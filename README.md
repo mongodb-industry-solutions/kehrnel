@@ -50,10 +50,12 @@ This will install all required dependencies including Typer (for CLI) and PyMong
 You can generate a valid openEHR composition from a template directly — either empty, minimal, or filled with random values.
 
 ```bash
-kehrnel-generate \
-  -t templates/TUMOUR.opt \
-  --random \
-  -o out/generated_random.json
+kehrnel-map \                                                    
+  -m samples/mappings/tumour_mapping.yaml \
+  -s samples/in/fiche_tumour.xml \               
+  -t samples/templates/T-IGR-TUMOUR-SUMMARY.opt \
+  -o samples/out/tomourExample.json \
+  --trace
 ```
 **Parameters:**
 
