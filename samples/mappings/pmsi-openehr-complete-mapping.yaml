@@ -1,0 +1,538 @@
+# ════════════════════════════════════════════════════════════════════════════
+# PMSI CDA  →  T-IGR-PMSI-EXTRACT   (OpenEHR Mapper configuration)
+# Version 2.0 — complete mapping, YAML-lint clean
+# ════════════════════════════════════════════════════════════════════════════
+
+##############################################################################
+# METADATA
+##############################################################################
+_metadata:
+  version:          "1.0"
+  source_format:    "PMSI_CDA"
+  target_template:  "T-IGR-PMSI-EXTRACT"
+  namespaces:
+    cda: "urn:hl7-org:v3"
+    xsi: "http://www.w3.org/2001/XMLSchema-instance"
+
+##############################################################################
+# GLOBAL OPTIONS  (goes right after _metadata)
+##############################################################################
+_options:
+  prune_empty: true            # remove null / "" / []
+  prune_empty_elements: true   # remove ITEM/CLUSTER/ELEMENT that became empty
+
+##############################################################################
+# PRE-PROCESSING — one ADMIN_ENTRY per <evenementPMSI/>
+##############################################################################
+
+_preprocessing:
+  # 1) clone the stub for each <evenementPMSI/>
+  - type:  multiply_content
+    xpath: "//cda:evenementPMSI"
+    target: "/content"
+    template_path: "/content/0"
+
+  # 2) remove the original template stub
+  - type:  delete             # ← mapper supports this in every version
+    xpath: "/content[1]"      # first /content node (1-based)
+
+  # 3-4) your existing multiply_items steps …
+  - type: multiply_items
+    xpath: "//cda:evenementPMSI[{i}]//cda:acte"
+    target: "/content/{i}/data/items/0/items/2/items"
+    template_path: "/content/{i}/data/items/0/items/2/items/0"
+
+  - type: multiply_items
+    xpath: "//cda:evenementPMSI[{i}]//cda:diagnosticsSignificatifs"
+    target: "/content/{i}/data/items/0/items/1/items"
+    template_path: "/content/{i}/data/items/0/items/1/items/4"
+
+  - type: multiply_items
+    xpath: "//cda:evenementPMSI[{i}]/cda:rss/cda:rum"
+    target: "/content/{i}/data/items/0/items/0/items"
+    template_path: "/content/{i}/data/items/0/items/0/items/0"
+
+##############################################################################
+# COMPOSITION-LEVEL RULES
+##############################################################################
+"/name/value":                                    "constant: PMSI Extract"
+
+"/language/code_string":                          "xpath: //cda:ClinicalDocument/cda:languageCode/@code" 
+"/language/terminology_id/value":                 "constant: ISO_639-1" 
+
+
+"/territory/code_string":                         "constant: FR"
+"/territory/terminology_id/value": "constant: ISO_3166-1"
+
+"/category/value":                                "constant: event"
+"/category/defining_code/terminology_id/value":   "constant: openehr"
+"/category/defining_code/code_string":            "constant: 433"
+
+"/context/setting/value":                         "constant: home"
+"/context/setting/defining_code/terminology_id/value": "constant: openehr"
+"/context/setting/defining_code/code_string":     "constant: 225"
+
+# document time
+"/context/start_time/value":
+  xpath:     "//cda:ClinicalDocument/cda:effectiveTime/@value"
+  transform: "hl7_to_iso8601"
+"/context/end_time/value":
+  xpath:     "//cda:ClinicalDocument/cda:effectiveTime/@value"
+  transform: "hl7_to_iso8601"
+
+# reporting period
+"/context/other_context/items/0/name/value":        "constant: Periode Debut"
+"/context/other_context/items/0/archetype_node_id": "constant: at0002"
+"/context/other_context/items/0/value/_type":       "constant: DV_TEXT"
+"/context/other_context/items/0/value/value":       "xpath: //cda:periodeExercice/@dateDebut"
+
+"/context/other_context/items/1/name/value":        "constant: Periode Fin"
+"/context/other_context/items/1/archetype_node_id": "constant: at0005"
+"/context/other_context/items/1/value/_type":       "constant: DV_TEXT"
+"/context/other_context/items/1/value/value":       "xpath: //cda:periodeExercice/@dateFin"
+
+# composer
+"/composer/name": "xpath: //cda:ClinicalDocument/cda:custodian//cda:name/text()"
+
+##############################################################################
+# ADMIN_ENTRY for each evenementPMSI ({i})
+##############################################################################
+"/content/{i}/_type":                "constant: ADMIN_ENTRY"
+"/content/{i}/name/value":           "constant: IGS PMSI STAY"
+"/content/{i}/archetype_node_id":    "constant: openEHR-EHR-ADMIN_ENTRY.igs_pmsi_stay.v0"
+"/content/{i}/language/code_string": "constant: fr"
+"/content/{i}/encoding/code_string": "constant: UTF-8"
+"/content/{i}/subject/_type":        "constant: PARTY_SELF"
+"/content/{i}/provider/_type":       "constant: PARTY_SELF"
+
+# item-tree wrapper
+"/content/{i}/data/_type":                "constant: ITEM_TREE"
+"/content/{i}/data/name/value":           "constant: Item tree"
+"/content/{i}/data/archetype_node_id":    "constant: at0001"
+
+##############################################################################
+# STAY-SEGMENT CLUSTER (first RUM only)
+##############################################################################
+"/content/{i}/data/items/0/_type":             "constant: CLUSTER"
+"/content/{i}/data/items/0/name/value":        "constant: IGR PMSI Stay Segment cluster"
+"/content/{i}/data/items/0/archetype_node_id": "constant: openEHR-EHR-CLUSTER.igr_pmsi_stay_segment_cluster.v0"
+
+### Stay-meta sub-cluster
+"/content/{i}/data/items/0/items/0/_type":             "constant: CLUSTER"
+"/content/{i}/data/items/0/items/0/name/value":        "constant: Stay Meta"
+"/content/{i}/data/items/0/items/0/archetype_node_id": "constant: at0001"
+
+# ── Stay Type (ambulatory if same-day) ───────────────────────────────────────
+"/content/{i}/data/items/0/items/0/items/0/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/0/items/0/name/value":        "constant: Stay Type"
+"/content/{i}/data/items/0/items/0/items/0/archetype_node_id": "constant: at0004"
+"/content/{i}/data/items/0/items/0/items/0/value/_type":       "constant: DV_CODED_TEXT"
+"/content/{i}/data/items/0/items/0/items/0/value/value":
+  xpath: |
+    string(
+      //cda:evenementPMSI[{i}]/cda:entree/cda:date =
+      //cda:evenementPMSI[{i}]/cda:sortie/cda:date
+    )
+  map:
+    "true":  "Ambulatoire"
+    "false": "Hospitalisation complète"
+"/content/{i}/data/items/0/items/0/items/0/value/defining_code/code_string":
+  xpath: |
+    string(
+      //cda:evenementPMSI[{i}]/cda:entree/cda:date =
+      //cda:evenementPMSI[{i}]/cda:sortie/cda:date
+    )
+  map:
+    "true":  "at0022"
+    "false": "at0020"
+"/content/{i}/data/items/0/items/0/items/0/value/defining_code/terminology_id/value": "constant: local"
+
+# ── Stay Status ─────────────────────────────────────────────────────────────
+"/content/{i}/data/items/0/items/0/items/1/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/0/items/1/name/value":        "constant: Stay Status"
+"/content/{i}/data/items/0/items/0/items/1/archetype_node_id": "constant: at0052"
+"/content/{i}/data/items/0/items/0/items/1/value/_type":       "constant: DV_CODED_TEXT"
+"/content/{i}/data/items/0/items/0/items/1/value/value":
+  xpath: //cda:evenementPMSI[{i}]/cda:venue/@etat
+  map:
+    encours: encours
+    clos:    clos
+    annule:  annule
+"/content/{i}/data/items/0/items/0/items/1/value/defining_code/code_string":
+  xpath: //cda:evenementPMSI[{i}]/cda:venue/@etat
+  map:
+    encours: at0053
+    clos:    at0054
+    annule:  at0055
+"/content/{i}/data/items/0/items/0/items/1/value/defining_code/terminology_id/value": "constant: local"
+
+# ── PMSI Source (constant) ─────────────────────────────────────────────────
+"/content/{i}/data/items/0/items/0/items/2/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/0/items/2/name/value":        "constant: PMSI Source"
+"/content/{i}/data/items/0/items/0/items/2/archetype_node_id": "constant: at0005"
+"/content/{i}/data/items/0/items/0/items/2/value/_type":       "constant: DV_CODED_TEXT"
+"/content/{i}/data/items/0/items/0/items/2/value/value":       "constant: RSS Batch"
+"/content/{i}/data/items/0/items/0/items/2/value/defining_code/code_string": "constant: at0023"
+"/content/{i}/data/items/0/items/0/items/2/value/defining_code/terminology_id/value": "constant: local"
+
+# ── Unit Code (mapped) ─────────────────────────────────────────────────────
+"/content/{i}/data/items/0/items/0/items/3/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/0/items/3/name/value":        "constant: Unit Code"
+"/content/{i}/data/items/0/items/0/items/3/archetype_node_id": "constant: at0006"
+"/content/{i}/data/items/0/items/0/items/3/value/_type":       "constant: DV_CODED_TEXT"
+"/content/{i}/data/items/0/items/0/items/3/value/value":
+  xpath: string((//cda:evenementPMSI[{i}]//cda:uniteMedicale/cda:code/text())[1])
+"/content/{i}/data/items/0/items/0/items/3/value/defining_code/code_string":
+  xpath: string((//cda:evenementPMSI[{i}]//cda:uniteMedicale/cda:code/text())[1])
+  map: { RTE: at0026, ITH: at0027, PD1: at0028, HJM: at0026, TAR: at0027,
+         SCC: at0028, SAR: at0026, GAR: at0027, PCA: at0028, UKN: at0026 }
+"/content/{i}/data/items/0/items/0/items/3/value/defining_code/terminology_id/value": "constant: local"
+
+# ── Entry Mode ─────────────────────────────────────────────────────────────
+"/content/{i}/data/items/0/items/0/items/4/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/0/items/4/name/value":        "constant: Entry Mode"
+"/content/{i}/data/items/0/items/0/items/4/archetype_node_id": "constant: at0007"
+"/content/{i}/data/items/0/items/0/items/4/value/_type":       "constant: DV_CODED_TEXT"
+"/content/{i}/data/items/0/items/0/items/4/value/value":
+  xpath: string((//cda:evenementPMSI[{i}]//cda:entree/@mode)[1])
+  aggregate: first
+  map: { "0": normal, "1": mutation, "8": "consult ext.", "9": death }
+"/content/{i}/data/items/0/items/0/items/4/value/defining_code/code_string":
+  xpath: string((//cda:evenementPMSI[{i}]//cda:entree/@mode)[1])
+  map: { "0": at0029, "1": at0030, "8": at0031, "9": at0032 }
+"/content/{i}/data/items/0/items/0/items/4/value/defining_code/terminology_id/value": "constant: local"
+
+# ── Entry Date/Time ─────────────────────────────────────────────────────────
+"/content/{i}/data/items/0/items/0/items/5/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/0/items/5/name/value":        "constant: Entry Date/Time"
+"/content/{i}/data/items/0/items/0/items/5/archetype_node_id": "constant: at0008"
+"/content/{i}/data/items/0/items/0/items/5/value/_type":       "constant: DV_DATE_TIME"
+"/content/{i}/data/items/0/items/0/items/5/value/value":
+  xpath: >-
+    concat(
+      //cda:evenementPMSI[{i}]//cda:entree/cda:date/text(),
+      'T',
+      //cda:evenementPMSI[{i}]//cda:entree/cda:heure/text()
+    )
+
+# ── Exit Mode ───────────────────────────────────────────────────────────────
+"/content/{i}/data/items/0/items/0/items/6/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/0/items/6/name/value":        "constant: Exit Mode"
+"/content/{i}/data/items/0/items/0/items/6/archetype_node_id": "constant: at0009"
+"/content/{i}/data/items/0/items/0/items/6/value/_type":       "constant: DV_CODED_TEXT"
+"/content/{i}/data/items/0/items/0/items/6/value/value":
+  xpath: string((//cda:evenementPMSI[{i}]//cda:sortie/@mode)[1])
+  aggregate: first
+  map: { "0": normal, "1": mutation, "8": "consult ext.", "9": death }
+"/content/{i}/data/items/0/items/0/items/6/value/defining_code/code_string":
+  xpath: string((//cda:evenementPMSI[{i}]//cda:sortie/@mode)[1])
+  map: { "0": at0033, "1": at0034, "8": at0035, "9": at0036 }
+"/content/{i}/data/items/0/items/0/items/6/value/defining_code/terminology_id/value": "constant: local"
+
+# ── Exit Date/Time ──────────────────────────────────────────────────────────
+"/content/{i}/data/items/0/items/0/items/7/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/0/items/7/name/value":        "constant: Exit Date/Time"
+"/content/{i}/data/items/0/items/0/items/7/archetype_node_id": "constant: at0010"
+"/content/{i}/data/items/0/items/0/items/7/value/_type":       "constant: DV_DATE_TIME"
+"/content/{i}/data/items/0/items/0/items/7/value/value":
+  xpath: >-
+    concat(
+      //cda:evenementPMSI[{i}]//cda:sortie/cda:date/text(),
+      'T',
+      //cda:evenementPMSI[{i}]//cda:sortie/cda:heure/text()
+    )
+
+# ── GHM Code ────────────────────────────────────────────────────────────────
+"/content/{i}/data/items/0/items/0/items/8/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/0/items/8/name/value":        "constant: GHM Code"
+"/content/{i}/data/items/0/items/0/items/8/archetype_node_id": "constant: at0011"
+"/content/{i}/data/items/0/items/0/items/8/value/_type":       "constant: DV_CODED_TEXT"
+"/content/{i}/data/items/0/items/0/items/8/value/value":
+  xpath: string((//cda:evenementPMSI[{i}]/cda:rss/cda:ghm/@code)[1])
+  aggregate: first
+
+"/content/{i}/data/items/0/items/0/items/8/value/defining_code/code_string":
+  xpath: string((//cda:evenementPMSI[{i}]/cda:rss/cda:ghm/@code)[1])
+"/content/{i}/data/items/0/items/0/items/8/value/defining_code/terminology_id/value": "constant: local"
+
+# ── DRG Version ─────────────────────────────────────────────────────────────
+"/content/{i}/data/items/0/items/0/items/9/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/0/items/9/name/value":        "constant: DRG Version"
+"/content/{i}/data/items/0/items/0/items/9/archetype_node_id": "constant: at0012"
+"/content/{i}/data/items/0/items/0/items/9/value/_type":       "constant: DV_TEXT"
+"/content/{i}/data/items/0/items/0/items/9/value/value":
+  xpath: string((//cda:evenementPMSI[{i}]/cda:rss/cda:ghm/@version)[1])
+
+# ── RUM Action ──────────────────────────────────────────────────────────────
+"/content/{i}/data/items/0/items/0/items/10/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/0/items/10/name/value":        "constant: Action (RUM)"
+"/content/{i}/data/items/0/items/0/items/10/archetype_node_id": "constant: at0013"
+"/content/{i}/data/items/0/items/0/items/10/value/_type":       "constant: DV_CODED_TEXT"
+"/content/{i}/data/items/0/items/0/items/10/value/value":
+  xpath: //cda:evenementPMSI[{i}]/cda:rss/cda:rum/@action
+  aggregate: first
+  map:
+    création:     Création
+    modification: Modification
+    annulation:   Annulation
+"/content/{i}/data/items/0/items/0/items/10/value/defining_code/code_string":
+  xpath: //cda:evenementPMSI[{i}]/cda:rss/cda:rum/@action
+  aggregate: first
+  map:
+    création:     at0037
+    modification: at0038
+    annulation:   at0039
+"/content/{i}/data/items/0/items/0/items/10/value/defining_code/terminology_id/value": "constant: local"
+
+# ── Boolean flags (classant, prestation A, anonymised, etc.) ────────────────
+"/content/{i}/data/items/0/items/0/items/11/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/0/items/11/name/value":        "constant: Is Classant?"
+"/content/{i}/data/items/0/items/0/items/11/archetype_node_id": "constant: at0014"
+"/content/{i}/data/items/0/items/0/items/11/value/_type":       "constant: DV_BOOLEAN"
+"/content/{i}/data/items/0/items/0/items/11/value/value":
+  xpath: //cda:evenementPMSI[{i}]/cda:rss/cda:rum/@classant
+  aggregate: first
+  map:
+    oui: true
+    non: false
+
+"/content/{i}/data/items/0/items/0/items/12/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/0/items/12/name/value":        "constant: Inter-facility Prestation A?"
+"/content/{i}/data/items/0/items/0/items/12/archetype_node_id": "constant: at0015"
+"/content/{i}/data/items/0/items/0/items/12/value/_type":       "constant: DV_BOOLEAN"
+"/content/{i}/data/items/0/items/0/items/12/value/value":
+  xpath: //cda:evenementPMSI[{i}]/cda:rss/cda:rum/@prestationInterEtablissementA
+  aggregate: first
+  map:
+    oui: true
+    non: false
+
+"/content/{i}/data/items/0/items/0/items/13/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/0/items/13/name/value":        "constant: Anonymised?"
+"/content/{i}/data/items/0/items/0/items/13/archetype_node_id": "constant: at0016"
+"/content/{i}/data/items/0/items/0/items/13/value/_type":       "constant: DV_BOOLEAN"
+"/content/{i}/data/items/0/items/0/items/13/value/value":
+  xpath: //cda:evenementPMSI[{i}]/cda:venue/@anonyme
+  aggregate: first
+  map:
+    oui: true
+    non: false
+
+"/content/{i}/data/items/0/items/0/items/14/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/0/items/14/name/value":        "constant: Confidential?"
+"/content/{i}/data/items/0/items/0/items/14/archetype_node_id": "constant: at0017"
+"/content/{i}/data/items/0/items/0/items/14/value/_type":       "constant: DV_BOOLEAN"
+"/content/{i}/data/items/0/items/0/items/14/value/value":
+  xpath: //cda:evenementPMSI[{i}]/cda:venue/@confidentiel
+  aggregate: first
+  map:
+    oui: true
+    non: false
+
+"/content/{i}/data/items/0/items/0/items/15/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/0/items/15/name/value":        "constant: Billable?"
+"/content/{i}/data/items/0/items/0/items/15/archetype_node_id": "constant: at0018"
+"/content/{i}/data/items/0/items/0/items/15/value/_type":       "constant: DV_BOOLEAN"
+"/content/{i}/data/items/0/items/0/items/15/value/value":
+  xpath: //cda:evenementPMSI[{i}]/cda:venue/@facturable
+  aggregate: first
+  map:
+    oui: true
+    non: false
+
+"/content/{i}/data/items/0/items/0/items/16/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/0/items/16/name/value":        "constant: Private stay?"
+"/content/{i}/data/items/0/items/0/items/16/archetype_node_id": "constant: at0019"
+"/content/{i}/data/items/0/items/0/items/16/value/_type":       "constant: DV_BOOLEAN"
+"/content/{i}/data/items/0/items/0/items/16/value/value":
+  xpath: //cda:evenementPMSI[{i}]/cda:venue/@prive
+  aggregate: first
+  map:
+    oui: true
+    non: false
+
+##############################################################################
+# DIAGNOSTIC LIST CLUSTER
+##############################################################################
+"/content/{i}/data/items/0/items/1/_type":             "constant: CLUSTER"
+"/content/{i}/data/items/0/items/1/name/value":        "constant: Diagnostic List"
+"/content/{i}/data/items/0/items/1/archetype_node_id": "constant: at0002"
+
+# principal diagnosis
+"/content/{i}/data/items/0/items/1/items/0/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/1/items/0/name/value":        "constant: Diagnosis Role"
+"/content/{i}/data/items/0/items/1/items/0/archetype_node_id": "constant: at0040"
+"/content/{i}/data/items/0/items/1/items/0/value/_type":       "constant: DV_CODED_TEXT"
+"/content/{i}/data/items/0/items/1/items/0/value/value":       "constant: Principal"
+"/content/{i}/data/items/0/items/1/items/0/value/defining_code/code_string": "constant: at0042"
+"/content/{i}/data/items/0/items/1/items/0/value/defining_code/terminology_id/value": "constant: local"
+
+"/content/{i}/data/items/0/items/1/items/1/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/1/items/1/name/value":        "constant: CIM-10 Code"
+"/content/{i}/data/items/0/items/1/items/1/archetype_node_id": "constant: at0041"
+"/content/{i}/data/items/0/items/1/items/1/value/_type":       "constant: DV_CODED_TEXT"
+"/content/{i}/data/items/0/items/1/items/1/value/value":
+  xpath: //cda:evenementPMSI[{i}]//cda:diagnosticPrincipal/cda:codeCim10/text()
+  aggregate: first 
+"/content/{i}/data/items/0/items/1/items/1/value/defining_code/code_string":
+  xpath: //cda:evenementPMSI[{i}]//cda:diagnosticPrincipal/cda:codeCim10/text()
+  aggregate: first
+"/content/{i}/data/items/0/items/1/items/1/value/defining_code/terminology_id/value": "constant: http://fhir.igr.fr/CodeSystem/CIM-10-FR"
+
+# related diagnosis
+"/content/{i}/data/items/0/items/1/items/2/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/1/items/2/name/value":        "constant: Diagnosis Role"
+"/content/{i}/data/items/0/items/1/items/2/archetype_node_id": "constant: at0040"
+"/content/{i}/data/items/0/items/1/items/2/value/_type":       "constant: DV_CODED_TEXT"
+"/content/{i}/data/items/0/items/1/items/2/value/value":       "constant: Related"
+"/content/{i}/data/items/0/items/1/items/2/value/defining_code/code_string": "constant: at0043"
+"/content/{i}/data/items/0/items/1/items/2/value/defining_code/terminology_id/value": "constant: local"
+
+"/content/{i}/data/items/0/items/1/items/3/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/1/items/3/name/value":        "constant: CIM-10 Code"
+"/content/{i}/data/items/0/items/1/items/3/archetype_node_id": "constant: at0041"
+"/content/{i}/data/items/0/items/1/items/3/value/_type":       "constant: DV_CODED_TEXT"
+"/content/{i}/data/items/0/items/1/items/3/value/value":
+  xpath: //cda:evenementPMSI[{i}]//cda:diagnosticRelie/cda:codeCim10/text()
+  aggregate: first
+"/content/{i}/data/items/0/items/1/items/3/value/defining_code/code_string":
+  xpath: //cda:evenementPMSI[{i}]//cda:diagnosticRelie/cda:codeCim10/text()
+  aggregate: first
+"/content/{i}/data/items/0/items/1/items/3/value/defining_code/terminology_id/value": "constant: http://fhir.igr.fr/CodeSystem/CIM-10-FR"
+
+# first significant diagnosis
+"/content/{i}/data/items/0/items/1/items/4/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/1/items/4/name/value":        "constant: Diagnosis Role"
+"/content/{i}/data/items/0/items/1/items/4/archetype_node_id": "constant: at0040"
+"/content/{i}/data/items/0/items/1/items/4/value/_type":       "constant: DV_CODED_TEXT"
+"/content/{i}/data/items/0/items/1/items/4/value/value":       "constant: Significant"
+"/content/{i}/data/items/0/items/1/items/4/value/defining_code/code_string": "constant: at0044"
+"/content/{i}/data/items/0/items/1/items/4/value/defining_code/terminology_id/value": "constant: local"
+
+"/content/{i}/data/items/0/items/1/items/5/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/1/items/5/name/value":        "constant: CIM-10 Code"
+"/content/{i}/data/items/0/items/1/items/5/archetype_node_id": "constant: at0041"
+"/content/{i}/data/items/0/items/1/items/5/value/_type":       "constant: DV_CODED_TEXT"
+"/content/{i}/data/items/0/items/1/items/5/value/value":
+  xpath: //cda:evenementPMSI[{i}]//cda:diagnosticsSignificatifs[1]/cda:diagnosticSignificatif/cda:codeCim10/text()
+  aggregate: first
+"/content/{i}/data/items/0/items/1/items/5/value/defining_code/code_string":
+  xpath: //cda:evenementPMSI[{i}]//cda:diagnosticsSignificatifs[1]/cda:diagnosticSignificatif/cda:codeCim10/text()
+  aggregate: first
+"/content/{i}/data/items/0/items/1/items/5/value/defining_code/terminology_id/value": "constant: http://fhir.igr.fr/CodeSystem/CIM-10-FR"
+
+##############################################################################
+# ACT LIST CLUSTER (first CCAM act)
+##############################################################################
+"/content/{i}/data/items/0/items/2/_type":             "constant: CLUSTER"
+"/content/{i}/data/items/0/items/2/name/value":        "constant: Act List"
+"/content/{i}/data/items/0/items/2/archetype_node_id": "constant: at0003"
+
+"/content/{i}/data/items/0/items/2/items/0/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/2/items/0/name/value":        "constant: CCAM Code"
+"/content/{i}/data/items/0/items/2/items/0/archetype_node_id": "constant: at0045"
+"/content/{i}/data/items/0/items/2/items/0/value/_type":       "constant: DV_CODED_TEXT"
+"/content/{i}/data/items/0/items/2/items/0/value/value":
+  xpath: string((//cda:evenementPMSI[{i}]//cda:acte[1]/cda:CCAM/cda:codeActe/text())[1])
+"/content/{i}/data/items/0/items/2/items/0/value/defining_code/terminology_id/value": "constant: CCAM"
+"/content/{i}/data/items/0/items/2/items/0/value/defining_code/code_string":
+  xpath: string((//cda:evenementPMSI[{i}]//cda:acte[1]/cda:CCAM/cda:codeActe/text())[1])
+
+"/content/{i}/data/items/0/items/2/items/0/value/defining_code/terminology_id/value": "constant: local"
+
+"/content/{i}/data/items/0/items/2/items/1/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/2/items/1/name/value":        "constant: Phase"
+"/content/{i}/data/items/0/items/2/items/1/archetype_node_id": "constant: at0046"
+"/content/{i}/data/items/0/items/2/items/1/value/_type":       "constant: DV_CODED_TEXT"
+"/content/{i}/data/items/0/items/2/items/1/value/value":
+  xpath: string((//cda:evenementPMSI[{i}]//cda:acte[1]/cda:CCAM/cda:codePhase/text())[1])
+  aggregate: first
+
+"/content/{i}/data/items/0/items/2/items/1/value/defining_code/code_string":
+  xpath: string((//cda:evenementPMSI[{i}]//cda:acte[1]/cda:CCAM/cda:codePhase/text())[1])
+  aggregate: first
+"/content/{i}/data/items/0/items/2/items/1/value/defining_code/terminology_id/value": "constant: local"
+
+"/content/{i}/data/items/0/items/2/items/2/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/2/items/2/name/value":        "constant: Activity"
+"/content/{i}/data/items/0/items/2/items/2/archetype_node_id": "constant: at0047"
+"/content/{i}/data/items/0/items/2/items/2/value/_type":       "constant: DV_CODED_TEXT"
+"/content/{i}/data/items/0/items/2/items/2/value/value":
+  xpath: string((//cda:evenementPMSI[{i}]//cda:acte[1]/cda:CCAM/cda:codeActivite/text())[1])
+"/content/{i}/data/items/0/items/2/items/2/value/defining_code/code_string":
+  xpath: string((//cda:evenementPMSI[{i}]//cda:acte[1]/cda:CCAM/cda:codeActivite/text())[1])
+"/content/{i}/data/items/0/items/2/items/2/value/defining_code/terminology_id/value": "constant: local"
+
+"/content/{i}/data/items/0/items/2/items/3/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/2/items/3/name/value":        "constant: Quantity"
+"/content/{i}/data/items/0/items/2/items/3/archetype_node_id": "constant: at0048"
+"/content/{i}/data/items/0/items/2/items/3/value/_type":       "constant: DV_COUNT"
+"/content/{i}/data/items/0/items/2/items/3/value/magnitude":
+  xpath:     "number(//cda:evenementPMSI[{i}]//cda:acte[1]/cda:CCAM/cda:quantite/text())"
+  transform: "to_int"
+  cast: "INTEGER" 
+
+"/content/{i}/data/items/0/items/2/items/4/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/2/items/4/name/value":        "constant: Date/Time Performed"
+"/content/{i}/data/items/0/items/2/items/4/archetype_node_id": "constant: at0049"
+"/content/{i}/data/items/0/items/2/items/4/value/_type":       "constant: DV_INTERVAL"
+"/content/{i}/data/items/0/items/2/items/4/value/lower_unbounded": "constant: false"
+"/content/{i}/data/items/0/items/2/items/4/value/upper_unbounded": "constant: false"
+"/content/{i}/data/items/0/items/2/items/4/value/lower_included":  "constant: false"
+"/content/{i}/data/items/0/items/2/items/4/value/upper_included":  "constant: false"
+"/content/{i}/data/items/0/items/2/items/4/value/lower/_type":     "constant: DV_DATE_TIME"
+"/content/{i}/data/items/0/items/2/items/4/value/lower/value":
+  xpath:     //cda:evenementPMSI[{i}]//cda:acte[1]/cda:CCAM/cda:dateRealisation/text()
+  transform: space_to_T
+"/content/{i}/data/items/0/items/2/items/4/value/upper/_type":     "constant: DV_DATE_TIME"
+"/content/{i}/data/items/0/items/2/items/4/value/upper/value":
+  xpath:     //cda:evenementPMSI[{i}]//cda:acte[1]/cda:CCAM/cda:dateRealisation/text()
+  transform: space_to_T
+
+"/content/{i}/data/items/0/items/2/items/5/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/2/items/5/name/value":        "constant: External Act?"
+"/content/{i}/data/items/0/items/2/items/5/archetype_node_id": "constant: at0050"
+"/content/{i}/data/items/0/items/2/items/5/value/_type":       "constant: DV_BOOLEAN"
+"/content/{i}/data/items/0/items/2/items/5/value/value":
+  xpath: //cda:evenementPMSI[{i}]//cda:acte[1]/@externe
+  aggregate: first
+  map:
+    oui: true
+    non: false
+
+"/content/{i}/data/items/0/items/2/items/6/_type":             "constant: ELEMENT"
+"/content/{i}/data/items/0/items/2/items/6/name/value":        "constant: Exceptional Reimbursement?"
+"/content/{i}/data/items/0/items/2/items/6/archetype_node_id": "constant: at0051"
+"/content/{i}/data/items/0/items/2/items/6/value/_type":       "constant: DV_BOOLEAN"
+"/content/{i}/data/items/0/items/2/items/6/value/value":
+  xpath: //cda:evenementPMSI[{i}]//cda:acte[1]/cda:CCAM/@remboursementExceptionnel
+  aggregate: first
+  map:
+    oui: true
+    non: false
+
+
+##############################################################################
+#  PER-CONTENT DEFAULTS  (applies to every /content/{i} …)
+##############################################################################
+"/content/{i}/language/terminology_id/value":      "constant: ISO_639-1"
+"/content/{i}/encoding/terminology_id/value":      "constant: IANA_character-sets"
+
+"/content/{i}/workflow_id/namespace":              "constant: openEHR-Mapper"
+"/content/{i}/workflow_id/type":                   "constant: ANY"
+"/content/{i}/workflow_id/id/value":               "constant: auto"
+"/content/{i}/workflow_id/id/scheme":              "constant: scheme"
+
+##############################################################################
+# TRANSFORM FUNCTIONS
+##############################################################################
+_transforms:
+  hl7_to_iso8601:
+    type:       regex
+    pattern:    "^(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})(\\d{2})([\\+\\-]\\d{4})$"
+    replacement: "$1-$2-$3T$4:$5:$6$7"
+
+  space_to_T:
+    type:   replace
+    search: " "
+    replace: "T"

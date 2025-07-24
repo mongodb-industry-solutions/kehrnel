@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=65", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kehrnel-core"
+version = "0.1.0"
+description = "kehrnel core, mapper and CLI"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+
+# hard runtime deps that *every* install needs
+dependencies = [
+    "PyYAML>=6",
+    "tabulate>=0.9",
+]
+
+[project.optional-dependencies]
+cli   = ["typer[all]>=0.9"]     # adds colour, autocomplete, etc.
+mongo = ["pymongo>=4"]          # only if you want Mongo persistence
+
+[project.scripts]
+kehrnel-generate = "cli.generate:app"
+kehrnel-map      = "cli.map:app"
+kehrnel-validate = "cli.validate:app"
+kehrnel-ingest   = "cli.ingest:app"
+kehrnel-transform= "cli.transform:app"
+
+
+# ---------------------------------------------------------------------------
+# tell setuptools to use the `src/` layout
+# ---------------------------------------------------------------------------
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = [
+    "cli",
+    "core",
+    "mapper",
+    "ingest",
+    "persistence",
+    "api",
+    "aql",
+    "transform",
+]

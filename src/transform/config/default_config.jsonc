@@ -1,0 +1,47 @@
+{
+    // ────────────────────────── Persistence (MongoDB) ──────────────────────────
+    "persistence": {
+      "mongo": {
+        // your MongoDB Atlas or local URI
+        "connection_string": "mongodb+srv://<user>:<pass>@yourcluster.mongodb.net",
+        // default database name
+        "database": "openEHR",
+        // collection names
+        "collections": {
+          "raw":        "samples",
+          "compositions":"sm-compositions3",
+          "search":     "sm-search3",
+          "codes":      "_codes",
+          "shortcuts":  "_shortcuts",
+          "restored":   "compositionsRestored"
+        }
+      },
+      // file‐system fallback (for tests or NDJSON dumps)
+      "fs": {
+        "output_folder": "data/ndjson"
+      }
+    },
+  
+    // ──────────────────────────── Transformer ─────────────────────────────
+    "transform": {
+      // path (relative to project root) of your mapping rules
+      "mapping_file": "transform/config/mappings.yaml",
+      // enable the shortcut compaction
+      "apply_shortcuts": true,
+      // interval (seconds) to reload/persist your at/ar code tables
+      "codes_refresh_interval": 60,
+      // if you want to reset used‐flags on the raw source collection at startup
+      "reset_used_flags": true,
+      "batch_size_reset": 2500,
+      // how many copies of each composition to write (for multi‐tenant or multi‐version testing)
+      "replication_factor": 1
+    },
+  
+    // ─────────────────────────────── CLI ────────────────────────────────
+    "cli": {
+      // default behavior for output (db vs. folder)
+      "default_output": "db",
+      // if `folder`, base path for JSONL dumps
+      "output_folder": "data/transformed"
+    }
+  }
