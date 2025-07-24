@@ -54,7 +54,7 @@ kehrnel-generate \
   -t templates/TUMOUR.opt \
   --random \
   -o out/generated_random.json
-
+```
 **Parameters:**
 
 - `-t`, `--template`: path to the .opt template.
