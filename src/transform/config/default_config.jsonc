@@ -1,5 +1,6 @@
 {
-    // ────────────────────────── Persistence (MongoDB) ──────────────────────────
+    "shortcuts": "src/transform/config/shortcuts.json",
+  // ────────────────────────── Persistence (MongoDB) ──────────────────────────
     "persistence": {
       "mongo": {
         // your MongoDB Atlas or local URI

@@ -1,62 +1,47 @@
-# kehrnel/ingest/bulk.py
+# ingest/bulk.py  – trimmed down from the old ingestion.py
+from __future__ import annotations
+import json, logging, threading
+from pathlib import Path
+from typing import Iterator, Dict, Any
+import certifi
 
-import threading, time, logging, traceback
-from multiprocessing import freeze_support
-from bson import ObjectId
-
-from ..transform.core import Transformer
-from ..persistence.mongo import MongoPersister
+from persistence import get_driver        # entry-point loader
+from transform.core import Transformer
 
 log = logging.getLogger(__name__)
 
-def run(cfg: dict):
-    pers = MongoPersister(cfg["source"], cfg["target"])
-    t    = Transformer(
-        mappings_path=cfg["transform"]["mappings_yaml"],
-        shortcuts_path=cfg["transform"].get("shortcuts_jsonc"),
-        role=cfg["role"],
-        codes_refresh_interval=cfg["codes_refresh_interval"]
-    )
+def run(transformer: Transformer,
+        jsonl: Path,
+        driver_cfg: Path,
+        workers: int = 4):
+    """Ingest an NDJSON file already in **flattened** shape."""
 
-    pers.bootstrap_codes()
-    pers.start_refresh_loops(cfg["role"], cfg["codes_refresh_interval"])
+    drv = get_driver(driver_cfg)          # e.g. MongoStore
+    drv.connect()
 
-    if cfg.get("clean_collections"):
-        pers.clean_target_collections()
-    if cfg.get("reset_used_flags"):
-        pers.reset_used_flags(cfg.get("batch_size_reset",2500))
+    def producer() -> Iterator[Dict[str, Any]]:
+        with jsonl.open("r", encoding="utf-8") as fh:
+            for line in fh:
+                yield json.loads(line)
 
-    done = fail = total_read = total_ins = 0
-    for idx, ehr_id in enumerate(pers.next_patient_ids(cfg["patient_limit"]), start=1):
+    drv.insert_many(producer(), workers=workers)
+    log.info("✓ done – inserted %d docs", drv.stats.inserted)
+
+# optional helper to mimic the old “pull-from-source Mongo” pipeline
+def from_mongo(src_cfg: Path, driver_cfg: Path, limit: int | None):
+    from persistence.mongo import MongoSource   # thin wrapper around PyMongo
+    src = MongoSource(json.loads(src_cfg.read_text()), limit=limit)
+
+    tf  = Transformer(json.loads(Path("transform/config/default_config.json")
+                                 .read_text(encoding="utf-8")))
+    drv = get_driver(driver_cfg)
+    drv.connect()
+
+    for raw in src.iter_compositions():
         try:
-            raws = pers.fetch_raw(ehr_id)
-            docs_full, docs_search = [], []
-            for r in raws:
-                try:
-                    base, slim = t.flatten(r)
-                except Exception:
-                    log.exception("transform failed for %s", ehr_id)
-                    continue
-                rf = cfg.get("replication_factor",1)
-                for i in range(rf):
-                    new_id = ObjectId()
-                    d = base.copy(); d["_id"]=new_id; d["ehr_id"]=f"{ehr_id}~r{i+1}"
-                    docs_full.append(d)
-                    if slim.get("sn"):
-                        s = slim.copy(); s["_id"]=new_id; s["ehr_id"]=d["ehr_id"]
-                        docs_search.append(s)
-            insf = pers.insert_compositions(docs_full)
-            inss = pers.insert_search(docs_search)
-            total_read += len(raws)
-            total_ins  += insf
-            done += 1
-        except Exception:
-            fail += 1
-            log.error("✖ %s failed\n%s", ehr_id, traceback.format_exc())
-
-        if idx % 10 == 0:
-            log.info("… processed %d", idx)
-
-    log.info("✓ done %d ✖ failed %d read %d ins %d",
-             done, fail, total_read, total_ins)
-    pers.flush_codes()
+            docs = tf.flatten(raw)
+            drv.insert_one(docs["base"])
+            if "search" in docs:
+                drv.insert_one(docs["search"], search=True)
+        except ValueError as e:
+            log.warning("skip %s – %s", raw["_id"], e)

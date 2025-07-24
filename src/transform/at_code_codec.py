@@ -70,3 +70,17 @@ class AtCodeCodec:
     def decode_map(self, ar_map: dict, at_map: dict) -> dict:
         """ Utility if needed for reverse stage. """
         return {**{v:k for k,v in ar_map.items()}, **{v:k for k,v in at_map.items()}}
+
+_SHARED = AtCodeCodec(role="primary")
+
+def set_shared_role(role: str) -> None:
+    """Call this once from `transform.core` so flatten/reverse know the role."""
+    global _SHARED
+    _SHARED = AtCodeCodec(role=role)
+
+def alloc(key: str, sid: str) -> int | None:          # noqa:  F401
+    """Exactly the helper the old monolith expected."""
+    return _SHARED.alloc(key, sid)
+
+def at_code_to_int(at: str) -> int | None:            # noqa:  F401
+    return _SHARED.at_code_to_int(at)

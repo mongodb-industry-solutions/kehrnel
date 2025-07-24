@@ -43,3 +43,22 @@ class RulesEngine:
             })
         self._cache[template_sid] = rules
         return rules
+
+# ---------------------------------------------------------------------
+# convenient singleton so _bulk_flatten can call one function only.
+# ---------------------------------------------------------------------
+_ENGINE: RulesEngine | None = None
+
+def get_rules_for(template_sid: str,
+                  *,
+                  mappings_yaml: str = "transform/config/mappings.yaml",
+                  codec: AtCodeCodec | None = None) -> List[Dict]:
+    """
+    Public helper used by `_bulk_flatten.py`.
+    Lazily initialises a **single** RulesEngine instance.
+    """
+    global _ENGINE
+    if _ENGINE is None:
+        # NOTE: codec is optional at first call – will be the shared codec
+        _ENGINE = RulesEngine(mappings_yaml, codec or AtCodeCodec())
+    return _ENGINE.get(template_sid)

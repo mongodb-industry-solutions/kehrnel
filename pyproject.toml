@@ -17,7 +17,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-cli   = ["typer[all]>=0.9"]     # adds colour, autocomplete, etc.
+cli   = ["typer[all]>=0.9", "json5>=0.9"]   
 mongo = ["pymongo>=4"]          # only if you want Mongo persistence
 
 [project.scripts]
