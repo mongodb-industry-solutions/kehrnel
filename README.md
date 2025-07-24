@@ -43,23 +43,26 @@ This will install all required dependencies including Typer (for CLI) and PyMong
 
 ---
 
-### 2. Full Playground Environment
-
-To test `kehrnel` inside a working MongoDB + FastAPI + Dashboard stack:
-
-```bash
-git clone https://github.com/your-org/healthcare-playground.git
-cd healthcare-playground
-docker compose up -d
-```
-
-The containers mount your local `kehrnel/` directory, so any code changes are hot-reloaded.
-
----
-
 ## ⚡ Quick Usage
 
-### 2.1 Map a source file into an openEHR Composition
+### 2.1 Generate a minimal or random composition
+
+You can generate a valid openEHR composition from a template directly — either empty, minimal, or filled with random values.
+
+```bash
+kehrnel-generate \
+  -t templates/TUMOUR.opt \
+  --random \
+  -o out/generated_random.json
+
+**Parameters:**
+
+- `-t`, `--template`: path to the .opt template.
+- `--random`: Generate a full composition with randomized values.
+- `--minimal`: Generate a minimal valid skeleton (no values).
+- `-o`: (optional) Path to write the output instead of printing to stdout.
+
+### 2.2 Map a source file into an openEHR Composition
 
 You can convert external source documents (e.g., CDA, HL7v2, custom XML/CSV) into a canonical openEHR composition JSON using a YAML mapping definition.
 
@@ -82,7 +85,7 @@ kehrnel-map \
 
 ---
 
-### 2.2 Validate a composition against its template
+### 2.3 Validate a composition against its template
 
 Ensures the generated composition structure conforms to the constraints of its openEHR OPT template.
 
