@@ -100,21 +100,6 @@ Check the playground Grafana dashboards or query from the API to validate ingest
 
 ---
 
-## 🌐 Minimal openEHR REST API (PoC)
-
-Once the **healthcare-playground** is running, an experimental openEHR-compatible FastAPI service is available:
-
-| Method | Path                                   | Description                            |
-|--------|----------------------------------------|----------------------------------------|
-| GET    | `/rest/openehr/v1/definition/template` | List available OPT templates            |
-| POST   | `/rest/openehr/v1/composition`         | Validate + store a composition          |
-| GET    | `/rest/openehr/v1/composition/{uid}`   | Fetch by UID                            |
-| GET    | `/rest/openehr/v1/composition`         | Filter by template, date, subject, etc. |
-
-Under the hood, this service reuses the exact same modules (`validate.py`, `generate.py`, etc.).
-
----
-
 ## 🧱 Project Structure
 
 ```
@@ -157,25 +142,6 @@ def main(opt: Optional[Path] = None): ...
 ```
 
 Avoid using modern `Path | None` typing to ensure compatibility.
-
----
-
-## 📅 Roadmap
-
-- ✅ July 2025 — Canonical to Flat transformer
-- ✅ July 2025 — MongoDB Atlas ingestor
-- ◻︎ Sept 2025 — ElasticSearch persistence backend
-- ◻︎ Oct 2025 — Smart-on-FHIR wrapper for REST API
-- ◻︎ Q4 2025 — Streamlit GUI for drag-and-drop mapping
-
-Community contributions welcome! Open an issue to share feedback or start a PR.
-
----
-
-## 📜 License
-
-MIT License — see [`LICENSE`](./LICENSE)
-
 ---
 
 ## 🤝 Acknowledgements
