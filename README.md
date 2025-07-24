@@ -59,23 +59,54 @@ The containers mount your local `kehrnel/` directory, so any code changes are ho
 
 ## ⚡ Quick Usage
 
-### 2.1 Convert a CDA file into a composition
+### 2.1 Map a source file into an openEHR Composition
+
+You can convert external source documents (e.g., CDA, HL7v2, custom XML/CSV) into a canonical openEHR composition JSON using a YAML mapping definition.
 
 ```bash
 kehrnel-map \
-  -m mappings/pmsi_mapping.yaml \
+  -m samples/mappings/tumour_mapping.yaml \
   -s samples/in/fiche_tumour.xml \
-  -t templates/PMSI.opt \
-  -o out/pmsi.json \
+  -t samples/templates/T-IGR-TUMOUR-SUMMARY.opt \
+  -o samples/out/tumourNew.json \
   --trace
 ```
 
-### 2.2 Generate a random composition and validate it
+**Parameters:**
+
+- `-m`, `--mapping`: Path to the YAML mapping file (defines source-to-openEHR path rules)
+- `-s`, `--source`: Path to the input source file (e.g., XML, CSV, FHIR JSON)
+- `-t`, `--template`: Path to the OPT template (optional but improves path validation)
+- `-o`, `--output`: Output file for the resulting composition JSON
+- `--trace`: *(optional)* Shows detailed mapping trace and intermediate resolution steps
+
+---
+
+### 2.2 Validate a composition against its template
+
+Ensures the generated composition structure conforms to the constraints of its openEHR OPT template.
+
+```bash
+kehrnel-validate \
+  -c samples/out/tumourNew.json \
+  -t samples/templates/T-IGR-TUMOUR-SUMMARY.opt \
+  -v
+```
+
+**Parameters:**
+
+- `-c`, `--composition`: Path to the composition JSON file to validate
+- `-t`, `--template`: Path to the OPT template file
+- `-v`, `--verbose`: *(optional)* Show all validation issues, including warnings and info
+
+You can also pipe the composition through stdin:
 
 ```bash
 comp=$(kehrnel-generate -t templates/TUMOUR.opt --random)
 printf "%s" "$comp" | kehrnel-validate -t templates/TUMOUR.opt -
 ```
+
+---
 
 ### 2.3 Transform canonical JSON to flattened and back
 
@@ -83,22 +114,16 @@ printf "%s" "$comp" | kehrnel-validate -t templates/TUMOUR.opt -
 # Flatten a canonical JSON file
 kehrnel-transform canonical.json --flatten -o flat.json
 
-# Expand it back to canonical form
+# Expand a flattened JSON file back to canonical structure
 kehrnel-transform flat.json --expand -o canonical.json
 ```
 
-### 2.4 Ingest into MongoDB Atlas
+**Parameters:**
 
-```bash
-kehrnel-ingest flat.json \
-  --dsn "$MONGODB_URI" \
-  --db ehr \
-  --collection comps
-```
-
-Check the playground Grafana dashboards or query from the API to validate ingestion.
-
----
+- Input file: Either canonical or flattened JSON
+- `--flatten`: Convert canonical → flattened representation
+- `--expand`: Convert flattened → canonical representation
+- `-o`, `--output`: Path to save the result
 
 ## 🧱 Project Structure
 
