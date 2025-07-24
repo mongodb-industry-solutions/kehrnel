@@ -61,31 +61,8 @@ kehrnel-generate \
 - `--random`: Generate a full composition with randomized values.
 - `--minimal`: Generate a minimal valid skeleton (no values).
 - `-o`: (optional) Path to write the output instead of printing to stdout.
-```
-### 2.2 Map a source file into an openEHR Composition
 
-You can convert external source documents (e.g., CDA, HL7v2, custom XML/CSV) into a canonical openEHR composition JSON using a YAML mapping definition.
-
-```bash
-kehrnel-map \
-  -m samples/mappings/tumour_mapping.yaml \
-  -s samples/in/fiche_tumour.xml \
-  -t samples/templates/T-IGR-TUMOUR-SUMMARY.opt \
-  -o samples/out/tumourNew.json \
-  --trace
-```
-
-**Parameters:**
-
-- `-m`, `--mapping`: Path to the YAML mapping file (defines source-to-openEHR path rules)
-- `-s`, `--source`: Path to the input source file (e.g., XML, CSV, FHIR JSON)
-- `-t`, `--template`: Path to the OPT template (optional but improves path validation)
-- `-o`, `--output`: Output file for the resulting composition JSON
-- `--trace`: *(optional)* Shows detailed mapping trace and intermediate resolution steps
-
----
-
-### 2.3 Validate a composition against its template
+### 2.2 Validate a composition against its template
 
 Ensures the generated composition structure conforms to the constraints of its openEHR OPT template.
 
@@ -109,9 +86,30 @@ comp=$(kehrnel-generate -t templates/TUMOUR.opt --random)
 printf "%s" "$comp" | kehrnel-validate -t templates/TUMOUR.opt -
 ```
 
+### 2.3 Map a source file into an openEHR Composition
+
+You can convert external source documents (e.g., CDA, HL7v2, custom XML/CSV) into a canonical openEHR composition JSON using a YAML mapping definition.
+
+```bash
+kehrnel-map \
+  -m samples/mappings/tumour_mapping.yaml \
+  -s samples/in/fiche_tumour.xml \
+  -t samples/templates/T-IGR-TUMOUR-SUMMARY.opt \
+  -o samples/out/tumourNew.json \
+  --trace
+```
+
+**Parameters:**
+
+- `-m`, `--mapping`: Path to the YAML mapping file (defines source-to-openEHR path rules)
+- `-s`, `--source`: Path to the input source file (e.g., XML, CSV, FHIR JSON)
+- `-t`, `--template`: Path to the OPT template (optional but improves path validation)
+- `-o`, `--output`: Output file for the resulting composition JSON
+- `--trace`: *(optional)* Shows detailed mapping trace and intermediate resolution steps
+
 ---
 
-### 2.3 Transform canonical JSON to flattened and back
+### 2.4 Transform canonical JSON to flattened and back
 
 ```bash
 # Flatten a canonical JSON file
@@ -128,7 +126,7 @@ kehrnel-transform flat.json --expand -o canonical.json
 - `--expand`: Convert flattened → canonical representation
 - `-o`, `--output`: Path to save the result
 
-## 🧱 Project Structure
+## Project Structure
 
 ```
 kehrnel/
@@ -151,7 +149,7 @@ kehrnel/
 
 ---
 
-## 🧩 Extending `kehrnel`
+## Extending `kehrnel`
 
 You can easily extend `kehrnel` by:
 
@@ -160,17 +158,6 @@ You can easily extend `kehrnel` by:
 - Implementing new **persistence adapters** (e.g., Elastic, SQL)
 - Adding CLI commands by dropping files in `cli/` with Typer apps
 
-### 💡 Tip for CLI typing
-
-Typer 0.12 still prefers:
-
-```python
-from typing import Optional
-def main(opt: Optional[Path] = None): ...
-```
-
-Avoid using modern `Path | None` typing to ensure compatibility.
----
 
 ## 🤝 Acknowledgements
 
