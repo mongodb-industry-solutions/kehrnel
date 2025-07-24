@@ -61,7 +61,7 @@ kehrnel-generate \
 - `--random`: Generate a full composition with randomized values.
 - `--minimal`: Generate a minimal valid skeleton (no values).
 - `-o`: (optional) Path to write the output instead of printing to stdout.
-
+```
 ### 2.2 Map a source file into an openEHR Composition
 
 You can convert external source documents (e.g., CDA, HL7v2, custom XML/CSV) into a canonical openEHR composition JSON using a YAML mapping definition.
