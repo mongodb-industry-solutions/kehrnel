@@ -14,11 +14,29 @@ authors = [{ name = "Your Name", email = "you@example.com" }]
 dependencies = [
     "PyYAML>=6",
     "tabulate>=0.9",
+    "lxml>=4.9",  # Added for XML parsing
 ]
 
 [project.optional-dependencies]
 cli   = ["typer[all]>=0.9", "json5>=0.9"]   
 mongo = ["pymongo>=4"]          # only if you want Mongo persistence
+api = [
+    "fastapi>=0.104",
+    "uvicorn[standard]>=0.24",
+    "motor>=3.3",  # Async MongoDB driver
+    "python-multipart>=0.0.6",  # For file uploads
+    "pydantic>=2.5",
+]
+all = [
+    "typer[all]>=0.9",
+    "json5>=0.9",
+    "pymongo>=4",
+    "fastapi>=0.104",
+    "uvicorn[standard]>=0.24",
+    "motor>=3.3",
+    "python-multipart>=0.0.6",
+    "pydantic>=2.5",
+]
 
 [project.scripts]
 kehrnel-generate = "cli.generate:app"
@@ -26,6 +44,7 @@ kehrnel-map      = "cli.map:app"
 kehrnel-validate = "cli.validate:app"
 kehrnel-ingest   = "cli.ingest:app"
 kehrnel-transform= "cli.transform:app"
+kehrnel-api      = "api.internal.api_server:main"  # New API server command
 
 
 # ---------------------------------------------------------------------------
@@ -40,6 +59,22 @@ packages = [
     "ingest",
     "persistence",
     "api",
+    "api.internal",  # Added for the internal API
     "aql",
     "transform",
 ]
+
+# ---------------------------------------------------------------------------
+# Development dependencies
+# ---------------------------------------------------------------------------
+[tool.setuptools.package-data]
+"*" = ["*.yaml", "*.yml", "*.json"]
+
+# ---------------------------------------------------------------------------
+# Optional: Configure uvicorn for development
+# ---------------------------------------------------------------------------
+[tool.uvicorn]
+host = "0.0.0.0"
+port = 8000
+reload = true
+log-level = "info"
