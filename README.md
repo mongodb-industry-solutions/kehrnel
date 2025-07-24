@@ -15,7 +15,7 @@ It also powers the **MongoDB Healthcare Playground**, a demo stack with MongoDB 
 
 ---
 
-## 🚀 Features
+## Features
 
 | #   | Utility               | CLI | Python API | Purpose                                                |
 | --- | --------------------- | --- | ---------- | ------------------------------------------------------ |
@@ -28,7 +28,7 @@ It also powers the **MongoDB Healthcare Playground**, a demo stack with MongoDB 
 
 ---
 
-## 🛠 Installation
+## Installation
 
 ### 1. Development Mode (Library + CLI)
 
@@ -43,7 +43,7 @@ This will install all required dependencies including Typer (for CLI) and PyMong
 
 ---
 
-## ⚡ Quick Usage
+## Quick Usage
 
 ### 2.1 Generate a minimal or random composition
 
