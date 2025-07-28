@@ -1,0 +1,34 @@
+#######################
+### Create an EHR  ####
+#######################
+
+curl -X POST 'http://127.0.0.1:8000/v1/ehr' \
+-H 'Content-Type: application/json' \
+-d '{"subject": {"id": "patient-for-get-test"}}'
+
+#######################
+###### GET EHR  #######
+#######################
+
+curl -X GET 'http://localhost:8000/v1/ehr/5e96bbff-11ea-4173-8243-ca18026f634f'
+curl -X GET 'http://localhost:8000/vi/ehr/5e96bbff-11ea-4173-8243-ca18026f634f'
+
+#####################
+##Update EHR Status##
+#####################
+
+ehr_id = "f91d8da8-349a-403d-809d-cfc196b2bfef"
+ETag = "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6::my-openehr-server::1"
+
+curl -v -X PUT 'http://localhost:8000/v1/ehr/f91d8da8-349a-403d-809d-cfc196b2bfef/ehr_status' \
+-H 'Content-Type: application/json' \
+-H 'If-Match: "05023d78-63a4-4b49-bbda-45d95d0b909e::my-openehr-server::1"' \
+-d '{
+    "subject": {
+        "id": "patient-for-status-update"
+    },
+    "is_modifiable": false,
+    "is_queryable": true
+}'
+
+
