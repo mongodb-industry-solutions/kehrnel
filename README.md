@@ -9,7 +9,7 @@ It also powers the **MongoDB Healthcare Playground**, a demo stack with MongoDB 
 ```
  ┌─────────────┐       REST/CLI        ┌────────────────────────┐
  │  kehrnel    │ <───────────────────▶ │ MongoDB Healthcare Play│
- │ (utilities) │  bidirectional sync  │   ground (demo stack)   │
+ │ (utilities) │  bidirectional sync   │   ground (demo stack)  │
  └─────────────┘                       └────────────────────────┘
 ```
 
@@ -20,13 +20,13 @@ It also powers the **MongoDB Healthcare Playground**, a demo stack with MongoDB 
 | #   | Utility                    | CLI | Python API | REST API | Purpose                                                |
 | --- | -------------------------- | --- | ---------- | -------- | ------------------------------------------------------ |
 | 0.0 | **kehrnel‑map**           | ✔︎  | ✔︎         | ✔︎       | Map HL7 CDA / FHIR / other formats → openEHR JSON      |
-| 0.1 | **kehrnel‑generate**      | ✔︎  | ✔︎         | –        | Generate minimal or random openEHR compositions        |
+| 0.1 | **kehrnel‑generate**      | ✔︎  | ✔︎         | –       | Generate minimal or random openEHR compositions        |
 | 0.2 | **kehrnel‑validate**      | ✔︎  | ✔︎         | ✔︎       | Validate compositions against an openEHR OPT           |
 | 0.3 | **kehrnel‑transform**     | ✔︎  | ✔︎         | ✔︎       | Transform: Canonical ⇄ Flattened JSON                  |
-| 0.4 | **kehrnel‑ingest**        | ✔︎  | ✔︎         | –        | Ingest JSON into MongoDB Atlas (bulk or single)        |
-| 0.5 | **document‑identifier**   | –   | ✔︎         | ✔︎       | Auto-identify document types and assign handlers       |
-| 0.6 | **mapping‑studio‑api**    | –   | –          | ✔︎       | REST API for Mapping Studio integration                |
-| 0.7 | **openEHR Demo API**      | –   | ✔︎         | ✔︎       | Minimal REST PoC for experimentation                   |
+| 0.4 | **kehrnel‑ingest**        | ✔︎  | ✔︎         | –       | Ingest JSON into MongoDB Atlas (bulk or single)        |
+| 0.5 | **kehrnel‑identify**      | ✔︎  | ✔︎         | ✔︎       | Auto-identify document types with pattern matching     |
+| 0.6 | **mapping‑studio‑api**    | –  | –         | ✔︎       | REST API for Mapping Studio integration                |
+| 0.7 | **openEHR Demo API**      | –  | ✔︎         | ✔︎       | Minimal REST PoC for experimentation                   |
 
 ---
 
@@ -66,14 +66,14 @@ python -m api.internal.api_server
 
 ## Quick Usage
 
-### 2.1 Generate a minimal or random composition
+### Generate a minimal or random composition
 
-You can generate a valid openEHR composition from a template directly — either empty, minimal, or filled with random values.
+Generate a valid openEHR composition from a template — either empty, minimal, or filled with random values.
 
 ```bash
 kehrnel-generate \                                                              
-  -t samples/templates/T-IGR-TUMOUR-SUMMARY.opt \
-  -o samples/out/tomourExample.json \
+  -t path/to/template.opt \
+  -o output/composition.json \
   --random
 ```
 **Parameters:**
@@ -83,14 +83,14 @@ kehrnel-generate \
 - `--minimal`: Generate a minimal valid skeleton (no values)
 - `-o`: (optional) Path to write the output instead of printing to stdout
 
-### 2.2 Validate a composition against its template
+### Validate a composition against its template
 
-Ensures the generated composition structure conforms to the constraints of its openEHR OPT template.
+Ensure the generated composition structure conforms to the constraints of its openEHR OPT template.
 
 ```bash
 kehrnel-validate \
-  -c samples/out/tumourNew.json \
-  -t samples/templates/T-IGR-TUMOUR-SUMMARY.opt \
+  -c path/to/composition.json \
+  -t path/to/template.opt \
   -v
 ```
 
@@ -103,20 +103,20 @@ kehrnel-validate \
 You can also pipe the composition through stdin:
 
 ```bash
-comp=$(kehrnel-generate -t templates/TUMOUR.opt --random)
-printf "%s" "$comp" | kehrnel-validate -t templates/TUMOUR.opt -
+comp=$(kehrnel-generate -t template.opt --random)
+printf "%s" "$comp" | kehrnel-validate -t template.opt -
 ```
 
-### 2.3 Map a source file into an openEHR Composition
+### Map a source file into an openEHR Composition
 
-You can convert external source documents (e.g., CDA, HL7v2, custom XML/CSV) into a canonical openEHR composition JSON using a YAML mapping definition.
+Convert external source documents (e.g., CDA, HL7v2, custom XML/CSV) into a canonical openEHR composition JSON using a YAML mapping definition.
 
 ```bash
 kehrnel-map \
-  -m samples/mappings/tumour_mapping.yaml \
-  -s samples/in/fiche_tumour.xml \
-  -t samples/templates/T-IGR-TUMOUR-SUMMARY.opt \
-  -o samples/out/tumourExample.json \
+  -m path/to/mapping.yaml \
+  -s path/to/source.xml \
+  -t path/to/template.opt \
+  -o output/composition.json \
   --trace
 ```
 
@@ -128,7 +128,7 @@ kehrnel-map \
 - `-o`, `--output`: Output file for the resulting composition JSON
 - `--trace`: *(optional)* Shows detailed mapping trace and intermediate resolution steps
 
-### 2.4 Transform canonical JSON to flattened and back
+### Transform canonical JSON to flattened and back
 
 ```bash
 # Flatten a canonical JSON file
@@ -147,23 +147,201 @@ kehrnel-transform flat.json --expand -o canonical.json
 
 ---
 
-## API Usage
+## Document Identification System
 
-### Document Identification API
+`kehrnel-identify` and the Mapping-Studio API share the **same pattern engine** (`DocumentIdentifier`). Patterns are loaded from multiple sources:
 
-The system can automatically identify document types and suggest appropriate handlers:
+1. **patterns.yaml** – the default pattern file next to `document_identifier.py` (can be excluded)
+2. **Extra pattern files** – optional YAML or JSON files passed by the caller
+3. **MongoDB collection `patterns`** – patterns persisted through the API (loaded at runtime by FastAPI)
+
+By default, the built-in `patterns.yaml` is always loaded. Use `--no-default` to load **only** your custom pattern files.
+
+### CLI – identify files or directories
+
+```bash
+# Single file with default patterns only
+kehrnel-identify -d path/to/doc.xml -o result.json
+
+# Default patterns + customer-specific patterns
+kehrnel-identify -d path/to/doc.xml -o result.json -p customer_patterns.yaml
+
+# ONLY customer patterns (exclude built-in patterns.yaml)
+kehrnel-identify -d path/to/doc.xml -o result.json -p customer.yml --no-default
+
+# Chain multiple pattern files (option can be repeated)
+kehrnel-identify -d samples/in/data -o results.json -p core.yml -p extra.json
+
+# Whole tree with extra patterns and debug output
+kehrnel-identify -d samples/in/data -o results.json --recursive -p custom.yaml --debug
+```
+
+| **Options** | **Default** | **Description** |
+|-------------|-------------|-----------------|
+| -p, --patterns | None | Extra YAML or JSON pattern files (can be repeated) |
+| --no-default | False | Ignore the built-in src/mapper/patterns.yaml |
+| --glob | * | Glob pattern to select files |
+| --recursive / --no-recursive | --recursive | Descend into sub-folders |
+| --debug | *off* | Prints every rule that was tested |
+
+### Pattern definition (YAML or JSON)
+
+Patterns can be defined in YAML or JSON files. Each file must contain a list/array of pattern objects:
+
+```yaml
+# patterns.yaml or custom_patterns.yaml
+- name: imaging_cda
+  handler: xml
+  priority: 90
+  xpath_patterns:
+    - "//cda:code[@code='11528-7']"
+  namespaces: {cda: "urn:hl7-org:v3"}
+
+- name: laboratory_csv
+  handler: csv
+  priority: 80
+  csv_headers:
+    - patientid
+    - test
+    - resultat
+```
+
+```json
+// patterns.json
+[
+  {
+    "name": "dicom_csv",
+    "handler": "csv",
+    "priority": 75,
+    "csv_headers": [
+      "accessionnumber",
+      "patientid",
+      "modality"
+    ]
+  }
+]
+```
+
+*All keys are **AND-ed** together – a document either matches 100% or it does not.*
+
+### Python API usage
 
 ```python
 from mapper.document_identifier import DocumentIdentifier
 
-identifier = DocumentIdentifier()
+# Default behaviour (patterns.yaml only)
+id1 = DocumentIdentifier()
+
+# Default patterns + one customer-specific file
+id2 = DocumentIdentifier(pattern_files=["customer_patterns.yaml"])
+
+# ONLY customer patterns (exclude built-in patterns.yaml)
+id3 = DocumentIdentifier(
+    pattern_files=["customer_patterns.yaml"],
+    include_default=False
+)
+
+# Multiple files without default patterns
+id4 = DocumentIdentifier(
+    pattern_files=["core.yml", "extra.json"],
+    include_default=False
+)
+
+# With runtime patterns from your application
+runtime_patterns = [DocumentPattern(...), ...]
+id5 = DocumentIdentifier(patterns=runtime_patterns)
+```
+
+### Managing patterns through the API
+
+| **Method & Path** | **Purpose** |
+|-------------------|-------------|
+| POST /api/internal/patterns | **Upsert** one pattern (JSON body = pattern fields) |
+| GET /api/internal/patterns | List every active pattern |
+| *(startup)* | API automatically loads all Mongo patterns into the in-memory singleton |
+
+Example:
+
+```bash
+curl -X POST http://localhost:8000/api/internal/patterns \
+     -H "Content-Type: application/json" \
+     -d '{
+           "name": "dicom_csv",
+           "handler": "csv",
+           "csv_headers": [
+             "accessionnumber","patientid","modality","seriesinstanceuid",
+             "studydate","studydescription","studyinstanceuid"
+           ]
+         }'
+```
+
+### Identification result schema
+
+```json
+{
+  "documentType": "laboratory_csv",   // pattern name
+  "handler":     "csv",               // xml | csv | json | hl7v2
+  "file":        "path/to/file.csv",
+  "sampleData":  {                    // one representative row / snippet
+    "patientid": "12345",
+    "test":      "HbA1c",
+    "resultat":  "6.8"
+  },
+  "structure":   {
+    "headers":   ["patientid","test","resultat"],
+    "delimiter": ";"
+  }
+}
+```
+
+**Note**: Because every pattern is unique and evaluated deterministically, no *"ambiguous_csv"* result is emitted any more.
+
+### Pattern loading order and conflicts
+
+Pattern loading behavior depends on the `include_default` parameter:
+
+**Default behavior** (`include_default=True` or `--no-default` not used):
+1. **Base patterns** from `src/mapper/patterns.yaml`
+2. **Extra files** specified via `-p` / `--patterns` (in order)
+3. **MongoDB patterns** (API runtime only)
+
+**Exclusive mode** (`include_default=False` or `--no-default` flag):
+1. **Only extra files** specified via `-p` / `--patterns`
+2. **MongoDB patterns** (API runtime only)
+3. Built-in `patterns.yaml` is completely ignored
+
+When patterns share the same `name`:
+- The **last loaded pattern wins**
+- This allows overriding built-in patterns by reusing their names
+- Final ordering is still determined by the `priority` field
+
+### Bootstrapping a new environment
+
+1. **For shared patterns**: Add core patterns to `src/mapper/patterns.yaml`
+2. **For customer-specific patterns**: Create separate YAML/JSON files
+3. Deploy/launch the API – it loads patterns based on configuration
+4. POST additional patterns to `/api/internal/patterns` for persistence
+5. Use CLI with appropriate flags:
+   - Include defaults: `kehrnel-identify -d data/ -p customer.yaml`
+   - Exclude defaults: `kehrnel-identify -d data/ -p customer.yaml --no-default`
+
+---
+
+## API Usage
+
+### Document Identification API
+
+```python
+from mapper.document_identifier import DocumentIdentifier
+
+# Single file identification
+identifier = DocumentIdentifier(debug=True)
 result = identifier.identify_document("path/to/document.xml")
 
 print(result)
 # {
-#   "documentType": "pmsi_cda",
+#   "documentType": "identified_type",
 #   "handler": "xml",
-#   "confidence": 0.95,
 #   "sampleData": {...},
 #   "structure": {...}
 # }
@@ -174,7 +352,7 @@ print(result)
 #### Identify Document Type
 ```bash
 curl -X POST "http://localhost:8000/api/internal/identify-document" \
-  -F "document=@sample.xml"
+  -F "document=@document.xml"
 ```
 
 #### List/Save Mappings
@@ -186,7 +364,7 @@ curl "http://localhost:8000/api/internal/mappings"
 curl -X POST "http://localhost:8000/api/internal/mappings" \
   -H "Content-Type: application/json" \
   -d '{
-    "documentType": "pmsi_cda",
+    "documentType": "my_document_type",
     "targetTemplate": "template_id",
     "content": "{ ... mapping json ... }",
     "version": "1.0"
@@ -211,43 +389,45 @@ curl -X POST "http://localhost:8000/api/internal/validate-composition" \
   }'
 ```
 
+#### Pattern Management
+```bash
+# List all patterns
+curl "http://localhost:8000/api/internal/patterns"
+
+# Add/Update a pattern (persisted to MongoDB)
+curl -X POST "http://localhost:8000/api/internal/patterns" \
+  -H "Content-Type: application/json" \
+  -d '{ ... pattern definition ... }'
+```
+
 ---
 
 ## Supported Document Types
 
-The document identifier can automatically recognize:
+The document identifier supports pattern-based recognition of various healthcare document formats:
 
-### XML/CDA Documents
-- **PMSI CDA**: French hospital activity records
-- **Fiche Tumeur**: Tumor registry documents
-- **SIMBAD**: Medication administration reports
-- **Generic CDA**: Any HL7 CDA R2 document
+### XML-based Documents
+- HL7 CDA R2 documents
+- Custom XML formats
+- FHIR XML resources
+- Proprietary clinical formats
 
-### CSV Documents
-- **Biology Results**: Lab test results with standard headers
-- **Generic Lab Results**: Various laboratory formats
+### CSV/Delimited Files
+- Laboratory results
+- Patient registries
+- Clinical measurements
+- Custom delimited formats
 
 ### HL7v2 Messages
-- **ADT**: Admission, Discharge, Transfer messages
-- **ORU**: Observation results
-- **ORM**: Order messages
+- ADT (Admission, Discharge, Transfer)
+- ORU (Observation Result)
+- ORM (Order Message)
+- Custom message types
 
-### Custom Formats
-You can add custom document patterns:
-
-```python
-from mapper.document_identifier import DocumentPattern
-
-pattern = DocumentPattern(
-    name="custom_format",
-    handler="xml",
-    required_elements=["CustomRoot", "RequiredElement"],
-    optional_elements=["OptionalElement"],
-    xpath_patterns=["//CustomRoot[@version='1.0']"]
-)
-
-identifier.add_pattern(pattern)
-```
+### JSON Documents
+- FHIR JSON resources
+- Custom JSON structures
+- API responses
 
 ---
 
@@ -256,90 +436,42 @@ identifier.add_pattern(pattern)
 ```
 kehrnel/
 ├── pyproject.toml            # Project configuration and dependencies
-├── README.md                 # You are here!
+├── README.md                 # This file
 ├── LICENSE                   # License information
-├── samples/                  # Example files and test data
-│   ├── in/                   # Input sample documents
-│   │   ├── fiche_tumour.xml  # Tumor record CDA example
-│   │   └── pmsi.xml          # PMSI CDA example
-│   ├── out/                  # Generated output examples
-│   │   ├── tumour*.json      # Various tumor compositions
-│   │   └── pmsi*.json        # PMSI compositions
-│   ├── mappings/             # YAML mapping definitions
-│   │   ├── tumour_mapping.yaml
-│   │   └── pmsi-openehr-complete-mapping.yaml
-│   └── templates/            # openEHR OPT templates
-│       ├── T-IGR-TUMOUR-SUMMARY.opt
-│       └── T-IGR-PMSI-EXTRACT.opt
-└── src/                      # Source code
-    ├── cli/                  # Command-line interfaces (Typer-based)
-    │   ├── __init__.py
-    │   ├── generate.py       # kehrnel-generate command
-    │   ├── validate.py       # kehrnel-validate command
-    │   ├── map.py           # kehrnel-map command
-    │   ├── transform.py      # kehrnel-transform command
-    │   └── ingest.py        # kehrnel-ingest command
-    ├── core/                 # Core openEHR logic
-    │   ├── __init__.py
-    │   ├── generator.py      # Composition generation
-    │   ├── validator.py      # Composition validation
-    │   ├── parser.py         # Template parsing
-    │   ├── models.py         # Data models
-    │   └── store/            # Storage abstractions
-    │       ├── base.py       # Base store interface
-    │       └── factory.py    # Store factory pattern
-    ├── mapper/               # Document mapping engine
-    │   ├── __init__.py
-    │   ├── mapping_engine.py # Core mapping logic
-    │   ├── document_identifier.py  # Auto document type detection
-    │   ├── transforms.py     # Value transformation functions
-    │   ├── handlers/         # Format-specific handlers
-    │   │   ├── __init__.py
-    │   │   ├── xml_handler.py    # XML/CDA handler
-    │   │   └── csv_handler.py    # CSV handler
-    │   └── utils/            # Mapping utilities
-    │       └── trace_mapping.py   # Debug tracing
-    ├── transform/            # JSON transformation utilities
-    │   ├── __init__.py
-    │   ├── core.py           # Core transformation logic
-    │   ├── single.py         # Single document transforms
-    │   ├── reverse_unflatten.py  # Unflatten JSON
-    │   ├── shortcuts.py      # Path shortcuts
-    │   ├── at_code_codec.py  # at-code handling
-    │   ├── rules_engine.py   # Transformation rules
-    │   └── config/           # Configuration files
-    │       ├── mappings.yaml
-    │       ├── shortcuts.json
-    │       └── default_config.jsonc
-    ├── persistence/          # Data persistence layer
-    │   ├── __init__.py
-    │   ├── mongo.py          # MongoDB adapter
-    │   ├── memory.py         # In-memory store
-    │   └── fs.py             # File system store
-    ├── ingest/               # Bulk data ingestion
-    │   ├── __init__.py
-    │   ├── ingest.py         # Core ingestion logic
-    │   ├── bulk.py           # Bulk operations
-    │   ├── mongo.py          # MongoDB ingestion
-    │   ├── fs.py             # File system ingestion
-    │   └── api.py            # API ingestion
-    ├── api/                  # REST API endpoints
-    │   ├── __init__.py
-    │   ├── internal/         # Internal APIs
-    │   │   ├── __init__.py
-    │   │   └── api_server.py # Mapping Studio API server
-    │   └── openehr/          # OpenEHR REST API (WIP)
-    │       ├── __init__.py
-    │       ├── template.py    # Template endpoints
-    │       └── composition.py # Composition endpoints
-    ├── aql/                  # AQL query engine (WIP)
-    │   ├── __init__.py
-    │   └── router.py         # AQL-to-MQL translation
-    └── tests/                # Test suite
-        ├── test_flatten.py
-        ├── test_reverse.py
-        ├── test_roundtrip.py
-        └── fixtures/         # Test data
+├── src/                      # Source code
+│   ├── cli/                  # Command-line interfaces
+│   │   ├── generate.py       # kehrnel-generate command
+│   │   ├── validate.py       # kehrnel-validate command
+│   │   ├── map.py           # kehrnel-map command
+│   │   ├── transform.py      # kehrnel-transform command
+│   │   ├── identify.py       # kehrnel-identify command
+│   │   └── ingest.py        # kehrnel-ingest command
+│   ├── core/                 # Core openEHR logic
+│   │   ├── generator.py      # Composition generation
+│   │   ├── validator.py      # Composition validation
+│   │   ├── parser.py         # Template parsing
+│   │   └── models.py         # Data models
+│   ├── mapper/               # Document mapping engine
+│   │   ├── mapping_engine.py # Core mapping logic
+│   │   ├── document_identifier.py  # Document type detection
+│   │   ├── patterns.yaml     # Document identification patterns
+│   │   ├── transforms.py     # Value transformation functions
+│   │   └── handlers/         # Format-specific handlers
+│   │       ├── xml_handler.py
+│   │       ├── csv_handler.py
+│   │       ├── json_handler.py
+│   │       └── hl7v2_handler.py
+│   ├── transform/            # JSON transformation utilities
+│   │   ├── core.py           # Core transformation logic
+│   │   ├── reverse_unflatten.py  # Unflatten JSON
+│   │   └── config/           # Configuration files
+│   ├── persistence/          # Data persistence layer
+│   │   ├── mongo.py          # MongoDB adapter
+│   │   ├── memory.py         # In-memory store
+│   │   └── fs.py             # File system store
+│   └── api/                  # REST API endpoints
+│       └── internal/         
+│           └── api_server.py # Mapping Studio API server
 ```
 
 ---
@@ -349,7 +481,7 @@ kehrnel/
 kehrnel powers the Mapping Studio feature in the MongoDB OpenEHR Playground:
 
 1. **Document Upload**: Upload clinical documents in various formats
-2. **Auto-Identification**: System identifies document type and structure
+2. **Auto-Identification**: System identifies document type and structure using pattern matching
 3. **Visual Mapping**: Create mappings visually or with code editor
 4. **Batch Processing**: Transform multiple documents at once
 5. **Validation**: Ensure outputs conform to openEHR templates
@@ -358,7 +490,7 @@ kehrnel powers the Mapping Studio feature in the MongoDB OpenEHR Playground:
 
 ```bash
 # MongoDB connection
-MONGODB_URL=mongodb+srv://usr:pwd@cluster.mongodb.net/openehr_playground
+MONGODB_URL=mongodb+srv://usr:pwd@cluster.mongodb.net/database
 
 # API configuration
 API_HOST=0.0.0.0
@@ -372,16 +504,22 @@ BACKEND_URL=http://localhost:8000
 
 ---
 
-## Extending `kehrnel`
+## Performance and Scalability
 
-You can easily extend `kehrnel` by:
+### Document Identification
+- **Pattern Caching**: Patterns loaded once and cached in memory
+- **Priority-based Evaluation**: Higher priority patterns checked first
+- **Early Exit**: First matching pattern wins
+- **Batch Processing**: Identify entire directories efficiently
 
-- Adding new **source handlers** (`mapper/handlers/*.py`) to support other formats (CSV, FHIR, etc.)
-- Creating custom **document patterns** for auto-identification
-- Writing custom **generators** or **transformers** (`core/`)
-- Implementing new **persistence adapters** (e.g., Elastic, SQL)
-- Adding CLI commands by dropping files in `cli/` with Typer apps
-- Extending the REST API with new endpoints
+### MongoDB Integration
+- **Pattern Persistence**: Custom patterns stored in MongoDB
+- **Lazy Loading**: Patterns loaded on startup from both YAML and database
+- **Singleton Pattern**: One DocumentIdentifier instance per process
+
+---
+
+## Extending kehrnel
 
 ### Adding a Custom Handler
 
@@ -394,26 +532,38 @@ class CustomHandler(BaseHandler):
         # Parse your custom format
         pass
     
-    def extract_value(self, xpath, namespaces=None):
+    def extract_value(self, query, namespaces=None):
         # Extract values using your format's query language
         pass
 ```
 
-### Adding Document Patterns
+### Creating Document Patterns
+
+```yaml
+# src/mapper/patterns.yaml
+- name: your_document_type
+  handler: xml|csv|json|hl7v2|custom
+  priority: 1-100  # Higher = checked first
+  required_elements: [...]
+  xpath_patterns: [...]  # XML only
+  csv_headers: [...]     # CSV only
+  exclude_elements: [...] 
+```
+
+### Adding CLI Commands
+
+Create a new file in `cli/` with a Typer app:
 
 ```python
-# In your code or via API
-pattern = DocumentPattern(
-    name="my_custom_doc",
-    handler="custom",
-    required_elements=["root", "data"],
-    xpath_patterns=["//root[@type='custom']"]
-)
+# cli/custom_command.py
+import typer
 
-# Via API
-curl -X POST "http://localhost:8000/api/internal/patterns" \
-  -H "Content-Type: application/json" \
-  -d '{ ... pattern definition ... }'
+app = typer.Typer()
+
+@app.command()
+def main(input_file: Path, output_file: Path):
+    """Your custom command description"""
+    # Implementation
 ```
 
 ---
@@ -424,6 +574,29 @@ When running the API server, interactive documentation is available at:
 
 - **Swagger UI**: http://localhost:8000/docs
 - **ReDoc**: http://localhost:8000/redoc
+
+---
+
+## Testing
+
+Run the test suite:
+
+```bash
+# Run all tests
+pytest
+
+# Run specific test module
+pytest tests/test_identifier.py
+
+# Run with coverage
+pytest --cov=src --cov-report=html
+```
+
+---
+
+## License
+
+This project is licensed under the terms specified in the LICENSE file.
 
 ---
 

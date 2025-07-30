@@ -40,12 +40,12 @@ all = [
 
 [project.scripts]
 kehrnel-generate = "cli.generate:app"
+kehrnel-identify = "cli.identify:app"
 kehrnel-map      = "cli.map:app"
 kehrnel-validate = "cli.validate:app"
 kehrnel-ingest   = "cli.ingest:app"
 kehrnel-transform= "cli.transform:app"
-kehrnel-api      = "api.internal.api_server:main"  # New API server command
-
+kehrnel-api      = "api.internal.api_server:main"  
 
 # ---------------------------------------------------------------------------
 # tell setuptools to use the `src/` layout
@@ -59,7 +59,7 @@ packages = [
     "ingest",
     "persistence",
     "api",
-    "api.internal",  # Added for the internal API
+    "api.internal",
     "aql",
     "transform",
 ]
@@ -69,6 +69,7 @@ packages = [
 # ---------------------------------------------------------------------------
 [tool.setuptools.package-data]
 "*" = ["*.yaml", "*.yml", "*.json"]
+"mapper" = ["patterns.yaml"]
 
 # ---------------------------------------------------------------------------
 # Optional: Configure uvicorn for development

@@ -2,9 +2,7 @@
 
 import os
 from dotenv import load_dotenv
-load_dotenv()
-
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Body
+from fastapi import FastAPI, UploadFile, Query, File, Form, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -16,6 +14,22 @@ import tempfile
 from pathlib import Path
 from bson import ObjectId
 import motor.motor_asyncio
+from functools import lru_cache         
+from contextlib import suppress 
+
+
+@lru_cache
+def get_identifier() -> "DocumentIdentifier":
+    """
+    Lazily build and cache ONE DocumentIdentifier for this process.
+    Only loads patterns from MongoDB, NOT from patterns.yaml.
+    """
+    return DocumentIdentifier(
+        patterns=[], 
+        include_default=False,  # ← Add this parameter!
+        debug=False
+    )
+
 
 # Initialize the components we need
 # For now, we'll create placeholder classes if the actual imports fail
@@ -28,11 +42,12 @@ try:
     from mapper.handlers.xml_handler import XMLHandler
     from mapper.handlers.csv_handler import CSVHandler
     from mapper.handlers.hl7v2_handler import HL7v2Handler
+
 except ImportError as e:
     print(f"Warning: Some kehrnel components are not implemented yet: {e}")
     print("Creating placeholder classes for development...")
     
-    # Placeholder classes for development
+        
     class kehrnelGenerator:
         def __init__(self, template_parser):
             self.template_parser = template_parser
@@ -67,9 +82,8 @@ except ImportError as e:
     class HL7v2Handler:
         pass
     
-    # Import DocumentIdentifier and DocumentPattern from the fixed file
     try:
-        from mapper.document_identifier import DocumentIdentifier, DocumentPattern
+            from mapper.document_identifier import DocumentIdentifier, DocumentPattern
     except:
         # If still failing, create minimal versions
         class DocumentPattern:
@@ -86,7 +100,6 @@ except ImportError as e:
                 return {
                     "documentType": "unknown_xml",
                     "handler": "xml",
-                    "confidence": 0.5,
                     "sampleData": {},
                     "structure": {"elements": ["root"]}
                 }
@@ -165,26 +178,51 @@ async def save_temp_file(content: bytes, suffix: str) -> Path:
 # API Endpoints
 @app.on_event("startup")
 async def startup_db_client():
-    if db is not None:
-        try:
-            # Test the connection
-            await motor_client.admin.command('ping')
-            print("✅ Connected to MongoDB successfully!")
-            
-            # Ensure required collections exist
-            collections = await db.list_collection_names()
-            if 'mappings' not in collections:
-                await db.create_collection('mappings')
-                print("✅ Created 'mappings' collection")
-            if 'templates' not in collections:
-                await db.create_collection('templates')
-                print("✅ Created 'templates' collection")
-                
-        except Exception as e:
-            print(f"❌ MongoDB connection test failed: {e}")
-            print("Please check your MONGODB_URL environment variable")
-    else:
-        print("❌ MongoDB client not initialized")
+    if db is None:
+        print("❌ MongoDB client not initialised")
+        return
+
+    try:
+        await motor_client.admin.command("ping")
+        print("✅ Connected to MongoDB")
+
+        # Ensure collections exist
+        collections = await db.list_collection_names()
+        for coll in ("mappings", "templates", "patterns", "type_template_associations"):
+            if coll not in collections:
+                await db.create_collection(coll)
+                print(f"✅ Created '{coll}' collection")
+
+        # Load ONLY persisted patterns from MongoDB (not from patterns.yaml)
+        identifier = get_identifier()
+        count_before = len(identifier.patterns)
+        
+        # Load patterns from MongoDB only
+        async for pat in db.patterns.find():
+            try:
+                # Ensure we have all required fields with defaults
+                pattern_data = {
+                    "name": pat.get("name"),
+                    "handler": pat.get("handler"),
+                    "priority": pat.get("priority", 50),
+                    "required_elements": pat.get("required_elements", []),
+                    "xpath_patterns": pat.get("xpath_patterns", []),
+                    "namespaces": pat.get("namespaces", {}),
+                    "csv_headers": pat.get("csv_headers", []),
+                    "exclude_elements": pat.get("exclude_elements", [])
+                }
+                identifier.patterns.append(DocumentPattern(**pattern_data))
+            except Exception as e:
+                print(f"⚠️  Skipping invalid pattern from DB: {e}")
+        
+        # Re-sort by priority after loading
+        identifier.patterns.sort(key=lambda p: p.priority, reverse=True)
+        
+        print(f"🚀 Loaded {len(identifier.patterns) - count_before} patterns from MongoDB "
+              f"(total {len(identifier.patterns)})")
+
+    except Exception as e:
+        print(f"❌ MongoDB startup failed: {e}")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
@@ -193,41 +231,119 @@ async def shutdown_db_client():
 
 @app.get("/")
 async def root():
-    """API root endpoint"""
+    """API root endpoint with comprehensive endpoint documentation"""
     return {
         "message": "Kehrnel Mapping Studio API",
         "version": "1.0.0",
-        "endpoints": [
-            "/api/internal/identify-document",
-            "/api/internal/mappings",
-            "/api/internal/transform",
-            "/api/internal/validate-composition"
-        ]
+        "description": "API for document identification, mapping, and transformation to openEHR format",
+        "endpoints": {
+            "mappings": {
+                "identification": {
+                    "POST /api/internal/identify-document": "Identify document type with optional debug mode (?debug=true)",
+                    "POST /api/internal/test-pattern": "Test a pattern against a document without saving"
+                },
+                "patterns": {
+                    "GET /api/internal/patterns": "List all active patterns with full details",
+                    "POST /api/internal/patterns": "Add or update a pattern",
+                    "DELETE /api/internal/patterns/{name}": "Delete a pattern",
+                    "POST /api/internal/patterns/import": "Import patterns from JSON file"
+                },
+                "definitions": {
+                    "GET /api/internal/mappings": "Get all mapping definitions",
+                    "POST /api/internal/mappings": "Create or update a mapping",
+                    "DELETE /api/internal/mappings/{id}": "Delete a mapping",
+                    "GET /api/internal/mappings/by-type/{type}": "Get mapping for specific document type",
+                    "POST /api/internal/mappings/test": "Test a mapping without saving"
+                },
+                "associations": {
+                    "GET /api/internal/type-template-associations": "Get document type to template associations",
+                    "POST /api/internal/type-template-associations": "Save type-template association"
+                }
+            },
+            "transformation": {
+                "POST /api/internal/transform": "Transform document using mapping to openEHR composition",
+                "POST /api/internal/validate-composition": "Validate composition against template"
+            },
+            "utilities": {
+                "GET /api/internal/handlers": "List available document handlers",
+                "GET /healthz": "Health check endpoint"
+            }
+        },
+        "documentation": {
+            "openapi": "/docs",
+            "redoc": "/redoc"
+        }
     }
 
+class IdentificationResult(BaseModel):
+    documentType: str
+    handler: str
+    filename: str
+    sampleData: dict
+    structure: dict
+
 @app.post("/api/internal/identify-document")
-async def identify_document(document: UploadFile = File(...)):
-    """Identify document type and handler from uploaded file"""
+async def identify_document(
+    document: UploadFile = File(...),
+    debug: bool = Query(False, description="Enable debug mode for pattern matching details")
+):
+    """
+    Identify document with optional debug information.
+    Returns detailed pattern matching info when debug=true.
+    """
+    tmp_path = await save_temp_file(await document.read(), Path(document.filename).suffix)
+    
     try:
-        # Save uploaded file temporarily
-        content = await document.read()
-        file_path = await save_temp_file(content, Path(document.filename).suffix)
+        identifier = get_identifier()
         
-        try:
-            # Use document identifier
-            result = document_identifier.identify_document(file_path)
+        # If debug mode, capture pattern evaluation
+        if debug:
+            debug_info = {
+                "patternsChecked": [],
+                "matchedPattern": None,
+                "evaluationOrder": []
+            }
             
-            # Add filename to result
+            # Manually check each pattern to capture debug info
+            for pattern in identifier.patterns:
+                debug_info["evaluationOrder"].append({
+                    "name": pattern.name,
+                    "priority": pattern.priority,
+                    "handler": pattern.handler
+                })
+                
+                # Use a temporary identifier with just this pattern
+                temp_identifier = DocumentIdentifier(patterns=[pattern])
+                result = temp_identifier.identify_document(tmp_path)
+                
+                pattern_matched = result.get("documentType") == pattern.name
+                debug_info["patternsChecked"].append({
+                    "name": pattern.name,
+                    "matched": pattern_matched,
+                    "handler": pattern.handler
+                })
+                
+                if pattern_matched:
+                    debug_info["matchedPattern"] = pattern.name
+                    result["debugInfo"] = debug_info
+                    result["confidence"] = f"{pattern.priority}/100"
+                    result["filename"] = document.filename
+                    return result
+            
+            # No pattern matched, use default identification
+            result = identifier.identify_document(tmp_path)
+            result["debugInfo"] = debug_info
             result["filename"] = document.filename
-            
+            return result
+        else:
+            # Normal identification without debug
+            result = identifier.identify_document(tmp_path)
+            result["filename"] = document.filename
             return result
             
-        finally:
-            # Cleanup
-            file_path.unlink(missing_ok=True)
-            
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        with suppress(FileNotFoundError):
+            tmp_path.unlink()
 
 @app.get("/api/internal/mappings")
 async def get_mappings():
@@ -528,37 +644,247 @@ async def test_mapping(request: TransformRequest):
             "error": str(e)
         }
 
+@app.get("/api/internal/patterns")
+async def get_patterns():
+    """Get all active patterns with full details"""
+    identifier = get_identifier()
+    return {
+        "patterns": [
+            {
+                "name": p.name,
+                "handler": p.handler,
+                "priority": p.priority,
+                "required_elements": p.required_elements,
+                "xpath_patterns": p.xpath_patterns,
+                "namespaces": p.namespaces,
+                "csv_headers": p.csv_headers,
+                "exclude_elements": p.exclude_elements,
+            }
+            for p in identifier.patterns
+        ],
+        "count": len(identifier.patterns)
+    }
+
 @app.post("/api/internal/patterns")
-async def add_document_pattern(pattern: Dict[str, Any]):
-    """Add a new document pattern for identification"""
+async def add_or_update_pattern(pattern: Dict[str, Any]):
+    """
+    Add or update a pattern.
+    - Adds to in-memory singleton immediately
+    - Persists to MongoDB for future restarts
+    """
     try:
-        new_pattern = DocumentPattern(
-            name=pattern['name'],
-            handler=pattern['handler'],
-            required_elements=pattern.get('required_elements', []),
-            optional_elements=pattern.get('optional_elements', []),
-            namespaces=pattern.get('namespaces', {}),
-            xpath_patterns=pattern.get('xpath_patterns', []),
-            csv_headers=pattern.get('csv_headers', [])
-        )
+        # Validate pattern structure
+        required_fields = ["name", "handler"]
+        for field in required_fields:
+            if field not in pattern:
+                raise HTTPException(status_code=400, detail=f"Missing required field: {field}")
         
-        document_identifier.add_pattern(new_pattern)
+        # Create pattern object
+        new_pattern = DocumentPattern(**pattern)
         
-        # Optionally save to database for persistence
-        await db.document_patterns.insert_one(pattern)
+        # Add to singleton
+        identifier = get_identifier()
         
-        return {"message": "Pattern added successfully", "patterns": document_identifier.list_patterns()}
+        # Remove existing pattern with same name if exists
+        identifier.patterns = [p for p in identifier.patterns if p.name != new_pattern.name]
+        identifier.patterns.append(new_pattern)
         
+        # Re-sort by priority
+        identifier.patterns.sort(key=lambda p: p.priority, reverse=True)
+        
+        # Persist to MongoDB
+        if db:
+            await db.patterns.replace_one(
+                {"name": new_pattern.name},
+                pattern,
+                upsert=True
+            )
+        
+        return {
+            "message": f"Pattern '{new_pattern.name}' saved successfully",
+            "pattern": pattern,
+            "total_patterns": len(identifier.patterns)
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.delete("/api/internal/patterns/{pattern_name}")
+async def delete_pattern(pattern_name: str):
+    """Delete a pattern from both memory and database"""
+    try:
+        identifier = get_identifier()
+        
+        # Remove from memory
+        original_count = len(identifier.patterns)
+        identifier.patterns = [p for p in identifier.patterns if p.name != pattern_name]
+        
+        if len(identifier.patterns) == original_count:
+            raise HTTPException(status_code=404, detail=f"Pattern '{pattern_name}' not found")
+        
+        # Remove from database
+        if db:
+            await db.patterns.delete_one({"name": pattern_name})
+        
+        return {
+            "message": f"Pattern '{pattern_name}' deleted successfully",
+            "remaining_patterns": len(identifier.patterns)
+        }
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/internal/patterns")
-async def list_document_patterns():
-    """List all registered document patterns"""
-    return {
-        "patterns": document_identifier.list_patterns(),
-        "count": len(document_identifier.patterns)
-    }
+@app.post("/api/internal/test-pattern")
+async def test_pattern(
+    document: UploadFile = File(...),
+    patterns: str = Form(...)
+):
+    """Test a pattern against a document"""
+    try:
+        # Parse pattern from JSON string
+        pattern_data = json.loads(patterns)
+        test_pattern = DocumentPattern(**pattern_data)
+        
+        # Save document temporarily
+        tmp_path = await save_temp_file(await document.read(), Path(document.filename).suffix)
+        
+        try:
+            # Create a temporary identifier with just this pattern
+            temp_identifier = DocumentIdentifier(patterns=[test_pattern])
+            
+            # Test identification
+            result = temp_identifier.identify_document(tmp_path)
+            
+            # Check if it matches
+            matches = result.get("documentType") == test_pattern.name
+            
+            return {
+                "matches": matches,
+                "result": result,
+                "details": {
+                    "documentType": result.get("documentType"),
+                    "handler": result.get("handler"),
+                    "pattern_name": test_pattern.name
+                }
+            }
+        finally:
+            tmp_path.unlink(missing_ok=True)
+            
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/api/internal/patterns/import")
+async def import_patterns(patterns_file: UploadFile = File(...)):
+    """Import multiple patterns from a JSON or YAML file"""
+    try:
+        content = await patterns_file.read()
+        filename = patterns_file.filename.lower()
+        
+        # Parse based on file extension
+        if filename.endswith(('.yaml', '.yml')):
+            patterns_data = yaml.safe_load(content)
+        elif filename.endswith('.json'):
+            patterns_data = json.loads(content)
+        else:
+            # Try to auto-detect format
+            try:
+                patterns_data = json.loads(content)
+            except json.JSONDecodeError:
+                try:
+                    patterns_data = yaml.safe_load(content)
+                except yaml.YAMLError:
+                    raise HTTPException(status_code=400, detail="File must be valid JSON or YAML")
+        
+        if not isinstance(patterns_data, list):
+            raise HTTPException(status_code=400, detail="File must contain an array/list of patterns")
+        
+        imported_count = 0
+        errors = []
+        
+        for pattern_data in patterns_data:
+            try:
+                # Handle optional fields that might be None or missing
+                if 'optional_elements' in pattern_data and not pattern_data['optional_elements']:
+                    pattern_data.pop('optional_elements', None)
+                
+                pattern = DocumentPattern(**pattern_data)
+                
+                # Add to singleton
+                identifier = get_identifier()
+                identifier.patterns = [p for p in identifier.patterns if p.name != pattern.name]
+                identifier.patterns.append(pattern)
+                
+                # Persist to MongoDB
+                if db:
+                    await db.patterns.replace_one(
+                        {"name": pattern.name},
+                        pattern_data,
+                        upsert=True
+                    )
+                
+                imported_count += 1
+            except Exception as e:
+                errors.append({
+                    "pattern": pattern_data.get("name", "unknown"),
+                    "error": str(e)
+                })
+        
+        # Re-sort patterns
+        identifier = get_identifier()
+        identifier.patterns.sort(key=lambda p: p.priority, reverse=True)
+        
+        return {
+            "imported": imported_count,
+            "errors": errors,
+            "total_patterns": len(identifier.patterns)
+        }
+    except (json.JSONDecodeError, yaml.YAMLError) as e:
+        raise HTTPException(status_code=400, detail=f"Invalid file format: {str(e)}")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+# Add type-template associations endpoints
+@app.get("/api/internal/type-template-associations")
+async def get_type_template_associations():
+    """Get all document type to template associations"""
+    if db:
+        associations = {}
+        async for assoc in db.type_template_associations.find():
+            associations[assoc["documentType"]] = assoc["templateId"]
+        return associations
+    return {}
+
+@app.post("/api/internal/type-template-associations")
+async def save_type_template_association(data: Dict[str, str]):
+    """Save a document type to template association"""
+    document_type = data.get("documentType")
+    template_id = data.get("templateId")
+    
+    if not document_type or not template_id:
+        raise HTTPException(status_code=400, detail="Both documentType and templateId are required")
+    
+    if db:
+        await db.type_template_associations.replace_one(
+            {"documentType": document_type},
+            {
+                "documentType": document_type,
+                "templateId": template_id,
+                "updated": datetime.utcnow()
+            },
+            upsert=True
+        )
+    else:
+        raise HTTPException(status_code=503, detail="Database connection not available")
+    
+    return {"message": "Association saved successfully"}
+
+@app.get("/healthz", include_in_schema=False)
+async def healthz():
+    return {"status": "ok", "db": db is not None}
+
+@app.get("/api/internal/handlers")
+async def list_handlers():
+    return ["xml", "csv", "json", "hl7v2"]
 
 def main():
     """Main entry point for the API server"""
