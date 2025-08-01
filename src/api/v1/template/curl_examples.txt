@@ -1,0 +1,12 @@
+###########################
+### Create a TEMPLATE  ####
+###########################
+
+
+curl -v -X POST http://localhost:8000/v1/template \
+-H "Content-Type: application/xml" \
+-d @'T-IGR-BIOLOGY.opt'
+
+curl -X POST http://localhost:8080/ehrbase/rest/openehr/v1/definition/template/adl1.4 \
+  -H "Content-Type: application/xml" \
+  --data-binary @'Vitals.v0.opt'
