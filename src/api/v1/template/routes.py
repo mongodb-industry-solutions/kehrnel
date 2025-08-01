@@ -12,12 +12,9 @@ router = APIRouter(
 )
 
 @router.post(
-    "/",
-    status_code = status.HTTP_201_CREATED,
+    "",
     summary = "Upload a new clinical template",
     description = "Upload a new OPERATIONAL_TEMPLATE (OPT). The request body must be the raw XML content of the .opt file.",
-    responses = create_template_responses,
-    response_class= Response
 )
 async def upload_template(
     response: Response,
@@ -33,10 +30,10 @@ async def upload_template(
     new_template = result["template"]
     etag = result["etag"]
 
-    response.headers["Location"] = f"/v1/template/{new_template.template_id}"
-    response.headers["Etag"] = f'"{etag}"'
+    headers = {
+        "Location": f"/v1/template/{new_template.template_id}",
+        "ETag": f'"{etag}"',
+        "Last-Modified": formatdate(new_template.created_timestamp.timestamp(), usegmt=True),
+    }
 
-    last_modified_gmt = formatdate(new_template.created_timestamp.timestamp(), usegmt=True)
-    response.headers["Last-Modified"] = last_modified_gmt
-
-    return response
+    return Response(status_code=status.HTTP_201_CREATED, headers=headers)
