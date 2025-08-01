@@ -90,3 +90,40 @@ async def create_template(db: AsyncIOMotorDatabase, template_content: str) -> di
         "template": new_template,
         "etag": etag
     }
+
+async def retrieve_template_by_id(db: AsyncIOMotorDatabase, template_id: str) -> dict:
+    """
+    Handles the business logic of retrieving a clinical template by its ID.
+
+    Args:
+        db: The database session.
+        template_id: The unique ID of the template to retrieve
+
+    Returns:
+        A dictionary containing the retrieved template object and its ETag
+
+    Raises:
+        HTTPException: If the template is not found (404)
+    """
+
+    # Fetch the template document from the repository
+    template_doc = await find_template_by_id(template_id, db)
+
+    # Handle the "not found" case
+    if not template_doc:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = f"Template with ID '{template_id}' not found"
+        )
+    
+    # Validate the database data against the Pydantic model
+    template_model = Template.model_validate(template_doc)
+    
+    # Generate the ETag from the template's content
+    etag = generate_template_etag(template_model.content)
+
+    # Return the model and ETag for the route to use
+    return {
+        "template": template_model,
+        "etag": etag
+    }
