@@ -66,8 +66,8 @@ async def create_template(db: AsyncIOMotorDatabase, template_content: str) -> di
     
     # Create the template model instance
     new_template = Template(
-        teamplate_id = template_id,
-        content = template_id,
+        template_id = template_id,
+        content = template_content,
     )
 
     # Convert to a dictionary for database insertion, respecting aliases
