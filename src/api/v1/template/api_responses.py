@@ -30,3 +30,35 @@ create_template_responses = {
         "model": ErrorResponse
     }
 }
+
+get_template_responses = {
+    status.HTTP_200_OK: {
+        "description": "Template found and returned successfully. The body contains the raw XML content.",
+        "content": {
+            "application/xml": {
+                "schema": {
+                    "type": "string",
+                    "format": "binary"
+                },
+                "example": "<?xml version='1.0' encoding='UTF-8'?><template>...</template>"
+            }
+        },
+        "headers": {
+            "ETag": {
+                "description": "The ETag of the template, which is a hash of its content",
+                "schema": {"type": "string"},
+            }
+        }
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "A template with the specified `template_id` does not exist.",
+        "model": ErrorResponse,
+        "content": {
+            "application/json": {
+                "example": {
+                    "detail": "Template with ID 'NON_EXISTENT_ID' not found."
+                }
+            }
+        }
+    }
+}
