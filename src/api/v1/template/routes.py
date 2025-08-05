@@ -16,7 +16,7 @@ router = APIRouter(
 @router.get(
     "/{template_format}",
     summary = "List templates by format",
-    description = "Lists all available templates for a given format (e.g, adl1.4). Returns a list of template summaries, excluding the full XML content."
+    description = "Lists all available templates for a given format (e.g, adl1.4). Returns a list of template summaries, excluding the full XML content.",
     response_model = List[TemplateSummary],
     responses = list_templates_responses
 )
