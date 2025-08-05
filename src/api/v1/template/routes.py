@@ -3,7 +3,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from email.utils import formatdate
 
 from src.app.core.database import get_mongodb_ehr_db
-from src.api.v1.template.service import create_template, retrieve_template_by_id
+from src.api.v1.template.service import create_template, retrieve_template_by_id_and_format
 from src.api.v1.template.api_responses import create_template_responses, get_template_responses
 from src.api.v1.template.models import TemplateFormat
 
@@ -13,23 +13,28 @@ router = APIRouter(
 )
 
 @router.get(
-    "/{template_id}",
-    summary = "Get template by ID",
+    "/{template_format}/{template_id}",
+    summary = "Get template by ID and format",
     description = "Retrieve a specific OPT template by its unique `template_id`. The response body will be the raw XML content of the template",
     responses = get_template_responses,
     response_class = Response
 )
 async def get_template_by_id(
     template_id: str,
+    template_format: TemplateFormat,
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
 ):
     """
-    Retrievesa template by its `template_id`.
+    Retrievesa template by its `template_id` and `template_format`.
     The enpoint returns the raw XML content of the template with the `Content-Type`
     header set to `application/xml`. It also includes `ETag` and `Last-Modified`
     headers for caching purposes
     """
-    result = await retrieve_template_by_id(db = db, template_id = template_id)
+    result = await retrieve_template_by_id_and_format(
+        db = db, 
+        template_format = template_format, 
+        template_id = template_id
+    )
     
     template = result["template"]
     etag = result["etag"]
