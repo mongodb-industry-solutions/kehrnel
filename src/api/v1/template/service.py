@@ -5,7 +5,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from fastapi import HTTPException, status
 from pymongo.errors import PyMongoError
 
-from src.api.v1.template.repository import find_template_by_id, insert_template
+from src.api.v1.template.repository import find_template_by_id_and_format, insert_template
 from src.api.v1.template.models import Template, TemplateFormat
 
 # Define the namespace map
@@ -19,7 +19,6 @@ def get_template_id_from_opt(xml_content: str) -> str:
         root = ET.fromstring(xml_content)
         # Use the namespace map for a cleaner find() call
         template_id_element = root.find('.//openEHR:template_id/openEHR:value', NAMESPACES)
-
         if template_id_element is None or not template_id_element.text:
             raise ValueError("Template ID not found in the XML content.")
         return template_id_element.text
@@ -59,10 +58,10 @@ async def create_template(db: AsyncIOMotorDatabase, template_content: str, templ
     template_id = get_template_id_from_opt(template_content)
 
     # Check if a template with this ID already exists
-    if await find_template_by_id(template_id, db):
+    if await find_template_by_id_and_format(template_id, template_format.value, db):
         raise HTTPException(
             status_code = status.HTTP_409_CONFLICT,
-            detail = f"Template with ID {template_id} already exists."
+            detail = f"Template with ID {template_id} and format '{template_format.value}' already exists."
         )
     
     # Create the template model instance
@@ -93,12 +92,13 @@ async def create_template(db: AsyncIOMotorDatabase, template_content: str, templ
         "etag": etag
     }
 
-async def retrieve_template_by_id(db: AsyncIOMotorDatabase, template_id: str) -> dict:
+async def retrieve_template_by_id_and_format(db: AsyncIOMotorDatabase, template_format: TemplateFormat, template_id: str) -> dict:
     """
     Handles the business logic of retrieving a clinical template by its ID.
 
     Args:
         db: The database session.
+        template_format: The format of the template (e.g adl1.4)
         template_id: The unique ID of the template to retrieve
 
     Returns:
@@ -109,13 +109,13 @@ async def retrieve_template_by_id(db: AsyncIOMotorDatabase, template_id: str) ->
     """
 
     # Fetch the template document from the repository
-    template_doc = await find_template_by_id(template_id, db)
+    template_doc = await find_template_by_id_and_format(template_id, template_format, db)
 
     # Handle the "not found" case
     if not template_doc:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = f"Template with ID '{template_id}' not found"
+            detail = f"Template with ID '{template_id}' and '{template_format.value}' not found"
         )
     
     # Validate the database data against the Pydantic model
