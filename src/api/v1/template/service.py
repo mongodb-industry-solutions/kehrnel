@@ -4,12 +4,23 @@ from datetime import datetime, timezone
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from fastapi import HTTPException, status
 from pymongo.errors import PyMongoError
+from typing import List
 
-from src.api.v1.template.repository import find_template_by_id_and_format, insert_template
-from src.api.v1.template.models import Template, TemplateFormat
+from src.api.v1.template.repository import find_template_by_id_and_format, insert_template, find_templates_by_format
+from src.api.v1.template.models import Template, TemplateFormat, TemplateSummary
 
 # Define the namespace map
 NAMESPACES = {'openEHR': 'http://schemas.openehr.org/v1'}
+
+async def list_templates_by_format(db: AsyncIOMotorDatabase, template_format: TemplateFormat) -> List[TemplateSummary]:
+    """
+    Handle the business logic of listing all clinical templates of a specific format
+    """
+    template_docs = await find_templates_by_format(template_format.value, db)
+
+    # Convert the list of database documents into a list of TemplateSummary models
+    # An empty list is a valid response if no templates for that format exist
+    return [TemplateSummary.model_validate(doc) for doc in template_docs]
 
 def get_template_id_from_opt(xml_content: str) -> str:
     """
