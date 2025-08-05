@@ -29,7 +29,7 @@ class Template(BaseModel):
 
 class TemplateSummary(BaseModel):
     """A summary view of a template, excluding the full XML content"""
-    template_id: str
+    template_id: str = Field(..., alias = "_id", description="Unique identifier for the template, this is extracted from the OPT file")
     template_format: TemplateFormat
     created_timestamp: datetime
 
