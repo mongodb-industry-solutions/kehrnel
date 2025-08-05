@@ -1,16 +1,35 @@
 from fastapi import APIRouter, Depends, status, Body, Response
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from email.utils import formatdate
+from typing import List
 
 from src.app.core.database import get_mongodb_ehr_db
-from src.api.v1.template.service import create_template, retrieve_template_by_id_and_format
-from src.api.v1.template.api_responses import create_template_responses, get_template_responses
-from src.api.v1.template.models import TemplateFormat
+from src.api.v1.template.service import create_template, retrieve_template_by_id_and_format, list_templates_by_format
+from src.api.v1.template.api_responses import create_template_responses, get_template_responses, list_templates_responses
+from src.api.v1.template.models import TemplateFormat, TemplateSummary
 
 router = APIRouter(
-    prefix = "/template",
-    tags = ["Template"]
+    prefix = "/definition/template",
+    tags = ["Definition - Template"]
 )
+
+@router.get(
+    "/{template_format}",
+    summary = "List templates by format",
+    description = "Lists all available templates for a given format (e.g, adl1.4). Returns a list of template summaries, excluding the full XML content."
+    response_model = List[TemplateSummary],
+    responses = list_templates_responses
+)
+async def list_all_templates_by_format(
+    template_format: TemplateFormat,
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Retrieves a list of summaries for all templates of a specific format.
+    """
+    return await list_templates_by_format(db=db, template_format = template_format)
+
+    
 
 @router.get(
     "/{template_format}/{template_id}",
@@ -79,8 +98,10 @@ async def upload_template(
     new_template = result["template"]
     etag = result["etag"]
 
+    location_path = f"/v1/definition/template/{new_template.template_format.value}/{new_template.template_id}"
+
     headers = {
-        "Location": f"/v1/template/{new_template.template_id}",
+        "Location": location_path,
         "ETag": f'"{etag}"',
         "Last-Modified": formatdate(new_template.created_timestamp.timestamp(), usegmt=True),
     }
