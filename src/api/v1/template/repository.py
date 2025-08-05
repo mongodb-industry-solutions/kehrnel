@@ -1,6 +1,7 @@
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from pymongo.errors import PyMongoError
 import logging
+from typing import List, Dict, Any
 
 # Create a logger instace
 logger = logging.getLogger(__name__)
@@ -27,6 +28,19 @@ async def find_template_by_id_and_format(template_id: str, template_format: str,
     except PyMongoError as e:
         logger.error(f"Error retrieving template with id {template_id}: {e}")
         raise e
+    
+
+async def find_templates_by_format(template_format: str, db:AsyncIOMotorDatabase) -> List[Dict[str, Any]]:
+    """
+    Retrieves a list of all the template documents matching a specific format.
+    """
+    try:
+        cursor = db[TEMPLATE_COLL_NAME].find({"template_format": template_format})
+        return await cursor.to_list(length = None)
+    except PyMongoError as e:
+        logger.error(f"Error retrieving templates with format {template_format}: {e}")
+        raise e
+
     
 
 async def insert_template(template_doc: dict, db: AsyncIOMotorDatabase):
