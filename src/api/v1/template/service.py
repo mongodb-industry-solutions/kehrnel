@@ -42,13 +42,14 @@ def generate_template_etag(content: str) -> str:
     return hashlib.sha1(content.encode('utf-8')).hexdigest()
 
 
-async def create_template(db: AsyncIOMotorDatabase, template_content: str) -> dict:
+async def create_template(db: AsyncIOMotorDatabase, template_content: str, template_format: TemplateFormat) -> dict:
     """
     Handles the business logic of creating and storing a new clinical template.
 
     Args:
         db: The database session.
         template_content: The raw XML string of the OPERATIONAL_TEMPLATE.
+        template_format: The format of the template (e.g, adl1.4)
 
     Returns:
         A dictionary containing the created template object and its ETag.
@@ -68,6 +69,7 @@ async def create_template(db: AsyncIOMotorDatabase, template_content: str) -> di
     new_template = Template(
         template_id = template_id,
         content = template_content,
+        template_format = template_format
     )
 
     # Convert to a dictionary for database insertion, respecting aliases
