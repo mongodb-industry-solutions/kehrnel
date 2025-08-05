@@ -3,7 +3,7 @@ from src.api.v1.ehr.models import ErrorResponse
 
 create_template_responses = {
     status.HTTP_201_CREATED: {
-        "description": "Template successfully uploaded. The response body is empty, but headers `Location` and `ETag` are set.",
+        "description": "Template successfully uploaded. The format (e.g., 'adl1.4') is specified in the URL. The response body is empty, but headers `Location` and `ETag` are set.",
         "headers": {
             "Location": {
                 "description": "The path to the newly created template resource.",
