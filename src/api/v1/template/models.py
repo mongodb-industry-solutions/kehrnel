@@ -26,3 +26,12 @@ class Template(BaseModel):
                 "created_timestamp": "2023-10-01T12:00:00Z"
             }
         }
+
+class TemplateSummary(BaseModel):
+    """A summary view of a template, excluding the full XML content"""
+    template_id: str
+    template_format: TemplateFormat
+    created_timestamp: datetime
+
+    class Config:
+        from_attributes = True
