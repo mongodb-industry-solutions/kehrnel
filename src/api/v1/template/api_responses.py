@@ -3,7 +3,7 @@ from src.api.v1.ehr.models import ErrorResponse
 
 create_template_responses = {
     status.HTTP_201_CREATED: {
-        "description": "Template successfully uploaded. The response body is empty, but headers `Location` and `ETag` are set.",
+        "description": "Template successfully uploaded. The format (e.g., 'adl1.4') is specified in the URL. The response body is empty, but headers `Location` and `ETag` are set.",
         "headers": {
             "Location": {
                 "description": "The path to the newly created template resource.",
@@ -51,7 +51,7 @@ get_template_responses = {
         }
     },
     status.HTTP_404_NOT_FOUND: {
-        "description": "A template with the specified `template_id` does not exist.",
+        "description": "A template with the specified `template_format` and `template_id` does not exist.",
         "model": ErrorResponse,
         "content": {
             "application/json": {

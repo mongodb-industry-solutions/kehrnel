@@ -7,16 +7,22 @@ logger = logging.getLogger(__name__)
 
 TEMPLATE_COLL_NAME = "templates"
 
-async def find_template_by_id(template_id: str, db: AsyncIOMotorDatabase):
+async def find_template_by_id_and_format(template_id: str, template_format: str, db: AsyncIOMotorDatabase):
     """
-    Retrieves a single template document fron the database by its template_id.
+    Retrieves a single template document fron the database by its template_id and format.
+    The `_id` in the database is the template_id.
     """
     try:
-        template = await db[TEMPLATE_COLL_NAME].find_one({"_id": template_id})
+        query_criteria = {
+            "_id": template_id,
+            "template_format": template_format
+        }
+
+        template = await db[TEMPLATE_COLL_NAME].find_one(query_criteria)
         if template:
             return template
         else:
-            logger.warning(f"Template with id {template_id} not found.")
+            logger.warning(f"Template with id '{template_id}' and format '{template_format}' not found.")
             return None
     except PyMongoError as e:
         logger.error(f"Error retrieving template with id {template_id}: {e}")
