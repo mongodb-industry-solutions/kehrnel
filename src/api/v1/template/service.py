@@ -6,7 +6,7 @@ from fastapi import HTTPException, status
 from pymongo.errors import PyMongoError
 
 from src.api.v1.template.repository import find_template_by_id, insert_template
-from src.api.v1.template.models import Template
+from src.api.v1.template.models import Template, TemplateFormat
 
 # Define the namespace map
 NAMESPACES = {'openEHR': 'http://schemas.openehr.org/v1'}
