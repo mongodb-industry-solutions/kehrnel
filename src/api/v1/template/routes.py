@@ -5,6 +5,7 @@ from email.utils import formatdate
 from src.app.core.database import get_mongodb_ehr_db
 from src.api.v1.template.service import create_template, retrieve_template_by_id
 from src.api.v1.template.api_responses import create_template_responses, get_template_responses
+from src.api.v1.template.models import TemplateFormat
 
 router = APIRouter(
     prefix = "/template",
@@ -47,11 +48,14 @@ async def get_template_by_id(
     )
 
 @router.post(
-    "",
+    "/{template_format}",
     summary = "Upload a new clinical template",
-    description = "Upload a new OPERATIONAL_TEMPLATE (OPT). The request body must be the raw XML content of the .opt file.",
+    description = "Upload a new OPERATIONAL_TEMPLATE (OPT). The `template_format` must be specified in the URL (e.g., 'adl1.4' or 'adl2'). The request body must be the raw XML content of the .opt file.",
+    responses = create_template_responses,
+    status_code = status.HTTP_201_CREATED
 )
 async def upload_template(
+    template_format: TemplateFormat,
     response: Response,
     template_content: str = Body(..., media_type="application/xml", description="The raw XML content of the OPERATIONAL_TEMPLATE (.opt file)"),
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
@@ -59,8 +63,13 @@ async def upload_template(
     """
     Uploads a new clinical template (OPERATIONAL_TEMPLATE). The `template_id` is
     extracted from the XML content. The system checks for conflicts based on this ID.
+    The template format (e.g., 'adl1.4') must be provided in the URL.
     """
-    result = await create_template(db = db, template_content = template_content)
+    result = await create_template(
+        db = db, 
+        template_content = template_content,
+        template_format = template_format
+    )
 
     new_template = result["template"]
     etag = result["etag"]
