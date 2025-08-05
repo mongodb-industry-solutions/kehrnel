@@ -51,7 +51,7 @@ get_template_responses = {
         }
     },
     status.HTTP_404_NOT_FOUND: {
-        "description": "A template with the specified `template_id` does not exist.",
+        "description": "A template with the specified `template_format` and `template_id` does not exist.",
         "model": ErrorResponse,
         "content": {
             "application/json": {
