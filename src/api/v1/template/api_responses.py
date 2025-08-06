@@ -1,5 +1,29 @@
 from fastapi import status
 from src.api.v1.ehr.models import ErrorResponse
+from src.api.v1.template.models import TemplateSummary
+
+list_templates_responses = {
+    status.HTTP_200_OK: {
+        "description": "A list of template summaries for the given format was retrieved successfully",
+        "model": TemplateSummary,
+        "content": {
+            "applicatiom/json": {
+                "example": [
+                    {
+                        "template_id": "T-IGR-BIOLOGY",
+                        "template_format": "adl1.4",
+                        "created_timestamp": "2025-08-05T20:30:00.123Z"
+                    },
+                    {
+                        "template_id": "T-IGR-PMSI-EXTRACT",
+                        "template_format": "adl1.4",
+                        "created_timestamp": "2025-08-05T20:35:00.456Z"
+                    }
+                ]
+            }
+        }
+    }
+}
 
 create_template_responses = {
     status.HTTP_201_CREATED: {
