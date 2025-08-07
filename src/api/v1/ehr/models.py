@@ -39,7 +39,8 @@ class ErrorResponse(BaseModel):
 
 
 class CompositionCreate(BaseModel):
-    root: Dict[str, Any] = Field(..., alias = "__root__")
+    root: Dict[str, Any]
+    
     @validator("root")
     def check_composition_structure(cls, v):
         # Basic validator to ensure we're getting a composition-like object
