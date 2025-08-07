@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, validator, RootModel
 from datetime import datetime
 from typing import Optional, List, Literal, Any, Dict
 
@@ -38,14 +38,18 @@ class ErrorResponse(BaseModel):
     detail: str
 
 
-class CompositionCreate(BaseModel):
-    root: Dict[str, Any]
-    
+class CompositionCreate(RootModel[Dict[str, Any]]):
+    """
+    A model that accepts a raw dictionary as its payload, which is expected
+    to be a valid openEHR canonical COMPOSITION object.
+    """
+
     @validator("root")
     def check_composition_structure(cls, v):
-        # Basic validator to ensure we're getting a composition-like object
+        # Basic validation to ensure we're getting a composition-like object.
+        # With RootModel, 'v' is the entire dictionary.
         if "_type" not in v or v["_type"] != "COMPOSITION":
-            raise ValueError("Request body must be a valid openEHR composition with _type: 'COMPOSITION'")
+            raise ValueError("Request body must be a valid openEHR COMPOSITION with _type: 'COMPOSITION'")
         if "archetype_details" not in v or "template_id" not in v["archetype_details"]:
             raise ValueError("COMPOSITION must have archetype_details with a template_id")
         return v
@@ -60,6 +64,7 @@ class CompositionCreate(BaseModel):
     def content(self) -> Dict[str, Any]:
         return self.root
 
+# Full Composition model for database and response. This model is correct and does not need changes.
 class Composition(BaseModel):
     uid: str = Field(..., alias="_id")
     time_created: datetime
