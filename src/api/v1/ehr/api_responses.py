@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, status, Body, Query, HTTPException, Response
-from src.api.v1.ehr.models import EHRCreationResponse, EHRStatus, ErrorResponse, EHR
+from src.api.v1.ehr.models import EHRCreationResponse, EHRStatus, ErrorResponse, EHR, Composition
 from typing import Optional, List
 
 # Dictionary of examples for the request body for the create_ehr_endpoint:
@@ -119,4 +119,38 @@ get_ehr_list_responses = {
         }
     },
     status.HTTP_404_NOT_FOUND: {"description": "No EHRs found in the database.", "model": ErrorResponse}
+}
+
+# Response definitions for the create composition endpoint
+create_composition_responses = {
+    status.HTTP_201_CREATED: {
+        "description": "Composition successfully created and added to the EHR",
+        "model": Composition,
+        "headers": {
+            "Location": {
+                "description": "The path to the newly created composition resource",
+                "schema": {"type": "string"},
+                "example": "/v1/ehr/{ehr_id}/composition/{composition_uid}"
+            },
+            "ETag": {
+                "description": "The ETag of the new composition version (its UID)",
+                "schema": {"type": "string"},
+            }
+        }
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "The EHR with the specified `ehr_id` was not found",
+        "model": ErrorResponse,
+        "content": {
+            "application/json": {
+                "example": {
+                    "detail": "EHR with id '...' not found"
+                }
+            }
+        }
+    },
+    status.HTTP_422_UNPROCESSABLE_ENTITY: {
+        "description": "The request body is invalid (e.g. missing a required field like 'template_id')",
+        "model": ErrorResponse
+    }
 }

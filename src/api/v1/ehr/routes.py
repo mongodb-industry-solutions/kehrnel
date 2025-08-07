@@ -5,11 +5,11 @@ from email.utils import formatdate
 
 from datetime import datetime, timezone
 
-from src.api.v1.ehr.service import create_ehr, retrieve_ehr_by_id, update_ehr_status, retrieve_ehr_list
-from src.api.v1.ehr.models import EHRCreationResponse, EHRStatus, ErrorResponse, EHR
+from src.api.v1.ehr.service import create_ehr, retrieve_ehr_by_id, update_ehr_status, retrieve_ehr_list, add_composition
+from src.api.v1.ehr.models import EHRCreationResponse, EHRStatus, ErrorResponse, EHR, Composition, CompositionCreate
 from src.app.core.database import get_mongodb_ehr_db
 
-from src.api.v1.ehr.api_responses import get_ehr_by_id_responses, create_ehr_api_responses, ehr_status_example, update_ehr_status_responses, get_ehr_list_responses
+from src.api.v1.ehr.api_responses import get_ehr_by_id_responses, create_ehr_api_responses, ehr_status_example, update_ehr_status_responses, get_ehr_list_responses, create_composition_responses
 
 router = APIRouter(
     prefix="/ehr",
@@ -65,7 +65,7 @@ async def update_ehr_status_endpoint(
 @router.get(
     "",
     response_model = List[EHR],
-    response_model_by_alias=False,
+    response_model_by_alias = False,
     summary = "Get a list of EHR",
     responses = get_ehr_list_responses
 )
@@ -85,7 +85,7 @@ async def get_ehr_list(
 @router.get(
     "/{ehr_id}",
     response_model = EHR,
-    response_model_by_alias=False,
+    response_model_by_alias = False,
     status_code = status.HTTP_200_OK,
     summary = "Get EHR by ID",
     responses = get_ehr_by_id_responses
@@ -104,6 +104,48 @@ async def get_ehr_by_id(
     """
     ehr_data = await retrieve_ehr_by_id(ehr_id= ehr_id, db= db)
     return ehr_data
+
+
+@router.post(
+    "/{ehr_id}/composition",
+    response_model = Composition,
+    response_model_by_alias = False,
+    status_code = status.HTTP_201_CREATED,
+    summary = "Create Composition",
+    responses = create_composition_responses
+)
+async def create_composition_endpoint(
+    ehr_id: str,
+    response: Response,
+    composition_create: CompositionCreate = Body(
+        ...,
+        description = "The composition object to be created, structured according to a template"
+    ),
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Creates a new `composition` and adds it to the specified EHR.
+
+    This endpoint creates the first version of a new `composition`.
+    - A new `contribution` is created to audit this change.
+    - The new `composition` is atomically stored and linked to the EHR.
+
+    Upon successfull creation, the new `composition` object is returned, and the `Location`, `ETag`, and `Last-Modified` headers are set.
+    """
+
+    new_composition = await add_composition(
+        ehr_id = ehr_id,
+        composition_create = composition_create,
+        db = db
+    )
+
+    # Response Headers
+    response.headers["Location"] = f"/v1/ehr/{ehr_id}/composition/{new_composition.uid}"
+    response.headers["ETag"] = f'"{new_composition.uid}"'
+    last_modified_gmt = formatdate(new_composition.time_created.timestamp(), usegmt = True)
+    response.headers["Last-Modified"] = last_modified_gmt
+
+    return new_composition
 
 
 @router.post(
