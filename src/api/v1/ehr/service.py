@@ -4,8 +4,8 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import Optional, List
 from fastapi import HTTPException, status
 from pymongo.errors import PyMongoError
-from src.api.v1.ehr.repository import insert_ehr_and_contribution_in_transaction, find_ehr_by_subject, find_ehr_by_id, update_ehr_status_in_transaction, find_newest_ehrs
-from src.api.v1.ehr.models import EHRStatus, PartySelf, EHRCreationResponse, EHR
+from src.api.v1.ehr.repository import insert_ehr_and_contribution_in_transaction, find_ehr_by_subject, find_ehr_by_id, update_ehr_status_in_transaction, find_newest_ehrs, insert_composition_contribution_and_update_ehr
+from src.api.v1.ehr.models import EHRStatus, PartySelf, EHRCreationResponse, EHR, Composition, CompositionCreate
 from app.core.models import Contribution, AuditDetails
 
 
@@ -215,3 +215,83 @@ async def create_ehr(db: AsyncIOMotorDatabase,
         system_id=ehr_doc.system_id,
         time_created=time_created
     )
+
+async def add_composition(
+    ehr_id: str,
+    composition_create: CompositionCreate,
+    db: AsyncIOMotorDatabase,
+    commiter_name: str = "System"
+) -> Composition:
+    """
+    Handles the business logic of adding a new Composition to an existing EHR.
+
+    It involves:
+
+    1. Validating that the target EHR exists
+    2. Creating a versioned Composition object
+    3. Creating a contribution to audit the change
+    4. Calling the repository to perform an atomic update of all related documents.
+
+    Args:
+        ehr_id: The ID of the EHR to which the composition will be added.
+        composition_create: The data for the new composition from the request.
+        db: The database session
+        commiter_name: The name of the committer for the audit trail.
+
+    Returns:
+        The newly created and persisted Composition object
+
+    Raises:
+        HTTPExceptoin: 404 if EHR not found, 500 on database error
+    """
+
+    # Validate that the EHR Exists
+    ehr = await find_ehr_by_id(ehr_id, db)
+    if not ehr:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = f"EHR with id '{ehr_id}' not found."
+        )
+    
+    time_created = datetime.now(timezone.utc)
+
+    # Generate a new unique ID for the composition object itself, and then its first version UID
+    composition_object_id = str(uuid.uuid4())
+    composition_uid = f"{composition_object_id}::my-openehr-server::1"
+
+    # Create the full composition object for storage
+    new_composition = Composition(
+        **composition_create.model_dump(),
+        uid = composition_uid,
+        time_created = time_created
+    )
+    
+    # Creates the contribution object for the transaction
+    contribution = Contribution(
+        ehr_id = ehr_id,
+        audit = AuditDetails(
+            system_id = "my-openehr-server",
+            committer_name = commiter_name,
+            time_committed = time_created,
+            change_type = "creation"
+        ),
+        versions = [new_composition.model_dump(by_alias = True)]
+    )
+
+    # Pass the repository for atomic insertion and update
+    try:
+        await insert_composition_contribution_and_update_ehr(
+            ehr_id = ehr_id,
+            composition_doc = new_composition.model_dump(by_alias = True),
+            contribution_doc = contribution.model_dump(by_alias = True),
+            db = db
+        )
+    except PyMongoError as e:
+        # The repository re-raises the error, we catch it here to give a user-friendly response
+        raise HTTPException(
+            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail = f"Could not create Composition due to a database erorr: {e}"
+        )
+    
+    # Return the created composition object
+    return new_composition
