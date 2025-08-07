@@ -36,3 +36,26 @@ class EHR(BaseModel):
 
 class ErrorResponse(BaseModel):
     detail: str
+
+
+class CompositionCreate(BaseModel):
+    template_id: str
+    data: dict 
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "template_id": "T-IGR-BIOLOGY",
+                "data": {
+                    "/content[openEHR-EHR-SECTION.adhoc.v1]/items[openEHR-EHR-OBSERVATION.lab_test-hba1c.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0078.2]": "7.5 %"
+                }
+            }
+        }
+
+class Composition(CompositionCreate):
+    uid: str = Field(..., alias = "_id")
+    type: Literal["COMPOSITION"] = Field("COMPOSITION", alias="_type")
+    time_created: datetime
+
+    class Config:
+        populate_by_name = True
