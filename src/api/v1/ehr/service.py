@@ -223,13 +223,14 @@ async def add_composition(
     commiter_name: str = "System"
 ) -> Composition:
     """
-    Handles the business logic of adding a new Composition to an existing EHR.
+    Handles the business logic of adding a new, client-provided canonical
+    Composition to an existing EHR.
 
     It involves:
 
-    1. Validating that the target EHR exists
-    2. Creating a versioned Composition object
-    3. Creating a contribution to audit the change
+    1. Validating that the target EHR exists.
+    2. Assigning a system-managed version UID to the composition.
+    3. Creating a Contribution to audit the change.
     4. Calling the repository to perform an atomic update of all related documents.
 
     Args:
@@ -253,20 +254,31 @@ async def add_composition(
             detail = f"EHR with id '{ehr_id}' not found."
         )
     
+    # Create versioned objects
     time_created = datetime.now(timezone.utc)
 
-    # Generate a new unique ID for the composition object itself, and then its first version UID
+    # Generate a new unique ID for the composition object, and then its first version UID
     composition_object_id = str(uuid.uuid4())
     composition_uid = f"{composition_object_id}::my-openehr-server::1"
 
+    # The composition data is the full dictionary coming from the request
+    composition_data = composition_create.content
+
     # Create the full composition object for storage
-    new_composition = Composition(
-        **composition_create.model_dump(),
+    # The _id will be the version UID. The 'data' field holds the full object.
+    new_composition_for_db = Composition(
         uid = composition_uid,
-        time_created = time_created
+        time_created = time_created,
+        data = composition_data
     )
     
     # Creates the contribution object for the transaction
+    audit_version_data = {
+        "_type": "COMPOSITION",
+        "uid": composition_uid,
+        "template_id": composition_create.template_id
+    }
+    
     contribution = Contribution(
         ehr_id = ehr_id,
         audit = AuditDetails(
@@ -275,14 +287,14 @@ async def add_composition(
             time_committed = time_created,
             change_type = "creation"
         ),
-        versions = [new_composition.model_dump(by_alias = True)]
+        versions=[audit_version_data]
     )
 
     # Pass the repository for atomic insertion and update
     try:
         await insert_composition_contribution_and_update_ehr(
             ehr_id = ehr_id,
-            composition_doc = new_composition.model_dump(by_alias = True),
+            composition_doc = new_composition_for_db.model_dump(by_alias = True),
             contribution_doc = contribution.model_dump(by_alias = True),
             db = db
         )
@@ -294,4 +306,4 @@ async def add_composition(
         )
     
     # Return the created composition object
-    return new_composition
+    return new_composition_for_db
