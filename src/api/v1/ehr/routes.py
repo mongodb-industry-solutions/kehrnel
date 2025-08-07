@@ -148,7 +148,6 @@ async def create_composition_endpoint(
     return new_composition
 
 
-
 @router.post(
     "",
     response_model = EHRCreationResponse,
