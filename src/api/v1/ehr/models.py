@@ -1,6 +1,6 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 from datetime import datetime
-from typing import Optional, List, Literal
+from typing import Optional, List, Literal, Any, Dict
 
 # Based on OpenEHR RM PartySelf
 class PartySelf(BaseModel):
@@ -39,23 +39,31 @@ class ErrorResponse(BaseModel):
 
 
 class CompositionCreate(BaseModel):
-    template_id: str
-    data: dict 
+    root: Dict[str, Any] = Field(..., alias = "__root__")
+    @validator("root")
+    def check_composition_structure(cls, v):
+        # Basic validator to ensure we're getting a composition-like object
+        if "_type" not in v or v["_type"] != "COMPOSITION":
+            raise ValueError("Request body must be a valid openEHR composition with _type: 'COMPOSITION'")
+        if "archetype_details" not in v or "template_id" not in v["archetype_details"]:
+            raise ValueError("COMPOSITION must have archetype_details with a template_id")
+        return v
+    
+    # Helper property to easily access the template_id
+    @property
+    def template_id(self) -> str:
+        return self.root["archetype_details"]["template_id"]["value"]
+    
+     # Helper property to get the full dictionary content
+    @property
+    def content(self) -> Dict[str, Any]:
+        return self.root
 
-    class Config:
-        json_schema_extra = {
-            "example": {
-                "template_id": "T-IGR-BIOLOGY",
-                "data": {
-                    "/content[openEHR-EHR-SECTION.adhoc.v1]/items[openEHR-EHR-OBSERVATION.lab_test-hba1c.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0078.2]": "7.5 %"
-                }
-            }
-        }
-
-class Composition(CompositionCreate):
-    uid: str = Field(..., alias = "_id")
-    type: Literal["COMPOSITION"] = Field("COMPOSITION", alias="_type")
+class Composition(BaseModel):
+    uid: str = Field(..., alias="_id")
     time_created: datetime
+    # The 'data' field will hold the entire canonical JSON object
+    data: Dict[str, Any]
 
     class Config:
         populate_by_name = True
