@@ -7,6 +7,7 @@ logger = logging.getLogger(__name__)
 
 EHR_COLL_NAME = "ehr"
 EHR_CONTRIBUTIONS_COLL = "contributions"
+COMPOSITIONS_COLL_NAME = "compositions"
 
 async def find_ehr_by_subject(subject_id: str, subject_namespace: str, db: AsyncIOMotorDatabase):
     return await db[EHR_COLL_NAME].find_one(
@@ -85,4 +86,49 @@ async def update_ehr_status_in_transaction(ehr_id: str, new_status_doc: dict, co
                 )
             except PyMongoError as e:
                 logger.error(f"EHR status update transaction failed: {e}")
+                raise
+
+# Transactional function to create a Composition
+async def insert_composition_contribution_and_update_ehr(
+    ehr_id: str,
+    composition_doc: dict,
+    contribution_doc: dict,
+    db: AsyncIOMotorDatabase      
+):
+    """
+    Inserts a new Composition and its associated Contribution, and updates the parent EHR document to link them.
+    All operations are performed within a single atomic transaction
+    """
+
+    async with await db.client.start_session() as session:
+        async with session.start_transaction():
+            try:
+                # Insert the new Contribution document
+                await db[EHR_CONTRIBUTIONS_COLL].insert_one(contribution_doc, session = session)
+
+                # Insert the new Composition document
+                await db[COMPOSITIONS_COLL_NAME].insert_one(composition_doc, session = session)
+
+                # Update the EHR document by pushin the new IDs to ther respective lists
+                update_criteria = {
+                    "$push": {
+                        "contributions": contribution_doc["_id"],
+                        "compositions": composition_doc["_id"]
+                    }
+                }
+
+                update_result = await db[EHR_COLL_NAME].update_one(
+                    {"_id": ehr_id},
+                    update_criteria,
+                    session = session
+                )
+
+                # Ensure the EHR document was actually found and updated
+                if update_result.matched_count == 0:
+                    # Cause the transaction to abort
+                    raise PyMongoError(f"Failed to find and update the EHR with id '{ehr_id}' during transaction.")
+            except PyMongoError as e:
+                logger.error(f"Composition creating transaction failed: {e}")
+                # Transaction is automatically aborted if there is an exception
+                # Re-raise it for the service layer to handle
                 raise
