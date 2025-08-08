@@ -11,7 +11,8 @@ from src.api.v1.ehr.repository import (
     find_newest_ehrs, 
     insert_composition_contribution_and_update_ehr, 
     find_composition_by_uid,
-    add_deletion_contribution_and_update_ehr
+    add_deletion_contribution_and_update_ehr,
+    find_deletion_contribution_for_version
 )
 from src.api.v1.ehr.models import EHRStatus, PartySelf, EHRCreationResponse, EHR, Composition, CompositionCreate
 from app.core.models import Contribution, AuditDetails
@@ -55,6 +56,14 @@ async def delete_composition_by_preceding_uid(
         versioned_object_uid = preceding_version_uid,
         db = db
     )
+
+    # Verify this version hans't already been deleted
+    existing_deletion = await find_deletion_contribution_for_version(preceding_version_uid, db)
+    if existing_deletion:
+        raise HTTPException(
+            status_code = status.HTTP_409_CONFLICT,
+            detail = f"Version '{preceding_version_uid}' has already been deleted."
+        )
     
     # Create the new version UID for the audit entry
     try:
