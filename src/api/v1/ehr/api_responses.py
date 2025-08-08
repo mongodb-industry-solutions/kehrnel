@@ -266,7 +266,7 @@ delete_composition_responses = {
            }
        }
     },
-    status.HTTP_409_NOT_FOUND: {
+    status.HTTP_409_CONFLICT: {
         "description": "The specified version of the composition has already been deleted.",
         "model": ErrorResponse,
         "content": {
