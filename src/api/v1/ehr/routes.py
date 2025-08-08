@@ -1,20 +1,121 @@
 from fastapi import APIRouter, Depends, status, Body, Query, HTTPException, Response, Header
+from fastapi.responses import JSONResponse
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import Optional, List
 from email.utils import formatdate
 
 from datetime import datetime, timezone
 
-from src.api.v1.ehr.service import create_ehr, retrieve_ehr_by_id, update_ehr_status, retrieve_ehr_list, add_composition
+from src.api.v1.ehr.service import (
+    create_ehr, retrieve_ehr_by_id, 
+    update_ehr_status, 
+    retrieve_ehr_list, 
+    add_composition, 
+    retrieve_composition_by_version_uid, 
+    update_composition
+)
+
 from src.api.v1.ehr.models import EHRCreationResponse, EHRStatus, ErrorResponse, EHR, Composition, CompositionCreate
 from src.app.core.database import get_mongodb_ehr_db
 
-from src.api.v1.ehr.api_responses import get_ehr_by_id_responses, create_ehr_api_responses, ehr_status_example, update_ehr_status_responses, get_ehr_list_responses, create_composition_responses
+from src.api.v1.ehr.api_responses import (
+    get_ehr_by_id_responses, 
+    create_ehr_api_responses, 
+    ehr_status_example, 
+    update_ehr_status_responses, 
+    get_ehr_list_responses, 
+    create_composition_responses, 
+    get_composition_responses, 
+    update_composition_responses
+)
 
 router = APIRouter(
     prefix="/ehr",
     tags=["EHR"]
 )
+
+
+# Endpoint to update a composition by creating a new version
+@router.put(
+    "/{ehr_id}/composition/{preceding_version_uid}",
+    status_code = status.HTTP_200_OK,
+    summary = "Update Composition by version ID",
+    responses = update_composition_responses
+)
+async def update_composition_endpoint(
+    ehr_id: str,
+    preceding_version_uid: str,
+    response: Response,
+    composition_data: CompositionCreate = Body(..., description = "The new version of the canonical COMPOSITION object"),
+    if_match: str = Header(..., alias = "If-Match", description = "The UID of the preceding version to be updated. Must match the UID in the URL"),
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Updates an existing `COMPOSITION` by creating a new version
+    This operation is used for making corrections or additions to a clinical document
+    The `preceding_version_uid` in the path identifies the version to be replaced.
+
+    Optimistic locking is enforced via the mandatory `If-Match` header, which must
+    be set to the `preceding_version_uid`.
+
+    A new `CONTRIBUTION` with `change_type: modification` is created to audit
+    this change. The new version of the `COMPOSITION` is returned in the body.
+    """
+
+    new_composition = await update_composition(
+        ehr_id = ehr_id,
+        preceding_version_uid = preceding_version_uid,
+        if_match = if_match,
+        new_composition_data = composition_data,
+        db = db
+    )
+
+    # Set response headers for the new version
+    response.headers["ETag"] = f'"{new_composition.uid}"'
+    response.headers["Location"] = f"/v1/ehr/{ehr_id}/composition/{new_composition.uid}"
+    last_modified_gmt = formatdate(new_composition.time_created.timestamp(), usegmt = True)
+    response.headers["Last-Modified"] = last_modified_gmt
+
+    # Return the canonical JSON data of the new composition version
+    return JSONResponse(
+        content = new_composition.data,
+        status_code = status.HTTP_200_OK
+    )
+
+
+@router.get(
+    "/{ehr_id}/composition/{versioned_object_uid}",
+    status_code = status.HTTP_200_OK,
+    summary = "Get Composition by version ID",
+    responses = get_composition_responses
+)
+async def get_composition_by_version_id(
+    ehr_id: str,
+    versioned_object_uid: str,
+    response: Response,
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Retrieves a specific version of a `COMPOSITION` from a given EHR.
+
+    The composition is identified by its unique versioned object UID
+    This endpoint returns the full canonical `COMPOSITION` object in the response body
+
+    The `ETag` `Last-Modified`, and `Location` headers are set for proper HTTP caching and resource identification
+    """
+    composition = await retrieve_composition_by_version_uid(
+        ehr_id = ehr_id,
+        versioned_object_uid = versioned_object_uid,
+        db = db
+    )
+
+    response.headers["ETag"] = f'"{composition.uid}"'
+    response.headers["Location"] = f"/v1/ehr/{ehr_id}/composition/{composition.uid}"
+    last_modified_gmt = formatdate(composition.time_created.timestamp(), usegmt = True)
+    response.headers["Last-Modified"] = last_modified_gmt
+
+    # Return the canonical JSON data part of the composition
+    return JSONResponse(content = composition.data, status_code = status.HTTP_200_OK)
 
 
 # PUT endpoint to update the EHR_STATUS

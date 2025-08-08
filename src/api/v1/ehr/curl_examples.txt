@@ -13,9 +13,9 @@ curl -X POST 'http://127.0.0.1:8000/v1/ehr' \
 curl -X GET 'http://localhost:8000/v1/ehr/5e96bbff-11ea-4173-8243-ca18026f634f'
 curl -X GET 'http://localhost:8000/vi/ehr/5e96bbff-11ea-4173-8243-ca18026f634f'
 
-#####################
-##Update EHR Status##
-#####################
+#######################
+## Update EHR Status ##
+#######################
 
 ehr_id = "f91d8da8-349a-403d-809d-cfc196b2bfef"
 ETag = "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6::my-openehr-server::1"
@@ -32,3 +32,27 @@ curl -v -X PUT 'http://localhost:8000/v1/ehr/f91d8da8-349a-403d-809d-cfc196b2bfe
 }'
 
 
+##########################
+## Create a COMPOSITION ##
+##########################
+
+
+curl -X POST 'http://localhost:8000/v1/ehr/08d82721-4238-436a-9679-61901b6bc176/composition' \
+  -H "Content-Type: application/json" \
+  --data @tumourRandom.json
+  
+
+##########################
+### GET a COMPOSITION ####
+##########################
+curl -X GET 'http://localhost:8000/v1/ehr/616f8c00-d429-4004-a797-1c11fac35022/composition/9aafd9d2-c7a1-4f77-bda2-f9890e94f528::my-openehr-server::1'
+
+
+############################
+### UPDATE a COMPOSITION ###
+############################
+
+curl -X PUT http://localhost:8000/v1/ehr/08d82721-4238-436a-9679-61901b6bc176/composition/4b8e7e3c-2552-4272-b41a-71a38e98c5fc::my-openehr-server::1 \
+  -H "Content-Type: application/json" \
+  -H "If-Match: \"4b8e7e3c-2552-4272-b41a-71a38e98c5fc::my-openehr-server::1\"" \
+  --data @pmsi.json

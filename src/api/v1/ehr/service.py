@@ -4,9 +4,154 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import Optional, List
 from fastapi import HTTPException, status
 from pymongo.errors import PyMongoError
-from src.api.v1.ehr.repository import insert_ehr_and_contribution_in_transaction, find_ehr_by_subject, find_ehr_by_id, update_ehr_status_in_transaction, find_newest_ehrs, insert_composition_contribution_and_update_ehr
+from src.api.v1.ehr.repository import insert_ehr_and_contribution_in_transaction, find_ehr_by_subject, find_ehr_by_id, update_ehr_status_in_transaction, find_newest_ehrs, insert_composition_contribution_and_update_ehr, find_composition_by_uid
 from src.api.v1.ehr.models import EHRStatus, PartySelf, EHRCreationResponse, EHR, Composition, CompositionCreate
 from app.core.models import Contribution, AuditDetails
+
+
+async def update_composition(
+    ehr_id: str,
+    preceding_version_uid: str,
+    if_match: str,
+    new_composition_data: CompositionCreate,
+    db: AsyncIOMotorDatabase,
+    committer_name: str = "System"
+) -> Composition:
+    """
+    Updates a composition by creating a new version.
+
+    Args:
+        ehr_id: The ID of the parent EHR
+        preceding_version_uid: The UID of the composition version to be replaced
+        if_match: ETag for optimistic locking, must match preceding_version_uid
+        new_composition_data: The new canonical composition data from the request
+        db: The database session
+        committer_name: The name of the committer for the audit trail
+
+    Returns:
+        The newly created composition object (the new version)
+    """
+
+    # Concurrency and consistency check
+    expected_uid = if_match.strip('"')
+    if expected_uid != preceding_version_uid:
+        raise HTTPException(
+            status_code = status.HTTP_400_BAD_REQUEST,
+            detail = f"The If-Match header ('{expected_uid}') does not match the preceding_version_uid in the URL ('{preceding_version_uid}')."
+        )
+    
+    # Fetch the composition being updated to ensure it exists
+    existing_composition = await retrieve_composition_by_version_uid(
+        ehr_id = ehr_id,
+        versioned_object_uid = preceding_version_uid,
+        db = db
+    )
+
+    if not existing_composition:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "EHR with id '{ehr_id}' and composition not '{versioned_object_uid}' found"
+        )
+
+    # Create the new version UID
+    try:
+        object_id, system_id, version_str = preceding_version_uid.split('::')
+        new_version = int(version_str) + 1
+        new_uid = f"{object_id}::{system_id}::{new_version}"
+    except (ValueError, IndexError):
+        raise HTTPException(status_code=500, detail="Could not parse the existing version UID to create a new version.")
+    
+    # Prepare the new versioned objects
+    time_commited = datetime.now(timezone.utc)
+
+    # Create the new Composition object for the database
+    new_composition_for_db = Composition(
+        uid = new_uid,
+        time_created = time_commited,
+        data = new_composition_data.content
+    )
+
+    # Create the Contribution for this modification
+    contribution = Contribution(
+        ehr_id = ehr_id,
+        audit = AuditDetails(
+            system_id = "my-openehr-server",
+            committer_name = committer_name,
+            time_committed = time_commited,
+            change_type = "modification"
+        ),
+        versions = [{
+            "_type": "COMPOSITION",
+            "uid": new_uid,
+            "template_id": new_composition_data.template_id
+        }]
+    )
+
+    # Atomically inser the new documents and update the EHR. Reuse the same repository function to do so
+    try:
+        await insert_composition_contribution_and_update_ehr(
+            ehr_id = ehr_id,
+            composition_doc = new_composition_for_db.model_dump(by_alias = True),
+            contribution_doc = contribution.model_dump(by_alias = True),
+            db = db
+        )
+    except PyMongoError as e:
+        raise HTTPException(
+            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail = f"Could not update Composition due to a database error: {e}"
+        )
+    
+    return new_composition_for_db
+
+
+async def retrieve_composition_by_version_uid(
+    ehr_id: str,
+    versioned_object_uid: str,
+    db: AsyncIOMotorDatabase
+) -> Composition:
+    """
+    Retrieves a specific version of a Composition
+
+    It validates that the EHR exists and that the Composition UID is linked to it, then fetches the full composition data.
+
+    Args:
+        ehr_id: The ID of the parent EHR
+        versioned_bject_uid: The unique version ID of the composition to retrieve.
+        db: The database sessionw
+
+    Returns:
+        The validated composition pydantic model
+
+    Raises:
+        HTTPException: 404 if the EHR of composition is not found
+    """
+
+    # Validate that the EHR exists and contains a composition link
+    ehr_doc = await find_ehr_by_id(ehr_id, db)
+    if not ehr_doc:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "EHR with id '{ehr_id}' not found"
+        )
+    
+    # Check if the composition UID is in the EHR's list of compositions
+    # Ensure the composition belongs to the specified EHR
+
+    if versioned_object_uid not in ehr_doc.get("compositions", []):
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = f"Composition with id '{versioned_object_uid}' not found"
+        )
+    
+    # Fetch the composition document from the repository
+    composition_doc = await find_composition_by_uid(versioned_object_uid, db)
+    if not composition_doc:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "Composition with id '{versioned_object_uid}' not found"
+        )
+    
+    return Composition.model_validate(composition_doc)
 
 
 async def update_ehr_status(
