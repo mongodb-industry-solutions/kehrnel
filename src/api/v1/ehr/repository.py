@@ -9,6 +9,15 @@ EHR_COLL_NAME = "ehr"
 EHR_CONTRIBUTIONS_COLL = "contributions"
 COMPOSITIONS_COLL_NAME = "compositions"
 
+
+async def find_composition_by_uid(uid: str, db: AsyncIOMotorDatabase):
+    """
+    Retrieves a single COMPOSITION document from the database by its versioned UID
+    The `_id` in the database is the composition's versioned UID
+    """
+    return await db[COMPOSITIONS_COLL_NAME].find_one({"_id": uid})
+
+
 async def find_ehr_by_subject(subject_id: str, subject_namespace: str, db: AsyncIOMotorDatabase):
     return await db[EHR_COLL_NAME].find_one(
         {"ehr_status.subject.id": subject_id, "ehr_status.subject.namespace": subject_namespace}
