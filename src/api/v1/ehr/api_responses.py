@@ -154,3 +154,40 @@ create_composition_responses = {
         "model": ErrorResponse
     }
 }
+
+# Response definitions for the get composition endpoint
+get_composition_responses = {
+    status.HTTP_200_OK: {
+        "description": "Composition found and returned successfully. The body contains the raw canonical JSON of the compositions",
+        "content": {
+            "application/json": {
+                "example": {
+                    "_type": "COMPOSITION",
+                    "name": {"value": "Problem/Diagnosis"},
+                    "archetype_details": {
+                        "template_id": {"value": "T-IGR-TUMOUR-SUMMARY"}
+                    },
+                    # ... canonical composition fields
+                }
+            }
+        },
+        "headers": {
+            "ETag": {
+                "description": "The ETag of the composition version (its UID).",
+                "schema": {"type": "string"},
+            },
+            "Location": {
+                "description": "The path to the retrieved composition resource.",
+                "schema": {"type": "string"},
+            },
+            "Last-Modified": {
+                "description": "The timestamp of when this version of the composition was created.",
+                "schema": {"type": "string", "format": "date-time"},
+            },
+        }
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "The specified EHR or the Composition within it was not found",
+        "model": ErrorResponse
+    }
+}
