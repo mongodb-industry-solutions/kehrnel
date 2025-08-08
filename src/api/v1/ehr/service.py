@@ -4,9 +4,59 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import Optional, List
 from fastapi import HTTPException, status
 from pymongo.errors import PyMongoError
-from src.api.v1.ehr.repository import insert_ehr_and_contribution_in_transaction, find_ehr_by_subject, find_ehr_by_id, update_ehr_status_in_transaction, find_newest_ehrs, insert_composition_contribution_and_update_ehr
+from src.api.v1.ehr.repository import insert_ehr_and_contribution_in_transaction, find_ehr_by_subject, find_ehr_by_id, update_ehr_status_in_transaction, find_newest_ehrs, insert_composition_contribution_and_update_ehr, find_composition_by_uid
 from src.api.v1.ehr.models import EHRStatus, PartySelf, EHRCreationResponse, EHR, Composition, CompositionCreate
 from app.core.models import Contribution, AuditDetails
+
+
+async def retrieve_composition_by_version_uid(
+    ehr_id: str,
+    versioned_object_uid: str,
+    db: AsyncIOMotorDatabase
+) -> Composition:
+    """
+    Retrieves a specific version of a Composition
+
+    It validates that the EHR exists and that the Composition UID is linked to it, then fetches the full composition data.
+
+    Args:
+        ehr_id: The ID of the parent EHR
+        versioned_bject_uid: The unique version ID of the composition to retrieve.
+        db: The database sessionw
+
+    Returns:
+        The validated composition pydantic model
+
+    Raises:
+        HTTPException: 404 if the EHR of composition is not found
+    """
+
+    # Validate that the EHR exists and contains a composition link
+    ehr_doc = await find_ehr_by_id(ehr_id, db)
+    if not ehr_doc:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "EHR with id '{ehr_id}' not found"
+        )
+    
+    # Check if the composition UID is in the EHR's list of compositions
+    # Ensure the composition belongs to the specified EHR
+
+    if versioned_object_uid not in ehr_doc.get("compositions", []):
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = f"Composition with id "
+        )
+    
+    # Fetch the composition document from the repository
+    composition_doc = await find_composition_by_uid(versioned_object_uid, db)
+    if not composition_doc:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "Composition with id '{versioned_object_uid}' not found"
+        )
+    
+    return Composition.model_validate(composition_doc)
 
 
 async def update_ehr_status(
