@@ -47,6 +47,12 @@ async def update_composition(
         db = db
     )
 
+    if not existing_composition:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "EHR with id '{ehr_id}' and composition not '{versioned_object_uid}' found"
+        )
+
     # Create the new version UID
     try:
         object_id, system_id, version_str = preceding_version_uid.split('::')
