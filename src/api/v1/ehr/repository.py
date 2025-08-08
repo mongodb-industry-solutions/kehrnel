@@ -9,6 +9,39 @@ EHR_COLL_NAME = "ehr"
 EHR_CONTRIBUTIONS_COLL = "contributions"
 COMPOSITIONS_COLL_NAME = "compositions"
 
+async def add_deletion_contribution_and_update_ehr(
+    ehr_id: str,
+    contribution_doc: dict,
+    db: AsyncIOMotorDatabase
+):
+    """
+    Atomicalloy adds a 'deleted' contribution and updates the parent EHR to link it
+    This is used for the logical deletion of a composition version.
+    """
+    async with await db.client.start_session() as session:
+        async with session.start_transaction():
+            try:
+                # Inser the new contribution document marking the deletion
+                await db[EHR_CONTRIBUTIONS_COLL].insert_one(contribution_doc, session = session)
+
+                update_set_criteria = {
+                    "$push": {
+                        "contributions": contribution_doc["_id"]
+                    }
+                }
+
+                # Update the parent EHR document by pushin the new contribution ID
+                update_result = await db[EHR_COLL_NAME].update_one(
+                    {"_id": ehr_id},
+                    update_set_criteria,
+                    session = session
+                )
+
+                # Ensure the EHR was found and updated
+                if update_result.matched_count == 0:
+                    raise PyMongoError(f"Failed to find EHR with id '{ehr_id}' during deletion transaction")
+            except PyMongoError as e:
+                logger.error(f"Composition deletion transaction failed: {e}")
 
 async def find_composition_by_uid(uid: str, db: AsyncIOMotorDatabase):
     """
