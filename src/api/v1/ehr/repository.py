@@ -9,6 +9,20 @@ EHR_COLL_NAME = "ehr"
 EHR_CONTRIBUTIONS_COLL = "contributions"
 COMPOSITIONS_COLL_NAME = "compositions"
 
+async def find_deletion_contribution_for_version(
+        preceding_version_uid: str,
+        db: AsyncIOMotorDatabase
+):
+    """
+    Checks if a 'deleted' contribution already exists for a specific version UID
+    """
+    return await db[EHR_CONTRIBUTIONS_COLL].find_one(
+        {
+            "audit.change_type": "deleted",
+            "versions.preceding_version_uid": preceding_version_uid
+        }
+    )
+
 async def add_deletion_contribution_and_update_ehr(
     ehr_id: str,
     contribution_doc: dict,
