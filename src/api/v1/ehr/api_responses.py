@@ -266,6 +266,17 @@ delete_composition_responses = {
            }
        }
     },
+    status.HTTP_409_NOT_FOUND: {
+        "description": "The specified version of the composition has already been deleted.",
+        "model": ErrorResponse,
+        "content": {
+            "application/json": {
+                "example": {
+                    "detail": "Version '{version_uid}' has already been deleted."
+                }
+            }
+        }
+    },
     status.HTTP_404_NOT_FOUND: {
         "description": "The specified EHR or the composition to be deleted was not found",
         "model": ErrorResponse
