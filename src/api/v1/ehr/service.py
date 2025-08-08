@@ -58,7 +58,7 @@ async def delete_composition_by_preceding_uid(
     
     # Create the new version UID for the audit entry
     try:
-        object_id, system_id, version_str = preceding_version_uid('::')
+        object_id, system_id, version_str = preceding_version_uid.split('::')
         new_version = int(version_str) + 1
         new_audit_uid = f"{object_id}::{system_id}::{new_version}"
     except (ValueError, IndexError):
@@ -93,7 +93,8 @@ async def delete_composition_by_preceding_uid(
     try:
         await add_deletion_contribution_and_update_ehr(
             ehr_id = ehr_id,
-            contribution_doc = contribution.model_dump(by_alias = True)
+            contribution_doc = contribution.model_dump(by_alias = True),
+            db = db
         )
     except PyMongoError as e:
         raise HTTPException(
