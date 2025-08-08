@@ -12,7 +12,8 @@ from src.api.v1.ehr.service import (
     retrieve_ehr_list, 
     add_composition, 
     retrieve_composition_by_version_uid, 
-    update_composition
+    update_composition,
+    delete_composition_by_preceding_uid
 )
 
 from src.api.v1.ehr.models import EHRCreationResponse, EHRStatus, ErrorResponse, EHR, Composition, CompositionCreate
@@ -26,13 +27,57 @@ from src.api.v1.ehr.api_responses import (
     get_ehr_list_responses, 
     create_composition_responses, 
     get_composition_responses, 
-    update_composition_responses
+    update_composition_responses,
+    delete_composition_responses
 )
 
 router = APIRouter(
     prefix="/ehr",
     tags=["EHR"]
 )
+
+@router.delete(
+    "/{ehr_id}/composition/{preceding_version_uid}",
+    status_code = status.HTTP_204_NO_CONTENT,
+    summary = "Delete composition by version ID",
+    responses = delete_composition_responses
+)
+async def delete_composition_endpoint(
+    ehr_id: str,
+    preceding_version_uid: str,
+    response: Response,
+    if_match: str = Header(..., alias = "If-Match", description = "The UID of the preceding version to be deleted. Must match the UID in the URL"),
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Logically deletes a `COMPOSITION` from the EHR.
+
+    This operation doesn't physically delete the data. Instead, it creates a new `CONTRIBUTION` with `change_type: deleted` to audit the action
+    This makes the specified version of the composition no longer the "latest" version.
+
+    Optimistic locking is enforced via the mandatory `If-Match` header, which must be set to the `preceding_version_uid`.
+
+    On success, this endpoint returns a `204 No Content` status.
+    The `ETag`, `Location`, and `Last-Modified` headers are updated to reflect the new state.
+    """
+    result = await delete_composition_by_preceding_uid(
+        ehr_id = ehr_id,
+        preceding_version_uid = preceding_version_uid,
+        if_match = if_match,
+        db = db
+    )
+
+    # Set response headers for the deletion audit
+    response.headers["ETag"] = f'"{result["new_audit_uid"]}"'
+    # The Location header points to the versioned object, not the deleted version
+    response.headers["Location"] = f"/v1/ehr/{ehr_id}/composition/{result['versioned_object_locator']}"
+    last_modified_gmt = formatdate(result["time_committed"].timestamp(), usegmt=True)
+    response.headers["Last-Modified"] = last_modified_gmt
+
+    # Return the 204 No Content response
+    return Response(
+        status_code=status.HTTP_204_NO_CONTENT
+    )
 
 
 # Endpoint to update a composition by creating a new version

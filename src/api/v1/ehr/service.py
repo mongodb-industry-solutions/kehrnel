@@ -1,13 +1,122 @@
 import uuid
 from datetime import datetime, timezone
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 from fastapi import HTTPException, status
 from pymongo.errors import PyMongoError
-from src.api.v1.ehr.repository import insert_ehr_and_contribution_in_transaction, find_ehr_by_subject, find_ehr_by_id, update_ehr_status_in_transaction, find_newest_ehrs, insert_composition_contribution_and_update_ehr, find_composition_by_uid
+from src.api.v1.ehr.repository import (
+    insert_ehr_and_contribution_in_transaction, 
+    find_ehr_by_subject, find_ehr_by_id, 
+    update_ehr_status_in_transaction, 
+    find_newest_ehrs, 
+    insert_composition_contribution_and_update_ehr, 
+    find_composition_by_uid,
+    add_deletion_contribution_and_update_ehr,
+    find_deletion_contribution_for_version
+)
 from src.api.v1.ehr.models import EHRStatus, PartySelf, EHRCreationResponse, EHR, Composition, CompositionCreate
 from app.core.models import Contribution, AuditDetails
 
+async def delete_composition_by_preceding_uid(
+    ehr_id: str,
+    preceding_version_uid: str,
+    if_match: str,
+    db: AsyncIOMotorDatabase,
+    committer_name: str = "System"
+) -> Dict[str, Any]:
+    """
+    Handles the logical deletion of a composition version.
+
+    This doesn't delete the record. Instead it creates a new "deleted" contribution that points to the version being deleted
+
+    Args:
+        ehr_id: The ID of the parent EHR.
+        preceding_version_uid: The UID of the composition version to be "deleted".
+        if_match: The ETag for optimistic locking, must match preceding_version_uid.
+        db: The database session
+        committer_name: The name of the committer for the audit trail
+
+    Returns:
+        A dictionary containing the UID of the new deletion audit entry and its creation time
+    """
+    # Cncurrency and consistency check
+    expected_uid = if_match.strip('"')
+    if expected_uid != preceding_version_uid:
+        raise HTTPException(
+            status_code = status.HTTP_412_PRECONDITION_FAILED,
+            detail = f"The If-Match header ('{expected_uid}') doesn't match the preceding_version_uid in the URL ('{preceding_version_uid}')"
+        )
+    
+    # Fetch the EHR and composition to ensure they exist and are linked
+    ehr = await retrieve_ehr_by_id(ehr_id, db)
+
+    # This function already raises 404 if the composition is not found or not linked to the EHR.
+    composition_to_delete = await retrieve_composition_by_version_uid(
+        ehr_id = ehr_id,
+        versioned_object_uid = preceding_version_uid,
+        db = db
+    )
+
+    # Verify this version hans't already been deleted
+    existing_deletion = await find_deletion_contribution_for_version(preceding_version_uid, db)
+    if existing_deletion:
+        raise HTTPException(
+            status_code = status.HTTP_409_CONFLICT,
+            detail = f"Version '{preceding_version_uid}' has already been deleted."
+        )
+    
+    # Create the new version UID for the audit entry
+    try:
+        object_id, system_id, version_str = preceding_version_uid.split('::')
+        new_version = int(version_str) + 1
+        new_audit_uid = f"{object_id}::{system_id}::{new_version}"
+    except (ValueError, IndexError):
+        raise HTTPException(
+            status_code = 500,
+            detail = "Could not parse the existing version UID to create a new version for the deletion audit."
+        )
+    
+    # Prepare the new "deleted" contribution
+    time_committed = datetime.now(timezone.utc)
+
+    # The 'versions' field in the contribution audit now records the deletion
+    # It points to the version that was deleted
+    audit_version_data = {
+        "_type": "DELETED",
+        "uid": new_audit_uid,
+        "preceding_version_uid": preceding_version_uid
+    }
+
+    contribution = Contribution(
+        ehr_id = ehr_id,
+        audit = AuditDetails(
+            system_id = "my-openehr-server",
+            committer_name = committer_name,
+            time_committed = time_committed,
+            change_type = "deleted"
+        ),
+        versions = [audit_version_data]
+    )
+
+    # Pass to the repository fo atomic update
+    try:
+        await add_deletion_contribution_and_update_ehr(
+            ehr_id = ehr_id,
+            contribution_doc = contribution.model_dump(by_alias = True),
+            db = db
+        )
+    except PyMongoError as e:
+        raise HTTPException(
+            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail = f"Could not delete Composition due to a database error: {e}"
+        )
+    
+    # Return data needed for response headers
+    return {
+        "new_audit_uid": new_audit_uid,
+        "time_committed": time_committed,
+        "versioned_object_locator": f"{object_id}::{system_id}"
+    }
 
 async def update_composition(
     ehr_id: str,
