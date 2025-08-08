@@ -45,7 +45,7 @@ async def retrieve_composition_by_version_uid(
     if versioned_object_uid not in ehr_doc.get("compositions", []):
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = f"Composition with id "
+            detail = f"Composition with id '{versioned_object_uid}' not found"
         )
     
     # Fetch the composition document from the repository
