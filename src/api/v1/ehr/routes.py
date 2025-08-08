@@ -70,7 +70,7 @@ async def delete_composition_endpoint(
     # Set response headers for the deletion audit
     response.headers["ETag"] = f'"{result["new_audit_uid"]}"'
     # The Location header points to the versioned object, not the deleted version
-    response.headers["Location"] = f"/v1/ehr/{ehr_id}/composition/{result['versioned_object_id']}"
+    response.headers["Location"] = f"/v1/ehr/{ehr_id}/composition/{result['versioned_object_locator']}"
     last_modified_gmt = formatdate(result["time_committed"].timestamp(), usegmt=True)
     response.headers["Last-Modified"] = last_modified_gmt
 
