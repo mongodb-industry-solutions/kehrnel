@@ -115,7 +115,7 @@ async def delete_composition_by_preceding_uid(
     return {
         "new_audit_uid": new_audit_uid,
         "time_committed": time_committed,
-        "versioned_object_id": object_id
+        "versioned_object_locator": f"{object_id}::{system_id}"
     }
 
 async def update_composition(
