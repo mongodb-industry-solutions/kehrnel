@@ -240,3 +240,38 @@ update_composition_responses = {
         "model": ErrorResponse
     }
 }
+
+delete_composition_responses = {
+    status.HTTP_204_NO_CONTENT: {
+       "description": "Composition successfully marked as deleted. The response has no body",
+       "headers": {
+           "ETag": {
+               "description": "The ETaf of the new 'deleted' audit entry version (its UID)",
+               "schema": {
+                   "type": "string"
+               }
+           },
+           "Location": {
+               "description": "The path to the 'versioned composition' resource which has been modified ",
+               "schema": {
+                   "type": "string"
+               }
+           },
+           "Last-Modified": {
+               "description": "The timestamp of when the deletion was committed",
+               "schema": {
+                   "type": "string",
+                   "format": "date-time"
+               }
+           }
+       }
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "The specified EHR or the composition to be deleted was not found",
+        "model": ErrorResponse
+    },
+    status.HTTP_412_PRECONDITION_FAILED: {
+        "description": "The `If-Match` header does not match the `preceding_version_uid`, indicating a concurrency conflict",
+        "model": ErrorResponse
+    }
+}
