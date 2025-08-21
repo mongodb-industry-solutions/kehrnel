@@ -7,13 +7,18 @@ import asyncio
 from src.app.main import app
 from src.app.core.database import get_mongodb_ehr_db
 from typing import AsyncGenerator
+from dotenv import load_dotenv
+import os
 
 # Database Fixture
 # This fixture will create a new, clean database for each test session
 # It will drop the database connection after all tests are done
 
-MONGO_TEST_URI = ""
-TEST_DB_NAME = ""
+# Load the environment variables
+load_dotenv()
+
+MONGO_TEST_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
+TEST_DB_NAME = os.getenv("TEST_DB_NAME")
 
 @pytest_asyncio.fixture(scope="session")
 def event_loop():
