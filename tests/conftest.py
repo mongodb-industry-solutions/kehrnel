@@ -1,3 +1,7 @@
+import httpx
+print(f"HTTPretty version being used by pytest: {httpx.__version__}")
+print(f"HTTPretty file location: {httpx.__file__}")
+
 import pytest_asyncio
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 from httpx import AsyncClient
@@ -20,34 +24,45 @@ load_dotenv()
 MONGO_TEST_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
 TEST_DB_NAME = os.getenv("TEST_DB_NAME")
 
-@pytest_asyncio.fixture(scope="session")
-def event_loop():
+@pytest_asyncio.fixture(scope="function")
+async def test_db_client() -> AsyncGenerator[AsyncIOMotorClient, None]:
     """
-    Creates an instance of the default event loop for the test session.
-    Necessary for pytest-asyncio
+    Creates a Motor client for the test database that lives for each test function.
     """
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    yield loop
-    loop.close()
+    client = AsyncIOMotorClient(MONGO_TEST_URI)
+    yield client
+    client.close()
 
 
-@pytest_asyncio.fixture(scope="session")
+@pytest_asyncio.fixture(scope="function")
 async def test_db(test_db_client: AsyncIOMotorClient) -> AsyncGenerator[AsyncIOMotorDatabase, None]:
     """
-    Provies a clean test database for the entire test session
-    dropping the test database at the end
+    Provides a clean test database for each test function,
+    cleaning collections before and after each test.
     """
     db = test_db_client[TEST_DB_NAME]
+    
+    # --- Pre-test cleanup ---
+    # Ensure collections are empty before tests start
+    await db["ehr"].delete_many({})
+    await db["contributions"].delete_many({})
+    await db["compositions"].delete_many({})
+    await db["templates"].delete_many({})
+
     yield db
-    # Drop the database after all tests in the session are complete
-    await test_db_client.drop_database(TEST_DB_NAME)
+
+    # --- Post-test cleanup (teardown) ---
+    await db["ehr"].delete_many({})
+    await db["contributions"].delete_many({})
+    await db["compositions"].delete_many({})
+    await db["templates"].delete_many({})
 
 
 # API Client Fixture
 # This fixture creates a client that can make requests to your API
 # It uses the test_db fixture to override the production database dependency
 
-@pytest_asyncio.fixture(scope="session")
+@pytest_asyncio.fixture(scope="function")
 async def client(test_db: AsyncIOMotorDatabase) -> AsyncGenerator[AsyncClient, None]:
     """
     Provides an HTTPX AsyncClient for making the requests to the FastAPI app
@@ -58,12 +73,8 @@ async def client(test_db: AsyncIOMotorDatabase) -> AsyncGenerator[AsyncClient, N
         return test_db
     
     app.dependency_overrides[get_mongodb_ehr_db] = override_get_db
-    async with AsyncClient(app=app, base_url="http://test") as c:
+    async with AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as c:
         yield c
 
     # Clean the override after the session
     app.dependency_overrides.clear()
-
-
-
-
