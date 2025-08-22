@@ -85,7 +85,6 @@ async def test_get_ehr_by_id_success(client: AsyncClient):
 
     assert get_response.status_code == status.HTTP_200_OK
     data = get_response.json()
-    print(f"Print data: {data}")
     assert data["ehr_id"] == ehr_id
     assert "ehr_status" in data
 
