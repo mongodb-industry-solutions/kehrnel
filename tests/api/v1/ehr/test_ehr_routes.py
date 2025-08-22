@@ -2,7 +2,49 @@ import pytest
 from httpx import AsyncClient
 from fastapi import status
 
+# TODO: Create a file with the static variables, list and dictionaries, such as this one.
+VALID_COMPOSITION = {
+    "_type": "COMPOSITION",
+    "archetype details": {
+        "template_id": {
+            "value": "Test-Template-v1"
+        }
+    },
+    "name": {
+        "value": "Test Composition Version 1"
+    },
+    "content": [
+        {
+            "data": "lorem ipsum dolor sit amet"
+        }
+    ]
+}
+
 # When using pytest the fixtures need to be added as arguments to the test functions, Pytest injects them
+
+@pytest.mark.asyncio
+async def test_get_ehr_list_success(client: AsyncClient):
+    """
+    Test  GET /ehr: Retrieves a list of 50 EHR resources sorted by `time_created` in descending order
+    """
+
+    # Create two EHRs to ensure the list is not empty
+    await client.post("/v1/ehr")
+    await client.post("/v1/ehr")
+
+    # Run the request
+    response = await client.get("/v1/ehr")
+
+    # Assert the response
+    assert response.status_code == status.HTTP_200_OK
+
+    data = response.json()
+    
+    # Make sure that the result is a list
+    assert isinstance(data, list)
+    assert len(data) > 0
+    assert "ehr_id" in data[0]
+
 
 @pytest.mark.asyncio
 async def test_create_ehr_without_body_success(client: AsyncClient):
