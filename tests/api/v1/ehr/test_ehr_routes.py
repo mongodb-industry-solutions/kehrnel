@@ -47,6 +47,16 @@ async def test_get_ehr_list_success(client: AsyncClient):
 
 
 @pytest.mark.asyncio
+async def test_get_ehr_list_empty(client: AsyncClient):
+    """
+    Test GET /ehr: Ensure an empty list is returned when no EHRs exist
+    """
+    response = await client.get("/v1/ehr")
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == []
+
+
+@pytest.mark.asyncio
 async def test_create_ehr_without_body_success(client: AsyncClient):
     """
     Test POST /ehr: Successfully create an EHR with no request body
