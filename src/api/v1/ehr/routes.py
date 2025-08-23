@@ -67,16 +67,15 @@ async def delete_composition_endpoint(
         db = db
     )
 
-    # Set response headers for the deletion audit
-    response.headers["ETag"] = f'"{result["new_audit_uid"]}"'
-    # The Location header points to the versioned object, not the deleted version
-    response.headers["Location"] = f"/v1/ehr/{ehr_id}/composition/{result['versioned_object_locator']}"
+    # Return explicit Response with headers and 204 status code
     last_modified_gmt = formatdate(result["time_committed"].timestamp(), usegmt=True)
-    response.headers["Last-Modified"] = last_modified_gmt
-
-    # Return the 204 No Content response
     return Response(
-        status_code=status.HTTP_204_NO_CONTENT
+        status_code=status.HTTP_204_NO_CONTENT,
+        headers={
+            "ETag": f'"{result["new_audit_uid"]}"',
+            "Location": f"/v1/ehr/{ehr_id}/composition/{result['versioned_object_locator']}",
+            "Last-Modified": last_modified_gmt
+        }
     )
 
 
@@ -115,16 +114,16 @@ async def update_composition_endpoint(
         db = db
     )
 
-    # Set response headers for the new version
-    response.headers["ETag"] = f'"{new_composition.uid}"'
-    response.headers["Location"] = f"/v1/ehr/{ehr_id}/composition/{new_composition.uid}"
+    # Return explicit JSONResponse with headers and status code
     last_modified_gmt = formatdate(new_composition.time_created.timestamp(), usegmt = True)
-    response.headers["Last-Modified"] = last_modified_gmt
-
-    # Return the canonical JSON data of the new composition version
     return JSONResponse(
-        content = new_composition.data,
-        status_code = status.HTTP_200_OK
+        content=new_composition.data,
+        status_code=status.HTTP_200_OK,
+        headers={
+            "ETag": f'"{new_composition.uid}"',
+            "Location": f"/v1/ehr/{ehr_id}/composition/{new_composition.uid}",
+            "Last-Modified": last_modified_gmt
+        }
     )
 
 
@@ -154,13 +153,17 @@ async def get_composition_by_version_id(
         db = db
     )
 
-    response.headers["ETag"] = f'"{composition.uid}"'
-    response.headers["Location"] = f"/v1/ehr/{ehr_id}/composition/{composition.uid}"
+    # Return explicit JSONResponse with headers and status code
     last_modified_gmt = formatdate(composition.time_created.timestamp(), usegmt = True)
-    response.headers["Last-Modified"] = last_modified_gmt
-
-    # Return the canonical JSON data part of the composition
-    return JSONResponse(content = composition.data, status_code = status.HTTP_200_OK)
+    return JSONResponse(
+        content=composition.data,
+        status_code=status.HTTP_200_OK,
+        headers={
+            "ETag": f'"{composition.uid}"',
+            "Location": f"/v1/ehr/{ehr_id}/composition/{composition.uid}",
+            "Last-Modified": last_modified_gmt
+        }
+    )
 
 
 # PUT endpoint to update the EHR_STATUS
