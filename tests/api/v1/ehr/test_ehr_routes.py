@@ -234,6 +234,70 @@ async def test_update_composition_precondition_failed(client: AsyncClient):
     assert update_response.status_code == status.HTTP_400_BAD_REQUEST
 
 
+@pytest.mark.asyncio
+async def test_delete_composition_success(client: AsyncClient):
+    """
+    Test DELETE /ehr/{ehr_id}/composition/{uid}: Successfully delete a composition.
+    """
+    # Create EHR and composition
+    ehr_response = await client.post("/v1/ehr")
+    ehr_id = ehr_response.json()["ehr_id"]
+    comp_response = await client.post(f"/v1/ehr/{ehr_id}/composition", json=VALID_COMPOSITION)
+    preceding_version_uid = comp_response.json()["uid"]
+
+    # Prepare headers and send DELETE request
+    headers = {"If-Match": f'"{preceding_version_uid}"'}
+    delete_response = await client.delete(f"/v1/ehr/{ehr_id}/composition/{preceding_version_uid}", headers=headers)
+
+    # Assert success
+    assert delete_response.status_code == status.HTTP_204_NO_CONTENT
+    assert delete_response.content == b""
+    assert "ETag" in delete_response.headers
+    assert "Location" in delete_response.headers
+    assert "Last-Modified" in delete_response.headers
+
+@pytest.mark.asyncio
+async def test_delete_composition_conflict(client: AsyncClient):
+    """
+    Test DELETE /ehr/{ehr_id}/composition/{uid}: Fail with 409 if already deleted.
+    """
+    # Create EHR and composition
+    ehr_response = await client.post("/v1/ehr")
+    ehr_id = ehr_response.json()["ehr_id"]
+    comp_response = await client.post(f"/v1/ehr/{ehr_id}/composition", json=VALID_COMPOSITION)
+    preceding_version_uid = comp_response.json()["uid"]
+    headers = {"If-Match": f'"{preceding_version_uid}"'}
+
+    # Delete it once successfully
+    delete_response1 = await client.delete(f"/v1/ehr/{ehr_id}/composition/{preceding_version_uid}", headers=headers)
+    assert delete_response1.status_code == status.HTTP_204_NO_CONTENT
+
+    # Attempt to delete it again
+    delete_response2 = await client.delete(f"/v1/ehr/{ehr_id}/composition/{preceding_version_uid}", headers=headers)
+    
+    # Assert conflict
+    assert delete_response2.status_code == status.HTTP_409_CONFLICT
+    assert "already been deleted" in delete_response2.json()["detail"]
+
+
+@pytest.mark.asyncio
+async def test_delete_composition_precondition_failed(client: AsyncClient):
+    """
+    Test DELETE /ehr/{ehr_id}/composition/{uid}: Fail with 412 for incorrect If-Match.
+    """
+    # Create EHR and composition
+    ehr_response = await client.post("/v1/ehr")
+    ehr_id = ehr_response.json()["ehr_id"]
+    comp_response = await client.post(f"/v1/ehr/{ehr_id}/composition", json=VALID_COMPOSITION)
+    preceding_version_uid = comp_response.json()["uid"]
+
+    # Prepare headers with wrong ETag
+    headers = {"If-Match": '"wrong-uid"'}
+
+    # Send DELETE and assert failure
+    delete_response = await client.delete(f"/v1/ehr/{ehr_id}/composition/{preceding_version_uid}", headers=headers)
+    assert delete_response.status_code == status.HTTP_412_PRECONDITION_FAILED
+
 
 @pytest.mark.asyncio
 async def test_create_ehr_without_body_success(client: AsyncClient):
