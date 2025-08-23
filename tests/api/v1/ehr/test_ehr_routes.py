@@ -5,7 +5,7 @@ from fastapi import status
 # TODO: Create a file with the static variables, list and dictionaries, such as this one.
 VALID_COMPOSITION = {
     "_type": "COMPOSITION",
-    "archetype details": {
+    "archetype_details": {
         "template_id": {
             "value": "Test-Template-v1"
         }
@@ -113,7 +113,7 @@ async def test_update_ehr_status_precondition_failed(client: AsyncClient):
     }
 
     # Send request and assert failure
-    update_response = await client.put("/v1/ehr/{ehr_id}/ehr_status", json = update_payload, headers=headers)
+    update_response = await client.put(f"/v1/ehr/{ehr_id}/ehr_status", json = update_payload, headers=headers)
     assert update_response.status_code == status.HTTP_412_PRECONDITION_FAILED
 
 
@@ -163,6 +163,140 @@ async def test_get_composition_by_version_uid_success(client: AsyncClient):
     assert get_response.headers["ETag"] == f'"{comp_uid}"'
     retrieved_data = get_response.json()
     assert retrieved_data["name"]["value"] == "Test Composition Version 1"
+
+
+@pytest.mark.asyncio
+async def test_get_composition_not_found(client: AsyncClient):
+    """
+    Test GET /ehr/{ehr_id}/composition/{version_uid}: Fail with 404 for non-existent composition.
+    """
+
+    # Create EHR resource
+    ehr_response = await client.post("/v1/ehr")
+    ehr_id = ehr_response.json()["ehr_id"]
+
+    fake_comp_uid = "00000000-0000-0000-0000-000000000000::server::1"
+
+    # Retrieve the composition
+    response = await client.get(f"/v1/ehr/{ehr_id}/composition/{fake_comp_uid}")
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
+@pytest.mark.asyncio
+async def test_update_composition_success(client: AsyncClient):
+    """
+    Test PUT /ehr/{ehr_id}/composition/{uid}: Successfully update a composition (create new version).
+    """
+
+    # Create EHR and initial composition (v1)
+    ehr_response = await client.post("/v1/ehr")
+    ehr_id = ehr_response.json()["ehr_id"]
+
+    comp_v1_response = await client.post(f"/v1/ehr/{ehr_id}/composition", json = VALID_COMPOSITION)
+    preceding_version_uid = comp_v1_response.json()["uid"]
+
+    # Prepare payload for v2 and headers
+    update_payload = VALID_COMPOSITION.copy()
+    update_payload["name"]["value"] = "Test Composition Version 2"
+    headers = {
+        "If-Match": f'"{preceding_version_uid}"'
+    }
+
+    # Send the PUT request to update the composition
+    update_response = await client.put(f"/v1/ehr/{ehr_id}/composition/{preceding_version_uid}", json = update_payload, headers = headers)
+
+    # Assert response for new version
+    assert update_response.status_code == status.HTTP_200_OK
+    comp_v2_data = update_response.json()
+    assert comp_v2_data["name"]["value"] == "Test Composition Version 2"
+
+    # Check headers point to the new version
+    new_uid = update_response.headers["ETag"].strip('"')
+    assert new_uid != preceding_version_uid
+    assert new_uid in update_response.headers["Location"]
+    # The version should be incremented
+    assert "::2" in new_uid
+
+
+@pytest.mark.asyncio
+async def test_update_composition_precondition_failed(client: AsyncClient):
+    """
+    Test PUT /ehr/{ehr_id}/composition/{uid}: Fail with 400 if If-Match doesn't match URL.
+    """
+    ehr_response = await client.post("/v1/ehr")
+    ehr_id = ehr_response.json()["ehr_id"]
+    comp_v1_response = await client.post(f"/v1/ehr/{ehr_id}/composition", json=VALID_COMPOSITION)
+    preceding_version_uid = comp_v1_response.json()["uid"]
+
+    headers = {"If-Match": '"a-different-uid"'}
+    update_response = await client.put(f"/v1/ehr/{ehr_id}/composition/{preceding_version_uid}", json=VALID_COMPOSITION, headers=headers)
+
+    assert update_response.status_code == status.HTTP_400_BAD_REQUEST
+
+
+@pytest.mark.asyncio
+async def test_delete_composition_success(client: AsyncClient):
+    """
+    Test DELETE /ehr/{ehr_id}/composition/{uid}: Successfully delete a composition.
+    """
+    # Create EHR and composition
+    ehr_response = await client.post("/v1/ehr")
+    ehr_id = ehr_response.json()["ehr_id"]
+    comp_response = await client.post(f"/v1/ehr/{ehr_id}/composition", json=VALID_COMPOSITION)
+    preceding_version_uid = comp_response.json()["uid"]
+
+    # Prepare headers and send DELETE request
+    headers = {"If-Match": f'"{preceding_version_uid}"'}
+    delete_response = await client.delete(f"/v1/ehr/{ehr_id}/composition/{preceding_version_uid}", headers=headers)
+
+    # Assert success
+    assert delete_response.status_code == status.HTTP_204_NO_CONTENT
+    assert delete_response.content == b""
+    assert "ETag" in delete_response.headers
+    assert "Location" in delete_response.headers
+    assert "Last-Modified" in delete_response.headers
+
+@pytest.mark.asyncio
+async def test_delete_composition_conflict(client: AsyncClient):
+    """
+    Test DELETE /ehr/{ehr_id}/composition/{uid}: Fail with 409 if already deleted.
+    """
+    # Create EHR and composition
+    ehr_response = await client.post("/v1/ehr")
+    ehr_id = ehr_response.json()["ehr_id"]
+    comp_response = await client.post(f"/v1/ehr/{ehr_id}/composition", json=VALID_COMPOSITION)
+    preceding_version_uid = comp_response.json()["uid"]
+    headers = {"If-Match": f'"{preceding_version_uid}"'}
+
+    # Delete it once successfully
+    delete_response1 = await client.delete(f"/v1/ehr/{ehr_id}/composition/{preceding_version_uid}", headers=headers)
+    assert delete_response1.status_code == status.HTTP_204_NO_CONTENT
+
+    # Attempt to delete it again
+    delete_response2 = await client.delete(f"/v1/ehr/{ehr_id}/composition/{preceding_version_uid}", headers=headers)
+    
+    # Assert conflict
+    assert delete_response2.status_code == status.HTTP_409_CONFLICT
+    assert "already been deleted" in delete_response2.json()["detail"]
+
+
+@pytest.mark.asyncio
+async def test_delete_composition_precondition_failed(client: AsyncClient):
+    """
+    Test DELETE /ehr/{ehr_id}/composition/{uid}: Fail with 412 for incorrect If-Match.
+    """
+    # Create EHR and composition
+    ehr_response = await client.post("/v1/ehr")
+    ehr_id = ehr_response.json()["ehr_id"]
+    comp_response = await client.post(f"/v1/ehr/{ehr_id}/composition", json=VALID_COMPOSITION)
+    preceding_version_uid = comp_response.json()["uid"]
+
+    # Prepare headers with wrong ETag
+    headers = {"If-Match": '"wrong-uid"'}
+
+    # Send DELETE and assert failure
+    delete_response = await client.delete(f"/v1/ehr/{ehr_id}/composition/{preceding_version_uid}", headers=headers)
+    assert delete_response.status_code == status.HTTP_412_PRECONDITION_FAILED
 
 
 @pytest.mark.asyncio
