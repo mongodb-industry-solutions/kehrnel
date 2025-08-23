@@ -219,6 +219,23 @@ async def test_update_composition_success(client: AsyncClient):
 
 
 @pytest.mark.asyncio
+async def test_update_composition_precondition_failed(client: AsyncClient):
+    """
+    Test PUT /ehr/{ehr_id}/composition/{uid}: Fail with 400 if If-Match doesn't match URL.
+    """
+    ehr_response = await client.post("/v1/ehr")
+    ehr_id = ehr_response.json()["ehr_id"]
+    comp_v1_response = await client.post(f"/v1/ehr/{ehr_id}/composition", json=VALID_COMPOSITION)
+    preceding_version_uid = comp_v1_response.json()["uid"]
+
+    headers = {"If-Match": '"a-different-uid"'}
+    update_response = await client.put(f"/v1/ehr/{ehr_id}/composition/{preceding_version_uid}", json=VALID_COMPOSITION, headers=headers)
+
+    assert update_response.status_code == status.HTTP_400_BAD_REQUEST
+
+
+
+@pytest.mark.asyncio
 async def test_create_ehr_without_body_success(client: AsyncClient):
     """
     Test POST /ehr: Successfully create an EHR with no request body
