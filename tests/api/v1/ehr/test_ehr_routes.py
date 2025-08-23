@@ -117,6 +117,31 @@ async def test_update_ehr_status_precondition_failed(client: AsyncClient):
     assert update_response.status_code == status.HTTP_412_PRECONDITION_FAILED
 
 
+# Composition endpoints
+@pytest.mark.asyncio
+async def test_create_composition_success(client: AsyncClient):
+    """
+    Test POST /ehr/{ehr_id}/composition: Successfully create a composition
+    """
+
+    # Create an EHR to host the composition
+    create_ehr_response = await client.post("/v1/ehr")
+    assert create_ehr_response.status_code == status.HTTP_201_CREATED
+
+    ehr_id = create_ehr_response.json()["ehr_id"]
+
+    # Create the composition
+    response = await client.post(f"/v1/ehr/{ehr_id}/composition", json = VALID_COMPOSITION)
+
+    # Assert the result
+    assert response.status_code == status.HTTP_201_CREATED
+    assert "Location" in response.headers
+    assert "ETag" in response.headers
+    data = response.json()
+    assert "uid" in data
+    assert data["data"]["name"]["value"] == "Test Composition Version 1"
+
+
 @pytest.mark.asyncio
 async def test_create_ehr_without_body_success(client: AsyncClient):
     """
