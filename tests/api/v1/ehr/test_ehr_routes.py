@@ -57,6 +57,41 @@ async def test_get_ehr_list_empty(client: AsyncClient):
 
 
 @pytest.mark.asyncio
+async def test_update_ehr_status_success(client: AsyncClient):
+    """
+    Test PUT /ehr
+    """
+    # Create an EHR
+    create_response = await client.post("/v1/ehr")
+    assert create_response.status_code == status.HTTP_201_CREATED
+
+    data = create_response.json()
+    ehr_id = data["ehr_id"]
+    original_status_uid = data["ehr_status"]["uid"]
+
+    # Prepare the update payload and headers
+    update_payload = {
+        "subject": data["ehr_status"]["subject"],
+        "is_modifiable": False,
+        "is_queryable": False
+    }
+
+    headers = {"If-Match": f'"{original_status_uid}'}
+
+    # Send the PUT request
+    update_response = await client.put(f"/v1/ehr/{ehr_id}/ehr_status", json = update_payload, headers = headers)
+
+    # Assert the response
+    assert update_response.status_code == status.HTTP_200_OK
+    new_status_data = update_response.json()
+    assert new_status_data["is_modifiable"] is False
+    assert new_status_data["is_queryable"] is False
+    # UID must be updated to a new version
+    assert new_status_data["uid"] != original_status_uid
+
+
+
+@pytest.mark.asyncio
 async def test_create_ehr_without_body_success(client: AsyncClient):
     """
     Test POST /ehr: Successfully create an EHR with no request body
