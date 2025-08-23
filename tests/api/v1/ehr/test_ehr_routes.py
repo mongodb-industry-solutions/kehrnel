@@ -166,6 +166,23 @@ async def test_get_composition_by_version_uid_success(client: AsyncClient):
 
 
 @pytest.mark.asyncio
+async def test_get_composition_not_found(client: AsyncClient):
+    """
+    Test GET /ehr/{ehr_id}/composition/{version_uid}: Fail with 404 for non-existent composition.
+    """
+
+    # Create EHR resource
+    ehr_response = await client.post("/v1/ehr")
+    ehr_id = ehr_response.json()["ehr_id"]
+
+    fake_comp_uid = "00000000-0000-0000-0000-000000000000::server::1"
+
+    # Retrieve the composition
+    response = await client.get(f"/v1/ehr/{ehr_id}/composition/{fake_comp_uid}")
+    assert response.status_code == status.HTTP_404_PRECONDITION_FAILED
+
+
+@pytest.mark.asyncio
 async def test_create_ehr_without_body_success(client: AsyncClient):
     """
     Test POST /ehr: Successfully create an EHR with no request body
