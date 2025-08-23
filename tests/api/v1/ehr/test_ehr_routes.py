@@ -90,6 +90,32 @@ async def test_update_ehr_status_success(client: AsyncClient):
     assert new_status_data["uid"] != original_status_uid
 
 
+@pytest.mark.asyncio
+async def test_update_ehr_status_precondition_failed(client: AsyncClient):
+    """
+    Test PUT /ehr/{ehr_id}/ehr_status: Fail with 412 if If-Match header is incorrect.
+    """
+
+    # Create an EHR
+    create_response = await client.post("/v1/ehr")
+    assert create_response.status_code == status.HTTP_201_CREATED
+    data = create_response.json()
+    ehr_id = data["ehr_id"]
+
+    # Use a wrong ETag in the If-Match header
+    update_payload = {
+        "subject": data["ehr_status"]["subject"],
+        "is_modifiable": False
+    }
+
+    headers = {
+        "If-Match": '"wrong-uid::server::1"'
+    }
+
+    # Send request and assert failure
+    update_response = await client.put("/v1/ehr/{ehr_id}/ehr_status", json = update_payload, headers=headers)
+    assert update_response.status_code == status.HTTP_412_PRECONDITION_FAILED
+
 
 @pytest.mark.asyncio
 async def test_create_ehr_without_body_success(client: AsyncClient):
