@@ -143,6 +143,29 @@ async def test_create_composition_success(client: AsyncClient):
 
 
 @pytest.mark.asyncio
+async def test_get_composition_by_version_uid_success(client: AsyncClient):
+    """
+    Test GET /ehr/{ehr_id}/composition/{version_uid}: Successfully retrieve a composition.
+    """
+
+    # Create EHR and Composition
+    ehr_response = await client.post("/v1/ehr")
+    ehr_id = ehr_response.json()["ehr_id"]
+
+    comp_response = await client.post(f"/v1/ehr/{ehr_id}/composition", json = VALID_COMPOSITION)
+    comp_uid = comp_response.json()["uid"]
+
+    # Retrieve the composition
+    get_response = await client.get(f"/v1/ehr/{ehr_id}/composition/{comp_uid}")
+
+    # Assert success
+    assert get_response.status_code == status.HTTP_200_OK
+    assert get_response.headers["ETag"] == f'"{comp_uid}"'
+    retrieved_data = get_response.json()
+    assert retrieved_data["name"]["value"] == "Test Composition Version 1"
+
+
+@pytest.mark.asyncio
 async def test_create_ehr_without_body_success(client: AsyncClient):
     """
     Test POST /ehr: Successfully create an EHR with no request body
