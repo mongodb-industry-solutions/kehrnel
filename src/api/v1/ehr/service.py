@@ -290,7 +290,7 @@ async def update_ehr_status(
     # 1. Fetch the current EHR
     current_ehr_doc = await find_ehr_by_id(ehr_id, db)
     if not current_ehr_doc:
-        raise HTTPException(status_cod = status.HTTP_404_NOT_FOUND, detail = f"EHR with id '{ehr_id}' not found")
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = f"EHR with id '{ehr_id}' not found")
     
     current_status = EHR.model_validate(current_ehr_doc).ehr_status
 
