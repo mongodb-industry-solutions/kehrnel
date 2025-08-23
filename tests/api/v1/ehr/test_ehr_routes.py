@@ -5,7 +5,7 @@ from fastapi import status
 # TODO: Create a file with the static variables, list and dictionaries, such as this one.
 VALID_COMPOSITION = {
     "_type": "COMPOSITION",
-    "archetype details": {
+    "archetype_details": {
         "template_id": {
             "value": "Test-Template-v1"
         }
@@ -113,7 +113,7 @@ async def test_update_ehr_status_precondition_failed(client: AsyncClient):
     }
 
     # Send request and assert failure
-    update_response = await client.put("/v1/ehr/{ehr_id}/ehr_status", json = update_payload, headers=headers)
+    update_response = await client.put(f"/v1/ehr/{ehr_id}/ehr_status", json = update_payload, headers=headers)
     assert update_response.status_code == status.HTTP_412_PRECONDITION_FAILED
 
 
@@ -179,7 +179,7 @@ async def test_get_composition_not_found(client: AsyncClient):
 
     # Retrieve the composition
     response = await client.get(f"/v1/ehr/{ehr_id}/composition/{fake_comp_uid}")
-    assert response.status_code == status.HTTP_404_PRECONDITION_FAILED
+    assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
 @pytest.mark.asyncio
