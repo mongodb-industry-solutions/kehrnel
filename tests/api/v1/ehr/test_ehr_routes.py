@@ -183,6 +183,42 @@ async def test_get_composition_not_found(client: AsyncClient):
 
 
 @pytest.mark.asyncio
+async def test_update_composition_success(client: AsyncClient):
+    """
+    Test PUT /ehr/{ehr_id}/composition/{uid}: Successfully update a composition (create new version).
+    """
+
+    # Create EHR and initial composition (v1)
+    ehr_response = await client.post("/v1/ehr")
+    ehr_id = ehr_response.json()["ehr_id"]
+
+    comp_v1_response = await client.post(f"/v1/ehr/{ehr_id}/composition", json = VALID_COMPOSITION)
+    preceding_version_uid = comp_v1_response.json()["uid"]
+
+    # Prepare payload for v2 and headers
+    update_payload = VALID_COMPOSITION.copy()
+    update_payload["name"]["value"] = "Test Composition Version 2"
+    headers = {
+        "If-Match": f'"{preceding_version_uid}"'
+    }
+
+    # Send the PUT request to update the composition
+    update_response = await client.put(f"/v1/ehr/{ehr_id}/composition/{preceding_version_uid}", json = update_payload, headers = headers)
+
+    # Assert response for new version
+    assert update_response.status_code == status.HTTP_200_OK
+    comp_v2_data = update_response.json()
+    assert comp_v2_data["name"]["value"] == "Test Composition Version 2"
+
+    # Check headers point to the new version
+    new_uid = update_response.headers["ETag"].strip('"')
+    assert new_uid != preceding_version_uid
+    assert new_uid in update_response.headers["Location"]
+    # The version should be incremented
+    assert "::2" in new_uid
+
+
+@pytest.mark.asyncio
 async def test_create_ehr_without_body_success(client: AsyncClient):
     """
     Test POST /ehr: Successfully create an EHR with no request body
