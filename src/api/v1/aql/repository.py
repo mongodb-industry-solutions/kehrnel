@@ -65,7 +65,7 @@ class AqlMongoTransformer(Transformer):
     def comparison(self, path, op, value):
         return {path["mongo_field"]: {op: value}}
     
-    def where_clause(self, comparison)
+    def where_clause(self, comparison):
         return {"$match": comparison}
     
     def contains_clause(self, _):
