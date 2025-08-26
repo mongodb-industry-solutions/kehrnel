@@ -13,7 +13,7 @@ from src.api.v1.aql.repository import (
     find_all_stored_queries
 )
 
-from src.api.v1.aql.models import StoredQuery, QueryRequest, QueryResponse, StoredQuerySummary, MetaData
+from src.api.v1.aql.models import StoredQuery, QueryRequest, QueryResponse, StoredQuerySummary
 
 async def create_or_update_stored_query(name: str, aql_query: str, db: AsyncIOMotorDatabase) -> None:
     """
@@ -69,8 +69,7 @@ async def remove_stored_query(name: str, db: AsyncIOMotorDatabase) -> None:
 
 async def process_aql_query(request: QueryRequest, request_path: str, db: AsyncIOMotorDatabase) -> QueryResponse:
     """
-    Processes an AQL query execution request.
-    This is currently a placeholder that returns a mocked result.
+    Processes an AQL query execution request by calling the repository's execution engine.
     """
     try:
         # Pass the full request model to the repository
@@ -79,13 +78,22 @@ async def process_aql_query(request: QueryRequest, request_path: str, db: AsyncI
             db=db
         )
 
-        # Populate metadata that the service layer is responsible for
-        result_dict["meta"]["href"] = request_path
+        # Build the final response object
+        response_data = {
+            "meta": {
+                "href": request_path,
+                "executed_aql": request.query,
+            },
+            "q": result_dict["q"],
+            "columns": result_dict["columns"],
+            "rows": result_dict["rows"]
+        }
 
-        return QueryResponse.model_validate(result_dict)
-    except Exception as e:
+        return QueryResponse.model_validate(response_data)
+    
+    except ValueError as e:
         # This will catch errors from the future AQL engine
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Error processing AQL query: {e}"
+            detail=f"Invalid AQL query: {e}"
         )
