@@ -101,7 +101,7 @@ async def get_stored_query(
     "/{name:path}",
     summary="Delete Stored Query",
     description="Deletes a stored query by its `name`.",
-    status_code=status.HTTP_24_NO_CONTENT
+    status_code=status.HTTP_204_NO_CONTENT
 )
 async def delete_stored_query(
     name: str,
