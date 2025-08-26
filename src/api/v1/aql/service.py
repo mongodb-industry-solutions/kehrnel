@@ -97,3 +97,13 @@ async def process_aql_query(request: QueryRequest, request_path: str, db: AsyncI
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Invalid AQL query: {e}"
         )
+    except PyMongoError as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Database execution failed: {e}"
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An unexpected error ocurred: {e}"
+        )
