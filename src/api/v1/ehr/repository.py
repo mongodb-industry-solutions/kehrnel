@@ -159,6 +159,7 @@ async def insert_composition_contribution_and_update_ehr(
     async with await db.client.start_session() as session:
         async with session.start_transaction():
             try:
+                composition_doc["ehr_id"] = ehr_id
                 # Insert the new Contribution document
                 await db[EHR_CONTRIBUTIONS_COLL].insert_one(contribution_doc, session = session)
 
