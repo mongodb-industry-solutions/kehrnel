@@ -3,12 +3,15 @@
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from pymongo.errors import PyMongoError
 import logging
-from typing import Dict, Any, Optional, List
+# Regular Expressions
+import re
+from typing import Dict, Any, Optional, List, Tuple
 from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
 
 STORED_QUERY_COLL_NAME = "stored_queries"
+EHR_COLL_NAME = "ehr"
 
 async def save_stored_query(name: str, aql_query: str, db: AsyncIOMotorDatabase) -> None:
     """
@@ -62,32 +65,122 @@ async def delete_stored_query_by_name(name: str, db: AsyncIOMotorDatabase) -> in
         logger.error(f"Error deleting stored query '{name}': {e}")
         raise e
 
+
+def _parse_simple_ehr_query(aql: str) -> Dict[str, Any]:
+    """
+    A simple regex-based parser for a limited AQL subset.
+    Parses queries like: SELECT e/path/value, e/path2/value from EHR e
+    """
+
+    # Regex to capture the SELECT clause from a simple EHR Query
+    match = re.match(r"\s*SELECT\s+(.+?)\s+FROM\s+EHR\s+e\s*$", aql, re.IGNORECASE)
+    if not match:
+        raise ValueError("Invalid or unsupported AQL query structure for simple parser")
+    
+    select_clause = match.group(1)
+
+    # Split fields by comma, trim whitespace
+    fields = [field.strip() for field in select_clause.split(',')]
+
+    parsed_fields = []
+    for field in fields:
+        path_match = re.match(r"e/([\w_]+)/value", field)
+        # AQL paths are like 'e/ehr_id/value'. We need to extract 'ehr_id'
+        if not path_match:
+            raise ValueError(f"Unsupported field format in SELECT clause: {field}")
+        
+        # Example: "e/ehr_id/value"
+        aql_path = path_match.group(0)
+        # Example: "ehr_id"
+        mongo_field = path_match.group(1)
+
+        # Map AQL field names to MongoDB document fields
+        if mongo_field == "ehr_id":
+            mongo_field = "_id"
+
+        parsed_fields.append({
+            "aql_path": aql_path,
+            "column_name": path_match.group(1),
+            "mongo_field": mongo_field
+        })
+
+    return {
+        "select_fields": parsed_fields
+    }
+
+
 async def execute_aql_query(request_body: Dict[str, Any], db: AsyncIOMotorDatabase) -> Dict[str, Any]:
     """
-    **PLACEHOLDER**
-    This function will eventually contain the logic to parse the AQL, build a
-    MongoDB aggregation pipeline, and execute it.
-
-    For now, it returns a mocked, hardcoded result matching the QueryResponse model.
+    Parses a simple AQL query, builds a MongoDB Aggregation Pipeline,
+    executes it, and formats the result.
     """
-    query = request_body.get("q")
-    logger.info(f"Executing AQL query (MOCKED): {query}")
-    if request_body.get("ehr_id"):
-        logger.info(f"Query scoped to ehr_id: {request_body.get('ehr_id')}")
+    aql_query = request_body.get("q")
+    ehr_id = request_body.get("ehr_id")
 
-    # MOCKED RESPONSE that matches the new QueryResponse structure
+    # Parse the AQL query:
+    try:
+        parsed_aql = _parse_simple_ehr_query(aql_query)
+    except ValueError as e:
+        logger.error(f"AQL Parsing Error: {e}")
+        raise
+
+    # Build the MongoDB Agg Pipeline
+    pipeline = []
+
+    # $match stage (Filter by the ehr_id if provided)
+    if ehr_id:
+        pipeline.append({
+            "$match": {
+                "_id": ehr_id
+            }
+        })
+
+    # $project stage, modify the output to show the selected fields
+    projection = {
+        "_id": 0
+    }
+
+    for field in parsed_aql["select_fields"]:
+        projection[field["column_name"]] = f"${field['mongo_field']}"
+
+    pipeline.append({
+        "$project": projection
+    })
+
+    # Add offset and limit for pagination
+    if request_body.get("offset"):
+        pipeline.append({"$skip": request_body["offset"]})
+    if request_body.get("fetch"):
+        pipeline.append({"$limit": request_body["fetch"]})
+
+    
+    logger.info(f"Generated MongoDB Aggregation Pipeline: {pipeline}")
+
+    # Execute the pipeline
+    try:
+        cursor = db[EHR_COLL_NAME].aggregate(pipeline)
+        results = await cursor.to_list(length=None)
+    except PyMongoError as e:
+        logger.error(f"Database error during AQL execution: {e}")
+        raise
+
+    # Format the results into the required QueryResponse structure
+    columns = []
+    for field in parsed_aql["select_fields"]:
+        columns.append({
+            "name": field["column_name"],
+            "path": field["aql_path"]
+        })
+
+    rows = []
+    # The order of columns is determined by the parsed_aql list
+    column_names_in_order = [field["column_name"] for field in parsed_aql["select_fields"]]
+    for doc in results:
+        row = [doc.get(col_name) for col_name in column_names_in_order]
+        rows.append(row)
+
     return {
-        "meta": {
-            "href": "/v1/query/aql", # This will be set dynamically in service layer
-            "executed_aql": query,
-        },
-        "q": query,
-        "columns": [
-            {"name": "ehr_id", "path": "/ehr_id/value"},
-            {"name": "Systolic", "path": "/data[at0001]/items[at0004]/value/magnitude"}
-        ],
-        "rows": [
-            ["a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6", 120],
-            ["f1g2h3i4-j5k6-l7m8-n9o0-p1q2r3s4t5u6", 125]
-        ]
+        "q": aql_query,
+        "columns": columns,
+        "rows": rows
     }
