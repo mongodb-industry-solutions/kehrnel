@@ -26,7 +26,7 @@ ALIAS: "e" | "c"
 comparison_op: "=" | "!=" | ">" | "<" | ">=" | "<="
 
 // Values in comparisons are currently limited to strings.
-value: ESCAPED_STRING
+value: ESCAPED_STRING | SIGNED_NUMBER
 
 // Import common terminals from the Lark library.
 %import common.CNAME
