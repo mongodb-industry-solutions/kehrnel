@@ -1,6 +1,6 @@
 from fastapi import status
 from src.api.v1.ehr.models import ErrorResponse
-from src.api.v1.aql.models import QueryResult
+from src.api.v1.aql.models import QueryResponse
 
 stored_query_responses = {
     status.HTTP_201_CREATED: {
@@ -23,7 +23,7 @@ stored_query_responses = {
 execute_query_responses = {
     status.HTTP_200_OK: {
         "description": "Query executed successfully.",
-        "model": QueryResult
+        "model": QueryResponse
     },
     status.HTTP_400_BAD_REQUEST: {
         "description": "The AQL query is invalid or contains errors.",
