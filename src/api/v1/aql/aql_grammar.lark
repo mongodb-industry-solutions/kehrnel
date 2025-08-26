@@ -31,6 +31,7 @@ value: ESCAPED_STRING
 // Import common terminals from the Lark library.
 %import common.CNAME
 %import common.ESCAPED_STRING
+%import common.SIGNED_NUMBER
 %import common.WS
 
 // Ignore whitespace between tokens.
