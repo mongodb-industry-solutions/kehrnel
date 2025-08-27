@@ -25,8 +25,11 @@ ALIAS: "e" | "c"
 // Comparison operators for the WHERE clause.
 comparison_op: "=" | "!=" | ">" | "<" | ">=" | "<="
 
-// Values in comparisons are currently limited to strings.
-value: ESCAPED_STRING | SIGNED_NUMBER
+// A value can now be a double-quoted string, a single-quoted string, or a number.
+value: ESCAPED_STRING | SINGLE_QUOTED_STRING | SIGNED_NUMBER
+
+// Define a terminal for single-quoted strings using a regular expression.
+SINGLE_QUOTED_STRING: /'[^']*'/
 
 // Import common terminals from the Lark library.
 %import common.CNAME
