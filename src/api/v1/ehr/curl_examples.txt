@@ -56,3 +56,12 @@ curl -X PUT http://localhost:8000/v1/ehr/08d82721-4238-436a-9679-61901b6bc176/co
   -H "Content-Type: application/json" \
   -H "If-Match: \"4b8e7e3c-2552-4272-b41a-71a38e98c5fc::my-openehr-server::1\"" \
   --data @pmsi.json
+
+
+############################
+### DELETE a COMPOSITION ###
+############################
+
+curl -X DELETE http://localhost:8000/v1/ehr/08d82721-4238-436a-9679-61901b6bc176/composition/4b8e7e3c-2552-4272-b41a-71a38e98c5fc::my-openehr-server::1 \
+  -H "Content-Type: application/json" \
+  -H "If-Match: \"4b8e7e3c-2552-4272-b41a-71a38e98c5fc::my-openehr-server::1\""
