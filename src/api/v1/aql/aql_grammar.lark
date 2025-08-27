@@ -1,23 +1,30 @@
 // AQL Grammar for Lark Parser
 
-?query: select_clause from_clause [contains_clause] [where_clause] [order_by_clause]
+?query: select_clause from_clause contains_clause_part where_clause_part order_clause_part
 
-// SELECT clause: Starts with SELECT, followed by one or more select expressions.
 select_clause: "SELECT"i select_expr ("," select_expr)*
 select_expr: path ("AS"i CNAME)? -> aliased_path
 
-// FROM clause: Defines the primary source, which is EHR for now.
 from_clause: "FROM"i "EHR"i "e"
 
-// CONTAINS clause: For joining with other documents like COMPOSITION.
+// Make all clauses explicit with _part suffix to avoid conflicts
+contains_clause_part: contains_clause | -> empty_contains
 contains_clause: "CONTAINS"i "COMPOSITION"i "c"
 
-// WHERE clause: For filtering results.
+where_clause_part: where_clause | -> empty_where  
 where_clause: "WHERE"i comparison
 comparison: path comparison_op value
 
-// ORDER BY clause. The ASC/DESC choice is now inline.
-order_by_clause: "ORDER BY"i path [("ASC"i | "DESC"i)]
+order_clause_part: order_clause | -> empty_order
+order_clause: "ORDER"i "BY"i path [ASC | DESC]
+
+// Empty clause handlers
+empty_contains: 
+empty_where:
+empty_order:
+
+ASC: "ASC"i
+DESC: "DESC"i
 
 // A path is an alias (e.g., 'e' or 'c') followed by segments.
 // Example: e/ehr_id/value

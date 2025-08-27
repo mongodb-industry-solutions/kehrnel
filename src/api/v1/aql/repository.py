@@ -83,20 +83,45 @@ class AqlMongoTransformer(Transformer):
         return {path["mongo_field"]: {op: value}}
 
     def where_clause(self, comparison):
-        return {"$match": comparison}
+        result = {"$match": comparison}
+        logger.info(f"WHERE CLAUSE DEBUG: comparison={comparison}, result={result}")
+        return result
 
     def contains_clause(self, *args):
         return {"contains_composition": True}
     
-    # This is the single, correct method for handling the ORDER BY clause.
-    # The old `ordering()` method has been removed.
-    def order_by_clause(self, path, direction_token=None):
+    def empty_contains(self):
+        return {}
+        
+    def empty_where(self):
+        return {}
+        
+    def empty_order(self):
+        return {}
+    
+    def contains_clause_part(self, clause):
+        return clause
+        
+    def where_clause_part(self, clause):
+        return clause
+        
+    def order_clause_part(self, clause):
+        return clause
+    
+    # Renamed method to match the grammar rule
+    def order_clause(self, path, direction_token=None):
         """
         Creates the sorting dictionary for the plan.
         'direction_token' will be a Token for 'ASC' or 'DESC', or None if omitted.
         """
-        direction = -1 if direction_token and direction_token.value.upper() == 'DESC' else 1
-        return {"$sort": {path["mongo_field"]: direction}}
+        direction_value = None
+        if direction_token:
+            direction_value = direction_token.value.upper() if hasattr(direction_token, 'value') else str(direction_token).upper()
+        
+        direction = -1 if direction_value == 'DESC' else 1
+        result = {"$sort": {path["mongo_field"]: direction}}
+        logger.info(f"ORDER CLAUSE DEBUG: path={path}, direction_token={direction_token}, direction_value={direction_value}, direction={direction}, result={result}")
+        return result
 
     def aliased_path(self, path, alias=None):
         column_name = alias.value if alias else path["aql_path"].split('/')[-2]
@@ -105,13 +130,16 @@ class AqlMongoTransformer(Transformer):
     def select_clause(self, *select_exprs):
         return list(select_exprs)
 
-    def query(self, select_clause, from_clause, contains_clause=None, where_clause=None, order_by_clause=None):
-        return {
+    def query(self, select_clause, from_clause, contains_clause_part, where_clause_part, order_clause_part):
+        result = {
             "select": select_clause,
-            "contains": contains_clause or {},
-            "where": where_clause or {},
-            "orderby": order_by_clause or {}
+            "contains": contains_clause_part,
+            "where": where_clause_part,
         }
+        if order_clause_part and order_clause_part != {}:
+            result["orderby"] = order_clause_part
+        logger.info(f"QUERY DEBUG: select={select_clause}, where={where_clause_part}, order={order_clause_part}, result={result}")
+        return result
 
 
 def _build_pipeline_from_plan(plan: Dict[str, Any], request_body: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -125,7 +153,9 @@ def _build_pipeline_from_plan(plan: Dict[str, Any], request_body: Dict[str, Any]
         """Determines the correct MongoDB field path based on the query context."""
         # Handles case where e/ehr_id/value -> _id is selected after a join from compositions
         if is_ehr_join and plan_path == "_id" and any(c["mongo_field"] == "_id" and c["path"].startswith("e/") for c in plan["select"]):
+            logger.info(f"get_mongo_path: EHR join case - {plan_path} -> ehr_doc.{plan_path}")
             return f"ehr_doc.{plan_path}"
+        logger.info(f"get_mongo_path: Default case - {plan_path} -> {plan_path}")
         return plan_path
 
     if has_composition:
@@ -152,13 +182,18 @@ def _build_pipeline_from_plan(plan: Dict[str, Any], request_body: Dict[str, Any]
             pipeline.append({"$match": match_stage})
 
     # Add the $sort stage if 'orderby' exists in the plan
+    logger.info(f"DEBUG: Checking for orderby in plan: {plan.get('orderby')}")
     if plan.get("orderby"):
         sort_plan = plan["orderby"]["$sort"]
         original_sort_field = list(sort_plan.keys())[0]
         sort_direction = sort_plan[original_sort_field]
         
         final_sort_field = get_mongo_path(original_sort_field)
+        logger.info(f"SORT DEBUG - Original field: {original_sort_field}, Final field: {final_sort_field}, Direction: {sort_direction}")
+        logger.info(f"SORT DEBUG - Sort stage: {{'$sort': {{'{final_sort_field}': {sort_direction}}}}}")
         pipeline.append({"$sort": {final_sort_field: sort_direction}})
+    else:
+        logger.info("DEBUG: No orderby found in plan")
 
     # Build the final projection
     projection = {"_id": 0}
@@ -193,6 +228,7 @@ async def execute_aql_query(request_body: Dict[str, Any], db: AsyncIOMotorDataba
     logger.info(f"Generated Query Plan: {query_plan}")
     pipeline = _build_pipeline_from_plan(query_plan, request_body)
     logger.info(f"Generated MongoDB Aggregation Pipeline: {pipeline}")
+    logger.info(f"FINAL PIPELINE DEBUG: {pipeline}")
 
     try:
         collection_name = COMPOSITION_COLL_NAME if query_plan.get("contains") else EHR_COLL_NAME
