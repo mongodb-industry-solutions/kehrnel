@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 # Import Lark for parsing
-from lark import Lark, Transformer, v_args
+from lark import Lark, Transformer, v_args, Token
 
 logger = logging.getLogger(__name__)
 
@@ -38,12 +38,8 @@ class AqlMongoTransformer(Transformer):
             return "_id"
         # AQL: c/uid/value -> Mongo: composition_doc.data.uid.value
         elif alias == 'c':
-            mongo_path = "composition_doc"
-            # --- THIS IS THE FIX ---
-            # The canonical composition is nested under the 'data' field.
             field_path = ".".join(s.value for s in segments)
-            return f"{mongo_path}.data.{field_path}"
-            # -----------------------
+            return f"composition_doc.data.{field_path}"
         # AQL: e/some/path -> Mongo: some.path
         else:
             return ".".join(s.value for s in segments)
@@ -56,11 +52,35 @@ class AqlMongoTransformer(Transformer):
         mongo_field = self._translate_path(alias.value, segments)
         return {"aql_path": aql_path_str, "mongo_field": mongo_field}
 
-    def comparison_op(self, op):
-        return {"=": "$eq", "!=": "$ne", ">": "$gt", "<": "$lt", ">=": "$gte", "<=": "$le"}.get(op.value, "$eq")
+    def comparison_op(self, *args):
+        # Handle the case where the operator might be passed differently
+        if len(args) == 1:
+            op = args[0]
+            if hasattr(op, 'value'):
+                op_value = op.value
+            else:
+                op_value = str(op)
+        elif len(args) == 0:
+            # Fallback if no arguments are passed
+            op_value = "="
+        else:
+            # Multiple arguments - take the first one
+            op = args[0]
+            op_value = op.value if hasattr(op, 'value') else str(op)
+        
+        return {"=": "$eq", "!=": "$ne", ">": "$gt", "<": "$lt", ">=": "$gte", "<=": "$le"}.get(op_value, "$eq")
 
-    def value(self, val):
-        return val.strip('"\'')
+    def value(self, val_token: Token):
+        if val_token.type == 'ESCAPED_STRING' or val_token.type == 'SINGLE_QUOTED_STRING':
+            return val_token.value.strip('"\'')
+        elif val_token.type == 'SIGNED_NUMBER':
+            # Convert the string representation of a number to a float or int
+            num = float(val_token.value)
+            if num.is_integer():
+                return int(num)
+            return num
+        # Fallback for unexpected types
+        return val_token.value
 
     def comparison(self, path, op, value):
         return {path["mongo_field"]: {op: value}}
@@ -86,28 +106,68 @@ def _build_pipeline_from_plan(plan: Dict[str, Any], request_body: Dict[str, Any]
     """Constructs the MongoDB aggregation pipeline from the transformed query plan."""
     pipeline = []
 
-    match_stage = {}
-    if plan.get("where", {}).get("$match"):
-        match_stage.update(plan["where"]["$match"])
-    if request_body.get("ehr_id"):
-        match_stage["_id"] = request_body["ehr_id"]
-    if match_stage:
-        pipeline.append({"$match": match_stage})
-
-    if plan.get("contains", {}).get("contains_composition"):
-        pipeline.append({
-            "$lookup": {
-                "from": COMPOSITION_COLL_NAME,
-                "localField": "_id",
-                "foreignField": "ehr_id",
-                "as": "composition_doc"
-            }
-        })
-        pipeline.append({"$unwind": "$composition_doc"})
+    # Determine if this is a composition-centric query
+    has_composition = plan.get("contains", {}).get("contains_composition")
+    has_ehr_fields = any(col["mongo_field"] == "_id" for col in plan["select"])
+    
+    # If we have composition fields, start from compositions collection
+    if has_composition:
+        # Start from compositions collection
+        match_stage = {}
+        if plan.get("where", {}).get("$match"):
+            # Fix field paths for WHERE clause when starting from compositions
+            where_conditions = plan["where"]["$match"]
+            fixed_conditions = {}
+            for field_path, condition in where_conditions.items():
+                if field_path.startswith("composition_doc."):
+                    # Remove the composition_doc prefix since we're starting from compositions
+                    fixed_field_path = field_path.replace("composition_doc.", "")
+                    fixed_conditions[fixed_field_path] = condition
+                else:
+                    fixed_conditions[field_path] = condition
+            match_stage.update(fixed_conditions)
+            
+        if request_body.get("ehr_id"):
+            match_stage["ehr_id"] = request_body["ehr_id"]
+        
+        if match_stage:
+            pipeline.append({"$match": match_stage})
+        
+        # If we also need EHR fields, do a lookup to EHR collection
+        if has_ehr_fields:
+            pipeline.append({
+                "$lookup": {
+                    "from": EHR_COLL_NAME,
+                    "localField": "ehr_id",
+                    "foreignField": "_id",
+                    "as": "ehr_doc"
+                }
+            })
+            pipeline.append({"$unwind": "$ehr_doc"})
+    else:
+        # Original logic for EHR-centric queries
+        match_stage = {}
+        if plan.get("where", {}).get("$match"):
+            match_stage.update(plan["where"]["$match"])
+        if request_body.get("ehr_id"):
+            match_stage["_id"] = request_body["ehr_id"]
+        if match_stage:
+            pipeline.append({"$match": match_stage})
 
     projection = {"_id": 0}
     for col in plan["select"]:
-        projection[col["name"]] = f"${col['mongo_field']}"
+        # Adjust field paths based on collection structure
+        if has_composition and col["mongo_field"].startswith("composition_doc."):
+            # Remove the composition_doc prefix since we're starting from compositions
+            field_path = col["mongo_field"].replace("composition_doc.", "")
+        elif has_ehr_fields and has_composition and col["mongo_field"] == "_id":
+            # When looking up EHR from compositions, use the ehr_doc._id
+            field_path = "ehr_doc._id"
+        else:
+            field_path = col["mongo_field"]
+        
+        projection[col["name"]] = f"${field_path}"
+    
     pipeline.append({"$project": projection})
 
     if request_body.get("offset"):
@@ -139,7 +199,14 @@ async def execute_aql_query(request_body: Dict[str, Any], db: AsyncIOMotorDataba
     logger.info(f"Generated MongoDB Aggregation Pipeline: {pipeline}")
 
     try:
-        cursor = db[EHR_COLL_NAME].aggregate(pipeline)
+        # Determine which collection to start the aggregation from
+        has_composition = query_plan.get("contains", {}).get("contains_composition")
+        if has_composition:
+            collection = db[COMPOSITION_COLL_NAME]
+        else:
+            collection = db[EHR_COLL_NAME]
+        
+        cursor = collection.aggregate(pipeline)
         results = await cursor.to_list(length=None)
     except PyMongoError as e:
         logger.error(f"Database error during AQL execution: {e}")
@@ -155,7 +222,6 @@ async def execute_aql_query(request_body: Dict[str, Any], db: AsyncIOMotorDataba
     return {"q": aql_query, "columns": columns, "rows": rows}
 
 
-# --- Stored Query Functions (Unchanged) ---
 async def save_stored_query(name: str, aql_query: str, db: AsyncIOMotorDatabase) -> None:
     query_doc = {"query": aql_query, "created_timestamp": datetime.now(timezone.utc)}
     try:
