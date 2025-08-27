@@ -90,6 +90,18 @@ class AqlMongoTransformer(Transformer):
 
     def contains_clause(self, *args):
         return {"contains_composition": True}
+    
+    def ordering(self, direction: Token):
+        """Translates ASC/DESC into MongoDB sort orders (1/-1)."""
+        if direction.value.upper() == 'DESC':
+            return -1
+        return 1  # Default to ASC
+    
+    def order_by_clause(self, path, ordering=None):
+        """Creates the sorting dictionary for the plan."""
+        # If ordering (ASC/DESC) is not specified, default to ascending (1).
+        direction = ordering if ordering is not None else 1
+        return {"$sort": {path["mongo_field"]: direction}}
 
     def aliased_path(self, path, alias=None):
         column_name = alias.value if alias else path["aql_path"].split('/')[-2]
@@ -98,8 +110,13 @@ class AqlMongoTransformer(Transformer):
     def select_clause(self, *select_exprs):
         return list(select_exprs)
 
-    def query(self, select_clause, from_clause, contains_clause=None, where_clause=None):
-        return {"select": select_clause, "contains": contains_clause or {}, "where": where_clause or {}}
+    def query(self, select_clause, from_clause, contains_clause=None, where_clause=None, order_by_clause=None):
+        return {
+            "select": select_clause,
+            "contains": contains_clause or {},
+            "where": where_clause or {},
+            "orderby": order_by_clause or {}
+        }
 
 
 def _build_pipeline_from_plan(plan: Dict[str, Any], request_body: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -154,6 +171,25 @@ def _build_pipeline_from_plan(plan: Dict[str, Any], request_body: Dict[str, Any]
         if match_stage:
             pipeline.append({"$match": match_stage})
 
+    # Add the $sort stage if 'orderby' exists in the plan
+    # This should come AFTER matching/lookups but BEFORE pagination (skip/limit)
+
+    if plan.get("orderby"):
+        sort_stage_plan = plan["orderby"]
+        original_sort_field = list(sort_stage_plan["$sort"].keys())[0]
+        sort_direction = sort_stage_plan["$sort"][original_sort_field]
+
+        # We must adjust the field path for sorting, just like we do for projection
+        if has_composition and original_sort_field.startswith("composition_doc."):
+            fixed_sort_field = original_sort_field.replace("composition_doc.", "")
+        elif has_ehr_fields and has_composition and original_sort_field == "_id":
+            fixed_sort_field = "ehr_doc._id"
+        else:
+            fixed_sort_field = original_sort_field
+        
+        pipeline.append({"$sort": {fixed_sort_field: sort_direction}})
+    
+    
     projection = {"_id": 0}
     for col in plan["select"]:
         # Adjust field paths based on collection structure
