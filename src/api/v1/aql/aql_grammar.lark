@@ -1,0 +1,41 @@
+// AQL Grammar for Lark Parser
+
+?query: select_clause from_clause [contains_clause] [where_clause]
+
+// SELECT clause: Starts with SELECT, followed by one or more select expressions.
+select_clause: "SELECT"i select_expr ("," select_expr)*
+select_expr: path ("AS"i CNAME)? -> aliased_path
+
+// FROM clause: Defines the primary source, which is EHR for now.
+from_clause: "FROM"i "EHR"i "e"
+
+// CONTAINS clause: For joining with other documents like COMPOSITION.
+contains_clause: "CONTAINS"i "COMPOSITION"i "c"
+
+// WHERE clause: For filtering results.
+where_clause: "WHERE"i comparison
+comparison: path comparison_op value
+
+// A path is an alias (e.g., 'e' or 'c') followed by segments.
+// Example: e/ehr_id/value
+path: ALIAS "/" path_segment ("/" path_segment)*
+path_segment: CNAME
+ALIAS: "e" | "c"
+
+// Comparison operators for the WHERE clause.
+comparison_op: "=" | "!=" | ">" | "<" | ">=" | "<="
+
+// A value can now be a double-quoted string, a single-quoted string, or a number.
+value: ESCAPED_STRING | SINGLE_QUOTED_STRING | SIGNED_NUMBER
+
+// Define a terminal for single-quoted strings using a regular expression.
+SINGLE_QUOTED_STRING: /'[^']*'/
+
+// Import common terminals from the Lark library.
+%import common.CNAME
+%import common.ESCAPED_STRING
+%import common.SIGNED_NUMBER
+%import common.WS
+
+// Ignore whitespace between tokens.
+%ignore WS
