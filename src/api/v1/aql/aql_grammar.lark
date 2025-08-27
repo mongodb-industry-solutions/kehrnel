@@ -1,6 +1,6 @@
 // AQL Grammar for Lark Parser
 
-?query: select_clause from_clause [contains_clause] [where_clause]
+?query: select_clause from_clause [contains_clause] [where_clause] [order_by_clause]
 
 // SELECT clause: Starts with SELECT, followed by one or more select expressions.
 select_clause: "SELECT"i select_expr ("," select_expr)*
@@ -15,6 +15,10 @@ contains_clause: "CONTAINS"i "COMPOSITION"i "c"
 // WHERE clause: For filtering results.
 where_clause: "WHERE"i comparison
 comparison: path comparison_op value
+
+// ORDER BY clause for sorting results.
+order_by_clause: "ORDER BY"i path [ordering]
+ordering: "ASC"i | "DESC"i
 
 // A path is an alias (e.g., 'e' or 'c') followed by segments.
 // Example: e/ehr_id/value
