@@ -17,8 +17,7 @@ where_clause: "WHERE"i comparison
 comparison: path comparison_op value
 
 // ORDER BY clause for sorting results.
-order_by_clause: "ORDER BY"i path [ordering]
-ordering: "ASC"i | "DESC"i
+order_by_clause: "ORDER BY"i path [("ASC"i | "DESC"i)]
 
 // A path is an alias (e.g., 'e' or 'c') followed by segments.
 // Example: e/ehr_id/value
