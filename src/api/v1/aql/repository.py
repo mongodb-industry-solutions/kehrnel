@@ -36,10 +36,17 @@ class AqlMongoTransformer(Transformer):
         # AQL: e/ehr_id/value -> Mongo: _id
         if alias == 'e' and segments[0].value == 'ehr_id':
             return "_id"
-        # AQL: c/uid/value -> Mongo: composition_doc.data.uid.value
+
+        # AQL: c/uid/value is a special path referring to the composition's version UID.
+        # This correctly maps to the document's primary key `_id`.
+        if alias == 'c' and segments[0].value == 'uid':
+            return "_id"
+
+        # AQL: c/some/other/path -> Mongo: data.some.other.path
         elif alias == 'c':
             field_path = ".".join(s.value for s in segments)
-            return f"composition_doc.data.{field_path}"
+            return f"data.{field_path}"
+        
         # AQL: e/some/path -> Mongo: some.path
         else:
             return ".".join(s.value for s in segments)
@@ -53,18 +60,12 @@ class AqlMongoTransformer(Transformer):
         return {"aql_path": aql_path_str, "mongo_field": mongo_field}
 
     def comparison_op(self, *args):
-        # Handle the case where the operator might be passed differently
         if len(args) == 1:
             op = args[0]
-            if hasattr(op, 'value'):
-                op_value = op.value
-            else:
-                op_value = str(op)
+            op_value = op.value if hasattr(op, 'value') else str(op)
         elif len(args) == 0:
-            # Fallback if no arguments are passed
             op_value = "="
         else:
-            # Multiple arguments - take the first one
             op = args[0]
             op_value = op.value if hasattr(op, 'value') else str(op)
         
@@ -74,22 +75,53 @@ class AqlMongoTransformer(Transformer):
         if val_token.type == 'ESCAPED_STRING' or val_token.type == 'SINGLE_QUOTED_STRING':
             return val_token.value.strip('"\'')
         elif val_token.type == 'SIGNED_NUMBER':
-            # Convert the string representation of a number to a float or int
             num = float(val_token.value)
-            if num.is_integer():
-                return int(num)
-            return num
-        # Fallback for unexpected types
+            return int(num) if num.is_integer() else num
         return val_token.value
 
     def comparison(self, path, op, value):
         return {path["mongo_field"]: {op: value}}
 
     def where_clause(self, comparison):
-        return {"$match": comparison}
+        result = {"$match": comparison}
+        logger.info(f"WHERE CLAUSE DEBUG: comparison={comparison}, result={result}")
+        return result
 
     def contains_clause(self, *args):
         return {"contains_composition": True}
+    
+    def empty_contains(self):
+        return {}
+        
+    def empty_where(self):
+        return {}
+        
+    def empty_order(self):
+        return {}
+    
+    def contains_clause_part(self, clause):
+        return clause
+        
+    def where_clause_part(self, clause):
+        return clause
+        
+    def order_clause_part(self, clause):
+        return clause
+    
+    # Renamed method to match the grammar rule
+    def order_clause(self, path, direction_token=None):
+        """
+        Creates the sorting dictionary for the plan.
+        'direction_token' will be a Token for 'ASC' or 'DESC', or None if omitted.
+        """
+        direction_value = None
+        if direction_token:
+            direction_value = direction_token.value.upper() if hasattr(direction_token, 'value') else str(direction_token).upper()
+        
+        direction = -1 if direction_value == 'DESC' else 1
+        result = {"$sort": {path["mongo_field"]: direction}}
+        logger.info(f"ORDER CLAUSE DEBUG: path={path}, direction_token={direction_token}, direction_value={direction_value}, direction={direction}, result={result}")
+        return result
 
     def aliased_path(self, path, alias=None):
         column_name = alias.value if alias else path["aql_path"].split('/')[-2]
@@ -98,54 +130,49 @@ class AqlMongoTransformer(Transformer):
     def select_clause(self, *select_exprs):
         return list(select_exprs)
 
-    def query(self, select_clause, from_clause, contains_clause=None, where_clause=None):
-        return {"select": select_clause, "contains": contains_clause or {}, "where": where_clause or {}}
+    def query(self, select_clause, from_clause, contains_clause_part, where_clause_part, order_clause_part):
+        result = {
+            "select": select_clause,
+            "contains": contains_clause_part,
+            "where": where_clause_part,
+        }
+        if order_clause_part and order_clause_part != {}:
+            result["orderby"] = order_clause_part
+        logger.info(f"QUERY DEBUG: select={select_clause}, where={where_clause_part}, order={order_clause_part}, result={result}")
+        return result
 
 
 def _build_pipeline_from_plan(plan: Dict[str, Any], request_body: Dict[str, Any]) -> List[Dict[str, Any]]:
     """Constructs the MongoDB aggregation pipeline from the transformed query plan."""
     pipeline = []
 
-    # Determine if this is a composition-centric query
     has_composition = plan.get("contains", {}).get("contains_composition")
-    has_ehr_fields = any(col["mongo_field"] == "_id" for col in plan["select"])
+    is_ehr_join = has_composition and any(col["path"].startswith("e/") for col in plan["select"])
     
-    # If we have composition fields, start from compositions collection
+    def get_mongo_path(plan_path: str) -> str:
+        """Determines the correct MongoDB field path based on the query context."""
+        # Handles case where e/ehr_id/value -> _id is selected after a join from compositions
+        if is_ehr_join and plan_path == "_id" and any(c["mongo_field"] == "_id" and c["path"].startswith("e/") for c in plan["select"]):
+            logger.info(f"get_mongo_path: EHR join case - {plan_path} -> ehr_doc.{plan_path}")
+            return f"ehr_doc.{plan_path}"
+        logger.info(f"get_mongo_path: Default case - {plan_path} -> {plan_path}")
+        return plan_path
+
     if has_composition:
-        # Start from compositions collection
         match_stage = {}
         if plan.get("where", {}).get("$match"):
-            # Fix field paths for WHERE clause when starting from compositions
-            where_conditions = plan["where"]["$match"]
-            fixed_conditions = {}
-            for field_path, condition in where_conditions.items():
-                if field_path.startswith("composition_doc."):
-                    # Remove the composition_doc prefix since we're starting from compositions
-                    fixed_field_path = field_path.replace("composition_doc.", "")
-                    fixed_conditions[fixed_field_path] = condition
-                else:
-                    fixed_conditions[field_path] = condition
-            match_stage.update(fixed_conditions)
-            
+            match_stage.update(plan["where"]["$match"])
         if request_body.get("ehr_id"):
             match_stage["ehr_id"] = request_body["ehr_id"]
-        
         if match_stage:
             pipeline.append({"$match": match_stage})
         
-        # If we also need EHR fields, do a lookup to EHR collection
-        if has_ehr_fields:
+        if is_ehr_join:
             pipeline.append({
-                "$lookup": {
-                    "from": EHR_COLL_NAME,
-                    "localField": "ehr_id",
-                    "foreignField": "_id",
-                    "as": "ehr_doc"
-                }
+                "$lookup": { "from": EHR_COLL_NAME, "localField": "ehr_id", "foreignField": "_id", "as": "ehr_doc" }
             })
             pipeline.append({"$unwind": "$ehr_doc"})
-    else:
-        # Original logic for EHR-centric queries
+    else: # EHR-only query
         match_stage = {}
         if plan.get("where", {}).get("$match"):
             match_stage.update(plan["where"]["$match"])
@@ -154,22 +181,30 @@ def _build_pipeline_from_plan(plan: Dict[str, Any], request_body: Dict[str, Any]
         if match_stage:
             pipeline.append({"$match": match_stage})
 
+    # Add the $sort stage if 'orderby' exists in the plan
+    logger.info(f"DEBUG: Checking for orderby in plan: {plan.get('orderby')}")
+    if plan.get("orderby"):
+        sort_plan = plan["orderby"]["$sort"]
+        original_sort_field = list(sort_plan.keys())[0]
+        sort_direction = sort_plan[original_sort_field]
+        
+        final_sort_field = get_mongo_path(original_sort_field)
+        logger.info(f"SORT DEBUG - Original field: {original_sort_field}, Final field: {final_sort_field}, Direction: {sort_direction}")
+        logger.info(f"SORT DEBUG - Sort stage: {{'$sort': {{'{final_sort_field}': {sort_direction}}}}}")
+        pipeline.append({"$sort": {final_sort_field: sort_direction}})
+    else:
+        logger.info("DEBUG: No orderby found in plan")
+
+    # Build the final projection
     projection = {"_id": 0}
     for col in plan["select"]:
-        # Adjust field paths based on collection structure
-        if has_composition and col["mongo_field"].startswith("composition_doc."):
-            # Remove the composition_doc prefix since we're starting from compositions
-            field_path = col["mongo_field"].replace("composition_doc.", "")
-        elif has_ehr_fields and has_composition and col["mongo_field"] == "_id":
-            # When looking up EHR from compositions, use the ehr_doc._id
-            field_path = "ehr_doc._id"
-        else:
-            field_path = col["mongo_field"]
-        
-        projection[col["name"]] = f"${field_path}"
+        plan_field = col["mongo_field"]
+        final_field_path = get_mongo_path(plan_field)
+        projection[col["name"]] = f"${final_field_path}"
     
     pipeline.append({"$project": projection})
 
+    # Add pagination
     if request_body.get("offset"):
         pipeline.append({"$skip": request_body["offset"]})
     if request_body.get("fetch"):
@@ -179,10 +214,6 @@ def _build_pipeline_from_plan(plan: Dict[str, Any], request_body: Dict[str, Any]
 
 
 async def execute_aql_query(request_body: Dict[str, Any], db: AsyncIOMotorDatabase) -> Dict[str, Any]:
-    """
-    Parses an AQL query using Lark, builds a MongoDB Aggregation Pipeline,
-    executes it, and formats the result.
-    """
     aql_query = request_body.get("q")
     if not aql_parser:
         raise RuntimeError("AQL parser is not initialized. Check for grammar file.")
@@ -197,14 +228,11 @@ async def execute_aql_query(request_body: Dict[str, Any], db: AsyncIOMotorDataba
     logger.info(f"Generated Query Plan: {query_plan}")
     pipeline = _build_pipeline_from_plan(query_plan, request_body)
     logger.info(f"Generated MongoDB Aggregation Pipeline: {pipeline}")
+    logger.info(f"FINAL PIPELINE DEBUG: {pipeline}")
 
     try:
-        # Determine which collection to start the aggregation from
-        has_composition = query_plan.get("contains", {}).get("contains_composition")
-        if has_composition:
-            collection = db[COMPOSITION_COLL_NAME]
-        else:
-            collection = db[EHR_COLL_NAME]
+        collection_name = COMPOSITION_COLL_NAME if query_plan.get("contains") else EHR_COLL_NAME
+        collection = db[collection_name]
         
         cursor = collection.aggregate(pipeline)
         results = await cursor.to_list(length=None)
@@ -214,7 +242,7 @@ async def execute_aql_query(request_body: Dict[str, Any], db: AsyncIOMotorDataba
 
     columns = [{"name": field["name"], "path": field["path"]} for field in query_plan["select"]]
     rows = []
-    column_names_in_order = [field["name"] for field in query_plan["select"]]
+    column_names_in_order = [col["name"] for col in columns]
     for doc in results:
         row = [doc.get(col_name) for col_name in column_names_in_order]
         rows.append(row)
