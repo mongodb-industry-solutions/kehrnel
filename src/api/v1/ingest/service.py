@@ -1,63 +1,73 @@
 # src/api/v1/ingest/service.py
 
-from pymongo.errors import BulkWriteError
-from bson import ObjectId
-from motor.motor_asyncio import AsyncIOMotorDatabase
+import json
+from typing import Dict, Any
 
 from src.transform.flattener_g import CompositionFlattener
-
-
-async def _safe_insert(collection, docs):
-    """Helper to insert documents and gracefully handle duplicate key errors."""
-    if not docs:
-        return 0
-    try:
-        result = await collection.insert_many(docs, ordered=False)
-        return len(result.inserted_ids)
-    except BulkWriteError as bwe:
-        # Filter for duplicate key errors (code 11000)
-        dup = sum(1 for e in bwe.details.get("writeErrors", []) if e["code"] == 11000)
-        # Check for any other errors
-        other_errors = [e for e in bwe.details.get("writeErrors", []) if e["code"] != 11000]
-        if other_errors:
-            # Re-raise if there are errors other than duplicates
-            raise
-        return len(docs) - dup
-
+from src.api.v1.ingest.repository import IngestionRepository
+from src.transform.exceptions_g import FlattenerError
 
 class IngestionService:
-    @staticmethod
-    async def process_and_store_composition(
-        raw_composition_doc: dict,
-        flattener: CompositionFlattener,
-        db: AsyncIOMotorDatabase,
-        config: dict,
-    ) -> str:
+    def __init__(self, flattener: CompositionFlattener, repository: IngestionRepository):
+        self.flattener = flattener
+        self.repository = repository
+    
+    async def _process_and_store(self, raw_composition_doc: Dict[str, Any]) -> str:
         """
-        Uses the flattener to transform a composition and stores it in the database.
-        Returns the new composition's ID.
+        Private helper to run the core transformation and storage loc
+        This avoids code duplication across different ingestion methods
         """
-        # 1. Use the flattener to transform the composition (this part is synchronous)
-        base_doc, search_doc = flattener.transform_composition(raw_composition_doc)
 
-        # 2. Assign a new BSON ObjectId for the flattened documents
-        new_id = ObjectId()
-        base_doc["_id"] = new_id
+        # Validate the structure of the input document
+        if not all(k in raw_composition_doc for k in ["_id", "ehr_id", "canonicalJSON"]):
+            raise ValueError("Source document must contain '_id', 'ehr_id', and 'canonicalJSON'.")
+        
+        # Use the flattener to transform the composition
+        try:
+            base_doc, search_doc = self.flattener.transform_composition(raw_composition_doc)
+        except FlattenerError as e:
+            raise e
+        
+        # Use the repository to store the flatten documents 
+        new_comp_id = await self.repository.insert_flattened_composition_in_transaction(base_doc, search_doc)
 
-        has_search_data = search_doc and search_doc.get("sn")
-        if has_search_data:
-            search_doc["_id"] = new_id
+        return new_comp_id
+    
+    async def ingest_from_payload(self, raw_composition_doc: Dict[str, Any]) -> str:
+        """
+        Processes a composition provided directly in the request body
+        """
+        return await self._process_and_store(raw_composition_doc)
+    
+    
+    async def ingest_from_local_file(self, file_path: str) -> str:
+        """
+        Reads a canonical composition from a local JSON file, the processes it
+        """
 
-        # 3. Get collection names from config
-        compositions_collection_name = config["target"]["compositions_collection"]
-        search_collection_name = config["target"]["search_collection"]
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                raw_composition_doc = json.load(f)
+        except FileNotFoundError:
+            raise FileNotFoundError(f"The specified file was not found: {file_path}")
+        except json.JSONDecodeError:
+            raise ValueError(f"The file is not a valid JSON: {file_path}")
+        
+        return await self._process_and_store(raw_composition_doc)
+    
 
-        comp_collection = db[compositions_collection_name]
-        search_collection = db[search_collection_name]
+    async def ingest_from_database(self, ehr_id: str) -> str:
+        """
+        Fetches a canonical composition from the source database collection using
+        an ehr_id, then processes it.
+        """
+        raw_composition_doc = await self.repository.find_canonical_composition_by_ehr_id(ehr_id)
+        
+        if not raw_composition_doc:
+            raise ValueError(f"No canonical composition found for ehr_id: {ehr_id}")
 
-        # 4. Insert into target collections asynchronously
-        await _safe_insert(comp_collection, [base_doc])
-        if has_search_data:
-            await _safe_insert(search_collection, [search_doc])
-
-        return str(new_id)
+        # The _id from MongoDB is an ObjectId, but the flattener expects a string. Let's ensure it is.
+        # This also matches the structure of a doc loaded from JSON.
+        raw_composition_doc["_id"] = str(raw_composition_doc["_id"])
+            
+        return await self._process_and_store(raw_composition_doc)
