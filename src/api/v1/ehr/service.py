@@ -17,6 +17,30 @@ from src.api.v1.ehr.repository import (
 from src.api.v1.ehr.models import EHRStatus, PartySelf, EHRCreationResponse, EHR, Composition, CompositionCreate
 from app.core.models import Contribution, AuditDetails
 
+
+async def retrieve_ehr_by_subject(subject_id: str, subject_namespace: str, db: AsyncIOMotorDatabase) -> EHR:
+    """
+    Retrieves a single EHR by its subject's ID and namespace.
+
+    Args:
+        subject_id: The identifier of the subject.
+        subject_namespace: The namespace of the subject's identifier.
+        db: The database session.
+
+    Returns:
+        The EHR Pydantic model instance.
+
+    Raises:
+        HTTPException: If no EHR with the given subject is found (status 404).
+    """
+    ehr_document = await find_ehr_by_subject(subject_id, subject_namespace, db)
+    if not ehr_document:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = f"EHR with subject_id '{subject_id}' and namespace '{subject_namespace}' not found"
+        )
+    return EHR.model_validate(ehr_document)
+
 async def delete_composition_by_preceding_uid(
     ehr_id: str,
     preceding_version_uid: str,

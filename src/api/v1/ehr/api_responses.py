@@ -3,6 +3,22 @@ from src.api.v1.ehr.models import EHRCreationResponse, EHRStatus, ErrorResponse,
 from typing import Optional, List
 
 # Dictionary of examples for the request body for the create_ehr_endpoint:
+get_ehr_by_subject_responses = {
+    status.HTTP_200_OK: {
+        "description": "EHR for the specified subject found and returned successfully.",
+        "model": EHR,
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "No EHR was found for the specified `subject_id` and `subject_namespace`.",
+        "model": ErrorResponse,
+        "content": {
+            "application/json": {
+                "example": {"detail": "EHR with subject_id '...' and namespace '...' not found"}
+            }
+        },
+    }
+}
+
 ehr_status_example = {
     "with_subject": {
         "summary": "Create EHR with a subject",
