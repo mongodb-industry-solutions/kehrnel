@@ -96,6 +96,6 @@ app.include_router(aql_router, prefix="/v1", tags=["AQL"])
 # The new ingestion router
 app.include_router(
     ingest_routes.router,
-    prefix="/v1/ingest", # Using /v1 prefix for consistency
+    prefix="/v1/ingestions",
     tags=["Ingestion"]
 )
