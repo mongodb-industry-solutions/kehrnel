@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status, Body, Query, HTTPException, Response, Header
 from fastapi.responses import JSONResponse
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from typing import Optional, List
+from typing import Optional, List, Union
 from email.utils import formatdate
 
 from datetime import datetime, timezone
@@ -13,7 +13,8 @@ from src.api.v1.ehr.service import (
     add_composition, 
     retrieve_composition_by_version_uid, 
     update_composition,
-    delete_composition_by_preceding_uid
+    delete_composition_by_preceding_uid,
+    retrieve_ehr_by_subject
 )
 
 from src.api.v1.ehr.models import EHRCreationResponse, EHRStatus, ErrorResponse, EHR, Composition, CompositionCreate
@@ -28,7 +29,8 @@ from src.api.v1.ehr.api_responses import (
     create_composition_responses, 
     get_composition_responses, 
     update_composition_responses,
-    delete_composition_responses
+    delete_composition_responses,
+    get_ehr_by_subject_responses
 )
 
 router = APIRouter(
@@ -213,22 +215,38 @@ async def update_ehr_status_endpoint(
 
 @router.get(
     "",
-    response_model = List[EHR],
+    response_model=Union[EHR, List[EHR]], 
     response_model_by_alias = False,
-    summary = "Get a list of EHR",
-    responses = get_ehr_list_responses
+    summary="Get EHR by subject ID or list EHRs",
+    responses={**get_ehr_by_subject_responses, **get_ehr_list_responses}
 )
-async def get_ehr_list(
+async def get_ehr_by_subject_or_list(
+    subject_id: Optional[str] = Query(None, description="The EHR subject id."),
+    subject_namespace: Optional[str] = Query(None, description="The EHR subject id namespace."),
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
 ):
     """
-    Retrieves a list of the 50 most recently created EHRs.
-    The list is sorted by `time_created` in descending order.
-    This endpoint does not support pagination.
-    """
-    ehr_data = await retrieve_ehr_list(db=db, limit=50)
+    Retrieves EHR resources. This endpoint has dual functionality:
+
+    - **Find by Subject:** If `subject_id` and `subject_namespace` query parameters
+      are provided, it returns the single EHR matching that subject.
     
-    return ehr_data
+    - **List EHRs:** If no query parameters are provided, it retrieves a list
+      of the 50 most recently created EHRs.
+    """
+
+    # If both query parameters are present, find the specific EHR
+    if subject_id and subject_namespace:
+        ehr_data = await retrieve_ehr_by_subject(
+            subject_id=subject_id,
+            subject_namespace=subject_namespace,
+            db=db
+        )
+        return ehr_data
+    
+    # Otherwise, fall back to the original list functionality
+    ehr_list_data = await retrieve_ehr_list(db=db, limit=50)
+    return ehr_list_data
 
 
 @router.get(
