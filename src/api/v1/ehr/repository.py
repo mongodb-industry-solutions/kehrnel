@@ -1,3 +1,5 @@
+# repository.py
+
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from pymongo.errors import PyMongoError
 import logging
@@ -41,13 +43,17 @@ async def add_deletion_contribution_and_update_ehr(
 
                 update_set_criteria = {
                     "$push": {
-                        "contributions": contribution_doc["_id"]
+                        "contributions": {
+                            "id": {"value": contribution_doc["_id"]},
+                            "namespace": "local",
+                            "type": "CONTRIBUTION"
+                        }
                     }
                 }
 
                 # Update the parent EHR document by pushin the new contribution ID
                 update_result = await db[EHR_COLL_NAME].update_one(
-                    {"_id.value": ehr_id}, # Update query to match new model
+                    {"_id.value": ehr_id}, 
                     update_set_criteria,
                     session = session
                 )
