@@ -14,7 +14,8 @@ from tabulate import tabulate
 
 from core import kehrnelGenerator, kehrnelValidator, TemplateParser
 from mapper import mapping_engine
-from mapper.handlers.xml_handler import XMLHandler  # existing handler
+from mapper.handlers.xml_handler import XMLHandler 
+from mapper.utils.macro_expander import expand_macros
 
 app = typer.Typer(add_completion=False, rich_markup_mode="rich")
 
@@ -62,6 +63,7 @@ def main(
 
     src_tree = handler.load_source(source)
     proc_map = handler.preprocess_mapping(raw_map, src_tree)
+    proc_map = expand_macros(proc_map)
 
     # ── generate composition ───────────────────────────────────────────────
     comp = gen.generate_from_mapping(proc_map, source)

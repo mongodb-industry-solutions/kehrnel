@@ -1,0 +1,240 @@
+# patterns.yaml — document-type detection rules
+# -----------------------------------------------------------------------------
+# The top-level is a YAML sequence of pattern objects.
+# Each pattern may have: name · handler · priority · required_elements ·
+# optional_elements · xpath_patterns · namespaces · csv_headers · exclude_elements
+# -----------------------------------------------------------------------------
+
+# Fiche Tumour
+- name: fiche_tumour_cda
+  handler: xml
+  priority: 100
+  namespaces:
+    cda: "urn:hl7-org:v3"
+  xpath_patterns:
+    - "//cda:component/cda:structuredBody/cda:component/cda:section/cda:title[normalize-space(.)='Fiche Tumeur']"
+  required_elements:
+    - ficheTumeur
+    - dateCreation
+    - dateDiagnostic
+    - codeLesionnel
+    - categorie
+    - codeGdeLocalisation
+    - codeSiege
+
+
+# PMSI diagnostics & acts
+- name: pmsi_cda
+  handler: xml
+  priority: 95
+  namespaces:
+    cda: "urn:hl7-org:v3"
+  xpath_patterns:
+    - "//cda:title[normalize-space(.)='Diagnostics et Actes PMSI']"
+    - "//cda:code[@code='PMSI' and @displayName='PMSI']"
+  required_elements:
+    - periodeExercice
+    - evenementPMSI
+
+# Biology report (BHV)
+- name: bhv_biology_cda
+  handler: xml
+  priority: 94
+  namespaces:
+    cda: "urn:hl7-org:v3"
+  xpath_patterns:
+    - "//cda:title[contains(normalize-space(.), 'BHV')]"
+    - "//cda:code[@code='11502-2' and @displayName=\"CR d'examens biologiques\"]"
+  required_elements: []        # none beyond the XPath tests
+
+# Biology report (BAC, BHV, generic…)
+- name: biology_cda
+  handler: xml
+  priority: 90          # below PMSI / above imaging
+  namespaces: { cda: "urn:hl7-org:v3" }
+  xpath_patterns:
+    - "//cda:code[@code='11502-2']"
+  required_elements: []
+
+# ── Biology report – generic fallback (CERBA, etc.) ──────────────────────
+- name: biology_generic_cda
+  handler: xml
+  priority: 88
+  namespaces: { cda: "urn:hl7-org:v3" }
+  xpath_patterns:
+    # Rely *only* on the LOINC code; titles vary a lot.
+    - "//cda:code[@code='11502-2' and @displayName=\"CR d'examens biologiques\"]"
+  required_elements: []
+  # Make sure even very small CDA stubs pass:
+  exclude_elements:    []        # none
+  
+# Consultation report
+- name: consultation_cda
+  handler: xml
+  priority: 80          
+  namespaces: {cda: "urn:hl7-org:v3"}
+  xpath_patterns:
+    - "//cda:code[@code='11488-4' and \
+                 @displayName=\"CR ou fiche de consultation ou de visite\"]"
+  required_elements: []
+
+
+# Résumé d’hospitalisation  (LOINC 11493-4)
+- name: hospital_resume_cda
+  handler: xml
+  priority: 92
+  namespaces: { cda: "urn:hl7-org:v3" }
+  xpath_patterns:
+    - "//cda:code[@code='11493-4' and \
+                 @displayName=\"CR hospitalier (séjour)\"]"
+  required_elements: []
+
+# RCP (Réunion de concertation pluridisciplinaire)
+- name: rcp_cda
+  handler: xml
+  priority: 94
+  namespaces: { cda: "urn:hl7-org:v3" }
+  xpath_patterns:
+    # accept either the canonical 34794-8 **or** the older 11488-4
+    - "//cda:code[@code='34794-8' or @code='11488-4']"
+    # the title always contains the phrase “REUNION DE CONCERTATION”
+    - "//cda:title[contains(translate(normalize-space(.),                         \
+                      'abcdefghijklmnopqrstuvwxyz',                               \
+                      'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),                              \
+                      'REUNION DE CONCERTATION')]"
+  required_elements: []
+
+# Imagerie (scanner, écho, TDM, IRM…) – LOINC 11528-7
+- name: imaging_cda                       
+  handler: xml
+  priority: 90
+  namespaces: {cda: "urn:hl7-org:v3"}
+  xpath_patterns:
+    - "//cda:code[@code='11528-7']"
+  required_elements: []
+
+# Chimiothérapie – compte-rendu d’administration
+#    (not CDA-namespaced; root = <Messages>)
+- name: chimio_admin_xml
+  handler: xml
+  priority: 96           
+  xpath_patterns:
+    - "/*[local-name()='Messages']/*[local-name()='M_Compte_rendu_administration']"
+  required_elements:
+    - M_Compte_rendu_administration
+    - Patient
+
+# Anatomie-Cytologie / Pathology report
+- name: pathology_cda
+  handler: xml
+  priority: 89               
+  namespaces:
+    cda: "urn:hl7-org:v3"
+  xpath_patterns:
+    # unique LOINC code for “CR d'anatomie et de cytologie pathologiques”
+    - "//cda:code[@code='11526-1' and @displayName=\"CR d'anatomie et de cytologie pathologiques\"]"
+  required_elements: []      # none beyond the XPath test
+
+
+# Medical certificate / attestation
+- name: certificate_cda
+  handler: xml
+  priority: 90
+  namespaces: {cda: "urn:hl7-org:v3"}
+  xpath_patterns:
+    # canonical certificate code
+    - "//cda:code[@code='CERT-DECL']"
+  required_elements: []
+
+
+# Central-line (VVC) insertion or any minor procedure note
+- name: procedure_cda
+  handler: xml
+  priority: 89
+  namespaces: {cda: "urn:hl7-org:v3"}
+  # ONE xpath; inside it we express the OR
+  xpath_patterns:
+    - |
+      //cda:title[
+            contains(translate(normalize-space(.),
+                               'abcdefghijklmnopqrstuvwxyz',
+                               'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),
+                     'VVC')
+          or contains(translate(normalize-space(.),
+                               'abcdefghijklmnopqrstuvwxyz',
+                               'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),
+                     'POSE')
+        ]
+      | //cda:code[@code='34794-8'
+          and not(contains(translate(normalize-space(//cda:title),
+                                     'abcdefghijklmnopqrstuvwxyz',
+                                     'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),
+                           'REUNION DE CONCERTATION'))]
+  required_elements: []
+
+# -----------------------------------------------------------------------------#
+#                               CSV patterns                                   #
+# -----------------------------------------------------------------------------#
+# patterns.yaml  (CSV part only)
+- name: laboratory_csv
+  handler: csv
+  csv_headers:               
+    - commentaire
+    - dateprelevement
+    - dateresultat
+    - ipp
+    - identifiantanalyse
+    - resultat
+    - typeresultat
+
+- name: dicom_csv
+  handler: csv
+  csv_headers:
+    - accessionnumber
+    - anatomicregionsequence
+    - availableimages
+    - bodypartexamined
+    - modality
+    - patientid
+    - seriesinstanceuid
+    - studydate
+    - studydescription
+    - studyinstanceuid
+
+# -----------------------------------------------------------------------------#
+#                               Generic HL7 v2                                #
+# -----------------------------------------------------------------------------#
+- name: generic_hl7v2
+  handler: hl7v2
+  priority: 50        # very low
+  required_elements:  # segments that *any* ADT/ORM/ORU will have
+    - MSH
+    - PID
+
+# -----------------------------------------------------------------------------#
+#                               JSON patterns                                  #
+# -----------------------------------------------------------------------------#
+- name: mdt_report_json
+  handler: json
+  priority: 75
+  required_elements:
+    - ner_results
+    - summary
+  optional_elements: []
+
+- name: openehr_composition
+  handler: json
+  priority: 65
+  required_elements:
+    - _type
+  optional_elements:
+    - name
+    - archetype_node_id
+
+- name: openehr_web_template
+  handler: json
+  priority: 60
+  required_elements:
+    - templateId
+    - tree
+  optional_elements: []

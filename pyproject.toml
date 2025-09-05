@@ -15,10 +15,11 @@ dependencies = [
     "PyYAML>=6",
     "tabulate>=0.9",
     "lxml>=4.9",  # Added for XML parsing
+    "Jinja2>=3.1"  
 ]
 
 [project.optional-dependencies]
-cli   = ["typer[all]>=0.9", "json5>=0.9"]   
+cli   = ["typer[all]>=0.9", "json5>=0.9", "Jinja2>=3.1"]   
 mongo = ["pymongo>=4"]          # only if you want Mongo persistence
 api = [
     "fastapi>=0.104",
@@ -30,6 +31,7 @@ api = [
 all = [
     "typer[all]>=0.9",
     "json5>=0.9",
+    "Jinja2>=3.1",
     "pymongo>=4",
     "fastapi>=0.104",
     "uvicorn[standard]>=0.24",
@@ -41,6 +43,7 @@ all = [
 [project.scripts]
 kehrnel-generate = "cli.generate:app"
 kehrnel-identify = "cli.identify:app"
+kehrnel-skeleton = "cli.skeleton:app"
 kehrnel-map      = "cli.map:app"
 kehrnel-validate = "cli.validate:app"
 kehrnel-ingest   = "cli.ingest:app"

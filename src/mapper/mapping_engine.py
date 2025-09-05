@@ -1,9 +1,5 @@
-"""
-apply_mapping() drives the JSON-path ⇢ value assignment.
+# src/mapper/mapping_engine.py   
 
-The rules themselves are interpreted by a concrete *SourceHandler*
-(see xml_handler.py for an example).
-"""
 from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict, Protocol
@@ -15,27 +11,45 @@ class SourceHandler(Protocol):
     def extract_value(self, src: Any, rule: Dict | str) -> Any: ...
     def preprocess_mapping(self, mapping: Dict, src: Any) -> Dict: ...
 
+from mapper.utils.macro_expander import expand_macros
+from mapper.utils.jinja_env      import env as _JINJA
 
-# ---------------------------------------------------------------------------
+def _render_template(tpl: str, ctx: dict) -> str:
+    return _JINJA.from_string(tpl).render(ctx)
 
+def apply_mapping(generator, mapping, handler, source_tree, skeleton):
+    # ① expand @code/@term/… macros once
+    mapping = expand_macros(mapping)
 
-def apply_mapping(generator, mapping: Dict, handler: SourceHandler,
-                  source_tree: Any, skeleton: Dict) -> Dict:
-    """
-    generator  –  core.OpenEHRGenerator (needs its private _set_value_at_path)
-    mapping    –  mapping dict WITHOUT meta keys
-    handler    –  concrete handler (XML, CSV, …)
-    source_tree–  already loaded/parsed source data
-    skeleton   –  composition returned by generator.generate_minimal()
-    """
     for jpath, rule in mapping.items():
         if jpath.startswith("_"):
-            continue                           # meta (_metadata, _options …)
+            continue
 
+        # ② default / null_flavour bookkeeping
+        default   = rule.pop("default",   None) if isinstance(rule, dict) else None
+        nlf       = rule.pop("null_flavour", None) if isinstance(rule, dict) else None
+
+        # ③ evaluate rule (Jinja2 template strings supported)
         try:
             value = handler.extract_value(source_tree, rule)
-            if value is not None:
+
+            # treat pure strings starting with "{{" "}}" as Jinja templates
+            if isinstance(value, str) and "{{" in value and "}}" in value:
+                value = _render_template(value, {"maps_to": value})
+
+            if value in (None, "", []) and default is not None:
+                value = default
+            elif value in (None, "", []) and nlf:
+                value = {
+                    "null_flavour": {
+                        "value": nlf,
+                        "_type": "DV_CODED_TEXT"
+                    }
+                }
+
+            if value not in (None, "", []):
                 generator._set_value_at_path(skeleton, jpath, value)
+
         except Exception as exc:
             print(f"[WARN] {jpath}: {exc}")
 

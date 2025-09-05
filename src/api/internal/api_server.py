@@ -1,3 +1,4 @@
+# /src/api/internal/api_server.py
 """FastAPI server for Mapping Studio integration with kehrnel - Internal Tooling API"""
 
 import os
@@ -15,8 +16,12 @@ from pathlib import Path
 from bson import ObjectId
 import motor.motor_asyncio
 from functools import lru_cache         
-from contextlib import suppress 
+from contextlib import suppress
+from cli.skeleton import main as skeleton_cli
+from io import StringIO
+import sys
 
+load_dotenv()
 
 @lru_cache
 def get_identifier() -> "DocumentIdentifier":
@@ -41,7 +46,8 @@ try:
     from mapper.mapping_engine import MappingEngine
     from mapper.handlers.xml_handler import XMLHandler
     from mapper.handlers.csv_handler import CSVHandler
-    from mapper.handlers.hl7v2_handler import HL7v2Handler
+    from mapper.utils.macro_expander import expand_macros
+    from cli.skeleton import main as _skeleton_cli 
 
 except ImportError as e:
     print(f"Warning: Some kehrnel components are not implemented yet: {e}")
@@ -123,7 +129,8 @@ app.add_middleware(
 )
 
 # MongoDB connection
-MONGODB_URL = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
+MONGODB_URL = os.getenv("MONGODB_URL") 
+
 try:
     motor_client = motor.motor_asyncio.AsyncIOMotorClient(
         MONGODB_URL,
@@ -344,6 +351,21 @@ async def identify_document(
     finally:
         with suppress(FileNotFoundError):
             tmp_path.unlink()
+
+@app.post("/api/internal/generate-skeleton")
+async def generate_skeleton(templateContent: str,
+                            useMacros: bool = True):
+    tmp = await save_temp_file(templateContent.encode(),
+                               '.opt' if '<template' in templateContent else '.json')
+    buf, _stdout = StringIO(), sys.stdout
+    sys.stdout = buf                 
+    try:
+        skeleton_cli.callback(Path(tmp), useMacros, Path("-"))
+    finally:
+        sys.stdout = _stdout
+        tmp.unlink(missing_ok=True)
+
+    return {"skeleton": buf.getvalue()}
 
 @app.get("/api/internal/mappings")
 async def get_mappings():
@@ -693,7 +715,7 @@ async def add_or_update_pattern(pattern: Dict[str, Any]):
         identifier.patterns.sort(key=lambda p: p.priority, reverse=True)
         
         # Persist to MongoDB
-        if db:
+        if db is not None:
             await db.patterns.replace_one(
                 {"name": new_pattern.name},
                 pattern,
@@ -722,7 +744,7 @@ async def delete_pattern(pattern_name: str):
             raise HTTPException(status_code=404, detail=f"Pattern '{pattern_name}' not found")
         
         # Remove from database
-        if db:
+        if db is not None:
             await db.patterns.delete_one({"name": pattern_name})
         
         return {
@@ -815,7 +837,7 @@ async def import_patterns(patterns_file: UploadFile = File(...)):
                 identifier.patterns.append(pattern)
                 
                 # Persist to MongoDB
-                if db:
+                if db is not None:
                     await db.patterns.replace_one(
                         {"name": pattern.name},
                         pattern_data,
@@ -847,7 +869,7 @@ async def import_patterns(patterns_file: UploadFile = File(...)):
 @app.get("/api/internal/type-template-associations")
 async def get_type_template_associations():
     """Get all document type to template associations"""
-    if db:
+    if db is not None:
         associations = {}
         async for assoc in db.type_template_associations.find():
             associations[assoc["documentType"]] = assoc["templateId"]
@@ -863,7 +885,7 @@ async def save_type_template_association(data: Dict[str, str]):
     if not document_type or not template_id:
         raise HTTPException(status_code=400, detail="Both documentType and templateId are required")
     
-    if db:
+    if db is not None:
         await db.type_template_associations.replace_one(
             {"documentType": document_type},
             {
