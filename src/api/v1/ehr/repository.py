@@ -5,6 +5,7 @@ import logging
 # Create a logger instance
 logger = logging.getLogger(__name__)
 
+# TODO: Remove the COLL variables from the ehr/repository and take them to the .env or whatever the best approach is
 EHR_COLL_NAME = "ehr"
 EHR_CONTRIBUTIONS_COLL = "contributions"
 COMPOSITIONS_COLL_NAME = "compositions"
@@ -46,7 +47,7 @@ async def add_deletion_contribution_and_update_ehr(
 
                 # Update the parent EHR document by pushin the new contribution ID
                 update_result = await db[EHR_COLL_NAME].update_one(
-                    {"_id": ehr_id},
+                    {"_id.value": ehr_id}, # Update query to match new model
                     update_set_criteria,
                     session = session
                 )
@@ -66,8 +67,15 @@ async def find_composition_by_uid(uid: str, db: AsyncIOMotorDatabase):
 
 
 async def find_ehr_by_subject(subject_id: str, subject_namespace: str, db: AsyncIOMotorDatabase):
+    """
+    Finds an EHR by its subject's external reference ID and namespace.
+    The query path is updated to match the new nested structure.
+    """
     return await db[EHR_COLL_NAME].find_one(
-        {"ehr_status.subject.id": subject_id, "ehr_status.subject.namespace": subject_namespace}
+        {
+            "ehr_status.subject.external_ref.id.value": subject_id, 
+            "ehr_status.subject.external_ref.namespace": subject_namespace
+        }
     )
 
 
@@ -91,7 +99,7 @@ async def find_ehr_by_id(ehr_id: str, db: AsyncIOMotorDatabase):
     """
     Retrieves a single EHR document from the database by its ehr_id.
     """
-    find_ehr_result = await db[EHR_COLL_NAME].find_one({"_id": ehr_id})
+    find_ehr_result = await db[EHR_COLL_NAME].find_one({"_id.value": ehr_id})
     return find_ehr_result
 
 
@@ -103,7 +111,7 @@ async def find_newest_ehrs(db: AsyncIOMotorDatabase, limit: int = 50):
     # The query finds all documents ({}), sorts them by time_created in
     # descending order (-1), and limits the result set.
 
-    cursor_ehr_result = db[EHR_COLL_NAME].find().sort("time_created", -1).limit(limit)
+    cursor_ehr_result = db[EHR_COLL_NAME].find().sort("time_created.value", -1).limit(limit)
     if cursor_ehr_result is None:
         logger.warning("No EHRs found in the database.")
         return []
@@ -119,7 +127,7 @@ async def update_ehr_status_in_transaction(ehr_id: str, new_status_doc: dict, co
         async with session.start_transaction():
             try:
                 ehr_update_criteria = {
-                    "_id": ehr_id
+                    "_id.value": ehr_id
                 }
 
                 ehr_update_doc = {
@@ -127,7 +135,11 @@ async def update_ehr_status_in_transaction(ehr_id: str, new_status_doc: dict, co
                         "ehr_status": new_status_doc
                     },
                     "$push": {
-                        "contributions": contribution_doc["_id"]
+                        "contributions": { # Push an ObjectRef
+                            "id": {"value": contribution_doc["_id"]},
+                            "namespace": "local",
+                            "type": "CONTRIBUTION"
+                        }
                     }
                 }
 
@@ -169,13 +181,21 @@ async def insert_composition_contribution_and_update_ehr(
                 # Update the EHR document by pushin the new IDs to ther respective lists
                 update_criteria = {
                     "$push": {
-                        "contributions": contribution_doc["_id"],
-                        "compositions": composition_doc["_id"]
+                        "contributions": {
+                            "id": {"value": contribution_doc["_id"]},
+                            "namespace": "local",
+                            "type": "CONTRIBUTION"
+                        },
+                        "compositions": {
+                            "id": {"value": composition_doc["_id"]},
+                            "namespace": "local",
+                            "type": "COMPOSITION"
+                        }
                     }
                 }
 
                 update_result = await db[EHR_COLL_NAME].update_one(
-                    {"_id": ehr_id},
+                    {"_id.value": ehr_id},
                     update_criteria,
                     session = session
                 )
