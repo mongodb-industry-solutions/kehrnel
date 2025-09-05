@@ -1,3 +1,5 @@
+#ehr/service.py
+
 import uuid
 from datetime import datetime, timezone
 from motor.motor_asyncio import AsyncIOMotorDatabase
@@ -274,10 +276,12 @@ async def retrieve_composition_by_version_uid(
     # Check if the composition UID is in the EHR's list of compositions
     # Ensure the composition belongs to the specified EHR
 
-    if versioned_object_uid not in ehr_doc.get("compositions", []):
+    composition_refs = ehr_doc.get("compositions", [])
+
+    if not any(comp["id"]["value"] == versioned_object_uid for comp in composition_refs):
         raise HTTPException(
-            status_code = status.HTTP_404_NOT_FOUND,
-            detail = f"Composition with id '{versioned_object_uid}' not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Composition with id '{versioned_object_uid}' not found in EHR '{ehr_id}'"
         )
     
     # Fetch the composition document from the repository
