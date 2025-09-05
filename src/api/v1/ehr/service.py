@@ -14,7 +14,11 @@ from src.api.v1.ehr.repository import (
     add_deletion_contribution_and_update_ehr,
     find_deletion_contribution_for_version
 )
-from src.api.v1.ehr.models import EHRStatus, PartySelf, EHRCreationResponse, EHR, Composition, CompositionCreate
+from src.api.v1.ehr.models import (
+    EHRStatus, PartySelf, EHRCreationResponse, EHR, Composition, CompositionCreate,
+    EHRStatusCreate, EhrIdModel, SystemIdModel, ObjectVersionID, DvDateTime,
+    ObjectRef, HierObjectID
+)
 from src.app.core.models import Contribution, AuditDetails
 
 
@@ -393,7 +397,7 @@ async def retrieve_ehr_by_id(ehr_id: str, db: AsyncIOMotorDatabase) ->EHR:
     return EHR.model_validate(ehr_document)
 
 
-async def retrieve_ehr_list(db: AsyncIOMotorDatabase, limit: int = 50) ->EHR:
+async def retrieve_ehr_list(db: AsyncIOMotorDatabase, limit: int = 50) -> List[EHR]:
     """
     Retrieves a list of the newest EHRs.
 
@@ -415,64 +419,107 @@ async def retrieve_ehr_list(db: AsyncIOMotorDatabase, limit: int = 50) ->EHR:
     return [EHR.model_validate(document) for document in ehr_list_documents]
 
 
-async def create_ehr(db: AsyncIOMotorDatabase,
-                     initial_status: Optional[EHRStatus] = None,
-                     commiter_name: str = "System"
+async def create_ehr_with_id(
+    ehr_id: str,
+    db: AsyncIOMotorDatabase,
+    initial_status: Optional[EHRStatusCreate] = None,
+    committer_name: str = "System"
 ) -> EHRCreationResponse:
-    
+    """
+    Creates an EHR with a client-specified ID
+    """
+    if await find_ehr_by_id(ehr_id, db):
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"EHR with id '{ehr_id}' already exists"
+        )
+    return await _create_ehr_logic(db, ehr_id, initial_status, committer_name)
+
+
+async def create_ehr(
+    db: AsyncIOMotorDatabase,
+    initial_status: Optional[EHRStatusCreate] = None,
+    committer_name: str = "System"
+) -> EHRCreationResponse:
+    """
+    Creates an EHR with a server-generated ID.
+    """
     ehr_id = str(uuid.uuid4())
+    return await _create_ehr_logic(db, ehr_id, initial_status, committer_name)
+
+
+async def _create_ehr_logic(
+    db: AsyncIOMotorDatabase,
+    ehr_id: str,
+    initial_status: Optional[EHRStatusCreate] = None,
+    committer_name: str = "System"
+) -> EHRCreationResponse:
+    """
+    Shared business logic for creating an EHR.
+    """
     time_created = datetime.now(timezone.utc)
+    system_id = "my-openehr-server"
 
     if initial_status:
-        # Check if an EHR for this subject already exists
-        existing_ehr = await find_ehr_by_subject(
-            subject_id = initial_status.subject.id,
-            subject_namespace = initial_status.subject.namespace,
-            db=db
-        )
-        if existing_ehr:
+        # Check for conflic by subject ID
+        subject_id = initial_status.subject.external_ref["id"]["value"]
+        subject_namespace = initial_status.subject.external_ref["namespace"]
+
+        if await find_ehr_by_subject(subject_id, subject_namespace, db):
             raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail=f"An EHR with subjectId '{initial_status.subject.id}' already exists."
+                status_code = status.HTTP_409_CONFLICT,
+                detail = f"An EHR with subjectId '{subject_id}' already exists"
             )
-        # Client provided an EHR_STATUS in the request body.
-        # We use the status provided by the client.
-        ehr_status = initial_status
+        subject = initial_status.subject
     else:
-        # Client sent an empty request body.
-        # We MUST create a default EHR_STATUS.
-        # It's good practice to give it a temporary, system-generated subject
-        temp_subject_id = f"unassigned.{ehr_id}"
-        ehr_status = EHRStatus(
-            subject=PartySelf(
-                id=temp_subject_id,
-                namespace="system.unassigned"
-            )
+        # Create default subject
+        subject = PartySelf(
+            external_ref={
+                "id": {
+                    "value": str(uuid.uuid4())
+                },
+                "namespace": "patients",
+                "type": "PERSON"
+            }
         )
 
-    # The object_id persists across all versions of this EHR_STATUS
+    # Create the full EHR_status object for storage
     ehr_status_object_id = str(uuid.uuid4())
-    ehr_status.uid = f"{ehr_status_object_id}::my-openehr-server::1"
+    ehr_status_uid_val = f"{ehr_status_object_id}::{system_id}::1"
 
-    # Create the Contribution object for this transaction
+    ehr_status = EHRStatus(
+        uid=ObjectVersionID(value=ehr_status_uid_val),
+        subject=subject,
+        is_modifiable=initial_status.is_modifiable if initial_status else True,
+        is_queryable=initial_status.is_queryable if initial_status else True,
+    )
+
+    contribution_id = str(uuid.uuid4())
     contribution = Contribution(
-        ehr_id = ehr_id,
-        audit = AuditDetails(
-            system_id = "my-openehr-server",
-            committer_name = commiter_name,
-            time_committed = time_created,
-            change_type = "creation"
+        id=contribution_id,
+        ehr_id=ehr_id,
+        audit=AuditDetails(
+            system_id=system_id,
+            committer_name=committer_name,
+            time_committed=time_created,
+            change_type="creation"
         ),
         versions=[ehr_status.model_dump(by_alias=True)]
     )
 
-    # Create the main EHR document
     ehr_doc = EHR(
-        ehr_id = ehr_id,
-        system_id = "my-openehr-server",
-        time_created = time_created,
-        ehr_status = ehr_status,
-        contributions = [contribution.id]
+        ehr_id=EhrIdModel(value=ehr_id),
+        system_id=SystemIdModel(value=system_id),
+        time_created=DvDateTime(value=time_created),
+        ehr_status=ehr_status,
+        ehr_access=ObjectRef(
+            id=HierObjectID(value=str(uuid.uuid4())), type="EHR_ACCESS"
+        ),
+        contributions=[
+            ObjectRef(
+                id=HierObjectID(value=contribution_id), type="CONTRIBUTION"
+            )
+        ]
     )
 
     try:
@@ -488,11 +535,13 @@ async def create_ehr(db: AsyncIOMotorDatabase,
         )
 
     return EHRCreationResponse(
-        ehr_id=ehr_id,
-        ehr_status=ehr_status,
-        system_id=ehr_doc.system_id,
-        time_created=time_created
+        ehr_id=EhrIdModel(value=ehr_id),
+        ehr_status=ObjectRef(id=HierObjectID(value=ehr_status.uid.value), type="EHR_STATUS"),
+        system_id=SystemIdModel(value=system_id),
+        time_created=DvDateTime(value=time_created),
+        ehr_access=ehr_doc.ehr_access
     )
+
 
 async def add_composition(
     ehr_id: str,
