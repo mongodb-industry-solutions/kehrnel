@@ -1,15 +1,17 @@
+# ehr/routes.py
+
 from fastapi import APIRouter, Depends, status, Body, Query, HTTPException, Response, Header
 from fastapi.responses import JSONResponse
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import Optional, List, Union
 from email.utils import formatdate
-
 from datetime import datetime, timezone
 
 from src.api.v1.ehr.service import (
     create_ehr, retrieve_ehr_by_id, 
     update_ehr_status, 
-    retrieve_ehr_list, 
+    retrieve_ehr_list,
+    create_ehr_with_id,
     add_composition, 
     retrieve_composition_by_version_uid, 
     update_composition,
@@ -17,17 +19,17 @@ from src.api.v1.ehr.service import (
     retrieve_ehr_by_subject
 )
 
-from src.api.v1.ehr.models import EHRCreationResponse, EHRStatus, ErrorResponse, EHR, Composition, CompositionCreate
-from src.app.core.database import get_mongodb_ehr_db
+from src.api.v1.ehr.models import EHRCreationResponse, EHRStatusCreate, EHRStatus, ErrorResponse, EHR, Composition, CompositionCreate
 
+from src.app.core.database import get_mongodb_ehr_db
 from src.api.v1.ehr.api_responses import (
-    get_ehr_by_id_responses, 
-    create_ehr_api_responses, 
+    get_ehr_by_id_responses,
+    create_ehr_api_responses,
     ehr_status_example, 
-    update_ehr_status_responses, 
-    get_ehr_list_responses, 
-    create_composition_responses, 
-    get_composition_responses, 
+    update_ehr_status_responses,
+    get_ehr_list_responses,
+    create_composition_responses,
+    get_composition_responses,
     update_composition_responses,
     delete_composition_responses,
     get_ehr_by_subject_responses
@@ -37,6 +39,40 @@ router = APIRouter(
     prefix="/ehr",
     tags=["EHR"]
 )
+
+@router.put(
+    "/{ehr_id}",
+    status_code=status.HTTP_201_CREATED,
+    summary="Create EHR with specified ID",
+    responses=create_ehr_api_responses
+)
+async def create_ehr_with_id_endpoint(
+    ehr_id: str,
+    response: Response,
+    prefer: str = Header("return=minimal", alias="Prefer"),
+    ehr_status: Optional[EHRStatusCreate] = Body(default=None),
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Creates a new EHR with a client-specified `ehr_id`.
+    An optional `EHR_STATUS` can be provided in the body.
+    - `Prefer: return=representation` returns the full resource.
+    - `Prefer: return=minimal` returns an empty body with headers.
+    """
+    ehr_response = await create_ehr_with_id(
+        ehr_id=ehr_id, db=db, initial_status=ehr_status
+    )
+
+    response.headers["Location"] = f"/v1/ehr/{ehr_response.ehr_id.value}"
+    response.headers["ETag"] = f'"{ehr_response.ehr_id.value}"'
+
+    if prefer == "return=representation":
+        return ehr_response
+    else:
+        return Response(
+            status_code=status.HTTP_201_CREATED, 
+            headers=response.headers
+        )
 
 @router.delete(
     "/{ehr_id}/composition/{preceding_version_uid}",
@@ -215,8 +251,7 @@ async def update_ehr_status_endpoint(
 
 @router.get(
     "",
-    response_model=Union[EHR, List[EHR]], 
-    response_model_by_alias = False,
+    response_model=List[EHR], # List is the primary return type for the base endpoint
     summary="Get EHR by subject ID or list EHRs",
     responses={**get_ehr_by_subject_responses, **get_ehr_list_responses}
 )
@@ -242,7 +277,7 @@ async def get_ehr_by_subject_or_list(
             subject_namespace=subject_namespace,
             db=db
         )
-        return ehr_data
+        return JSONResponse(content=ehr_data.model_dump(by_alias=True))
     
     # Otherwise, fall back to the original list functionality
     ehr_list_data = await retrieve_ehr_list(db=db, limit=50)
@@ -251,11 +286,10 @@ async def get_ehr_by_subject_or_list(
 
 @router.get(
     "/{ehr_id}",
-    response_model = EHR,
-    response_model_by_alias = False,
-    status_code = status.HTTP_200_OK,
-    summary = "Get EHR by ID",
-    responses = get_ehr_by_id_responses
+    response_model=EHR,
+    status_code=status.HTTP_200_OK,
+    summary="Get EHR by ID",
+    responses=get_ehr_by_id_responses
 )
 async def get_ehr_by_id(
     ehr_id: str,
@@ -269,7 +303,7 @@ async def get_ehr_by_id(
 
     If no EHR with the given `ehr_id` exists, a 404 Not Found error is returned.
     """
-    ehr_data = await retrieve_ehr_by_id(ehr_id= ehr_id, db= db)
+    ehr_data = await retrieve_ehr_by_id(ehr_id=ehr_id, db=db)
     return ehr_data
 
 
@@ -317,28 +351,25 @@ async def create_composition_endpoint(
 
 @router.post(
     "",
-    response_model = EHRCreationResponse,
-    status_code = status.HTTP_201_CREATED,
-    summary = "Create EHR",
-    responses = create_ehr_api_responses
+    status_code=status.HTTP_201_CREATED,
+    summary="Create EHR",
+    responses=create_ehr_api_responses
 )
 async def create_ehr_endpoint(
     response: Response,
-    ehr_status: Optional[EHRStatus] = Body(
-        default = None, 
-        description = "An optional EHR_STATUS object. If provided, it will be used as the initial status for the new EHR."),
-        examples = ehr_status_example,
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)):
+    prefer: str = Header("return=minimal", alias="Prefer"),
+    ehr_status: Optional[EHRStatusCreate] = Body(
+        default=None, 
+        description="Optional initial EHR_STATUS.",
+        examples=ehr_status_example,
+    ),
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
     """
-    Creates a new Electronic Health Record (EHR).
-
-    This endpoint supports two main use cases:
-    - **With a body:** Provide an `EHR_STATUS` object to create an EHR for a specific subject.
-    - **Without a body:** Send an empty request to create a subject-less EHR that can be assigned later.
-
-    Upon successful creation, the endpoint returns the unique `ehr_id`, the final `ehr_status` object, the `system_id`, and the creation timestamp.
+    Creates a new EHR with a server-generated `ehr_id`.
+    - `Prefer: return=representation` returns the full resource representation.
+    - `Prefer: return=minimal` (default) returns an empty body with headers.
     """
-    
     ehr_response = await create_ehr(
         db=db,
         initial_status=ehr_status
@@ -350,18 +381,20 @@ async def create_ehr_endpoint(
     # This points to where the client can retrieve the newly created resource.
     # Note: Ideally, this would use `request.url_for`, but that requires a named "GET" route.
     # For now, we construct it manually.
-    response.headers["Location"] = f"/v1/ehr/{ehr_response.ehr_id}"
+    response.headers["Location"] = f"/v1/ehr/{ehr_response.ehr_id.value}"
 
     # 2. Set the ETag header
     # The ETag is used for caching and conditional requests (e.g., If-None-Match).
     # The HTTP spec requires the value to be in double quotes.
-    response.headers["ETag"] = f'"{ehr_response.ehr_status.uid}"'
+    response.headers["ETag"] = f'"{ehr_response.ehr_id.value}"'
 
-    # 3. Set the Last-Modified header
-    # The datetime object must be formatted into a standard HTTP-date string (RFC 7231).
-    # We use a helper from the standard library to do this correctly.
-    timestamp = ehr_response.time_created.timestamp()
-    last_modified_gmt = formatdate(timestamp, usegmt=True)
-    response.headers["Last-Modified"] = last_modified_gmt
-
-    return ehr_response
+    if prefer == "return=representation":
+        # Return the full response model with 201 status
+        return JSONResponse(
+            content=ehr_response.model_dump(by_alias=True),
+            status_code=status.HTTP_201_CREATED,
+            headers=response.headers
+        )
+    else:
+        # For return=minimal, return no body but keep the headers and 201 status
+        return Response(status_code=status.HTTP_201_CREATED, headers=response.headers)
