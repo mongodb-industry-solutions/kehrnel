@@ -15,7 +15,7 @@ from src.api.v1.ehr.repository import (
     find_deletion_contribution_for_version
 )
 from src.api.v1.ehr.models import EHRStatus, PartySelf, EHRCreationResponse, EHR, Composition, CompositionCreate
-from app.core.models import Contribution, AuditDetails
+from src.app.core.models import Contribution, AuditDetails
 
 
 async def retrieve_ehr_by_subject(subject_id: str, subject_namespace: str, db: AsyncIOMotorDatabase) -> EHR:
