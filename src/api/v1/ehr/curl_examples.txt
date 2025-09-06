@@ -2,16 +2,52 @@
 ### Create an EHR  ####
 #######################
 
+# 1. Create an EHR and get back only headers (default behavior)
+curl -i -X POST http://localhost:9000/v1/ehr \
+-H "Content-Type: application/json" \
+-d '{}'
+
+
+# 2. Create an EHR for a specific subject and get the full resource back
+#    Generate a unique subject_id for the test
+export SUBJECT_ID="test-subject-123456"
+
+curl -i -X POST http://localhost:9000/v1/ehr \
+-H "Content-Type: application/json" \
+-H "Prefer: return=representation" \
+-d '{
+    "_type": "EHR_STATUS",
+    "subject": {
+        "_type": "PARTY_SELF",
+        "external_ref": {
+            "id": { "value": "test-subject-12345678" },
+            "namespace": "test.namespace",
+            "type": "PERSON"
+        }
+    }
+}'
+
 curl -X POST 'http://127.0.0.1:8000/v1/ehr' \
 -H 'Content-Type: application/json' \
 -d '{"subject": {"id": "patient-for-get-test"}}'
+
+# Create an EHR using a specific UUID we provide
+
+curl -i -X PUT http://localhost:9000/v1/ehr/5e96bbff-11ea-4173-8243-ca18026f634f \
+-H "Content-Type: application/json" \
+-d '{}'
 
 #######################
 ###### GET EHR  #######
 #######################
 
-curl -X GET 'http://localhost:8000/v1/ehr/5e96bbff-11ea-4173-8243-ca18026f634f'
-curl -X GET 'http://localhost:8000/vi/ehr/5e96bbff-11ea-4173-8243-ca18026f634f'
+curl -X GET 'http://localhost:9000/v1/ehr/eab5f872-b3eb-4f99-86d2-e7eb5f765a78'
+curl -X GET 'http://localhost:9000/v1/ehr/5e96bbff-11ea-4173-8243-ca18026f634f'
+curl -X GET 'http://localhost:9000/vi/ehr/5e96bbff-11ea-4173-8243-ca18026f634f'
+
+# Retrieve the EHR created in the second step by its subject
+# The SUBJECT_ID variable should still be set from Test 2
+curl -X GET "http://localhost:9000/v1/ehr?subject_id=test-subject-123456&subject_namespace=test.namespace"
 
 #######################
 ## Update EHR Status ##
