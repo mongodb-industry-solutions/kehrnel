@@ -37,6 +37,26 @@ curl -i -X PUT http://localhost:9000/v1/ehr/5e96bbff-11ea-4173-8243-ca18026f634f
 -H "Content-Type: application/json" \
 -d '{}'
 
+curl -X POST "http://localhost:9000/v1/ehr" \
+-H "Content-Type: application/json" \
+-H "Prefer: return=representation" \
+-d '{
+    "_type": "EHR_STATUS",
+    "subject": {
+        "_type": "PARTY_SELF",
+        "external_ref": {
+            "id": {"value": "patient-999"},
+            "namespace": "test.hospital.ids",
+            "type": "PERSON"
+        }
+    },
+    "is_modifiable": true,
+    "is_queryable": true
+}'
+
+"value":"ae8d5700-77dc-4a02-afef-2a3a8d74b8bb"
+"value":"4922f519-ba18-4975-bc63-a12c52c17d5a::my-openehr-server::1"
+
 #######################
 ###### GET EHR  #######
 #######################
@@ -53,19 +73,55 @@ curl -X GET "http://localhost:9000/v1/ehr?subject_id=test-subject-123456&subject
 ## Update EHR Status ##
 #######################
 
-ehr_id = "f91d8da8-349a-403d-809d-cfc196b2bfef"
-ETag = "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6::my-openehr-server::1"
+"value":"ae8d5700-77dc-4a02-afef-2a3a8d74b8bb"
+"value":"4922f519-ba18-4975-bc63-a12c52c17d5a::my-openehr-server::1"
 
-curl -v -X PUT 'http://localhost:8000/v1/ehr/f91d8da8-349a-403d-809d-cfc196b2bfef/ehr_status' \
--H 'Content-Type: application/json' \
--H 'If-Match: "05023d78-63a4-4b49-bbda-45d95d0b909e::my-openehr-server::1"' \
+curl -X PUT "http://localhost:9000/v1/ehr/ae8d5700-77dc-4a02-afef-2a3a8d74b8bb/ehr_status" \
+-v \
+-H "Content-Type: application/json" \
+-H "If-Match: \"4922f519-ba18-4975-bc63-a12c52c17d5a::my-openehr-server::1\"" \
 -d '{
+    "_type": "EHR_STATUS",
+    "uid": {
+        "_type": "OBJECT_VERSION_ID",
+        "value": "'"4922f519-ba18-4975-bc63-a12c52c17d5a::my-openehr-server::1"'"
+    },
     "subject": {
-        "id": "patient-for-status-update"
+        "_type": "PARTY_SELF",
+        "external_ref": {
+            "id": {"value": "patient-999"},
+            "namespace": "test.hospital.ids",
+            "type": "PERSON"
+        }
     },
     "is_modifiable": false,
     "is_queryable": true
 }'
+
+
+# This one should fail
+curl -X PUT "http://localhost:9000/v1/ehr/ae8d5700-77dc-4a02-afef-2a3a8d74b8bb/ehr_status" \
+-v \
+-H "Content-Type: application/json" \
+-H "If-Match: \"4922f519-ba18-4975-bc63-a12c52c17d5a::my-openehr-server::1\"" \
+-d '{
+    "_type": "EHR_STATUS",
+    "uid": {
+        "_type": "OBJECT_VERSION_ID",
+        "value": "'"4922f519-ba18-4975-bc63-a12c52c17d5a::my-openehr-server::1"'"
+    },
+    "subject": {
+        "_type": "PARTY_SELF",
+        "external_ref": {
+            "id": {"value": "patient-999"},
+            "namespace": "test.hospital.ids",
+            "type": "PERSON"
+        }
+    },
+    "is_modifiable": false,
+    "is_queryable": true
+}'
+
 
 
 ##########################
