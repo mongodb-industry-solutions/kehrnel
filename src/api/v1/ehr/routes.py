@@ -3,9 +3,10 @@
 from fastapi import APIRouter, Depends, status, Body, Query, HTTPException, Response, Header
 from fastapi.responses import JSONResponse
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from typing import Optional, List, Union
+from typing import Optional, List, Union, Dict, Any
 from email.utils import formatdate
 from datetime import datetime, timezone
+from pydantic import ValidationError
 
 from src.api.v1.ehr.service import (
     create_ehr, retrieve_ehr_by_id, 
@@ -42,6 +43,7 @@ router = APIRouter(
 
 @router.put(
     "/{ehr_id}",
+    response_model=EHRCreationResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Create EHR with specified ID",
     responses=create_ehr_api_responses
@@ -50,7 +52,7 @@ async def create_ehr_with_id_endpoint(
     ehr_id: str,
     response: Response,
     prefer: str = Header("return=minimal", alias="Prefer"),
-    ehr_status: Optional[EHRStatusCreate] = Body(default=None),
+    payload: Optional[Dict[str, Any]] = Body(default=None),
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
 ):
     """
@@ -59,8 +61,15 @@ async def create_ehr_with_id_endpoint(
     - `Prefer: return=representation` returns the full resource.
     - `Prefer: return=minimal` returns an empty body with headers.
     """
+    initial_status: Optional[EHRStatusCreate] = None
+    if payload and payload != {}:
+        try:
+            initial_status = EHRStatusCreate.model_validate(payload)
+        except ValidationError as e:
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=e.errors())
+
     ehr_response = await create_ehr_with_id(
-        ehr_id=ehr_id, db=db, initial_status=ehr_status
+        ehr_id=ehr_id, db=db, initial_status=initial_status
     )
 
     response.headers["Location"] = f"/v1/ehr/{ehr_response.ehr_id.value}"
@@ -69,10 +78,8 @@ async def create_ehr_with_id_endpoint(
     if prefer == "return=representation":
         return ehr_response
     else:
-        return Response(
-            status_code=status.HTTP_201_CREATED, 
-            headers=response.headers
-        )
+        return Response(status_code=status.HTTP_201_CREATED, headers=response.headers)
+
 
 @router.delete(
     "/{ehr_id}/composition/{preceding_version_uid}",
@@ -251,7 +258,8 @@ async def update_ehr_status_endpoint(
 
 @router.get(
     "",
-    response_model=List[EHR], # List is the primary return type for the base endpoint
+    response_model=Union[EHR, List[EHR]],
+    response_model_by_alias=True,
     summary="Get EHR by subject ID or list EHRs",
     responses={**get_ehr_by_subject_responses, **get_ehr_list_responses}
 )
@@ -277,7 +285,7 @@ async def get_ehr_by_subject_or_list(
             subject_namespace=subject_namespace,
             db=db
         )
-        return JSONResponse(content=ehr_data.model_dump(by_alias=True))
+        return ehr_data
     
     # Otherwise, fall back to the original list functionality
     ehr_list_data = await retrieve_ehr_list(db=db, limit=50)
@@ -351,6 +359,7 @@ async def create_composition_endpoint(
 
 @router.post(
     "",
+    response_model=EHRCreationResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Create EHR",
     responses=create_ehr_api_responses
@@ -358,7 +367,7 @@ async def create_composition_endpoint(
 async def create_ehr_endpoint(
     response: Response,
     prefer: str = Header("return=minimal", alias="Prefer"),
-    ehr_status: Optional[EHRStatusCreate] = Body(
+    payload: Optional[Dict[str, Any]] = Body(
         default=None, 
         description="Optional initial EHR_STATUS.",
         examples=ehr_status_example,
@@ -370,9 +379,17 @@ async def create_ehr_endpoint(
     - `Prefer: return=representation` returns the full resource representation.
     - `Prefer: return=minimal` (default) returns an empty body with headers.
     """
+    initial_status: Optional[EHRStatusCreate] = None
+
+    if payload and payload != {}:
+        try:
+            initial_status = EHRStatusCreate.model_validate(payload)
+        except ValidationError as e:
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=e.errors())
+
     ehr_response = await create_ehr(
         db=db,
-        initial_status=ehr_status
+        initial_status=initial_status
     )
 
     # Set the response headers using the data from the service layer
@@ -389,12 +406,6 @@ async def create_ehr_endpoint(
     response.headers["ETag"] = f'"{ehr_response.ehr_id.value}"'
 
     if prefer == "return=representation":
-        # Return the full response model with 201 status
-        return JSONResponse(
-            content=ehr_response.model_dump(by_alias=True),
-            status_code=status.HTTP_201_CREATED,
-            headers=response.headers
-        )
+        return ehr_response
     else:
-        # For return=minimal, return no body but keep the headers and 201 status
         return Response(status_code=status.HTTP_201_CREATED, headers=response.headers)
