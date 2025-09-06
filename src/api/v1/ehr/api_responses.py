@@ -1,21 +1,64 @@
-from fastapi import APIRouter, Depends, status, Body, Query, HTTPException, Response
-from src.api.v1.ehr.models import EHRCreationResponse, EHRStatus, ErrorResponse, EHR, Composition
-from typing import Optional, List
+from fastapi import status
+from src.api.v1.ehr.models import EHRCreationResponse, ErrorResponse, EHR, Composition
+from typing import List
+
+get_ehr_by_id_responses = {
+    status.HTTP_200_OK: {
+        "description": "EHR found and returned successfully.",
+        "model": EHR,
+        "content": {
+            "application/json": {
+                "example": {
+                    "ehr_id": {"value": "a1b2c3d4-e4f5-a6b7-c8d9-e0f1a2b3c4d5"},
+                    "system_id": {"value": "my-openehr-server"},
+                    "time_created": {"value": "2024-01-01T10:00:00.000Z"},
+                    "ehr_status": {
+                        "uid": {
+                            "value": "f1g2h3i4::my-openehr-server::1",
+                            "_type": "OBJECT_VERSION_ID"
+                        },
+                        "_type": "EHR_STATUS",
+                        "archetype_node_id": "openEHR-EHR-EHR_STATUS.generic.v1",
+                        "name": {"value": "EHR status"},
+                        "subject": {
+                            "_type": "PARTY_SELF",
+                            "external_ref": {
+                                "id": {"value": "patient-123"},
+                                "namespace": "hospital.main.ids",
+                                "type": "PERSON"
+                            }
+                        },
+                        "is_modifiable": True,
+                        "is_queryable": True
+                    },
+                    "ehr_access": {
+                        "id": {"value": "b2c3d4e5-f6a7-b8c9-d0e1-f2a3b4c5d6e7"},
+                        "namespace": "local",
+                        "type": "EHR_ACCESS"
+                    },
+                    "contributions": [],
+                    "compositions": [],
+                    "directory": None
+                }
+            }
+        }
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "The EHR with the specified `ehr_id` was not found.",
+        "model": ErrorResponse
+    }
+}
 
 # Dictionary of examples for the request body for the create_ehr_endpoint:
 get_ehr_by_subject_responses = {
     status.HTTP_200_OK: {
         "description": "EHR for the specified subject found and returned successfully.",
         "model": EHR,
+        "content": get_ehr_by_id_responses[status.HTTP_200_OK]["content"]
     },
     status.HTTP_404_NOT_FOUND: {
         "description": "No EHR was found for the specified `subject_id` and `subject_namespace`.",
         "model": ErrorResponse,
-        "content": {
-            "application/json": {
-                "example": {"detail": "EHR with subject_id '...' and namespace '...' not found"}
-            }
-        },
     }
 }
 
@@ -26,8 +69,12 @@ ehr_status_example = {
         "value": {
             "_type": "EHR_STATUS",
             "subject": {
-                "id": "12345",
-                "namespace": "my.patient.id.space"
+                "_type": "PARTY_SELF",
+                "external_ref": {
+                    "id": {"value": "12345"},
+                    "namespace": "my.patient.id.space",
+                    "type": "PERSON"
+                }
             },
             "is_modifiable": True,
             "is_queryable": True
@@ -35,7 +82,7 @@ ehr_status_example = {
     },
     "no_subject": {
         "summary": "Create a subject-less EHR",
-        "description": "Send an empty request body `{}`. The system will auto-generate a temporary subject.",
+        "description": "Send an empty request body `{}`. The system will auto-generate a subject.",
         "value": None
     }
 }
@@ -43,58 +90,34 @@ ehr_status_example = {
 # Responses for swagger documentation for the create_ehr_endpoint
 create_ehr_api_responses = {
     status.HTTP_201_CREATED: {
-        "description": "EHR created successfully.",
+        "description": "EHR created successfully. Body is returned if 'Prefer: return=representation' header is set.",
         "model": EHRCreationResponse,
-    },
-    status.HTTP_409_CONFLICT: {
-        "description": "An EHR for the given subject already exists.",
-        "model": ErrorResponse,
-        "content": {
-            "application/json": {
-                "example": {"detail": "An EHR with subjectId '12345' already exists."}
-            }
-        },
-    },
-    status.HTTP_422_UNPROCESSABLE_ENTITY: {
-        "description": "The request body is invalid (e.g., missing a required field).",
-        "model": ErrorResponse,
-    }
-}
-
-get_ehr_by_id_responses = {
-    status.HTTP_200_OK: {
-        "description": "EHR found and returned successfully",
-        "model": EHR,
         "content": {
             "application/json": {
                 "example": {
-                    "ehr_id": "a1b2c3d4-e4f5-a6b7-c8d9-e0f1a2b3c4d5",
-                    "system_id": "my-openehr-server",
-                    "time_created": "2023-10-27T12:00:00.123456+00:00",
+                    "ehr_id": {"value": "a1b2c3d4-e4f5-a6b7-c8d9-e0f1a2b3c4d5"},
                     "ehr_status": {
-                        "uid": "f1g2h3i4-j5k6-l7m8-n9o0-p1q2r3s4t5u6::my-openehr-server::1",
-                        "_type": "EHR_STATUS",
-                        "subject": {
-                            "id": "patient-123",
-                            "namespace": "hospital.main.ids"
-                        },
-                        "is_modifiable": True,
-                        "is_queryable": True
+                        "id": {"value": "f1g2h3i4::my-openehr-server::1"},
+                        "namespace": "local",
+                        "type": "EHR_STATUS"
                     },
-                    "contributions": [
-                        "c1a2b3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6"
-                    ],
-                    "compositions": [],
-                    "directory_id": None
+                    "system_id": {"value": "my-openehr-server"},
+                    "time_created": {"value": "2024-01-01T10:00:00.000Z"},
+                    "ehr_access": {
+                        "id": {"value": "b2c3d4e5-f6a7-b8c9-d0e1-f2a3b4c5d6e7"},
+                        "namespace": "local",
+                        "type": "EHR_ACCESS"
+                    }
                 }
             }
         }
     },
-    status.HTTP_404_NOT_FOUND: {
-        "description": "The EHR with the specified `ehr_id` was not found.",
-        "model": ErrorResponse
+    status.HTTP_409_CONFLICT: {
+        "description": "An EHR for the given subject or with the given ehr_id already exists.",
+        "model": ErrorResponse,
     }
 }
+
 
 update_ehr_status_responses = {
     status.HTTP_200_OK: {"description": "EHR_STATUS updated successfully."},
@@ -110,26 +133,7 @@ get_ehr_list_responses = {
         "content": {
             "application/json": {
                 "example": [
-                    {
-                        "ehr_id": "a1b2c3d4-e4f5-a6b7-c8d9-e0f1a2b3c4d5",
-                        "system_id": "my-openehr-server",
-                        "time_created": "2023-10-27T12:00:00.123456+00:00",
-                        "ehr_status": {
-                            "uid": "f1g2h3i4-j5k6-l7m8-n9o0-p1q2r3s4t5u6::my-openehr-server::1",
-                            "_type": "EHR_STATUS",
-                            "subject": {
-                                "id": "patient-123",
-                                "namespace": "hospital.main.ids"
-                            },
-                            "is_modifiable": True,
-                            "is_queryable": True
-                        },
-                        "contributions": [
-                            "c1a2b3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6"
-                        ],
-                        "compositions": [],
-                        "directory_id": None
-                    }
+                    get_ehr_by_id_responses[status.HTTP_200_OK]["content"]["application/json"]["example"]
                 ]
             }
         }
