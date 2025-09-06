@@ -235,10 +235,10 @@ async def update_ehr_status_endpoint(
     to the ETag (the version UID) of the current `EHR_STATUS`.
 
     A new `CONTRIBUTION` is created to audit this change. The new `EHR_STATUS` version
-    is returned in the body, and the `ETag` and `Last-Modified` headers are updated.
+    is returned in the body, and the `ETag`, `Last-Modified`, and `Location` headers are updated.
     """
 
-    new_status = await update_ehr_status(
+    new_status, time_committed = await update_ehr_status(
         ehr_id = ehr_id,
         status_update_request = status_update,
         if_match = if_match,
@@ -246,12 +246,14 @@ async def update_ehr_status_endpoint(
     )
 
     # Set the response headers with the new version's details
-    response.headers["ETag"] = f'"{new_status.uid}"'
+    new_version_uid = new_status.uid.value
+    response.headers["ETag"] = f'"{new_version_uid}"'
 
-    # The Location header points to the EHR itself, as the status is a sub-resource
-    response.headers["Location"] = f"/v1/ehr/{ehr_id}/ehr_status" 
+     # The Location header now points to the specific version of the EHR_STATUS resource
+    response.headers["Location"] = f"/v1/ehr/{ehr_id}/ehr_status/{new_version_uid}"
 
-    last_modified_gmt = formatdate(datetime.now(timezone.utc).timestamp(), usegmt = True)
+    # Use the actual commit time for the Last-Modified header for accuracy
+    last_modified_gmt = formatdate(time_committed.timestamp(), usegmt = True)
     response.headers["Last-Modified"] = last_modified_gmt
 
     return new_status
