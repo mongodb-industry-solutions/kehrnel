@@ -3,7 +3,7 @@
 import uuid
 from datetime import datetime, timezone
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Tuple
 from fastapi import HTTPException, status
 from pymongo.errors import PyMongoError
 from src.api.v1.ehr.repository import (
@@ -301,7 +301,7 @@ async def update_ehr_status(
     if_match: str,
     db: AsyncIOMotorDatabase,
     commiter_name: str = "System"
-) -> EHRStatus:
+) -> Tuple[EHRStatus, datetime]:
     """
     Updates the status of an existing EHR.
 
@@ -316,7 +316,7 @@ async def update_ehr_status(
         commiter_name: The name of the committer for the audit trail.
 
     Returns:
-        The newly created and versioned EHRStatus object.
+        A tuple containing the newly created and versioned EHRStatus object and its commit time.
     """
 
     # 1. Fetch the current EHR
@@ -329,10 +329,10 @@ async def update_ehr_status(
     # 2. Concurrency Check (In case two clients are trying to update the same version of the status simultaneously)
     # The ETag format includes quotes, which we must remove for comparison
     expected_uid = if_match.strip('"')
-    if current_status.uid != expected_uid:
+    if current_status.uid.value != expected_uid: # FIX: Access the .value attribute
         raise HTTPException(
             status_code=status.HTTP_412_PRECONDITION_FAILED,
-            detail=f"The provided version UID ('{expected_uid}') doesn't match the latest version ('{current_status.uid}'). Get the latest version and try again"
+            detail=f"The provided version UID ('{expected_uid}') doesn't match the latest version ('{current_status.uid.value}'). Get the latest version and try again"
         )
     
     # 3. Prepare the new versioned objects
@@ -340,15 +340,18 @@ async def update_ehr_status(
 
     # Parse the UID to increment the version: {object_id}::{creating_system_id}::{version_tree_id}
     try:
-        object_id, system_id, version = current_status.uid.split('::')
+        object_id, system_id, version = current_status.uid.value.split('::')
         new_version = int(version) + 1
-        new_uid = f"{object_id}::{system_id}::{new_version}"
-    except:
+        new_uid_value = f"{object_id}::{system_id}::{new_version}"
+    except (ValueError, IndexError):
         raise HTTPException(status_code=500, detail="Couldn't parse the existing version UID")
     
     # Create the new EHRStatus object for storage
-    new_ehr_status = status_update_request.model_copy(
-        update = {"uid": new_uid, "type": "EHR_STATUS"}
+    new_ehr_status = EHRStatus(
+        uid=ObjectVersionID(value=new_uid_value),
+        subject=status_update_request.subject,
+        is_modifiable=status_update_request.is_modifiable,
+        is_queryable=status_update_request.is_queryable
     )
 
     # Create the new contribution
@@ -371,7 +374,7 @@ async def update_ehr_status(
         db = db
     )
 
-    return new_ehr_status
+    return new_ehr_status, time_committed
 
 
 async def retrieve_ehr_by_id(ehr_id: str, db: AsyncIOMotorDatabase) ->EHR:
