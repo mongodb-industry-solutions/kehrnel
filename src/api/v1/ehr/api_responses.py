@@ -1,6 +1,60 @@
 from fastapi import status
-from src.api.v1.ehr.models import EHRCreationResponse, ErrorResponse, EHR, Composition
+from src.api.v1.ehr.models import EHRCreationResponse, ErrorResponse, EHR, Composition, EHRStatus
 from typing import List
+
+
+get_ehr_status_responses = {
+    status.HTTP_200_OK: {
+        "description": "EHR_STATUS retrieved successfully",
+        "model": EHRStatus,
+        "content": {
+            "application/json": {
+                "example": {
+                    "uid": {
+                        "value": "f1g2h3i4::my-openehr-server::1",
+                        "_type": "OBJECT_VERSION_ID"
+                    },
+                    "_type": "EHR_STATUS",
+                    "archetype_node_id": "openEHR-EHR-EHR_STATUS.generic.v1",
+                    "name": {"value": "EHR status"},
+                    "subject": {
+                        "_type": "PARTY_SELF",
+                        "external_ref": {
+                            "id": {
+                                "value": "patient-123",
+                                "namespace": "hospital.main.ids",
+                                "type": "Person"
+                            }
+                        }
+                    },
+                    "is_modifiable": True,
+                    "is_queryable": True
+                }
+            }
+        },
+        "headers": {
+            "ETag": {
+                "description": "The ETag of the current EHR_STATUS version (its UID)",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "Location": {
+                "description": "The path to this specific version of the EHR_STATUS resource.",
+                "schema": {"type": "string"},
+            },
+            "Last-Modified": {
+                "description": "The timestamp of when this version of the EHR_STATUS was created.",
+                "schema": {"type": "string", "format": "date-time"},
+            },
+        }
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "The EHR with the specified `ehr_id` was not found",
+        "model": ErrorResponse
+    }
+}
+
 
 get_ehr_by_id_responses = {
     status.HTTP_200_OK: {
