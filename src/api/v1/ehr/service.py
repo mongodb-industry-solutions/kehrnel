@@ -14,7 +14,8 @@ from src.api.v1.ehr.repository import (
     insert_composition_contribution_and_update_ehr, 
     find_composition_by_uid,
     add_deletion_contribution_and_update_ehr,
-    find_deletion_contribution_for_version
+    find_deletion_contribution_for_version,
+    find_contribution_by_version_uid
 )
 from src.api.v1.ehr.models import (
     EHRStatus, PartySelf, EHRCreationResponse, EHR, Composition, CompositionCreate,
@@ -22,6 +23,40 @@ from src.api.v1.ehr.models import (
     ObjectRef, HierObjectID
 )
 from src.app.core.models import Contribution, AuditDetails
+
+
+async def retrieve_ehr_status_by_ehr_id(ehr_id: str, db: AsyncIOMotorDatabase) -> Tuple[EHRStatus, datetime]:
+    """
+    Retrieves the latest EHR_STATUS for a given EHR and its commit time
+
+    Args:
+        ehr_id: The unique identifier of the EHR
+        db: The database session.
+
+    Returns:
+        A tuple comtaining the EHRStatus Pydantic model and the time it was commited
+
+    Raises:
+        HTTPException: If the EHR with the given ID is not found (404)
+    """
+
+    ehr_model = await retrieve_ehr_by_id(ehr_id=ehr_id, db=db)
+
+    ehr_status = ehr_model.ehr_status
+    version_uid = ehr_status.uid.value
+
+    # Find the corresponding contribution to get the commit time
+    contribution_doc = await find_contribution_by_version_uid(version_uid=version_uid, db=db)
+
+    if contribution_doc:
+        time_committed = contribution_doc["audit"]["time_committed"]
+    else:
+        # Fallback for the initial version: use the EHR's creation time
+        # This case should be rare in a consistent system but provides robustness
+        time_committed = ehr_model.time_created.value
+
+    return ehr_status, time_committed
+
 
 
 async def retrieve_ehr_by_subject(subject_id: str, subject_namespace: str, db: AsyncIOMotorDatabase) -> EHR:
