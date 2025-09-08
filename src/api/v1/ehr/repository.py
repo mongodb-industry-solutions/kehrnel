@@ -12,6 +12,15 @@ EHR_COLL_NAME = "ehr"
 EHR_CONTRIBUTIONS_COLL = "contributions"
 COMPOSITIONS_COLL_NAME = "compositions"
 
+async def find_contribution_by_version_uid(version_uid: str, db: AsyncIOMotorDatabase):
+    """
+    Finds a contribution document by the UID of a version it contains.
+    This is used to find the commit time for a specific version of an object
+    """
+    return await db[EHR_CONTRIBUTIONS_COLL].find_one(
+        {"versions.uid.value": version_uid}
+    )
+
 async def find_deletion_contribution_for_version(
         preceding_version_uid: str,
         db: AsyncIOMotorDatabase
