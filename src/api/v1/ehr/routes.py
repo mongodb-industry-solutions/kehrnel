@@ -17,7 +17,8 @@ from src.api.v1.ehr.service import (
     retrieve_composition_by_version_uid, 
     update_composition,
     delete_composition_by_preceding_uid,
-    retrieve_ehr_by_subject
+    retrieve_ehr_by_subject,
+    retrieve_ehr_status_by_ehr_id
 )
 
 from src.api.v1.ehr.models import EHRCreationResponse, EHRStatusCreate, EHRStatus, ErrorResponse, EHR, Composition, CompositionCreate
@@ -33,7 +34,8 @@ from src.api.v1.ehr.api_responses import (
     get_composition_responses,
     update_composition_responses,
     delete_composition_responses,
-    get_ehr_by_subject_responses
+    get_ehr_by_subject_responses,
+    get_ehr_status_responses
 )
 
 router = APIRouter(
@@ -210,6 +212,40 @@ async def get_composition_by_version_id(
         }
     )
 
+@router.get(
+    "/{ehr_id}/ehr_status",
+    response_model = EHRStatus,
+    response_model_by_alias = False,
+    status_code = status.HTTP_200_OK,
+    summary = "Get latest EHR Status",
+    responses = get_ehr_status_responses
+)
+async def get_ehr_status_endpoint(
+    ehr_id: str,
+    response: Response,
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Retrieves the latest version of the `EHR_STATUS` for a given EHR.
+
+    The response includes the full `EHR_STATUS` object and sets the `ETag`,
+    `Location`, and `Last-Modified` headers for proper resource versioning and caching
+    """
+    ehr_status, time_committed = await retrieve_ehr_status_by_ehr_id(
+        ehr_id = ehr_id,
+        db = db
+    )
+
+    version_uid = ehr_status.uid.value
+
+    # Set the response headers
+    response.headers["ETag"] = f'"{version_uid}"'
+    response.headers["Location"] = f"/v1/ehr/{ehr_id}/ehr_status/{version_uid}"
+
+    last_modified_gmt = formatdate(time_committed.timestamp(), usegmt = True)
+    response.headers["Last-Modified"] = last_modified_gmt
+
+    return ehr_status
 
 # PUT endpoint to update the EHR_STATUS
 @router.put(
