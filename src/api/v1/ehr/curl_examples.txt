@@ -57,6 +57,58 @@ curl -X POST "http://localhost:9000/v1/ehr" \
 "value":"ae8d5700-77dc-4a02-afef-2a3a8d74b8bb"
 "value":"4922f519-ba18-4975-bc63-a12c52c17d5a::my-openehr-server::1"
 
+curl -X POST "http://localhost:9000/v1/ehr" \
+-i \
+-H "Content-Type: application/json" \
+-H "Prefer: return=representation" \
+-d '{
+    "_type": "EHR_STATUS",
+    "subject": {
+        "_type": "PARTY_SELF",
+        "external_ref": {
+            "id": {"value": "patient-999"},
+            "namespace": "my.test.patients",
+            "type": "PERSON"
+        }
+    },
+    "is_modifiable": true,
+    "is_queryable": true
+}'
+
+HTTP/1.1 201 Created
+date: Mon, 08 Sep 2025 22:59:44 GMT
+server: uvicorn
+content-length: 396
+content-type: application/json
+location: /v1/ehr/30b333f1-537d-4734-bde9-917a8b8053c2
+etag: "30b333f1-537d-4734-bde9-917a8b8053c2"
+
+{"ehr_id":{"value":"30b333f1-537d-4734-bde9-917a8b8053c2"},"ehr_status":{"id":{"value":"8008fd05-e571-4140-9be3-fd1e78cbc05d::my-openehr-server::1"},"namespace":"local","type":"EHR_STATUS"},"system_id":{"value":"my-openehr-server"},"time_created":{"value":"2025-09-08T22:59:45.733439Z"},"ehr_access":{"id":{"value":"1d1d151d-3736-44c3-b82f-66a7a8168cee"},"namespace":"local","type":"EHR_ACCESS"}}
+
+curl -X GET "http://localhost:9000/v1/ehr/30b333f1-537d-4734-bde9-917a8b8053c2/ehr_status" -i
+
+
+gio.rodriguez@M-F7V2F999M9 kehrnel % curl -X GET "http://localhost:9000/v1/ehr/30b333f1-537d-4734-bde9-917a8b8053c2/ehr_status" -i
+HTTP/1.1 200 OK
+date: Mon, 08 Sep 2025 23:04:28 GMT
+server: uvicorn
+content-length: 377
+content-type: application/json
+etag: "8008fd05-e571-4140-9be3-fd1e78cbc05d::my-openehr-server::1"
+location: /v1/ehr/30b333f1-537d-4734-bde9-917a8b8053c2/ehr_status/8008fd05-e571-4140-9be3-fd1e78cbc05d::my-openehr-server::1
+last-modified: Tue, 09 Sep 2025 04:59:45 GMT
+
+{"uid":{"value":"8008fd05-e571-4140-9be3-fd1e78cbc05d::my-openehr-server::1","type":"OBJECT_VERSION_ID"},"type":"EHR_STATUS","archetype_node_id":"openEHR-EHR-EHR_STATUS.generic.v1","name":{"value":"EHR status"},"subject":{"type":"PARTY_SELF","external_ref":{"id":{"value":"patient-999"},"namespace":"my.test.patients","type":"PERSON"}},"is_modifiable":true,"is_queryable":true}%
+
+gio.rodriguez@M-F7V2F999M9 kehrnel % curl -X GET "http://localhost:9000/v1/ehr/00000000-0000-0000-0000-000000000000/ehr_status" -i
+HTTP/1.1 404 Not Found
+date: Mon, 08 Sep 2025 23:08:21 GMT
+server: uvicorn
+content-length: 72
+content-type: application/json
+
+{"detail":"EHR with id '00000000-0000-0000-0000-000000000000 not found"}%                                                                                
+
 #######################
 ###### GET EHR  #######
 #######################
@@ -98,6 +150,22 @@ curl -X PUT "http://localhost:9000/v1/ehr/ae8d5700-77dc-4a02-afef-2a3a8d74b8bb/e
     "is_queryable": true
 }'
 
+
+# Find the contribution_uid
+curl -XGET -i "http://localhost:9000/v1/ehr/ae8d5700-77dc-4a02-afef-2a3a8d74b8bb"
+
+gio.rodriguez@M-F7V2F999M9 kehrnel % curl -XGET -i "http://localhost:9000/v1/ehr/ae8d5700-77dc-4a02-afef-2a3a8d74b8bb"
+HTTP/1.1 200 OK
+date: Tue, 09 Sep 2025 23:08:45 GMT
+server: uvicorn
+content-length: 906
+content-type: application/json
+
+{"_id":{"value":"ae8d5700-77dc-4a02-afef-2a3a8d74b8bb"},"system_id":{"value":"my-openehr-server"},"time_created":{"value":"2025-09-06T01:01:13.980000"},"ehr_status":{"uid":{"value":"4922f519-ba18-4975-bc63-a12c52c17d5a::my-openehr-server::2","_type":"OBJECT_VERSION_ID"},"_type":"EHR_STATUS","archetype_node_id":"openEHR-EHR-EHR_STATUS.generic.v1","name":{"value":"EHR status"},"subject":{"_type":"PARTY_SELF","external_ref":{"id":{"value":"patient-999"},"namespace":"test.hospital.ids","type":"PERSON"}},"is_modifiable":false,"is_queryable":true},"ehr_access":{"id":{"value":"fea0fce5-e506-467d-bf9e-b385bf520270"},"namespace":"local","type":"EHR_ACCESS"},"contributions":[{"id":{"value":"0365e49d-48ec-4057-a5f5-6e1eb72fb008"},"namespace":"local","type":"CONTRIBUTION"},{"id":{"value":"e9e5d650-8d88-4a5b-8cbe-da4d33724f74"},"namespace":"local","type":"CONTRIBUTION"}],"compositions":[],"directory":null}%
+
+# Find by EHR ID and Contribution ID
+
+curl -X GET "http://localhost:9000/v1/ehr/ae8d5700-77dc-4a02-afef-2a3a8d74b8bb/contribution/0365e49d-48ec-4057-a5f5-6e1eb72fb008" -i
 
 # This one should fail
 curl -X PUT "http://localhost:9000/v1/ehr/ae8d5700-77dc-4a02-afef-2a3a8d74b8bb/ehr_status" \
