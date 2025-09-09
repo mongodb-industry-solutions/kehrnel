@@ -18,12 +18,14 @@ from src.api.v1.ehr.service import (
     update_composition,
     delete_composition_by_preceding_uid,
     retrieve_ehr_by_subject,
-    retrieve_ehr_status_by_ehr_id
+    retrieve_ehr_status_by_ehr_id,
+    retrieve_contribution
 )
 
 from src.api.v1.ehr.models import EHRCreationResponse, EHRStatusCreate, EHRStatus, ErrorResponse, EHR, Composition, CompositionCreate
 
 from src.app.core.database import get_mongodb_ehr_db
+from src.app.core.models import Contribution
 from src.api.v1.ehr.api_responses import (
     get_ehr_by_id_responses,
     create_ehr_api_responses,
@@ -35,7 +37,8 @@ from src.api.v1.ehr.api_responses import (
     update_composition_responses,
     delete_composition_responses,
     get_ehr_by_subject_responses,
-    get_ehr_status_responses
+    get_ehr_status_responses,
+    get_contribution_responses
 )
 
 router = APIRouter(
@@ -352,6 +355,36 @@ async def get_ehr_by_id(
     ehr_data = await retrieve_ehr_by_id(ehr_id=ehr_id, db=db)
     return ehr_data
 
+
+@router.get(
+    "/{ehr_id}/contribution/{contribution_uid}",
+    response_model=Contribution,
+    response_model_by_alias=False,
+    status_code=status.HTTP_200_OK,
+    summary="Get Contribution by ID",
+    responses=get_contribution_responses
+)
+async def get_contribution_endpoint(
+    ehr_id: str,
+    contribution_uid: str,
+    response: Response,
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Retrieves a contribution by its unique identifier for a specific EHR.
+
+    Contributions are the audit entries for every change made to an EHR.
+    This endpoint allows clients to inspect the details of a change, such as
+    the committer, the time, and what versions were created.
+    """
+    contribution = await retrieve_contribution(
+        ehr_id=ehr_id, contribution_uid=contribution_uid, db=db
+    )
+
+    response.headers["Location"] = f"/v1/ehr/{ehr_id}/contribution/{contribution_uid}"
+    response.headers["ETag"] = f'"{contribution_uid}"'
+
+    return contribution
 
 @router.post(
     "/{ehr_id}/composition",
