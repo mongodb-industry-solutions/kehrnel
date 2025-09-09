@@ -12,6 +12,14 @@ EHR_COLL_NAME = "ehr"
 EHR_CONTRIBUTIONS_COLL = "contributions"
 COMPOSITIONS_COLL_NAME = "compositions"
 
+
+async def find_contribution_by_id(contribution_uid: str, db: AsyncIOMotorDatabase):
+    """
+    Retrieved a single CONTRIBUTION document from the database by its _id
+    """
+    return await db[EHR_CONTRIBUTIONS_COLL].find_one({"_id": contribution_uid})
+
+
 async def find_contribution_by_version_uid(version_uid: str, db: AsyncIOMotorDatabase):
     """
     Finds a contribution document by the UID of a version it contains.
