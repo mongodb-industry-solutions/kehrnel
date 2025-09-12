@@ -22,29 +22,6 @@ class StoredQuery(BaseModel):
             }
         }
 
-class QueryRequest(BaseModel):
-    """
-    Represents the request body for executing an AQL query.
-    """
-    query: str = Field(..., description="The AQL query string to be executed.", alias="q")
-    ehr_id: Optional[str] = Field(None, description="If specified, the query will be executed only on this single EHR.")
-    offset: Optional[int] = Field(None, ge=0, description="Number of rows to skip in the result set.")
-    fetch: Optional[int] = Field(None, gt=0, description="Maximum number of rows to return.")
-    query_parameters: Optional[Dict[str, Any]] = Field(None, description="Parameters to substitute in the AQL query.")
-
-    class Config:
-        populate_by_name = True
-        json_schema_extra = {
-            "example": {
-                "q": "SELECT e/ehr_id/value FROM EHR e WHERE e/ehr_id/value = $ehr_id_param",
-                "query_parameters": {
-                    "ehr_id_param": "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6"
-                },
-                "offset": 0,
-                "fetch": 10
-            }
-        }
-
 class QueryResultColumn(BaseModel):
     """
     Defines the name and path of a single column in an AQL query result set.
@@ -63,19 +40,6 @@ class MetaData(BaseModel):
     generator: str = Field(default="PythonEHRBase/1.0.0", description="Software that generated this result.")
     executed_aql: str = Field(..., description="The AQL query that was actually executed.")
 
-class QueryResponse(BaseModel):
-    """
-    Complete response for AQL query execution, including metadata.
-    """
-    meta: MetaData = Field(..., description="Metadata about the query execution.")
-    name: Optional[str] = Field(None, description="Name of the stored query, if applicable.")
-    query: str = Field(..., description="The original AQL query that was executed.", alias="q")
-    columns: List[QueryResultColumn] = Field(..., description="Column definitions for the result set.")
-    rows: List[List[Any]] = Field(..., description="The actual result data.")
-
-    class Config:
-        populate_by_name = True
-
 class StoredQueryDefinition(BaseModel):
     """
     Definition of a stored query for creation/update operations.
@@ -90,3 +54,12 @@ class StoredQuerySummary(BaseModel):
 
     class Config:
         populate_by_name = True
+
+class QueryResponse(BaseModel):
+    """
+    Standard response model for an executed AQL query.
+    """
+    meta: MetaData
+    q: str = Field(..., description="The original AQL query string sent by the client.")
+    columns: List[QueryResultColumn]
+    rows: List[Dict[str, Any]]

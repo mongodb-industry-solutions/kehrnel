@@ -9,40 +9,36 @@ from src.api.v1.aql.service import (
     create_or_update_stored_query,
     retrieve_stored_query,
     remove_stored_query,
-    process_aql_query,
-    list_all_stored_queries
+    list_all_stored_queries,
+    process_aql_query
 )
-from src.api.v1.aql.models import QueryRequest, QueryResponse, StoredQuerySummary
-from src.api.v1.aql.api_responses import stored_query_responses, execute_query_responses
+from src.api.v1.aql.models import StoredQuerySummary, QueryResponse
+from src.api.v1.aql.api_responses import stored_query_responses
 
 router = APIRouter(
     prefix="/query",
     tags=["AQL"]
 )
 
-# NOTE: The prefix for this endpoint is slightly different to allow /query/{name} later.
 @router.post(
     "/aql",
-    summary="Execute AQL query",
-    description="Executes an AQL query and returns the results. **Note: The execution engine is currently a placeholder and will return mocked data.**",
-    response_model=QueryResponse,
-    response_model_by_alias=True,
-    status_code=status.HTTP_200_OK,
-    responses=execute_query_responses
+    summary="Execute AQL Query",
+    description="Executes an AQL query provided in the request body and returns the results.",
+    response_model=QueryResponse
 )
 async def execute_query(
-    request_body: QueryRequest,
-    fastapi_request: Request,
+    request: Request,
+    aql: str = Body(..., media_type="text/plain", description="The AQL query string."),
+    ehr_id: str = None,
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
 ):
     """
-    Takes an AQL query in the request body, executes it, and returns the result set.
+    Accepts an AQL query as plain text, executes it, and returns the result set.
+    Optional ehr_id parameter can be provided to filter results for a specific EHR.
     """
-    return await process_aql_query(
-        request=request_body,
-        request_path=fastapi_request.url.path,
-        db=db
-    )
+    response = await process_aql_query(aql_query=aql, request_url=request.url, db=db, ehr_id=ehr_id)
+    return response
+
 
 @router.get(
     "",
