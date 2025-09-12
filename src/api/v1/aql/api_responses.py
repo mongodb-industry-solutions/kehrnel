@@ -19,14 +19,3 @@ stored_query_responses = {
         "model": ErrorResponse
     }
 }
-
-execute_query_responses = {
-    status.HTTP_200_OK: {
-        "description": "Query executed successfully.",
-        "model": QueryResponse
-    },
-    status.HTTP_400_BAD_REQUEST: {
-        "description": "The AQL query is invalid or contains errors.",
-        "model": ErrorResponse
-    }
-}
