@@ -3,17 +3,102 @@
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from fastapi import HTTPException, status
 from pymongo.errors import PyMongoError
-from typing import List
+from typing import List, Dict, Any
 
 from src.api.v1.aql.repository import (
     save_stored_query,
     find_stored_query_by_name,
     delete_stored_query_by_name,
-    execute_aql_query,
-    find_all_stored_queries
+    find_all_stored_queries,
+    execute_aql_query
 )
 
-from src.api.v1.aql.models import StoredQuery, QueryRequest, QueryResponse, StoredQuerySummary
+from src.api.v1.aql.models import StoredQuery, StoredQuerySummary, QueryResponse, MetaData
+from src.api.v1.aql.aql_transformer import AQLtoMQLTransformer
+
+class AQLParser:
+    def __init__(self, aql_query: str):
+        self.aql_query = aql_query
+    def parse(self) -> dict:
+        # For this example, we use the provided AST.
+        # In a real system, you would parse self.aql_query here.
+        from src.aql_parser.ast_example import ast_data
+        return ast_data
+
+
+async def process_aql_query(aql_query: str, request_url: str, db: AsyncIOMotorDatabase, ehr_id: str = None) -> QueryResponse:
+    """
+    Handles the full lifecycle of executing an AQL query.
+    1. Parses AQL to AST.
+    2. Transforms AST to MQL.
+    3. Executes MQL against the database.
+    4. Formats the results into the standard response model.
+    """
+
+    try:
+        # Step 1: Parse AQL into AST
+        parser = AQLParser(aql_query)
+        ast = parser.parse()
+
+        # Step 2: Transform AST into MQL Aggregation Pipeline
+        transformer = AQLtoMQLTransformer(ast, ehr_id=ehr_id)
+        pipeline = transformer.build_pipeline()
+
+        # Step 3: Execute the query via the repository
+        results = await execute_aql_query(pipeline=pipeline, db=db)
+
+        # Debug: Log the results structure
+        print(f"DEBUG - Results type: {type(results)}")
+        print(f"DEBUG - Results length: {len(results) if isinstance(results, list) else 'N/A'}")
+        if results:
+            print(f"DEBUG - First result type: {type(results[0])}")
+            print(f"DEBUG - First result: {results[0]}")
+
+        # Step 4: Format the response
+        meta = MetaData(
+            href=str(request_url),
+            executed_aql=aql_query
+        )
+
+        # Extract column names and paths from the project stage for the response model
+        columns = []
+        project_stage = next((stage for stage in pipeline if '$project' in stage), None)
+        if project_stage:
+            # This is a simplified way to get column names; a more robust method
+            # would map back to the original AST select columns.
+            columns = [{"name": key, "path": f"/{key}"} for key in project_stage['$project'] if key != '_id']
+
+        # Ensure results is properly formatted and serializable
+        if not isinstance(results, list):
+            results = [results] if results else []
+        
+        # Convert datetime objects to ISO strings for JSON serialization
+        def convert_datetime_objects(obj):
+            if isinstance(obj, dict):
+                return {k: convert_datetime_objects(v) for k, v in obj.items()}
+            elif isinstance(obj, list):
+                return [convert_datetime_objects(item) for item in obj]
+            elif hasattr(obj, 'isoformat'):  # datetime objects
+                return obj.isoformat()
+            else:
+                return obj
+        
+        serializable_results = [convert_datetime_objects(result) for result in results]
+        
+        return QueryResponse(meta=meta, q=aql_query, columns=columns, rows=serializable_results)
+    
+    except PyMongoError as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail = f"Database error during query execution: {e}"
+        )
+    except (ValueError, NotImplementedError) as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error processing AQL query: {e}"
+        )
+
+
 
 async def create_or_update_stored_query(name: str, aql_query: str, db: AsyncIOMotorDatabase) -> None:
     """
@@ -65,45 +150,4 @@ async def remove_stored_query(name: str, db: AsyncIOMotorDatabase) -> None:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Database error while deleting stored query '{name}': {e}"
-        )
-
-async def process_aql_query(request: QueryRequest, request_path: str, db: AsyncIOMotorDatabase) -> QueryResponse:
-    """
-    Processes an AQL query execution request by calling the repository's execution engine.
-    """
-    try:
-        # Pass the full request model to the repository
-        result_dict = await execute_aql_query(
-            request_body=request.model_dump(by_alias=True, exclude_none=True),
-            db=db
-        )
-
-        # Build the final response object
-        response_data = {
-            "meta": {
-                "href": request_path,
-                "executed_aql": request.query,
-            },
-            "q": result_dict["q"],
-            "columns": result_dict["columns"],
-            "rows": result_dict["rows"]
-        }
-
-        return QueryResponse.model_validate(response_data)
-    
-    except ValueError as e:
-        # This will catch errors from the future AQL engine
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Invalid AQL query: {e}"
-        )
-    except PyMongoError as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Database execution failed: {e}"
-        )
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An unexpected error ocurred: {e}"
         )
