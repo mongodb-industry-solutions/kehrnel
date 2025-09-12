@@ -24,6 +24,7 @@ async def execute_aql_query(pipeline: List[Dict[str, Any]], db: AsyncIOMotorData
         return await cursor.to_list(length=None)
     except PyMongoError as e:
         logger.error(f"AQL query execution failed in repository: {e}")
+        raise e
 
 
 async def save_stored_query(name: str, aql_query: str, db: AsyncIOMotorDatabase) -> None:
