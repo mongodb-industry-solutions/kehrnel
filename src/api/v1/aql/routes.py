@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, Depends, status, Body, Response, Request
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from typing import List
+from typing import List, Dict, Any
 
 from src.app.core.database import get_mongodb_ehr_db
 from src.api.v1.aql.service import (
@@ -10,7 +10,8 @@ from src.api.v1.aql.service import (
     retrieve_stored_query,
     remove_stored_query,
     list_all_stored_queries,
-    process_aql_query
+    process_aql_query,
+    process_aql_ast_query
 )
 from src.api.v1.aql.models import StoredQuerySummary, QueryResponse
 from src.api.v1.aql.api_responses import stored_query_responses
@@ -39,6 +40,34 @@ async def execute_query(
     response = await process_aql_query(aql_query=aql, request_url=request.url, db=db, ehr_id=ehr_id)
     return response
 
+
+@router.post(
+    "/ast",
+    summary="Execute AQL AST Query (Testing)",
+    description="Executes an AQL query from AST structure (for testing LET clauses and other features)."
+)
+async def execute_ast_query(
+    request: Request,
+    ast_data: Dict[str, Any] = Body(..., description="The AQL AST structure."),
+    ehr_id: str = None,
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Accepts an AQL query as AST structure, converts it to MongoDB pipeline, executes it, and returns the result set.
+    This endpoint is primarily for testing
+    """
+    try:
+        
+        response = await process_aql_ast_query(ast_query= ast_data, request_url=request.url, db=db, ehr_id=ehr_id)
+        return response
+        
+    except Exception as e:
+        return {
+            "ast": ast_data,
+            "documents": [],
+            "error": str(e),
+            "errorType": type(e).__name__
+        }
 
 @router.get(
     "",
