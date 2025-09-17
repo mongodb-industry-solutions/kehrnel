@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, Depends, status, Body, Response, Request
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from typing import List
+from typing import List, Dict, Any
 
 from src.app.core.database import get_mongodb_ehr_db
 from src.api.v1.aql.service import (
@@ -14,6 +14,7 @@ from src.api.v1.aql.service import (
 )
 from src.api.v1.aql.models import StoredQuerySummary, QueryResponse
 from src.api.v1.aql.api_responses import stored_query_responses
+from src.api.v1.aql.aql_transformer import AQLtoMQLTransformer
 
 router = APIRouter(
     prefix="/query",
@@ -38,6 +39,52 @@ async def execute_query(
     """
     response = await process_aql_query(aql_query=aql, request_url=request.url, db=db, ehr_id=ehr_id)
     return response
+
+
+@router.post(
+    "/ast",
+    summary="Execute AQL AST Query (Testing)",
+    description="Executes an AQL query from AST structure (for testing LET clauses and other features)."
+)
+async def execute_ast_query(
+    request: Request,
+    ast_data: Dict[str, Any] = Body(..., description="The AQL AST structure."),
+    ehr_id: str = None,
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Accepts an AQL query as AST structure, converts it to MongoDB pipeline, executes it, and returns the result set.
+    This endpoint is primarily for testing LET clause functionality and other advanced features.
+    """
+    try:
+        # Create transformer with AST
+        transformer = AQLtoMQLTransformer(ast_data, ehr_id=ehr_id)
+        
+        # Generate MongoDB pipeline
+        pipeline = transformer.build_pipeline()
+        
+        # Execute the pipeline
+        collection = db["sm_compositions3"]  # Use the composition collection from config
+        cursor = collection.aggregate(pipeline)
+        results = await cursor.to_list(length=1000)  # Limit to 1000 results for testing
+        
+        # Return simple response for testing
+        return {
+            "ast": ast_data,
+            "pipeline": pipeline,
+            "resultCount": len(results),
+            "results": results[:10] if results else [],  # Show first 10 results only
+            "letVariables": list(transformer.let_variables.keys()) if hasattr(transformer, 'let_variables') else []
+        }
+        
+    except Exception as e:
+        # Return error details for debugging
+        return {
+            "ast": ast_data,
+            "pipeline": [],
+            "error": str(e),
+            "errorType": type(e).__name__
+        }
 
 
 @router.get(
