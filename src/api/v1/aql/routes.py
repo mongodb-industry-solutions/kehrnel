@@ -74,7 +74,7 @@ async def execute_ast_query(
             "pipeline": pipeline,
             "resultCount": len(results),
             "results": results[:10] if results else [],  # Show first 10 results only
-            "letVariables": list(transformer.let_variables.keys()) if hasattr(transformer, 'let_variables') else []
+            "letVariables": list(transformer.let_variables.keys())
         }
         
     except Exception as e:
