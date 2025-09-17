@@ -74,6 +74,11 @@ class AQLtoMQLTransformer:
         if sort_stage:
             pipeline.append(sort_stage)
         
+        # 5. Build the $limit stage from LIMIT clause
+        limit_stage = self._build_limit_stage()
+        if limit_stage:
+            pipeline.append(limit_stage)
+        
         return pipeline
 
     # --- Validation ---
@@ -932,6 +937,33 @@ class AQLtoMQLTransformer:
             sort_spec[field_name] = sort_direction
             
         return {"$sort": sort_spec} if sort_spec else None
+
+    def _build_limit_stage(self) -> Optional[Dict[str, Any]]:
+        """
+        Constructs the $limit stage from the LIMIT clause.
+        
+        Returns:
+            Optional[Dict[str, Any]]: MongoDB $limit stage or None if no LIMIT clause
+            
+        Example LIMIT AST:
+        "limit": 10
+        
+        Produces MongoDB $limit:
+        {"$limit": 10}
+        """
+        limit_value = self.ast.get("limit")
+        
+        # Check if limit exists and is a positive integer
+        if limit_value is None:
+            return None
+            
+        try:
+            limit_int = int(limit_value)
+            if limit_int <= 0:
+                raise ValueError(f"LIMIT value must be positive, got: {limit_int}")
+            return {"$limit": limit_int}
+        except (ValueError, TypeError) as e:
+            raise ValueError(f"Invalid LIMIT value: {limit_value}. Must be a positive integer.")
 
     # --- Utility Methods ---
     def _translate_aql_path(self, aql_path: str) -> Tuple[str, str]:
