@@ -59,6 +59,11 @@ class AQLtoMQLTransformer:
         project_stage = self._build_project_stage()
         if project_stage:
             pipeline.append(project_stage)
+
+        # 3. Build the $sort stage from ORDER BY clause
+        sort_stage = self._build_sort_stage()
+        if sort_stage:
+            pipeline.append(sort_stage)
         
         return pipeline
 
@@ -566,6 +571,54 @@ class AQLtoMQLTransformer:
                     }
                 }
         return {"$project": projection}
+
+    def _build_sort_stage(self) -> Optional[Dict[str, Any]]:
+        """
+        Constructs the $sort stage from the ORDER BY clause.
+        
+        Returns:
+            Optional[Dict[str, Any]]: MongoDB $sort stage or None if no ORDER BY clause
+            
+        Example ORDER BY AST:
+        "orderBy": {
+            "columns": {
+                "0": {"path": "c/name/value", "direction": "ASC"},
+                "1": {"path": "c/context/start_time/value", "direction": "DESC"}
+            }
+        }
+        
+        Produces MongoDB $sort:
+        {"$sort": {"c_name": 1, "c_context_start_time": -1}}
+        """
+        order_by = self.ast.get("orderBy", {})
+        
+        # Check if orderBy exists and has columns
+        if not order_by or not order_by.get("columns"):
+            return None
+            
+        sort_spec = {}
+        columns = order_by.get("columns", {})
+        
+        for col_data in columns.values():
+            aql_path = col_data.get("path")
+            direction = col_data.get("direction", "ASC").upper()
+            
+            if not aql_path:
+                continue
+                
+            # Convert AQL path to MongoDB field name using same logic as projection
+            path_parts = aql_path.split('/')
+            if len(path_parts) >= 2:
+                # Use variable + field name, e.g., "e_ehr_id" or "c_name"
+                field_name = f"{path_parts[0]}_{path_parts[1]}"
+            else:
+                field_name = path_parts[-1]
+                
+            # Convert direction to MongoDB sort value
+            sort_direction = 1 if direction == "ASC" else -1
+            sort_spec[field_name] = sort_direction
+            
+        return {"$sort": sort_spec} if sort_spec else None
 
     # --- Utility Methods ---
     def _translate_aql_path(self, aql_path: str) -> Tuple[str, str]:
