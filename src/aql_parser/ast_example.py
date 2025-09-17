@@ -7,12 +7,6 @@ ast_data = {
       "0": {
         "value": {
           "type": "dataMatchPath",
-          "path": "e/ehr_id/value"
-        }
-      },
-      "1": {
-        "value": {
-          "type": "dataMatchPath",
           "path": "c/name/value"
         }
       }
@@ -27,12 +21,5 @@ ast_data = {
     "rmType": "COMPOSITION",
     "alias": "c"
   },
-  "where": {
-    "path": "c/name/value",
-    "operator": "=",
-    "value": "HC3 Reports"
-  },
-  "orderBy": {},
-  "limit": None,
-  "offset": None
+  "limit": 5
 }
