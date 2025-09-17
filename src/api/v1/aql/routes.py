@@ -10,11 +10,11 @@ from src.api.v1.aql.service import (
     retrieve_stored_query,
     remove_stored_query,
     list_all_stored_queries,
-    process_aql_query
+    process_aql_query,
+    process_aql_ast_query
 )
 from src.api.v1.aql.models import StoredQuerySummary, QueryResponse
 from src.api.v1.aql.api_responses import stored_query_responses
-from src.api.v1.aql.aql_transformer import AQLtoMQLTransformer
 
 router = APIRouter(
     prefix="/query",
@@ -54,38 +54,20 @@ async def execute_ast_query(
 ):
     """
     Accepts an AQL query as AST structure, converts it to MongoDB pipeline, executes it, and returns the result set.
-    This endpoint is primarily for testing LET clause functionality and other advanced features.
+    This endpoint is primarily for testing
     """
     try:
-        # Create transformer with AST
-        transformer = AQLtoMQLTransformer(ast_data, ehr_id=ehr_id)
         
-        # Generate MongoDB pipeline
-        pipeline = transformer.build_pipeline()
-        
-        # Execute the pipeline
-        collection = db["sm_compositions3"]  # Use the composition collection from config
-        cursor = collection.aggregate(pipeline)
-        results = await cursor.to_list(length=1000)  # Limit to 1000 results for testing
-        
-        # Return simple response for testing
-        return {
-            "ast": ast_data,
-            "pipeline": pipeline,
-            "resultCount": len(results),
-            "results": results[:10] if results else [],  # Show first 10 results only
-            "letVariables": list(transformer.let_variables.keys())
-        }
+        response = await process_aql_ast_query(ast_query= ast_data, request_url=request.url, db=db, ehr_id=ehr_id)
+        return response
         
     except Exception as e:
-        # Return error details for debugging
         return {
             "ast": ast_data,
-            "pipeline": [],
+            "documents": [],
             "error": str(e),
             "errorType": type(e).__name__
         }
-
 
 @router.get(
     "",
