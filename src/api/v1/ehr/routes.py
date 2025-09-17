@@ -14,7 +14,7 @@ from src.api.v1.ehr.service import (
     retrieve_ehr_list,
     create_ehr_with_id,
     add_composition, 
-    retrieve_composition_by_version_uid, 
+    retrieve_composition, 
     update_composition,
     delete_composition_by_preceding_uid,
     retrieve_ehr_by_subject,
@@ -178,32 +178,36 @@ async def update_composition_endpoint(
 
 
 @router.get(
-    "/{ehr_id}/composition/{versioned_object_uid}",
+    "/{ehr_id}/composition/{uid_based_id}",
     status_code = status.HTTP_200_OK,
-    summary = "Get Composition by version ID",
+    summary = "Get Composition by version or object ID",
     responses = get_composition_responses
 )
-async def get_composition_by_version_id(
+async def get_composition_by_id(
     ehr_id: str,
-    versioned_object_uid: str,
+    uid_based_id: str,
     response: Response,
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
 ):
     """
-    Retrieves a specific version of a `COMPOSITION` from a given EHR.
+    Retrieves a version of a `COMPOSITION` from a given EHR.
 
-    The composition is identified by its unique versioned object UID
-    This endpoint returns the full canonical `COMPOSITION` object in the response body
+    The composition is identified by its `uid_based_id`, which can be either:
+    - A `version_uid` (e.g., `...::server::1`) to fetch a specific version.
+    - A `versioned_object_uid` (e.g., `...`) to fetch the latest version.
 
-    The `ETag` `Last-Modified`, and `Location` headers are set for proper HTTP caching and resource identification
+    The full canonical `COMPOSITION` object is returned in the response body.
+    The `ETag`, `Last-Modified`, and `Location` headers are set for the specific
+    version that is returned.
     """
-    composition = await retrieve_composition_by_version_uid(
+    composition = await retrieve_composition(
         ehr_id = ehr_id,
-        versioned_object_uid = versioned_object_uid,
+        uid_based_id = uid_based_id,
         db = db
     )
 
     # Return explicit JSONResponse with headers and status code
+    # The 'composition.uid' will always be the full version_uid of the returned object
     last_modified_gmt = formatdate(composition.time_created.timestamp(), usegmt = True)
     return JSONResponse(
         content=composition.data,

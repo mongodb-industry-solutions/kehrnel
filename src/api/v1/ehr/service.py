@@ -13,6 +13,7 @@ from src.api.v1.ehr.repository import (
     find_newest_ehrs, 
     insert_composition_contribution_and_update_ehr, 
     find_composition_by_uid,
+    find_latest_composition_by_object_id,
     add_deletion_contribution_and_update_ehr,
     find_deletion_contribution_for_version,
     find_contribution_by_version_uid,
@@ -149,7 +150,7 @@ async def delete_composition_by_preceding_uid(
     ehr = await retrieve_ehr_by_id(ehr_id, db)
 
     # This function already raises 404 if the composition is not found or not linked to the EHR.
-    composition_to_delete = await retrieve_composition_by_version_uid(
+    composition_to_delete = await retrieve_composition(
         ehr_id = ehr_id,
         versioned_object_uid = preceding_version_uid,
         db = db
@@ -248,7 +249,7 @@ async def update_composition(
         )
     
     # Fetch the composition being updated to ensure it exists
-    existing_composition = await retrieve_composition_by_version_uid(
+    existing_composition = await retrieve_composition(
         ehr_id = ehr_id,
         versioned_object_uid = preceding_version_uid,
         db = db
@@ -311,29 +312,33 @@ async def update_composition(
     return new_composition_for_db
 
 
-async def retrieve_composition_by_version_uid(
+async def retrieve_composition(
     ehr_id: str,
-    versioned_object_uid: str,
+    uid_based_id: str,
     db: AsyncIOMotorDatabase
 ) -> Composition:
     """
-    Retrieves a specific version of a Composition
+    Retrieves a version of a Composition based on a UID.
 
-    It validates that the EHR exists and that the Composition UID is linked to it, then fetches the full composition data.
+    This function handles two cases as per openEHR spec:
+    1. If `uid_based_id` is a full version UID (e.g., "id::server::1"), it fetches that specific version.
+    2. If `uid_based_id` is a base object UID (e.g., "id"), it fetches the LATEST version of that composition.
+
+    It also validates that the composition belongs to the specified EHR.
 
     Args:
-        ehr_id: The ID of the parent EHR
-        versioned_bject_uid: The unique version ID of the composition to retrieve.
-        db: The database sessionw
+        ehr_id: The ID of the parent EHR.
+        uid_based_id: The unique ID of the composition (can be version-specific or not).
+        db: The database session.
 
     Returns:
-        The validated composition pydantic model
+        The validated Composition Pydantic model.
 
     Raises:
-        HTTPException: 404 if the EHR of composition is not found
+        HTTPException: 404 if the EHR or Composition is not found.
     """
 
-    # Validate that the EHR exists and contains a composition link
+    # Validate that the EHR exists
     ehr_doc = await find_ehr_by_id(ehr_id, db)
     if not ehr_doc:
         raise HTTPException(
@@ -341,23 +346,29 @@ async def retrieve_composition_by_version_uid(
             detail = "EHR with id '{ehr_id}' not found"
         )
     
-    # Check if the composition UID is in the EHR's list of compositions
-    # Ensure the composition belongs to the specified EHR
+    composition_doc = None
+    # Case 1: A specific version is requested (contains '::')
+    if "::" in uid_based_id:
+        composition_doc = await find_composition_by_uid(uid_based_id, db)
+    else:
+        composition_doc = await find_latest_composition_by_object_id(uid_based_id, db)
 
+    if not composition_doc:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail=f"Composition with id '{uid_based_id}' not found in EHR '{ehr_id}'"
+        )
+    
+    # Get the full version UID for validation
+    versioned_object_uid = composition_doc["_id"]
+
+    # Ensure the found composition is actually linked to the specified EHR.
     composition_refs = ehr_doc.get("compositions", [])
 
     if not any(comp["id"]["value"] == versioned_object_uid for comp in composition_refs):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Composition with id '{versioned_object_uid}' not found in EHR '{ehr_id}'"
-        )
-    
-    # Fetch the composition document from the repository
-    composition_doc = await find_composition_by_uid(versioned_object_uid, db)
-    if not composition_doc:
-        raise HTTPException(
-            status_code = status.HTTP_404_NOT_FOUND,
-            detail = "Composition with id '{versioned_object_uid}' not found"
+            detail=f"Composition with id '{uid_based_id}' not found in EHR '{ehr_id}'"
         )
     
     return Composition.model_validate(composition_doc)
