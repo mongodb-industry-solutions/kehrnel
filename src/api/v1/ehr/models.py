@@ -3,6 +3,7 @@
 from pydantic import BaseModel, Field, validator, RootModel
 from datetime import datetime
 from typing import Optional, List, Literal, Any, Dict, Union
+from src.app.core.models import AuditDetails
 
 class HierObjectID(BaseModel):
     value: str
@@ -133,3 +134,14 @@ class Composition(BaseModel):
 
     class Config:
         populate_by_name = True
+
+class RevisionHistoryItem(BaseModel):
+    version_id: ObjectVersionID = Field(..., alias="versionedID")
+    audit: AuditDetails
+
+    class Config:
+        populate_by_name = True
+
+# The top-level response model for the revision history endpoint
+class RevisionHistory(BaseModel):
+    items: List[RevisionHistoryItem]
