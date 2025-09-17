@@ -291,7 +291,7 @@ class AQLtoMQLTransformer:
                 # Composition field mapping via cn array
                 field_path = "/".join(parts[1:])
                 # For LET expressions, we need to use a different approach since we don't have cn_matched yet
-                return f"$cn.0.{self.schema_config['data_field']}.{field_path.replace('/', '.')}"
+                return f"$cn.{self.schema_config['data_field']}.{field_path.replace('/', '.')}"
         
         return f"${path}"
 
