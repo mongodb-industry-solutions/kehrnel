@@ -2,6 +2,7 @@
 
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from fastapi import HTTPException, status
+from fastapi.responses import JSONResponse
 from pymongo.errors import PyMongoError
 from typing import List, Dict, Any
 
@@ -24,6 +25,67 @@ class AQLParser:
         # In a real system, you would parse self.aql_query here.
         from src.aql_parser.ast_example import ast_data
         return ast_data
+
+
+async def process_aql_ast_query(ast_query: Dict[str, Any], request_url: str, db: AsyncIOMotorDatabase, ehr_id: str = None) -> QueryResponse:
+    """
+    Handles the lifecycle of executing an AST query.
+    1. Transforms AST to MQL.
+    2. Executes MQL against the database.
+    3. Formats the results into the standard response model.
+    """
+
+    try:
+        transformer = AQLtoMQLTransformer(ast_query, ehr_id=ehr_id)
+        pipeline = transformer.build_pipeline()
+
+        # Execute the query via the repository
+        results = await execute_aql_query(pipeline=pipeline, db=db)
+
+
+        # Extract column names and paths from the project stage for the response model
+        columns = []
+        project_stage = next((stage for stage in pipeline if '$project' in stage), None)
+
+        if project_stage:
+            # This is a simplified way to get column names; a more robust method
+            # would map back to the original AST select columns.
+            columns = [{"name": key, "path": f"/{key}"} for key in project_stage['$project'] if key != '_id']
+
+        # Ensure results is properly formatted and serializable
+        if not isinstance(results, list):
+            results = [results] if results else []
+
+        # Convert datetime objects to ISO strings for JSON serialization
+        def convert_datetime_objects(obj):
+            if isinstance(obj, dict):
+                return {k: convert_datetime_objects(v) for k, v in obj.items()}
+            elif isinstance(obj, list):
+                return [convert_datetime_objects(item) for item in obj]
+            elif hasattr(obj, 'isoformat'):  # datetime objects
+                return obj.isoformat()
+            else:
+                return obj
+            
+        serializable_results = [convert_datetime_objects(result) for result in results]
+        return JSONResponse(
+            content={
+                "query": ast_query,
+                "columns": columns,
+                "rows": serializable_results
+            },
+            status_code=200
+        )
+    except PyMongoError as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail = f"Database error during query execution: {e}"
+        )
+    except (ValueError, NotImplementedError) as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error processing AST query: {e}"
+        )
 
 
 async def process_aql_query(aql_query: str, request_url: str, db: AsyncIOMotorDatabase, ehr_id: str = None) -> QueryResponse:
