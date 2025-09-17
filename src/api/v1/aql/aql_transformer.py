@@ -40,9 +40,13 @@ class AQLtoMQLTransformer:
         self.ehr_alias = None
         self.composition_alias = None
         
+        # LET variable storage
+        self.let_variables: Dict[str, Any] = {}
+        
         self._validate_ast()
         self._build_context_map()
         self._detect_key_aliases()
+        self._process_let_variables()
 
     def build_pipeline(self) -> List[Dict[str, Any]]:
         """
@@ -55,12 +59,17 @@ class AQLtoMQLTransformer:
         if match_stage:
             pipeline.append(match_stage)
 
-        # 2. Build the $project stage from the SELECT clause
+        # 2. Build the $addFields stage for LET variables (before projection)
+        let_stage = self._build_let_stage()
+        if let_stage:
+            pipeline.append(let_stage)
+
+        # 3. Build the $project stage from the SELECT clause
         project_stage = self._build_project_stage()
         if project_stage:
             pipeline.append(project_stage)
 
-        # 3. Build the $sort stage from ORDER BY clause
+        # 4. Build the $sort stage from ORDER BY clause
         sort_stage = self._build_sort_stage()
         if sort_stage:
             pipeline.append(sort_stage)
@@ -116,6 +125,203 @@ class AQLtoMQLTransformer:
         
         if not self.composition_alias:
             raise ValueError("Could not detect COMPOSITION alias from AST")
+
+    def _process_let_variables(self):
+        """
+        Processes LET clause variables and stores them for resolution during query building.
+        LET variables can contain literals, paths, expressions, or computed values.
+        """
+        let_clause = self.ast.get("let")
+        if not let_clause:
+            return
+        
+        variables = let_clause.get("variables", {})
+        for var_id, var_def in variables.items():
+            var_name = var_def.get("name")
+            var_expression = var_def.get("expression")
+            
+            if not var_name or not var_expression:
+                continue
+                
+            # Store the variable definition for later resolution
+            self.let_variables[var_name] = var_expression
+    
+    def _resolve_let_variable(self, var_name: str, context: str = "select") -> Any:
+        """
+        Resolves a LET variable to its MongoDB representation.
+        
+        Args:
+            var_name: The variable name (e.g., "$template_id")
+            context: The context where the variable is being resolved ("select", "where", "sort")
+        
+        Returns:
+            MongoDB expression or literal value
+        """
+        if var_name not in self.let_variables:
+            raise ValueError(f"Unknown LET variable: {var_name}")
+        
+        expression = self.let_variables[var_name]
+        return self._resolve_expression(expression, context)
+    
+    def _resolve_expression(self, expression: Dict[str, Any], context: str = "select") -> Any:
+        """
+        Resolves an expression (from LET or elsewhere) to its MongoDB representation.
+        
+        Args:
+            expression: The expression dictionary from the AST
+            context: The context where the expression is being resolved
+        
+        Returns:
+            MongoDB expression or literal value
+        """
+        expr_type = expression.get("type")
+        
+        if expr_type == "literal":
+            return expression.get("value")
+        
+        elif expr_type == "dataMatchPath":
+            path = expression.get("path")
+            if not path:
+                return None
+                
+            # For dataMatchPath in LET context, we need to handle it differently
+            # This is a simplified approach - in production, you'd want more sophisticated path resolution
+            if "/" in path:
+                parts = path.split("/")
+                alias = parts[0]
+                
+                if alias == self.ehr_alias:
+                    # EHR field mapping  
+                    field_path = "/".join(parts[1:])
+                    mapped_field = self._map_ehr_path_to_field(field_path)
+                    return f"${mapped_field}"
+                elif alias == self.composition_alias:
+                    # For composition paths in LET, use array element access
+                    field_path = "/".join(parts[1:])
+                    data_path = f"{self.schema_config['data_field']}.{field_path.replace('/', '.')}"
+                    
+                    # Return a more complex expression to find the matching element
+                    return {
+                        "$let": {
+                            "vars": {
+                                "target_element": {
+                                    "$first": {
+                                        "$filter": {
+                                            "input": f"${self.schema_config['composition_array']}",
+                                            "as": "item",
+                                            "cond": {"$regexMatch": {"input": f"$$item.{self.schema_config['path_field']}", "regex": ".*"}}
+                                        }
+                                    }
+                                }
+                            },
+                            "in": f"$$target_element.{data_path}"
+                        }
+                    }
+            
+            return f"${path}"
+        
+        elif expr_type == "concat":
+            # Handle string concatenation using $concat
+            operands = expression.get("operands", [])
+            resolved_operands = [self._resolve_expression(op, context) for op in operands]
+            return {"$concat": resolved_operands}
+        
+        elif expr_type == "arithmetic":
+            # Handle arithmetic operations
+            operator = expression.get("operator")
+            operands = expression.get("operands", [])
+            resolved_operands = [self._resolve_expression(op, context) for op in operands]
+            
+            if operator == "+":
+                return {"$add": resolved_operands}
+            elif operator == "-":
+                return {"$subtract": resolved_operands}
+            elif operator == "*":
+                return {"$multiply": resolved_operands}
+            elif operator == "/":
+                return {"$divide": resolved_operands}
+        
+        elif expr_type == "conditional":
+            # Handle conditional expressions using $cond
+            condition = expression.get("condition")
+            true_value = self._resolve_expression(expression.get("trueValue"), context)
+            false_value = self._resolve_expression(expression.get("falseValue"), context)
+            
+            # Convert condition to MongoDB expression
+            mongo_condition = self._build_condition_expression(condition)
+            
+            return {
+                "$cond": {
+                    "if": mongo_condition,
+                    "then": true_value,
+                    "else": false_value
+                }
+            }
+        
+        elif expr_type == "function":
+            # Handle function calls
+            func_name = expression.get("name")
+            if func_name == "CURRENT_YEAR":
+                return {"$year": "$$NOW"}
+            # Add more functions as needed
+        
+        # Default: return as is
+        return expression
+
+    def _resolve_path_to_mongo_field(self, path: str) -> str:
+        """
+        Resolves an AQL path to a MongoDB field reference.
+        This handles the semi-flattened schema field mapping.
+        """
+        if not path:
+            return ""
+            
+        # This is similar to existing path resolution logic
+        # For now, using a simplified approach
+        if "/" in path:
+            parts = path.split("/")
+            alias = parts[0]
+            
+            if alias == self.ehr_alias:
+                # EHR field mapping
+                field_path = "/".join(parts[1:])
+                mapped_field = self._map_ehr_path_to_field(field_path)
+                return f"${mapped_field}"
+            elif alias == self.composition_alias:
+                # Composition field mapping via cn array
+                field_path = "/".join(parts[1:])
+                # For LET expressions, we need to use a different approach since we don't have cn_matched yet
+                return f"$cn.0.{self.schema_config['data_field']}.{field_path.replace('/', '.')}"
+        
+        return f"${path}"
+
+    def _map_ehr_path_to_field(self, field_path: str) -> str:
+        """
+        Maps EHR-level field paths to MongoDB field names.
+        """
+        if field_path == "ehr_id/value":
+            return "ehr_id"
+        # Add more EHR field mappings as needed
+        return field_path.replace('/', '.')
+
+    def _build_condition_expression(self, condition: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Builds a MongoDB condition expression from an AST condition.
+        """
+        if "path" in condition:
+            field = self._resolve_path_to_mongo_field(condition["path"])
+            operator = condition.get("operator", "=")
+            value = condition.get("value")
+            
+            if operator == "LIKE":
+                # Convert LIKE to regex
+                regex_pattern = value.replace("%", ".*")
+                return {"$regexMatch": {"input": field, "regex": regex_pattern, "options": "i"}}
+            else:
+                mongo_op = OPERATOR_MAP.get(operator, "$eq")
+                return {mongo_op: [field, value]}
+        
+        return condition
 
     # --- Context Building ---
     def _build_context_map(self):
@@ -219,12 +425,18 @@ class AQLtoMQLTransformer:
             } if children else {}
         else:
             # Base condition (leaf node)
-            return {
+            condition = {
                 "type": "condition",
                 "path": where_node.get("path"),
                 "operator": where_node.get("operator"),
                 "value": where_node.get("value")
             }
+            
+            # Handle LET variable references in WHERE clause
+            if "variable" in where_node:
+                condition["variable"] = where_node.get("variable")
+            
+            return condition
 
     def _separate_conditions(self, processed_where: Dict) -> Tuple[Dict, Dict]:
         """
@@ -259,31 +471,43 @@ class AQLtoMQLTransformer:
         
         if node.get("type") == "condition":
             # Base condition - check if it's EHR or composition level
-            variable = node["path"].split('/')[0]
+            path = node.get("path")
+            variable_ref = node.get("variable")
             
-            if variable == self.ehr_alias:
-                # EHR-level condition
-                path_parts = node["path"].split('/')[1:]  # Remove EHR alias
-                if len(path_parts) >= 2 and path_parts[0] == 'ehr_id':
-                    ehr_field = 'ehr_id'
-                    mql_operator = OPERATOR_MAP.get(node["operator"], "$eq")
-                    value = self._format_value(node["value"])
-                    
-                    # Convert to BSON Binary UUID if it's an ehr_id field
-                    if ehr_field == 'ehr_id' and isinstance(value, str):
-                        try:
-                            uuid_obj = uuid.UUID(value)
-                            value = Binary.from_uuid(uuid_obj)
-                        except (ValueError, TypeError):
-                            pass  # Keep as string if conversion fails
-                    
-                    if mql_operator == "$eq":
-                        ehr_conditions[ehr_field] = value
-                    else:
-                        ehr_conditions[ehr_field] = {mql_operator: value}
-            else:
-                # Composition-level condition
+            # Handle variable references vs path references
+            if variable_ref:
+                # For variable references, we treat them as composition-level for now
+                # In a full implementation, you'd analyze the variable definition
                 comp_conditions.append(node)
+            elif path:
+                variable = path.split('/')[0]
+                
+                if variable == self.ehr_alias:
+                    # EHR-level condition
+                    path_parts = path.split('/')[1:]  # Remove EHR alias
+                    if len(path_parts) >= 2 and path_parts[0] == 'ehr_id':
+                        ehr_field = 'ehr_id'
+                        mql_operator = OPERATOR_MAP.get(node["operator"], "$eq")
+                        value = self._format_value(node["value"])
+                        
+                        # Convert to BSON Binary UUID if it's an ehr_id field
+                        if ehr_field == 'ehr_id' and isinstance(value, str):
+                            try:
+                                uuid_obj = uuid.UUID(value)
+                                value = Binary.from_uuid(uuid_obj)
+                            except (ValueError, TypeError):
+                                pass  # Keep as string if conversion fails
+                        
+                        if mql_operator == "$eq":
+                            ehr_conditions[ehr_field] = value
+                        else:
+                            ehr_conditions[ehr_field] = {mql_operator: value}
+                else:
+                    # Composition-level condition
+                    comp_conditions.append(node)
+            else:
+                # No path or variable - skip this condition
+                pass
         
         elif node.get("operator") in ["AND", "OR"]:
             # Logical operator - need to check if all children are same level
@@ -375,7 +599,16 @@ class AQLtoMQLTransformer:
         Groups conditions by their variable alias for proper $elemMatch construction.
         """
         if node.get("type") == "condition":
-            variable = node["path"].split('/')[0]
+            # Determine the variable for grouping
+            if node.get("variable"):
+                # Variable reference - group by the composition alias since variables are resolved at that level
+                variable = self.composition_alias
+            elif node.get("path"):
+                variable = node["path"].split('/')[0]
+            else:
+                # Skip conditions without path or variable
+                return
+                
             if variable not in variable_conditions:
                 variable_conditions[variable] = []
             variable_conditions[variable].append(node)
@@ -453,27 +686,59 @@ class AQLtoMQLTransformer:
     def _create_elem_match_for_single_condition(self, variable: str, condition: Dict) -> Dict:
         """Creates $elemMatch for a single condition."""
         base_path_regex = self._build_full_path_regex(variable)
-        aql_path = condition["path"]
-        p_regex_part, data_path = self._translate_aql_path(aql_path)
         
-        mql_operator = OPERATOR_MAP.get(condition["operator"])
-        if not mql_operator:
-            raise NotImplementedError(f"AQL operator '{condition['operator']}' not supported.")
+        # Handle variable references vs path references
+        if condition.get("variable"):
+            # Variable reference - resolve the variable to its value
+            var_name = condition["variable"]
+            if var_name in self.let_variables:
+                # Use the resolved variable value directly
+                value = self._resolve_let_variable(var_name, "where")
+                mql_operator = OPERATOR_MAP.get(condition["operator"], "$eq")
+                
+                # For variable references, we use a generic path match and then check the variable value
+                # This is a simplified approach - in production you'd want more sophisticated handling
+                path_field = self.schema_config['path_field']
+                
+                if mql_operator == "$eq":
+                    data_condition = value
+                else:
+                    data_condition = {mql_operator: value}
+                
+                return {
+                    path_field: {"$regex": base_path_regex},
+                    # Use a placeholder data path - this would need more sophisticated handling in production
+                    f"{self.schema_config['data_field']}.placeholder": data_condition
+                }
+            else:
+                raise ValueError(f"Unknown LET variable: {var_name}")
         
-        value = self._format_value(condition["value"])
-        path_field = self.schema_config['path_field']
-        full_path_regex = self._combine_path_regex(base_path_regex, p_regex_part)
-        
-        # Build data condition
-        if mql_operator == "$eq":
-            data_condition = value
         else:
-            data_condition = {mql_operator: value}
-        
-        return {
-            path_field: {"$regex": full_path_regex},
-            data_path: data_condition
-        }
+            # Regular path-based condition
+            aql_path = condition["path"]
+            if not aql_path:
+                raise ValueError("Condition must have either path or variable reference")
+                
+            p_regex_part, data_path = self._translate_aql_path(aql_path)
+            
+            mql_operator = OPERATOR_MAP.get(condition["operator"])
+            if not mql_operator:
+                raise NotImplementedError(f"AQL operator '{condition['operator']}' not supported.")
+            
+            value = self._format_value(condition["value"])
+            path_field = self.schema_config['path_field']
+            full_path_regex = self._combine_path_regex(base_path_regex, p_regex_part)
+            
+            # Build data condition
+            if mql_operator == "$eq":
+                data_condition = value
+            else:
+                data_condition = {mql_operator: value}
+            
+            return {
+                path_field: {"$regex": full_path_regex},
+                data_path: data_condition
+            }
 
     def _combine_path_regex(self, base_regex: str, path_prefix: str) -> str:
         """Combines base path regex with specific path prefix."""
@@ -526,7 +791,24 @@ class AQLtoMQLTransformer:
         projection = {"_id": 0}
         for col_data in columns.values():
             alias = col_data.get("alias")
-            aql_path = col_data["value"]["path"]
+            value_spec = col_data.get("value", {})
+            
+            # Check if this is a variable reference
+            if value_spec.get("type") == "variable":
+                var_name = value_spec.get("name")
+                if not alias:
+                    alias = var_name.lstrip('$')  # Use variable name as alias
+                
+                # Reference the field created by the LET stage
+                field_name = var_name.lstrip('$')
+                projection[alias] = f"${field_name}"
+                continue
+            
+            # Handle regular path-based columns
+            aql_path = value_spec.get("path")
+            if not aql_path:
+                continue
+                
             if not alias: # If no alias, use a more descriptive default based on full path
                 path_parts = aql_path.split('/')
                 if len(path_parts) >= 2:
@@ -572,6 +854,29 @@ class AQLtoMQLTransformer:
                 }
         return {"$project": projection}
 
+    def _build_let_stage(self) -> Optional[Dict[str, Any]]:
+        """
+        Constructs the $addFields stage for LET variables.
+        This stage adds computed fields to documents based on LET expressions.
+        
+        Returns:
+            Optional[Dict[str, Any]]: MongoDB $addFields stage or None if no LET clause
+        """
+        if not self.let_variables:
+            return None
+        
+        add_fields = {}
+        
+        for var_name, expression in self.let_variables.items():
+            # Remove $ prefix for field name (MongoDB field names don't use $)
+            field_name = var_name.lstrip('$')
+            
+            # Resolve the expression to MongoDB aggregation expression
+            resolved_expression = self._resolve_expression(expression, "let")
+            add_fields[field_name] = resolved_expression
+        
+        return {"$addFields": add_fields}
+
     def _build_sort_stage(self) -> Optional[Dict[str, Any]]:
         """
         Constructs the $sort stage from the ORDER BY clause.
@@ -601,18 +906,26 @@ class AQLtoMQLTransformer:
         
         for col_data in columns.values():
             aql_path = col_data.get("path")
+            variable = col_data.get("variable")
             direction = col_data.get("direction", "ASC").upper()
             
-            if not aql_path:
+            field_name = None
+            
+            # Handle LET variable references in ORDER BY
+            if variable:
+                # Use the field name created by the LET stage
+                field_name = variable.lstrip('$')
+            elif aql_path:
+                # Convert AQL path to MongoDB field name using same logic as projection
+                path_parts = aql_path.split('/')
+                if len(path_parts) >= 2:
+                    # Use variable + field name, e.g., "e_ehr_id" or "c_name"
+                    field_name = f"{path_parts[0]}_{path_parts[1]}"
+                else:
+                    field_name = path_parts[-1]
+            
+            if not field_name:
                 continue
-                
-            # Convert AQL path to MongoDB field name using same logic as projection
-            path_parts = aql_path.split('/')
-            if len(path_parts) >= 2:
-                # Use variable + field name, e.g., "e_ehr_id" or "c_name"
-                field_name = f"{path_parts[0]}_{path_parts[1]}"
-            else:
-                field_name = path_parts[-1]
                 
             # Convert direction to MongoDB sort value
             sort_direction = 1 if direction == "ASC" else -1
