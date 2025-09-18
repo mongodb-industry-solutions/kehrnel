@@ -236,7 +236,7 @@ async def delete_composition_by_preceding_uid(
     # It points to the version that was deleted
     audit_version_data = {
         "_type": "DELETED",
-        "uid": new_audit_uid,
+        "uid": {"value": new_audit_uid, "_type": "OBJECT_VERSION_ID"},
         "preceding_version_uid": preceding_version_uid
     }
 
@@ -344,7 +344,7 @@ async def update_composition(
         ),
         versions = [{
             "_type": "COMPOSITION",
-            "uid": new_uid,
+            "uid": {"value": new_uid, "_type": "OBJECT_VERSION_ID"},
             "template_id": new_composition_data.template_id
         }]
     )
@@ -742,7 +742,7 @@ async def add_composition(
     # Creates the contribution object for the transaction
     audit_version_data = {
         "_type": "COMPOSITION",
-        "uid": composition_uid,
+        "uid": {"value": composition_uid, "_type": "OBJECT_VERSION_ID"},
         "template_id": composition_create.template_id
     }
     
