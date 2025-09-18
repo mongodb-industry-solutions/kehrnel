@@ -134,6 +134,8 @@ async def delete_composition_endpoint(
 # Endpoint to update a composition by creating a new version
 @router.put(
     "/{ehr_id}/composition/{preceding_version_uid}",
+    response_model=Composition,
+    response_model_by_alias=False,
     status_code = status.HTTP_200_OK,
     summary = "Update Composition by version ID",
     responses = update_composition_responses
@@ -142,13 +144,13 @@ async def update_composition_endpoint(
     ehr_id: str,
     preceding_version_uid: str,
     response: Response,
-    composition_data: CompositionCreate = Body(..., description = "The new version of the canonical COMPOSITION object"),
-    if_match: str = Header(..., alias = "If-Match", description = "The UID of the preceding version to be updated. Must match the UID in the URL"),
+    composition_data: CompositionCreate = Body(..., description="The new version of the canonical COMPOSITION object"),
+    if_match: str = Header(..., alias="If-Match", description="The UID of the preceding version to be updated. Must match the UID in the URL"),
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
 ):
     """
-    Updates an existing `COMPOSITION` by creating a new version
-    This operation is used for making corrections or additions to a clinical document
+    Updates an existing `COMPOSITION` by creating a new version.
+    This operation is used for making corrections or additions to a clinical document.
     The `preceding_version_uid` in the path identifies the version to be replaced.
 
     Optimistic locking is enforced via the mandatory `If-Match` header, which must
@@ -159,24 +161,20 @@ async def update_composition_endpoint(
     """
 
     new_composition = await update_composition(
-        ehr_id = ehr_id,
-        preceding_version_uid = preceding_version_uid,
-        if_match = if_match,
-        new_composition_data = composition_data,
-        db = db
+        ehr_id=ehr_id,
+        preceding_version_uid=preceding_version_uid,
+        if_match=if_match,
+        new_composition_data=composition_data,
+        db=db
     )
 
-    # Return explicit JSONResponse with headers and status code
-    last_modified_gmt = formatdate(new_composition.time_created.timestamp(), usegmt = True)
-    return JSONResponse(
-        content=new_composition.data,
-        status_code=status.HTTP_200_OK,
-        headers={
-            "ETag": f'"{new_composition.uid}"',
-            "Location": f"/v1/ehr/{ehr_id}/composition/{new_composition.uid}",
-            "Last-Modified": last_modified_gmt
-        }
-    )
+    # Set the headers on the response object
+    last_modified_gmt = formatdate(new_composition.time_created.timestamp(), usegmt=True)
+    response.headers["ETag"] = f'"{new_composition.uid}"'
+    response.headers["Location"] = f"/v1/ehr/{ehr_id}/composition/{new_composition.uid}"
+    response.headers["Last-Modified"] = last_modified_gmt
+
+    return new_composition
 
 
 @router.get(
