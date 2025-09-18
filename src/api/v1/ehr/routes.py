@@ -449,6 +449,11 @@ async def get_revision_history_endpoint(
     """
     Retrieves the revision history of a VERSIONED_COMPOSITION, which provides
     a list of audits for each version created for that composition.
+
+    This endpoint provides a complete audit trail for a single clinical document
+    (identified by its `versioned_object_uid`). It returns a chronological list
+    of all changes, including the initial creation, all subsequent modifications,
+    and any deletions.
     """
 
     revision_history = await retrieve_revision_history(
