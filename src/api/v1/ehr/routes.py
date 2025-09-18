@@ -503,6 +503,7 @@ async def get_versioned_composition_endpoint(
 async def get_composition_version_endpoint(
     ehr_id: str,
     versioned_object_uid: str,
+    response: Response,
     version_at_time: Optional[str] = Query(None, alias="version_at_time", description="A given time in the extended ISO 8601 format."),
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
 ):
@@ -524,15 +525,12 @@ async def get_composition_version_endpoint(
     )
 
     version_uid = version_response.uid.value
+    
+    # Set headers on the injected Response object
+    response.headers["ETag"] = f'"{version_uid}"'
+    response.headers["Location"] = f"/v1/ehr/{ehr_id}/composition/{version_uid}"
 
-    return JSONResponse(
-        content=version_response.model_dump(by_alias=True),
-        status_code=status.HTTP_200_OK,
-        headers={
-            "ETag": f'"{version_uid}"',
-            "Location": f"/v1/ehr/{ehr_id}/composition/{version_uid}",
-        },
-    )
+    return version_response
 
 
 @router.post(
