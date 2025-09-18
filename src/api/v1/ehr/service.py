@@ -206,7 +206,7 @@ async def delete_composition_by_preceding_uid(
     # This function already raises 404 if the composition is not found or not linked to the EHR.
     composition_to_delete = await retrieve_composition(
         ehr_id = ehr_id,
-        versioned_object_uid = preceding_version_uid,
+        uid_based_id = preceding_version_uid,
         db = db
     )
 
@@ -305,7 +305,7 @@ async def update_composition(
     # Fetch the composition being updated to ensure it exists
     existing_composition = await retrieve_composition(
         ehr_id = ehr_id,
-        versioned_object_uid = preceding_version_uid,
+        uid_based_id = preceding_version_uid,
         db = db
     )
 
