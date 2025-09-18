@@ -18,12 +18,13 @@ from src.api.v1.ehr.repository import (
     find_deletion_contribution_for_version,
     find_contribution_by_version_uid,
     find_contribution_by_id,
-    find_contributions_for_composition
+    find_contributions_for_composition,
+    find_first_composition_by_object_id
 )
 from src.api.v1.ehr.models import (
     EHRStatus, PartySelf, EHRCreationResponse, EHR, Composition, CompositionCreate,
     EHRStatusCreate, EhrIdModel, SystemIdModel, ObjectVersionID, DvDateTime,
-    ObjectRef, HierObjectID, RevisionHistory, RevisionHistoryItem
+    ObjectRef, HierObjectID, RevisionHistory, RevisionHistoryItem, VersionedComposition
 )
 from src.app.core.models import Contribution, AuditDetails
 
@@ -111,6 +112,57 @@ async def retrieve_revision_history(
             )
             history_items.append(item)
     return RevisionHistory(items=history_items)
+
+
+async def retrieve_versioned_composition(
+    ehr_id: str, 
+    versioned_object_uid: str,
+    db: AsyncIOMotorDatabase
+) -> VersionedComposition:
+    """
+    Retrieves metadata about a VERSIONED_COMPOSITION
+
+    This function validates that the composition belongs to the EHR, 
+    then finds the creation time of its version to construc the response
+
+    Args:
+        ehr_id: The ID of the parent EHR
+        versioned_object_uid: The base ID of the composition
+        db: The database session
+
+    Returns:
+        A VersionedComposition object
+
+    Raises:
+        HTTPException 404 if the EHR or Composition is not found.
+    """
+
+    # Validate that the composition exists within this EHR
+    # Reuse the retrieve_composition, which already performs the check
+    # If the check fails, it will raise a 404, which is the correct behavior
+
+    await retrieve_composition(ehr_id=ehr_id, uid_based_id=versioned_object_uid, db=db)
+
+    # Fetch the first version of the composition to get its creation time
+    first_composition_doc = await find_first_composition_by_object_id(versioned_object_uid, db)
+
+    if not first_composition_doc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Composition with id '{versioned_object_uid}' not found in EHR '{ehr_id}'"
+        )
+    
+    # Construct the VersionedComposition response object
+    versioned_composition_response = VersionedComposition(
+        uid=HierObjectID(value=versioned_object_uid),
+        ownerId=ObjectRef(
+            id=HierObjectID(value=ehr_id),
+            type="EHR"
+        ),
+        timeCreated=DvDateTime(value=first_composition_doc["time_created"])
+    )
+
+    return versioned_composition_response
 
 
 async def retrieve_ehr_status_by_ehr_id(ehr_id: str, db: AsyncIOMotorDatabase) -> Tuple[EHRStatus, datetime]:
