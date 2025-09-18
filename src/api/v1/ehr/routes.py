@@ -19,10 +19,11 @@ from src.api.v1.ehr.service import (
     delete_composition_by_preceding_uid,
     retrieve_ehr_by_subject,
     retrieve_ehr_status_by_ehr_id,
-    retrieve_contribution
+    retrieve_contribution,
+    retrieve_revision_history
 )
 
-from src.api.v1.ehr.models import EHRCreationResponse, EHRStatusCreate, EHRStatus, ErrorResponse, EHR, Composition, CompositionCreate
+from src.api.v1.ehr.models import EHRCreationResponse, EHRStatusCreate, EHRStatus, ErrorResponse, EHR, Composition, CompositionCreate, RevisionHistory
 
 from src.app.core.database import get_mongodb_ehr_db
 from src.app.core.models import Contribution
@@ -38,7 +39,8 @@ from src.api.v1.ehr.api_responses import (
     delete_composition_responses,
     get_ehr_by_subject_responses,
     get_ehr_status_responses,
-    get_contribution_responses
+    get_contribution_responses,
+    get_revision_history_responses
 )
 
 router = APIRouter(
@@ -430,6 +432,32 @@ async def create_composition_endpoint(
     response.headers["Last-Modified"] = last_modified_gmt
 
     return new_composition
+
+
+@router.get(
+    "/{ehr_id}/versioned_composition/{versioned_object_uid}/revision_history",
+    response_model=RevisionHistory,
+    status_code=status.HTTP_200_OK,
+    summary="Get revision history of a Composition",
+    responses=get_revision_history_responses
+)
+async def get_revision_history_endpoint(
+    ehr_id: str,
+    versioned_object_uid: str,
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Retrieves the revision history of a VERSIONED_COMPOSITION, which provides
+    a list of audits for each version created for that composition.
+    """
+
+    revision_history = await retrieve_revision_history(
+        ehr_id=ehr_id,
+        versioned_object_uid=versioned_object_uid,
+        db=db
+    )
+
+    return revision_history
 
 
 @router.post(
