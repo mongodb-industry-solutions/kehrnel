@@ -19,12 +19,13 @@ from src.api.v1.ehr.repository import (
     find_contribution_by_version_uid,
     find_contribution_by_id,
     find_contributions_for_composition,
-    find_first_composition_by_object_id
+    find_first_composition_by_object_id,
+    find_latest_contribution_for_composition
 )
 from src.api.v1.ehr.models import (
     EHRStatus, PartySelf, EHRCreationResponse, EHR, Composition, CompositionCreate,
     EHRStatusCreate, EhrIdModel, SystemIdModel, ObjectVersionID, DvDateTime,
-    ObjectRef, HierObjectID, RevisionHistory, RevisionHistoryItem, VersionedComposition
+    ObjectRef, HierObjectID, RevisionHistory, RevisionHistoryItem, VersionedComposition, OriginalVersionResponse
 )
 from src.app.core.models import Contribution, AuditDetails
 
@@ -448,8 +449,8 @@ async def retrieve_composition(
     ehr_doc = await find_ehr_by_id(ehr_id, db)
     if not ehr_doc:
         raise HTTPException(
-            status_code = status.HTTP_404_NOT_FOUND,
-            detail = "EHR with id '{ehr_id}' not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"EHR with id '{ehr_id}' not found"
         )
     
     composition_doc = None
@@ -457,21 +458,33 @@ async def retrieve_composition(
     if "::" in uid_based_id:
         composition_doc = await find_composition_by_uid(uid_based_id, db)
     else:
+        # Latest version of a base object is requested
         composition_doc = await find_latest_composition_by_object_id(uid_based_id, db)
 
     if not composition_doc:
         raise HTTPException(
-            status_code = status.HTTP_404_NOT_FOUND,
+            status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Composition with id '{uid_based_id}' not found in EHR '{ehr_id}'"
         )
     
-    # Get the full version UID for validation
-    versioned_object_uid = composition_doc["_id"]
+    # Extract the base object UID from the found document's full version UID (_id)
+    try:
+        versioned_object_uid_from_doc = composition_doc["_id"].split("::")[0]
+    except IndexError:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Malformed composition UID found in the database."
+        )
 
     # Ensure the found composition is actually linked to the specified EHR.
     composition_refs = ehr_doc.get("compositions", [])
 
-    if not any(comp["id"]["value"] == versioned_object_uid for comp in composition_refs):
+    is_linked = any(
+        ref.get("id", {}).get("value", "").startswith(versioned_object_uid_from_doc)
+        for ref in composition_refs
+    )
+
+    if not is_linked:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Composition with id '{uid_based_id}' not found in EHR '{ehr_id}'"
