@@ -155,3 +155,15 @@ class VersionedComposition(BaseModel):
 
     class Config:
         populate_by_name = True
+
+
+class OriginalVersionResponse(BaseModel):
+    uid: ObjectVersionID
+    preceding_version_uid: Optional[ObjectVersionID] = Field(None, alias="precedingVersionUid")
+    data: Dict[str, Any]
+    commit_audit: AuditDetails = Field(..., alias="commitAudit")
+    contribution: ObjectRef
+    type: Literal["ORIGINAL_VERSION"] = Field("ORIGINAL_VERSION", alias="_type")
+
+    class Config:
+        populate_by_name = True

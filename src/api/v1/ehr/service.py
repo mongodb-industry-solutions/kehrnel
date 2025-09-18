@@ -2,6 +2,7 @@
 
 import uuid
 from datetime import datetime, timezone
+from dateutil.parser import isoparse
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import Optional, List, Dict, Any, Tuple
 from fastapi import HTTPException, status
@@ -19,12 +20,13 @@ from src.api.v1.ehr.repository import (
     find_contribution_by_version_uid,
     find_contribution_by_id,
     find_contributions_for_composition,
-    find_first_composition_by_object_id
+    find_first_composition_by_object_id,
+    find_latest_contribution_for_composition
 )
 from src.api.v1.ehr.models import (
     EHRStatus, PartySelf, EHRCreationResponse, EHR, Composition, CompositionCreate,
     EHRStatusCreate, EhrIdModel, SystemIdModel, ObjectVersionID, DvDateTime,
-    ObjectRef, HierObjectID, RevisionHistory, RevisionHistoryItem, VersionedComposition
+    ObjectRef, HierObjectID, RevisionHistory, RevisionHistoryItem, VersionedComposition, OriginalVersionResponse
 )
 from src.app.core.models import Contribution, AuditDetails
 
@@ -448,8 +450,8 @@ async def retrieve_composition(
     ehr_doc = await find_ehr_by_id(ehr_id, db)
     if not ehr_doc:
         raise HTTPException(
-            status_code = status.HTTP_404_NOT_FOUND,
-            detail = "EHR with id '{ehr_id}' not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"EHR with id '{ehr_id}' not found"
         )
     
     composition_doc = None
@@ -457,27 +459,136 @@ async def retrieve_composition(
     if "::" in uid_based_id:
         composition_doc = await find_composition_by_uid(uid_based_id, db)
     else:
+        # Latest version of a base object is requested
         composition_doc = await find_latest_composition_by_object_id(uid_based_id, db)
 
     if not composition_doc:
         raise HTTPException(
-            status_code = status.HTTP_404_NOT_FOUND,
+            status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Composition with id '{uid_based_id}' not found in EHR '{ehr_id}'"
         )
     
-    # Get the full version UID for validation
-    versioned_object_uid = composition_doc["_id"]
+    # Extract the base object UID from the found document's full version UID (_id)
+    try:
+        versioned_object_uid_from_doc = composition_doc["_id"].split("::")[0]
+    except IndexError:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Malformed composition UID found in the database."
+        )
 
     # Ensure the found composition is actually linked to the specified EHR.
     composition_refs = ehr_doc.get("compositions", [])
 
-    if not any(comp["id"]["value"] == versioned_object_uid for comp in composition_refs):
+    is_linked = any(
+        ref.get("id", {}).get("value", "").startswith(versioned_object_uid_from_doc)
+        for ref in composition_refs
+    )
+
+    if not is_linked:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Composition with id '{uid_based_id}' not found in EHR '{ehr_id}'"
         )
     
     return Composition.model_validate(composition_doc)
+
+
+async def retrieve_composition_version(
+    ehr_id: str,
+    versioned_object_uid: str,
+    db: AsyncIOMotorDatabase,
+    version_at_time: Optional[str] = None
+) -> OriginalVersionResponse:
+    """
+    Retrieves a specific version of a composition.
+
+    If version_at_time is provided, it finds the version extant at that time.
+    Otherwise, it finds the latest version.
+
+    Args:
+        ehr_id: The ID of the parent EHR
+        versioned_object_uid: The base ID of the composition
+
+    Returns:
+        An OriginalVersionResponse object containing the version data and audit
+
+    Raises:
+        HTTPException: If the resource or version is not found, or if the timestamp is invalid
+    """
+
+    # Validate that the EHR exists and contains this versioned composition.
+    # It will raise 404 if not found, which is the correct behavior
+
+    await retrieve_composition(ehr_id=ehr_id, uid_based_id=versioned_object_uid, db=db)
+
+    at_time_datetime: Optional[datetime] = None
+    if version_at_time:
+        try:
+            at_time_datetime = isoparse(version_at_time)
+        except ValueError:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Invalid 'version_at_time' format: {version_at_time}"
+            )
+        
+    # Find the relevant contribution document using the new repository function
+    contribution_doc = await find_latest_contribution_for_composition(
+        versioned_object_uid=versioned_object_uid,
+        db=db,
+        timestamp=at_time_datetime
+    )
+
+    if not contribution_doc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No version of composition '{versioned_object_uid}' found at the specified time."
+        )
+    
+    
+    # If the found contribution is a deletion marker, no version was extant.
+    if contribution_doc["audit"]["change_type"] == "deleted":
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Composition '{versioned_object_uid}' was deleted at or before the specified time."
+        )
+    
+    # Extract composition version info from the contribution's 'versions' array.
+    version_info = next(
+        (v for v in contribution_doc.get("versions", [])
+         if v.get("uid", {}).get("value", "").startswith(versioned_object_uid)),
+        None
+    )
+    
+    if not version_info:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Inconsistent data: Contribution found but version link is missing."
+        )
+    
+    composition_version_uid = version_info["uid"]["value"]
+    preceding_uid_val = version_info.get("preceding_version_uid")
+
+    # Fetch the actual composition data document.
+    composition_doc = await find_composition_by_uid(composition_version_uid, db)
+    if not composition_doc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Inconsistent data: Version referenced in contribution not found."
+        )
+    
+    response = OriginalVersionResponse(
+        uid=ObjectVersionID.model_validate(version_info["uid"]),
+        preceding_version_uid=ObjectVersionID(value=preceding_uid_val) if preceding_uid_val else None,
+        data=composition_doc["data"],
+        commit_audit=AuditDetails.model_validate(contribution_doc["audit"]),
+        contribution=ObjectRef(
+            id=HierObjectID(value=contribution_doc["_id"]),
+            type="CONTRIBUTION"
+        )
+    )
+
+    return response
 
 
 async def update_ehr_status(

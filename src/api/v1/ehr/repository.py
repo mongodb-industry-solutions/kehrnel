@@ -3,6 +3,8 @@
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from pymongo.errors import PyMongoError
 import logging
+from typing import Optional
+from datetime import datetime
 
 # Create a logger instance
 logger = logging.getLogger(__name__)
@@ -11,6 +13,38 @@ logger = logging.getLogger(__name__)
 EHR_COLL_NAME = "ehr"
 EHR_CONTRIBUTIONS_COLL = "contributions"
 COMPOSITIONS_COLL_NAME = "compositions"
+
+
+async def find_latest_contribution_for_composition(
+    versioned_object_uid: str,
+    db: AsyncIOMotorDatabase,
+    timestamp: Optional[datetime] = None
+):
+    """
+    Finds the most recent contribution for a specific composition, optionally at or before a given time.
+    """
+
+    filter_criteria = {
+        "versions": {
+            "$elemMatch": {
+                "uid.value": {
+                    "$regex": f"^{versioned_object_uid}::"
+                }
+            }
+        }
+    }
+
+    if timestamp:
+        filter_criteria["audit.time_committed"] = {
+            "$lte": timestamp
+        }
+    
+    cursor = db[EHR_CONTRIBUTIONS_COLL].find(filter_criteria).sort("audit.time_committed", -1).limit(1)
+    documents = await cursor.to_list(length=1)
+
+    if documents:
+        return documents[0]
+    return None
 
 
 async def find_contribution_by_id(contribution_uid: str, db: AsyncIOMotorDatabase):

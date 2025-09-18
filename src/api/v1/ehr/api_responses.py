@@ -1,5 +1,5 @@
 from fastapi import status
-from src.api.v1.ehr.models import EHRCreationResponse, ErrorResponse, EHR, Composition, EHRStatus, RevisionHistory, VersionedComposition
+from src.api.v1.ehr.models import EHRCreationResponse, ErrorResponse, EHR, Composition, EHRStatus, RevisionHistory, VersionedComposition, OriginalVersionResponse
 from typing import List
 from src.app.core.models import Contribution
 
@@ -477,6 +477,57 @@ get_versioned_composition_responses = {
     },
     status.HTTP_404_NOT_FOUND: {
         "description": "The specified EHR or Composition was not found.",
+        "model": ErrorResponse
+    }
+}
+
+get_composition_version_at_time_responses = {
+    status.HTTP_200_OK: {
+        "description": "The requested version of the composition has been successfully retrieved.",
+        "model": OriginalVersionResponse,
+        "content": {
+            "application/json": {
+                "example": {
+                    "_type": "ORIGINAL_VERSION",
+                    "uid": {
+                        "value": "a1b2c3d4-e5f6::my-openehr-server::1",
+                        "_type": "OBJECT_VERSION_ID"
+                    },
+                    "precedingVersionUid": None,
+                    "data": {
+                        "_type": "COMPOSITION",
+                        "name": {"value": "Problem/Diagnosis"},
+                        "archetype_details": {
+                            "template_id": {"value": "T-IGR-TUMOUR-SUMMARY"}
+                        },
+                    },
+                    "commitAudit": {
+                        "system_id": "my-openehr-server",
+                        "committer_name": "System",
+                        "time_committed": "2024-05-20T10:00:00.000Z",
+                        "change_type": "creation"
+                    },
+                    "contribution": {
+                        "id": {"value": "c1d2e3f4-a5b6-c7d8-e9f0-a1b2c3d4e5f6"},
+                        "namespace": "local",
+                        "type": "CONTRIBUTION"
+                    }
+                }
+            }
+        },
+        "headers": {
+            "ETag": {
+                "description": "The ETag of the returned version (its UID).",
+                "schema": {"type": "string"}
+            },
+            "Location": {
+                "description": "The canonical URL of the returned version.",
+                "schema": {"type": "string"}
+            }
+        }
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "The EHR, Composition, or a version at the specified time was not found.",
         "model": ErrorResponse
     }
 }
