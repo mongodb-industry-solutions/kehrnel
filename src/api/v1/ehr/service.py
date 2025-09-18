@@ -511,7 +511,7 @@ async def retrieve_composition_version(
         versioned_object_uid: The base ID of the composition
 
     Returns:
-        An OriginaVersionResponse object containing the version data and audit
+        An OriginalVersionResponse object containing the version data and audit
 
     Raises:
         HTTPException: If the resource or version is not found, or if the timestamp is invalid
