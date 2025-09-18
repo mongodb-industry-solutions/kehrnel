@@ -1,5 +1,5 @@
 from fastapi import status
-from src.api.v1.ehr.models import EHRCreationResponse, ErrorResponse, EHR, Composition, EHRStatus
+from src.api.v1.ehr.models import EHRCreationResponse, ErrorResponse, EHR, Composition, EHRStatus, RevisionHistory
 from typing import List
 from src.app.core.models import Contribution
 
@@ -405,6 +405,49 @@ delete_composition_responses = {
     },
     status.HTTP_412_PRECONDITION_FAILED: {
         "description": "The `If-Match` header does not match the `preceding_version_uid`, indicating a concurrency conflict",
+        "model": ErrorResponse
+    }
+}
+
+get_revision_history_responses = {
+    status.HTTP_200_OK: {
+        "description": "Revision history retrieved successfully.",
+        "model": RevisionHistory,
+        "content": {
+            "application/json": {
+                "example": {
+                    "items": [
+                        {
+                            "versionId": {
+                                "value": "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6::my-openehr-server::1",
+                                "_type": "OBJECT_VERSION_ID"
+                            },
+                            "audit": {
+                                "system_id": "my-openehr-server",
+                                "committer_name": "System",
+                                "time_committed": "2024-05-20T10:00:00.000Z",
+                                "change_type": "creation"
+                            }
+                        },
+                        {
+                            "versionId": {
+                                "value": "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6::my-openehr-server::2",
+                                "_type": "OBJECT_VERSION_ID"
+                            },
+                            "audit": {
+                                "system_id": "my-openehr-server",
+                                "committer_name": "Dr. Alice",
+                                "time_committed": "2024-05-21T14:30:00.000Z",
+                                "change_type": "modification"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "The specified EHR or Composition was not found.",
         "model": ErrorResponse
     }
 }
