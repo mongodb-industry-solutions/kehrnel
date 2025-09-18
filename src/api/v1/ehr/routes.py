@@ -20,10 +20,11 @@ from src.api.v1.ehr.service import (
     retrieve_ehr_by_subject,
     retrieve_ehr_status_by_ehr_id,
     retrieve_contribution,
-    retrieve_revision_history
+    retrieve_revision_history,
+    retrieve_versioned_composition
 )
 
-from src.api.v1.ehr.models import EHRCreationResponse, EHRStatusCreate, EHRStatus, ErrorResponse, EHR, Composition, CompositionCreate, RevisionHistory
+from src.api.v1.ehr.models import EHRCreationResponse, EHRStatusCreate, EHRStatus, ErrorResponse, EHR, Composition, CompositionCreate, RevisionHistory, VersionedComposition
 
 from src.app.core.database import get_mongodb_ehr_db
 from src.app.core.models import Contribution
@@ -40,7 +41,8 @@ from src.api.v1.ehr.api_responses import (
     get_ehr_by_subject_responses,
     get_ehr_status_responses,
     get_contribution_responses,
-    get_revision_history_responses
+    get_revision_history_responses,
+    get_versioned_composition_responses
 )
 
 router = APIRouter(
@@ -461,6 +463,32 @@ async def get_revision_history_endpoint(
     )
 
     return revision_history
+
+
+@router.get(
+    "/{ehr_id}/versioned_composition/{versioned_object_uid}",
+    response_model=VersionedComposition,
+    response_model_by_alias=True,
+    status_code=status.HTTP_200_OK,
+    summary="Get Versioned Composition metadata",
+    responses=get_versioned_composition_responses
+)
+async def get_versioned_composition_endpoint(
+    ehr_id: str,
+    versioned_object_uid: str,
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Retrieves metadata about a VERSIONED_COMPOSITION, which is the container for all versions of a single clinical document.
+
+    This includes its unique identifier (the versioned_object_uid), the EHR that owns it, and the time the very first version was created.
+    """
+    versioned_composition = await retrieve_versioned_composition(
+        ehr_id=ehr_id,
+        versioned_object_uid=versioned_object_uid,
+        db=db
+    )
+    return versioned_composition
 
 
 @router.post(

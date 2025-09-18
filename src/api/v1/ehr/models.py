@@ -145,3 +145,13 @@ class RevisionHistoryItem(BaseModel):
 # The top-level response model for the revision history endpoint
 class RevisionHistory(BaseModel):
     items: List[RevisionHistoryItem]
+
+
+class VersionedComposition(BaseModel):
+    uid: HierObjectID
+    owner_id: ObjectRef = Field(..., alias="ownerId")
+    time_created: DvDateTime = Field(..., alias="timeCreated")
+    type: Literal["VERSIONED_COMPOSITION"] = Field("VERSIONED_COMPOSITION", alias="_type")
+
+    class Config:
+        populate_by_name = True
