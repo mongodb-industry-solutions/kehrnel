@@ -1,5 +1,5 @@
 from fastapi import status
-from src.api.v1.ehr.models import EHRCreationResponse, ErrorResponse, EHR, Composition, EHRStatus, RevisionHistory
+from src.api.v1.ehr.models import EHRCreationResponse, ErrorResponse, EHR, Composition, EHRStatus, RevisionHistory, VersionedComposition
 from typing import List
 from src.app.core.models import Contribution
 
@@ -442,6 +442,35 @@ get_revision_history_responses = {
                             }
                         }
                     ]
+                }
+            }
+        }
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "The specified EHR or Composition was not found.",
+        "model": ErrorResponse
+    }
+}
+
+get_versioned_composition_responses = {
+    status.HTTP_200_OK: {
+        "description": "Versioned Composition metadata retrieved successfully.",
+        "model": VersionedComposition, # Assuming you create this model
+        "content": {
+            "application/json": {
+                "example": {
+                    "_type": "VERSIONED_COMPOSITION",
+                    "uid": {
+                        "value": "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6"
+                    },
+                    "ownerId": {
+                        "id": {"value": "e1f2a3b4-c5d6-e7f8-a9b0-c1d2e3f4a5b6"},
+                        "namespace": "local",
+                        "type": "EHR"
+                    },
+                    "timeCreated": {
+                        "value": "2024-05-22T10:00:00.000Z"
+                    }
                 }
             }
         }
