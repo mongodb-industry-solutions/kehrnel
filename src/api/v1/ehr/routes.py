@@ -21,10 +21,11 @@ from src.api.v1.ehr.service import (
     retrieve_ehr_status_by_ehr_id,
     retrieve_contribution,
     retrieve_revision_history,
-    retrieve_versioned_composition
+    retrieve_versioned_composition,
+    retrieve_composition_version
 )
 
-from src.api.v1.ehr.models import EHRCreationResponse, EHRStatusCreate, EHRStatus, ErrorResponse, EHR, Composition, CompositionCreate, RevisionHistory, VersionedComposition
+from src.api.v1.ehr.models import EHRCreationResponse, EHRStatusCreate, EHRStatus, ErrorResponse, EHR, Composition, CompositionCreate, RevisionHistory, VersionedComposition, OriginalVersionResponse
 
 from src.app.core.database import get_mongodb_ehr_db
 from src.app.core.models import Contribution
@@ -42,7 +43,8 @@ from src.api.v1.ehr.api_responses import (
     get_ehr_status_responses,
     get_contribution_responses,
     get_revision_history_responses,
-    get_versioned_composition_responses
+    get_versioned_composition_responses,
+    get_composition_version_at_time_responses
 )
 
 router = APIRouter(
@@ -489,6 +491,48 @@ async def get_versioned_composition_endpoint(
         db=db
     )
     return versioned_composition
+
+@router.get(
+    "/{ehr_id}/versioned_composition/{versioned_object_uid}/version",
+    response_model=OriginalVersionResponse,
+    response_model_by_alias=True,
+    status_code=status.HTTP_200_OK,
+    summary="Get Composition version at time",
+    responses=get_composition_version_at_time_responses,
+)
+async def get_composition_version_endpoint(
+    ehr_id: str,
+    versioned_object_uid: str,
+    version_at_time: Optional[str] = Query(None, alias="version_at_time", description="A given time in the extended ISO 8601 format."),
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+):
+    """
+    Retrieves a VERSION from the VERSIONED_COMPOSITION identified by `versioned_object_uid`.
+
+    - If `version_at_time` is supplied, it retrieves the VERSION that was extant at the specified time.
+    - If `version_at_time` is not supplied, it retrieves the latest (current) VERSION.
+
+    The response is a full VERSION object, which includes the canonical composition data
+    along with commit audit details.
+    """
+
+    version_response = await retrieve_composition_version(
+        ehr_id=ehr_id,
+        versioned_object_uid=versioned_object_uid,
+        version_at_time=version_at_time,
+        db=db,
+    )
+
+    version_uid = version_response.uid.value
+
+    return JSONResponse(
+        content=version_response.model_dump(by_alias=True),
+        status_code=status.HTTP_200_OK,
+        headers={
+            "ETag": f'"{version_uid}"',
+            "Location": f"/v1/ehr/{ehr_id}/composition/{version_uid}",
+        },
+    )
 
 
 @router.post(
