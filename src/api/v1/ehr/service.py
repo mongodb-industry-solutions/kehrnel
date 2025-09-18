@@ -17,12 +17,13 @@ from src.api.v1.ehr.repository import (
     add_deletion_contribution_and_update_ehr,
     find_deletion_contribution_for_version,
     find_contribution_by_version_uid,
-    find_contribution_by_id
+    find_contribution_by_id,
+    find_contributions_for_composition
 )
 from src.api.v1.ehr.models import (
     EHRStatus, PartySelf, EHRCreationResponse, EHR, Composition, CompositionCreate,
     EHRStatusCreate, EhrIdModel, SystemIdModel, ObjectVersionID, DvDateTime,
-    ObjectRef, HierObjectID
+    ObjectRef, HierObjectID, RevisionHistory, RevisionHistoryItem
 )
 from src.app.core.models import Contribution, AuditDetails
 
@@ -57,6 +58,59 @@ async def retrieve_contribution(ehr_id: str, contribution_uid: str, db: AsyncIOM
         )
     
     return Contribution.model_validate(contribution_doc)
+
+
+async def retrieve_revision_history(
+    ehr_id: str,
+    versioned_object_uid: str,
+    db: AsyncIOMotorDatabase
+) -> RevisionHistory:
+    """
+    Retrieves the revision history for a versioned composition.
+
+    Args:
+        ehr_id: The ID of the parent EHR
+        versioned_object_uid: The base ID of the composition
+        db: The database session
+
+    Returns:
+        A RevisionHistory object containing all audit entries for the composition
+
+    Raises:
+        HTTPException 404 if the EHR or composition is not found
+    """
+
+    # Validate that the EHR exists and contains the composition to prevent data leakage
+    # Reuse the logic from retrieve_composition by fetching the latest version
+
+    await retrieve_composition(ehr_id=ehr_id, uid_based_id=versioned_object_uid, db=db)
+
+    # Fetch all the relevant contribution from the repository
+    contribution_docs = await find_contributions_for_composition(versioned_object_uid, db)
+
+    if not contribution_docs:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No revision history found for composition '{versioned_object_uid}' in EHR '{ehr_id}'"
+        )
+    
+    # Map the contribution data to the RevisionHistoryItem model
+    history_items = []
+    for contrib_doc in contribution_docs:
+        # Find the specific version entry within the contribution that matches the composition
+        matching_version = next(
+            (v for v in contrib_doc.get("versions", []) 
+             if v.get("uid", {}).get("value", "").startswith(versioned_object_uid)),
+            None
+        )
+
+        if matching_version:
+            item = RevisionHistoryItem(
+                versionId=ObjectVersionID.model_validate(matching_version["uid"]),
+                audit=AuditDetails.model_validate(contrib_doc["audit"])
+            )
+            history_items.append(item)
+    return RevisionHistory(items=history_items)
 
 
 async def retrieve_ehr_status_by_ehr_id(ehr_id: str, db: AsyncIOMotorDatabase) -> Tuple[EHRStatus, datetime]:
@@ -152,7 +206,7 @@ async def delete_composition_by_preceding_uid(
     # This function already raises 404 if the composition is not found or not linked to the EHR.
     composition_to_delete = await retrieve_composition(
         ehr_id = ehr_id,
-        versioned_object_uid = preceding_version_uid,
+        uid_based_id = preceding_version_uid,
         db = db
     )
 
@@ -182,7 +236,7 @@ async def delete_composition_by_preceding_uid(
     # It points to the version that was deleted
     audit_version_data = {
         "_type": "DELETED",
-        "uid": new_audit_uid,
+        "uid": {"value": new_audit_uid, "_type": "OBJECT_VERSION_ID"},
         "preceding_version_uid": preceding_version_uid
     }
 
@@ -251,7 +305,7 @@ async def update_composition(
     # Fetch the composition being updated to ensure it exists
     existing_composition = await retrieve_composition(
         ehr_id = ehr_id,
-        versioned_object_uid = preceding_version_uid,
+        uid_based_id = preceding_version_uid,
         db = db
     )
 
@@ -290,7 +344,7 @@ async def update_composition(
         ),
         versions = [{
             "_type": "COMPOSITION",
-            "uid": new_uid,
+            "uid": {"value": new_uid, "_type": "OBJECT_VERSION_ID"},
             "template_id": new_composition_data.template_id
         }]
     )
@@ -688,7 +742,7 @@ async def add_composition(
     # Creates the contribution object for the transaction
     audit_version_data = {
         "_type": "COMPOSITION",
-        "uid": composition_uid,
+        "uid": {"value": composition_uid, "_type": "OBJECT_VERSION_ID"},
         "template_id": composition_create.template_id
     }
     

@@ -19,10 +19,11 @@ from src.api.v1.ehr.service import (
     delete_composition_by_preceding_uid,
     retrieve_ehr_by_subject,
     retrieve_ehr_status_by_ehr_id,
-    retrieve_contribution
+    retrieve_contribution,
+    retrieve_revision_history
 )
 
-from src.api.v1.ehr.models import EHRCreationResponse, EHRStatusCreate, EHRStatus, ErrorResponse, EHR, Composition, CompositionCreate
+from src.api.v1.ehr.models import EHRCreationResponse, EHRStatusCreate, EHRStatus, ErrorResponse, EHR, Composition, CompositionCreate, RevisionHistory
 
 from src.app.core.database import get_mongodb_ehr_db
 from src.app.core.models import Contribution
@@ -38,7 +39,8 @@ from src.api.v1.ehr.api_responses import (
     delete_composition_responses,
     get_ehr_by_subject_responses,
     get_ehr_status_responses,
-    get_contribution_responses
+    get_contribution_responses,
+    get_revision_history_responses
 )
 
 router = APIRouter(
@@ -132,6 +134,8 @@ async def delete_composition_endpoint(
 # Endpoint to update a composition by creating a new version
 @router.put(
     "/{ehr_id}/composition/{preceding_version_uid}",
+    response_model=Composition,
+    response_model_by_alias=False,
     status_code = status.HTTP_200_OK,
     summary = "Update Composition by version ID",
     responses = update_composition_responses
@@ -140,13 +144,13 @@ async def update_composition_endpoint(
     ehr_id: str,
     preceding_version_uid: str,
     response: Response,
-    composition_data: CompositionCreate = Body(..., description = "The new version of the canonical COMPOSITION object"),
-    if_match: str = Header(..., alias = "If-Match", description = "The UID of the preceding version to be updated. Must match the UID in the URL"),
+    composition_data: CompositionCreate = Body(..., description="The new version of the canonical COMPOSITION object"),
+    if_match: str = Header(..., alias="If-Match", description="The UID of the preceding version to be updated. Must match the UID in the URL"),
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
 ):
     """
-    Updates an existing `COMPOSITION` by creating a new version
-    This operation is used for making corrections or additions to a clinical document
+    Updates an existing `COMPOSITION` by creating a new version.
+    This operation is used for making corrections or additions to a clinical document.
     The `preceding_version_uid` in the path identifies the version to be replaced.
 
     Optimistic locking is enforced via the mandatory `If-Match` header, which must
@@ -157,24 +161,20 @@ async def update_composition_endpoint(
     """
 
     new_composition = await update_composition(
-        ehr_id = ehr_id,
-        preceding_version_uid = preceding_version_uid,
-        if_match = if_match,
-        new_composition_data = composition_data,
-        db = db
+        ehr_id=ehr_id,
+        preceding_version_uid=preceding_version_uid,
+        if_match=if_match,
+        new_composition_data=composition_data,
+        db=db
     )
 
-    # Return explicit JSONResponse with headers and status code
-    last_modified_gmt = formatdate(new_composition.time_created.timestamp(), usegmt = True)
-    return JSONResponse(
-        content=new_composition.data,
-        status_code=status.HTTP_200_OK,
-        headers={
-            "ETag": f'"{new_composition.uid}"',
-            "Location": f"/v1/ehr/{ehr_id}/composition/{new_composition.uid}",
-            "Last-Modified": last_modified_gmt
-        }
-    )
+    # Set the headers on the response object
+    last_modified_gmt = formatdate(new_composition.time_created.timestamp(), usegmt=True)
+    response.headers["ETag"] = f'"{new_composition.uid}"'
+    response.headers["Location"] = f"/v1/ehr/{ehr_id}/composition/{new_composition.uid}"
+    response.headers["Last-Modified"] = last_modified_gmt
+
+    return new_composition
 
 
 @router.get(
@@ -430,6 +430,37 @@ async def create_composition_endpoint(
     response.headers["Last-Modified"] = last_modified_gmt
 
     return new_composition
+
+
+@router.get(
+    "/{ehr_id}/versioned_composition/{versioned_object_uid}/revision_history",
+    response_model=RevisionHistory,
+    status_code=status.HTTP_200_OK,
+    summary="Get revision history of a Composition",
+    responses=get_revision_history_responses
+)
+async def get_revision_history_endpoint(
+    ehr_id: str,
+    versioned_object_uid: str,
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Retrieves the revision history of a VERSIONED_COMPOSITION, which provides
+    a list of audits for each version created for that composition.
+
+    This endpoint provides a complete audit trail for a single clinical document
+    (identified by its `versioned_object_uid`). It returns a chronological list
+    of all changes, including the initial creation, all subsequent modifications,
+    and any deletions.
+    """
+
+    revision_history = await retrieve_revision_history(
+        ehr_id=ehr_id,
+        versioned_object_uid=versioned_object_uid,
+        db=db
+    )
+
+    return revision_history
 
 
 @router.post(

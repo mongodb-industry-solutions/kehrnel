@@ -89,6 +89,38 @@ async def find_composition_by_uid(uid: str, db: AsyncIOMotorDatabase):
     return await db[COMPOSITIONS_COLL_NAME].find_one({"_id": uid})
 
 
+async def find_contributions_for_composition(versioned_object_uid: str, db: AsyncIOMotorDatabase):
+    """
+    Finds all the contributions documents related to a specific versioned composition.
+
+    It searched for contributions where at least one version inside it has a UID
+    that starts with the given versioned_object_uid.
+
+    Args:
+        versioned_object_uid: The base ID of the composition (e.g "uuid...")
+        db: The database session.
+
+    Returns:
+        A list of matching contribution documents, sorted by commit time.
+    """
+
+    filter_criteria = {
+        # Looks inside the 'versions' array for an element where the 'uid.value' starts with the base ID
+        "versions": {
+            "$elemMatch": {
+                "uid.value": {
+                    "$regex": f"^{versioned_object_uid}::"
+                }
+            }
+        }
+    }
+
+    # Sort by the audit's time_committed to get a chronological history
+    
+    cursor = db[EHR_CONTRIBUTIONS_COLL].find(filter_criteria).sort("audit.time_committed", 1) # 1 for ascending order
+    return await cursor.to_list(length=None)
+
+
 async def find_latest_composition_by_object_id(object_id: str, db: AsyncIOMotorDatabase):
     """
     Finds the latest version of a composition by its base object ID.
