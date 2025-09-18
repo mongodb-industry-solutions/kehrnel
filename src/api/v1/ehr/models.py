@@ -136,7 +136,7 @@ class Composition(BaseModel):
         populate_by_name = True
 
 class RevisionHistoryItem(BaseModel):
-    version_id: ObjectVersionID = Field(..., alias="versionedID")
+    version_id: ObjectVersionID = Field(..., alias="versionId")
     audit: AuditDetails
 
     class Config:

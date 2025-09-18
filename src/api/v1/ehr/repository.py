@@ -89,7 +89,7 @@ async def find_composition_by_uid(uid: str, db: AsyncIOMotorDatabase):
     return await db[COMPOSITIONS_COLL_NAME].find_one({"_id": uid})
 
 
-async def find_contribution_for_composition(versioned_object_uid: str, db: AsyncIOMotorDatabase):
+async def find_contributions_for_composition(versioned_object_uid: str, db: AsyncIOMotorDatabase):
     """
     Finds all the contributions documents related to a specific versioned composition.
 
