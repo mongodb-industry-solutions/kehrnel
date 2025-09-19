@@ -220,7 +220,7 @@ class PipelineBuilder:
         try:
             limit_int = int(limit_value)
             if limit_int <= 0:
-                raise ValueError(f"LIMIT value must be positive, got: {limit_int}")
+                raise ValueError(f"LIMIT value must be a positive integer greater than zero, got: {limit_int}")
             return {"$limit": limit_int}
         except (ValueError, TypeError) as e:
             raise ValueError(f"Invalid LIMIT value: {limit_value}. Must be a positive integer.")
