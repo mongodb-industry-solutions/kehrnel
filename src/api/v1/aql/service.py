@@ -15,7 +15,7 @@ from src.api.v1.aql.repository import (
 )
 
 from src.api.v1.aql.models import StoredQuery, StoredQuerySummary, QueryResponse, MetaData
-from src.api.v1.aql.aql_transformer import AQLtoMQLTransformer
+from src.api.v1.aql.transformers import AQLtoMQLTransformer
 
 class AQLParser:
     def __init__(self, aql_query: str):
