@@ -51,6 +51,60 @@ get_contribution_responses = {
     }
 }
 
+
+get_ehr_status_by_version_id_responses = {
+    status.HTTP_200_OK: {
+        "description": "The specified version of the EHR_STATUS was found and returned.",
+        "model": EHRStatus,
+        "content": {
+            "application/json": {
+                "example": {
+                    "uid": {
+                        "value": "f1g2h3i4::my-openehr-server::2", # example of version 2
+                        "_type": "OBJECT_VERSION_ID"
+                    },
+                    "_type": "EHR_STATUS",
+                    "archetype_node_id": "openEHR-EHR-EHR_STATUS.generic.v1",
+                    "name": {"value": "EHR status"},
+                    "subject": {
+                        "_type": "PARTY_SELF",
+                        "external_ref": {
+                            "id": {
+                                "value": "patient-123",
+                                "namespace": "hospital.main.ids",
+                                "type": "Person"
+                            }
+                        }
+                    },
+                    "is_modifiable": False, # Example of an updated status
+                    "is_queryable": True
+                }
+            }
+        },
+        "headers": {
+            "ETag": {
+                "description": "The ETag of this specific EHR_STATUS version (its UID).",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "Location": {
+                "description": "The path to this specific version of the EHR_STATUS resource.",
+                "schema": {"type": "string"},
+            },
+            "Last-Modified": {
+                "description": "The timestamp of when this version of the EHR_STATUS was committed.",
+                "schema": {"type": "string", "format": "date-time"},
+            },
+        }
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "The EHR with the specified `ehr_id` was not found, or the `version_uid` does not exist.",
+        "model": ErrorResponse
+    }
+}
+
+
 get_ehr_status_responses = {
     status.HTTP_200_OK: {
         "description": "EHR_STATUS retrieved successfully",
