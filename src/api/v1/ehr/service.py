@@ -167,6 +167,55 @@ async def retrieve_versioned_composition(
     return versioned_composition_response
 
 
+async def retrieve_ehr_status_by_version_uid(
+    ehr_id: str, version_uid: str, db: AsyncIOMotorDatabase
+) -> Tuple[EHRStatus, datetime]:
+    """
+    Retrieves a specific version of the EHR_STATUS for a given EHR.
+
+    Args:
+        ehr_id: The unique identifier of the parent EHR.
+        version_uid: The unique identifier of the specific EHR_STATUS version
+        db: The database session
+
+    Returns:
+        A tuple containing the EHRStatus pydantic model and the time it was committed
+
+    Raises:
+        HTTPException: If the EHR or the specific version is not found (404)
+    """
+
+    # Find the contribution that created this version
+    contribution_doc = await find_contribution_by_version_uid(version_uid=version_uid, db=db)
+
+    # Validate that the contribution exists and belongs to the specified EHR
+    # This prevents accessing a version from a different EHR
+    if not contribution_doc or contribution_doc.get("ehr_id") != ehr_id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Version '{version_uid}' not found in EHR '{ehr_id}'."
+        )
+    
+    # Find the EHR_STATUS object within the contribution's 'versions' array
+    ehr_status_doc = next(
+        (v for v in contribution_doc.get("versions", []) if v.get("uid", {}).get("value") == version_uid),
+        None,
+    )
+
+    if not ehr_status_doc:
+        # This case indicates data inconsistency
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Inconsistent data: Contribution found for version '{version_uid}', but the version data is missing."
+        )
+    
+    # Parse the document into an EHRStatus model
+    ehr_status = EHRStatus.model_validate(ehr_status_doc)
+    time_committed = contribution_doc["audit"]["time_committed"]
+
+    return ehr_status, time_committed
+
+
 async def retrieve_ehr_status_by_ehr_id(ehr_id: str, db: AsyncIOMotorDatabase) -> Tuple[EHRStatus, datetime]:
     """
     Retrieves the latest EHR_STATUS for a given EHR and its commit time
