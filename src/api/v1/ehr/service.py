@@ -21,12 +21,12 @@ from src.api.v1.ehr.repository import (
     find_contribution_by_id,
     find_contributions_for_composition,
     find_first_composition_by_object_id,
-    find_latest_contribution_for_composition
+    find_latest_contribution_for_composition,
 )
 from src.api.v1.ehr.models import (
     EHRStatus, PartySelf, EHRCreationResponse, EHR, Composition, CompositionCreate,
     EHRStatusCreate, EhrIdModel, SystemIdModel, ObjectVersionID, DvDateTime,
-    ObjectRef, HierObjectID, RevisionHistory, RevisionHistoryItem, VersionedComposition, OriginalVersionResponse
+    ObjectRef, HierObjectID, RevisionHistory, RevisionHistoryItem, VersionedComposition, OriginalVersionResponse, VersionedEHRStatus
 )
 from src.app.core.models import Contribution, AuditDetails
 
@@ -165,6 +165,55 @@ async def retrieve_versioned_composition(
     )
 
     return versioned_composition_response
+
+
+async def retrieve_versioned_ehr_status(
+    ehr_id: str,
+    db: AsyncIOMotorDatabase
+) -> VersionedEHRStatus:
+    """
+    Retrieves metadata about the VERSIONED_EHR_STATUS for a given EHR
+
+    This involves validating the EHR's existence, parsing the EHR_STATUS UID to get the base object ID,
+    and using the EHR's creation time as the creation time for the versioned status.
+
+    Args:
+        ehr_id: The unique identifier of the parent EHR.
+        db: The database session
+
+    Returns:
+        A versionedEHRStatus Pydantic model instance
+
+    Raises:
+        HTTPException: If the EHR with the given ID is not found (status 404)
+    """
+
+    # Retrieve the full EHR object. This also validates that the EHR exists.
+    ehr = await retrieve_ehr_by_id(ehr_id=ehr_id, db=db)
+
+    # Extract the base object UID from the full version UID
+    try:
+        versioned_object_uid = ehr.ehr_status.uid.value.split("::")[0]
+    except (IndexError, AttributeError):
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail = "Malformed EHR_STATUS UID found in the database"
+        )
+    
+    # Create the response object
+    # The `time_created` of the versioned status is the creation time of its first version
+    # which is the same as the EHR's creation time.
+
+    versioned_ehr_status_response = VersionedEHRStatus(
+        uid=HierObjectID(value=versioned_object_uid),
+        owner_id=ObjectRef(
+            id=HierObjectID(value=ehr_id),
+            type="EHR"
+        ),
+        time_created=ehr.time_created
+    )
+
+    return versioned_ehr_status_response
 
 
 async def retrieve_ehr_status_by_version_uid(
