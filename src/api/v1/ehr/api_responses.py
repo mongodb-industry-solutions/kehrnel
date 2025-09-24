@@ -60,7 +60,7 @@ get_ehr_status_by_version_id_responses = {
             "application/json": {
                 "example": {
                     "uid": {
-                        "value": "f1g2h3i4::my-openehr-server::2", # example of version 2
+                        "value": "f1g2h3i4::my-openehr-server::2",
                         "_type": "OBJECT_VERSION_ID"
                     },
                     "_type": "EHR_STATUS",
