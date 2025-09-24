@@ -156,6 +156,15 @@ class VersionedComposition(BaseModel):
     class Config:
         populate_by_name = True
 
+class VersionedEHRStatus(BaseModel):
+    uid: HierObjectID
+    owner_id: ObjectRef = Field(..., alias="ownerId")
+    time_created: DvDateTime = Field(..., alias="timeCreated")
+    type: Literal["VERSIONED_EHR_STATUS"] = Field("VERSIONED_EHR_STATUS", alias="_type")
+
+    class Config:
+        populate_by_name = True
+
 
 class OriginalVersionResponse(BaseModel):
     uid: ObjectVersionID

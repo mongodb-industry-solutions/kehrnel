@@ -21,12 +21,12 @@ from src.api.v1.ehr.repository import (
     find_contribution_by_id,
     find_contributions_for_composition,
     find_first_composition_by_object_id,
-    find_latest_contribution_for_composition
+    find_latest_contribution_for_composition,
 )
 from src.api.v1.ehr.models import (
     EHRStatus, PartySelf, EHRCreationResponse, EHR, Composition, CompositionCreate,
     EHRStatusCreate, EhrIdModel, SystemIdModel, ObjectVersionID, DvDateTime,
-    ObjectRef, HierObjectID, RevisionHistory, RevisionHistoryItem, VersionedComposition, OriginalVersionResponse
+    ObjectRef, HierObjectID, RevisionHistory, RevisionHistoryItem, VersionedComposition, OriginalVersionResponse, VersionedEHRStatus
 )
 from src.app.core.models import Contribution, AuditDetails
 
@@ -165,6 +165,104 @@ async def retrieve_versioned_composition(
     )
 
     return versioned_composition_response
+
+
+async def retrieve_versioned_ehr_status(
+    ehr_id: str,
+    db: AsyncIOMotorDatabase
+) -> VersionedEHRStatus:
+    """
+    Retrieves metadata about the VERSIONED_EHR_STATUS for a given EHR
+
+    This involves validating the EHR's existence, parsing the EHR_STATUS UID to get the base object ID,
+    and using the EHR's creation time as the creation time for the versioned status.
+
+    Args:
+        ehr_id: The unique identifier of the parent EHR.
+        db: The database session
+
+    Returns:
+        A versionedEHRStatus Pydantic model instance
+
+    Raises:
+        HTTPException: If the EHR with the given ID is not found (status 404)
+    """
+
+    # Retrieve the full EHR object. This also validates that the EHR exists.
+    ehr = await retrieve_ehr_by_id(ehr_id=ehr_id, db=db)
+
+    # Extract the base object UID from the full version UID
+    try:
+        versioned_object_uid = ehr.ehr_status.uid.value.split("::")[0]
+    except (IndexError, AttributeError):
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail = "Malformed EHR_STATUS UID found in the database"
+        )
+    
+    # Create the response object
+    # The `time_created` of the versioned status is the creation time of its first version
+    # which is the same as the EHR's creation time.
+
+    versioned_ehr_status_response = VersionedEHRStatus(
+        uid=HierObjectID(value=versioned_object_uid),
+        owner_id=ObjectRef(
+            id=HierObjectID(value=ehr_id),
+            type="EHR"
+        ),
+        time_created=ehr.time_created
+    )
+
+    return versioned_ehr_status_response
+
+
+async def retrieve_ehr_status_by_version_uid(
+    ehr_id: str, version_uid: str, db: AsyncIOMotorDatabase
+) -> Tuple[EHRStatus, datetime]:
+    """
+    Retrieves a specific version of the EHR_STATUS for a given EHR.
+
+    Args:
+        ehr_id: The unique identifier of the parent EHR.
+        version_uid: The unique identifier of the specific EHR_STATUS version
+        db: The database session
+
+    Returns:
+        A tuple containing the EHRStatus pydantic model and the time it was committed
+
+    Raises:
+        HTTPException: If the EHR or the specific version is not found (404)
+    """
+
+    # Find the contribution that created this version
+    contribution_doc = await find_contribution_by_version_uid(version_uid=version_uid, db=db)
+
+    # Validate that the contribution exists and belongs to the specified EHR
+    # This prevents accessing a version from a different EHR
+    if not contribution_doc or contribution_doc.get("ehr_id") != ehr_id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Version '{version_uid}' not found in EHR '{ehr_id}'."
+        )
+    
+    # Find the EHR_STATUS object within the contribution's 'versions' array
+    ehr_status_doc = next(
+        (v for v in contribution_doc.get("versions", []) if v.get("uid", {}).get("value") == version_uid),
+        None,
+    )
+
+    if not ehr_status_doc:
+        # This case indicates data inconsistency
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Inconsistent data: Contribution found for version '{version_uid}', but the version data is missing."
+        )
+    
+    # Parse the document into an EHRStatus model
+    ehr_status = EHRStatus.model_validate(ehr_status_doc)
+    time_committed = contribution_doc["audit"]["time_committed"]
+
+    return ehr_status, time_committed
 
 
 async def retrieve_ehr_status_by_ehr_id(ehr_id: str, db: AsyncIOMotorDatabase) -> Tuple[EHRStatus, datetime]:

@@ -19,13 +19,15 @@ from src.api.v1.ehr.service import (
     delete_composition_by_preceding_uid,
     retrieve_ehr_by_subject,
     retrieve_ehr_status_by_ehr_id,
+    retrieve_ehr_status_by_version_uid,
     retrieve_contribution,
     retrieve_revision_history,
     retrieve_versioned_composition,
-    retrieve_composition_version
+    retrieve_composition_version,
+    retrieve_versioned_ehr_status
 )
 
-from src.api.v1.ehr.models import EHRCreationResponse, EHRStatusCreate, EHRStatus, ErrorResponse, EHR, Composition, CompositionCreate, RevisionHistory, VersionedComposition, OriginalVersionResponse
+from src.api.v1.ehr.models import EHRCreationResponse, EHRStatusCreate, EHRStatus, ErrorResponse, EHR, Composition, CompositionCreate, RevisionHistory, VersionedComposition, OriginalVersionResponse, VersionedEHRStatus
 
 from src.app.core.database import get_mongodb_ehr_db
 from src.app.core.models import Contribution
@@ -41,10 +43,12 @@ from src.api.v1.ehr.api_responses import (
     delete_composition_responses,
     get_ehr_by_subject_responses,
     get_ehr_status_responses,
+    get_ehr_status_by_version_id_responses,
     get_contribution_responses,
     get_revision_history_responses,
     get_versioned_composition_responses,
-    get_composition_version_at_time_responses
+    get_composition_version_at_time_responses,
+    get_versioned_ehr_status_responses
 )
 
 router = APIRouter(
@@ -222,6 +226,70 @@ async def get_composition_by_id(
             "Last-Modified": last_modified_gmt
         }
     )
+
+
+@router.get(
+    "/{ehr_id}/versioned_ehr_status",
+    response_model=VersionedEHRStatus,
+    response_model_by_alias=True,
+    status_code=status.HTTP_200_OK,
+    summary="Get Versioned EHR_STATUS metadata",
+    responses=get_versioned_ehr_status_responses
+)
+async def get_versioned_ehr_status_endpoint(
+    ehr_id: str,
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Retrieves metadata about a VERSIONED_EHR_STATUS, which is the container 
+    for all versions of a single EHR's status.
+
+    This includes its unique identifier (the base versioned_object_uid), the EHR 
+    that owns it, and the time the very first version was created.
+    """
+    versioned_ehr_status = await retrieve_versioned_ehr_status(
+        ehr_id=ehr_id,
+        db=db
+    )
+
+    return versioned_ehr_status
+
+@router.get(
+    "/{ehr_id}/ehr_status/{version_uid}",
+    response_model=EHRStatus,
+    response_model_by_alias=False,
+    status_code=status.HTTP_200_OK,
+    summary="GET EHR Status by version ID",
+    responses=get_ehr_status_by_version_id_responses
+)
+async def get_ehr_status_by_version_id_endpoint(
+    ehr_id: str, 
+    version_uid: str,
+    response: Response,
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Retrieves a specific version of the `EHR_STATUS` for a given EHR
+
+    The response includes the full `EHR_STATUS` object for the specified version and sets the `ETag`, `Location`, and `Last-Modified`
+    headers for proper resource versioning and caching
+    """
+
+    ehr_status, time_committed = await retrieve_ehr_status_by_version_uid(
+        ehr_id=ehr_id,
+        version_uid=version_uid,
+        db=db
+    )
+
+    # Set the response headers 
+    response.headers["ETag"] = f'"{version_uid}"'
+    response.headers["Location"] = f"/v1/ehr/{ehr_id}/ehr_status/{version_uid}"
+
+    last_modified_gmt = formatdate(time_committed.timestamp(), usegmt=True)
+    response.headers["Last-Modified"] = last_modified_gmt
+
+    return ehr_status
+
 
 @router.get(
     "/{ehr_id}/ehr_status",

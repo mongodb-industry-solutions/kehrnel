@@ -1,5 +1,5 @@
 from fastapi import status
-from src.api.v1.ehr.models import EHRCreationResponse, ErrorResponse, EHR, Composition, EHRStatus, RevisionHistory, VersionedComposition, OriginalVersionResponse
+from src.api.v1.ehr.models import EHRCreationResponse, ErrorResponse, EHR, Composition, EHRStatus, RevisionHistory, VersionedComposition, OriginalVersionResponse, VersionedEHRStatus
 from typing import List
 from src.app.core.models import Contribution
 
@@ -50,6 +50,60 @@ get_contribution_responses = {
         "model": ErrorResponse
     }
 }
+
+
+get_ehr_status_by_version_id_responses = {
+    status.HTTP_200_OK: {
+        "description": "The specified version of the EHR_STATUS was found and returned.",
+        "model": EHRStatus,
+        "content": {
+            "application/json": {
+                "example": {
+                    "uid": {
+                        "value": "f1g2h3i4::my-openehr-server::2",
+                        "_type": "OBJECT_VERSION_ID"
+                    },
+                    "_type": "EHR_STATUS",
+                    "archetype_node_id": "openEHR-EHR-EHR_STATUS.generic.v1",
+                    "name": {"value": "EHR status"},
+                    "subject": {
+                        "_type": "PARTY_SELF",
+                        "external_ref": {
+                            "id": {
+                                "value": "patient-123",
+                                "namespace": "hospital.main.ids",
+                                "type": "Person"
+                            }
+                        }
+                    },
+                    "is_modifiable": False,
+                    "is_queryable": True
+                }
+            }
+        },
+        "headers": {
+            "ETag": {
+                "description": "The ETag of this specific EHR_STATUS version (its UID).",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "Location": {
+                "description": "The path to this specific version of the EHR_STATUS resource.",
+                "schema": {"type": "string"},
+            },
+            "Last-Modified": {
+                "description": "The timestamp of when this version of the EHR_STATUS was committed.",
+                "schema": {"type": "string", "format": "date-time"},
+            },
+        }
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "The EHR with the specified `ehr_id` was not found, or the `version_uid` does not exist.",
+        "model": ErrorResponse
+    }
+}
+
 
 get_ehr_status_responses = {
     status.HTTP_200_OK: {
@@ -408,6 +462,37 @@ delete_composition_responses = {
         "model": ErrorResponse
     }
 }
+
+
+get_versioned_ehr_status_responses = {
+    status.HTTP_200_OK: {
+        "description": "Versioned EHR_STATUS metadata retrieved successfully.",
+        "model": VersionedEHRStatus,
+        "content": {
+            "application/json": {
+                "example": {
+                    "_type": "VERSIONED_EHR_STATUS",
+                    "uid": {
+                        "value": "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6"
+                    },
+                    "ownerId": {
+                        "id": {"value": "e1f2a3b4-c5d6-e7f8-a9b0-c1d2e3f4a5b6"},
+                        "namespace": "local",
+                        "type": "EHR"
+                    },
+                    "timeCreated": {
+                        "value": "2024-05-22T10:00:00.000Z"
+                    }
+                }
+            }
+        }
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "The specified EHR was not found.",
+        "model": ErrorResponse
+    }
+}
+
 
 get_revision_history_responses = {
     status.HTTP_200_OK: {
