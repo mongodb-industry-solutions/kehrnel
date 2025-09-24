@@ -21,7 +21,7 @@ from src.api.v1.ehr.repository import (
     find_contribution_by_id,
     find_contributions_for_composition,
     find_first_composition_by_object_id,
-    find_latest_contribution_for_composition,
+    find_latest_contribution_by_vo_uid
 )
 from src.api.v1.ehr.models import (
     EHRStatus, PartySelf, EHRCreationResponse, EHR, Composition, CompositionCreate,
@@ -265,35 +265,65 @@ async def retrieve_ehr_status_by_version_uid(
     return ehr_status, time_committed
 
 
-async def retrieve_ehr_status_by_ehr_id(ehr_id: str, db: AsyncIOMotorDatabase) -> Tuple[EHRStatus, datetime]:
-    """
-    Retrieves the latest EHR_STATUS for a given EHR and its commit time
+async def retrieve_ehr_status_by_ehr_id(
+    ehr_id: str, 
+    db: AsyncIOMotorDatabase,
+    version_at_time: Optional[str] = None
+) -> Tuple[EHRStatus, datetime]:
+    
+    # 1. Retrieve the full EHR document to get the ehr_status UID
+    ehr_doc = await find_ehr_by_id(ehr_id, db)
+    if not ehr_doc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"EHR with id '{ehr_id}' not found"
+        )
 
-    Args:
-        ehr_id: The unique identifier of the EHR
-        db: The database session.
+    # 2. Extract the base object UID from the full version UID
+    try:
+        ehr_status_uid = ehr_doc["ehr_status"]["uid"]["value"]
+        versioned_object_uid = ehr_status_uid.split("::")[0]
+    except (KeyError, IndexError):
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Malformed EHR_STATUS UID found in the database."
+        )
 
-    Returns:
-        A tuple comtaining the EHRStatus Pydantic model and the time it was commited
+    at_time_datetime: Optional[datetime] = None
+    if version_at_time:
+        try:
+            at_time_datetime = isoparse(version_at_time)
+        except ValueError:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Invalid 'version_at_time' format: {version_at_time}"
+            )
 
-    Raises:
-        HTTPException: If the EHR with the given ID is not found (404)
-    """
+    # 3. Use the new generic repository function
+    contribution_doc = await find_latest_contribution_by_vo_uid(
+        versioned_object_uid=versioned_object_uid, db=db, timestamp=at_time_datetime
+    )
 
-    ehr_model = await retrieve_ehr_by_id(ehr_id=ehr_id, db=db)
+    if not contribution_doc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No EHR_STATUS version found for EHR '{ehr_id}' at the specified time."
+        )
+    
+    # Use the UID for a precise match instead of _type
+    ehr_status_doc = next(
+        (v for v in contribution_doc.get("versions", []) if v.get("uid", {}).get("value", "").startswith(versioned_object_uid)),
+        None
+    )
 
-    ehr_status = ehr_model.ehr_status
-    version_uid = ehr_status.uid.value
-
-    # Find the corresponding contribution to get the commit time
-    contribution_doc = await find_contribution_by_version_uid(version_uid=version_uid, db=db)
-
-    if contribution_doc:
-        time_committed = contribution_doc["audit"]["time_committed"]
-    else:
-        # Fallback for the initial version: use the EHR's creation time
-        # This case should be rare in a consistent system but provides robustness
-        time_committed = ehr_model.time_created.value
+    if not ehr_status_doc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Inconsistent data: Contribution found for EHR_STATUS, but the version data is missing."
+        )
+    
+    ehr_status = EHRStatus.model_validate(ehr_status_doc)
+    time_committed = contribution_doc["audit"]["time_committed"]
 
     return ehr_status, time_committed
 
@@ -631,7 +661,7 @@ async def retrieve_composition_version(
             )
         
     # Find the relevant contribution document using the new repository function
-    contribution_doc = await find_latest_contribution_for_composition(
+    contribution_doc = await find_latest_contribution_by_vo_uid(
         versioned_object_uid=versioned_object_uid,
         db=db,
         timestamp=at_time_datetime
