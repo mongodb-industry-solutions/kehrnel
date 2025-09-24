@@ -19,7 +19,6 @@ from src.api.v1.ehr.repository import (
     find_deletion_contribution_for_version,
     find_contribution_by_version_uid,
     find_contribution_by_id,
-    find_contributions_for_composition,
     find_first_composition_by_object_id,
     find_latest_contribution_by_vo_uid,
     find_contributions_for_versioned_object
