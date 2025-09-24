@@ -122,15 +122,15 @@ async def find_composition_by_uid(uid: str, db: AsyncIOMotorDatabase):
     return await db[COMPOSITIONS_COLL_NAME].find_one({"_id": uid})
 
 
-async def find_contributions_for_composition(versioned_object_uid: str, db: AsyncIOMotorDatabase):
+async def find_contributions_for_versioned_object(versioned_object_uid: str, db: AsyncIOMotorDatabase):
     """
-    Finds all the contributions documents related to a specific versioned composition.
+    Finds all the contributions documents related to a specific versioned object (e.g., a COMPOSITION or EHR_STATUS).
 
-    It searched for contributions where at least one version inside it has a UID
+    It searches for contributions where at least one version inside it has a UID
     that starts with the given versioned_object_uid.
 
     Args:
-        versioned_object_uid: The base ID of the composition (e.g "uuid...")
+        versioned_object_uid: The base ID of the versioned object.
         db: The database session.
 
     Returns:
@@ -149,8 +149,7 @@ async def find_contributions_for_composition(versioned_object_uid: str, db: Asyn
     }
 
     # Sort by the audit's time_committed to get a chronological history
-    
-    cursor = db[EHR_CONTRIBUTIONS_COLL].find(filter_criteria).sort("audit.time_committed", 1) # 1 for ascending order
+    cursor = db[EHR_CONTRIBUTIONS_COLL].find(filter_criteria).sort("audit.time_committed", 1)
     return await cursor.to_list(length=None)
 
 
