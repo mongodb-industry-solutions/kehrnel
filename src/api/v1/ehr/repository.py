@@ -15,15 +15,47 @@ EHR_CONTRIBUTIONS_COLL = "contributions"
 COMPOSITIONS_COLL_NAME = "compositions"
 
 
-async def find_latest_contribution_for_composition(
+# async def find_latest_contribution_for_composition(
+#     versioned_object_uid: str,
+#     db: AsyncIOMotorDatabase,
+#     timestamp: Optional[datetime] = None
+# ):
+#     """
+#     Finds the most recent contribution for a specific composition, optionally at or before a given time.
+#     """
+
+#     filter_criteria = {
+#         "versions": {
+#             "$elemMatch": {
+#                 "uid.value": {
+#                     "$regex": f"^{versioned_object_uid}::"
+#                 }
+#             }
+#         }
+#     }
+
+#     if timestamp:
+#         filter_criteria["audit.time_committed"] = {
+#             "$lte": timestamp
+#         }
+    
+#     cursor = db[EHR_CONTRIBUTIONS_COLL].find(filter_criteria).sort("audit.time_committed", -1).limit(1)
+#     documents = await cursor.to_list(length=1)
+
+#     if documents:
+#         return documents[0]
+#     return None
+
+
+async def find_latest_contribution_by_vo_uid(
     versioned_object_uid: str,
     db: AsyncIOMotorDatabase,
     timestamp: Optional[datetime] = None
 ):
     """
-    Finds the most recent contribution for a specific composition, optionally at or before a given time.
+    Finds the most recent contribution for a specific versioned object, 
+    optionally at or before a given time. Works for Compositions and EHR_STATUS.
     """
-
     filter_criteria = {
         "versions": {
             "$elemMatch": {
@@ -35,9 +67,7 @@ async def find_latest_contribution_for_composition(
     }
 
     if timestamp:
-        filter_criteria["audit.time_committed"] = {
-            "$lte": timestamp
-        }
+        filter_criteria["audit.time_committed"] = {"$lte": timestamp}
     
     cursor = db[EHR_CONTRIBUTIONS_COLL].find(filter_criteria).sort("audit.time_committed", -1).limit(1)
     documents = await cursor.to_list(length=1)
@@ -45,6 +75,7 @@ async def find_latest_contribution_for_composition(
     if documents:
         return documents[0]
     return None
+
 
 
 async def find_contribution_by_id(contribution_uid: str, db: AsyncIOMotorDatabase):
@@ -254,32 +285,6 @@ async def find_ehr_by_id(ehr_id: str, db: AsyncIOMotorDatabase):
     """
     find_ehr_result = await db[EHR_COLL_NAME].find_one({"_id.value": ehr_id})
     return find_ehr_result
-
-
-async def find_latest_contribution_for_ehr_status(ehr_id: str, db: AsyncIOMotorDatabase, timestamp: Optional[datetime] = None):
-    """
-    Retrieved the most recent contribution for an EHR's status, optionally at or before a given time.
-    """
-    filter_criteria = {
-        "ehr_id": ehr_id,
-        "versions": {
-            "$elemMatch": {
-                "_type": "EHR_STATUS"
-            }
-        }
-    }
-
-    if timestamp:
-        filter_criteria["audit.time_committed"] = {
-            "$lte": timestamp
-        }
-
-    cursor = db[EHR_COLL_NAME].find(filter_criteria).sort("audit.time_committed", -1).limit(1)
-    documents = cursor.to_list(length=1)
-
-    if documents:
-        return documents[0]
-    return None
 
 
 async def find_newest_ehrs(db: AsyncIOMotorDatabase, limit: int = 50):
