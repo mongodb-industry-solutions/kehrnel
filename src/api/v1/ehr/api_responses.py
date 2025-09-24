@@ -1,5 +1,5 @@
 from fastapi import status
-from src.api.v1.ehr.models import EHRCreationResponse, ErrorResponse, EHR, Composition, EHRStatus, RevisionHistory, VersionedComposition, OriginalVersionResponse
+from src.api.v1.ehr.models import EHRCreationResponse, ErrorResponse, EHR, Composition, EHRStatus, RevisionHistory, VersionedComposition, OriginalVersionResponse, VersionedEHRStatus
 from typing import List
 from src.app.core.models import Contribution
 
@@ -462,6 +462,37 @@ delete_composition_responses = {
         "model": ErrorResponse
     }
 }
+
+
+get_versioned_ehr_status_responses = {
+    status.HTTP_200_OK: {
+        "description": "Versioned EHR_STATUS metadata retrieved successfully.",
+        "model": VersionedEHRStatus,
+        "content": {
+            "application/json": {
+                "example": {
+                    "_type": "VERSIONED_EHR_STATUS",
+                    "uid": {
+                        "value": "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6"
+                    },
+                    "ownerId": {
+                        "id": {"value": "e1f2a3b4-c5d6-e7f8-a9b0-c1d2e3f4a5b6"},
+                        "namespace": "local",
+                        "type": "EHR"
+                    },
+                    "timeCreated": {
+                        "value": "2024-05-22T10:00:00.000Z"
+                    }
+                }
+            }
+        }
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "The specified EHR was not found.",
+        "model": ErrorResponse
+    }
+}
+
 
 get_revision_history_responses = {
     status.HTTP_200_OK: {
