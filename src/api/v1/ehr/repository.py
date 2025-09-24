@@ -256,6 +256,32 @@ async def find_ehr_by_id(ehr_id: str, db: AsyncIOMotorDatabase):
     return find_ehr_result
 
 
+async def find_latest_contribution_for_ehr_status(ehr_id: str, db: AsyncIOMotorDatabase, timestamp: Optional[datetime] = None):
+    """
+    Retrieved the most recent contribution for an EHR's status, optionally at or before a given time.
+    """
+    filter_criteria = {
+        "ehr_id": ehr_id,
+        "versions": {
+            "$elemMatch": {
+                "_type": "EHR_STATUS"
+            }
+        }
+    }
+
+    if timestamp:
+        filter_criteria["audit.time_committed"] = {
+            "$lte": timestamp
+        }
+
+    cursor = db[EHR_COLL_NAME].find(filter_criteria).sort("audit.time_committed", -1).limit(1)
+    documents = cursor.to_list(length=1)
+
+    if documents:
+        return documents[0]
+    return None
+
+
 async def find_newest_ehrs(db: AsyncIOMotorDatabase, limit: int = 50):
     """
     Retrieves a list of the most recently created EHR documents from the database.
