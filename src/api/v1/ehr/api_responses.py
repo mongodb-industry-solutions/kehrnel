@@ -76,7 +76,7 @@ get_ehr_status_by_version_id_responses = {
                             }
                         }
                     },
-                    "is_modifiable": False, # Example of an updated status
+                    "is_modifiable": False,
                     "is_queryable": True
                 }
             }
