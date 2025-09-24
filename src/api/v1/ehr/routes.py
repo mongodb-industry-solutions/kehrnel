@@ -24,7 +24,8 @@ from src.api.v1.ehr.service import (
     retrieve_revision_history,
     retrieve_versioned_composition,
     retrieve_composition_version,
-    retrieve_versioned_ehr_status
+    retrieve_versioned_ehr_status,
+    retrieve_ehr_status_revision_history
 )
 
 from src.api.v1.ehr.models import EHRCreationResponse, EHRStatusCreate, EHRStatus, ErrorResponse, EHR, Composition, CompositionCreate, RevisionHistory, VersionedComposition, OriginalVersionResponse, VersionedEHRStatus
@@ -48,7 +49,8 @@ from src.api.v1.ehr.api_responses import (
     get_revision_history_responses,
     get_versioned_composition_responses,
     get_composition_version_at_time_responses,
-    get_versioned_ehr_status_responses
+    get_versioned_ehr_status_responses,
+    get_ehr_status_revision_history_responses
 )
 
 router = APIRouter(
@@ -253,6 +255,34 @@ async def get_versioned_ehr_status_endpoint(
     )
 
     return versioned_ehr_status
+
+
+@router.get(
+    "/{ehr_id}/versioned_ehr_status/revision_history",
+    response_model=RevisionHistory,
+    status_code=status.HTTP_200_OK,
+    summary="Get revision history of the EHR_STATUS",
+    responses=get_ehr_status_revision_history_responses
+)
+async def get_ehr_status_revision_history_endpoint(
+    ehr_id: str,
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Retrieves the revision history of the VERSIONED_EHR_STATUS, which provides
+    a list of audits for each version created for that EHR's status.
+
+    This endpoint provides a complete audit trail for the EHR_STATUS.
+    It returns a chronological list of all changes, including the initial
+    creation and all subsequent modifications.
+    """
+    revision_history = await retrieve_ehr_status_revision_history(
+        ehr_id=ehr_id,
+        db=db
+    )
+
+    return revision_history
+    
 
 @router.get(
     "/{ehr_id}/ehr_status/{version_uid}",
