@@ -21,8 +21,7 @@ from src.api.v1.ehr.repository import (
     find_contribution_by_id,
     find_contributions_for_composition,
     find_first_composition_by_object_id,
-    find_latest_contribution_for_composition,
-    find_latest_contribution_for_ehr_status
+    find_latest_contribution_by_vo_uid
 )
 from src.api.v1.ehr.models import (
     EHRStatus, PartySelf, EHRCreationResponse, EHR, Composition, CompositionCreate,
@@ -267,36 +266,29 @@ async def retrieve_ehr_status_by_version_uid(
 
 
 async def retrieve_ehr_status_by_ehr_id(
-        ehr_id: str, 
-        db: AsyncIOMotorDatabase,
-        version_at_time: Optional[str] = None
+    ehr_id: str, 
+    db: AsyncIOMotorDatabase,
+    version_at_time: Optional[str] = None
 ) -> Tuple[EHRStatus, datetime]:
-    """
-    Retrieves a version of the EHR_STATUS for a given EHR.
-
-    If `version_at_time` is provided, it retrieves the version extant at that time.
-    Otherwise, it retrieves the latest version.
-
-    Args:
-        ehr_id: The unique identifier of the EHR.
-        db: The database session.
-        version_at_time: An optional ISO 8601 timestamp.
-
-    Returns:
-        A tuple containing the EHRStatus Pydantic model and the time it was committed.
-
-    Raises:
-        HTTPException: If the EHR is not found, no version is found for the given
-                       time, or the timestamp format is invalid.
-    """
-
-    # Validate that the EHR exists
-    if not await find_ehr_by_id(ehr_id, db):
+    
+    # 1. Retrieve the full EHR document to get the ehr_status UID
+    ehr_doc = await find_ehr_by_id(ehr_id, db)
+    if not ehr_doc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"EHR with id '{ehr_id}' not found"
         )
-    
+
+    # 2. Extract the base object UID from the full version UID
+    try:
+        ehr_status_uid = ehr_doc["ehr_status"]["uid"]["value"]
+        versioned_object_uid = ehr_status_uid.split("::")[0]
+    except (KeyError, IndexError):
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Malformed EHR_STATUS UID found in the database."
+        )
+
     at_time_datetime: Optional[datetime] = None
     if version_at_time:
         try:
@@ -306,9 +298,10 @@ async def retrieve_ehr_status_by_ehr_id(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Invalid 'version_at_time' format: {version_at_time}"
             )
-        
-    contribution_doc = await find_latest_contribution_for_ehr_status(
-        ehr_id=ehr_id, db=db, timestamp=at_time_datetime
+
+    # 3. Use the new generic repository function
+    contribution_doc = await find_latest_contribution_by_vo_uid(
+        versioned_object_uid=versioned_object_uid, db=db, timestamp=at_time_datetime
     )
 
     if not contribution_doc:
@@ -317,14 +310,13 @@ async def retrieve_ehr_status_by_ehr_id(
             detail=f"No EHR_STATUS version found for EHR '{ehr_id}' at the specified time."
         )
     
-    # Extract the EHR_STATUS object from the contribution's 'versions' array
+    # Use the UID for a precise match instead of _type
     ehr_status_doc = next(
-        (v for v in contribution_doc.get("versions", []) if v.get("_type") == "EHR_STATUS"),
+        (v for v in contribution_doc.get("versions", []) if v.get("uid", {}).get("value", "").startswith(versioned_object_uid)),
         None
     )
 
     if not ehr_status_doc:
-        # This indicates data inconsistency
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Inconsistent data: Contribution found for EHR_STATUS, but the version data is missing."
@@ -669,7 +661,7 @@ async def retrieve_composition_version(
             )
         
     # Find the relevant contribution document using the new repository function
-    contribution_doc = await find_latest_contribution_for_composition(
+    contribution_doc = await find_latest_contribution_by_vo_uid(
         versioned_object_uid=versioned_object_uid,
         db=db,
         timestamp=at_time_datetime
