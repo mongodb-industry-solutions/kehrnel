@@ -302,17 +302,22 @@ async def get_ehr_status_by_version_id_endpoint(
 async def get_ehr_status_endpoint(
     ehr_id: str,
     response: Response,
+    version_at_time: Optional[str] = Query(None, alias="version_at_time", description="A given time in the extended ISO 8601 format"),
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
 ):
     """
-    Retrieves the latest version of the `EHR_STATUS` for a given EHR.
+    Retrieves a version of the `EHR_STATUS` for a given EHR.
+
+    - If `version_at_time` is supplied, retrieves the version extant at the specified time.
+    - If `version_at_time` is not supplied, retrieves the latest version.
 
     The response includes the full `EHR_STATUS` object and sets the `ETag`,
-    `Location`, and `Last-Modified` headers for proper resource versioning and caching
+    `Location`, and `Last-Modified` headers for proper resource versioning and caching.
     """
     ehr_status, time_committed = await retrieve_ehr_status_by_ehr_id(
         ehr_id = ehr_id,
-        db = db
+        db = db,
+        version_at_time=version_at_time
     )
 
     version_uid = ehr_status.uid.value
