@@ -19,9 +19,9 @@ from src.api.v1.ehr.repository import (
     find_deletion_contribution_for_version,
     find_contribution_by_version_uid,
     find_contribution_by_id,
-    find_contributions_for_composition,
     find_first_composition_by_object_id,
-    find_latest_contribution_by_vo_uid
+    find_latest_contribution_by_vo_uid,
+    find_contributions_for_versioned_object
 )
 from src.api.v1.ehr.models import (
     EHRStatus, PartySelf, EHRCreationResponse, EHR, Composition, CompositionCreate,
@@ -63,6 +63,64 @@ async def retrieve_contribution(ehr_id: str, contribution_uid: str, db: AsyncIOM
     return Contribution.model_validate(contribution_doc)
 
 
+async def retrieve_ehr_status_revision_history(
+    ehr_id: str,
+    db: AsyncIOMotorDatabase
+) -> RevisionHistory:
+    """
+    Retrieves the revision history for the EHR_STATUS of a given EHR.
+
+    Args:
+        ehr_id: The ID of the parent EHR.
+        db: The database session.
+
+    Returns:
+        A RevisionHistory object containing all audit entries for the EHR_STATUS.
+
+    Raises:
+        HTTPException 404 if the EHR is not found.
+    """
+
+    # Validate EHR exists and get its status UID
+    ehr = await retrieve_ehr_by_id(ehr_id=ehr_id, db=db)
+
+    # Extract the base versioned object UID for the EHR_STATUS
+    try:
+        ehr_status_uid = ehr.ehr_status.uid.value
+        versioned_object_uid = ehr_status_uid.split("::")[0]
+    except (IndexError, AttributeError):
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Malformed EHR_STATUS UID found in the database"
+        )
+    
+    # Fetch all relevant contributions using the generic repository function
+    contribution_docs = await find_contributions_for_versioned_object(versioned_object_uid, db)
+    if not contribution_docs:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No revision history found for EHR_STATUS in EHR '{ehr_id}'"
+        )
+    
+    # Map the contribution data to the RevisionHistoryItem model
+    history_items = []
+    for contrib_doc in contribution_docs:
+        # Find the specific version entry within the contribution that matches the EHR_STATUS
+        matching_version = next(
+            (v for v in contrib_doc.get("versions", []) 
+             if v.get("uid", {}).get("value", "").startswith(versioned_object_uid)),
+            None
+        )
+
+        if matching_version:
+            item = RevisionHistoryItem(
+                versionId=ObjectVersionID.model_validate(matching_version["uid"]),
+                audit=AuditDetails.model_validate(contrib_doc["audit"])
+            )
+            history_items.append(item)
+
+    return RevisionHistory(items=history_items)
+
 async def retrieve_revision_history(
     ehr_id: str,
     versioned_object_uid: str,
@@ -89,7 +147,7 @@ async def retrieve_revision_history(
     await retrieve_composition(ehr_id=ehr_id, uid_based_id=versioned_object_uid, db=db)
 
     # Fetch all the relevant contribution from the repository
-    contribution_docs = await find_contributions_for_composition(versioned_object_uid, db)
+    contribution_docs = await find_contributions_for_versioned_object(versioned_object_uid, db)
 
     if not contribution_docs:
         raise HTTPException(

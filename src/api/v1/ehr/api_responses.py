@@ -493,6 +493,48 @@ get_versioned_ehr_status_responses = {
     }
 }
 
+get_ehr_status_revision_history_responses = {
+    status.HTTP_200_OK: {
+        "description": "EHR_STATUS revision history retrieved successfully.",
+        "model": RevisionHistory,
+        "content": {
+            "application/json": {
+                "example": {
+                    "items": [
+                        {
+                            "versionId": {
+                                "value": "f1g2h3i4::my-openehr-server::1",
+                                "_type": "OBJECT_VERSION_ID"
+                            },
+                            "audit": {
+                                "system_id": "my-openehr-server",
+                                "committer_name": "System",
+                                "time_committed": "2024-01-01T10:00:00.000Z",
+                                "change_type": "creation"
+                            }
+                        },
+                        {
+                            "versionId": {
+                                "value": "f1g2h3i4::my-openehr-server::2",
+                                "_type": "OBJECT_VERSION_ID"
+                            },
+                            "audit": {
+                                "system_id": "my-openehr-server",
+                                "committer_name": "System",
+                                "time_committed": "2024-05-23T11:00:00.000Z",
+                                "change_type": "modification"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "The specified EHR was not found.",
+        "model": ErrorResponse
+    }
+}
 
 get_revision_history_responses = {
     status.HTTP_200_OK: {
