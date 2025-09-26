@@ -287,6 +287,45 @@ async def get_ehr_status_revision_history_endpoint(
     
 
 @router.get(
+    "/{ehr_id}/versioned_ehr_status/version",
+    response_model=OriginalVersionResponse,
+    response_model_by_alias=True,
+    status_code=status.HTTP_200_OK,
+    summary="Get EHR_STATUS version at time",
+    responses=get_ehr_status_version_at_time_responses
+)
+async def get_ehr_status_version_endpoint(
+    ehr_id: str,
+    response: Response,
+    version_at_time: Optional[str] = Query(None, alias="version_at_time", description="A given time in the extended ISO 8601 format"),
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Retrieves a version from the VERSIONED_EHR_STATUS identified by `ehr_id`
+
+    - If `version_at_time` is supplied, it retrieves the VERSION that was extant at the specified time.
+    - If `version_at_time` is not supplied, it retrieves the latest (current) VERSION.
+
+    The response is a full VERSION object, which includes the canonical EHR_STATUS data
+    along with commit audit details
+    """
+    version_response = await retrieve_ehr_status_version(
+        ehr_id=ehr_id,
+        version_at_time=version_at_time,
+        db=db
+    )
+
+    version_uid = version_response.uid.value
+
+    # Set headers on the injected Response object
+    response.headers["ETag"] = f'"{version_uid}"'
+    # The canonical location for a specific version of an EHR_STATUS is this endpoint
+    response.headers["Location"] = f"/v1/ehr/{ehr_id}/ehr_status/{version_uid}"
+
+    return version_response
+    
+
+@router.get(
     "/{ehr_id}/ehr_status/{version_uid}",
     response_model=EHRStatus,
     response_model_by_alias=False,
