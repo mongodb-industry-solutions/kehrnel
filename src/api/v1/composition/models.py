@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Optional, List, Literal, Any, Dict
 
 from src.app.core.models import AuditDetails
-from src.api.v1.ehr.models import ObjectVersionID, HierObjectID, ObjectRef, DvDateTime, RevisionHistoryItem, RevisionHistory, OriginalVersionResponse
+from src.api.v1.common.models import HierObjectID, ObjectRef, DvDateTime
 
 class CompositionCreate(RootModel[Dict[str, Any]]):
     """
