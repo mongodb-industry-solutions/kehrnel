@@ -14,6 +14,7 @@ from src.api.v1.ehr.routes import router as ehr_router
 from src.api.v1.template.routes import router as template_router
 from src.api.v1.aql.routes import router as aql_router
 from src.api.v1.composition.routes import router as composition_router
+from src.api.v1.contribution.routes import router as contribution_router
 from src.api.v1.ingest.routes import router as ingest_router
 
 # The new flattener class
@@ -92,4 +93,5 @@ app.include_router(ehr_router, prefix="/v1", tags=["EHR"])
 app.include_router(template_router, prefix="/v1", tags=["Template"])
 app.include_router(aql_router, prefix="/v1", tags=["AQL"])
 app.include_router(composition_router, prefix="/v1", tags=["Compositions"])
+app.include_router(contribution_router, prefix="/v1", tags=["Contributions"])
 app.include_router(ingest_router, prefix="/v1/ingestions", tags=["Ingestion"])
