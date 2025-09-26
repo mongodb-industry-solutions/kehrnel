@@ -26,7 +26,8 @@ from src.api.v1.ehr.service import (
     retrieve_composition_version,
     retrieve_versioned_ehr_status,
     retrieve_ehr_status_revision_history,
-    retrieve_ehr_status_version
+    retrieve_ehr_status_version,
+    retrieve_ehr_status_version_by_uid
 )
 
 from src.api.v1.ehr.models import EHRCreationResponse, EHRStatusCreate, EHRStatus, ErrorResponse, EHR, Composition, CompositionCreate, RevisionHistory, VersionedComposition, OriginalVersionResponse, VersionedEHRStatus
@@ -52,7 +53,8 @@ from src.api.v1.ehr.api_responses import (
     get_composition_version_at_time_responses,
     get_versioned_ehr_status_responses,
     get_ehr_status_revision_history_responses,
-    get_ehr_status_version_at_time_responses
+    get_ehr_status_version_at_time_responses,
+    get_ehr_status_version_by_id_responses
 )
 
 router = APIRouter(
@@ -324,6 +326,33 @@ async def get_ehr_status_version_endpoint(
 
     return version_response
     
+
+@router.get(
+    "/{ehr_id}/versioned_ehr_status/version/{version_uid}",
+    response_model=OriginalVersionResponse,
+    response_model_by_alias=True,
+    status_code=status.HTTP_200_OK,
+    summary="Get EHR_STATUS version by ID",
+    responses=get_ehr_status_version_by_id_responses
+)
+async def get_ehr_status_version_by_id_endpoint(
+    ehr_id: str,
+    version_uid: str,
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Retrieves a specific VERSION of the EHR_STATUS identified by `version_uid`.
+
+    The response is a full VERSION object, which includes the canonical EHR_STATUS data
+    along with commit audit details.
+    """
+    version_response = await retrieve_ehr_status_version_by_uid(
+        ehr_id=ehr_id,
+        version_uid=version_uid,
+        db=db
+    )
+    return version_response
+
 
 @router.get(
     "/{ehr_id}/ehr_status/{version_uid}",
