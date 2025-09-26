@@ -865,6 +865,64 @@ async def retrieve_ehr_status_version(
     return response
 
 
+async def retrieve_ehr_status_version_by_uid(
+    ehr_id: str,
+    version_uid: str,
+    db: AsyncIOMotorDatabase
+) -> OriginalVersionResponse:
+    """
+    Retrieves a specific version of an EHR_STATUS by its full versio UID.
+
+    Args:
+        ehr_id: The ID of the parent EHR.
+        version_uid: The full, unique version identifier.
+        db: The database session.
+
+    Returns:
+        An OriginalVersionResponse object containing the version data and audit.
+
+    Raises:
+        HTTPException: If the resource or specific version is not found.
+    """
+    # Find the contribution that created this version.
+    contribution_doc = await find_contribution_by_version_uid(version_uid=version_uid, db=db)
+
+    # Validate that the contribution exists and belongs to the specified EHR.
+    if not contribution_doc or contribution_doc.get("ehr_id") != ehr_id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Version '{version_uid}' not found in EHR '{ehr_id}'."
+        )
+
+    # Find the EHR_STATUS object within the contribution's 'versions' array.
+    version_info = next(
+        (v for v in contribution_doc.get("versions", []) if v.get("uid", {}).get("value") == version_uid),
+        None,
+    )
+
+    if not version_info:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Inconsistent data: Contribution found for version '{version_uid}', but the version data is missing."
+        )
+
+    preceding_uid_val = version_info.get("preceding_version_uid")
+
+    # Construct and return the response.
+    response = OriginalVersionResponse(
+        uid=ObjectVersionID.model_validate(version_info["uid"]),
+        preceding_version_uid=ObjectVersionID(value=preceding_uid_val) if preceding_uid_val else None,
+        data=version_info,
+        commit_audit=AuditDetails.model_validate(contribution_doc["audit"]),
+        contribution=ObjectRef(
+            id=HierObjectID(value=contribution_doc["_id"]),
+            type="CONTRIBUTION"
+        )
+    )
+
+    return response
+
+
 async def update_ehr_status(
     ehr_id: str,
     status_update_request: EHRStatus,
