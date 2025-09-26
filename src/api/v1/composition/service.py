@@ -14,15 +14,20 @@ from src.api.v1.composition.repository import (
     add_deletion_contribution_and_update_ehr,
 )
 
-from src.api.v1.composition.models import (
-    Composition, CompositionCreate, RevisionHistory, RevisionHistoryItem, 
-    VersionedComposition, OriginalVersionResponse
+from src.api.v1.common.models import (
+    RevisionHistory,
+    RevisionHistoryItem,
+    OriginalVersionResponse,
+    ObjectVersionID,
+    HierObjectID,
+    ObjectRef,
+    DvDateTime
 )
+from src.api.v1.composition.models import Composition, CompositionCreate, VersionedComposition
 
 from src.api.v1.ehr.service import retrieve_ehr_by_id
-from src.api.v1.ehr.repository import find_ehr_by_id # For direct db access
-from src.api.v1.ehr.models import ObjectVersionID, HierObjectID, ObjectRef, DvDateTime
-# And some generic contribution functions
+from src.api.v1.ehr.repository import find_ehr_by_id
+
 from src.api.v1.contribution.repository import (
     find_deletion_contribution_for_version, 
     find_latest_contribution_by_vo_uid,
@@ -595,56 +600,3 @@ async def retrieve_composition_version(
     )
 
     return response
-
-
-async def retrieve_revision_history(
-    ehr_id: str,
-    versioned_object_uid: str,
-    db: AsyncIOMotorDatabase
-) -> RevisionHistory:
-    """
-    Retrieves the revision history for a versioned composition.
-
-    Args:
-        ehr_id: The ID of the parent EHR
-        versioned_object_uid: The base ID of the composition
-        db: The database session
-
-    Returns:
-        A RevisionHistory object containing all audit entries for the composition
-
-    Raises:
-        HTTPException 404 if the EHR or composition is not found
-    """
-
-    # Validate that the EHR exists and contains the composition to prevent data leakage
-    # Reuse the logic from retrieve_composition by fetching the latest version
-
-    await retrieve_composition(ehr_id=ehr_id, uid_based_id=versioned_object_uid, db=db)
-
-    # Fetch all the relevant contribution from the repository
-    contribution_docs = await find_contributions_for_versioned_object(versioned_object_uid, db)
-
-    if not contribution_docs:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"No revision history found for composition '{versioned_object_uid}' in EHR '{ehr_id}'"
-        )
-    
-    # Map the contribution data to the RevisionHistoryItem model
-    history_items = []
-    for contrib_doc in contribution_docs:
-        # Find the specific version entry within the contribution that matches the composition
-        matching_version = next(
-            (v for v in contrib_doc.get("versions", []) 
-             if v.get("uid", {}).get("value", "").startswith(versioned_object_uid)),
-            None
-        )
-
-        if matching_version:
-            item = RevisionHistoryItem(
-                versionId=ObjectVersionID.model_validate(matching_version["uid"]),
-                audit=AuditDetails.model_validate(contrib_doc["audit"])
-            )
-            history_items.append(item)
-    return RevisionHistory(items=history_items)
