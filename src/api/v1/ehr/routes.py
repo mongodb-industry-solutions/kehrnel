@@ -25,7 +25,8 @@ from src.api.v1.ehr.service import (
     retrieve_versioned_composition,
     retrieve_composition_version,
     retrieve_versioned_ehr_status,
-    retrieve_ehr_status_revision_history
+    retrieve_ehr_status_revision_history,
+    retrieve_ehr_status_version
 )
 
 from src.api.v1.ehr.models import EHRCreationResponse, EHRStatusCreate, EHRStatus, ErrorResponse, EHR, Composition, CompositionCreate, RevisionHistory, VersionedComposition, OriginalVersionResponse, VersionedEHRStatus
@@ -50,7 +51,8 @@ from src.api.v1.ehr.api_responses import (
     get_versioned_composition_responses,
     get_composition_version_at_time_responses,
     get_versioned_ehr_status_responses,
-    get_ehr_status_revision_history_responses
+    get_ehr_status_revision_history_responses,
+    get_ehr_status_version_at_time_responses
 )
 
 router = APIRouter(
