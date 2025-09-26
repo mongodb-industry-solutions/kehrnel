@@ -511,6 +511,7 @@ async def delete_composition_by_preceding_uid(
         "versioned_object_locator": f"{object_id}::{system_id}"
     }
 
+
 async def update_composition(
     ehr_id: str,
     preceding_version_uid: str,
