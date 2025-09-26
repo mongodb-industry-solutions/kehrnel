@@ -493,6 +493,68 @@ get_versioned_ehr_status_responses = {
     }
 }
 
+get_ehr_status_version_at_time_responses = {
+    status.HTTP_200_OK: {
+        "description": "The requested version of the EHR_STATUS has been successfully retrieved.",
+        "model": OriginalVersionResponse,
+        "content": {
+            "application/json": {
+                "example": {
+                    "_type": "ORIGINAL_VERSION",
+                    "uid": {
+                        "value": "a1b2c3d4::my-openehr-server::2",
+                        "_type": "OBJECT_VERSION_ID"
+                    },
+                    "precedingVersionUid": {
+                        "value": "a1b2c3d4::my-openehr-server::1",
+                        "_type": "OBJECT_VERSION_ID"
+                    },
+                    "data": {
+                        "_type": "EHR_STATUS",
+                        "uid": {
+                            "value": "a1b2c3d4::my-openehr-server::2"
+                        },
+                        "subject": {
+                            "_type": "PARTY_SELF"
+                        },
+                        "is_modifiable": False,
+                        "is_queryable": True
+                    },
+                    "commitAudit": {
+                        "system_id": "my-openehr-server",
+                        "committer_name": "Dr. Alice",
+                        "time_committed": "2024-05-23T14:30:00.000Z",
+                        "change_type": "modification"
+                    },
+                    "contribution": {
+                        "id": {"value": "c1d2e3f4-a5b6-c7d8-e9f0-a1b2c3d4e5f6"},
+                        "namespace": "local",
+                        "type": "CONTRIBUTION"
+                    }
+                }
+            }
+        },
+        "headers": {
+            "ETag": {
+                "description": "The ETag of the returned version (its UID).",
+                "schema": {"type": "string"}
+            },
+            "Location": {
+                "description": "The canonical URL of the returned EHR_STATUS version.",
+                "schema": {"type": "string"}
+            }
+        }
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "The EHR or a version at the specified time was not found.",
+        "model": ErrorResponse
+    },
+    status.HTTP_400_BAD_REQUEST: {
+        "description": "The `version_at_time` parameter is not a valid ISO 8601 timestamp.",
+        "model": ErrorResponse
+    }
+}
+
 get_ehr_status_revision_history_responses = {
     status.HTTP_200_OK: {
         "description": "EHR_STATUS revision history retrieved successfully.",
