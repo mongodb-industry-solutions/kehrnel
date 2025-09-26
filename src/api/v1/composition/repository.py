@@ -9,22 +9,72 @@ EHR_COLL_NAME = "ehr"
 logger = logging.getLogger(__name__)
 
 async def find_composition_by_uid(uid: str, db: AsyncIOMotorDatabase):
+    """
+    Retrieves a single COMPOSITION document from the database by its versioned UID
+    The `_id` in the database is the composition's versioned UID
+    """
     return await db[COMPOSITIONS_COLL_NAME].find_one({"_id": uid})
 
 
 async def find_latest_composition_by_object_id(object_id: str, db: AsyncIOMotorDatabase):
-    filter_criteria = {"_id": {"$regex": f"^{object_id}::"}}
+    """
+    Finds the latest version of a composition by its base object ID.
+
+    It queries for all versions matching the base object ID and sorts them by creation time to return the most recent one.
+
+    Args:
+        object_id: The base ID of the composition (without the ::version part).
+        db: The database session.
+
+    Returns:
+        The latest composition document, or None if not found.
+    """
+
+    # Regex to find all versions of a given composition object
+    filter_criteria = {
+        "_id": {
+            "$regex": f"^{object_id}::"
+        }
+    }
+
+    # Find all matching documents, sort by time_created descending and get the first one
     cursor = db[COMPOSITIONS_COLL_NAME].find(filter_criteria).sort("time_created", -1).limit(1)
     documents = await cursor.to_list(length=1)
-    return documents[0] if documents else None
+
+    if documents:
+        return documents[0]
+    return None
 
 
 async def find_first_composition_by_object_id(object_id: str, db: AsyncIOMotorDatabase):
-    filter_criteria = {"_id": {"$regex": f"^{object_id}::"}}
+    """
+    Finds the first version of a composition by its base object ID
+
+    It queries for all versiones matching the base object ID and sorts them by creation time 
+    in ascending order to return the very first one
+
+    Args:
+        object_id: The base ID of the composition (without the ::version part).
+        db: The database session
+
+    Returns:
+        The first composition document, or None if not found
+    """
+
+    # Regex to find all versions of a given composition object
+    filter_criteria = {
+        "_id": {
+            "$regex": f"^{object_id}::"
+        }
+    }
+
+    # Find all matching documents, sort by time_created ascending (1), and get the first one
     cursor = db[COMPOSITIONS_COLL_NAME].find(filter_criteria).sort("time_created", 1).limit(1)
     documents = await cursor.to_list(length=1)
-    return documents[0] if documents else None
 
+    if documents:
+        return documents[0]
+    return None
 
 async def insert_composition_contribution_and_update_ehr(
     ehr_id: str,
