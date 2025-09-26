@@ -15,11 +15,8 @@ from src.api.v1.composition.service import (
     retrieve_composition_version,
 )
 
-
-from src.api.v1.composition.models import (
-    Composition, CompositionCreate, RevisionHistory, 
-    VersionedComposition, OriginalVersionResponse
-)
+from src.api.v1.common.models import RevisionHistory, OriginalVersionResponse
+from src.api.v1.composition.models import Composition, CompositionCreate, VersionedComposition
 
 
 from src.app.core.database import get_mongodb_ehr_db
