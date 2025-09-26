@@ -13,8 +13,8 @@ from src.app.core.database import connect_to_mongo, close_mongo_connection, get_
 from src.api.v1.ehr.routes import router as ehr_router
 from src.api.v1.template.routes import router as template_router
 from src.api.v1.aql.routes import router as aql_router
-# The new ingestion router
-from src.api.v1.ingest import routes as ingest_routes
+from src.api.v1.composition.routes import router as composition_router
+from src.api.v1.ingest.routes import router as ingest_router
 
 # The new flattener class
 from src.transform.flattener_g import CompositionFlattener
@@ -88,14 +88,8 @@ app.add_middleware(
 )
 
 # --- Include Routers ---
-# Your existing routers
 app.include_router(ehr_router, prefix="/v1", tags=["EHR"])
 app.include_router(template_router, prefix="/v1", tags=["Template"])
 app.include_router(aql_router, prefix="/v1", tags=["AQL"])
-
-# The new ingestion router
-app.include_router(
-    ingest_routes.router,
-    prefix="/v1/ingestions",
-    tags=["Ingestion"]
-)
+app.include_router(composition_router, prefix="/v1", tags=["Compositions"])
+app.include_router(ingest_router, prefix="/v1/ingestions", tags=["Ingestion"])
