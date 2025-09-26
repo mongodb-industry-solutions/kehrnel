@@ -1,6 +1,6 @@
 from fastapi import status
-from src.api.v1.composition.models import Composition, VersionedComposition, OriginalVersionResponse
-from src.api.v1.ehr.models import ErrorResponse
+from src.api.v1.composition.models import Composition, VersionedComposition
+from src.api.v1.common.models import ErrorResponse, OriginalVersionResponse
 from src.api.v1.ehr.api_responses import get_revision_history_responses
 
 
