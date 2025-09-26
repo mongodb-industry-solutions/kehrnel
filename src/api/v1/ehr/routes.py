@@ -16,7 +16,6 @@ from src.api.v1.ehr.service import (
     retrieve_ehr_by_subject,
     retrieve_ehr_status_by_ehr_id,
     retrieve_ehr_status_by_version_uid,
-    retrieve_contribution,
     retrieve_versioned_ehr_status,
     retrieve_ehr_status_revision_history,
     retrieve_ehr_status_version,
@@ -26,7 +25,6 @@ from src.api.v1.ehr.service import (
 from src.api.v1.ehr.models import EHRCreationResponse, EHRStatusCreate, EHRStatus, ErrorResponse, EHR, RevisionHistory, OriginalVersionResponse, VersionedEHRStatus
 
 from src.app.core.database import get_mongodb_ehr_db
-from src.app.core.models import Contribution
 from src.api.v1.ehr.api_responses import (
     get_ehr_by_id_responses,
     create_ehr_api_responses,
@@ -36,8 +34,6 @@ from src.api.v1.ehr.api_responses import (
     get_ehr_by_subject_responses,
     get_ehr_status_responses,
     get_ehr_status_by_version_id_responses,
-    get_contribution_responses,
-    get_revision_history_responses,
     get_versioned_ehr_status_responses,
     get_ehr_status_revision_history_responses,
     get_ehr_status_version_at_time_responses,
