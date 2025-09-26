@@ -777,6 +777,94 @@ async def retrieve_composition_version(
     return response
 
 
+async def retrieve_ehr_status_version(
+    ehr_id: str,
+    db: AsyncIOMotorDatabase,
+    version_at_time: Optional[str] = None,
+) -> OriginalVersionResponse:
+    """
+    Retrieves a specific version of an EHR_STATUS
+
+    if version_at_time is provided, it finds the version extant at that time
+    Otherwise, it finds the latest version
+
+    Args:
+        ehr_id: The ID of the parent EHR
+        db: The database session
+        version_at_time: Optional ISO 8601 timestampt
+
+    Returns:
+        An originalVersionResponse object containing the version data and audit
+
+    Raises:
+        HTTPException: If the resource or version is not found, or if the timestamp is invalid
+    """
+
+    # Validate EHR exists and get its status UID
+    ehr = await retrieve_ehr_by_id(ehr_id = ehr_id, db=db)
+    try:
+        ehr_status_uid = ehr.ehr_status.uid.value
+        versioned_object_uid = ehr_status_uid.split("::")[0]
+    except (IndexError, AttributeError):
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Malformed EHR_STATUS UID found in the database"
+        )
+    
+    # Parse timestamp if provided
+    at_time_datetime: Optional[datetime] = None
+    if version_at_time:
+        try:
+            at_time_datetime = isoparse(version_at_time)
+        except ValueError:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Invalid 'version_at_time' format: {version_at_time}"
+            )
+        
+    # Find the relevant contribution document
+    contribution_doc = await find_latest_contribution_by_vo_uid(
+        versioned_object_uid=versioned_object_uid,
+        db=db,
+        timestamp=at_time_datetime
+    )
+
+    if not contribution_doc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No version of EHR_STATUS for EHR '{ehr_id}' found at the specified time."
+        )
+    
+    # Extract the EHR_STATUS version info form the contribution's 'versions' array
+    version_info = next(
+        (v for v in contribution_doc.get("versions", [])
+         if v.get("uid", {}).get("value", "").startswith(versioned_object_uid)),
+        None
+    )
+
+    if not version_info:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Inconsistent data: Contribution found but EHR_STATUS version link is missing"
+        )
+    
+    preceding_uid_val = version_info.get("preceding_version_uid")
+
+    # Construct the response. The 'data' is the EHR_STATUS object itself, which is already embedded in the contribution document
+    response = OriginalVersionResponse(
+        uid=ObjectVersionID.model_validate(version_info["uid"]),
+        preceding_version_uid=ObjectVersionID(value=preceding_uid_val) if preceding_uid_val else None,
+        data=version_info,
+        commit_audit=AuditDetails.model_validate(contribution_doc["audit"]),
+        contribution=ObjectRef(
+            id=HierObjectID(value=contribution_doc["_id"]),
+            type="CONTRIBUTION"
+        )
+    )
+
+    return response
+
+
 async def update_ehr_status(
     ehr_id: str,
     status_update_request: EHRStatus,
