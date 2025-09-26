@@ -555,6 +555,20 @@ get_ehr_status_version_at_time_responses = {
     }
 }
 
+
+get_ehr_status_version_by_id_responses = {
+    status.HTTP_200_OK: {
+        "description": "The specified version of the EHR_STATUS has been successfully retrieved.",
+        "model": OriginalVersionResponse,
+        "content": get_ehr_status_version_at_time_responses[status.HTTP_200_OK]["content"] # Re-use example
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "The EHR or the specified version_uid was not found.",
+        "model": ErrorResponse
+    }
+}
+
+
 get_ehr_status_revision_history_responses = {
     status.HTTP_200_OK: {
         "description": "EHR_STATUS revision history retrieved successfully.",
