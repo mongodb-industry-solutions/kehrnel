@@ -13,7 +13,8 @@ async def find_composition_by_uid(uid: str, db: AsyncIOMotorDatabase):
     Retrieves a single COMPOSITION document from the database by its versioned UID
     The `_id` in the database is the composition's versioned UID
     """
-    return await db[COMPOSITIONS_COLL_NAME].find_one({"_id": uid})
+    result = await db[COMPOSITIONS_COLL_NAME].find_one({"_id": uid})
+    return result
 
 
 async def find_latest_composition_by_object_id(object_id: str, db: AsyncIOMotorDatabase):
