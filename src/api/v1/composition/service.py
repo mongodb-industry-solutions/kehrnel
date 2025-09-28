@@ -542,8 +542,7 @@ async def retrieve_composition_version(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Invalid 'version_at_time' format: {version_at_time}"
             )
-        
-    # Find the relevant contribution document using the new repository function
+
     contribution_doc = await find_latest_contribution_by_vo_uid(
         versioned_object_uid=versioned_object_uid,
         db=db,
