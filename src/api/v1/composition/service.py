@@ -123,7 +123,7 @@ async def add_composition(
         # The repository re-raises the error, we catch it here to give a user-friendly response
         raise HTTPException(
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail = f"Could not create Composition due to a database erorr: {e}"
+            detail = f"Could not create Composition due to a database error: {e}"
         )
     
     # Return the created composition object
