@@ -1,35 +1,96 @@
+# ehr/models.py
+
 from pydantic import BaseModel, Field, validator, RootModel
 from datetime import datetime
-from typing import Optional, List, Literal, Any, Dict
+from typing import Optional, List, Literal, Any, Dict, Union
+from src.app.core.models import AuditDetails
+
+class HierObjectID(BaseModel):
+    value: str
+
+
+class EhrIdModel(HierObjectID):
+    pass
+
+
+class SystemIdModel(HierObjectID):
+    pass
+
+
+class ObjectVersionID(BaseModel):
+    value: str
+    type: str = Field(alias="_type", default="OBJECT_VERSION_ID")
+
+    class Config:
+        populate_by_name = True
+
 
 # Based on OpenEHR RM PartySelf
 class PartySelf(BaseModel):
-    id: str = Field(..., description="Identifier of the subject of care")
-    namespace: str = Field("local", description="Namespace of the identifier")
+    type: Literal["PARTY_SELF"] = Field("PARTY_SELF", alias="_type")
+    external_ref: Optional[Dict[str, Any]] = None # Simplified for now
+
+    class Config:
+        populate_by_name = True
+
+
+class SubjectModel(BaseModel):
+    id: HierObjectID
+    namespace: str
+
 
 # Based on OpenEHR RM EHR_STATUS
 class EHRStatus(BaseModel):
-    uid: Optional[str] = None
+    uid: ObjectVersionID
     type: Literal["EHR_STATUS"] = Field("EHR_STATUS", alias="_type")
-    subject: PartySelf
+    archetype_node_id: str = "openEHR-EHR-EHR_STATUS.generic.v1"
+    name: Dict[str, str] = {"value": "EHR status"}
+    subject: Union[PartySelf, SubjectModel]
     is_modifiable: bool = True
     is_queryable: bool = True
 
+    class Config:
+        populate_by_name = True
+
+
+# Model for the EHR_STATUS provided in a request body
+class EHRStatusCreate(BaseModel):
+    type: Literal["EHR_STATUS"] = Field(..., alias="_type")
+    subject: PartySelf
+    is_modifiable: bool = True
+    is_queryable: bool = True
+    
+    class Config:
+        populate_by_name = True
+
+
+class DvDateTime(BaseModel):
+    value: datetime
+
+
+class ObjectRef(BaseModel):
+    id: HierObjectID
+    namespace: str = "local"
+    type: str
+
+
 class EHRCreationResponse(BaseModel):
-    ehr_id: str
-    ehr_status: EHRStatus
-    system_id: str
-    time_created: datetime = Field(..., description="Timestamp when the EHR was created")
+    ehr_id: EhrIdModel
+    ehr_status: ObjectRef
+    system_id: SystemIdModel
+    time_created: DvDateTime
+    ehr_access: ObjectRef
+    
 
 class EHR(BaseModel):
-    # The ehr_id is now aliased to be the primary key _id
-    ehr_id: str = Field(..., alias="_id")
-    system_id: str
-    time_created: datetime
+    ehr_id: EhrIdModel = Field(..., alias="_id")
+    system_id: SystemIdModel
+    time_created: DvDateTime
     ehr_status: EHRStatus
-    contributions: List[str] = []
-    compositions: List[str] = []
-    directory_id: str | None = None
+    ehr_access: ObjectRef
+    contributions: List[ObjectRef] = []
+    compositions: List[ObjectRef] = []
+    directory: Optional[ObjectRef] = None
 
     class Config:
         populate_by_name = True
@@ -70,6 +131,48 @@ class Composition(BaseModel):
     time_created: datetime
     # The 'data' field will hold the entire canonical JSON object
     data: Dict[str, Any]
+
+    class Config:
+        populate_by_name = True
+
+class RevisionHistoryItem(BaseModel):
+    version_id: ObjectVersionID = Field(..., alias="versionId")
+    audit: AuditDetails
+
+    class Config:
+        populate_by_name = True
+
+# The top-level response model for the revision history endpoint
+class RevisionHistory(BaseModel):
+    items: List[RevisionHistoryItem]
+
+
+class VersionedComposition(BaseModel):
+    uid: HierObjectID
+    owner_id: ObjectRef = Field(..., alias="ownerId")
+    time_created: DvDateTime = Field(..., alias="timeCreated")
+    type: Literal["VERSIONED_COMPOSITION"] = Field("VERSIONED_COMPOSITION", alias="_type")
+
+    class Config:
+        populate_by_name = True
+
+class VersionedEHRStatus(BaseModel):
+    uid: HierObjectID
+    owner_id: ObjectRef = Field(..., alias="ownerId")
+    time_created: DvDateTime = Field(..., alias="timeCreated")
+    type: Literal["VERSIONED_EHR_STATUS"] = Field("VERSIONED_EHR_STATUS", alias="_type")
+
+    class Config:
+        populate_by_name = True
+
+
+class OriginalVersionResponse(BaseModel):
+    uid: ObjectVersionID
+    preceding_version_uid: Optional[ObjectVersionID] = Field(None, alias="precedingVersionUid")
+    data: Dict[str, Any]
+    commit_audit: AuditDetails = Field(..., alias="commitAudit")
+    contribution: ObjectRef
+    type: Literal["ORIGINAL_VERSION"] = Field("ORIGINAL_VERSION", alias="_type")
 
     class Config:
         populate_by_name = True
