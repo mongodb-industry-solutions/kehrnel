@@ -396,7 +396,7 @@ async def update_ehr_status(
     status_update_request: EHRStatus,
     if_match: str,
     db: AsyncIOMotorDatabase,
-    commiter_name: str = "System"
+    committer_name: str = "System"
 ) -> Tuple[EHRStatus, datetime]:
     """
     Updates the status of an existing EHR.
@@ -409,7 +409,7 @@ async def update_ehr_status(
         status_update_request: The new EHR_STATUS data from the client.
         if_match: The ETag value of the current EHR_STATUS, for concurrency control.
         db: The database session.
-        commiter_name: The name of the committer for the audit trail.
+        committer_name: The name of the committer for the audit trail.
 
     Returns:
         A tuple containing the newly created and versioned EHRStatus object and its commit time.
@@ -455,7 +455,7 @@ async def update_ehr_status(
         ehr_id = ehr_id,
         audit = AuditDetails(
             system_id = "my-openehr-server",
-            committer_name = commiter_name,
+            committer_name = committer_name,
             time_committed = time_committed,
             change_type = "modification"
         ),
