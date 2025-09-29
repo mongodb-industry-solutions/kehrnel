@@ -1,8 +1,11 @@
-from fastapi import APIRouter, Depends, status, Body, Response, Header, Query
+from fastapi import APIRouter, Depends, status, Body, Response, Header, Query, Request
 from fastapi.responses import JSONResponse
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from typing import Optional
+from typing import Optional, Dict, Any
 from email.utils import formatdate
+import logging
+from uuid import UUID
+from src.transform.flattener_g import CompositionFlattener
 
 
 from src.api.v1.composition.service import (
@@ -39,6 +42,13 @@ router = APIRouter(
 )
 
 
+def get_flattener(request: Request) -> CompositionFlattener:
+    """
+    Dependency to retrieve the globally initialized CompositionFlattener
+    """
+    return request.app.state.flattener
+
+
 @router.post(
     "/composition",
     response_model = Composition,
@@ -54,7 +64,8 @@ async def create_composition_endpoint(
         ...,
         description = "The composition object to be created, structured according to a template"
     ),
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    flattener: CompositionFlattener = Depends(get_flattener)
 ):
     """
     Creates a new `composition` and adds it to the specified EHR.
@@ -62,6 +73,7 @@ async def create_composition_endpoint(
     This endpoint creates the first version of a new `composition`.
     - A new `contribution` is created to audit this change.
     - The new `composition` is atomically stored and linked to the EHR.
+    - A semi-flattened version of the composition is also created and stored.
 
     Upon successfull creation, the new `composition` object is returned, and the `Location`, `ETag`, and `Last-Modified` headers are set.
     """
@@ -69,7 +81,8 @@ async def create_composition_endpoint(
     new_composition = await add_composition(
         ehr_id = ehr_id,
         composition_create = composition_create,
-        db = db
+        db = db,
+        flattener = flattener
     )
 
     # Response Headers

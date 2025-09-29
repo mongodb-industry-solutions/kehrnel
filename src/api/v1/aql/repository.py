@@ -20,8 +20,8 @@ async def execute_aql_query(pipeline: List[Dict[str, Any]], db: AsyncIOMotorData
     """
     try:
         cursor = db[FLATTEN_COMPOSITION_COLL_NAME].aggregate(pipeline)
-        print("Pipeline:", pipeline)
-        return await cursor.to_list(length=None)
+        doc_result = await cursor.to_list(length=None)
+        return doc_result
     except PyMongoError as e:
         logger.error(f"AQL query execution failed in repository: {e}")
         raise e
