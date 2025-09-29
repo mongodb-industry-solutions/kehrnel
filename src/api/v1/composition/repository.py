@@ -1,10 +1,13 @@
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from pymongo.errors import PyMongoError
 import logging
+from typing import Dict, Optional
 
 COMPOSITIONS_COLL_NAME = "compositions"
 EHR_CONTRIBUTIONS_COLL = "contributions"
 EHR_COLL_NAME = "ehr"
+FLAT_COMPOSITIONS_COLL_NAME = "sm_compositions3"
+SEARCH_COMPOSITIONS_COLL_NAME = "sm_search3"
 
 logger = logging.getLogger(__name__)
 
@@ -81,22 +84,44 @@ async def insert_composition_contribution_and_update_ehr(
     ehr_id: str,
     composition_doc: dict,
     contribution_doc: dict,
-    db: AsyncIOMotorDatabase      
+    db: AsyncIOMotorDatabase,
+    flattened_base_doc: Optional[Dict] = None,
+    flattened_search_doc: Optional[Dict] = None
 ):
     """
-    Inserts a new Composition and its associated Contribution, and updates the parent EHR document to link them.
-    All operations are performed within a single atomic transaction
+    Inserts a new Composition, its Contribution, its flattened versions,
+    and updates the parent EHR, all within a single atomic transaction.
     """
 
     async with await db.client.start_session() as session:
         async with session.start_transaction():
             try:
                 composition_doc["ehr_id"] = ehr_id
+
                 # Insert the new Contribution document
                 await db[EHR_CONTRIBUTIONS_COLL].insert_one(contribution_doc, session = session)
 
                 # Insert the new Composition document
                 await db[COMPOSITIONS_COLL_NAME].insert_one(composition_doc, session = session)
+
+                # Insert the flattened versions if they exist
+                if flattened_base_doc and flattened_search_doc:
+                    composition_uid = composition_doc["_id"]
+
+                    # Use the canonical version UID as the _id for flattened docs for consistency
+                    flattened_base_doc["_id"] = composition_uid
+
+                    has_search_data = flattened_search_doc and flattened_search_doc.get("sn")
+
+                    if has_search_data:
+                        flattened_search_doc["_id"] = composition_uid
+
+                    # Insert the flattened base document
+                    await db[FLAT_COMPOSITIONS_COLL_NAME].insert_one(flattened_base_doc, session=session)                
+
+                    # Insert the flattened search document if it has content
+                    if has_search_data:
+                        await db[SEARCH_COMPOSITIONS_COLL_NAME].insert_one(flattened_search_doc, session=session)
 
                 # Update the EHR document by pushin the new IDs to ther respective lists
                 update_criteria = {
@@ -137,7 +162,7 @@ async def add_deletion_contribution_and_update_ehr(
     db: AsyncIOMotorDatabase
 ):
     """
-    Atomicalloy adds a 'deleted' contribution and updates the parent EHR to link it
+    Atomically adds a 'deleted' contribution and updates the parent EHR to link it
     This is used for the logical deletion of a composition version.
     """
     async with await db.client.start_session() as session:
