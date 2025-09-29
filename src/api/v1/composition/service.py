@@ -41,7 +41,7 @@ async def add_composition(
     ehr_id: str,
     composition_create: CompositionCreate,
     db: AsyncIOMotorDatabase,
-    commiter_name: str = "System"
+    committer_name: str = "System"
 ) -> Composition:
     """
     Handles the business logic of adding a new, client-provided canonical
@@ -58,7 +58,7 @@ async def add_composition(
         ehr_id: The ID of the EHR to which the composition will be added.
         composition_create: The data for the new composition from the request.
         db: The database session
-        commiter_name: The name of the committer for the audit trail.
+        committer_name: The name of the committer for the audit trail.
 
     Returns:
         The newly created and persisted Composition object
@@ -104,7 +104,7 @@ async def add_composition(
         ehr_id = ehr_id,
         audit = AuditDetails(
             system_id = "my-openehr-server",
-            committer_name = commiter_name,
+            committer_name = committer_name,
             time_committed = time_created,
             change_type = "creation"
         ),
