@@ -6,6 +6,9 @@ from typing import Optional, Dict, Any
 from fastapi import HTTPException, status
 from pymongo.errors import PyMongoError
 
+from src.transform.flattener_g import CompositionFlattener
+from src.transform.exceptions_g import FlattenerError
+
 from src.api.v1.composition.repository import (
     find_composition_by_uid,
     find_latest_composition_by_object_id,
@@ -41,30 +44,33 @@ async def add_composition(
     ehr_id: str,
     composition_create: CompositionCreate,
     db: AsyncIOMotorDatabase,
+    flattener: CompositionFlattener,
     committer_name: str = "System"
 ) -> Composition:
     """
     Handles the business logic of adding a new, client-provided canonical
-    Composition to an existing EHR.
+    Composition to an existing EHR, and also creating its flattened version.
 
     It involves:
 
     1. Validating that the target EHR exists.
     2. Assigning a system-managed version UID to the composition.
     3. Creating a Contribution to audit the change.
-    4. Calling the repository to perform an atomic update of all related documents.
+    4. Preparing and transforming the composition into a flattened format.
+    5. Calling the repository to perform an atomic update of all related documents.
 
     Args:
         ehr_id: The ID of the EHR to which the composition will be added.
         composition_create: The data for the new composition from the request.
         db: The database session
+        flattener: The initialized CompositionFlattener instance.
         committer_name: The name of the committer for the audit trail.
 
     Returns:
         The newly created and persisted Composition object
 
     Raises:
-        HTTPExceptoin: 404 if EHR not found, 500 on database error
+        HTTPException: 404 if EHR not found, 422 on transformation error, 500 on database error.
     """
 
     # Validate that the EHR Exists
@@ -92,6 +98,24 @@ async def add_composition(
         time_created = time_created,
         data = composition_data
     )
+
+    # Prepare the input document for the flattener, matching the structure it expects
+    raw_doc_for_flattener = {
+        "_id": new_composition_for_db.uid,
+        "ehr_id": ehr_id,
+        "composition_version": "1",
+        "canonicalJSON": new_composition_for_db.data
+    }
+
+    try:
+        # Transform the composition using the flattener instance
+        flattened_base_doc, flattened_search_doc = flattener.transform_composition(raw_doc_for_flattener)
+    except FlattenerError as e:
+        # If the transformation fails, return a client-side error
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Composition could not be processed: {e}"
+        )
     
     # Creates the contribution object for the transaction
     audit_version_data = {
@@ -117,6 +141,8 @@ async def add_composition(
             ehr_id = ehr_id,
             composition_doc = new_composition_for_db.model_dump(by_alias = True),
             contribution_doc = contribution.model_dump(by_alias = True),
+            flattened_base_doc = flattened_base_doc,
+            flattened_search_doc = flattened_search_doc,
             db = db
         )
     except PyMongoError as e:
