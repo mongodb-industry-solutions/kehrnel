@@ -269,7 +269,7 @@ async def update_ehr_status_endpoint(
     new_version_uid = new_status.uid.value
     response.headers["ETag"] = f'"{new_version_uid}"'
 
-     # The Location header now points to the specific version of the EHR_STATUS resource
+    # The Location header now points to the specific version of the EHR_STATUS resource
     response.headers["Location"] = f"/v1/ehr/{ehr_id}/ehr_status/{new_version_uid}"
 
     # Use the actual commit time for the Last-Modified header for accuracy
