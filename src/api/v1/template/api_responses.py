@@ -1,5 +1,5 @@
 from fastapi import status
-from src.api.v1.ehr.models import ErrorResponse
+from src.api.v1.common.models import ErrorResponse
 from src.api.v1.template.models import TemplateSummary
 
 list_templates_responses = {
