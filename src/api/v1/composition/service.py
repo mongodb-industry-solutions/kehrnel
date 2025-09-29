@@ -257,12 +257,12 @@ async def update_composition(
         raise HTTPException(status_code=500, detail="Could not parse the existing version UID to create a new version.")
     
     # Prepare the new versioned objects
-    time_commited = datetime.now(timezone.utc)
+    time_committed = datetime.now(timezone.utc)
 
     # Create the new Composition object for the database
     new_composition_for_db = Composition(
         uid = new_uid,
-        time_created = time_commited,
+        time_created = time_committed,
         data = new_composition_data.content
     )
 
@@ -272,7 +272,7 @@ async def update_composition(
         audit = AuditDetails(
             system_id = "my-openehr-server",
             committer_name = committer_name,
-            time_committed = time_commited,
+            time_committed = time_committed,
             change_type = "modification"
         ),
         versions = [{
