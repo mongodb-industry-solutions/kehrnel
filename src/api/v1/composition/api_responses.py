@@ -130,7 +130,7 @@ delete_composition_responses = {
        "description": "Composition successfully marked as deleted. The response has no body",
        "headers": {
            "ETag": {
-               "description": "The ETaf of the new 'deleted' audit entry version (its UID)",
+               "description": "The ETag of the new 'deleted' audit entry version (its UID)",
                "schema": {
                    "type": "string"
                }
