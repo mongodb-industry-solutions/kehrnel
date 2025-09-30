@@ -1,5 +1,3 @@
-# kehrnel/transform/rules_engine.py
-
 import json5 
 import threading
 from typing import Any, Dict, List, Tuple
