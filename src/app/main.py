@@ -2,14 +2,13 @@
 
 import os
 import json
+import json5
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-# Your existing database connection handlers
 from src.app.core.database import connect_to_mongo, close_mongo_connection, get_mongodb_ehr_db
 
-# Your existing routers
 from src.api.v1.ehr.routes import router as ehr_router
 from src.api.v1.template.routes import router as template_router
 from src.api.v1.aql.routes import router as aql_router
@@ -18,22 +17,19 @@ from src.api.v1.contribution.routes import router as contribution_router
 from src.api.v1.ehr_status.routes import router as ehr_status_router
 from src.api.v1.ingest.routes import router as ingest_router
 
-# The new flattener class
 from src.transform.flattener_g import CompositionFlattener
+from src.transform.core import Transformer, load_default_cfg
 
-
-# --- Lifespan Manager for Application Startup and Shutdown ---
-# This replaces the deprecated on_event("startup") and on_event("shutdown")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # --- Startup Logic ---
     print("Application startup...")
     
-    # 1. Connect to MongoDB using your existing function
+    # 1. Connect to MongoDB using the existing function
     await connect_to_mongo()
     
     # 2. Get a database instance for the flattener
-    #    We use your existing get_mongodb_ehr_db() function for consistency
+    #    Use the existing get_mongodb_ehr_db() function for consistency
     db = await get_mongodb_ehr_db()
 
     # 3. Load configuration for the flattener
@@ -57,7 +53,19 @@ async def lifespan(app: FastAPI):
     )
     
     print("CompositionFlattener initialized.")
+    print("Initializing Transformer for un-flattening...")
     
+    # Load the base config (for shortcuts, etc.)
+    transformer_config = load_default_cfg(None)
+    
+    # Add the MAPPINGS FILE PATH to the transformer's config dictionary
+    # The RulesEngine expects a path, not a loaded dictionary.
+    transformer_config['mappings'] = mappings_path
+
+    # 3. Now, initialize the Transformer with the complete config
+    app.state.transformer = Transformer(cfg=transformer_config, role="primary")
+    print("Transformer initialized.")
+
     yield  # --- Application is now running ---
     
     # --- Shutdown Logic ---
@@ -77,7 +85,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="OpenEHR MongoDB API",
     version="1.0.0",
-    lifespan=lifespan  # Use the modern lifespan manager
+    lifespan=lifespan
 )
 
 # Your existing CORS middleware
