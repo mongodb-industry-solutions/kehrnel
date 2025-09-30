@@ -6,11 +6,13 @@ from email.utils import formatdate
 import logging
 from uuid import UUID
 from src.transform.flattener_g import CompositionFlattener
+from src.transform.core import Transformer
 
 
 from src.api.v1.composition.service import (
     add_composition, 
-    retrieve_composition, 
+    retrieve_composition,
+    retrieve_and_unflatten_composition, # New Import
     update_composition,
     delete_composition_by_preceding_uid,
     retrieve_revision_history,
@@ -47,6 +49,16 @@ def get_flattener(request: Request) -> CompositionFlattener:
     Dependency to retrieve the globally initialized CompositionFlattener
     """
     return request.app.state.flattener
+
+
+def get_transformer(request: Request) -> Transformer:
+    """
+    Dependency to retrieve the globally initialized Transformer.
+    NOTE: This needs to be initialized and added to app.state at startup.
+    """
+    if not hasattr(request.app.state, 'transformer'):
+        raise RuntimeError("Transformer not initialized or attached to app state.")
+    return request.app.state.transformer
 
 
 @router.post(
@@ -126,8 +138,80 @@ async def get_composition_by_id(
     # Return explicit JSONResponse with headers and status code
     # The 'composition.uid' will always be the full version_uid of the returned object
     last_modified_gmt = formatdate(composition.time_created.timestamp(), usegmt = True)
+    
+    # Convert the data to JSON-serializable format
+    import json
+    from datetime import datetime, date
+    
+    def json_serializer(obj):
+        """JSON serializer for objects not serializable by default json code"""
+        if isinstance(obj, (datetime, date)):
+            return obj.isoformat()
+        raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
+    
+    # Serialize and deserialize to ensure all datetime objects are converted to strings
+    json_data = json.loads(json.dumps(composition.data, default=json_serializer))
+    
     return JSONResponse(
-        content=composition.data,
+        content=json_data,
+        status_code=status.HTTP_200_OK,
+        headers={
+            "ETag": f'"{composition.uid}"',
+            "Location": f"/v1/ehr/{ehr_id}/composition/{composition.uid}",
+            "Last-Modified": last_modified_gmt
+        }
+    )
+
+
+@router.get(
+    "/composition-unflatten/{uid_based_id}",
+    status_code = status.HTTP_200_OK,
+    summary = "Get Composition by un-flattening",
+    responses = get_composition_responses,
+    description = "Retrieves a COMPOSITION by fetching its flattened version and reconstructing the canonical JSON on the fly."
+)
+async def get_composition_by_id_unflattened(
+    ehr_id: str,
+    uid_based_id: str,
+    response: Response,
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    transformer: Transformer = Depends(get_transformer)
+):
+    """
+    Retrieves a version of a `COMPOSITION` by reading from the optimized,
+    flattened storage and reconstructing the canonical object.
+
+    The composition is identified by its `uid_based_id`, which can be either:
+    - A `version_uid` (e.g., `...::server::1`) to fetch a specific version.
+    - A `versioned_object_uid` (e.g., `...`) to fetch the latest version.
+
+    The reconstructed canonical `COMPOSITION` is returned, with headers set.
+    This serves as a performant alternative to the standard GET endpoint.
+    """
+    composition = await retrieve_and_unflatten_composition(
+        ehr_id=ehr_id,
+        uid_based_id=uid_based_id,
+        db=db,
+        transformer=transformer
+    )
+
+    last_modified_gmt = formatdate(composition.time_created.timestamp(), usegmt=True)
+    
+    # Convert the data to JSON-serializable format
+    import json
+    from datetime import datetime, date
+    
+    def json_serializer(obj):
+        """JSON serializer for objects not serializable by default json code"""
+        if isinstance(obj, (datetime, date)):
+            return obj.isoformat()
+        raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
+    
+    # Serialize and deserialize to ensure all datetime objects are converted to strings
+    json_data = json.loads(json.dumps(composition.data, default=json_serializer))
+    
+    return JSONResponse(
+        content=json_data,
         status_code=status.HTTP_200_OK,
         headers={
             "ETag": f'"{composition.uid}"',
@@ -321,5 +405,3 @@ async def get_composition_version_endpoint(
     response.headers["Location"] = f"/v1/ehr/{ehr_id}/composition/{version_uid}"
 
     return version_response
-
-
