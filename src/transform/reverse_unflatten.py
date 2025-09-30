@@ -1,4 +1,4 @@
-# kehrnel/transform/reverse_unflatten.py
+# kehrnel/transform/unflattener.py
 
 import copy
 from typing import Any, Dict, List, Optional
@@ -21,6 +21,7 @@ class CodeBook:
     def __init__(self, ar_map, at_map):
         self.ar = {v:k for k,v in ar_map.items()}
         self.at = at_map
+    
     def decode(self, code:int)->str:
         if code>=0: return self.ar.get(code,str(code))
         raw = self.at.get(code)
@@ -45,10 +46,33 @@ def _insert_at(parent, kp, value, li, exp):
             cur = cur.setdefault(key, {})
 
 def rebuild_composition(flat, ar_map, at_map, keys, vals):
+    """
+    Reconstructs a canonical openEHR Composition from its flattened representation.
+    """
     exp = ShortcutExpander(keys, vals)
     cb  = CodeBook(ar_map, at_map)
     path2obj = {}
     root = None
+    
+    def decode_archetype_ids(obj):
+        """Recursively decode numeric archetype_id fields back to strings."""
+        if isinstance(obj, dict):
+            result = {}
+            for key, value in obj.items():
+                if key == "archetype_id" and isinstance(value, int):
+                    # Decode numeric archetype_id back to proper object structure
+                    decoded_value = cb.decode(value)
+                    result[key] = {"value": decoded_value}
+                elif isinstance(value, (dict, list)):
+                    result[key] = decode_archetype_ids(value)
+                else:
+                    result[key] = value
+            return result
+        elif isinstance(obj, list):
+            return [decode_archetype_ids(item) for item in obj]
+        else:
+            return obj
+    
     for node in flat["cn"]:
         d = copy.deepcopy(node["data"])
         ani = d.pop("archetype_node_id")
@@ -64,4 +88,9 @@ def rebuild_composition(flat, ar_map, at_map, keys, vals):
             parent = path2obj[parent_p]
             _insert_at(parent, kp, d, li, exp)
         path2obj[p] = d
+    
+    # Decode any remaining numeric archetype_id fields in the final result
+    if root:
+        root = decode_archetype_ids(root)
+    
     return root
