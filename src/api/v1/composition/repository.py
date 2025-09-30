@@ -20,6 +20,14 @@ async def find_composition_by_uid(uid: str, db: AsyncIOMotorDatabase):
     return result
 
 
+async def find_flattened_composition_by_uid(uid: str, db: AsyncIOMotorDatabase):
+    """
+    Retrieves a single flattened COMPOSITION document from the sm_compositions3
+    collection by its versioned UID.
+    """
+    return await db[FLAT_COMPOSITIONS_COLL_NAME].find_one({"_id": uid})
+
+
 async def find_latest_composition_by_object_id(object_id: str, db: AsyncIOMotorDatabase):
     """
     Finds the latest version of a composition by its base object ID.
@@ -79,6 +87,7 @@ async def find_first_composition_by_object_id(object_id: str, db: AsyncIOMotorDa
     if documents:
         return documents[0]
     return None
+
 
 async def insert_composition_contribution_and_update_ehr(
     ehr_id: str,
