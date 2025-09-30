@@ -10,7 +10,7 @@ from .at_code_codec  import AtCodeCodec
 from .rules_engine   import RulesEngine 
 from .shortcuts      import ShortcutApplier
 from ._bulk_flatten  import walk, dpath_get          
-from .reverse_unflatten import rebuild_composition
+from .unflattener import rebuild_composition
 
 __all__ = ["Transformer", "load_default_cfg"]
 
@@ -102,6 +102,11 @@ class Transformer:
     # ──────────────────────────────────────────────────────────────
     # reverse one flattened doc
     # ──────────────────────────────────────────────────────────────
+    async def load_codes_from_db(self, db, config: dict) -> None:
+        """Load codes from the database into the global CODE_BOOK for this transformer."""
+        from . import at_code_codec as _acc
+        await _acc.load_codes_from_db(db, config)
+
     def reverse(self, flat: dict) -> dict:
         ar_map = self.codec._book("ar_code")   # maps within codec
         at_map = self.codec._book("at")
