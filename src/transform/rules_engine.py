@@ -1,17 +1,20 @@
 # kehrnel/transform/rules_engine.py
 
-import yaml, threading
+import json5 
+import threading
 from typing import Any, Dict, List, Tuple
 from .at_code_codec import AtCodeCodec
 
 _thread_loc = threading.local()
 
 class RulesEngine:
-    def __init__(self, mappings_yaml: str, codec: AtCodeCodec):
+    def __init__(self, mappings_file: str, codec: AtCodeCodec):
         self.codec = codec
-        with open(mappings_yaml, 'r', encoding='utf-8') as f:
-            cfg = yaml.safe_load(f)
-        self.raw_templates = cfg.get("rules", []) or cfg.get("rules", {})
+        with open(mappings_file, 'r', encoding='utf-8') as f:
+            cfg = json5.load(f) 
+        
+        
+        self.raw_templates = cfg.get("templates", {})
         self._cache: Dict[str, List[Dict]] = {}
 
     def _seg_to_int(self, seg: Any) -> int:
@@ -44,9 +47,6 @@ class RulesEngine:
         self._cache[template_sid] = rules
         return rules
 
-# ---------------------------------------------------------------------
-# convenient singleton so _bulk_flatten can call one function only.
-# ---------------------------------------------------------------------
 _ENGINE: RulesEngine | None = None
 
 def get_rules_for(template_sid: str,
@@ -59,6 +59,5 @@ def get_rules_for(template_sid: str,
     """
     global _ENGINE
     if _ENGINE is None:
-        # NOTE: codec is optional at first call – will be the shared codec
         _ENGINE = RulesEngine(mappings_yaml, codec or AtCodeCodec())
     return _ENGINE.get(template_sid)
