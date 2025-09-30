@@ -7,10 +7,12 @@ from fastapi import HTTPException, status
 from pymongo.errors import PyMongoError
 
 from src.transform.flattener_g import CompositionFlattener
+from src.transform.core import Transformer
 from src.transform.exceptions_g import FlattenerError
 
 from src.api.v1.composition.repository import (
     find_composition_by_uid,
+    find_flattened_composition_by_uid,
     find_latest_composition_by_object_id,
     find_first_composition_by_object_id,
     insert_composition_contribution_and_update_ehr,
@@ -228,6 +230,107 @@ async def retrieve_composition(
         )
     
     return Composition.model_validate(composition_doc)
+
+
+async def retrieve_and_unflatten_composition(
+    ehr_id: str,
+    uid_based_id: str,
+    db: AsyncIOMotorDatabase,
+    transformer: Transformer
+) -> Composition:
+    """
+    Retrieves a flattened composition, reconstructs it into canonical JSON,
+    and returns it. This service replicates the logic of `retrieve_composition`
+    but uses the flattened document as the source of truth for the content.
+
+    Args:
+        ehr_id: The ID of the parent EHR.
+        uid_based_id: The unique ID of the composition (version-specific or latest).
+        db: The database session.
+        transformer: The Transformer instance for un-flattening.
+
+    Returns:
+        A Composition Pydantic model containing the reconstructed data.
+
+    Raises:
+        HTTPException: 404 if resources are not found, 500 for internal errors.
+    """
+    
+    # 1. Validate that the EHR Exists
+    ehr_doc = await find_ehr_by_id(ehr_id, db)
+    if not ehr_doc:
+        raise HTTPException(status_code=404, detail=f"EHR with id '{ehr_id}' not found")
+
+    # 2. Determine the specific version UID to fetch
+    canonical_doc = None
+    if "::" in uid_based_id:
+        # A specific version is requested, we need to fetch its metadata
+        canonical_doc = await find_composition_by_uid(uid_based_id, db)
+    else:
+        # The latest version is requested, find it from the canonical collection
+        canonical_doc = await find_latest_composition_by_object_id(uid_based_id, db)
+
+    if not canonical_doc:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Composition with id '{uid_based_id}' not found in EHR '{ehr_id}'"
+        )
+
+    composition_version_uid = canonical_doc["_id"]
+
+    # 3. Security Check: Ensure the composition belongs to the specified EHR
+    try:
+        versioned_object_uid = composition_version_uid.split("::")[0]
+    except IndexError:
+        raise HTTPException(status_code=500, detail="Malformed UID in database.")
+
+    if not any(
+        ref.get("id", {}).get("value", "").startswith(versioned_object_uid)
+        for ref in ehr_doc.get("compositions", [])
+    ):
+        raise HTTPException(
+            status_code=404,
+            detail=f"Composition '{uid_based_id}' not found in EHR '{ehr_id}'"
+        )
+    
+    # 4. Fetch the flattened document using the determined version UID
+    flattened_doc = await find_flattened_composition_by_uid(composition_version_uid, db)
+
+    if not flattened_doc:
+        # This case indicates data inconsistency, which should be rare with transactions
+        raise HTTPException(
+            status_code=500,
+            detail=f"Inconsistent data: Canonical composition '{composition_version_uid}' exists but its flattened version is missing."
+        )
+    
+    # 5. Load codes from database into the transformer's codec
+    try:
+        await transformer.load_codes_from_db(db, {"target": {"codes_collection": "_codes"}})
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to load codes from database: {e}"
+        )
+    
+    # 6. Un-flatten the document to reconstruct the canonical JSON
+    try:
+        reconstructed_data = transformer.reverse(flattened_doc)
+    except Exception as e:
+        import traceback
+        print(f"ERROR in reverse: {e}")
+        print(f"ERROR traceback: {traceback.format_exc()}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to un-flatten composition '{composition_version_uid}': {e}"
+        )
+    
+
+    # 7. Return the data in the same Pydantic model as the original function
+    return Composition(
+        uid=composition_version_uid,
+        time_created=canonical_doc["time_created"],
+        data=reconstructed_data
+    )
 
 
 async def update_composition(
