@@ -1,5 +1,6 @@
 import json5 
 import threading
+import yaml
 from typing import Any, Dict, List, Tuple
 from .at_code_codec import AtCodeCodec
 
