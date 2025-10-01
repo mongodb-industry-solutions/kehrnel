@@ -28,6 +28,7 @@ class ConditionProcessor:
         self.path_resolver = path_resolver
         self.let_variables = let_variables or {}
         self.value_formatter = ValueFormatter()
+        self.format = schema_config.get('format', 'full')
 
     def process_where_clause(self, where_node: Dict) -> Dict:
         """
@@ -120,12 +121,8 @@ class ConditionProcessor:
                         mql_operator = OPERATOR_MAP.get(node["operator"], "$eq")
                         value = self.value_formatter.format_value(node["value"])
                         
-                        # Convert to BSON Binary UUID if it's an ehr_id field
-                        if ehr_field == 'ehr_id' and isinstance(value, str):
-                            try:
-                                value = self.value_formatter.format_ehr_id(value)
-                            except ValueError:
-                                pass  # Keep as string if conversion fails
+                        # For shortened format collections, keep EHR ID as string to match document format
+                        # Don't convert to Binary for now as documents store EHR IDs as strings
                         
                         if mql_operator == "$eq":
                             ehr_conditions[ehr_field] = value
