@@ -2,6 +2,7 @@
 from typing import Dict, Any, List, Optional
 from .condition_processor import ConditionProcessor
 from .value_formatter import ValueFormatter
+from .format_resolver import FormatResolver
 import uuid
 from bson import Binary
 
@@ -19,6 +20,11 @@ class PipelineBuilder:
         self.path_resolver = path_resolver
         self.context_map = context_map
         self.let_variables = let_variables or {}
+        self.format = schema_config.get('format', 'full')
+        
+        # Use FormatResolver for better format handling
+        self.format_resolver = FormatResolver(context_map, ehr_alias, composition_alias, schema_config)
+        
         self.condition_processor = ConditionProcessor(
             ehr_alias, composition_alias, schema_config, path_resolver, let_variables
         )
@@ -49,13 +55,8 @@ class PipelineBuilder:
         
         # Add external EHR ID if provided and not already in conditions
         if ehr_id and 'ehr_id' not in match_conditions:
-            # Convert string UUID to proper BSON Binary for MongoDB
-            try:
-                uuid_obj = uuid.UUID(ehr_id)
-                match_conditions['ehr_id'] = Binary.from_uuid(uuid_obj)
-            except (ValueError, TypeError):
-                # If conversion fails, use as string (fallback)
-                match_conditions['ehr_id'] = ehr_id
+            # For shortened format collections, keep EHR ID as string to match document format
+            match_conditions['ehr_id'] = ehr_id
         
         # Add composition-level conditions with proper OR/AND support
         if comp_conditions_structure:
@@ -130,33 +131,128 @@ class PipelineBuilder:
                     projection[alias] = {"$toString": "$ehr_id"}
                 # Don't continue here - let other columns be processed too
             else:
-                # Process composition/observation columns
-                path_regex_part, data_path = self.path_resolver.translate_aql_path(aql_path)
-                base_path_regex = self.path_resolver.build_full_path_regex(variable)
+                # Handle different formats
+                path_regex_part, data_path = self.format_resolver.translate_aql_path(aql_path)
                 
-                # Use configurable field names
-                composition_array_field = self.schema_config['composition_array']
-                path_field = self.schema_config['path_field']
-                
-                # Combine path prefix with base regex properly
-                full_path_regex = self.path_resolver.combine_path_regex(base_path_regex, path_regex_part)
-                
-                projection[alias] = {
-                    "$let": {
-                        "vars": {
-                            "target_element": {
-                                "$first": {
-                                    "$filter": {
-                                        "input": f"${composition_array_field}",
-                                        "as": "item",
-                                        "cond": {"$regexMatch": {"input": f"$$item.{path_field}", "regex": full_path_regex}}
+                if path_regex_part is None:
+                    # Check for special composition handling
+                    if data_path.startswith("composition_"):
+                        # Special handling for composition-level fields - find composition root dynamically
+                        composition_array_field = self.schema_config['composition_array']
+                        
+                        if data_path == "composition_uid":
+                            # Find the first cn element where data._type == 'COMPOSITION' and extract uid
+                            projection[alias] = {
+                                "$let": {
+                                    "vars": {
+                                        "comp_element": {
+                                            "$first": {
+                                                "$filter": {
+                                                    "input": f"${composition_array_field}",
+                                                    "as": "item",
+                                                    "cond": {"$eq": ["$$item.data._type", "COMPOSITION"]}
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "in": {
+                                        "$cond": {
+                                            "if": {"$ne": ["$$comp_element", None]},
+                                            "then": "$$comp_element.data.uid.value",
+                                            "else": None
+                                        }
                                     }
                                 }
                             }
-                        },
-                        "in": f"$$target_element.{data_path}"
+                        elif data_path == "composition_name":
+                            # Find the first cn element where data._type == 'COMPOSITION' and extract name
+                            projection[alias] = {
+                                "$let": {
+                                    "vars": {
+                                        "comp_element": {
+                                            "$first": {
+                                                "$filter": {
+                                                    "input": f"${composition_array_field}",
+                                                    "as": "item",
+                                                    "cond": {"$eq": ["$$item.data._type", "COMPOSITION"]}
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "in": {
+                                        "$cond": {
+                                            "if": {"$ne": ["$$comp_element", None]},
+                                            "then": "$$comp_element.data.name.value",
+                                            "else": None
+                                        }
+                                    }
+                                }
+                            }
+                        else:
+                            # Other composition fields - extract the field name after "composition_"
+                            field_name = data_path.replace("composition_", "")
+                            projection[alias] = {
+                                "$let": {
+                                    "vars": {
+                                        "comp_element": {
+                                            "$first": {
+                                                "$filter": {
+                                                    "input": f"${composition_array_field}",
+                                                    "as": "item",
+                                                    "cond": {"$eq": ["$$item.data._type", "COMPOSITION"]}
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "in": {
+                                        "$cond": {
+                                            "if": {"$ne": ["$$comp_element", None]},
+                                            "then": f"$$comp_element.data.{field_name}",
+                                            "else": None
+                                        }
+                                    }
+                                }
+                            }
+                    else:
+                        # Direct field access (for pure shortened format without cn array)
+                        projection[alias] = f"${data_path}"
+                else:
+                    # Use cn array filtering logic (for both full and shortened formats with cn array)
+                    
+                    # Use configurable field names
+                    composition_array_field = self.schema_config['composition_array']
+                    path_field = self.schema_config['path_field']
+                    
+                    # For composition-level paths in shortened format, use the path_regex_part directly
+                    if variable == self.format_resolver.composition_alias and self.format == 'shortened':
+                        full_path_regex = path_regex_part  # Use the direct regex like "^7$"
+                    else:
+                        # For full format or non-composition paths, build the full regex
+                        base_path_regex = self.format_resolver.build_full_path_regex(variable)
+                        full_path_regex = self.format_resolver.combine_path_regex(base_path_regex, path_regex_part)
+                    
+                    projection[alias] = {
+                        "$let": {
+                            "vars": {
+                                "target_element": {
+                                    "$first": {
+                                        "$filter": {
+                                            "input": f"${composition_array_field}",
+                                            "as": "item",
+                                            "cond": {"$regexMatch": {"input": f"$$item.{path_field}", "regex": full_path_regex}}
+                                        }
+                                    }
+                                }
+                            },
+                            "in": {
+                                "$cond": {
+                                    "if": {"$ne": ["$$target_element", None]},
+                                    "then": f"$$target_element.{data_path}",
+                                    "else": None  # Return null if no matching element found
+                                }
+                            }
+                        }
                     }
-                }
         return {"$project": projection}
 
     def build_sort_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
