@@ -2,7 +2,7 @@
 from typing import Any, Dict, List, Optional
 from .ast_validator import ASTValidator
 from .context_mapper import ContextMapper
-from .path_resolver import PathResolver
+from .format_resolver import FormatResolver
 from .pipeline_builder import PipelineBuilder
 
 
@@ -54,8 +54,8 @@ class AQLtoMQLTransformer:
         # 4. Process LET variables
         self._process_let_variables()
         
-        # 5. Initialize path resolver
-        self.path_resolver = PathResolver(
+        # 5. Initialize format resolver
+        self.path_resolver = FormatResolver(
             self.context_map, 
             self.ehr_alias, 
             self.composition_alias, 
