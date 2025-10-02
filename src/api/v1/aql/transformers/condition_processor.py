@@ -21,11 +21,11 @@ class ConditionProcessor:
     """
 
     def __init__(self, ehr_alias: str, composition_alias: str, schema_config: Dict[str, str], 
-                 path_resolver, let_variables: Dict[str, Any] = None):
+                 format_resolver, let_variables: Dict[str, Any] = None):
         self.ehr_alias = ehr_alias
         self.composition_alias = composition_alias
         self.schema_config = schema_config
-        self.path_resolver = path_resolver
+        self.format_resolver = format_resolver
         self.let_variables = let_variables or {}
         self.value_formatter = ValueFormatter()
         self.format = schema_config.get('format', 'full')
@@ -170,14 +170,14 @@ class ConditionProcessor:
                     "children": comp_children
                 })
 
-    def build_composition_match(self, comp_structure: Dict) -> Dict:
+    async def build_composition_match(self, comp_structure: Dict) -> Dict:
         """
         Builds MongoDB match conditions for composition-level queries with OR/AND support.
         """
         if comp_structure.get("type") == "condition":
             # Single condition
             variable = comp_structure["path"].split('/')[0]
-            elem_match = self._create_elem_match_for_single_condition(variable, comp_structure)
+            elem_match = await self._create_elem_match_for_single_condition(variable, comp_structure)
             return {"$elemMatch": elem_match}
         
         elif comp_structure.get("operator") == "AND":
@@ -200,7 +200,7 @@ class ConditionProcessor:
                             "operator": "AND",
                             "children": conditions
                         }
-                    elem_match = self._create_elem_match_for_variable_group(variable, condition_structure)
+                    elem_match = await self._create_elem_match_for_variable_group(variable, condition_structure)
                     elem_matches.append({"$elemMatch": elem_match})
             
             return {"$all": elem_matches} if len(elem_matches) > 1 else elem_matches[0] if elem_matches else {}
@@ -244,24 +244,24 @@ class ConditionProcessor:
             for child in node.get("children", []):
                 self._group_conditions_by_variable(child, variable_conditions)
 
-    def _create_elem_match_for_variable_group(self, variable: str, conditions_structure: Dict) -> Dict:
+    async def _create_elem_match_for_variable_group(self, variable: str, conditions_structure: Dict) -> Dict:
         """
         Creates a single $elemMatch object for conditions on a variable, supporting OR/AND logic.
         """
         if conditions_structure.get("type") == "condition":
             # Single condition
-            return self._create_elem_match_for_single_condition(variable, conditions_structure)
+            return await self._create_elem_match_for_single_condition(variable, conditions_structure)
         
         elif conditions_structure.get("operator") == "AND":
             # Multiple conditions on same variable - combine with AND logic
-            base_path_regex = self.path_resolver.build_full_path_regex(variable)
+            base_path_regex = self.format_resolver.build_full_path_regex(variable)
             data_conditions = {}
             path_prefix = ""
             
             for condition in conditions_structure.get("children", []):
                 if condition.get("type") == "condition":
                     aql_path = condition["path"]
-                    p_regex_part, data_path = self.path_resolver.translate_aql_path(aql_path)
+                    p_regex_part, data_path = await self.format_resolver.translate_aql_path(aql_path)
                     
                     # Update path prefix if we have specific node identifiers
                     if p_regex_part and not path_prefix:
@@ -290,7 +290,7 @@ class ConditionProcessor:
             
             # Build final regex pattern
             path_field = self.schema_config['path_field']
-            full_path_regex = self.path_resolver.combine_path_regex(base_path_regex, path_prefix)
+            full_path_regex = self.format_resolver.combine_path_regex(base_path_regex, path_prefix)
             
             return {
                 path_field: {"$regex": full_path_regex},
@@ -301,16 +301,16 @@ class ConditionProcessor:
             # OR conditions on same variable
             or_conditions = []
             for condition in conditions_structure.get("children", []):
-                condition_match = self._create_elem_match_for_variable_group(variable, condition)
+                condition_match = await self._create_elem_match_for_variable_group(variable, condition)
                 or_conditions.append(condition_match)
             
             return {"$or": or_conditions} if or_conditions else {}
         
         return {}
 
-    def _create_elem_match_for_single_condition(self, variable: str, condition: Dict) -> Dict:
+    async def _create_elem_match_for_single_condition(self, variable: str, condition: Dict) -> Dict:
         """Creates $elemMatch for a single condition."""
-        base_path_regex = self.path_resolver.build_full_path_regex(variable)
+        base_path_regex = self.format_resolver.build_full_path_regex(variable)
         
         # Handle variable references vs path references
         if condition.get("variable"):
@@ -344,7 +344,7 @@ class ConditionProcessor:
             if not aql_path:
                 raise ValueError("Condition must have either path or variable reference")
                 
-            p_regex_part, data_path = self.path_resolver.translate_aql_path(aql_path)
+            p_regex_part, data_path = await self.format_resolver.translate_aql_path(aql_path)
             
             mql_operator = OPERATOR_MAP.get(condition["operator"])
             if not mql_operator:
@@ -352,7 +352,7 @@ class ConditionProcessor:
             
             value = self.value_formatter.format_value(condition["value"])
             path_field = self.schema_config['path_field']
-            full_path_regex = self.path_resolver.combine_path_regex(base_path_regex, p_regex_part)
+            full_path_regex = self.format_resolver.combine_path_regex(base_path_regex, p_regex_part)
             
             # Build data condition
             if mql_operator == "$eq":
