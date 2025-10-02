@@ -1,9 +1,11 @@
 # src/api/v1/aql/transformers/aql_transformer.py
 from typing import Any, Dict, List, Optional
+from motor.motor_asyncio import AsyncIOMotorDatabase
 from .ast_validator import ASTValidator
 from .context_mapper import ContextMapper
 from .format_resolver import FormatResolver
 from .pipeline_builder import PipelineBuilder
+from .archetype_resolver import ArchetypeResolver
 
 
 class AQLtoMQLTransformer:
@@ -22,9 +24,10 @@ class AQLtoMQLTransformer:
     - PipelineBuilder: Constructs MongoDB aggregation stages
     """
 
-    def __init__(self, ast: Dict[str, Any], ehr_id: Optional[str] = None, schema_config: Optional[Dict[str, str]] = None):
+    def __init__(self, ast: Dict[str, Any], ehr_id: Optional[str] = None, schema_config: Optional[Dict[str, str]] = None, db: Optional[AsyncIOMotorDatabase] = None):
         self.ast = ast
         self.ehr_id = ehr_id
+        self.db = db
         
         # Schema field configuration (Point 3 preparation)
         self.schema_config = schema_config or {
@@ -54,15 +57,21 @@ class AQLtoMQLTransformer:
         # 4. Process LET variables
         self._process_let_variables()
         
-        # 5. Initialize format resolver
+        # 5. Initialize archetype resolver if database is available
+        self.archetype_resolver = None
+        if self.db is not None:
+            self.archetype_resolver = ArchetypeResolver(self.db)
+        
+        # 6. Initialize format resolver with archetype resolver
         self.path_resolver = FormatResolver(
             self.context_map, 
             self.ehr_alias, 
             self.composition_alias, 
-            self.schema_config
+            self.schema_config,
+            self.archetype_resolver
         )
         
-        # 6. Initialize pipeline builder
+        # 7. Initialize pipeline builder
         self.pipeline_builder = PipelineBuilder(
             self.ehr_alias,
             self.composition_alias,
@@ -92,14 +101,14 @@ class AQLtoMQLTransformer:
             # Store the variable definition for later resolution
             self.let_variables[var_name] = var_expression
 
-    def build_pipeline(self) -> List[Dict[str, Any]]:
+    async def build_pipeline(self) -> List[Dict[str, Any]]:
         """
         Constructs the full MongoDB aggregation pipeline from the AST.
         """
         pipeline = []
 
         # 1. Build the $match stage from WHERE and CONTAINS clauses
-        match_stage = self.pipeline_builder.build_match_stage(self.ast, self.ehr_id)
+        match_stage = await self.pipeline_builder.build_match_stage(self.ast, self.ehr_id)
         if match_stage:
             pipeline.append(match_stage)
 
@@ -109,7 +118,7 @@ class AQLtoMQLTransformer:
             pipeline.append(let_stage)
 
         # 3. Build the $project stage from the SELECT clause
-        project_stage = self.pipeline_builder.build_project_stage(self.ast)
+        project_stage = await self.pipeline_builder.build_project_stage(self.ast)
         if project_stage:
             pipeline.append(project_stage)
 
