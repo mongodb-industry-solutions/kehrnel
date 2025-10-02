@@ -1,6 +1,7 @@
 # src/api/v1/aql/transformers/format_resolver.py
 import re
 from typing import Tuple, Dict, Optional
+from .archetype_resolver import ArchetypeResolver
 
 
 class FormatResolver:
@@ -8,14 +9,15 @@ class FormatResolver:
     Handles path resolution for both full-path and shortened-path formats.
     """
 
-    def __init__(self, context_map: Dict[str, Dict], ehr_alias: str, composition_alias: str, schema_config: Dict[str, str]):
+    def __init__(self, context_map: Dict[str, Dict], ehr_alias: str, composition_alias: str, schema_config: Dict[str, str], archetype_resolver: Optional[ArchetypeResolver] = None):
         self.context_map = context_map
         self.ehr_alias = ehr_alias
         self.composition_alias = composition_alias
         self.schema_config = schema_config
         self.format = schema_config.get('format', 'full')
+        self.archetype_resolver = archetype_resolver
 
-    def translate_aql_path(self, aql_path: str) -> Tuple[str, str]:
+    async def translate_aql_path(self, aql_path: str) -> Tuple[str, str]:
         """
         Translates AQL path based on the detected format.
         
@@ -23,11 +25,11 @@ class FormatResolver:
         For shortened format: Returns (None, direct_path) for direct field access
         """
         if self.format == 'shortened':
-            return self._translate_shortened_path(aql_path)
+            return await self._translate_shortened_path(aql_path)
         else:
             return self._translate_full_path(aql_path)
 
-    def _translate_shortened_path(self, aql_path: str) -> Tuple[str, str]:
+    async def _translate_shortened_path(self, aql_path: str) -> Tuple[str, str]:
         """
         Translates AQL path for shortened format.
         Shortened format can have either:
@@ -46,49 +48,77 @@ class FormatResolver:
                     # Composition UID is stored as comp_id at document root level
                     return None, "comp_id"  # Direct field access from document root
                 elif parts[0] == "name":
-                    return "^\\d+$", "data.name.value"  # Still in cn array at composition root
+                    # Get dynamic composition p-pattern
+                    comp_pattern = await self._get_composition_p_pattern()
+                    return comp_pattern, "data.name.value"  # Still in cn array at composition root
                 elif parts[0] == "archetype_node_id":
-                    return "^\\d+$", "data.archetype_node_id"  # Still in cn array at composition root
+                    comp_pattern = await self._get_composition_p_pattern()
+                    return comp_pattern, "data.archetype_node_id"  # Still in cn array at composition root
                 else:
                     # For other composition-level fields
                     data_path = "data." + ".".join(parts)
-                    return "^\\d+$", data_path
+                    comp_pattern = await self._get_composition_p_pattern()
+                    return comp_pattern, data_path
             else:
                 # Just the composition itself
-                return "^\\d+$", "data"
+                comp_pattern = await self._get_composition_p_pattern()
+                return comp_pattern, "data"
         
-        # For non-composition paths, use the existing logic
+        # For non-composition paths, use dynamic resolution
         data_path = "data"
         
-        # Handle variable-specific path mapping
-        if variable_alias == "admin_salut":
-            # admin_salut maps to a specific element in cn array with its own p value
-            if len(parts) > 0 and parts[0].startswith("items"):
-                # Handle the items array navigation within admin_salut
-                # Check if this is the specific Centro path
-                if len(parts) >= 2:
-                    first_items = re.match(r"items\[(.+)\]", parts[0])
-                    second_items = re.match(r"items\[(.+)\]", parts[1])
+        # Handle variable-specific path mapping dynamically
+        if len(parts) > 0 and parts[0].startswith("items"):
+            # Check if we can resolve this as a nested archetype path
+            if self.archetype_resolver:
+                nested_pattern = await self.archetype_resolver.resolve_nested_path_to_p_pattern(
+                    variable_alias, parts, self.context_map
+                )
+                if nested_pattern:
+                    # Build data path from remaining non-items parts
+                    remaining_parts = []
+                    for part in parts:
+                        if not re.match(r"items\[(.+)\]", part):
+                            remaining_parts.append(part)
                     
-                    if (first_items and second_items and 
-                        first_items.group(1) == "at0007" and 
-                        second_items.group(1) == "at0014"):
-                        # This is the Centro path - needs special p-value pattern
-                        remaining_path_parts = parts[2:]  # Skip the two items[] parts
-                        if remaining_path_parts:
-                            data_path = f"data.{'.'.join(remaining_path_parts)}"
-                        else:
-                            data_path = "data"
-                        # Return the specific p-value for Publishing centre element
-                        return "^-14\\.-7\\.9\\.-4\\.7$", data_path
-                
-                remaining_path = self._handle_admin_salut_items(parts)
-                data_path = remaining_path
+                    if remaining_parts:
+                        data_path = f"data.{'.'.join(remaining_parts)}"
+                    else:
+                        data_path = "data"
+                    
+                    return nested_pattern, data_path
+                else:
+                    # If we can't resolve the nested pattern, use basic data path
+                    remaining_parts = []
+                    for part in parts:
+                        if not re.match(r"items\[(.+)\]", part):
+                            remaining_parts.append(part)
+                    
+                    if remaining_parts:
+                        data_path = f"data.{'.'.join(remaining_parts)}"
+                    else:
+                        data_path = "data"
+                    
+                    # Try to get just the base pattern for the variable
+                    base_pattern = await self.archetype_resolver.resolve_variable_to_p_pattern(
+                        variable_alias, self.context_map
+                    )
+                    return base_pattern, data_path
             else:
-                data_path = "data"
+                # No archetype resolver available - return None to indicate direct field access
+                remaining_parts = []
+                for part in parts:
+                    if not re.match(r"items\[(.+)\]", part):
+                        remaining_parts.append(part)
                 
-        elif variable_alias == "med_ac":
-            # med_ac maps to a specific element in cn array
+                if remaining_parts:
+                    data_path = f"data.{'.'.join(remaining_parts)}"
+                else:
+                    data_path = "data"
+                
+                return None, data_path
+        else:
+            # Generic path handling for all other variables
             if len(parts) > 0:
                 if parts[0] == "time":
                     data_path = "data.time.value"
@@ -109,25 +139,35 @@ class FormatResolver:
                     data_path = f"data.{'.'.join(parts)}"
             else:
                 data_path = "data"
-        else:
-            # Default handling for other variables
-            data_path = self._map_to_content_structure(parts)
         
         # For shortened format with cn array, we need to return a p regex pattern
         # This will be used to filter the cn array elements
         if variable_alias == self.composition_alias:
-            return "^7$", data_path  # Already handled above
-        elif variable_alias == "admin_salut":
-            # admin_salut is at p: '9.-4.7' for the main cluster
-            # Note: specific Centro path is handled above with different p-value
-            return "^9\\.-4\\.7$", data_path
-        elif variable_alias == "med_ac":
-            # med_ac is at p: '11.10.7' (ACTION within SECTION within COMPOSITION)
-            return "^11\\.10\\.7$", data_path
+            comp_pattern = await self._get_composition_p_pattern()
+            return comp_pattern, data_path  # Already handled above
         else:
-            # For other variables, we need to map to their specific p values
-            # This would need to be configured based on your specific archetype mappings
-            return None, data_path
+            # Use dynamic archetype resolution
+            if self.archetype_resolver:
+                p_pattern = await self.archetype_resolver.resolve_variable_to_p_pattern(
+                    variable_alias, self.context_map
+                )
+                return p_pattern, data_path
+            else:
+                # Fallback if no archetype resolver available
+                return None, data_path
+    
+    async def _get_composition_p_pattern(self) -> str:
+        """
+        Get the p-pattern for composition dynamically or fallback to default.
+        """
+        if self.archetype_resolver:
+            pattern = await self.archetype_resolver.resolve_composition_p_pattern(
+                self.composition_alias, self.context_map
+            )
+            return pattern
+        else:
+            # Fallback to default composition pattern
+            return "^7$"
     
     def _handle_description_path(self, desc_parts: list) -> str:
         """
@@ -242,8 +282,8 @@ class FormatResolver:
         
         # Based on the JSON structure provided, map paths appropriately
         if first_part == "items":
-            # Handle items arrays - need to check the specific archetype context
-            return self._handle_items_array(parts)
+            # Handle items arrays using generic approach
+            return f"data.{'.'.join(parts)}"
         elif first_part == "time":
             return "data.time.value"
         elif first_part == "other_participations":
@@ -256,40 +296,25 @@ class FormatResolver:
             # Default mapping
             return f"data.{'.'.join(parts)}"
 
-    def _handle_admin_salut_items(self, parts: list) -> str:
+    def _convert_archetype_refs(self, parts: list) -> list:
         """
-        Handle admin_salut items array access for shortened format.
-        Maps to the correct nested structure within admin_salut cluster.
+        Converts archetype node references to array indices or field names.
         """
-        # Based on the actual MongoDB document structure:
-        # Admin Salut cluster at p: '9.-4.7'
-        # Publishing institution cluster at p: '-7.9.-4.7' 
-        # Publishing centre element at p: '-14.-7.9.-4.7' 
-        
-        if len(parts) >= 2:
-            # Pattern: items[at0007]/items[at0014]/value/defining_code/code_string
-            # This needs to be handled specially since the data is in a separate cn array element
-            first_items = re.match(r"items\[(.+)\]", parts[0])
-            second_items = re.match(r"items\[(.+)\]", parts[1]) if len(parts) > 1 else None
-            
-            if first_items and second_items:
-                first_code = first_items.group(1)
-                second_code = second_items.group(1)
+        converted = []
+        for part in parts:
+            match = re.match(r"(.+)\[(.+)\]", part)
+            if match:
+                # Convert archetype references to indices or field access
+                field_name = match.group(1)
+                archetype_code = match.group(2)
                 
-                # at0007 = Publishing institution, at0014 = Publishing centre
-                if first_code == "at0007" and second_code == "at0014":
-                    # For this specific path, we need to return a special indicator
-                    # that tells the system to look for a different p value
-                    # The actual data is at p: '-14.-7.9.-4.7'
-                    remaining_path_parts = parts[2:]  # Skip the two items[] parts
-                    if remaining_path_parts:
-                        nested_path = ".".join(remaining_path_parts)
-                        return f"data.{nested_path}"
-                    else:
-                        return "data"
+                # For now, use field name and handle archetype filtering later
+                converted.append(field_name)
+                # You could add logic here to map specific archetype codes to indices
+            else:
+                converted.append(part)
         
-        # Default fallback
-        return "data"
+        return converted
 
     def _handle_items_array(self, parts: list) -> str:
         """
@@ -330,29 +355,7 @@ class FormatResolver:
                     # Non-archetype parts (like 'value', 'defining_code', etc.)
                     remaining_path.append(part)
             
-            return f"data.context.other_context.{'.'.join(remaining_path)}"
-        
         return f"data.{'.'.join(parts)}"
-
-    def _convert_archetype_refs(self, parts: list) -> list:
-        """
-        Converts archetype node references to array indices or field names.
-        """
-        converted = []
-        for part in parts:
-            match = re.match(r"(.+)\[(.+)\]", part)
-            if match:
-                # Convert archetype references to indices or field access
-                field_name = match.group(1)
-                archetype_code = match.group(2)
-                
-                # For now, use field name and handle archetype filtering later
-                converted.append(field_name)
-                # You could add logic here to map specific archetype codes to indices
-            else:
-                converted.append(part)
-        
-        return converted
 
     def build_full_path_regex(self, variable: str) -> str:
         """
