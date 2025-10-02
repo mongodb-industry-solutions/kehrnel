@@ -65,13 +65,27 @@ class FormatResolver:
             # admin_salut maps to a specific element in cn array with its own p value
             if len(parts) > 0 and parts[0].startswith("items"):
                 # Handle the items array navigation within admin_salut
-                remaining_path = self._handle_items_array(parts)
-                # Remove the 'data.' prefix since we'll add it
-                if remaining_path.startswith("data."):
-                    remaining_path = remaining_path[5:]
-                data_path = f"data.context.other_context.{remaining_path}"
+                # Check if this is the specific Centro path
+                if len(parts) >= 2:
+                    first_items = re.match(r"items\[(.+)\]", parts[0])
+                    second_items = re.match(r"items\[(.+)\]", parts[1])
+                    
+                    if (first_items and second_items and 
+                        first_items.group(1) == "at0007" and 
+                        second_items.group(1) == "at0014"):
+                        # This is the Centro path - needs special p-value pattern
+                        remaining_path_parts = parts[2:]  # Skip the two items[] parts
+                        if remaining_path_parts:
+                            data_path = f"data.{'.'.join(remaining_path_parts)}"
+                        else:
+                            data_path = "data"
+                        # Return the specific p-value for Publishing centre element
+                        return "^-14\\.-7\\.9\\.-4\\.7$", data_path
+                
+                remaining_path = self._handle_admin_salut_items(parts)
+                data_path = remaining_path
             else:
-                data_path = f"data.context.other_context.items.1.{'.'.join(parts)}"
+                data_path = "data"
                 
         elif variable_alias == "med_ac":
             # med_ac maps to a specific element in cn array
@@ -103,6 +117,13 @@ class FormatResolver:
         # This will be used to filter the cn array elements
         if variable_alias == self.composition_alias:
             return "^7$", data_path  # Already handled above
+        elif variable_alias == "admin_salut":
+            # admin_salut is at p: '9.-4.7' for the main cluster
+            # Note: specific Centro path is handled above with different p-value
+            return "^9\\.-4\\.7$", data_path
+        elif variable_alias == "med_ac":
+            # med_ac is at p: '11.10.7' (ACTION within SECTION within COMPOSITION)
+            return "^11\\.10\\.7$", data_path
         else:
             # For other variables, we need to map to their specific p values
             # This would need to be configured based on your specific archetype mappings
@@ -234,6 +255,41 @@ class FormatResolver:
         else:
             # Default mapping
             return f"data.{'.'.join(parts)}"
+
+    def _handle_admin_salut_items(self, parts: list) -> str:
+        """
+        Handle admin_salut items array access for shortened format.
+        Maps to the correct nested structure within admin_salut cluster.
+        """
+        # Based on the actual MongoDB document structure:
+        # Admin Salut cluster at p: '9.-4.7'
+        # Publishing institution cluster at p: '-7.9.-4.7' 
+        # Publishing centre element at p: '-14.-7.9.-4.7' 
+        
+        if len(parts) >= 2:
+            # Pattern: items[at0007]/items[at0014]/value/defining_code/code_string
+            # This needs to be handled specially since the data is in a separate cn array element
+            first_items = re.match(r"items\[(.+)\]", parts[0])
+            second_items = re.match(r"items\[(.+)\]", parts[1]) if len(parts) > 1 else None
+            
+            if first_items and second_items:
+                first_code = first_items.group(1)
+                second_code = second_items.group(1)
+                
+                # at0007 = Publishing institution, at0014 = Publishing centre
+                if first_code == "at0007" and second_code == "at0014":
+                    # For this specific path, we need to return a special indicator
+                    # that tells the system to look for a different p value
+                    # The actual data is at p: '-14.-7.9.-4.7'
+                    remaining_path_parts = parts[2:]  # Skip the two items[] parts
+                    if remaining_path_parts:
+                        nested_path = ".".join(remaining_path_parts)
+                        return f"data.{nested_path}"
+                    else:
+                        return "data"
+        
+        # Default fallback
+        return "data"
 
     def _handle_items_array(self, parts: list) -> str:
         """
