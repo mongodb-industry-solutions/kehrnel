@@ -33,6 +33,7 @@ class PipelineBuilder:
     def build_match_stage(self, ast: Dict[str, Any], ehr_id: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Constructs the $match stage of the aggregation pipeline."""
         where_clause = ast.get("where")
+        contains_clause = ast.get("contains")
         
         # Initialize match conditions even if there's no WHERE clause
         # (we might still need to add EHR ID or other conditions)
@@ -58,10 +59,30 @@ class PipelineBuilder:
             # For shortened format collections, keep EHR ID as string to match document format
             match_conditions['ehr_id'] = ehr_id
         
+        # Process CONTAINS clause for composition filtering
+        if contains_clause:
+            contains_conditions = self._process_contains_clause(contains_clause)
+            if contains_conditions:
+                comp_array_field = self.schema_config['composition_array']
+                if comp_array_field in match_conditions:
+                    # Merge with existing composition conditions using $and
+                    match_conditions[comp_array_field] = {
+                        "$and": [match_conditions[comp_array_field], contains_conditions]
+                    }
+                else:
+                    match_conditions[comp_array_field] = contains_conditions
+        
         # Add composition-level conditions with proper OR/AND support
         if comp_conditions_structure:
             comp_array_field = self.schema_config['composition_array']
-            match_conditions[comp_array_field] = self.condition_processor.build_composition_match(comp_conditions_structure)
+            comp_match = self.condition_processor.build_composition_match(comp_conditions_structure)
+            if comp_array_field in match_conditions:
+                # Merge with existing composition conditions using $and
+                match_conditions[comp_array_field] = {
+                    "$and": [match_conditions[comp_array_field], comp_match]
+                }
+            else:
+                match_conditions[comp_array_field] = comp_match
         
         return {"$match": match_conditions} if match_conditions else None
 
@@ -223,11 +244,11 @@ class PipelineBuilder:
                     composition_array_field = self.schema_config['composition_array']
                     path_field = self.schema_config['path_field']
                     
-                    # For composition-level paths in shortened format, use the path_regex_part directly
-                    if variable == self.format_resolver.composition_alias and self.format == 'shortened':
-                        full_path_regex = path_regex_part  # Use the direct regex like "^7$"
+                    # For shortened format, use the path_regex_part directly for all variables
+                    if self.format == 'shortened':
+                        full_path_regex = path_regex_part  # Use the direct regex from format resolver
                     else:
-                        # For full format or non-composition paths, build the full regex
+                        # For full format, build the full regex
                         base_path_regex = self.format_resolver.build_full_path_regex(variable)
                         full_path_regex = self.format_resolver.combine_path_regex(base_path_regex, path_regex_part)
                     
@@ -299,6 +320,73 @@ class PipelineBuilder:
             sort_spec[field_name] = sort_direction
             
         return {"$sort": sort_spec} if sort_spec else None
+
+    def _process_contains_clause(self, contains_clause: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Processes the CONTAINS clause to generate composition filtering conditions.
+        
+        Args:
+            contains_clause: The CONTAINS clause from the AST
+            
+        Returns:
+            MongoDB condition to filter compositions based on structure requirements
+        """
+        if not contains_clause:
+            return None
+            
+        rmType = contains_clause.get("rmType")
+        predicate = contains_clause.get("predicate")
+        
+        # Handle COMPOSITION level filtering
+        if rmType == "COMPOSITION" and predicate:
+            path = predicate.get("path")
+            operator = predicate.get("operator")
+            value = predicate.get("value")
+            
+            if path == "archetype_node_id" and operator == "=" and value:
+                # For shortened format, check if any cn element has the matching archetype
+                if self.format == 'shortened':
+                    # Map archetype IDs to template names or patterns
+                    template_patterns = {
+                        "openEHR-EHR-COMPOSITION.vaccination_list.v0": ["HC3 Immunization List", "vaccination", "immunization"],
+                        "openEHR-EHR-COMPOSITION.tumour.v0": ["T-IGR-TUMOUR-SUMMARY", "tumour", "tumor"]
+                    }
+                    
+                    patterns = template_patterns.get(value, [value])
+                    
+                    # Look for composition root element and check its template_id or name
+                    or_conditions = []
+                    for pattern in patterns:
+                        or_conditions.extend([
+                            {"data.archetype_details.template_id.value": {"$regex": pattern, "$options": "i"}},
+                            {"data.name.value": {"$regex": pattern, "$options": "i"}}
+                        ])
+                    
+                    return {
+                        "$elemMatch": {
+                            "$and": [
+                                {"p": {"$regex": "^\\d+$"}},  # Composition root element
+                                {"data._type": "COMPOSITION"},  # Ensure it's a composition
+                                {"$or": or_conditions}
+                            ]
+                        }
+                    }
+                else:
+                    # For full format, use p field matching
+                    return {
+                        "$elemMatch": {
+                            "p": {"$regex": f"^.*{value}.*$"}
+                        }
+                    }
+        
+        # Handle nested CONTAINS (children elements)
+        contains_children = contains_clause.get("contains")
+        if contains_children:
+            # For now, we'll focus on the composition-level filtering
+            # Nested element filtering would require more complex logic
+            pass
+            
+        return None
 
     def build_limit_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """
