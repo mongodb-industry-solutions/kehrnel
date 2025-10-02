@@ -48,8 +48,8 @@ async def process_aql_ast_query(ast_query: Dict[str, Any], request_url: str, db:
             'format': collection_format
         }
         
-        transformer = AQLtoMQLTransformer(ast_query, ehr_id=ehr_id, schema_config=schema_config)
-        pipeline = transformer.build_pipeline()
+        transformer = AQLtoMQLTransformer(ast_query, ehr_id=ehr_id, schema_config=schema_config, db=db)
+        pipeline = await transformer.build_pipeline()
 
         # Execute the query via the repository
         results = await execute_aql_query(pipeline=pipeline, db=db, collection_format=collection_format)
@@ -126,8 +126,8 @@ async def process_aql_query(aql_query: str, request_url: str, db: AsyncIOMotorDa
         }
         
         # Step 3: Transform AST into MQL Aggregation Pipeline
-        transformer = AQLtoMQLTransformer(ast, ehr_id=ehr_id, schema_config=schema_config)
-        pipeline = transformer.build_pipeline()
+        transformer = AQLtoMQLTransformer(ast, ehr_id=ehr_id, schema_config=schema_config, db=db)
+        pipeline = await transformer.build_pipeline()
 
         # Step 4: Execute the query via the repository
         results = await execute_aql_query(pipeline=pipeline, db=db, collection_format=collection_format)
