@@ -98,8 +98,8 @@ async def debug_pipeline(
             'format': collection_format
         }
         
-        transformer = AQLtoMQLTransformer(ast_data, ehr_id=ehr_id, schema_config=schema_config)
-        pipeline = transformer.build_pipeline()
+        transformer = AQLtoMQLTransformer(ast_data, ehr_id=ehr_id, schema_config=schema_config, db=db)
+        pipeline = await transformer.build_pipeline()
         
         return {
             "ast": ast_data,
