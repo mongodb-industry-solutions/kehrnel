@@ -70,51 +70,6 @@ async def execute_ast_query(
             "errorType": type(e).__name__
         }
 
-@router.post(
-    "/debug/pipeline",
-    summary="Debug: Generate MongoDB Pipeline",
-    description="Returns the generated MongoDB aggregation pipeline without executing it."
-)
-async def debug_pipeline(
-    ast_data: Dict[str, Any] = Body(..., description="The AQL AST structure."),
-    ehr_id: str = None,
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
-):
-    """
-    Debug endpoint that returns the generated MongoDB pipeline for troubleshooting.
-    """
-    try:
-        from src.api.v1.aql.repository import detect_collection_format
-        from src.api.v1.aql.transformers.aql_transformer import AQLtoMQLTransformer
-        
-        # Detect collection format
-        collection_format = await detect_collection_format(db)
-        
-        # Configure schema based on detected format
-        schema_config = {
-            'composition_array': 'cn',  # Both formats use cn array
-            'path_field': 'p',  # Both formats use p field
-            'data_field': 'data',
-            'format': collection_format
-        }
-        
-        transformer = AQLtoMQLTransformer(ast_data, ehr_id=ehr_id, schema_config=schema_config, db=db)
-        pipeline = await transformer.build_pipeline()
-        
-        return {
-            "ast": ast_data,
-            "collection_format": collection_format,
-            "pipeline": pipeline,
-            "schema_config": schema_config
-        }
-        
-    except Exception as e:
-        return {
-            "ast": ast_data,
-            "pipeline": [],
-            "error": str(e),
-            "errorType": type(e).__name__
-        }
 
 @router.get(
     "",
