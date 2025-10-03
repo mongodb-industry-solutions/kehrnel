@@ -97,10 +97,70 @@ class PipelineBuilder:
     def _merge_composition_conditions(self, existing: Dict, new: Dict) -> Dict:
         """
         Properly merges two composition-level conditions that might be $elemMatch or $all.
+        If both conditions target the same p-value, merge them into a single $elemMatch.
         """
-        # If both conditions use $elemMatch, combine them with $all
+        # Helper function to extract p-value from a condition
+        def get_p_value(condition):
+            if "$elemMatch" in condition:
+                elem_match = condition["$elemMatch"]
+                
+                # Handle direct p field
+                if "p" in elem_match:
+                    p_val = elem_match["p"]
+                    if isinstance(p_val, str):
+                        return p_val
+                    elif isinstance(p_val, dict) and "$regex" in p_val:
+                        return p_val["$regex"]
+                
+                # Handle p field inside $and array
+                elif "$and" in elem_match:
+                    for and_condition in elem_match["$and"]:
+                        if "p" in and_condition:
+                            p_val = and_condition["p"]
+                            if isinstance(p_val, str):
+                                return p_val
+                            elif isinstance(p_val, dict) and "$regex" in p_val:
+                                return p_val["$regex"]
+            return None
+        
+        # Helper function to extract all conditions from $elemMatch 
+        def extract_conditions(condition):
+            if "$elemMatch" in condition:
+                elem_match = condition["$elemMatch"]
+                if "$and" in elem_match:
+                    # Flatten $and array into individual conditions
+                    conditions = {}
+                    for and_condition in elem_match["$and"]:
+                        conditions.update(and_condition)
+                    return conditions
+                else:
+                    return elem_match
+            return {}
+        
+        # Check if both conditions are $elemMatch targeting the same p-value
         if "$elemMatch" in existing and "$elemMatch" in new:
-            return {"$all": [existing, new]}
+            existing_p = get_p_value(existing)
+            new_p = get_p_value(new)
+            
+            # If they target the same p-value, merge into single $elemMatch
+            if existing_p and new_p and existing_p == new_p:
+                # Extract all conditions from both elemMatch
+                existing_conditions = extract_conditions(existing)
+                new_conditions = extract_conditions(new)
+                
+                # Merge all conditions
+                merged_conditions = {}
+                merged_conditions.update(existing_conditions)
+                merged_conditions.update(new_conditions)
+                
+                # Ensure we use the exact p-value match (not regex) when possible
+                if existing_p:
+                    merged_conditions["p"] = existing_p
+                
+                return {"$elemMatch": merged_conditions}
+            else:
+                # Different p-values, use $all
+                return {"$all": [existing, new]}
         
         # If existing is $all and new is $elemMatch, add to the $all array
         elif "$all" in existing and "$elemMatch" in new:
