@@ -23,7 +23,13 @@ class CodeBook:
         self.at = at_map
     
     def decode(self, code:int)->str:
-        if code>=0: return self.ar.get(code,str(code))
+        if code>=0: 
+            # Look up the archetype identifier from the reverse mapping
+            archetype_id = self.ar.get(code)
+            if archetype_id:
+                return archetype_id
+            # Fallback to string representation if not found
+            return str(code)
         raw = self.at.get(code)
         if raw and raw.lower().startswith("at"):
             return f"at{int(raw[2:]):04d}"
@@ -49,8 +55,15 @@ def rebuild_composition(flat, ar_map, at_map, keys, vals):
     """
     Reconstructs a canonical openEHR Composition from its flattened representation.
     """
+    from .at_code_codec import get_reverse_mappings
+    
     exp = ShortcutExpander(keys, vals)
-    cb  = CodeBook(ar_map, at_map)
+    
+    # Get the actual reverse mappings from the loaded codes
+    ar_reverse, at_reverse = get_reverse_mappings()
+    
+    # Use the loaded reverse mappings instead of the passed parameters
+    cb = CodeBook(ar_reverse, at_reverse)
     path2obj = {}
     root = None
     
