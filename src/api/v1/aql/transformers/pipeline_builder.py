@@ -62,7 +62,7 @@ class PipelineBuilder:
         
         # Process CONTAINS clause for composition filtering
         if contains_clause:
-            contains_conditions = self._process_contains_clause(contains_clause)
+            contains_conditions = await self._process_contains_clause(contains_clause)
             if contains_conditions:
                 comp_array_field = self.schema_config['composition_array']
                 if comp_array_field in match_conditions:
@@ -239,7 +239,7 @@ class PipelineBuilder:
             
         return {"$sort": sort_spec} if sort_spec else None
 
-    def _process_contains_clause(self, contains_clause: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    async def _process_contains_clause(self, contains_clause: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """
         Processes the CONTAINS clause to generate composition filtering conditions.
         
@@ -262,33 +262,74 @@ class PipelineBuilder:
             value = predicate.get("value")
             
             if path == "archetype_node_id" and operator == "=" and value:
-                # For shortened format, check if any cn element has the matching archetype
+                # For shortened format, use archetype resolver to get numeric code
                 if self.format == 'shortened':
-                    # Map archetype IDs to template names or patterns
-                    template_patterns = {
-                        "openEHR-EHR-COMPOSITION.vaccination_list.v0": ["HC3 Immunization List", "vaccination", "immunization"],
-                        "openEHR-EHR-COMPOSITION.tumour.v0": ["T-IGR-TUMOUR-SUMMARY", "tumour", "tumor"]
-                    }
-                    
-                    patterns = template_patterns.get(value, [value])
-                    
-                    # Look for composition root element and check its template_id or name
-                    or_conditions = []
-                    for pattern in patterns:
-                        or_conditions.extend([
-                            {"data.archetype_details.template_id.value": {"$regex": pattern, "$options": "i"}},
-                            {"data.name.value": {"$regex": pattern, "$options": "i"}}
-                        ])
-                    
-                    return {
-                        "$elemMatch": {
-                            "$and": [
-                                {"p": {"$regex": "^\\d+$"}},  # Composition root element
-                                {"data._type": "COMPOSITION"},  # Ensure it's a composition
-                                {"$or": or_conditions}
-                            ]
+                    # Use archetype resolver to get the numeric code for this archetype
+                    archetype_resolver = self.format_resolver.archetype_resolver
+                    if archetype_resolver:
+                        archetype_code = await archetype_resolver.get_archetype_code(value)
+                        if archetype_code is not None:
+                            # Match elements with exact p-value for this archetype
+                            return {
+                                "$elemMatch": {
+                                    "$and": [
+                                        {"p": str(archetype_code)},  # Exact match for the archetype code
+                                        {"data._type": "COMPOSITION"}  # Ensure it's a composition
+                                    ]
+                                }
+                            }
+                        else:
+                            # Fallback: if archetype not found in codes, try template name patterns
+                            template_patterns = {
+                                "openEHR-EHR-COMPOSITION.vaccination_list.v0": ["HC3 Immunization List", "vaccination", "immunization"],
+                                "openEHR-EHR-COMPOSITION.tumour.v0": ["T-IGR-TUMOUR-SUMMARY", "tumour", "tumor"],
+                                "openEHR-EHR-COMPOSITION.encounter.v1": ["encounter", "visit"]
+                            }
+                            
+                            patterns = template_patterns.get(value, [value])
+                            
+                            or_conditions = []
+                            for pattern in patterns:
+                                or_conditions.extend([
+                                    {"data.archetype_details.template_id.value": {"$regex": pattern, "$options": "i"}},
+                                    {"data.name.value": {"$regex": pattern, "$options": "i"}}
+                                ])
+                            
+                            return {
+                                "$elemMatch": {
+                                    "$and": [
+                                        {"p": {"$regex": "^\\d+$"}},  # Composition root element
+                                        {"data._type": "COMPOSITION"},  # Ensure it's a composition
+                                        {"$or": or_conditions}
+                                    ]
+                                }
+                            }
+                    else:
+                        # No archetype resolver available, use fallback patterns
+                        template_patterns = {
+                            "openEHR-EHR-COMPOSITION.vaccination_list.v0": ["HC3 Immunization List", "vaccination", "immunization"],
+                            "openEHR-EHR-COMPOSITION.tumour.v0": ["T-IGR-TUMOUR-SUMMARY", "tumour", "tumor"],
+                            "openEHR-EHR-COMPOSITION.encounter.v1": ["encounter", "visit"]
                         }
-                    }
+                        
+                        patterns = template_patterns.get(value, [value])
+                        
+                        or_conditions = []
+                        for pattern in patterns:
+                            or_conditions.extend([
+                                {"data.archetype_details.template_id.value": {"$regex": pattern, "$options": "i"}},
+                                {"data.name.value": {"$regex": pattern, "$options": "i"}}
+                            ])
+                        
+                        return {
+                            "$elemMatch": {
+                                "$and": [
+                                    {"p": {"$regex": "^\\d+$"}},  # Composition root element
+                                    {"data._type": "COMPOSITION"},  # Ensure it's a composition
+                                    {"$or": or_conditions}
+                                ]
+                            }
+                        }
                 else:
                     # For full format, use p field matching
                     return {
@@ -300,9 +341,59 @@ class PipelineBuilder:
         # Handle nested CONTAINS (children elements)
         contains_children = contains_clause.get("contains")
         if contains_children:
-            # For now, we'll focus on the composition-level filtering
-            # Nested element filtering would require more complex logic
-            pass
+            # For nested archetype filtering, we need to ensure that the composition
+            # contains both the parent archetype AND the nested archetype
+            nested_rmType = contains_children.get("rmType")
+            nested_predicate = contains_children.get("predicate")
+            
+            if nested_rmType and nested_predicate:
+                nested_path = nested_predicate.get("path")
+                nested_operator = nested_predicate.get("operator")
+                nested_value = nested_predicate.get("value")
+                
+                if nested_path == "archetype_node_id" and nested_operator == "=" and nested_value:
+                    # For shortened format, add the nested archetype as an additional constraint
+                    if self.format == 'shortened':
+                        archetype_resolver = self.format_resolver.archetype_resolver
+                        if archetype_resolver:
+                            nested_archetype_code = await archetype_resolver.get_archetype_code(nested_value)
+                            if nested_archetype_code is not None:
+                                # Return a condition that requires BOTH the composition archetype AND the nested archetype
+                                # This modifies the current return to include both conditions
+                                composition_array = self.schema_config['composition_array']
+                                
+                                # Get the composition archetype code from current predicate processing
+                                if rmType == "COMPOSITION" and predicate:
+                                    comp_path = predicate.get("path")
+                                    comp_operator = predicate.get("operator") 
+                                    comp_value = predicate.get("value")
+                                    
+                                    if comp_path == "archetype_node_id" and comp_operator == "=" and comp_value:
+                                        comp_archetype_code = await archetype_resolver.get_archetype_code(comp_value)
+                                        if comp_archetype_code is not None:
+                                            # Return condition requiring both archetypes to exist in the composition
+                                            return {
+                                                "$and": [
+                                                    {
+                                                        composition_array: {
+                                                            "$elemMatch": {
+                                                                "p": str(comp_archetype_code),
+                                                                "data._type": "COMPOSITION"
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        composition_array: {
+                                                            "$elemMatch": {
+                                                                "p": str(nested_archetype_code),
+                                                                "data._type": nested_rmType
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+            
+            # If we can't process the nested contains, continue with just the parent processing
             
         return None
 
