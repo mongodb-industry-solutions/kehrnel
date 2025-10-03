@@ -39,38 +39,13 @@ class FormatResolver:
         parts = aql_path.split('/')[1:]  # remove variable alias
         variable_alias = aql_path.split('/')[0]
         
-        # Handle composition-level paths for shortened format with cn array
-        if variable_alias == self.composition_alias:
-            # For composition-level paths like c/uid/value, c/name/value
-            # In shortened format, some fields are at document root, others in cn array
-            if len(parts) >= 1:
-                if parts[0] == "uid":
-                    # Composition UID is stored as comp_id at document root level
-                    return None, "comp_id"  # Direct field access from document root
-                elif parts[0] == "name":
-                    # Get dynamic composition p-pattern
-                    comp_pattern = await self._get_composition_p_pattern()
-                    return comp_pattern, "data.name.value"  # Still in cn array at composition root
-                elif parts[0] == "archetype_node_id":
-                    comp_pattern = await self._get_composition_p_pattern()
-                    return comp_pattern, "data.archetype_node_id"  # Still in cn array at composition root
-                else:
-                    # For other composition-level fields
-                    data_path = "data." + ".".join(parts)
-                    comp_pattern = await self._get_composition_p_pattern()
-                    return comp_pattern, data_path
-            else:
-                # Just the composition itself
-                comp_pattern = await self._get_composition_p_pattern()
-                return comp_pattern, "data"
-        
-        # For non-composition paths, use dynamic resolution
-        data_path = "data"
-        
         # Handle variable-specific path mapping dynamically
         # Check if any part contains archetype references (AT codes like [at0001] or full archetype IDs like [openEHR-EHR-CLUSTER.name.v0])
         has_archetype_refs = any(re.search(r'\[(?:at\d+|openEHR-[^\]]+)\]', part) for part in parts)
         
+
+        
+        # Handle archetype references FIRST, regardless of variable type
         if has_archetype_refs:
             # Check if we can resolve this as a nested archetype path
             if self.archetype_resolver:
@@ -82,8 +57,12 @@ class FormatResolver:
                     # Build data path from remaining non-archetype parts
                     remaining_parts = []
                     for part in parts:
-                        # Skip archetype references but keep other parts
-                        if not re.match(r"(?:items|description|value|name|protocol|data|state|activities|activity|events|event)\[.+\]", part):
+                        # Keep only parts that are NOT archetype references AND not navigation paths
+                        # Skip parts like: 
+                        # - other_context[at0001], items[openEHR-EHR-CLUSTER.name.v0], items[at0003] (archetype references)
+                        # - context (navigation path to archetype references)
+                        # But keep regular field names like: value, defining_code, code_string
+                        if not re.search(r'\[(?:at\d+|openEHR-[^\]]+)\]', part) and part not in ['context', 'description', 'data', 'state', 'protocol', 'activities', 'events']:
                             remaining_parts.append(part)
                     
                     if remaining_parts:
@@ -110,6 +89,7 @@ class FormatResolver:
                     )
                     return base_pattern, data_path
             else:
+
                 # No archetype resolver available - return None to indicate direct field access
                 remaining_parts = []
                 for part in parts:
@@ -122,6 +102,31 @@ class FormatResolver:
                     data_path = "data"
                 
                 return None, data_path
+
+        # AFTER archetype handling, check for composition-specific simple paths
+        if variable_alias == self.composition_alias:
+            # For composition-level paths like c/uid/value, c/name/value
+            # In shortened format, some fields are at document root, others in cn array
+            if len(parts) >= 1:
+                if parts[0] == "uid":
+                    # Composition UID is stored as comp_id at document root level
+                    return None, "comp_id"  # Direct field access from document root
+                elif parts[0] == "name":
+                    # Get dynamic composition p-pattern
+                    comp_pattern = await self._get_composition_p_pattern()
+                    return comp_pattern, "data.name.value"  # Still in cn array at composition root
+                elif parts[0] == "archetype_node_id":
+                    comp_pattern = await self._get_composition_p_pattern()
+                    return comp_pattern, "data.archetype_node_id"  # Still in cn array at composition root
+                else:
+                    # For other composition-level fields WITHOUT archetype references
+                    data_path = "data." + ".".join(parts)
+                    comp_pattern = await self._get_composition_p_pattern()
+                    return comp_pattern, data_path
+            else:
+                # Just the composition itself
+                comp_pattern = await self._get_composition_p_pattern()
+                return comp_pattern, "data"
         else:
             # Generic path handling for all other variables
             if len(parts) > 0:
