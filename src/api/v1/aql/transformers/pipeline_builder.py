@@ -1,9 +1,19 @@
 # src/api/v1/aql/transformers/pipeline_builder.py
+
 from typing import Dict, Any, List, Optional
 from .condition_processor import ConditionProcessor
 from .value_formatter import ValueFormatter
+from .format_resolver import FormatResolver
 import uuid
 from bson import Binary
+
+TEMPLATE_PATTERNS = {
+    # Mapping of archetype IDs to template name patterns for fallback matching
+    # Used when archetype resolver cannot find numeric codes in database
+    "openEHR-EHR-COMPOSITION.vaccination_list.v0": ["HC3 Immunization List", "vaccination", "immunization"],
+    "openEHR-EHR-COMPOSITION.tumour.v0": ["T-IGR-TUMOUR-SUMMARY", "tumour", "tumor"],
+    "openEHR-EHR-COMPOSITION.encounter.v1": ["encounter", "visit"]
+}
 
 
 class PipelineBuilder:
@@ -12,21 +22,27 @@ class PipelineBuilder:
     """
 
     def __init__(self, ehr_alias: str, composition_alias: str, schema_config: Dict[str, str], 
-                 path_resolver, context_map: Dict[str, Dict], let_variables: Dict[str, Any] = None):
+                 format_resolver: FormatResolver, context_map: Dict[str, Dict], let_variables: Dict[str, Any] = None):
         self.ehr_alias = ehr_alias
         self.composition_alias = composition_alias
         self.schema_config = schema_config
-        self.path_resolver = path_resolver
+        self.format_resolver = format_resolver
         self.context_map = context_map
         self.let_variables = let_variables or {}
+        self.format = schema_config.get('format', 'full')
+        
+        # Use the provided FormatResolver (which should have ArchetypeResolver configured)
+        self.format_resolver = format_resolver
+        
         self.condition_processor = ConditionProcessor(
-            ehr_alias, composition_alias, schema_config, path_resolver, let_variables
+            ehr_alias, composition_alias, schema_config, format_resolver, let_variables
         )
         self.value_formatter = ValueFormatter()
 
-    def build_match_stage(self, ast: Dict[str, Any], ehr_id: Optional[str] = None) -> Optional[Dict[str, Any]]:
+    async def build_match_stage(self, ast: Dict[str, Any], ehr_id: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Constructs the $match stage of the aggregation pipeline."""
         where_clause = ast.get("where")
+        contains_clause = ast.get("contains")
         
         # Initialize match conditions even if there's no WHERE clause
         # (we might still need to add EHR ID or other conditions)
@@ -49,18 +65,33 @@ class PipelineBuilder:
         
         # Add external EHR ID if provided and not already in conditions
         if ehr_id and 'ehr_id' not in match_conditions:
-            # Convert string UUID to proper BSON Binary for MongoDB
-            try:
-                uuid_obj = uuid.UUID(ehr_id)
-                match_conditions['ehr_id'] = Binary.from_uuid(uuid_obj)
-            except (ValueError, TypeError):
-                # If conversion fails, use as string (fallback)
-                match_conditions['ehr_id'] = ehr_id
+            # For shortened format collections, keep EHR ID as string to match document format
+            match_conditions['ehr_id'] = ehr_id
+        
+        # Process CONTAINS clause for composition filtering
+        if contains_clause:
+            contains_conditions = await self._process_contains_clause(contains_clause)
+            if contains_conditions:
+                comp_array_field = self.schema_config['composition_array']
+                if comp_array_field in match_conditions:
+                    # Merge with existing composition conditions using $and
+                    match_conditions[comp_array_field] = {
+                        "$and": [match_conditions[comp_array_field], contains_conditions]
+                    }
+                else:
+                    match_conditions[comp_array_field] = contains_conditions
         
         # Add composition-level conditions with proper OR/AND support
         if comp_conditions_structure:
             comp_array_field = self.schema_config['composition_array']
-            match_conditions[comp_array_field] = self.condition_processor.build_composition_match(comp_conditions_structure)
+            comp_match = await self.condition_processor.build_composition_match(comp_conditions_structure)
+            if comp_array_field in match_conditions:
+                # Merge with existing composition conditions using $and
+                match_conditions[comp_array_field] = {
+                    "$and": [match_conditions[comp_array_field], comp_match]
+                }
+            else:
+                match_conditions[comp_array_field] = comp_match
         
         return {"$match": match_conditions} if match_conditions else None
 
@@ -87,7 +118,7 @@ class PipelineBuilder:
         
         return {"$addFields": add_fields}
 
-    def build_project_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    async def build_project_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Constructs the $project stage from the SELECT clause."""
         columns = ast.get("select", {}).get("columns", {})
         if not columns:
@@ -130,33 +161,45 @@ class PipelineBuilder:
                     projection[alias] = {"$toString": "$ehr_id"}
                 # Don't continue here - let other columns be processed too
             else:
-                # Process composition/observation columns
-                path_regex_part, data_path = self.path_resolver.translate_aql_path(aql_path)
-                base_path_regex = self.path_resolver.build_full_path_regex(variable)
+                # Handle different formats - now async
+                path_regex_pattern, data_path = await self.format_resolver.translate_aql_path(aql_path)
                 
-                # Use configurable field names
-                composition_array_field = self.schema_config['composition_array']
-                path_field = self.schema_config['path_field']
-                
-                # Combine path prefix with base regex properly
-                full_path_regex = self.path_resolver.combine_path_regex(base_path_regex, path_regex_part)
-                
-                projection[alias] = {
-                    "$let": {
-                        "vars": {
-                            "target_element": {
-                                "$first": {
-                                    "$filter": {
-                                        "input": f"${composition_array_field}",
-                                        "as": "item",
-                                        "cond": {"$regexMatch": {"input": f"$$item.{path_field}", "regex": full_path_regex}}
+                if path_regex_pattern is None:
+                    # Check for special direct field access (like composition UID at document root)
+                    if data_path == "comp_id":
+                        # Direct field access for composition UID at document root
+                        projection[alias] = f"${data_path}"
+                    else:
+                        # Direct field access (for pure shortened format without cn array)
+                        projection[alias] = f"${data_path}"
+                else:
+                    # Use cn array filtering logic with dynamic p-patterns
+                    composition_array_field = self.schema_config['composition_array']
+                    path_field = self.schema_config['path_field']
+                    
+                    # Use MongoDB's $regexMatch which returns boolean for $filter condition
+                    projection[alias] = {
+                        "$let": {
+                            "vars": {
+                                "target_element": {
+                                    "$first": {
+                                        "$filter": {
+                                            "input": f"${composition_array_field}",
+                                            "as": "item",
+                                            "cond": {"$regexMatch": {"input": f"$$item.{path_field}", "regex": path_regex_pattern}}
+                                        }
                                     }
                                 }
+                            },
+                            "in": {
+                                "$cond": {
+                                    "if": {"$ne": ["$$target_element", None]},
+                                    "then": f"$$target_element.{data_path}",
+                                    "else": None  # Return null if no matching element found
+                                }
                             }
-                        },
-                        "in": f"$$target_element.{data_path}"
+                        }
                     }
-                }
         return {"$project": projection}
 
     def build_sort_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -203,6 +246,164 @@ class PipelineBuilder:
             sort_spec[field_name] = sort_direction
             
         return {"$sort": sort_spec} if sort_spec else None
+
+    async def _process_contains_clause(self, contains_clause: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Processes the CONTAINS clause to generate composition filtering conditions.
+        
+        Args:
+            contains_clause: The CONTAINS clause from the AST
+            
+        Returns:
+            MongoDB condition to filter compositions based on structure requirements
+        """
+        if not contains_clause:
+            return None
+            
+        rmType = contains_clause.get("rmType")
+        predicate = contains_clause.get("predicate")
+        
+        # Handle COMPOSITION level filtering
+        if rmType == "COMPOSITION" and predicate:
+            path = predicate.get("path")
+            operator = predicate.get("operator")
+            value = predicate.get("value")
+            
+            if path == "archetype_node_id" and operator == "=" and value:
+                # For shortened format, use archetype resolver to get numeric code
+                if self.format == 'shortened':
+                    # Use archetype resolver to get the numeric code for this archetype
+                    archetype_resolver = self.format_resolver.archetype_resolver
+                    if archetype_resolver:
+                        archetype_code = await archetype_resolver.get_archetype_code(value)
+                        if archetype_code is not None:
+                            # Match elements with exact p-value for this archetype
+                            return {
+                                "$elemMatch": {
+                                    "$and": [
+                                        {"p": str(archetype_code)},  # Exact match for the archetype code
+                                        {"data._type": "COMPOSITION"}  # Ensure it's a composition
+                                    ]
+                                }
+                            }
+                        else:
+                            # # Fallback: if archetype not found in codes, try template name patterns
+                            # template_patterns = {
+                            #     "openEHR-EHR-COMPOSITION.vaccination_list.v0": ["HC3 Immunization List", "vaccination", "immunization"],
+                            #     "openEHR-EHR-COMPOSITION.tumour.v0": ["T-IGR-TUMOUR-SUMMARY", "tumour", "tumor"],
+                            #     "openEHR-EHR-COMPOSITION.encounter.v1": ["encounter", "visit"]
+                            # }
+                            
+                            patterns = template_patterns.get(value, [value])
+                            
+                            or_conditions = []
+                            for pattern in patterns:
+                                or_conditions.extend([
+                                    {"data.archetype_details.template_id.value": {"$regex": pattern, "$options": "i"}},
+                                    {"data.name.value": {"$regex": pattern, "$options": "i"}}
+                                ])
+                            
+                            return {
+                                "$elemMatch": {
+                                    "$and": [
+                                        {"p": {"$regex": "^\\d+$"}},  # Composition root element
+                                        {"data._type": "COMPOSITION"},  # Ensure it's a composition
+                                        {"$or": or_conditions}
+                                    ]
+                                }
+                            }
+                    else:
+                        # # No archetype resolver available, use fallback patterns
+                        # template_patterns = {
+                        #     "openEHR-EHR-COMPOSITION.vaccination_list.v0": ["HC3 Immunization List", "vaccination", "immunization"],
+                        #     "openEHR-EHR-COMPOSITION.tumour.v0": ["T-IGR-TUMOUR-SUMMARY", "tumour", "tumor"],
+                        #     "openEHR-EHR-COMPOSITION.encounter.v1": ["encounter", "visit"]
+                        # }
+                        
+                        patterns = template_patterns.get(value, [value])
+                        
+                        or_conditions = []
+                        for pattern in patterns:
+                            or_conditions.extend([
+                                {"data.archetype_details.template_id.value": {"$regex": pattern, "$options": "i"}},
+                                {"data.name.value": {"$regex": pattern, "$options": "i"}}
+                            ])
+                        
+                        return {
+                            "$elemMatch": {
+                                "$and": [
+                                    {"p": {"$regex": "^\\d+$"}},  # Composition root element
+                                    {"data._type": "COMPOSITION"},  # Ensure it's a composition
+                                    {"$or": or_conditions}
+                                ]
+                            }
+                        }
+                else:
+                    # For full format, use p field matching
+                    return {
+                        "$elemMatch": {
+                            "p": {"$regex": f"^.*{value}.*$"}
+                        }
+                    }
+        
+        # Handle nested CONTAINS (children elements)
+        contains_children = contains_clause.get("contains")
+        if contains_children:
+            # For nested archetype filtering, we need to ensure that the composition
+            # contains both the parent archetype AND the nested archetype
+            nested_rmType = contains_children.get("rmType")
+            nested_predicate = contains_children.get("predicate")
+            
+            if nested_rmType and nested_predicate:
+                nested_path = nested_predicate.get("path")
+                nested_operator = nested_predicate.get("operator")
+                nested_value = nested_predicate.get("value")
+                
+                if nested_path == "archetype_node_id" and nested_operator == "=" and nested_value:
+                    # For shortened format, add the nested archetype as an additional constraint
+                    if self.format == 'shortened':
+                        archetype_resolver = self.format_resolver.archetype_resolver
+                        if archetype_resolver:
+                            nested_archetype_code = await archetype_resolver.get_archetype_code(nested_value)
+                            if nested_archetype_code is not None:
+                                # Return a condition that requires BOTH the composition archetype AND the nested archetype
+                                # This modifies the current return to include both conditions
+                                composition_array = self.schema_config['composition_array']
+                                
+                                # Get the composition archetype code from current predicate processing
+                                if rmType == "COMPOSITION" and predicate:
+                                    comp_path = predicate.get("path")
+                                    comp_operator = predicate.get("operator") 
+                                    comp_value = predicate.get("value")
+                                    
+                                    if comp_path == "archetype_node_id" and comp_operator == "=" and comp_value:
+                                        comp_archetype_code = await archetype_resolver.get_archetype_code(comp_value)
+                                        if comp_archetype_code is not None:
+                                            # Return condition requiring both archetypes to exist in the composition
+                                            return {
+                                                "$and": [
+                                                    {
+                                                        composition_array: {
+                                                            "$elemMatch": {
+                                                                "p": str(comp_archetype_code),
+                                                                "data._type": "COMPOSITION"
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        composition_array: {
+                                                            "$elemMatch": {
+                                                                "p": str(nested_archetype_code),
+                                                                "data._type": nested_rmType
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+            
+            # If we can't process the nested contains, continue with just the parent processing
+            
+        return None
 
     def build_limit_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """
@@ -255,7 +456,7 @@ class PipelineBuilder:
                 if alias == self.ehr_alias:
                     # EHR field mapping  
                     field_path = "/".join(parts[1:])
-                    mapped_field = self.path_resolver.map_ehr_path_to_field(field_path)
+                    mapped_field = self.format_resolver.map_ehr_path_to_field(field_path)
                     return f"${mapped_field}"
                 elif alias == self.composition_alias:
                     # For composition paths in LET, use array element access
@@ -337,7 +538,7 @@ class PipelineBuilder:
         from .condition_processor import OPERATOR_MAP
         
         if "path" in condition:
-            field = self.path_resolver.resolve_path_to_mongo_field(condition["path"])
+            field = self.format_resolver.resolve_path_to_mongo_field(condition["path"])
             operator = condition.get("operator", "=")
             value = condition.get("value")
             

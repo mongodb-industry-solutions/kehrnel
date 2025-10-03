@@ -63,11 +63,13 @@ async def execute_ast_query(
         
     except Exception as e:
         return {
-            "ast": ast_data,
-            "documents": [],
+            "query": ast_data,
+            "columns": [],
+            "rows": [],
             "error": str(e),
             "errorType": type(e).__name__
         }
+
 
 @router.get(
     "",

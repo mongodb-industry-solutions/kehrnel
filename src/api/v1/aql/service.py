@@ -11,7 +11,8 @@ from src.api.v1.aql.repository import (
     find_stored_query_by_name,
     delete_stored_query_by_name,
     find_all_stored_queries,
-    execute_aql_query
+    execute_aql_query,
+    detect_collection_format
 )
 
 from src.api.v1.aql.models import StoredQuery, StoredQuerySummary, QueryResponse, MetaData
@@ -36,11 +37,22 @@ async def process_aql_ast_query(ast_query: Dict[str, Any], request_url: str, db:
     """
 
     try:
-        transformer = AQLtoMQLTransformer(ast_query, ehr_id=ehr_id)
-        pipeline = transformer.build_pipeline()
+        # Detect collection format
+        collection_format = await detect_collection_format(db)
+        
+        # Configure schema based on detected format
+        schema_config = {
+            'composition_array': 'cn',  # Both formats use cn array
+            'path_field': 'p',  # Both formats use p field
+            'data_field': 'data',
+            'format': collection_format
+        }
+        
+        transformer = AQLtoMQLTransformer(ast_query, ehr_id=ehr_id, schema_config=schema_config, db=db)
+        pipeline = await transformer.build_pipeline()
 
         # Execute the query via the repository
-        results = await execute_aql_query(pipeline=pipeline, db=db)
+        results = await execute_aql_query(pipeline=pipeline, db=db, collection_format=collection_format)
 
 
         # Extract column names and paths from the project stage for the response model
@@ -102,12 +114,23 @@ async def process_aql_query(aql_query: str, request_url: str, db: AsyncIOMotorDa
         parser = AQLParser(aql_query)
         ast = parser.parse()
 
-        # Step 2: Transform AST into MQL Aggregation Pipeline
-        transformer = AQLtoMQLTransformer(ast, ehr_id=ehr_id)
-        pipeline = transformer.build_pipeline()
+        # Step 2: Detect collection format
+        collection_format = await detect_collection_format(db)
+        
+        # Configure schema based on detected format
+        schema_config = {
+            'composition_array': 'cn',  # Both formats use cn array
+            'path_field': 'p',  # Both formats use p field
+            'data_field': 'data',
+            'format': collection_format
+        }
+        
+        # Step 3: Transform AST into MQL Aggregation Pipeline
+        transformer = AQLtoMQLTransformer(ast, ehr_id=ehr_id, schema_config=schema_config, db=db)
+        pipeline = await transformer.build_pipeline()
 
-        # Step 3: Execute the query via the repository
-        results = await execute_aql_query(pipeline=pipeline, db=db)
+        # Step 4: Execute the query via the repository
+        results = await execute_aql_query(pipeline=pipeline, db=db, collection_format=collection_format)
 
         # Debug: Log the results structure
         print(f"DEBUG - Results type: {type(results)}")

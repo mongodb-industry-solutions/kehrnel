@@ -117,3 +117,10 @@ async def load_codes_from_db(db, config: dict) -> None:
         SEQ["at"] = doc.get("_min", SEQ.get("at", -1))
     
     print(f"Loaded {len(ar_book)} ar_codes and {len(at_book)} at_codes into global CODE_BOOK.")
+
+def get_reverse_mappings():
+    """Get reverse mappings for both ar_codes and at_codes."""
+    with CACHE_LOCK:
+        ar_reverse = {v: k for k, v in CODE_BOOK["ar_code"].items()}
+        at_reverse = CODE_BOOK["at"].copy()
+    return ar_reverse, at_reverse
