@@ -124,15 +124,14 @@ class ArchetypeResolver:
         if variable_alias not in context_map:
             return None
         
+        
         archetype_id = context_map[variable_alias].get('archetype_id')
         if not archetype_id:
             return None
-        
+
         base_archetype_code = await self.get_archetype_code(archetype_id)
         if base_archetype_code is None:
-            return None
-        
-        # Build the nested p-value by processing archetype node references
+            return None        # Build the nested p-value by processing archetype node references
         at_codes = []  # Collect AT codes in the order they appear in AQL path
         
         for part in aql_path_parts:
@@ -190,7 +189,9 @@ class ArchetypeResolver:
                 composition_archetype_code = await self.get_archetype_code(archetype_id)
                 break
         
-        if composition_archetype_code is not None:
+        # Only add composition archetype code if it's different from the base archetype
+        # This prevents duplication when the variable itself is the composition
+        if composition_archetype_code is not None and composition_archetype_code != base_archetype_code:
             p_parts.append(str(composition_archetype_code))
         
         # Build the composite p-value pattern
