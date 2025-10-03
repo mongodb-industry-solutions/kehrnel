@@ -86,14 +86,39 @@ class PipelineBuilder:
             comp_array_field = self.schema_config['composition_array']
             comp_match = await self.condition_processor.build_composition_match(comp_conditions_structure)
             if comp_array_field in match_conditions:
-                # Merge with existing composition conditions using $and
-                match_conditions[comp_array_field] = {
-                    "$and": [match_conditions[comp_array_field], comp_match]
-                }
+                # Merge with existing composition conditions properly
+                existing_condition = match_conditions[comp_array_field]
+                match_conditions[comp_array_field] = self._merge_composition_conditions(existing_condition, comp_match)
             else:
                 match_conditions[comp_array_field] = comp_match
         
         return {"$match": match_conditions} if match_conditions else None
+
+    def _merge_composition_conditions(self, existing: Dict, new: Dict) -> Dict:
+        """
+        Properly merges two composition-level conditions that might be $elemMatch or $all.
+        """
+        # If both conditions use $elemMatch, combine them with $all
+        if "$elemMatch" in existing and "$elemMatch" in new:
+            return {"$all": [existing, new]}
+        
+        # If existing is $all and new is $elemMatch, add to the $all array
+        elif "$all" in existing and "$elemMatch" in new:
+            existing_all = existing["$all"]
+            return {"$all": existing_all + [new]}
+        
+        # If existing is $elemMatch and new is $all, add existing to new's $all array
+        elif "$elemMatch" in existing and "$all" in new:
+            new_all = new["$all"]
+            return {"$all": [existing] + new_all}
+        
+        # If both are $all, combine their arrays
+        elif "$all" in existing and "$all" in new:
+            return {"$all": existing["$all"] + new["$all"]}
+        
+        # Default fallback - this shouldn't happen in normal operation
+        else:
+            return {"$all": [existing, new]}
 
     def build_let_stage(self) -> Optional[Dict[str, Any]]:
         """
@@ -287,14 +312,7 @@ class PipelineBuilder:
                                 }
                             }
                         else:
-                            # # Fallback: if archetype not found in codes, try template name patterns
-                            # template_patterns = {
-                            #     "openEHR-EHR-COMPOSITION.vaccination_list.v0": ["HC3 Immunization List", "vaccination", "immunization"],
-                            #     "openEHR-EHR-COMPOSITION.tumour.v0": ["T-IGR-TUMOUR-SUMMARY", "tumour", "tumor"],
-                            #     "openEHR-EHR-COMPOSITION.encounter.v1": ["encounter", "visit"]
-                            # }
-                            
-                            patterns = template_patterns.get(value, [value])
+                            patterns = TEMPLATE_PATTERNS.get(value, [value])
                             
                             or_conditions = []
                             for pattern in patterns:
@@ -313,14 +331,7 @@ class PipelineBuilder:
                                 }
                             }
                     else:
-                        # # No archetype resolver available, use fallback patterns
-                        # template_patterns = {
-                        #     "openEHR-EHR-COMPOSITION.vaccination_list.v0": ["HC3 Immunization List", "vaccination", "immunization"],
-                        #     "openEHR-EHR-COMPOSITION.tumour.v0": ["T-IGR-TUMOUR-SUMMARY", "tumour", "tumor"],
-                        #     "openEHR-EHR-COMPOSITION.encounter.v1": ["encounter", "visit"]
-                        # }
-                        
-                        patterns = template_patterns.get(value, [value])
+                        patterns = TEMPLATE_PATTERNS.get(value, [value])
                         
                         or_conditions = []
                         for pattern in patterns:
@@ -379,26 +390,23 @@ class PipelineBuilder:
                                     if comp_path == "archetype_node_id" and comp_operator == "=" and comp_value:
                                         comp_archetype_code = await archetype_resolver.get_archetype_code(comp_value)
                                         if comp_archetype_code is not None:
-                                            # Return condition requiring both archetypes to exist in the composition
+                                            # For nested archetypes, the p-value follows the hierarchy:
+                                            # - Composition: "22" 
+                                            # - Action within composition: "24.22"
+                                            # - Elements within action: "-2.-1.24.22" etc.
+                                            
+                                            # Build the hierarchical p-pattern for the nested archetype
+                                            nested_p_pattern = f"{nested_archetype_code}.{comp_archetype_code}"
+                                            
+                                            # Return condition requiring the nested archetype to exist
+                                            # The composition archetype will be matched by the parent CONTAINS processing
                                             return {
-                                                "$and": [
-                                                    {
-                                                        composition_array: {
-                                                            "$elemMatch": {
-                                                                "p": str(comp_archetype_code),
-                                                                "data._type": "COMPOSITION"
-                                                            }
-                                                        }
-                                                    },
-                                                    {
-                                                        composition_array: {
-                                                            "$elemMatch": {
-                                                                "p": str(nested_archetype_code),
-                                                                "data._type": nested_rmType
-                                                            }
-                                                        }
+                                                composition_array: {
+                                                    "$elemMatch": {
+                                                        "p": {"$regex": f"^{nested_p_pattern}$"},
+                                                        "data._type": nested_rmType
                                                     }
-                                                ]
+                                                }
                                             }
             
             # If we can't process the nested contains, continue with just the parent processing
