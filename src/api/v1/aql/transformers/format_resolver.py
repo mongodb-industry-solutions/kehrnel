@@ -68,8 +68,8 @@ class FormatResolver:
         data_path = "data"
         
         # Handle variable-specific path mapping dynamically
-        # Check if any part contains archetype references (like description[at0001] or items[at0002])
-        has_archetype_refs = any(re.search(r'\[at\d+\]', part) for part in parts)
+        # Check if any part contains archetype references (AT codes like [at0001] or full archetype IDs like [openEHR-EHR-CLUSTER.name.v0])
+        has_archetype_refs = any(re.search(r'\[(?:at\d+|openEHR-[^\]]+)\]', part) for part in parts)
         
         if has_archetype_refs:
             # Check if we can resolve this as a nested archetype path
