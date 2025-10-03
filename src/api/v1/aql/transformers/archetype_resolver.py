@@ -136,17 +136,35 @@ class ArchetypeResolver:
         at_codes = []  # Collect AT codes in the order they appear in AQL path
         
         for part in aql_path_parts:
-            # Look for any archetype node reference patterns: items[at0XXX] or description[at0XXX]
-            archetype_match = re.match(r"(?:items|description|value|name|protocol|data|state|activities|activity|events|event|items_single|items_multiple)\[(.+)\]", part)
+            # Look for any archetype node reference patterns: items[at0XXX], description[at0XXX], or items[openEHR-EHR-CLUSTER.name.v0]
+            archetype_match = re.match(r"(?:items|description|value|name|protocol|data|state|activities|activity|events|event|items_single|items_multiple|context|other_context)\[(.+)\]", part)
             if archetype_match:
-                at_code = archetype_match.group(1)
-                at_code_value = await self.get_at_code(at_code)
-                if at_code_value is not None:
-                    # Collect AT codes in order they appear in the AQL path
-                    at_codes.append(str(at_code_value))
+                reference = archetype_match.group(1)
+                
+                # Handle AT codes (like at0001)
+                if reference.startswith('at'):
+                    at_code_value = await self.get_at_code(reference)
+                    if at_code_value is not None:
+                        # Collect AT codes in order they appear in the AQL path
+                        at_codes.append(str(at_code_value))
+                    else:
+                        # If we can't resolve an AT code, we can't build the full path
+                        return None
+                        
+                # Handle full archetype IDs (like openEHR-EHR-CLUSTER.xds_metadata.v0)
+                elif reference.startswith('openEHR-'):
+                    archetype_code = await self.get_archetype_code(reference)
+                    if archetype_code is not None:
+                        # Add the archetype code to the path
+                        at_codes.append(str(archetype_code))
+                    else:
+                        # If we can't resolve the archetype, we can't build the full path
+                        return None
+                        
                 else:
-                    # If we can't resolve an AT code, we can't build the full path
-                    return None
+                    # Unknown reference type, skip
+                    continue
+                    
             elif part in ["value", "defining_code", "code_string", "magnitude", "units", "normal_range", "time", "name"]:
                 # These are leaf properties that don't contribute to the p-value
                 continue
