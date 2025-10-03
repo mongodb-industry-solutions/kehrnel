@@ -10,7 +10,7 @@ OPERATOR_MAP = {
     ">": "$gt",
     "<": "$lt",
     ">=": "$gte",
-    "<=": "$le",
+    "<=": "$lte",
 }
 
 
@@ -254,18 +254,20 @@ class ConditionProcessor:
         
         elif conditions_structure.get("operator") == "AND":
             # Multiple conditions on same variable - combine with AND logic
-            base_path_regex = self.format_resolver.build_full_path_regex(variable)
             data_conditions = {}
-            path_prefix = ""
+            path_condition = None
+            
+            # For shortened format, we need to collect the p-pattern from any condition
+            p_pattern_for_shortened = None
             
             for condition in conditions_structure.get("children", []):
                 if condition.get("type") == "condition":
                     aql_path = condition["path"]
                     p_regex_part, data_path = await self.format_resolver.translate_aql_path(aql_path)
                     
-                    # Update path prefix if we have specific node identifiers
-                    if p_regex_part and not path_prefix:
-                        path_prefix = p_regex_part + "/"
+                    # For shortened format, collect the p-pattern from any condition
+                    if self.format == 'shortened' and p_regex_part and not p_pattern_for_shortened:
+                        p_pattern_for_shortened = p_regex_part
                     
                     mql_operator = OPERATOR_MAP.get(condition["operator"])
                     if not mql_operator:
@@ -288,12 +290,39 @@ class ConditionProcessor:
                         else:
                             data_conditions[data_path] = {mql_operator: value}
             
-            # Build final regex pattern
+            # Build path condition based on format
             path_field = self.schema_config['path_field']
-            full_path_regex = self.format_resolver.combine_path_regex(base_path_regex, path_prefix)
+            
+            if self.format == 'shortened':
+                # For shortened format, use the p-pattern directly if available
+                if p_pattern_for_shortened:
+                    path_condition = {"$regex": p_pattern_for_shortened}
+                else:
+                    # If no specific p-pattern, match any element (fallback)
+                    path_condition = {"$exists": True}
+            else:
+                # For full format, use the original logic
+                base_path_regex = self.format_resolver.build_full_path_regex(variable)
+                path_prefix = ""
+                
+                # Update path prefix if we have specific node identifiers from any condition
+                for condition in conditions_structure.get("children", []):
+                    if condition.get("type") == "condition":
+                        aql_path = condition["path"]
+                        p_regex_part, _ = await self.format_resolver.translate_aql_path(aql_path)
+                        if p_regex_part and not path_prefix:
+                            path_prefix = p_regex_part + "/"
+                            break
+                
+                full_path_regex = self.format_resolver.combine_path_regex(base_path_regex, path_prefix)
+                if full_path_regex:
+                    path_condition = {"$regex": full_path_regex}
+                else:
+                    # Fallback if no regex pattern available
+                    path_condition = {"$exists": True}
             
             return {
-                path_field: {"$regex": full_path_regex},
+                path_field: path_condition,
                 **data_conditions
             }
         
@@ -352,7 +381,23 @@ class ConditionProcessor:
             
             value = self.value_formatter.format_value(condition["value"])
             path_field = self.schema_config['path_field']
-            full_path_regex = self.format_resolver.combine_path_regex(base_path_regex, p_regex_part)
+            
+            # For shortened format, we need to handle path patterns differently
+            if self.format == 'shortened':
+                # For shortened format, use the p_regex_part directly if available
+                if p_regex_part:
+                    path_condition = {"$regex": p_regex_part}
+                else:
+                    # If no specific p-pattern, match any element (fallback)
+                    path_condition = {"$exists": True}
+            else:
+                # For full format, combine the regex patterns
+                full_path_regex = self.format_resolver.combine_path_regex(base_path_regex, p_regex_part)
+                if full_path_regex:
+                    path_condition = {"$regex": full_path_regex}
+                else:
+                    # Fallback if no regex pattern available
+                    path_condition = {"$exists": True}
             
             # Build data condition
             if mql_operator == "$eq":
@@ -361,7 +406,7 @@ class ConditionProcessor:
                 data_condition = {mql_operator: value}
             
             return {
-                path_field: {"$regex": full_path_regex},
+                path_field: path_condition,
                 data_path: data_condition
             }
 
