@@ -68,17 +68,22 @@ class FormatResolver:
         data_path = "data"
         
         # Handle variable-specific path mapping dynamically
-        if len(parts) > 0 and parts[0].startswith("items"):
+        # Check if any part contains archetype references (like description[at0001] or items[at0002])
+        has_archetype_refs = any(re.search(r'\[at\d+\]', part) for part in parts)
+        
+        if has_archetype_refs:
             # Check if we can resolve this as a nested archetype path
             if self.archetype_resolver:
                 nested_pattern = await self.archetype_resolver.resolve_nested_path_to_p_pattern(
                     variable_alias, parts, self.context_map
                 )
+
                 if nested_pattern:
-                    # Build data path from remaining non-items parts
+                    # Build data path from remaining non-archetype parts
                     remaining_parts = []
                     for part in parts:
-                        if not re.match(r"items\[(.+)\]", part):
+                        # Skip archetype references but keep other parts
+                        if not re.match(r"(?:items|description|value|name|protocol|data|state|activities|activity|events|event)\[.+\]", part):
                             remaining_parts.append(part)
                     
                     if remaining_parts:
@@ -151,6 +156,7 @@ class FormatResolver:
                 p_pattern = await self.archetype_resolver.resolve_variable_to_p_pattern(
                     variable_alias, self.context_map
                 )
+
                 return p_pattern, data_path
             else:
                 # Fallback if no archetype resolver available
