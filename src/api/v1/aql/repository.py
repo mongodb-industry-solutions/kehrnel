@@ -11,8 +11,8 @@ logger = logging.getLogger(__name__)
 STORED_QUERY_COLL_NAME = "stored_queries"
 EHR_COLL_NAME = "ehr"
 COMPOSITION_COLL_NAME = "compositions"
-FLATTEN_COMPOSITION_COLL_NAME = "sm_compositions3"
-SHORTEN_COMPOSITION_COLL_NAME = "sm_compositions3"
+FLATTEN_COMPOSITION_COLL_NAME = "flatten_compositions"
+SHORTEN_COMPOSITION_COLL_NAME = "flatten_compositions"
 CODES_COLL_NAME = "_codes"
 
 
@@ -22,10 +22,10 @@ async def detect_collection_format(db: AsyncIOMotorDatabase) -> str:
     Returns either 'shortened' or 'full' based on the format found.
     """
     try:
-        # Check sm_compositions3 collection first since it's the preferred collection
+        # Check FLATTEN_COMPOSITION_COLL_NAME collection first since it's the preferred collection
         shorten_count = await db[SHORTEN_COMPOSITION_COLL_NAME].count_documents({})
         if shorten_count > 0:
-            # Sample a document to determine the format within sm_compositions3
+            # Sample a document to determine the format within FLATTEN_COMPOSITION_COLL_NAME
             sample = await db[SHORTEN_COMPOSITION_COLL_NAME].find_one({})
             if sample and 'cn' in sample:
                 # Check if this is shortened format (short p paths like '7') or full format (long archetype paths)
@@ -72,7 +72,7 @@ async def execute_aql_query(pipeline: List[Dict[str, Any]], db: AsyncIOMotorData
             collection_format = await detect_collection_format(db)
         
         # Determine which collection to use based on what's available
-        # Check sm_compositions3 first since it's the preferred collection
+        # Check FLATTEN_COMPOSITION_COLL_NAME first since it's the preferred collection
         shorten_count = await db[SHORTEN_COMPOSITION_COLL_NAME].count_documents({})
         if shorten_count > 0:
             collection_name = SHORTEN_COMPOSITION_COLL_NAME

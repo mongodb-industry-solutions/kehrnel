@@ -71,6 +71,41 @@ async def execute_ast_query(
         }
 
 
+@router.post(
+    "/ast/debug",
+    summary="Debug AQL AST Query Pipeline",
+    description="Returns the generated MongoDB pipeline for debugging purposes."
+)
+async def debug_ast_query(
+    request: Request,
+    ast_data: Dict[str, Any] = Body(..., description="The AQL AST structure."),
+    ehr_id: str = None,
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Returns the generated MongoDB aggregation pipeline for debugging purposes.
+    """
+    try:
+        # Import here to avoid circular imports
+        from .service import build_aql_pipeline
+        
+        pipeline = await build_aql_pipeline(ast_data, db, ehr_id)
+        
+        return {
+            "query": ast_data,
+            "pipeline": pipeline,
+            "pipeline_count": len(pipeline)
+        }
+        
+    except Exception as e:
+        return {
+            "query": ast_data,
+            "pipeline": [],
+            "error": str(e),
+            "errorType": type(e).__name__
+        }
+
+
 @router.get(
     "",
     summary="List Stored Queries",

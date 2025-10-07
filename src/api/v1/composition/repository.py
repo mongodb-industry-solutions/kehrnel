@@ -6,7 +6,7 @@ from typing import Dict, Optional
 COMPOSITIONS_COLL_NAME = "compositions"
 EHR_CONTRIBUTIONS_COLL = "contributions"
 EHR_COLL_NAME = "ehr"
-FLAT_COMPOSITIONS_COLL_NAME = "sm_compositions3"
+FLAT_COMPOSITIONS_COLL_NAME = "flatten_compositions"
 SEARCH_COMPOSITIONS_COLL_NAME = "sm_search3"
 
 logger = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ async def find_composition_by_uid(uid: str, db: AsyncIOMotorDatabase):
 
 async def find_flattened_composition_by_uid(uid: str, db: AsyncIOMotorDatabase):
     """
-    Retrieves a single flattened COMPOSITION document from the sm_compositions3
+    Retrieves a single flattened COMPOSITION document from the FLATTEN_COMPOSITION_COLL_NAME
     collection by its versioned UID.
     """
     return await db[FLAT_COMPOSITIONS_COLL_NAME].find_one({"_id": uid})

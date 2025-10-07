@@ -28,6 +28,28 @@ class AQLParser:
         return ast_data
 
 
+async def build_aql_pipeline(ast_query: Dict[str, Any], db: AsyncIOMotorDatabase, ehr_id: str = None) -> List[Dict[str, Any]]:
+    """
+    Builds the MongoDB aggregation pipeline from an AST query.
+    Used for debugging purposes.
+    """
+    # Detect collection format
+    collection_format = await detect_collection_format(db)
+    
+    # Configure schema based on detected format
+    schema_config = {
+        'composition_array': 'cn',  # Both formats use cn array
+        'path_field': 'p',  # Both formats use p field
+        'data_field': 'data',
+        'format': collection_format
+    }
+    
+    transformer = AQLtoMQLTransformer(ast_query, ehr_id=ehr_id, schema_config=schema_config, db=db)
+    pipeline = await transformer.build_pipeline()
+    
+    return pipeline
+
+
 async def process_aql_ast_query(ast_query: Dict[str, Any], request_url: str, db: AsyncIOMotorDatabase, ehr_id: str = None) -> QueryResponse:
     """
     Handles the lifecycle of executing an AST query.

@@ -108,6 +108,10 @@ class ArchetypeResolver:
         This handles cases like admin_salut/items[at0007]/items[at0014] where we need
         to build a composite p-value based on the nested archetype structure.
         
+        The p-values are inverted in the flattened structure:
+        - AQL path: a/description[at0001]/items[at0002]/value/defining_code/code_string
+        - P-value: "-2.-1.24.22" (deepest first: at0002, at0001, ACTION, COMPOSITION)
+        
         Args:
             variable_alias: The base variable alias
             aql_path_parts: The path parts after the variable alias
@@ -116,48 +120,92 @@ class ArchetypeResolver:
         Returns:
             Regex pattern for the nested p-value or None if not resolvable
         """
-        # Get the base archetype code
-        base_pattern = await self.resolve_variable_to_p_pattern(variable_alias, context_map)
-        if not base_pattern:
+        # Get the base archetype code for the variable
+        if variable_alias not in context_map:
             return None
         
-        # Extract the base code (remove ^ and $ from regex)
-        base_code = base_pattern.replace("^", "").replace("$", "").replace("\\", "")
         
-        # Build the nested p-value by processing items[] references
-        at_codes = []  # Collect AT codes first
+        archetype_id = context_map[variable_alias].get('archetype_id')
+        if not archetype_id:
+            return None
+
+        base_archetype_code = await self.get_archetype_code(archetype_id)
+        if base_archetype_code is None:
+            return None        # Build the nested p-value by processing archetype node references
+        at_codes = []  # Collect AT codes in the order they appear in AQL path
         
         for part in aql_path_parts:
-            # Look for items[at0XXX] patterns
-            items_match = re.match(r"items\[(.+)\]", part)
-            if items_match:
-                at_code = items_match.group(1)
-                at_code_value = await self.get_at_code(at_code)
-                if at_code_value is not None:
-                    # Collect AT codes in order they appear in the path
-                    at_codes.append(str(at_code_value))
+            # Look for any archetype node reference patterns: items[at0XXX], description[at0XXX], or items[openEHR-EHR-CLUSTER.name.v0]
+            archetype_match = re.match(r"(?:items|description|value|name|protocol|data|state|activities|activity|events|event|items_single|items_multiple|context|other_context)\[(.+)\]", part)
+            if archetype_match:
+                reference = archetype_match.group(1)
+                
+                # Handle AT codes (like at0001)
+                if reference.startswith('at'):
+                    at_code_value = await self.get_at_code(reference)
+                    if at_code_value is not None:
+                        # Collect AT codes in order they appear in the AQL path
+                        at_codes.append(str(at_code_value))
+                    else:
+                        # If we can't resolve an AT code, we can't build the full path
+                        return None
+                        
+                # Handle full archetype IDs (like openEHR-EHR-CLUSTER.xds_metadata.v0)
+                elif reference.startswith('openEHR-'):
+                    archetype_code = await self.get_archetype_code(reference)
+                    if archetype_code is not None:
+                        # Add the archetype code to the path
+                        at_codes.append(str(archetype_code))
+                    else:
+                        # If we can't resolve the archetype, we can't build the full path
+                        return None
+                        
                 else:
-                    # If we can't resolve an AT code, we can't build the full path
-                    return None
+                    # Unknown reference type, skip
+                    continue
+                    
+            elif part in ["value", "defining_code", "code_string", "magnitude", "units", "normal_range", "time", "name"]:
+                # These are leaf properties that don't contribute to the p-value
+                continue
             else:
-                # Non-items parts don't contribute to the p-value
+                # Unknown part - continue processing but don't add to p-value
+                continue
+        
+        # Build p_parts in the correct inverted hierarchical order
+        # The p-value is inverted: [deepest_at_code, parent_at_code, ..., base_archetype, composition_archetype]
+        # AQL path: description[at0001]/items[at0002] represents items INSIDE description
+        # So at0002 (items) is deeper than at0001 (description)
+        # In p-value: -2.-1.24.22 (items first, then description, then ACTION, then COMPOSITION)
+        # So we need to reverse the at_codes to get deepest first
+        p_parts = list(reversed(at_codes))  # Reverse to get deepest element first
+        p_parts.append(str(base_archetype_code))  # Add base archetype code
+        
+        # Get the composition archetype code and add it at the end
+        # Find the composition in the context map
+        composition_archetype_code = None
+        for alias, info in context_map.items():
+            archetype_id = info.get('archetype_id')
+            if archetype_id and 'COMPOSITION' in archetype_id:
+                composition_archetype_code = await self.get_archetype_code(archetype_id)
                 break
         
-        # Build p_parts in the correct hierarchical order (deepest first, then base)
-        # OpenEHR p-values are built: [deepest_at_code, parent_at_code, ..., base_archetype]
-        p_parts = list(reversed(at_codes))  # Reverse AT codes for correct hierarchy
-        p_parts.append(base_code)  # Add base archetype code at the end
+        # Only add composition archetype code if it's different from the base archetype
+        # This prevents duplication when the variable itself is the composition
+        if composition_archetype_code is not None and composition_archetype_code != base_archetype_code:
+            p_parts.append(str(composition_archetype_code))
         
         # Build the composite p-value pattern
         if len(p_parts) > 1:
             # For nested paths, the pattern should match the specific hierarchy
-            # Example: -14.-7.9 (where -14 and -7 are AT codes, 9 is admin_salut archetype)
+            # Example: -2.-1.24.22 (where -2=at0002, -1=at0001, 24=ACTION, 22=COMPOSITION)
             composite_p = ".".join(p_parts)
-            # MongoDB regex needs double-escaped dots for $regexMatch
+            # For exact matching in shortened format, we want to match this exact pattern
+            # MongoDB regex needs dots escaped for $regexMatch
             escaped_pattern = composite_p.replace(".", "\\.")
-            return escaped_pattern
+            return f"^{escaped_pattern}$"
         else:
-            return base_pattern
+            # Fallback to just the base archetype pattern
+            return f"^{base_archetype_code}$"
     
     async def resolve_composition_p_pattern(self, composition_alias: str, context_map: Dict[str, Dict]) -> str:
         """
