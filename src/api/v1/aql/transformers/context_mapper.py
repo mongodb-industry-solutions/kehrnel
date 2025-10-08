@@ -43,7 +43,8 @@ class ContextMapper:
         # Some nodes like SECTION might not have an alias
         current_alias = alias if alias else f"_{parent_alias}_child" 
 
-        archetype_id = node.get("predicate", {}).get("value")
+        predicate = node.get("predicate")
+        archetype_id = predicate.get("value") if predicate else None
         self.context_map[current_alias] = {"archetype_id": archetype_id, "parent": parent_alias}
         
         if "contains" in node:

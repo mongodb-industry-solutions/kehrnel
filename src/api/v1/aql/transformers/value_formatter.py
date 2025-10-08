@@ -16,7 +16,28 @@ class ValueFormatter:
         """Converts string value from AST to appropriate Python type for MongoDB."""
         if not isinstance(value, str):
             return value
-            
+        
+        # Handle boolean string representations
+        if value.lower() == "true":
+            return True
+        elif value.lower() == "false":
+            return False
+        
+        # Handle numeric strings
+        # Check for integer
+        if value.isdigit() or (value.startswith('-') and value[1:].isdigit()):
+            return int(value)
+        
+        # Check for float
+        try:
+            float_val = float(value)
+            # Only return as float if it actually contains a decimal point
+            # This prevents integers from being converted to floats
+            if '.' in value:
+                return float_val
+        except ValueError:
+            pass
+        
         # Check if it's a date string and format it appropriately for MongoDB
         if ValueFormatter._is_iso_date_string(value):
             # Convert to MongoDB ISODate format but keep as string for the aggregation pipeline
@@ -27,7 +48,7 @@ class ValueFormatter:
             except (ValueError, TypeError):
                 return value
         
-        # It's not a date, return as is
+        # It's not a special type, return as string
         return value
 
     @staticmethod
