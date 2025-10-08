@@ -56,7 +56,8 @@ class ArchetypeResolver:
             The numeric code or None if not found
         """
         await self._load_codes_if_needed()
-        return self._archetype_to_code_cache.get(archetype_id)
+        result = self._archetype_to_code_cache.get(archetype_id)
+        return result
     
     async def get_at_code(self, at_code: str) -> Optional[int]:
         """
@@ -105,17 +106,17 @@ class ArchetypeResolver:
         """
         Resolves nested archetype paths to their specific p-value patterns.
         
-        This handles cases like admin_salut/items[at0007]/items[at0014] where we need
-        to build a composite p-value based on the nested archetype structure.
+        This handles cases where archetypes are nested within other archetypes and we need
+        to build the complete hierarchical p-value pattern including all intermediate
+        structural elements.
         
-        The p-values are inverted in the flattened structure:
-        - AQL path: a/description[at0001]/items[at0002]/value/defining_code/code_string
-        - P-value: "-2.-1.24.22" (deepest first: at0002, at0001, ACTION, COMPOSITION)
+        The key insight is that nested aliases (like CLUSTER inside EVALUATION) need to
+        account for their full containment context, not just their immediate archetype code.
         
         Args:
-            variable_alias: The base variable alias
+            variable_alias: The variable alias (e.g., 'loc' for CLUSTER)
             aql_path_parts: The path parts after the variable alias
-            context_map: The context map containing archetype IDs
+            context_map: The context map containing archetype IDs and parent relationships
         
         Returns:
             Regex pattern for the nested p-value or None if not resolvable
@@ -124,18 +125,19 @@ class ArchetypeResolver:
         if variable_alias not in context_map:
             return None
         
-        
         archetype_id = context_map[variable_alias].get('archetype_id')
         if not archetype_id:
             return None
 
         base_archetype_code = await self.get_archetype_code(archetype_id)
         if base_archetype_code is None:
-            return None        # Build the nested p-value by processing archetype node references
+            return None
+        
+        # Build the nested p-value by processing archetype node references from the path
         at_codes = []  # Collect AT codes in the order they appear in AQL path
         
         for part in aql_path_parts:
-            # Look for any archetype node reference patterns: items[at0XXX], description[at0XXX], or items[openEHR-EHR-CLUSTER.name.v0]
+            # Look for any archetype node reference patterns
             archetype_match = re.match(r"(?:items|description|value|name|protocol|data|state|activities|activity|events|event|items_single|items_multiple|context|other_context)\[(.+)\]", part)
             if archetype_match:
                 reference = archetype_match.group(1)
@@ -144,24 +146,18 @@ class ArchetypeResolver:
                 if reference.startswith('at'):
                     at_code_value = await self.get_at_code(reference)
                     if at_code_value is not None:
-                        # Collect AT codes in order they appear in the AQL path
                         at_codes.append(str(at_code_value))
                     else:
-                        # If we can't resolve an AT code, we can't build the full path
                         return None
                         
                 # Handle full archetype IDs (like openEHR-EHR-CLUSTER.xds_metadata.v0)
                 elif reference.startswith('openEHR-'):
                     archetype_code = await self.get_archetype_code(reference)
                     if archetype_code is not None:
-                        # Add the archetype code to the path
                         at_codes.append(str(archetype_code))
                     else:
-                        # If we can't resolve the archetype, we can't build the full path
                         return None
-                        
                 else:
-                    # Unknown reference type, skip
                     continue
                     
             elif part in ["value", "defining_code", "code_string", "magnitude", "units", "normal_range", "time", "name"]:
@@ -171,17 +167,64 @@ class ArchetypeResolver:
                 # Unknown part - continue processing but don't add to p-value
                 continue
         
-        # Build p_parts in the correct inverted hierarchical order
-        # The p-value is inverted: [deepest_at_code, parent_at_code, ..., base_archetype, composition_archetype]
-        # AQL path: description[at0001]/items[at0002] represents items INSIDE description
-        # So at0002 (items) is deeper than at0001 (description)
-        # In p-value: -2.-1.24.22 (items first, then description, then ACTION, then COMPOSITION)
-        # So we need to reverse the at_codes to get deepest first
-        p_parts = list(reversed(at_codes))  # Reverse to get deepest element first
-        p_parts.append(str(base_archetype_code))  # Add base archetype code
+        # CRITICAL: Build the complete hierarchical context for nested aliases
+        # We need to reconstruct the full containment path by walking up the parent chain
+        # and understanding where this alias exists within its parent's structure
         
-        # Get the composition archetype code and add it at the end
-        # Find the composition in the context map
+        hierarchical_parts = []
+        
+        # Start with the AT codes from the current path (deepest first)
+        hierarchical_parts.extend(reversed(at_codes))
+        
+        # Add the current archetype code
+        hierarchical_parts.append(str(base_archetype_code))
+        
+        # Walk up the containment hierarchy to build the complete context
+        current_alias = variable_alias
+        while current_alias in context_map:
+            parent_alias = context_map[current_alias].get('parent')
+            if not parent_alias or parent_alias not in context_map:
+                break
+                
+            parent_archetype_id = context_map[parent_alias].get('archetype_id')
+            if not parent_archetype_id:
+                current_alias = parent_alias
+                continue
+            
+            # For nested archetypes, we need to find the structural elements that connect
+            # the child to the parent. This requires understanding the openEHR archetype
+            # containment patterns.
+            
+            # Common pattern: CLUSTER inside EVALUATION typically goes through a data[at0001] structure
+            # More generally, most archetypes have standard structural containers
+            
+            # Get the parent archetype code
+            parent_archetype_code = await self.get_archetype_code(parent_archetype_id)
+            if parent_archetype_code is None:
+                current_alias = parent_alias
+                continue
+            
+            # Skip composition - handle it separately at the end
+            if 'COMPOSITION' in parent_archetype_id:
+                current_alias = parent_alias
+                break
+                
+            # Add intermediate structural element based on archetype containment patterns
+            # This is the key insight: most openEHR archetypes have standard data containers
+            if 'EVALUATION' in parent_archetype_id or 'OBSERVATION' in parent_archetype_id or 'ACTION' in parent_archetype_id:
+                # These typically contain items through a data[at0001] structure
+                hierarchical_parts.append("-1")  # at0001 is the standard data container
+            elif 'SECTION' in parent_archetype_id:
+                # Sections typically contain items directly or through specific structures
+                # We might need to add logic here for specific section patterns if needed
+                pass
+            
+            # Add the parent archetype code
+            hierarchical_parts.append(str(parent_archetype_code))
+            
+            current_alias = parent_alias
+        
+        # Add composition archetype code at the end
         composition_archetype_code = None
         for alias, info in context_map.items():
             archetype_id = info.get('archetype_id')
@@ -189,23 +232,17 @@ class ArchetypeResolver:
                 composition_archetype_code = await self.get_archetype_code(archetype_id)
                 break
         
-        # Only add composition archetype code if it's different from the base archetype
-        # This prevents duplication when the variable itself is the composition
-        if composition_archetype_code is not None and composition_archetype_code != base_archetype_code:
-            p_parts.append(str(composition_archetype_code))
+        if composition_archetype_code is not None:
+            hierarchical_parts.append(str(composition_archetype_code))
         
         # Build the composite p-value pattern
-        if len(p_parts) > 1:
-            # For nested paths, the pattern should match the specific hierarchy
-            # Example: -2.-1.24.22 (where -2=at0002, -1=at0001, 24=ACTION, 22=COMPOSITION)
-            composite_p = ".".join(p_parts)
-            # For exact matching in shortened format, we want to match this exact pattern
-            # MongoDB regex needs dots escaped for $regexMatch
+        if len(hierarchical_parts) > 1:
+            composite_p = ".".join(hierarchical_parts)
             escaped_pattern = composite_p.replace(".", "\\.")
-            return f"^{escaped_pattern}$"
+            return f"^{escaped_pattern}(?:\\.\\d+)*$"
         else:
             # Fallback to just the base archetype pattern
-            return f"^{base_archetype_code}$"
+            return f"^{base_archetype_code}(?:\\.\\d+)*$"
     
     async def resolve_composition_p_pattern(self, composition_alias: str, context_map: Dict[str, Dict]) -> str:
         """
@@ -216,8 +253,8 @@ class ArchetypeResolver:
             context_map: The context map containing archetype IDs
         
         Returns:
-            Regex pattern for composition p-value (defaults to "^7$" if not found)
+            Regex pattern for composition p-value (defaults to "^\\d+$" if not found)
         """
         pattern = await self.resolve_variable_to_p_pattern(composition_alias, context_map)
-        # Default to "^7$" which seems to be the standard composition root pattern
-        return pattern or "^7$"
+        # Default to match any numeric composition p-value when no specific predicate
+        return pattern or "^\\d+$"
