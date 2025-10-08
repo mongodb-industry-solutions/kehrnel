@@ -8,13 +8,14 @@ import re
 class ArchetypeResolver:
     """
     Dynamically resolves archetype IDs to p-values by querying the _codes collection.
-    Replaces hardcoded p-value patterns with database-driven resolution.
+    Replaces hardcoded p-value patterns with database-driven resolution and pattern discovery.
     """
     
     def __init__(self, db: AsyncIOMotorDatabase):
         self.db = db
         self._archetype_to_code_cache: Dict[str, int] = {}
         self._at_code_to_int_cache: Dict[str, int] = {}
+        self._structural_pattern_cache: Dict[str, List[str]] = {}
         self._codes_loaded = False
     
     async def _load_codes_if_needed(self):
@@ -104,14 +105,13 @@ class ArchetypeResolver:
     
     async def resolve_nested_path_to_p_pattern(self, variable_alias: str, aql_path_parts: List[str], context_map: Dict[str, Dict]) -> Optional[str]:
         """
-        Resolves nested archetype paths to their specific p-value patterns.
+        Resolves nested archetype paths to their specific p-value patterns using a truly
+        data-driven approach that analyzes query structure and archetype relationships.
         
-        This handles cases where archetypes are nested within other archetypes and we need
-        to build the complete hierarchical p-value pattern including all intermediate
-        structural elements.
-        
-        The key insight is that nested aliases (like CLUSTER inside EVALUATION) need to
-        account for their full containment context, not just their immediate archetype code.
+        This method builds the complete hierarchical p-value pattern by:
+        1. Extracting AT codes from the AQL path itself
+        2. Building the containment hierarchy from child to parent
+        3. Using a pattern discovery mechanism to find intermediate structural elements
         
         Args:
             variable_alias: The variable alias (e.g., 'loc' for CLUSTER)
@@ -133,54 +133,91 @@ class ArchetypeResolver:
         if base_archetype_code is None:
             return None
         
-        # Build the nested p-value by processing archetype node references from the path
-        at_codes = []  # Collect AT codes in the order they appear in AQL path
-        
+        # Extract AT codes from the AQL path itself
+        path_at_codes = []
         for part in aql_path_parts:
-            # Look for any archetype node reference patterns
+            # Look for archetype node references in path segments
             archetype_match = re.match(r"(?:items|description|value|name|protocol|data|state|activities|activity|events|event|items_single|items_multiple|context|other_context)\[(.+)\]", part)
             if archetype_match:
                 reference = archetype_match.group(1)
                 
-                # Handle AT codes (like at0001)
+                # Handle AT codes (like at0002, at0004)
                 if reference.startswith('at'):
                     at_code_value = await self.get_at_code(reference)
                     if at_code_value is not None:
-                        at_codes.append(str(at_code_value))
+                        path_at_codes.append(str(at_code_value))
                     else:
                         return None
                         
-                # Handle full archetype IDs (like openEHR-EHR-CLUSTER.xds_metadata.v0)
+                # Handle nested archetype IDs
                 elif reference.startswith('openEHR-'):
                     archetype_code = await self.get_archetype_code(reference)
                     if archetype_code is not None:
-                        at_codes.append(str(archetype_code))
+                        path_at_codes.append(str(archetype_code))
                     else:
                         return None
-                else:
-                    continue
-                    
             elif part in ["value", "defining_code", "code_string", "magnitude", "units", "normal_range", "time", "name"]:
-                # These are leaf properties that don't contribute to the p-value
-                continue
-            else:
-                # Unknown part - continue processing but don't add to p-value
+                # Leaf properties don't contribute to p-value hierarchy
                 continue
         
-        # CRITICAL: Build the complete hierarchical context for nested aliases
-        # We need to reconstruct the full containment path by walking up the parent chain
-        # and understanding where this alias exists within its parent's structure
-        
+        # Build hierarchical parts starting from the deepest level
         hierarchical_parts = []
         
-        # Start with the AT codes from the current path (deepest first)
-        hierarchical_parts.extend(reversed(at_codes))
+        # Add AT codes from the path (deepest first)
+        hierarchical_parts.extend(reversed(path_at_codes))
         
         # Add the current archetype code
         hierarchical_parts.append(str(base_archetype_code))
         
-        # Walk up the containment hierarchy to build the complete context
+        # Build the containment hierarchy by walking up parent relationships
+        containment_chain = await self._build_containment_chain(variable_alias, context_map)
+        
+        # Process each level in the containment chain
+        for level_info in containment_chain:
+            parent_archetype_code = level_info['archetype_code']
+            archetype_type = level_info['archetype_type']
+            
+            # Skip composition - handle separately
+            if archetype_type == 'COMPOSITION':
+                continue
+            
+            # Add intermediate structural elements based on openEHR patterns
+            # This uses a discovery mechanism rather than hardcoding
+            structural_elements = await self._discover_structural_elements(
+                child_archetype_code=hierarchical_parts[-1] if hierarchical_parts else str(base_archetype_code),
+                parent_archetype_code=str(parent_archetype_code),
+                parent_archetype_type=archetype_type
+            )
+            
+            # Add discovered structural elements
+            hierarchical_parts.extend(structural_elements)
+            
+            # Add the parent archetype code
+            hierarchical_parts.append(str(parent_archetype_code))
+        
+        # Add composition at the end if present
+        composition_info = next((info for info in containment_chain if info['archetype_type'] == 'COMPOSITION'), None)
+        if composition_info:
+            hierarchical_parts.append(str(composition_info['archetype_code']))
+        
+        # Build the final pattern
+        if len(hierarchical_parts) > 1:
+            composite_p = ".".join(hierarchical_parts)
+            escaped_pattern = composite_p.replace(".", "\\.")
+            return f"^{escaped_pattern}(?:\\.\\d+)*$"
+        else:
+            return f"^{base_archetype_code}(?:\\.\\d+)*$"
+    
+    async def _build_containment_chain(self, variable_alias: str, context_map: Dict[str, Dict]) -> List[Dict]:
+        """
+        Builds the containment chain from child to composition.
+        
+        Returns:
+            List of dicts with archetype_code, archetype_type, and alias
+        """
+        chain = []
         current_alias = variable_alias
+        
         while current_alias in context_map:
             parent_alias = context_map[current_alias].get('parent')
             if not parent_alias or parent_alias not in context_map:
@@ -191,58 +228,190 @@ class ArchetypeResolver:
                 current_alias = parent_alias
                 continue
             
-            # For nested archetypes, we need to find the structural elements that connect
-            # the child to the parent. This requires understanding the openEHR archetype
-            # containment patterns.
-            
-            # Common pattern: CLUSTER inside EVALUATION typically goes through a data[at0001] structure
-            # More generally, most archetypes have standard structural containers
-            
-            # Get the parent archetype code
             parent_archetype_code = await self.get_archetype_code(parent_archetype_id)
             if parent_archetype_code is None:
                 current_alias = parent_alias
                 continue
             
-            # Skip composition - handle it separately at the end
-            if 'COMPOSITION' in parent_archetype_id:
-                current_alias = parent_alias
-                break
-                
-            # Add intermediate structural element based on archetype containment patterns
-            # This is the key insight: most openEHR archetypes have standard data containers
-            if 'EVALUATION' in parent_archetype_id or 'OBSERVATION' in parent_archetype_id or 'ACTION' in parent_archetype_id:
-                # These typically contain items through a data[at0001] structure
-                hierarchical_parts.append("-1")  # at0001 is the standard data container
-            elif 'SECTION' in parent_archetype_id:
-                # Sections typically contain items directly or through specific structures
-                # We might need to add logic here for specific section patterns if needed
-                pass
+            # Extract archetype type from ID
+            archetype_type = self._extract_archetype_type(parent_archetype_id)
             
-            # Add the parent archetype code
-            hierarchical_parts.append(str(parent_archetype_code))
+            chain.append({
+                'alias': parent_alias,
+                'archetype_code': parent_archetype_code,
+                'archetype_type': archetype_type,
+                'archetype_id': parent_archetype_id
+            })
             
             current_alias = parent_alias
         
-        # Add composition archetype code at the end
-        composition_archetype_code = None
-        for alias, info in context_map.items():
-            archetype_id = info.get('archetype_id')
-            if archetype_id and 'COMPOSITION' in archetype_id:
-                composition_archetype_code = await self.get_archetype_code(archetype_id)
-                break
-        
-        if composition_archetype_code is not None:
-            hierarchical_parts.append(str(composition_archetype_code))
-        
-        # Build the composite p-value pattern
-        if len(hierarchical_parts) > 1:
-            composite_p = ".".join(hierarchical_parts)
-            escaped_pattern = composite_p.replace(".", "\\.")
-            return f"^{escaped_pattern}(?:\\.\\d+)*$"
+        return chain
+    
+    def _extract_archetype_type(self, archetype_id: str) -> str:
+        """Extract archetype type from full archetype ID."""
+        # Handle both full IDs and shortened ones
+        if 'openEHR-EHR-' in archetype_id:
+            return archetype_id.split('.')[0].replace('openEHR-EHR-', '')
         else:
-            # Fallback to just the base archetype pattern
-            return f"^{base_archetype_code}(?:\\.\\d+)*$"
+            # For shortened format, extract from the ID structure
+            for rm_type in ['COMPOSITION', 'EVALUATION', 'OBSERVATION', 'ACTION', 'SECTION', 'CLUSTER', 'ADMIN_ENTRY']:
+                if rm_type.lower() in archetype_id.lower():
+                    return rm_type
+        return 'UNKNOWN'
+    
+    async def _discover_structural_elements(self, child_archetype_code: str, parent_archetype_code: str, parent_archetype_type: str) -> List[str]:
+        """
+        Discovers intermediate structural elements between child and parent archetypes.
+        
+        This method uses a hybrid approach:
+        1. First tries data-driven pattern discovery from actual compositions
+        2. Falls back to openEHR structural patterns as a secondary approach
+        
+        Args:
+            child_archetype_code: The child archetype code
+            parent_archetype_code: The parent archetype code  
+            parent_archetype_type: The parent archetype type (EVALUATION, OBSERVATION, etc.)
+        
+        Returns:
+            List of intermediate structural element codes
+        """
+        # Try data-driven discovery first (most accurate)
+        try:
+            discovered_elements = await self._discover_structural_elements_from_data(
+                child_archetype_code, parent_archetype_code
+            )
+            if discovered_elements:
+                return discovered_elements
+        except Exception as e:
+            print(f"Data-driven discovery failed, falling back to pattern-based: {e}")
+        
+        # Fallback to pattern-based discovery using openEHR structural knowledge
+        structural_elements = []
+        
+        # Pattern 1: Most RM types have a standard 'data' container (at0001 = -1)
+        if parent_archetype_type in ['EVALUATION', 'OBSERVATION', 'ACTION']:
+            # These typically have a data[at0001] structure containing items
+            structural_elements.append("-1")
+        
+        # Pattern 2: ADMIN_ENTRY typically has direct item containers or data structures
+        elif parent_archetype_type == 'ADMIN_ENTRY':
+            # Often has data[at0001] as well
+            structural_elements.append("-1")
+        
+        # Pattern 3: SECTION can contain items directly or through specific structures
+        elif parent_archetype_type == 'SECTION':
+            # Some sections may have intermediate structures, but often direct containment
+            # Could be enhanced with specific section patterns
+            pass
+        
+        # Pattern 4: CLUSTER within CLUSTER typically has direct item containment
+        elif parent_archetype_type == 'CLUSTER':
+            # Usually direct containment through items[], no intermediate structure needed
+            pass
+        
+        return structural_elements
+    
+    async def _discover_structural_elements_from_data(self, child_archetype_code: str, parent_archetype_code: str) -> List[str]:
+        """
+        Advanced pattern discovery that analyzes actual data to find structural elements.
+        
+        This method queries a sample of compositions to understand the actual p-value patterns
+        between specific archetype combinations, making the system truly data-driven.
+        
+        Args:
+            child_archetype_code: The child archetype code
+            parent_archetype_code: The parent archetype code
+        
+        Returns:
+            List of discovered intermediate structural element codes
+        """
+        cache_key = f"{child_archetype_code}->{parent_archetype_code}"
+        
+        # Check cache first
+        if cache_key in self._structural_pattern_cache:
+            return self._structural_pattern_cache[cache_key]
+        
+        try:
+            # Query compositions to find patterns between these archetypes
+            compositions_col = self.db["compositions"]
+            
+            # Look for documents that contain both archetypes in their cn array
+            pipeline = [
+                {
+                    "$match": {
+                        "cn.data.archetype_node_id": {"$in": [int(child_archetype_code), int(parent_archetype_code)]}
+                    }
+                },
+                {
+                    "$project": {
+                        "cn": {
+                            "$filter": {
+                                "input": "$cn",
+                                "cond": {
+                                    "$in": ["$$this.data.archetype_node_id", [int(child_archetype_code), int(parent_archetype_code)]]
+                                }
+                            }
+                        }
+                    }
+                },
+                {"$limit": 10}
+            ]
+            
+            structural_elements = []
+            async for doc in compositions_col.aggregate(pipeline):
+                # Analyze p-value patterns to extract intermediate elements
+                patterns = self._analyze_p_value_patterns(doc["cn"], child_archetype_code, parent_archetype_code)
+                structural_elements.extend(patterns)
+            
+            # Deduplicate and find the most common pattern
+            if structural_elements:
+                from collections import Counter
+                most_common = Counter(structural_elements).most_common(1)
+                result = most_common[0][0] if most_common else []
+            else:
+                result = []
+            
+            # Cache the result
+            self._structural_pattern_cache[cache_key] = result
+            return result
+            
+        except Exception as e:
+            print(f"Pattern discovery failed for {cache_key}: {e}")
+            return []
+    
+    def _analyze_p_value_patterns(self, cn_array: List[Dict], child_code: str, parent_code: str) -> List[List[str]]:
+        """
+        Analyzes p-value patterns in a composition to extract structural relationships.
+        
+        Args:
+            cn_array: The cn array from a composition
+            child_code: The child archetype code
+            parent_code: The parent archetype code
+        
+        Returns:
+            List of intermediate element patterns found
+        """
+        patterns = []
+        
+        # Find p-values for child and parent archetypes
+        child_p_values = [item["p"] for item in cn_array if item.get("data", {}).get("archetype_node_id") == int(child_code)]
+        parent_p_values = [item["p"] for item in cn_array if item.get("data", {}).get("archetype_node_id") == int(parent_code)]
+        
+        # Analyze the hierarchical relationship
+        for child_p in child_p_values:
+            for parent_p in parent_p_values:
+                if child_p.endswith(parent_p):
+                    # Extract intermediate elements
+                    prefix = child_p[:-len(parent_p)].rstrip('.')
+                    if prefix:
+                        # Remove the child code itself and extract intermediate elements
+                        parts = prefix.split('.')
+                        if parts and parts[0] == child_code:
+                            intermediate = parts[1:] if len(parts) > 1 else []
+                            if intermediate:
+                                patterns.append(intermediate)
+        
+        return patterns
     
     async def resolve_composition_p_pattern(self, composition_alias: str, context_map: Dict[str, Dict]) -> str:
         """
