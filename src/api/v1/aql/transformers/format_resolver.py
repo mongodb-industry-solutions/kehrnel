@@ -177,8 +177,8 @@ class FormatResolver:
             )
             return pattern
         else:
-            # Fallback to default composition pattern
-            return "^7$"
+            # Fallback to match any composition when no specific predicate
+            return "^\\d+$"
     
     def _handle_description_path(self, desc_parts: list) -> str:
         """
@@ -237,19 +237,19 @@ class FormatResolver:
             # The root composition typically has p matching the template archetype ID
             if len(parts) >= 1:
                 if parts[0] == "uid":
-                    # Look for root composition in cn array
-                    return "^7$", "data.uid.value"  # 7 is the typical root composition archetype ID
+                    # Look for root composition in cn array - match any composition p-value
+                    return "^\\d+$", "data.uid.value"
                 elif parts[0] == "name":
-                    return "^7$", "data.name.value"
+                    return "^\\d+$", "data.name.value"
                 elif parts[0] == "archetype_node_id":
-                    return "^7$", "data.archetype_node_id"
+                    return "^\\d+$", "data.archetype_node_id"
                 else:
                     # For other composition-level fields
                     data_path = "data." + ".".join(parts)
-                    return "^7$", data_path
+                    return "^\\d+$", data_path
             else:
                 # Just the composition itself
-                return "^7$", "data"
+                return "^\\d+$", "data"
         
         # Handle other variable paths
         p_parts = []
