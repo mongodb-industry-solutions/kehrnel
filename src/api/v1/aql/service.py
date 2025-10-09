@@ -17,15 +17,7 @@ from src.api.v1.aql.repository import (
 
 from src.api.v1.aql.models import StoredQuery, StoredQuerySummary, QueryResponse, MetaData
 from src.api.v1.aql.transformers import AQLtoMQLTransformer
-
-class AQLParser:
-    def __init__(self, aql_query: str):
-        self.aql_query = aql_query
-    def parse(self) -> dict:
-        # For this example, we use the provided AST.
-        # In a real system, you would parse self.aql_query here.
-        from src.aql_parser.ast_example import ast_data
-        return ast_data
+from src.aql_parser.parser import AQLParser
 
 
 async def build_aql_pipeline(ast_query: Dict[str, Any], db: AsyncIOMotorDatabase, ehr_id: str = None) -> List[Dict[str, Any]]:

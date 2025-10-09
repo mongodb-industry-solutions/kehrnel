@@ -15,6 +15,7 @@ from src.api.v1.aql.service import (
 )
 from src.api.v1.aql.models import StoredQuerySummary, QueryResponse
 from src.api.v1.aql.api_responses import stored_query_responses
+from src.aql_parser.validator import validate_aql_syntax
 
 router = APIRouter(
     prefix="/query",
@@ -39,6 +40,65 @@ async def execute_query(
     """
     response = await process_aql_query(aql_query=aql, request_url=request.url, db=db, ehr_id=ehr_id)
     return response
+
+
+@router.post(
+    "/aql/validate",
+    summary="Validate AQL Query",
+    description="Validates an AQL query syntax without executing it."
+)
+async def validate_aql_query(
+    aql: str = Body(..., media_type="text/plain", description="The AQL query string to validate.")
+):
+    """
+    Validates an AQL query syntax and returns validation results including errors and warnings.
+    This endpoint can be used to check query syntax before execution.
+    """
+    try:
+        validation_result = validate_aql_syntax(aql)
+        return validation_result
+    except Exception as e:
+        return {
+            "success": False,
+            "message": "Validation process failed.",
+            "errors": [str(e)],
+            "warnings": []
+        }
+
+
+@router.post(
+    "/aql/parse",
+    summary="Parse AQL to AST",
+    description="Converts an AQL query to AST structure without executing it."
+)
+async def parse_aql_to_ast_endpoint(
+    aql: str = Body(..., media_type="text/plain", description="The AQL query string to parse.")
+):
+    """
+    Parses an AQL query string and returns the corresponding AST structure.
+    This endpoint can be used to understand how queries are interpreted or for debugging.
+    """
+    try:
+        from src.aql_parser.parser import AQLParser
+        
+        parser = AQLParser(aql)
+        ast = parser.parse()
+        
+        return {
+            "success": True,
+            "message": "AQL parsed successfully",
+            "original_query": aql,
+            "ast": ast
+        }
+        
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Failed to parse AQL: {str(e)}",
+            "original_query": aql,
+            "ast": None,
+            "error": str(e)
+        }
 
 
 @router.post(
