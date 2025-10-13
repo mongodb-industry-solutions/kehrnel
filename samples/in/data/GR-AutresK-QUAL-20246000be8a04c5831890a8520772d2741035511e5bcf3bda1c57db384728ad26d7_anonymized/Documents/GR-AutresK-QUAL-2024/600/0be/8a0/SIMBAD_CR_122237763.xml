@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122237763" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ONCOLOGIE MEDICALE ORL : DR.FERRAND</title>
+    <effectiveTime value="20191210000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20191210000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b> Patient vu après 2 cures de TPEX dans le cadre d'une récidive <br/>ganglionnaire cervicale non opérable d'un carcinome épidermoïde. <br/>Toxicité cutanée de grade II. <br/><br/>Chimiothérapie impacté par la fistule avec pharyngostome d'évolution <br/>favorable.</b>
+<br/>
+<b> <br/><u> Ce jour<br/></u></b> Vu ce jour en hospitalisation programmée pour pose de gastrostomie 
+ <br/>qui s'est bien passé.
+ <br/>
+<br/>Je lui explique que les résultats du scanner sont plutôt en faveur 
+ <br/>d'une réponse sous réserve d'une relecture radiologique que l'on 
+ <br/>demande ce jour pour l'évaluation de la cible tumorale rendue 
+ <br/>difficile par l'abcèdation.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<br/>Poursuite pour 2 nouvelles cures de TPEX avant début d'un traitement 
+ <br/>d'entretien.
+ <br/>
+<br/>Je reverrai le patient avec un scanner dans 6 semaines (ordonnance 
+ <br/>remise) pour programmer avec lui le début du traitement d'entretien 
+ <br/>par CETUXIMAB bimensuel.
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_129427655" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°16H06893 2180064 Dr Nizar LABAIED</title>
+    <effectiveTime value="20160715000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20160715000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<br/>MICRO-BIOPSIE(S) DU SEIN DROIT 
+ <br/>
+<br/>Prélèvement sous repérage échographique du quadrant supéro-externe (nodule échogène ACR 5). 
+ <br/>- 2 carotte(s) tissulaire(s) (aiguille 14G) mesurant 13 mm arrivées fixées en formol (blocs 1+2).
+ <br/>
+<br/>MICROSCOPIE
+ <br/>
+<br/>- Type histologique : Carcinome canalaire infiltrant (sans type spécifique) (STS)
+ <br/> Différenciation : peu différencié (score 3)
+ <br/> Anisonucléose : élevée (score 3)
+ <br/> Index mitotique : modéré (score 2) (10 mitoses/2 mm2)
+ <br/> Grade histopronostique Ellis-Elston : III
+ <br/>- Absence de carcinome canalaire in situ associé.
+ <br/>- Pas d'embole vasculaire observé.
+ <br/>
+<br/>Corrélations radio-histologiques :
+ <br/>- L'aspect histologique semble concordant avec l'aspect échographique
+ <br/>
+<br/>Absence de tissu mammaire péri-lésionnel.
+ <br/>
+<br/>
+<br/>
+<br/>CONCLUSION
+ <br/>- CARCINOME CANALAIRE INFILTRANT (STS) 
+ <br/> Grade histopronostique Ellis-Elston : III ( 10 mitoses/2 mm2).
+ <br/>- L'aspect histologique semble concordant avec l'aspect échographique
+ <br/>
+<br/>- Etude des récepteurs hormonaux réalisée.
+ <br/>- Etude de l'oncoprotéine HER2 réalisée.
+ <br/>
+<br/>HHGSA7B2-3SED 
+ <br/>
+<br/> Dr Nizar LABAIED 
+ <br/> Praticien 
+ <br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

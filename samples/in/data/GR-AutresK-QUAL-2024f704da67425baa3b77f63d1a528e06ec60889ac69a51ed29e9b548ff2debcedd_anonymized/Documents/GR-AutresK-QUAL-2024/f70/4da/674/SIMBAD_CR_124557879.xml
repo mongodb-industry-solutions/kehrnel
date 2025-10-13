@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124557879" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM TAP ET</title>
+    <effectiveTime value="20181221000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181221000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur FEKI MKAOUAR Rahma
+ <br/>Destinataire : CTE 060 - GYNECOLOGIE
+ <br/> DR COLOMBA--BLAMEBLE EMELINE
+ <br/>
+<b><br/>Dicté par : </b> Docteur Rahma Feki Mkaouar
+ <b><br/>Dicté le : </b> 21/12/2018 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Essais thérapeutiques 
+ <br/>
+<b>Ref :</b> 559654 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : SHV
+ <br/>Examen n° 4686
+ <br/>Examen réalisé le : 19/12/2018
+ <br/>
+<br/>
+<u><b>COMPTE-RENDUS ESSAIS THERAPEUTIQUES<br/>SCANNER THORACO-ABDOMINO-PELVIEN<br/> </b></u>
+<br/>
+<b>Nom de PROTOCOLE : ATALANTE<br/>Numéro CSET : 2502</b>
+<br/>
+<b><br/>Critères d'évaluation : RECIST 1.1 / irRECIST (unidimensionnel)<br/><br/>Date du scanner Baseline : ce jour le 19/12/2018<br/></b>
+<br/>
+<u><b>INDICATION<br/><br/></b></u> Patiente de 66 ans, prise en charge pour un carcinome ovarien de 
+ <br/>haut grade inextirpable avec progression de la masse pelvienne sur le 
+ <br/>bilan d'imagerie d'octobre 2018 .
+ <br/>Scanner Baseline avant inclusion protocolaire. 
+ <br/>
+<br/>
+<u><b>TECHNIQUE<br/></b></u>
+<b><br/></b> Examen réalisé sur un scanner OPTIMA CT660, GENERAL ELECTRIC, mis 
+ <br/>en service le 8 février 2016.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 422272HM5
+ <br/>
+<br/>Réalisation d'une acquisition :
+ <br/>\'a7 Thoracique
+ <br/>\'a7 Abdominale 
+ <br/>\'a7 Pelvienne
+ <br/>
+<br/>Examen réalisé avec injection intraveineuse de produit de contraste.
+ <br/>
+<b>Produit de contraste injecté : Xenetix <br/>Quantité : 110 mL <br/>PDL : 540.05 mGy.cm</b>
+<br/>
+<br/>
+<u><b>RESULTATS<br/></b></u>
+<b><br/><u>Etage thoracique</u></b>
+<u> <br/></u>Absence d'adénomégalie médiastino-hilaire, axillaire ou en 
+ <br/>sus-claviculaire.
+ <br/>Lame d'épanchement pleural bilatéral.
+ <br/>Absence d'épanchement péricardique.
+ <br/>Absence d'embolie pulmonaire proximale.
+ <br/>Pas de lésion suspecte du parenchyme pulmonaire.
+ <br/>
+<br/>
+<u><b>Etage abdomino-pelvien<br/></b></u> Masse pelvienne de 140 mm de grande axe, prise comme cible. 
+ <br/>Ascite de grande abondance avec lésions de carcinose péritonéale 
+ <br/>péri-hépatiques, la plus volumineux est en regard du dôme hépatique, 
+ <br/>prise comme cible.
+ <br/>Pas d'adénomégalie rétropéritonéale ou coeliomésentérique.
+ <br/>Ganglions inguinaux bilatéraux de taille centimétrique et 
+ <br/>infracentimétrique. 
+ <br/>Pas de lésion focale suspecte intra-hépatique, splénique, 
+ <br/>pancréatique, rénale ou surrénalienne.
+ <br/>
+<b><br/><u>En fenêtres osseuses</u></b>
+<u> <br/></u>Pas de lésion osseuse suspecte. 
+ <br/>
+<br/>
+<u><b>EVALUATION DES CIBLES<br/></b> <br/></u>C1 : masse pelvienne
+ <br/> Image : 400 Taille : 140 mm
+ <br/>
+<br/>C2 : lésion de carcinose péri-hépatiques
+ <br/> Image : 234 Taille : 62 mm
+ <br/>
+<br/>
+<b>Somme : 202 mm<br/></b>
+<br/>
+<b>Lésion(s) non cible(s) : autres lésions de carcinose péritonéale<br/></b>
+<b><br/><u>CONCLUSION<br/></u></b>
+<u> <br/></u>
+<b>Scanner Baseline ce jour.<br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Rahma FEKI MKAOUAR <br/>Le vendredi 21 décembre 2018 à 15:23 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

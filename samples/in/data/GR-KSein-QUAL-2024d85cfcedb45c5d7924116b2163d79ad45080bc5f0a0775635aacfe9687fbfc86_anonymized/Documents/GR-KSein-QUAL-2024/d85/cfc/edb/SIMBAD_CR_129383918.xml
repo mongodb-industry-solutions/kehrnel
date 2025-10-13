@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_129383918" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>REUNION DE CONCERTATION PLURIDISCIPLINAIRE</title>
+    <effectiveTime value="20160727000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20160727000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>ONCOLOGUES <br/></b> DR PISTILLI - DR CHEAIB - DR MARCHAND 
+ <br/>
+<br/>
+<b>ONCOLOGUES RADIOTHERAPEUTES</b>
+<br/>DR RIVERA - DR EZRA
+ <br/>
+<br/>
+<b>CHIRURGIEN</b>
+<br/>DR MAZOUNI - DR RIMAREIX
+ <br/>
+<br/>
+<b>ANATOMO-PATHOLOGISTE</b>
+<br/>DR 
+ <br/>
+<br/>
+<b>RADIOLOGUE</b>
+<br/>
+<br/>
+<b>INFIRMIERE ATTACHE DE RECHERCHE CLINIQUE</b>
+<br/>
+<br/>
+<b>Secrétaires Médicales</b>
+<br/>Veronica FORTE - Anne-Solenn VANNIER
+ <br/>
+<br/>
+<b>COMPTE-RENDU DICTE PAR : </b> DR CHEAIB
+ <br/>
+<br/>Patiente de 59 ans.
+ <br/>
+<br/>Nodule mammaire droit de 25 mm.
+ <br/>Cytoponction : adénocarcinome.
+ <br/>Microbiopsie : carcinome canalaire infiltrant de grade III.
+ <br/>RE-, RP-, HER2-
+ <br/>
+<br/>
+<b> DECISION THERAPEUTIQUE</b>
+<br/>
+<br/>1/ Bilan d'extension complet avec bilan biologique, FEVG.
+ <br/>Scanner thoraco-abdomino-pelvien et scintigraphie osseuse.
+ <br/>A vérifier.
+ <br/>
+<br/>Vue le type histologique, pas d'indication à une chirurgie première.
+ <br/>
+<br/>2/ Chimiothérapie néo-adjuvante par 4 EC 75 dose dense + 12 TAXOL 
+ <br/>hebdo. 
+ <br/>On pourrait proposer la participation au groupe GECA.
+ <br/>
+<br/>3/ Chirurgie par TUMORECTOMIE - GS
+ <br/>
+<br/>4/ Radiothérapie : en fonction de la chirurgie.
+ <br/>
+<br/>- Eligible pour l'étude CANTO de cohorte avant de débuter la 
+ <br/>chimiothérapie.
+ <br/>
+<b><br/>Proposition thérapeutique conforme au référentiel REMAGUS <br/>CURIE-GUSTAVE ROUSSY 2014-2015<br/></b>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

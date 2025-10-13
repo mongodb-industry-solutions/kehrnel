@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125144668" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>VISITE EN SALLE - Hémato - Transplantation de moelle osseuse</title>
+    <effectiveTime value="20180926000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180926000000+0000"/>
+        <assignedAuthor>
+            <code code="PAR/184" displayName="PARIS"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Dr BOURHIS</b></u>
+<b> - Dr PILORGE - Dr BELHADJ - Mme VEYRAT - IDE DU SERVICE - <br/>ASH - Diététicienne.</b>
+<br/>
+<u><br/><b>Situation à J40</b></u>
+<b> (J0 le 17.08.18) d'une allogreffe de cellules <br/>souches périphériques, haploidentique, sexe identique de son fils, à <br/>conditionnement d'intensité réduite par radiothérapie splénique 6 Gy, <br/>FLUDARABINE 150 mg/m2, ENDOXAN 29 mg/kg, TBI 2 Gy, J0 le 17.08.18, <br/>dans le cadre du traitement d'une myélofibrose primitive JAK2+ <br/>diagnostiquée en 2015, score DIPSS à 4, splénomégalie à 22 cm, <br/>diagnostiquée le 04/04/2012.<br/>Surveillance initiale au CHU Fort de France, début d'un traitement <br/>par RUXOLITINIB à partir de juin 2017 devant la majoration de la <br/>splénomégalie et de l'hyperleucocytose.<br/>A noter, carcinome prostatique diagnostiqué en novembre 2011. <br/>Traitement par radiothérapie exclusive.<br/>Situation pré-greffe : une hologramme du 17 juillet 2018. Absence de <br/>transformation, persistance de limitation de JACK2 V6117F, <br/>hétérozygote avec une BRAF à 35 %. Adénomégalie à 22 cm en <br/>pré-greffe.</b>
+<br/>
+<br/>
+<br/>
+<u><b>Pour rappel</b></u>
+<b> :</b>
+<br/>
+<br/>Greffe D / R
+ <br/>Masculin / Masculin
+ <br/>95 kg / 72 kg
+ <br/>O+ / B+
+ <br/>CMV + / +
+ <br/>EBV + / +
+ <br/>Toxo - / -
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan des toxicités</b></u> :
+ <br/>
+<br/>Aplasie prolongée. 
+ <br/>Aucun stigmate de prise.
+ <br/>RCP Transplantation Greffe de Mo\'eblle du 24.09.18 : décision de 
+ <br/>greffon complémentaire sélectionné CD34+. Greffon sélectionné dans le 
+ <br/>laboratoire de Thérapie cellulaire de l'Hôpital Saint-Louis (Docteur 
+ <br/>LARGHERO). Boost réinjecté le 01.10.18.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan clinique</b></u> :
+ <br/>
+<br/>OMS 3.
+ <br/>79 kg le 25.09.18.
+ <br/>Poids habituel à 80 kg.
+ <br/>Hémodynamique normale.
+ <br/>VVC en place.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan hématologique</b></u> :
+ <br/>
+<br/>Aplasie persistante avec 0.1 leucocytes, 8 d'Hb, 10 G/L plaquettes.
+ <br/>Transfusions quasi quotidiennes en plaquettes et 2 fois par semaine 
+ <br/>en érythrocytes.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan métabolique</b></u> :
+ <br/>
+<br/>Ionogramme, protidémie dans les normes.
+ <br/>Insuffisance rénale débutante, azotémie à 14, créatinine à 115, 
+ <br/>clairance à 50 mL/min, BH altéré avec bilirubine totale élevée, 
+ <br/>essentiellement libre.
+ <br/>Absence de signe de MVO sur l'échographie hebdomadaire.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan infectieux</b></u> :
+ <br/>
+<br/>Sub-fébrile à 38°C. CRP à 70.
+ <br/>Absence de documentation microbiologique.
+ <br/>Antibiothérapie antibactérienne par MEROPENEM.
+ <br/>Prophylaxie type FLUCONAZOLE / Traitement par GANCICLOVIR pour 
+ <br/>réactivation CMV à dose d'entretien à 5 mg/kg, 2.28 le 24.09.
+ <br/>Poursuite du GANCICLOVIR à dose préventive.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan immunologique</b></u> :
+ <br/>
+<br/>Triple prophylaxie anti-GVH avec actuellement CICLOSPORINE 130 x 2, 
+ <br/>ciclosporinémie à 208 ng/mL le 24.09. Arrêt du MMF protocolaire à 
+ <br/>J35. CYCLOPHOSPHAMIDE post-transplantation à J3 / J4. Pour l'instant, 
+ <br/>pas de stigmates de GVH.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan nutritionnel</b></u> :
+ <br/>
+<br/>Absence de nutrition orale.
+ <br/>Nutrition parentérale par 1500 mL de SMOFKABIVEN, 1600 kcal/jour.
+ <br/>Pas de toxicité hépatique.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan de recherche clinique</b></u> :
+ <br/>
+<br/>Aucun protocole.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan relationnel</b></u> :
+ <br/>
+<br/>Patient alité.
+ <br/>Suivi psychologique en cours.
+ <br/>
+<br/>
+<br/>
+<u><b>En pratique</b></u> : 
+ <br/>
+<br/>Non prise du greffon.
+ <br/>Tentative d'arrêt du GCSF jusqu'au lundi 01.10.18.
+ <br/>Patient à réanimer +++
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

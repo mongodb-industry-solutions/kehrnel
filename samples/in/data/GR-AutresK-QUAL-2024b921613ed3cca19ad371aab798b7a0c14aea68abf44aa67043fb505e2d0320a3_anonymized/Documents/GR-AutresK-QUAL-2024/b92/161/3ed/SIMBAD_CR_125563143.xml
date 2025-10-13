@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125563143" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°18H07099 2632712 Dr Jacques BOSQ</title>
+    <effectiveTime value="20180719000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180719000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>DÉPARTEMENT DE BIOLOGIE ET DE PATHOLOGIE MEDICALES<br/></p>
+<p>114, rue Edouard Vaillant - 94805 VILLEJUIF CEDEX<br/></p>
+<p>N° I.G.R. : 110 XXXXXX <br/>XXXXXX XXXXXX XXXXXX XXXXXX M <br/> Docteur DE BOTTON <br/>Examen demandé par : <br/>Dr DE BOTTON <br/>CTE 110 - HEMATOLOGIE <br/>Prélevé le 17/07/2018 <br/>Enregistré le 18/07/2018 <br/></p>
+<p> JBO <br/> Examen n° : 18H07099<br/></p>
+<p> CR édité le : 19/07/2018<br/></p>
+<p>Copie à : 1/1 </p>
+<p>BIOPSIE OSTEO-MEDULLAIRE DE L'EPINE ILIAQUE POSTERIEURE DROITE </p>
+<p> Prélèvement de qualité peu contributive. <br/>La carotte biopsique, de 6 mm, comprenant 4 espaces médullaires. est constituée pour 0 % de sa longueur d'une corticale osseuse et pour 100 % d'os spongieux. <br/>Les travées osseuses sont d'aspect normal. La fibrose est absente. La richesse cellulaire est de type 0 - aplasique pour quelqu'un de cet âge. <br/>Les différentes lignées hématopoiétiques se caractérisent comme suit : la lignée érythroblastique est aplasique, la lignée granuleuse est aplasique, la lignée mégacaryocytaire est aplasique. <br/>Absence d'infiltration cellulaire anormale dans les limites des carottes biopsiques. </p>
+<p> <br/>CONCLUSION </p>
+<p> Biopsie ostéo-médullaire de l'épine iliaque postérieure droite : <br/>Biopsie médullaire de petite taille, peu contributive, déchiquetée sans éléments hématopoïétiques. Aplasie médullaire. <br/>Absence de localisation tumorale maligne. </p>
+<p> <br/>BHSM0111<br/>D <br/></p>
+<p> Dr Jacques BOSQ <br/> Médecin Spécialiste </p>
+<p> Compte-rendu validé et signé électroniquement </p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

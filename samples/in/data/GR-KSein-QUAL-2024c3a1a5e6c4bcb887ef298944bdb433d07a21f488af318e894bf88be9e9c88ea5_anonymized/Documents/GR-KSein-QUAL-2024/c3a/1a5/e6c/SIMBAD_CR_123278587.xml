@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123278587" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>MED.NUCLEAIRE MN TEP FDG 050</title>
+    <effectiveTime value="20190703000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190703000000+0000"/>
+        <assignedAuthor>
+            <code code="MNU/174" displayName="MEDECINE NUCLEAIRE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur TERROIR--CASSOU-MOUNAT MARIE
+ <br/>
+<br/>Destinataire : CTE 050 - SEIN
+ <br/> DR MOKDAD--ADI MERIEM
+ <br/>
+<br/>
+<br/>
+<b>EXAMEN DE TOMOGRAPHIE PAR EMISSION DE POSITONS<br/>TEP-FDG<br/> Dicté par : </b> Docteur Mathilde Mahe, Interne
+ <b><br/>Dicté le : </b> 02/07/2019 
+ <b><br/>Service : </b> MNU-MEDECINE NUCLEAIRE 
+ <br/>
+<b>Type de document : </b> MNU CE TEP FDG 
+ <br/>
+<b>Ref :</b> 739624 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : BHI
+ <br/>
+<br/>
+<br/>Examen réalisé le : 02/07/2019
+ <br/>
+<br/>Examen réalisé sur un TEP-TDM DISCOVERY 690 PET-CT, GENERAL 
+ <br/>ELECTRIC, 
+ <br/>mis en service en juin 2011.
+ <br/>- Numéro d'autorisation : M940029
+ <br/>- Numéro d'identification : 266196HM5
+ <br/>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<u><br/></u></b>
+<br/>Patiente de 40 ans suivie pour un carcinome canalaire infiltrant 
+ <br/>gauche métastatique ganglionnaire.
+ <br/>Sous Xeloda depuis avril 2019, réévaluation.
+ <br/>
+<u><b><br/><br/>TECHNIQUE</b></u>
+<b> :<u><br/></u></b>
+<br/>Acquisition TEP standard réalisée 71 minutes après injection par voie 
+ <br/>intraveineuse de 326,7 MBq de 18-FDG.
+ <br/>Glycémie avant injection : 5,7 mmol/l - Durée du jeûne : > 6 heures
+ <br/>Scanner de repérage pour fusion d'images, PDL : 486,32 mGy.cm
+ <br/>- Poids 93 kg - Taille 165 cm
+ <br/>- Site d'injection : coude gauche 
+ <br/>- Heure d'injection 13 h 49
+ <br/>- Début de l'examen à 14 h 00
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/><br/></b> Comparaison avec l'examen précédent du XXXXXX/2019
+ <br/>
+<br/>
+<br/>
+<u>Etage cervico-encéphalique :</u>
+<br/>
+<br/>- Absence de fixation pathologique cérébrale. 
+ <br/>- Absence de fixation pathologique de la loge thyroïdienne ou des 
+ <br/>aires ganglionnaires cervicales. 
+ <br/>- asymétrie de fixation oropharyngée au profit du coté droit à 
+ <br/>confronter à un examen ORL.
+ <br/>- Diminution de l'asymétrie de fixation du larynx avec foyer rétro 
+ <br/>cricoïdien droit SUV max 5,2 vs 9,2.
+ <br/>
+<br/>
+<br/>
+<u>Etage thoracique :</u>
+<br/>
+<br/>- Absence de fixation pathologique pleuro-pulmonaire. 
+ <br/>- Absence d'épanchement pleural ou péricardique. 
+ <br/>- Majoration en taille et en intensité de fixation des adénopathies 
+ <br/>susclaviculaires et axillaires gauches:
+ <br/>* Foyer sous cutané en avant du sterno cléido mastoïdien gauche SUV 
+ <br/>max 16,5 vs 9,1 mesurant 34 mm vs 14mm
+ <br/>* Foyer sus claviculaire gauche en regard de la 1 ère côte SUV max 
+ <br/>11,9 vs 11,7 de 18 mm vs 13mm.
+ <br/>* Foyer sus claviculaire gauche plus haut situé SUV max 13,7 vs 11,7 
+ <br/>avec majoration de l'étendue.
+ <br/>- Absence de fixation pathologique des glandes mammaires. 
+ <br/>- Renforcement de la fixation en regard des clips axillaires SUV 5,2 
+ <br/>vs 4,4
+ <br/>
+<br/>
+<br/>
+<u>Etage abdomino-pelvien :</u>
+<br/>
+<br/>- Majoration en étendue et intensité de fixation du foyer surrénalien 
+ <br/>SUV max 15,8 vs 9,5
+ <br/>- Absence de fixation pathologique hépatique, splénique, 
+ <br/>pancréatique. 
+ <br/>- Absence de fixation pathologique des aires ganglionnaires 
+ <br/>sous-diaphragmatiques 
+ <br/>
+<br/>
+<br/>
+<u>Etage ostéo-médullaire :</u>
+<br/>
+<br/>- Absence de fixation pathologique au niveau osseux. 
+ <br/>- Diminution de la fixation en regard du muscle infra épineux gauche 
+ <br/>d'allure fonctionnelle au précédent examen.
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/><u><br/></u>Progression métabolique devant la majoration en intensité et étendue <br/>de fixation des foyers déjà décrits.<br/>Asymétrie de fixation oropharyngée au profit du coté droit à <br/>confronter à un examen ORL plus marquée que sur l'examen précédent.<br/>Absence de nouveau foyer suspect par ailleurs<br/></b>
+<br/>
+<b><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Marie TERROIR CASSOU-MOUNAT <br/>Le mardi 2 juillet 2019 à 16:57<br/>_________________________________________________<br/>Signé électroniquement par Docteur Mathilde MAHE <br/>Le mardi 2 juillet 2019 à 17:00 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127284010" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>RESUME D'HOSPITALISATION FAISANT FONCTION DE LETTRE DE LIAISON</title>
+    <effectiveTime value="20171020000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171019000000+0000"/>
+        <assignedAuthor>
+            <code code="MOR/178" displayName="MORBIHAN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Docteur HARICHANE - Interne ORL</b></u>
+<br/>
+<br/>
+<u><b>Médecin référent</b></u>
+<b> :</b> Docteur BREUSKIN
+ <br/>
+<br/>
+<u><b>Motif d'hospitalisation</b></u>
+<b> :</b>
+<br/>
+<br/>Patient âgé de 56 ans, hospitalisé dans le service RHONE du 19.10.17 
+ <br/>au 20.10.17 pour une 
+ <b>PAN ENDOSCOPIE + FIBROSCOPIE OESO-GASTRIQUE<br/></b>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS CHIRURGICAUX</b></u>
+<br/>- Dupuytren bilatéral 
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS MEDICAUX</b></u>
+<br/>- Carcinome épidermoïde du voile et pilier postérieur traité par 
+ <br/>radiochimiothérapie
+ <br/>- Actuellement douleurs pharyngées en cours d'exploration 
+ <br/>- Epilepsie: denrnière crise en 2014
+ <br/>
+<br/>Tabac : sevré en 2014
+ <br/>OH : sevré en 2014
+ <br/>
+<br/>
+<u><b>ALLERGIE/INTOLERANCES<br/></b></u> NC 
+ <br/>
+<br/>
+<u><b>ACTES REALISES ET EVOLUTION DANS LE SERVICE</b></u>
+<b> :</b>
+<br/>
+<br/>
+<b> A l'admission :</b>
+<br/>- EVA : 5/10 (cervical droit)
+ <br/>
+<br/>
+<b>PAN ENDOSCOPIE + FIBROSCOPIE OESO-GASTRIQUE </b> réalisée le 19.10.17 par 
+ <br/>le Docteur BREUSKIN 
+ <b><br/> <br/></b> Suites opératoires simples.
+ <br/>
+<br/>Retour au domicile le 20.10.17.
+ <br/>
+<br/>
+<b> A la sortie :</b>
+<br/>- EVA : 0/10
+ <br/>
+<br/>
+<u><b>Ordonnances de sortie</b></u>
+<b> :</b>
+<br/>
+<br/>- faire pratiquer un scanner thoracique (apporter le résultat le 
+ <br/>7.11.17)
+ <br/>- PARACTEAMOL : un gramme toutes les 6 heures,
+ <br/>- TOPALGIC 50 mg toutes les 8 heures,
+ <br/>- AUGMENTIN un gramme toutes les 8 heures pdt 7 jorus.
+ <br/>
+<br/>
+<u><b>Documents remis à la sortie</b></u>
+<b> :</b>
+<br/>
+<br/>- Bulletins de situation.
+ <br/>- prolongation arrêt de travail (20.12.17)
+ <br/>- scanner thoracique du 5.10.17 (fait à Antony)
+ <br/>
+<br/>
+<u><b>Les prochains rendez-vous</b></u> : 
+ <br/>
+<br/>30/10/2017 08:45 MOR IBN HISTO IBN 
+ <br/>07/11/2017 15:00 MOR IBN C ORL CTE PE 19/10 + TDM VILLE + 
+ <br/>antibiothérapie 
+ <br/>
+<br/>
+<br/>
+<b>" Conformément à l'article R710 2-1 du code de Santé Publique " :</b>
+<br/>Transfusion de produits sanguins labiles : non
+ <br/>Portage de germe multirésistant : non
+ <br/>Infections nosocomiales : non
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122419062" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>CONSULTATION ORL - Interne ORL</title>
+    <effectiveTime value="20190918000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20191114000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ CONSULTATION ORL - INTERNE ORL
+ <br/>
+<br/>Dicté par : Docteur Christol Fabre, Interne
+ <br/>Dicté le : 18/09/2019 
+ <br/>Service : ORL-CONSULTATIONS ORL 
+ <br/>Type de document : ORL CC PETITE CHIRURGIE 
+ <br/>Ref : 792710 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>Patient : José XXXXXX 
+ <br/>Identifiant : XXXXXX 
+ <br/>Date de naissance : XXXXXX 
+ <br/>Sexe : Male 
+ <br/>_____________________________________________________________
+ <br/>Secrétaire : DSU
+ <br/>
+<br/>Patient ayant bénéficier d'une laryngectomie totale pour un carcinome 
+ <br/>hypopharyngé gauche avec reconstruction par un lambeau de grand 
+ <br/>pectoral puis par un lambeau d'ALP pour de multiples pharyngostomes. 
+ <br/>
+<br/>Le patient m'est adressé en urgence par l'orthophoniste Alice GUYON 
+ <br/>qui trouvait un oedème facial important.
+ <br/>
+<br/>Effectivement, le patient présente un syndrome cave supérieur. 
+ <br/>
+<br/>Etant donné qu'il doit être revu par le Docteur BREUSKIN dans 2 
+ <br/>jours, je n'ai pas fait d'examen clinique. 
+ <br/>
+<br/>
+<u><b>A l'interrogatoire</b></u>
+<br/>Le patient a fait un scanner thoracique le 13/09/19, qui, à la 
+ <br/>visualisation des images, retrouve une probable lésion descendant 
+ <br/>jusqu'en cervical bas avec l'aminage de la veine jugulaire gauche 
+ <br/>interne expliquant les symptomes. 
+ <br/>
+<br/>Je lui prescris donc un scanner cervico-facial à réaliser en urgence, 
+ <br/>si possible avant la consultation du Docteur BREUSKIN. 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

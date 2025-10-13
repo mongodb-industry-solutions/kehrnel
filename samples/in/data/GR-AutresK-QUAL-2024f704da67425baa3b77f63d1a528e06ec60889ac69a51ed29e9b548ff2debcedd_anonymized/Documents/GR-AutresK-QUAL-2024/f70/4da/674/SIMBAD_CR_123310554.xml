@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123310554" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ONCOLOGIE GYNECOLOGIE - DR EMELINE COLOMBA</title>
+    <effectiveTime value="20190628000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190628000000+0000"/>
+        <assignedAuthor>
+            <code code="060/8" displayName="CTE 060 - GYNECOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>COMPTE RENDU DE CONSULTATION DE GYNECOLOGIE<br/><br/>Dicté par : </b> Docteur Emeline Colomba
+ <b><br/>Dicté le : </b> 27/06/2019 
+ <b><br/>Service : </b> 060-CTE 060 - GYNECOLOGIE 
+ <br/>
+<b>Type de document : </b> 060 CC CONSULTATION 
+ <br/>
+<b>Ref :</b> 736408 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : HLX/A
+ <br/>
+<br/>
+<b>Je revois ce jour Madame XXXXXX, âgée de 66 ans pour sa 1re <br/>injection d'Avastin ATEZOLIZUMAB ou placebo en entretien dans le <br/>cadre du protocole ATALANTE sous Carboplatine Gemcitabine pour une <br/>première rechute d'un adénocarcinome séreux de haut grade jamais <br/>réséqué platine sensible.<br/><br/>Pour mémoire </b> : C1 J1 le 18 janvier , C2 le 21 février, le C2 avait 
+ <br/>été décalé pour une thrombopénie avec hémorragie digestive et 
+ <br/>déglobulisation puis une neutropénie, réalisé le 14 mars mais le 
+ <br/>Carboplatine n'a pas été réalisé .On rappelle la toxicité 
+ <br/>hématologique justifiant l'arrêt du J8 et de l'ajustement des doses 
+ <br/>de Carboplatine jusqu'à un AUC3.
+ <br/>Elle reçoit finalement le C3 au Gard le 4 avril 2019 de Carboplatine 
+ <br/>AUC4 300 mg dose totale interrompu après la moitié 150 mg justifiant 
+ <br/>le passage à un protocole de désensibilisation.
+ <br/>En réalité la cure du 9 avril correspond bien au C3 , C4 le 27 avril 
+ <br/> A noter qu'on réalise que lors du C4 a priori la patiente n' a reçu 
+ <br/>que 150 mg de Carboplatine selon le protocole de désensibilisation 
+ <br/>qui avait été repris.
+ <br/>
+<b> <br/></b> D'autre part il existait également une réaction anaphylactique au 
+ <br/>Carboplatine justifiant de protocole de désensibilisation et 
+ <br/>d'optimisation du traitement de la prémédication médicamenteuse anti 
+ <br/>allergique, depuis la tolérance est meilleure.
+ <br/>
+<br/>
+<b><br/>Depuis la dernière consultation : </b> on note un épisode de consultation 
+ <br/>aux urgences le 7 juin pour fièvre à 40° isolée, et un bilan a été 
+ <br/>réalisé avec 'des hémocultures qui est revenu négatif. 
+ <br/>
+<br/>A noter une hémoculture périphérique positive à staphylocoque 
+ <br/>évoquant une contamination. A noter 1000 éléments sur le liquide 
+ <br/>d'ascite. 
+ <br/>
+<b><br/></b> La patiente ne sait pas si un traitement antibiotique a été donné 
+ <br/>aux urgences et à la sortie d'hospitalisation. 
+ <br/>La fièvre n'est pas réapparue. 
+ <br/>Notion de frissons. 
+ <br/>
+<b><br/>Le bilan biologique réalisé ce jour est satisfaisant </b> avec une 
+ <br/>créatinine à 71, un bilan hépatique normal une albumine à 31 une 
+ <br/>hémoglobine à 10,8 et des plaquettes à 445 000 et des PNN à 6100.
+ <br/>A noter un CA 125 à 1185, globalement stable par rapport à février.
+ <br/>
+<b><br/>Examen clinique :<br/></b> PS : 1 
+ <br/>Fréquence respiration à 16
+ <br/>Poids 60 kg 
+ <br/>Pouls à 98/min 
+ <br/>Température à 38°2
+ <br/>Tension à 11/7 
+ <br/>Saturation à 99 % en air ambiant
+ <br/>
+<b><br/>Traitement actuel : </b> Polaramine 2 mg 1 comprimé jour Innohep 0,5 
+ <br/>ml/jour Primperan et Kytril à la demande. 
+ <br/>
+<br/>Bandelette urinaire est négative. 
+ <br/>
+<b><br/></b> On rappelle que la patiente bénéficie d'une ponction d'ascite toutes 
+ <br/>les 5 à 6 semaines. 
+ <br/>Episode de rash cutané prurigineux d'évolution favorable sous 
+ <br/>Polaramine, rash apparu 2 à 3 jours après les injections 
+ <br/>potentiellement lié de grade 1. 
+ <br/>
+<br/>
+<b>Examen clinique :<br/></b> Examen inchangé 
+ <br/>Ascite de moyenne abondance.
+ <br/>
+<br/>
+<b><h3>Conclusion</h3> :<br/></b> Poursuite de la séquence thérapeutique, la patiente reçoit ce jour 
+ <br/>Avastin 15 mg/ kilo soit 900 mg dose totale associée à l'ATEZOLIZUMAB 
+ <br/>1200 mg, J1 = J21 ou placebo, elle sera revue conformément au 
+ <br/>protocole. 
+ <br/>
+<br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Emeline COLOMBA <br/>Le vendredi 28 juin 2019 à 13:13</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

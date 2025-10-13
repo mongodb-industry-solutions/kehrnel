@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125775281" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ORTHOPHONIE : Mme Alice GUYON</title>
+    <effectiveTime value="20180528000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180619000000+0000"/>
+        <assignedAuthor>
+            <code code="010/1" displayName="CTE 010 - ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patient vu ce jour à la demande du Dr. Breuskin pour évaluation des 
+ <br/>difficultés de déglutition et apprentissage de la voix oesophagienne 
+ <br/>
+<br/>Le patient est porteur d'une gastrostomie par laquelle il passe deux 
+ <br/>poches. Il s'alimente également un petit peu per os (pâtes, café, 
+ <br/>banane) mais péniblement. 
+ <br/>
+<b>Bilan praxique :<br/></b> - la mobilité et la tonicité labiales sont réduites 
+ <br/>- la tonicité jugale est OK
+ <br/>- on retrouve une LOB à 2,7cm, mais la mobilité mandibulaire est OK
+ <br/> - la mobilité linguale est très limitée avec un recul de la base de 
+ <br/>langue peu efficace
+ <br/>
+<b>Bilan de la déglutition :<br/></b> - aucune difficulté sur les textures testées (eau pétillante et 
+ <br/>compote) avec tête légèrement en arrière pour éviter un reflux nasal 
+ <br/>On propose donc au patient un programme alimentaire exclusivement per 
+ <br/>os, en texture mixé épais lisse (avec 2 fortimels max). 
+ <br/>On met également en place des praxies (contre l'installation du 
+ <br/>trismus déjà présent, et praxies linguales, ainsi qu'un travail 
+ <br/>d'articulation en voix chuchotée).
+ <br/>
+<br/>Le patient sera suivi en rééducation orthophonique à raison de 2 
+ <br/>séances par semaine pour apprentissage de la voix oesophagienne. On 
+ <br/>en profitera pour évaluer de nouveau la déglutition et vérifier que 
+ <br/>le programme d'alimentation est bien suivi. 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

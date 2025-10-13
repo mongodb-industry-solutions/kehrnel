@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122949812" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 192320106</title>
+    <effectiveTime value="20190820000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190826000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Dr J. Delahousse (61 92) <br/>Pr A. Paci (47 30) </p>
+<p>Dr A. Arbab (41 65) <br/>Pr A. Bennaceur (40 65) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Dr E. Gallois (40 62) <br/>Pr F. Griscelli (51 93) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>XXXXXX </p>
+<p>FémininNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>20/08/2019 05:06 </p>
+<p>Sexe : </p>
+<p>20/08/2019 08:00 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>Nom de naissance : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>HERAULT </p>
+<p> 2 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>HERAULTPrescrit par : </p>
+<p>lundi 26 août 2019 </p>
+<p>Complet </p>
+<p>BIOCHIMIE </p>
+<p> BILAN HÉPATIQUE / PANCRÉATIQUE <br/>PAL 156 UI/L ( 30 - 120 )150 19/08/2019 11:40 NDP <br/>Plasma hépariné - IFCC </p>
+<p>ASAT 53 UI/L ( < 35 )67 19/08/2019 11:40 NDP <br/>Plasma hépariné - IFCC </p>
+<p>ALAT 138 UI/L ( < 35 )168 19/08/2019 11:40 NDP <br/>Plasma hépariné - IFCC </p>
+<p>GGT 447 UI/L ( < 38 )458 19/08/2019 11:40 NDP <br/>Plasma hépariné - IFCC </p>
+<p>Bilirubine Totale 6 μmol/l ( 5 - 21 )6 19/08/2019 11:40 NDP <br/>Plasma hépariné - DPD </p>
+<p>Bilirubine Conjuguée 1 μmol/l ( < 3 )2 19/08/2019 11:40 NDP <br/>Plasma hépariné - DPD </p>
+<p>HEMOSTASE </p>
+<p> RENSEIGNEMENTS CLINIQUES 1er Traitement presc </p>
+<p>_lab1 <br/>Sans traitement </p>
+<p> BILAN DE COAGULATION <br/>Taux de Prothrombine 95 % ( 70 - 100 )84 12/08/2019 16:45 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>Temps de Quick (Témoin = 12,9s) 13.3 s 1XXXXXX 12/08/2019 16:45 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>INR 1.0 1.1 12/08/2019 16:45 NDP </p>
+<p>0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>TCK 30 s 29 12/08/2019 16:45 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK Ratio 1.0 ( < 1.2 )1.0 12/08/2019 16:45 NDP </p>
+<p>MICROBIOLOGIE </p>
+<p> SÉROLOGIE INFECTIEUSE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 26/08/2019 à 15:39 par : Pr GRISCELLI Franck,Dr PRADON Caroline</p>
+<p></p>
+<p></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>HERAULTPatient : 2 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>HERAULTPrescrit par : </p>
+<p>- Hépatite A (VHA) </p>
+<p>Anticorps totaux anti-VHA : GRFPrélèvement non parvenu <br/>Sérum - Access HAV Ab (EIA) </p>
+<p> index (VHA) : Prélèvement nonparvenu </p>
+<p>GRF </p>
+<p>- Hépatite B (VHB) </p>
+<p>Antigène HBs : GRFPrélèvement non parvenu <br/>Sérum - Access HBs Ag (EIA) </p>
+<p> index (Ag HBs) : Prélèvement nonparvenu </p>
+<p>0.29 11/10/2018 14:05 GRF </p>
+<p>Anticorps anti-HBs GRFPrélèvement non parvenu <br/>Sérum - Access HBc Ab (EIA) </p>
+<p> concentration (Ac HBs) : Prélèvement nonparvenu </p>
+<p>0.0 11/10/2018 14:05 GRF </p>
+<p>Anticorps totaux anti-HBc : GRFPrélèvement non parvenu <br/>Sérum - Access HBc Ab (EIA) </p>
+<p> index (Ac HBc) : Prélèvement nonparvenu </p>
+<p>0.18 11/10/2018 14:05 GRF </p>
+<p>- Hépatite C (VHC) </p>
+<p>Anticorps totaux anti-VHC GRFPrélèvement non parvenu <br/>Sérum - Access HCV Ab V3 (EIA) </p>
+<p> index (VHC) : Prélèvement nonparvenu </p>
+<p>0.04 14/05/2018 08:38 GRF </p>
+<p>- Virus de l'Immunodéficience Humaine (VIH) </p>
+<p>Anticorps anti-VIH 1 et 2, antigène p24 : GRFPrélèvement non parvenu <br/>Sérum - Access HIV combo (EIA) </p>
+<p> index (VIH) : Prélèvement nonparvenu </p>
+<p>0.31 11/10/2018 14:05 GRF </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 26/08/2019 à 15:39 par : Pr GRISCELLI Franck,Dr PRADON Caroline</p>
+<p></p>
+<ul>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Bilan hépatique / pancréatique</li>
+</ul>
+<li>HEMOSTASE</li>
+<ul>
+<li>Renseignements cliniques</li>
+<li>Bilan de coagulation</li>
+</ul>
+<li>MICROBIOLOGIE</li>
+<ul>
+<li>Sérologie infectieuse</li>
+<ul>
+<li>Hépatite A (VHA)</li>
+<li>Hépatite B (VHB)</li>
+<li>Hépatite C (VHC)</li>
+<li>Virus de l'Immunodéficience Humaine (VIH)</li>
+</ul>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

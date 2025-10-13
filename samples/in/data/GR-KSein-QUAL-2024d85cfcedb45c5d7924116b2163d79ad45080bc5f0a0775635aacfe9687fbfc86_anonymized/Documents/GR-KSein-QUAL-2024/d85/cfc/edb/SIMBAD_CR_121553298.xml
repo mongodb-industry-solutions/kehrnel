@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121553298" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="24611-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de télé-médecine (téléconsultation)"/>
+    <title>Suivi Thérapeutique Téléph. du 2020-03-18</title>
+    <effectiveTime value="20200318000000+0000"/>
+    <confidentialityCode code="24611-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de télé-médecine (téléconsultation)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200319000000+0000"/>
+        <assignedAuthor>
+            <code code="UPO/332" displayName="UNITE DE PSYCHO_ONCOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ {\rtf1\ansi\ansicpg1252\deff0\deflang1036{\fonttbl{\f0\fnil\fcharset0 
+ <br/>Courier New;{\f1\froman\fcharset0 Times New Roman;{\colortbl 
+ <br/>;\red0\green0
+ <b>lue0;\viewkind4\uc1 \sb100\sa100\cf1 Entretien <br/>téléphonique dans le cadre d'un suivi. <br/>Inquiétudes en lien avec les résultats qui seront annoncés lundi <br/>prochain. Les périodes d'attente étant toujours très anxiogène pour <br/>Mme XXXXXX. <br/>Nous convenons de nous entretenir de nouveau le 24.03 à 11h30.\cf0\f1 <br/> \f0 <br/></b>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

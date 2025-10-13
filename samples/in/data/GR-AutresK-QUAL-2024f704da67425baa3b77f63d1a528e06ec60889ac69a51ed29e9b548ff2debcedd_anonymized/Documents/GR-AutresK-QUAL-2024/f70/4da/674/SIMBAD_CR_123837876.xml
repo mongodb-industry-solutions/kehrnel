@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123837876" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>DEPARTEMENT DE MEDECINE - SERVICE GARD</title>
+    <effectiveTime value="20190409000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190409000000+0000"/>
+        <assignedAuthor>
+            <code code="GAR/182" displayName="GARD"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>DEPARTEMENT DE MEDECINE ONCOLOGIQUE - HOSPITALISATION GARD<br/><br/> Dicté par : </b> Docteur Emilie Moati, Interne
+ <b><br/>Dicté le : </b> 04/04/2019 
+ <b><br/>Service : </b> GAR-GARD 
+ <br/>
+<b>Type de document : </b> GAR RH CHIMIO 
+ <br/>
+<b>Ref :</b> 646480 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : FDY/a
+ <br/>
+<br/>
+<u><b>Interne</b></u> : Emilie MOATI
+ <br/>
+<br/>
+<u><b>HOSPITALISATION SERVICE GARD DU 04 AU 06 AVRIL 2019<br/></b></u>
+<br/>Mme XXXXXX XXXXXX, 66 ans, est hospitalisée pour la réalisation de 
+ <br/>la 4ème cure de chimiothérapie de type CARBOPLATINE/GEMZAR/AVASTIN 
+ <br/>+/- ATEZOLIZUMAB dans le cadre de la prise en charge d'un 
+ <br/>d'adénocarcinome séreux de haut grade stade IV (pleural) initial, 
+ <br/>jamais réséqué, en rechute locale, en cours de chimiothérapie par 
+ <br/>(protocole ATALANTE).
+ <br/>
+<br/>
+<b>Profil moléculaire</b> : BRCA1 et BRCA2 sauvages en constitutionnel et 
+ <br/>somatique
+ <br/>
+<b>Protocole signé</b> : ATALANTE
+ <br/>
+<br/>
+<u><b>Médecin référent</b></u> : Dr Fanny POMMERET
+ <br/>
+<br/>
+<u><b>ANTECEDENTS / PATHOLOGIES ASSOCIEES<br/></b></u> * Appendicectomie.
+ <br/>* Thrombose MID diagnostiqué en février 2017, sous anticoagulant.
+ <br/>* Pas d'allergie.
+ <br/>* Pas d'intoxication éthylo-tabagique.
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE</b></u>
+<br/>
+<b> * Fin février 2017 </b> : suite à une thrombose inaugurale au niveau du 
+ <br/>membre inférieur droit (thrombose de la veine saphène interne, 
+ <br/>étendue jusqu'à la fémorale commune), découverte sur l'échographie 
+ <br/>doppler d'une masse tissulaire pelvienne, probablement d'origine 
+ <br/>ovarienne à composante mixte mesurant de grand axe 120 mm ; ascite 
+ <br/>d'environ 2 à 3 litres.
+ <br/>
+<u><b><br/></b></u> Mise en route d'un traitement anticoagulant par INNOHEP à dose 
+ <br/>curative avec un switch par PREVISCAN.
+ <br/>
+<u><b><br/></b></u>
+<b> * Mars 2017 </b> : réalisation d'une coelioscopie exploratrice par le Dr 
+ <br/>CHERIER qui retrouve une carcinose péritonéale avec une milliaire 
+ <br/>diffuse, l'exploration étant limitée compte-tenu de l'adhérence du 
+ <br/>grand épiploon à la paroi antérieure ; PCI à 16/27, cytologie 
+ <br/>positive ; examen extemporané qui retrouve un adénocarcinome
+ <br/>
+<u><b><br/></b></u> 1ère ligne de chimiothérapie par CARBOPLATINE + TAXOL, C1J1 le 
+ <br/>31/03/17. Chimiothérapie nécessitant des réductions de doses pour 
+ <br/>toxicité hématologique principalement thrombopénie grade II.
+ <br/>
+<u><b><br/></b></u>
+<b> * Octobre 2017 :</b> coelioscopie exploratrice retrouvant un PCI stable 
+ <br/>mais instabilité hémodynamique majeure et respiratoire ayant fait 
+ <br/>surseoir à la chirurgie initialement prévue.
+ <br/>
+<u><b><br/></b></u> Poursuite d'un traitement systémique exclusif.
+ <br/>
+<u><b><br/></b></u> Reprise de la chimiothérapie par CARBOPLATINE + TAXOL avec 
+ <br/>adjonction d'AVASTIN, C1J1 le 20/10/17, 2 cures puis entretien par 
+ <br/>AVASTIN seul.
+ <br/>
+<u><b><br/></b></u> Stabilité clinique sous AVASTIN pendant 1 an, ascite ponctionnée 
+ <br/>toutes les 6 semaines.
+ <br/>
+<u><b><br/></b></u>
+<b> * Octobre 2018 :</b> progression ovarienne et biologique.
+ <br/>Inclusion dans le protocole ATALANTE, bras CARBOPLATINE + GEMZAR + 
+ <br/>AVASTIN +/- ATEZOLIZUMAB, C1J1 le 18 janvier 2019
+ <br/>
+<u><b><br/>HISTOIRE RECENTE<br/></b></u> C1 marqué par une toxicité hématologique de grade IV justifiant 
+ <br/>l'ajustement des doses au CARBOPLATINE AUC3 et à la GEMCITABINE 1 000 
+ <br/>mg/m2 J1 sans J8.
+ <br/>Le C3 a été marqué par une réaction allergique au CARBOPLATINE mais 
+ <br/>dans un contexte où la prémédication par SOLUMEDROL n'avait pas été 
+ <br/>réalisée. 
+ <br/>On propose donc la prochaine cure par du CARBOPLATINE sur 2 heures 
+ <br/>avec une prémédication par 120 mg de SOLUMEDROL 1 ampoule d'AZANTAC 1 
+ <br/>ampoule de POLARAMINE et une surveillance en hospitalisation au Gard. 
+ <br/>
+<br/>On observe un bénéfice clinique net de la réintroduction des sels de 
+ <br/>platine après C1.
+ <br/>Toutefois depuis le 21 février2019 la patiente rapporte une 
+ <br/>réapparition plus rapide de l'ascite avec une nouvelle ponction 
+ <br/>d'ascite de 2,8 litres le 22 mars 2019. Mais on rappelle que devant 
+ <br/>la réaction allergique, la patiente n'a reçu qu'une petite dose de 
+ <br/>CARBOPLATINE le 14 mars 2019. 
+ <br/>
+<u><b><br/>TRAITEMENT PERSONNEL<br/></b></u> - INOHEP 0.5 ml le matin
+ <br/>
+<br/>
+<u><b>INTERCURE<br/></b></u>
+<br/>Pas d'asthénie.
+ <br/>Pas de nausée.
+ <br/>Pas de vomissement.
+ <br/>Constipation grade I liée aux anti émétiques.
+ <br/>Pas de mucite.
+ <br/>
+<br/>Toxicité hématologique : 
+ <br/>- neutropénie grade 0
+ <br/>- thrombopénie grade 0
+ <br/>- anémie grade I.
+ <br/>
+<br/>Réaction allergique de grade II liée au CARBOPLATINE.
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE<br/></b></u>
+<br/>OMS : 1
+ <br/>Poids actuel : 61.5 kg Taille : 164 cm SC :1.67 m2
+ <br/>
+<br/>Prise en charge nutritionnelle : non.
+ <br/>Syndrome douloureux : non.
+ <br/>EVA d'entrée 0/10.
+ <br/>
+<br/>Auscultation pulmonaire : eupnéique en air ambiant. Pas de toux. 
+ <br/>Murmure vésiculaire bilatéral et symétrique, sans bruit surajouté. 
+ <br/>Auscultation cardiaque : bruits du coeur réguliers sans souffle. Pas 
+ <br/>de signe d'insuffisance cardiaque droite ou gauche. 
+ <br/>OMI : non.
+ <br/>Abdomen : augmenté de volume, ascite non invalidante mais abondante. 
+ <br/>Abdomen souple dépressible indolore, hernie ombilicale connue et non 
+ <br/>étranglée, pas de nodule de carcinose palpé, le transit est normal.
+ <br/>Aires ganglionnaires : libres.
+ <br/>Examen neurologique : normal.
+ <br/>Examen du PAC : propre.
+ <br/>
+<br/>
+<u><b>EXAMENS COMPLEMENTAIRES<br/></b></u>
+<br/>- NFS : leucocytes à 9 120 /mm3, PNN à 6 110 /mm3, Hb à 10.9 g/dl, 
+ <br/>plaquettes à 467 000 /mm3
+ <br/>
+<br/>- Créatinine à 55 μmol/l
+ <br/>Débit de filtration glomérulaire (MDRD) >60 ml/mn
+ <br/>
+<br/>- Bilan hépatique : PAL à 129 UI/L, ASAT à 17 UI/L, ALAT à 11 UI/L, 
+ <br/>GGT à 41 UI/L, albumine à 26 g/L
+ <br/>
+<br/>- Marqueurs :
+ <br/>* CA 125 : 949 U/ml le 02 avril 2019
+ <br/>
+<br/>
+<u><b>EN PRATIQUE<br/></b></u>
+<br/>Réalisation de la 4ème cure de chimiothérapie à partir du 4 avril 
+ <br/>2019 associant :
+ <br/>
+<br/>
+<b>* GEMCITABINE 1 000 mg/m2 soit 1600 mg DT<br/>* CARBOPLAINE AUC4 soit 300 mg DT : interrompu<u>db<br/></u>* BEVACIZUMAB 15 mg/kg soit 923 mg DT<br/>* ATEZOLIZUMAB ou placébo 1 200 mg<br/><br/>J1 = J21 (Pas de J8 de GEMCITABINE)<br/><br/></b> Tolérance : réaction allergique de grade II après le passage de la 
+ <br/>moitié du CARBOPLATINE (150 mg) avec rash cutané prurigineux 
+ <br/>généralisé, nausées. 
+ <br/>Pas de dyspnée, pas de désaturation, hémodynamique stable. Arrêt de 
+ <br/>la perfusion. 
+ <br/>
+<br/>Reprise de la chimiothérapie dans le cadre d'un protocole de 
+ <br/>désensibilisation. La patiente reçoit le 5 avril 2019 :
+ <br/>
+<b>* CARBOPLATINE : <br/> ntbl</b> poche n°mL administrés[c] théorique[c] réelle 
+ <br/>
+<b>rdrw15rdrsrdrw15rdrs rdrw15rdrs rdrw15rdrs rdrw15rdrsrdrw15rdrs <br/>ntblPOCHE 1 <br/>rdrw15rdrs rdrw15rdrs ntbl</b> 0,008 mg/ml0,008 mg/ml
+ <br/>ntbl 2 ml / h / 15 min0,50,004
+ <br/>
+<b>rdrw15rdrs rdrw15rdrs ntbl 5 ml / h / 15 min1,250,01<br/>rdrw15rdrs rdrw15rdrs ntbl 10 ml / h / 15 min2,50,02<br/>rdrw15rdrs rdrw15rdrs ntbl 20 ml / h / 15 min50,04<br/>rdrw15rdrs rdrw15rdrs ntbl Vol adm9,25</b>
+<br/>
+<b>rdrw15rdrsrdrw15rdrs rdrw15rdrs rdrw15rdrs rdrw15rdrsrdrw15rdrs <br/>ntblQté administrée0,074mg<br/>rdrw15rdrs rdrw15rdrs ntblPOCHE 2</b>
+<br/>
+<b>rdrw15rdrs rdrw15rdrs ntbl 0,08 mg/ml0,0794 mg/ml<br/>ntbl 5 ml / h / 15 min1,250,1<br/>rdrw15rdrs rdrw15rdrs ntbl 10 ml / h / 15 min2,50,2<br/>rdrw15rdrs rdrw15rdrs ntbl 20 ml / h / 15 min50,4<br/>rdrw15rdrs rdrw15rdrs ntbl 40 ml / h / 15 min100,79<br/>rdrw15rdrs rdrw15rdrs ntbl Vol adm18,75</b>
+<br/>
+<b>rdrw15rdrsrdrw15rdrs rdrw15rdrs rdrw15rdrs rdrw15rdrsrdrw15rdrs <br/>ntblQté administrée1,49mg<br/>rdrw15rdrs rdrw15rdrs ntblPOCHE 3</b>
+<br/>
+<b>rdrw15rdrs rdrw15rdrs ntbl 0,6 mg/ml0,6 mg/ml<br/>ntbl 10 ml / h / 15 min2,51,5<br/>rdrw15rdrs rdrw15rdrs ntbl 20 ml / h / 15 min53<br/>rdrw15rdrs rdrw15rdrs ntbl 40 ml / h / 15 min106<br/>rdrw15rdrs rdrw15rdrs ntbl 75 ml / h / 180 min22512<br/>rdrw15rdrs rdrw15rdrs ntbl Vol adm242,5</b> 127,5
+ <br/>
+<b>rdrw15rdrsrdrw15rdrs rdrw15rdrs rdrw15rdrs rdrw15rdrsrdrw15rdrs <br/>ntblQté administrée150mg<br/>ntbl</b>
+<br/>
+<b>rdrw15rdrsrdrw15rdrsrdrw15rdrs rdrw15rdrsrdrw15rdrs <br/>rdrw15rdrsrdrw15rdrs rdrw15rdrsrdrw15rdrsrdrw15rdrs ntbldose totale <br/>administrée 151,6</b> mg
+ <br/>
+<br/>Tolérance : bonne.
+ <br/>
+<br/>Le prochain cycle sera à réalisé avec un protocole de 
+ <br/>désensibilisation en hospitalisation. 
+ <br/>
+<br/>
+<u><b>Prescriptions de sortie</b></u> :
+ <br/>- INNOHEP 0.5 ml le matin 
+ <br/>- PRIMPERAN 10 mg x3/jour si nausées
+ <br/>- Bains de bouche 
+ <br/>
+<br/>Sera revue en consultation le 24 avril 2019 avec le Dr LEARY.
+ <br/>Sera réhospitalisée le 25/04/19.
+ <br/>
+<br/>La patiente quitte le service Gard le 05 avril 2019.
+ <br/>
+<br/> Prise en charge palliative NON
+ <br/>
+<br/>
+<b>EVALUATION DE LA CHARGE EN SOINS</b>
+<br/>* Ponction à visée symptomatique NON
+ <br/>* Adaptation du traitement antalgique NON
+ <br/>* Irradiation antalgique NON
+ <br/>* Occlusion intestinale NON
+ <br/>* Transfusion sanguine NON
+ <br/>* Prise en charge de la détresse respiratoire 
+ <br/>avec désaturation <90% AA NON
+ <br/>* Traitement des divers symptômes vecteurs d'inconfort 
+ <br/>(toux, prurit, nausées, vomissements, anxiété, 
+ <br/>dépression, troubles du sommeil, déshydratation,...) OUI 
+ <br/>* Soins de nursing NON
+ <br/>* Nutrition 
+ <br/> - déjà sous CNO, nutrition entérale/parentérale NON
+ <br/> - mise en route CNO/nutrition entérale/parentale NON
+ <br/>
+<br/>
+<b>PRISE EN CHARGE MULTI-DISCIPLINAIRE<br/></b> * Prise en charge de l'EMASP NON
+ <br/>* Cs CETD (douleur, sophrologie, auriculothérapie) NON
+ <br/>* Cs onco-psychologie NON
+ <br/>* Prise en charge sociale NON
+ <br/>* Soins de kinésithérapie NON
+ <br/>* cs diététicienne ou nutritionniste NON
+ <br/>
+<br/>
+<b>MODE DE SORTIE </b>
+<br/>* HAD Santé Service NON
+ <br/>* HAD province NON
+ <br/>* IDE libérale NON
+ <br/>
+<br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Emilie MOATI <br/>Le lundi 8 avril 2019 à 12:58 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121349045" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>Compte-rendu d'hospitalisation - Service Rouergue</title>
+    <effectiveTime value="20200428000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200424000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>Patiente de 67 ans, hospitalisée dans le service ROUERGUE du 24 au 28 
+ <br/>avril 2020 pour 
+ <b>ponction d'ascite avec fièvre à 39°C et frissons, </b>
+<br/>dans le cadre de la prise en charge d'un 
+ <b>adénocarcinome séreux</b> en 
+ <br/>rechute platine resistant avec ascite refractaire traité par GEMZAR 
+ <br/>(dernière injection le 18/04/2020).
+ <br/>
+<br/>
+<u><b>MEDECIN REFERENT A GR</b></u> : 
+ <u><b><br/><br/>ANTECEDENTS NON ONCOLOGIQUES</b></u> :
+ <br/>
+<br/>- Thrombose du membre inférieur gauche sous antocoagulants.
+ <br/>- Cimentoplastie T10 L5 en mars.
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE A L'ARRIVEE</b></u> :
+ <br/>
+<br/>
+<b>Pression artérielle : 120/55 mmHg.<br/>Pouls : 111 /min.<br/>Température : 38 °4C.<br/>Saturation en air ambiant : 97 %.<br/></b>
+<br/>OMS : 4.
+ <br/>Sensation de dyspnée de repos mais attribuée à une énorme ascite avec 
+ <br/>hernie ombilicale. 
+ <br/>Auscultation cardio pulmonaire normale. 
+ <br/>Matité aux bases. Doute sur crépitants gauches. 
+ <br/>Pas de foyer. 
+ <br/>Pas de point d'appel neurologique. 
+ <br/>OMI +++++.
+ <br/>Pas de signe de défaillance hémodynamique. 
+ <br/>Apyrétique aux urgences. 
+ <br/>
+<br/>
+<u><b>EXAMENS COMPLEMENTAIRES A L'ARRIVEE</b></u> :
+ <br/>
+<br/>
+<u><b>Bilan biologique</b></u> :
+ <br/>
+<br/>
+<u>NFS</u> :
+ <br/>Leucocytes 13 300 mm3, PNN 12 600 mm3, Lymphocytes 400 mm3, Hb 7,1 
+ <br/>g/dL, Plq 229 000 mm3.
+ <br/>
+<br/>
+<u>Ionogramme</u> :
+ <br/>Na 137 mmol/L, K 3,7 mmol/L, Cl 103 mmol/L, RA 25 mmol/L, Prot 58 g/L,
+ <br/>Créat 53 μmol/L, Glycémie 8 mmol/L, Ca 1,99 mmol/L, Cac 2,47 mmol/L, 
+ <br/>Ph 0,63 mmol/L, Mg 0,59 mmol/L, Albumine 21 g/L, LDH 533 UI/L.
+ <br/>
+<br/>
+<u>Bilan hépatique</u> :
+ <br/>PAL 234 UI/L, ASAT 59 UI/L, ALAT 26 UI/L, GGT 52 UI/L,
+ <br/>Bilirubine totale 9 μmol/L.
+ <br/>
+<br/>
+<u>Bilan infectieux</u> :
+ <br/>CRP 330 mg/L.
+ <br/>
+<br/>Hémocultures : négatives 
+ <br/>ECBU : négatif 
+ <br/>
+<br/>
+<u><b>TRAITEMENT ET EVOLUTION DANS LE SERVICE</b></u>
+<b> : <br/></b>
+<br/>Ascite réfractaire dans le cadre d'un cancer de l'ovaire en 
+ <br/>progression dans un contexte fébrile. Ponction d'ascite en RI (ascite 
+ <br/>cloisonnée) retirant 3500 ml de liquide séro-hématique adressé en 
+ <br/>bactériologie. La culture est négative pour le moment mais présence 
+ <br/>de PN ++. Gros syndrome inflammatoire biologique avec CRP + D-Ddimère 
+ <br/>+ 
+ <br/>fibronogéne, LDH + ferritine trés élevées +.
+ <br/>PCR sars-cov-2 négative et patiente déjà sous anticoagulant. 
+ <br/>Antiobothérapie empirique initiée par AUGMENTIN dans l'attente du 
+ <br/>résultat de culture définitive.
+ <br/>
+<br/>La dyspnée peut être expliquée par l'anémie + ascite de grande 
+ <br/>abondance. Nouvelle transfusion ce jour pour atteindre un seuil 
+ <br/>supérieur à 9 g/L. la patiente est déjà sous anti coagulant . 
+ <br/>Persistance de la dyspnée, la radiographie de thorax met en évidence 
+ <br/>une majoration de l'épanchement pleural droit. Scanner thoracique : 
+ <br/>majoration de l'épanchement pleural bilatéral prédominant à droite 
+ <br/>associé à une embolie pulmonaire gauche.
+ <br/>
+<br/>Augmentation de la posologie d'HBPM en cours.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :</b>
+<br/>
+<br/>Cancer de l'ovaire en progression avec ascite réfractaire. 
+ <br/>Fièvre associée à un gros syndrome inflammatoire sans documentation 
+ <br/>pour le moment. 
+ <br/>Ascite non infectée, cloisonnée, ponctionnée en RI. Arrêt de 
+ <br/>l'antibiothérapie par Augmentin.
+ <br/>Dyspnée en rapport avec un épanchement pleural bilatéral prédominant 
+ <br/>à droite. Le parenchyme pulmonaire sous jacent n'est pas strictement 
+ <br/>normal + EP gauche chez une patiente sous anticoagulant possiblement 
+ <br/>sous dosé devant la prise de poids liée aux oedèmes.
+ <br/>Ponction pleurale à réaliser.
+ <br/>PCR Covid 19 négative.
+ <br/>Patiente transférée au service Gard le 28/04/2020 pour poursuite de 
+ <br/>la prise en charge. 
+ <br/>
+<br/>* Prise en charge palliative NON
+ <br/>
+<br/>
+<b>EVALUATION DE LA CHARGE EN SOINS<br/></b> * Ponction à visée symptomatique NON
+ <br/>* Adaptation du traitement antalgique NON
+ <br/>* Irradiation antalgique NON
+ <br/>* Occlusion intestinale NON
+ <br/>* Transfusion sanguine OUI 
+ <br/>* Prise en charge de la détresse respiratoire
+ <br/>avec désaturation < 90% en AA NON
+ <br/>* Traitement des divers symptômes vecteurs d'inconfort 
+ <br/>(toux, prurit, nausées, vomissements, anxiété, 
+ <br/>dépression, troubles du sommeil, déshydratation...) OUI 
+ <br/>* Soins de nursing NON
+ <br/>* Nutrition : 
+ <br/>- déjà sous CNO, nutrition entérale/parentérale NON
+ <br/>- mise en route d'une nutrition entérale/parentérale NON
+ <br/>
+<br/>
+<b>PRISE EN CHARGE MULTI-DISCIPLINAIRE<br/></b> * Prise en charge de l'EMASP NON
+ <br/>* Consultation CETD (douleur, sophrologie, 
+ <br/>auriculothérapie) NON
+ <br/>* Consultation d'onco-psychologie NON
+ <br/>* Prise en charge sociale NON
+ <br/>* Soins de kinésithérapie NON
+ <br/>* Consultation diététicienne ou nutritionniste NON
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

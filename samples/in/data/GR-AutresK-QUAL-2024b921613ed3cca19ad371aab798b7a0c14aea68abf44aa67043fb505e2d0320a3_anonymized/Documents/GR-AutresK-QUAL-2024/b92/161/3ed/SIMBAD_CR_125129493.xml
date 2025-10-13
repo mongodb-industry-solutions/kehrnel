@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125129493" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>RESUME D'ENTREE - SERVICE REANIMATION</title>
+    <effectiveTime value="20180927000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180928000000+0000"/>
+        <assignedAuthor>
+            <code code="SAR/487" displayName="SOINS AIGUS REANIMATION"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>{\rtf1\fbidis\ansi\ansicpg1252\deff0\deflang1036{\fonttbl{\f0\fnil\fcharset0 Courier New;{\f1\fmodern\fprq1\fcharset0 Courier 
+ <br/>New;\viewkind4\uc1 \ltrpar
+ <b> Monsieur XXXXXX, âgé de 67 ans, a été admis <br/>dans le service de <br/>réanimation le 27 septembre 2018 à 1h au 13 octobre pour détresse <br/>respiratoire aigu\'eb et confusion à j40 d'une allogreffe pour <br/>myélofibrose primitive.</b>
+<br/>
+<br/>
+<u>Médecin référent</u> : Dr BOURHIS.
+ <br/>Personne de confiance : Madame XXXXXX Mariette, sa conjointe.
+ <br/>Directives anticipées : absentes 
+ <br/>
+<br/>
+<u><b>Mode de vie</b></u>
+<b> :</b>
+<br/>
+<br/>- OMS 3.
+ <br/>- Marié, 3 enfants (dont 1 fils décédé).
+ <br/>- Retraité, travaillait dans une entreprise de transport.
+ <br/>- Pas d'intoxication tabagique.
+ <br/>- OH occasionnel.
+ <br/>- Voyage à l'étranger : Caraïbe / Europe
+ <br/>
+<br/>
+<u><b>Antécédents familiaux</b></u>
+<b> :<br/></b>
+<br/>- Père : DCD à 77 ans, oenolyse, cirrhose, pathologie virale.
+ <br/>- Mère : DCD à 78 ans, pathologie gynécologique fibrome.
+ <br/>- 1 soeur, Béatrice XXXXXX LADEON, : vit en Métropôle, HTA, 
+ <br/>anévrisme cérébral opéré récemment en neuro-chirurgie en région 
+ <br/>Parisienne.
+ <br/>
+<br/>
+<u><b>Antécédents médicaux</b></u>
+<b> :<br/><br/></b> - Cavernome portal le 04/04/2012 avec splénomégalie et VO.
+ <br/>- 3 AIT (2006, 2012 et 2015).
+ <br/>- Carcinome prostatique diagnostiqué en novembre 2011 et traité par 
+ <br/>radiothérapie exclusive.
+ <br/>- Arthropathie acromio-claviculaire congestive et bursite 
+ <br/>sous-acromiale avec rupture complète distale du tendon du 
+ <br/>supra-épineux (IRM du 09/07/2018).
+ <br/>- Appendicectomie
+ <b><br/><br/><u>Antécédents chirurgicaux</u> :</b>
+<br/>
+<br/>- Tumeur gastrique bénigne opérée en 1972.
+ <br/>- Fracture ouverte de la jambe opérée en 2006.
+ <br/>
+<br/>
+<u><b>Traitements à son entrée en réanimation</b></u>
+<b> :</b>
+<br/>
+<br/>- IV Plitican si besoin
+ <br/>- IV Zophren si besoin
+ <br/>- IV Meronem 2gx3/j ( j1 le 03/09)
+ <br/>- IV Vfend 500mgX2 / j ( j1 le 26/09 )
+ <br/>- IV Triflucan 400mg/j (STOP le 26/09)
+ <br/>- Aéresol Pentacarinat 300mg le 16/08 et le 08/09
+ <br/>- IV Cymévan 200mx2/j 
+ <br/>- IV ciclosporine 130mg/12h
+ <br/>- IV Nivestim 48 MUI X2/j (j1 le 22/08)
+ <br/>- IV perfalgan si besoin
+ <br/>- IV Acupan si besoin
+ <br/>- IV spasfon si besoin
+ <br/>- PO Oxynorm 5mg X3/j si douleur
+ <br/>- PO Oxycontin 10mgX2/j
+ <br/>- PO delursan 2cpX3/j
+ <br/>- PO Xanax 0.25mg le soir si besoin
+ <br/>- PO tiorfan 2 cpX 3/j si diarrhée
+ <br/>- PO lansoprazole 30mg/j
+ <br/>
+<br/>
+<br/>
+<u><b>Histoire de la maladie carcinologique</b></u>
+<b> :</b>
+<br/>
+<br/>- Syndrome myéloprolifératif de type myélofibrose primitive JAK2+, 
+ <br/>score DIPSS à 4, splénomégalie à 22 cm diagnostiqué le 04/04/2012 
+ <br/>dans un contexte de cavernome portal avec splénomégalie, VO, 
+ <br/>gastropathie d'HTP.
+ <br/>- Surveillance initiale au CHU de Fort de France.
+ <br/>
+<br/>- Progression de la leucocytose en septembre 2016 avec tableau de 
+ <br/>splénomégalie, thrombose et hypertension portale. Début d'un 
+ <br/>traitement par Plavix + Hydréa en janvier 2017.
+ <br/>- Début d'un traitement par Ruxolitinib à partir de juin 2017 devant 
+ <br/>la majoration de la splénomégalie, et de l'hyperleucocytose.
+ <br/>
+<br/>- RCP le 06/11/2017 : indication à une allogreffe.
+ <br/>- Transfert à Gustave Roussy à Paris D1 le 09/08/2018.
+ <br/>
+<br/>- 17/08/2018 : J0 d'une allogreffe de cellules souches périphériques 
+ <br/>haploidentique, sexe identique, de son fils à conditionnement 
+ <br/>s'intensité réduite par radiothérapie splénique 6 Gy, Fludarabine 150 
+ <br/>mg/m2, Endoxan 29 mg/kg, TBI 2 Gy -> aplasie prolongée, pas de 
+ <br/>stigmate de prise, thrombopénie réfractaire (autour de 
+ <br/>8000-10000/mm3).
+ <br/>
+<br/>- RCP le 24/09/2018 : décision de greffon complémentaire sélectionné 
+ <br/>CD34+. Boost doit être réinjecté le 01/10/2018.
+ <br/>
+<br/>
+<u><b>Histoire de la maladie récente</b></u>
+<b> :</b>
+<br/>
+<br/>- Pas de sortie d'aplasie à J40 d'une allogreffe haploidentique.
+ <br/>
+<br/>- Fièvre depuis le 25/09 sous Meropenem (débuté le 03/09 pour 
+ <br/>dyspnée et désaturation avec toux productive avec ajout de 
+ <br/>Voriconazole le 26/09 + syndrome confusionnel 
+ <br/>- NB : ECBC du 28/08/2018 positif à Stenotrophomonas maltophilia , 
+ <br/>traité par tavanic pendant une semaine.
+ <br/>
+<br/>- Scanner du 26/06 (thorax + sinus + crâne): 
+ <br/> . hématome sous-duraux bilatéraux, chronique avec resaignement 
+ <br/>récent.
+ <br/> . Epanchement pleural bilatéral de moyenne abondance plus marqué à 
+ <br/>droite. Condensation en verre dépoli du segment apical du lobe 
+ <br/>supérieur droit, d'allure vraisemblablement infectieuse. 
+ <br/> . Comblement de l'ethmoïde antérieur et des sinus frontaux.
+ <br/>
+<b><br/></b> - Au retour du scanner, découverte de bulles d'air dans le cathéter 
+ <br/>tunélisé (aspiration de 2cc d'air) : suspicion d'embolie gazeuse, CI 
+ <br/>caisson hyperbarecar saignement sous dural et décision d'oxygénation 
+ <br/>au masque à haute concentration + position déclive. Avis 
+ <br/>neurochirurgie : pas d'indication chirurgicale.
+ <br/>
+<br/>- 27/09/2018 vers 00h30 : détresse respiratoire sous 15l/min au MHC 
+ <br/>avec crépitants des bases aux apex, polypnée, balancement thoraco 
+ <br/>abdominal et signes de lutte. Glasgow 13-14. GDS : acideose 
+ <br/>respiratoire. L'ETT au lit montre de PRVG élevées en faceur d'un OAP 
+ <br/>hémodynamique.
+ <br/>
+<br/>- CAT : Lasilix 40 mg + instauration VNI FiO2 100% à PD1 puis 
+ <br/>transfert en réanimation pour complément de prise en charge.
+ <br/>
+<br/>
+<br/>
+<b>A L'ARRIVEE DANS LE SERVICE DE REANIMATION</b>
+<br/>
+<br/>
+<u><b>Examen clinique</b></u>
+<b> :<br/></b>
+<br/>Poids habituel = 80 Kg Poids à j2 = 80.3 Kg.
+ <br/>Taille = 1m80.
+ <br/>
+<br/>Pouls : 118/min.
+ <br/>Pression artérielle : 137/89 mmHg.
+ <br/>Température : 38,8°C.
+ <br/>SpO2 : 100% sous VNI 100%, PEP 8, AI 8.
+ <br/>Fréquence respiratoire : 23/min.
+ <br/>
+<br/>EVA = 0
+ <br/>Glasgow = 14
+ <br/>
+<br/>- 
+ <u>Au plan cardio-vasculaire</u> : bruits du coeur réguliers, rapides, 
+ <br/>sans souffle. Pas de turgescence jugulaire. Mollets souples et 
+ <br/>indolores, Pouls périphériques perçus, pas de marbrure.
+ <br/>
+<br/>- 
+ <u>Au plan pulmonaire</u> : murmure vésiculaire bilatéral, crépitants 
+ <br/>bilatéraux, pas de toux ni d'encombrement. VNI 100%, PEP 8, AI 8.
+ <br/>
+<br/>- 
+ <u>Au plan abdominal</u> : abdomen souple, dépressible, légèrement 
+ <br/>distendu, tympanique, sensible dans son ensemble, hépato 
+ <br/>splénomégalie, bruits hydroaériques présents. Sonde urinaire en place.
+ <br/>
+<br/>- 
+ <u>Au plan neurologique</u> : endormi, agité au réveil, conscient et 
+ <br/>orienté. Absence de déficit sensitivo-moteur. ROT présents. 
+ <br/>
+<br/>
+<u><b>Examens complémentaires</b></u>
+<b> :</b>
+<br/>
+<u><br/></u>- 
+ <u>ECG</u> : sus-décalage ascendant de ST en latéral et inférieur. Trouble 
+ <br/>de la repolarisation en latéral haut (I, AVL), axe QRS normal.
+ <br/>
+<br/>- 
+ <u>Radiographie thoracique</u> : sd alvéolo interstitiel bilatéral + 
+ <br/>aspect evoquant un épanchement pleural droit
+ <br/>
+<br/>- ETT (27/09) : FEVG 40%, profil mitral restrictif avec E/E' à 12,46, 
+ <br/>ITV sous aortique à 14cm, VCInf dilatée. absence de dilatation des 
+ <br/>cavitées droites . Absence de HTAP. Absence d'épanchement 
+ <br/>péricardique.
+ <br/>
+<br/>
+<u><b>Bilan biologique</b></u> :
+ <br/>
+<br/>- 
+ <u>Ionogramme sanguin</u> : sodium 136 mmol/l, potassium 4,2 mmol/l, 
+ <br/>chlore 103 mmol/l, réserve alcaline 25 mmol/l, protides 56 g/l, 
+ <br/>urée 16,5 mmol/l, créatinine 133 μmol/l, calcium 2,15 mmol/l, 
+ <br/>phosphore 1,09 mmol/l, magnésium 0,77 mmol/l, albumine 28 g/l.
+ <br/>- 
+ <u>NFS</u> : GB 300/mm3, Hb 7,9 g/dl, hématocrite 22,1%, 
+ <br/>plaquettes 20 000/mm3.
+ <br/>- 
+ <u>CRP</u> = 86,3 mg/l.
+ <br/>- 
+ <u>BNP</u> = 2578 pg/ml.
+ <br/>- 
+ <u>Troponine</u> = 0,07 μg/l.
+ <br/>- 
+ <u>Bilan hépatique</u> : PAL 118 UI/L, ASAT 32 UI/l, ALAT 13 UI/l, 
+ <br/>GGT 45 UI/l, bilirubine totale 62 μmol/l, bilirubine conjugée 34 
+ <br/>μmol/l, LDH 218 UI/L, Lipase 3 UI/L, CK 39 UI/L.
+ <br/>- 
+ <u>Hémostase</u> : TP 55%, Fibrinogène 6,4 g/l.
+ <br/>- 
+ <u>Gaz du sang</u> : pH 7,44 , PaO2 374 mmHg, PaCO2 39,3 mmHg, 
+ <br/>réserve alcaline 25,4 mmol/l, saturation 99,7%. Lactate 0,5 mmol/l.
+ <br/>
+<br/>
+<b>CONCLUSION INITIALE ET PRISE EN CHARGE THERAPEUTIQUE INITIALE<br/></b>
+<br/>- Il s'agit d'un tableau aigue d'OAP hémodynamique de surcharge sur 
+ <br/>les données cliniques, échographique et biologiques sur pneumopathie 
+ <br/>infectieuse probable sous jacente. Bonne évolution initiale sous VNI 
+ <br/>et traitement médicale
+ <br/> . VNI ( FiO2 100%, PEP 8, AI 8 )poursuivie en continue à FiO2 100 
+ <br/>devant le doute sur une embolie gazeuse pendant 12h puis à raison 
+ <br/>d'une 1h/4h (FiO2 40%) en alternance avec 4l/min d'O2 aux lunettes
+ <br/> . IV Lasilix 20 mg x 3/ j ( diurèse à 2600 cc j1)
+ <br/> . IVSE Risordon 1mg/h
+ <b><br/> <br/></b> - Par ailleurs:
+ <br/> . Insuffisance rénale aigue multifactorielle à diurèse conservée 
+ <br/>sous lasilix ( profil mixte sur l'iono urinaire et Clairance 
+ <br/>créatinine à 80mlmin à j1). a surveiller 
+ <br/> . Aplasie sous GCSF, complément d'allogreffe à prévoir
+ <br/> . Poursuite traitement anti infectieux par meropenem, 
+ <br/>Voriconanzole et Cymevan
+ <br/> . Enquete infectieuse ( PCR toxo, CMV et EBV, Ag Aspergillaire, 
+ <br/>hémocultures )
+ <br/> . Poursuite ciclosporine et dosage résiduel
+ <br/> . Transfusion itératif de CPA
+ <br/> . Analgésie par rémifentanil en IVSE
+ <br/>
+<br/>
+<b>EVOLUTION DURANT LA PREMIERE SEMAINE EN REANIMATION</b>
+<br/>
+<br/>\f1 - 
+ <u>Au plan respiratoire</u> : 
+ <br/> \ltrpar\qj Ventilation mécanique non invasive en mode VSAI avec de 
+ <br/>une FiO2 à 40%, AI 12 et PEP 8 en alternance avec O2 3-4 l/min.
+ <br/>Amélioration nette de la part hémodynamique de l'oecdème pulmonaire.
+ <br/>
+<br/>- 
+ <u>Au plan infectieux</u> : 
+ <br/>CRP à 270 et PCT à 12.71 avec une cinétique en augmentation /48h
+ <br/>Fièvre jusqu'à 39.60°C 
+ <br/>Poursuite de Meropenem, du voriconazole et du Cymevan.
+ <br/>Le prélèvement respiratoire du 28/10 est positif à Staph. 
+ <br/>Hoemolyticus . Les hémocultures sont négatives et l'Ag urinaire 
+ <br/>légionelle négatif.
+ <br/>Vu le terrain immunodéprimé, ajout du Zyvoxid et Tavanic le 28/09 
+ <br/>(antériorité de sténotrophomonas maltophilia).
+ <br/>
+<br/>- 
+ <u>Au plan hémodynamique</u> :
+ <br/>Poursuite du risordon IVSE et déplétion par les diurétiques
+ <br/>BNP reste élevé > 3000 mais au contrôle ETT amélioration de la FEVG à 
+ <br/>45% et du débit cardiaque (ITV sous aortique 19cm)et normalisation des 
+ <br/>PRVG (E/E' à 5.6).
+ <br/>
+<br/>- 
+ <u>Au plan hématologique</u> :
+ <br/>Transfusion itérative par CPA (1 CPA/6h) et CGR. 
+ <br/>Aplasie sous GCSF.
+ <br/>2\superème\nosupersub allogreffe le 01/10/18 (soit 
+ <br/>6\superème\nosupersub jour d'hospitalisation)
+ <br/>Baisse de la ciclosporine à 110 mg 2fois/j
+ <br/> \ltrpar 
+ <br/>- 
+ <u>Au plan rénal</u> : 
+ <br/> \ltrpar\qj Poursuite de la dégradation de la fonction rénale avec 
+ <br/>baisse du DFG aux alentours de 30 ml/min avec un profil urinaire 
+ <br/>organique. Stade KDIGO=3. Absence de recours à une EER.
+ <br/> \ltrpar 
+ <br/>- 
+ <u>Au plan neurologique</u> : 
+ <br/>Somnolence. Fatigue généralisée.
+ <br/>Ouverture difficile des yeux à la demande le 01/10.
+ <br/>
+<b>\f0 <br/>EVOLUTION DU 02/10 au 13/10<br/><br/><br/><br/></b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_119939592" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°20T02432 3123960 Dr Christophe MARZAC</title>
+    <effectiveTime value="20201125000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201125000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>DÉPARTEMENT DE BIOLOGIE ET DE PATHOLOGIE MEDICALES<br/></p>
+<p>114, rue Edouard Vaillant - 94805 VILLEJUIF CEDEX<br/></p>
+<p>N° I.G.R. : 050 XXXXXX <br/>XXXXXX XXXXXX George XXXXXX F <br/> INTERNE <br/>Examen demandé par : <br/>INTERNE <br/>CTE 110 - HEMATOLOGIE <br/>Prélevé le 25/11/2020 <br/>Enregistré le 25/11/2020 <br/></p>
+<p> CZC <br/> Examen n° : 20T02432<br/></p>
+<p> CR édité le : 25/11/2020<br/></p>
+<p>Copie à : 1/1 </p>
+<p>MYELOGRAMME<br/></p>
+<p>Renseignements cliniques : Bi-cytopénie macrocytaire à distance de chimiothérapie. Kc du sein irradié multitraité métastatique. <br/>Date de prélèvement : 25/11/2020 <br/>But de l'examen : diagnostic <br/>Os ponctionné : sternum Dureté : normale </p>
+<p> Richesse : pauvre <br/>SERIE MEGACARYOCYTAIRE : non évaluable très rares éléments <br/>BLASTES : 0 % </p>
+<p> SERIE GRANULOCYTAIRE : 71 % <br/>- NEUTROPHILES <br/> Myéloblastes : 0 % <br/> Promyélocytes : 3 % <br/> Myélocytes : 4 % <br/> Métamyélocytes : 4 % <br/> Polynucléaires : 60 %<br/>- EOSINOPHILES <br/> Myélocytes : 0 % <br/> Métamyélocytes : 0 % <br/> Polynucléaires : 0 %<br/>- BASOPHILES : 0 % </p>
+<p>SERIE ERYTHROCYTAIRE : 17 % <br/>Proérytroblastes : 1 % <br/>Eryth. basophiles : 2 % <br/>Eryth. polychromatophiles : 5 % <br/>Eryth. acidophiles : 9 %<br/>SERIE LYMPHOIDE : 6% <br/>Lymphoblastes : % <br/>Lymphocytes : 3 % <br/>Lymphoplasmocytes : % <br/>Plasmocytes : 3 % </p>
+<p>SERIE MONOCYTAIRE : 6 % <br/>Promonocytes : % <br/>Monocytes : 6 %<br/></p>
+<p><br/>CONCLUSION <br/>Prélèvement peu cellulaire possiblement prélevé en zone irradiée. La lignée mégacaryocytaire n'est pas évaluable (1 élément/frottis), les polynucléaires sont souvent hypersegmentés et certains érythroblastes ont une chromatine lâche ou présentent des images de mitose. Pas de cellules extra-hématopoïétiques observées. <br/>Au total: présence de signes carentiels frustes (folates, B12) sans éléments patents en faveur d'un syndrome myélodysplasique. </p>
+<p> PCSM0N20 <br/></p>
+<p> Dr Christophe MARZAC <br/> Praticien spécialiste </p>
+<p> Compte rendu validé et signé électroniquement </p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

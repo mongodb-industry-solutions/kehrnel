@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125347863" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Dr Laura NGUYEN - Psychiatre / Addictologue</title>
+    <effectiveTime value="20180827000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180827000000+0000"/>
+        <assignedAuthor>
+            <code code="UPO/332" displayName="UNITE DE PSYCHO_ONCOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patient âgé de 57 ans qui a pour antécédent un carcinome épidermoïde 
+ <br/>de l'oropharynx bilatéral traité par radiochimiothérapie en octobre 
+ <br/>2014. Deuxième localisation de carcinome épidermoïde hypo-pharyngé 
+ <br/>droit traité par pahryngo-laryngectomie totale de rattrapage et 
+ <br/>lambeau de grand pectoral le 13.11.2017. Problématique de 
+ <br/>pharyngostome ayant nécessité de multiples interventions.
+ <br/>
+<br/>J'avais rencontré le patient en Novembre 2017 pour une aide au 
+ <br/>sevrage tabagique et il se dit abstinent depuis. Il se dit également 
+ <br/>abstinent pour l'alcool depuis 2014, au moment du traitement de son 
+ <br/>premier cancer, un sevrage hospitalier à Paul Brousse avait alors été 
+ <br/>réalisé en raison d'antécédents de crises d'épilepsie.
+ <br/>
+<br/>
+<u><b>Ce jour</b></u> , le patient dit s'être approprié les bénéfices d'un sevrage 
+ <br/>en alcool et en tabac sur le long terme, dans ce contexte de 
+ <br/>récidive cancéreuse. Même s'il a tendance à minimiser le lien de ses 
+ <br/>substances avec sa maladie, il dit souhaiter poursuivre cette 
+ <br/>abstinence sur le long terme. Il n'est pas en demande de poursuivre 
+ <br/>un suivi addictologique ; je l'informe de la nécessité de consulter 
+ <br/>rapidement si une fragilité addictologique se faisait sentir. 
+ <br/>Au niveau thymique, il décrit un moral fluctuant variant en fonction 
+ <br/>de son état de santé. Il évoque principalement une lassitude des 
+ <br/>soins et l'absence d'amélioration rapide constatée. Il ne rapporte 
+ <br/>pas d'idées noires, d'idées suicidaires ou encore de cognitions 
+ <br/>dépressives de type dévalorisation ou culpabilité. Il peut se 
+ <br/>projeter de manière un peu plus optimiste après les soins. Mr D. 
+ <br/>rapporte des troubles du sommeil anciens, peu améliorés par les 
+ <br/>traitements, qui ne constituent pas une plainte de sa part. 
+ <br/>
+<u><b><br/>Au total</b></u>
+<b> : <br/>Abstinences totales en alcool et en tabac maintenues chez un patient <br/>qui semble s'être saisi des bénéfices d'un sevrage durable dans ce <br/>contexte de cancer. Il existe une vulnérabilité addictologique <br/>certaine mais il ne souhaite pas poursuivre un suivi addictologique. <br/>Nous restons disponibles si besoin. Au niveau thymique, pas de <br/>symptomatologie en faveur d'un épisode dépressif majeur mais <br/>fléchissement thymique en lien avec une lassitude des soins. </b>
+<br/>
+<br/>
+<u><b>CAT</b></u>
+<b> : <br/>Pas de proposition de nouveau RDV. Le resollicitera l'UPO ou son <br/>médecin traitant si besoin. </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

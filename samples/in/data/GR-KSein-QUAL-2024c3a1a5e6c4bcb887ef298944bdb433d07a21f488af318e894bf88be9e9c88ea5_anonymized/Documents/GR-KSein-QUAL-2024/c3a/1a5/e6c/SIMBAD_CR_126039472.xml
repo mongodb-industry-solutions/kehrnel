@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126039472" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncogénétique- Madame Marina DI MARIA</title>
+    <effectiveTime value="20180509000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180509000000+0000"/>
+        <assignedAuthor>
+            <code code="132/26" displayName="CTE 132 - ONCOGENETIQUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>CONSULTATION D'ONCOGENETIQUE -DEPARTEMENT DE MEDECINE<br/><br/>Dicté par : </b> Madame Marina Di Maria, Conseillère en Génétique
+ <b><br/>Dicté le : </b> 04/05/2018 
+ <b><br/>Service : </b> 132-CONSULTATION DE GENETIQUE 
+ <br/>
+<b>Type de document : </b> 132 CC CONSULT. ONCOGENETIQUE 
+ <br/>
+<b>Ref :</b> 412100 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : MBY
+ <br/>
+<b>Consultation du 4 mai 2018.<br/><br/></b> Consultation menée sous délégation du Docteur CARON
+ <br/>
+<br/>
+<b>Consultation destinée à évaluer une éventuelle prédisposition <br/>génétique au cancer.<br/></b>
+<br/>Adressée par : Dr ANDRE.
+ <br/>Personne vue avec son conjoint.
+ <br/>Profession : Professeur des écoles 
+ <br/>
+<br/>
+<u><b>ANTECEDENTS <br/></b> * Personnels : <br/></u>Patiente âgée de 39 ans.
+ <br/>36 ans : Carcinome canalaire infiltrant grade III, RE-, RP-, Her2- 
+ <br/>traité par chimiothérapie, radiothérapie, mastectomie avec 
+ <br/>reconstruction immédiate.
+ <br/>
+<br/>16/04/2018 : Microbiopsie du ganglion susclaviculaire gauche : 
+ <br/>Adénocarcinome peu différencié RE-, RP-, Her2- compatible avec une 
+ <br/>origine mammaire primitive. 
+ <br/>
+<br/>\'c2ge premières règles : 15 ans 
+ <br/>
+<br/>
+<u>* Familiaux : <br/></u>. Enfants : deux garçons en bonne santé. 
+ <br/>. Fratrie : fille unique. 
+ <br/>
+<br/>. Branche maternelle :
+ <br/>Mère indemne de cancer. 
+ <br/>Oncle décédé de problème non carcinologique .
+ <br/>Arrière grand-mère décédée cancer du sein à 81 ans. 
+ <br/>
+<br/>. Branche paternelle :
+ <br/>Aucune information.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3>: <br/></b></u>
+<b><br/></b> Possible prédisposition au cancer.
+ <br/>Indication d'analyse constitutionnelle d'un panel de gènes 
+ <br/>habituellement impliqués dans la pathologie présentée par la 
+ <br/>personne, avec une probabilité faible d'identifier une mutation dans 
+ <br/>le contexte.
+ <br/>Notons l'absence d'information au niveau de la branche paternelle 
+ <br/>
+<u><br/><b>EN PRATIQUE : <br/></b></u>
+<b><br/></b> Explications sur les causes multifactorielles du cancer, le rôle des 
+ <br/>facteurs génétiques, environnementaux et de leur interaction.
+ <br/>Les 3 issues possibles du test sont exposées :
+ <br/>
+<br/>1. Identification d'une mutation clairement délétère : la prise en 
+ <br/>charge serait adaptée en fonction du type d'anomalie identifiée :
+ <br/>-Certaines anomalies ont une pénétrance importante sur un organe 
+ <br/>précis, parfois sur plusieurs (sein et ovaire, par exemple). La 
+ <br/>gestion de ces augmentations de risques est bien codifiée. Elle 
+ <br/>repose essentiellement sur des examens de surveillance. Lorsqu'aucun 
+ <br/>moyen de dépistage satisfaisant n'existe pour l'organe en question, 
+ <br/>une chirurgie préventive peut être envisagée (ovaires, cas 
+ <br/>exceptionnels de risque de cancer de l'estomac...).
+ <br/>-D'autres prédispositions, beaucoup plus rares, n'ont à l'heure 
+ <br/>actuelle qu'une définition limitée de leur spectre d'organes, leur 
+ <br/>pénétrance et des âges concernés. Certaines pourraient avoir une 
+ <br/>pénétrance forte sur une grande variété d'organes, parfois à des âges 
+ <br/>pédiatriques. L'utilité clinique de leur identification reposerait sur 
+ <br/>les connaissances actuelles, avec une prise en charge partielle du 
+ <br/>surrisque. Elle évoluerait avec les avancées scientifiques.
+ <br/>L'identification d'une mutation délétère permettrait la réalisation 
+ <br/>des tests présymptomatiques dans la famille. La patiente aurait la 
+ <br/>responsabilité légale de communiquer cette information à ses 
+ <br/>apparentés majeurs. Nous l'assisterions dans cette démarche.
+ <br/>
+<br/>2. Absence d'anomalie : 
+ <br/>Ceci ne permettrait pas d'écarter définitivement tout risque 
+ <br/>individuel ou familial. La prise en charge serait déterminée sur 
+ <br/>d'autres arguments (histoire familiale, phénotype tumoral,...). Il 
+ <br/>n'y aurait pas de test génétique envisageable pour les apparentés.
+ <br/>
+<br/>3. Identification d'un variant de signification inconnue : non 
+ <br/>utilisable pour la prise de décision, non utilisable pour des tests 
+ <br/>familiaux.
+ <br/>L'impact psychologique dans ces différentes situations est également 
+ <br/>abordé. On propose une consultation avec une psychologue attachée à 
+ <br/>la consultation afin de discuter des problèmes spécifiques à ce 
+ <br/>contexte.
+ <br/>Décision d'analyse génétique
+ <br/>La personne sera informée par courrier de la mise à disposition des 
+ <br/>résultats, qui lui seront communiqués au cours d'une nouvelle 
+ <br/>consultation afin de les commenter et de préciser la conduite à tenir 
+ <br/>et la surveillance à préconiser pour elle-même et ses apparentés.
+ <br/>Consentements éclairés signés
+ <br/>Après validation du Dr CARON, prescription d'une analyse 
+ <br/>constitutionnelle d'un panel de gènes 
+ <b>BRCA1, BRCA2, PALB2, TP53, PTEN <br/>et CDH1.<br/><br/></b> Prélèvement sanguin : fait ce jour
+ <br/>
+<br/>Dans le cadre de la procédure PRAG, nous demandons la réalisation de 
+ <br/>l'analyse génétique en urgence (résultats souhaités fin mai début 
+ <br/>juin).
+ <br/>
+<br/>
+<b><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Olivier CARON <br/>Le vendredi 4 mai 2018 à 16:17<br/>_________________________________________________<br/>Signé électroniquement par Madame Marina DI MARIA , Conseillère en <br/>Génétique<br/>Le vendredi 4 mai 2018 à 16:39</b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

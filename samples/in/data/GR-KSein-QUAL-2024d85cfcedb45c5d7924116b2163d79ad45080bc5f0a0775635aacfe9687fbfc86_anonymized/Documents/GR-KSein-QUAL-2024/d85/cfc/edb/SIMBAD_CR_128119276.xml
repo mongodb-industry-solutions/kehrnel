@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128119276" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Entretien Service Social</title>
+    <effectiveTime value="20170515000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170515000000+0000"/>
+        <assignedAuthor>
+            <code code="ASS/266" displayName="SERVICE SOCIAL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Assistante sociale Mélia Sugranes Poste 6385
+ <br/>
+<br/>Mme est divorcée, elle a 1 fille qui vit en Australie.
+ <br/>Mme travaille comme juriste dans un cabinet d'avocat (PME).
+ <br/>
+<br/>Mutuelle + prévoyance complémentaire OK
+ <br/>100% OK
+ <br/>
+<br/>Pour le moment Mme a un traitement RTE puis chimio, elle ne reprendra 
+ <br/>sûrement pas son emploi avant Septembre/Octobre.
+ <br/>Elle ne souhaite pas reprendre son activité comme avant car c'était 
+ <br/>beaucoup trop intense en terme d'horaires et de charge de travail.
+ <br/>
+<br/>Mme souhaiterait connaître les options qui s'offrent à elle pour la 
+ <br/>reprise de son activité professsionnelle.
+ <br/>
+<br/>Je propose à Mme de me renseigner.
+ <br/>Nous reprenons RDV pour faire le point.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126902960" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>INTERVENTION</title>
+    <effectiveTime value="20171206000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171221000000+0000"/>
+        <assignedAuthor>
+            <code code="MOR/178" displayName="MORBIHAN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Opérateurs : <u>Docteur BREUSKIN</u> - Docteur SCHAFF - Docteur STRUK - <br/>Docteur DE FREMICOURT - Docteur OBONGO<br/>Aide opérateurs : Docteur MANGIN<br/>Anesthésiste : Docteur SITBON<br/> <br/>REPRISE DE CERVICOTOMIE ET FERMETURE DE PHARYNGOSTOME PAR UN LAMBEAU <br/>MUSCULO-CUTAN\'c9 DE GRAND DORSAL P\'c9DICUL\'c9 PR\'c9LEV\'c9 \'c0 <br/>GAUCHE<br/> <br/></b>
+<br/>
+<u><b>INTERVENTION</b></u> :
+ <br/>- Patient en décubitus dorsal.
+ <br/>- Sous anesthésie générale.
+ <br/>- Ventilation par sonde de Montandon via le trachéostome.
+ <br/>- Prévention des points de compression.
+ <br/>- Billot sous les épaules et sous les épineuses.
+ <br/>- Double désinfection cutanée à la Bétadine.
+ <br/>- Mise en place des champs stériles.
+ <br/>
+<br/>On débute par la cervicotomie.
+ <br/>On relève le lambeau cutané.
+ <br/>On constate un lachage complet des sutures du côté gauche sur toute 
+ <br/>la hauteur allant de la base de la langue jusqu'à la limite 
+ <br/>inférieure au niveau de la section oesophagienne.
+ <br/>Bel aspect du lambeau de grand pectoral et de la palette cutanée.
+ <br/>Nettoyage au sérum physiologique avec eau oxygénée et bétadine.
+ <br/>Curetage des tissus de granulation.
+ <br/>On décide de réaliser un lambeau musculo-cutané pédiculé de grand 
+ <br/>dorsal prélevé du côté gauche.
+ <br/>Incision en avant du bord antérieur du muscle grand dorsal.
+ <br/>Prélèvement d'une palette cutanée d'environ 9 cm de haut sur 5 cm de 
+ <br/>large.
+ <br/>Identification du bord antérieur du muscle.
+ <br/>Décollement de la face profonde du muscle.
+ <br/>Identification et préservation du pédicule.
+ <br/>On remonte le pédicule vasculaire jusqu'aux vaisseaux axillaires.
+ <br/>Clip sur les différentes branches vasculaires.
+ <br/>Section du nerf du grand dorsal.
+ <br/>Libération du muscle avec incision inférieure et médiale.
+ <br/>Section du tendon du grand dorsal.
+ <br/>Confection d'un tunnel qui passe au dessus de la clavicule en 
+ <br/>sous-cutané pour permettre le passage du lambeau dans la région 
+ <br/>cervicale sans tension.
+ <br/>Le lambeau est passé dans la région cervicale.
+ <br/>Contrôle de l'hémostase.
+ <br/>Mise en place d'un redon aspiratif.
+ <br/>Fermeture de la zone de prélèvement du grand dorsal par des points 
+ <br/>inversants dermiques de Vicryl 3/0 et agrafes à la peau.
+ <br/>Mise en place d'un tube salivaire qui est repéré par un fil qui passe 
+ <br/>via la fosse nasale.
+ <br/>
+<br/>Au niveau cervical, la palette cutanée du lambeau de grand dorsal est 
+ <br/>suturée à la muqueuse pharyngée restante et à la palette cutanée du 
+ <br/>grand pectoral.
+ <br/>Reconfection du trachéostome.
+ <br/>A noter que la prothèse phonatoire est changée pour une prothèse plus 
+ <br/>grande face à un élargissement de la fistule trachéo-oesophagienne.
+ <br/>Defect cutané laissant visible la face musculaire du lambeau dans la 
+ <br/>région cervicale gauche.
+ <br/>Pansement tour de cou applicateur.
+ <br/>Remise d'une canule à ballonnet type FOAM CUF en fin d'intervention.
+ <br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>
+<b>Cervicotomie pour récidive de pharyngostome.<br/>Fermeture par un lambeau musculo-cutané de grand dorsal.<br/>Haut risque de nouvelle désunion.<br/></b>
+<br/>
+<u><b>CONSIGNES POST-OPERATOIRE</b></u> :
+ <br/>- Surveillance locale.
+ <br/>- Surveillance de la prothèse phonatoire.
+ <br/>- Pas de réalimentation.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

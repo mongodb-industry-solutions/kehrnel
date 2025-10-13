@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126126368" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ORL - Interne ORL</title>
+    <effectiveTime value="20180420000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180424000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Patient vu par le DR YASSINE (interne)<br/></b></u>
+<br/> Je vois ce jour en consultation Mr XXXXXX qui a eu la 
+ <br/>fermeture d'un pharyngostome par un lambeau libre latéral de cuisse.
+ <br/>
+<br/>L'examen ce jour au niveau de la cuisse retrouve quelques dépôts de 
+ <br/>fibrine en regard de la cicatrisation dirigée, que l'on nettoie. On 
+ <br/>remet un pansement.
+ <br/>L'examen cervical ne montre pas d'anomalie.
+ <br/>On réalise une fibroscopie à travers la trachéostomie qui est 
+ <br/>normale, hormis un petit bourgeon à 9H qu'on cautérise, en regard du 
+ <br/>trachéostome.
+ <br/>On réalise l'épreuve au bleu : il n'y a pas de fuite.
+ <br/>
+<br/>Le patient est autorisé à remanger.
+ <br/>On lui explique bien qu'il faut plutôt préférer des laitages, des 
+ <br/>aliments mixés, des glaces.
+ <br/>
+<br/>Il sera revu en consultation par le DR BREUSKIN en mai 2018.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

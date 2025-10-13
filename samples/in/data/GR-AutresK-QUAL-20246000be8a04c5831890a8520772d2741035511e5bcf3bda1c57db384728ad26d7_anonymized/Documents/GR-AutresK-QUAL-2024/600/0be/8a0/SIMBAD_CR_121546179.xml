@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121546179" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation de Carcinologie Cervico-Faciale : Dr J. GUERLAIN</title>
+    <effectiveTime value="20200320000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200320000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>SERVICE ORL- COMPTE RENDU DE CONSULTATION<br/></b>
+<br/>
+<b>Dicté par</b> : Docteur Joanne Guerlain
+ <br/>
+<b>Dicté le </b> : 20/03/2020 
+ <br/>
+<b>Service </b> : ORL-CONSULTATIONS ORL 
+ <br/>
+<b>Type de document</b> : ORL CC STM 
+ <br/>
+<b>Ref </b> : 964436 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient</b> : José XXXXXX 
+ <br/>
+<b>Identifiant </b> : XXXXXX 
+ <br/>
+<b>Date de naissance</b> : XXXXXX 
+ <br/>
+<b>Sexe</b> : Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire : </b> COSTE FLAVIE
+ <br/>
+<br/>
+<br/>
+<br/>
+<u> Consultation du Dr BREUSKIN faite par le Dr GUERLAIN</u>
+<br/>
+<br/>Patient âgé de 58 ans, actuellement sous CETUXIMAB bimensuel en 
+ <br/>maintenance après une 1ère ligne de TIPEX pour une récidive de 
+ <br/>carcinome épidermoïde latéro-cervical bilatéral.
+ <br/>Il a présenté un carcinome épidermoïde de l'oropharynx HPV négatif 
+ <br/>traité par radio-chimiothérapie en octobre 2014.
+ <br/>Chirurgie de rattrapage en novembre 2017 et mars 2018. 
+ <br/>
+<br/>Sur son dernier scanner du 13/03/2020 il existe une stabilité résiste 
+ <br/>1.1 avec une tendance à l'augmentation latéro-cervicale droite et une 
+ <br/>stabilité à gauche.
+ <br/>
+<br/>
+<u><b>A l'interrogatoire</b></u> :
+ <br/>Patient en bon état général.
+ <br/>Alimentation exclusive par la GPE à cause d'un pharyngostome tumoral 
+ <br/>à gauche.
+ <br/>Il avait eu des épisodes de saignement trachéaux en décembre.
+ <br/>Il est sous LEVOTHYROX 25.
+ <br/>
+<br/>
+<u><b>A l'examen clinique</b></u> :
+ <br/>L'examen cervical retrouve une induration cervicale avec le 
+ <br/>pharyngostome gauche persistant.
+ <br/>Le trachéostome est parfait de même que la fibroscopie trachéale.
+ <br/>En fibroscopie du néopharynx, on retrouve des croûtes irrégulières 
+ <br/>sous forme un peu de nodule au nombre de 2 au niveau de la paroi 
+ <br/>pharyngée postérieure et au niveau de l'oropharynx à droite pouvant 
+ <br/>être d'allure post-radique.
+ <br/>Il n'y a pas clairement visualisé d'origine du pharyngostome.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>Pour l'instant je n'autorise pas la reprise de l'alimentation de Mr 
+ <br/>XXXXXX et je dis plutôt qu'il n'aura probablement pas de 
+ <br/>possibilité de reprendre l'alimentation per os.
+ <br/>Je demande tout de même que mon compte-rendu de consultation soit 
+ <br/>transféré au Dr BREUSKIN voir si elle veut tout de même réaliser ou 
+ <br/>pas un TOGD en vue d'une potentielle réalimentation étant donné qu'à 
+ <br/>la nasofibroscopie nous ne retrouvons pas l'orifice du pharyngostome.
+ <br/>Je dis au patient que nous le recontacterons en fonction de l'avis du 
+ <br/>Dr BREUSKIN sur ce point mais je reste pessimiste auprès de lui.
+ <br/>Par ailleurs, je renouvelle ses ordonnances et il faudrait rajouter 
+ <br/>une TSH pour son prochain bilan biologique qui est prévu le 
+ <br/>24/03/2020.
+ <br/>
+<br/>Nous ne prévoyons pas de rendez-vous systématique avec le Dr BREUSKIN 
+ <br/>mais restons à la disposition du Dr FERRAND pour une réévaluation 
+ <br/>clinique quand cela lui semble nécessaire. 
+ <br/>
+<br/>
+<br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b> Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>24/03/2020 10:10 ORL FRF SG 
+ <br/> =SG MAGNESIUM
+ <br/> =SG TSH
+ <br/> 10:15 ORL FRF BILAN ONCO 
+ <br/>25/03/2020 09:00 RHO FFD HDJ CHIMIO 
+ <br/> 09:05 RHO FFD C HDJ A TRAITER 
+ <br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Joanne GUERLAIN <br/>Le vendredi 20 mars 2020 à 12:36<br/></b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

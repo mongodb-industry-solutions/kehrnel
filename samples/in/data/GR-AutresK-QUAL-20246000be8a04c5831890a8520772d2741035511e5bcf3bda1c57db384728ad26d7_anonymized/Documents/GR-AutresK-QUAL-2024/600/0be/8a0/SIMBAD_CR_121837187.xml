@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121837187" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION DE NUTRITION - Docteur Stéphanie CHEMAMA</title>
+    <effectiveTime value="20200207000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200207000000+0000"/>
+        <assignedAuthor>
+            <code code="DIE/373" displayName="DIETETIQUE - NUTRITION"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>Unité Transversale de Diététique et Nutrition (UTDN) - Département de <br/>Soins de Support (DISSPO)<br/><br/>CONSULTATION DE NUTRITION<br/><br/>Dicté par : </b> Docteur Stéphanie Chemama, Nutritionniste
+ <b><br/>Dicté le : </b> 05/02/2020 
+ <b><br/>Service : </b> DIE - DIETETIQUE 
+ <br/>
+<b>Type de document : </b> DIE CC DE NUTRITION 
+ <br/>
+<b>Ref :</b> 926420 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire :</b> DTM/A
+ <br/>
+<br/>
+<u><b>CONTEXTE</b></u>
+<b> :</b>
+<br/>
+<br/>Il s'agit d'un patient âgé de 58 ans, suivi par le Dr BREUSKIN, pour 
+ <br/>un carcinome épidermoïde hypopharyngé du sinus piriforme droit.
+ <br/>
+<br/>M. DA SILVA a eu une laryngectomie totale le 12/11/17 avec une 
+ <br/>reconstruction prévue pour le mois de mars 2018.
+ <br/>
+<br/>Il a une 
+ <b>gastrostomie d'alimentation </b> depuis le 09/12/19.
+ <br/>
+<b><br/>Prestataire : LVL<br/><br/><u>Antécédents</u></b> :
+ <br/>
+<br/>Pas d'antécédent particulier.
+ <br/>Pas de diabète.
+ <br/>Sevrage tabagique et alcoolique en 2017.
+ <br/>
+<br/>
+<u><b>Allergies</b></u> : 0
+ <br/>
+<br/>
+<u><b>Activité physique</b></u>
+<b> :<br/><br/></b> - Pas de marche.
+ <br/>- Pas de kinésithérapie.
+ <br/>
+<br/>
+<u><b>HISTOIRE PONDERALE</b></u> : 
+ <br/>
+<br/>
+<b>- Taille : 1 m 61 </b>
+<br/>- Poids habituel : 68 kg 
+ <br/>- Poids le 12/11/17 : 61 kg
+ <br/>- Poids le 23/01/18 : 61 kg
+ <br/>- Poids le 30/04/18 : 63 kg
+ <br/>- Poids le 23/07/18 : 67 Kg
+ <br/>- Poids le 21/01/18 : 71 kg
+ <br/>- Poids le 24/12/19 : entre 67 et 70 kg
+ <br/>
+<br/>
+<u><b>Poids ce jour à la consultation</b></u>
+<b>: entre 68 et 69 kg.</b> Il est donc 
+ <br/>stable. Il est toujours en cours de chimiothérapie toutes les 2 
+ <br/>semaines.
+ <br/>
+<b><br/>EVA des ingesta : 0/10.<br/></b>
+<br/>Il passe 3 poches par jour : 1 le matin, 1 le midi et 1 le soir, sur 
+ <br/>2h chaque poche, sur pompe. Il est autonome pour le passage des 
+ <br/>poches.
+ <br/>
+<br/>Il ne prend aucun complément nutritionnel oral.
+ <br/>
+<br/>Pas de nausée, pas de vomissement, pas de diarrhée, pas de douleur 
+ <br/>particulière.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> : <br/> <br/></b> Je lui renouvelle donc sa nutrition entérale pour 12 semaines avec 1 
+ <br/>poche de 500 ml de NUTRISON ENERGY MULTIFIBRES PROTEIN PLUS le matin 
+ <br/>et le midi et 1 poche de 500 ml de NUTRISON ENERGY MULTIFIBRES non 
+ <br/>PROTEIN PLUS le soir.
+ <br/>
+<br/>Ordonnance également pour l'infirmière à domicile pour la 
+ <br/>vérification du ballonnet mensuelle.
+ <br/>
+<br/>Je le reverrai donc dans 12 semaines pour refaire le point avec lui 
+ <br/>sur son état nutritionnel et sa nutrition entérale.
+ <br/>
+<br/>
+<b><br/></b>
+<br/>
+<br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Stéphanie CHEMAMA , Nutritionniste<br/>Le vendredi 7 février 2020 à 15:06</b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

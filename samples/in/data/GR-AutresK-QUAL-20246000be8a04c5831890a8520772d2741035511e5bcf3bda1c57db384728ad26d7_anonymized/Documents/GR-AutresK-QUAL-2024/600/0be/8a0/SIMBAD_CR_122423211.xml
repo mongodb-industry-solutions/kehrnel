@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122423211" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM ORL TDM THORAX</title>
+    <effectiveTime value="20191114000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20191114000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur HARGUEM ZAYANI Sana
+ <br/>
+<br/>Destinataire : RHONE
+ <br/> DR INTERNE
+ <br/>
+<b>Compte rendu générique de SCANNER<br/><br/><br/> Dicté par : </b> Docteur Sana Harguem Zayani
+ <b><br/>Dicté le : </b> 13/11/2019 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Générique 
+ <br/>
+<b>Ref :</b> 855463 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : 
+ <b>LRQ<br/>Numéro d'examen : 4863</b>
+<br/>
+<br/>
+<br/>Examen réalisé le : 13.11.2019
+ <br/>
+<br/>
+<br/>
+<u><b>SCANNER CERVICO-THORACIQUE<br/> </b></u>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/></b> Patient âgé de 58 ans pris en charge pour récidive locale et 
+ <br/>ganglionnaire d'un carcinome épidermoïde de l'hypopharynx.
+ <br/>Forte suspicion de fistule entre la collection basicervicale gauche 
+ <br/>et l'entonnoir pharyngé. 
+ <br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/></b> Examen réalisé sur un scanner OPTIMA CT660, GENERAL ELECTRIC, mis 
+ <br/>en service le 8 février 2016.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 422272HM5
+ <br/>
+<br/>Réalisation d'une acquisition :
+ <br/>\'a7 Cervicale
+ <br/>\'a7 Thoracique
+ <br/>
+<br/>Examen réalisé avec opacification haute; avec et sans injection 
+ <br/>intraveineuse de produit de contraste.
+ <br/>
+<br/>
+<b>Produit de contraste injecté : an et que ce <br/>Quantité :<br/>PDL : 414+ 238 mGy.cm<br/></b>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> : <br/>En comparaison au scanner du 08/11/2019 : <br/><u>Cou:<br/></u></b> Cet examen confirme la présence d'un trajet fistuleux entre 
+ <br/>l'entonnoir pharyngé et la collection latéro-cervicale gauche à 
+ <br/>contenu aérique.
+ <br/>Cette collection mesure ce jour 42 x 26 mm versus 64 x 44 mm dans le 
+ <br/>plan axial et s'étend sur 70 mm versus 93 mm de hauteur.
+ <br/>Aspect superposable de l'imagerie par ailleurs. 
+ <br/>
+<br/>
+<u><b>Thorax:<br/></b></u> Absence d'embolie pulmonaire proximale.
+ <br/>Absence d'adénopathie médiastinale.
+ <br/>Aspect globalement stable de l'atélectasie du lobe inférieur gauche 
+ <br/>précédemment décrite.
+ <br/>Absence de lésion nodulaire d'allure évolutive apparue. 
+ <br/>Aspect superposable de l'imagerie par ailleurs. 
+ <br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Sana HARGUEM ZAYANI <br/>Le mercredi 13 novembre 2019 à 16:12 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

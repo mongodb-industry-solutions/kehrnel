@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124685505" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Dr Yun Gan TAO - CONSULTATION DE RADIOTHERAPIE</title>
+    <effectiveTime value="20181204000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181204000000+0000"/>
+        <assignedAuthor>
+            <code code="RTE/414" displayName="RADIOTHERAPIE EXTERNE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>CONSULTATION DE SURVEILLANCE DE RADIOTHERAPIE EXTERNE<br/><br/><br/> Dicté par : </b> Docteur Yun Gan Tao
+ <b><br/>Dicté le : </b> 28/11/2018 
+ <b><br/>Service : </b> RTE-RADIOTHERAPIE EXTERNE 
+ <br/>
+<b>Type de document : </b> RTE CC SURV 
+ <br/>
+<b>Ref :</b> 541073 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: Masculin</b>
+<br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : ZUT/A
+ <br/>
+<br/>Je vois ce jour Monsieur XXXXXX, on est à 4 ans après la 
+ <br/>radiochimiothérapie d'un carcinome épidermoïde du voile T3N2cM0 dans 
+ <br/>l'essai GORTEC 2004-01.
+ <br/>On retrouve une deuxième localisation au niveau du sinus piriforme 
+ <br/>droit après une PLT il y a 1 an.
+ <br/>
+<br/>L'alimentation est per os à solide.
+ <br/>Pas de xérostomie.
+ <br/>Une gène modérée légère au niveau pharyngé gauche.
+ <br/>
+<br/>
+<u><b>A L'EXAMEN CE JOUR</b></u>
+<b>:<br/><br/></b> L'état général est conservé, on ne trouve pas de trismus et la 
+ <br/>protraction linguale est satisfaisante.
+ <br/>Pas de lésion suspecte au niveau buccopharyngé surtout au niveau 
+ <br/>vélo amygdalien gauche à l'inspection ni à la palpation .
+ <br/>
+<br/>En nasofibroscopie, on ne trouve pas de lésion suspecte dans la base 
+ <br/>de langue, pas de lésion suspecte dans l'entonnoir pharyngé.
+ <br/>
+<br/>Au niveau cervical, sclérose de grade 1, pas d'adénopathie évidente 
+ <br/>palpable.
+ <br/>Pas de lésion suspecte à l'orifice de trachéostome, pas de lésion 
+ <br/>suspecte dans la trachée.
+ <br/>
+<br/>Il sera revu par le Docteur BREUSKIN le mois prochain et ensuite dans 
+ <br/>5 mois.
+ <br/>Prochain rendez-vous en radiothérapie en novembre 2019. 
+ <br/>
+<br/>
+<b>_________________________________________________<br/>Signé électroniquement par Docteur Yun Gan TAO <br/>Le lundi 3 décembre 2018 à 11:59 </b>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

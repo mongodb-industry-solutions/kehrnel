@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128779350" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation de chirurgie - Dr Grégoire MIAILHE</title>
+    <effectiveTime value="20161219000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20161219000000+0000"/>
+        <assignedAuthor>
+            <code code="360/53" displayName="BLOC CHIRURGIE GENERALE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patiente de 59 ans.
+ <br/>
+<br/>Nodule mammaire droit de 25 mm.
+ <br/>Cytoponction : adénocarcinome.
+ <br/>Microbiopsie : carcinome canalaire infiltrant de grade III.
+ <br/>RE-, RP-, HER2-
+ <br/>
+<br/>
+<b> DECISION THERAPEUTIQUE</b>
+<br/>
+<br/>1/ Bilan d'extension complet avec bilan biologique, FEVG.
+ <br/>Scanner thoraco-abdomino-pelvien et scintigraphie osseuse.
+ <br/>A vérifier.
+ <br/>
+<br/>Vue le type histologique, pas d'indication à une chirurgie première.
+ <br/>
+<br/>2/ Chimiothérapie néo-adjuvante par 4 EC 75 dose dense + 12 TAXOL 
+ <br/>hebdo. 
+ <br/>On pourrait proposer la participation au groupe GECA.
+ <br/>
+<br/>3/ Chirurgie par TUMORECTOMIE - GS
+ <br/>
+<br/>4/ Radiothérapie : en fonction de la chirurgie.
+ <br/>
+<br/>- Eligible pour l'étude CANTO de cohorte avant de débuter la 
+ <br/>chimiothérapie.
+ <br/>
+<br/> __________________________
+ <br/>
+<br/>Patiente vue en vue d'une chirurgie par tumorectomie avec procédure 
+ <br/>du GS droit après chimiothérapie néo-adjuvante. 
+ <br/>A noter qu'un CLIP a été posé sur la lésion avant la chimiothérapie 
+ <br/>néo-adjuvante. 
+ <br/>Dans le cadre de son bilan, le scanner TAP réalisé avant la 
+ <br/>chimiothérapie le 17.08.2016 mettait en évidence deux micro-nodules 
+ <br/>isolés en base pulmonaire droite mesurés à prés de 4.5 mm et un 
+ <br/>micro-nodule de la base gauche également isolée pour lesquels on 
+ <br/>recontrolera par un scanner TAP à la fin de tout les traitements. 
+ <br/>
+<br/>La chimiothérapie doit se terminer d'après les rendez-vous le 
+ <br/>30.01.2017. 
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE</b></u> : 
+ <br/>TSG : 90B. 
+ <br/>Au niveau du sein droit : empatement du QSI avec un nodule mal 
+ <br/>caractérisé de 1.5 cm. 
+ <br/>Pas d'autre nodule palpable au niveau du sein droit. 
+ <br/>Sein gauche : T0N0. 
+ <br/>Pas d'adénopathie droite. 
+ <br/>
+<br/>Je propose à la patiente une chirurgie de type tumorectomie avec une 
+ <br/>incision péri-aréolaire, nous programmerons cette intervention fin 
+ <br/>février avec un repérage du CLIP mis en place initialement à GR. 
+ <br/>
+<br/>Patiente vivant seule nécéssitant une hospitalisation le soir de 
+ <br/>l'intervention aux Ardennes.
+ <br/>
+<br/>La patiente est prévenue du fait que nous réaliserons un examen 
+ <br/>extemporané sur le GS et qu'il sera possible de réaliser un curage 
+ <br/>dans un même temps opératoire. 
+ <br/>
+<br/>Explication des principes du drainage sous-cutané, de 
+ <br/>l'hospitalisation 4-5 jours en cas de curage axillaire. 
+ <br/>
+<br/> Consultation d'anesthésie : 13.02.2017
+ <br/>Modalité d'anesthésie : AG
+ <br/>Hospitalisation le : 23.02.2017
+ <br/>Service d'hospitalisation : Ardennes
+ <br/>
+<br/>Opérateur : GMH
+ <br/>Intervention le : 23.02.2017
+ <br/>Intitulé de l'intervention : Tumorectomie avec GS + repérage 
+ <br/>échographique
+ <br/>Côté à opérer : Droit
+ <br/>
+<br/>Durée de la chirurgie sanglante : 1h30
+ <br/>Extemporané : Oui
+ <br/>Position sur la table opératoire : DD
+ <br/>
+<br/>Durée d'hospitalisation : 1 Nuit
+ <br/>Passage en USCC : Non
+ <br/>Fast Track : Non
+ <br/>Suivi nutritionnel : Non
+ <br/>Soins de suite à prévoir : Non
+ <br/>Evaluation de la douleur(de 0 à 10) : 0/10 
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126943780" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>COMPTE-RENDU DE VISITE EN HOSPITALISATION - Docteur BREUSKIN</title>
+    <effectiveTime value="20171215000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171215000000+0000"/>
+        <assignedAuthor>
+            <code code="MOR/178" displayName="MORBIHAN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patient chez qui il persiste un pharyngostome pour le moment pris en 
+ <br/>charge par pansement compressif.
+ <br/> Fistule trachéo-oesophagienne à l'endroit où la Provox était mise en 
+ <br/>place.
+ <br/>Cette fistule me semble avoir tendance à diminuer en taille.
+ <br/>On continue donc de la suivre et on verra s'il est nécessaire 
+ <br/>d'envisager une fermeture au bloc opératoire.
+ <br/>On poursuit les soins locaux.
+ <br/>J'explique au patient le caractère complexe de la situation.
+ <br/>Je lui explique l'attitude envisagée, à savoir une attitude 
+ <br/>attentiste de cicatrisation.
+ <br/>Si cette attitude ne fonctionne pas, nous reprogrammerons une 
+ <br/>nouvelle intervention.
+ <br/>Le patient me semble avoir bien compris l'attitude proposée.
+ <br/>
+<br/>J'avais eu sa fille au téléphone dans le courant de la semaine qui 
+ <br/>était très inquiète.
+ <br/>Il sera nécessaire que je recontacte sa fille pour discuter de la 
+ <br/>situation.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

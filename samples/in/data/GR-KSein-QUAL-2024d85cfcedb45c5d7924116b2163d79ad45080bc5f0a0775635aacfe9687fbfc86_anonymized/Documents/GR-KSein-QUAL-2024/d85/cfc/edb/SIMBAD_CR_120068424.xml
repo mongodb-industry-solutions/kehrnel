@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120068424" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°18H02433 2554556 Dr Alexander VALENT</title>
+    <effectiveTime value="20180419000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201105000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<br/>RESULTAT D'ANALYSE PAR FISH
+ <br/>
+<br/>Microbiopsie hépatique 
+ <br/>
+<br/>Date de réception au laboratoire : 19/03/2018
+ <br/>
+<br/>Diagnostic : Métastase d'un carcinome mammaire
+ <br/>
+<br/>Gène analysé : HER2
+ <br/>Sonde : LSI Her2-R/Cep17-G - Lot : 476567 - Fournisseur : Vysis
+ <br/>
+<br/>Détail de lecture (chaque ligne correspond à un clone observé)
+ <br/>
+<br/>Nb copies,,,,,,,,,,,Nb ,,,,,,,,,,,,,Nb cellules,,,,Ratio par clone
+ <br/>,,,gène,,,,,,centromères 17,,,,,analysées
+ <br/>....2.5...........1...............3..........2.5
+ <br/>....4.5...........1...............2..........4.5
+ <br/>....2...........2...............3..........1
+ <br/>....3.5...........2...............6..........1.75
+ <br/>....5.5...........2...............11..........2.75
+ <br/>....7.5...........2...............3..........3.75
+ <br/>....3...........3...............2..........1
+ <br/>....4.5...........3...............3..........1.5
+ <br/>....6.5...........3...............9..........2.17
+ <br/>....5.5...........4...............3..........1.38
+ <br/>....9...........5...............4..........1.8
+ <br/>....7.5...........4...............1..........1.88
+ <br/>
+<br/>Nombre de noyaux analysés : 50
+ <br/>
+<br/>Nombre moyen de centromères / cellule : 2.58
+ <br/>Nombre moyen de HER2 / cellule : 5.29
+ <br/>Ratio moyen HER2/CEN17 : 2.05
+ <br/>
+<br/>Formule ISCN 2013 : 
+ <br/>ish (D17Z1x1,ERBB2x2
+ <br/>3)[3]/(D17Z1x1,ERBB2x4
+ <br/>5)[2]/(D17Z1,ERBB2)x2[3]/ (D17Z1x2,ERBB2x3
+ <br/>4)[6]/(D17Z1x2,ERBB2x5
+ <br/>6)[11]/(D17Z1x2,ERBB2x7
+ <br/>8)[3]/ (D17Z1,ERBB2)x3[2]/(D17Z1x3,ERBB2x4
+ <br/>5)[3]/(D17Z1x3,ERBB2x6
+ <br/>7)[9]/ (D17Z1x4,ERBB2x5
+ <br/>6)[3]/(D17Z1x5,ERBB2)x9[4]/(D17Z1x4,ERBB2x7
+ <br/>8[1] 
+ <br/>
+<br/>
+<br/>
+<br/>CONCLUSION
+ <br/>
+<br/>Présence d'une amplification du gène HER2 selon les critères GEFPICS 2014 dans les cellules analysées par FISH.
+ <br/>
+<br/>Il s'agit d'une amplification faible avec la valeur "borderline" de ratio qui est à 2,05.
+ <br/>
+<br/>
+<br/>HHFFAMX4-----GS, BIFFAMX4 
+ <br/>
+<br/>Dr Marie-Christine MATHIEU Dr Alexander VALENT 
+ <br/>Médecin Spécialiste Biologiste 
+ <br/> Compte rendu validé et signé électroniquement 
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

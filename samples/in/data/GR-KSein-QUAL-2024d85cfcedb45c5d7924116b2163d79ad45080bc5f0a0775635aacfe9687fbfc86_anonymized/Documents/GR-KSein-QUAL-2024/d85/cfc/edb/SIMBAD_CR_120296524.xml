@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120296524" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'URGENCE</title>
+    <effectiveTime value="20201002000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201002000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b><br/> </b></u>
+<b>SERVICE DE M\'c9DECINE D'URGENCE EN ONCOLOGIE<br/><u><br/>Compte-rendu de consultation<br/><br/> </u></b>
+<br/>
+<u><b>CONSULTATION DU X<br/></b></u>
+<br/>
+<u><b>ACCUEIL IAO / X<br/></b></u> (entre 08h30 et 19h30) 
+ <br/>
+<br/>
+<u><b>MEDECIN EXAMINATEUR</b></u> : Dr MMerad
+ <br/>
+<br/>
+<u><b>MOTIF DE LA CONSULTATION</b></u> :
+ <br/>
+<br/>Patiente de 
+ <b>63 </b> ans, adressée par l'HDJ pour 
+ <b>prise en charge d'une <br/>tétraplégie + dysarthrie brutale dans le </b> cadre de la prise en 
+ <br/>charge d'une récidive hépatique et osseuse d'un cancer du sein droit 
+ <br/>diagnostiqué initialement en 2016 triple négatif, en 8ème ligne par 
+ <br/>Carboplatine débuté le 29/6. Persistance d'une thrombopénie malgré 
+ <br/>l'arrêt du traitement par Carboplatine justifiant le myélograme du 
+ <br/>jour. 
+ <br/>
+<br/>Atteintes osseuses diffuses avec épidurite en C5-C6 + atteinte 
+ <br/>foraminale droite radiothérapie sur le sacrum + L4 en aout dernier. 
+ <br/>
+<br/>
+<br/>
+<u><b>MEDECIN REFERENT</b></u> : Dr MOKDAD 
+ <br/>
+<br/>
+<br/>
+<u><b>ANTECEDENTS NON ONCOLOGIQUES</b></u> :
+ <br/>
+<br/> - Handicap : non 
+ <br/> - Pathologie psychiatrique : oui anxiété 
+ <br/> - Etat grabataire : non 
+ <br/> - Précarité sociale : non 
+ <br/> - Difficultés de coopération ou incapacité à s'exprimer : oui au 
+ <br/>moment de l'examen . 
+ <br/>
+<br/>Zona récidivant traité par Aciclovir . 
+ <br/>
+<br/>
+<u><b>TRAITEMENT EN COURS</b></u> :
+ <br/>
+<br/>Gabapentine. 
+ <br/>Zelitrex.
+ <br/>
+<br/>
+<br/>
+<u><b>EXAMEN CLINIQUE A L'ARRIVEE</b></u> :
+ <br/>
+<br/>Poids à l'entrée : 50 kg.
+ <br/>Taille : 171 CM.
+ <br/>
+<br/>Pression artérielle : 149/81 mmHg.
+ <br/>Pouls : 88/min.
+ <br/>Température : 36.5°C.
+ <br/>Saturation en air ambiant : 98 %.
+ <br/>
+<br/>OMS :1 
+ <br/>Pas de céphalées. 
+ <br/>Tétraparésie brutale avec dysrarthrie. 
+ <br/>Force musculaire conservée. 
+ <br/>Pas de niveau lésionnel. 
+ <br/>ROT abolits. 
+ <br/>Pas de nystagmus. 
+ <br/>Pas d'anomalie des paires craniennes. 
+ <br/>Pas de paralysie faciale. 
+ <br/>
+<br/>Rythme cardiaque régulier. 
+ <br/>Pas de signe d'insuffisance cardiaque. 
+ <br/>
+<br/>Le reste de l'examen clinique est sans particularité, des hépatalgies 
+ <br/>sont signalées . 
+ <br/>
+<br/>Le geste de BOM s'est déroulé sans problème particulier. 
+ <br/>Pas de douleur. 
+ <br/>Pas de notion d'anxiété majeure pendant le geste. 
+ <br/>
+<br/>
+<br/>
+<u><b>EXAMENS COMPLEMENTAIRES A L'ARRIVEE</b></u> :
+ <br/>
+<br/>
+<u><b>Bilan biologique</b></u> :
+ <br/>
+<br/>
+<u>NFS</u> :
+ <br/>Leucocytes 4 200/mm3, PNN 3 300/mm3 
+ <br/>Lymphocytes 400/mm3
+ <br/>Hémoglobine 9,5g/dL, Plq 68 000 /mm3.
+ <br/>
+<br/>Bilan hépatique : 
+ <br/>Aggravation de la cholestase. 
+ <br/>GGt a 3x N. 
+ <br/>Pas de trouble ionique. 
+ <br/>Pas d insuffisance rénale. 
+ <br/>LDH élevé 1119 UI/L.
+ <br/>CRP 18 mg/l.
+ <br/>
+<br/>Troponine non faite. 
+ <br/>
+<br/>ECG ras. 
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>
+<br/>Cancer du sein metastatique en 8ème ligne de traitement. 
+ <br/>Pas de traitement spécifique par Carboplatine depuis aout dernier en 
+ <br/>raison d'une thrombopénie . 
+ <br/>Tétraparésie brutale avec dysarthrie dans un contexte de neuropathie 
+ <br/>des membres.
+ <br/>Récupération en moins de 30 mn de la fonctionnalité des membres 
+ <br/>supérieurs. 
+ <br/>Dispartion de la dysarthie en 1 heure. 
+ <br/>Il persiste une paraparésie en voie de récupération, bouge les 
+ <br/>orteils. 
+ <br/>
+<br/>Une imagerie cérébrale + coupes cervicales sont demander en urgence 
+ <br/>pour éliminer une origine vasculaire + complication rachidienne 
+ <br/>cervicale. Une imagerie dorso lombaire devra être discutée
+ <br/>dans un second temps. 
+ <br/>
+<br/>Difficile d'établir un diagnostique devant cette atteinte 
+ <br/>sémiologique. 
+ <br/>Un avis au Dr Rouby est demandé dans l'hypothèse d'une conversion 
+ <br/>hystérique. Pas beaucoup d'argument. 
+ <br/>
+<br/>L'hypothèse vasculaire pourrait être évoquée pour la dysarthrie mais 
+ <br/>pas pour le reste du tableau neuologique. 
+ <br/>
+<br/>
+<br/>
+<u><b>CONDUITE A TENIR</b></u> :
+ <br/>NOTE interne de garde 20h41 REGNIER : 
+ <br/>
+<br/>TDM cérébral et cervical :
+ <br/>Absence de lésion suspecte de localisation secondaire à l'étage 
+ <br/>encéphalique.
+ <br/>Absence d'anomalie des axes vasculaires à destiner encéphalique.
+ <br/>Lésions ostéolytiques connues de C5 et C6 avec discrète épidurite 
+ <br/>antérieure, sans rétrécissement canalaire significatif.
+ <br/>
+<br/>Apparition par rapport au TEP scanner de juin 2020 de multiples 
+ <br/>micronodules pulmonaires bilatéraux associés à un épanchement pleural 
+ <br/>droit faisant suspecter une évolution métastatique pulmonaire. A 
+ <br/>compléter par un TDM TAP.
+ <br/>
+<br/>Donc : surveillance cette nuit et bilan de contrôle demain.
+ <br/>
+<br/>
+<br/>Heure d'arrivée : 13h20
+ <br/>Heure de départ : nd
+ <br/>
+<b>ADMISSION SERVICE ROUERGUE</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122218296" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>RESUME D'HOSPITALISATION-SERVICE RHONE</title>
+    <effectiveTime value="20191212000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20191212000000+0000"/>
+        <assignedAuthor>
+            <code code="RHO/179" displayName="RHONE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>SERVICE D'HOSPITALISATION RHONE - COMPTE RENDU D'HOSPITALISATION <br/>CHIMIOTHERAPIE 24 HEURES<br/><br/>Dicté par : </b> Docteur Leonardo Muratori, Interne
+ <b><br/>Dicté le : </b> 12/12/2019 
+ <b><br/>Service : </b> RHO-RHONE 
+ <br/>
+<b>Type de document : </b> RHO RH HOSPI + 24 H (S) 
+ <br/>
+<b>Ref :</b> 881908 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : gvt/XAY
+ <u><b><br/><br/></b></u> Approuvé par : Dr IACOB
+ <br/>
+<br/>
+<br/>
+<u><b>Docteur MURATORI /Docteur IACOB<br/></b></u>
+<br/>
+<u><b>Chirurgien référent IGR</b></u> : 
+ <b>DR BREUSKIN </b>
+<br/>
+<br/>
+<u><b>Oncologue référent IGR </b></u>
+<b>: DR FERRAND <br/></b>
+<br/>
+<u><b>Date d'entrée</b></u>
+<b> </b> : 12/12/2019
+ <br/>
+<br/>
+<u><b>Motif d'hospitalisation</b></u>
+<b> </b> : 
+ <b><br/></b> Patient de 58 ans hospitalisé pour sa 3ème cure de chimiothérapie 
+ <br/>par CISPLATINE-DOCETAXEL-CETUXIMAB, dans le cadre de la prise en 
+ <br/>charge d'une récidive latéro-cervicale bilatérale d'un carcinome 
+ <br/>oropharyngé traité initialement par radiochimiothérapie en Octobre 
+ <br/>2014 avec chirurgie de rattrapage Novembre 2017 et Mars 2018
+ <b><br/></b> Hospitalisé au Morbihan à partir du 8/12 pour pose de gastrotomie.
+ <br/>
+<b><br/><u>Antécédents médico-chirurgicaux</u><br/><u>Chirurgicaux <br/></u></b> - carcinome épidermoïde hypopharyngé (récidive) traité par PLT avec 
+ <br/>lambeau de grand pectoral et lambeau antéro-latéral de cuisse, 
+ <br/>- trachéotomie, 
+ <br/>- opéré d'une maladie de Dupuytren à 2 reprises (à gauche et à 
+ <br/>droite).
+ <br/>
+<br/>
+<u><b>Médicaux</b></u>
+<br/>- crise comitiale généralisée avec dernier évènement il y a plus de 
+ <br/>10 ans, pas de suivi neurologique, que l'on recommande notamment sur 
+ <br/>le plan thérapeutique, 
+ <br/>- psoriasis diffus essentiellement aux mains et aux avant-pieds, pas 
+ <br/>de traitement systémique, 
+ <br/>- hypothyroïdie, 
+ <br/>- pas d'allergie.
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE</b></u>
+<br/>- Prise en charge pour un carcinome épidermoïde initialement de 
+ <br/>l'oropharynx vélaire et des piliers postérieurs bilatéralement 
+ <br/>traité par radiochimiothérapie en octobre 2014.
+ <br/>- Août 2017 : Seconde localisation de carcinome épidermoïde de l' 
+ <br/>hypopharynx droit.
+ <br/>- 13/11/17 : Traitement par pharyngo-laryngectomie totale droite et 
+ <br/>reconstruction par lambeau musculo-cutané de grand pectoral.
+ <br/>Suites compliquées d'un pharyngostome à plusieurs reprises.
+ <br/>Monté d'un lambeau de grand dorsal le 06/12/2017.
+ <br/>Malgré les reprises, persistance d'un pharyngostome et déhiscence 
+ <br/>des sutures avec pharyngostome large.
+ <br/>- 19/03/18 : reprise de cervicotomie pour rétablissement de la 
+ <br/>continuité digestive et réfection d'un trachéostome dans le contexte 
+ <br/>de pharyngostome large post-PLT de rattrapage avec fermeture par un 
+ <br/>lambeau libre antéro-latéral de cuisse prélevé à gauche et lambeau 
+ <br/>pédiculé supra-claviculaire avec anastomose de perforante 
+ <br/>delto-acromial prélevé à gauche.
+ <br/>- Récidive latéro-cervical gauche nécrotique envahissant les tissus 
+ <br/>mous, péri carotidienne non résécable et adénopathie en 2 à droite 
+ <br/>envahissant la veine jugulaire découverte à l'été 2019 par la 
+ <br/>majoration d'un oedème du visage et de douleur.
+ <br/>Biopsié, AP : Carcinome épidermoïde HPV-, P16-.
+ <br/>- RCP ORL du 17/10/19 : décision d'un traitement systémique (pas de 
+ <br/>réirradiation envisagée).
+ <br/>
+<br/>
+<b>- Début d'un traitement par TpeX (C1 le 30/10/19)<br/><br/><u>Intercure:</u><br/></b> Rien a signaler.
+ <br/>
+<br/>
+<br/>
+<u><b>Examen clinique et biologique à l'entrée</b></u>
+<br/>OMS 1
+ <br/>Poids : 68 kg
+ <br/>Taille : 161 cm
+ <br/>SC : 1.7 m2
+ <br/>IMC : 26 kg/m2
+ <br/>TA : 113/74mmHg
+ <br/>FC :86 bpm
+ <br/>T : 36°C.
+ <br/>EVA : 0/10.
+ <br/>Saturation : 96% en AA
+ <br/>Trachéotomie : en place et fonctionnelle.
+ <br/>Alimentation : par sonde naso-gastrique depuis le 11/12 par 
+ <br/>gastrostomie.
+ <br/>
+<br/>
+<u>Au plan clinique loco-régional</u> :
+ <br/>Examen ORL : absence de mucite. 
+ <br/>Adénopathie : non palpable.
+ <br/>Auscultation cardio-pulmonaire : sans particularité.
+ <br/>Abdomen : souple et dépressible, indolore, sans masse palpable, pas 
+ <br/>de hépatosplénomégalie.
+ <br/>Transit : régulier.
+ <br/>Pas d'oedème des membres inférieurs.
+ <br/>
+<br/>
+<u>Au plan bio-hématologique</u> : 11/12/2019
+ <br/>Hémoglobine : 12 g/dl
+ <br/>Leucocytes : 5 800/mm3
+ <br/>PNN : 4 500/mm3
+ <br/>Plaquettes : 226 000/mm3
+ <br/>Créatininémie 36 μmol/l.
+ <br/>Ionogramme : Magnésium 0.69 mmol/l, Potassium 3 mmol/l, Sodium 133
+ <br/>mmol/l, Phosphore 0.75 mmol/l, Calcium corrigé 2.35 mmol/l.
+ <br/>Bilan hépatique : ASAT 23 UI/l, ALAT 15 UI/l, Gamma GT 109 UI/l,
+ <br/>PAL 100 UI/l, Bilirubine totale 7 μmol/l.
+ <br/>Albumine : 36 g/l
+ <br/>CRP : 106 mg/l
+ <br/>TP : 87 %
+ <br/>
+<br/>
+<u><b>Evolution dans le service</b></u>
+<br/>Hospitalisé entre le 8/12 et le 12/12 au Morbihan pour pose de 
+ <br/>gastrostomie, pas de complication, transféré au Rhône le 12/12/19.
+ <br/>
+<br/>
+<b>- Au le plan oncologique:</b>
+<br/>
+<u>Administration de sa 3 ème cure de chimiothérapie de type TpeX </u> : 
+ <br/>
+<br/> CISPLATINE 75 mg/m2 soit 120mg en DT
+ <br/> CETUXIMAB 250mg/m2 soit 400 mg DT
+ <br/> DOCETAXEL 75mg/m2 réduit à 80% soit 100mg en DT
+ <br/>
+<br/>Bonne tolérance immédiate de la chimiothérapie.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3> :<br/></b></u> 1/ C3 Cisplatine-Cetuximab-Docetaxel.
+ <br/>2/ Prise en charge nutritionnelle.
+ <br/>
+<br/>
+<br/>Poids à la sortie : 68 kg
+ <br/>EVA à la sortie : 0/10
+ <br/>
+<b><br/><u>Sortie à domicile le 13/12/2019</u> : <br/></b> - Bulletins de situation x3 .
+ <br/>- Bon de transport par ambulance.
+ <br/>- Lettre de liaison remise en main propre au patient ce jour
+ <br/>- Convocation
+ <br/>- Dernière prise de sang. 
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b>Traitement de sortie</b></u>
+<b> :<br/>- En cas de fièvre :</b>
+<br/>A débuter seulement en cas de fièvre > 38°.3 C (appeler le service et 
+ <br/>refaire une prise de sang)
+ <br/>
+<br/>
+<b>AMOXICILLINE acide clavulanique</b> 1 Gr x 3/J pendant 7 jours.
+ <br/>
+<b>CIPROFLOXACINE </b> 500 mg 1 cp x 2/J pendant 7 jours.
+ <br/>
+<b><br/>- En cas de diarrhées :<br/>IMODIUM </b> 2 gél après la 1 ère selle liquide puis 1 gél toutes les 6H 
+ <br/>avec max 6 gél par jour.
+ <br/>
+<b>SMECTA </b> 3 sachets/J
+ <br/>
+<br/>
+<b>- En cas de nausées :</b>
+<br/>
+<b>PRIMPERAN </b> 10 mg 1 cp x 3/J.
+ <br/>
+<br/>
+<b>- En cas de constipation :</b>
+<br/>
+<b>MOVICOL</b> 2 sachets /J le matin.
+ <br/>
+<br/>
+<b>- Si douleurs :</b>
+<br/>
+<b>DOLIPRANE</b> 1 Gr x 3/J si besoin.
+ <br/>
+<br/>
+<b>- En systématique :</b>
+<br/>- NFS, plaquettes, iono, urée et créat + calcium + phosphore + 
+ <br/>magnésium + Albumine + BH + Bilirubine + CRP chaque semaine et 48 h 
+ <br/>avant la prochaine hospitalisation (et en cas de fièvre ou bilan 
+ <br/>perturbé) par une IDE à domicile pendant 1 mois, à faxer au RHO, 1er 
+ <br/>contrôle le .
+ <br/>- Bains de bouche par BICARBONATE 1.4%, 4 fois par jour.
+ <br/>- DOXYCYCLINE 100 mg : 1 cp/jour pendant 1 mois.
+ <br/>- DEXERYL : 4 appl/jour pendant 1 mois. 
+ <br/>- SPASFON : 1 cp matin, midi et soir pendant 30 jours
+ <br/>- MUCOMYSTENDO 1g/5ml : 1 amp toutes les 4 heures pendant 30 jours
+ <br/>- LYRICA 25 mg : 2 gél matin, 2 gél midi, 2 gél le soir pendant 30 
+ <br/>jours
+ <br/>- SKENAN LP 10mg : 2 gél matin et 2 gel le soir pendant 30 jours
+ <br/>- LEVOTHYROX 25 UG: 1 cp matin pendant 30 jours
+ <br/>- DOXYCYCLINE 100mg : 4 cp au coucher
+ <br/>- GARDENAL 100mg : 1 cp au coucher pendant 30 jours
+ <br/>- ORAMORPH 10mg : 
+ <br/>- LANSOPRAZOLE 30mg : 1 cp matin pendant 30 jours
+ <br/>- NIVESTIM 30 MU/0.5 ML / 1 seringue pré-remplie le midi pendant 5 
+ <br/>jours du 14/12 au 18/12
+ <br/>- EMEND 80 mg : 1 gél le midi pendant 2 jours
+ <br/>- ZOPHREN 8 mg : 1 cp matin et soir pendant 5 jours
+ <br/>- MAG 2 100mg : 1 cp matin, midi et soir pendant 30 jours
+ <br/>- PHOSPHONEUROS : 50 gouttes matin, midi et soir pendant 30 jours
+ <br/>- NACL 0.9 par nébuliseur
+ <br/>- NUTRISON ENERGY MULTIFIBRE 500 ml HYPERCALORIQUE HYPERPROTEINE 
+ <br/>NUTRITION ENTERALE PAR SONDE NASO GASTRIQUE 
+ <br/>Nutrition entérale : 3poches/j, matin, midi et soir pendant 30 jours
+ <br/>- ONDANSETRON 8mg : 1 cp matin et soir pendant 5 jours
+ <br/>- Soins de gastrostomie et jéjunostomie CODE ACL à faire par une IDE
+ <br/>- Set de remplacement de gastrostomie CODE ACL
+ <br/>- BETADINE DERMIQUE 125ml
+ <br/>- BETADINE SCRUB
+ <br/>- NaCl 0.9 125 ml
+ <br/>
+<b><br/></b>
+<br/>
+<u><b>Conformément à l'article R710-2-1 du code de Santé Publique</b></u>
+<b> :<br/> <br/></b> Transfusion de produits sanguins labiles : NON.
+ <br/>Portage de germe multirésistant : NON.
+ <br/>
+<br/>
+<b><br/>____________________<br/>Docteur Leonardo MURATORI</b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126261132" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>HOPITAL DE JOUR DE MEDECINE DE CHEVILLY LARUE - Unité Vendée</title>
+    <effectiveTime value="20180403000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180403000000+0000"/>
+        <assignedAuthor>
+            <code code="CHL/511" displayName="CHEVILLY STRUCTURE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>HOPITAL DE JOUR DU 03/04/2018<br/><br/><u>MOTIF</u></b>
+<br/>
+<br/> Patiente âgée de 61 ans, vue ce jour pour son C2 de traitement par 
+ <br/>CARBOPLATINE/GEMCITABINE, dans le cadre de la prise en charge d'une 
+ <br/>rechute métastatique osseuse et hépatique d'un CCI, triple négatif, 
+ <br/>traité initialement par 6 EC75 + doses TAXOL, TGS, radiothérapie.
+ <br/>
+<br/>C1 réalisée le 26/02/2018.
+ <br/>C2 décalée en raison d'une thrombopénie et neutropénie non fébrile.
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE<br/><br/></b></u> OMS : 0
+ <br/>TA : 127/77
+ <br/>T° : 37°C
+ <br/>Poids : 51 kg
+ <br/>Taille : 1m71
+ <br/>Examen clinique sans particularité
+ <br/>
+<u><b><br/>BILAN BIOLOGIQUE<br/><br/></b></u> Bilan biologique du 29/03/2018 : Hb à 11 g/dl, leucocytes à 2 
+ <br/>830/mm3, PNN à 1 220/mm3, plaquettes à 360 000/mm3, bilan rénal 
+ <br/>normal, bilan hépatique normal.
+ <br/>
+<br/>
+<u><b>EN PRATIQUE<br/></b></u>
+<br/>Administration ce jour : 
+ <br/>- CARBOPLATINE AUC3 soit 230 mg en DT
+ <br/>- GEMCITABINE 850 mg/m2 soit 1400 mg en DT
+ <br/>
+<br/>La patiente aura des injections de NIVESTIM en prophylaxie d'une 
+ <br/>neutropénie, en post-chimiothérapie.
+ <br/>Elle reverra le Dr MOKDAD le 19/04/2018.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

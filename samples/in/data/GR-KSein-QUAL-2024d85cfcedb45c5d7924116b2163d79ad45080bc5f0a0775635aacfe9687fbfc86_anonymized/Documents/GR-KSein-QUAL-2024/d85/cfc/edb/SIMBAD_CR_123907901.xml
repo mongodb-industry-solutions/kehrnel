@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123907901" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ORL - Dr Fabienne HAROUN</title>
+    <effectiveTime value="20190329000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190329000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patiente de 62 ans suivie à l'IGR depuis 2016 pour un cancer du sein 
+ <br/>droit en récidive métastatique hépatique et osseuse actuellement sous 
+ <br/>3ème ligne de chimiothérapie (ERIBULINE) depuis novembre 2018.
+ <br/>
+<br/>Apparition sur un PET SCANNER de janvier 2019 d'une fixation 
+ <br/>oropharyngée au niveau de l'amygdale droite associée à des 
+ <br/>adénopathies peu suspectes.
+ <br/>Persistance d'une asymétrie amygdalienne prédominant à droite sur le 
+ <br/>PET SCANNER de mars 2019 mais hyperfixation moins importante.
+ <br/>
+<br/>La patiente est adressée pour un examen ORL.
+ <br/>
+<br/>Ce jour la patiente est en très bon état général.
+ <br/>Elle ne présente pas de plainte particulière mais dit être sujette à 
+ <br/>des infections récurrentes notamment urinaires, bronchiques et 
+ <br/>oropharyngées du fait de sa maladie.
+ <br/>
+<br/>On explique à la patiente qu'une asymétrie des amygdales est assez 
+ <br/>fréquente et qu'une hyperfixation au TEP SCANNER semble cohérente 
+ <br/>avec le rôle fonctionnel des amygdales dans le cadre des défenses 
+ <br/>immunitaires.
+ <br/>
+<br/>
+<u><b>Examen clinique</b></u> :
+ <br/>
+<br/>Pas d'adénopathie cervicale palpable.
+ <br/>L'examen endo-buccal est normal.
+ <br/>Au niveau de l'oropharynx on retrouve deux petites amygdales dans 
+ <br/>leur loge sans lésion suspecte.
+ <br/>A la nasofibroscopie bonne mobilité du pharyngo-larynx. Pas de lésion 
+ <br/>suspecte également.
+ <br/>
+<br/>On rassure donc la patiente, et on lui conseille de rester vigilante 
+ <br/>qu'en à sa symptomatologie.
+ <br/>Pas besoin de pousser les explorations, nous reverrons la patiente à 
+ <br/>la demande de son oncologue si besoin.
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

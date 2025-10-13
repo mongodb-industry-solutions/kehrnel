@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127904687" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ONCOLOGIE GYNECOLOGIE - DR JUDITH MICHELS</title>
+    <effectiveTime value="20170622000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170623000000+0000"/>
+        <assignedAuthor>
+            <code code="060/8" displayName="CTE 060 - GYNECOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Patiente vue par le Docteur Frédéric BIGOT, Interne</b>
+<br/>
+<br/>Madame XXXXXX, 64 ans, est vue en présence de son conjoint dans le 
+ <br/>cadre de la prise en charge d'un adénocarcinome séreux de haut grade 
+ <br/>de l'ovaire stade IV (pleural), actuellement en cours de 
+ <br/>chimiothérapie première par CARBOPLATINE - TAXOL dont elle a reçu 4 
+ <br/>cures (5ème cure prévue le 23/06/2017).
+ <br/>
+<br/>Profil moléculaire : BRCA1 et 2 non mutés, en somatique, recherche 
+ <br/>mutation BRCA constitutionnelle en cours.
+ <br/>Marqueur tumoral : CA 125 informatif (1 000 au diagnostic).
+ <br/>
+<br/>On rappelle également que la patiente avait fait une thrombose 
+ <br/>veineuse profonde du membre inférieur droit au diagnostic.
+ <br/>
+<br/>Tolérance du traitement : très bonne tolérance clinique.
+ <br/>
+<br/>La patiente n'est plus du tout dyspnéique.
+ <br/>
+<br/>Il n'a pas été réalisé de nouvelle ponction pleurale.
+ <br/>
+<br/>Elle poursuit les injections d'INNOHEP 0.7 ml en raison de la TVP 
+ <br/>récente qui persistait sur le dernier contrôle par écho-doppler.
+ <br/>
+<br/>
+<br/>
+<u><b>EXAMEN CLINIQUE</b></u>
+<br/>
+<br/>A l'examen clinique ce jour : 
+ <br/>OMS : 0.
+ <br/>Poids : 69 kg, stable.
+ <br/>TA : 160/90 mmHg.
+ <br/>Saturation : 100 % en air ambiant.
+ <br/>Pouls : 100/mn.
+ <br/>T : 37,2°.
+ <br/>
+<br/>Examen cardio-pulmonaire normal.
+ <br/>Pas d'abolition du murmure vésiculaire perçu.
+ <br/>
+<br/>Aires ganglionnaires superficielles libres.
+ <br/>
+<br/>Examen abdominal : ascite de faible abondance. Pas de trouble du 
+ <br/>transit. Pas de nodule palpé.
+ <br/>
+<br/>PAC sous-clavier droit propre.
+ <br/>
+<br/>
+<br/>
+<u><b>EXAMENS COMPLEMENTAIRES</b></u>
+<br/>
+<br/>- Biologie du 21/06/2017 : 
+ <br/>Hb à 11,6 g/dl, PNN à 8 830/mm3, Plaquettes à 75 000/mm3.
+ <br/>Créatinine à 58 μmol/l.
+ <br/>Bilan hépatique normal.
+ <br/>CA 125 à 71 UI/ml.
+ <br/>
+<br/>La patiente a réalisé une échographie mammaire pour recontrôle d'un 
+ <br/>kyste atypique de 7 mm à l'union des quadrants internes du sein droit.
+ <br/>L'examen retrouve des kystes bilatéraux typiques.
+ <br/>L'examen est classé ACR2 bilatéral.
+ <br/>La surveillance sera à réaliser dans le cadre du dépistage 
+ <br/>systématique avec un nouvel examen dans deux ans, sauf si il était 
+ <br/>retrouvé une deuxième BRCA en constitutionnel.
+ <br/>
+<br/>
+<br/>
+<u><b>EN PRATIQUE<br/><br/></b></u> Bonne réponse biologique et clinique après 4 cures de CARBOPLATINE - 
+ <br/>TAXOL.
+ <br/>
+<br/>Poursuite du programme thérapeutique avec 5ème cure de CARBOPLATINE - 
+ <br/>TAXOL.
+ <br/>
+<br/>L'examen sera à réaliser demain, le 23/06/2017, si le contrôle de la 
+ <br/>NFS réalisée ce jour est bon.
+ <br/>
+<br/>En cas de persistance d'une thrombopénie, nous décalerons d'une 
+ <br/>semaine la chimiothérapie.
+ <br/>
+<br/>A noter qu'elle reverra le 29/06/2017 le Docteur GOUY en consultation 
+ <br/>afin de programmer la coelioscopie exploratrice après chimiothérapie 
+ <br/>première.
+ <br/>
+<br/>Elle réalisera, au préalable, un écho-doppler veineux des membres 
+ <br/>inférieurs.
+ <br/>
+<br/>La patiente réalisera, début juillet, un scanner TAP de réévaluation.
+ <br/>
+<br/>En fonction de tous ces éléments, nous déciderons de la réalisation 
+ <br/>d'une chirurgie de débulking après la sixième ou septième cure.
+ <br/>
+<br/>Pour notre part, nous reverrons la patiente pour évaluation clinique 
+ <br/>et biologique avec les résultats du PET scanner mi-juillet 2017.
+ <br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

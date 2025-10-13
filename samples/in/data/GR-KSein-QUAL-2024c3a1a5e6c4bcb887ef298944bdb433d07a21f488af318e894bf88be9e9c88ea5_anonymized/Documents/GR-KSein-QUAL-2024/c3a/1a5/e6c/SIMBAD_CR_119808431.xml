@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_119808431" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION LONGUE ANNONCE DE PRE- RADIOTHERAPIE</title>
+    <effectiveTime value="20201211000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201211000000+0000"/>
+        <assignedAuthor>
+            <code code="RTE/414" displayName="RADIOTHERAPIE EXTERNE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>COMPTE RENDU DE LONGUE ANNONCE DE RADIOTHERAPIE EXTERNE<br/><br/>Dicté par : </b> Docteur Guillaume Louvel
+ <b><br/>Dicté le : </b> 09/12/2020 
+ <b><br/>Service : </b> RTE-ONCOLOGIE RADIOTHERAPIE 
+ <br/>
+<b>Type de document : </b> RTE CC Générique 
+ <br/>
+<b>Ref :</b> 1186189 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : 
+ <b>FTV**</b>
+<br/>
+<br/>Madame XXXXXX, 41 ans, est vue ce jour pour discuter d'une irradiation 
+ <br/>antalgique via l'HDJ dans le cadre d'un cancer du sein triple négatif 
+ <br/>métastatique en progression. 
+ <br/>
+<br/>
+<u><b>ANTECEDENTS / PATHOLOGIES ASSOCIEES<br/></b></u> Aucun.
+ <br/>Pas d'allergie connue.
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE<br/></b></u>
+<br/>2015 : cancer du sein gauche diagnostiqué initialement traité à 
+ <br/>Bergonié par chimiothérapie, chirurgie puis radiothérapie au niveau 
+ <br/>axillaire, CMI et sus claviculaire, triple négatif.
+ <br/>
+<br/>Récidive en mars 2018, sous NAVELBINE. 
+ <br/>
+<br/>TEP-SCANNER le 20.12.2018 qui montre, comparativement à l'examen 
+ <br/>précédent de septembre 2018, un aspect de réévolutivité au niveau 
+ <br/>ganglionnaire sus et sous-claviculaire gauche et probablement 
+ <br/>axillaire gauche.
+ <br/>
+<br/>Elle a débuté un traitement par TALAZOPARIB le 12/01/2019 en 2ème 
+ <br/>ligne.
+ <br/>
+<br/>TEP SCANNER le XXXXXX/2019 : aspect de progression métabolique devant 
+ <br/>la majoration en intensité de fixation de certaines adénopathies 
+ <br/>sus-claviculaires et axillaires gauches malgré la régression 
+ <br/>métabolique du foyer pris pour cible. La majoration d'un nodule 
+ <br/>sous-cutané cervical antérieur gauche. L'apparition d'un nodule 
+ <br/>surrénalien gauche fixant d'allure secondaire. 
+ <br/>
+<br/>Sous XELODA depuis avril 2019 en 3ème ligne.
+ <br/>
+<br/>TEP SCANNER du 02/07/2019 : Nouvelle progression métabolique 4ème 
+ <br/>ligne par ENDOXAN oral.
+ <br/>
+<br/>Aout 2019 : nouvelle progression; 5ème ligne de traitement par 
+ <br/>ERIBULINE pour 5 cycles.
+ <br/>
+<br/>TEP-SCANNER le 13/12/2019 : progression donc début d'une 5ème ligne 
+ <br/>par CARBOPLATINE / GEMZAR depuis décembre 2019 jusqu'au 28/02/2020.
+ <br/>
+<br/>Scanner thoraco-abdomino-pelvien de juin 2020 : Progression 
+ <br/>ganglionnaire sous-diaphragmatique devant l'apparition 
+ <br/>d'adénomégalies rétro-péritonéales gauches comparativement au scanner 
+ <br/>de Février 2020.
+ <br/>
+<br/>Reprise de CARBOPLATINE / GEMZAR C1J1 22/07/2020. Dernière cure le 
+ <br/>09/09/2020 (C3).
+ <br/>
+<u><b><br/><br/> </b></u> ******************
+ <br/>
+<br/>
+<u><b><br/></b></u>
+<br/>Depuis au moins 1 mois 1/2, Madame XXXXXX présente une franche 
+ <br/>majoration des douleurs cervicales et épaule gauche avec impotence 
+ <br/>fonctionnelle du bras gauche, ayant nécessité une hospitalisation du 
+ <br/>fait d'un mauvais équilibre antalgique sous palier 3 per-os.
+ <br/>
+<br/>Elle a été mise sous PCA de morphine, AMITRIPTYLINE, GABAPENTINE 
+ <br/>(800mgx3), KETAMINE et 40 mg de SOLUPRED.
+ <br/>Elle présente par ailleurs depuis mi-décembre 2020, une dyspnée au 
+ <br/>moindre effort. Elle a réalisé un scanner qui retrouve une majoration 
+ <br/>de l'épanchement pleural, épanchement péricardique gauche sans embolie 
+ <br/>pulmonaire.
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE<br/></b></u> EVA = 8/10
+ <br/>
+<br/>Importante masse ganglionnaire palpable au niveau du creux 
+ <br/>sus-claviculaire et de l'ensemble du cou gauche pris en masse et 
+ <br/>extrêmement douloureux à la palpation. Il s'y associe une masse 
+ <br/>sous-cutanée en région sous-claviculaire non douloureuse mais en voie 
+ <br/>de perméation.
+ <br/>Membre supérieur gauche à 0/5 en terme de motricité. Elle peut bouger 
+ <br/>uniquement les doigts gauches. 
+ <br/>Important lymphoecdème du membre supérieur gauche.
+ <br/>
+<br/>
+<u><b>EN PRATIQUE<br/><br/></b></u> On valide donc l'indication d'une radiothérapie antalgique 
+ <br/>palliative qui visera à délivrer 20 Gy en 5 fractions de 4 Gy au 
+ <br/>niveau de la récidive cervicale gauche.
+ <br/>
+<br/>Il s'agit d'une réirradiation par rapport à l'irradiation 
+ <br/>sus-claviculaire gauche réalisée en 2015 à Bordeaux. Madame XXXXXX a 
+ <br/>été informée des risques de plexite radique inhérente du fait de la 
+ <br/>dose cumulée des deux irradiations, mais cette seconde irradiation 
+ <br/>est rendue indispensable du fait des douleurs extrêmement intenses 
+ <br/>présentées par la patiente malgré la PCA de morphine, la KETAMINE 
+ <br/>l'AMITRIPTYLINE et la GABAPENTINE. Il existe déjà par ailleurs une 
+ <br/>impotence fonctionnelle quasi-totale du membre supérieur gauche. Il 
+ <br/>existe par ailleurs un risque de radioépithélite et de rebonds 
+ <br/>douloureux.
+ <br/>
+<br/>
+<b>LISTE RENDEZ-VOUS PREVUS</b>
+<br/>10/12/2020 scanner de radiothérapie 
+ <br/>17/12/2020 COVID-19 
+ <br/>21/12/2020 mise en place de la radiothérapie
+ <br/>
+<u><br/></u>
+<b><br/>_________________________________________________<br/>Signé électroniquement par Docteur Guillaume LOUVEL <br/>Le jeudi 10 décembre 2020 à 12:04 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

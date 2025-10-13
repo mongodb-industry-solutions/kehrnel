@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127662073" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>MED.NUCLEAIRE MN TEP FDG 060</title>
+    <effectiveTime value="20170809000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170809000000+0000"/>
+        <assignedAuthor>
+            <code code="MNU/174" displayName="MEDECINE NUCLEAIRE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur LUMBROSO Jean
+ <br/>
+<br/>Destinataire : CTE 060 - GYNECOLOGIE
+ <br/> DR MICHELS JUDITH
+ <br/>
+<br/>
+<br/>
+<b>EXAMEN DE TOMOGRAPHIE PAR EMISSION DE POSITONS TEP-FDG<br/><br/>Dicté par : </b> Berivan EMSEN interne et DR LUMBROSO 
+ <b><br/>Dicté le : </b> 09/08/2017
+ <b><br/>Service : </b> Mnu-Medecine Nucleaire
+ <br/>
+<b>Type de document : </b> MNU CE TEP FDG
+ <b><br/>Ref:</b> 280179 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant : </b> XXXXXX
+ <b><br/>Date de naissance : </b> XXXXXX
+ <br/>
+<b>Sexe: </b> Femme 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : EDG
+ <br/>
+<br/>Examen réalisé le : 09/08/2017
+ <br/>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/><u><br/></u></b> Patiente de 65 ans suivie pour un adénocarcinome séreux de l'ovaire 
+ <br/>de haut grade stade IV pleural. Evaluation pré-opératoire après 6 
+ <br/>cures de chimiothérapie par CARBOPLATINE/TAXOL néo adjuvante.
+ <br/>
+<br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/><u><br/></u></b> Acquisition TEP réalisée 60 minutes après injection par voie 
+ <br/>intraveineuse de 243 MBq de 18-FDG.
+ <br/>Glycémie avant injection : 5.7 mmol/l.
+ <br/>Scanner de repérage pour fusion d'images, PDL : 224 mGy.cm
+ <br/>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/><br/></b> Absence d'examen antérieur disponible pour comparaison : 
+ <br/>
+<br/>
+<u>A l'étage cervico-thoracique<br/></u>
+<br/>- Absence de fixation suspecte de la sphère ORL.
+ <br/>
+<br/>- Ganglions cervicaux bilatéraux infra-centimétriques faiblement 
+ <br/>fixants, exemple :
+ <br/>* secteur II B gauche de 6mm SUVmax 2.5.
+ <br/>
+<br/>- Ganglion sus-claviculaire gauche de 5mm non fixant et axillaires 
+ <br/>bilatéraux non fixants, peu spécifiques.
+ <br/>
+<br/>- Absence d'épanchement pleural.
+ <br/>
+<br/>- Absence de nodule pulmonaire suspect ou de fixation suspecte 
+ <br/>pleuro-pulmonaire.
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<u>A l'étage abdomino-pelvien</u>
+<br/>
+<br/>- Ascite abdomino-pelvienne de moyenne abondance non fixante.
+ <br/>
+<br/>- Fixation de la partie postérieure de la masse pelvienne (SUVmax 
+ <br/>8.8), en rapport avec un résidu tumoral.
+ <br/>
+<br/>- Foyer de fixation hépatique du segment VII ou V (SUVmax 4.8) sans 
+ <br/>anomalie TDM en regard, à recontrôler.
+ <br/>
+<br/>- Ganglions inguinaux bilatéraux infra-centimétriques fixants 
+ <br/>prédominant à gauche (SUVmax 4.5 de 2 ganglions gauches),de 
+ <br/>spécificité incertaine.
+ <br/>
+<br/>- Absence de fixation suspecte splénique, pancréatique ou surrénalien.
+ <br/>
+<br/>- Absence de fixation suspecte ganglionnaire ceolio-mésentérique, 
+ <br/>lombo aortique ou des axes iliaques.
+ <br/>
+<br/>
+<br/>
+<br/>
+<u>Au niveau osseux<br/></u>
+<br/>- Absence de fixation suspecte du squelette exploré.
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/><br/>Absence d'examen baseline pour comparaison.<br/>Fixation de la partie postérieure de la masse pelvienne, en rapport <br/>avec un résidu tumoral, associé à une ascite de moyenne abondance.<br/>Image hépatique simplement douteuse.<br/>Pas d'autre foyer suspect notamment pleural.<br/></b>
+<br/>
+<br/>
+<br/>LUMBROSO, Jean 
+ <br/>Signé électroniquement par Jean LUMBROSO 
+ <br/>à 11:36 le 9/8/2017
+ <br/>EMSEN, Berivan 
+ <br/>Signé électroniquement par Berivan EMSEN 
+ <br/>à 11:59 le 9/8/2017
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

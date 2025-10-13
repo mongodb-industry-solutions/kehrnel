@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124656984" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CR Consultation du 2018-12-07</title>
+    <effectiveTime value="20181207000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181207000000+0000"/>
+        <assignedAuthor>
+            <code code="RTE/414" displayName="RADIOTHERAPIE EXTERNE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>CONSULTATION LONGUE ANNONCE DE PRE-RADIOTHERAPIE EXTERNE<br/> <br/><br/> Dicté par : </b>Docteur Valentine Martin
+ <b><br/>Dicté le : </b>09/08/2018 
+ <b><br/>Service : </b>RTE-RADIOTHERAPIE EXTERNE 
+ <br/>
+<b>Type de document : </b>RTE CC CLA2 
+ <br/>
+<b>Ref :</b> 469399 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b>XXXXXX XXXXXX XXXXXX
+ <b> <br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe</b>
+<b>: </b>Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : MII/QMA/A
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b>ANTECEDENTS MEDICAUX PERSONNELS :</b></u>
+<b><br/></b>Splénomégalie à 22 cm découverte en février 2012, dans un contexte de cavernome portal avec varices oesophagiennes.
+ <br/>Adénocarcinome prostatique, diagnostiqué le 15/11/2011, traité par radiothérapie exclusive du 26/02 au 07/06/2018 à Fort de France (prostate 76 Gy, pelvis 53 Gy).
+ <br/>Thrombose portale diagnostiquée en septembre 2017, traitée par INNOHEP à dose curative puis LOVENOX à dose préventive.
+ <br/>
+<br/>
+<u><b>ANTECEDENTS CHIRURGICAUX :<br/></b></u>Pas d'antécédent chirurgical connu. 
+ <br/>
+<br/>
+<u><b>TRAITEMENT ACTUEL :<br/></b></u>JAKAVI 20 mg 2x/jour depuis juin 2017 associé à une corticothérapie depuis février 2018 40 mg/jour. 
+ <br/>EPO toutes les 3 semaines. 
+ <br/>LOVENOX 04 ml/jour.
+ <br/>OMEPRAZOLE 20 mg/jour.
+ <br/>PARACETAMOL si besoin.
+ <br/>LAMALINE pour les douleurs au niveau de l'épaule droite.
+ <br/>
+<br/>
+<u><b>MODE DE VIE : <br/></b></u>Vit en Martinique.
+ <br/>Retraité depuis 2006 d'une entreprise de transports.
+ <br/>Marié, 3 enfants dont un décédé d'un AVP.
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE :</b></u>
+<b> <br/></b>Diagnostic en avril 2012 d'un cavernome portal avec présence d'une splénomégalie non chiffrée et la présence de varices oesophagiennes de grade I-II.
+ <br/>Apparition en 2015 d'une hyperleucocytose associée à une myélémie et la présence de dacryocytes et de 4% de blastes circulants. 
+ <br/>BOM (date non connue et examen non disponible dans le dossier) : hyperplasie mégacaryocytaire avec présence de mégacaryocytes dystrophiques regroupés en Cluster associée à une hypoplasie érythroblastique et une fibrose médullaire non gradée associée à une ostéosclérose grade III. Absence d'excès de blastes.
+ <br/>Caryotype juin 2017 : pseudo-diploïde avec une del13 (compte-rendu non disponible dans le dossier), à priori présence d'une mutation JAK2 V617F positive. 
+ <br/>
+<br/>Il s'agit donc d'une myélofibrose primitive JAK2 V617F positive.
+ <br/>Traitement par PLAVIX et HYDREA à partir de janvier 2017 puis JAKAVI 20 mg x2/jour à partir de juillet 2017.
+ <br/>Le JAKAVI a permis une reprise du poids (le patient avait perdu plus de 20 Kg) ainsi qu'une amélioration globale de l'état général.
+ <br/>Introduction d'une corticothérapie à 1mg/Kg/jour le 30/01/2018 devant une composante hémolytique de l'anémie. 
+ <br/>Par ailleurs, le patient est sous EPO ARANESP 500 μg toutes les 3 semaines, date de début non précisée.
+ <br/>
+<br/>Une allogreffe de CSP est prévue à Gustave Roussy en août 2018 précédée d'une radiothérapie splénique à la dose de 6 Gy en 10 fractions qui a eu lieu du 19 au 31/07/2018. 
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b>CONSULTATION CE JOUR</b></u>
+<b> :<u><br/></u></b>OMS : 1.
+ <br/>Patient toujours dyspnéique en raison d'une anémie à 8,8 g/dL avec un mauvais rendement transfusionnel.
+ <br/>Diminution du volume de la rate à 2 travers de doigt versus 4 ainsi que de la sensibilité à la palpation.
+ <br/>Reste de l'examen clinique sans particularité.
+ <br/>
+<br/>Dernier bilan biologique en date du 09/08/2018 retrouvant:
+ <br/>- hémoglobine: 7,9 g/dL,
+ <br/>- leucocytes: 1 300/mm3 dont 900 polynucléaires neutrophiles et 100 Lymphocytes,
+ <br/>- plaquettes: 33 000/mm3
+ <br/>osupersub .
+ <br/>
+<br/>
+<br/>
+<u><b>EN PRATIQUE</b></u>
+<b> :<u><br/></u></b>Allogreffe haplo-identique avec conditionnement d'intensité réduite par FTBI 2 Gy FLUDARABINE/ ENDOXAN.
+ <br/>L'irradiation aura lieu le 16/08/2018.
+ <br/>
+<br/>Le déroulement ainsi que les principaux effets secondaires aigus (céphalées, mucite, parotidite, nausées vomissements, douleurs abdominales, diarrhées, asthénie) et plus tardifs (cataracte, faible probabilité de fibrose pulmonaire et d'autres complications) sont expliqués au patient qui les comprend et les accepte. 
+ <br/>
+<u><br/> <br/></u>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Valentine MARTIN <br/>Le samedi 11 août 2018 à 16:42 </b>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

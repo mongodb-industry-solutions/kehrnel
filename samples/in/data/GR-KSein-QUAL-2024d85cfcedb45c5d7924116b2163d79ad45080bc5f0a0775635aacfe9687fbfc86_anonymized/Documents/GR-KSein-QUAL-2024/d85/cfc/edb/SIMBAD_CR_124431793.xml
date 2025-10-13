@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124431793" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>MED.NUCLEAIRE MN TEP FDG 050</title>
+    <effectiveTime value="20190114000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190114000000+0000"/>
+        <assignedAuthor>
+            <code code="MNU/174" displayName="MEDECINE NUCLEAIRE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur GRIMALDI SERENA
+ <br/>
+<br/>Destinataire : CTE 050 - SEIN
+ <br/> DR MOKDAD--ADI MERIEM
+ <br/>
+<b>EXAMEN DE TOMOGRAPHIE PAR EMISSION DE POSITONS<br/>TEP-FDG<br/>Dicté par : </b> Docteur Séréna Grimaldi
+ <b><br/>Dicté le : </b> 10/01/2019 
+ <b><br/>Service : </b> MNU-MEDECINE NUCLEAIRE 
+ <br/>
+<b>Type de document : </b> MNU CE TEP FDG 
+ <br/>
+<b>Ref :</b> 571209 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : fck
+ <br/>
+<br/>
+<br/>Examen réalisé le : 10/01/2019
+ <br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/><u><br/></u></b> Patiente de 61 ans prise en charge pour un carcinome canalaire 
+ <br/>infiltrant triple négatif du sein droit, diagnostiqué en 2016, en 
+ <br/>rechute osseuse et hépatique. 
+ <br/>Radiothérapie au niveau du rachis thoracique (sur lésion de T3 avec 
+ <br/>atteinte épidurale) jusqu'au 15 décembre 2018. 
+ <br/>Evaluation sous ERIBULINE , débuté le 9 novembre 2018 (interrompu 
+ <br/>pendant la radiothérapie) .
+ <br/>
+<br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/><u><br/></u></b> Acquisition TEP standard réalisée 59 minutes après injection par 
+ <br/>voie intraveineuse de 163,4 MBq de 18-FDG.
+ <br/>Glycémie avant injection : 4,6 mmol/l - Durée du jeûne : > 6 heures
+ <br/>Scanner de repérage pour fusion d'images, PDL : 131,00 mGy.cm
+ <br/>- Poids 47 Kg - Taille 171 Cm
+ <br/>- Site d'injection : coude droit - 
+ <br/>- Heure d'injection 13 h 30
+ <br/>- Début de l'examen à 14 h 29
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/><br/></b> Comparaison avec l'examen précédent du 19/10/2018. 
+ <br/>
+<br/>
+<br/>1. 
+ <u><b>Etage craniocervical :<br/><br/></b></u> - Absence de foyer hyperfixant suspect cérébral.
+ <br/>- Persistance d'une hyper fixation amygdalienne intense, prédominante 
+ <br/>à droite, manquant de spécificité, à confronter à l'examen clinique.
+ <br/>- il s'y associe des fixations ganglionnaires bilatérales des 
+ <br/>secteurs II prédominant également à droite, en regard de ganglions 
+ <br/>infracentimétriques, peu spécifiques. 
+ <br/>
+<br/>
+<br/>
+<br/>2. 
+ <u><b>Etage thoracique :<br/><br/></b></u> - Absence d'anomalie de fixation des aires mammaires- et des aires 
+ <br/>ganglionnaires locorégionales, notamment sur les sites de chirurgie à 
+ <br/>droite .
+ <br/>- Absence de foyer hyperfixant suspect pleuro-pulmonaire. 
+ <br/>- Absence de fixation pathologique des aires ganglionnaires 
+ <br/>médiastinohilaires. 
+ <br/>
+<br/>
+<br/>3. 
+ <u><b>Etage abdomino-pelvien :<br/><br/></b></u> - Nette diminution en étendue de la fixation en regard de la 
+ <br/>métastase hépatique secondaire du segment VII. Stabilité en intensité 
+ <br/>de fixation et en taille. SUVmax 4,8 versus 5,9 .
+ <br/>- Minime hétérogénéité de fixation par ailleurs sur le parenchyme 
+ <br/>hépatique, sans autre foyer pathologique. 
+ <br/>- Absence de foyer hyperfixant suspect au niveau splénique, 
+ <br/>pancréatique, surrénalien et des aires ganglionnaires 
+ <br/>sous-diaphragmatiques.
+ <br/>
+<br/>
+<br/>
+<br/>4. 
+ <u><b>Etage musculo-squelettique :<br/><br/></b></u> - Diminution en intensité de fixation de la lésion du pédicule droit 
+ <br/>de T3, d'allure secondaire, avec épidurite associée, récemment traitée 
+ <br/>par radiothérapie : SUVmax 3,4 versus 5,7. 
+ <br/>- Absence de nouvelle lésion osseuse suspecte.
+ <br/>- Diminution de l'intensité de fixation d'un foyer de l'arc antérieur 
+ <br/>de la 10e côte droite, d'allure traumatique.
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/><u><br/></u></b> Comparativement à l'examen précédent d'octobre 2018, aspect TEP de 
+ <br/>réponse métabolique partielle :
+ <br/>
+<br/>- Nette diminution en étendue de la fixation en regard de la lésion 
+ <br/>secondaire hépatique unique.
+ <br/>- Diminution en intensité de fixation de la lésion T3 traitée par 
+ <br/>radiothérapie (néanmoins l'évaluation est précoce par rapport à la 
+ <br/>fin de la radiothérapie : on pourrait proposer un contrôle en fin de 
+ <br/>mars 2019 pour mieux évaluer la réponse ce niveau).
+ <br/>- Absence de nouvelle lésion. 
+ <br/>Par ailleurs on signale la persistance d'une hyperfixation 
+ <br/>oropharyngée prédominant à droite, associée à des fixations 
+ <br/>ganglionnaires cervicales bilatérales, possiblement d'origine 
+ <br/>inflammatoire, mais persistant sur un intervalle de plusieurs mois : 
+ <br/>à comparer à la clinique. 
+ <br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Séréna GRIMALDI <br/>Le jeudi 10 janvier 2019 à 16:19 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

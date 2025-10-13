@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120808150" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>DEPARTEMENT DE MEDECINE - SERVICE GARD</title>
+    <effectiveTime value="20200717000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200717000000+0000"/>
+        <assignedAuthor>
+            <code code="GAR/182" displayName="GARD"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b> DEPARTEMENT DE MEDECINE ONCOLOGIQUE - HOSPITALISATION GARD<br/><br/> Dicté par : </b> Docteur Noemie Gassian, Interne
+ <b><br/>Dicté le : </b> 07/07/2020 
+ <b><br/>Service : </b> GAR-GARD 
+ <br/>
+<b>Type de document : </b> GAR RH MEDECINE 
+ <br/>
+<b>Ref :</b> 1041271 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : Valérie PASQUIET
+ <br/>
+<br/>
+<br/>
+<u><b>Interne</b></u> : Noémie GASSIAN
+ <br/>
+<br/>
+<u><b>HOSPITALISATION SERVICE GARD DU 7 AU 17 JUILLET 2020<br/></b></u>
+<br/>Madame XXXXXX est hospitalisée dans les suites de la prise en 
+ <br/>charge d'une fracture du col fémoral traumatique prise en charge par 
+ <br/>prothèse fémorale cervico-céphalique et cupule mobile le 06/07/2020.
+ <br/>Pour rappel cette patiente de 67 ans est traitée par GEMCITABINE 
+ <br/>depuis le 20/04/2020 pour un adénome adénocarcinome séreux de haut 
+ <br/>grade en rechute platine résistant et multitraité avec ascite et 
+ <br/>oecdèmes des membres inférieurs.
+ <br/>
+<br/>
+<b>Profil moléculaire</b> : BRCA1 sauvage, constitutionnel et somatique, P53 
+ <br/>muté
+ <br/>
+<br/>
+<u><b>Médecin référent</b></u> : Docteur Emeline COLOMBA
+ <br/>
+<br/>
+<u><b>ANTECEDENTS / PATHOLOGIES ASSOCIEES<br/><br/></b></u> - Thrombose membre inférieur droit diagnostiquée en février 2017
+ <br/>- cimentoplastie par voie transpédiculaire postérieure dans les corps 
+ <br/>vertébraux de T10, T11, L1, L2, L3, L4 et L5.
+ <br/>- Prothèse fémorale gauche cervicocéphalique et cupule mobile Tornier 
+ <br/>Océane + ciment Palacoas le 06/07/2020
+ <br/>- Appendicectomie
+ <br/>- Pas d'allergie
+ <br/>
+<u><b><br/>MODE DE VIE<br/></b></u>
+<br/>- Mariée, 3 enfants, 
+ <br/>- Marche avec une canne à son domicile
+ <u><b><br/><br/>HISTOIRE DE LA MALADIE<br/><br/></b></u> * Diagnostic en février 2017 d'une masse pelvienne, probablement 
+ <br/>d'origine ovarienne avec présence d'une ascite et d'une thrombose au 
+ <br/>niveau du membre inférieur droit. 
+ <br/>
+<br/>Mise en place d'un traitement anticoagulant par INNOHEP puis switch 
+ <br/>par PREVISCAN.
+ <br/>
+<br/>
+<b> * Mars 2017</b> : coelioscopie exploratrice qui retrouve une carcinose 
+ <br/>péritonéale. 
+ <br/>Mise en place d'une 1ère ligne de chimiothérapie par CARBOPLATINE + 
+ <br/>TAXOL, débutée le 31/03/17, par la suite les doses ont été réduites 
+ <br/>pour toxicité hématologique, thrombopénie grade II.
+ <br/>
+<br/>
+<b> * Octobre 2017</b> : coelioscopie exploratrice interrompue par une 
+ <br/>instabilité hémodynamique majeure et respiratoire. Poursuite d'un 
+ <br/>traitement systémique avec reprise de CARBOPLATINE + TAXOL et 
+ <br/>adjonction d'AVASTIN, le 20/10/2017, 2 cures puis entretien par 
+ <br/>AVASTIN seul.
+ <br/>
+<u><b><br/></b></u> Stabilité clinique sous AVASTIN pendant 1 an, ascite ponctionnée 
+ <br/>toutes les 4 semaines.
+ <br/>
+<br/>
+<b> * Octobre 2018</b> : progression ovarienne, inclusion dans le protocole 
+ <br/>ATALANTE, bras CARBOPLATINE + GEMZAR + AVASTIN +/- ATEZOLIZUMAB, 
+ <br/>débuté le 18/01/2019. 
+ <br/>
+<br/>
+<b> * Juillet 2019</b> : progression, PLATINE résistante motivant 
+ <br/>l'introduction d'une chimiothérapie par TAXOL hebdomadaire.
+ <br/>
+<br/>
+<b> * Janvier 2020</b> : progression sous TAXOL, nouvelle ligne par CAELYX, 
+ <br/>débutée le 30/01/2020.
+ <br/>Les ponctions d'ascite ont continué toutes les 6 semaines pendant le 
+ <br/>TAXOL puis tous les 10 jours sous traitement par CAELYX.
+ <br/>Début d'une nouvelle ligne de chimiothérapie par GEMCITABINE le 
+ <br/>20/04/2020 pour progression clinique. 
+ <br/>
+<br/>
+<u>Complications liées à la maladie et au traitement</u> :
+ <u> </u>
+<br/>- Ascite, nécessitant des ponctions presque toutes les 6 semaines. 
+ <br/>- Epanchement pleural droit, ponctionné le 03/03/2020. 
+ <br/>- Thrombose du membre inférieur droit inaugurale, traitée par INNOHEP 
+ <br/>0.6ml.
+ <br/>
+<u><b><br/>TRAITEMENT A L'ENTREE<br/></b></u> - OXYNORMORO 10 mg/4h
+ <br/>- OXYCONTIN LP 30 mg 2 fois/jour
+ <br/>- PARACETAMOL.
+ <br/>- INNOHEP 4 500 UI 1 injection SC/jour
+ <br/>- AUGMENTIN 1 g 3 fois/jour
+ <br/>- ACUPAN
+ <br/>
+<br/>
+<u><b>HISTOIRE RECENTE<br/></b></u>
+<br/>Hospitalisation aux urgences du 3 au 05/07/2020 pour douleurs 
+ <br/>abdominales sur ascite
+ <br/>- ascite non ponctionnable du fait d'une hypotension artérielle à 7/5
+ <br/>- transfusion de 2 CGR
+ <br/>- chute avec fracture du col fémoral gauche GARDEN IV 
+ <br/>- transfert au Kremlin Bicêtre pour prise en charge chirurgicale
+ <br/>- mise en place d'une prothèse 
+ <br/>
+<br/>
+<u><b><br/>EXAMEN CLINIQUE<br/></b></u>
+<br/>OMS : 4
+ <br/>Poids initial : non renseigné
+ <br/>Poids actuel : non évaluable 
+ <br/>Température : 36.4°C TA : 87/45 Pouls : 103 bpm
+ <br/>Saturation : 96% en air ambiant
+ <br/>
+<br/>Prise en charge nutritionnelle : compléments alimentaires 2 fois/jours
+ <br/>Syndrome douloureux : non. EVA d'entrée 0/10.
+ <br/>
+<br/>Auscultation pulmonaire : pas de dyspnée, pas de toux, murmure 
+ <br/>vésiculaire bilatéral, diminué en base droite
+ <br/>Auscultation cardiaque : pas de douleur thoracique, pas de 
+ <br/>palpitation, bruits du coecur réguliers sans souffle audible, OMI 
+ <br/>bilatéraux remontant jusqu'aux lombes, rougeur des deux membres 
+ <br/>inférieurs
+ <br/>Abdomen : abdomen distendu en rapport avec une ascite de grande 
+ <br/>abondance, hernie ombilicale, dilatation veineuse collatérale 
+ <br/>abdominale
+ <br/>Sur le plan urinaire : sonde urinaire en place, urines hématuriques
+ <br/>Aires ganglionnaires : pas d'adénopathie palpable
+ <br/>Examen neurologique : patiente consciente orientée
+ <br/>Examen orthopédique : patiente alitée, un Redon en place 
+ <br/>extériorisons 250 ml de liquide sérohématique
+ <br/>Examen du PAC : pas de problème infectieux
+ <br/>
+<u><b><br/>EXAMENS COMPLEMENTAIRES<br/></b></u>
+<br/>- NFS : leucocytes à 2 300/mm3, PNN à 1 600/mm3, Hb à 8.4 g/dl, 
+ <br/>plaquettes à 26 000/mm3
+ <br/>
+<br/>- Créatinine à 50 μmol/l, urée à 15.6 mmol/l
+ <br/>Débit de filtration glomérulaire (MDRD) à 106 ml/mn
+ <br/>
+<br/>- Ionogramme sanguin : sodium à 143 mmol/l, potassium à 3.4 mmol/l, 
+ <br/>calcium corrigé à 2.34 mmol/l, protides à 42 g/l
+ <br/>
+<br/>- Bilan hépatique : PAL à 123 UI/L, ASAT à 48 UI/L, ALAT à 39 UI/L, 
+ <br/>GGT à 40 UI/L, albumine à 23 g/L, 
+ <br/>
+<br/>- CRP à 114.2 mg/l, 
+ <br/>
+<br/>
+<u><b>EN PRATIQUE<br/><br/></b></u> Altération de l'état général chez une patiente multi traitée pour un 
+ <br/>adénocarcinome séreux de haut grade platine résistant.
+ <br/>Fracture du col fémoral gauche.
+ <br/>Pancytopénie.
+ <br/>Ascite récidivante.
+ <br/>
+<br/>
+<br/>
+<u><b>EVOLUTION DANS LE SERVICE<br/></b></u>
+<br/>
+<b> Sur le plan infectieux<br/></b> Poursuite de l'antibiothérapie par AUGMENTIN pour une durée totale 
+ <br/>de 7 jours pour le traitement de l'érysipèle des membres inférieurs.
+ <br/>
+<br/>
+<b> Sur le plan oncologique<br/></b> Devant l'absence de bénéfice clinique de la chimiothérapie par 
+ <br/>GEMCITABINE, l'importante toxicité hématologique, il est décidé avec 
+ <br/>le Dr COLOMBA de l'arrêt de cette ligne. 
+ <br/>Du fait de l'altération importante de l'état général de la patiente, 
+ <br/>aucune chimiothérapie ou traitement spécifique ne seront repris. La 
+ <br/>patiente et sa famille en sont informées lors de son hospitalisation.
+ <br/>Avec leur consentement, un retour à domicile est organisé avec une 
+ <br/>HAD. La patiente est connue de l'unité de soins palliatifs et sera 
+ <br/>éventuellement prise en charge dans le service en cas de nécessité.
+ <br/>
+<br/>
+<b> Sur le plan orthopédique<br/></b> Mise en place d'une kinésithérapie
+ <br/>Retrait du Redon le 08/07/2020
+ <br/>Retrait des agrafes prévu le 28/07/2020
+ <br/>
+<br/>
+<b> Sur le plan hématologique<br/></b> A l'entrée, Mme XXXXXX présente une pancytopénie nécessitant la 
+ <br/>transfusion de 2 CGR et de 2 CPA notamment avant ponction d'ascite.
+ <br/>La thrombopénie et la leucopénie se sont spontanément normalisés. 
+ <br/>L'anémie est d'origine mixte, inflammatoire et secondaire à la 
+ <br/>chimiothérapie. 
+ <br/>
+<br/>
+<b> Sur le plan abdominal<br/></b> Réalisation d'une ponction d'ascite en radiologie interventionnelle 
+ <br/>le 10/07/2020 permettant d'évacuer 3,6L.
+ <br/>Une nouvelle tentative est réalisée le 16/07/2020 mais échoue du fait 
+ <br/>d'un saignement lors de l'anesthésie favorisé par l'INNOHEP. La sortie 
+ <br/>est donc décalée au 17/07/2020 pour réitérer cette tentative.
+ <br/>Evacuation de 3,6 L en radiologie interventionnelle le 17/07/2020.
+ <br/>Refus de la pose d'un drain par la patiente du fait d'une ascite 
+ <br/>cloisonnée.
+ <br/>
+<br/>
+<b> Sur le plan antalgique<br/></b> Du fait de l'absence de douleur spontanée, la dose de fond 
+ <br/>d'OXYCONTIN est diminuée à 40 mg matin et soir de façon efficace. 
+ <br/>Interdoses maintenues à 10 mg
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<br/>
+<br/>- Fracture du col du fémur gauche pris en charge par prothèse 
+ <br/>intermédiaire
+ <br/>- Erysipèle traité par Augmentin
+ <br/>- Toxicité hématologique 
+ <br/>- Poursuite des ponctions d'ascite
+ <br/>
+<br/>
+<br/>
+<u><b>Prescription de sortie</b></u> :
+ <br/>- OXYCONTIN LP 20 mg matin et soir
+ <br/>- OXYNORMORO 10 mg si douleurs
+ <br/>- PARACETAMOL
+ <br/>- PRIMPERAN si besoin
+ <br/>- DIFFUS K
+ <br/>
+<br/>Consultation téléphonique avec le Dr COLOMBA le 30/07/2020.
+ <br/>
+<br/>La patiente quitte le service Gard le 16/07/2020
+ <br/>
+<br/>
+<b>Réactualisation de la FAD le jour de la sortie NON<br/></b> Prise en charge palliative OUI 
+ <br/>
+<b>EVALUATION DE LA CHARGE EN SOINS</b>
+<br/>* Ponction à visée symptomatique OUI 
+ <br/>* Adaptation du traitement antalgique OUI NON
+ <br/>* Irradiation antalgique NON
+ <br/>* Occlusion intestinale NON
+ <br/>* Transfusion sanguine OUI 
+ <br/>* Prise en charge de la détresse respiratoire 
+ <br/>avec désaturation <90% AA NON
+ <br/>* Traitement des divers symptômes vecteurs d'inconfort 
+ <br/>(toux, prurit, nausées, vomissements, anxiété, 
+ <br/>dépression, troubles du sommeil, déshydratation,...) NON
+ <br/>* Soins de nursing OUI 
+ <br/>* Nutrition 
+ <br/> - déjà sous CNO, nutrition entérale/parentérale NON
+ <br/> - mise en route CNO/nutrition entérale/parentale NON
+ <br/>
+<br/>
+<b>PRISE EN CHARGE MULTI-DISCIPLINAIRE<br/></b> * Prise en charge de l'EMASP OUI 
+ <br/>* Cs CETD (douleur, sophrologie, auriculothérapie) NON
+ <br/>* Cs onco-psychologie NON
+ <br/>* Prise en charge sociale NON
+ <br/>* Soins de kinésithérapie OUI
+ <br/>* cs diététicienne ou nutritionniste NON
+ <br/>
+<br/>
+<b>MODE DE SORTIE </b>
+<br/>* HAD Santé Service OUI 
+ <br/>* HAD province NON
+ <br/>* IDE libérale NON
+ <br/>
+<br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Noemie GASSIAN <br/>Le vendredi 17 juillet 2020 à 13:45 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

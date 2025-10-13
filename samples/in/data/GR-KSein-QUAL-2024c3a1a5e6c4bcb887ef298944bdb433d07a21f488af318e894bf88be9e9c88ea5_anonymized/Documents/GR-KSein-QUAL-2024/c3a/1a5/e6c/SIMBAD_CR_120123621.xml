@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120123621" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>HOPITAL DE JOUR DE MEDECINE ONCOLOGIQUE ADULTES</title>
+    <effectiveTime value="20201028000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201028000000+0000"/>
+        <assignedAuthor>
+            <code code="HJM/484" displayName="HOPITAL DE JOUR MEDECINE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>DEPARTEMENT DE MEDECINE - HOPITAL DE JOUR MEDECINE <br/><br/> Dicté par : </b> Docteur Reda El Hazzaz, Interne
+ <b><br/>Dicté le : </b> 30/09/2020 
+ <b><br/>Service : </b> HJM-HOPITAL DE JOUR MEDECINE 
+ <br/>
+<b>Type de document : </b> HJM CC GENERIQUE 
+ <br/>
+<b>Ref :</b> 1114892 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : QLZ/A
+ <br/>
+<br/>Approuvé par :
+ <br/>
+<br/>
+<br/>
+<u><b>COMPTE-RENDU DE CONSULTATION EN HOPITAL DE JOUR DE MEDECINE<br/> </b></u>
+<br/>
+<b> Madame XXXXXX, patiente âgée de 41 ans, admise en Hôpital de Jour pour <br/>l'administration de sa cure de chimiothérapie par CARBOPLATINE AUC2 <br/>hebdomadaire pour la 1ère cure après adaptation du schéma <br/>thérapeutique vu que la patiente était sous GEMCITABINE-CARBOPLATINE. <br/>Dernièrement, la décision du médecin référent est d'arrêter la <br/>GEMCITABINE et de faire le CARBOPLATINE AUC2 en hebdomadaire.<br/></b>
+<br/>
+<b>Intercure </b> :
+ <br/>
+<br/>Je rappelle que la patiente a été hospitalisée le 24/09/2020 dans le 
+ <br/>service Hérault pour la prise en charge des nausées, des vomissements 
+ <br/>et des douleurs abdominales. La patiente a bénéficié d'une IRM 
+ <br/>cérébrale pour les vomissements qui n'a pas objectivé de lésion 
+ <br/>cérébrale pouvant expliquer cela. La patiente a bénéficié d'un 
+ <br/>traitement symptomatique avec une hydratation. Actuellement, la 
+ <br/>patiente rapporte une amélioration nette et complète des nausées et 
+ <br/>des vomissements sous 
+ <b>ZOPHREN </b> et 
+ <b>PRIMPERAN</b> .
+ <br/>
+<br/>Concernant les douleurs abdominales, la patiente rapporte qu'elle a 
+ <br/>toujours mal malgré la prescription de 
+ <b>MORPHINIQUES</b> ,nous avons donc 
+ <br/>associé aujourd'hui un 
+ <b>ANTISPASMODIQUE </b> aux 
+ <b>MORPHINIQUES</b> . Elle 
+ <br/>rapporte aussi que ses douleurs abdominales sont présentes au moment 
+ <br/>de la constipation, raison pour laquelle nous avons prescrit des 
+ <br/>lavements.
+ <br/>
+<br/>La patiente tolère bien la chimiothérapie sans effet secondaire 
+ <br/>cutané.
+ <br/>Pas de mucite.
+ <br/>Pas d'autre effet secondaire.
+ <br/>
+<br/>
+<b>Examen clinique </b> :
+ <br/>
+<br/>OMS : 1.
+ <br/>Apyrétique sans signe d'appel infectieux.
+ <br/>
+<br/>Auscultation cardio-pulmonaire sans anomalie.
+ <br/>Abdomen souple et dépressible avec une légère sensibilité diffuse sur 
+ <br/>tout l'abdomen.
+ <br/>Le reste de l'examen clinique est sans particularité.
+ <br/>
+<br/>
+<b>Bilan biologique </b> : satisfaisant pour la cure d'aujourd'hui.
+ <br/>
+<br/>
+<b>En pratique </b> : 
+ <br/>
+<br/>La patiente reçoit ce jour :
+ <br/>
+<b>* CARBOPLATINE AUC2 soit une dose totale de 300 mg.<br/></b> Bonne tolérance immédiate.
+ <b><br/>_________________________________________________<br/>Signé électroniquement par Docteur Reda EL HAZZAZ <br/>Le mardi 13 octobre 2020 à 15:12<br/>_________________________________________________<br/>Signé électroniquement par Docteur Maria KFOURY <br/>Le mardi 27 octobre 2020 à 18:09 </b>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

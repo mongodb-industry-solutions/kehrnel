@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120001852" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>DEMANDE BIOPSIE MEDULLAIRE/CARYOTYPE/MYELOGRAMME</title>
+    <effectiveTime value="20201125000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201117000000+0000"/>
+        <assignedAuthor>
+            <code code="110/16" displayName="CTE 110 - HEMATOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>DEMANDE DE BIOPSIE OSTEO-MEDULLAIRE / MYELOGRAMME<br/></b></u>
+<b><br/>Date de la demande : 17/11 <br/>Date du rendez-vous : 25/11<br/>Médecin demandeur : DR MICOL<br/></b> __________________________________________________________
+ <b><br/></b>
+<br/>
+<b>1) <u>Actes demandés</u> </b> (cocher X = actes demandés)
+ <b><br/></b>
+<br/>
+<b>Indication </b> : Bilan de cytopénies/ K du sein.
+ <br/>
+<br/>
+<b>Protocole</b> (feuille spécifique) : ...........................
+ <br/>
+<br/>[ ] BOM ( prévoir NFS, quick, cépha-kaolin )
+ <br/>
+<br/>[x] Myélogramme
+ <br/>
+<b>[x] Sternal +++</b> ( prévoir PATCH MYELO HEM )
+ <br/> [ ] Iliaque
+ <br/>
+<br/>[x] Immunophénotype (1 tube EDTA)
+ <br/>
+<br/>[ ] Biologie moléculaire 
+ <br/> [ ] Diagnostic ou rechute (1 tube EDTA + 1 tube PAXGENE)
+ <br/> [ ] NGS (1 tube EDTA, si diag ou rechute 1 seul EDTA suffit)
+ <br/> [ ] Suivi moléculaire :
+ <br/> [ ] NPM1 (1 tube EDTA)
+ <br/> [ ] MRD LAL PH- (1 tube EDTA)
+ <br/>
+<br/> [ ] WT1 (1 tube PAXGENE)
+ <br/> [ ] PML-RARA (1 tube PAXGENE)
+ <br/> [ ] BCR-ABL (1 tube PAXGENE)
+ <br/> [ ] AML1-ETO (1 tube PAXGENE) 
+ <br/> [ ] CBFB/MYH11 (1 tube PAXGENE) 
+ <br/> [ ] EVI1 (1 tube PAXGENE)
+ <br/>
+<br/> [ ] Autre : 
+ <br/>
+<br/> [x]Cytogénétique (tube spécifique)
+ <br/> [x] Cytogénétique conventionnelle
+ <br/> [ ] Mutation BRAF 
+ <br/>
+<br/>
+<br/>[ ]Chimérisme (allogreffe)
+ <br/> [ ] Biologie moléculaire (1 tube EDTA)
+ <br/> [ ] Cytogénétique (1 tube Héparinate lithium) 
+ <br/>
+<br/>[ ]Congélation, tissuthèque 
+ <br/>
+<br/> Informations reportées par le médecin réalisant les actes sur le 
+ <br/>document destiné au laboratoire.
+ <br/> ________________________________________________________________
+ <br/>
+<br/>
+<b>2) <u>Informations données au patient</u> </b> (cocher X = informations données) 
+ <br/>
+<b><br/></b> [ ] Raison de la réalisation des examens.
+ <br/>[ ] Modalités de réalisation des actes.
+ <br/>[ ] Consentement signé pour le CRB recueilli et transmission 
+ <br/> directe d'un exemplaire avec la demande à destination du 
+ <br/> CRB.
+ <br/>
+<b>_________________________________________________________________<br/></b>
+<br/>
+<b>3) <u>Vérification par médecin prescripteur</u></b> (cocher X = vérification 
+ <br/>faite)
+ <u><b><br/></b></u>
+<br/>[ ] Bilan biologique (NFS, Hémostase) le jour du geste.
+ <br/>[ ] Contrôle médical des résultats le jour du geste.
+ <br/>[ ] Indication transfusionnelle pour réaliser l'acte et nécessité
+ <br/> d'une programmation par HJM.
+ <br/>[ ] Traitement anti-coagulant à modifier ou à adapter.
+ <br/>[ ] Traitement anti-agrégant/Aspirine >160 mg/jour (modifier
+ <br/> ou adapter le traitement. 
+ <br/>
+<br/>[ ] Absence de contre-indication à anesthésie locale.
+ <br/>
+<br/>[ ] Prélèvements à prévoir sous Entonox
+ <br/>________________________________________________________________
+ <br/>
+<br/>
+<b> AVK : </b> relais par héparine curative avant biopsie médullaire
+ <br/>
+<b>Héparine curative : </b> ne pas injecter le matin de réalisation des 
+ <br/>actes
+ <br/>
+<b>Anti-agrégant plaquettaire : </b> arrêt 8 jours avant biopsie médullaire. 
+ <br/>Discuter relais par HBPM
+ <br/>
+<b>Avis du cardiologue indispensable si stent coronaire ou artériel <br/>récent, prothèse valvulaire.<br/></b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

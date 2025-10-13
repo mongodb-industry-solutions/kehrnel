@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123838946" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>LETTRE DE LIAISON</title>
+    <effectiveTime value="20190409000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190409000000+0000"/>
+        <assignedAuthor>
+            <code code="GAR/182" displayName="GARD"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>SERVICE GARD - LETTRE DE LIAISON<br/><br/>Dicté par : </b> Docteur Emilie Moati, Interne
+ <b><br/>Dicté le : </b> 05/04/2019 
+ <b><br/>Service : </b> GAR-GARD 
+ <br/>
+<b>Type de document : </b> GAR NO LETTRE DE LIAISON 
+ <br/>
+<b>Ref :</b> 647245 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : FDY
+ <u><b>/a</b></u>
+<br/>
+<u><b><br/>HOSPITALISATION SERVICE GARD - 01 42 11 43 01<br/> </b></u>
+<br/>
+<u><b><br/>Médecin référent Gustave Roussy</b></u> : Dr POMMERET
+ <br/>114 rue Edouard Vaillant - 94805 VILLEJUIF CEDEX
+ <br/>
+<br/>
+<u><b>Patient pris en charge par l'interne</b></u> : Emilie MOATI
+ <br/>114 rue Edouard Vaillant - 94805 VILLEJUIF CEDEX
+ <br/>
+<br/>
+<u><b>Date du séjour</b></u> : 04 au 06 avril 2019
+ <br/>
+<u><b>Modalité d'entrée</b></u> : domicile
+ <br/>
+<u><b>Modalité de sortie</b></u> : domicile
+ <br/>
+<br/>
+<u><b>Traitement d'entrée</b></u> : INOHEP 0.5 ml le matin
+ <br/>
+<br/>
+<u><b>Motif d'hospitalisation</b></u> : hospitalisée pour la réalisation de la 4ème 
+ <br/>cure de chimiothérapie de type CARBOPLATINE/GEMZAR/AVASTIN +/- 
+ <br/>ATEZOLIZUMAB dans le cadre de la prise en charge d'un 
+ <br/>d'adénocarcinome séreux de haut grade stade IV (pleural) initial, 
+ <br/>jamais réséqué, en rechute locale, en cours de chimiothérapie par 
+ <br/>(protocole ATALANTE).
+ <br/>
+<br/>
+<u><b>Synthèse médicale du séjour</b></u> :
+ <br/>Réalisation de la 4ème cure de chimiothérapie à partir du 4 avril 
+ <br/>2019 associant :
+ <br/>
+<br/>
+<b>* GEMCITABINE 1 000 mg/m2 soit 1600 mg DT<br/>* CARBOPLAINE AUC4 soit 300 mg DT : interrompu<u>db<br/></u>* BEVACIZUMAB 15 mg/kg soit 923 mg DT<br/>* ATEZOLIZUMAB ou placébo 1 200 mg<br/><br/>J1 = J21 (Pas de J8 de GEMCITABINE)<br/><br/></b> Tolérance : réaction allergique de grade II après le passage de la 
+ <br/>moitié du CARBOPLATINE (150 mg) avec rash cutané prurigineux 
+ <br/>généralisé, nausées. 
+ <br/>Pas de dyspnée, pas de désaturation, hémodynamique stable. Arrêt de 
+ <br/>la perfusion. 
+ <br/>
+<br/>Reprise de la chimiothérapie dans le cadre d'un protocole de 
+ <br/>désensibilisation. La patiente reçoit le 5 avril 2019 :
+ <br/>
+<b>* CARBOPLATINE : <br/> ntbl</b> poche n°mL administrés[c] théorique[c] réelle 
+ <br/>
+<b>rdrw15rdrsrdrw15rdrs rdrw15rdrs rdrw15rdrs rdrw15rdrsrdrw15rdrs <br/>ntblPOCHE 1 <br/>rdrw15rdrs rdrw15rdrs ntbl</b> 0,008 mg/ml0,008 mg/ml
+ <br/>ntbl 2 ml / h / 15 min0,50,004
+ <br/>
+<b>rdrw15rdrs rdrw15rdrs ntbl 5 ml / h / 15 min1,250,01<br/>rdrw15rdrs rdrw15rdrs ntbl 10 ml / h / 15 min2,50,02<br/>rdrw15rdrs rdrw15rdrs ntbl 20 ml / h / 15 min50,04<br/>rdrw15rdrs rdrw15rdrs ntbl Vol adm9,25</b>
+<br/>
+<b>rdrw15rdrsrdrw15rdrs rdrw15rdrs rdrw15rdrs rdrw15rdrsrdrw15rdrs <br/>ntblQté administrée0,074mg<br/>rdrw15rdrs rdrw15rdrs ntblPOCHE 2</b>
+<br/>
+<b>rdrw15rdrs rdrw15rdrs ntbl 0,08 mg/ml0,0794 mg/ml<br/>ntbl 5 ml / h / 15 min1,250,1<br/>rdrw15rdrs rdrw15rdrs ntbl 10 ml / h / 15 min2,50,2<br/>rdrw15rdrs rdrw15rdrs ntbl 20 ml / h / 15 min50,4<br/>rdrw15rdrs rdrw15rdrs ntbl 40 ml / h / 15 min100,79<br/>rdrw15rdrs rdrw15rdrs ntbl Vol adm18,75</b>
+<br/>
+<b>rdrw15rdrsrdrw15rdrs rdrw15rdrs rdrw15rdrs rdrw15rdrsrdrw15rdrs <br/>ntblQté administrée1,49mg<br/>rdrw15rdrs rdrw15rdrs ntblPOCHE 3</b>
+<br/>
+<b>rdrw15rdrs rdrw15rdrs ntbl 0,6 mg/ml0,6 mg/ml<br/>ntbl 10 ml / h / 15 min2,51,5<br/>rdrw15rdrs rdrw15rdrs ntbl 20 ml / h / 15 min53<br/>rdrw15rdrs rdrw15rdrs ntbl 40 ml / h / 15 min106<br/>rdrw15rdrs rdrw15rdrs ntbl 75 ml / h / 180 min22512<br/>rdrw15rdrs rdrw15rdrs ntbl Vol adm242,5</b> 127,5
+ <br/>
+<b>rdrw15rdrsrdrw15rdrs rdrw15rdrs rdrw15rdrs rdrw15rdrsrdrw15rdrs <br/>ntblQté administrée150mg<br/>ntbl</b>
+<br/>
+<b>rdrw15rdrsrdrw15rdrsrdrw15rdrs rdrw15rdrsrdrw15rdrs <br/>rdrw15rdrsrdrw15rdrs rdrw15rdrsrdrw15rdrsrdrw15rdrs ntbldose totale <br/>administrée 151,6</b> mg
+ <br/>
+<u><b><br/>BMR</b></u> : NON
+ <br/>
+<u><b>Transfusion</b></u> : NON.
+ <br/>
+<u><b>Bilans sanguins</b></u> : imprimés et remis au patient le jour de la sortie.
+ <br/>
+<u><b>Examens radiologiques</b></u> : aucun
+ <br/>
+<u><b>Recommandations et surveillance</b></u> : OUI.
+ <br/>
+<u><b>Annonce des éléments en attente</b></u> : aucun.
+ <br/>
+<u><b>Traitement de sortie</b></u> :
+ <br/>- INNOHEP 0.5 ml le matin 
+ <br/>- PRIMPERAN 10 mg x3/jour si nausées
+ <br/>- Bains de bouche 
+ <br/>
+<br/>
+<u><b>Prochain rendez-vous</b></u> : 
+ <br/>- Le 24/04/19, consultation avec le Dr LEARY 
+ <br/>- Le 25/04/19, hospitalisation Gard.
+ <br/>
+<br/>
+<b>Document imprimé sur la page d'identification du dossier patient de <br/>Gustave Roussy et remis en main propre au patient le jour de la <br/>sortie.<u> <br/></u></b>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Emilie MOATI , Interne<br/>Le lundi 8 avril 2019 à 12:40<br/></b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

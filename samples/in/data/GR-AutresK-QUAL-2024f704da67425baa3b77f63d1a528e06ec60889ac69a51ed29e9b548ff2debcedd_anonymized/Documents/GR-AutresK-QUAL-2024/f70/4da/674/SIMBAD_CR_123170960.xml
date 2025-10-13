@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123170960" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'URGENCE</title>
+    <effectiveTime value="20190718000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190718000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<br/>
+<u><b>Consultation du 18/07/2019<br/></b> <br/><br/><b>Médecin examinateur</b></u> : Dr WOJCIESZKO
+ <br/>
+<br/>
+<br/>
+<u><b>Motif de consultation et histoire actuelle</b></u> :
+ <br/>
+<br/>Patiente de 67 ans consulte pour fièvre depuis 2 semaines, plutôt 
+ <br/>vespérale, autour de 38°C.
+ <br/>Majoration de l'ascite.
+ <br/>
+<br/>Pas de frisson.
+ <br/>
+<br/>
+<u><b>Antécédents</b></u> :
+ <br/>
+<br/>Carcinome séreux ovarien de haut grade métastatique pleural et 
+ <br/>péritonéal, jamais réséqué.
+ <br/>Traitement initial par Carboplatine-taxol avec Avastin en entretien.
+ <br/>
+<br/>Rechute en janvier 2019, traitée dans le cadre du protocole ATALANTE 
+ <br/>par Gemzar + Carboplatine + Avastin + Atezolizumab/placebo, puis 
+ <br/>Avastin + Atezolizumab/placebo en entretien depuis juin 2019.
+ <br/>
+<br/>
+<u><b>Examen clinique</b></u> :
+ <br/>
+<br/>
+<u>Constantes</u> : TA 130/97 mmHg, Pouls 114/min, T 38,3°C, Sat 100% en AA.
+ <br/>
+<br/>Consciente, orientée, OMS 2. Pas de signe d'hypoperfusion 
+ <br/>périphérique.
+ <br/>
+<br/>Auscultation CP normale.
+ <br/>Pas de signe d'insuffisance cardiaque.
+ <br/>
+<br/>Abdomen distendu pas une volumineuse ascite, avec hernie ombilicale.
+ <br/>Pas de signe fonctionnel urinaire.
+ <br/>
+<br/>
+<u><b>Résultats du bilan para-clinique</b></u> :
+ <br/>
+<br/>Radiographie pulmonaire normale.
+ <br/>Majoration de la CRP 80->170.
+ <br/>PCT négative.
+ <br/>Discrète déshydratation.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>
+<br/>Ponction d'ascite de 4000mL d'un liquide citrin.
+ <br/>Envoi de prélèvements en bactériologie.
+ <br/>
+<br/>
+<u><b>Conduite à tenir</b></u> :
+ <br/>
+<br/>Retour à domicile avec bilan à faire dans 1 semaine.
+ <br/>Conseil de revenir en cas de nouveau signe clinique faisant évoquer 
+ <br/>une infection.
+ <br/>
+<br/>
+<b>RETOUR A DOMICILE</b>
+<br/>
+<br/>Heure d'arrivée : 16h20.
+ <br/>Heure de départ : 18h45.
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

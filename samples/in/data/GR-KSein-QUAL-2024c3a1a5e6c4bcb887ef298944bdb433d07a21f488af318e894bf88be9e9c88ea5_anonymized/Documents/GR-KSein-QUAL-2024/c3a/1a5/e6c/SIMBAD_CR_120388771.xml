@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120388771" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>EXAMEN IRM IRM CRANE</title>
+    <effectiveTime value="20200921000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200921000000+0000"/>
+        <assignedAuthor>
+            <code code="IRM/301" displayName="RADIODIAGNOSTIC-IRM"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur BENCHIMOL-ZOUARI Axelle
+ <br/>
+<br/>Destinataire : HERAULT
+ <br/> DR TARABAY Anthony
+ <br/>
+<br/>
+<b>IRM CEREBRALE<br/><br/>Dicté par : </b> Docteur Olivier Maugino, Interne
+ <b><br/>Dicté le : </b> 18/09/2020 
+ <b><br/>Service : </b> IRM-RADIODIAGNOSTIC IRM 
+ <br/>
+<b>Type de document : </b> IRM CR Générique 
+ <br/>
+<b>Ref :</b> 1103711 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire </b> : 
+ <b>OPR </b>
+<br/>Examen 3300
+ <br/>Examen réalisé le : 18/09/2020
+ <br/>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/><br/></b> Patiente de 41 ans, suivie pour un carcinome canalaire infiltrant 
+ <br/>triple négatif du sein gauche en sixième ligne de traitement, 
+ <br/>présentant des nausées-vomissements en continus depuis un mois à 
+ <br/>distance de la chimiothérapie. 
+ <br/>Scanner cérébral la veille sans particularité. 
+ <br/>Recherche de carcinose leptoméningée.
+ <u><b><br/></b></u>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/></b> IRM GE 1,5 T
+ <br/>Séquence axiale diffusion , axiales 3D T1, axiales Swan, sagittale 
+ <br/>cube flair, axiale 3D T1 gadolinium après injection de 15 Dotarem
+ <br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> : <br/>Examen comparé au scanner du 17/09/2020 et à l'IRM d'août 2019.<br/><br/></b> Absence de prise de contraste pathologique à l'étage supra et 
+ <br/>infratentorielle.
+ <br/>Absence de rehaussement pathologique leptoméningé.
+ <br/>Structures médianes en place.
+ <br/>Absence d'hémorragie intra et péricérébrale.
+ <br/>Absence d'hypersignal diffusion pathologique. 
+ <br/>Absence d'argument en faveur d'un AVC ischémique récent ou 
+ <br/>semi-récent.
+ <br/>Absence d'hypersignal flair pathologique de la substance blanche.
+ <br/>Système ventriculaire sans particularité.
+ <br/>Bonne perméabilité des sinus veineux.
+ <b><br/><u><br/>CONCLUSION</u> :<br/>Absence de lésions secondaires intraparenchymateuses et <br/>leptoméningées.<u><br/></u></b>
+<u> <br/></u>
+<b><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Axelle BENCHIMOL-ZOUARI <br/>Le vendredi 18 septembre 2020 à 14:18 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

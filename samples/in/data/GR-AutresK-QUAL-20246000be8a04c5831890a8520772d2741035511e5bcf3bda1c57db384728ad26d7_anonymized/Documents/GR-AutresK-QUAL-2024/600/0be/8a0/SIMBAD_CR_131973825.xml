@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_131973825" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM OROPHARYNX TDM THORAX O</title>
+    <effectiveTime value="20140711000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20140716000000+0000"/>
+        <assignedAuthor>
+            <code code="260/45" displayName="RADIODIAGNOSTIC"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur BIDAULT Francois
+ <br/>
+<br/>Destinataire : CONSULTATIONS ORL
+ <br/> DR TEMAM Stéphane
+ <br/>
+<br/>
+<br/>
+<br/>Examen 4564
+ <br/>===========
+ <br/>
+<br/>
+<u><b>SCANNERS ORL ET THORACIQUE</b></u>
+<br/>
+<br/>
+<u><b>INDICATION<br/><br/></b></u> Bilan initial pour tumeur oropharyngée vélaire droite.
+ <br/>Adénopathies cervicales.
+ <u><b><br/><br/>TECHNIQUE<br/><br/>Au niveau ORL :</b></u>
+<br/>Injection de produit de contraste non ionique de basse osmolalité à
+ <br/>une dose inférieure ou égale à 1,5ml/kg. 
+ <br/>Acquisition hélicoïdale du haut des sinus frontaux à la base du cou
+ <br/>(64 x 0,625mm, pitch 0,5).
+ <br/>Reconstructions de coupes de 2,5mm axiales, coronales et sagittales
+ <br/>(filtres parties molles et os).
+ <br/>DLP 305.55 mGy.cm.
+ <br/>
+<br/>
+<u><b>Au niveau thoracique :</b></u>
+<br/>Injection de produit de contraste non ionique de basse osmolalité à
+ <br/>une dose inférieure ou égale à 1,5ml/kg.
+ <br/>Acquisition hélicoïdale (64 x 0,625mm, pitch 0,9), reconstructions de
+ <br/>coupes de 5mm jointives, axiales, coronales et sagittales (filtre
+ <br/>médiastinal), axiales (filtre parenchymateux pulmonaire),
+ <br/>reconstructions de coupes axiales MIP d'épaisseur de 8mm tous les 5mm.
+ <br/>DLP 154.97 mGy.cm.
+ <br/>
+<br/>
+<u><b><br/>RESULTAT<br/><br/></b></u> La lésion vélaire est difficile à observer en scanner, sa structure 
+ <br/>prenant fortement le contraste de façon spontanée.
+ <br/>Absence de masse para-pharyngée ou d'extension lingulae décelée au 
+ <br/>scanner.
+ <br/>Très discrète irrégularité de la paroi droite du cavum (image 42 
+ <br/>série 601) à confronter à l'examen clinique.
+ <br/>Adénomégalie du groupe II droit mesurée à 29x25 mm dans le plan axial 
+ <br/>(image 56 série 601), adénopathie du groupe II gauche hétérogène 
+ <br/>mesurée à 10x13 mm dans le plan axial (image 54), adénomégalie du 
+ <br/>groupe II gauche mesurée à 20x13 mm (image 59 série 601).
+ <br/>
+<br/>Parenchyme pulmonaire : 
+ <br/>Absence de masse ou de nodule suspect de localisation secondaire, 
+ <br/>rares micro-nodules et épaississements septaux périphériques non 
+ <br/>spécifiques.
+ <br/>
+<br/>Médiastin/paroi : 
+ <br/>Stigmates de fractures de côtes multiples à droite, anciennes.
+ <br/>Absence d'adénomégalie ou d'adénopathie médiastinale.
+ <br/>Absence d'épanchement pleural.
+ <br/>
+<u><b><br/><br/>CONCLUSION<br/><br/></b></u>
+<b>Lésion vélaire difficile à observer au scanner, à confronter à la <br/>clinique.<br/>Adénopathies cervicales bilatérales des groupes II.<br/><br/><br/><br/><u><br/></u></b>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127277775" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>COMPTE-RENDU DE VISITE EN HOSPITALISATION - Docteur BREUSKIN</title>
+    <effectiveTime value="20171019000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171020000000+0000"/>
+        <assignedAuthor>
+            <code code="MOR/178" displayName="MORBIHAN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>Patient vu ce jour en présence de sa fille.
+ <br/>Je lui explique que la pan endoscopie laisse suspecter une deuxième 
+ <br/>localisation de carcinome épidermoïde au niveau de l'hypo-pharynx.
+ <br/>
+<br/>Explications qu'a priori le traitement consisterait en une 
+ <br/>pharyngo-laryngectomie totale.
+ <br/>
+<br/>Le patient ne semble pas opposé à ce traitement est néanmoins très 
+ <br/>affecté par l'annonce.
+ <br/>
+<br/>Souhaiterait une consultation en orthophonie et si possible 
+ <br/>rencontrer un patient ayant bénéficié d'une laryngectomie totale.
+ <br/>On demande que ceci soit planifié après le COMITE.
+ <br/>
+<br/>J'explique également au patient, en présence de sa fille que vu 
+ <br/>l'antécédent de radiothérapie il peut exister des troubles de 
+ <br/>cicatrisation post-opératoire.
+ <br/>
+<br/>On maintient la date proposée du 13.11.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

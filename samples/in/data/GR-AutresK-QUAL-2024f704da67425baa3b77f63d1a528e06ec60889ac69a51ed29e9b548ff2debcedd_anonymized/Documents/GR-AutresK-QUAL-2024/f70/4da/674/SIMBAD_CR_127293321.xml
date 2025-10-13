@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127293321" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>COMITE DE GYNECOLOGIE</title>
+    <effectiveTime value="20171017000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171018000000+0000"/>
+        <assignedAuthor>
+            <code code="060/8" displayName="CTE 060 - GYNECOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<u><b>REUNION DE CONCERTATION PLURIDISCIPLINAIRE DE GYNECOLOGIE<br/><br/></b></u>
+<b>DR PAUTIER(Oncologue médicale) - DR MICHELS(Oncologue Médicale) -<br/>DR BALLEYGUIER(Radiologue)- DR HAIE MEDER (Radiothérapeute) - <br/>DR BENTIVEGNA (Chirurgien) - PR CHARGARI (Radiothérapeute) - <br/>DR MAULARD (Chirurgien) - DR MIAILHE(Chirurgien) - <br/>DR GOUY (Chirurgien) - PR MORICE (Chirurgien)<br/><br/><br/>DR MIAILHE - dossier seul<br/><br/></b> La chirurgie de cytoréduction initialement prévue n'a pas été 
+ <br/>réalisable compte tenu d'instabilités hémodynamiques par hypovolémie 
+ <br/>lors de l'induction.
+ <br/>
+<br/>Une aspiration de l'ascite avec une nouvelle coelioscopie 
+ <br/>exploratrice a été réalisée retrouvant une carcinose péritonéale 
+ <br/>stable par rapport à la coelioscopie initiale avant la chimiothérapie.
+ <br/>
+<br/>12 litres d'ascite ont été évacués le jour de la chirurgie.
+ <br/>
+<br/>Compte tenu de l'instabilité majeure hémodynamique et respiratoire de 
+ <br/>la patiente au décours de l'induction, il n'a pas été réalisé de 
+ <br/>chirurgie de cyroréduction.
+ <br/>
+<br/>Le comité est favorable à la reprise de la chimiothérapie par 
+ <br/>CARBOPLATINE TAXOL avec introduction de l'AVASTIN, puis AVASTIN en 
+ <br/>maintenance.
+ <br/>
+<b><br/></b>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

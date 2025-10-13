@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126349496" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>INTERVENTION</title>
+    <effectiveTime value="20180319000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180320000000+0000"/>
+        <assignedAuthor>
+            <code code="MOR/178" displayName="MORBIHAN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Opérateurs : <u>Docteur BREUSKIN</u> - Docteur ALKHASHNAM - Docteur KOLB<br/>Aides opérateurs : Docteur CAILLEAUX - Docteur COMBES <br/>Anesthésiste : Docteur MOTAMED</b>
+<br/>
+<br/>
+<br/>
+<b>REPRISE DE CERVICOTOMIE POUR R\'c9TABLISSEMENT DE LA CONTINUIT\'c9 <br/>DIGESTIVE ET REFECTION D'UN TRACH\'c9OSTOME DANS UN CONTEXTE DE <br/>PHARYNGOSTOME LARGE POST-PLT DE RATTRAPAGE AVEC FERMETURE PAR UN <br/>LAMBEAU LIBRE ANT\'c9RO-LAT\'c9RAL DE CUISSE PR\'c9LEV\'c9 \'c0 <br/>GAUCHE ET UN LAMBEAU P\'c9DICUL\'c9 SUPRA-CLAVICULAIRE AVEC <br/>ANASTOMOSE DE PERFORANTE <br/>DELTO-ACROMIAL PR\'c9LEV\'c9 \'c0 GAUCHE</b>
+<br/>
+<br/>
+<br/>
+<u><b>INTERVENTION</b></u> :
+ <br/>- Patient en décubitus dorsal.
+ <br/>- Sous anesthésie générale.
+ <br/>- Intubation par sonde de Montandon via le trachéostome.
+ <br/>- Prévention des points de compression.
+ <br/>- Billot sous les épaules.
+ <br/>- Double désinfection cutanée à la Bétadine.
+ <br/>- Mise en place des champs stériles.
+ <br/>
+<br/>
+<br/>Décollement initial du lambeau de peaucier en reprenant la cicatrice 
+ <br/>cervicale.
+ <br/>Le décollement est effectué au dessus du muscle grand dorsal et au 
+ <br/>dessus du plan du muscle grand pectoral qui sont tous les 2 situés en 
+ <br/>région cervicale.
+ <br/>Décollement vers le bas du trachéostome.
+ <br/>Libération de la trachée en avant et latéralement.
+ <br/>Section de la paroi antérieure de la trachée par rapport à la paroi 
+ <br/>postérieure.
+ <br/>Libération de la muqueuse entre la paroi postérieure de la trachée et 
+ <br/>la paroi antérieure de l'oesophage.
+ <br/>Fil tracteur sur la trachée.
+ <br/>On retrouve un pharyngostome bas très large, relativement haut situé.
+ <br/>Séparation des 2 lambeaux du muscle grand pectoral et grand dorsal 
+ <br/>permettant de constater que la muqueuse de la paroi postérieure du 
+ <br/>néo-pharynx est de bel aspect de même que la suture avec la palette 
+ <br/>cutanée du lambeau de grand pectoral.
+ <br/>Décollement des berges muqueuses sur tout le pourtour.
+ <br/>Libération du lambeau de grand dorsal et de sa palette cutanée qui 
+ <br/>fait 4 à 5 cm2.
+ <br/>Le lambeau est conservé pour fermeture ultérieure.
+ <br/>
+<br/>On décide de réaliser un lambeau antéro-latéral de cuisse pour fermer 
+ <br/>le néo-pharynx.
+ <br/>
+<br/>Dissection du bord antérieur du muscle sterno-cléïdo-mastoïdien à 
+ <br/>gauche.
+ <br/>Identification de la veine jugulaire interne qui est libérée.
+ <br/>Clip sur un tronc veineux de Farabeuf résiduel.
+ <br/>Identification de l'artère carotide commune, de l'artère carotide 
+ <br/>externe.
+ <br/>Clip sur l'artère linguale.
+ <br/>Libération de l'artère faciale et du tronc de l'artère carotide 
+ <br/>externe en arrière du nerf XII qui est identifié et préservé.
+ <br/>
+<br/>
+<br/>
+<u><b>Partie reconstruction</b></u> : 
+ <u><b>Docteur ALKHASHNAM</b></u>
+<b> - Docteur KOLB</b>
+<br/>
+<b>RECONSTRUCTION DE PLTC PAR UN LAMBEAU LIBRE ANT\'c9RO-LAT\'c9RAL DE <br/>CUISSE PR\'c9LEV\'c9 \'c0 GAUCHE ET UN LAMBEAU P\'c9DICUL\'c9 <br/>SUPRA-CLAVICULAIRE AVEC ANASTOMOSE DE PERFORANTE DELTO-ACROMIAL <br/>PR\'c9LEV\'c9 \'c0 GAUCHE</b>
+<br/>
+<br/>
+<b> Prélèvement d'un lambeau libre antéro-latéral de cuisse gauche.</b>
+<br/>Tracé d'une ligne entre la crête iliaque antérieure et le bord 
+ <br/>latéral de la rotule.
+ <br/>Incision de 4 cm en interne.
+ <br/>Incision de l'aponévrose musculaire.
+ <br/>On retrouve 3 petites perforantes qui naissent de la branche 
+ <br/>horizontale des vaisseaux circonflexes fémoraux.
+ <br/>Dissection des 3 perforantes jusqu'à l'origine.
+ <br/>Prélèvement d'une palette cutanée de 5 cm de largeur et 14 cm de 
+ <br/>longueur.
+ <br/>Après le prélèvement, l'aspect du lambeau est satisfaisant.
+ <br/>
+<br/>
+<br/>
+<b> Transfert micro-chirurgical.</b>
+<br/>Protocole LOVENOX.
+ <br/>Ligature et section du pédicule du lambeau.
+ <br/>Lavage du lambeau au sérum Hépariné.
+ <br/>On réalise ensuite l'anastomose artérielle en termino-terminale entre 
+ <br/>l'artère du lambeau et l'artère carotide externe avec des points 
+ <br/>séparés de 8/0.
+ <br/>Après l'anastomose, on a un bon retour veineux avec une anastomose 
+ <br/>perméable et étanche.
+ <br/>On réalise ensuite l'anastomose entre la veine du lambeau et la veine 
+ <br/>jugulaire interne en termino-latéral avec des points séparés de 8/0.
+ <br/>L'anastomose est étanche et perméable.
+ <br/>L'aspect du lambeau est satisfaisant.
+ <br/>On réalise ensuite la fermeture semi-circulaire avec la paroi 
+ <br/>pharyngée postérieure et la partie proximale et distale de la base de 
+ <br/>la langue et l'oesophage avec des points séparés de 3/0.
+ <br/>On utilise l'aponévrose pour une deuxième fermeture.
+ <br/>
+<br/>
+<b> Fermeture de la zone donneuse.</b>
+<br/>Vérification de l'hémostase.
+ <br/>Nettoyage au sérum physiologique.
+ <br/>Mise en place d'un cathéter d'analgésie.
+ <br/>Mise en place de 2 drains de redon.
+ <br/>Fermeture cutanée en 3 plans au Vicryl 2/0 et Monocryl 3/0.
+ <br/>
+<br/>
+<br/>
+<b> Prélèvement d'un lambeau delto-acromial et supra-claviculaire à <br/>gauche.</b>
+<br/>Incision cutanée antérieure.
+ <br/>Dissection sus-musculaire.
+ <br/>On retrouve une perforante de l'artère delto-acromial pour laquelle 
+ <br/>on a réalisé des dissections en interne mais on retrouve le pédicule 
+ <br/>qui était déjà lié antérieurement pour le passage du lambeau de grand 
+ <br/>dorsal pédiculé qui a déjà été réalisé antérieurement.
+ <br/>On décide ensuite de prélever un lambeau supra-claviculaire après 
+ <br/>dissection postérieure on retrouve des perforantes 
+ <br/>supra-claviculaires.
+ <br/>Ensuite, on incise le bord postérieur de la palette cutanée et on 
+ <br/>prélève le lambeau sur la perforante supra-claviculaire en gardant le 
+ <br/>pédicule delto-acromial pour réaliser une anastomose 
+ <br/>micro-chirurgicale.
+ <br/>On dissèque la perforante jusuq'à son origine.
+ <br/>Mise en place du lambeau au niveau de la perte de substance cutanée 
+ <br/>pour la fermeture cutanée et pour la fermeture de la paroi 
+ <br/>postérieure de la trachée.
+ <br/>On réalise ensuite une anastomose artérielle entre la perforante de 
+ <br/>l'artère delto-acromial et l'artère du lambeau de grand dorsal avec 
+ <br/>des points séparés d'Ethilon 10/0.
+ <br/>A la fin de l'anastomose, celle-ci est étanche et perméable.
+ <br/>Fermeture du trachéostome au Vicryl 2/0.
+ <br/>Fermeture cutanée au Vicryl 3/0 et Ethilon 4/0 après mise en place de 
+ <br/>2 drain de redon de chaque côté et d'une lame de drainage à gauche.
+ <br/>
+<br/>
+<b> Fermeture de la zone donneuse.</b>
+<br/>Vérification de l'hémostase.
+ <br/>Nettoyage au sérum physiologique.
+ <br/>Fermeture cutanée directe en 2 plans au Vicryl 3/0 et des agrafes.
+ <br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>
+<b>Rétablissement de la continuité digestive et reconfection d'un <br/>trachéostome pour prise en charge d'un large pharyngostome suite à <br/>une PLT de rattrapage.<br/>Pas d'élément suspect lors de la dissection.<br/>L'extrémité proximale de la trachée a été envoyé pour examen <br/>anatomopathologique.<br/>Les fragments de la muqueuse oesophagienne également.<br/></b>
+<br/>
+<br/>
+<u><b>CONSIGNES POST-OPERATOIRE</b></u> :
+ <br/>- Surveillance locale.
+ <br/>- Prévoir TOGD dans 15 jours.
+ <br/>- Réalimentation en fonction du TOGD et de l'évolution clinique.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125851637" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 181580603</title>
+    <effectiveTime value="20180607000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180607000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Pr A. Paci (47 30) <br/>Dr V. Poinsignon (61 92) </p>
+<p>Pr A. Bennaceur (40 65) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr T. Steimle (41 65) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Pr F. Griscelli (51 93) <br/>Dr N. Yin (40 62) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>XXXXXX </p>
+<p>FemmeNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>07/06/2018 13:15 </p>
+<p>Sexe : </p>
+<p>07/06/2018 13:15 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>Nom de naissance : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>CTE 060 - GYNECOLOGIE </p>
+<p> 3 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>jeudi 07 juin 2018 </p>
+<p>Complet </p>
+<p>Résultats <br/>Valeurs </p>
+<p>Précédentes <br/>Val. </p>
+<p>Valeurs de <br/><br/><br/>Référence </p>
+<p>Analyses Unités <br/><br/></p>
+<p>BIOCHIMIE <br/>Ionogramme </p>
+<p>Sodium 142 mmol/l ( 136 - 146 )139 31/05/2018 23:00 FTN <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Potassium 3.9 mmol/l ( 3.4 - 4.5 )3.9 31/05/2018 23:00 FTN <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Chlore 105 mmol/l ( 101 - 109 )103 31/05/2018 23:00 FTN <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Reserve alcaline 27 mmol/l ( 21 - 31 )28 31/05/2018 23:00 FTN <br/>Plasma hépariné - PEPC </p>
+<p>Protides 75 g/L ( 66 - 83 )75 31/05/2018 23:00 FTN <br/>Plasma hépariné - Biuret </p>
+<p>Urée 5.7 mmol/l ( 2.8 - 7.2 )8.5 31/05/2018 23:00 FTN <br/>Plasma hépariné - Uréase-GLDH </p>
+<p>Créatinine 60 μmol/l ( 49 - 90 )105 31/05/2018 23:00 FTN <br/>Plasma hépariné - Enzymatique raccordée IDMS </p>
+<p>Glucose 5.0 mmol/l ( 4.1 - 5.9 )5.7 31/05/2018 23:00 FTN </p>
+<p>Valeur de référence pour un patient à jeunPlasma hépariné - Hexokinase <br/>G6P-DH </p>
+<p>Calcium 2.41 mmol/l ( 2.20 - 2.65 )2.36 31/05/2018 23:00 FTN <br/>Plasma hépariné - Arsenazo III </p>
+<p>Calcium Corrigé 2.49 mmol/l ( 2.12 - 2.52 )2.41 31/05/2018 23:00 FTN </p>
+<p>La calcémie corrigée est calculée selon la formule : <br/>Ca corrigé = Ca mesuré(mmol/l) + 1- (albumine (g/l) / 40),applicable uniquement avec albuminémie inférieure ou égale à 40 g/L. </p>
+<p>Phosphore 1.18 mmol/l ( 0.81 - 1.45 )1.24 31/05/2018 23:00 FTN <br/>Plasma hépariné - Molybdate, UV </p>
+<p>Acide Urique 470 μmol/l ( 155 - 357 ) FTN <br/>Plasma hépariné - Uricase PAP </p>
+<p>Magnesium 0.80 mmol/l ( 0.77 - 1.03 )0.78 31/05/2018 23:00 FTN <br/>Plasma hépariné - Bleu de xylidyle </p>
+<p>Base calcul Cockroft 1.28 0.73 31/05/2018 23:00 FTN </p>
+<p>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Débit de Filtration Glomérulaire (MDRD) >60.0 mL/mn/1.73m2 45.6 31/05/2018 23:00 FTN </p>
+<p>< 60 : Insuffisance rénale à explorer si nécessaire. <br/>Si origine afro américaine, le DFG est à multiplier par 1.212 </p>
+<p>Bilan hépatique / pancréatique <br/>PAL 98 UI/L ( 30 - 120 )103 31/05/2018 23:00 FTN <br/>Plasma hépariné - IFCC </p>
+<p>ASAT 24 UI/L ( < 35 )31 31/05/2018 23:00 FTN <br/>Plasma hépariné - IFCC </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 07/06/2018 à 15:48 par : Dr TROALEN Frédéric,Dr VERGÉ Véronique</p>
+<p></p>
+<p></p>
+<p>Résultats <br/></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>CTE 060 - GYNECOLOGIE </p>
+<p>Unités <br/><br/>Valeurs de <br/><br/><br/>Référence </p>
+<p>Patient : </p>
+<p>Val.Analyses <br/><br/>Valeurs </p>
+<p>Précédentes <br/></p>
+<p> 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>181580603 <br/><br/>XXXXXX XXXXXX </p>
+<br/>
+<p>ALAT 19 UI/L ( < 35 )20 31/05/2018 23:00 FTN <br/>Plasma hépariné - IFCC </p>
+<p>GGT 23 UI/L ( < 38 )23 31/05/2018 23:00 FTN <br/>Plasma hépariné - IFCC </p>
+<p>Amylase 244 UI/L ( 28 - 100 ) FTN <br/>Plasma hépariné - IFCC </p>
+<p>Bilirubine Totale 6 μmol/l ( 5 - 21 )5 31/05/2018 23:00 FTN <br/>Plasma hépariné - DPD </p>
+<p>Bilan lipidique <br/>Cholesterol 7.37 mmol/l ( 5.20 - 6.20 ) FTN <br/>Plasma hépariné - CHO-PAP </p>
+<p>Triglycérides 1.22 mmol/l ( < 1.70 ) FTN <br/>Plasma hépariné - GPO-PAP </p>
+<p>Protéines <br/>Albumine 37 g/L ( 35 - 52 )38 31/05/2018 23:00 FTN <br/>Plasma hépariné - Vert de bromocrésol </p>
+<p>Créatine Kinase 96 UI/L ( < 145 )35 01/04/2017 08:00 FTN <br/>Plasma hépariné - IFCC </p>
+<p>LDH 268 UI/L ( < 247 )293 31/05/2018 23:00 FTN <br/>Plasma hépariné - IFCC </p>
+<p>Marqueurs biologiques <br/>CA 125 170 UI/mL ( < 35 )101 01/09/2017 09:00 FTN <br/>Serum - ECLIA </p>
+<p>HEMOSTASE <br/>Bilan de coagulation </p>
+<p>Taux de Prothrombine 100 % ( 70 - 100 )100 31/05/2018 23:00 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>Temps de Quick (Témoin = 12,2s) 12.9 s 12.8 31/05/2018 23:00 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>INR 1.1 1.1 31/05/2018 23:00 FTN </p>
+<p>0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>Fibrinogène 7.3 g/L ( 2.0 - 4.0 )7.5 04/11/2017 17:30 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK (Témoin = 29s) 36 s 32 31/05/2018 23:00 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK Ratio 1.2 ( < 1.2 )1.1 31/05/2018 23:00 FTN </p>
+<p>HEMATOLOGIE <br/>Numeration sanguine (Sang total sur EDTA) <br/><br/>Méthode : XN - SYSMEX </p>
+<p>Leucocytes 7.6 10*9/L ( 4.0 - 10.0 )8.2 31/05/2018 23:00 VVE </p>
+<p>Hématies 4.51 10*12/L ( 4.00 - 5.20 )4.29 31/05/2018 23:00 VVE </p>
+<p>Hémoglobine 12.9 g/100mL ( 11.5 - 15.0 )12.3 31/05/2018 23:00 VVE </p>
+<p>Hématocrite 39.7 % ( 34.0 - 45.0 )37.8 31/05/2018 23:00 VVE </p>
+<p>VGM 88.0 μ3 ( 75.0 - 96.0 )88.1 31/05/2018 23:00 VVE </p>
+<p>TCMH 28.6 pg/cel ( 24.0 - 33.0 )28.7 31/05/2018 23:00 VVE </p>
+<p>CCMH 32.5 g/100mL ( 32.0 - 36.0 )32.5 31/05/2018 23:00 VVE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 07/06/2018 à 15:48 par : Dr TROALEN Frédéric,Dr VERGÉ Véronique</p>
+<p></p>
+<p></p>
+<p>Résultats <br/></p>
+<p>Page 3 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>CTE 060 - GYNECOLOGIE </p>
+<p>Unités <br/><br/>Valeurs de <br/><br/><br/>Référence </p>
+<p>Patient : </p>
+<p>Val.Analyses <br/><br/>Valeurs </p>
+<p>Précédentes <br/></p>
+<p> 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>181580603 <br/><br/>XXXXXX XXXXXX </p>
+<br/>
+<p>IDG 15.0 % ( 11.0 - 15.0 )14.9 31/05/2018 23:00 VVE </p>
+<p>Plaquettes 260.0 10*9/L ( 150.0-400.0 )264.0 31/05/2018 23:00 VVE </p>
+<p>Formule <br/>Polynucléaires Neutrophiles 69.6 % 59.9 31/05/2018 23:00 VVE </p>
+<p>VVE4.9 31/05/2018 23:00 ( 1.5 - 7.0 )10*9/Lsoit 5.3 </p>
+<p>Polynucléaires Eosinophiles 0.8 % 1.3 31/05/2018 23:00 VVE </p>
+<p>VVE0.1 31/05/2018 23:00 ( 0.0 - 0.6 )10*9/Lsoit 0.1 </p>
+<p>Polynucléaires Basophiles 0.4 % 0.4 31/05/2018 23:00 VVE </p>
+<p>VVE0.0 31/05/2018 23:00 ( 0.0 - 0.1 )10*9/Lsoit 0.0 </p>
+<p>Lymphocytes 24.8 % 32.2 31/05/2018 23:00 VVE </p>
+<p>VVE2.6 31/05/2018 23:00 ( 1.2 - 4.0 )10*9/Lsoit 1.9 </p>
+<p>Monocytes 4.4 % 6.2 31/05/2018 23:00 VVE </p>
+<p>VVE0.5 31/05/2018 23:00 ( 0.2 - 0.8 )10*9/Lsoit 0.3 </p>
+<p>IDP 9 10 31/05/2018 23:00 VVE </p>
+<p>VMP 8.8 μ3 ( 7.5 - 11.0 )8.8 31/05/2018 23:00 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 07/06/2018 à 15:48 par : Dr TROALEN Frédéric,Dr VERGÉ Véronique</p>
+<p></p>
+<ul>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Ionogramme</li>
+<li>Bilan hépatique / pancréatique</li>
+<li>Bilan lipidique</li>
+<li>Protéines</li>
+<li>Marqueurs biologiques</li>
+</ul>
+<li>HEMOSTASE</li>
+<ul>
+<li>Bilan de coagulation</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/><br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

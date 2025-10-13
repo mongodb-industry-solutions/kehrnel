@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127336304" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>COMPTE-RENDU DE SORTIE D'UNITE DE SOINS CHIRURGICAUX CONTINUS</title>
+    <effectiveTime value="20171011000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171011000000+0000"/>
+        <assignedAuthor>
+            <code code="SCC/488" displayName="SOINS CONTINUS CHIRURGICAUX"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Anesthésiste</b></u>
+<b> : Dr LAI.</b>
+<br/>
+<br/>Hospitalisée 
+ <b>du 09 au 11 octobre 2017.<br/><br/><u>Intitulé opératoire</u> :</b>
+<br/>
+<br/>Coelioscopie exporation et évacuation 12L d'ascite.
+ <br/>
+<br/>
+<u><b>Evènements peropératoires et risques spécifiques</b></u> : 
+ <br/>
+<br/>
+<br/>
+<u><b>Antécédents importants</b></u> : 
+ <br/>
+<br/>
+<br/>
+<u><b>Motifs de l'admission en USCC</b></u>
+<b> : </b>
+<br/>
+<br/>
+<br/>
+<u><b>Transfusion (bloc + SSPI</b></u>
+<b>) : 0<br/></b>
+<br/>
+<br/>
+<b>STATUT A LA SORTIE<br/></b>
+<br/>
+<u><b>Etat respiratoire</b></u>
+<b> : extubée</b>
+<br/>
+<u><br/><br/><b>Complication : si Oui, précisez</b></u>
+<b> :<br/></b> Cardio-vasculaire : oui
+ <br/>Respiratoire : non
+ <br/>Nausées/Vomissements : non 
+ <br/>
+<br/>- 
+ <u>Au plan rénal</u> : 
+ <br/> * Stade KDIGO (Evaluation quotidienne et préciser la diurèse 
+ <br/>minimale en ml/kg/h pendant le séjour): non renseigné
+ <br/>
+<br/>
+<b>La patiente est transférée dans le Service de Chirurgie "TARN"<br/>le 11 octobre 2017 pour poursuite de la prise en charge.</b>
+<br/>
+<br/>
+<b>CONCLUSION, CONSIGNES ET TRAITEMENTS <br/><br/>Hypotension artérielle post-opératoire sur hypovolémie secondaire à <br/>l'évacuation de l'ascite.<br/>Traitement par remplissage vasculaire et Albumine 20%<br/>Evolution favorable.<br/>Sortie le 11/10 pour suite de prise en charge<br/><br/>IGS 2 (sans l'âge) = 14.</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

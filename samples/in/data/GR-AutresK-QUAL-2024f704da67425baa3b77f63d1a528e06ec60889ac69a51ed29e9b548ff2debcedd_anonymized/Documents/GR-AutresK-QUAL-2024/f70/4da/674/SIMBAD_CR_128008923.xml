@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128008923" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>HOPITAL DE JOUR DE MEDECINE</title>
+    <effectiveTime value="20170605000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170605000000+0000"/>
+        <assignedAuthor>
+            <code code="HJM/484" displayName="HOPITAL DE JOUR MEDECINE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Docteur Mariana IACOB</b></u>
+<br/>
+<br/>
+<u><b>Motif</b></u> : C4 de CARBOPLATINE/TAXOL pour un adénocarcinome séreux de 
+ <br/>haut grade de l'ovaire, stade IV pleural.
+ <br/>
+<br/>
+<u><b>Médecin référent</b></u> : Dr Judith MICHELS
+ <br/>
+<br/>
+<u><b>Intercure</b></u>
+<br/>Bonne tolérance au traitement en dehors de nausées de grade I, mais 
+ <br/>la patiente n'a pas pris son traitement antiémétiques.
+ <br/>Bien améliorée après reprise du traitement.
+ <br/>Pas de vomissement.
+ <br/>Pas de diarrhée.
+ <br/>Pas de mucite.
+ <br/>Pas de fièvre.
+ <br/>Pas de neuropathie.
+ <br/>
+<br/>
+<u><b>Examen clinique</b></u>
+<br/>OMS 0.
+ <br/>Poids 70 kg
+ <br/>Auscultation cardio-pulmonaire sans particularité.
+ <br/>Abdomen souple, dépressible et indolore.
+ <br/>Pas d'OMI.
+ <br/>Pas d'adénopathie.
+ <br/>
+<br/>
+<u><b>Bilan biologique</b></u>
+<br/>- Hb 11.6 g/dl, GB à 4 820/mm3, PNN à 2390/mm3, plaquettes à 
+ <br/>198 000/mm3
+ <br/>- Créatinine à 52 μmol/l
+ <br/>- Sodium à 146 mmol/l, potassium à 4.1 mmol/l
+ <br/>- ASAT à 18 UI/L, ALAT à 27 UI/L, GGT à 30 UI/L
+ <br/>- CA 125 à 151 
+ <br/>
+<br/>
+<u><b>En pratique</b></u>
+<br/>Reçoit ce jour : 
+ <br/>
+<br/> * CARBOPLATINE AUC 5 620 mg DT J1
+ <br/> * TAXOL 175 mg/m2 soit 310 mg DT J1
+ <br/>
+<br/>Consultation avec le Dr MICHELS le 22/06/2017.
+ <br/>Prochaine cure le 23/06/2017.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127281021" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="10213-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anesthésie"/>
+    <title>CR Anesthesie Post-Op</title>
+    <effectiveTime value="20171019000000+0000"/>
+    <confidentialityCode code="10213-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anesthésie"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171019000000+0000"/>
+        <assignedAuthor>
+            <code code="ANS/286" displayName="ANESTHESIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Prénom <br/><br/><br/><br/>Nom <br/><br/><br/><br/>ID Patient <br/><br/><br/><br/>D. de N. </p>
+<p>No séjour <br/><br/><br/><br/>Taille <br/><br/><br/><br/>Poids <br/><br/><br/><br/>Age </p>
+<p>Anesthésie le </p>
+<p>Classe ASA <br/><br/></p>
+<p>José <br/><br/><br/><br/>XXXXXX <br/><br/>XXXXXX XXXXXX </p>
+<p>673555 165 cm 69 kg 56 ans </p>
+<p>19.10.2017 </p>
+<br/>
+<p>PERIop17:0016:0015:0014:0019/10/2017 </p>
+<p>Report printed 19/10/17 15:41 Page 1/4 </p>
+<p>Con </p>
+<p>stan </p>
+<p>tes </p>
+<p>H <br/>D </p>
+<p>M </p>
+<br/>
+<p>26,3 </p>
+<p>22,5 </p>
+<p>18,8 </p>
+<br/>
+<p>11,3 </p>
+<p>7,5 </p>
+<p>3,75 </p>
+<br/>
+<p>PASs mmHg </p>
+<p>PASm mmHg </p>
+<p>PASd mmHg </p>
+<p>Delta PP % </p>
+<p>PNIs mmHg </p>
+<p>PNId mmHg </p>
+<p>SpO2 % </p>
+<p>Evénements <br/><br/>Ane> Sortie salle Entrée SSPI Sortie SSPI </p>
+<p>Dro </p>
+<p>gues </p>
+<p>1 g </p>
+<p>309,2 mg </p>
+<p>140,6 μg </p>
+<p>100 mg </p>
+<p>Paracetamol i.v [10 mg/ml] </p>
+<p>Cet - Propofol 10 mg/ml [10 mg/ml] </p>
+<p>Cet - Remifentanil 25 μg/ml [0,025 mg/ml] </p>
+<p>Tramadol </p>
+<p>I.V.g </p>
+<p>I.V. perf </p>
+<p>I.V. perf </p>
+<p>I.V.mg </p>
+<br/>
+<p>0 6 6 0 </p>
+<p>0 3,1 2 0 </p>
+<br/>
+<p>Flui 0 mlRinger I.V. perf </p>
+<p>ml(500) 500 </p>
+<p>Con </p>
+<p>stan </p>
+<p>tes </p>
+<br/>
+<p>3,75 </p>
+<p>2,5 </p>
+<p>1,25 </p>
+<br/>
+<p>86,3 </p>
+<p>57,5 </p>
+<p>28,8 </p>
+<br/>
+<p>38,3 </p>
+<p>36,5 </p>
+<p>34,8 </p>
+<p>NMT TOF </p>
+<p>NMTratio % </p>
+<p>Temp . °C <br/></p>
+<p>NMTptc</p>
+<p></p>
+<p></p>
+<p>Prénom <br/><br/><br/><br/>Nom <br/><br/><br/><br/>ID Patient <br/><br/><br/><br/>D. de N. </p>
+<p>No séjour <br/><br/><br/><br/>Taille <br/><br/><br/><br/>Poids <br/><br/><br/><br/>Age </p>
+<p>Anesthésie le </p>
+<p>Classe ASA <br/><br/></p>
+<p>José <br/><br/><br/><br/>XXXXXX <br/><br/>XXXXXX XXXXXX </p>
+<p>673555 165 cm 69 kg 56 ans </p>
+<p>19.10.2017 </p>
+<br/>
+<p>PERIop17:0016:0015:0014:0019/10/2017 </p>
+<p>Report printed 19/10/17 15:41 Page 2/4 </p>
+<p>O 2 </p>
+<p>/ C <br/>O </p>
+<br/>
+<p>3,75 </p>
+<p>2,5 </p>
+<p>1,25 </p>
+<p>FiO2 % </p>
+<p>ETO2 % </p>
+<p>ETCO2 (mmHg) mmHg </p>
+<p>FICO2 (mmHg) mmHg </p>
+<p>FIN2O % </p>
+<p>A <br/><br/>V </p>
+<p>H <br/></p>
+<br/>
+<p>BIS. </p>
+<p>ET Sevo. % </p>
+<p>ET Des. % </p>
+<p>Conso desflurane ml </p>
+<p>Conso Sevoflurane ml </p>
+<p>A <br/><br/>A</p>
+<p></p>
+<p></p>
+<p>Prénom <br/><br/><br/><br/>Nom <br/><br/><br/><br/>ID Patient <br/><br/><br/><br/>D. de N. </p>
+<p>No séjour <br/><br/><br/><br/>Taille <br/><br/><br/><br/>Poids <br/><br/><br/><br/>Age </p>
+<p>Anesthésie le </p>
+<p>Classe ASA <br/><br/></p>
+<p>José <br/><br/><br/><br/>XXXXXX <br/><br/>XXXXXX XXXXXX </p>
+<p>673555 165 cm 69 kg 56 ans </p>
+<p>19.10.2017 </p>
+<br/>
+<p>PERIop17:0016:0015:0014:0019/10/2017 </p>
+<p>Report printed 19/10/17 15:41 Page 3/4 </p>
+<p>Ven </p>
+<p>tilat </p>
+<p>ion </p>
+<br/>
+<p>43,8 </p>
+<p>37,5 </p>
+<p>31,3 </p>
+<br/>
+<p>18,8 </p>
+<p>12,5 </p>
+<p>6,25 </p>
+<br/>
+<p>RR(co2) /min </p>
+<p>VT ml </p>
+<p>VM L/min </p>
+<p>VMinsp L/min </p>
+<p>PEEP1(m) cmH2O </p>
+<p>PEEPtotal cmH2O </p>
+<p>Ppic cmH2O</p>
+<p></p>
+<p></p>
+<p>Prénom <br/><br/><br/><br/>Nom <br/><br/><br/><br/>ID Patient <br/><br/><br/><br/>D. de N. </p>
+<p>No séjour <br/><br/><br/><br/>Taille <br/><br/><br/><br/>Poids <br/><br/><br/><br/>Age </p>
+<p>Anesthésie le </p>
+<p>Classe ASA <br/><br/></p>
+<p>José <br/><br/><br/><br/>XXXXXX <br/><br/>XXXXXX XXXXXX </p>
+<p>673555 165 cm 69 kg 56 ans </p>
+<p>19.10.2017 </p>
+<br/>
+<p>18:0017:0016:0015:0019/10/2017 </p>
+<p>Report printed 19/10/17 15:41 Page 4/4 </p>
+<p>Con </p>
+<p>stan </p>
+<p>tes </p>
+<br/>
+<p>93,8 </p>
+<p>62,5 </p>
+<p>31,3 </p>
+<br/>
+<p>92,4 </p>
+<p>79,2 </p>
+<br/>
+<p>52,8 </p>
+<p>39,6 </p>
+<p>26,4 </p>
+<p>13,2 </p>
+<br/>
+<p>52,5 </p>
+<br/>
+<p>37,5 </p>
+<br/>
+<p>22,5 </p>
+<br/>
+<p>7,5 </p>
+<br/>
+<p>PNIs mmHg </p>
+<p>PNId mmHg </p>
+<p>PASs mmHg </p>
+<p>PASm mmHg </p>
+<p>PASd mmHg </p>
+<p>SpO2 % </p>
+<br/>
+<p>ETCO2 (mmHg) </p>
+<p>Evénements <br/><br/>Entrée SSPI Sortie SSPI </p>
+<p>Sta </p>
+<p>tut </p>
+<p>Pst </p>
+<p>EVS </p>
+<p>NVPO </p>
+<p>Frissons </p>
+<p>O2 additionnel par </p>
+<p>O2(r) L/min </p>
+<p>Temp . °C <br/></p>
+<p>Sec </p>
+<p>0 nulle 1 faible 1 faible </p>
+<p>1 Rien 1 Rien 1 Rien </p>
+<p>Non Non </p>
+<p>Lunettes O2 </p>
+<br/>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

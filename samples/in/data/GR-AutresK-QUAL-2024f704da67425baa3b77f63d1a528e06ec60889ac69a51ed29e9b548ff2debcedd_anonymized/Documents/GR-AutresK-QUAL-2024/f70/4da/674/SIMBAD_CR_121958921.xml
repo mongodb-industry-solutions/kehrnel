@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121958921" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>Compte-rendu d'hospitalisation - Service Rouergue</title>
+    <effectiveTime value="20200121000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200122000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<br/>
+<u><b>HOSPITALISATION DU 20 AU 21 JANVIER 2020</b></u>
+<br/>
+<br/> Patiente de 67 ans hospitalisée dans le service ROUERGUE pour 
+ <br/>ponction d'ascite. 
+ <br/>
+<br/>
+<u><b>Médecin référent à GR</b></u> : 
+ <br/>
+<br/>
+<u><b>Antécédents oncologiques</b></u> :
+ <br/>
+<br/>Carcinome séreux ovarien de haut grade métastatique pleural et 
+ <br/>péritonéal, jamais réséqué.
+ <br/>Traitement initial par CARBOPLATINE-TAXOL avec AVASTIN en entretien.
+ <br/>
+<br/>
+<u><b>Examen clinique à l'arrivée - G. CAMPRODON (interne de garde)</b></u> :
+ <br/>
+<br/>
+<u>Constantes</u> : TA 114/80 mmHg, pouls 98 BPM, température 38°C, O2 
+ <br/>AA, saturation 100%. EVA 2/10.
+ <br/>
+<br/>Sub fébrile à 38,4 à l'arrivée. 
+ <br/>
+<br/>- Abdomen pléthorique, dépressible, non douloureux. Ascite majeure. 
+ <br/>Orifices herniaires libres. BHA entendus difficilement. Pas de 
+ <br/>trouble du transit.
+ <br/>- Pas d'urine et doute sur vessie pleine au bladder mais sonde ne 
+ <br/>donnant rien.
+ <br/>- Bruits du coeur réguliers sans souffle. Mumure vésiculaire 
+ <br/>bilatéral et symétrique sans bruits surajoutés. 
+ <br/>
+<br/>
+<u><b>Résultats du bilan para-clinique à l'arrivée</b></u> :
+ <br/>
+<br/>Hb 8.5 g/dL globalement stable, Plaquettes 457 G/L.
+ <br/>Na 134 mmol/l, K 4.3 mmol/l, Ca 2.25 mmol/l.
+ <br/>DFG 74.
+ <br/>PAL 85 UI/L, GGT 11 UI/L, ASAT 12 UI/L, ALAT 7 UI/L.
+ <br/>Tn 6.
+ <br/>CRP 74 mg/l.
+ <br/>Leuco 10.8 G/L, PNN 8.6 G/L.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>
+<br/>- Ponction réalisée en HDJ n'ayant ramené que 450 cc après 4 
+ <br/>tentatives malgré guidage échographique.
+ <br/>- Subfébrile à l'arrivée, ECBU fait. 
+ <br/>- Sensation de faiblesse après les ponctions d'ascite. ECG normal.
+ <br/>
+<br/>
+<u><b>Conduite à tenir</b></u> :
+ <br/>
+<br/>- Refaire la ponction demain après un eventuel nouveau drainage.
+ <br/>- Faire des hémocultures si récidive de la fièvre.
+ <br/>- Si échec ponction après guidage échographique, voir pour geste en 
+ <br/>RI.
+ <br/>
+<br/>
+<u><b>Evolution dans le service - Dr WOJCIESZKO</b></u>
+<b> :</b>
+<br/>
+<br/>Ponction d'ascite à visée diagnostique (car pas d'envoi en 
+ <br/>bactériologie du dernier prélèvement) et évacuatrice.
+ <br/>
+<br/>Retrait après repérage échographique de 7.5 L d'un liquide hématique 
+ <br/>à l'aide d'une aiguille de type Yu, ponction en fosse iliaque droite.
+ <br/>A noter que la ponction paraissait impossible en FIG d'après le 
+ <br/>repérage échographique, mais aisée en FID.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>
+<br/>Poussée d'ascite nécessitant une évacuation après repérage 
+ <br/>échographique.
+ <br/>Infection du liquide d'ascite à éliminer vu l'évolution du syndrome 
+ <br/>inflammatoire.
+ <br/>La patiente est transférée dans le service GERS le 21.01.2020 pour 
+ <br/>suite de la prise en charge.
+ <br/>
+<br/>
+<br/>* Prise en charge palliative NON
+ <br/>
+<br/>
+<b>EVALUATION DE LA CHARGE EN SOINS<br/></b> * Ponction à visée symptomatique OUI 
+ <br/>* Adaptation du traitement antalgique NON
+ <br/>* Irradiation antalgique NON
+ <br/>* Occlusion intestinale NON
+ <br/>* Transfusion sanguine NON
+ <br/>* Prise en charge de la détresse respiratoire
+ <br/>avec désaturation < 90% en AA NON
+ <br/>* Traitement des divers symptômes vecteurs d'inconfort 
+ <br/>(toux, prurit, nausées, vomissements, anxiété, 
+ <br/>dépression, troubles du sommeil, déshydratation...) OUI 
+ <br/>* Soins de nursing NON
+ <br/>* Nutrition : 
+ <br/>- déjà sous CNO, nutrition entérale/parentérale NON
+ <br/>- mise en route d'une nutrition entérale/parentérale NON
+ <br/>
+<br/>
+<b>PRISE EN CHARGE MULTI-DISCIPLINAIRE<br/></b> NON
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

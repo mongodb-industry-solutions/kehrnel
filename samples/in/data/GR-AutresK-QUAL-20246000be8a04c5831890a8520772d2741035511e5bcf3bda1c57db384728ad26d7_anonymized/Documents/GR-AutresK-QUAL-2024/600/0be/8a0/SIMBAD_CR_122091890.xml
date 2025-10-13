@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122091890" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>HOPITAL DE JOUR DE MEDECINE ONCOLOGIQUE ADULTE</title>
+    <effectiveTime value="20200103000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200103000000+0000"/>
+        <assignedAuthor>
+            <code code="HJM/484" displayName="HOPITAL DE JOUR MEDECINE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>DEPARTEMENT DE MEDECINE - HOPITAL DE JOUR MEDECINE <br/><br/> Dicté par : </b> Docteur Thi Hong Van To, Interne
+ <b><br/>Dicté le : </b> 29/11/2019 
+ <b><br/>Service : </b> HJM-HOPITAL DE JOUR MEDECINE 
+ <br/>
+<b>Type de document : </b> HJM CC GENERIQUE 
+ <br/>
+<b>Ref :</b> 871365 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : QCL/A
+ <br/>
+<br/>CR DU 28.11.2019
+ <br/>
+<br/>Docteur TO - Docteur CHEAIB
+ <br/>
+<br/>
+<u><b>COMPTE-RENDU DE CONSULTATION EN HOPITAL DE JOUR DE MEDECINE<br/> </b></u>
+<br/>Patient âgé de 58 ans vu ce jour pour la réalisation de son C2-J8 de 
+ <b><br/>CISPLATINE-DOCETAXEL-CETUXIMAB </b> dans le cadre de la prise en charge 
+ <br/>d'une récidive latéro-cervicale bilatérale d'un carcinome oropharyngé
+ <b> <br/></b> traité initialement par radiochimiothérapie en octobre 2014 avec 
+ <br/>chirurgie de rattrapage en novembre 2017 et mars 2018.
+ <br/>
+<br/>Le C1J1 a été réalisé le 30.10.2019 en hospitalisation. La posologie 
+ <br/>du DOCETAXEL a été diminué de 20 % à partir du C2-J1 le 21.11.2019 
+ <br/>pendant son hospitalisation.
+ <br/>
+<br/>Hospitalisation récente entre le 05.11.2019 et le 19.11.2019 pour une 
+ <br/>candidose ainsi qu'une douleur au niveau cervical et abdominal avec un 
+ <br/>trajet fistuleux entre la cavité buccale et l'abcès au niveau cervical 
+ <br/>qui a été vu au scanner cervical. Traitement par TAZOCILINE et 
+ <br/>TRIFLUCAN avec amélioration progressive.
+ <br/>
+<br/>Nutrition entérale par sonde nasogastrique. 
+ <br/>
+<br/>
+<b>Intercure </b> : 
+ <br/>Bonne tolérance depuis la dernière hospitalisation, pas de récidive 
+ <br/>de la fièvre, persistance d'une petite douleur au niveau cervical en 
+ <br/>rapport avec l'abcès traité. 
+ <br/>
+<br/> Quelques ballonnements, pas de diarrhée. 
+ <br/>Poursuite de la nutrition par sonde nasogastrique 3 fois par jour.
+ <br/>Pas de neuropathie périphérique.
+ <br/>Réalisation de NIVESTIM depuis ce matin seulement, ordonnance faite 
+ <br/>pour 5 jours.
+ <br/>Rendez-vous pour un audiogramme prévu le 03.12.2019.
+ <br/>
+<br/>
+<b>Bilan biologique</b> (du 25.11.2019) : satisfaisant.
+ <br/>Bilan cardiaque réalisé en hôpital de jour aujourd'hui : troponine, 
+ <br/>CKMP et BNP négatifs ; D-dimères à 0,66 μg/mL.
+ <br/>
+<br/>
+<b>Examen clinique</b> : 
+ <br/>PS : 1.
+ <br/>Pas de point d'appel infectieux clinique. 
+ <br/>La chambre implantable est fonctionnelle et propre.
+ <br/>Sécheresse cutanée, absence de pustule ou d'infection locale.
+ <br/>Douleur cervicale droite en rapport avec l'abcès, sans fistule 
+ <br/>cutanée. 
+ <br/>
+<br/>Auscultation cardio-pulmonaire : normale. 
+ <br/>Abdomen : souple, dépressible et indolore. 
+ <br/>
+<br/>
+<b>En pratique </b> : 
+ <br/>Le patient reçoit ce jour son C2-J8 par : 
+ <br/>
+<b>- CETUXIMAB 250 mg/m2 soit 440 mg DT sur 1 heure.<br/></b> Bonne tolérance immédiate. 
+ <br/>
+<br/>La prochaine injection de C2-J15 est prévue le 04.12.2019.
+ <br/>
+<br/>Ordonnance remise ce jour d'OGASTORO (LANSOPRAZOLE) 1 comprimé 
+ <br/>dispersible 30 mg/jour en remplacement du PANTOPRAZOLE injectable.
+ <b><br/>________________________________________________<br/>Signé électroniquement par Docteur Thi Hong Van TO <br/>Le vendredi 6 décembre 2019 à 18:14<br/>_________________________________________________<br/>Signé électroniquement par Docteur Bianca CHEAIB <br/>Le jeudi 19 décembre 2019 à 08:55 </b>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

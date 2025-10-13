@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_118674796" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>UNITE DE PSYCHO-ONCOLOGIE - Leonor FASSE - Psychologue Clinicienne</title>
+    <effectiveTime value="20210507000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20210507000000+0000"/>
+        <assignedAuthor>
+            <code code="UPO/332" displayName="UNITE DE PSYCHO_ONCOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Entretien ce jour avec Mme XXXXXX, à la demande de l'interne de 
+ <br/>l'UDEP, pour évaluation de l'état psychologique. Mme XXXXXX avait 
+ <br/>rencontré une fois ma collègue Mme Sallard en 2018. Cet entretien se 
+ <br/>fait en présence d'Alice Butruille, stagiaire psychologue.
+ <br/>
+<br/>Mme XXXXXX est visiblement assez réticente à s'entretenir avec moi, 
+ <br/>restant particulièrement laconique et évitant tout contact visuel. 
+ <br/>Elle décrit brièvement sa prise en charge récente et souligne une 
+ <br/>majoration de ses douleurs depuis son hospitalisation, majoration 
+ <br/>qu'elle explique par l'impossibilité de retrouver ici des positions 
+ <br/>antalgiques qu'elle pouvait adopter à la maison. A l'investigation, 
+ <br/>la seule émotion qu'elle mentionne est une lassitude, mais elle ne 
+ <br/>détaille pas. Nous parlons également du vécu de ses deux enfants 
+ <br/>(dont son fils de 16 ans qui vit avec son compagnon et elle) et de sa 
+ <br/>belle-fille (19 ans, qui vit également avec elle), et qui sont très 
+ <br/>préoccupés par son état, selon ses propos. Là encore, Mme XXXXXX 
+ <br/>préfère ne pas approfondir ce sujet. Elle insiste sur le fait qu'elle 
+ <br/>a besoin de "positif", et que le maintien de projets avec ses proches 
+ <br/>l'aide à faire face.
+ <br/>
+<br/>Elle se sent bien accueillie à l'UDEP et attend des professionnels un 
+ <br/>soulagement de ses douleurs.
+ <br/>
+<br/>Au total: la détresse de la patiente est ce jour difficile à évaluer. 
+ <br/>Cette modalité de fonctionnement, marquée par une inhibition 
+ <br/>relationnelle, est visiblement habituelle chez Mme XXXXXX, observée 
+ <br/>par tous les professionnels. Je remets mes coordonnées à Mme XXXXXX; 
+ <br/>transmission aux soignants de l'UDEP. 
+ <br/>
+<br/>
+<br/> Le médecin autorise l'établissement des prescriptions médicales de transports sanitaires du patient, adaptées à sa situation médicale.
+ 
+
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

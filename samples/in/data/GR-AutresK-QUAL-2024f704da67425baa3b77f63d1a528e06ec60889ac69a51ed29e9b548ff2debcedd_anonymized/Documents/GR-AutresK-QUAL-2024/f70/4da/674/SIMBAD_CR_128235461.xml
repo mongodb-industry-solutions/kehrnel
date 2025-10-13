@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128235461" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D ONCOLOGIE GYNECOLOGIE - DR AUDREY LE ROY</title>
+    <effectiveTime value="20170419000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170421000000+0000"/>
+        <assignedAuthor>
+            <code code="060/8" displayName="CTE 060 - GYNECOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patiente de 64 ans vue après une première cure de CARBOPLATINE /TAXOL 
+ <br/>dans le cadre d'un carcinome de haut grade d'origine gynécologique ou 
+ <br/>péritonéale stade IV pleural gauche.
+ <br/>Marqueurs tumoraux informatifs.
+ <br/>CA 125 à 1000 U/ml, CA 19.9 142 U/ml, CA 15.3 154 U/l.
+ <br/>
+<br/>
+<b>Antécédents médicaux </b> : 
+ <br/>
+<br/>Phlébite du membre inférieur droit faisant révéler le cancer ovarien.
+ <br/>Pas d'antécédent chirurgicaux.
+ <br/>
+<br/>
+<b>Antécédents gynécologique</b> : 
+ <br/>
+<br/>G3 P3 
+ <br/>3 accouchements voie basse.
+ <br/> Ménopause 49 ans. Pas de THS.
+ <br/>
+<br/>
+<b>Antécédents familiaux </b> : 
+ <br/>
+<br/>Cancer du pancréas chez le père à 65 ans.
+ <br/>
+<br/>Allergie : DEXERYL? 
+ <br/>
+<br/>
+<u>Traitement actuel </u>: 
+ <br/>
+<br/>INNOHEP 0.7 ml / jour.
+ <br/>
+<b><br/>HISTOIRE DE LA MALADIE :</b>
+<br/>
+<br/>
+<b> * Fin février 2017</b> : suite à une thrombose inaugurale au niveau du 
+ <br/>membre inférieur droit (thrombose de la veine saphène interne, 
+ <br/>étendue jusqu'à la fémorale commune), découverte sur l'échographie 
+ <br/>doppler d'une masse tissulaire pelvienne, probablement d'origine 
+ <br/>ovarienne à composante mixte mesurant de grand axe 120 mm ; ascite 
+ <br/>d'environ 2 à 3 litres.
+ <br/>
+<br/>
+<b> * Mars 2017</b> : réalisation d'une coelioscopie exploratrice par le Dr 
+ <br/>SCHERIER qui retrouve une carcinose péritonéale avec une milliaire 
+ <br/>diffuse, l'exploration étant limitée compte tenu de l'adhérence du 
+ <br/>grand épiploon à la paroi antérieure ; PCI à 16/27, cytologie 
+ <br/>positive ; examen extemporané qui retrouve un adénocarcinome.
+ <br/>
+<br/>* 
+ <b> Scanner TAP du 16/3</b> : carcinose péritonéale avec nodules 
+ <br/>péritonéaux essentiellement dans la région péri-hépatique droite et 
+ <br/>l'arrière cavité des épiploons. Ganglions rétropéritonéaux, 
+ <br/>épanchement pleural liquidien gauche de moyenne abondance avec 
+ <br/>atélectasies.
+ <br/>
+<br/>Pendant l'hospitalisation dans le service Tarn la patiente a été 
+ <br/>ponctionnée au niveau pleural gauche ramenant 1.8 litres le 
+ <br/>29/03/2017.
+ <br/>Chimiothérapie en 1ère intention expliquée à la patiente de même que 
+ <br/>les effets indésirables de la chimiothérapie en présence de son mari.
+ <br/>
+<br/>La patiente est transférée dans le service Gard pour la suite de la 
+ <br/>prise en charge.
+ <br/>
+<br/>Réalisation d'une 1ère cure par CARBOPLATINE AUC 5 / TAXOL 175 mg / 
+ <br/>m2, C1 J1 le 1er avril au GARD.
+ <br/>
+<br/>La patiente a bien toléré la 1ère cure hormis une constipation les 
+ <br/>jours suivant la chimiothérapie.
+ <br/>Elle a présenté des nausées et vomissements les 3 jours suivants mais 
+ <br/>n'avait que du ZOPHREN au domicile.
+ <br/>L'état général est conservé, l'appétit moyen, elle a perdu 2 kg 
+ <br/>depuis la 1ère cure.
+ <br/>
+<br/>Pas de signe fonctionnel respiratoire malgrè un épanchement pleural 
+ <br/>gauche connu.
+ <br/>Alopécie débutante, grade 1.
+ <br/>
+<br/>Pas de syndrôme infectieux.
+ <br/>
+<br/>
+<b>EXAMEN</b>
+<br/>
+<br/>TA : 159/91
+ <br/>Pouls : 112/mn
+ <br/>Saturation : 96% 
+ <br/>T° : 38 recontrôlée à 38,5 
+ <br/>Poids : 70 kg 
+ <br/>Taille : 1,64m
+ <br/>Auscultation cardiaque sans particularité.
+ <br/>Mollets souples et indolores.
+ <br/>Diminution du murmure vésiculaire en base gauche, pas d'autre bruit 
+ <br/>sur-ajouté, pas de dyspnée.
+ <br/>Abdomen plétorique, dépressible, bruits hydro-aériques présents.
+ <br/>Petite matité des flancs.
+ <br/>Cicatrice de coelioscopie ombilicale et sus-pubienne présentant une 
+ <br/>croute que la patiente n'a pas soigné, en dessous, aspect 
+ <br/>discrètement inflammatoire de la cicatrice. Pas d'écoulement.
+ <br/>Examen sénologique : pas d'anomalie.
+ <br/>Examen gynécologique : examen difficile, patiente très anxieuse.
+ <br/>Col en place, d'aspect sain.
+ <br/>Pas d'anomalie au toucher vaginal.
+ <br/>TR : sans anomalie.
+ <br/>
+<b>Frottis réalisé</b> .
+ <br/>
+<br/>
+<u>Biologiquement</u> : 
+ <br/>
+<br/>Hémoglobine : 11,7g /dl
+ <br/>Plaquettes : 444 G/litre
+ <br/>Leucocytes et neutrophiles : normaux.
+ <br/>Créatinine : 65 μmmol / litre
+ <br/>Ionogramme sanguin et bilan hépatique normaux.
+ <br/>Pas de CA 125 récent.
+ <br/>
+<br/>A noter, mammographie et échographie mammaire classées ACR3 à droite 
+ <br/>avec un kyste du quadrant inférieur du sein droit de 7 mm à 
+ <br/>recontrôler en juin 2017.
+ <br/>
+<br/>
+<b>EN PRATIQUE </b>
+<br/>
+<br/>Poursuite de la chimiothérapie par CARBOPLATINE AUC 5 soit 560 mg DT 
+ <br/>et PACLITAXEL 175 mg / m2 soit 310 mg DT le 20/04 à Chevilly, sous 
+ <br/>réserve d'un contrôle de l'hyperthermie.
+ <br/>
+<br/>On fait prélevé ce jour une BU qui est négative, ECBU et hémocultures 
+ <br/>de principe.
+ <br/>
+<br/>Pas de point d'appel infectieux, clinique à l'examen, je le rappelle.
+ <br/>
+<br/>On adapte la dose d'anti-coagulant au poids, soit 12 000 unités 
+ <br/>d'INNOHEP / jour.
+ <br/>
+<br/>La patiente réalisera en externe un scanner TAP après la 3ème cure 
+ <br/>soit mi-mai avant de voir le DR GOUY.
+ <br/>
+<br/>On lui demande de réaliser un doppler de contrôle pour la 
+ <br/>consultation du 18 mai pour voir s'il persiste sa phlébite surale 
+ <br/>droite.
+ <br/>
+<br/>Elle reverra le DR MICHELS en consultation le 18 mai.
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121977323" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>INTERNE DE GARDE - URGENCES - NUIT ET WEEK-END</title>
+    <effectiveTime value="20200120000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200120000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Médecin examinateur : CAMPRODON Guillaume\fs19 
+ <br/>
+<br/>
+<u><b>Consultation du 20/01/20</b></u>
+<br/>
+<br/>
+<br/>
+<u><b>Motif de consultation et histoire actuelle</b></u> :
+ <br/>
+<br/>Patiente de 67 ans adressée aux Urgences au lieu de l'HDJ pour 
+ <br/>ponction d'ascite dans un contexte d'adénocarcinome séreux de haut 
+ <br/>grade actuellemnt en progression sous TAXOL hebdomadaire.
+ <br/>
+<br/>
+<br/>
+<u><b>Antécédents</b></u> :
+ <br/>Carcinome séreux ovarien de haut grade métastatique pleural et 
+ <br/>péritonéal, jamais réséqué.
+ <br/>Traitement initial par Carboplatine-taxol avec Avastin en entretien.
+ <br/>
+<br/>
+<u><b>Examen clinique</b></u> :
+ <br/>- Abdomen pléthorique, dépressible, non douloureux. Ascite majeure. 
+ <br/>Orifices herniaires libres. BHA entendus difficilement. Pas de 
+ <br/>trouble du transit.
+ <br/>- Pas d'urine et doute sur vessie pleine au bladder mais sonde ne 
+ <br/>donnant rien.
+ <br/>- Bruits du coeur réguliers sans souffle. Mumure vésiculaire 
+ <br/>bilatéral et symétrique sans bruits surajoutés. 
+ <br/>
+<br/>
+<u>Constantes</u> : TA 114/80 mmHg, pouls 98 BPM, température 38°C, O2 
+ <br/>AA, saturation 100%. EVA 2/10.
+ <br/>\fs19 
+ <br/>Sub fébrile à 38,4 à l'arrivée. 
+ <br/>
+<br/>
+<u><b>Résultats du bilan para-clinique</b></u> :
+ <br/>Hb 8.5 g/dl globalement stable
+ <br/>Plaquettes 457 G/L
+ <br/>Na 134 mmol/l
+ <br/>K 4.3 mmol/l
+ <br/>Ca 2.25 mmol/l
+ <br/>DFG 74
+ <br/>PAL/GGT 85/11 UI/L
+ <br/>ASAT/ALAT 12/7 UI/L
+ <br/>Tn 6
+ <br/>CRP 74 mg/l
+ <br/>Leuco 10.8 G/L
+ <br/>PNN 8.6 G/L
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>- Ponction réalisée en HDJ n'ayant ramené que 450 cc après 4 
+ <br/>tentatives malgré guidage échographique.
+ <br/>- Subfébrile à l'arrivée, ECBU fait. 
+ <br/>- Sensation de faiblesse après les ponctions d'ascite. ECG normal.
+ <br/>
+<br/>
+<u><b>Conduite à tenir</b></u> :
+ <br/>- Refaire la ponction demain après un eventuel nouveau drainage
+ <br/>- Faire des hémocultures si récidive de la fièvre
+ <br/>- Si échec ponction après guidage échographique voir pour gest en RI.
+ <br/>
+<br/>
+<br/>
+<b>ADMISSION SERVICE ROUERGUE</b>
+<br/>
+<br/>Heure d'arrivée : 19H00
+ <br/>\fs19 Heure de départ : ND
+ <br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

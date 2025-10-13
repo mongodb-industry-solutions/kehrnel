@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125304351" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncogénétique - DR. Olivier CARON</title>
+    <effectiveTime value="20180903000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180903000000+0000"/>
+        <assignedAuthor>
+            <code code="132/26" displayName="CTE 132 - ONCOGENETIQUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>CONSULTATION D'ONCOGENETIQUE -DEPARTEMENT DE MEDECINE<br/><br/>Dicté par : </b> Docteur Olivier Caron
+ <b><br/>Dicté le : </b> 03/09/2018 
+ <b><br/>Service : </b> 132-CONSULTATION DE GENETIQUE 
+ <br/>
+<b>Type de document : </b> 132 CC CONSULT. ONCOGENETIQUE 
+ <br/>
+<b>Ref :</b> 481708 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : AGI
+ <br/>
+<br/>Famille 20327
+ <br/>
+<br/>Consultation du 23/08/2018
+ <br/>
+<br/>La patiente vient pour être informée des résultats de son analyse 
+ <br/>génétique effectuée en raison de ses antécédents personnels et 
+ <br/>familiaux.
+ <br/>
+<br/>
+<b>Cette analyse retrouve une mutation constitutionnelle du gène BRCA1.</b>
+<br/>(Sous réserve de l'analyse d'un deuxième prélèvement qui sera réalisé 
+ <br/>lors d'un prochain passage à Gustave Roussy.)
+ <br/>
+<br/>On réexplique le mode de transmission et les risques de cancers liés 
+ <br/>à cette mutation constitutionnelle, les moyens de dépistage et de 
+ <br/>prévention.
+ <br/>
+<br/>Pour mémoire, la patiente est actuellement en cours de prise en 
+ <br/>charge de la rechute d'un cancer du sein triple-négatif. Cette 
+ <br/>information pourrait modifier la prise en charge thérapeutique et 
+ <br/>sera portée à la connaissance de ses oncologues.
+ <br/>
+<br/>La surveillance post-thérapeutique sera discutée collégialement, mais 
+ <br/>comportera probablement une IRM mammaire. Nous discuterons également 
+ <br/>de l'annexectomie prophylactique. Le dossier sera discuté en RCP FAR.
+ <br/>
+<br/>Les apparentés majeurs peuvent s'ils le souhaitent réaliser un test 
+ <br/>ciblé sur cette anomalie après réalisation d'une consultation 
+ <br/>d'onco-génétique (test pré-symptomatique).
+ <br/>
+<br/>On incite la patiente à les informer qu'un test génétique est 
+ <br/>disponible dans la famille. Il s'agit là de sa responsabilité légale. 
+ <br/>Attestation de remise du résultat signée ce jour.
+ <br/>
+<br/>Une copie du résultat définitif, obtenu sous 4 à 6 semaines, sera 
+ <br/>adressée directement à la patiente avec son accord.
+ <b><br/><br/></b> Copie du compte rendu adressée au Dr ANDRE et au Docteur MOKDAD
+ <b><br/>_________________________<br/>Signé électroniquement par Docteur Olivier CARON <br/>Le lundi 3 septembre 2018 à 12:33</b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

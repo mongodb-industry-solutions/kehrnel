@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126012868" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>RCP PROFEEL SEIN</title>
+    <effectiveTime value="20180514000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180514000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>CR RCP PROFEEL-SEIN ELIGIBILITE</b>
+<br/>
+<br/>
+<b>ONCOLOGUES <br/></b> DR ARNEDOS
+ <br/>
+<br/>
+<b>ATTACHE et INFIRMIERE DE RECHERCHE CLINIQUE <br/></b> SABBAGH Fadi
+ <br/>DENEUVE Jacqueline
+ <br/>
+<br/>
+<b>Secrétaire Médicale</b>
+<br/>LEGRAIN Carole
+ <br/>
+<br/>
+<b>COMPTE-RENDU DICTE PAR</b> : Dr ARNEDOS
+ <br/>
+<br/>Nous avons bien reçu la fiche de screening de Madame XXXXXX avec le 
+ <br/>bilan biologique.
+ <br/>
+<br/>Point(s) particulier(s) relevé(s) : 
+ <br/>RAS
+ <br/>
+<br/>
+<u><b>DECISION PROFEEL</b></u>
+<br/>
+<br/>Son dossier a été évalué le en RCP PROFEEL et il s'avère que cette 
+ <br/>patiente est éligible pour réaliser le profilage moléculaire.
+ <br/>
+<br/>Nous convoquons cette patiente le 15/05/2018 en consultation avant la 
+ <br/>première cure de traitement. 
+ <br/>
+<br/>Pour les patientes triple négatif :
+ <br/>Nous contacterons le médecin référent de la patiente afin de nous 
+ <br/>fournir un échantillon tumoral (le plus récent possible) pour 
+ <br/>réaliser des recherches complémentaires (PDL-1, récepteurs aux 
+ <br/>androgènes, etc).
+ <br/>Néanmoins, après discussion avec son médecin référent, nous allons 
+ <br/>réviser la possibilité d'inclusion dans le cadre du protocole SAFIR02 
+ <br/>à la place.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

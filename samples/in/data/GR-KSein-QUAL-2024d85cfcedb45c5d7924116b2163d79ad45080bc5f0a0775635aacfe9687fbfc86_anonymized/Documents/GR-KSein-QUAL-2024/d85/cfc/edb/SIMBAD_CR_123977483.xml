@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123977483" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>MED.NUCLEAIRE MN TEP FDG 050</title>
+    <effectiveTime value="20190320000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190320000000+0000"/>
+        <assignedAuthor>
+            <code code="MNU/174" displayName="MEDECINE NUCLEAIRE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur TISSOT Hubert
+ <br/>
+<br/>Destinataire : CTE 050 - SEIN
+ <br/> DR MOKDAD--ADI MERIEM
+ <br/>
+<b>EXAMEN DE TOMOGRAPHIE PAR EMISSION DE POSITONS<br/>TEP-FDG<br/>Dicté par : </b> Docteur Hubert Tissot
+ <b><br/>Dicté le : </b> 20/03/2019 
+ <b><br/>Service : </b> MNU-MEDECINE NUCLEAIRE 
+ <br/>
+<b>Type de document : </b> MNU CE TEP FDG 
+ <br/>
+<b>Ref :</b> 633834 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : fck
+ <br/>
+<br/>
+<br/>Examen réalisé le 20/03/2019
+ <br/>
+<br/>Examen réalisé sur un TEP-TDM DISCOVERY 690 PET-CT, GENERAL 
+ <br/>ELECTRIC, 
+ <br/>mis en service en juin 2011.
+ <br/>- Numéro d'autorisation : M940029
+ <br/>- Numéro d'identification : 266196HM5
+ <br/>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> : patiente de 61 ans suivie pour un carcinome canalaire <br/>infiltrant du sein droit, diagnostiqué en 2016, en rechute osseuse et <br/>hépatique. Patiente traitée par ERIBULINE débuté le 9 novembre 2018. <br/>Radiothérapie du rachis thoracique jusqu'au 15 décembre 2018 sur une <br/>lésion de T3 avec atteinte épidurale. <u><br/></u></b>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<u><br/></u></b> Acquisition TEP standard réalisée 73 minutes après injection par 
+ <br/>voie intraveineuse de 171,0 MBq de 18-FDG.
+ <br/>Glycémie avant injection : 5,3 mmol/l - Durée du jeûne : > 10 heures
+ <br/>Scanner de repérage pour fusion d'images, PDL : 102,61 mGy.cm
+ <br/>- Poids 49 Kg - Taille 171 Cm
+ <br/>- Site d'injection : coude droit - 
+ <br/>- Heure d'injection 09 h 50
+ <br/>- Début de l'examen à 11 h 03
+ <br/>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/><br/></b> Comparaison avec l'examen précédent du 10/01/2019 et celui du 
+ <br/>19/10/2019 (Baseline pour cette ligne de traitement).
+ <br/>
+<br/>
+<u><b>A l'étage encéphalique</b> :<br/></u>Pas d'hypo ou d'hyperfixation suspecte au sein du parenchyme cérébral.
+ <br/>
+<br/>
+<br/>
+<u><b>A l'étage cervico-thoracique </b> :<br/></u>Persistance d'une asymétrie de fixation amygdalienne au profit du 
+ <br/>côté droit, toutefois nettement moins marquée que précédemment. 
+ <br/>Diminution en intensité des fixations ganglionnaires bilatérales des 
+ <br/>groupes II, prédominants toujours à droite, aspécifiques.
+ <br/>Pas d'hyper fixation suspecte en regard des aires mammaires.
+ <br/>Pas d'hyper fixation ganglionnaire suspecte.
+ <br/>Apparition de plages de condensation mal limitées pulmonaires 
+ <br/>bilatérales postéroapicale droite et juxta scissurales de l'apex 
+ <br/>gauche et du Fowler gauche, compatibles avec des foyers de 
+ <br/>pneumopathie : à recontrôler après antibiothérapie et (SUVmax à 4,9 à 
+ <br/>droite).
+ <br/>Pas de lésion pleuroparenchymateuse hyperfixante suspecte par 
+ <br/>ailleurs. 
+ <br/>
+<br/>
+<u><b>A l'étage abdomino-pelvien </b> :<br/></u>Majoration modérée en intensité et étendue de la fixation de la 
+ <br/>lésion 
+ <br/>hépatique secondaire connue du segment 7 par rapport à l'examen 
+ <br/>précédent, qui reste toutefois moins étendue et globalement stable en 
+ <br/>intensité par rapport au Baseline (SUVmax à 6.4 vs 4.8 vs 5.9).
+ <br/>Pas d'hyper fixation ganglionnaire ou viscérale suspecte par 
+ <br/>ailleurs. 
+ <br/>
+<br/>
+<u><b>Sur le plan musculo-squelettique :<br/></b></u> Poursuite de la diminution en intensité de fixation de la lésion du 
+ <br/>pédicule droit de T3, d'allure secondaire, traitée par radiothérapie, 
+ <br/>en régression métabolique complète ce jour : SUVmax à 1,9 discernable 
+ <br/>du bruit de fond versus 3,4 versus 5,7.
+ <br/>Disparition de la fixation d'allure traumatique d'extrémité 
+ <br/>antérieure de la 10e côte droite.
+ <br/>Pas de lésion hyperfixante suspecte nouvellement apparue. 
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<u><br/></u>Comparativement à l'examen précédent du 10 janvier 2019 à l'examen <br/>baseline du 19/10/2019 :<br/><br/>* Majoration modérée en intensité et discrète majoration en étendue <br/>par rapport à l'examen précédent de la lésion hépatique du segment <br/>VII, en faveur d'une réévolution tumorale modérée. A noter que la <br/>lésion reste en régression partielle en étendue et stable en <br/>intensité par rapport au Baseline.<br/><br/>* Régression complète de la lésion de T3, traitée par radiothérapie.<br/>* Apparition de plages de condensations hyperfixantes apicales <br/>bilatérales et du Fowler gauche, compatibles avec une éventuelle <br/>origine infectieuse, devant être recontrôlées scanographiquement <br/>après antibiothérapie. <br/></b>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Hubert TISSOT <br/>Le mercredi 20 mars 2019 à 12:29 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_118838119" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CR Consultation du 2021-04-16</title>
+    <effectiveTime value="20210416000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20210416000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Compte rendu de consultation de SENOLOGIE<br/><br/>Dicté par : </b>Docteur Meriem Mokdad Adi
+ <b><br/>Dicté le : </b>09/03/2021 
+ <b><br/>Service : </b>050-CTE 050 - SEIN 
+ <br/>
+<b>Type de document : </b>050 CC Générique 
+ <br/>
+<b>Ref :</b> 1281436 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b>XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b> <br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe</b>
+<b>: </b>Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : 
+ <b>Nom Obligatoire</b>
+<br/>
+<br/>Consultation téléphonique ce jour (patiente pas à l'aise avec avec la vidéo transmission) 
+ <br/> dans le cadre de la prise en charge d'une récidive en mars 2018, sous 
+ <br/>CMF , débutée en décembre 2020, pour un cancer du sein gauche 
+ <br/>diagnostiqué initialement en 2015 traité à Bergonié par 
+ <br/>chimiothérapie, chirurgie puis radiothérapie au niveau axillaire, CMI et sus claviculaire, triple négatif et actuellement en récidive 
+ <br/>ganglionnaire sus-claviculaire , axillaire et pleural.
+ <br/>
+<br/>
+<br/> La radiothérapie s'est donc déroulée du 22 décembre au 30 décembre 
+ <br/>2020 au cours de cinq séances de 4 Gy sur l'adénopathie sus 
+ <br/>claviculaire gauche .
+ <br/>
+<br/>
+<u><b>Intercure </b></u>:
+ <br/>
+<br/>Tolérance correcte du CMF,asthénie grade I , mise à part sur le plan hématologique avec une neutropénie à 500 et une thrombopénie 86000
+ <br/>PS : 2 stable , patiente suivie par l'équipe de soins palliatifs . 
+ <br/>Poids : 62 Kg versus 70 kg.
+ <br/>
+<b>Scanner thoraco abdominopelvien d'évaluation réalisé le 25 février:<br/></b>Réponse partielle cervicale gauche, en rapport avec le traitement 
+ <br/>local par radiothérapie de décembre 2020.
+ <br/>Globale stabilité tumorale par ailleurs en comparaison à décembre 
+ <br/>2020 (sous réserve d'absence d'exploration abdominopelvienne en 
+ <br/>décembre)
+ <br/>
+<b><br/></b>J'informe la patiente des résultats
+ <br/>RCP moléculaire dans le cas de la biopsie liquide du 04/03: absence d'orientation thérapeutique
+ <br/>
+<br/>
+<u><b>En pratique</b></u>:
+ <br/>
+<br/>
+<b>Poursuite de la chimiothérapie par CMF à dose réduite de 20% sous couvert de ZARZIO <br/>Demande de scanner faxée ce jour, évaluation à prévoir après 3 cycles de CMF donc vers la mi-mai<br/></b>
+<br/>
+<br/>Je reverrai la patiente en consultation avec les résultats du scanner le 17 ou le 24/05
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/> ____________________________
+ <br/>
+<b>Courrier rédigé avec un logiciel de reconnaissance vocale pouvant comporter quelques imperfections orthographiques.<br/> <u></u></b>
+<u><br/> </u>
+<br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Meriem MOKDAD ADI <br/>Le mardi 9 mars 2021 à 13:58 </b>
+<br/>
+<br/>
+<br/>
+<br/> Le médecin autorise l'établissement des prescriptions médicales de transports sanitaires du patient, adaptées à sa situation médicale.
+ 
+
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

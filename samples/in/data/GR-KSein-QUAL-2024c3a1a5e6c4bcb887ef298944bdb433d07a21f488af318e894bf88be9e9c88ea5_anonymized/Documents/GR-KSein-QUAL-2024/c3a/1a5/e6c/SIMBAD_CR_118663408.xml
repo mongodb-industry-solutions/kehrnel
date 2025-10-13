@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_118663408" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM CRANE TDM THX ABD PEL TDM ADENOPATH TDM RACHIS XSEG</title>
+    <effectiveTime value="20210510000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20210510000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur HARGUEM ZAYANI Sana
+ <br/>Destinataire : UNITE EXPERTISE PALLIATIVE
+ <br/> DR KHOURY ABBOUD Rita maria
+ <br/>
+<br/>
+<b>Dicté par : </b> Docteur Sana Harguem Zayani
+ <b><br/>Dicté le : </b> 07/05/2021 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Générique 
+ <br/>
+<b>Ref :</b> 1347870 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire </b> : SHV
+ <br/>Examen n° 2260
+ <br/>Examen réalisé le : 07/05/2021
+ <br/>
+<br/>
+<u><b>SCANNER CEREBRAL, CERVICAL ET THORACO-ABDOMINO-PELVIEN<br/><br/> </b></u>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/></b> Patiente âgée de 42 ans, prise en charge pour un cancer du sein 
+ <br/>triple négative multimétastatique actuellement en 10e ligne par CMF.
+ <br/>Actuellement douleurs basithoraciques et du flanc gauche invalidante.
+ <br/>Pas de déficit neurologique, pas de trouble sphinctérien.
+ <br/>Scanner cérébral à la recherche d'une cause de cette douleur avec une 
+ <br/>réévaluation de la maladie.
+ <br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/></b> Examen réalisé sur un scanner OPTIMA CT660, GENERAL ELECTRIC, mis 
+ <br/>en service le 8 février 2016.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 422272HM5
+ <br/>
+<br/>Réalisation d'une acquisition :
+ <br/>\'a7 Cérébrale
+ <br/>\'a7 Cervicale
+ <br/>\'a7 Rachidienne
+ <br/>\'a7 Thoracique
+ <br/>\'a7 Abdominale 
+ <br/>\'a7 Pelvienne
+ <br/>
+<br/>Examen réalisé avec injection intraveineuse de produit de contraste.
+ <br/>
+<b>Produit de contraste injecté : Xenetix<br/>Quantité : 80 mL<br/>PDL : jointe aux images <br/></b>
+<br/>
+<u><b>RESULTATS</b></u>
+<b> :<br/>Examen de réalisation extrêmement difficile, patiente très algique ne <br/>tolérant pas le décubitus dorsal :<br/><br/><u></u></b>
+<u> En comparaison au scanner du 25 février 2021<br/><br/><b>Crâne<br/></b></u> Absence d'apparition de prise de contraste suspecte cérébroméningée.
+ <br/>Structures médianes en place.
+ <br/>Absence d'hydrocéphalie.
+ <br/>Sinus veineux duremérien perméables.
+ <br/>
+<br/>
+<u><b> Cou<br/></b></u> Perméabilité conservée des axes vasculaires jugulocarotidiens.
+ <br/>Aspect globalement stable des ganglions basicervicaux, de XXXXXX axe 
+ <br/>infracentimétrique.
+ <br/>
+<br/>
+<u><b> Thorax<br/></b></u> Majoration de l'épanchement pleural gauche de grande abondance, 
+ <br/>compressif, avec discrète déviation du médiastin vers le côté droit.
+ <br/>Troubles ventilatoires avec collapsus passif du lobe inférieur droit 
+ <br/>et du lobe supérieur droit en regard.
+ <br/>Fine lame d'épanchement péricardique. Pas d'apparition d'un 
+ <br/>épanchement pleural droit.
+ <br/>
+<br/>Globale stabilité de l'infiltration ganglionnaire médiastinale, 
+ <br/>difficilement mesurable.
+ <br/>Stabilité de l'atélectasie passive linéaire paracardiaque du lobe 
+ <br/>moyen.
+ <br/>Pas d'apparition d'une nouvelle lésion parenchymateuse d'allure 
+ <br/>évolutive.
+ <br/>
+<br/>
+<u><b> Abdomen - pelvis<br/></b></u> Tendance à l'augmentation non significative en taille de 
+ <br/>l'infiltration tissulaire rétropéritonéale, engainant l'aorte 
+ <br/>abdominale et ses branches, envahissant le pôle supérieur du rein et 
+ <br/>la surrénale gauche.
+ <br/>On prend pour exemple la partie à la hauteur de la bifurcation du 
+ <br/>tronc coecliaque mesurant 75 mm de grand axe contre 74 mm.
+ <br/>Aspect globalement stable des ganglions rétropéritonéaux 
+ <br/>lomboaortiques et inter-aortico-caves.
+ <br/>Absence de distension digestive.Stase stercorale diffuse.
+ <br/>Absence d'apparition d'une lésion hépatique, splénique, pancréatique 
+ <br/>d'allure évolutive.
+ <br/>Absence d'apparition d'une anomalie du rein droit. Surrénale droite 
+ <br/>fine.
+ <br/>
+<br/>Absence d'apparition d'un épanchement intrapéritonéal.
+ <br/>
+<br/>En fenêtre osseuse :
+ <br/>Absence d'apparition d'une lésion osseuse lytique ou condensante 
+ <br/>d'allure évolutive.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/>Majoration de l'épanchement pleural gauche de grande abondance, <br/>d'aspect compressif sur le médiastin, qui est discrètement déviée <br/>vers le côté droit comparativement scanner de février 2021.<br/>Aspect globalement stable de la maladie par ailleurs à l'étage sous <br/>diaphragmatique avec tendance à l'augmentation non significative en <br/>taille par ailleurs de l'infiltration tissulaire et de la coulée <br/>ganglionnaire rétro péritonéale selon les critères de RECIST 1.1.<br/>Pas d'apparition de lésion osseuse d'allure évolutive.<br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Sana HARGUEM ZAYANI <br/>Le vendredi 7 mai 2021 à 11:54 </b>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/> Le médecin autorise l'établissement des prescriptions médicales de 
+ <br/>transports sanitaires du patient, adaptées à sa situation médicale. 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121035890" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ONCOLOGIE MEDICALE ORL : DR.FERRAND</title>
+    <effectiveTime value="20200616000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200616000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b> Patient de 58 ans vu ce jour en présence de son épouse dans le cadre <br/>de la prise en charge d'un carcinome épidermoïde oropharyngé HPV-, en <br/>récidive latéro-cervicale bilatérale potentiellement pleurale, sous <br/>NIVOLUMAB en 2ème ligne de récidive métastatique.<br/><br/></b> Pour mémoire, traitement initial parradiochimiothérapie en octobre 
+ <br/>2014 jusqu'à mars 2018.
+ <br/>Récidive biopsiée en octobre 2019. 
+ <br/>C1 Tpex le 30/10/19.
+ <br/>C4 le 03/01/20 : réponse métabolique.
+ <br/>Progression après 2 mois de traitement d'entretien par CETUXIMAB le 
+ <br/>13/03/20.
+ <br/>C1 NIVOLUMAB le 25/03.
+ <br/>C6 NIVOLUMAB le 02/06.
+ <br/>Screening KOTIP : HRAS non muté, mutation oncogénique délétère de 
+ <br/>TP53,variante de signification inconnue de CDKN2A.
+ <br/>
+<br/>
+<u><b>Antécédents chirurgicaux<br/></b></u> - Carcinome épidermoïde hypopharyngé (récidive) traité par PLT avec 
+ <br/>lambeau de grand pectoral et lambeau antéro-latéral de cuisse, 
+ <br/>- Trachéotomie, 
+ <br/>- Opéré d'une maladie de Dupuytren à 2 reprises (à gauche et à 
+ <br/>droite).
+ <br/>
+<br/>
+<u><b>Antécédents médicaux</b></u>
+<br/>- Crise comitiale généralisée avec dernier évènement il y a plus de 
+ <br/>10 ans, pas de suivi neurologique, que l'on recommande notamment sur 
+ <br/>le plan thérapeutique, 
+ <br/>- Psoriasis diffus essentiellement aux mains et aux avant-pieds, pas 
+ <br/>de traitement systémique, 
+ <br/>- Hypothyroïdie, 
+ <br/>
+<br/>
+<u><b>Allergie</b></u>
+<br/>Aucune.
+ <u><b><br/><br/>Traitement habituel</b></u>
+<br/>- LEVOTHYROX 25 μg,
+ <br/>- DUROGESIC 50 μg,
+ <br/>- ORAMORPH 20 mg. 
+ <br/>
+<b><br/><u> Ce jour</u></b>
+<br/>EVA : entre 6 et 7. Augmentation du DUROGESIC à 75 μg/h.
+ <br/>Le patient se plaint de douleurs pour lesquelles j'augmente le dosage 
+ <br/>du DUROGESIC.
+ <br/>Alimentation toujours par gastrostomie.
+ <br/>Sécrétions plutôt contrôlées sur le plan du pharyngostome, qui reste 
+ <br/>cependant ouvert.
+ <br/>
+<br/>
+<u><b>Examen clinique <br/></b></u> OMS : 1.
+ <br/>Poids : stable voire en augmentation autour de 74-75 kg.
+ <br/>Les constantes hémodynamiques sont normales.
+ <br/>NB: pas de syndrome pleural clinique, même si le patient se sent un 
+ <br/>peu essoufflé.
+ <br/>
+<br/>
+<u><b>Bilan biologique</b></u>
+<br/>Le bilan du 15/06 montre une fonction rénale normale, un bilan 
+ <br/>hépatique normal, absence d'anomalie sur les CK et LDH, numération 
+ <br/>normale sans lymphopénie. Bilan thyroïdien satisfaisant.
+ <br/>
+<br/>Imagerie
+ <br/>J'annonce hélas les résultats du scanner ORL et TAP du 10/06 montrant 
+ <br/>l'augmentation de la taille de la récidive latéro-cervicale droite de 
+ <br/>30 versus 26 mm en mars ainsi que de la masse à gauche à 62 versus 40 
+ <br/>mm en mars. Le pharyngostome semble plutôt augmenté en taille.
+ <br/>
+<br/>A signaler que le trajet fistuleux est à proximité de l'axe 
+ <br/>carotidien gauche avec un risque vasculaire, pour lequel nous 
+ <br/>demandons l'avis des vasculaires.
+ <br/>
+<br/>
+<u><b>Au total<br/></b></u> Nous arrêtons donc le NIVOLUMAB et je propose au patient, après 
+ <br/>discussion avec celui-ci ainsi que sa fille au téléphone, de tenter 
+ <br/>un essai clinique de Phase I.
+ <br/>
+<br/>Les autres options sont :
+ <br/>- Soit une chimiothérapie cytotoxique qui serait plutôt une 
+ <br/>monothérapie de type 5FU, METHOTREXATE ou une reprise de TAXANE (taux 
+ <br/>de réponse un peu plus élevé après séquences d'immunothérapie).
+ <br/>- Soit des soins de support exclusifs.
+ <br/>
+<br/>Le patient souhaite réfléchir à ces options et est d'accord pour que 
+ <br/>j'envoie son dossier en Phase I.
+ <br/>
+<br/>En parallèle, nous signons ce jour en double exemplaire le formulaire 
+ <br/>de consentement de pré-screening version 2.0 du 24/09/19 pour le 
+ <br/>protocole RAGNAR (portrait moléculaire).
+ <br/>
+<br/>Je reverrai le patient dans 15 jours en consultation si son dossier 
+ <br/>n'est pas accepté en Phase I.
+ <br/>
+<br/>Son dossier passe en staff d'oncologie médicale cet après-midi.
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

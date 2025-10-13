@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128495875" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>RADIODIAG RD REPER ECHO RD MAMMO</title>
+    <effectiveTime value="20170223000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170223000000+0000"/>
+        <assignedAuthor>
+            <code code="260/45" displayName="RADIODIAGNOSTIC"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur TARDIVEL ANNE MARIE
+ <br/>
+<br/>Destinataire : BLOC CHIRURGIE GENERALE
+ <br/> DR MIAILHE GREGOIRE
+ <br/>
+<br/>
+<b>REPERAGE PRE-OPERATOIRE SOUS ECHOGRAPHIE <br/>DU SEIN DROIT<br/> </b>
+<br/>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<br/>
+<br/>Nodule mesurant 12 mm situé sur le rayon de 2 h à 3 cm du mamelon 
+ <br/>et 5 mm du plan cutané, classée ACR6.
+ <br/>
+<b><br/><u>TECHNIQUE</u><br/> <br/></b> Après désinfection cutanée, on positionne sous guidage 
+ <br/>échographique l'extrémité du harpon au sein de la lésion.
+ <br/>
+<br/>On dessine une croix cutanée au marqueur indélibile à l'aplomb 
+ <br/>de la lésion en position chirurgicale.
+ <br/>
+<br/>Sur le cliché de fin de procédure, le harpon est correctement 
+ <br/>positionné transfixant la lésion qui se situe sur la mammographie en 
+ <br/>regard du 2ème repère.
+ <br/>
+<br/>Pas de complication.
+ <br/>
+<b><br/></b>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

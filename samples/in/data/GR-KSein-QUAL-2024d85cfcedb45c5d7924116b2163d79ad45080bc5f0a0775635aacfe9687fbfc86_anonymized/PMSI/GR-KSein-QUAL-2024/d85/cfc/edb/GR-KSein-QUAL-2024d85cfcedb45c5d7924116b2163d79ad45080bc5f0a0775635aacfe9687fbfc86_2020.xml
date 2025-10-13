@@ -1,0 +1,1289 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:voc="urn:hl7-org:v3/voc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:hl7-org:v3 CDA.xsd">
+    <realmCode code="FR"/>
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id root="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86_2020"/>
+    <code code="PMSI" codeSystem="IGR" codeSystemName="type" displayName="PMSI"/>
+    <title>Diagnostics et Actes PMSI</title>
+    <effectiveTime value="20220527124936+0000"/>
+    <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
+    <languageCode code="fr-FR"/>
+    <recordTarget>
+        <patientRole>
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20220527124936+0000"/>
+        <assignedAuthor>
+            <id root="IGR"/>
+            <code code="" codeSystem="IGR" codeSystemName="type" displayName="PMSI"/>
+            <assignedAuthoringDevice>
+                <softwareName>Simbad</softwareName>
+            </assignedAuthoringDevice>
+        </assignedAuthor>
+    </author>
+    <custodian>
+        <assignedCustodian>
+            <representedCustodianOrganization>
+                <id root="IGR"/>
+                <name>IGR</name>
+                <telecom nullFlavor="UNK"/>
+                <addr nullFlavor="UNK"/>
+            </representedCustodianOrganization>
+        </assignedCustodian>
+    </custodian>
+    <component>
+        <structuredBody>
+            <periodeExercice dateDebut="2020-01" dateFin="2020-12">
+                <evenementsPMSI acquittementAttendu="oui" version="1.06">
+                    <enteteMessage modeTraitement="réel">
+                        <identifiantMessage>GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86_2020</identifiantMessage>
+                        <dateHeureProduction>20220527124936+0000</dateHeureProduction>
+                        <emetteur>
+                            <agents>
+                                <agent categorie="application">
+                                    <code>Simbad</code>
+                                </agent>
+                            </agents>
+                        </emetteur>
+                        <destinataire>
+                            <agents>
+                                <agent categorie="application">
+                                    <code>CONSORE</code>
+                                </agent>
+                            </agents>
+                        </destinataire>
+                    </enteteMessage>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>662410</emetteur>
+                                    <recepteur>662410</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>PCA</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>PCA</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-01-21</date>
+                                            <heure>07:37:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-01-21</date>
+                                            <heure>12:30:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z082</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C787</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C502</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C795</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>HLHJ006</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2020-01-21 08:15:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>YYYY300</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2020-01-21 08:15:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZZQX058</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2020-01-21 12:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZZQX045</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2020-01-21 12:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZZQX162</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2020-01-21 12:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZZQX034</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2020-01-21 12:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>789581</emetteur>
+                                    <recepteur>789581</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>ROU</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>ROU</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-10-26</date>
+                                            <heure>10:51:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-10-28</date>
+                                            <heure>18:38:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>R64</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C502</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C795</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C787</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>R740</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>E43</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZBQK002</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2020-10-26 15:15:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>690889</emetteur>
+                                    <recepteur>690889</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>C1B</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>C1B</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-03-02</date>
+                                            <heure>10:04:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-03-02</date>
+                                            <heure>23:59:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C502</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C787</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C795</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>799215</emetteur>
+                                    <recepteur>799215</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>HJM</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>HJM</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-11-17</date>
+                                            <heure>08:29:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-11-17</date>
+                                            <heure>23:59:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z5130</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C502</codeCim10>
+                                        </diagnosticRelie>
+                                    </diagnostics>
+                                    <actes>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>GGHB001</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2020-11-17 11:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>GGJB002</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2020-11-17 11:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZBQK002</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2020-11-17 15:46:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>GGHB001</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2020-11-17 09:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZBQK002</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2020-11-17 08:30:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>GGJB002</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2020-11-17 09:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZZQX128</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2020-11-17 12:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZZQX034</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2020-11-17 12:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>778350</emetteur>
+                                    <recepteur>778350</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>ROU</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>ROU</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-10-02</date>
+                                            <heure>10:18:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-10-03</date>
+                                            <heure>11:52:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>R4700</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C795</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C502</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C787</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>LCQH001</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2020-10-02 17:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZZQP004</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2020-10-02 17:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>DEQP003</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2020-10-02 13:12:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>FDHB006</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2020-10-02 10:18:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>662381</emetteur>
+                                    <recepteur>662381</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>C1B</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>C1B</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-01-07</date>
+                                            <heure>14:32:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-01-07</date>
+                                            <heure>23:59:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C502</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C787</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C795</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>662403</emetteur>
+                                    <recepteur>662403</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>C1B</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>C1B</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-01-13</date>
+                                            <heure>10:38:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-01-13</date>
+                                            <heure>23:59:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C502</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C787</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C795</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>679041</emetteur>
+                                    <recepteur>679041</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>C1B</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>C1B</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-02-10</date>
+                                            <heure>14:02:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-02-10</date>
+                                            <heure>23:59:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C502</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C787</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C795</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>662374</emetteur>
+                                    <recepteur>662374</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>C1B</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>C1B</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-02-03</date>
+                                            <heure>13:51:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-02-03</date>
+                                            <heure>23:59:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C502</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C787</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C795</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>662395</emetteur>
+                                    <recepteur>662395</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>C1B</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>C1B</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-01-20</date>
+                                            <heure>14:42:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-01-20</date>
+                                            <heure>23:59:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C502</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C787</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C795</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>750713</emetteur>
+                                    <recepteur>750713</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>C1B</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>C1B</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-07-27</date>
+                                            <heure>11:47:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-07-27</date>
+                                            <heure>23:59:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C502</codeCim10>
+                                        </diagnosticRelie>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>804346</emetteur>
+                                    <recepteur>804346</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>HER</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>HER</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-11-30</date>
+                                            <heure>14:52:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-12-08</date>
+                                            <heure>08:15:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>C502</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C782</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C787</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>R630</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>D696</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z515</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C780</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>R18</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C795</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>J91</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZZQP004</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2020-12-02 16:45:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZZQH033</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2020-12-02 16:45:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>753597</emetteur>
+                                    <recepteur>753597</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>C1B</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>C1B</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-08-03</date>
+                                            <heure>14:06:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-08-03</date>
+                                            <heure>23:59:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C502</codeCim10>
+                                        </diagnosticRelie>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>694162</emetteur>
+                                    <recepteur>694162</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>C1B</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>C1B</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-03-09</date>
+                                            <heure>10:08:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-03-09</date>
+                                            <heure>23:59:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C502</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C787</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C795</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>760850</emetteur>
+                                    <recepteur>760850</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>C1B</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>C1B</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-08-19</date>
+                                            <heure>14:08:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-08-19</date>
+                                            <heure>23:59:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C502</codeCim10>
+                                        </diagnosticRelie>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>687856</emetteur>
+                                    <recepteur>687856</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>C1B</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>C1B</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-02-24</date>
+                                            <heure>09:48:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-02-24</date>
+                                            <heure>23:59:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C502</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C787</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C795</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>739216</emetteur>
+                                    <recepteur>739216</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>C1B</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>C1B</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-06-29</date>
+                                            <heure>11:28:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-06-29</date>
+                                            <heure>23:59:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C502</codeCim10>
+                                        </diagnosticRelie>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>756336</emetteur>
+                                    <recepteur>756336</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>C1B</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>C1B</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-08-10</date>
+                                            <heure>13:59:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-08-10</date>
+                                            <heure>23:59:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C502</codeCim10>
+                                        </diagnosticRelie>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>742359</emetteur>
+                                    <recepteur>742359</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>C1B</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>C1B</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-07-06</date>
+                                            <heure>11:19:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-07-06</date>
+                                            <heure>23:59:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C502</codeCim10>
+                                        </diagnosticRelie>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>747863</emetteur>
+                                    <recepteur>747863</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>C1B</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>C1B</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-07-20</date>
+                                            <heure>14:03:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-07-20</date>
+                                            <heure>23:59:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C502</codeCim10>
+                                        </diagnosticRelie>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>794928</emetteur>
+                                    <recepteur>794928</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>133</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>133</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-11-09</date>
+                                            <heure>12:43:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-11-09</date>
+                                            <heure>23:59:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z515</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C502</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C787</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C795</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>683093</emetteur>
+                                    <recepteur>683093</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>C1B</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>C1B</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-02-17</date>
+                                            <heure>14:55:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-02-17</date>
+                                            <heure>23:59:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C502</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C787</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C795</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>662389</emetteur>
+                                    <recepteur>662389</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>C1B</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>C1B</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-01-27</date>
+                                            <heure>14:32:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-01-27</date>
+                                            <heure>23:59:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C502</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C787</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C795</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>745236</emetteur>
+                                    <recepteur>745236</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>C1B</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>C1B</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2020-07-13</date>
+                                            <heure>11:23:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2020-07-13</date>
+                                            <heure>23:59:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C502</codeCim10>
+                                        </diagnosticRelie>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                </evenementsPMSI>
+            </periodeExercice>
+        </structuredBody>
+    </component>
+</ClinicalDocument>

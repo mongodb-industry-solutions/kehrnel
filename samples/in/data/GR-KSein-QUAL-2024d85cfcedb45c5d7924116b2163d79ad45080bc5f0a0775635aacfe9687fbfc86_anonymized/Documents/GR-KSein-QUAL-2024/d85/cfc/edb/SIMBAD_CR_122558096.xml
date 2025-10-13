@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122558096" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation ORL : Dr Nadia BENMOUSSA-REBIBO</title>
+    <effectiveTime value="20191023000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20191023000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>SERVICE O.R.L - COMPTE RENDU DE CONSULTATION DE SUIVI<br/><br/>Dicté par : </b> Docteur Nadia Benmoussa-Rebibo
+ <b><br/>Dicté le : </b> 15/10/2019 
+ <b><br/>Service : </b> ORL-CONSULTATIONS ORL 
+ <br/>
+<b>Type de document : </b> ORL CC CEN SUIVI 
+ <br/>
+<b>Ref :</b> 813690 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : DA SILVA Laureline/A
+ <b><br/></b>
+<br/>Patiente qui a déjà vu le Docteur HAROUN au mois de novembre qui 
+ <br/>avait présenté une fixation au pet scan de découverte fortuite.
+ <br/>A noter, cette patiente est traitée pour un cancer du sein sur 
+ <br/>l'institut. 
+ <br/>
+<br/>
+<u><b>Ce jour<br/></b></u> Elle a repassé un pet scanner qui montre une augmentation de la 
+ <br/>fixation au niveau de l'amygdale droite avec un SUV à 7,9 associée à 
+ <br/>des adénopathies du secteur II avec SUV à 3,3.
+ <br/>
+<br/>
+<u> A l'examen clinique<br/></u> Pas d'adénopathie palpée.
+ <br/>
+<br/>Examen de la cavité buccale sans particularité.
+ <br/>
+<br/>Palpation de la loge amygdalienne ne montrant pas d'induration.
+ <br/>
+<br/>
+<u> Examen du pharyngolarynx<br/></u> Pas de lésion visualisée.
+ <br/>
+<br/>
+<u><b>Au total<br/></b></u> Etant donné cette persistance de fixation au même endroit avec une 
+ <br/>augmentation de l'intensité, je préconise la réalisation d'une 
+ <br/>endoscopie avec des biopsies de principe même si mon examen est 
+ <br/>normal. 
+ <br/>Nous allons donc organiser ce geste en ambulatoire.
+ <br/>
+<br/>Opérateur : LID 
+ <br/>Intervention le : 29/10/19 
+ <br/>Intitulé de l'intervention : Panendoscopie + biopsies 
+ <br/>Côté opéré et côté lambeau :
+ <br/>Installation :
+ <br/>Temps opératoire : 45 mn
+ <br/>Extemporané : NON
+ <br/>Anesthésie : AG 
+ <br/>USCC : NON
+ <br/>Mode d'hospitalisation : AMBULATOIRE
+ <br/>Temps hospitalisation estimé : / 
+ <br/>Hospitalisation le : 29/10/19
+ <br/>Service d'hospitalisation : AMBULATOIRE
+ <br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b> Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>29/10/2019 09:20 ORL EON SG 
+ <br/> =SG B H
+ <br/> =SG LMG
+ <br/> 09:50 ORL EON ADM CHIR AMB AG 
+ <br/> 11:00 ORL LID ENDOSCOPIE ORL 
+ <br/> 11:20 ORL EON PBO SEG CCF 
+ <br/> 11:20 ORL EON PBO CHIR LID 
+ <br/> 13:30 ORL EON LIT PCA 180 
+ <br/>31/10/2019 10:30 UPO CCV C UPO CCV 
+ <br/>04/11/2019 16:00 UPO CCV C UPO CCV 
+ <br/>11/11/2019 13:30 HJM MKD HDJ CHIMIO 
+ <br/> 13:30 050 MKD HDJ FERIE CHL 
+ <br/> 13:35 HJM MKD C HDJ A TRAITER 
+ <br/>22/11/2019 11:00 C0B ULD ECHO C CARD CHL 
+ <br/>25/11/2019 10:00 050 MKD RV EXTERIEUR 
+ <br/>26/11/2019 16:30 UPO CCV C UPO CCV 
+ <br/>02/12/2019 08:45 050 MKD CLA SENO MKD L FAUSSE CLA 
+ <br/> 14:00 HJM MKD HDJ CHIMIO CHL 
+ <br/> 14:05 HJM MKD C HDJ CHL 
+ <br/>
+<b>_________________________________________________<br/>Signé électroniquement par Docteur Nadia BENMOUSSA-REBIBO <br/>Le vendredi 18 octobre 2019 à 15:16</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

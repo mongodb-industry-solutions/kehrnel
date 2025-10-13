@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120933718" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 201810950</title>
+    <effectiveTime value="20200629000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200630000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Dr J. Delahousse (61 92) <br/>Interrne D. Combarel (37 69) <br/>Pr A. Paci (47 30) </p>
+<p>Dr A. Arbab (41 65) <br/>Pr A. Bennaceur (40 65) <br/>Interrne S. Fodil (37 69) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Dr E. Gallois (40 62) <br/>Pr F. Griscelli (51 93) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX José </p>
+<p>DEMANDE N° </p>
+<p>MasculinNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>29/06/2020 20:39 </p>
+<p>Sexe : </p>
+<p>29/06/2020 20:30 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>SOINS AIGUS REANIMATION </p>
+<p> 3 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>mardi 30 juin 2020 </p>
+<p>Complet </p>
+<p>BIOCHIMIE </p>
+<p>Validation du dossier FTNRésultats validés par le technicien de garde par délégation du biologisted'astreinte </p>
+<p>Revue bilan Biochimie LADRéalisée par le biologiste </p>
+<p> GAZ <br/>Na (Sg) 138 mmol/l ( 136 - 146 ) <br/>Sang - Potentiométrie </p>
+<p>K (Sg) 4.3 mmol/l ( 3.4 - 4.5 ) <br/>Sang - Potentiométrie </p>
+<p>Cl (Sg) 103 mmol/l ( 98 - 106 ) <br/>Sang - Potentiométrie </p>
+<p>Créat (Sg) 50 μmol/l ( 53 - 106 ) <br/>Sang - Ampèrométrie </p>
+<p>Gluc (Sg) 8.9 mmol/l ( 3.9 - 5.8 ) <br/>Sang - Ampèrométrie </p>
+<p>Calcium Ionisé 1.08 mmol/l ( 1.15 - 1.29 ) <br/>Sang - Potentiométrie </p>
+<p>Lact (Sg) 2.1 mmol/l ( 0.5 - 1.6 )4.0 13/11/2017 14:00 <br/>Sang - Ampèrométrie </p>
+<p>Température Patient 37.9 °C Non renseignée 15/11/2017 08:40 _CP <br/>AS </p>
+<p>Oxygénation 80.0 % 21.0 15/11/2017 08:40 </p>
+<p>Artériel _CP <br/>AS </p>
+<p>Artériel 15/11/2017 08:40Nature plvt </p>
+<p>pH A corrigé 7.32 ( 7.35 - 7.45 )7.42 15/11/2017 08:40 <br/>Sang - Potentiométrie </p>
+<p>Reserve Alcaline A 29.6 mmol/l ( 22.2 - 28.3 )26.7 15/11/2017 08:40 <br/>Sang - Potentiomètrie </p>
+<p>pCO2 A corrigée 60.2 mmHg ( 35 - 48 )41.8 15/11/2017 08:40 <br/>Sang - Potentiométrie </p>
+<p>pO2 A corrigée 87.8 mmHg ( 83 - 108 )91.6 15/11/2017 08:40 <br/>Sang - Ampérométrie </p>
+<p>% Saturation O2 A 95.8 % ( 95.0 - 99.0 )97.6 15/11/2017 08:40 </p>
+<p>tO2 A 19.7 % 17.0 15/11/2017 08:40 </p>
+<p> IONOGRAMME <br/>Sodium 139 mmol/l ( 136 - 146 )143 29/06/2020 08:00 FTN <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Potassium 3.9 mmol/l ( 3.4 - 4.5 )4.6 29/06/2020 08:00 FTN <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 30/06/2020 à 12:13 par : Dr DROUARD Laurence,Dr VERGÉ Véronique,Dr TROALEN Frédéric,Dr ARBAB Ahmadreza</p>
+<p></p>
+<p></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>SOINS AIGUS REANIMATIONPatient : 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX josé </p>
+<br/>
+<p>Chlore 95 mmol/l ( 101 - 109 )101 29/06/2020 08:00 FTN <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Reserve alcaline 33 mmol/l ( 21 - 31 )33 29/06/2020 08:00 FTN <br/>Plasma hépariné - PEPC </p>
+<p>Protides 75 g/L ( 66 - 83 )67 29/06/2020 08:00 FTN <br/>Plasma hépariné - Biuret </p>
+<p>Urée 4.6 mmol/l ( 2.8 - 7.2 )5.7 28/06/2020 03:00 FTN <br/>Plasma hépariné - Uréase-GLDH </p>
+<p>Créatinine 48 μmol/l ( 64 - 104 )41 29/06/2020 08:00 FTN <br/>Plasma hépariné - Enzymatique raccordée IDMS </p>
+<p>Glucose 9.2 mmol/l ( 4.1 - 5.9 )7.0 28/06/2020 03:00 FTN </p>
+<p>Valeur de référence pour un patient à jeunPlasma hépariné - Hexokinase <br/>G6P-DH </p>
+<p>Calcium 2.21 mmol/l ( 2.20 - 2.65 )2.24 29/06/2020 08:00 FTN <br/>Plasma hépariné - Arsenazo III </p>
+<p>Phosphore 1.28 mmol/l ( 0.81 - 1.45 )0.95 29/06/2020 08:00 FTN <br/>Plasma hépariné - Molybdate, UV </p>
+<p>Magnesium 0.64 mmol/l ( 0.73 - 1.06 )0.70 29/06/2020 08:00 FTN <br/>Plasma hépariné - Bleu de xylidyle </p>
+<p>Base calcul Cockroft 2.07 2.43 29/06/2020 08:00 FTN </p>
+<p>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Débit de Filtration Glomérulaire (MDRD) >60 mL/mn/1.73m2 >60 29/06/2020 08:00 FTN </p>
+<p>< 60 : Insuffisance rénale à explorer si nécessaire. <br/>Si origine afro américaine, le DFG est à multiplier par 1.212 </p>
+<p>Débit de Filtration Glomérulaire (CKD- <br/>EPI) </p>
+<p>115 mL/mn/1.73m2 ( 80 - 120 )122 29/06/2020 08:00 </p>
+<p>Estimation du débit de filtration glomérulaire en utilisant le dosage de la créatinine (standardisé ID-MS) 30 - 60 mL/min : Insuffisance rénale modérée < 30 mL/min : Insuffisance rénale sévère </p>
+<p>HEMOSTASE </p>
+<p>Validation du dossier FTNRésultats validés par le technicien de garde par délégation du biologisted'astreinte </p>
+<p>Revue bilan Hémostase LADRéalisée par le biologiste </p>
+<p> BILAN DE COAGULATION <br/>Taux de Prothrombine 79 % ( 70 - 100 )86 28/06/2020 03:00 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>Temps de Quick (Témoin = 13s) 15.2 s 14.4 28/06/2020 03:00 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>INR 1.2 1.1 28/06/2020 03:00 FTN </p>
+<p>0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>Facteur II 113 % ( 70 - 120 )104 12/11/2019 08:00 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>Facteur V 163 % ( 70 - 120 )133 12/11/2019 08:00 LAD <br/>Plasma Citraté - Chronométrique </p>
+<p>Fibrinogène 6.3 g/L ( 2.0 - 4.0 )7.5 26/06/2020 13:10 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK (Témoin = 28s) 26 s 27 28/06/2020 03:00 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK Ratio 0.9 ( < 1.2 )0.9 28/06/2020 03:00 FTN </p>
+<p>HEMATOLOGIE </p>
+<p>Validation du dossier RVBRésultats validés par le technicien de garde par délégation du biologisted'astreinte </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 30/06/2020 à 12:13 par : Dr DROUARD Laurence,Dr VERGÉ Véronique,Dr TROALEN Frédéric,Dr ARBAB Ahmadreza</p>
+<p></p>
+<p></p>
+<p>Page 3 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>SOINS AIGUS REANIMATIONPatient : 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX josé </p>
+<br/>
+<p>Revue bilan Hémato VVERéalisée par le biologiste </p>
+<p> NUMERATION SANGUINE (SANG TOTAL SUR EDTA) <br/>MÉTHODE : XN - SYSMEX </p>
+<p>Leucocytes 18.1 10*9/L ( 4.0 - 10.0 )16.8 29/06/2020 08:00 RVB </p>
+<p>Hématies 4.71 10*12/L ( 4.50 - 5.80 )3.67 29/06/2020 08:00 RVB </p>
+<p>Hémoglobine 14.4 g/100mL ( 13.0 - 17.0 )11.5 29/06/2020 08:00 RVB </p>
+<p>Hématocrite 44.1 % ( 39.0 - 49.0 )35.5 29/06/2020 08:00 RVB </p>
+<p>VGM 93.6 μ3 ( 80.0 - 97.0 )96.7 29/06/2020 08:00 RVB </p>
+<p>TCMH 30.6 pg/cel ( 26.0 - 33.0 )31.3 29/06/2020 08:00 RVB </p>
+<p>CCMH 32.7 g/100mL ( 32.0 - 36.0 )32.4 29/06/2020 08:00 RVB </p>
+<p>IDG 16.4 % ( 11.0 - 15.0 )15.6 29/06/2020 08:00 RVB </p>
+<p>Plaquettes 221.0 10*9/L 244.0 29/06/2020 08:00 RVB </p>
+<p>Impédance (150 - 400 x 10^9/L) </p>
+<p> FORMULE <br/>Polynucléaires Neutrophiles 91.1 % 90.2 29/06/2020 08:00 RVB </p>
+<p>RVB15.2 29/06/2020 08:00 ( 1.5 - 7.0 )10*9/Lsoit 16.5 </p>
+<p>Polynucléaires Eosinophiles 0.1 % 0.0 29/06/2020 08:00 RVB </p>
+<p>RVB0.0 29/06/2020 08:00 ( 0.0 - 0.6 )10*9/Lsoit 0.0 </p>
+<p>Polynucléaires Basophiles 0.1 % 0.1 29/06/2020 08:00 RVB </p>
+<p>RVB0.0 29/06/2020 08:00 ( 0.0 - 0.1 )10*9/Lsoit 0.0 </p>
+<p>Lymphocytes 3.6 % 4.6 29/06/2020 08:00 RVB </p>
+<p>RVB0.8 29/06/2020 08:00 ( 1.2 - 4.0 )10*9/Lsoit 0.7 </p>
+<p>Monocytes 5.1 % 5.1 29/06/2020 08:00 RVB </p>
+<p>RVB0.8 29/06/2020 08:00 ( 0.2 - 0.8 )10*9/Lsoit 0.9 </p>
+<p>Myelémie 0.0 % ( 0.0 )0.0 29/06/2020 08:00 VVE </p>
+<p>Formule VVEAutomate </p>
+<p>IDP 12 13 29/06/2020 08:00 RVB </p>
+<p>VMP 10.0 μ3 ( 7.5 - 11.0 )10.8 29/06/2020 08:00 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 30/06/2020 à 12:13 par : Dr DROUARD Laurence,Dr VERGÉ Véronique,Dr TROALEN Frédéric,Dr ARBAB Ahmadreza</p>
+<p></p>
+<ul>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Gaz</li>
+<li>Ionogramme</li>
+</ul>
+<li>HEMOSTASE</li>
+<ul>
+<li>Bilan de coagulation</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

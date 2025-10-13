@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125384132" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 182280240</title>
+    <effectiveTime value="20180816000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180820000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Pr A. Paci (47 30) <br/>Dr V. Poinsignon (61 92) </p>
+<p>Pr A. Bennaceur (40 65) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr T. Steimle (41 65) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Pr F. Griscelli (51 93) <br/>Dr N. Yin (40 62) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>HommeNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>16/08/2018 08:52 </p>
+<p>Sexe : </p>
+<p>16/08/2018 08:00 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>PARIS D1 </p>
+<p> 3 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>lundi 20 août 2018 </p>
+<p>Complet </p>
+<p>Résultats <br/>Valeurs </p>
+<p>Précédentes <br/>Val. </p>
+<p>Valeurs de <br/><br/><br/>Référence </p>
+<p>Analyses Unités <br/><br/></p>
+<p>BIOCHIMIE <br/>Ionogramme </p>
+<p>Sodium 141 mmol/l ( 136 - 146 )139 15/08/2018 08:00 NDP <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Potassium 3.6 mmol/l ( 3.4 - 4.5 )4.0 15/08/2018 08:00 NDP <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Chlore 101 mmol/l ( 101 - 109 )103 15/08/2018 08:00 NDP <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Reserve alcaline 32 mmol/l ( 21 - 31 )30 15/08/2018 08:00 NDP <br/>Plasma hépariné - PEPC </p>
+<p>Protides 68 g/L ( 66 - 83 )64 15/08/2018 08:00 NDP <br/>Plasma hépariné - Biuret </p>
+<p>Urée 5.3 mmol/l ( 2.8 - 7.2 )4.8 15/08/2018 08:00 NDP <br/>Plasma hépariné - Uréase-GLDH </p>
+<p>Créatinine 72 μmol/l ( 64 - 104 )61 15/08/2018 08:00 NDP <br/>Plasma hépariné - Enzymatique raccordée IDMS </p>
+<p>Glucose 5.0 mmol/l ( 4.1 - 5.9 )5.8 15/08/2018 08:00 NDP </p>
+<p>Valeur de référence pour un patient à jeunPlasma hépariné - Hexokinase <br/>G6P-DH </p>
+<p>Calcium 2.32 mmol/l ( 2.20 - 2.65 )2.22 15/08/2018 08:00 NDP <br/>Plasma hépariné - Arsenazo III </p>
+<p>Calcium Corrigé 2.32 mmol/l ( 2.12 - 2.52 )2.27 15/08/2018 08:00 NDP </p>
+<p>La calcémie corrigée est calculée selon la formule : <br/>Ca corrigé = Ca mesuré(mmol/l) + 1- (albumine (g/l) / 40),applicable uniquement avec albuminémie inférieure ou égale à 40 g/L. </p>
+<p>Phosphore 1.32 mmol/l ( 0.81 - 1.45 )1.08 15/08/2018 08:00 NDP <br/>Plasma hépariné - Molybdate, UV </p>
+<p>Acide Urique 118 μmol/l ( 208 - 428 )319 26/06/2018 09:25 NDP <br/>Plasma hépariné - Uricase PAP </p>
+<p>Fer 37.3 μmol/l ( 12.5 - 32.2 )5.4 03/07/2018 17:55 NDP <br/>Plasma hépariné - TPTZ </p>
+<p>Magnesium 0.97 mmol/l ( 0.73 - 1.06 )0.93 15/08/2018 08:00 NDP <br/>Plasma hépariné - Bleu de xylidyle </p>
+<p>Base calcul Cockroft 1.24 1.47 15/08/2018 08:00 NDP </p>
+<p>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Débit de Filtration Glomérulaire (MDRD) >60.0 mL/mn/1.73m2 >60.0 15/08/2018 08:00 NDP </p>
+<p>< 60 : Insuffisance rénale à explorer si nécessaire. <br/>Si origine afro américaine, le DFG est à multiplier par 1.212 </p>
+<p>Bilan hépatique / pancréatique <br/>PAL 65 UI/L ( 30 - 120 )67 13/08/2018 08:00 NDP <br/>Plasma hépariné - IFCC </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 20/08/2018 à 15:00 par : Dr YIN Nicolas,Dr PRADON Caroline,Dr VERGÉ Véronique</p>
+<p></p>
+<p></p>
+<p>Résultats <br/></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>PARIS D1 </p>
+<p>Unités <br/><br/>Valeurs de <br/><br/><br/>Référence </p>
+<p>Patient : </p>
+<p>Val.Analyses <br/><br/>Valeurs </p>
+<p>Précédentes <br/></p>
+<p> 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>182280240 <br/><br/>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>ASAT 17 UI/L ( < 50 )15 13/08/2018 08:00 NDP <br/>Plasma hépariné - IFCC </p>
+<p>ALAT 29 UI/L ( < 50 )30 13/08/2018 08:00 NDP <br/>Plasma hépariné - IFCC </p>
+<p>GGT 74 UI/L ( < 55 )75 13/08/2018 08:00 NDP <br/>Plasma hépariné - IFCC </p>
+<p>Bilirubine Totale 13 μmol/l ( 5 - 21 )12 13/08/2018 08:00 NDP <br/>Plasma hépariné - DPD </p>
+<p>Bilirubine Conjuguée 4 μmol/l ( < 3 ) NDP <br/>Plasma hépariné - DPD </p>
+<p>Protéines <br/>CRP 7.0 mg/l ( < 5.0 )11.1 15/08/2018 08:00 NDP <br/>Plasma hépariné - Immuno-turbidimétrie </p>
+<p>Albumine 40 g/L ( 35 - 52 )38 15/08/2018 08:00 NDP <br/>Plasma hépariné - Vert de bromocrésol </p>
+<p>LDH 177 UI/L ( < 248 )181 13/08/2018 08:00 NDP <br/>Plasma hépariné - IFCC </p>
+<p>Médicaments <br/>Vancomycine Résiduel 23.0 μg/mL ( 15.0 - 20.0 )15.4 15/08/2018 08:00 NDP <br/>Serum - Immuno-turbidimétrie </p>
+<p>HEMOSTASE <br/>Bilan de coagulation </p>
+<p>Taux de Prothrombine 59 % ( 70 - 100 )55 13/08/2018 08:00 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>Temps de Quick (Témoin = 12,2s) 16.1 s 16.7 13/08/2018 08:00 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>INR 1.6 1.7 13/08/2018 08:00 NDP </p>
+<p>0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>Facteur II 92 % ( 70 - 120 )80 13/08/2018 08:00 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>Facteur V 79 % ( 70 - 120 )62 13/08/2018 08:00 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>Facteur VII 72 % ( 70 - 120 )57 13/08/2018 08:00 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>Facteur X 75 % ( 70 - 120 )67 13/08/2018 08:00 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>Fibrinogène 2.6 g/L ( 2.0 - 4.0 )1.9 13/08/2018 08:00 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK (Témoin = 29s) 136 s 36 13/08/2018 08:00 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK Ratio 4.7 ( < 1.2 )1.2 13/08/2018 08:00 NDP </p>
+<p>HEMATOLOGIE <br/>Numeration sanguine (Sang total sur EDTA) <br/><br/>Méthode : XN - SYSMEX </p>
+<p>Leucocytes 0.1 10*9/L ( 4.0 - 10.0 )0.2 15/08/2018 08:00 VVE </p>
+<p>Hématies 2.80 10*12/L ( 4.50 - 5.80 )2.39 15/08/2018 08:00 VVE </p>
+<p>Hémoglobine 8.3 g/100mL ( 13.0 - 17.0 )7.0 15/08/2018 08:00 VVE </p>
+<p>Hématocrite 24.0 % ( 39.0 - 49.0 )20.1 15/08/2018 08:00 VVE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 20/08/2018 à 15:00 par : Dr YIN Nicolas,Dr PRADON Caroline,Dr VERGÉ Véronique</p>
+<p></p>
+<p></p>
+<p>Résultats <br/></p>
+<p>Page 3 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>PARIS D1 </p>
+<p>Unités <br/><br/>Valeurs de <br/><br/><br/>Référence </p>
+<p>Patient : </p>
+<p>Val.Analyses <br/><br/>Valeurs </p>
+<p>Précédentes <br/></p>
+<p> 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>182280240 <br/><br/>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>VGM 85.7 μ3 ( 80.0 - 97.0 )84.1 15/08/2018 08:00 VVE </p>
+<p>TCMH 29.6 pg/cel ( 26.0 - 33.0 )29.3 15/08/2018 08:00 VVE </p>
+<p>CCMH 34.6 g/100mL ( 32.0 - 36.0 )34.8 15/08/2018 08:00 VVE </p>
+<p>IDG 14.7 % ( 11.0 - 15.0 )14.7 15/08/2018 08:00 VVE </p>
+<p>Plaquettes 28.0 10*9/L ( 150.0-400.0 )26.0 15/08/2018 08:00 VVE </p>
+<p>Formule <br/>Polynucléaires Neutrophiles ! ! 15/08/2018 08:00 VVE </p>
+<p>VVE! 15/08/2018 08:00 ( 1.5 - 7.0 )10*9/Lsoit ! </p>
+<p>Polynucléaires Eosinophiles ! ! 15/08/2018 08:00 VVE </p>
+<p>VVE! 15/08/2018 08:00 ( 0.0 - 0.6 )10*9/Lsoit ! </p>
+<p>Polynucléaires Basophiles ! ! 15/08/2018 08:00 VVE </p>
+<p>VVE! 15/08/2018 08:00 ( 0.0 - 0.1 )10*9/Lsoit ! </p>
+<p>Lymphocytes ! ! 15/08/2018 08:00 VVE </p>
+<p>VVE! 15/08/2018 08:00 ( 1.2 - 4.0 )10*9/Lsoit ! </p>
+<p>Monocytes ! ! 15/08/2018 08:00 VVE </p>
+<p>VVE! 15/08/2018 08:00 ( 0.2 - 0.8 )10*9/Lsoit ! </p>
+<p>IDP 11 9 15/08/2018 08:00 VVE </p>
+<p>VMP 9.5 μ3 ( 7.5 - 11.0 )10.7 15/08/2018 08:00 </p>
+<p>MICROBIOLOGIE <br/>Biologie moléculaire </p>
+<p>Cytomégalovirus (CMV) </p>
+<p>Cytomégalovirus (CMV) 5072 UI/mL 999 13/08/2018 08:00 NYI </p>
+<p>Domaine de quantification : 161 - 10 000 000 UI/mLPCR sang total - PCR SENTOSA SA CMV </p>
+<p>Soit (CMV) : 3.71 log 3.00 13/08/2018 08:00 NYI </p>
+<p>Epstein Baar Virus (EBV) </p>
+<p>Epstein-Baar virus (EBV) <210 UI/mL <210 13/08/2018 08:00 NYI </p>
+<p>Domaine de quantification : 210 - 10 000 000 UI/mLPCR sang total - PCR SENTOSA SA EBV </p>
+<p>Interprétation (EBV) : NYIAbsence de détection d'ADN viral au seuil de 210 UI/mL </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 20/08/2018 à 15:00 par : Dr YIN Nicolas,Dr PRADON Caroline,Dr VERGÉ Véronique</p>
+<p></p>
+<ul>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Ionogramme</li>
+<li>Bilan hépatique / pancréatique</li>
+<li>Protéines</li>
+<li>Médicaments</li>
+</ul>
+<li>HEMOSTASE</li>
+<ul>
+<li>Bilan de coagulation</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/><br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+<li>MICROBIOLOGIE</li>
+<ul>
+<li>Biologie moléculaire</li>
+<ul>
+<li>Cytomégalovirus (CMV)</li>
+<li>Epstein Baar Virus (EBV)</li>
+</ul>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

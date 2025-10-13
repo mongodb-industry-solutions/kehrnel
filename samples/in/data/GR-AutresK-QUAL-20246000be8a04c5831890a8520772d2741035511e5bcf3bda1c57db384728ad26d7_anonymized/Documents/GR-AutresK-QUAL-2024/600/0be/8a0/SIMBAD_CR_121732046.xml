@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121732046" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>CONSULTATION ORL - Interne ORL</title>
+    <effectiveTime value="20200224000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200224000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>CONSULTATION ORL - INTERNE ORL<br/><br/>Dicté par : </b> Docteur Alexandre Tendron, Interne
+ <b><br/>Dicté le : </b> 06/01/2020 
+ <b><br/>Service : </b> ORL-CONSULTATIONS ORL 
+ <br/>
+<b>Type de document : </b> ORL CC PETITE CHIRURGIE 
+ <br/>
+<b>Ref :</b> 896576 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire : ESD</b> /a 
+ <b><br/><br/>Je vois ce jour Monsieur XXXXXX José.<br/><br/><u>Rappel clinique <br/></u></b> Patient de 58 ans suivi pour un carcinome épidermoïde de 
+ <br/>l'hypopharynx traité par une pharyngolaryngectomie totale avec 
+ <br/>lambeau de grand pectoral et un lambeau antérolatéral de cuisse en 
+ <br/>2017 et mars 2018. 
+ <br/>Les suites se sont compliquées d'un pharyngostome qu'il présente 
+ <br/>depuis 3 mois selon le patient. 
+ <br/>Il a été hospitalisé dernièrement en oncologie médicale dans le 
+ <br/>service du Rhône pour une cure de chimiothérapie pour 4ème cure. 
+ <br/>Il est suivi sur le plan nutritionnel par le docteur Chemama qui l'a 
+ <br/>vu le 2 janvier dernier pour son suivi d'alimentation et de sa 
+ <br/>gastrostomie. La conclusion de cette consultation était de poursuivre 
+ <br/>l'alimentation telle qu'elle était actuellement car le poids était 
+ <br/>stable voire en augmentation et que tout se passe bien. 
+ <br/>
+<br/>
+<u><b>Examen clinique <br/></b></u> Sur le plan du pharyngostome, nous constatons effectivement deux 
+ <br/>orifices au niveau basicervical gauche propres peu productifs. 
+ <br/>La prise en charge consiste à réaliser des pansements quotidiens par 
+ <br/>une infirmière avec méchage juste au niveau de l'orifice par de 
+ <br/>l'Algostéril. 
+ <br/>Le cou reste non inflammatoire et le patient est non fébrile.
+ <br/>
+<br/>
+<u><b>Au total <br/></b></u> Suivi de pharyngostome. Devant la cicatrisation en amélioration 
+ <br/>selon le patient et l'aspect propre du pharyngostome et peu 
+ <br/>productif, nous poursuivons la prise en charge par les pansements à 
+ <br/>l'identique par l'infirmière qui s'occupe de lui tous les jours.
+ <br/>L'alimentation reste quant à elle uniquement réalisée par la 
+ <br/>gastrostomie.
+ <br/>Nous reverrons le patient en consultation en petite chirurgie dans 3 
+ <br/>semaines-1 mois pour suivi de la cicatrisation. 
+ <br/>
+<b><br/>_________________________________________________<br/>Signé électroniquement par Docteur Alexandre TENDRON , Interne<br/>Le vendredi 21 février 2020 à 09:32</b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

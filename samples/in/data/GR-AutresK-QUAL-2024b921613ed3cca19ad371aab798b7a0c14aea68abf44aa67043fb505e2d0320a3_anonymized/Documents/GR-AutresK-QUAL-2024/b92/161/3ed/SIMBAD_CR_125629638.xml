@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125629638" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>EXAMEN IRM IRM MB SUP</title>
+    <effectiveTime value="20180710000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180710000000+0000"/>
+        <assignedAuthor>
+            <code code="IRM/301" displayName="RADIODIAGNOSTIC-IRM"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Destinataire : CTE 110 - HEMATOLOGIE
+ <br/> DR BOURHIS Jean Henri
+ <b><br/><br/>Dicté par : </b> Docteur Fadila Mihoubi-Bouvier
+ <b><br/>Dicté le : </b> 09/07/2018 
+ <b><br/>Service : </b> IRM-RADIODIAGNOSTIC IRM 
+ <br/>
+<b>Type de document : </b> IRM CR Générique 
+ <br/>
+<b>Ref :</b> 450266 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : ZBL
+ <br/>
+<br/>
+<u><b>IRM DES MEMBRES SUPERIEURS</b></u>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/><u><br/></u></b> Douleurs depuis plus de 2 mois de l'épaule droite avec restriction 
+ <br/>de certains mouvements.
+ <br/>Bilan prégreffe. 
+ <br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/><u><br/></u></b> Trois plans T2 FAT SAT, sagittales T1, axiales et T1 FAT SAT après 
+ <br/>injection de 16 CC de Dotarem.
+ <br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/><u><br/></u></b> Arthropathie acromio-claviculaire congestive, avec lame 
+ <br/>d'épanchement et anomalies de signal à type d'oedème médullaire des 
+ <br/>berges articulaires.
+ <br/>Pas de rehaussement capsulaire significatif.
+ <br/>Pas d'anomalie de signal significative de l'intervalle des rotateurs.
+ <br/>Pas de comblement de la graisse sous-coracoïdienne. 
+ <br/>Lame d'épanchement articulaire visible au sein de la gouttière 
+ <br/>bicipitale.
+ <br/>Fine bursite sous-acromiale réhaussée après injection.
+ <br/>Rupture complète du tendon supra-épineux (6 mm en coronal, 16 mm en 
+ <br/>sagittal) étendue à l'infra-épineux, distale, avec une rétraction du 
+ <br/>moignon tendineux situé entre son insertion distale et l'aplomb de la 
+ <br/>tête humérale.
+ <br/>Irrégularité de la face superficielle du tendon de l'infra-épineux 
+ <br/>sans franche rupture.
+ <br/>Pas d'anomalie du tendon bicipital bien en place dans sa gouttière.
+ <br/>Fissuration intra-tendineuse du subscapulaire sans désinsertion.
+ <br/>Pas d'amyotrophie ni involution graisseuse significative des muscles 
+ <br/>de la coiffe des rotateurs. 
+ <br/>
+<u><b><br/><br/>CONCLUSION</b></u>
+<b> :<br/><u><br/></u></b> Arthropathie acromio-claviculaire congestive.
+ <br/>Bursite sous-acromiale, avec rupture complète distale du tendon du 
+ <br/>supra-épineux.
+ <b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Fadila MIHOUBI-BOUVIER <br/>Le lundi 9 juillet 2018 à 13:06 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

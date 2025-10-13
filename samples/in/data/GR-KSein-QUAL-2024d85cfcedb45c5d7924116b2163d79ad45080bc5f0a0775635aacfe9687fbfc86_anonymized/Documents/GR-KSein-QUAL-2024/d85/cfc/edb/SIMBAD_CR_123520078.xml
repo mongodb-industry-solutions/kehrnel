@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123520078" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION DE DERMATOLOGIE - DOCTEUR B. BACHOLLET</title>
+    <effectiveTime value="20190528000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190528000000+0000"/>
+        <assignedAuthor>
+            <code code="090/12" displayName="CTE 090 - DERMATOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>DEPARTEMENT DE MEDECINE ONCOLOGIQUE - SERVICE DE DERMATOLOGIE<br/><br/> Dicté par : </b> Docteur Bertrand Bachollet
+ <b><br/>Dicté le : </b> 28/05/2019 
+ <b><br/>Service : </b> 090-CTE 090 - DERMATOLOGIE 
+ <br/>
+<b>Type de document : </b> 090 CC GENERIQUE 
+ <br/>
+<b>Ref :</b> 714022 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : EJL
+ <br/>
+<br/>
+<u><b>COMPTE-RENDU DE CONSULTATION<br/></b></u>
+<br/>
+<b>Patiente de 62 ans, suivie pour carcinome canalaire infiltrant du <br/>sein droit diagnostiqué en 2016, en rechute osseuse et hépatique <br/>traitée par ERIBULINE depuis novembre 2018.<br/>Radiothérapie du rachis thoracique jusqu'en décembre 2018 pour une <br/>lésion de T3 avec atteinte épidurale.<br/></b>
+<br/>La patiente vient pour des plaques érythémateuse du cou et du 
+ <br/>décolleté qui sont apparues sur quelques mois.
+ <br/>
+<br/>
+<u><b>Examen clinique :<br/></b></u>
+<br/>L'aspect retrouve des plaques non infiltrées, érythémateuses et 
+ <br/>parfois discrètement violacées, avec une disposition en maille à type 
+ <br/>d'érythrose inter-folliculaire du cou.
+ <br/>L'aspect est probablement une manifestation d'héliodermie ancienne 
+ <br/>d'apparition retardée car il existe également une lentiginose des 
+ <br/>épaules, du dos et des faces externes des membres supérieurs (la 
+ <br/>patiente a vécu en Afrique de 1960 à 1976 et s'est beaucoup exposée 
+ <br/>au soleil).
+ <br/>Il n'existe pas de sensations de prurit, ni de brûlures et les 
+ <br/>lésions ne sont pas infiltrées.
+ <br/>Le reste de l'examen retrouve quelques naevus d'aspect banal, une 
+ <br/>kératose séborrhéique sous le sein gauche et un kyste du pli 
+ <br/>rétroauriculaire gauche.
+ <br/>
+<br/>
+<u><b>En pratique :<br/></b></u>
+<br/>On essaye des applications d'Effederm à la vitamine A acide pour 
+ <br/>diminuer les plaques érythémateuses du cou et du décolleté à raison 
+ <br/>d'une application par jour pendant plusieurs mois. 
+ <br/>
+<br/>
+<br/>Examen dermoscopique réalisé ce jour.
+ <br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Bertrand BACHOLLET <br/>Le mardi 28 mai 2019 à 09:49 </b>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

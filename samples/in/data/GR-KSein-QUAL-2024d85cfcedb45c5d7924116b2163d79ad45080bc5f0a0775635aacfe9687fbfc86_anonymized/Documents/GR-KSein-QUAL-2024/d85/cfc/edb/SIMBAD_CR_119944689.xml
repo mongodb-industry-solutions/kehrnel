@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_119944689" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 203300234</title>
+    <effectiveTime value="20201125000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201125000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Dr J. Delahousse (61 92) <br/>Interne D. Combarel (37 69) <br/>Pr A. Paci (47 30) </p>
+<p>Dr A. Arbab (41 65) <br/>Pr A. Bennaceur (40 65) <br/>Interne S. Fodil (37 69) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Dr E. Gallois (40 62) <br/>Pr F. Griscelli (51 93) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>FémininNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>25/11/2020 09:06 </p>
+<p>Sexe : </p>
+<p>25/11/2020 09:06 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>CTE 110 - HEMATOLOGIE </p>
+<p> 2 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>MICOL Jean-BaptistePrescrit par : </p>
+<p>mercredi 25 novembre 2020 </p>
+<p>Complet </p>
+<p>HEMOSTASE </p>
+<p> BILAN DE COAGULATION <br/>Taux de Prothrombine 65 % ( 70 - 100 )62 23/11/2020 10:56 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>Temps de Quick (Témoin = 13s) 17.4 s 18.0 23/11/2020 10:56 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>INR 1.4 1.4 23/11/2020 10:56 NDP </p>
+<p>0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>Facteur II 76 % ( 70 - 120 )68 23/11/2020 10:56 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>Facteur V 141 % ( 70 - 120 )125 23/11/2020 10:56 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>Facteur VII 28 % ( 70 - 120 )21 23/11/2020 10:56 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>Facteur X 78 % ( 70 - 120 )61 23/11/2020 10:56 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>Fibrinogène 3.4 g/L ( 2.0 - 4.0 )4.9 02/10/2020 10:53 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK 24 s 23 23/11/2020 10:56 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK Ratio 0.8 ( < 1.2 )0.8 23/11/2020 10:56 NDP </p>
+<p>TCK Témoin 29 s 29 23/11/2020 10:56 NDP </p>
+<p>HEMATOLOGIE </p>
+<p> NUMERATION SANGUINE (SANG TOTAL SUR EDTA) <br/>MÉTHODE : XN - SYSMEX </p>
+<p>Leucocytes 5.9 10*9/L ( 4.0 - 10.0 )5.2 23/11/2020 10:56 TLY </p>
+<p>Hématies 2.63 10*12/L ( 4.00 - 5.20 )2.66 23/11/2020 10:56 TLY </p>
+<p>Hémoglobine 10.7 g/100mL ( 11.5 - 15.0 )10.9 23/11/2020 10:56 TLY </p>
+<p>Hématocrite 32.8 % ( 34.0 - 45.0 )33.4 23/11/2020 10:56 TLY </p>
+<p>VGM 124.7 μ3 ( 75.0 - 96.0 )125.6 23/11/2020 10:56 TLY </p>
+<p>TCMH 40.7 pg/cel ( 24.0 - 33.0 )41.0 23/11/2020 10:56 TLY </p>
+<p>CCMH 32.6 g/100mL ( 32.0 - 36.0 )32.6 23/11/2020 10:56 TLY </p>
+<p>IDG 17.3 % ( 11.0 - 15.0 )18.1 23/11/2020 10:56 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 25/11/2020 à 11:57 par : Dr PRADON Caroline</p>
+<p></p>
+<p></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>CTE 110 - HEMATOLOGIEPatient : 2 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>MICOL Jean-BaptistePrescrit par : </p>
+<p>Plaquettes 50.0 10*9/L 46.0 23/11/2020 10:56 TLY </p>
+<p>Impedance </p>
+<p> FORMULE <br/>Polynucléaires Neutrophiles 82.2 % 80.7 23/11/2020 10:56 TLY </p>
+<p>TLY4.2 23/11/2020 10:56 ( 1.5 - 7.0 )10*9/Lsoit 4.9 </p>
+<p>Polynucléaires Eosinophiles 0.2 % 0.0 23/11/2020 10:56 TLY </p>
+<p>TLY0.0 23/11/2020 10:56 ( 0.0 - 0.6 )10*9/Lsoit 0.0 </p>
+<p>Polynucléaires Basophiles 0.0 % 0.0 23/11/2020 10:56 TLY </p>
+<p>TLY0.0 23/11/2020 10:56 ( 0.0 - 0.1 )10*9/Lsoit 0.0 </p>
+<p>Lymphocytes 6.6 % 5.0 23/11/2020 10:56 TLY </p>
+<p>TLY0.3 23/11/2020 10:56 ( 1.2 - 4.0 )10*9/Lsoit 0.4 </p>
+<p>Monocytes 11.0 % 14.3 23/11/2020 10:56 TLY </p>
+<p>TLY0.7 23/11/2020 10:56 ( 0.2 - 0.8 )10*9/Lsoit 0.6 </p>
+<p>Formule Automate </p>
+<p>VMP 13.8 μ3 ( 7.5 - 11.0 )12.3 23/11/2020 10:56 </p>
+<p> COMMENTAIRES </p>
+<p>Formule automate vérifiée sur frottis TLY </p>
+<p>Anisopoikilocytose TLY </p>
+<p>Absence d'agrégats plaquettaire sur frottis TLY </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 25/11/2020 à 11:57 par : Dr PRADON Caroline</p>
+<p></p>
+<ul>
+<li>HEMOSTASE</li>
+<ul>
+<li>Bilan de coagulation</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+<li>Commentaires</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

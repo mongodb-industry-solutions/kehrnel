@@ -1,3 +1,4 @@
+# parser.py
 """
 Thin wrapper around xml.etree that parses an OPT once and exposes
 cached helpers used by both the generator and validator.

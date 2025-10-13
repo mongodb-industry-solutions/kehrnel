@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125108358" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title> AVIS - SERVICE REANIMATION</title>
+    <effectiveTime value="20180927000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181002000000+0000"/>
+        <assignedAuthor>
+            <code code="SAR/487" displayName="SOINS AIGUS REANIMATION"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>INTERVENTION REANIMATEUR DANS LES SERVICES D'HOSPITALISATION<br/></b>
+<br/>Service d'Hospitalisation : Paris D1
+ <br/>Date de l'intervention : 27/09/2018
+ <br/>Durée d'intervention : 10 minutes 
+ <br/>Médecin réalisateur : Dr HAMMAMI
+ <br/>Présence
+ <br/>
+<br/>
+<u>Motif d'intervention</u>
+<u>Actes réalisés</u>
+<b><br/></b>
+<br/>Détresse vitale VNI
+ <br/>
+<br/>
+<u>Diagnostic Principal / Commentaire</u> : 
+ <br/>
+<br/>Doute sur une embolie gazeuse.
+ <br/>Myélofibrose J40 de son allogreffe.
+ <br/>Projet : réinjection greffe la semaine prochaine.
+ <br/>Thrombopénie réfractaire.
+ <br/>Scanner : hématome sous dural.
+ <br/>-> Hyperbare
+ <br/>-> avis neurochir.
+ <br/>
+<br/>= Admission en réanimation.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

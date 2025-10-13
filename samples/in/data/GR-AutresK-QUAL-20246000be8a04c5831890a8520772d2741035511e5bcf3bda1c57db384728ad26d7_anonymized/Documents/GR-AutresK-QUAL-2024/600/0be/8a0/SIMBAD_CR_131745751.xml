@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_131745751" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>FIN DE TRAITEMENT DE RADIOTHERAPIE EXTERNE</title>
+    <effectiveTime value="20141028000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20141103000000+0000"/>
+        <assignedAuthor>
+            <code code="RTE/414" displayName="RADIOTHERAPIE EXTERNE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>CONSULTATION DU 28/10/2014 Dr Claire PETIT, Interne:</b></u>
+<br/>
+<br/>
+<u><b>RAPPEL</b></u> :
+ <br/>
+<br/>Patient de 53 ans qui va terminer sa radiochimiothérapie dans le 
+ <br/>cadre d'un carcinome épidermoide oropharyngé vélaire, classé T3N2cM0.
+ <br/>Inclusion dans le protocole GORTEC 2004-01, Bras IMRT + CISPLATINE.
+ <br/>
+<br/>
+<u><b>RADIOTHERAPIE</b></u> :
+ <br/>
+<b><br/></b> Il a été réalisé une radiothérapie conformationnelle avec modulation 
+ <br/>d'intensité à la dose de :
+ <br/>- 75 Gy au niveau de l'oropharynx et des adénopathies envahies.
+ <br/>- 50 Gy dans les aires ganglionnaires cervico-susclaviculaires, à 
+ <br/>titre prophylactique.
+ <br/>
+<br/>Fractionnement : 2 Gy /séance jusqu'à 50 Gy puis 2,5 Gy par séance 
+ <br/>jusqu'à 75 Gy, 5 séances /semaine.
+ <br/>Energie : 6 MV.
+ <br/>Appareil : SIRIUS.
+ <br/>Balistique : 7 faisceaux isocentriques.
+ <br/>
+<br/>Date de début de la radiothérapie : 11/09/2014.
+ <br/>Date de fin de la radiothérapie : 03/11/2014.
+ <br/>Nombre de séances : 30.
+ <br/>Nombre de jours : 53.
+ <br/>Interruption : non.
+ <br/>
+<br/>Une dosimétrie a bien sûr été réalisée avec correction 
+ <br/>d'hétérogénéité et histogramme dose volume.
+ <br/>
+<br/>
+<u><b>CHIMIOTHERAPIE CONCOMITANTE:<br/></b></u>
+<br/>CISPLATINE 100 mg /m2.
+ <br/>Nombre de cycles administrés : 3.
+ <br/>
+<u><b><br/>TOLERANCE ET POINTS PARTICULIERS EN FIN DE RADIOTHERAPIE</b></u> :
+ <br/>
+<br/>Vu à la dose de 65 Gy.
+ <br/>
+<br/>Etat général conservé.
+ <br/>OMS : 1.
+ <br/>Poids en fin de traitement : 61 kg, versus 65 kg en début de 
+ <br/>traitement.
+ <br/>Asthénie : grade I.
+ <br/>Oesophagite : grade II.
+ <br/>Mucite : grade II.
+ <br/>Epithélite : grade I.
+ <br/>EVA : 3, sous antalgiques de palier II.
+ <br/>
+<br/>Au total, tolérance satisfaisante de la radiothérapie. 
+ <br/>
+<br/>
+<u><b>SUIVI ULTERIEUR, RECOMMANDATIONS ET FUTURS RENDEZ-VOUS</b></u> :
+ <br/>
+<br/>Sera revu en consultation par le Dr TAO dans 6 semaines.
+ <br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125626345" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 181770285</title>
+    <effectiveTime value="20180626000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180710000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Pr A. Paci (47 30) <br/>Dr V. Poinsignon (61 92) </p>
+<p>Pr A. Bennaceur (40 65) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr T. Steimle (41 65) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Pr F. Griscelli (51 93) <br/>Dr N. Yin (40 62) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>HommeNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>26/06/2018 09:26 </p>
+<p>Sexe : </p>
+<p>26/06/2018 09:25 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>CTE 110 - HEMATOLOGIE <br/></p>
+<p> 5 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>BOURHIS Jean HenriPrescrit par : </p>
+<p>mardi 10 juillet 2018 </p>
+<p>Complet </p>
+<p>Résultats <br/>Valeurs </p>
+<p>Précédentes <br/>Val. </p>
+<p>Valeurs de <br/><br/><br/><br/><br/>Référence </p>
+<p>Analyses Unités <br/><br/><br/><br/></p>
+<p>BIOCHIMIE <br/>Ionogramme </p>
+<p>Sodium 139 mmol/l ( 136 - 146 ) LAD <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Potassium 4.0 mmol/l ( 3.4 - 4.5 ) LAD <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Chlore 105 mmol/l ( 101 - 109 ) LAD <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Reserve alcaline 27 mmol/l ( 21 - 31 ) LAD <br/>Plasma hépariné - PEPC </p>
+<p>Protides 78 g/L ( 66 - 83 ) LAD <br/>Plasma hépariné - Biuret </p>
+<p>Urée 5.9 mmol/l ( 2.8 - 7.2 ) LAD <br/>Plasma hépariné - Uréase-GLDH </p>
+<p>Créatinine 83 μmol/l ( 64 - 104 ) LAD <br/>Plasma hépariné - Enzymatique raccordée IDMS </p>
+<p>Glucose 5.5 mmol/l ( 4.1 - 5.9 ) LAD </p>
+<p>Valeur de référence pour un patient à jeunPlasma hépariné - Hexokinase <br/>G6P-DH </p>
+<p>Acide Urique 319 μmol/l ( 208 - 428 ) LAD <br/>Plasma hépariné - Uricase PAP </p>
+<p>Base calcul Cockroft 1.08 LAD </p>
+<p>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Débit de Filtration Glomérulaire (MDRD) >60.0 mL/mn/1.73m2 LAD </p>
+<p>< 60 : Insuffisance rénale à explorer si nécessaire. <br/>Si origine afro américaine, le DFG est à multiplier par 1.212 </p>
+<p>Bilan hépatique / pancréatique <br/>PAL 82 UI/L ( 30 - 120 ) LAD <br/>Plasma hépariné - IFCC </p>
+<p>ASAT 30 UI/L ( < 50 ) LAD <br/>Plasma hépariné - IFCC </p>
+<p>ALAT 15 UI/L ( < 50 ) LAD <br/>Plasma hépariné - IFCC </p>
+<p>GGT 74 UI/L ( < 55 ) LAD <br/>Plasma hépariné - IFCC </p>
+<p>Bilirubine Totale 18 μmol/l ( 5 - 21 ) LAD <br/>Plasma hépariné - DPD </p>
+<p>Bilan lipidique <br/>Cholesterol 4.20 mmol/l ( 5.20 - 6.20 ) LAD <br/>Plasma hépariné - CHO-PAP </p>
+<p>Protéines </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 10/07/2018 à 19:12 par : Dr DROUARD Laurence,Pr GRISCELLI Franck,Dr PRADON Caroline,Dr</p>
+<p></p>
+<p></p>
+<p>Résultats <br/></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>CTE 110 - HEMATOLOGIE <br/></p>
+<p>Unités <br/><br/><br/><br/>Valeurs de <br/><br/><br/><br/><br/>Référence </p>
+<p>Patient : </p>
+<p>Val.Analyses <br/><br/><br/><br/>Valeurs </p>
+<p>Précédentes <br/></p>
+<p> 5 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>181770285 <br/><br/><br/><br/>XXXXXX XXXXXX </p>
+<br/>
+<p>BOURHIS Jean HenriPrescrit par : </p>
+<p>CRP 5.0 mg/l ( < 5.0 ) LAD <br/>Plasma hépariné - Immuno-turbidimétrie </p>
+<p>PréAlbumine 0.28 g/L ( 0.20 - 0.40 ) NDP <br/>Serum - Immuno-turbidimétrie </p>
+<p>Albumine 47 g/L ( 35 - 52 ) LAD <br/>Plasma hépariné - Vert de bromocrésol </p>
+<p>Orosomucoide 1.08 g/L ( 0.50 - 1.20 ) NDP <br/>Serum - Immuno-turbidimétrie </p>
+<p>Electrophorèse </p>
+<p>Protides 75 g/L ( 66 - 74 ) LAD <br/>Serum - Biuret </p>
+<p>Alb elect 63.6 % ( 55.8 - 66.1 ) LAD <br/>Serum - Electro capillaire </p>
+<p>Soit 47.7 g/L ( 36.8 - 48.9 ) LAD </p>
+<p>Alpha1 Globulines 4.7 % ( 2.9 - 4.9 ) LAD <br/>Serum - Electro capillaire </p>
+<p>Soit 3.5 g/L ( 1.9 - 3.6 ) LAD </p>
+<p>Alpha2 Globulines 6.5 % ( 7.1 - 11.8 ) LAD <br/>Serum - Electro capillaire </p>
+<p>Soit 4.9 g/L ( 4.7 - 8.7 ) LAD </p>
+<p>Beta Globulines 1 4.6 % ( 4.7 - 7.2 ) NDP </p>
+<p>Soit 3.5 g/L ( 3.1 - 5.3 ) NDP </p>
+<p>Changement d'équipement à partir du 09/03/2017 permettant de différencier les béta globulines en deux sous-populations. </p>
+<p>Beta Globulines 2 4.3 % ( 3.2 - 6.5 ) NDP </p>
+<p>Soit 3.2 g/L ( 2.1 - 4.8 ) NDP </p>
+<p>Gamma Globulines 1XXXXXX % ( 11.1 - 18.8 ) LAD <br/>Serum - Electro capillaire </p>
+<p>Soit 12.2 g/L ( 7.3 - 13.9 ) LAD </p>
+<p>Commentaires : NDPLégère déformation dans la région des gamma globulines </p>
+<p>Marqueurs biologiques <br/>PSA 0.03 ng/mL ( < 4.00 ) LAD <br/>Serum - ECLIA </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 10/07/2018 à 19:12 par : Dr DROUARD Laurence,Pr GRISCELLI Franck,Dr PRADON Caroline,Dr</p>
+<p></p>
+<p></p>
+<p>Résultats <br/></p>
+<p>Page 3 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>CTE 110 - HEMATOLOGIE <br/></p>
+<p>Unités <br/><br/><br/><br/>Valeurs de <br/><br/><br/><br/><br/>Référence </p>
+<p>Patient : </p>
+<p>Val.Analyses <br/><br/><br/><br/>Valeurs </p>
+<p>Précédentes <br/></p>
+<p> 5 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>181770285 <br/><br/><br/><br/>XXXXXX XXXXXX </p>
+<br/>
+<p>BOURHIS Jean HenriPrescrit par : </p>
+<p>HEMOSTASE <br/>Bilan de coagulation </p>
+<p>Taux de Prothrombine 62 % ( 70 - 100 ) LAD <br/>Plasma Citraté - Chronométrique </p>
+<p>Temps de Quick (Témoin = 12,2s) 15.7 s LAD <br/>Plasma Citraté - Chronométrique </p>
+<p>INR 1.6 LAD </p>
+<p>0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>Facteur II 84 % ( 70 - 120 ) LAD <br/>Plasma Citraté - Chronométrique </p>
+<p>Facteur V 59 % ( 70 - 120 ) LAD <br/>Plasma Citraté - Chronométrique </p>
+<p>Facteur X 72 % ( 70 - 120 ) LAD <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK (Témoin = 29s) 37 s LAD </p>
+<p>A contrôler sur un nouvel échantillonPlasma Citraté - Chronométrique </p>
+<p>TCK Ratio 1.3 ( < 1.2 ) LAD </p>
+<p>HEMATOLOGIE <br/>Numeration sanguine (Sang total sur EDTA) <br/><br/>Méthode : XN - SYSMEX </p>
+<p>Leucocytes 8.5 10*9/L ( 4.0 - 10.0 ) SAE </p>
+<p>Hématies 2.68 10*12/L ( 4.50 - 5.80 ) SAE </p>
+<p>Hémoglobine 8.2 g/100mL ( 13.0 - 17.0 ) SAE </p>
+<p>Hématocrite 25.0 % ( 39.0 - 49.0 ) SAE </p>
+<p>VGM 93.3 μ3 ( 80.0 - 97.0 ) SAE </p>
+<p>TCMH 30.6 pg/cel ( 26.0 - 33.0 ) SAE </p>
+<p>CCMH 32.8 g/100mL ( 32.0 - 36.0 ) SAE </p>
+<p>IDG 18.5 % ( 11.0 - 15.0 ) </p>
+<p>Plaquettes 218.0 10*9/L ( 150.0-400.0 ) SAE </p>
+<p>Formule <br/>Polynucléaires Neutrophiles 42.0 % SAE </p>
+<p>SAE( 1.5 - 7.0 )10*9/Lsoit 3.6 </p>
+<p>Polynucléaires Eosinophiles 6.0 % SAE </p>
+<p>SAE( 0.0 - 0.6 )10*9/Lsoit 0.5 </p>
+<p>Polynucléaires Basophiles 7.0 % SAE </p>
+<p>SAE( 0.0 - 0.1 )10*9/Lsoit 0.6 </p>
+<p>Lymphocytes 11.0 % SAE </p>
+<p>SAE( 1.2 - 4.0 )10*9/Lsoit 0.9 </p>
+<p>Monocytes 8.0 % SAE </p>
+<p>SAE( 0.2 - 0.8 )10*9/Lsoit 0.7 </p>
+<p>Métamyelocytes 15.0 % ( 0.0 ) SAE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 10/07/2018 à 19:12 par : Dr DROUARD Laurence,Pr GRISCELLI Franck,Dr PRADON Caroline,Dr</p>
+<p></p>
+<p></p>
+<p>Résultats <br/></p>
+<p>Page 4 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>CTE 110 - HEMATOLOGIE <br/></p>
+<p>Unités <br/><br/><br/><br/>Valeurs de <br/><br/><br/><br/><br/>Référence </p>
+<p>Patient : </p>
+<p>Val.Analyses <br/><br/><br/><br/>Valeurs </p>
+<p>Précédentes <br/></p>
+<p> 5 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>181770285 <br/><br/><br/><br/>XXXXXX XXXXXX </p>
+<br/>
+<p>BOURHIS Jean HenriPrescrit par : </p>
+<p>Myelocytes 6.0 % SAE </p>
+<p>Blastes 2.0 % ( 0.0 ) SAE </p>
+<p>Erythroblastes 12.0 % SAE </p>
+<p>Réticulocytes 2.9 % SAE </p>
+<p>SAE( 25.0 -100.0 )10*9/Lsoit 78.3 </p>
+<p>Commentaire echantillon SAEFormule microscopique <br/>Lame vue par le biologiste <br/>Dysgranulopoeise <br/>Présence de dacryocytes et de macroplaquettes </p>
+<p>IDP 9 SAE </p>
+<p>VMP 9.1 μ3 ( 7.5 - 11.0 ) </p>
+<p>MICROBIOLOGIE <br/>Sérologie infectieuse </p>
+<p>Hépatite B (VHB) </p>
+<p>Antigène HBs : GRFNégatif <br/>Sérum - Access HBs Ag (EIA) </p>
+<p> index (Ag HBs) : 0.36 GRF </p>
+<p>Anticorps anti-HBs GRF219.4 mUI/ml <br/>Sérum - Access HBc Ab (EIA) </p>
+<p> concentration (Ac HBs) : 219.4 mUI/ml GRF </p>
+<p>Anticorps totaux anti-HBc : GRFNégatif <br/>Sérum - Access HBc Ab (EIA) </p>
+<p> index (Ac HBc) : 0.16 GRF </p>
+<p>Conclusion sérologie Hépatite B GRFProfil compatible avec un antécédent vaccinal (taux protecteur d'anticorps anti- <br/>HBs > 10 mUI/mL selon l'OMS). </p>
+<p>Hépatite C (VHC) </p>
+<p>Anticorps totaux anti-VHC GRFNégatif <br/>Sérum - Access HCV Ab V3 (EIA) </p>
+<p> index (VHC) : 0.05 GRF </p>
+<p>Virus de l'Immunodéficience Humaine (VIH) </p>
+<p>Anticorps anti-VIH 1 et 2, antigène p24 : GRFNégatif <br/>Sérum - Access HIV combo (EIA) </p>
+<p> index (VIH) : 0.32 GRF </p>
+<p>HTLV (Abbott) </p>
+<p>Anticorps IgG anti HTLV 1et 2 : GRFNégatif <br/>Sérum - EIA </p>
+<p> index (HTLV) : 0.428 GRF </p>
+<p>DO Ac HTLV 0.146 GRF </p>
+<p>Seuil Ac HTLV 0.341 GRF </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 10/07/2018 à 19:12 par : Dr DROUARD Laurence,Pr GRISCELLI Franck,Dr PRADON Caroline,Dr</p>
+<p></p>
+<p></p>
+<p>Résultats <br/></p>
+<p>Page 5 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>CTE 110 - HEMATOLOGIE <br/></p>
+<p>Unités <br/><br/><br/><br/>Valeurs de <br/><br/><br/><br/><br/>Référence </p>
+<p>Patient : </p>
+<p>Val.Analyses <br/><br/><br/><br/>Valeurs </p>
+<p>Précédentes <br/></p>
+<p> 5 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>181770285 <br/><br/><br/><br/>XXXXXX XXXXXX </p>
+<br/>
+<p>BOURHIS Jean HenriPrescrit par : </p>
+<p>Cytomégalovirus (CMV) </p>
+<p>Anticorps IgG anti-CMV : GRFPositif <br/>Sérum - Access CMV IgG (EIA) </p>
+<p> concentration (CMV) : >473.0 AU/mL GRF </p>
+<p>VZV (Trinity Biotech) </p>
+<p>Anticorps IgG anti-VZV : GRFPositif <br/>Sérum - EIA </p>
+<p> index (VZV) : 3.095 GRF </p>
+<p>DO Ac VZV 2.188 GRF </p>
+<p>Seuil Ac VZV 0.707 GRF </p>
+<p>HSV (Diasorin) </p>
+<p>Anticorps anti-HSV IgG : GRFPositif <br/>Sérum - EIA </p>
+<p> index (HSV) : 3.811 GRF </p>
+<p>DO Ac HSV 1.612 GRF </p>
+<p>Seuil Ac HSV 0.423 GRF </p>
+<p>EBV - Diasorin </p>
+<p>Anticorps IgG anti-EBNA : GRFPositif <br/>Sérum - EIA </p>
+<p> index (EBNA) : 168.697 GRF </p>
+<p>Anticorps IgG anti-VCA : GRFPositif <br/>Sérum - EIA </p>
+<p> index (VCA) : >200.000 GRF </p>
+<p>Toxoplasmose </p>
+<p>Anticorps IgG anti-Toxoplasma gondii : GRFPositif <br/>Sérum - Access Toxo IgG (EIA) </p>
+<p> concentration (IgG Toxo) : >441.0 UI/mL GRF </p>
+<p>Anticorps IgM anti-Toxoplasma gondii : GRFNégatif <br/>Sérum - Access Toxo IgM II (EIA) </p>
+<p> index (IgM Toxo) : 0.20 GRF </p>
+<p>Sérologie des trépanomatoses - Eurobio </p>
+<p>VDRL GRFNégatif <br/>Sérum - Agglutination </p>
+<p>Sérologie des trépanomatoses - Cypress Diagnostics </p>
+<p>TPHA GRFNégatif <br/>Sérum - Hémagglutination </p>
+<p>EXAMENS SOUS-TRAITES <br/>Immuno-hématologie </p>
+<p>Ac anti HLA de classe I et II LADReçu le : 10/07/2018 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 10/07/2018 à 19:12 par : Dr DROUARD Laurence,Pr GRISCELLI Franck,Dr PRADON Caroline,Dr</p>
+<p></p>
+<ul>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Ionogramme</li>
+<li>Bilan hépatique / pancréatique</li>
+<li>Bilan lipidique</li>
+<li>Protéines</li>
+<li>Electrophorèse</li>
+<li>Marqueurs biologiques</li>
+</ul>
+<li>HEMOSTASE</li>
+<ul>
+<li>Bilan de coagulation</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/><br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+<li>MICROBIOLOGIE</li>
+<ul>
+<li>Sérologie infectieuse</li>
+<ul>
+<li>Hépatite B (VHB)</li>
+<li>Hépatite C (VHC)</li>
+<li>Virus de l'Immunodéficience Humaine (VIH)</li>
+<li>HTLV (Abbott)</li>
+<li>Cytomégalovirus (CMV)</li>
+<li>VZV (Trinity Biotech)</li>
+<li>HSV (Diasorin)</li>
+<li>EBV - Diasorin</li>
+<li>Toxoplasmose</li>
+<li>Sérologie des trépanomatoses - Eurobio</li>
+<li>Sérologie des trépanomatoses - Cypress Diagnostics</li>
+</ul>
+</ul>
+<li>EXAMENS SOUS-TRAITES</li>
+<ul>
+<li>Immuno-hématologie</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

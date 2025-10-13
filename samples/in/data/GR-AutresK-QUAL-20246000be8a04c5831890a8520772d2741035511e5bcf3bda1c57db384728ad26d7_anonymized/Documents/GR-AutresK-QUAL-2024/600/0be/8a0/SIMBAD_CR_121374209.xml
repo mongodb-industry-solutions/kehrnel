@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121374209" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 201120158</title>
+    <effectiveTime value="20200421000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200421000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Dr J. Delahousse (61 92) <br/>Interrne D. Combarel (3769) <br/>Pr A. Paci (47 30) </p>
+<p>Dr A. Arbab (41 65) <br/>Pr A. Bennaceur (40 65) <br/>Interrne S. Francis (3769) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Dr E. Gallois (40 62) <br/>Pr F. Griscelli (51 93) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX José </p>
+<p>DEMANDE N° </p>
+<p>MasculinNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>21/04/2020 08:14 </p>
+<p>Sexe : </p>
+<p>21/04/2020 08:14 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>CONSULTATIONS ORL </p>
+<p> 3 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>mardi 21 avril 2020 </p>
+<p>Complet </p>
+<p>BIOCHIMIE </p>
+<p> IONOGRAMME <br/>Sodium 139 mmol/l ( 136 - 146 )143 07/04/2020 09:51 FTN <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Potassium 3.7 mmol/l ( 3.4 - 4.5 )3.5 07/04/2020 09:51 FTN <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Chlore 98 mmol/l ( 101 - 109 )98 07/04/2020 09:51 FTN <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Reserve alcaline 31 mmol/l ( 21 - 31 )35 07/04/2020 09:51 FTN <br/>Plasma hépariné - PEPC </p>
+<p>Protides 81 g/L ( 66 - 83 )82 07/04/2020 09:51 FTN <br/>Plasma hépariné - Biuret </p>
+<p>Urée 6.2 mmol/l ( 2.8 - 7.2 )5.6 07/04/2020 09:51 FTN <br/>Plasma hépariné - Uréase-GLDH </p>
+<p>Créatinine 52 μmol/l ( 64 - 104 )45 07/04/2020 09:51 FTN <br/>Plasma hépariné - Enzymatique raccordée IDMS </p>
+<p>Glucose 5.0 mmol/l ( 4.1 - 5.9 )5.5 07/04/2020 09:51 FTN </p>
+<p>Valeur de référence pour un patient à jeunPlasma hépariné - Hexokinase <br/>G6P-DH </p>
+<p>Calcium 2.48 mmol/l ( 2.20 - 2.65 )2.54 07/04/2020 09:51 FTN <br/>Plasma hépariné - Arsenazo III </p>
+<p>Phosphore 1.08 mmol/l ( 0.81 - 1.45 )1.10 07/04/2020 09:51 FTN <br/>Plasma hépariné - Molybdate, UV </p>
+<p>Acide Urique 416 μmol/l ( 208 - 428 )328 07/04/2020 09:51 FTN <br/>Plasma hépariné - Uricase PAP </p>
+<p>Magnesium 0.78 mmol/l ( 0.73 - 1.06 )0.74 07/04/2020 09:51 FTN <br/>Plasma hépariné - Bleu de xylidyle </p>
+<p>Base calcul Cockroft 1.92 2.22 07/04/2020 09:51 FTN </p>
+<p>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Débit de Filtration Glomérulaire (MDRD) >60 mL/mn/1.73m2 >60 07/04/2020 09:51 FTN </p>
+<p>< 60 : Insuffisance rénale à explorer si nécessaire. <br/>Si origine afro américaine, le DFG est à multiplier par 1.212 </p>
+<p>Débit de Filtration Glomérulaire (CKD- <br/>EPI) </p>
+<p>111 mL/mn/1.73m2 ( 80 - 120 )118 07/04/2020 09:51 </p>
+<p>Estimation du débit de filtration glomérulaire en utilisant le dosage de la créatinine (standardisé ID-MS) 30 - 60 mL/min : Insuffisance rénale modérée < 30 mL/min : Insuffisance rénale sévère </p>
+<p> BILAN HÉPATIQUE / PANCRÉATIQUE <br/>PAL 95 UI/L ( 30 - 120 )113 07/04/2020 09:51 FTN <br/>Plasma hépariné - IFCC </p>
+<p>ASAT 22 UI/L ( < 50 )28 07/04/2020 09:51 FTN <br/>Plasma hépariné - IFCC </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 21/04/2020 à 10:19 par : Dr LACROIX Ludovic,Dr TROALEN Frédéric,Dr Christophe MARZAC</p>
+<p></p>
+<p></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>CONSULTATIONS ORLPatient : 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX josé </p>
+<br/>
+<p>ALAT 16 UI/L ( < 50 )32 07/04/2020 09:51 LLX <br/>Plasma hépariné - IFCC </p>
+<p>GGT 116 UI/L ( < 55 )121 07/04/2020 09:51 FTN <br/>Plasma hépariné - IFCC </p>
+<p>Amylase 25 UI/L ( 28 - 100 )39 07/04/2020 09:51 LLX <br/>Plasma hépariné - IFCC </p>
+<p>Bilirubine Totale 9 μmol/l ( 5 - 21 )7 07/04/2020 09:51 FTN <br/>Plasma hépariné - DPD </p>
+<p> BILAN LIPIDIQUE <br/>Cholesterol 5.34 mmol/l ( 5.20 - 6.20 )6.49 07/04/2020 09:51 FTN <br/>Plasma hépariné - CHO-PAP </p>
+<p>Triglycérides 2.13 mmol/l ( < 1.70 )2.91 07/04/2020 09:51 FTN <br/>Plasma hépariné - GPO-PAP </p>
+<p> PROTÉINES <br/>Albumine 41 g/L ( 35 - 52 )44 07/04/2020 09:51 FTN <br/>Plasma hépariné - Vert de bromocrésol </p>
+<p>Créatine Kinase 97 UI/L ( < 171 )88 07/04/2020 09:51 FTN <br/>Plasma hépariné - IFCC </p>
+<p>LDH 206 UI/L ( < 248 )168 07/04/2020 09:51 FTN <br/>Plasma hépariné - IFCC </p>
+<p>HEMOSTASE </p>
+<p> BILAN DE COAGULATION <br/>Taux de Prothrombine 84 % ( 70 - 100 )95 07/04/2020 09:51 LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>Temps de Quick (Témoin = 13s) 14.6 s 13.5 07/04/2020 09:51 LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>INR 1.1 1.0 07/04/2020 09:51 LLX </p>
+<p>0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>Fibrinogène 6.2 g/L ( 2.0 - 4.0 )5.8 07/04/2020 09:51 LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK (Témoin = 28s) 30 s 29 07/04/2020 09:51 LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK Ratio 1.0 ( < 1.2 )1.0 07/04/2020 09:51 LLX </p>
+<p>HEMATOLOGIE </p>
+<p> NUMERATION SANGUINE (SANG TOTAL SUR EDTA) <br/>MÉTHODE : XN - SYSMEX </p>
+<p>Leucocytes 10.5 10*9/L ( 4.0 - 10.0 )9.8 07/04/2020 09:51 CZC </p>
+<p>Hématies 4.66 10*12/L ( 4.50 - 5.80 )5.07 07/04/2020 09:51 CZC </p>
+<p>Hémoglobine 14.7 g/100mL ( 13.0 - 17.0 )16.3 07/04/2020 09:51 CZC </p>
+<p>Hématocrite 42.9 % ( 39.0 - 49.0 )47.6 07/04/2020 09:51 CZC </p>
+<p>VGM 92.1 μ3 ( 80.0 - 97.0 )93.9 07/04/2020 09:51 CZC </p>
+<p>TCMH 31.5 pg/cel ( 26.0 - 33.0 )32.1 07/04/2020 09:51 CZC </p>
+<p>CCMH 34.3 g/100mL ( 32.0 - 36.0 )34.2 07/04/2020 09:51 CZC </p>
+<p>IDG 14.0 % ( 11.0 - 15.0 )14.4 07/04/2020 09:51 </p>
+<p>Plaquettes 240.0 10*9/L 260.0 07/04/2020 09:51 CZC </p>
+<p>Impédance (150 - 400 x 10^9/L) </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 21/04/2020 à 10:19 par : Dr LACROIX Ludovic,Dr TROALEN Frédéric,Dr Christophe MARZAC</p>
+<p></p>
+<p></p>
+<p>Page 3 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>CONSULTATIONS ORLPatient : 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX josé </p>
+<br/>
+<p> FORMULE <br/>Polynucléaires Neutrophiles 68.3 % 64.5 07/04/2020 09:51 CZC </p>
+<p>CZC6.3 07/04/2020 09:51 ( 1.5 - 7.0 )10*9/Lsoit 7.2 </p>
+<p>Polynucléaires Eosinophiles 2.1 % 1.5 07/04/2020 09:51 CZC </p>
+<p>CZC0.2 07/04/2020 09:51 ( 0.0 - 0.6 )10*9/Lsoit 0.2 </p>
+<p>Polynucléaires Basophiles 0.4 % 0.4 07/04/2020 09:51 CZC </p>
+<p>CZC0.0 07/04/2020 09:51 ( 0.0 - 0.1 )10*9/Lsoit 0.0 </p>
+<p>Lymphocytes 21.9 % 27.5 07/04/2020 09:51 CZC </p>
+<p>CZC2.7 07/04/2020 09:51 ( 1.2 - 4.0 )10*9/Lsoit 2.3 </p>
+<p>Monocytes 7.3 % 6.1 07/04/2020 09:51 CZC </p>
+<p>CZC0.6 07/04/2020 09:51 ( 0.2 - 0.8 )10*9/Lsoit 0.8 </p>
+<p>Formule CZCAutomate </p>
+<p>IDP 14 15 07/04/2020 09:51 CZC </p>
+<p>VMP 11.0 μ3 ( 7.5 - 11.0 )11.4 07/04/2020 09:51 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 21/04/2020 à 10:19 par : Dr LACROIX Ludovic,Dr TROALEN Frédéric,Dr Christophe MARZAC</p>
+<p></p>
+<ul>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Ionogramme</li>
+<li>Bilan hépatique / pancréatique</li>
+<li>Bilan lipidique</li>
+<li>Protéines</li>
+</ul>
+<li>HEMOSTASE</li>
+<ul>
+<li>Bilan de coagulation</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

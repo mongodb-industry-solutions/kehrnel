@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124273987" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>HOSPITALISATION SERVICE FINISTERE</title>
+    <effectiveTime value="20190205000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190204000000+0000"/>
+        <assignedAuthor>
+            <code code="FIN/177" displayName="FINISTERE D2"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<u><b>Docteur Jinan ABDULLAH - Interne</b></u>
+<br/>
+<br/>
+<u><b>HOSPITALISATION SERVICE FINISTERE DU 1er AU 5 FEVRIER 2019</b></u>
+<br/>
+<br/>Patiente âgée de 66 ans, hospitalisée par le biais des urgences pour
+ <br/>épistaxis dans un contexte 
+ <b>d'adénocarcinome séreux de haut grade <br/>stade IV (pleural) initial, jamais réséqué, en rechute locale</b> , en 
+ <br/>cours de 
+ <br/>chimiothérapie par CARBOPLATINE + GEMZAR (protocole ATALANTE).
+ <br/>
+<br/>
+<b>Médecin référent</b> : Docteur Fanny POMMERET
+ <br/>
+<br/>* BRCA1 et 2 non muté
+ <br/>* Marqueurs tumoraux informatifs (CA125 > 1000 U/ml, CA19.9 142 U/ml, 
+ <br/>CA15-3 154 U/ml au diagnostic)
+ <br/>
+<br/>
+<b> ANTECEDENTS</b>
+<br/>* Appendicectomie
+ <br/>* Thrombose MID diagnostiqué en février 2017, sous anticoagulant
+ <br/>* Pas d'allergie
+ <br/>* Pas d'intoxication éthylo-tabagique
+ <br/>
+<br/>
+<u>Traitement habituel</u> : anti-émétiques (EMEND, ZOPHREN, PRIMPERAN), 
+ <br/>DOLIPRANE si besoin
+ <br/>
+<br/>
+<b> HISTOIRE DE LA MALADIE</b>
+<br/>
+<br/>
+<b> Fin février 2017</b> : Suite à une thrombose inaugurale au niveau du 
+ <br/>membre inférieur droit (thrombose de la veine saphène interne, 
+ <br/>étendue jusqu'à la fémorale commune), découverte sur l'échographie 
+ <br/>doppler d'une masse tissulaire pelvienne, probablement d'origine 
+ <br/>ovarienne à composante mixte mesurant de grand axe 120 mm ; ascite 
+ <br/>d'environ 2 à 3 litres
+ <br/>
+<br/>Mise en route d'un traitement anticoagulant par Innohep à dose 
+ <br/>curative avec un switch par Préviscan.
+ <br/>
+<br/>
+<b> Mars 2017</b> : Réalisation d'une coelioscopie exploratrice par le 
+ <br/>Dr CHERIER qui retrouve une carcinose péritonéale avec une milliaire 
+ <br/>diffuse, l'exploration étant limitée compte-tenu de l'adhérence du 
+ <br/>grand épiploon à la paroi antérieure ; PCI à 16/27, cytologie 
+ <br/>positive ; examen extemporané qui retrouve un adénocarcinome
+ <br/>
+<br/>1ère ligne de chimiothérapie par CARBOPLATINE + TAXOL, C1J1 le 
+ <br/>31/3/17. Chimiothérapie nécessitant des réductions de doses pour 
+ <br/>toxicité hématologique principalement thrombopénie grade II.
+ <br/>
+<br/>
+<b> Octobre 2017</b> : Coelioscopie exploratrice retrouvant un PCI stable 
+ <br/>mais instabilité hémodynamique majeure et respiratoire ayant fait 
+ <br/>surseoir à la chirurgie initialement prévue
+ <br/>
+<br/>* Discussion en RCP Gyné : poursuite d'un traitement systémique 
+ <br/>exclusif
+ <br/>
+<br/>Reprise de la chimiothérapie par CARBOPLATINE + TAXOL avec adjonction 
+ <br/>d'AVASTIN, C1J1 le 20/10/17, 2 cures puis entretien par AVASTIN seul.
+ <br/>
+<b><br/></b> Stabilité clinique sous AVASTIN pendant 1 an, ascite ponctionnée 
+ <br/>toutes les 6 semaines.
+ <br/>
+<br/>
+<b> Octobre 2018</b> : Progression ovarienne et biologique
+ <br/>-> Inclusion dans le protocole ATALANT, bras CARBOPLATINE + GEMZAR + 
+ <br/>AVASTIN +/- ATEZOLIZUMAB, C1J1 le 18 janvier 2019
+ <br/>
+<br/>
+<b> HISTOIRE RECENTE</b>
+<br/>
+<br/>Consulte aux urgences le 1/2/19 pour épistaxis d'apparition récente 
+ <br/>avec hémoptysie et rectorragie.
+ <br/>
+<br/>Aux urgences, pic fébrile à 38°2.
+ <br/>
+<br/>Le bilan biologique montre des plaquettes à 18000/mm3, Hb à 8,9 g/dl, 
+ <br/>PNN à 600/mm3, cholestase anictérique avec cytolyse à 3N, syndrome 
+ <br/>inflammatoire avec CRP à 86,9 mg/l.
+ <br/>
+<br/>Réalisation d'une transfusion de concentrés plaquettaires, 
+ <br/>instauration d'une antibiothérapie probabiliste par ROCEPHINE + 
+ <br/>FLAGYL.
+ <br/>
+<br/>Transférée dans le service le 1/2/19 pour suite de la prise en 
+ <br/>charge.
+ <br/>
+<br/>
+<b> EXAMEN CLINIQUE</b>
+<br/>
+<br/>- OMS = 1
+ <br/>- Poids 63 Kg
+ <br/>- Taille 1m64
+ <br/>- TA 144/85 mmHg, FC 96/min, SaO2 à 100 % en air ambiant
+ <br/>- Température 37°
+ <br/>- Alimentation per os normale
+ <br/>- Absence de douleur (EVA 0/10)
+ <br/>- PAC veineux propre, non inflammatoire
+ <br/>- Coeur/poumon : auscultation cardio-pulmonaire sans particularité 
+ <br/>notamment pas de crépitant 
+ <br/>- Abdomen souple, dépressible, indolore, pas de masse palpable
+ <br/>- Pas d'OMI
+ <br/>- Aires ganglionnaires libres
+ <br/>
+<br/>
+<b> EXAMENS COMPLEMENTAIRES</b>
+<br/>
+<br/>
+<b>Bilan biologique le 1/2/19</b>
+<br/>Hb : 8,9 g/dl
+ <br/>GB : 1 400/mm3\super 
+ <br/>\nosupersub PNN : 600/mm3\super 
+ <br/>\nosupersub Plaquettes : 19 000/mm3\super 
+ <br/>\nosupersub 
+ <br/>Na+ : 138 mmol/l
+ <br/>K+ : 3,7 mmol/l
+ <br/>Créatinine : 62 μmol/l
+ <br/>Magnésium : 0,68 mmol/l
+ <br/>PAL : 171 UI/l
+ <br/>ASAT/ALAT : 106/142 UI/l
+ <br/>GGT : 52 UI/l
+ <br/>Bilirubine totale : 7 μmol/l
+ <br/>CRP : 86,9 mg/l
+ <br/>
+<br/>
+<b> EVOLUTION DANS LE SERVICE</b>
+<br/>
+<br/>
+<u>Sur le plan hématologique</u>
+<br/>Après transfusion de CPA, augmentation des plaquettes à 35000/mm3. 
+ <br/>Nouvelle transfusion d'un concentré plaquettaire le 4/2/19.
+ <br/>
+<br/>Anémie à 7,8 g/dl le 4/2/19 ayant justifié une transfusion de 2 
+ <br/>culots globulaires le 4/2/19.
+ <br/>
+<br/>* Plaquettes de contrôle le 5/2/19 : 65000/mm3
+ <br/>* Hémoglobine de contrôle le 5/2/19 : 10 g/dl
+ <br/>
+<br/>
+<u>Sur le plan infectieux</u>
+<br/>Diminution du syndrome inflammatoire durant l'hospitalisation et 
+ <br/>patiente apyrétique durant l'hospitalisation.
+ <br/>
+<br/>* Hémoculture PAC + périph : négatives
+ <br/>* ECBU : germes divers, 28700/ml de leucocytes
+ <br/>
+<br/>Dans ce contexte, relai de l'antibiothérapie par CIPROFLOXACINE.
+ <br/>
+<br/>
+<u>Sur le plan carcinologique</u>
+<br/>Adénocarcinome séreux de haut grade stade IV (pleural) initial, 
+ <br/>jamais réséqué, en rechute locale, en cours de chimiothérapie par 
+ <br/>CARBOPLATINE + GEMZAR (protocole ATALANTE), C1J1 le 18/1/19.
+ <br/>
+<br/>Patiente vue par le Dr COLOMBA durant l'hospitalisation.
+ <br/>
+<br/>Décision de diminuer les doses de CARBOPLATINE à 300 mg DT et de 
+ <br/>GEMCITABINE à 1600 mg DT lors des prochaines cures.
+ <br/>
+<br/>Annulation du J8 de chimiothérapie initialement prévu.
+ <br/>
+<br/>
+<u>Sur le plan digestif</u>
+<br/>Réalisation d'une ponction d'ascite ramenant 2 litres d'un liquide 
+ <br/>jaune citrin.
+ <br/>
+<br/>
+<u>Syndrome douloureux</u>
+<br/>* Evaluation de la douleur à l'entrée : EVA 0/10
+ <br/>* Evaluation de la douleur à la sortie : EVA 0/10
+ <br/>
+<br/>
+<b> <h3>Conclusion</h3></b>
+<br/>* Neutropénie fébrile et pancytopénie chimio-induite dans un contexte 
+ <br/>d'adénocarcinome séreux de haut grade stade IV (pleural) initial, 
+ <br/>jamais réséqué, en rechute locale, en cours de chimiothérapie par 
+ <br/>CARBOPLATINE + GEMZAR (protocole ATALANTE), C1J1 le 18/1/19
+ <br/>* Tranfusion de culots globulaire et concentrés plaquettaires
+ <br/>* Annulation du J8 de chimiothérapie
+ <br/>* Infection urinaire traitée par CIPROFLOXACINE
+ <br/>* Indication à une réduction des doses de chimiothérapie lors des 
+ <br/>prochaines cures
+ <br/>
+<br/>Madame XXXXXX quitte le service le 5/2/19.
+ <br/>
+<br/>Elle sera revue en consultation par le Docteur COLOMBA le 14/2/19 
+ <br/>selon les modalités du protocole.
+ <br/>
+<br/>
+<b> Traitement de sortie</b> : CIPROFLOXACINE 500 mg (1-0-1)
+ <br/>
+<br/>
+<br/> Prise en charge palliative NON
+ <br/>
+<br/>
+<b>EVALUATION DE LA CHARGE EN SOINS</b>
+<br/>* Ponction à visée symptomatique OUI
+ <br/>* Adaptation du traitement antalgique NON
+ <br/>* Irradiation antalgique NON
+ <br/>* Occlusion intestinale NON
+ <br/>* Transfusion sanguine OUI 
+ <br/>* Prise en charge de la détresse respiratoire 
+ <br/>avec désaturation <90% AA NON
+ <br/>* Traitement des divers symptômes vecteurs d'inconfort 
+ <br/>(toux, prurit, nausées, vomissements, anxiété, 
+ <br/>dépression, troubles du sommeil, déshydratation,...) OUI 
+ <br/>* Soins de nursing NON
+ <br/>* Nutrition 
+ <br/> - déja nous CNO, nutrition entérale/parentérale NON
+ <br/> - mise en route de CNO/nutrition entérale/parentale NON
+ <br/>
+<br/>
+<b>PRISE EN CHARGE MULTI-DISCIPLINAIRE<br/></b> * Prise en charge de l'EMASP NON
+ <br/>* Cs CETD (douleur, sophrologie, auriculothérapie) NON
+ <br/>* Cs onco-psychologie NON
+ <br/>* Prise en charge sociale NON
+ <br/>* Soins de kinésithérapie NON
+ <br/>* cs diététicienne ou nutritionniste NON
+ <br/>
+<br/>
+<b>MODE DE SORTIE<u></u></b>
+<u> <br/></u>* HAD Santé Service NON
+ <br/>* HAD Province NON
+ <br/>* IDE Libérale NON
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

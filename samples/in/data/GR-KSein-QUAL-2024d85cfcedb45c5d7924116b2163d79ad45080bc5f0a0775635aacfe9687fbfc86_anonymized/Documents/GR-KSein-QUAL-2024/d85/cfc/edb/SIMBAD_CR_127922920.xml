@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127922920" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>FIN DE TRAITEMENT RADIOTHERAPIE EXTERNE</title>
+    <effectiveTime value="20170608000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170620000000+0000"/>
+        <assignedAuthor>
+            <code code="RTE/414" displayName="RADIOTHERAPIE EXTERNE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>COMPTE RENDU DE FIN DE RADIOTHERAPIE EXTERNE </p>
+<p>Nom du Patient : XXXXXX XXXXXX <br/>N° de dossier IGR : XXXXXX <br/>Date de naissance : XXXXXX </p>
+<p>Médecin référent : Paola COCUZZA <br/>Date dernière consultation : 02/06/2017 </p>
+<p>1/ Rappel clinique : T2 N0 de 25 mm du sein droit, carcinome canalaire infiltrant de grade III triple négatif. Dans le bilan 2 micronodules pulmonaires à surveiller. TGS le 23/02/2017 après 6 EC 75 dose dense et 4 cycles de TAXOL hebdomadaires : persistance de </p>
+<p>13 mm de carcinome métaplasique avec différenciation chondroide ou ostéoïde, 17 mm'intracanalaire, 1GS-. Tolérance à la chimiothérapie satisfaisante. </p>
+<p>2/ Planification du traitement : <br/>Acquisition des données anatomiques par coupes scanographiques jointives 3 mm après mise en place derepères cutanés. </p>
+<p>3/ Déroulement du traitement : <br/>Résumé de traitement: </p>
+<p>Site Dosecourante Modalité Du Au <br/>Jours </p>
+<p>passés Frac. </p>
+<p>SEIN 50,09 Gy RX 19/04/2017 26/05/2017 37 25 <br/>BOOST LIT TUMORAL 16,04 Gy RX 29/05/2017 08/06/2017 10 8 </p>
+<p>(En cas de besoin le compte rendu technique détaillé peut vous être envoyé) <br/>La dose totale reçue correspond à la dose prescrite </p>
+<p>Commentaire : <br/>Contrôle du positionnement par imagerie embarquée. </p>
+<p>4/ Tolérance lors de la dernière semaine de traitement : <br/>EVA :Pas de douleur <br/>OMS : 0 Activité normale <br/>Dermatite maximale en cours de traitement : Aucune <br/>Erythème cutané maximal en cours de traitement grade : 0 <br/>Topographie Erythème : UQ Inf <br/>Œsophagite maximale en cours de traitement grade : 0 </p>
+<p>Fin trmt (02/06/2017)</p>
+<p></p>
+<p></p>
+<p>5/ Prochains Rendez-vous : <br/>Prochaine consultation le 27/07/2017 avec le Docteur MOKDAD-ADI (oncologue médical) avec un bilanbiologique. </p>
+<p>Prochaine consultation en janvier 2018 en radiothérapie avec un bilan d'imagerie et un bilan biologique. </p>
+<p>Dr COCUZZA, Paola le 20/06/2017</p>
+<p></p>
+<p></p>
+<p>Compte rendu de radiothérapie : </p>
+<p> XXXXXX BrigittePatient : </p>
+<p>Date de naissance : XXXXXX </p>
+<p>Pour les traitements en cours entre le 19/04/2017 et le 08/06/2017 </p>
+<p>NoIGR: </p>
+<p>Médecin : Estelle BRONSART </p>
+<p>XXXXXX </p>
+<p>Diagnostic : </p>
+<p>Diagnostic traité du 19/04/2017 au 08/06/2017 </p>
+<p>Remarque : </p>
+<p>Latéralité :1 - Droit </p>
+<p>Morphologie : 85 003,00 - CARCINOME CANALAIRE INVASIF SAI (C50.-) </p>
+<p>pTNM : </p>
+<p>C50.4 T.M., quadrant supéro-externe du sein - Primitif - Curatif </p>
+<p>Site Prescrit techniquedosefractionnement jours du au </p>
+<p> 50,09 25SEIN 50,00Gy 38 / 2,00Gyà / Conformationnelle 2519/04/2017 26/05/2017 </p>
+<p>Imagerie portale: 19 UM </p>
+<p>19 UM contribuent à la dose avec l'énergie de traitement </p>
+<p>Faisceau(x) traité(s) </p>
+<p>ID Nom App. Nature Angleaudu </p>
+<p> 56.00Photon 6MVSIR10 TGI10 19/04/2017 26/05/2017 13:42:04 </p>
+<p> 231.00Photon 6MVSIR11 TGE11 19/04/2017 26/05/2017 13:44:23 </p>
+<p> 56.00Photon 6MVSIR12 TGI RED12 19/04/2017 26/05/2017 13:42:24 </p>
+<p> 231.00Photon 6MVSIR13 TGE RED13 19/04/2017 26/05/2017 13:43:27 </p>
+<p>Arrêt de traitement d'au moins 3 jours : </p>
+<p>Site Prescrit techniquedosefractionnement jours du au </p>
+<p> 16,04 8BOOST LIT TUMORAL 16,00Gy 11 / 2,00Gyà / Conformationnelle 829/05/2017 08/06/2017 </p>
+<p>Imagerie portale: 14 UM </p>
+<p>14 UM contribuent à la dose avec l'énergie de traitement </p>
+<p>Faisceau(x) traité(s) </p>
+<p>ID Nom App. Nature Angleaudu </p>
+<p> 59.00Photon 6MVSIR20 TGI BOOST20 29/05/2017 08/06/2017 10:18:00 </p>
+<p> 236.00Photon 6MVSIR21 TGE BOOST21 29/05/2017 08/06/2017 10:19:57 </p>
+<p>Arrêt de traitement d'au moins 3 jours : </p>
+<p>x </p>
+<p>Page 1 sur 1IGR Département Radiothérapie CLINIQUE </p>
+<p>DoseSSum.CR</p>
+<p></p>
+<p></p>
+<p>FICHE DE RECUEIL <br/>DES DONNEES DE PLANIFICATION <br/>DOSIMETRIQUE PREVISIONNELLE </p>
+<p>COMITE DE SENOLOGIE (CTE 050) </p>
+<p>Page 1 sur 1 11 avril 2017 </p>
+<p>IDENTITE PATIENT <br/>Nom : XXXXXX N°IGR : XXXXXX <br/>Prénom : XXXXXX Date de naissance :XXXXXX </p>
+<p>DONNEES DE PLANIFICATION DOSIMETRIQUE PREVISIONELLE <br/>Prescription : 66 Gy - 2Gy/fraction Affichage contraintes oui </p>
+<p>Dose prescrite = 50 Gy <br/>Dmoy = 61,6 Gy soit 123%Dp </p>
+<p>Dmax < 110 % <br/>D98% 95 % </p>
+<p>Dose prescrite = 66 Gy <br/>Dmoy = 67,4 Gy soit 102%Dp </p>
+<p>CTV BOOST Dmax < 110 % <br/><br/>D98% 95 % </p>
+<p>ORGANES À RISQUE </p>
+<p>V30Gy < 10 % <br/>V 20Gy = 11,0 % V20Gy < 20 % </p>
+<p>Dmoy = 7,4 Gy V10Gy < 30 % </p>
+<p>Dmoy < 20 Gy </p>
+<p>Poumons G et D V 20Gy = 6,0 % V20Gy < 18 % <br/>V40Gy < 5 % </p>
+<p>V 20Gy = 0,0 % V20Gy < 10 % </p>
+<p>Dmoy = 1,2 Gy Dmoy < 6 Gy </p>
+<p>Contraintes </p>
+<p>Cœur </p>
+<p>Doses reçues etvolumes irradiés </p>
+<p>Contraintes </p>
+<p>Poumon homolat. </p>
+<p>Contraintes </p>
+<p>CTV SEIN D </p>
+<p>Commentaires : </p>
+<p>CR Dosimétrique (11/04/2017)</p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

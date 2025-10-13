@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127121914" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>COMPTE-RENDU R.I.</title>
+    <effectiveTime value="20171116000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171116000000+0000"/>
+        <assignedAuthor>
+            <code code="136/300" displayName="CONS. RADIO INTERVENTIONNELLE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b><br/>Intervention </b>
+<br/>
+<br/>Date: 16/11/2017 
+ <br/>Opérateur(s) principal: RI SENIOR 1 
+ <br/>Manipulatrice:Simonvermot Aurelie; 
+ <br/>Anesthésiste: 
+ <br/>Intervention guidée par: Arceau d'angiographie numérisé General 
+ <br/>Electric Healthcare, INNOVA 4100 No de série 548517BU2 mis en 
+ <br/>service 
+ <b> en 2007 </b> . 
+ <br/>
+<br/>PDS : 1,64 GY.cm2 
+ <br/>DLP : 0 mGy.cm 
+ <br/>
+<br/>Produit de contraste: 0 ml
+ <br/>
+<b>DRAINAGE DE COLLECTION</b>
+<br/>
+<b>Dicté par : </b> Docteur Maxime Barat, Interne
+ <b><br/>Dicté le : </b> 16/11/2017 
+ <b><br/>Service : </b> 136-CONS. RADIO INTERVENTIONNELLE 
+ <br/>
+<b>Type de document : Changement de sonde naso-gastrique sous controle <br/>scopique</b>
+<br/>
+<b>Ref :</b> 323906 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX 
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : il
+ <br/>
+<br/>
+<b>Date</b> : 16/11/2017
+ <br/>
+<b>Opérateur(s)</b> : G. Gravel. 
+ <br/>
+<br/>
+<b>INDICATION :</b>
+<br/>J2 post opératoire d'une laryngectomie pour néoplasie ORL. Sonde 
+ <br/>nasogastrique posée au bloc mais alimentation impossible : reflux par 
+ <br/>le nez. Suspicion de perforation de la sonde. Changement. 
+ <br/>
+<br/>
+<b>TECHNIQUE & RESULTAT :</b>
+<br/>Contrôle de la bonne position de la sonde naso gastrique sous 
+ <br/>contrôle scopique. Elle est correctement située dans le fundus. 
+ <br/>Mise en place d'un guide Sensor 0.35 dans la sonde pour la 
+ <br/>cathétériser. 
+ <br/>Changement par un guide d'Amplatz. 
+ <br/>Mise en place d'une sonde 5F sur le guide. 
+ <br/>Mise en place de la nouvelle sonde naso-gastrique. 
+ <br/>Contrôle scopique et test à l'air qui confirment la bonne position 
+ <br/>dans l'estomac de la nouvelle sonde. 
+ <br/>
+<br/>
+<b><h3>Conclusion</h3> :</b>
+<br/>Changement de sonde naso-gastrique sous contrôle scopique.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

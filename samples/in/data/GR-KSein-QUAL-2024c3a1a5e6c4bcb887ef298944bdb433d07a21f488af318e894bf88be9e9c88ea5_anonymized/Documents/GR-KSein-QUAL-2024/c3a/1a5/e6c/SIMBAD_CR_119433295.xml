@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_119433295" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>UDEP - Unité D'Expertise Palliative -</title>
+    <effectiveTime value="20210202000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20210201000000+0000"/>
+        <assignedAuthor>
+            <code code="UEP/535" displayName="UNITE EXPERTISE PALLIATIVE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>Unité D'Expertise Palliative (UDEP) - Département de Soins de Support <br/>-DISSPO<br/><br/>COMPTE RENDU D'HOSPITALISATION<br/><br/>Dicté par : </b> Docteur Caroline Poisson, Interne
+ <b><br/>Dicté le : </b> 28/01/2021 
+ <b><br/>Service : </b> UEP- UDEP UNITE D EXPERTISE PALLIATIVE 
+ <br/>
+<b>Type de document : </b> UEP RH HOSPITALISATION 
+ <br/>
+<b>Ref :</b> 1237228 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire :IZM/A<br/></b>
+<br/> Compte-rendu d'hospitalisation remis en mains propres à la sortie du 
+ <br/>patient, faisant fonction de lettre de liaison.
+ <br/>
+<br/>
+<b> Patient de 41ans hospitalisée dans l'Unité D'Expertise Palliative <br/>(UDEP) du 28/01/2021 au 2/02/2021 <br/><br/><u>Motif d'hospitalisation<br/></u></b> Patiente de 41 ans, en 8ème ligne métastatique pour un cancer du 
+ <br/>sein triple négatif, hospitalisée pour équilibre antalgique, 
+ <br/>et prise en charge des nausées/vomissements.
+ <br/>
+<b><br/><u>Oncologue référent</u> : Dr MOKDAD <br/><br/><u>Suivi antérieur au DISSPO<br/></u>- EMASP :</b> Dr PAVLIUC 
+ <b><br/>- CETD :</b> Dr SEVEQUE
+ <b><br/>- Psychologue :</b> Capucine SALLARD
+ <b><br/>- Assistante sociale :</b> Monica VARGAS 
+ <b><br/><br/><u>Informations complémentaires</u><br/>Directives anticipées: </b> non rédigées.
+ <b><br/>Personne de confiance: </b> son époux, M. BUSSEAU Frédérique 
+ <br/>06.60.97.99.67.
+ <br/>
+<b>Intervenants au domicile:</b>
+<br/>-Prise en charge par l'HAD santé service avec deux passages par jour 
+ <br/>des infirmières, a une PCA de MORPHINE et une PCA de KETAMINE.
+ <br/>
+<b><br/><u>Antécédents notables</u> <br/></b> Aucun, pas d'allergie connue. 
+ <br/>
+<br/>
+<u><b>Histoire de la maladie et ses complications</b></u>
+<b> <br/></b> - 2015 : cancer du sein gauche diagnostiqué initialement traité à 
+ <br/>l'Institut Bergonié par chimiothérapie, chirurgie puis radiothérapie 
+ <br/>au niveau axillaire, CMI et sus claviculaire, triple négatif.
+ <br/>- Récidive en mars 2018,
+ <b>L1 par NAVELBINE. </b>
+<br/>- Déc 2018 : progression ganglionnaire sus et sous-claviculaire 
+ <br/>gauche et probablement 
+ <br/>axillaire gauche. 
+ <b>L2 par TALAZOPARIB</b>à partir de janvier 2019 
+ <br/>- Avril 2019 : progression ganglionnaire, majoration d'un nodule 
+ <br/>sous-cutané cervical antérieur gauche et apparition d'un nodule 
+ <br/>surrénalien gauche.
+ <br/>
+<b>L3 par XELODA. <br/></b> - Juillet 2019 : nouvelle progression métabolique ;
+ <b>L4 par ENDOXAN <br/>oral.</b>
+<br/>- Aout 2019: Nouvelle progression
+ <b>L5 par ERIBULINE</b> ; 5 cycles reçus 
+ <br/>- Décembre 2019 : progression donc 
+ <b>L6 par CARBOPLATINE / GEMZAR</b>
+<br/>jusqu'au 28/02/2020 ; arrêté sur progression 
+ <br/>- Durant la période COVID - rechallenge de NAVELBINE 
+ <br/>- Reprise de CARBOPLATINE / GEMZAR C1J1 22/07/2020. Dernière cure le 
+ <br/>09/09/2020 ; 3 cycles supplémentaires reçus.
+ <br/>- Fin octobre 2020 :
+ <b>L7 par PACLITAXEL C1 J1 débuté le 04/11/2020.</b>
+<br/>- Décembre 2020 :
+ <b>L8 par CMF</b> + Radiothérapie antalgique sur 
+ <br/>adénopathie claviculaire gauche de 22/12 au 30/12/2020 en 5 séances 
+ <br/>de 4 Gy.
+ <br/>
+<br/>
+<u><b>Complications de la maladie :<br/></b></u> La patiente présente une progression au niveau de l'adénopathie 
+ <br/>sus-claviculaire gauche avec des douleurs mixtes avec une composante 
+ <br/>neuropathique importante au niveau du membre supérieur gauche, raison 
+ <br/>pour laquelle elle est hospitalisée au mois de novembre pour 
+ <br/>équilibration antalgique.
+ <br/>
+<br/>
+<u><b>Histoire de la maladie récente</b></u>
+<b><br/></b> Patiente vue régulièrement en HDJ soins palliatifs ; dont le dernier 
+ <br/>le 27/01 : 
+ <br/>- Proposition d'hospitaliser la patiente dès qu'une place sera 
+ <br/>disponible à l'UDEP, pour équilibre antalgique, réévaluation des 
+ <br/>traitements, discussion sur le projet thérapeutique, et organisation 
+ <br/>des aides au domicile et prise en charge sociale.
+ <br/>- Fragilité émotionnelle, patiente qui se sent épuisée moralement. 
+ <br/>- Constipation, la patiente ne prend pas systématiquement de laxatif. 
+ <br/>
+<u><br/><b>Mode de vie</b></u>
+<b> <br/></b> Professeur des écoles en maternelle (en arrêt de travail).
+ <br/>Mariée, a deux fils d'une première union de 10 et 15 ans, le fils de 
+ <br/>15 ans est à la maison avec elle et le fils cadet est avec son père 
+ <br/>dans le sud de la France ; elle vit aussi avec le fils de son mari 
+ <br/>actuel.
+ <br/>Habite dans une maison avec étage, la chambre est au rez-de-chaussée. 
+ <br/>et la salle de bain est à l'étage.
+ <br/>Tabagisme non sevré.
+ <br/>
+<br/>
+<u><b>Traitement à l'entrée <br/></b></u> PCA morphine 7 mg/h avec bolus 9mg, sur 72 heures 18 bolus demandés 
+ <br/>sur 16 bolus reçus
+ <br/>PCA KETAMINE 2 mg/h
+ <br/>LOVENOX 0.4ml 
+ <br/>MOVENTIG 25mg le matin 
+ <br/>NORSET 15mg le soir
+ <br/>XANAX 0.25mg si besoin 
+ <br/>Paracétamol si besoin 
+ <br/>MICROLAX si besoin
+ <br/>PRIMPERAN 3 x par jour
+ <br/>LAROXYL I.V. 25 mg sur la nuit
+ <br/>LANSOPRAZOLE 30 mg
+ <br/>neurontin 800-800-800
+ <br/>
+<br/>
+<u><b>Biologie</b></u>
+<br/>Sodium 139 mmol/l, potassium 3,6 mmol/l, créatininémie 51 μmol/l, 
+ <br/>calcémie corrigée 2,30 mmol/l, phosphatases alcalines 223 UI/l, ASAT 
+ <br/>2N, ALAT 5N, Gamma GT 450 U/L bilirubine totale à 7 μmol/L
+ <br/>CRP 4,9 mg/l, albuminémie 36 g/l ; LDH 484 UI/l 
+ <br/>TSH normale ; cortisol à 8h < normale 
+ <br/>Bilan d'hémostase normal 
+ <br/>Leucocytes 1600 dont 800PNN ; hémoglobine 8,7 g/dl ; plaquettes 155 
+ <br/>000.
+ <br/>
+<br/>
+<u><b>Evaluation médico-soignante des symptômes</b></u>
+<br/>OMS à l'entrée : 2
+ <br/>EN à l'entrée : 1/10
+ <br/> FAD à l'entrée : soin max en salle 
+ <br/>Poids 63 kg (-8 kg depuis septembre 2020)
+ <br/>Pression artérielle 128/82 Fréquence cardiaque 111 bpm 
+ <br/>Température à 36°C Saturation à 98 % en air ambiant
+ <br/>
+<br/>
+<b>Sur le plan des douleurs</b> : 
+ <br/>- Beaucoup moins de douleurs au niveau du membre supérieur gauche.
+ <br/>Au repos, une EVA à 0/10 ; à l'effort ou en mouvements EVA max à 3 à 
+ <br/>4/10.Depuis que la patiente a débuté une nouvelle chimiothérapie par 
+ <br/>CMF, elle décrit clairement moins de douleurs au niveau du bras 
+ <br/>raison 
+ <br/>pour laquelle elle ne prend plus de LAROXYL en si besoin, elle ne 
+ <br/>prend plus de paracétamol et elle a pu arrêter son SOLUPRED 40 mg 
+ <br/>sans contrôle médical. Les douleurs sont toujours mixtes, elles sont 
+ <br/>décrites comme une sensation de compression lorsqu'il y a un 
+ <br/>lymphoedème important, mais également associé à des décharges 
+ <br/>électriques et une sensation de coup de couteau.
+ <br/>Douleur dentaire au niveau de la molaire inférieure gauche, avec 
+ <br/>antécédent d'abcès. Il y a une indication à réaliser une extraction 
+ <br/>dentaire.
+ <br/>
+<br/>
+<b>Sur le plan cardio-pulmonaire</b> :
+ <br/>Patiente eupnéique en air ambiant, l'auscultation cardiopulmonaire 
+ <br/>met en évidence une diminution du murmure vésiculaire basithoracique 
+ <br/>gauche. La patiente est dyspnéique à l'effort ; elle est obligée de 
+ <br/>s'arrêter pour reprendre son souffle lorsqu'elle monte des escaliers. 
+ <br/>Mais légère amélioration depuis le dernier HDJ soins palliatifs.
+ <br/>Bruits du coecur réguliers, sans souffle perçu. Pas d'oedème des 
+ <br/>membres inférieurs.
+ <br/>
+<br/>
+<b>Sur le plan digestif</b> :
+ <br/>Abdomen souple dépressible indolore. Trouble du transit marqué par 
+ <br/>une constipation importante sous morphiniques et ZOPHREN. La patiente 
+ <br/>n'a pas pris de MOVENTIG prescrit. Elle n'a pas eu de selle depuis 5 
+ <br/>jours. 
+ <br/>Vomissement indépendant de la chimiothérapie.
+ <br/>Perte d'appétit importante, elle ne mange quasiment rien, elle 
+ <br/>grignote plutôt dans la journée, mais continue de prendre deux 
+ <br/>compléments nutritionnels par jour.
+ <br/>Ses nausées-vomissements avait été explorés lors d'une 
+ <br/>hospitalisation dans le service "Hérault" au mois de septembre 2020 ; 
+ <br/>aucune étiologie n'avait été retrouvée ; la méningite carcinomateuse 
+ <br/>avait alors été éliminée. Cependant la patiente a tout de même perdu 
+ <br/>9 kg en cinq mois ; elle vomit à chaque repas. Le PRIMPERAN est 
+ <br/>inefficace.
+ <br/>
+<br/>
+<b>Sur le plan des muqueuses et des téguments</b> :
+ <br/>Etat cutané propre.
+ <br/>PAC propre, fonctionnel, non inflammatoire.
+ <br/>Lymphoedème du bras gauche, n'utilise pas de manchon car ne le 
+ <br/>supporte pas, utilise une bande de contention. 
+ <br/>Bouche propre sans mucite.
+ <br/>
+<br/>
+<b>Sur le plan neuro-psychologique</b> :
+ <br/>Depuis le soulagement des douleurs, la patiente décrit un sommeil de 
+ <br/>qualité satisfaisante. Elle n'a pas débuté le traitement par norset 
+ <br/>et xanax prescrit lors du dernier HDJ SP 
+ <br/>
+<br/>
+<b>Sur le plan de la mobilité / autonomie</b> :
+ <br/>Patiente autonome pour les actes de la vie quotidienne. Périmètre de 
+ <br/>marche limité par la dyspnée à l'effort. Elle décrit devoir s'arrêter 
+ <br/>dans les escaliers quand elle veut monter dans sa salle de bain.
+ <br/>
+<b><br/><u>Evaluation radiologique</u><br/></b> Non réalisée.
+ <br/>
+<br/>
+<u><b>Evaluation des connaissances du patient et de son entourage<br/></b></u> Au clair ; nous n'abordons pas le pronostic et l'évolution de la 
+ <br/>maladie lors de cette hospitalisation. 
+ <br/>
+<br/>
+<u><b>Scores pronostiques<br/></b></u>
+<b>Pronopall :5</b> /10
+ <b><br/>PALLIA 10 :5</b> /10
+ <br/>
+<br/>
+<u><b>Evolution dans le service<br/></b></u>
+<b>Sur le plan des douleurs</b> : 
+ <br/>La patiente est peu algique ; ce qui nous permet donc d'arrêter 
+ <br/>progressivement la kétamine. Cependant, on ne modifie pas les doses 
+ <br/>de morphine car la patiente est bien soulagée et la PCA au quotidien 
+ <br/>ne la gêne pas. 
+ <br/>
+<br/>
+<b>Sur le plan cardio-pulmonaire</b> :
+ <br/>Patiente stable durant l'hospitalisation. 
+ <br/>
+<br/>
+<b>Sur le plan digestif</b> :
+ <br/>Mise en place d' HALDOL 5 gouttes matin midi et soir avant les repas, 
+ <br/>ainsi que du ZOPHREN 8mg en systématique matin et soir. Durant toute 
+ <br/>l'hospitalisation, la patiente ne présente aucune nausée; elle 
+ <br/>arrive à manger les plateaux repas et les CNO prescrits. On insiste 
+ <br/>sur la nécessité de poursuivre les traitements anti-émétiques en 
+ <br/>systématique de manière à reprendre du poids et à faciliter la prise 
+ <br/>alimentaire. 
+ <br/>Prise en charge des troubles du transit avec des laxatifs en 
+ <br/>systématique. 
+ <br/>
+<br/>
+<b>Sur le plan neuro-psychologique</b> :
+ <br/>Aucune plainte durant l'hospitalisation.
+ <br/>Pas d'anxiété ou de trouble de sommeil objectivés.
+ <br/>
+<br/>
+<b>Sur le plan hormonal: </b>
+<br/>Mise en évidence sur le bilan biologique d'une insuffisance 
+ <br/>surrénalienne en lien avec l'arrêt brutal de la corticothérapie par 
+ <br/>la patiente. La cortisolémie à 8h est effondrée ; on reprend donc un 
+ <br/>traitement par CORTANCYL 20 mg matin et soir avec une prescription de 
+ <br/>décroissance très progressive. 
+ <br/>
+<br/>
+<b>Modifications des traitements au cours de l'hospitalisation :<u><br/></u></b>
+<br/>
+<u><b>Devenir<br/></b></u> Retour à domicile en HAD
+ <br/>
+<br/>
+<u><b>Tableau des opioïdes</b></u>
+<br/>
+<br/>+---------------------+---------+----------+--------------------+
+ <br/>| Molécule opioïde | Date de | Date de | Motif interruption |
+ <br/>| | début | fin | |
+ <br/>+=====================+=========+==========+====================+
+ <br/>| OXYCODONE pour | 06/2019 | 04/11/19 | Inefficace |
+ <br/>| douleurs cervicales | | | |
+ <br/>+---------------------+---------+----------+--------------------+
+ <br/>| PCA Morphine | 04/11 | | |
+ <br/>| jusqu'à 7 mg/h | | | |
+ <br/>| Bolus 9 mg | | | |
+ <br/>+---------------------+---------+----------+--------------------+
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<br/>Arrêt de la kétamine en PCA chez une patiente nettement moins algique
+ <br/>Prise en charge de nausée et vomissement par anti-émétique en 
+ <br/>systématique. 
+ <br/>
+<br/>OMS à la sortie : 2
+ <br/>EN à la sortie : 1/10
+ <br/> FAD à la sortie : 
+ <br/>- réactualisée : OUI 
+ <br/>
+<br/>Mode de sortie : Taxi 
+ <br/>Lieu de sortie : Domicile 
+ <br/>
+<br/>
+<u><b>Traitement de sortie</b></u>
+<br/>PCA morphine 7 mg/h avec bolus 9mg
+ <br/>LOVENOX 0.4ml : 1 inj le matin 
+ <br/>MOVENTIG 25mg le matin 
+ <br/>NORSET 15mg le soir
+ <br/>XANAX 0.25mg si besoin 
+ <br/>Paracétamol si besoin ; max 3g par jour 
+ <br/>MICROLAX si besoin
+ <br/>LANSOYL x 3/j si besoin 
+ <br/>LANSOPRAZOLE 30 mg le soir 
+ <br/>CORTANCYL 20mg le matin pendant 7 jours puis 10mg le matin pendant 7 
+ <br/>jours puis 5mg 
+ <br/>NEURONTIN 800mg matin midi et soir 
+ <br/>HALDOL en goutte : 5 gouttes matin midi et soir avant les repas
+ <br/>ZOPHREN 8 mg matin et soir en systématique 
+ <br/>
+<br/>
+<br/>* Prise en charge palliative OUI 
+ <br/>
+<br/>EVALUATION DE LA CHARGE EN SOINS
+ <br/>* Ponction à visée symptomatique NON
+ <br/>* Adaptation du traitement antalgique OUI
+ <br/>* Irradiation antalgique NON
+ <br/>* Occlusion intestinale NON
+ <br/>* Transfusion sanguine NON
+ <br/>* Prise en charge de la détresse respiratoire
+ <br/>avec désaturation < 90% en AA NON
+ <br/>* Traitement des divers symptômes vecteurs d'inconfort 
+ <br/>(toux, prurit, nausées, vomissements, anxiété, 
+ <br/>dépression, troubles du sommeil, déshydratation...) OUI 
+ <br/>* Soins de nursing NON
+ <br/>* Nutrition : 
+ <br/>- déjà sous CNO, nutrition entérale/parentérale OUI
+ <br/>- mise en route d'une nutrition entérale/parentérale NON
+ <br/>
+<br/>PRISE EN CHARGE MULTI-DISCIPLINAIRE
+ <br/>* Prise en charge de l'EMASP OUI 
+ <br/>* Consultation CETD (douleur, sophrologie, 
+ <br/>auriculothérapie) NON
+ <br/>* Consultation d'onco-psychologie NON
+ <br/>* Prise en charge sociale NON
+ <br/>* Soins de kinésithérapie NON
+ <br/>* Consultation diététicienne ou nutritionniste OUI 
+ <br/>
+<br/>
+<br/>CMA liées aux soins contribuant à la valorisation PMSI des séjours
+ <br/>Soins
+ <br/>- Pose et entretien d'une pompe à perfusion.
+ <br/>- Ajustement et entretien d'un dispositif vasculaire, VVC ou KT.
+ <br/>Complications après traitement
+ <br/>- Lymphoedème après mastectomie.
+ <br/>- Dénutrition (indiquer ancien poids, poids actuel, vitesse perte de 
+ <br/>poids et SNO).
+ <br/>- Besoin d'assistance à domicile, aucun autre membre du foyer ne 
+ <br/>pouvant assurer les soins.
+ <br/>
+<br/>
+<b>_________________________________________________<br/>Signé électroniquement par Docteur Caroline POISSON , Interne<br/>Le vendredi 29 janvier 2021 à 16:07</b>
+<br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

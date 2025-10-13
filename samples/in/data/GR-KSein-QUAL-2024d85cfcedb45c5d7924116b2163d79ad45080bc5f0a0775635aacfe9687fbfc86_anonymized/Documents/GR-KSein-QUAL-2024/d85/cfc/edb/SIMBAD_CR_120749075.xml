@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120749075" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20200727000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200727000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Compte rendu générique de SENOLOGIE<br/><br/>Dicté par : </b> Docteur Meriem Mokdad Adi
+ <b><br/>Dicté le : </b> 27/07/2020 
+ <b><br/>Service : </b> 050-CTE 050 - SEIN 
+ <br/>
+<b>Type de document : </b> 050 CC Générique 
+ <br/>
+<b>Ref :</b> 1057034 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> :ORC
+ <br/>
+<br/>Vue ce jour seule dans le cadre de la prise en charge 
+ <br/>d'une récidive hépatique et osseuse d'un cancer du sein droit 
+ <br/>diagnostiqué initialement en 2016 triple négatif, en 8ème ligne par 
+ <br/>Carboplatine débuté le 29/06.
+ <br/>Patiente a eu deux épisodes de zona fin avril, traité par ACICLOVIR, 
+ <br/>sous XELODA
+ <br/>
+<br/>
+<u><b>RAPPEL:</b></u>
+<u><b><br/><br/></b></u> T2 N0 de 25mm du sein droit diagnostiqué en juillet 2016, carcinome 
+ <br/>canalaire infiltrant de grade III triple négatif. Dans le bilan 2 
+ <br/>micronodules pulmonaires à surveiller. 
+ <br/>
+<br/>Chimiothérapie néo-adjuvante par 6 EC 75 doses denses + 12 TAXOL 
+ <br/>hebdo débutée le 29/08/2016. 
+ <br/>
+<br/>TGS le 23/02/2017 : persistance de 13mm de carcinome métaplasique 
+ <br/>avec une différentiation chondroïde ou ostéoïde, 17mm 
+ <br/>d'intracanalaire, 1GS-. 
+ <br/>
+<br/>Radiothérapie : sein + surimpression terminée le 08/06/2017. 
+ <br/>
+<br/>XELODA adjuvant 6 cycles compte tenu du risque persistant, à 
+ <br/>expliquer à la patiente. 
+ <br/>
+<br/>TEP scanner le 08/02/2018 : Aspect TEP en faveur d'une rechute 
+ <br/>métastatique avec atteinte osseuse de T3 et atteinte hépatique 
+ <br/>(segment VII). 
+ <br/>
+<br/>La patiente avait débuté une chimiothérapie par CARBOPLATINE GEMZAR 
+ <br/>de février à juillet 2018. 
+ <br/>
+<br/>Elle a reçu HERCEPTIN à partir du 02/05 en association avec 
+ <br/>CARBOPLATINE- GEMZAR puis en association avec ENDOXAN débuté en 
+ <br/>juillet 2018. 
+ <br/>
+<br/>Suite au résultat de la biopsie hépatique le 07/03/2018 : 
+ <br/>localisation hépatique d'une prolifération tumorale maligne dont la 
+ <br/>morphologie est tout à fait compatible avec une localisation du 
+ <br/>carcinome mammaire de type métaplasique avec différenciation 
+ <br/>chondroïde et / ou ostéoïde connu
+ <br/>RE négatif, RP négatif, présence d'une amplification du gène HER2 
+ <br/>selon les critères GEFPICS 2014 dans les cellules analysées par FISH. 
+ <br/>
+<br/>Il s'agit d'une amplification faible avec la valeur "borderline" de 
+ <br/>ratio qui est à 2,05. 
+ <br/>
+<br/>Le PET scan réalisé le 27/04 avait montré : une réponse métabolique 
+ <br/>partielle de la lésion hépatique unique du segment VII et de la 
+ <br/>lésion osseuse isolée en T3. 
+ <br/>
+<br/>Elle a reçu 6 cycles de CARBOPLATINE GEMZAR débuté le 26 février 
+ <br/>jusqu'au 09/07 marqué par des toxicités importantes sur le plan 
+ <br/>hématologique : thrombopénie et neutropénie. 
+ <br/>
+<br/>
+<b>PROFEEL :</b> mutation TP53
+ <br/>Sous ENDOXAN depuis le 23/07 jusqu'au 25/10.
+ <br/>Arrêt de l'ENDOXAN pour progression hépatique et osseuse. 
+ <br/>
+<b>TEP 19/10</b> : comparativement à l'examen précédent de juillet 2018, 
+ <br/>aspect de progression, devant la majoration des lésions 
+ <br/>pré-existantes du foie et de T3, sans nouvelle fixation suspecte. 
+ <br/>
+<br/>IRM rachis 31/10 : globale stabilité de l'atteinte de T3 avec 
+ <br/>atteinte épidurale foraminale droite T3/T4. 
+ <br/>Pas d'apparition de lésion osseuse suspecte. 
+ <br/>Pas de compression médullaire. 
+ <br/>La patiente ne prend pas d'XGEVA car elle appréhende les effets 
+ <br/>secondaires, elle demande un temps de réflexion. 
+ <br/>ERIBULINE en 3ème ligne le 09/11. 
+ <br/>
+<br/>Il était prévu de lui proposer une inclusion dans le protocole MCLA 
+ <br/>cohorte 1 : non éligible car n'avait pas reçu le PERTUZUMAB au 
+ <br/>préalable. 
+ <br/>MCLA cohorte 2, elle n'a pas eu d'hormonothérapie avant, donc ne peut 
+ <br/>être incluse dans 
+ <b>VIOLETTE </b> et 
+ <b>IMMU132</b> : non éligible compte tenu de 
+ <br/>la faible amplification HER2. 
+ <br/>
+<br/>1ère ligne : CARBOPLATINE / GEMZAR
+ <br/>2ème ligne : ENDOXAN 
+ <br/>3ème ligne : ERIBULINE
+ <br/>4ème ligne : CMF 
+ <br/>
+<br/>5ème ligne : NAVELBINE 
+ <br/>6ème ligne : Taxol jusqu'au 09/03
+ <br/>Pour rappel PDL1 négatif ( recherché en mars 2018) 
+ <br/>RA négatif recherché en novembre 2018) 
+ <br/>
+<br/>
+<u><b>CE JOUR:<br/></b></u>
+<b><br/>PS :0</b>
+<br/>Poids : 52 kg
+ <br/>
+<br/>Tolérance du carboplatine reste correcte.
+ <br/>Mucite de grade I.
+ <br/>Crampes nocturnes.
+ <br/>Diarrhées à J4 J5 3 à 4 selles par jour , spontanément résolutives 
+ <br/>puis période de constipation traitée par Macrogol.
+ <br/>Céphalées grade 1
+ <br/>
+<br/>Douleurs au niveau dorsal, j'informe la patiente que si les douleurs 
+ <br/>s'aggravaient je propose de faire une IRM pour discuter le dossier en 
+ <br/>RCP DOULOS pour proposer un traitement local.
+ <br/>
+<br/>Présente des troubles cognitifs , perd ses mots, dire un mot à la 
+ <br/>place d'un autre.
+ <br/>IRM cérébrale 09/09.
+ <br/>Dernier TEP le 18/06 : progression au niveau hépatique et osseux.
+ <br/>
+<br/>Je propose aussi de discuter de dossier pour un protocole de phase I: 
+ <br/>Son dossier a été évalué au staff du comité 150 des essais précoces et 
+ <br/>malheureusement nous n'avons pas d'essai thérapeutique de phase I à 
+ <br/>proposer à cette patiente. 
+ <br/>
+<br/>Cependant, cette patiente est potentiellement éligible dans 
+ <br/>l'étude biologique de phase II de type STARTRK-2.
+ <br/>
+<br/>
+<u><b>EN PRATIQUE:</b></u>
+<b><br/></b>
+<br/>Poursuite du CARBOPLATINE débuté le 29/06.
+ <br/>
+<br/>Nouvelle évaluation par scanner début octobre.
+ <br/>
+<br/>Je la reverrai en consultation en septembre puis début octobre avec 
+ <br/>les résultats du TEP à GR.
+ <br/>
+<br/>
+<br/> ____________________________
+ <br/>
+<b>Courrier rédigé avec un logiciel de reconnaissance vocale pouvant <br/>comporter quelques imperfections orthographiques.<br/><u></u></b>
+<u> <br/></u>
+<br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Meriem MOKDAD ADI <br/>Le lundi 27 juillet 2020 à 11:03 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

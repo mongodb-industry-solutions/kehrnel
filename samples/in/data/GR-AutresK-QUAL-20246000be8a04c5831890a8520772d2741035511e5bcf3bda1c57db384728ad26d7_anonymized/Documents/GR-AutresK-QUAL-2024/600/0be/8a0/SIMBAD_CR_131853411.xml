@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_131853411" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>RESUME D'HOSPITALISATION - SERVICE INDRE ET LOIRE</title>
+    <effectiveTime value="20140913000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20140915000000+0000"/>
+        <assignedAuthor>
+            <code code="IEL/185" displayName="INDRE ET LOIRE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Docteur Alina FUEREA</b></u>
+<br/>
+<br/>
+<b>HOSPITALISATION dans le service INDRE ET LOIRE du 11/09 au 13/09/2014<br/></b>
+<br/>Médecin référent IGR : Dr TEMAM Stéphane
+ <br/>
+<br/>
+<br/>
+<u><b>MOTIF D'HOSPITALISATION</b></u>
+<b> :</b>
+<br/>
+<br/>
+<b>Monsieur DA SILVA José,</b> patient âgé de 53 ans, est hospitalisé pour 
+ <br/>la réalisation de la 1ère cure de chimiothérapie par CISPLATINE en 
+ <br/>concomitant à la radiothérapie dans le cadre d'un carcinome 
+ <br/>épidermoïde oropharyngé classé T3 N2c M0 avec HPV+ et P16+ à 70-80%
+ <br/>
+<br/>
+<u><b>ANTECEDENTS</b></u>
+<b> :</b>
+<br/>
+<br/>
+<u><b>Antécédents médico-chirurgicaux</b></u>
+<b> :<br/></b>
+<br/> - Notion d'épilepsie depuis une dizaine d'années. 
+ <br/> A été stable pendant deux ans mais a fait une nouvelle crise 
+ <br/> récente.
+ <br/> A eu un scanner cérébral qui a été jugé rassurant, un électro-
+ <br/> encéphalogramme a été recommandé.
+ <br/> - Psoriasis.
+ <br/> - Maladie de Dupuytren bilatérale sévère invalidante qui justifie 
+ <br/> une allocation adulte handicapé probablement liée à son 
+ <br/> intoxication alcoolique.
+ <br/> - Epilepsie
+ <br/>
+<br/>
+<u><b>Mode de vie</b></u> :
+ <br/>
+<br/>Tabagisme chronique sévère depuis l'âge de 16 ans estimé à 38 PA,
+ <br/>est actuellement en sevrage à Paul Brousse.
+ <br/>Alcoolisme chronique très sévère, non sevré.
+ <br/>
+<br/>
+<u><b>Histoire de la maladie</b></u> : 
+ <br/>
+<br/>Gêne pharyngée puis apparition d'odynodysphagie et d'otalgie droite 
+ <br/>avec adénopathies sous-digastriques à droite il y a environ 7 mois.
+ <br/>
+<br/>Le patient a été vu par le Docteur CHEDDADI qui a retrouvé une lésion 
+ <br/>vélaire et il a ensuite été adressé au Docteur TEMAM qui a retrouvé 
+ <br/>une lésion finement bourgeonnante, oropharyngée prenant la 
+ <br/>quasi-totalité du voile, prédominante à droite où elle descend sur le 
+ <br/>pilier postérieur, associée à une leucoplasie au niveau du pilier 
+ <br/>antérieur droit.
+ <br/>Le voile reste mobile.
+ <br/>
+<br/>En nasofibroscopie, on note que la tumeur remonte sur la paroi 
+ <br/>postérieure du voile mais respectant le cavum.
+ <br/>
+<br/>La pan endoscopie du 18/07/14 a retrouvé la lésion prenant la 
+ <br/>totalité du voile, descendant sur les piliers postérieurs, se 
+ <br/>prolongeant de façon superficielle sur la paroi oropharyngée 
+ <br/>postérieure avec un aspect de carcinose diffus.
+ <br/>En revanche, pas d'anomalie au niveau de l'hypopharynx, ni de 
+ <br/>l'endolarynx.
+ <br/>Les biopsies ont retrouvé un CARCINOME INFILTRANT de type 
+ <br/>EPIDERMO\'cfDE MOYENNEMENT A BIEN DIFFERENCIE avec un p16 positif.
+ <br/>
+<br/>18 Août 2014 : Le patient a été vu en consultation par le Dr TAO qui 
+ <br/>valide l'indication d'une radio-chimiothérapie concomitante. Le 
+ <br/>patient est éligible dans le protocole GORTEC 2004-01 évaluant une 
+ <br/>radio-chimiiothérapie en IMRT 75 Gy en 35 séances vs radiothérapie 
+ <br/>conformationnelle 70 Gy en 35 séances sur 7 semaines.
+ <br/>Questionnaire rempli et consentement signés.
+ <br/>
+<br/>
+<br/>
+<b>Classification T3 N2c M0.<br/><br/>On propose une radio-chimiothérapie concomitante.<br/><br/></b>
+<br/>
+<u><b>TRAITEMENT PERSONNEL</b></u>
+<b> :</b>
+<br/>* AOTAL 333 mg 2cps 3x / jour
+ <br/>* THERALENE 5 mg 3cps au coucher si insomnie
+ <br/>* ATARAX 25 mg 1 cp x4 / jour
+ <br/>* PHENOBARBITAL 5 mg 1 cp le soir
+ <br/>* ACIDE FOLIQUE 5 mg 1 cp le matin
+ <br/>* NICOTINE 21 mg/h sur 24h 
+ <br/>* NICOTINE 4 mg en gomme 4 gommes / jour
+ <br/>
+<br/>
+<b>* * * * * * * * * * * * * * * * * * * *<br/> </b>
+<br/>
+<u><b>EXAMEN CLINIQUE</b></u>
+<b> :</b>
+<br/>
+<br/>
+<b>EVA à l'entrée : 0 / 10<br/>Poids à l'entrée :</b> 64,5 kg
+ <br/>
+<b>Taille</b> : 1 m 60
+ <br/>
+<br/>Tension artérielle : 10/7
+ <br/>Pouls : 80/min.
+ <br/>Apyrétique.
+ <br/>Saturation en air ambiant à 100%.
+ <br/>
+<br/>OMS : 0
+ <br/>Auscultation cardio-pulmonaire sans particularité.
+ <br/>Abdomen : souple, dépressible, indolore, pas de masse palpable.
+ <br/>Adénopathie latéro-cervicale droite et gauche mobile non algique.
+ <br/>
+<br/>
+<br/>
+<u><b>BILAN BIOLOGIQUE</b></u>
+<b> :</b>
+<br/>
+<br/>- 
+ <u>Biologie</u> :
+ <br/>GB : 7 400 PNN : 3 800
+ <br/>Hb : 15,5 g/dl Plaquettes : 178 000
+ <br/>Na : 141 K : 4,4
+ <br/>Chlore : Protides : 
+ <br/>
+<br/>- 
+ <u>Fonction rénale</u> :
+ <br/>Urée : 2,6 Créatinine : 64 μmol.
+ <br/>
+<br/>- 
+ <u>Bilan hépatique</u> :
+ <br/>ASAT : 14 UI/L ALAT : 11 UI/L.
+ <br/>GGT : 60 UI/L PAL : 80 UI/L.
+ <br/>Albuminémie : g/l Calcémie : 2,35 mmol.
+ <br/>
+<br/>
+<b>* * * * * * * * * * * * * * * * * * * *<br/> </b>
+<br/>
+<u><b>EVOLUTION DANS LE SERVICE</b></u>
+<b> :</b>
+<br/>
+<br/>Pas de contre-indication à la réalisation de la chimiothérapie.
+ <br/>Administration de la 1ère cure de chimiothérapie le 11/09/2014 :
+ <br/>
+<br/>
+<b>* CISPLATINE 100 mg/m2 soit 170 mg DT<br/>avec une bonne tolérance immédiate du traitement avec pré-médication <br/>par ZOPHREN/EMEND/Corticoïdes + Hyperhydratation.<br/></b>
+<br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/></b>
+<br/>
+<b>1ère cure de chimiothérapie en concomitant à la radiothérapie dans le <br/>cadre d'un carcinome épidermoïde de l'oropharynx classé T3 N2c M0 <br/>avec <br/>HPV+ et P16+ à 70 - 80%</b>
+<br/>
+<br/>
+<b>EVA à la sortie : 0 / 10<br/>Poids à la sortie :</b> 65 kg
+ <br/>
+<br/>Le patient quitte le service le 13/09/2014 pour son domicile.
+ <br/>
+<br/>Poursuite de la radiothérapie à titre externe.
+ <br/>Prochaine cure de chimiothérapie le 02/10/2014.
+ <br/>
+<br/>
+<u><b>ORDONNANCES DE SORTIE</b></u>
+<b> :</b>
+<br/>* Bains de bouche BICARBONATE/XYLOCA\'cfNE 
+ <br/>* PRIMPERAN 20 mg x3 / jour si besoin
+ <br/>* ZOPHREN 8 mg x2 / jour 
+ <br/>
+<br/>
+<b>Prise en charge palliative : NON.</b>
+<br/>
+<br/>
+<b>CMA liées aux soins contribuant à la valorisation PMSI des séjours :</b>
+<br/>- Aucune
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121372534" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ORL - Dr Ingrid BREUSKIN</title>
+    <effectiveTime value="20200421000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200421000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>SERVICE ORL- COMPTE RENDU DE CONSULTATION<br/></b>
+<br/>
+<b>Dicté par</b> : Docteur Ingrid Breuskin
+ <br/>
+<b>Dicté le </b> : 21/04/2020 
+ <br/>
+<b>Service </b> : ORL-CONSULTATIONS ORL 
+ <br/>
+<b>Type de document</b> : ORL CC STM 
+ <br/>
+<b>Ref </b> : 982217 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient</b> : José XXXXXX 
+ <br/>
+<b>Identifiant </b> : XXXXXX 
+ <br/>
+<b>Date de naissance</b> : XXXXXX 
+ <br/>
+<b>Sexe</b> : Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire : </b> COSTE FLAVIE
+ <br/>
+<br/>
+<br/>
+<br/>Patient vu conjointement avec le Dr FERRAND.
+ <br/>Décrit des difficultés respiratoires.
+ <br/>Au niveau cervical, la peau est inflammatoire, un peu oedématiée.
+ <br/>Du côté latéro-cervical gauche, petit pertuis avec écoulement louche.
+ <br/>Un prélèvement bactériologique avait été réalisé le 27/03/2020 et le 
+ <br/>17/04/2020, celui-ci retrouve du staphylocoque doré sensible à 
+ <br/>l'AUGMENTIN. A mon sens il n'y a pas lieu de réaliser de traitement 
+ <br/>complémentaire sachant que le patient a déjà bénéficié d'une 
+ <br/>antibiothérapie par AUGMENTIN pendant 7 jours.
+ <br/>
+<br/>
+<u><b>A l'examen clinique</b></u> :
+ <br/>
+<br/>
+<u>Nasofibroscopie</u> : présence de nombreuses sécrétions. Muqueuse 
+ <br/>d'aspect un peu irrégulier au niveau vélaire et au niveau du 
+ <br/>néopharynx. Diagnostic différentiel entre une évolution tumorale et 
+ <br/>un aspect post-radique difficile.
+ <br/>
+<br/>Fibroscopie via le trachéostome : muqueuse d'aspect érythémateux et 
+ <br/>présence de sécrétion muco-purulente un peu épaisse, trop abondante. 
+ <br/>A surveiller.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>Prescription d'aérosols de sérum physiologique.
+ <br/>Contrôle tensionnel.
+ <br/>Le patient sera revu dans 15 jours par le Dr FERRAND et il 
+ <br/>m'appellera si besoin pour réexaminer le patient.
+ <br/>
+<br/>
+<br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b> Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>22/04/2020 09:00 RHO FFD HDJ CHIMIO 
+ <br/> 09:05 RHO FFD C HDJ A TRAITER 
+ <br/>05/05/2020 08:30 ORL FRF C ORL FRF 
+ <br/> 09:05 ORL FRF SG 
+ <br/> =SG MAGNESIUM
+ <br/> 09:10 ORL FRF BILAN ONCO 
+ <br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Ingrid BREUSKIN <br/>Le mardi 21 avril 2020 à 12:18<br/></b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

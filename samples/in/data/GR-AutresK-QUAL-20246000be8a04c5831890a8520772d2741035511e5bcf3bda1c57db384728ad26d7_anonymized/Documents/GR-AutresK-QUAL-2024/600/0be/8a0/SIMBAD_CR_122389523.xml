@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122389523" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>RESUME D'HOSPITALISATION FAISANT FONCTION DE LETTRE DE LIAISON</title>
+    <effectiveTime value="20191119000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20191119000000+0000"/>
+        <assignedAuthor>
+            <code code="RHO/179" displayName="RHONE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>SERVICE D'HOSPITALISATION RHONE - COMPTE RENDU D'HOSPITALISATION <br/>CHIMIOTHERAPIE + 24 HEURES<br/><br/>Dicté par : </b> Docteur Nardjes Djehal
+ <b><br/>Dicté le : </b> 06/11/2019 
+ <b><br/>Service : </b> RHO-RHONE 
+ <br/>
+<b>Type de document : </b> RHO RH HOSPI + 24 H (S) 
+ <br/>
+<b>Ref :</b> 849804 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : 
+ <b>YRB<u><br/> <br/></u></b> Approuvé par : 
+ <b>YRB</b>
+<br/>
+<br/>
+<br/>
+<u><b>Docteur DJEHAL/Docteur MAYACHE-BADIS<br/></b></u>
+<br/>
+<u><b>Chirurgien référent IGR</b></u> : Dr BREUSKIN
+ <br/>
+<br/>
+<u><b>Oncologue référent IGR </b></u>
+<b>: Dr FERRAND<br/></b>
+<br/>
+<u><b>Date d'entrée</b></u>
+<b> </b> : 05/11/2019
+ <br/>
+<br/>
+<u><b>Motif d'hospitalisation</b></u>
+<b> </b> : 
+ <b><br/></b> Patient de 58 ans hospitalisé via les urgences pour la prise en 
+ <br/>charge d'une oesophagite candidosique et d'une constipation , dans le 
+ <br/>cadre de la prise en charge 
+ <b> </b> d'une récidive latéro-cervicale 
+ <br/>bilatérale d'un carcinome oropharyngé, HPV-, traité initialement par 
+ <br/>radiochimiothérapie en octobre 2014, avec chirurgie de rattrapage en 
+ <br/>novembre 2017 et mars 2018.
+ <br/>
+<b><br/><br/><u>Antécédents médico-chirurgicaux<br/>Chirurgicaux <br/></u></b> - carcinome épidermoïde hypopharyngé (récidive) traité par PLT avec 
+ <br/>lambeau de grand pectoral et lambeau antéro-latéral de cuisse, 
+ <br/>- trachéotomie, 
+ <br/>- opéré d'une maladie de Dupuytren à 2 reprises (à gauche et à 
+ <br/>droite).
+ <br/>
+<br/>
+<u><b>Médicaux</b></u>
+<br/>- crise comitiale généralisée avec dernier évènement il y a plus de 
+ <br/>10 ans, pas de suivi neurologique, que l'on recommande notamment sur 
+ <br/>le plan thérapeutique, 
+ <br/>- psoriasis diffus essentiellement aux mains et aux avant-pieds, pas 
+ <br/>de traitement systémique, 
+ <br/>- hypothyroïdie, 
+ <br/>- pas d'allergie.
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE</b></u>
+<br/>- Prise en charge pour un carcinome épidermoïde initialement de 
+ <br/> l'oropharynx vélaire et des piliers postérieurs bilatéralement 
+ <br/> traité par radiochimiothérapie en octobre 2014.
+ <br/>- Août 2017 : Seconde localisation de carcinome épidermoïde de 
+ <br/> l' hypopharynx droit.
+ <br/>- 13/11/17 : Traitement par pharyngo-laryngectomie totale droite et 
+ <br/> reconstruction par lambeau musculo-cutané de grand pectoral.
+ <br/> Suites compliquées d'un pharyngostome à plusieurs reprises.
+ <br/> Monté d'un lambeau de grand dorsal le 06/12/2017.
+ <br/> Malgré les reprises, persistance d'un pharyngostome et déhiscence 
+ <br/> des sutures avec pharyngostome large.
+ <br/>- 19/03/18 : reprise de cervicotomie pour rétablissement de la 
+ <br/> continuité digestive et réfection d'un trachéostome dans le 
+ <br/>contexte 
+ <br/> de pharyngostome large post-PLT de rattrapage avec fermeture par un 
+ <br/> lambeau libre antéro-latéral de cuisse prélevé à gauche et lambeau 
+ <br/> pédiculé supra-claviculaire avec anastomose de perforante 
+ <br/> delto-acromial prélevé à gauche.
+ <br/>- Récidive latéro-cervical gauche nécrotique envahissant les tissus 
+ <br/> mous, péri carotidienne non résécable et adénopathie en 2 à droite 
+ <br/> envahissant la veine jugulaire découverte à l'été 2019 par la 
+ <br/> majoration d'un oedème du visage et de douleur.
+ <br/> Biopsié, AP : Carcinome épidermoïde HPV-, P16-.
+ <br/>- RCP ORL du 17/10/19 : décision d'un traitement systémique (pas de 
+ <br/> réirradiation envisagée).
+ <br/>
+<br/>
+<b>- Début d'un traitement par Tpex (C1 le 30/10/19)<br/><u></u></b>
+<u> <br/><br/>Histoire récente</u>: 
+ <br/>Patient hospitalisé via l'HDJ pour douleurs abdominales, constipation 
+ <br/>et douleurs cervicales à la déglutition en lien avec une candidose.
+ <br/>
+<br/>
+<u><b>Examen clinique et biologique à l'entrée</b></u>
+<br/>OMS 1
+ <br/>Poids : 70,4 kg
+ <br/>Taille :1,61 m
+ <br/>SC : 1,74m2
+ <br/>IMC : 27,16kg/m2
+ <br/>TA : 12/7mmHg
+ <br/>FC : 79bpm
+ <br/>T : 37,2°C.
+ <br/>EVA : 4/10 au niveau abdominal et oro-pharyngé
+ <br/>Saturation : 96% en AA
+ <br/>Trachéotomie : en place et fonctionnelle.
+ <br/>Alimentation : par SNG
+ <br/>
+<br/>
+<u>Au plan clinique loco-régional</u> :
+ <br/>Examen ORL : oedème sous-palpébral.
+ <br/>Adénopathie : non palpable
+ <br/>Auscultation cardio-pulmonaire : sans particularité.
+ <br/>Abdomen : souple et dépressible, sans masse palpable, pas 
+ <br/>de hépatosplénomégalie. 
+ <br/>Transit :Petite douleurs et minimes distensions avec constipation 
+ <br/>datant de 3 jours.
+ <br/>Pas d'oedème des membres inférieurs.
+ <br/>
+<br/>
+<u>Au plan bio-hématologique le 04/11/2019</u> : 
+ <br/>Hémoglobine : 14,4g/dl
+ <br/>Leucocytes : 9 900/mm3
+ <br/>PNN : 9 200/mm3
+ <br/>Plaquettes : 239 000/mm3
+ <br/>Créatininémie à 61 μmol/l.
+ <br/>Ionogramme : Magnésium 0,79 mmol/l, Potassium 3,7mmol/l, Sodium 134
+ <br/>Mmol/l, Phosphore 0,98 mmol/l, Calcium 2,23 mmol/l, Calcium 2,28 
+ <br/>corrigé mmol/l.
+ <br/>Bilan hépatique : ASAT 24UI/l, ALAT 19 UI/l, Gamma GT 102 UI/l, PAL 
+ <br/>101
+ <br/> UI/l, Bilirubine totale 11μmol/l
+ <br/>Albumine :38 g/l
+ <br/>CRP : 142,4mg/l
+ <br/>TP : 90%
+ <br/>
+<br/>
+<u><b>Evolution dans le service<br/>Au plan digestif<br/></b></u> Reprise du transit le 06/11/19 avec amélioration de la mucite et de 
+ <br/>l' oesophagite candidosique.
+ <br/>Reprise alimentaire.
+ <br/>
+<br/>
+<b>Note Dr MAYACHE-BADIS le 06/11/19 :<br/></b> Hospitalisé pour une mucite de grade II et une constipation, le 
+ <br/>patient n'a toujours pas récupéré un transit correct, gaz présents 
+ <br/>ce jour, toujours pas de transit, on prescrit du MOVICOL à 2 sachets 
+ <br/>3x/J avec des compotes de pruneaux ; si pas de reprise du transit 
+ <br/>demain il faudra faire un grand lavement en NORMACOL.
+ <br/>Prescription ce jour de bains de bouche + TRIFLUCAN à 100 mg en I.V. 
+ <br/>par jour pendant 5 jours.
+ <br/>
+<br/>
+<b>Note Dr MAYACHE le 06/11/19 :<br/></b> J8 de Cetuximab aujourd'hui du moment que le patient est 
+ <br/>actuellement hospitalisé.
+ <br/>
+<br/>
+<b>Au plan oncologique :</b>
+<br/>
+<u><b>Administration de son C1J8 de chimiothérapie le 06/11/19 par</b></u> : 
+ <br/>
+<br/> CETUXIMAB 250 mg/m2 soit 450 mg DT
+ <br/>
+<br/>Bonne tolérance immédiate de la chimiothérapie.
+ <br/>
+<br/>
+<u><b>Administration de son C1J15 de chimiothérapie le 13/11/19 par</b></u> :
+ <br/>
+<br/> CETUXIMAB 250 mg/m2 soit 450 mg DT.
+ <br/>
+<br/>Bonne tolérance immédiate de la chimiothérapie.
+ <br/>
+<br/>
+<br/>
+<b>Visite du 07/11/19 : Dr EVEN, Dr BERNICHON, Dr BROUSTAUT, Dr DJEHAL, <br/>Dr MURATORI</b>
+<br/>Mr Da Silva se plaint ce jour de douleurs essentiellement au niveau 
+ <br/>cervical à type de décharges électriques et d'élancements.
+ <br/>On introduit un traitement pour les douleurs neuropathiques, le 
+ <br/>LYRICA.
+ <br/>Il se plaint d'une asthénie un peu plus importante ce jour.
+ <br/>Le bilan biologique montre une neutropénie avec des PNN à 600.
+ <br/>Patient apyrétique.
+ <br/>
+<br/>
+<b>Sur le plan infectieux :<br/></b> Le patient a présenté un abcès latéro-cervical le 08/11/19 confirmé 
+ <br/>par scanner.
+ <br/>Avis ORL en attente.
+ <br/>
+<br/>
+<b>Visite du 12/11/19 : Dr MAYACHE, Dr BERNICHON, Dr BROUSTAUT, Dr <br/>DJEHAL, Dr MURATORI</b>
+<br/>Le patient présente depuis quelques jours un abcès cervical 
+ <br/>probablement lié à une réaction post-chimio.
+ <br/>
+<br/>La CRP est en baisse et passe de 350 à 75 aujourd'hui.
+ <br/>Il n'est plus en aplasie.
+ <br/>
+<br/>Il reste pour l'instant hospitalisé sous antibiothérapie par 
+ <br/>TAZOCILLINE à 4G 3X/J, le patient ne peut plus manger par la bouche.
+ <br/>Actuellement sous nutrition entérale par SNG, il est préférable de 
+ <br/>faire une demande de GPE.
+ <br/>
+<br/>On valide pour demain le J15 de Cetuximab à 250 mg/m2.
+ <br/>
+<br/>
+<b>Visite du 14/11/19 : Dr EVEN, Dr BERNICHON, Dr BROUSTAUT, Dr DJEHAL, <br/>Dr MURATORI<br/></b> Scanner cervical passé hier qui confirme la présence du trajet 
+ <br/>fistuleux avec une diminution de la collection et une lame bien en 
+ <br/>place.
+ <br/>Sur le plan biologique, diminution de la CRP, le patient reste 
+ <br/>apyrétique. Nous n'avons pas encore l'antibiogramme des prélèvements 
+ <br/>réalisés au niveau de la collection.
+ <br/>Il y a des bacilles gram négatifs mais nous ne disposons pas de 
+ <br/>l'identification.
+ <br/>Le patient reste en bon état général.
+ <br/>Administration de son Cetuximab le 13/11 à la dose de 250 mg/m2 soit 
+ <br/>450 mg DT.
+ <br/>Nous allons rediscuter le dossier avec les chirurgiens pour la suite 
+ <br/>de la prise en charge concernant cette collection et nous attendons 
+ <br/>également l'avis du Dr Gachot concernant la prise en charge.
+ <br/>Patient pour l'instant à jeun.
+ <br/>
+<br/>
+<b>Note Dr DJEHAL le 15/11/2019 <br/></b> Mise à plat de l'abcès nécrotique fait le 08/11/19.
+ <br/>Evolution favorable sous antibiotique avec normalisation du bilan 
+ <br/>infectieux et la diminution de l'écoulement sur la lame.
+ <br/>Ablation de la lame faite le 15 novembre 2019. Avis infectieux 
+ <br/>Docteur MERAD pour suite de la TAZOCILLINE jusqu'au lundi 18 novembre 
+ <br/>2019.
+ <br/>Pose de gastrostomie prévue le 09/12/19, devant la 
+ <br/>contre-indication à l'alimentation per os devant une fistule 
+ <br/>confirmée à l'examen ORL.
+ <br/>
+<br/>
+<b>Note du 18/11/19 Dr MURATORI<br/></b> Le patient a été évalué par le Dr MERAD le 15/11/19 qui a donné 
+ <br/>comme indication de poursuivre la TAZOCILLINE jusqu'au 18/11/19 et 
+ <br/>d'administrer la chimiothérapie la semaine suivante.
+ <br/>Le patient sortira à domicile le 19/11/19 sous couverture d'HAD.
+ <br/>
+<br/>
+<b>Visite du 19/11/19 : Dr MAYACHE, Dr BERNICHON, Dr BROUSTAUT, Dr <br/>MURATORI</b>
+<br/>Poursuite de la diminution de la CRP, le patient reste apyrétique, 
+ <br/>ablation du méchage il y a 48 h avec des suites correctes.
+ <br/>
+<br/>Le patient est sortant aujourd'hui, il sera réhospitalisé pour sa 
+ <br/>prochaine cure de chimiothérapie.
+ <br/>
+<br/>Une consultation avec Dr Ferrand est prévue le 10/12/19, il faudra 
+ <br/>s'assurer que le patient a bien une ordonnance pour réaliser un 
+ <br/>scanner à l'extérieur.
+ <br/>Le RV pour la mise en place de la GPA est prévue le 09/12, le patient 
+ <br/>sera hospitalisé la veille pour ce geste.
+ <br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3> :</b></u>
+<br/>1/ Abcès nécrotique de la tumeur basi-cervicale, bonne évolution 
+ <br/>après mise à plat et antibiothérapie.
+ <br/>2/ Présence d'une fistule tumoro-pharyngée.
+ <br/>3/ Mise en place d'une nutrition entérale par sonde nasogastrique.
+ <br/>4/ Réalisation des C1J8 et C1J15 de chimiothérapie au cours de 
+ <br/>l'hospitalisation.
+ <br/>
+<br/>
+<br/>
+<u><b>Prochains rendez-vous :</b></u>
+<br/>
+<br/>21/11/2019 10:30 010 OMR RV TEL CSE 
+ <br/>22/11/2019 12:35 ORL FRF BILAN ONCO 
+ <br/> 14:00 ORL FRF ADM RHONE-ALP 
+ <br/>27/11/2019 10:00 RHO BOM HDJ CHIMIO 
+ <br/> 10:05 RHO BOM C HDJ A TRAITER 
+ <br/>04/12/2019 08:00 RHO BOM HDJ CHIMIO 
+ <br/> 08:05 RHO BOM C HDJ A TRAITER 
+ <br/>09/12/2019 15:3XXXXXX6 NAF PBO SEG RIL 
+ <br/> 15:3XXXXXX6 NAF PBO CHIR _R1 
+ <br/>10/12/2019 08:50 ORL FRF C ORL FRF 
+ <br/> 09:30 010 IBN ORTHOPHONIE GYW 
+ <br/>11/12/2019 12:00 ORL FRF BILAN ONCO 
+ <br/> 14:00 ORL FRF ADM RHONE-ALP 
+ <br/>18/12/2019 08:00 RHO BOM HDJ CHIMIO 
+ <br/> 08:05 RHO BOM C HDJ A TRAITER 
+ <br/>19/12/2019 09:45 ORL YBS C PLAS LKH 
+ <br/>24/12/2019 09:30 DIE CMB C NUTR CMB FIN ORDO NE/LVL 
+ <br/> 10:00 RHO BOM HDJ CHIMIO 
+ <br/> 10:05 RHO BOM C HDJ A TRAITER 
+ <br/>02/01/2020 12:20 ORL FRF BILAN ONCO 
+ <br/> 14:00 ORL FRF ADM RHONE-ALP 
+ <br/>08/01/2020 08:00 RHO BOM HDJ CHIMIO 
+ <br/> 08:05 RHO BOM C HDJ A TRAITER 
+ <br/>14/01/2020 09:10 ORL FRF C ORL FRF 
+ <br/>15/01/2020 08:00 RHO BOM HDJ CHIMIO 
+ <br/> 08:05 RHO BOM C HDJ A TRAITER 
+ <br/> 09:15 CAM YGT C RX YGT 
+ <br/>29/01/2020 08:00 RHO BOM HDJ CHIMIO 
+ <br/> 08:05 RHO BOM C HDJ A TRAITER 
+ <br/>05/02/2020 08:00 RHO BOM HDJ CHIMIO 
+ <br/> 08:05 RHO BOM C HDJ A TRAITER 
+ <br/>19/02/2020 08:00 RHO BOM HDJ CHIMIO 
+ <br/> 08:05 RHO BOM C HDJ A TRAITER 
+ <br/>26/02/2020 08:00 RHO BOM HDJ CHIMIO 
+ <br/> 08:05 RHO BOM C HDJ A TRAITER 
+ <br/>20/03/2020 10:30 ORL IBN C ORL IBN 
+ <br/>15/05/2020 08:50 310 GSN C ODONTO GSN 
+ <br/> 09:00 310 GSN RD PANORAMIQUE 
+ <br/>
+<br/>
+<br/>Poids à la sortie : 68kg
+ <br/>EVA à la sortie : 0/10
+ <br/>
+<b><br/><u>Sortie à domicile le</u> : 19/11/19<br/><br/></b> - Bulletins de situation x3 .
+ <br/>- Bon de transport par VSL
+ <br/>- Convocation
+ <br/>- Dernière prise de sang.
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<u><b>Traitement de sortie</b></u>
+<b> :<br/>- En cas de fièvre :</b>
+<br/>A débuter seulement en cas de fièvre > 38°.3 C (appeler le service et 
+ <br/>refaire une prise de sang)
+ <br/>
+<br/>
+<b>AMOXICILLINE acide clavulanique</b> 1 Gr x 3/J pendant 7 jours.
+ <br/>
+<b>CIPROFLOXACINE </b> 500 mg 1 cp x 2/J pendant 7 jours.
+ <br/>
+<b><br/>- En cas de diarrhées :<br/>IMODIUM </b> 2 gél après la 1 ère selle liquide puis 1 gél toutes les 6H 
+ <br/>avec max 6 gél par jour.
+ <br/>
+<b>SMECTA </b> 3 sachets/J
+ <br/>
+<br/>
+<b>- En cas de nausées :</b>
+<br/>
+<b>PRIMPERAN </b> 10 mg 1 cp x 3/J.
+ <br/>
+<br/>
+<b>- En cas de constipation :</b>
+<br/>
+<b>MOVICOL</b> 2 sachets /J le matin.
+ <br/>
+<br/>
+<b>- Si douleurs :</b>
+<br/>
+<b>DOLIPRANE</b> 1 Gr x 3/J si besoin.
+ <br/>
+<br/>
+<b>- En systématique :</b>
+<br/>- NFS, plaquettes, iono, urée et créat + calcium + phosphore + 
+ <br/>magnésium + Albumine + BH + Bilirubine + CRP chaque semaine et 48 h 
+ <br/>avant la prochaine hospitalisation (et en cas de fièvre ou bilan 
+ <br/>perturbé) par une IDE à domicile pendant 1 mois, à faxer au RHONE 01 
+ <br/>42 11 53 25.
+ <br/>- SMECTA 1sachet/prise 3/24h max
+ <br/>- L-THYROXINE 150UG 25μg le matin
+ <br/>- NUTRISON ENERGY 1 poche matin midi et soir
+ <br/>- LYRICA 25mg 2 gélules matin midi et soir
+ <br/>- GARDENAL 100mg 1 cp au coucher
+ <br/>- Bains de bouche par BICARBONATE 1.4%, 6 fois par jour.
+ <br/>- SKENAN LP 10mg 2 gélules matin et soir
+ <br/>- MOVICOL 2 sachets matin midi et soir
+ <br/>- ORAMORPH 10mg à la demande 4/24h max
+ <br/>- DOLIPRANE 1G 1cp à 08h 14h et 22h
+ <br/>
+<br/> - Faire pratiquer par IDE tous les jours, dimanche et jours fériés 
+ <br/>inclus, autant de passage que nécessaire, y compris la nuit pour :
+ <br/>* nettoyage de l'orifice de trachéotomie avec un antiseptique de type 
+ <br/>sérum physiologique
+ <br/>* nettoyage et le changement de la canule de trachéotomie
+ <br/>* réfection du pansement sec
+ <br/>* la surveillance quotidienne des sécrétions bronchiques et de l'état 
+ <br/>respiratoire
+ <br/>* l'éducation du patient à l'aspiration efficace des sécrétions.
+ <br/>Réfection du pansement au niveau cervical gauche 2x/J
+ <br/>- Faire pratiquer par une IDE à domicile le branchement, 
+ <br/>débranchement et surveillance d'une nutrition entérale sur sonde 
+ <br/>naso-gastrique, surveillance et éducation pour 4 semaines à 
+ <br/>renouveler 3 fois.
+ <br/>- Nutriments :3 x 500 ml NUTRISON ENERGY/ JOUR
+ <br/>
+<b>- Réaliser en ville scanner Crane + cou pour la consultation du <br/>10/12/19<br/></b>
+<br/>
+<b> CMA :Ajustement entretien dispositif vasculaire (VVC-KT) Ablation<br/>Social Besoin assistance domicile, 0 membre au foyer assurant <br/>soins </b>
+<br/>
+<u><b>Conformément à l'article R710-2-1 du code de Santé Publique</b></u>
+<b> :<br/> <br/></b> Transfusion de produits sanguins labiles : NON.
+ <br/>Portage de germe multirésistant : NON.
+ <br/>
+<br/>
+<br/> Prise en charge palliative : OUI 
+ <br/>
+<b>Prise en charge par l'équipe mobile de soins palliatifs OUI</b>
+<br/>Si OUI :
+ <br/>
+<br/>Pose Gastrostomie ou pose SNO : NON
+ <br/>Ponction à visée symptomatique : OUI 
+ <br/>Adaptation du traitement antalgique : NON
+ <br/>Irradiation antalgique : OUI 
+ <br/>Chimiothérapie palliative : NON
+ <br/>Chirurgie de propreté: OUI 
+ <br/>Prise en charge saignement : OUI 
+ <br/>Transfusion sanguine : OUI 
+ <br/>Prise en charge de la détresse respiratoire +/- trachéo OUI 
+ <br/>Nutrition : 
+ <br/>- déjà sous CNO, nutrition entérale/parentérale OUI 
+ <br/>- mise en route d'une nutrition entérale/parentérale OUI 
+ <br/>Occlusion intestinale OUI 
+ <br/>Traitement des divers symptômes vecteurs d'inconfort
+ <br/>(toux, prurit, nausées, vomissements, anxiété, 
+ <br/>dépression, troubles du sommeil, déshydratation, ...) NON
+ <br/>Consultation onco-psychologie : OUI
+ <br/>Kinésithérapie : OUI
+ <br/>Nursing : OUI 
+ <br/>
+<br/>Organisation retour domicile - soins de suite
+ <br/>prise en charge sociale OUI
+ <br/>
+<br/>
+<b><br/>____________________<br/>Docteur Nardjes DJEHAL</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

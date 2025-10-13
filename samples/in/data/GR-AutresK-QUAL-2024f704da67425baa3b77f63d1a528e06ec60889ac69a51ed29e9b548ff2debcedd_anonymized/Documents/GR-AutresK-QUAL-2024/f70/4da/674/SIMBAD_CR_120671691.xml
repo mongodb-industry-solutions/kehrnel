@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120671691" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>Résumé d'hospitalisation en Hôpital de Jour Chirurgical</title>
+    <effectiveTime value="20200807000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200807000000+0000"/>
+        <assignedAuthor>
+            <code code="PCA/465" displayName="HOPITAL DE JOUR CHIRURGICAL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Admission ce jour en Hôpital de Jour de Chirurgie Ambulatoire
+ <u><b><br/><br/></b></u>
+<br/>
+<b>Motif de l'hospitalisation</b> : RI
+ <br/>
+<br/>
+<br/>
+<b>Traitement à l'entrée : </b>
+<br/>- NC
+ <br/>
+<br/>
+<b>Intitulé de l'intervention</b> : Ponction ascite
+ <br/>
+<br/>
+<b>Nom de l'opérateur :</b> Docteur AL AHMAR Marc 
+ <br/>
+<b>Mode anesthésique :</b> AL 
+ <br/>
+<br/>Surveillance post-opératoire : sortie immédiate
+ <br/>
+<br/>
+<b> En cas de problème, veuillez contacter :<br/>* Administratif : 01.42.11. 58.77<br/>* Infirmière de régulation (la semaine de 8h30 à 18h) : 01.42.11.46.08<br/>* Service des Urgences (le soir et weekend) : 01.42.11.55.55<br/></b>
+<br/>Score de douleur à la sortie : 1/3 selon le score de Chung
+ <br/>Score des NVPO à la sortie : 1/5
+ <br/>
+<br/>Temps de surveillance : Sortie immédiate
+ <br/>L'état de santé autorise la sortie médicale du/de la patient(e) pour 
+ <br/>son domicile.
+ <br/>
+<br/>
+<u><b>Documents remis à la sortie</b></u>
+<b> </b> :
+ <br/> - Bulletin de situation (X 2)
+ <br/> - Compte rendu opératoire. Non disponible à la sortie
+ <br/> - Résumé d'hospitalisation 
+ <br/>
+<br/>
+<b>Poursuite du traitement d'entrée </b> :
+ <br/>- 0
+ <br/>
+<br/>
+<b>Ordonnances</b> : " Pas de prescription médicamenteuse de sortie "
+ <br/>
+<br/>
+<br/> Consignes post-opératoires transmises à l'oral par l'infimière avant 
+ <br/>la sortie.
+ <br/>
+<u><b> <br/></b></u>
+<b>Prochain rendez-vous </b> : " Pas de rendez-vous post-opératoire "
+ <br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS<br/> <br/> Date Heure Demandeurs Libellé d'acte * commentaires<br/><br/>10/09/2020 09:00 060 ECB C TEL ECB </b>
+<br/>
+<br/>
+<br/>
+<u> Document imprimé sur la page d'identification du dossier patient de <br/>Gustave Roussy et remis en mains propres au patient le <br/>jour de l' intervention</u>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

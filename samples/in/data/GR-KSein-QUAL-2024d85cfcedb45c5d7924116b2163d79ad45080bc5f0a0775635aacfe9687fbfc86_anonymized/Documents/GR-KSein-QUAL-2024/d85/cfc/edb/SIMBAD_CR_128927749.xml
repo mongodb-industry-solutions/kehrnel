@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128927749" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncogénétique - DR Patrick BENUSIGLIO</title>
+    <effectiveTime value="20161110000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20161115000000+0000"/>
+        <assignedAuthor>
+            <code code="132/26" displayName="CTE 132 - ONCOGENETIQUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>La patiente vient pour être informée des résultats de son analyse <br/>génétique.</b></u>
+<br/>
+<br/>Elle est venue seule.
+ <br/>
+<br/>L'analyse moléculaire des gènes BRCA1 et BRCA2 n'a retrouvé aucune 
+ <br/>anomalie avec les techniques utilisées (séquençage et recherche de 
+ <br/>grand réarrangement).
+ <br/>
+<br/>Il peut y avoir plusieurs raisons à ce résultat :
+ <br/>
+<br/>- Soit il n'y a en effet pas de prédisposition héréditaire au cancer 
+ <br/>dans la famille. On rappelle que l'analyse était motivée 
+ <br/>principalement par un cancer du sein triple négatif à 59 ans chez la 
+ <br/>proposante.
+ <br/>- Soit il peut s'agir d'un autre gène encore inconnu aujourd'hui.
+ <br/>- Soit il se peut également que les techniques aient laissé passer 
+ <br/>une mutation dans un des gènes étudiés (probabilité faible).
+ <br/>
+<br/>Au total on ne peut pas exclure toute notion de prédisposition.
+ <br/>
+<br/>Dans ce cas, il n'y a pas de test présymptomatique disponible pour 
+ <br/>les apparentés.
+ <br/>
+<br/>Ce résultat ne modifie pas la prise en charge actuelle de la patiente.
+ <br/>
+<br/>
+<u><b>Conseils de surveillance pour la famille :<br/></b></u> Surveillance standard chez la soeur avec mammographie, échographie 
+ <br/>tous les deux ans.
+ <br/>Chez la fille, rien pour l'instant, elle n'a que 34 ans. Il faudrait 
+ <br/>discuter d'initier un dépistage du cancer du sein vers l'âge de 45 
+ <br/>ans.
+ <br/>
+<br/>Les connaissances concernant la génétique du cancer du sein évoluant, 
+ <br/>la patiente peut nous recontacter dans quelques années pour faire le 
+ <br/>point et lancer éventuellement des analyses plus approfondies.
+ <br/>
+<br/>Les analyses pourront être reprises au fur et à mesure des avancées 
+ <br/>technologiques et scientifiques.
+ <br/>De son côté, la patiente nous informera de tout nouvel événement 
+ <br/>carcinologique survenant dans la famille.
+ <br/>
+<br/>Copie du compte-rendu et des résultats adressées à la patiente.
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123302515" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM CRANE</title>
+    <effectiveTime value="20190701000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190701000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur FEKI MKAOUAR Rahma
+ <br/>
+<br/>Destinataire : ROUERGUE
+ <br/> DR INTERNE
+ <br/>
+<br/>
+<b><br/> Dicté par : </b> Docteur Rahma Feki Mkaouar
+ <b><br/>Dicté le : </b> 29/06/2019 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Générique 
+ <br/>
+<b>Ref :</b> 737878 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : OSU
+ <br/>
+<br/>Examen n°4482
+ <br/>Examen réalisé le : 29/06/2019
+ <br/>
+<br/>
+<u><b>SCANNER CRANIEN<br/> </b></u>
+<br/>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/><br/></b> Patiente de 62 ans, suivie pour cancer du sein métastatique au 
+ <br/>niveau hépatique sous chimiothérapie
+ <br/>Chute ce jour avec point d'impact crânien perte de connaissance. 
+ <br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/><br/></b> Examen réalisé sur un scanner DISCOVERY 750 HD, GENERAL ELECTRIC, 
+ <br/>mis en service en septembre 2012.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 429098CN7
+ <br/>
+<br/>Réalisation d'une acquisition :
+ <br/>\'a7 Cérébrale
+ <br/>
+<br/>Examen réalisé sans et avec injection de produit de contraste
+ <br/>
+<br/>
+<b>Produit de contraste injecté : Xenetix <br/>Quantité : 85 cc<br/>PDL : 1109.99 mGy.cm<br/></b>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/><br/></b> Absence de collection hématique intra ou extra-axiale.
+ <br/>Absence d'hémorragie sous-arachnoïdienne.
+ <br/>Absence d'anomalie de densité spontanée à du parenchyme cérébral, 
+ <br/>cérébelleux ou du tronc cérébral.
+ <br/>Absence de prise de contraste cérébroméningée suspecte.
+ <br/>Absence de processus expansif intra ou extra-axiale.
+ <br/>Structures médianes en place. 
+ <br/>Absence d'hydrocéphalie
+ <br/>Comblement partiel des sinus maxillaires rapport avec une sinusite.
+ <br/>
+<br/>Etude en fenêtre osseuse ne montre pas de fracture. 
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/><br/>TDM cérébrale sans et avec injection de contraste sans anomalie <br/>significative décelable, notamment absence d'anomalie <br/>post-traumatique. <br/><br/>________________________________________________<br/>Signé électroniquement par Docteur Rahma FEKI MKAOUAR <br/>Le samedi 29 juin 2019 à 13:22 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

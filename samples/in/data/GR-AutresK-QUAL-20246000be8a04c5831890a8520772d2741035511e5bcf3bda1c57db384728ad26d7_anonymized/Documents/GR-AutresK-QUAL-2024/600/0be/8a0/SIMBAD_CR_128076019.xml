@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128076019" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ORL - Dr Ingrid BREUSKIN</title>
+    <effectiveTime value="20170512000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170522000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Rappel</b></u> : 
+ <br/>
+<br/>
+<b> CARCINOME \'c9PIDERMO\'cfDE oropharyngé vélaire et pilier postérieur <br/>droit <br/>et gauche, classé T3 N2C M0, traité par radio-chimiothérapie terminée <br/>le 28 octobre 2014</b> .
+ <br/>
+<br/>Consultation à 2 ans et 7 mois de la fin du traitement.
+ <br/>
+<br/>Le patient va globalement bien.
+ <br/>Xérostomie de grade I.
+ <br/>Dysphagie de grade I.
+ <br/>Alimentation plutôt normale avec parfois régime mixé.
+ <br/>Poids stable.
+ <br/>Rapporte une gêne voire douleur pharyngée droite qui irradie vers 
+ <br/>l'hémi-crâne droit, sans otalgie.
+ <br/>La douleur est essentiellement présente lors des repas.
+ <br/>Douleur évaluée à 5/10.
+ <br/>
+<br/>Le patient avait passé un 
+ <b>scanner en Novembre dernier</b> à Bicêtre.
+ <br/>Les résultats sont récupérés ce jour et le compte-rendu ne retrouve 
+ <br/>aucune anomalie. Les images ne sont pas visualisées.
+ <br/>
+<br/>
+<u><b>Examen clinique</b></u> :
+ <br/>
+<br/>Patient en bon état général.
+ <br/>OMS 0.
+ <br/>Poids : 71 kg.
+ <br/>
+<br/>
+<u>Palpation cervicale</u> : fibrose sous-cutanée légère, pas de tuméfaction 
+ <br/>suspecte. 
+ <br/>Pas d'anomalie à l'inspection et à la palpation de la cavité buccale 
+ <br/>et de l'oropharynx. Pas d'anomalie dans la région pharyngée droite à 
+ <br/>la palpation.
+ <br/>
+<u>Naso-fibroscopie</u> : pas de lésion muqueuse suspecte. Mobilité laryngée 
+ <br/>correcte et symétrique.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>
+<br/>Examen oncologique rassurant à 2 ans et demi d'une prise en charge 
+ <br/>par radiothérapie d'un CARCINOME EPIDERMOIDE de l'oropharynx.
+ <br/>
+<br/>
+<b>Le patient sera revu dans 6 mois en consultation de radiothérapie.<br/>Je le reverrai pour ma part 6 mois plus tard.<br/><br/></b> Si les douleurs pharyngées venaient à persister, je l'encourage à 
+ <br/>nous reconsulter de manière plus précoce.
+ <br/>Prescription de PARACETAMOL.
+ <br/>
+<br/>
+<br/> LISTE RENDEZ-VOUS PREVUS
+ <br/>
+<br/> Date Heure Demandeurs Libellé d'acte * commentaires
+ <br/>
+<br/>08/11/2017 __: 1 CAM YGT C RX YGT 
+ <br/>09/03/2018 08:40 310 GSN RD PANORAMIQUE 
+ <br/> 08:50 310 GSN C ODONTO GSN 
+ <br/>11/05/2018 __: 1 ORL IBN C ORL IBN 
+ <br/>07/11/2018 __: 1 CAM YGT C RX YGT 
+ <br/>10/05/2019 __: 1 ORL IBN C ORL IBN 
+ <br/>06/11/2019 __: 1 CAM YGT C RX YGT 
+ <br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

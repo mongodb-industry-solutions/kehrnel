@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126005356" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 181340259</title>
+    <effectiveTime value="20180514000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180515000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Pr A. Paci (47 30) <br/>Dr V. Poinsignon (61 92) </p>
+<p>Pr A. Bennaceur (40 65) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr T. Steimle (41 65) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Pr F. Griscelli (51 93) <br/>Dr N. Yin (40 62) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>XXXXXX </p>
+<p>FemmeNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>14/05/2018 08:38 </p>
+<p>Sexe : </p>
+<p>14/05/2018 08:38 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>Nom de naissance : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>CTE 050 - SEIN </p>
+<p> 3 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>lundi 14 mai 2018 </p>
+<p>Complet </p>
+<p>Résultats <br/>Valeurs </p>
+<p>Précédentes <br/>Val. </p>
+<p>Valeurs de <br/><br/><br/>Référence </p>
+<p>Analyses Unités <br/><br/></p>
+<p>BIOCHIMIE <br/>Ionogramme </p>
+<p>Sodium 140 mmol/l ( 136 - 146 ) LLX <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Potassium 4.7 mmol/l ( 3.4 - 4.5 ) LLX <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Chlore 104 mmol/l ( 101 - 109 ) LLX <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Reserve alcaline 29 mmol/l ( 21 - 31 ) LLX <br/>Plasma hépariné - PEPC </p>
+<p>Protides 71 g/L ( 66 - 83 ) LLX <br/>Plasma hépariné - Biuret </p>
+<p>Urée 4.6 mmol/l ( 2.8 - 7.2 ) LLX <br/>Plasma hépariné - Uréase-GLDH </p>
+<p>Créatinine 74 μmol/l ( 49 - 90 ) LLX <br/>Plasma hépariné - Enzymatique raccordée IDMS </p>
+<p>Glucose 6.0 mmol/l ( 4.1 - 5.9 ) LLX </p>
+<p>Valeur de référence pour un patient à jeunPlasma hépariné - Hexokinase <br/>G6P-DH </p>
+<p>Calcium 2.40 mmol/l ( 2.20 - 2.65 ) LLX <br/>Plasma hépariné - Arsenazo III </p>
+<p>Magnesium 0.84 mmol/l ( 0.77 - 1.03 ) LLX <br/>Plasma hépariné - Bleu de xylidyle </p>
+<p>Base calcul Cockroft 1.42 LLX </p>
+<p>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Débit de Filtration Glomérulaire (MDRD) >60.0 mL/mn/1.73m2 LLX </p>
+<p>< 60 : Insuffisance rénale à explorer si nécessaire. <br/>Si origine afro américaine, le DFG est à multiplier par 1.212 </p>
+<p>Bilan hépatique / pancréatique <br/>PAL 104 UI/L ( 30 - 120 ) LLX <br/>Plasma hépariné - IFCC </p>
+<p>ASAT 63 UI/L ( 0 - 35 ) LLX <br/>Plasma hépariné - IFCC </p>
+<p>ALAT 124 UI/L ( 0 - 35 ) LLX <br/>Plasma hépariné - IFCC </p>
+<p>GGT 226 UI/L ( 0 - 38 ) LLX <br/>Plasma hépariné - IFCC </p>
+<p>Bilirubine Totale 7 μmol/l ( 5 - 21 ) LLX <br/>Plasma hépariné - DPD </p>
+<p>Protéines </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 14/05/2018 à 13:16 par : Pr GRISCELLI Franck,Dr LACROIX Ludovic,Dr SAADA Véronique</p>
+<p></p>
+<p></p>
+<p>Résultats <br/></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>CTE 050 - SEIN </p>
+<p>Unités <br/><br/>Valeurs de <br/><br/><br/>Référence </p>
+<p>Patient : </p>
+<p>Val.Analyses <br/><br/>Valeurs </p>
+<p>Précédentes <br/></p>
+<p> 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>181340259 <br/><br/>XXXXXX XXXXXX </p>
+<br/>
+<p>LDH 289 UI/L ( 0 - 247 ) LLX <br/>Plasma hépariné - IFCC </p>
+<p>Marqueurs biologiques <br/>CA 15-3 23 UI/mL ( 0 - 30 ) LLX <br/>Serum - ECLIA </p>
+<p>HEMOSTASE <br/>Bilan de coagulation </p>
+<p>Taux de Prothrombine 100 % ( 70 - 100 ) LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>Temps de Quick (Témoin = 12,2s) 12.6 s LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>INR 1.1 LLX </p>
+<p>0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>TCK (Témoin = 29s) 29 s LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK Ratio 1.0 ( < 1.2 ) LLX </p>
+<p>HEMATOLOGIE <br/>Numeration sanguine (Sang total sur EDTA) <br/><br/>Méthode : XN - SYSMEX </p>
+<p>Leucocytes 4.6 10*9/L ( 4.0 - 10.0 ) SAE </p>
+<p>Hématies 5.18 10*12/L ( 4.00 - 5.20 ) SAE </p>
+<p>Hémoglobine 15.5 g/100mL ( 12.0 - 16.0 ) SAE </p>
+<p>Hématocrite 45.0 % ( 34.0 - 45.0 ) SAE </p>
+<p>VGM 86.9 μ3 ( 85.0 - 95.0 ) SAE </p>
+<p>TCMH 29.9 pg/cel ( 28.0 - 34.0 ) SAE </p>
+<p>CCMH 3XXXXXX g/100mL ( 32.0 - 36.5 ) SAE </p>
+<p>IDG 14.0 % ( 0.0 - 16.0 ) </p>
+<p>Plaquettes 329.0 10*9/L ( 150.0-400.0 ) SAE </p>
+<p>Formule <br/>Polynucléaires Neutrophiles 60.6 % SAE </p>
+<p>SAE( 1.8 - 7.5 )10*9/Lsoit 2.8 </p>
+<p>Polynucléaires Eosinophiles 3.1 % SAE </p>
+<p>SAE( 0.0 - 0.5 )10*9/Lsoit 0.1 </p>
+<p>Polynucléaires Basophiles 0.9 % SAE </p>
+<p>SAE( 0.0 - 0.3 )10*9/Lsoit 0.0 </p>
+<p>Lymphocytes 28.2 % SAE </p>
+<p>SAE( 1.0 - 4.0 )10*9/Lsoit 1.3 </p>
+<p>Monocytes 7.2 % SAE </p>
+<p>SAE( 0.1 - 1.0 )10*9/Lsoit 0.3 </p>
+<p>IDP 10 SAE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 14/05/2018 à 13:16 par : Pr GRISCELLI Franck,Dr LACROIX Ludovic,Dr SAADA Véronique</p>
+<p></p>
+<p></p>
+<p>Résultats <br/></p>
+<p>Page 3 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>CTE 050 - SEIN </p>
+<p>Unités <br/><br/>Valeurs de <br/><br/><br/>Référence </p>
+<p>Patient : </p>
+<p>Val.Analyses <br/><br/>Valeurs </p>
+<p>Précédentes <br/></p>
+<p> 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>181340259 <br/><br/>XXXXXX XXXXXX </p>
+<br/>
+<p>VMP 9.4 μ3 ( 6.0 - 12.0 ) </p>
+<p>MICROBIOLOGIE <br/>Sérologie infectieuse </p>
+<p>Hépatite B (VHB) </p>
+<p>Anticorps anti-HBs GRFNégatif <br/>Sérum - Access HBc Ab (EIA) </p>
+<p> concentration : 0.0 mUI/ml GRF </p>
+<p>Anticorps totaux anti-HBc : GRFNégatif <br/>Sérum - Access HBc Ab (EIA) </p>
+<p> index : 0.14 GRF </p>
+<p>Conclusion sérologie Hépatite B GRFProfil compatible avec une absence de contact avec le virus de l'hépatite B. <br/>En cas de suspicion d'infection récente, un contrôle à 3 mois est nécessaire. </p>
+<p>Hépatite C (VHC) </p>
+<p>Anticorps totaux anti-VHC GRFNégatif <br/>Sérum - Access HCV Ab V3 (EIA) </p>
+<p> index : 0.04 GRF </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 14/05/2018 à 13:16 par : Pr GRISCELLI Franck,Dr LACROIX Ludovic,Dr SAADA Véronique</p>
+<p></p>
+<ul>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Ionogramme</li>
+<li>Bilan hépatique / pancréatique</li>
+<li>Protéines</li>
+<li>Marqueurs biologiques</li>
+</ul>
+<li>HEMOSTASE</li>
+<ul>
+<li>Bilan de coagulation</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/><br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+<li>MICROBIOLOGIE</li>
+<ul>
+<li>Sérologie infectieuse</li>
+<ul>
+<li>Hépatite B (VHB)</li>
+<li>Hépatite C (VHC)</li>
+</ul>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

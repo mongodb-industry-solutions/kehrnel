@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122946370" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>DEPARTEMENT DE MEDECINE - SERVICE HERAULT</title>
+    <effectiveTime value="20190827000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190827000000+0000"/>
+        <assignedAuthor>
+            <code code="HER/183" displayName="HERAULT"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>COMPTE RENDU D'HOSPITALISATION SERVICE HERAULT<br/><br/> Dicté par : </b> Docteur Louai Missri, Interne
+ <b><br/>Dicté le : </b> 26/08/2019 
+ <b><br/>Service : </b> HER-HERAULT 
+ <br/>
+<b>Type de document : </b> HER RH CHIMIO 
+ <br/>
+<b>Ref :</b> 775620 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : GHC
+ <br/>
+<br/>
+<u><b>HOSPITALISATION SERVICE HERAULT DU 26 AU 27 AOUT 2019</b></u>
+<br/>
+<br/>
+<u><b>Interne : Louaï MISSRI</b></u>
+<br/>
+<br/>
+<b>Mme XXXXXX XXXXXX , 40 ans, est hospitalisée pour C1 J8 d'Eribuline <br/>dans le cadre d'un carcinome mammaire triple négatif avec mutation <br/>BRCA ; métastatique au niveau ganglionnaire , surrénalien gauche et <br/>cutanée , <br/></b>
+<br/>
+<u>Statut mutationnel</u> : Mutation constitutionnelle de BRCA 1 
+ <br/>
+<br/>
+<b>Médecin référent : Dr MOKDAD<br/></b>
+<br/>
+<u><b>ANTEDECENTS / PATHOLOGIES ASSOCIEES</b></u>
+<br/>Cancer du sein triple négatif découvert en 2015, BRCA1 muté, traité 
+ <br/>par chimiothérapie, chirurgie et radiothérapie axillaire, CMI et 
+ <br/>sus-claviculaire.
+ <br/>* récidive ganglionnaire en mai 2018 traitée par TAXOL
+ <br/>* nouvelle récidive en décembre 2018 traitée par TALAZOPARIB
+ <br/>* progression ganglionnaire en 2019 traitée par XELODA (avril 2019) 
+ <br/>puis par ENDOXAN débuté en juillet 2019 (traitement actuel).
+ <br/>
+<br/>Autre : consultation en février 2019 à la fondation Cognacq Jay pour 
+ <br/>lymphoedème d'apparition progressive sous chimiothérapie, avec 
+ <br/>douleur et impotence fonctionnelle. Régression sous physiothérapie 
+ <br/>décongestive et bandages.
+ <br/>
+<br/>
+<b>Allergie : PENICILLINE<br/></b>
+<br/>
+<u><b>TRAITEMENT PERSONNEL</b></u>
+<br/>- OXYCONTIN 40 mg matin et soir
+ <br/>- OXYNORMORO 10 mg 1 cp si besoin max 4/jour
+ <br/>- DOLIPRANE 1 g si besoin max 4/jour
+ <br/>- PRIMPERAN 10 mg 1 cp si besoin
+ <br/>- MOVICOL 2 sachets le matin si constipation
+ <br/>
+<br/>
+<u><b>INTERCURE<br/></b></u> Asthénie grade 1
+ <br/>Nausées grade 1 
+ <br/>Vomissements grade 0 
+ <br/>Mucite grade 0 
+ <br/>Toxicité hématologique :
+ <br/> - neutropénie 0 
+ <br/> - thrombopénie 0 
+ <br/> - anémie 0 
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE A L'ARRIVEE DANS LE SERVICE</b></u>
+<br/>OMS : 1
+ <br/>Poids initial : 95 kg
+ <br/>Poids actuel : 85 kg Taille : 1m65 SC : 1,94 m2
+ <br/>
+<br/>Prise en charge nutritionnelle : aucune.
+ <br/>Syndrome douloureux : aucun, EVA d'entrée 0/10.
+ <br/>
+<br/>Auscultation pulmonaire : murmure vésiculaire bilatéral et 
+ <br/>symétrique, sans bruit surajouté 
+ <br/>
+<br/>Auscultation cardiaque : eurythmie cardiaque, pas de signes 
+ <br/>d'insuffisance ventriculaire gauche ni droite, mollets souples, pas 
+ <br/>d'OMI 
+ <br/>
+<br/>Abdomen : souple dépressible indolore. Absence d' organomégalie 
+ <br/>évidente. 
+ <br/>
+<br/>Aires ganglionnaires périphériques libres
+ <br/>
+<br/>Examen neurologique : sans particularité
+ <br/>
+<br/>Examen du PAC : sans particularité 
+ <br/>
+<br/>Examen cutané : Nodule ulcéré à la peau en regard de la fourchette 
+ <br/>sternale, propre, sans signes inflammatoires au niveau sous 
+ <br/>claviculaire interne gauche, suintement modéré, en amélioration 
+ <br/>d'après la patiente
+ <br/>
+<br/>Aspect typique d'érythème cutané migrant face antéro interne à 7 cm 
+ <br/>d'une lésion punctiforme cicatricielle (séjour en juin 19 dans le sud 
+ <br/>de la France avec randonnée) 
+ <br/>
+<br/>
+<u><b>EXAMENS COMPLEMENTAIRES A L'ARRIVEE DANS LE SERVICE</b></u>
+<br/>
+<br/>- NFS : leucocytes à 7 220/mm3, PNN à 6 224/mm3, Hb à 14,7 g/dl,
+ <br/>Plaquettes à 309 000/mm3,
+ <br/>
+<br/>- Créatinine à 95 μmol/l, 
+ <br/>Clairance de la créatinine à 86 ml/mn,
+ <br/>
+<br/>- Bilan hépatique : PAL à UI/L, ASAT à 73 UI/L, ALAT à 122 UI/L,
+ <br/>GGT à 426 UI/L, bilirubine totale à 8,6 μmol/L.
+ <br/>
+<br/>
+<u><b>EN PRATIQUE</b></u>
+<br/>
+<br/>Réalisation du C1 J8 de chimiothérapie le 27/08/2019 par :
+ <br/>
+<b><br/> * ERIBULINE : 1.23 mg/m2 soit 2.5 mg DT<br/></b>
+<br/>Bonne tolérance immédiate
+ <br/>
+<br/>J1 = J21 
+ <br/>
+<br/>On demande une sérologie de Lyme devant l'aspect typique et 
+ <br/>traitement empirique par DOXYCYCLINE 100 mg matin et soir jusqu'à 
+ <br/>disparition de la lésion (minimum 3 semaines).
+ <br/>Patiente avertie d'une possible réaction de Jarisch-Herxheimer. 
+ <br/>
+<br/>Amélioration nette du syndrome algique avec réduction de la posologie 
+ <br/>de l'OXYCONTIN à 20 mg matin et soir. 
+ <br/>
+<br/>
+<u>Prescriptions de sortie</u> :
+ <br/>- OXYCONTIN 20 mg matin et soir
+ <br/>- OXYNORMORO 5 mg 1 cp si besoin max 4/jour
+ <br/>- DOLIPRANE 1 g si besoin max 4/jour
+ <br/>- PRIMPERAN 10 mg 1 cp si besoin
+ <br/>- MOVICOL 2 sachets le matin si constipation
+ <br/>- ECONAZOLE poudre 1% : 1 application sous mammaire matin et soir
+ <br/>- DOXYCYCLINE 100 mg matin et soir
+ <br/>
+<br/>Sera revue en consultation par le Dr MOKDAD le 05/09/2019 
+ <br/>HDJ pour C2J1 le 10/09/2019 
+ <br/>
+<br/>Le patiente quitte le service Hérault le 27/08/2019
+ <br/>
+<br/> Prise en charge palliative
+ <br/>NON
+ <br/>
+<br/>
+<b>EVALUATION DE LA CHARGE EN SOINS</b>
+<br/>* Ponction à visée symptomatique
+ <br/> NON
+ <br/>* Adaptation du traitement antalgique
+ <br/>OUI
+ <br/>* Irradiation antalgique
+ <br/>NON
+ <br/>* Occlusion intestinale
+ <br/>NON
+ <br/>* Transfusion sanguine
+ <br/>NON
+ <br/>* Prise en charge de la détresse respiratoire avec 
+ <br/>désaturation <90% AA
+ <br/>NON
+ <br/>* Traitement des divers symptômes vecteurs d'inconfort 
+ <br/>(toux, prurit, nausées, vomissements, anxiété, dépression, troubles 
+ <br/>du sommeil, déshydratation,...)
+ <br/>NON
+ <br/>* Soins de nursing
+ <br/>NON
+ <br/>* Nutrition 
+ <br/> - déja sous CNO, nutrition entérale/parentérale
+ <br/>NON
+ <br/> - mise en route CNO/nutrition entérale/parentale
+ <br/>NON
+ <br/>
+<br/>
+<b>PRISE EN CHARGE MULTI-DISCIPLINAIRE<br/></b> * Prise en charge de l'EMASP
+ <br/>NON
+ <br/>* Cs CETD (douleur, sophrologie, auriculothérapie)
+ <br/>NON
+ <br/>* Cs onco-psychologie
+ <br/>NON
+ <br/>* Prise en charge sociale
+ <br/>NON
+ <br/>* Soins de kinésithérapie
+ <br/> NON
+ <br/>* cs diététicienne ou nutritionniste
+ <br/>NON
+ <br/>
+<br/>
+<b>MODE DE SORTIE </b>
+<br/>* HAD Santé Service
+ <br/> NON
+ <br/>* HAD province
+ <br/>NON
+ <br/>* IDE libérale
+ <br/>NON
+ <br/>
+<br/>
+<b>_________________________________________________<br/>Signé électroniquement par Docteur Louai MISSRI <br/>Le lundi 26 août 2019 à 20:10 </b>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

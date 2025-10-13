@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_131939594" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ADDICTOLOGIE - Docteur Ouerdia BOUAB</title>
+    <effectiveTime value="20140725000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20140731000000+0000"/>
+        <assignedAuthor>
+            <code code="UPO/332" displayName="UNITE DE PSYCHO_ONCOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patient âgé de 53 ans qui nous a été adressé par le Docteur TEMAM 
+ <br/>pour une dépendance à l'alcool et au tabac.
+ <br/>
+<br/>Il est marié depuis 1991. Il a 2 enfants de 28 et 27 ans dont l'un 
+ <br/>est à la maison et l'autre installé.
+ <br/>Il est locataire de son logement à Villejuif.
+ <br/>Il est agent d'entretien dans le bâtiment. Il a un salaire.
+ <br/>Il a une sécurité sociale et une mutuelle.
+ <br/>
+<br/>
+<u>Sur le plan somatique</u> :
+ <br/>C'est un patient qui est suivi à Gustave ROUSSY pour un cancer ORL 
+ <br/>depuis quelques mois. Traitements prévus : radiothérapie et 
+ <br/>chimiothérapie concomitante.
+ <br/>Il a eu une épilepsie sous GARDENAL 100 mg/jour.
+ <br/>Maladie de Dupuytren pour laquelle il a été opéré des deux mains.
+ <br/>
+<br/>
+<u>Sur le plan psychiatrique</u> :
+ <br/> On ne retrouve pas de dépression, pas de tentative de suicide, pas 
+ <br/>de suivi.
+ <br/>
+<br/>
+<u>Sur le plan familial</u> :
+ <br/>On retrouve un père alcool-dépendant, un frère alcoolo-dépendant.
+ <br/>
+<br/>
+<u>Sur le plan juridique</u> :
+ <br/>Il a eu un retrait de permis pour conduite en état d'ivresse à 2 
+ <br/>reprises.
+ <br/>
+<br/>
+<u>Traitements</u> :
+ <br/>Actuellement il est sous traitement par GARDENAL et LEXOMIL 1/2 
+ <br/>cp/jour.
+ <br/>
+<br/>
+<u>Sur le plan addictologique</u> :
+ <br/>
+<b>- Pour l'alcool</b> : Il a commencé à 14 ans. Dépendance rapide. 
+ <br/>Consommations quotidiennes depuis l'âge de 16 ans. Il consomme une 
+ <br/>bouteille de vin voire 1 bouteille et demi par jour. Jamais de 
+ <br/>période d'arrêt. Pas de cure ni de post-cure. Pas de traitement. 
+ <br/>Depuis l'annonce du diagnoostic du cancer il a diminué les doses à 2 
+ <br/>verres/jour d'après lui.
+ <br/>Les effets recherchés : Un effet antidépresseur. On retrouve une 
+ <br/>notion de syndrome post-traumatique au Portugal.
+ <br/>Les effets négatifs : La santé, les conflits avec sa femme, la 
+ <br/>fatigue.
+ <br/>Les motivations à l'arrêt : La santé.
+ <br/>
+<br/>
+<b>- Pour le tabac</b> : Il a commencé à l'âge de 14-16 ans. Il a fumé 1 
+ <br/>paquet/jour. Il voudrait arrêter pour des problèmes de santé. Il a 
+ <br/>réduit depuis l'annonce du diagniostic du cancer. 
+ <br/>
+<br/>
+<u>Au total</u> :
+ <br/>Nous décidons aujourd'hui de mettre les traitements substitutifs pour 
+ <br/>l'aide à l'arrêt du tabac avec nicorette Skin et Nicorette Inhaleur.
+ <br/>
+<br/>Je prévois une hospitalisation à Paul Brousse pour un sevrage 
+ <br/>hospitalier vu les antécédents de crise d'épilepsie.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

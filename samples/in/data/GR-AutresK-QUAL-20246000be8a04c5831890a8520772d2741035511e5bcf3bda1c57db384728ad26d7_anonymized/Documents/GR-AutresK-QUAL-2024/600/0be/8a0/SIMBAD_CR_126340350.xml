@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126340350" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>COMPTE-RENDU DE SORTIE D'UNITE DE SOINS CHIRURGICAUX CONTINUS</title>
+    <effectiveTime value="20180321000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180321000000+0000"/>
+        <assignedAuthor>
+            <code code="SCC/488" displayName="SOINS CONTINUS CHIRURGICAUX"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Anesthésiste</b></u>
+<b> : Dr COUGARD</b>
+<br/>
+<br/>Hospitalisée 
+ <b>du 19/03/2018 au 21/03/2018.<br/><br/><u>Intitulé opératoire</u> :</b>
+<br/>Fermeture de Pharyngostome + lambeau antéro latéral cuisse gauche.
+ <br/>
+<br/>
+<u><b>Evènements peropératoires et risques spécifiques</b></u> : 
+ <br/>AIVOC de propofol car multiples decanulation chirurgicales 
+ <br/>
+<br/>hemodynamique stable 
+ <br/>2 CG
+ <br/>
+<br/>
+<u><b>Antécédents importants</b></u> : 
+ <br/>EPILEPSIE sous gardenal.
+ <br/>
+<br/>
+<u><b>Motifs de l'admission en USCC</b></u>
+<b> : </b>
+<br/>Risque de complication liée au geste chirurgical. 
+ <br/>
+<br/>
+<u><b>Transfusion (bloc + SSPI</b></u>
+<b>) : <br/></b> Concentrés globulaires : 3.
+ <br/>Concentrés plaquettaires : 0.
+ <br/>Plasma : 0.
+ <br/>
+<br/>
+<b>STATUT A LA SORTIE<br/></b>
+<br/>
+<u><b>Etat respiratoire</b></u>
+<b> : </b>
+<br/>Extubée.
+ <u><br/><br/><b>Complication : si Oui, précisez</b></u>
+<b> :<br/></b> Cardio-vasculaire : non.
+ <br/>Respiratoire : non.
+ <br/>Nausées/Vomissements : non.
+ <br/>
+<br/>
+<b>La patiente est transférée dans le Service de Chirurgie " MORBIHAN "<br/>le 21/03/2018 pour poursuite de la prise en charge.</b>
+<br/>
+<br/>
+<b>CONCLUSION, CONSIGNES ET TRAITEMENTS <br/><br/><br/><br/>IGS 2 (sans l'âge) = 7.</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

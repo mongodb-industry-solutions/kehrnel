@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127139607" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>INTERVENTION</title>
+    <effectiveTime value="20171113000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171114000000+0000"/>
+        <assignedAuthor>
+            <code code="MOR/178" displayName="MORBIHAN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Opérateur : Docteur BREUSKIN <br/>Aides opérateur : Docteur CAILLEAUX - Docteur BAUS<br/>Anesthésiste : Docteur VESA<br/><br/> PHARYNGO-LARYNGECTOMIE TOTALE DROITE + EVIDEMENT CERVICAL RADICAL <br/>MODIFI\'c9 DROIT EMPORTANT LES AIRES II, III, IV + <br/>H\'c9MI-THYRO\'cfDECTOMIE DROITE + FERMETURE DU N\'c9O-PHARYNX PAR <br/>LAMBEAU MUSCULO-CUTAN\'c9 DE GRAND PECTORAL PR\'c9LEV\'c9 \'c0 DROITE <br/>+ POSE DE PROTH\'c8SE PHONATOIRE</b>
+<br/>
+<br/>
+<br/>
+<u><b>INTERVENTION</b></u> :
+ <br/>- Patient en décubitus dorsal.
+ <br/>- Sous anesthésie générale.
+ <br/>- Intubation oro-trachéale.
+ <br/>- Mise en place d'une sonde naso-gastrique.
+ <br/>- Billot sous les épaules.
+ <br/>- Extension prudente de la tête.
+ <br/>- Double désinfection cutanée à la Bétadine.
+ <br/>- Mise en place des champs stériles.
+ <br/>
+<br/>
+<br/>
+<b>I / EVIDEMENT CERVICAL RADICAL MODIFI\'c9 DROIT EMPORTANT LES AIRES <br/>IIA, IIB, III, IV LAISS\'c9S EN MONOBLOC SUR LA PI\'c8CE OP\'c9RATOIRE<br/></b>
+<br/>Incision cervicale bi-mastoïdienne.
+ <br/>Relèvement sous-platysmal du lambeau de peaucier.
+ <br/>Incision de l'aponévrose cervicale superficielle au bord antérieur du 
+ <br/>muscle sterno-cléïdo-mastoïdien.
+ <br/>Dégagement de la face profonde du muscle jusqu'au plan des racines du 
+ <br/>plexus cervical.
+ <br/>Identification et préservation du nerf spinal.
+ <br/>Réalisation de l'évidement du groupe IIb.
+ <br/>Identification de la limite inférieure du curage.
+ <br/>L'évidement est ensuite mené de dehors en dedans et de haut en bas.
+ <br/>L'évidement est progressivement pédiculisé sur le larynx.
+ <br/>Au niveau du groupe IIa, il existe du tissu très fibrosé 
+ <br/>vraisemblablement séquellaire de l'irradiation du carcinome 
+ <br/>épidermoïde oro-pharyngé.
+ <br/>
+<br/>L'évidement respecte les structures vasculo-nerveuses du cou, à 
+ <br/>savoir, la carotide externe et ses branches, la veine jugulaire 
+ <br/>interne, le nerf vague, le nerf grand hypoglosse et le nerf spinal et 
+ <br/>en profondeur, le nef phrénique.
+ <br/>Ligature du tronc de Farabeuf et ligature de l'artère thyroïdienne 
+ <br/>supérieure du côté droit.
+ <br/>On ne note pas la présence de ganglion d'aspect pathologique dans cet 
+ <br/>évidement.
+ <br/>
+<br/>
+<br/>
+<b>II / PHARYNGO-LARYNGECTOMIE TOTALE DROITE MORDANT SUR LA BASE DE LA <br/>LANGUE DROITE <br/></b>
+<br/>On dissèque les tissus du côté gauche .
+ <br/>Identification et ligature du pédicule laryngé supérieur à gauche.
+ <br/>Identification du nerf grand hypoglosse gauche qui est préservé.
+ <br/>Dégagement de la grande corne de l'os hyoïde à gauche.
+ <br/>Ligature du tronc veineux de Farabeuf à gauche.
+ <br/>Incision des muscles constricteurs sur la grande aile du cartilage 
+ <br/>thyroïde à gauche.
+ <br/>On rugine et on dégage la paroi externe du sinus piriforme gauche.
+ <br/>A droite, libération en superficie de la grande corne de l'os hyoïde.
+ <br/>Incision des muscles constricteurs sur la grande aile du cartilage 
+ <br/>thyroïde sans ruginer le sinus piriforme.
+ <br/>Section et ligature du pédicule laryngé supérieur.
+ <br/>Section des muscles infra-hyoïdiens.
+ <br/>Isthmotomie thyroïdienne.
+ <br/>Dégagement du lobe thyroïdien gauche et du côté droit, on emporte 
+ <br/>l'hémi-thyroïde et l'hémi-lobe droit thyroïdien.
+ <br/>Réalisation de la trachéotomie sous le 2ème anneau trachéal.
+ <br/>Le corps de l'os hyoïde est libéré.
+ <br/>Dégagement de la vallécule.
+ <br/>Laryngotomie au niveau de la vallécule du côté gauche.
+ <br/>L'exérèse longe le bord latéral de l'épiglotte du côté gauche.
+ <br/>A droite, on note que la muqueuse a un aspect irrégulier 
+ <br/>carcinomateux dans la région du carrefour.
+ <br/>L'exérèse passe à distance de cet aspect irrégulier.
+ <br/>L'exérèse circonscrit progressivement la lésion qui emporte la paroi 
+ <br/>pharyngée postérieure.
+ <br/>L'exérèse est poursuivie de haut en bas et du côté gauche.
+ <br/>Section inter-trachéo-oesophagienne.
+ <br/>Latéralement à droite, circonscription de la lésion localisée au 
+ <br/>niveau du sinus piriforme et on termine l'exérèse en sectionnant la 
+ <br/>partie basse du sinus piriforme.
+ <br/>
+<br/>Macroscopiquement, l'exérèse muqueuse est à distance.
+ <br/>Dans la partie basse du sinus piriforme, on réalise une recoupe.
+ <br/>En profondeur, bonne marge.
+ <br/>
+<br/>La pièce opératoire et sa recoupe sont envoyées, orientées, en tissu 
+ <br/>frais, pour analyse histopathologique définitive avec l'évidement 
+ <br/>laissé en monobloc.
+ <br/>
+<br/>Rinçage au sérum physiologique.
+ <br/>Contrôle de l'hémostase.
+ <br/>
+<br/>
+<br/>
+<b>III / LAMBEAU MUSCULO-CUTAN\'c9 P\'c9DICUL\'c9 DE GRAND PECTORAL <br/>PR\'c9LEV\'c9 \'c0 DROITE </b>
+<br/>
+<br/>On réalise une palette cutanée d'environ 7 cm de haut sur 6 cm de 
+ <br/>large dans la partie distale et 3 dans la partie proximale.
+ <br/>Section du muscle grand pectoral dans sa partie médiale, inférieure 
+ <br/>et latérale.
+ <br/>Identification et préservation du pédicule.
+ <br/>Confection d'un tunnel sous-cutané permettant le passage sans tension 
+ <br/>du lambeau dans la région cervicale.
+ <br/>Rinçage au sérum physiologique.
+ <br/>Contrôle de l'hémostase.
+ <br/>Mise en place de 2 redons aspiratifs dans la zone de prélèvement du 
+ <br/>lambeau de grand pectoral.
+ <br/>Fermeture cutanée en 2 plans, points inversants dermiques de Vicryl 
+ <br/>3/0 et agrafes à la peau.
+ <br/>Pose d'une prothèse phonatoire au niveau de l'oesophage.
+ <br/>
+<br/>Fermeture du néo-pharynx avec la palette cutanée du muscle grand 
+ <br/>pectoral.
+ <br/>Dans la partie inférieure, fermeture du néo-pharynx sur lui-même.
+ <br/>La palette cutanée est suturée par des points séparés de Vicryl 2/0.
+ <br/>Fermeture soigneuse dans la partie haute à droite à proximité de la 
+ <br/>base de la langue.
+ <br/>Suture du muscle grand pectoral sur des constricteurs à gauche et sur 
+ <br/>la paroi pré-vertebrale à droite.
+ <br/>Suture sur le muscle digastrique et le muscle de la base de la langue 
+ <br/>en haut.
+ <br/>Rinçage au sérum physiologique.
+ <br/>Contrôle de l'hémostase.
+ <br/>Mise en place de 2 redons aspiratifs dans l'évidement droit et d'un 
+ <br/>redon dans la zone de décollement à gauche.
+ <br/>Confection du trachéostome par des points inversants de Vicryl 2/0.
+ <br/>Fermeture cutanée en 2 plans.
+ <br/>Points inversants dermiques de Vicryl 3/0 et agrafes à la peau.
+ <br/>Ethilon 4/0 au pourtour du trachéostome.
+ <br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>
+<b>Pharyngo-laryngectomie totale droite + évidement cervical droit + <br/>hémi-thyroïdectomie et fermeture par lambeau musculo-cutané de grand <br/>pectoral.<br/>Macroscopiquement, exérèse satisfaisante.<br/>Lésion assez superficielle et cemendant mal limitée.<br/>Discussion de la nécessité d'une ré-irradiation en RCP.<br/></b>
+<br/>
+<br/>
+<u><b>CONSIGNES POST-OPERATOIRE</b></u> :
+ <br/>- Surveillance locale.
+ <br/>- Retrait des redons si moins de 30 cc par 24 heures à partir de J3.
+ <br/>- Surveillance de la Calcémie post-opératoire.
+ <br/>- Prévoir bilan de TSH dans 1 mois.
+ <br/>- Dossier comité dans 3-4 semaines.
+ <br/>- Prévoir consultation post-opératoire avec le Docteur BREUSKIN dans 
+ <br/>4-5 semaines après le dossier comité.
+ <br/>- Prévoir TOGD à J12 en l'absence de complication.
+ <br/>- Retrait des agrafes thoraciques à partir de J8 et cervicales à 
+ <br/>partir de J10 en l'absence de complication.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121268560" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>EMASP - CR HOSPI SOINS PALLIATIFS - Docteur Elena PAVLIUC</title>
+    <effectiveTime value="20200505000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200511000000+0000"/>
+        <assignedAuthor>
+            <code code="134/536" displayName="EMASP"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>EVALUATION AU LIT DU PATIENT PAR L'EMASP<br/></b></u>
+<br/>
+<b>Date de l'évaluation initiale : 05/05/2020<br/></b>
+<br/>Patiente vue par : Dr PAVLIUC 
+ <br/>Patiente connue de l'EMASP 
+ <br/>
+<br/>
+<u><b>MOTIF D'HOSPITALISATION ET DE L'INTERVENTION DE L'EMASP</b></u>
+<b> :<br/></b> Patiente hospitalisée pour fièvre et altération de l'état général. 
+ <br/>Discussion sur le projet et adaptation du traitement symptomatique.
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS NOTABLES</b></u>
+<br/>Thrombose du membre inférieur droit en 2017.
+ <br/>Appendicectomie.
+ <br/>Fracture ostéoporotique de L3 à L1, cimentoplastie le 24/03 du T10 à 
+ <br/>L5, compliquée d'une minime fuite de ciment, stabilité des douleurs 
+ <br/>depuis. 
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE ET SES COMPLICATIONS</b></u>
+<br/>Diagnostic en février 2017 d'une masse pelviene, probablement 
+ <br/>d'origine ovarienne avec présence d'une ascite et d'une thrombose au 
+ <br/>niveau du membre inférieur droit. 
+ <br/>
+<br/>Mise en place d'un traitement anticoagulant par INNOHEP puis switch 
+ <br/>par PREVISCAN.
+ <br/>
+<br/>Mars 2017: coelioscopie exploratrice qui retrouve une carcinose 
+ <br/>péritonéale. 
+ <br/>Mise en place d'une 1ère ligne de chimiothérapie par CARBOPLATINE + 
+ <br/>TAXOL, débutée le 31/03/17, par la suite les doses ont été réduites 
+ <br/>pour toxicité hématologique, thrombopénie grade II.
+ <br/>
+<br/>Octobre 2017 : coelioscopie exploratrice interrompu par une 
+ <br/>instabilité hémodynamique majeure et respiratoire. Poursuite d'un 
+ <br/>traitement systémique avec reprise de CARBOPLATINE + TAXOL et 
+ <br/>adjonction d'AVASTIN, le 20/10/17, 2 cures puis entretien par AVASTIN 
+ <br/>seul.
+ <br/>
+<br/>Stabilité clinique sous AVASTIN pendant 1 an, ascite ponctionnée 
+ <br/>toutes les 4 semaines.
+ <br/>
+<br/>Octobre 2018 : progression ovarienne, inclusion dans le protocole 
+ <br/>ATALANTE, bras CARBOPLATINE + GEMZAR + AVASTIN +/- ATEZOLIZUMAB, 
+ <br/>débuté le 18/01/2019. 
+ <br/>
+<br/>Juillet 2019 : progression, PLATINE résistante motivant 
+ <br/>l'introduction d'une chimiothérapie par TAXOL hebdomadaire.
+ <br/>
+<b><br/></b> Janvier 2020
+ <b>: </b> progression sous TAXOL, nouvelle ligne par CAELYX, 
+ <br/>débutée le 30/01/2020.
+ <br/>
+<br/>Les ponctions d'ascite ont continué toutes les 6 semaines pendant le 
+ <br/>TAXOL puis tous les 10 jours sous traitement par CAELYX.
+ <br/>
+<br/>Début d'une nouvelle ligne de chimiothérapie par GEMCITABINE le 
+ <br/>20/04/2020 pour progression clinique. 
+ <br/>
+<br/>
+<b>Complications liées à la maladie et au traitement </b> : 
+ <br/>Ascite, nécessitant des ponctions presque toutes les 6 semaines. 
+ <br/>Epanchement pleural droit, ponctionné le 03/03/2020. 
+ <br/>Thrombose du membre inférieur droit inaugurale, traitée par INNOHEP.
+ <br/>
+<br/>
+<u><b>MODE DE VIE</b></u>
+<br/>Patiente mariée, trois fils dont un qui vit au domicile. 
+ <br/>Le couple habite dans un appartement au 2ème avec ascenseur, la salle 
+ <br/>de bain est avec une douche mais avec une petite marche. 
+ <br/>La patiente est retraitée, était commerçante. 
+ <br/>
+<br/>
+<u><b>TRAITEMENT EN COURS</b></u>
+<br/>Traitement oncologique : GEMCITABINE, débuté le 20/04/2020. 
+ <br/>
+<br/>OXYCONTIN LP 20 mg matin et soir 
+ <br/>OXYNORMORO 10 mg en interdose, en prend très rarement. 
+ <br/>INNOHEP 10.000 ui sous cutané, injections réalisées par son mari. 
+ <br/>PARACETAMOL 1 g, 2 à 4 fois par jour 
+ <br/>MONURIL pris le 20/04/2020. 
+ <br/>Bains de bouche au BICARBONATE, fait ponctuellement
+ <br/>PRIMPERAN si besoin, en prend rarement environ 1/j.
+ <br/>
+<br/>
+<u><b>\'c9VALUATION M\'c9DICO-SOIGNANTE DES SYMPT\'d4MES</b></u>
+<b> :</b>
+<br/>
+<br/>
+<b>Sur le plan des douleurs </b> : la patiente est bien contrôlées 
+ <br/>actuellement, est gênée par la douleur abdominale due à l'ascite, a 
+ <br/>eu la ponction d'ascite hier le 04/05/2020 avec une nette 
+ <br/>amélioration clinique, ne demande pas d'interdose depuis son 
+ <br/>hospitalisation. 
+ <br/>
+<br/>
+<b>Sur le plan cardio-pulmonaire </b> : la patiente a eu pendant 
+ <br/>l'hospitalisation une ponction pleurale avec une certaine efficacité 
+ <br/>mais se sent beaucoup mieux sur le plan respiratoire depuis la 
+ <br/>réalisation de la ponction d'ascite d'hier. 
+ <br/>A de l'oxygène à 1L qu'elle a enlevé aujourd'hui compte tenu de 
+ <br/>l'amélioration. A été capable de faire sa toilette sans oxygène. 
+ <br/>
+<br/>
+<b>Sur le plan digestif </b> : pas de nausée, pas de vomissement mais 
+ <br/>plénitude rapide à cause du liquide d'ascite amélioré depuis la 
+ <br/>ponction. A mieux manger hier soir et ce matin. 
+ <br/>
+<br/>
+<b>Sur le plan des muqueuses et du tégument</b> : oedèmes importants des 
+ <br/>membres inférieurs, érythèmes situés au niveau des deux jambes avec 
+ <br/>chaleur évoquant un érysipèle à surveiller, en sachant que la 
+ <br/>patiente a eu 5 jours d'AUGMENTIN la semaine dernière. 
+ <br/>
+<br/>
+<b>Sur le plan neuro-psychologique </b> : le sommeil est plutôt correct mais 
+ <br/>les derniers jours avant la ponction sont difficiles et le sommeil 
+ <br/>est 
+ <br/>perturbé aussi. 
+ <br/>La patiente n'exprime pas d'anxiété. 
+ <br/>
+<br/>
+<b>Sur le plan de la Mobilité / Autonomie :<br/></b> La patiente est en perte d'autonomie avec la mobilité qui est 
+ <br/>réduite en raison des oedèmes volumineux et de l'ascite. 
+ <br/>A eu des soins d'hygiène avec aide totale hier et aujourd'hui, elle 
+ <br/>s'est senti mieux et a participé aux soins. 
+ <br/>La patiente se sent capable de rentrer chez elle avec des aides pour 
+ <br/>la toilette et ayant comme aidant son mari. 
+ <br/>
+<br/>
+<u><b>EVALUATION DES CONNAISSANCES DU PATIENT ET DE SON ENTOURAGE</b></u>
+<b> :</b>
+<br/>La patiente espère une efficacité de la nouvelle ligne de 
+ <br/>chimiothérapie par GEMCITABINE, est demandeuse de ponction d'ascite 
+ <br/>une fois par semaine. 
+ <br/>Elle n'arrive à aborder la question d'une USP anticipée en cas de 
+ <br/>dégradation. 
+ <br/>
+<br/>
+<u><b>PROPOSITIONS APR\'c8S L'\'c9VALUATION INITIALE</b></u>
+<b> :</b>
+<br/>Réévaluer le syndrome inflammatoire compte tenu de l'aspect 
+ <br/>inflammatoire des lésions au niveau des jambes. 
+ <br/>Poursuite du même traitement antalgique. 
+ <br/>Organisation des ponctions d'ascite une fois par semaine. 
+ <br/>Sortie possible mais avec des aides via l'HAD.
+ <br/>La patiente doit être revue en HDJ SP le 20/05/2020.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

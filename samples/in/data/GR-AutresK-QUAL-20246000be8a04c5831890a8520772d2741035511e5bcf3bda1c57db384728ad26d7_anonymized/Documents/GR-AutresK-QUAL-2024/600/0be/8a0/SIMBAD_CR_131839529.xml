@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_131839529" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 142620529</title>
+    <effectiveTime value="20140919000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20140919000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>RESULTATSANALYSES Valeurs PrécédentesUnités Valeurs de <br/>Référence </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>D.N. : </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX Jos?? </p>
+<p>Homme </p>
+<p>19/09/2014 15:33 </p>
+<p>XXXXXX </p>
+<p>Demande enregistrée le : </p>
+<p>PATIENT : <br/></p>
+<p>XXXXXX SEXE : </p>
+<p>NJF : </p>
+<p>Pr J.M. Bidart (40 24) <br/>Dr L. Drouard-Troalen (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr V. Lazar (40 20) <br/>Dr F. Troalen (40 33) </p>
+<p>Département de Biologie et de Pathologie Médicales </p>
+<p>Biochimie <br/>Dr A.Paci (47 30) <br/>Dr S.Broutin (40 57) </p>
+<p>MicrobiologiHématologie <br/>Pr A. Bennaceur (40 65) <br/>Dr S. Amsellem (41 45) <br/>Dr V. Saada (40 67) <br/>Dr V. Vergé (40 34) </p>
+<p>vendredi 19 septembre 2014 </p>
+<p>TAO Yun Gan 010 </p>
+<p>Prescrit par : </p>
+<p>COMITE : </p>
+<p>INDRE ET LOIRE </p>
+<p>Villejuif, le </p>
+<p>Service : </p>
+<p>142620529 <br/>Complet </p>
+<p>Type <br/><br/>Ech. </p>
+<p>Val. </p>
+<p>19/09/2014 15:33 Page 1 / 2 </p>
+<p>Dr E. Chachaty (52 34) <br/>Dr P.L. Woerther (40 62) <br/>Pr F. Griscelli (51 93) </p>
+<p>Pharmacologie </p>
+<p>LAD140 141 11/09/2014 14:26mmol/l ( 136 - 142 ) <br/>ISE indirecte </p>
+<p>SodiumPL. </p>
+<p>LAD3.8 4.4 11/09/2014 14:26mmol/l ( 3.5 - 4.5 ) <br/>ISE indirecte </p>
+<p>PotassiumPL. </p>
+<p>LAD104 106 11/09/2014 14:26mmol/l ( 98 - 106 ) <br/>ISE indirecte </p>
+<p>ChlorePL. </p>
+<p>LAD28 30 11/09/2014 14:26mmol/l ( 24 - 28 ) <br/>Vitesse de changement pH </p>
+<p>Reserve alcalinePL. </p>
+<p>LAD66 74 11/09/2014 14:26g/L ( 66 - 74 ) <br/>Colorimétrie </p>
+<p>ProtidesPL. </p>
+<p>LAD1.7 2.6 11/09/2014 14:26mmol/l ( 3.0 - 7.5 ) <br/>Conductivité </p>
+<p>UréePL. </p>
+<p>LAD64 64 11/09/2014 14:26μmol/l ( 80 - 125 ) <br/>Colorimétrie </p>
+<p>CréatininePL. </p>
+<p>LAD2.24 2.35 11/09/2014 14:26mmol/l ( 2.25 - 2.55 ) <br/>ISE indirecte </p>
+<p>CalciumPL. </p>
+<p>LAD1.67(*) 1.67 11/09/2014 14:26 <br/>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg </p>
+<p>Base calcul CockroftPL. </p>
+<p>LAD>60.0 >60.0 11/09/2014 14:26mL/mn/1.73m2Débit de filtrationglomérulaire (MDRD) </p>
+<p>PL. </p>
+<p>Ionogramme </p>
+<p>LAD79 80 11/09/2014 14:26UI/L ( 0 - 135 ) <br/>AACC </p>
+<p>PALPL. </p>
+<p>LAD21 14 11/09/2014 14:26UI/L ( 0 - 35 ) <br/>P5P activé </p>
+<p>ASATPL. </p>
+<p>LAD30 11 11/09/2014 14:26UI/L ( 0 - 45 ) <br/>P5P activé </p>
+<p>ALATPL. </p>
+<p>LAD71 60 11/09/2014 14:26UI/L ( 0 - 55 ) <br/>Szasz </p>
+<p>GGTPL. </p>
+<p>Bilan hépatique / pancréatique </p>
+<p>Sang </p>
+<p>BIOCHIMIE </p>
+<p>EXP5.9 7.4 11/09/2014 14:2610*9/L ( 4.0 - 10.0 )LeucocytesSg </p>
+<p>Numeration sanguine </p>
+<p>HEMATOLOGIE </p>
+<p>Méthode : XN - SYSMEX </p>
+<p>IMMUNO-HEMATOLOGIE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé par :Validé le : Dr VERGE Véronique,Dr DROUARD-TROALEN Laurence</p>
+<p></p>
+<p></p>
+<p>RESULTATS Valeurs de <br/>Référence </p>
+<p>Valeurs PrécédentesUnitésANALYSES </p>
+<p>PATIENT : <br/>INDRE ET LOIRE </p>
+<p>TAO Yun Gan </p>
+<p>010COMITE : </p>
+<p>A :XXXXXX Jos?? <br/>Prescrit par : </p>
+<p>XXXXXX 142620529DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>Type <br/><br/>Ech. </p>
+<p>Val. </p>
+<p>Page 2 / 2 </p>
+<p>EXP4.13 4.55 11/09/2014 14:2610*12/L ( 4.50 - 5.90 )HématiesSg </p>
+<p>EXP14.1 15.5 11/09/2014 14:26g/100mL ( 13.0 - 17.0 )HémoglobineSg </p>
+<p>EXP39.8 44.8 11/09/2014 14:26% ( 42.0 - 54.0 )HématocriteSg </p>
+<p>EXP96.4 98.5 11/09/2014 14:26μ3 ( 85.0 - 95.0 )VGMSg </p>
+<p>EXP34.1 34.1 11/09/2014 14:26pg/cel ( 28.0 - 34.0 )TCMHSg </p>
+<p>EXP35.4 34.6 11/09/2014 14:26g/100mL ( 32.0 - 36.0 )CCMHSg </p>
+<p>EXP11.8 11.6 11/09/2014 14:26%IDGSg </p>
+<p>VVE131.0 178.0 11/09/2014 14:2610*9/L ( 150.0-400.0 )PlaquettesSg </p>
+<p>sysm68.9 51.7 11/09/2014 14:26%Polynucléaires NeutrophilesSg </p>
+<p>EXP4.1 3.8 11/09/2014 14:2610*9/L ( 1.8 - 7.5 )SoitSg </p>
+<p>sysm1.7 4.4 11/09/2014 14:26%Polynucléaires EosinophilesSg </p>
+<p>EXP0.1 0.3 11/09/2014 14:2610*9/L ( 0.0 - 0.5 )SoitSg </p>
+<p>sysm0.8 1.1 11/09/2014 14:26%Polynucléaires BasophilesSg </p>
+<p>EXP0.0 0.1 11/09/2014 14:2610*9/L ( 0.0 - 0.3 )SoitSg </p>
+<p>sysm20.2 33.8 11/09/2014 14:26%LymphocytesSg </p>
+<p>VVE1.2 2.5 11/09/2014 14:2610*9/L ( 1.0 - 4.0 )SoitSg </p>
+<p>sysm8.4 9.0 11/09/2014 14:26%MonocytesSg </p>
+<p>EXP0.5 0.7 11/09/2014 14:2610*9/L ( 0.1 - 1.0 )SoitSg </p>
+<p>EXP0.0 0.0 11/09/2014 14:26%MyelémieSg </p>
+<p>sysm13 16 11/09/2014 14:26IDPSg </p>
+<p>sysm11.2 11.9 11/09/2014 14:26μ3 ( 6.0 - 12.0 )VMPSg </p>
+<p>Formule </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé par :Validé le : Dr VERGE Véronique,Dr DROUARD-TROALEN Laurence</p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

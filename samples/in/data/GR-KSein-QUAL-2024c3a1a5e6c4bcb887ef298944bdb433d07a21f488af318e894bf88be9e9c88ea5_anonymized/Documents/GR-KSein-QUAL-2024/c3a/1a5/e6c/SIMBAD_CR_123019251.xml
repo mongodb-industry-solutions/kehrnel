@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123019251" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Note du 2019-08-13</title>
+    <effectiveTime value="20190813000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190813000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<u><b>MOT D'EVOLUTION DU 13 au 14.08.2019 - Dr. DAOUDI/ ROCHE Clémence <br/>(ext)</b></u>
+<br/>
+<br/>Evolution dans le service des urgences de Madame XXXXXX, patiente de 
+ <br/>40 ans suivie pour un carcinome mammaire en progression ganglionnaire 
+ <br/>axillaire et sus-claviculaire.
+ <br/>
+<br/>
+<br/>
+<u>Motif d'hospitalisation</u> : douleur lymphoedème du MSG et douleur 
+ <br/>abdominale + nausée et vomissement.
+ <br/>
+<br/>
+<u>Pour rappel ATCD</u> :
+ <br/>Cancer du sein triple négatif découvert en 2015, BRCA1 muté, traité 
+ <br/>par chimiothérapie, chirurgie et radiothérapie axillaire, CMI et 
+ <br/>sus-claviculaire.
+ <br/>* récidive ganglionnaire en mai 2018 traitée par TAXOL
+ <br/>* nouvelle récidive en décembre 2018 traitée par TALAZOPARIB
+ <br/>* progression ganglionnaire en 2019 traitée par XELODA (avril 2019) 
+ <br/>puis par ENDOXAN débuté en juillet 2019 (traitement actuel).
+ <br/>
+<br/>Autre : consultation en février 2019 à la fondation Cognacq Jay pour 
+ <br/>lymphoedème d'apparition progressive sous chimiothérapie, avec 
+ <br/>douleur et impotence fonctionnelle. Regression sous physiothérapie 
+ <br/>décongestive et bandages.
+ <br/>
+<br/>
+<u><b>Allergie</b></u>
+<b> : pénicilline</b>
+<br/>
+<br/>Aux urgences le 12/08 : Hyperalgie du MSG depuis 4/5 jours, 
+ <br/>d'apparition progressive sur lymphoedème post curage et 
+ <br/>radiothérapie, connue depuis 1 an, chronique.
+ <br/>De plus nausée et vomissements également depuis 4/5 jours. 
+ <br/>Notion d'un épisode de rectorragie dans un contexte de constipation 
+ <br/>aigue avec effort de poussée ++ cette nuit (hémorroïdes décrites par 
+ <br/>la patiente).
+ <br/>Pas de notion de fièvre ou frisson.
+ <br/>
+<br/>PEC sur la garde : 
+ <br/>- initiation d'une anticoagulation curative par LOVENOX 0.4 mL x2 
+ <br/>dans l'éventualité d'une thrombose du MSG
+ <br/>- Adaptation antalgique : PCA OXYCODONE 1mg/h + bolus 1mg + PERFALGAN 
+ <br/>si besoin.
+ <br/>
+<br/>
+<br/>
+<u>Bilan bio</u> : * Cytolyse mineure et cholestase avec GGT augmenté 
+ <br/>mais ces perturbations du bilan hépatique sont connus depuis presque 
+ <br/>1 an.
+ <br/>* Ionogramme sanguin sans particularité, notamment pas 
+ <br/>d'hyperkaliémie (à surveiller car lésion surrénale gauche).
+ <br/>* Pas de SIB
+ <br/>* Pas d'anémie ou de thrombopénie.
+ <br/>
+<br/>
+<u>Examens d'imagerie</u> :
+ <br/>* TDM AP : Lésion secondaire de la surrénale gauche ( mais connue 
+ <br/>depuis juillet, évolutivité ? ). Adénopathies rétropéritonéales.
+ <br/>Pas d'anomalie par ailleurs expliquant la symptomatologie de la 
+ <br/>patiente au niveau digestif.
+ <br/>* Echo Doppler du MS demandée pour éliminer une thombose : Absence de 
+ <br/>signe échographique en faveur d'une thrombose veineuse profonde ou 
+ <br/>superficielle du membre supérieur gauche.
+ <br/>En revanche, ralentissement du flux au sein des veines axillaire, 
+ <br/>sus-clavière et jugulaire interne, faisant suspecter un obstacle 
+ <br/>d'amont : compression d'origine ganglionnaire? A confronter aux 
+ <br/>données d'un scanner injecté
+ <br/>
+<br/>
+<u>Examen clinique ce jour</u> :
+ <br/>Constantes : TA 104/71 FC 64 bpm. T 36.8 °C
+ <br/>EVA 5/10.
+ <br/>BMI 35
+ <br/>
+<br/>* Examen neuro : patiente consciente et orientée. G15. Pas de trouble 
+ <br/>des paires craniennes, pas de troubles oculomoteur ni de signe 
+ <br/>oculaire objectivé (pas de signe d'HTIC). 
+ <br/>Pas de signe de Babinski. ROT +/+.
+ <br/>Pas de trouble moteur du MSG, mais radiculalgie sur un probable 
+ <br/>trajet C7/C8. 
+ <br/>* Examen abdo : abdomen souple, dépressible et indolore. BHA+. 
+ <br/>Constipation depuis plusieurs jours, avec efforts de poussée 
+ <br/>objectivant des rectorragies.
+ <br/>Pas d'hémorroïde externe visualisée mais douleur au TR (probable 
+ <br/>hemorroïdes internes ?), sans sang ni selles au doigté.
+ <br/>* Examen cardio-pulmonaire : BDC régulier, sans souffle perçu.
+ <br/>Eupnéique en AA. MV bilatéral et symétrique, sans bruit surajouté.
+ <br/>* Examen cutané : lymphoedème du membre gauche, chronique depuis 1 
+ <br/>an, non augmenté de volume selon la patiente. 2 nodules de perméation 
+ <br/>sus-claviculaires, dont un d'apparition récente. Pouls radial perçu. 
+ <br/>Pas de circulation collatérale veineuse.
+ <br/>Pas de signe en faveur d'une infection.
+ <br/>
+<br/>
+<u>CAT</u> :
+ <br/>- maintien de l'anticoagulation currative et scanner injecté dans 
+ <br/>48/72h pour éliminer de manière certaine une thrombose (et éliminer 
+ <br/>dans le doute une métastase osseuse).
+ <br/>- laxatifs en systématique
+ <br/>- surveillance rectorragie. Si récidive discuter d'une 
+ <br/>rectosigmoïdoscopie 
+ <br/>
+<br/>
+<u><b>Le 14/08/2019</b></u>
+<br/>
+<br/>
+<u>Examen clinique ce jour</u> :
+ <br/>Constantes :
+ <br/>Peu douloureuse (douleurs du MSG principalement le matin au réveil) 
+ <br/>sous 2mg/h PCA OXYCODONE
+ <br/>
+<br/>* Examen abdo : abdomen souple, dépressible et indolore. Selles ce 
+ <br/>matin, sans récidive de rectorragie.
+ <br/>Pas de récidive de vomissement mais toujours présence de nausée.
+ <br/>* Examen cardiopulmonaire : BDC réguliers, sans souffle. Mollets 
+ <br/>souples et indolores.
+ <br/>Eupnéique en AA. MV bilatéral et symétrique, un peu diminué aux 
+ <br/>bases. Doute sur de très légers crépitants également aux bases.
+ <br/>* Examen cutané : lymphoedème du MSG sans rougeur ni chaleur. Pas de 
+ <br/>modification de volume par rapport à la veille.
+ <br/>Erytheme du MID, au niveau du mollet, d'apparition progressive avec 
+ <br/>extension de la lésion (notamment entre hier et aujourd'hui), non 
+ <br/>chaude, non douloureuse. Pas de point de piqure visualisé. La 
+ <br/>patiente pense qu'il s'agirait d'une piqure de moustique (elle habite 
+ <br/>à Vitry, pas de balade en forêt récente, possède un chien).
+ <br/>Aucun argument pour un tableau infectieux.
+ <br/>* Examen neuro : semblable au précédent.
+ <br/>
+<br/>
+<u>Bilan bio</u> : - pas de SIB
+ <br/>- bilan hépatique toujours perturbé (mais connu)
+ <br/>- hypomagnesémie
+ <br/>Supperposable au précedant pour le reste.
+ <br/>
+<br/>
+<u><b>CAT</b></u>
+<b> :<br/>- Base de NaCl pour l'hydratation en vue du scanner injecté mais à <br/>faible dose, supplémentation Mg2+<br/>- Poursuite des traitements en cours qui semblent bien soulager la <br/>patiente (notamment PCA à dose augmentée la veille (1 -> 2 mg/h), <br/>MOVICOL, PRIMPERAN)<br/>- Prévoir relais oral pour les antalgiques<br/>- Poursuite anticoagulation encore ce jour en attendant l'angioTDM <br/>thoracique à 17h45 <br/>- surveillance lésion érythémateuse face postérieure mollet droit <br/>(délimitation au stylo faite) <br/>- dossier prévue au comité 050 le 21.08.2019. </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

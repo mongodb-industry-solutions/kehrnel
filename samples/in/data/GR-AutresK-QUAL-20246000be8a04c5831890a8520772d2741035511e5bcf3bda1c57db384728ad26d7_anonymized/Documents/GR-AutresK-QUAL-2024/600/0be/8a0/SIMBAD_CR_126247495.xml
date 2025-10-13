@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126247495" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>Résumé de sortie - Service MORBIHAN</title>
+    <effectiveTime value="20180405000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180405000000+0000"/>
+        <assignedAuthor>
+            <code code="MOR/178" displayName="MORBIHAN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Docteur BAUS - Interne ORL</b></u>
+<br/>
+<br/>
+<u><b>Médecin référent</b></u>
+<b> :</b> Docteur BREUSKIN
+ <br/>
+<br/>
+<u><b>Motif d'hospitalisation</b></u>
+<b> :</b>
+<br/>
+<br/>Patient âgé de 56 ans, hospitalisé dans le service Morbihan 
+ <br/>du 18.03.18 au 05.04.18 pour rétablissement de continuité et 
+ <br/>fermeture d'une volumineuse fistule trachéo-oesophagienne 
+ <br/>trachéo-oesophagienne en post-opéraoire d'une laryngectomie totale.
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS CHIRURGICAUX</b></u>
+<br/>- PLT à droite + reconstruction en 2017 avec un lambeau libre du 
+ <br/>grand dorsal
+ <br/>- Fermeture d'un pharyngostome avec un antérolatéral de cuisse en 2017
+ <br/>- PE x2
+ <br/>- Chirurgie du Dupuytren x2
+ <br/>
+<br/>
+<u>Evénements anesthésiques</u> : 
+ <br/>- Les chirurgies ont été compliquées d'un pharyngostome
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS MEDICAUX</b></u>
+<br/>- Carcinome épidermoïde de l'hypopharynx à droite
+ <br/>- Epilepsie en 2014, pas de crise depuis qu'il est traité
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS CARDIO-VASCULAIRES<br/></b></u> Aucun.
+ <br/>
+<br/>Tabac : Arrêt en 2014
+ <br/>OH : Arrêt en 2014
+ <br/>
+<br/>
+<u><b>ALLERGIE/INTOLERANCES<br/></b></u> Aucune.
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE</b></u>
+<b> </b>
+<br/>Patient pris en charge pour un carcinome épidermoïde initialement de 
+ <br/>l'oro-pharynx vélaire et des pilier postérieurs bilatéralement traité 
+ <br/>par radio-chimiothérapie en octobre 2014.
+ <br/>Seconde localisation de carcinome épidermoïde de l'hypopharynx droit 
+ <br/>diagnostiqué en août 2017.
+ <br/>Traitement par pharyngo-laryngectomie totale droite et reconstruction 
+ <br/>par lambeau musculo-cutané de grand pectoral le 13/11/2017.
+ <br/>Suites compliquées d'un pharyngostome à plusieurs reprises.
+ <br/>Monté d'un lambeau de grand dorsal le 06/12/2017.
+ <br/>Malgré les reprises, persistance d'un pharyngostome et dehiscence des 
+ <br/>sutures avec pharyngostome large.
+ <br/>
+<br/>Patient programmé au bloc opératoire pour rétablissement de la 
+ <br/>continuité digestive en mars prochain.
+ <br/>
+<br/>
+<u><b>ACTES REALISES ET EVOLUTION DANS LE SERVICE</b></u>
+<b> :</b>
+<br/>
+<b> A l'admission :</b>
+<br/>- poids : 62 kg
+ <br/>- EVA : 0/10
+ <br/>
+<br/>
+<b>Intervention réalisée le 19.03.2018 par le Docteur ALKHASHNAM</b> : 
+ <br/>
+<b>REPRISE DE CERVICOTOMIE POUR R\'c9TABLISSEMENT DE LA CONTINUIT\'c9 <br/>DIGESTIVE ET REFECTION D'UN TRACH\'c9OSTOME DANS UN CONTEXTE DE <br/>PHARYNGOSTOME LARGE POST-PLT DE RATTRAPAGE AVEC FERMETURE PAR UN <br/>LAMBEAU LIBRE ANT\'c9RO-LAT\'c9RAL DE CUISSE PR\'c9LEV\'c9 \'c0 <br/>GAUCHE ET UN LAMBEAU P\'c9DICUL\'c9 SUPRA-CLAVICULAIRE AVEC <br/>ANASTOMOSE DE PERFORANTE DELTO-ACROMIAL PR\'c9LEV\'c9 \'c0 GAUCHE</b>
+<br/>
+<br/>Suites opératoires : simples avec une bonne évolution locale de la 
+ <br/>palette cutanée cervicale. Le patient a présenté une anémie en 
+ <br/>post-opératoire ayant nécessité la transfusion de 2 CGR avec un bon 
+ <br/>rendement transfusionnel.
+ <br/>Le patient est apyrétique durant tout le séjour hospitalier.
+ <br/>A noter qu'il a présenté une légère désunion au niveau de la 
+ <br/>cicatrice de l'épaule gauche avec nécrose par souffrance cutanée sur 
+ <br/>environ 5 à 6 cm2. Cette nécrose a été parée en chambre sous 
+ <br/>anesthésie locale et actuellement traitée en cicatrisaiton dirigée et 
+ <br/>pansement gras.
+ <br/>La peau du site donneur de cuisse a présenté une nécrose sèche du 
+ <br/>fait d'une tension excessive par sutures directées traitées également 
+ <br/>par parage sous local et cicatrisation dirigée.
+ <br/>Ablation des redons à J3 post-opératoire.
+ <br/>Ablation de la lame cervicale à J5.
+ <br/>Ablation des agrafes et des fils de sutures à partir de J10.
+ <br/>Poursuite des soins locaux quotidiens avec nettoyage à l'eau et au 
+ <br/>savon des différentes cicatrices et application de Bétadine dermique 
+ <br/>sur la cuisse ainsi que de vaseline sur le lambeau cervical et la 
+ <br/>cicatrice de l'épaule gauche.
+ <br/>Le patient a présenté une rougeur en regard de l'épaule gauche 
+ <br/>associée à un écoulement suspect chez un patient ayant présenté de 
+ <br/>nombreuses oeso-trachéales et un pharyngostome dans les suites de ses 
+ <br/>différentes chirurgies.
+ <br/>Dans ce contexte, réalisation de prélèvements qui retrouvent un 
+ <br/>S.pyogenes traité par TAZOCILLINE probabiliste avec relais per-os par 
+ <br/>AUGMENTIN compte tenu de la sensibilité du germe. L'évolution est 
+ <br/>secondairement favorable avec disparition du syndrome inflammatoire 
+ <br/>biologique et de la rougeur clinique cutanée.
+ <br/>Le patient réalise un TOGD le 04.04.18 après ablation de son SALIVARY 
+ <br/>tube qui ne retrouve pas de fistule.
+ <br/>Compte tenu de la bonne évolution au niveau de son néopharynx et au 
+ <br/>niveau cutané, le patient est autorisé à sortir à J17 post-opératoire 
+ <br/>avec retour à domicile.
+ <br/>Pour rappel, Monsieur XXXXXX sort avec sa sonde nasogastrique 
+ <br/>et ne sera autorisé à reprendre l'alimentation que lors d'une 
+ <br/>consultation de contrôle avec le Docteur BREUSKIN.
+ <br/>
+<u><b><br/>Au total</b></u> : 
+ <br/>Reprise de cervicotomie pour rétablissement de continuité 
+ <br/>d'un trachéostome avec pharyngostome par lambeau libre et couverture 
+ <br/>cutanée par un lambeau pédiculé acromial dont les suites sont 
+ <br/>globalement simples autorisant une sortie à J17 après réalisation 
+ <br/>d'une TOGD ne retrouvant pas de fistule.
+ <br/>
+<br/>Retour au domicile le 05.04.18 avec la Coordination des Soins Externes
+ <br/>
+<br/>
+<b> A la sortie :</b>
+<br/>- poids : 62 kg
+ <br/>- EVA : 0/10
+ <br/>
+<br/>
+<u><b>Ordonnances de sortie</b></u>
+<b> :</b>
+<br/>
+<br/>- AUGMENTIN un gramme x 4 par jour pdt 7 jours,
+ <br/>- PARACETAMOL un gramme toutes les 6 heuers si douleur, qsp 1 mois,
+ <br/>- TRAMADOL 50 mg toutes les 6 heures si besoin, pdt 15 jours,
+ <br/>- SPASFON : deux cp x 3 par jour si douleur abdominale, qsp 10 jours,
+ <br/>- JELONET, mepilex, sérum phy, compresses
+ <br/>- TIORFAN une gélule x 3 par jour avant chaque repas si diarrhée pdt 
+ <br/>5 jours,
+ <br/>- ULTRA LEVURE 100 mg : une gélule matin et soir pdt 7 jours,
+ <br/>- INEXIUM 20 mg : un cp le soir pdt 1 mois,
+ <br/>- soins de cicatrice épaule gauche et cervical jusqu'à complète 
+ <br/>cicatrisation.
+ <br/>
+<br/>
+<u><b>Documents remis à la sortie</b></u>
+<b> :</b>
+<br/>
+<br/>- Bulletins de situation.
+ <br/>
+<br/>
+<u><b>Les prochains rendez-vous</b></u> : 
+ <br/>
+<br/>
+<br/>13/04/2018 09:00 MOR IBN PTE CHIR ORL cf mot visite IBN du 4.4 
+ <br/>20/04/2018 09:00 MOR IBN PTE CHIR ORL 
+ <br/>30/04/2018 13:50 DIE CMB C NUTR CMB LVL/FIN ORDO NE 03/05 
+ <br/>11/05/2018 __: 1 ORL IBN C ORL IBN visite de suivi 2004-01 / ne 
+ <br/>pas annuler 
+ <br/>07/06/2018 09:30 MOR IBN C PLAS LKH PO 
+ <br/>07/11/2018 09:15 CAM YGT C RX YGT 
+ <br/>15/03/2019 09:00 310 GSN RD PANORAMIQUE 
+ <br/> 09:10 310 GSN C ODONTO GSN 
+ <br/>10/05/2019 __: 1 ORL IBN C ORL IBN 
+ <br/>06/11/2019 __: 1 CAM YGT C RX YGT 
+ <br/>
+<br/>
+<b>" Conformément à l'article R710 2-1 du code de Santé Publique " :</b>
+<br/>Transfusion de produits sanguins labiles : nr
+ <br/>Portage de germe multirésistant : nr
+ <br/>Infections nosocomiales : nr
+ <br/>
+<br/>
+<b>Complications ou co-morbidités associées - Fiche de recueil des CMA <br/>ORL</b> :NR 
+ <b>CMA liées aux soins contribuant à la valorisation PMSI des <br/>séjours</b> : 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

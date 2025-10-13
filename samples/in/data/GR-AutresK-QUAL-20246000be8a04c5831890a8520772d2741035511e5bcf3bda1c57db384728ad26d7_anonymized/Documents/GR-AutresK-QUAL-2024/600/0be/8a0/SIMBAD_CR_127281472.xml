@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127281472" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>INTERVENTION</title>
+    <effectiveTime value="20171019000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171019000000+0000"/>
+        <assignedAuthor>
+            <code code="MOR/178" displayName="MORBIHAN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<b>PAN ENDOSCOPIE + FIBROSCOPIE OESO-GASTRIQUE<br/> <br/><br/><br/>Opérateur : Docteur BREUSKIN</b>
+<br/>
+<br/>Anesthésiste : Docteur BILLARD
+ <br/>
+<br/>
+<br/>
+<b><br/>INTERVENTION :</b>
+<br/>
+<br/>Patient en décubitus dorsal.
+ <br/>Anesthésie générale.
+ <br/>Ventilation par jet inter-crico-thyroïdienne.
+ <br/>
+<br/>On débute l'examen par la 
+ <b>FIBROSCOPIE OESO-GASTRIQUE</b> qui ne retrouve 
+ <br/>aucune anomalie de la bouche oesophagienne jusqu'au cardia.
+ <br/>
+<br/>L'examen à l'hypo-pharyngoscope ne retrouve pas de lésion du larynx 
+ <br/>ni de l'hypo-pharynx à gauche.
+ <br/>
+<br/>L'examen de l'hypo-pharynx à droite montre une muqueuse irrégulière, 
+ <br/>localisée au niveau de la paroi latérale du sinus piriforme droit, 
+ <br/>tournant sur l'angle antérieur, n'atteignant pas le mur 
+ <br/>pharyngo-laryngé.
+ <br/>
+<br/>En haut, la lésion remonte jusqu'au carrefour.
+ <br/>En bas, le fond du sinus piriforme n'est pas atteint.
+ <br/>
+<br/>Pas d'anomalie du reste de l'examen endoscopique.
+ <br/>
+<br/>Biopsies pour analyse histo-pathologique définitive envoyées en tissu 
+ <br/>fixé.
+ <br/>
+<br/>Au niveau cervical, il existe une sclérose à droite mais j'ai 
+ <br/>toujours l'impression d'un empâtement de la région II.
+ <br/>
+<br/>Le bilan d'imagerie par scanner cervico-thoracique, montre au niveau 
+ <br/>ORL une prise de contraste asymétrique au niveau de l'hypo-pharynx à 
+ <br/>droite.
+ <br/>Au niveau thoracique, présence d'opacités en verre dépoli multipes.
+ <br/>Au niveau du pet scanner, hypermétabolisme au niveau de la région 
+ <br/>hypopharyngée droite et discret hypermétabolisme d'un ganglion en III 
+ <br/>à droite (les images ne sont pas visualisées).
+ <br/>
+<br/>
+<b><h3>Conclusion</h3></b> , suspicion de seconde localisation de carcinome 
+ <br/>épidermoïde chez un patient ayant pour antécédent une 
+ <br/>radio-chimiothérapie pour un carcinome épidermoïde oro-pharyngé en 
+ <br/>2014.
+ <br/>
+<br/>
+<b>On demande :</b>
+<br/>
+<br/>- la récupération des images du pet scanner,
+ <br/>- un traitement antibiotique (AUGMENTIN un gramme x 3 par jour 
+ <br/>pendant 8 jours) et 
+ <br/>- un contrôle de scanner à distance pour contrôle des images en verre 
+ <br/>dépoli (en ville)
+ <br/>- une consultation de COMITE avec l'ensemble des résultats pour 
+ <br/>décision de prise en charge.
+ <br/>
+<u><br/>Orientation thérapeutique</u> :
+ <br/>
+<br/>- cette seconde localisation qui survient en territoire irradié 
+ <br/>relève d'un traitement chirurgical de type pharyngo-laryngectomie 
+ <br/>totale + évidement cervical droit + couverture par lambeau musculaire 
+ <br/>probablement pur de grand pectoral, ou lambeau musculo-cutané de 
+ <br/>fermeture. On réserve d'ores et déjà une date le lundi 13.11 pour 
+ <br/>cette intervention.
+ <br/>
+<br/>
+<br/>Consultation d'anesthésie : 
+ <br/>Prescripteur : Docteur BREUSKIN
+ <br/>Opérateur : Docteur BREUSKIN
+ <br/>Intervention le : 13.11.17 
+ <br/>Intitulé de l'intervention :pharyngo-laryngectomie totale + 
+ <br/>évidement cervical droit + couverture par lambeau musculaire 
+ <br/>probablement pur de grand pectoral, ou lambeau musculo-cutané de 
+ <br/>fermeture 
+ <br/>Côté opéré et côté lambeau :
+ <br/>Installation :
+ <br/>Temps opératoire : 06 heures
+ <br/>Extemporané : 
+ <br/>Anesthésie : 
+ <br/>USCC : OUI - NON
+ <br/>Mode d'hospitalisation : CONVENTIONNEL/AMBULATOIRE/COURT SEJOUR
+ <br/>Temps hospitalisation estimé : trois semaines
+ <br/>Hospitalisation le : 12.11.17
+ <br/>Service d'hospitalisation : 
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

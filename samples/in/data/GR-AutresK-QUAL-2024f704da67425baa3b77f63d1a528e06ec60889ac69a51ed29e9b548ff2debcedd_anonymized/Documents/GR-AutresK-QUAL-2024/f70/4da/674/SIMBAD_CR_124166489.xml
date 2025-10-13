@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124166489" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 190510423</title>
+    <effectiveTime value="20190220000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190220000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Dr J. Delahousse (61 92) <br/>Pr A. Paci (47 30) </p>
+<p>Pr A. Bennaceur (40 65) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr T. Steimle (41 65) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Pr F. Griscelli (51 93) <br/>Dr N. Yin (40 62) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>XXXXXX </p>
+<p>FémininNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>20/02/2019 10:34 </p>
+<p>Sexe : </p>
+<p>20/02/2019 10:34 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>Nom de naissance : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>CTE 060 - GYNECOLOGIE </p>
+<p> 3 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>PAUTIER PatriciaPrescrit par : </p>
+<p>mercredi 20 février 2019 </p>
+<p>Complet </p>
+<p>BIOCHIMIE </p>
+<p>Ionogramme <br/>Sodium 140 mmol/l ( 136 - 146 )138 07/02/2019 12:05 NDP <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Potassium 4.0 mmol/l ( 3.4 - 4.5 )3.6 07/02/2019 12:05 NDP <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Chlore 106 mmol/l ( 101 - 109 )103 07/02/2019 12:05 NDP <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Reserve alcaline 24 mmol/l ( 21 - 31 )27 07/02/2019 12:05 NDP <br/>Plasma hépariné - PEPC </p>
+<p>Protides 70 g/L ( 66 - 83 )63 07/02/2019 12:05 NDP <br/>Plasma hépariné - Biuret </p>
+<p>Urée 4.3 mmol/l ( 2.8 - 7.2 )3.4 04/02/2019 08:00 NDP <br/>Plasma hépariné - Uréase-GLDH </p>
+<p>Créatinine 62 μmol/l ( 49 - 90 )59 07/02/2019 12:05 NDP <br/>Plasma hépariné - Enzymatique raccordée IDMS </p>
+<p>Glucose 5.4 mmol/l ( 4.1 - 5.9 )7.5 01/02/2019 10:30 NDP </p>
+<p>Valeur de référence pour un patient à jeunPlasma hépariné - Hexokinase <br/>G6P-DH </p>
+<p>Calcium 2.30 mmol/l ( 2.20 - 2.65 )2.13 04/02/2019 08:00 NDP <br/>Plasma hépariné - Arsenazo III </p>
+<p>Calcium Corrigé 2.42 mmol/l ( 2.12 - 2.52 )2.49 20/12/2018 11:20 NDP </p>
+<p>La calcémie corrigée est calculée selon la formule : <br/>Ca corrigé = Ca mesuré(mmol/l) + 1- (albumine (g/l) / 40),applicable uniquement avec albuminémie inférieure ou égale à 40 g/L. </p>
+<p>Phosphore 1.08 mmol/l ( 0.81 - 1.45 )0.87 01/02/2019 10:30 NDP <br/>Plasma hépariné - Molybdate, UV </p>
+<p>Acide Urique 482 μmol/l ( 155 - 357 )475 20/12/2018 11:20 NDP <br/>Plasma hépariné - Uricase PAP </p>
+<p>Magnesium 0.78 mmol/l ( 0.77 - 1.03 )0.68 01/02/2019 10:30 NDP <br/>Plasma hépariné - Bleu de xylidyle </p>
+<p>Base calcul Cockroft 1.23 1.29 07/02/2019 12:05 NDP </p>
+<p>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Débit de Filtration Glomérulaire (MDRD) >60.0 mL/mn/1.73m2 >60.0 07/02/2019 12:05 NDP </p>
+<p>< 60 : Insuffisance rénale à explorer si nécessaire. <br/>Si origine afro américaine, le DFG est à multiplier par 1.212 </p>
+<p>Bilan hépatique / pancréatique <br/>PAL 137 UI/L ( 30 - 120 )121 07/02/2019 12:05 NDP <br/>Plasma hépariné - IFCC </p>
+<p>ASAT 28 UI/L ( < 35 )26 07/02/2019 12:05 NDP <br/>Plasma hépariné - IFCC </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 20/02/2019 à 12:45 par : Dr PRADON Caroline,Dr SAADA Véronique</p>
+<p></p>
+<p></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>CTE 060 - GYNECOLOGIEPatient : 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX XXXXXX </p>
+<br/>
+<p>PAUTIER PatriciaPrescrit par : </p>
+<p>ALAT 21 UI/L ( < 35 )42 07/02/2019 12:05 NDP <br/>Plasma hépariné - IFCC </p>
+<p>GGT 36 UI/L ( < 38 )36 07/02/2019 12:05 NDP <br/>Plasma hépariné - IFCC </p>
+<p>Amylase 240 UI/L ( 28 - 100 )244 07/06/2018 13:15 NDP <br/>Plasma hépariné - IFCC </p>
+<p>Bilirubine Totale 7 μmol/l ( 5 - 21 )7 07/02/2019 12:05 NDP <br/>Plasma hépariné - DPD </p>
+<p>Bilan lipidique <br/>Cholesterol 8.09 mmol/l ( 5.20 - 6.20 )7.37 07/06/2018 13:15 NDP <br/>Plasma hépariné - CHO-PAP </p>
+<p>Triglycérides 2.40 mmol/l ( < 1.70 )1.22 07/06/2018 13:15 NDP <br/>Plasma hépariné - GPO-PAP </p>
+<p>Protéines <br/>Albumine 35 g/L ( 35 - 52 )33 20/12/2018 11:20 NDP <br/>Plasma hépariné - Vert de bromocrésol </p>
+<p>Créatine Kinase 23 UI/L ( < 145 )96 07/06/2018 13:15 NDP <br/>Plasma hépariné - IFCC </p>
+<p>LDH 465 UI/L ( < 247 )216 04/02/2019 16:45 NDP <br/>Plasma hépariné - IFCC </p>
+<p>Marqueurs biologiques <br/>CA 125 1019 UI/mL ( < 35 )1770 10/01/2019 08:47 NDP <br/>Serum - ECLIA </p>
+<p>HEMOSTASE </p>
+<p>Bilan de coagulation <br/>Taux de Prothrombine 100 % ( 70 - 100 )Prélèvement non </p>
+<p>parvenu 04/02/2019 16:45 NDP </p>
+<p>A compter du 2 octobre 2018, changement de réactif pour la détermination du taux de prothrombine et descofacteurs II, V, VII et X. <br/>Pas de modification des valeurs usuelles. </p>
+<p>Plasma Citraté - Chronométrique </p>
+<p>Temps de Quick (Témoin = 12,2s) 12.9 s Prélèvement nonparvenu </p>
+<p>04/02/2019 16:45 NDP </p>
+<p>Plasma Citraté - Chronométrique </p>
+<p>INR 1.0 Prélèvement nonparvenu </p>
+<p>04/02/2019 16:45 NDP </p>
+<p>0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>Fibrinogène 7.3 g/L ( 2.0 - 4.0 )Prélèvement nonparvenu </p>
+<p>04/02/2019 16:45 NDP </p>
+<p>Plasma Citraté - Chronométrique </p>
+<p>TCK 30 s Prélèvement nonparvenu </p>
+<p>04/02/2019 16:45 NDP </p>
+<p>Plasma Citraté - Chronométrique </p>
+<p>TCK Ratio 1.0 ( < 1.2 )1.0 01/02/2019 10:30 NDP </p>
+<p>HEMATOLOGIE <br/>Numeration sanguine (Sang total sur EDTA) <br/><br/>Méthode : XN - SYSMEX </p>
+<p>Leucocytes 8.3 10*9/L ( 4.0 - 10.0 )0.9 07/02/2019 12:05 SAE </p>
+<p>Hématies 3.43 10*12/L ( 4.00 - 5.20 )4.12 07/02/2019 12:05 SAE </p>
+<p>Hémoglobine 9.2 g/100mL ( 11.5 - 15.0 )10.7 07/02/2019 12:05 SAE </p>
+<p>Hématocrite 29.7 % ( 34.0 - 45.0 )33.5 07/02/2019 12:05 SAE </p>
+<p>VGM 86.6 μ3 ( 75.0 - 96.0 )81.3 07/02/2019 12:05 SAE </p>
+<p>TCMH 26.8 pg/cel ( 24.0 - 33.0 )26.0 07/02/2019 12:05 SAE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 20/02/2019 à 12:45 par : Dr PRADON Caroline,Dr SAADA Véronique</p>
+<p></p>
+<p></p>
+<p>Page 3 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>CTE 060 - GYNECOLOGIEPatient : 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX XXXXXX </p>
+<br/>
+<p>PAUTIER PatriciaPrescrit par : </p>
+<p>CCMH 31.0 g/100mL ( 32.0 - 36.0 )31.9 07/02/2019 12:05 SAE </p>
+<p>IDG 25.0 % ( 11.0 - 15.0 )17.4 07/02/2019 12:05 </p>
+<p>Plaquettes 237.0 10*9/L 154.0 07/02/2019 12:05 SAE </p>
+<p>Impédance (150 - 400 x 10^9/L) </p>
+<p>Formule <br/>Polynucléaires Neutrophiles 61.4 % 24.7 07/02/2019 12:05 SAE </p>
+<p>SAE0.2 07/02/2019 12:05 ( 1.5 - 7.0 )10*9/Lsoit 5.1 </p>
+<p>Polynucléaires Eosinophiles 0.1 % ! 07/02/2019 12:05 SAE </p>
+<p>SAE! 07/02/2019 12:05 ( 0.0 - 0.6 )10*9/Lsoit 0.0 </p>
+<p>Polynucléaires Basophiles 0.6 % ! 07/02/2019 12:05 SAE </p>
+<p>SAE! 07/02/2019 12:05 ( 0.0 - 0.1 )10*9/Lsoit 0.0 </p>
+<p>Lymphocytes 28.3 % ! 07/02/2019 12:05 SAE </p>
+<p>SAE! 07/02/2019 12:05 ( 1.2 - 4.0 )10*9/Lsoit 2.3 </p>
+<p>Monocytes 9.6 % ! 07/02/2019 12:05 SAE </p>
+<p>SAE! 07/02/2019 12:05 ( 0.2 - 0.8 )10*9/Lsoit 0.8 </p>
+<p>Commentaires SAEFormule automate vérifiée sur frottis </p>
+<p>IDP 9 10 07/02/2019 12:05 SAE </p>
+<p>VMP 9.2 μ3 ( 7.5 - 11.0 )9.4 07/02/2019 12:05 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 20/02/2019 à 12:45 par : Dr PRADON Caroline,Dr SAADA Véronique</p>
+<p></p>
+<ul>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Ionogramme</li>
+<li>Bilan hépatique / pancréatique</li>
+<li>Bilan lipidique</li>
+<li>Protéines</li>
+<li>Marqueurs biologiques</li>
+</ul>
+<li>HEMOSTASE</li>
+<ul>
+<li>Bilan de coagulation</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/><br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

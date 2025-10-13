@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128178814" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°17H03271 2334574 Dr Etienne ROULEAU</title>
+    <effectiveTime value="20170503000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170503000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<br/>RECHERCHE DE MUTATION 
+ <br/>
+<br/>Renseignements cliniques et pathologiques :
+ <br/>- Date de prescription : 2017-04-04 
+ <br/>- Date d'arrivée au laboratoire : 2017-04-07 
+ <br/>- Diagnostic : adénocarcinome séreux de haut grade
+ <br/>- Evènement : Métastase
+ <br/>- Localisation : péritoine
+ <br/>- Type de matériel : Copeaux
+ <br/>- Modalité obtention du prélèvement : Biopsie
+ <br/>- Référence IGR du bloc d'inclusion : 1
+ <br/>- Pourcentage de cellules tumorales : 70%
+ <br/>
+<br/>GENE ANALYSE : BRCA1 
+ <br/>
+<br/>Technique d'analyse :
+ <br/>Recherche réalisée par séquençage nouvelle génération (enrichissement par capture kit OGT BRCA1 et séquençage MiSeq) - couverture de 100% de la région codante. Séquences de référence : BRCA1 NM_007294.3.
+ <br/>
+<br/>Résultat :
+ <br/>Aucune mutation ponctuelle délétère du gène BRCA1.
+ <br/>
+<br/>GENE ANALYSE : BRCA2 
+ <br/>
+<br/>Technique d'analyse :
+ <br/>Recherche réalisée par séquençage nouvelle génération (enrichissement par capture kit OGT BRCA2 et séquençage MiSeq) - couverture de 100% de la région codante. Séquences de référence : BRCA2 NM_000059.3.
+ <br/>
+<br/>Résultat :
+ <br/>Aucune mutation ponctuelle délétère du gène BRCA2.
+ <br/>
+<br/>GENE ANALYSE : TP53 
+ <br/>
+<br/>Technique d'analyse :
+ <br/>Analyse réalisée par séquençage de nouvelle génération (NGS) avec le kit de capture SureSeqTM Ovarian Cancer Panel (Oxford Gene Technology) couvrant l'ensemble des parties codantes du gène TP53 (NM_000546) suivi par un séquençage sur séquenceur Miseq (Illumina).
+ <br/>
+<br/>Résultat :
+ <br/>Présence d'une mutation de l'exon 5 du gène TP53 au niveau du codon , c.458_468dup ; p.Val157Profs*17 .
+ <br/>
+<br/>Fréquence allélique de la mutation : 35%
+ <br/>
+<br/>
+<br/>
+<br/>CONCLUSION :
+ <br/>
+<br/>Gène analysé : BRCA1
+ <br/>
+<br/>Par les stratégies actuelles d'analyse, il n'a pas été mis en évidence de mutation ponctuelle délétère du gène BRCA1 sur le prélèvement analysé. 
+ <br/>
+<br/>Gène analysé : BRCA2
+ <br/>
+<br/>Par les stratégies actuelles d'analyse, il n'a pas été mis en évidence de mutation ponctuelle délétère du gène BRCA2 sur le prélèvement analysé. 
+ <br/>
+<br/>Gène analysé : TP53
+ <br/>
+<br/>
+<br/>Présence d'une mutation du gène TP53 ).
+ <br/>Il s'agit d'une mutation oncogénique délétère du gène TP53.
+ <br/>
+<br/>IEDPA7A0, IHDPGMA2, -Y--0180 
+ <br/>
+<br/> Dr Etienne ROULEAU 
+ <br/> Praticien spécialiste 
+ <br/> Compte-rendu validé et signé électroniquement 
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

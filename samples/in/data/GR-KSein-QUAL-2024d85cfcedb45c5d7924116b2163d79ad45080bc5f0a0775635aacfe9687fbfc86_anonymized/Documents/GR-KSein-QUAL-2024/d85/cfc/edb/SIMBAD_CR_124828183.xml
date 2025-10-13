@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124828183" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>REUNION DE CONCERTATION PLURIDISCIPLINAIRE - DOULEURS OSSEUSES -</title>
+    <effectiveTime value="20181112000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181113000000+0000"/>
+        <assignedAuthor>
+            <code code="133/267" displayName="ANALGESIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>CETD : Dr Karima MEZA\'cfB et Dr Hortense THELU <br/>Chirurgie orthopédique : Dr Sylvain BRIAND<br/>Radiothérapie : Dr Guillaume LOUVEL <br/>Radiologie interventionnelle : Dr Benjamin MOULIN<br/></b>
+<br/>
+<br/>
+<b>Compte-rendu dicté par le Docteur LOUVEL </b>
+<br/>
+<br/>Nous voyons ce jour le dosser de Mme XXXXXX suivie dans le cadre 
+ <br/>d'un cancer du sein avec lésions osseuses secondaires.
+ <br/>
+<br/>Sur l'IRM, on authentifie en effet l'existence d'une lésion centrée 
+ <br/>sur T3 avec discrète épidurite en regard.
+ <br/>
+<br/>Sur le scanner cette lésion correspond à un aspect de lésion 
+ <br/>secondaire condensée. 
+ <br/>
+<br/>Il n'existe pas d'instabilité à ce niveau, on valide donc 
+ <br/>l'indication d'une radiothérapie qui visera à délivrer 30 Gy en 10 
+ <br/>fractions de 3 Gy au niveau de T3 T4.
+ <b><br/></b>
+<br/>
+<b>Double :<br/></b> Médecin référent IGR : Dr MOKDAD ADI 
+ <br/>Dr LOUVEL 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

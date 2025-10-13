@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121921884" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°20H00678 2957213 Dr Lalie ROGER BUSCH</title>
+    <effectiveTime value="20200128000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200128000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>DÉPARTEMENT DE BIOLOGIE ET DE PATHOLOGIE MEDICALES<br/></p>
+<p>114 rue Edouard Vaillant - 94805 VILLEJUIF CEDEX </p>
+<p>N° I.G.R. : 050 XXXXXX <br/>XXXXXX XXXXXX George XXXXXX <br/>Examen demandé par : Madame Le Docteur MOKDA-ADI Meriem <br/>Dr MOKDA-ADI Meriem Pathologie Mammaire <br/>CTE 050 - SEIN <br/>Prélevé le 21/01/2020 <br/>Enregistré le 21/01/2020 <br/></p>
+<p> RGO <br/> Examen n° : 20H00678<br/>CR édité le : 28/01/2020 </p>
+<p><br/></p>
+<p>Copie à : 1/1<br/></p>
+<p> BIOPSIE HEPATIQUE </p>
+<p> Renseignements cliniques : /<br/>MACROSCOPIE 2 micro-biopsies. 4 et 5mm. Fixation formol. Coloration HES.<br/>MICROSCOPIE <br/>Les 2 fragments présentent le même aspect histologique. Ils sont totalement lésionnels sans tissu hépatique visible. Ils sont constitués d'un stroma fibro-oedémateux, possiblement chondroïde, siège d'une prolifération en travées et en nids de cellules d'allure carcinomateuse.<br/>ETUDE IMMUNOHISTOCHIMIQUE <br/>CK7 : +, CK20 : - <br/>GATA-3 : - , Mammaglobine : + focale et faible (contrôle externe +), GCDFP15 : - (contrôle externe +).<br/>Récepteurs des oestrogènes : -. <br/>Récepteurs de la progestérone : -. <br/>Her 2 : 2+ (marquage membranaire complet d'intensité faible de 15% des cellules tumorales.<br/>CONCLUSION : <br/>Localisation d'un adénocarcinome peu différencié dont les aspects morphologiques et immunophénotypiques sont compatibles avec le carcinome mammaire connu, de phénotype RE - <br/>RP - Her2 équivoque (score 2+), RA -. <br/>L'étude des récepteurs hormonaux et du statut Her2 réalisée fait l'objet de compte-rendus distincts.<br/>HHFFAMB2 <br/> Dr Lalie ROGER BUSCH <br/> Praticien </p>
+<p> Compte rendu validé et signé électroniquement </p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

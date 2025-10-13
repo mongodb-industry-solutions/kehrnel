@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123019072" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM ABD+PELV</title>
+    <effectiveTime value="20190813000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190813000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur KASRAOUI Ines
+ <br/>
+<br/>Destinataire : ROUERGUE
+ <br/> DR INTERNE
+ <br/>
+<b>Compte rendu générique de SCANNER<br/><br/><br/> Dicté par : </b> Docteur Inès Kasraoui
+ <b><br/>Dicté le : </b> 13/08/2019 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Générique 
+ <br/>
+<b>Ref :</b> 767834 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : LRQ
+ <br/>
+<br/>
+<br/>Examen réalisé le : 12/08/2019
+ <br/>NUMERO D'EXAMEN : 5546
+ <br/>
+<br/>
+<br/>
+<u><b>SCANNER ABDOMINO-PELVIEN<br/><br/> <br/>INDICATION</b></u>
+<b> :<br/></b> Patiente âgée de 40 ans prise en charge pour un carcinome mammaire 
+ <br/>gauche traité initialement en 2015 par chimiothérapie chirurgie et 
+ <br/>radiothérapie, actuellement récidive ganglionnaire sus-claviculaire 
+ <br/>et axillaire sous Endoxan depuis début janvier 2019.
+ <br/>Patiente consulte pour douleur abdominale. Notion de rectorragie. 
+ <br/>
+<u><b><br/>TECHNIQUE</b></u>
+<b> :<br/></b> Examen réalisé sur un scanner DISCOVERY 750 HD, GENERAL ELECTRIC, 
+ <br/>mis en service en septembre 2012.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 429098CN7
+ <br/>
+<br/>
+<br/>Réalisation d'une acquisition :
+ <br/>\'a7 Abdominale 
+ <br/>\'a7 Pelvienne
+ <br/>
+<br/>Examen réalisé avec injection intraveineuse de produit de contraste.
+ <br/>
+<br/>
+<b>Produit de contraste injecté : XENETIX<br/>Quantité :140cc<br/>PDL : 3008.77 mGy.cm</b>
+<br/>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/></b> Pas d'épanchement intra ou rétro-péritonéal.
+ <br/>Pas d'occlusion digestive.
+ <br/>Axes vasculaires en l'occurrence mésentériques perméables.
+ <br/>Pas d'argument en faveur d'un saignement actif.
+ <br/>Masse surrénalienne gauche de 30 mm d'allure secondaire.
+ <br/>Multiples ganglions et adénopathies rétro-péritonéales.
+ <br/>Foie de taille normale de contours réguliers de parenchymographie 
+ <br/>homogène sans lésion suspecte.
+ <br/>Pas de dilatation des voies biliaires.
+ <br/>Vésicule biliaire non distendue.
+ <br/>Pancréas de taille normale, à lobulation conservée de rehaussement 
+ <br/>homogène.
+ <br/>Aspect normal de la rate et des reins.
+ <br/>Appendice rétro-caecal d'aspect normal.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/></b> Masse secondaire de la surrénale gauche.
+ <br/>Adénopathies rétro-péritonéales.
+ <br/>Pas d'anomalie par ailleurs expliquant la symptomatologie de la 
+ <br/>patiente. 
+ <br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Inès KASRAOUI <br/>Le mardi 13 août 2019 à 00:32 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122636867" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20191011000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20191011000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Compte rendu générique de SENOLOGIE<br/><br/>Dicté par : </b> Docteur Kahina Ait Kaci Arab Rehall
+ <b><br/>Dicté le : </b> 10/10/2019 
+ <b><br/>Service : </b> 050-CTE 050 - SEIN 
+ <br/>
+<b>Type de document : </b> 050 CC Générique 
+ <br/>
+<b>Ref :</b> 810277 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : ORC
+ <br/>
+<br/>
+<b>Patiente vue ce jour pour la prise en charge d'une récidive en mars <br/>2018, sous XELODA débuté le 15/04/2019 pour un cancer du sein gauche <br/>diagnostiqué initialement en 2015 traité à Bergonié par <br/>chimiothérapie, chirurgie puis radiothérapie au niveau axillaire, CMI <br/>et sus claviculaire, triple négatif et actuellement en récidive <br/>ganglionnaire susclaviculaire et axillaire.<br/></b>
+<br/>Randomisation le 11/10 dans le cadre du protocole SAFIR 02 : Bras 
+ <br/>standard avec poursuite du TAXOL à dose réduite( -20%) versus bras 
+ <br/>avec OLAPARIB.
+ <br/>
+<br/>TAXOL à dose réduite (-20%).
+ <br/>
+<br/>PET scanner le 20 décembre qui montre, comparativement à l'examen 
+ <br/>précédent de septembre 2018, un aspect de réévolutivité au niveau 
+ <br/>ganglionnaire sus et sous-claviculaire gauche et probablement 
+ <br/>axillaire gauche.
+ <br/>
+<br/>Pas d'autre localisation mise en évidence.
+ <br/>
+<br/>Echographie avec cytoponction au niveau ganglionnaire 
+ <br/>susclaviculaire, le plus volumineux le 21/12 :
+ <br/>Présence de cellules tumorales malignes métastatiques.
+ <br/>L'aspect est compatible avec une origine mammaire.
+ <br/>
+<br/>Elle a débuté un traitement par TALAZOPARIB le 12/01.
+ <br/>La patiente a été hospitalisée à Cognacq Jay en janvier 2019 : 
+ <br/>diminution de 47% du lymphoedème gauche.
+ <br/>Dr DUMONT contacté après progression sous TALAZOPARIB début avril 
+ <br/>pour une inclusion dans le protocole BASKET avec PEMBRO/LANZAPARIB à 
+ <br/>partir de la deuxième ligne : le protocole n'est pas encore ouvert.
+ <b><br/><br/>TEP du XXXXXX:<br/>Comparativement à l'examen précédent de décembre 2018 (Baseline), <br/><br/>aspect de progression métabolique devant :<br/>- La majoration en intensité de fixation de certaines adénopathies <br/>sus-claviculaires et axillaires gauches malgré la régression <br/>métabolique du foyer pris pour cible. <br/>- La majoration d'un nodule sous-cutané cervical antérieur gauche.<br/>- L'apparition d'un nodule surrénalien gauche fixant d'allure <br/>secondaire. <br/><br/>Sous XELODA depuis avril 2019.<br/><br/><u>Les résultats du TEP scanner réalisé à l'IGR le 2 juillet <br/>2019 :<br/></u>On note une progression métabolique devant la majoration en intensité <br/>et étendue de fixation des foyers déjà décrits.<br/>Asymétrie de fixation oropharyngée au profil du côté droit à <br/>confronter à un examen ORL plus marqué sur l'examen que sur l'examen <br/>précédent.<br/>Absence de nouveau foyer suspect par ailleurs. <br/><br/>Bilan biologique réalisé le 2 juillet 2019 correct sans anomalie avec <br/>le CA 15-3 ce jour à 17.<br/><br/>Dossier présenté à la RCP le 3 juillet 2019 où on propose une <br/>nouvelle ligne par ENDOXAN oral.<br/><br/></b> A savoir 
+ <b>Une IRM du crâne le 19/08/2019:</b> Pas de lésion suspecte 
+ <br/>décelée à l'étage cérébral.
+ <br/>
+<br/>
+<b>La patiente va consulter en urgence le 12/08/2019 pour un </b>épisode de 
+ <br/>rectorragie.
+ <br/>
+<br/>TDM TAP : Masse secondaire de la surrénale gauche. Adénopathies 
+ <br/>rétropéritonéales. Pas d'anomalie par ailleurs expliquant la 
+ <br/>symptomatologie de la patiente.
+ <br/>Puis hospitalisée pour une douleur du membre inférieur gauche.
+ <br/>Un doppler du bras gauche absence de thrombose 
+ <br/>Et devant la forte suspicion de progression début de l'eribuline 
+ <br/>depuis le 16/08/2019.
+ <br/>
+<br/>
+<u><b>CE JOUR <br/><br/></b></u> Actuellement sous ERIBULINE; nouvelle ligne thérapeutique depuis 
+ <br/>Août 2019 après suspicion d'une progression clinique et radiologique 
+ <br/>sous ENDOXAN en juillet.
+ <br/>La patiente l'a pris pendant 1 mois et demi.
+ <br/>
+<br/>
+<b>C4 J8 PREVU le 16/10/2019</b>
+<br/>
+<br/>Une bonne tolérance globale au traitement, plus de nausées.
+ <br/>Pas de neuropathie.
+ <br/>
+<br/>PS: 0.
+ <br/>Poids stable à 85 kg 
+ <br/>Taille : 165 cm.
+ <br/>EVA 08/10 sous OXYCONTIN 40 mg matin et soir.
+ <br/>Fréquence respiratoire à 13 ce jour.
+ <br/>
+<br/>
+<b>TEP SCANNER DU 01/10/2019; <br/>Comparativement à l'examen précédent, examen en faveur d'une franche <br/>réponse métabolique partielle avec :<br/><br/>* Nette réponse métabolique partielle des lésions ganglionnaire <br/>sus-diaphragmatiques et de la lésion surrénalienne gauche.<br/>* Régression complète des adénopathies sous diaphragmatiques latéro <br/>aortiques.<br/><br/>Absence d'hyperfixation suspecte nouvellement apparue.<br/><br/></b> On note la douleur qui revient depuis 01 semaine avec reprise des 
+ <br/>dérivés morphiniques
+ <br/>
+<br/>A l'examen clinique : on note une très bonne réponse clinique avec 
+ <br/>disparition des nodules basicervicaux gauches : 
+ <br/>Le reste de l'examen clinique est sans particularité.
+ <br/>
+<br/>Le dernier bilan du 26/08/2019 ASAT 40, ALAT 88, le reste du bilan 
+ <br/>est sans particularité.
+ <br/>
+<b><br/><u>EN PRATIQUE :<br/><br/></u></b> - réponse thérapeutiqe clinique et radiologique.
+ <br/>
+<br/>- poursuite du traitement par ERIBULINE jusqu'à maltolérance ou 
+ <br/>toxicité.
+ <br/>
+<u><b><br/></b></u> - Accord pour C4 J8 ERIBULINE le 16/10/2019 sous réserve des 
+ <br/>résultats biologiques.
+ <br/>
+<br/>- Prescription de l'OXYCONTIN 40 mg matin et soir et l'OXYNORM 10 mg.
+ <br/>
+<br/>- consultation dans 1 mois puis dans 02 mois avec un nouveau TEP 
+ <br/>scanner.
+ <b><br/></b>
+<br/>
+<br/> ____________________________
+ <br/>
+<b>Courrier rédigé avec un logiciel de reconnaissance vocale pouvant <br/>comporter quelques imperfections orthographiques.<br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Kahina AIT KACI ARAB REHALL <br/>Le jeudi 10 octobre 2019 à 12:04 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

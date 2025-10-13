@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120022142" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM THORAX</title>
+    <effectiveTime value="20201113000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201113000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur FEKI MKAOUAR Rahma
+ <br/>
+<br/>Destinataire : HERAULT
+ <br/> DR INTERNE
+ <br/>
+<br/>
+<b>SCANNER THORACO-ABDOMINO-PELVIEN<br/><br/><br/> Dicté par : </b> Docteur Rahma Feki Mkaouar
+ <b><br/>Dicté le : </b> 12/11/2020 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Générique 
+ <br/>
+<b>Ref :</b> 1157753 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : 
+ <b>DMI<br/><br/>EXAMEN N. 8479<br/></b>
+<br/>
+<br/>
+<br/>Examen réalisé le : 12.11.2020
+ <br/>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/></b> Patient de 41 ans, prise en charge dans le cadre d'un cancer du sein 
+ <br/>triple négatif en rechute ganglionnaire, sous Taxol depuis le 4 
+ <br/>novembre 2020.
+ <br/>Majoration des douleurs cervicales et de l'oecdème du bras gauche.
+ <br/>Evaluation de l'atteinte ganglionnaire et recherche de thrombose 
+ <br/>veineuse.
+ <br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/></b> Examen réalisé sur un scanner OPTIMA CT660, GENERAL ELECTRIC, mis 
+ <br/>en service le 8 février 2016.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 422272HM5
+ <br/>
+<br/>Réalisation d'une acquisition :
+ <br/>\'a7 Thoracique
+ <br/>\'a7 Abdominale 
+ <br/>\'a7 Pelvienne
+ <br/>Examen réalisé avec injection intraveineuse de produit de contraste.
+ <br/>
+<br/>
+<b>Produit de contraste injecté : Xenetix<br/>Quantité : 120 ml<br/><br/>PDL : 1488.85 mGy.cm<br/></b>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/></b> Comparativement scanner du 17 septembre 2020 (pas d'étage cervical ):
+ <br/>Thorax :
+ <br/>Nette majoration de l'atteinte ganglionnaire sus-claviculaire gauche, 
+ <br/>image 124-se5, mesurant 48 x 40 mm versus 16 x 15 mm.
+ <br/>Apparition comparativement au scanner du 13 décembre 2019 
+ <br/>d'innombrables adénopathies cervicales gauches avec une atteinte du 
+ <br/>secteur V (innombrables prises de contraste intermusculaires 
+ <br/>cervicales postérieures).
+ <br/>Magma ganglionnaire jugulocarotidien gauche envahissant la veine 
+ <br/>jugulaire interne en regard, qui reste toutefois perméable dans sa 
+ <br/>portion distale
+ <br/>Apparition d'une adénopathie pré-claviculaire droite, image 140, 
+ <br/>mesurant 20 x 22 mm.
+ <br/>Apparition de formations ganglionnaires infracentimétriques 
+ <br/>sus-claviculaires droites.
+ <br/>Apparition d'adénopathies médiastinales, par exemple adénopathie 
+ <br/>médiastinale antérieure gauche, image 192 - série 5, mesurant 17 mm 
+ <br/>de XXXXXX.
+ <br/>Apparition d'adénopathies de l'angle cardiophrénique gauche, image 
+ <br/>66-se4, mesurant 14 mm.
+ <br/>Apparition d'un épanchement pleural gauche de faible abondance.
+ <br/>Absence d'épanchement pleural droit ou péricardique.
+ <br/>Absence d'embolie pulmonaire proximale.
+ <br/>Absence de thrombose de la veine cave supérieure et des troncs 
+ <br/>veineux innominés.
+ <br/>Apparition d'un collapsus du parenchyme pulmonaire basal gauche.
+ <br/>Absence d'apparition de lésion suspecte du parenchyme pulmonaire.
+ <br/>
+<br/>Abdomen et pelvis :
+ <br/>Absence d'apparition de lésion focale suspecte du foie, de la rate, 
+ <br/>du pancréas, des reins et de la surrénale droite.
+ <br/>Stabilité de la masse surrénalienne gauche, nécrotique d'allure 
+ <br/>métastatique.
+ <br/>Légère majoration de l'atteinte ganglionnaire rétropéritonéale.
+ <br/>Absence d'apparition d'adénomégalie abdominopelvienne
+ <br/>Absence d'épanchement intrapéritonéale
+ <br/>En fenêtre osseuse :
+ <br/>Absence d'apparition de lésion lytique ou condensante suspecte.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/></b> Nette progression de l'atteinte ganglionnaire sus-diaphragmatique 
+ <br/>comparativement au scanner du 17 septembre 2020.
+ <br/>Magma ganglionnaire jugulocarotidien, envahissant la veine jugulaire 
+ <br/>interne en regard, toutefois elle reste perméable dans sa portion 
+ <br/>distale.
+ <br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Rahma FEKI MKAOUAR <br/>Le jeudi 12 novembre 2020 à 18:08 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

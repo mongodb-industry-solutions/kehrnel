@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_118641471" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>UDEP - Unité D'Expertise Palliative -</title>
+    <effectiveTime value="20210529000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20210512000000+0000"/>
+        <assignedAuthor>
+            <code code="UEP/535" displayName="UNITE EXPERTISE PALLIATIVE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Unité D'Expertise Palliative (UDEP) - Département Interdisciplinaire <br/>d'Organisation des Parcours Patients (DIOPP)<br/><br/>COMPTE RENDU D'HOSPITALISATION<br/><br/>Dicté par : </b> Docteur Rita Maria Khoury Abboud
+ <b><br/>Dicté le : </b> 11/05/2021 
+ <b><br/>Service : </b> UEP- UDEP UNITE D EXPERTISE PALLIATIVE 
+ <br/>
+<b>Type de document : </b> UEP RH HOSPITALISATION 
+ <br/>
+<b>Ref :</b> 1351417 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire : IZM/A</b>
+<br/>
+<br/> Nous avons le regret de vous annoncer le décès de Mme. XXXXXX survenu 
+ <br/>le 29/05 durant son hospitalisation à l'Unité D'Expertise Palliative 
+ <br/>du 05/05 au 29/05/2021.
+ <br/>
+<br/>
+<b> Patiente de 42 ans hospitalisée dans l'Unité D'Expertise Palliative <br/>(UDEP) du 05/05 au 29/05/2021.<br/><br/><u>Motif d'hospitalisation<br/></u></b> Hospitalisation pour prise en charge de douleurs non contrôlées chez 
+ <br/>une patiente suivie pour cancer du sein triple négatif BRCA1 muté 
+ <br/>tp53 muté métastatique pleurale, ganglionnaire sus et sous 
+ <br/>diaphragmatique. 
+ <br/>
+<b><br/><u>Oncologue référent</u> : Dr MOKDAD <br/><br/><u>Suivi antérieur au DISSPO<br/></u>- EMASP : </b> Dr PAVLIUC, Dr SAMPETREAN, Dr MATEUS
+ <b><br/>- CETD : </b> Marie Anne SEVEQUE
+ <b><br/>- Psychologue / psychiatre : </b> Mme SALLARD
+ <b><br/><br/><u>Informations complémentaires</u><br/>- Directives anticipées:</b> non rédigées.
+ <br/>
+<b>- Personne de confiance:</b> son époux, M. BUSSEAU Frédérique 
+ <br/>06.60.97.99.67.
+ <b><br/>- Intervenants au domicile:</b>
+<br/>- Prise en charge par l'HAD santé service avec deux passages par jour 
+ <br/>des infirmières, a une PCA de MORPHINE et une PCA de KETAMINE.
+ <br/>
+<b><br/><u>Antécédents notables</u> <br/></b> ALLERGIE A LA PENICILLINE 
+ <br/>
+<b><br/><u>Histoire de la maladie et ses complications</u> <br/></b> 2015: Carcinome canalaire infiltrant de grade III T4dN1M0, Ki67 90%, 
+ <br/>triple négatif en 2016 traité par chimiothérapie par 4 EC et Taxol 
+ <br/>hebdomadaire, radiothérapie et mastectomie curage axillaire. Bonne 
+ <br/>réponse, pas de cellule résiduelle.
+ <br/>
+<br/>2018: rechute ganglionnaire cervicale, axillaire et sus-claviculaire, 
+ <br/>confirmée histologiquement. 
+ <br/>L1 tAXOL cARBO 
+ <br/>Réponse complète mais toxicité hématologique
+ <br/>--> randomisation dans l'essai saphir02 (bras standard Taxol dose 
+ <br/>réduite) à partir d'octobre 2018
+ <br/>Progression en décembre 2018 --> L2: TALAZOPARIB débuté le 12/01/2019
+ <br/>Progression en avril 2019: L3 XELODA 
+ <br/>Progression en juillet 2019: L4 ENDOXAN oral 
+ <br/>Progression en aout 2019: L5: ERIBULIN 
+ <br/>Progression en décembre 2019: L6: CARBO/GEMZAR bonne réponse 
+ <br/>partielle mais tolérance hématologique limite ayant fait basculer à 
+ <br/>un traitement par NAVELBINE au vu du contexte COVID à partir de mars 
+ <br/>2020.
+ <br/>Progression en juin 2020: reprise de CARBO GEMZAR puis CARBO AUC2 
+ <br/>seule en raison de toxicité. 
+ <br/>Progression en octobre 2020: L7 par TAXOL. 
+ <br/>Progression en décembre 2020: L8 par CMF .
+ <br/>*Radiothérapie antalgique sur une adénopathie claviculaire G de 22/12 
+ <br/>au 30/12/2020
+ <br/>*RCP moléculaire mars 2021: pas d'orientation thérapeutique.
+ <br/>
+<br/>
+<u><b>Histoire de la maladie récente</b></u>
+<b><br/></b> Problématique douloureuse depuis plusieurs mois, prise en charge au 
+ <br/>domicile par PCA de MORPHINE avec PSE de KETAMINE, et coantalgiques.
+ <br/>Actuellement depuis un mois, douleurs en majoration progressive 
+ <br/>prenant la base thoracique gauche et s'étendant au flanc gauche, à 
+ <br/>caractère mixte nociceptif et neuropathique, non soulagée par une 
+ <br/>position particulière. 
+ <br/>
+<u><br/><b>Mode de vie</b></u>
+<b> <br/></b> Mariée, a deux fils d'une première union de 10 et 15 ans, le fils de 
+ <br/>15 ans est à la maison avec elle et le fils cadet est avec son père 
+ <br/>dans le sud de la France ; elle vit aussi avec la fille de son mari 
+ <br/>actuel qui a 19 ans. 
+ <br/>La patiente habite dans une maison avec étage, la chambre est au 
+ <br/>rez-de-chaussée par contre la salle de bain est à l'étage.
+ <br/>
+<br/>
+<u><b>Traitement à l'entrée <br/></b></u> PREDNISOLONE 50mg/jour 
+ <br/>PCA de MORPHINE débit 7 mg/h bolus 10
+ <br/>IVSE de KETAMINE 2 mg/h
+ <br/>LAROXYL 37 mg le soir 
+ <br/>LOVENOX 0.4
+ <br/>SPASFON
+ <br/>DEBRIDAT 
+ <br/>
+<br/>
+<u><b>Biologie</b></u>
+<br/>Pas de trouble iono, créatinine 50 μmol/l
+ <br/>calcium 2,35 mmol/l, albumine 43 g/l,
+ <br/>CRP 41 mg/l, LDH 1346 Ui/l
+ <br/>Bilan hépatique : dans les limites de la normale hormis des gamma-GT 
+ <br/>à 198
+ <br/>Hb 11,6 G/dl, PNN 14500, lymphocyte 300, plaquettes 264 000/mm3
+ <br/>TP 100%,
+ <br/>
+<br/>
+<u><b>Evaluation médico-soignante des symptômes</b></u>
+<br/>OMS à l'entrée :2
+ <br/>EN à l'entrée :10
+ <br/> FAD à l'entrée :Soins maximaux en salle 
+ <br/>Poids : 60 Taille :165
+ <br/>IMC :22 Surface corporelle : 1.6
+ <br/>TA 140/90 mmHg Pouls 97 /min FR12 /min 
+ <br/>Saturation 97% en AA T36.4 °C
+ <br/>
+<br/>
+<b>Sur le plan des douleurs</b> : patiente hyperalgique à son entrée avec 
+ <br/>douleur mixte nociceptive et neuropathique, allodynie ++. Douleur qui 
+ <br/>prend la base thoracique gauche tout le flanc gauche. Essais vains de 
+ <br/>trouver une position antalgique.
+ <br/>
+<br/>
+<b>Sur le plan cardio-pulmonaire</b> : patiente qui se dit ne pas être gênée 
+ <br/>sur le plan respiratoire. Discret essoufflement à l'effort NYHA deux.
+ <br/>
+<br/>
+<b>Sur le plan digestif</b> : transit correct.
+ <br/>
+<br/>
+<b>Sur le plan des muqueuses et des téguments</b> : mucite traitée par 
+ <br/>TRIFLUCAN il y a quelques semaines. Actuellement discrets aphtes 
+ <br/>buccaux.
+ <br/>
+<br/>
+<b>Sur le plan neuro-psychologique</b> : triste, appréhension quant à 
+ <br/>l'éventuelle progression de la maladie.
+ <br/>
+<br/>
+<b>Sur le plan de la mobilité / autonomie</b> : reste très autonome.
+ <br/>
+<b><br/><u>Evaluation radiologique</u><br/><u></u></b>
+<u> Scanner cérébro-cervico-TAP du 7/5/2021</u> :
+ <br/>Majoration de l'épanchement pleural gauche de grande abondance, 
+ <br/>d'aspect compressif sur le médiastin, qui est discrètement déviée 
+ <br/>vers le côté droit comparativement scanner de février 2021.
+ <br/>Aspect globalement stable de la maladie par ailleurs à l'étage sous 
+ <br/>diaphragmatique avec tendance à l'augmentation non significative en 
+ <br/>taille par ailleurs de l'infiltration tissulaire et de la coulée 
+ <br/>ganglionnaire rétro péritonéale selon les critères de RECIST 1.1.
+ <br/>Pas d'apparition de lésion osseuse d'allure évolutive.
+ <br/>
+<br/>
+<u><b>Evaluation des connaissances du patient et de son entourage<br/></b></u> Patiente au clair sur le caractère incurable de sa maladie et la 
+ <br/>paucité voire l'absence de solution thérapeutique efficace.
+ <br/>
+<br/>
+<u><b>Scores pronostiques<br/></b></u>
+<b>Pronopall : </b> 5/10
+ <b><br/>PALLIA 10 : </b> 7/10
+ <br/>
+<br/>
+<u><b>Evolution dans le service<br/></b></u>
+<b>Sur le plan des douleurs</b> : patiente très algique, rotation dès son 
+ <br/>arrivée de sa PCA de MORPHINE vers une PCA d'OXYNORM, absence de 
+ <br/>soulagement malgré une augmentation des doses, et un rajout de 
+ <br/>co-antalgie par anti-inflammatoire et par du NEURONTIN, et une 
+ <br/>majoration de la dose de LAROXYL. Finalement rotation vers une PCA de 
+ <br/>FENTANYL et ajustement des doses ayant permis une analgésie 
+ <br/>satisfaisante. Poussés douloureux vers 4-5h du matin, ce qui a emmené 
+ <br/>à la mise en place d'une PSE kétamine 1 mg/h la nuit, avec 
+ <br/>disparition des douleurs nocturnes. 
+ <br/>
+<br/>
+<b>Sur le plan cardio-pulmonaire</b> : présence au scanner effectué à 
+ <br/>l'admission d'un épanchement pleural gauche avec majoration de la 
+ <br/>composante antérieure, la composante postérieure étant déjà présente 
+ <br/>sur les anciens scanners. Patiente qui au début de l'hospitalisation 
+ <br/>était pauci voire asymptomatique sur le plan respiratoire en dehors 
+ <br/>d'un discret essoufflement à l'effort NYHA2 et de gênes passagères 
+ <br/>transitoires sans désaturation majeure --> majoration de la dysppnée 
+ <br/>et nécessité de besoin en O2 au décours--> ponction pleurale G après 
+ <br/>repérage echographique: retrait de 600cc de liquide--> amélioration 
+ <br/>clinique subjective mais persistance des besoins en O2 --> avis chir 
+ <br/>tho (Pr Mercier): possibilité de poser un PleurX si intervalle de 
+ <br/>ponction rapproché et si benéfice réél post ponction.
+ <br/>Le PleurX n'est finalement pas mis, car amélioration de la dyspnée 
+ <br/>avec absence du besoin pour ponctionner, après adaptation 
+ <br/>d'antibiotique par Céfépime et Metronidazole. Poursuite de 
+ <br/>l'oxygénothérapie en si besoin.
+ <br/>-apparition d'OMI importantes (compression tumorale, dénutrition)
+ <br/>
+<br/>
+<b>Sur le plan des muqueuses et des téguments</b> : discrète aphtose 
+ <br/>buccale. Rajout d'un traitement par TRIFLUCAN.
+ <br/>Par ailleurs fausses routes et dysphagie --> evaluation par ORL le 
+ <br/>14/05: paralysie de la corde vocale gauche sur probable compression 
+ <br/>mediastinale --> consult orthophoniste pour rééducation de la 
+ <br/>déglutition.
+ <br/>
+<br/>
+<b>Sur le plan neuro-psychologique</b> : tristesse, appréhension quant à la 
+ <br/>poursuite de l'évolution de la maladie, à la possibilité de décès et 
+ <br/>à la fin de vie. Demande d'un support psychologique accepté par la 
+ <br/>patiente.
+ <br/>L'état de Me XXXXXX commence à se dégrader au fur et à mesure avec 
+ <br/>apparition des episodes d'angoisse qui ont motivé la mise en place 
+ <br/>d'un traitement par Hypnovel à visée anxiolytique.
+ <br/>
+<br/>
+<b>Sur le plan de la mobilité / autonomie</b> :
+ <br/>Perte progressive de l'autonomie.
+ <br/>Plusieurs chutes dans le service. 
+ <br/>Discussions sur l'impossibilité de retour au domicile dans ces 
+ <br/>conditions et besoin d'hospitalisation dans une USP.
+ <br/>
+<br/>
+<b>Sur le plan oncologique:<br/></b> Prise en charge palliative exclusive compte tenu la progression 
+ <br/>clinique de la maladie.
+ <br/>
+<br/>L'état général de Me XXXXXX commence à se dégrader progressivement le 
+ <br/>22/05, avec un somnolence de plus en plus marquée, apparition des 
+ <br/>episodes de confusion, sans point d'appel biologique, et le plus 
+ <br/>probable dans le cadre de la progression tumorale.
+ <br/>L'avis d'aggravation est fait auprès de la famille.
+ <br/>Me XXXXXX décéde paisiblement le 29/05/2021 dans la présence de sa 
+ <br/>famille.
+ <br/>
+<br/>
+<b>Modifications des traitements au cours de l'hospitalisation :<u><br/></u></b> Rotation opioïdes vers du FENTANYL
+ <br/>Majoration de la dose du LAROXYL à 50 mg le soir
+ <br/>Rajout du NEURONTIN 400 mg x 3
+ <br/>Rajout des anti-inflammatoires si besoin 1 x par jour
+ <br/>Majoration brève de la corticothérapie puis dégression progressive.
+ <br/>
+<br/>
+<u><b>Tableau des opioïdes</b></u>
+<br/>
+<br/>+------------------+----------+----------+---------------------+
+ <br/>| Molécule opioïde | Date de | Date de | Motif interruption |
+ <br/>| | début | fin | |
+ <br/>+==================+==========+==========+=====================+
+ <br/>| MORPHINE | | 05/05/21 | Inefficacité |
+ <br/>+------------------+----------+----------+---------------------+
+ <br/>| OXYCODONE | 05/05/21 | 09/05/21 | Inefficacité |
+ <br/>+------------------+----------+----------+---------------------+
+ <br/>| FENTANYL | 09/05/21 | en cours | |
+ <br/>+------------------+----------+----------+---------------------+
+ <br/>
+<u><b><br/>AU TOTAL</b></u>
+<br/>Patiente de 42 ans suivie pour un cancer du sein multimétastatique, 
+ <br/>en prise en charge palliative exclusive.
+ <br/>Epanchement pleural gauche majeur drainé partiellement, pneumopathie 
+ <br/>infectieuse avec bonne évolution sous antibiothérapie, probable 
+ <br/>lymphangite carcinomateuse.
+ <br/>
+<br/>
+<br/>
+<br/>* Prise en charge palliative OUI 
+ <br/>
+<br/>
+<b>EVALUATION DE LA CHARGE EN SOINS<br/></b> * Ponction à visée symptomatique OUI 
+ <br/>* Adaptation du traitement antalgique OUI 
+ <br/>* Irradiation antalgique NON
+ <br/>* Occlusion intestinale NON
+ <br/>* Transfusion sanguine NON
+ <br/>* Prise en charge de la détresse respiratoire
+ <br/>avec désaturation < 90% en AA OUI
+ <br/>* Traitement des divers symptômes vecteurs d'inconfort 
+ <br/>(toux, prurit, nausées, vomissements, anxiété, 
+ <br/>dépression, troubles du sommeil, déshydratation...) OUI 
+ <br/>* Soins de nursing OUI 
+ <br/>* Nutrition : 
+ <br/>- déjà sous CNO, nutrition entérale/parentérale NON
+ <br/>- mise en route d'une nutrition entérale/parentérale NON
+ <br/>
+<br/>
+<b>PRISE EN CHARGE MULTI-DISCIPLINAIRE<br/></b> * Prise en charge de l'EMASP OUI 
+ <br/>* Consultation CETD (douleur, sophrologie, 
+ <br/>auriculothérapie) NON 
+ <br/>* Consultation d'onco-psychologie OUI 
+ <br/>* Prise en charge sociale OUI 
+ <br/>* Soins de kinésithérapie NON
+ <br/>* Consultation diététicienne ou nutritionniste OUI 
+ <br/>
+<br/>
+<br/>
+<b>CMA liées aux soins contribuant à la valorisation PMSI des séjours</b>
+<br/>
+<b>Soins</b>
+<br/>- Surveillance des voies urinaires ou mauvais fonctionnement.
+ <br/>- Pose et entretien d'une pompe à perfusion.
+ <br/>- Ajustement et entretien d'un dispositif vasculaire, VVC ou KT.
+ <br/>
+<b>Peau, état cutané</b>
+<br/>- Lymphoedème après mastectomie.
+ <br/>
+<b>Appareil locomoteur, neurologie et psychiatrie</b>
+<br/>- Désorientation, confusion, somnolence.
+ <br/>
+<b>Surveillance particulière</b>
+<br/>- Chutes à répétition.
+ <br/>- Etat grabataire.
+ <br/>
+<b>Social</b>
+<br/>- Besoin d'assistance à domicile, aucun autre membre du foyer ne 
+ <br/>pouvant assurer les soins.
+ <br/>
+<br/>
+<br/>
+<b>_________________________________________________<br/>Signé électroniquement par Docteur Rita Maria KHOURY ABBOUD <br/>Le mardi 11 mai 2021 à 18:26</b>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/> Le médecin autorise l'établissement des prescriptions médicales de 
+ <br/>transports sanitaires du patient, adaptées à sa situation médicale. 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

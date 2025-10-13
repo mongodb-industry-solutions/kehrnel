@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126450851" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>RCP PROFEEL SEIN</title>
+    <effectiveTime value="20180305000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180305000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ CR RCP PROFEEL-SEIN RESULTAT
+ <br/>
+<br/>ONCOLOGUES 
+ <br/>
+<br/>DR PISTILLI
+ <br/>
+<br/>
+<br/>ATTACHE et INFIRMIERE DE RECHERCHE CLINIQUE 
+ <br/>SABBAGH Fadi
+ <br/>DENEUVE Jacqueline
+ <br/>
+<br/>Secrétaires Médicales 
+ <br/>DEMIRDJIAN Stéphanie 
+ <br/>
+<br/>COMPTE-RENDU DICTE PAR : Dr PISTILLI
+ <br/>
+<br/>l'analyse moléculaire a été réalisée pour cette patiente. 
+ <br/>
+<br/>
+<br/>Point(s) particulier(s) relevé(s) : 
+ <br/>le matériel ADN était suffisant pour rendre un résultat 
+ <br/>
+<br/>
+<br/>
+<br/>DECISION PROFEEL 
+ <br/>
+<br/>1/ mutation : TP 53.
+ <br/>2/ Pas d'essai dans l'immédiat. En cas d'ouverture future d'un essai, 
+ <br/>la patiente pourrait être recontactée.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

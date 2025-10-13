@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_119138161" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>EMASP - CR HDJ SOINS PALLIATIFS - Dr Anda SAMPETREAN</title>
+    <effectiveTime value="20210309000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20210309000000+0000"/>
+        <assignedAuthor>
+            <code code="134/536" displayName="EMASP"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>Equipe Mobile d'Accompagnement et de Soins Palliatifs (EMASP) - <br/>Département de Soins de Support (DISSPO)<br/><br/>COMPTE RENDU DE CONSULTATION - HOPITAL DE JOUR SOINS PALLIATIFS<br/><br/><br/> Dicté par : </b> Docteur Anda Sampetrean
+ <b><br/>Dicté le : </b> 21/01/2021 
+ <b><br/>Service : </b> 134 - EMASP 
+ <br/>
+<b>Type de document : </b> 134 CC HDJ 
+ <br/>
+<b>Ref :</b> 1229835 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire :</b> TEC/ERL/A 
+ <u><b><br/></b></u> Date de l'Hôpital de Jour : 18/01/2021
+ <br/>Patient vu par : Dr SAMPETREAN IDE : Axelle FOUGERE
+ <br/>
+<br/>
+<b> L'ETAT CLINIQUE DE MADAME XXXXXX XXXXXX NECESSITE UNE PRISE EN CHARGE <br/>EN H\'d4PITAL DE JOUR DE SOINS PALLIATIFS POUR EVALUATION ET <br/>SURVEILLANCE MEDICALE.<br/></b>
+<br/>Patiente régulièrement suivie en Hôpital de Jour de Soins Palliatifs.
+ <br/>Patiente venue seule.
+ <br/>
+<br/>
+<b>Oncologue référent : Dr MOKDAD <br/><br/> OMS = 3 <br/></b>
+<br/>
+<u><b>INFORMATIONS COMPLEMENTAIRES</b></u>
+<br/>
+<b>Directives anticipées</b> : non rédigées
+ <br/>
+<b>Personne de confiance</b> : son époux
+ <br/>
+<b>Intervenants au domicile</b> : la patiente prise en charge par l'HAD 
+ <br/>santé service avec deux passages par jour des infirmières, a une PCA 
+ <br/>de MORPHINE et une PCA de KETAMINE
+ <br/>
+<br/>
+<u><b>ANTECEDENTS NOTABLES</b></u>
+<br/>Aucun, pas d'allergie connue. 
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE ET SES COMPLICATIONS</b></u>
+<br/>- 2015 : cancer du sein gauche diagnostiqué initialement traité à 
+ <br/>Bergonié par chimiothérapie, chirurgie puis radiothérapie au niveau 
+ <br/>axillaire, CMI et sus claviculaire, triple négatif.
+ <br/>
+<br/>- Récidive en mars 2018, sous NAVELBINE. 
+ <br/>
+<br/>- PET scanner le 20 décembre qui montre, comparativement à l'examen 
+ <br/>précédent de septembre 2018, un aspect de réévolutivité au niveau 
+ <br/>ganglionnaire sus et sous-claviculaire gauche et probablement 
+ <br/>axillaire gauche.
+ <br/>
+<br/>Elle a débuté un traitement par TALAZOPARIB le 12/01/2019 en 2ème 
+ <br/>ligne.
+ <br/>- TEP du XXXXXX : aspect de progression métabolique devant la 
+ <br/>majoration en intensité de fixation de certaines adénopathies 
+ <br/>sus-claviculaires et axillaires gauches malgré la régression 
+ <br/>métabolique du foyer pris pour cible. 
+ <br/>La majoration d'un nodule sous-cutané cervical antérieur gauche.
+ <br/>L'apparition d'un nodule surrénalien gauche fixant d'allure 
+ <br/>secondaire. 
+ <br/>
+<br/>Sous XELODA depuis avril 2019 en 3ème ligne.
+ <br/>
+<br/>- TEP scanner du 02/07/2019 : Nouvelle progression métabolique 4ème 
+ <br/>ligne par ENDOXAN oral.
+ <br/>
+<br/>- Aout 2019: Nouvelle progression; 5ème ligne de traitement par 
+ <br/>ERIBULINE pour 5 cycles.
+ <br/>
+<br/>- TEP scanner le 13/12 : progression donc début d'une 5ème ligne par 
+ <br/>CARBOPLATINE / GEMZAR depuis décembre 2019 jusqu'au 28/02/2020.
+ <br/>
+<br/>- TDM TAP de juin 2020 : Progression ganglionnaire 
+ <br/>sous-diaphragmatique devant l'apparition d'adénomégalies 
+ <br/>rétro-péritonéales gauches comparativement au scanner de Février 2020.
+ <br/>
+<br/>- Reprise de CARBOPLATINE / GEMZAR C1J1 22/07/2020.
+ <br/>Dernière cure le 09/09/2020 (C3).
+ <br/>
+<br/>Fin octobre 2020 : progression surtout au niveau de l'adénopathie 
+ <br/>sus-claviculaire proposition d'une nouvelle chimiothérapie par 
+ <br/>PACLITAXEL C1 J1 débuté le 4/11/2020.
+ <br/>
+<br/> 7e ligne par CMF débutée le 10/12/2020.
+ <br/>Radiothérapie sur adénopathie claviculaire gauche de 22/12 au 
+ <br/>30/12/2020 en 5 séances de 4 Gy.
+ <b><br/></b>
+<br/>
+<u><b>Complications de la maladie :</b></u>
+<br/>La patiente présente une progression au niveau de l'adénopathie 
+ <br/>sus-claviculaire gauche avec des douleurs mixtes avec une composante 
+ <br/>neuropathique importante au niveau du membre supérieur gauche, raison 
+ <br/>pour laquelle elle est hospitalisée au mois de novembre pour 
+ <br/>équilibration antalgique.
+ <br/>
+<br/>
+<u><b>MODE DE VIE</b></u>
+<br/>La patiente est mariée, a deux fils d'une première union de 10 et 15 
+ <br/>ans, le fils de 15 ans est à la maison avec elle et le fils cadet est 
+ <br/>avec son père dans le sud de la France ; elle vit aussi avec le fils 
+ <br/>de son mari actuel.
+ <br/>La patiente habite dans une maison avec étage, la chambre est au 
+ <br/>rez-de-chaussée par contre la salle de bain est à l'étage.
+ <br/>
+<br/>
+<u><b>TRAITEMENT EN COURS<br/></b></u> PCA morphine 7 mg/h avec bolus 9mg, sur 72 heures 18 bolus demandés 
+ <br/>sur 16 bolus reçus
+ <br/>PCA kétamine 2 mg/h
+ <br/>Arrêt du Neurontin par la patiente
+ <br/>Innohep 0,6 ml le soir
+ <br/>Paracétamol si besoin mais non pris
+ <br/>Microlax si besoin
+ <br/>Movicol arrêt à cause des vomissements
+ <br/>Bains de bouche Eludril
+ <br/>Arrêt du Laroxyl en gouttes
+ <br/>Primperan 3 x par jour
+ <br/>Laroxyl I.V. 25 mg sur la nuit
+ <br/>Lansoprazole 30 mg
+ <br/>
+<br/>
+<u><b>BIOLOGIE du 12/01/2020<br/></b></u> Hémoglobine 10,6, leucocytes 3000, PNN 2600, plaquettes 149 000
+ <br/>Sodium 138, potassium 3,9, albumine 34 
+ <br/>Calcium corrigé 2,35 
+ <br/>Créatinine 49 avec une clairance à 123 ml/min 
+ <br/>ASAT 63, ALAT 136, PAL 258, Gamma GT 581, bilirubine totale 7,6
+ <br/>
+<br/>
+<u><b>EVALUATION MEDICO-SOIGNANTE DES SYMPT\'d4MES</b></u>
+<br/>PS : 3
+ <br/>TA : 108/68 pouls : 87/min 
+ <br/>Saturation : 95 % en air ambiant Température : 37,3°
+ <br/>
+<br/>
+<b>Sur le plan douleur </b> :
+ <br/>- Pas de douleur sur la nuit.
+ <br/>- Persistance de la douleur au niveau du membre supérieur gauche avec 
+ <br/>une EN actuelle à 2/10, EN minimale à 0/10 et EN maximale à 4/10, avec 
+ <br/>un caractère de compression, coup de couteau, décharges électriques.
+ <br/>- Douleur dentaire au niveau de la molaire inférieure gauche, avec 
+ <br/>antécédent d'abcès, elle va voir sa dentiste demain.
+ <br/>- Bonne tolérance du traitement par morphine.
+ <br/>
+<br/>
+<b>Sur le plan cardio-pulmonaire </b> :
+ <br/>- Dyspnée d'effort au moindre effort.
+ <br/>- Le diagnostic de d'embolie pulmonaire a été affirmé sur le scanner 
+ <br/>réalisé en décembre 2020.
+ <br/>- Pas d'autre signe respiratoire.
+ <br/>- Auscultation cardiopulmonaire met en évidence une diminution du 
+ <br/>murmure vésiculaire basithoracique gauche.
+ <br/>
+<br/>
+<b>Sur le plan digestif </b> : 
+ <br/>- Vomissement indépendant de la chimiothérapie au caractère 
+ <br/>occasionnel.
+ <br/>- Perte d'appétit importante, elle ne mange quasiment rien, elle 
+ <br/>grignote plutôt dans la journée, mais continue de prendre deux 
+ <br/>compléments nutritionnels par jour.
+ <br/>Elle est suivie par la diététicienne de l'HAD.
+ <br/>- Constipation : elle va à la selle tous les 2-3 jours, utilise du 
+ <br/>Movicol parfois, mais plus souvent elle utilise du Microlax.
+ <br/>- Hydratation moins de 800 ml/jour.
+ <br/>- Pas de signe fonctionnel urinaire.
+ <br/>
+<br/>
+<b><br/><br/>Sur le plan des muqueuses et du tégument </b> :
+ <br/>- Hématome au site de l'Innohep
+ <br/>- Pas d'OMI
+ <br/>- Lymphoecdème du bras gauche, n'utilise pas de manchon car ne le 
+ <br/>supporte pas, utilise une bande de contention. 
+ <br/>- Mucite grade II, douloureuse. 
+ <br/>
+<br/>
+<b>Sur le plan neuro-psychologique </b> :
+ <br/>Se sent épuisée moralement, pleure pendant toute la consultation, 
+ <br/>est très fermée à une discussion sur sa maladie ou sur les symptômes.
+ <br/>- Réfractaire aux propositions de suivi en onco psychologie.
+ <br/>- Dort environ 10 heures par nuit, non interrompu, mais elle reste au 
+ <br/>lit pendant la journée et elle fait plusieurs siestes.
+ <br/>
+<br/>
+<b>Mobilité/autonomie</b> : 
+ <br/>- Perte de l'autonomie depuis la majoration de l'asthénie qui est 
+ <br/>grade III en ce moment.
+ <br/>- Elle est aidée par son mari pour la toilette, et aussi aidée pour 
+ <br/>monter les escaliers.
+ <br/>- Sort très peu juste pour les examens médicaux, sinon elle va 
+ <br/>parfois dans son jardin.
+ <br/>
+<br/>
+<b>Evaluation des connaissances du patient et de son entourage :</b>
+<br/>Devant la fragilité émotionnelle de la patiente, nous ne reprenons 
+ <br/>pas ce jour la discussion sur le pronostic de la maladie.
+ <br/>Discussion sur l'intérêt et l'importance des soins de support en ce 
+ <br/>moment, compte tenu du fait qu'elle est sous une chimiothérapie qui 
+ <br/>peuvent comporter des toxicités et qui peuvent encore empirer son 
+ <br/>état général.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3> ET PROPOSITIONS</b></u>
+<br/>
+<b>Synthèse de l'état clinique </b> :
+ <br/>Patient de 41 ans suivie pour un cancer du sein triple négatif 
+ <br/>évolutif après plusieurs lignes de traitement, actuellement en 
+ <br/>traitement par CMF.
+ <br/>
+<br/>
+<b>Symptômes réfractaires : </b>
+<br/>- Persistance des douleurs qui sont plutôt stables au niveau du 
+ <br/>membre supérieur gauche, sous PCA de morphine et PCA de kétamine.
+ <br/>- Nette altération de son état général avec une fatigue grade III.
+ <br/>- Prescription de Fungizone et Xylocaïne pour le traitement de la 
+ <br/>mucite.
+ <br/>
+<br/>
+<b>Propositions : </b>
+<br/>- Proposition ce jour d'hospitaliser la patiente dès qu'une place 
+ <br/>sera disponible à l'UDEP, pour équilibre antalgique, réévaluation des 
+ <br/>traitements, discussion sur le projet thérapeutique, et organisation 
+ <br/>des aides au domicile et prise en charge sociale.
+ <br/>- Fragilité émotionnelle, patiente qui se sent épuisée moralement. 
+ <br/>Prescription ce jour de Norset 15 mg le matin et Xanax en si besoin 
+ <br/>0,25 mg jusqu'à 3 x par jour, avec réévaluation dans 2 semaines.
+ <br/>- Constipation, la patiente ne prend pas systématiquement de laxatif. 
+ <br/>Prescription ce jour du Moventig 25 mg le matin.
+ <br/>- Arrête de l'Innohep devant l'absence d'embolie pulmonaire, passage 
+ <br/>à Lovenox 0,4 ml sous-cutané le soir à visée préventif.
+ <br/>
+<br/>La patiente sera rediscutée au staff HAD soins palliatifs dans une 
+ <br/>semaine.
+ <br/>
+<br/>
+<b>Décision pluridisciplinaire</b> - 
+ <b>Intervenants </b> : 
+ <br/>La patiente est vue ce jour par son oncologue référent, le Dr MOKDAD 
+ <br/>: poursuite de la chimiothérapie.
+ <br/>
+<br/>
+<b>Projets</b> : 
+ <br/>- Hospitalisation à l'UDEP dès que possible.
+ <br/>- Prochain HDJ Soins Palliatifs le 02/04/2021.
+ <br/>
+<br/>
+<b>Copie à envoyer : </b> Au médecin traitant : Dr BUSSY
+ <br/>
+<br/>
+<b>Courrier rédigé avec un logiciel de reconnaissance vocale pouvant <br/>comporter quelques imperfections orthographiques.<br/>_________________________________________________<br/>Signé électroniquement par Docteur Anda SAMPETREAN <br/>Le dimanche 7 mars 2021 à 13:01</b>
+<br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

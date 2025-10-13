@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122220380" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>HOPITAL DE JOUR DE MEDECINE ONCOLOGIQUE ADULTE</title>
+    <effectiveTime value="20191212000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20191212000000+0000"/>
+        <assignedAuthor>
+            <code code="HJM/484" displayName="HOPITAL DE JOUR MEDECINE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>DEPARTEMENT DE MEDECINE - HOPITAL DE JOUR MEDECINE <br/><br/> Dicté par : </b> Docteur Reda El Hazzaz, Interne
+ <b><br/>Dicté le : </b> 18/11/2019 
+ <b><br/>Service : </b> HJM-HOPITAL DE JOUR MEDECINE 
+ <br/>
+<b>Type de document : </b> HJM CC GENERIQUE 
+ <br/>
+<b>Ref :</b> 859988 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : DRW/A
+ <br/>
+<br/> Approuvé par :
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<u><b>COMPTE-RENDU DE CONSULTATION EN HOPITAL DE JOUR DE MEDECINE<br/> <br/></b></u>
+<br/>Patiente âgée de 67 ans, suivie pour un adénocarcinome séreux de haut 
+ <br/>grade de l'ovaire inextirpable, sous 
+ <b>TAXOL</b> actuellement pour une 
+ <br/>deuxième rechute aux platines résistantes.
+ <br/>
+<br/>La patiente est admise ce jour en hôpital de jour pour une ponction 
+ <br/>d'ascite évacuatrice.
+ <br/>
+<br/>
+<br/>
+<u><b>EXAMEN CLINIQUE :<br/><br/></b></u> OMS = 1.
+ <br/>
+<br/>\'c0 l'examen abdominal: le signe de glaçon et le signe de flot sont 
+ <br/>positifs.
+ <br/>
+<br/>Une échographie abdominale a été réalisée le 18/11/2019, qui a 
+ <br/>objectivé un épanchement liquidien, intra-péritonéal, non cloisonné, 
+ <br/>de moyenne abondance prédominant en fosse iliaque droite, et de 
+ <br/>moindre abondance par rapport à l' échographie précédente. 
+ <br/>La réalisation d'un marquage cutané en regard à été faite.
+ <br/>
+<br/>
+<u><b>EN PRATIQUE:<br/></b></u>
+<br/>
+<b>Nous avons effectué une ponction évacuatrice ce jour, nous avons eu <br/>un liquide jaune citrin avec une quantité d'à peu près 700 ml. </b>
+<br/>
+<br/>Les constantes de la patiente après la ponction d'ascite sont 
+ <br/>correctes.
+ <br/>La patiente se sent mieux après la ponction d'ascite.
+ <br/>La patiente rejoint son domicile après la ponction d'ascite. 
+ <br/>
+<br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Reda EL HAZZAZ <br/>Le vendredi 22 novembre 2019 à 16:56<br/>_________________________________________________<br/>Signé électroniquement par Docteur Mohammed ABDELSHAFY <br/>Le jeudi 28 novembre 2019 à 14:39 </b>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

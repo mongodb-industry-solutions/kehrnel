@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123700196" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>DEPARTEMENT DE MEDECINE - SERVICE GARD</title>
+    <effectiveTime value="20190430000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190430000000+0000"/>
+        <assignedAuthor>
+            <code code="GAR/182" displayName="GARD"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>DEPARTEMENT DE MEDECINE ONCOLOGIQUE - HOSPITALISATION GARD<br/><br/> Dicté par : </b> Docteur Pauline Parent, Interne
+ <b><br/>Dicté le : </b> 25/04/2019 
+ <b><br/>Service : </b> GAR-GARD 
+ <br/>
+<b>Type de document : </b> GAR RH CHIMIO 
+ <br/>
+<b>Ref :</b> 681562 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : 
+ <b>ESD - FDY/*<br/></b>
+<br/>
+<u><b>Interne :</b></u> Pauline PARENT
+ <br/>
+<br/>
+<u><b>HOSPITALISATION SERVICE GARD DU 25 AU 27 AVRIL 2019.<br/></b></u>
+<br/>Mme XXXXXX XXXXXX, 66 ans, est hospitalisée pour la réalisation de 
+ <br/>la 5ème cure de chimiothérapie de type CARBOPLATINE/GEMZAR/AVASTIN 
+ <br/>+/- ATEZOLIZUMAB dans le cadre de la prise en charge d'un 
+ <br/>d'adénocarcinome séreux de haut grade stade IV (pleural) initial, 
+ <br/>jamais réséqué, en rechute locale, en cours de chimiothérapie par 
+ <br/>(protocole ATALANTE).
+ <br/>
+<br/>Profil moléculaire: BRCA1 et BRCA2 sauvages en constitutionnel et 
+ <br/>somatique.
+ <br/>Protocole signé: ATALANTE.
+ <br/>
+<br/>
+<u><b>Médecin référent :</b></u> Dr Fanny POMMERET.
+ <br/>
+<br/>
+<u><b>ANTECEDENTS / PATHOLOGIES ASSOCIEES<br/></b></u> * Appendicectomie.
+ <br/>* Thrombose MID diagnostiqué en février 2017, sous anticoagulant.
+ <br/>* Pas d'allergie.
+ <br/>* Pas d'intoxication éthylo-tabagique.
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE<br/></b></u> * Fin février 2017 : suite à une thrombose inaugurale au niveau du 
+ <br/>membre inférieur droit (thrombose de la veine saphène interne, 
+ <br/>étendue jusqu'à la fémorale commune), découverte sur l'échographie 
+ <br/>doppler d'une masse tissulaire pelvienne, probablement d'origine 
+ <br/>ovarienne à composante mixte mesurant de grand axe 120 mm ; ascite 
+ <br/>d'environ 2 à 3 litres.
+ <br/>
+<br/>Mise en route d'un traitement anticoagulant par INNOHEP à dose 
+ <br/>curative avec un switch par PREVISCAN.
+ <br/>
+<br/>* Mars 2017 : réalisation d'une coelioscopie exploratrice par le Dr 
+ <br/>CHERIER qui retrouve une carcinose péritonéale avec une milliaire 
+ <br/>diffuse, l'exploration étant limitée compte-tenu de l'adhérence du 
+ <br/>grand épiploon à la paroi antérieure ; PCI à 16/27, cytologie 
+ <br/>Positive ; examen extemporané qui retrouve un adénocarcinome 1ère 
+ <br/>ligne de chimiothérapie par CARBOPLATINE + TAXOL, C1J1 le 31/03/17. 
+ <br/>Chimiothérapie nécessitant des réductions de doses pour toxicité 
+ <br/>hématologique principalement thrombopénie grade II.
+ <br/>* Octobre 2017 :coelioscopie exploratrice retrouvant un PCI stable 
+ <br/>mais instabilité hémodynamique majeure et respiratoire ayant fait 
+ <br/>surseoir à la chirurgie initialement prévue.
+ <br/>
+<br/>Poursuite d'un traitement systémique exclusif.
+ <br/>
+<br/>Reprise de la chimiothérapie par CARBOPLATINE + TAXOL avec adjonction 
+ <br/>d'AVASTIN, C1J1 le 20/10/17, 2 cures puis entretien par AVASTIN seul.
+ <br/>
+<br/>Stabilité clinique sous AVASTIN pendant 1 an, ascite ponctionnée 
+ <br/>toutes les 6 semaines.
+ <br/>
+<br/>* Octobre 2018 : progression ovarienne et biologique.
+ <br/>Inclusion dans le protocole ATALANTE, bras CARBOPLATINE + GEMZAR + 
+ <br/>AVASTIN +/- ATEZOLIZUMAB, C1J1 le 18 janvier 2019
+ <br/>
+<br/>On observe un bénéfice clinique net de la réintroduction des sels de 
+ <br/>platine après C1.
+ <br/>Toutefois depuis le 21 février2019 la patiente rapporte une 
+ <br/>réapparition plus rapide de l'ascite avec une nouvelle ponction 
+ <br/>d'ascite de 2,8 litres le 22 mars 2019. Mais on rappelle que devant 
+ <br/>la réaction allergique, la patiente n'a reçu qu'une petite dose de 
+ <br/>CARBOPLATINE le 14 mars 2019. 
+ <br/>
+<br/>A noter que le CARBOPLATINE est effectué en désensibilisation du fait 
+ <br/> de 2 réactions allergiques de grade 2.
+ <br/>
+<br/>
+<u><b>TRAITEMENT PERSONNEL<br/></b></u> - INOHEP 0.5 ml le matin
+ <br/>
+<br/>
+<u><b>INTERCURE</b></u>
+<br/>Pas d'asthénie.
+ <br/>Pas de nausée.
+ <br/>Pas de vomissement.
+ <br/>Pas de mucite.
+ <br/>
+<br/>
+<u><b>Toxicité hématologique : <br/></b></u> - neutropénie grade 0
+ <br/>- thrombopénie grade 0
+ <br/>- anémie grade I.
+ <br/>
+<br/>
+<b>Réaction allergique de grade II liée au CARBOPLATINE.<br/></b>
+<br/>
+<u><b>EXAMEN CLINIQUE<br/></b></u> OMS : 1
+ <br/>Poids : 63 kg 
+ <br/>Température : 37,5 TA : 152/86 Pouls : 105/mn
+ <br/>Saturation : 97% 
+ <br/>
+<br/>Prise en charge nutritionnelle : non.
+ <br/>Syndrome douloureux : non.
+ <br/>EVA d'entrée 0/10.
+ <br/>
+<br/>Auscultation pulmonaire : eupnéique en air ambiant. Pas de toux. 
+ <br/>Murmure vésiculaire bilatéral et symétrique, sans bruit surajouté. 
+ <br/>Auscultation cardiaque : bruits du coeur réguliers sans souffle. Pas 
+ <br/>de signe d'insuffisance cardiaque droite ou gauche. 
+ <br/>OMI : non.
+ <br/>Abdomen : augmenté de volume, ascite abondante. 
+ <br/>Abdomen souple, dépressible, indolore, hernie ombilicale connue et 
+ <br/>non étranglée, pas de nodule de carcinose palpé, le transit est 
+ <br/>normal.
+ <br/>Aires ganglionnaires : libres.
+ <br/>Examen neurologique : normal.
+ <br/>Examen du PAC : propre.
+ <br/>
+<br/>
+<u><b>EXAMENS COMPLEMENTAIRES<br/></b></u>
+<br/>- NFS : leucocytes à 8 510 /mm3, PNN à 5 450 /mm3, Hb à 10.4 g/dl, 
+ <br/>plaquettes à 406 000 /mm3
+ <br/>
+<br/>- Créatinine à 58 mmol/l
+ <br/>Débit de filtration glomérulaire (MDRD) >60 ml/mn
+ <br/>
+<br/>- Bilan hépatique : PAL à 103 UI/L, ASAT à 10 UI/L, ALAT à 28 UI/L, 
+ <br/>GGT à 103 UI/L, albumine à 24 g/L
+ <br/>
+<br/>- Marqueurs :
+ <br/>* CA 125 : 920 U/ml 
+ <br/>
+<br/>
+<u><b>EN PRATIQUE<br/></b></u>
+<br/>Réalisation de la 5ème cure de chimiothérapie à partir du 26 avril 
+ <br/>2019 associant :
+ <br/>
+<br/>
+<b>* GEMCITABINE 1 000 mg/m2 soit 1600 mg DT<br/>* CARBOPLATINE : 3 poches de respectivement 0,074 mg, 1,49 mg 150 mg <br/>dose totale administrée 151,6 mg<br/>* BEVACIZUMAB 15 mg/kg soit 923 mg DT<br/>* ATEZOLIZUMAB ou placébo 1 200 mg<br/><br/>J1 = J21 (Pas de J8 de GEMCITABINE)<br/></b>
+<br/>Tolérance : bonne. Réaction anaphylactique grade I avec 
+ <br/>manifestations cutanées au CARBOPLATINE 
+ <br/>Ponction ascite de 4 L liquide jaune-vert.
+ <br/>
+<br/>
+<u><b>Prescriptions de sortie:<br/></b></u> - INNOHEP 0.5 ml le matin 
+ <br/>- PRIMPERAN 10 mg x3/jour si nausées
+ <br/>- Bains de bouche 
+ <br/>
+<br/>Prochain scanner prévu le 3 mai 2019 et nous la reverrons 
+ <br/>conformément au protocole le 16 mai 2019.
+ <br/>Sera réhospitalisée le 16/05/19.
+ <br/>
+<br/>La patiente quitte le service Gard le 27 avril 2019.
+ <br/>
+<br/> Prise en charge palliative NON
+ <br/>
+<br/>EVALUATION DE LA CHARGE EN SOINS
+ <br/>* Ponction à visée symptomatique OUI
+ <br/>* Adaptation du traitement antalgique NON
+ <br/>* Irradiation antalgique NON
+ <br/>* Occlusion intestinale NON
+ <br/>* Transfusion sanguine NON
+ <br/>* Prise en charge de la détresse respiratoire 
+ <br/>avec désaturation <90% AA NON
+ <br/>* Traitement des divers symptômes vecteurs d'inconfort 
+ <br/>(toux, prurit, nausées, vomissements, anxiété, 
+ <br/>dépression, troubles du sommeil, déshydratation,...) OUI 
+ <br/>* Soins de nursing NON
+ <br/>* Nutrition 
+ <br/> - déjà sous CNO, nutrition entérale/parentérale NON
+ <br/> - mise en route CNO/nutrition entérale/parentale NON
+ <br/>
+<br/>PRISE EN CHARGE MULTI-DISCIPLINAIRE
+ <br/>* Prise en charge de l'EMASP NON
+ <br/>* Cs CETD (douleur, sophrologie, auriculothérapie) NON
+ <br/>* Cs onco-psychologie NON
+ <br/>* Prise en charge sociale NON
+ <br/>* Soins de kinésithérapie NON
+ <br/>* cs diététicienne ou nutritionniste NON
+ <br/>
+<br/>MODE DE SORTIE 
+ <br/>* HAD Santé Service NON
+ <br/>* HAD province NON
+ <br/>* IDE libérale NON
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Pauline PARENT <br/>Le lundi 29 avril 2019 à 19:30 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

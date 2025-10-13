@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122037199" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ONCOLOGIE GYNECOLOGIE - DR EMELINE COLOMBA</title>
+    <effectiveTime value="20200113000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200113000000+0000"/>
+        <assignedAuthor>
+            <code code="060/8" displayName="CTE 060 - GYNECOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>COMPTE RENDU DE CONSULTATION DE GYNECOLOGIE<br/><br/>Dicté par : </b> Docteur Emeline Colomba
+ <b><br/>Dicté le : </b> 09/01/2020 
+ <b><br/>Service : </b> 060-CTE 060 - GYNECOLOGIE 
+ <br/>
+<b>Type de document : </b> 060 CC CONSULTATION 
+ <br/>
+<b>Ref :</b> 901674 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : HLX/A
+ <b><br/></b>
+<br/>
+<b> Je revois ce jour Madame XXXXXX, âgée de 67 ans. On est à 5 mois <br/>du début du taxol hebdomadaire pour une deuxième rechute platine <br/>résistante d'un adénocarcinome séreux de haut grade inextirpable.<br/><br/>BRCA constitutionnelle et somatique sauvage CA 125 informatif.<br/> <br/>Pour mémoire </b> : 
+ <br/>
+<br/>Patiente incluse dans ATALANTE C1 J1 de carboplatine 
+ <br/>gemcitabine le 18 janvier , 
+ <br/>C2, toxicité hématologique justifiant l'arrêt du J8 et de 
+ <br/>l'ajustement des doses de Carboplatine jusqu'à un AUC3, allergie au 
+ <br/>carboplatine à C3 avec protocole de désensibilisation.
+ <br/>Bonne réponse clinique et biologique.
+ <br/>
+<br/>Progression clinique et biologique et radiologique avec majoration du 
+ <br/>syndrome de masse pelvien le 23 juillet 2019 justifiant la sortie du 
+ <br/>protocole et de débuter une chimiothérapie par Taxol hebdomadaire que 
+ <br/>la patiente réalise à domicile.
+ <br/>Sortie du protocole Atalante après 1 cure d'entretien.
+ <br/>
+<br/>On rappelle que le premier scanner montrait une diminution de la 
+ <br/>masse tissulaire.
+ <br/>
+<br/>
+<u><b> Sur le plan de la tolérance : </b></u> Neuropathie de grade 1. Le reste de la 
+ <br/>tolérance est satisfaisante par ailleurs.
+ <br/>
+<b><br/><u> Sur le plan symptomatique :</u></b> la patiente rapporte une asthénie plus 
+ <br/>importante. A noter un épisode de fécalomes qui était responsable 
+ <br/>également d'une dysurie qui a évoluée spontanément d'évolution 
+ <br/>favorable sous laxatifs.
+ <br/>Un épisode de poussée hémorroïdaire. Actuellement sous traitements 
+ <br/>locaux.
+ <b><br/></b> Le scanner TAP réalisé dans le cadre de la surveillance après 6 mois 
+ <br/>de Taxol hebdomadaire met en évidence une majoration de grand axe de 
+ <br/>la lésion ovarienne.
+ <br/>
+<br/>
+<br/>
+<u><b> Bilan biologique :</b></u> Hémoglobine à 10,4, Polynucléaires neutrophiles à 
+ <br/>4000, Plaquettes à 437 000, Créatinine à 62.
+ <br/>
+<u><b> Bilan hépatique :</b></u> normal CA 125 à 276 versus 350 en décembre toujours 
+ <br/>en baisse. 
+ <br/>
+<br/>Le cycle s'est terminé et un nouveau cycle serait potentiellement à 
+ <br/>débuter dans 15 jours.
+ <br/>
+<br/>
+<u><b>Examen clinique :</b></u>
+<br/>PS : 1
+ <br/>Poids : 64 kg
+ <br/>Auscultation cardiopulmonaire claire symétrique 
+ <br/>Abdomen souple, dépressible et indolore
+ <br/>Ascite. 
+ <br/>A noter que la dernière ponction d'ascite réalisée le 31 décembre a 
+ <br/>ramené 6,7 L d'ascite mais la patiente a été peu améliorée et 
+ <br/>celle-ci est revenue assez rapidement. On prévoira une ponction 
+ <br/>d'ascite. 
+ <br/>
+<br/>
+<br/>
+<b>EN PRATIQUE :<br/></b>
+<br/>
+<b>A la relecture des images </b> : je ne suis pas certaine de la 
+ <br/>majoration. On demandera une relecture à nos radiologues en comité 
+ <br/>d'autant que le CA 125 de Madame XXXXXX est toujours en baisse.
+ <br/>
+<br/>Je lui explique les options: soit on confirme la progression au 
+ <br/>prochain comité et, dans ce cas, je serai favorable à demander la 
+ <br/>levée d'aveugle pour le protocole ATALANTE.
+ <br/>Car la patiente est potentiellement incluable dans l'essai PEMBOV.
+ <br/>
+<br/>Si la patiente a déjà reçu l'immunothérapie, on pourrait discuter de 
+ <br/>chimiothérapie standard de type Caelyx ou Gemcitabine mais la 
+ <br/>patiente avait eu une toxicité hématologique assez notable sous 
+ <br/>chimiothérapie. 
+ <br/>
+<br/>Je la recontacterai pour lui donner les conclusions du comité en cas 
+ <br/>de stabilité de la masse, on serait d'avis de poursuivre le Taxol.
+ <br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Emeline COLOMBA <br/>Le vendredi 10 janvier 2020 à 17:40</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125215323" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM CRANE TDM SINUS</title>
+    <effectiveTime value="20180917000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180917000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur MOALLA SALMA
+ <br/>Destinataire : PARIS D1
+ <br/> DR INTERNE
+ <br/>
+<br/>
+<b>Dicté par : </b> Docteur Salma Moalla
+ <b><br/>Dicté le : </b> 15/09/2018 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Générique 
+ <br/>
+<b>Ref :</b> 490890 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : UGA
+ <br/>Examen n°6942
+ <br/>Examen réalisé le : 15 octobre 2018 
+ <br/>
+<br/>
+<br/>
+<br/>
+<b>SCANNER CEREBRAL ET DES SINUS</b>
+<br/>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> <br/></b> Patient de 67 ans, hospitalisé pour allogreffe de cellules souches 
+ <br/>pour une myélofibrose. fibrose. Pancytopénie persistante depuis 4 
+ <br/>semaines et apparition depuis 5 jours d'un oedème palpébral gauche 
+ <br/>avec douleur frontale gauche et ptose gauche d'aggravation 
+ <br/>progressive.
+ <br/>Recherche d'un processus expansif intra-sinusien ou rétro-orbitaire 
+ <br/>gauche. 
+ <br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> <br/></b> Examen réalisé sur un scanner DISCOVERY 750 HD, GENERAL ELECTRIC, 
+ <br/>mis en service en septembre 2012.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 429098CN7
+ <br/>
+<br/>Réalisation d'une acquisition :
+ <br/>\'a7 Cérébrale
+ <br/>\'a7 Sinusienne
+ <br/>
+<br/>Examen réalisé sans et avec injection de produit de contraste
+ <br/>
+<b>Produit de contraste injecté : xenetix <br/>Quantité :90 cc <br/>PDL : 1076.00 mGy.cm</b>
+<br/>
+<br/>
+<u><b><br/>RESULTATS<br/><br/></b></u> Epaississement des parties molles palpébrales gauches et de la base 
+ <br/>du front. Pas de collection descellée en son sein. 
+ <br/>Pas d'extension intra-orbitaire homo-latérale. 
+ <br/>Comblement des sinus frontaux, plus important à gauche. 
+ <br/>Comblement des cellules éthmoïdales antérieures. 
+ <br/>Epaississement discret des fond des sinus maxillaires, discrètement 
+ <br/>plus marqué à gauche. 
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> <br/>Pas de signe de sinusite aigüe. <br/>Epaississement des parties molles palpébrales gauches et de la base <br/>du front sans collection descellée en son sein. <br/><u></u></b>
+<u> <br/></u>
+<b><br/>_________________________________________________<br/>Signé électroniquement par Docteur Salma MOALLA <br/>Le samedi 15 septembre 2018 à 16:27 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

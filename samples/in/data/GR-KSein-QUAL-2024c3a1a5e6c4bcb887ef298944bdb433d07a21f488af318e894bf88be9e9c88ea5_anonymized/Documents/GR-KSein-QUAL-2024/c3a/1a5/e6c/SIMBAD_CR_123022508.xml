@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123022508" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'URGENCE</title>
+    <effectiveTime value="20190812000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190812000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<br/>
+<u><b>Consultation du 12/08//19<br/></b> <br/><br/><b>Médecin examinateur</b></u> : S.BAKKAR
+ <br/>
+<br/>
+<br/>
+<u><b>Motif de consultation et histoire actuelle</b></u> :
+ <br/>Douleur du MIG sur lymphoedème + nausées/vomissements alimentaires 
+ <br/>depuis 4 jours. 
+ <br/>Derniere selle hier. Gaz +.
+ <br/>
+<br/>
+<u>Traitemen :</u>
+<br/>Oxycontin 20 1-0-1
+ <br/>Oxynorm si besoin non pris
+ <br/>Endoxan.
+ <br/>
+<br/>
+<u><b>Antécédents</b></u> :
+ <br/>Cancer du sein gauche diagnostiqué initialement en 2015 traité à 
+ <br/>Bergonié par chimiothérapie, chirurgie puis radiothérapie au niveau 
+ <br/>axillaire, CMI et sus claviculaire, triple négatif et actuellement en 
+ <br/>récidive ganglionnaire susclaviculaire et axillaire sous endoxan 
+ <br/>depuis d2but juillet 2019
+ <br/>
+<br/>
+<br/>
+<u><b>Examen clinique</b></u> :
+ <br/>
+<u>Constantes</u> : EVA 7/10, TA 117/78 mmHg, SpO2 99 % en AA, pouls 77 BPM.
+ <br/>
+<br/>Nodules de perméation basicervicaux connus. 
+ <br/>Volumineux lymphoedème du bras gauche avec hypoesthésie et impotence 
+ <br/>fonctionnelle du fait de la douleur.
+ <br/>Pas de trajet de veinite.
+ <br/>Légèrement inflammatoire. 
+ <br/>Auscultation cardiopulmonaire, pas de signe d'IC.
+ <br/>Abdomen souple, BHA+ mais faible.
+ <br/>ECG : RRS, pas de trouble de la conduction ni de la repolarisation 
+ <br/>Pas de cephalées, pas de syndrome cérébelleux, Pas de déficit SM.
+ <br/>
+<br/>
+<u><b>Résultats du bilan para-clinique</b></u> :
+ <br/>Biologie : ionogramme N, créatinine 72 μmol/l, augmentation des 
+ <br/>GammaGT 6N, et des ALAT à 1.5 UI/L, biliburine totale 7 μmol/l, CRP 
+ <br/>négative, troponine <6,leucocytes 3900/mm3, PNN 2500/mm3, plaquettes 
+ <br/>258000/mm3, Hb 14.8 g/l. 
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>- Hyperalgie du MIG sur lymphoedème post curage et radiothérapie 
+ <br/>axillaire dans le cadre d'un cancer du sein en recidive 
+ <br/>ganglionnaire sus claviculaire et axillaire.
+ <br/>- Nausées/vomissements : intolerance au morphinique ? Syndrome 
+ <br/>occlusif? 
+ <br/>
+<br/>
+<u><b>Conduite à tenir</b></u> :
+ <br/>1/ Eliminer thrombose surajoutée : Doppler demandé, mise sous lovenox 
+ <br/>0.4x2 
+ <br/>2/ adaptation antalgique : PCA oxycodone 1mg/h + bolus 1mg + 
+ <br/>perfalgan si besoin 
+ <br/>2/ ASP en attente + antiémétique 
+ <br/>
+<br/>
+<u>12/08/19 S. BAKKAR</u>
+<br/>1 episode de rectorragie
+ <br/>Pas d'hematemese, pas de recidive des vomissement
+ <br/>Abdomen souple mais hepatalgie à la palpation, BHA+
+ <br/>ASP : pas de NHA? stase stercorale, pas de pneumopéritoine
+ <br/>TDM AP demandé.
+ <br/>
+<br/>TDM TAP : Masse secondaire de la surrénale gauche. Adénopathies 
+ <br/>rétropéritonéales. Pas d'anomalie par ailleurs expliquant la 
+ <br/>symptomatologie de la patiente. 
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<b>ADMISSION SERVICE ROUERGUE</b>
+<br/>
+<br/>Heure d'arrivée : 16H20
+ <br/>Heure de départ : ND
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

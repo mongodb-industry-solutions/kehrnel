@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128433183" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°17H02062 2312608 Dr Magali LACROIX-TRIKI</title>
+    <effectiveTime value="20170308000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170308000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<br/>TUMORECTOMIE MAMMAIRE DROITE APRES REPERAGE RADIOLOGIQUE APRES CHIMIOTHERAPIE NEO-ADJUVANTE 
+ <br/>GANGLION(S) SENTINELLE(S) AXILLAIRE(S) DROIT(S)
+ <br/>
+<br/>Renseignements cliniques :
+ <br/>Motif de chirurgie : nodule palpable
+ <br/>Micro/macro-biopsie de la lésion opérée : CCI de grade III RE- RP- HER2-.
+ <br/>
+<br/>MACROSCOPIE
+ <br/>
+<br/>Tumorectomie du quadrant supéro-interne :
+ <br/>Pièce reçue à l'état frais et fixée en formol orientée mesurant 6 x 3.5 x 1.8 cm
+ <br/>
+<br/>Présence de 1 fil(s) métallique(s) de repérage.
+ <br/>Présence d'un nodule tumoral.
+ <br/>Le nodule est arrondi et mesure 17 x 12 mm. 
+ <br/>Les limites d'exérèse latérales sont supérieures à 5 mm. .
+ <br/>Prélèvements : blocs 1-7.
+ <br/>
+<br/>Ganglion(s) sentinelle(s) : 1 ganglion(s) (blocs A)
+ <br/>- Ganglion n° 1 : d'aspect normal
+ <br/>
+<br/>MICROSCOPIE
+ <br/>
+<br/>Tumorectomie :
+ <br/>
+<br/>Description de nodule tumoral :
+ <br/>
+<br/>- Type histologique : Carcinome métaplasique avec différenciation mésenchymateuse de type chrondroïde et/ou ostéoïde
+ <br/> La tumeur est d'architecture trabéculaire ou massive avec des zones de type chondroïde dans 60% du volume tumoral.
+ <br/> Différenciation : peu différencié (score 3)
+ <br/> Anisonucléose : élevée (score 3)
+ <br/> Index mitotique : élevé (score 3) (19 mitoses/2 mm2)
+ <br/> Grade histopronostique Ellis-Elston : III
+ <br/> Taille microscopique du carcinome infiltrant : 13 mm.
+ <br/>- Présence d'une fibrose cicatricielle modérée 
+ <br/>- Présence de carcinome canalaire in situ associé, de grade nucléaire élevé sans nécrose, représentant 5% du volume tumoral.
+ <br/>- Taille du carcinome in situ et infiltrant : 17 mm.
+ <br/>- Pas d'embole vasculaire observé.
+ <br/>
+<br/>Limites du carcinome infiltrant avec les recoupes éventuelles :
+ <br/>- Les limites d'exérèse latérales sont toutes supérieures à 2 mm.
+ <br/> Distance minimale latérale : plus de 5 mm.
+ <br/>- Les limites d'exérèse profonde et superficielle sont toutes supérieures à 2 mm.
+ <br/>
+<br/>Limites du carcinome intracanalaire avec les recoupes éventuelles :
+ <br/>- Les limites d'exérèse latérales sont toutes supérieures à 2 mm.
+ <br/> Distance minimale latérale : plus de 5 mm.
+ <br/>- Les limites d'exérèse profonde et superficielle sont toutes supérieures à 2 mm.
+ <br/>
+<br/>Sein péri-lésionnel :
+ <br/>- tissu mammaire en involution adipeuse
+ <br/>
+<br/>Réponse au traitement :
+ <br/>- Tumeur mammaire : réponse faible (> 20% de tumeur).
+ <br/>- Eléments du Residual Cancer Burden (RCB) : taille tumorale : 17 x 12 mm ; pourcentage de carcinome : 60 % ; pourcentage de carcinome in situ : 5 %
+ <br/>
+<br/>Ganglion(s) sentinelle(s) : 
+ <br/>Aucun ganglion métastatique (1 GS-) après examen sur 4 niveaux de coupes en coloration standard et par étude immunohistochimique des cytokératines (AE1/AE3).
+ <br/>Présence d'une inclusion naevique bénigne.
+ <br/>
+<br/>C
+ <br/>
+<br/>ONCLUSION
+ <br/>
+<br/>Tumorectomie :
+ <br/>
+<br/>Description de nodule tumoral :
+ <br/>- CARCINOME METAPLASIQUE AVEC DIFFERENCIATION MESENCHYMATEUSE DE TYPE CHONDDROIDE ET/OU OSTEOIDE 
+ <br/> Index mitotique : 19 mitoses/2 mm2.
+ <br/> Taille du carcinome infiltrant : 13 mm
+ <br/>
+<br/>- Présence de carcinome canalaire in situ associé, de grade nucléaire élevé sans nécrose, représentant 5% du volume tumoral.
+ <br/>- Taille du carcinome in situ et infiltrant : 17 mm.
+ <br/>
+<br/>Limites du carcinome infiltrant avec les recoupes éventuelles :
+ <br/>- Les limites d'exérèse latérales sont toutes supérieures à 2 mm.
+ <br/>- Les limites d'exérèse profondes et superficielles sont supérieures à 2 mm.
+ <br/>
+<br/>Limites du carcinome intracanalaire avec les recoupes éventuelles :
+ <br/>- Les limites d'exérèse latérales sont toutes supérieures à 2 mm.
+ <br/>- Les limites d'exérèse profonde et superficielle sont supérieures à 2 mm.
+ <br/>
+<br/>Ganglion(s) sentinelle(s) : aucun ganglion métastatique (1 GS-).
+ <br/>
+<br/>Réponse au traitement :
+ <br/>- Tumeur mammaire : réponse faible (> 20% de tumeur).
+ <br/>- RCB-II
+ <br/>
+<br/>Classification pTNM : ypT1c ypN0(i-)(sn) 
+ <br/>
+<br/>- L'étude des récepteurs hormonaux a été réalisée sur la micro-biopsie.
+ <br/>- L'étude de l'oncoprotéine HER2 a été réalisée sur la micro-biopsie.
+ <br/>
+<br/>IESG0000--AXD, IHSG0000--AXD, IEGS0162----D, OHGSX7A7----D 
+ <br/>
+<br/> Dr Magali LACROIX-TRIKI 
+ <br/> Médecin spécialiste 
+ <br/> Compte-rendu validé et signé électroniquement 
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

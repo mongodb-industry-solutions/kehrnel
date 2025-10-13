@@ -1,0 +1,291 @@
+input:
+  kind: csv
+  columns: [paciente, centro, servicio, consulta, etapa, prom, fecha, pregunta, respuesta]
+  date_format: "%d/%m/%Y"
+
+_output:
+  filename_template: "hads_{{ first.paciente }}_{{ first.consulta }}_{{ index|int }}.json"
+
+_options:
+  prune_empty: true
+
+_translation:
+  enable: true
+  source_lang: es
+  target_lang: en
+  cache: .kehrnel/translations.json
+
+select:
+  where:
+    - prom ~= "(?i)^HADS"
+    - servicio == "VIH eVIHa"
+    - respuesta != "N/A"
+
+# One composition per visit
+group_by: [paciente, servicio, consulta]
+
+compose:
+  header:
+    language: en
+    territory: ES
+    category: event
+    context.start_time: ${fecha}
+
+  content:
+    - observation: openEHR-EHR-OBSERVATION.hads.v0
+      map:
+
+        # Event timing (use last row for the visit date)
+        - path: "data[at0001]/events[at0002]/time/value"
+          from: fecha
+          coerce: date_iso
+          list_mode: last
+
+        - path: "data[at0001]/origin/value"
+          from: fecha
+          coerce: date_iso
+          list_mode: last
+
+        - path: "language/code_string"
+          literal: "en"
+
+        - path: "data[at0001]/events[at0002]/name/value"
+          literal: "Any event"
+
+        # ─── HADS items (Q1..Q14) ──────────────────────────────────────────
+
+        # Q1
+        - when: 'pregunta ~= "^\s*1\.\s*Me siento tenso o nervioso:\s*$"'
+          path: "data[at0001]/events[at0002]/data[at0003]/items[at0115]/value"
+          type: ordinal
+          from: respuesta
+          choices:
+            "Nunca":                      { code: "at0116", ordinal: 0 }
+            "De vez en cuando":           { code: "at0117", ordinal: 1 }
+            "A veces":                    { code: "at0117", ordinal: 1 }
+            "Con mucha frecuencia":       { code: "at0118", ordinal: 2 }
+            "Muchas veces":               { code: "at0119", ordinal: 3 }
+            "La mayor parte del tiempo":  { code: "at0119", ordinal: 3 }
+            "Todos los días":             { code: "at0119", ordinal: 3 }
+
+        # Q2
+        - when: 'pregunta ~= "^\s*2\.\s*Todavía disfruto con lo que antes me gustaba:\s*$"'
+          path: "data[at0001]/events[at0002]/data[at0003]/items[at0120]/value"
+          type: ordinal
+          from: respuesta
+          choices:
+            "Tanto como siempre":            { code: "at0121", ordinal: 0 }
+            "Como siempre":                  { code: "at0121", ordinal: 0 }
+            "Al igual que siempre lo hice":  { code: "at0121", ordinal: 0 }
+            "No tanto ahora":                { code: "at0122", ordinal: 1 }
+            "No lo bastante":                { code: "at0122", ordinal: 1 }
+            "Sólo un poco":                  { code: "at0123", ordinal: 2 }
+            "Solo un poco":                  { code: "at0123", ordinal: 2 }
+            "Definitivamente menos ahora":   { code: "at0123", ordinal: 2 }
+            "Casi nada":                     { code: "at0124", ordinal: 3 }
+            "Nada":                          { code: "at0124", ordinal: 3 }
+
+        # Q3
+        - when: 'pregunta ~= "^\s*3\.\s*Tengo una sensación de miedo, como si algo horrible me fuera a suceder:\s*$"'
+          path: "data[at0001]/events[at0002]/data[at0003]/items[at0125]/value"
+          type: ordinal
+          from: respuesta
+          choices:
+            "Definitivamente y es muy fuerte": { code: "at0126", ordinal: 3 }
+            "Sí, pero no demasiado":           { code: "at0127", ordinal: 2 }
+            "Sí, pero no es muy fuerte":       { code: "at0127", ordinal: 2 }
+            "Un poco, pero no me preocupa":    { code: "at0128", ordinal: 1 }
+            "Nada":                            { code: "at0129", ordinal: 0 }
+
+        # Q4 (invertido)
+        - when: 'pregunta ~= "^\s*4\.\s*Puedo reírme y ver el lado divertido de las cosas:\s*$"'
+          path: "data[at0001]/events[at0002]/data[at0003]/items[at0130]/value"
+          type: ordinal
+          from: respuesta
+          choices:
+            "Tanto como siempre":           { code: "at0131", ordinal: 0 }
+            "Como siempre":                 { code: "at0131", ordinal: 0 }
+            "Al igual que siempre lo hice": { code: "at0131", ordinal: 0 }
+            "No tanto ahora":               { code: "at0132", ordinal: 1 }
+            "Definitivamente menos ahora":  { code: "at0133", ordinal: 2 }
+            "Casi nunca":                   { code: "at0133", ordinal: 2 }
+            "Nada":                         { code: "at0134", ordinal: 3 }
+
+        # Q5
+        - when: 'pregunta ~= "^\s*5\.\s*Tengo mi mente llena de preocupaciones:\s*$"'
+          path: "data[at0001]/events[at0002]/data[at0003]/items[at0135]/value"
+          type: ordinal
+          from: respuesta
+          choices:
+            "La mayoría de las veces":          { code: "at0136", ordinal: 3 }
+            "Con bastante frecuencia":          { code: "at0137", ordinal: 2 }
+            "A veces, aunque no muy a menudo":  { code: "at0138", ordinal: 1 }
+            "De vez en cuando":                 { code: "at0138", ordinal: 1 }
+            "A veces":                          { code: "at0138", ordinal: 1 }
+            "Solo en ocasiones":                { code: "at0139", ordinal: 0 }
+            "Solo ocasionalmente":              { code: "at0139", ordinal: 0 }
+
+        # Q6 (invertido)
+        - when: 'pregunta ~= "^\s*6\.\s*Me siento alegre:\s*$"'
+          path: "data[at0001]/events[at0002]/data[at0003]/items[at0140]/value"
+          type: ordinal
+          from: respuesta
+          choices:
+            "La mayor parte del tiempo": { code: "at0141", ordinal: 0 }
+            "Casi siempre":              { code: "at0141", ordinal: 0 }
+            "A veces":                   { code: "at0142", ordinal: 1 }
+            "No muy a menudo":           { code: "at0143", ordinal: 2 }
+            "Nada":                      { code: "at0144", ordinal: 3 }
+            "Nunca":                     { code: "at0144", ordinal: 3 }
+
+        # Q7 (invertido)
+        - when: 'pregunta ~= "^\s*7\.\s*Puedo estar sentado confortablemente y sentirme relajado:\s*$"'
+          path: "data[at0001]/events[at0002]/data[at0003]/items[at0145]/value"
+          type: ordinal
+          from: respuesta
+          choices:
+            "Definitivamente":  { code: "at0146", ordinal: 0 }
+            "Siempre":          { code: "at0146", ordinal: 0 }
+            "Por lo general":   { code: "at0147", ordinal: 1 }
+            "No muy a menudo":  { code: "at0148", ordinal: 2 }
+            "Nada":             { code: "at0149", ordinal: 3 }
+            "Nunca":            { code: "at0149", ordinal: 3 }
+
+        # Q8
+        - when: 'pregunta ~= "^\s*8\.\s*Me siento como si cada d[ií]a estuviera más lento:\s*$"'
+          path: "data[at0001]/events[at0002]/data[at0003]/items[at0160]/value"
+          type: ordinal
+          from: respuesta
+          choices:
+            "Casi todo el tiempo":              { code: "at0161", ordinal: 3 }
+            "Por lo general, en todo momento":  { code: "at0161", ordinal: 3 }
+            "Muy a menudo":                     { code: "at0162", ordinal: 2 }
+            "A veces":                          { code: "at0163", ordinal: 1 }
+            "Nada":                             { code: "at0164", ordinal: 0 }
+            "Nunca":                            { code: "at0164", ordinal: 0 }
+
+        # Q9
+        - when: 'pregunta ~= "^\s*9\.\s*Tengo una sensación extraña, como si tuviera mariposas en el estómago:\s*$"'
+          path: "data[at0001]/events[at0002]/data[at0003]/items[at0165]/value"
+          type: ordinal
+          from: respuesta
+          choices:
+            "Muy a menudo":            { code: "at0166", ordinal: 3 }
+            "Con bastante frecuencia": { code: "at0167", ordinal: 2 }
+            "En ciertas ocasiones":    { code: "at0168", ordinal: 1 }
+            "Nada":                    { code: "at0169", ordinal: 0 }
+            "Nunca":                   { code: "at0169", ordinal: 0 }
+
+        # Q10 (depresión)
+        - when: 'pregunta ~= "^\s*10\.\s*He perdido interés en mi aspecto personal:\s*$"'
+          path: "data[at0001]/events[at0002]/data[at0003]/items[at0170]/value"
+          type: ordinal
+          from: respuesta
+          choices:
+            "Me cuido tanto como siempre":          { code: "at0171", ordinal: 0 }
+            "Me preocupa al igual que siempre":     { code: "at0171", ordinal: 0 }
+            "Puede que no me cuide tanto":          { code: "at0172", ordinal: 1 }
+            "Podría tener un poco más de cuidado":  { code: "at0172", ordinal: 1 }
+            "Podria tener un poco mas de cuidado":  { code: "at0172", ordinal: 1 }
+            "No me cuido tanto como debería":       { code: "at0173", ordinal: 2 }
+            "No me preocupo tanto como debiera":    { code: "at0173", ordinal: 2 }
+            "Definitivamente":                      { code: "at0174", ordinal: 3 }
+            "Totalmente":                           { code: "at0174", ordinal: 3 }
+
+        # Q11
+        - when: 'pregunta ~= "^\s*11\.\s*Me siento inquieto, como si no pudiera parar de moverme:\s*$"'
+          path: "data[at0001]/events[at0002]/data[at0003]/items[at0175]/value"
+          type: ordinal
+          from: respuesta
+          choices:
+            "Nada":      { code: "at0176", ordinal: 0 }
+            "No mucho":  { code: "at0177", ordinal: 1 }
+            "Bastante":  { code: "at0178", ordinal: 2 }
+            "Mucho":     { code: "at0179", ordinal: 3 }
+
+        # Q12  (note: literal text variant kept from your source)
+        - when: 'pregunta == "12.- Me siento optimista respecto al futuro:"'
+          path: "data[at0001]/events[at0002]/data[at0003]/items[at0180]/value"
+          type: ordinal
+          from: respuesta
+          choices:
+            "Igual que siempre":                   { code: "at0181", ordinal: 0 }
+            "Como siempre":                        { code: "at0181", ordinal: 0 }
+            "Bastante":                            { code: "at0181", ordinal: 0 }
+            "Algo menos que antes":                { code: "at0182", ordinal: 1 }
+            "Menos de los que acostumbraba":       { code: "at0182", ordinal: 1 }
+            "Un poco menos que antes":             { code: "at0182", ordinal: 1 }
+            "Definitivamente menos que antes":     { code: "at0183", ordinal: 2 }
+            "Mucho menos de lo que acostumbraba":  { code: "at0183", ordinal: 2 }
+            "Mucho menos que antes":               { code: "at0183", ordinal: 2 }
+            "Casi nada":                           { code: "at0184", ordinal: 3 }
+            "Nada":                                { code: "at0184", ordinal: 3 }
+
+        # Q13
+        - when: 'pregunta ~= "^\s*13\.\s*Me asaltan pensamientos repentinos de pánico:\s*$"'
+          path: "data[at0001]/events[at0002]/data[at0003]/items[at0185]/value"
+          type: ordinal
+          from: respuesta
+          choices:
+            "Nada":                { code: "at0186", ordinal: 0 }
+            "No muy a menudo":     { code: "at0187", ordinal: 1 }
+            "Rara vez":            { code: "at0187", ordinal: 1 }
+            "Bastante a menudo":   { code: "at0188", ordinal: 2 }
+            "Muy frecuentemente":  { code: "at0189", ordinal: 3 }
+
+        # Q14
+        - when: 'pregunta ~= "^\s*14\.\s*Me divierto con un buen libro, programa de radio o televisión:\s*$"'
+          path: "data[at0001]/events[at0002]/data[at0003]/items[at0190]/value"
+          type: ordinal
+          from: respuesta
+          choices:
+            "A menudo":         { code: "at0191", ordinal: 0 }
+            "A veces":          { code: "at0192", ordinal: 1 }
+            "No muy a menudo":  { code: "at0193", ordinal: 2 }
+            "Rara vez":         { code: "at0193", ordinal: 2 }
+            "Muy rara vez":     { code: "at0194", ordinal: 3 }
+
+        # Free text observations
+        - when:
+            - pregunta == "Observaciones"
+          path: "data[at0001]/events[at0002]/data[at0003]/items[at0195]/value"
+          from: respuesta
+          null_if_empty: true
+          translate: no-cache
+
+        # Subscale totals (count)
+        - when: 'pregunta ~= "(?i)^ansiedad$" and respuesta ~= "^\s*\d+\s*$"'
+          path: "data[at0001]/events[at0002]/data[at0003]/items[at0150]/value"
+          type: count
+          from: respuesta
+          coerce: int
+          list_mode: last
+          translate: false
+
+        - when: 'pregunta ~= "(?i)^depresi[oó]n$" and respuesta ~= "^\s*\d+\s*$"'
+          path: "data[at0001]/events[at0002]/data[at0003]/items[at0151]/value"
+          type: count
+          from: respuesta
+          coerce: int
+          list_mode: last
+          translate: false
+
+        # ─── Interpretations (drive from _vars to keep rules DRY) ───────────
+
+        # Anxiety interpretation
+        - when: 'pregunta ~= "(?i)^ansiedad$"'
+          path: "protocol/items[openEHR-EHR-CLUSTER.hads_anxiety_interpretation.v0]/items[at0001]/value"
+          from: respuesta
+          ranges: { "0..7": "at0002", "8..10": "at0003", "11..21": "at0004" }
+          overwrite: last
+          translate: false
+
+        # Depression interpretation
+        - when: 'pregunta ~= "(?i)^depresi[oó]n$"'
+          path: "protocol/items[openEHR-EHR-CLUSTER.hads_depression_interpretation.v0]/items[at0001]/value"
+          from: respuesta
+          ranges: { "0..7": "at0002", "8..10": "at0003", "11..21": "at0004" }
+          overwrite: last
+          translate: false
+
+

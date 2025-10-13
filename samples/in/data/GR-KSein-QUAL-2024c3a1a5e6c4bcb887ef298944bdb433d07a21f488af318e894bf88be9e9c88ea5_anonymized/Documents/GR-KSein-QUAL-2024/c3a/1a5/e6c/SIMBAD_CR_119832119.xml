@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_119832119" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM THORAX</title>
+    <effectiveTime value="20201209000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201209000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur GARCIA GABRIEL
+ <br/>
+<br/>Destinataire : CTE 050 - SEIN
+ <br/> DR PAVLIUC Elena
+ <br/>
+<br/>
+<br/>
+<b>SCANNER THORACIQUE<br/><br/><br/>Dicté par : </b> Docteur Gabriel Garcia
+ <b><br/>Dicté le : </b> 08/12/2020 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Générique 
+ <br/>
+<b>Ref :</b> 1184354 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : DMI
+ <br/>
+<br/>EXAMEN N. 1437
+ <br/>
+<br/>
+<br/>Examen réalisé le 8 décembre 2020
+ <br/>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/></b> Dyspnée au moindre effort. Désaturation. Tachycardie. Carcinome 
+ <br/>mammaire évolutif.
+ <br/>Recherche d'argument pour une embolie pulmonaire.
+ <br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :</b>
+<br/>Examen réalisé sur un scanner SOMATOM FORCE, SIEMENS, mis en service 
+ <br/>le 7 Septembre 2020.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 76213
+ <br/>Réalisation d'une acquisition :
+ <br/>\'a7 Thoracique
+ <br/>Examen réalisé avec injection intraveineuse de produit de contraste.
+ <br/>
+<b>Produit de contraste injecté : Xenetix 350<br/>Quantité : 60 ml<br/>PDL : 262 mGy.cm<br/></b>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/> Comparaison à l'examen du 12 novembre 2020<br/></b>
+<br/>Absence de défect d'opacification endoluminale des branches des 
+ <br/>artères pulmonaires.
+ <br/>Absence d'argument pour une embolie pulmonaire.
+ <br/>Absence d'opacification de la veine pulmonaire supérieure gauche, 
+ <br/>apparue en comparaison avec l'examen précédent. Cette absence 
+ <br/>d'opacification est secondaire à un envahissement tumorale hilaire 
+ <br/>gauche.
+ <br/>Majoration de l'épanchement pleural gauche de grande abondance avec 
+ <br/>collapsus alvéolaire au contact expliquant, au moins en partie, la 
+ <br/>dyspnée.
+ <br/>Apparition d'un épanchement péricardique quasi circonférentiel de 
+ <br/>10 mm d'épaisseur maximale, sans anomalie des cavités droites.
+ <br/>Absence de nodule parenchymateux pulmonaire suspect de localisation 
+ <br/>secondaire.
+ <br/>Absence de condensation parenchymateuse suspecte.
+ <br/>Majoration des formations ganglionnaires médiastinales secondaire, en 
+ <br/>particulier de l'angle cardiophrénique.
+ <br/>Absence d'anomalie pariétale.
+ <br/>Absence de lésion osseuse lytique ou condensante suspecte.
+ <br/>Majoration de l'atteinte sous-diaphragmatique en particulier des 
+ <br/>adénopathies rétropéritonéales envahissant le rein gauche.
+ <br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :</b>
+<br/>
+<b>Absence d'embolie pulmonaire.<br/>Majoration de l'épanchement pleural gauche avec collapsus alvéolaire <br/>au contact expliquant, au moins en partie, la symptomatologie.<br/>Absence d'opacification de la veine pulmonaire supérieure gauche par <br/>envahissement tumoral hilaire gauche, pouvant également contribuer à <br/>la dyspnée.<br/>Epanchement péricardique.<br/>Progression oncologique par ailleurs en comparaison au 12 novembre <br/>2020.<br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Gabriel GARCIA <br/>Le mardi 8 décembre 2020 à 16:49 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123098207" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION DE GYNECOLOGIE - Docteur Patricia PAUTIER</title>
+    <effectiveTime value="20190731000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190731000000+0000"/>
+        <assignedAuthor>
+            <code code="060/8" displayName="CTE 060 - GYNECOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>COMPTE RENDU DE CONSULTATION DE GYNECOLOGIE<br/><br/>Dicté par : </b> Docteur Patricia Pautier
+ <b><br/>Dicté le : </b> 29/07/2019 
+ <b><br/>Service : </b> 060-CTE 060 - GYNECOLOGIE 
+ <br/>
+<b>Type de document : </b> 060 CC CONSULTATION 
+ <br/>
+<b>Ref :</b> 758583 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : CGO
+ <b><br/></b>
+<br/>
+<b>Patiente de 66 ans qui présente une reprise évolutive précoce après 1 <br/> injection d'Avastin ATEZOLIZUMAB ou placebo en entretien dans le <br/>Cadre du protocole ATALANTE après 6 cycles de Carboplatine <br/>Gemcitabine pour une première rechute d'un adénocarcinome séreux de <br/>haut grade inextirpable.<br/><br/>Pour mémoire </b> : C1 J1 de carboplatine gemcitabine le 18 janvier , 
+ <br/>C2, toxicité hématologique justifiant l'arrêt du J8 et de 
+ <br/>l'ajustement des doses de Carboplatine jusqu'à un AUC3, allergie au 
+ <br/>carboplatine à C3 avec protocole de désensibilisation.
+ <br/>Bonne réponse clinique et biologique.
+ <br/>
+<b><br/></b> Depuis début juillet échappement clinique avec nécessité de deux 
+ <br/>ponctions d'ascite toutes les 2 semaines et élévation du CA125. 
+ <br/>Sortie du protocole Atalante après 1cure d'entretien. 
+ <br/>
+<b><br/><br/>Examen clinique :<br/><br/></b> PS : 1 
+ <br/>Poids 57.2 kg 
+ <br/>Pouls 110/min 
+ <br/>Température à 38°6
+ <br/>Tension à 135/84 
+ <br/>Saturation à 96 % en air ambiant
+ <br/>Ascite de moyenne abondance 
+ <br/>Constipation 
+ <br/>Asthénie de grade 1-2 
+ <br/>Etat général malgré tout conservé 
+ <br/>
+<br/>
+<b>Traitement actuel : </b> Polaramine 2 mg 1 comprimé jour Innohep 0,5 
+ <br/>ml/jour Primperan et Kytril à la demande. 
+ <br/>
+<br/>Bandelette urinaire est négative. 
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3> :<br/></b></u>
+<br/>Progression platine résistante. 
+ <br/>Pas d'essai dans cette situation thérapeutique à proposer à la 
+ <br/>patiente.
+ <br/>On propose un traitement par Taxol hebdomadaire qu'elle pourra 
+ <br/>réaliser à domicile, que l'on débutera dés que possible 
+ <br/>Taxol hebdomadaire 80 mg/m2 soit 130 mg dose totale avec réalisation 
+ <br/>à domicile. Ponction d'ascite à la demande et sera revue dans 3 
+ <br/>semaines par le Dr COLOMBA.
+ <br/>
+<b><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Patricia PAUTIER <br/>Le mardi 30 juillet 2019 à 12:27</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121631554" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°20C00585 2986735 Dr Ranya SOUFAN</title>
+    <effectiveTime value="20200306000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200309000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<br/>COMPTE RENDU DE CYTOPATHOLOGIE 
+ <br/>
+<br/>LIQUIDE DE PONCTION PLEURALE
+ <br/>Prélèvement sous repérage échographique.
+ <br/>
+<br/>RENSEIGNEMENTS CLINIQUES 
+ <br/>Carcinome séreux de haut grade.
+ <br/>
+<br/>TOPOGRAPHIE
+ <br/>.
+ <br/>
+<br/>LATERALITE
+ <br/>Droite
+ <br/>
+<br/>TECHNIQUE
+ <br/>4,5 ml de liquide rouge trouble, centrifugé.
+ <br/>2 lames(s) colorée(s) au MGG.
+ <br/>2 lame(s) colorée(s) au Papanicolaou.
+ <br/>Techniques complémentaires : 
+ <br/>- inclusion en paraffine
+ <br/>- immunocytochimie : BerEP4 
+ <br/>
+<br/>INTERPRETATION
+ <br/>Le matériel prélevé est quantitativement et qualitativement satisfaisant. 
+ <br/>Liquide hémorragique, et inflammatoire (cellules inflammatoires polymorphes avec prédominance lymphocytaire), avec une seule cellule irrégulière pouvant correspondre à une cellule tumorale métastatique.
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>CONCLUSION
+ <br/>
+<br/>LIQUIDE DE PONCTION PLEURALE DROITE
+ <br/>Topographie : 
+ <br/>Prélèvement satisfaisant pour le diagnostic.
+ <br/>Présence d'une seule cellule irrégulière pouvant correspondre à une cellule tumorale métastatique.
+ <br/>
+<br/>LCRS0M00----D 
+ <br/>
+<br/> Dr Ranya SOUFAN 
+ <br/> Praticien 
+ <br/> Compte rendu validé et signé électroniquement 
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

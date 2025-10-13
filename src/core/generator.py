@@ -18,7 +18,8 @@ import datetime as dt
 import uuid
 from abc import ABC, abstractmethod
 from collections import OrderedDict
-from mapper.mapping_engine import SourceHandler, apply_mapping
+from mapper.mapping_engine import apply_mapping
+import re
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -112,6 +113,7 @@ class kehrnelGenerator:
 
         # Current archetype context during processing
         self.current_archetype_id = None
+        self._ordinal_by_code = self._build_ordinal_lookup()
         
     def _build_archetype_term_maps(self) -> Dict[str, Dict[str, str]]:
         """Build separate term maps for each archetype"""
@@ -165,6 +167,9 @@ class kehrnelGenerator:
     def register_handler(self, handler: SourceHandler):
         """Register a source format handler"""
         self.handlers.append(handler)
+
+    def set_at_path(self, obj: dict, path: str, value):
+        self._set_value_at_path(obj, path, value)
         
     def generate_random(self) -> Dict:
         """Generate a random composition respecting all constraints"""
@@ -214,6 +219,28 @@ class kehrnelGenerator:
     
     def _process_template_node(self, node: ET.Element, path: str, depth: int = 0) -> Optional[Dict]:
         """Process a template node and generate its structure"""
+
+        rm_type = node.findtext("opt:rm_type_name", "", self.NS)
+
+        if not rm_type:
+            return None
+
+        # decide EVENT subtype 
+        if rm_type == "EVENT":
+            xsi_t = node.get(f"{{{self.NS['xsi']}}}type", "")
+            if xsi_t == "C_POINT_EVENT":
+                rm_type = "POINT_EVENT"
+            elif xsi_t == "C_INTERVAL_EVENT":
+                rm_type = "INTERVAL_EVENT"
+            else:
+                has_width = any(
+                    a.findtext("opt:rm_attribute_name", "", self.NS) == "width"
+                    for a in node.findall("opt:attributes", self.NS)
+                )
+                rm_type = "INTERVAL_EVENT" if has_width else "POINT_EVENT"
+
+        result = OrderedDict([("_type", rm_type)])
+        
         # ---- skip archetype-slots -----------------------------------------
         xsi_type = node.get(f"{{{self.NS['xsi']}}}type")
         if xsi_type in ("ARCHETYPE_SLOT", "C_ARCHETYPE_SLOT"):
@@ -221,11 +248,8 @@ class kehrnelGenerator:
             # inserted later via a mapping or explicit input
             return None
         # -------------------------------------------------------------------
-        rm_type = node.findtext("opt:rm_type_name", "", self.NS)
+    
         node_id = node.findtext("opt:node_id", "", self.NS).strip()
-        
-        if not rm_type:
-            return None
         
         # Debug output for understanding structure
         indent = "  " * depth
@@ -281,7 +305,7 @@ class kehrnelGenerator:
             result["territory"] = {
                 "_type": "CODE_PHRASE",
                 "terminology_id": {"_type": "TERMINOLOGY_ID", "value": "ISO_3166-1"},
-                "code_string": "DE"
+                "code_string": "ES"
             }
             result["category"] = {
                 "_type": "DV_CODED_TEXT",
@@ -308,9 +332,17 @@ class kehrnelGenerator:
             if not attr_name:
                 continue
             
-            if attr_name == "name" and "name" in result:
-                continue
-            
+            if attr_name == "name":
+                coerced = self._process_single_attribute(attr, f"{path}/{attr_name}", depth, rm_type)
+                if coerced:
+                    # Keep human-readable text if we already set it from terms
+                    if coerced.get("_type") == "DV_CODED_TEXT":
+                        existing_txt = result.get("name", {}).get("value")
+                        if existing_txt and "value" not in coerced:
+                            coerced["value"] = existing_txt
+                    result["name"] = coerced
+                    continue
+                
             # Special handling for category attribute in COMPOSITION
             if attr_name == "category" and rm_type == "COMPOSITION":
                 value = self._process_single_attribute(attr, f"{path}/{attr_name}", depth, rm_type)
@@ -354,14 +386,7 @@ class kehrnelGenerator:
             # For non-COMPOSITION elements, add all attributes normally
             for key, value in attributes_to_add.items():
                 result[key] = value
-        
-        # Add archetype information for non-COMPOSITION archetype roots
-        if archetype_id and rm_type != "COMPOSITION":
-            result["archetype_details"] = {
-                "archetype_id": {"value": archetype_id},
-                "rm_version": "1.0.4"
-            }
-        
+    
         # Add archetype_node_id as the LAST element
         if archetype_id:
             result["archetype_node_id"] = archetype_id
@@ -466,6 +491,21 @@ class kehrnelGenerator:
 
         result: Dict[str, Any] = {"_type": rm_type}
 
+        # ──────────────────────────────────────────────────────────────
+        # DV_ORDINAL  ← add this
+        # ──────────────────────────────────────────────────────────────
+        if rm_type == "DV_ORDINAL":
+            result["value"] = None
+            result["symbol"] = {
+                "_type": "DV_CODED_TEXT",
+                "value": None,
+                "defining_code": {
+                    "_type": "CODE_PHRASE",
+                    "terminology_id": {"_type": "TERMINOLOGY_ID", "value": "local"},
+                    "code_string": None
+                }
+            }
+            return result
         # ──────────────────────────────────────────────────────────────
         # DV_CODED_TEXT
         # ──────────────────────────────────────────────────────────────
@@ -672,7 +712,7 @@ class kehrnelGenerator:
             "COMPOSITION", "SECTION", "ADMIN_ENTRY", "OBSERVATION", "EVALUATION",
             "INSTRUCTION", "ACTION", "CLUSTER", "ELEMENT", "ITEM_TREE",
             "ITEM_LIST", "ITEM_TABLE", "ITEM_SINGLE", "EVENT", "POINT_EVENT",
-            "INTERVAL_EVENT", "EVENT_CONTEXT", "HISTORY", "ACTIVITY"
+            "INTERVAL_EVENT", "HISTORY", "ACTIVITY"
         ]
     
     def _add_required_rm_fields(self, result: Dict, rm_type: str):
@@ -699,7 +739,7 @@ class kehrnelGenerator:
             result.setdefault("encoding", {
                 "_type": "CODE_PHRASE",
                 "terminology_id": {"_type": "TERMINOLOGY_ID", "value": "IANA_character-sets"},
-                "code_string": "ISO-10646-UTF-1"
+                "code_string": "UTF-8"
             })
             # subject / provider --------------------------------------------------
             result.setdefault("subject", {"_type": "PARTY_SELF"})
@@ -753,16 +793,42 @@ class kehrnelGenerator:
 
         elif rm_type in ["ITEM_TREE", "ITEM_LIST", "CLUSTER"]:
             result.setdefault("items", [])
+
+    def _build_ordinal_lookup(self) -> dict[str, int]:
+        """
+        Scan the OPT and collect ordinal (code_string -> integer) pairs.
+        Good enough to resolve DV_ORDINALs from a bare at-code.
+        """
+        out = {}
+        for val_attr in self.tree.findall(".//opt:attributes[opt:rm_attribute_name='value']", self.NS):
+            child = val_attr.find("opt:children", self.NS)
+            if child is None:
+                continue
+            # C_DV_ORDINAL has <list> entries with <value> and <symbol>/<defining_code>/<code_string>
+            if child.get(f"{{{self.NS['xsi']}}}type", "") == "C_DV_ORDINAL":
+                for item in child.findall("opt:list", self.NS):
+                    ival = item.findtext("opt:value", "", self.NS)
+                    code = item.findtext("opt:symbol/opt:defining_code/opt:code_string", "", self.NS)
+                    if ival and code:
+                        try:
+                            out[code] = int(ival)
+                        except Exception:
+                            pass
+        return out
     
     # -----------------------------------------------------------------
     # recurse through dict / list and set primitives to None
     # -----------------------------------------------------------------
     def _nullify_leaves(self, node: Any):
+        KEEP = {
+            "_type","name","archetype_details","archetype_node_id","template_id",
+            "language","territory","category","encoding","subject","provider","workflow_id",
+            "setting"  # EVENT_CONTEXT
+        }
         if isinstance(node, dict):
             for k, v in node.items():
                 # keep meta attributes (type, name, …) intact
-                if k in ("_type", "name", "archetype_details",
-                         "archetype_node_id", "template_id"):
+                if k in KEEP:
                     continue
                 if isinstance(v, (dict, list)):
                     self._nullify_leaves(v)
@@ -799,6 +865,39 @@ class kehrnelGenerator:
                     return True
 
         return False
+    
+    def _prune_incomplete_datavalues(self, node):
+        if isinstance(node, dict):
+            t = node.get("_type")
+            if t == "DV_COUNT" and node.get("magnitude") is None:
+                return None
+            if t == "DV_DATE_TIME" and node.get("value") is None:
+                return None
+            if t == "DV_CODED_TEXT":
+                v = node.get("value")
+                code = (node.get("defining_code") or {}).get("code_string")
+                if v is None and code is None:
+                    return None
+
+            out = {}
+            for k, v in node.items():
+                pruned = self._prune_incomplete_datavalues(v)  # <-- self.
+                # If the *value* was an incomplete DV_* → drop the key
+                if pruned is None and k == "value":
+                    continue
+                if pruned is not None:
+                    out[k] = pruned
+            return out or None
+
+        if isinstance(node, list):
+            out = []
+            for item in node:
+                pruned = self._prune_incomplete_datavalues(item)  # <-- self.
+                if pruned is not None:
+                    out.append(pruned)
+            return out or None
+
+        return node
 
     def _prune_empty(self, node: Any):
         """
@@ -848,7 +947,102 @@ class kehrnelGenerator:
             # drop {} / [] placeholders created above
             node[:] = [i for i in node if i not in ({}, [])]
         
+    def _normalize_for_rm(self, node, parent_key=None):
+        # Dict node ---------------------------------------------------------------
+        if isinstance(node, dict):
+            # Recurse first over children
+            for k, v in list(node.items()):
+                node[k] = self._normalize_for_rm(v, parent_key=k)
 
+            ntype = node.get("_type") or ""
+
+            # EVENT.time must be DV_DATE_TIME (you already had this)
+            if isinstance(ntype, str) and ntype.endswith("EVENT"):
+                t = node.get("time")
+                if isinstance(t, str):
+                    node["time"] = {"_type": "DV_DATE_TIME", "value": t}
+                elif isinstance(t, dict) and t.get("_type") is None and "value" in t:
+                    node["time"] = {"_type": "DV_DATE_TIME", "value": t.get("value")}
+
+            # HISTORY.origin must be DV_DATE_TIME
+            if ntype == "HISTORY":
+                o = node.get("origin")
+                if isinstance(o, str):
+                    node["origin"] = {"_type": "DV_DATE_TIME", "value": o}
+                elif isinstance(o, dict) and o.get("_type") != "DV_DATE_TIME":
+                    # handle {"value": "..."} with no _type
+                    val = o.get("value")
+                    node["origin"] = {"_type": "DV_DATE_TIME", "value": val} if val is not None else o
+
+            # EVENT_CONTEXT start/end must be DV_DATE_TIME
+            if ntype == "EVENT_CONTEXT":
+                for key in ("start_time", "end_time"):
+                    dtv = node.get(key)
+                    if isinstance(dtv, str):
+                        node[key] = {"_type": "DV_DATE_TIME", "value": dtv}
+                    elif isinstance(dtv, dict) and dtv.get("_type") != "DV_DATE_TIME":
+                        val = dtv.get("value")
+                        node[key] = {"_type": "DV_DATE_TIME", "value": val} if val is not None else dtv
+
+
+            # Normalize CODE_PHRASE.code_string to always be a plain string
+            def _fix_code_phrase(cp, fallback=None):
+                if not isinstance(cp, dict):
+                    return
+                cs = cp.get("code_string")
+                if isinstance(cs, dict):                # e.g. {"_type":"DV_TEXT","value": "..."}
+                    v = cs.get("value")
+                    cp["code_string"] = v if isinstance(v, str) and v else fallback
+
+            if "language" in node:
+                _fix_code_phrase(node["language"], fallback="en")
+            if ntype == "COMPOSITION" and "territory" in node:
+                _fix_code_phrase(node["territory"], fallback="ES")
+
+            # 1) EVENT.time must be DV_DATE_TIME
+            if isinstance(ntype, str) and ntype.endswith("EVENT"):
+                t = node.get("time")
+                if isinstance(t, str):
+                    node["time"] = {"_type": "DV_DATE_TIME", "value": t}
+                elif isinstance(t, dict) and t.get("_type") is None and "value" in t:
+                    node["time"] = {"_type": "DV_DATE_TIME", "value": t["value"]}
+
+            # 2) Drop empty value shells (DV_TEXT / DV_CODED_TEXT)
+            val = node.get("value")
+            if isinstance(val, dict):
+                vtype = val.get("_type")
+                # Empty DV_TEXT -> remove value
+                if vtype == "DV_TEXT" and not val.get("value"):
+                    node.pop("value", None)
+                # Empty DV_CODED_TEXT without defining_code -> remove value
+                elif vtype == "DV_CODED_TEXT" and not val.get("value") and not val.get("defining_code"):
+                    node.pop("value", None)
+                # 3) (Optional) DV_COUNT with null magnitude -> drop whole ELEMENT
+                elif vtype == "DV_COUNT" and val.get("magnitude") is None:
+                    # If this dict is an ELEMENT, remove the entire element
+                    if node.get("_type") == "ELEMENT":
+                        return None  # parent list will filter it out
+                    # Otherwise, at least drop the value to avoid invalid DV_COUNT
+                    node.pop("value", None)
+
+            # 4) EVENT_CONTEXT must not carry archetype_node_id
+            if ntype == "EVENT_CONTEXT":
+                node.pop("archetype_node_id", None)
+
+            return node
+
+        # List node ---------------------------------------------------------------
+        if isinstance(node, list):
+            cleaned = []
+            for x in node:
+                y = self._normalize_for_rm(x, parent_key=parent_key)
+                if y is not None:   # filter elements we explicitly dropped
+                    cleaned.append(y)
+            return cleaned
+
+        # Primitive (str, int, None, etc.) ---------------------------------------
+        return node
+    
     def _apply_postprocessing(self, steps: list[dict], comp: dict) -> None:
         """
         Execute YAML  _postprocessing  rules of type 'delete'.
@@ -924,21 +1118,28 @@ class kehrnelGenerator:
         return self._build_structure_from_template()
 
     def generate_from_mapping(self, mapping: Dict, source: Path) -> Dict:
-        composition   = self.generate_minimal()
-        handler       = self._find_handler(source)
-        source_tree   = handler.load_source(source)
-        mapping_proc  = handler.preprocess_mapping(mapping, source_tree)
+        composition = self.generate_minimal()
+        handler     = self._find_handler(source)
+        source_tree = handler.load_source(source)
+        composition = apply_mapping(self, mapping, handler, source_tree, composition)
+        composition = self._normalize_for_rm(composition) 
+        composition = self._prune_incomplete_datavalues(composition)  
 
-        composition   = apply_mapping(self, mapping_proc, handler, source_tree,
-                                    composition)
-
-        # existing prune_empty still removes leftover None / "" primitives
         opts = mapping.get("_options", {})
         if opts.get("prune_empty") or opts.get("prune_empty_elements"):
             self._prune_empty(composition)
 
-        return composition
+        root_lang = (composition.get("language") or {}).get("code_string") or "en"
+        for entry in composition.get("content", []):
+            if entry.get("_type") in {"OBSERVATION","EVALUATION","INSTRUCTION","ACTION","ADMIN_ENTRY"}:
+                entry["language"] = {
+                    "_type": "CODE_PHRASE",
+                    "terminology_id": {"_type": "TERMINOLOGY_ID", "value": "ISO_639-1"},
+                    "code_string": root_lang
+                }
 
+        return composition
+    
     def _find_handler(self, source_path: Path) -> SourceHandler:
         """
         Look through self.handlers (populated via .register_handler())
@@ -964,37 +1165,193 @@ class kehrnelGenerator:
         elif isinstance(node, list):
             for i, item in enumerate(node):
                 yield from self.iter_leaves(item, f"{path}/{i}")
+
+    def _select_child_by_code(self, coll, code):
+        if not isinstance(coll, list):
+            return None
+        # numeric index? allow events[0], items[3] etc.
+        if code.isdigit():
+            idx = int(code)
+            if 0 <= idx < len(coll):
+                return coll[idx]
+            return None
+        # by archetype node code or full archetype id
+        for it in coll:
+            if it.get("archetype_node_id") == code:
+                return it
+            a = it.get("archetype_details", {}).get("archetype_id", {})
+            if a.get("value") == code:
+                return it
+        return None
     
+    def _term_for_code(self, code: str, archetype_id: str | None = None) -> str | None:
+        if archetype_id and archetype_id in self.archetype_terms:
+            m = self.archetype_terms[archetype_id]
+            if code in m:
+                return m[code]
+        return None  
+
+    def _nearest_archetype_id(self, ancestors) -> Optional[str]:
+        for node in reversed(ancestors):
+            aid = node.get("archetype_details", {}).get("archetype_id", {}).get("value")
+            if aid:
+                return aid
+        return None
+
+    def _ordinal_value_for(self, code: str, archetype_id: Optional[str]) -> Optional[int]:
+        # Prefer archetype-scoped map if you have one; fall back to global
+        if hasattr(self, "_ordinal_by_code_per_arch"):
+            v = self._ordinal_by_code_per_arch.get(archetype_id, {}).get(code)
+            if v is not None: return v
+        return (getattr(self, "_ordinal_by_code", {}) or {}).get(code)
+    
+    def _nearest_archetype_id(self, nodes, default=None):
+        # Walk up the ancestor chain to find the closest archetype_details.archetype_id.value
+        for n in reversed(nodes or []):
+            if isinstance(n, dict):
+                aid = (n.get("archetype_details", {})
+                        .get("archetype_id", {})
+                        .get("value"))
+                if aid:
+                    return aid
+        return default
+
     def _set_value_at_path(self, obj: Dict, path: str, value: Any):
-        """Set a value in the object at the given JSON path"""
-        parts = path.strip('/').split('/')
-        current = obj
-        
-        for i, part in enumerate(parts[:-1]):
-            if part.isdigit():
-                part = int(part)
-                
-            if isinstance(current, list):
-                while len(current) <= part:
-                    current.append({})
-                current = current[part]
-            else:
-                if part not in current:
-                    next_part = parts[i + 1]
-                    if next_part.isdigit():
-                        current[part] = []
+        parts = [p for p in path.strip("/").split("/") if p]
+        cur = obj
+        current_arch_id: str | None = None
+        ancestors = [cur]
+
+        for seg in parts[:-1]:
+            m = re.match(r"^([A-Za-z0-9_]+)\[(.+?)\]$", seg)
+            if m:
+                key, sel = m.groups()
+                child = cur.get(key)
+                if child is None:
+                    # collections we expect as lists
+                    if key in ("content", "events", "items"):
+                        cur[key] = []
+                        child = cur[key]
                     else:
-                        current[part] = {}
-                current = current[part]
-        
-        final_key = parts[-1]
-        if final_key.isdigit() and isinstance(current, list):
-            final_key = int(final_key)
-            while len(current) <= final_key:
-                current.append({})
-            current[final_key] = value
-        else:
-            current[final_key] = value
+                        cur[key] = {}
+                        child = cur[key]
+                if isinstance(child, list):
+                    picked = self._select_child_by_code(child, sel)
+                    if picked is None:
+                        raise KeyError(f"Path segment '{seg}' not found in skeleton")
+                     # If selector is a full archetype id, remember it
+                    if sel.startswith("openEHR-"):
+                        current_arch_id = sel
+                    cur = picked
+                else:
+                    # dict with selector (e.g. data[at0001]) → ignore [code]
+                    cur = child
+            else:
+                # plain key or numeric index on a list
+                if isinstance(cur, list) and seg.isdigit():
+                    cur = cur[int(seg)]
+                else:
+                    # ensure a container exists
+                    if seg not in cur or not isinstance(cur[seg], (dict, list)):
+                        cur[seg] = cur.get(seg, {})
+                    cur = cur[seg]
+                # If the current node carries an archetype id, keep it fresh
+                if isinstance(cur, dict):
+                    aid = cur.get("archetype_details", {}) \
+                            .get("archetype_id", {}) \
+                            .get("value")
+                    if aid:
+                        current_arch_id = aid
+            ancestors.append(cur)
+
+        last = parts[-1]
+        existing = cur.get(last)
+        if isinstance(existing, dict) and isinstance(value, (str, int, float)):
+            dv_type = existing.get("_type", "")
+            if dv_type == "DV_COUNT":
+                try:
+                    cur[last]["magnitude"] = int(value)
+                except Exception:
+                    cur[last]["magnitude"] = value
+                return
+            if dv_type in ("DV_TEXT", "DV_CODED_TEXT", "DV_DATE_TIME"):
+                cur[last]["value"] = value
+                return
+            if dv_type == "DV_ORDINAL":
+                # numeric → magnitude directly
+                if isinstance(value, int) or (isinstance(value, str) and re.fullmatch(r"\s*[+-]?\d+\s*", value)):
+                    cur[last]["value"] = int(value)
+                    return
+
+                # string "at000X" → set code, derive integer + label
+                if isinstance(value, str):
+                    code = value.strip()
+                    # ensure symbol/defining_code skeleton exists
+                    sym = cur[last].setdefault("symbol", {"_type": "DV_CODED_TEXT"})
+                    dc  = sym.setdefault("defining_code", {"_type": "CODE_PHRASE"})
+                    tid = dc.setdefault("terminology_id", {"_type": "TERMINOLOGY_ID"})
+                    # fill terminology if missing (skeletons often omit it)
+                    if not tid.get("value"):
+                        # DV_ORDINAL codes from archetypes are local (atNNNN)
+                        if re.match(r"^at\d{4}$", code, flags=re.I):
+                            tid["value"] = "local"
+                        else:
+                            # fall back to local unless you later support externals
+                            tid["value"] = "local"
+                    dc["code_string"] = code
+
+                    # Choose the nearest archetype context (cluster or observation)
+                    arch_id = current_arch_id or self._nearest_archetype_id(ancestors)
+                    # Label from the *same archetype* (avoid cross-archetype collisions)
+                    term = self._term_for_code(code, arch_id)
+                    if term and not sym.get("value"):
+                        sym["value"] = term
+                    # Numeric ordinal from (arch, code) map; safe fallback to global if you keep one
+                    ov = (self._ordinal_by_code.get((arch_id, code))
+                            or self._ordinal_by_code.get(code))
+                    if ov is not None:
+                        cur[last]["value"] = ov
+                    return
+        if isinstance(existing, dict) and isinstance(value, dict):
+            dv_type = existing.get("_type", "")
+            if dv_type == "DV_ORDINAL":
+                # 1) pick code from incoming dict
+                code = (
+                    (value.get("symbol") or {})
+                        .get("defining_code", {})
+                        .get("code_string")
+                ) or value.get("code")
+
+                if code:
+                    sym = existing.setdefault("symbol", {"_type": "DV_CODED_TEXT"})
+                    dc  = sym.setdefault("defining_code", {"_type": "CODE_PHRASE"})
+                    tid = dc.setdefault("terminology_id", {"_type": "TERMINOLOGY_ID"})
+                    if not tid.get("value"):
+                        tid["value"] = "local"
+                    dc["code_string"] = code
+
+                    # ALWAYS override label from OPT (English)
+                    arch_id = current_arch_id or self._nearest_archetype_id(ancestors)
+                    term = self._term_for_code(code, arch_id)
+                    if term:
+                        sym["value"] = term
+
+                    # derive magnitude if not explicitly given
+                    ov = (self._ordinal_by_code.get((arch_id, code)) or self._ordinal_by_code.get(code))
+                    if ov is not None and existing.get("value") in (None, "", []):
+                        existing["value"] = ov
+
+                # 2) if incoming has explicit magnitude, keep it
+                if "value" in value and value["value"] is not None:
+                    try:
+                        existing["value"] = int(value["value"])
+                    except Exception:
+                        existing["value"] = value["value"]
+                return
+
+        cur[last] = value
+
+    
     
     def validate_composition(self, composition: Dict) -> List[str]:
         """Validate a composition against template constraints"""

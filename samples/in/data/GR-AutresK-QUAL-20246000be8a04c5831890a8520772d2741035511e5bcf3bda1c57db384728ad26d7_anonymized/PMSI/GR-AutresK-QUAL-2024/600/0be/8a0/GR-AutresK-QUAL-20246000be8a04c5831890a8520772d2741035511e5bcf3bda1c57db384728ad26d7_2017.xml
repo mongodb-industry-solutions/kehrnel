@@ -1,0 +1,871 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:voc="urn:hl7-org:v3/voc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:hl7-org:v3 CDA.xsd">
+    <realmCode code="FR"/>
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id root="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7_2017"/>
+    <code code="PMSI" codeSystem="IGR" codeSystemName="type" displayName="PMSI"/>
+    <title>Diagnostics et Actes PMSI</title>
+    <effectiveTime value="20220531092136+0000"/>
+    <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
+    <languageCode code="fr-FR"/>
+    <recordTarget>
+        <patientRole>
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20220531092136+0000"/>
+        <assignedAuthor>
+            <id root="IGR"/>
+            <code code="" codeSystem="IGR" codeSystemName="type" displayName="PMSI"/>
+            <assignedAuthoringDevice>
+                <softwareName>Simbad</softwareName>
+            </assignedAuthoringDevice>
+        </assignedAuthor>
+    </author>
+    <custodian>
+        <assignedCustodian>
+            <representedCustodianOrganization>
+                <id root="IGR"/>
+                <name>IGR</name>
+                <telecom nullFlavor="UNK"/>
+                <addr nullFlavor="UNK"/>
+            </representedCustodianOrganization>
+        </assignedCustodian>
+    </custodian>
+    <component>
+        <structuredBody>
+            <periodeExercice dateDebut="2017-01" dateFin="2017-12">
+                <evenementsPMSI acquittementAttendu="oui" version="1.06">
+                    <enteteMessage modeTraitement="réel">
+                        <identifiantMessage>GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7_2017</identifiantMessage>
+                        <dateHeureProduction>20220531092136+0000</dateHeureProduction>
+                        <emetteur>
+                            <agents>
+                                <agent categorie="application">
+                                    <code>Simbad</code>
+                                </agent>
+                            </agents>
+                        </emetteur>
+                        <destinataire>
+                            <agents>
+                                <agent categorie="application">
+                                    <code>CONSORE</code>
+                                </agent>
+                            </agents>
+                        </destinataire>
+                    </enteteMessage>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>101897491</emetteur>
+                                    <recepteur>101897491</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>RH2</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>RH2</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2017-11-12</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2017-11-13</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>C12</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C770</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C051</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z923</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z926</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z864</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>FCFA008</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-11-13 08:15:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>QZMA004</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-11-13 08:15:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>HDFA003</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-11-13 08:15:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                    </actes>
+                                </rum>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>SCC</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>SCC</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2017-11-13</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2017-11-14</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z488</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C12</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C770</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C051</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z923</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z926</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z864</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z930</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZZQX173</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-11-13 12:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>GDQX005</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-11-13 12:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZZQX069</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-11-13 12:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>FCQX010</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-11-13 12:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZZQK002</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-11-13 16:14:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                    </actes>
+                                </rum>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>RH2</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>RH2</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2017-11-14</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2017-12-06</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>C12</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C770</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C051</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z923</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z926</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z864</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z930</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>T856</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Y845</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>J90</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>T8138</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Y838</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>S112</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>B961</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>B9688</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>L021</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>T814</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>B957</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZZQK002</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-11-15 09:28:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZAQA001</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-12-06 15:31:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>HFLH001</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-11-16 15:30:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZBQK002</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-12-04 16:49:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>QZMA009</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-12-06 15:31:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZZQK002</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-11-16 19:27:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>YYYY300</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-11-16 15:30:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZBQK002</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-11-20 09:59:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZAQA001</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-11-29 15:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                    </actes>
+                                </rum>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>SCC</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>SCC</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2017-12-06</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2017-12-07</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z488</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C12</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C770</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C051</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z923</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z926</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z930</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>B961</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>B9688</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZZQK002</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-12-07 10:59:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                    </actes>
+                                </rum>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>MOR</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>MOR</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2017-12-07</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2017-12-18</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>C12</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C770</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C051</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z923</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z926</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z930</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>J950</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>T8138</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Y838</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>T814</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>B956</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>RH2</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>RH2</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2017-12-18</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2018-01-12</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>C12</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C770</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C051</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z923</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z926</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z930</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>J950</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>T8138</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Y838</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>T814</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>B956</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>R508</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>R650</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>J152</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>B950</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>HFCH001</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2018-01-05 09:15:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZBQK002</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-12-30 08:57:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZBQK002</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-12-18 15:33:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZZQK002</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-12-31 13:14:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZBQH001</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2018-01-05 20:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZZQP004</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2018-01-05 20:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>LAQK009</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-12-20 09:45:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZZQP004</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-12-20 09:45:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>YYYY300</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2018-01-05 09:15:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZZQK002</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2018-01-05 15:33:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>101866118</emetteur>
+                                    <recepteur>101866118</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>RH2</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>RH2</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2017-10-19</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2017-10-20</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>C12</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C051</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z923</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z926</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Z864</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>T66</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>Y842</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>L581</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZZQX069</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-10-19 12:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZZQX162</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-10-19 12:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>HEQE002</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-10-19 13:41:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>HDQE001</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2017-10-19 13:41:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                </evenementsPMSI>
+            </periodeExercice>
+        </structuredBody>
+    </component>
+</ClinicalDocument>

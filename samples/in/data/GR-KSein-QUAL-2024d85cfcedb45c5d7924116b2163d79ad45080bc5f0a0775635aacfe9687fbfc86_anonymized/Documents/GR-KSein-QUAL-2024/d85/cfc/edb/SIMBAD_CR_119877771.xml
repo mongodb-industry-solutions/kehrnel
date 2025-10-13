@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_119877771" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM THX ABD PEL</title>
+    <effectiveTime value="20201203000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201203000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur FEKI MKAOUAR Rahma
+ <br/>
+<br/>Destinataire : CTE 050 - SEIN
+ <br/> DR MOKDAD--ADI MERIEM
+ <br/>
+<b>SCANNER THORACO-ABDOMINO-PELVIEN<br/><br/><br/> Dicté par : </b> Docteur Rahma Feki Mkaouar
+ <b><br/>Dicté le : </b> 02/12/2020 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Générique 
+ <br/>
+<b>Ref :</b> 1178566 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : 
+ <b>MKH<br/>Examen N° 9078</b>
+<br/>
+<br/>
+<br/>Examen réalisé le : 02/12/20
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/></b> Patiente de 63 ans, prise en charge dans le cadre de la prise en 
+ <br/>charge d'une récidive hépatique et osseuse d'un cancer du sein droit 
+ <br/>diagnostiqué initialement en 2016, triple négatif.
+ <br/>Evaluation après 2 cycles de Xeloda en 9ème ligne, débuté vers le 
+ <br/>12/10/2020.
+ <br/>
+<br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/></b> Examen réalisé sur un scanner OPTIMA CT660, GENERAL ELECTRIC, mis 
+ <br/>en service le 8 février 2016.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 422272HM5
+ <br/>
+<br/>Réalisation d'une acquisition :
+ <br/>\'a7 Thoracique
+ <br/>\'a7 Abdominale 
+ <br/>\'a7 Pelvienne
+ <br/>
+<br/>Examen réalisé sans injection de produit de contraste
+ <br/>
+<br/>
+<br/>
+<b>PDL : 460.95 mGy.cm<br/><br/></b>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/>Comparativement scanner baseline du 8 octobre 2020 avant le début du <br/>traitement par Xeloda :<br/></b>
+<br/>
+<b>Thorax :</b>
+<br/>Nette majoration en nombre et en taille des nodules pulmonaires et 
+ <br/>aspect franchement de miliaire métastatique.
+ <br/>Majoration de l'épanchement pleural droit avec nette majoration 
+ <br/>également de la prise de contraste de la plèvre.
+ <br/>Apparition d'un épanchement pleural gauche sans prise de contraste de 
+ <br/>la plèvre évidente décelable.
+ <br/>Absence d'apparition d'adénomégalie médiastinohilaire, axillaire ou 
+ <br/>sus-claviculaire de la chaîne mammaire interne.
+ <br/>Absence d'embolie pulmonaire proximale.
+ <br/>
+<b>Abdomen et pelvis</b>
+<br/>Hépatomégalie avec nette majoration de l'atteinte métastatique 
+ <br/>hépatique.
+ <br/>Les veines portes et les veines hépatiques sont perméables, laminée 
+ <br/>par les lésions métastatiques.
+ <br/>Vésicule biliaire alithiasique. Absence de dilatation des voies 
+ <br/>biliaires.
+ <br/>Absence d'apparition de lésion focale suspecte de la rate, du 
+ <br/>pancréas, des reins et des surrénales.
+ <br/>Absence de dilatation des cavités excrétrices rénales de façon 
+ <br/>bilatérale.
+ <br/>Apparition d'un épanchement intrapéritonéal avec épaississement 
+ <br/>nodulaire évoquant de la carcinose péritonéale, par exemple un nodule 
+ <br/>péritonéal postérieur pelvien, image 435, mesurant 10 mm.
+ <br/>Absence d'apparition d'adénomégalie abdominopelvienne.
+ <br/>
+<b>En fenêtre osseuse :</b>
+<br/>Globale stabilité des lésions osseuses secondaires. Absence 
+ <br/>d'apparition d'une fracture tassement ou d'épidurite.
+ <br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/><br/>Franche progression comparativement au scanner du 8 octobre 2020.<br/>Nette majoration de l'atteinte métastatique pulmonaire, pleurale <br/>droite et hépatique.<br/>Apparition de la carcinose péritonéale.<br/><u></u></b>
+<u> <br/><br/></u>
+<br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Rahma FEKI MKAOUAR <br/>Le jeudi 3 décembre 2020 à 10:57 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

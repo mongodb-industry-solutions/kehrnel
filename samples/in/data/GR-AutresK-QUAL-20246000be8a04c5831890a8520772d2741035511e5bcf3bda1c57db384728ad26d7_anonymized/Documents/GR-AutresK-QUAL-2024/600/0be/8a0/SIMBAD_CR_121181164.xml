@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121181164" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>CONSULTATION ORL - Interne ORL</title>
+    <effectiveTime value="20200525000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200525000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>CONSULTATION ORL - INTERNE ORL<br/><br/>Dicté par : </b> Docteur Etienne Dauzier, Interne
+ <b><br/>Dicté le : </b> 11/05/2020 
+ <b><br/>Service : </b> ORL-CONSULTATIONS ORL 
+ <br/>
+<b>Type de document : </b> ORL CC PETITE CHIRURGIE 
+ <br/>
+<b>Ref :</b> 994300 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire : MIGUET</b>
+<b><br/></b>
+<br/>Patient de 58 ans suivi par le docteur GUERLAIN et le Docteur 
+ <br/>BREUSKIN et le Docteur FRRAND pour un carcinome épidermoïde de 
+ <br/>l'oropharynx, l'aspect est négatif traité par radiochimiothérapie en 
+ <br/>2014 suivi d'un rattrape en novembre 2017 et mars 2018 actuellement 
+ <br/>sous CETUXIMAB d'entretien après un problème typex pour une récidive 
+ <br/>latérocervicale bilatérale.
+ <br/>
+<br/>Le patient présente un problème de fistule tumorale latérocervicale 
+ <br/>gauche récidivant. Depuis quelques jours réapparition de la fistule 
+ <br/>avec écoulement sale. 
+ <br/>Pas de fièvre, pas d'abcès localisé, à la nasofibroscopie trachéale 
+ <br/>et nasopharyngé normale, l'examen endobuccale n'a pas de signe 
+ <br/>évolutive.
+ <br/>La pression péri cervicale gauche présente un petit trouble qui est 
+ <br/>prélevé ce jour.
+ <br/>
+<br/>Un petit saignement au décours du soin traité par compression 
+ <br/>spontanément arrêté.
+ <br/>
+<br/>On réalise des évaluations.. Et pansement Algostéril, et on programme 
+ <br/>cette prise en charge avec une infirmière libérale à domicile. Pas 
+ <br/>d'antibiothérapie pour le moment. 
+ <br/>Du fait d'une gêne respiratoire avec un examen trachéale normale, on 
+ <br/>represcrit des aérosols de soin sérum physiologique, de betnéval et 
+ <br/>du cunicorte au patient. 
+ <br/>
+<br/>Le patient sera revu le vendredi 22 mai en consultation en petite 
+ <br/>chirurgie avec le Docteur BREUSKIN.
+ <br/>
+<br/>
+<b>_________________________________________________<br/>Signé électroniquement par Docteur Etienne DAUZIER , Interne<br/>Le mercredi 13 mai 2020 à 15:05</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

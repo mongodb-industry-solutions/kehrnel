@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127537025" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20170904000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170905000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patiente de 60 ans vue ce jour avant le 4ème cycle de XELODA en 
+ <br/>adjuvant dans le cadre de la prise en charge d'un carcinome canalaire 
+ <br/>infiltrant triple négatif du sein droit.
+ <br/>
+<br/>Ce jour la patiente va bien mais présente des effets secondaires en 
+ <br/>rapport avec le XELODA à type de syndrome main pied grade I avec des 
+ <br/>crevasses au niveau des extrémités des doigts, une diarrhée grade I 
+ <br/>pour laquelle elle ne prend pas l'IMODIUM, une asthénie.
+ <br/>La patiente signale une gonalgie gauche depuis 2 semaines.
+ <br/>Pas d'autres arthralgies associées.
+ <br/>Je propose de faire des radio standards du genou.
+ <br/>
+<br/>La patiente a une fracture du 5ème orteil du pied droit pour laquelle 
+ <br/>elle a eu une immobilisation.
+ <br/>Le bilan biologique ce jour est correct, CA 15.3 à 8.
+ <br/>
+<br/>Je rappelle qu'elle poursuivra le XELODA à dose réduite c'est à dire 
+ <br/>3 gr/jour.
+ <br/>
+<u><b><br/>EN PRATIQUE</b></u> :
+ <br/>
+<br/>Poursuite du XELODA.
+ <br/>
+<br/>Prescription d'un scanner TAP.
+ <br/>
+<br/>Je la reverrai en consultation mi octobre à la fin du traitement avec 
+ <br/>les résultats du scanner TAP qu'elle fera à l'hôpital de Thiais.
+ <br/>
+<br/>La patiente verra les résultats de la radiographie du genou avec son 
+ <br/>médecin traitant.
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

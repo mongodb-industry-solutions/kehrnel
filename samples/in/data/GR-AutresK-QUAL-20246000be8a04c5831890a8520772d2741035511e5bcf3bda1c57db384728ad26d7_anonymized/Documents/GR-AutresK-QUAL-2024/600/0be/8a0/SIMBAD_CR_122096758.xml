@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122096758" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation de chirurgie plastique : Dr H. ALKHASHNAM</title>
+    <effectiveTime value="20200103000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200103000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>SERVICE ORL- COMPTE RENDU DE CONSULTATION<br/><br/>Dicté par : </b> Docteur Heba Alkhashnam
+ <b><br/>Dicté le : </b> 19/12/2019 
+ <b><br/>Service : </b> ORL-CONSULTATIONS ORL 
+ <br/>
+<b>Ref :</b> 887519 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : BTO
+ <br/>
+<br/>Patient de 58 ans qui a eu une reconstruction par un lambeau libre 
+ <br/>antéro-latéral de cuisse prélevé à gauche et lambeau pédiculé 
+ <br/>supra-claviculaire par le Dr KOLB et moi-même le 19/03/2018 pour un 
+ <br/>pharyngostome large post-PLT de rattrapage.
+ <br/>
+<br/>Actuellement le patient présente une récidive latéro-cervicale gauche 
+ <br/>nécrotique avec envahissement des tissus mous péri-carotidienne non 
+ <br/>réséquable.
+ <br/>
+<br/>Le patient est actuellement sous chimiothérapie.
+ <br/>Monsieur DA SILVA a été hospitalisé le 10/12 montre un saignement 
+ <br/>muqueux contrôlé par le nasofibroscope par le Dr BREUSKIN.
+ <br/>
+<br/>Il présente ce jour des fistules cutanées cervicales gauches avec 
+ <br/>écoulement.
+ <br/>Les cicatrices sont propres actuellement et nous continuons les 
+ <br/>pansements avec 
+ <br/>l'algostéril humide.
+ <br/>Contrôle en pansement orl dans trois semaines.
+ <br/>
+<br/>
+<br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b> Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>06/01/2020 09:00 ORL LKH PTE CHIR ORL 
+ <br/>08/01/2020 10:35 ORL FRF RV EXTERIEUR TEP scanner Bicetre 
+ <br/> 13:20 ORL BOM BILAN ONCO 
+ <br/> 13:30 RHO BOM HDJ CHIMIO 
+ <br/> 13:35 RHO BOM C HDJ A TRAITER 
+ <br/>14/01/2020 09:10 ORL FRF C ORL FRF 
+ <br/> 10:30 010 OMR RV TEL CSE 
+ <br/>15/01/2020 08:00 RHO BOM HDJ CHIMIO 
+ <br/> 08:05 RHO BOM C HDJ A TRAITER 
+ <br/> 08:15 ORL BOM BILAN ONCO 
+ <br/> 09:15 CAM YGT C RX YGT 
+ <br/>
+<br/>
+<b><br/></b>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Heba ALKHASHNAM <br/>Le jeudi 2 janvier 2020 à 08:19</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

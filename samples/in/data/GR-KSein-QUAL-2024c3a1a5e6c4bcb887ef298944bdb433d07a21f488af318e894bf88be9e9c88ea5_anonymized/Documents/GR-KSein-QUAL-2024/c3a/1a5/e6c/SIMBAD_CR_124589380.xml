@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124589380" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20181218000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181218000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Compte rendu générique de SENOLOGIE<br/><br/>Dicté par : </b> Docteur Meriem Mokdad Adi
+ <b><br/>Dicté le : </b> 17/12/2018 
+ <b><br/>Service : </b> 050-CTE 050 - SEIN 
+ <br/>
+<b>Type de document : </b> 050 CC Générique 
+ <br/>
+<b>Ref :</b> 554952 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : ORC
+ <br/>
+<br/>Patiente vue ce jour en présence de son époux dans le cadre du 
+ <br/>protocole SAFIR02, pour la prise en charge d'une récidive en mars 
+ <br/>2018 d'un cancer du sein gauche diagnostiqué initialement en 2015 
+ <br/>traité à Bergonié par chimiothérapie, chirurgie puis radiothérapie 
+ <br/>au niveau axillaire, CMI et sus claviculaire, triple négatif et 
+ <br/>actuellement en récidive ganglionnaire susclaviculaire et axillaire.
+ <br/>
+<br/>
+<b>Mutation constitutionnelle du gène BRCA1. Mutation confirmée en <br/>septembre.<br/><br/></b> La dernière injection de TAXOL remonte au 12 septembre 2018.
+ <br/>
+<br/>
+<b>Pet scanner réalisé à Antony le 21 septembre </b> qui montre une réponse 
+ <br/>métabolique complète de la récidive ganglionnaire susclaviculaire (il 
+ <br/>persiste une fixation résiduelle qui du fait de son caractère allongé 
+ <br/>est compatible avec une fixation fonctionnelle sur le muscle scalène 
+ <br/>antérieur, à confronter à un scanner diagnostique) et axillaire.
+ <b><br/><br/></b> Randomisation le 11/10 dans le cadre du protocole SAFIR 02 : Bras 
+ <br/>standard avec poursuite du TAXOL à dose réduite( -20%) versus bras 
+ <br/>avec OLAPARIB.
+ <br/>
+<br/>TAXOL à dose réduite(-20%).
+ <br/>
+<br/>
+<u><b>CONSULTATION CE JOUR :</b> <br/></u>
+<br/>PS : 1.
+ <br/>Poids : 85Kg, Taille: 165cm.
+ <br/>Examen clinique : palpation de deux micronodules au niveau de la 
+ <br/>partie interne de la clavicule gauche et au niveau sous-claviculaire 
+ <br/>gauche.
+ <br/>
+<br/>Palpation également d'un micronodule très superficiel au niveau du 
+ <br/>
+<br/>quadrant supéro externe gauche pour lequel je demande une echographie 
+ <br/>+/- cytoponction et une échographie de la paroi thoracique +/- 
+ <br/>cytoponction d'un des nodules sous claviculaires sous échographie.
+ <br/>
+<br/>Pour rappel échographie/mammographie en juillet 2018 à Gustave Roussy 
+ <br/>: absence de lésion suspecte du lambeau, la lésion de 2 cm décrite à 
+ <br/>la palpation dans le quadrant supéro-externe gauche correspond à un 
+ <br/>aspect post-thérapeutique en échographie.
+ <br/>Absence de lésion d'allure évolutive du sein droit.
+ <br/>Les deux creux axillaires sont libres.
+ <br/>Score ACR 2 droit. 
+ <b><br/></b>
+<br/>
+<b>A rdv le 7/01/2019 à Cognac Jay pour lymphoedème gauche.<br/></b>
+<br/>
+<b>Scanner thoraco-abdomino-pelvien </b> réalisé le 4 octobre : pas de 
+ <br/>lésion suspecte de récidive aux étages thoraciques et de pelvis.
+ <br/>
+<br/>
+<b>Bilan biologique : normal.<br/></b>
+<br/>
+<b> Echographie cardiaque </b> réalisée en ville le 4 octobre : normale avec 
+ <br/>une FEVG à 70 %.
+ <br/>
+<br/>
+<b> Dernier scanner réalisé fin novembre 2018 mais ne l'a pas apporté : <br/>selon la patiente, pas de lésion visible.<br/>La patiente me le transmettra par mail. <br/><br/>Pour rappel la patiente a eu deux biopsies courant mai 2018 dans le <br/>cadre du protocole SAFIR02 au niveau du ganglion susclaviculaire <br/>gauche dont une était non contributive.<br/><br/>Je propose de faire un TEP scanner dès que possible.<br/><br/>CA15-3 demandé ce jour normal à 15.<br/><br/><u>EN PRATIQUE<br/><br/></u></b> Poursuite du TAXOL à dose réduite ce jour sous couvert de granocyte 
+ <br/>34, 3 semaines sur 4 
+ <b>TAXOL 120mg.<br/><br/>Je la reverrai en consultation avec les résultats du pet scanner et <br/>des prélèvements cytologiques.<br/></b>
+<br/>
+<br/>
+<b><br/>_________________________________________________<br/>Signé électroniquement par Docteur Meriem MOKDAD ADI <br/>Le lundi 17 décembre 2018 à 12:37 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

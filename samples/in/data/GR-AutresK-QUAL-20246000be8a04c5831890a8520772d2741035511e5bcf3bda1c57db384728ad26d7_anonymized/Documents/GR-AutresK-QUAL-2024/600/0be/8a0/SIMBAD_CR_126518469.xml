@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126518469" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM THORAX O</title>
+    <effectiveTime value="20180222000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180222000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Destinataire : MORBIHAN
+ <br/> DR BREUSKIN INGRID
+ <br/>
+<b><br/>Dicté par : </b> Docteur Marwa Gargouri, Interne et Docteur GARCIA 
+ <br/>GABRIEL
+ <b><br/>Dicté le : </b> 21/02/2018 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Générique 
+ <br/>
+<b>Ref :</b> 364659 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : LIE
+ <br/>Examen n°1193
+ <br/>
+<br/>
+<u><b>SCANNER THORACIQUE<br/> </b></u>
+<br/>Examen réalisé le 21.02.2018
+ <br/>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/></b> Surveillance d'une lésion parenchymateuse pulmonaire gauche d'allure 
+ <br/>infectieuse décelée sur le scanner du 5 janvier 2017 chez un patient 
+ <br/>de 56 ans opéré d'une pharyngolaryngectomie totale pour un carcinome 
+ <br/>épidermoïde du sinus piriforme.
+ <br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/></b> Examen réalisé sur un scanner DISCOVERY 750 HD, GENERAL ELECTRIC, 
+ <br/>mis en service en septembre 2012.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 429098CN7
+ <br/>
+<br/>Réalisation d'une acquisition :
+ <br/>\'a7 Thoracique
+ <br/>Examen réalisé sans injection de produit de contraste
+ <br/>
+<br/>
+<b>PDL : 81 mGy.cm</b>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> <br/></b>
+<br/>
+<b> Comparativement au scanner du 5 janvier 2018</b>
+<br/>
+<br/>Régression quasi-totale de la condensation parenchymateuse ainsi que 
+ <br/>des micronodulaires bronchiolo alvéolaires du lobe inférieur gauche , 
+ <br/>il persiste un discret épaississement des parois bronchiques sans des 
+ <br/>lésion évolutive évidente.
+ <br/>Régression partielle des condensations parenchymateuses 
+ <br/>postérobasales droites.
+ <br/>Pas d'épanchement pleuropéricardique.
+ <br/>Pas d'adénomégalie thoracique dans les limites d'un examen réalisé 
+ <br/>sans injection de produit de contraste. 
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> <br/><br/></b> Régression quasi totale des lésions de broncho-pneumopathie 
+ <br/>infectieuse décrite sur le scanner du 5 janvier 2018.
+ <br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Gabriel GARCIA <br/>Le mercredi 21 février 2018 à 14:50 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

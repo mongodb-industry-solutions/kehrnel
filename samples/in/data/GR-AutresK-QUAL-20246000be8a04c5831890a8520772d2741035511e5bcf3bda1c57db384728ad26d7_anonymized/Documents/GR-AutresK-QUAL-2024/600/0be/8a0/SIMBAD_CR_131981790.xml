@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_131981790" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ORL - Dr Stéphane TEMAM</title>
+    <effectiveTime value="20140707000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20140710000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patient âgé de 53 ans adressé par le Dr CHEDDADI de Villejuif pour 
+ <br/>une tumeur oropharyngée vélaire avec adénopathies cervicales.
+ <br/>
+<u><b><br/>Antécédents :</b></u>
+<br/>Notion d'épilepsie depuis une dizaine d'année. A été stable pendant 
+ <br/>deux ans mais a fait une nouvelle crise récente.
+ <br/>A eu un scanner cérébral qui a été jugé rassurant, un 
+ <br/>électro-encéphalogramme a été recommandé.
+ <br/>Psoriasis.
+ <br/>Maladie Dupuytren bilatérale sévère invalidante qui justifie une 
+ <br/>allocation adulte handicapé probablement liée à son intoxication 
+ <br/>alcoollique.
+ <br/>
+<br/>Traitement médical : GARDESIL, LEXOMIL
+ <br/>
+<br/>- familiaux de cancer :
+ <br/>Cancer du poumon chez un fère.
+ <br/>
+<br/>
+<u><b>Mode de vie :</b></u>
+<br/>Ancien maçon. Allocation adulte handicapé.
+ <br/>Sa femme travaille.
+ <br/>Deux enfants de 26 et 27 ans. 
+ <br/>Vit en appartement à Villejuif. Patient d'origine portugaise en 
+ <br/>France depuis 25 ans.
+ <br/>Tabagisme chronique sévère non sevré depuis l'âge de 16 ans au moins 
+ <br/>un paquet de cigarette par jour. 38 paquets/année.
+ <br/>Alcoolisme chronique très sévère environ deux bouteilles de vin par 
+ <br/>jour, bière et pastis plus occasionnelle. Aurait déjà été pris en 
+ <br/>charge par une psychologue pour le sevrage sans succès.
+ <br/>
+<br/>
+<u><b>Histoire de la maladie :</b></u>
+<br/>Gène pharyngée depuis six mois puis apparition d'odynodysphagie et 
+ <br/>d'otalgies droite avec adénopathies sous digastrique droite qui 
+ <br/>l'amènent à consulter.
+ <br/>Pas de dysphonie.
+ <br/>Perte de poids minime de 66 à 64 kg habillé ce jour pour 1m65.
+ <br/>Le patient voit le Dr CHEDDADI qui retrouve une lésion vélaire et 
+ <br/>nous l'adresse pour poursuite de la prise en charge.
+ <br/>
+<br/>
+<u><b>A l'examen :</b></u>
+<br/>Le patient fait plus que son âge, un peu fatigué.
+ <br/>Maladie de Dupuytren sévère avec rétraction tendineuse bilatérale 
+ <br/>malgré la chirurgie déjà réalisée de chaque côté.
+ <br/>Etat buccodentaire médiocre.
+ <br/>Protraction linguale normale.
+ <br/>Lésion tumorale finement bourgeonnante oropharyngée prenant la 
+ <br/>quasi-totalité du voile prédominant à droite où elle descend sur le 
+ <br/>pilier postérieur associé à une leucoplasie au niveau du pilier 
+ <br/>antérieur droit.
+ <br/>Le voile reste bien mobile.
+ <br/>En nasofibroscopie, on note que la tumeur remonte sur la paroi 
+ <br/>postérieur du voile mais elle respecte le cavum.
+ <br/>Aspect érythroplasique diffus oro-hypopharyngé.
+ <br/>Le sinus piriforme gauche s'ouvre un peu moins bien sans lésion 
+ <br/>tumorale clairement individualisable, à contrôler lors de 
+ <br/>l'endoscopie.
+ <br/>Pas d'anomalie endolaryngée.
+ <br/>Mobilité normale des cordes vocales.
+ <br/>Au niveau cervical, volumineuses adénopathies 4 x 2 mobile sous 
+ <br/>digastrique droite, adénopathie profonde 2 x 1 sous digastrique 
+ <br/>gauche.
+ <br/>Les creux sus claviculaires sont libres.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3> :</b></u>
+<br/>Probable carcinome oropharyngé vélaire débutant associé à des 
+ <br/>adénopathies cervicales bilatérales hautes chez un patient de 53 ans 
+ <br/>ayant une intoxication alcoolo-tabagique sévère non sevrée et 
+ <br/>d'autres co-morbidités peu significatives.
+ <br/>Etat général correct. Dénutrition minime, douleurs.
+ <br/>
+<br/>
+<b>Je complète le bilan :</b>
+<br/> - consultation d'anesthésie
+ <br/> - pan endoscopie qui pourrait être réalisée en ambulatoire
+ <br/> - consultation odonto avec panoramique dentaire
+ <br/> - IRM ORL
+ <br/> - scanner cervico-thoracique
+ <br/> - Tepscanner
+ <br/> - consultation addictologie
+ <br/>
+<br/>J'explique longuement au patient la nécessité d'un sevrage 
+ <br/>alcoolo-tabagique complet et définitif et il accepte une prise en 
+ <br/>charge.
+ <br/> - RCP ORL pour décision thérapeutique.
+ <br/> - fibroscopie digestive haute si possible dans le même temps que 
+ <br/>l'endoscopie ORL
+ <br/> - consultation nutrition sans urgence
+ <br/>
+<br/>
+<u><b>Orientation thérapeutique :</b></u>
+<br/>Le patient devrait pouvoir bénéficier d'une radiothérapie avec 
+ <br/>chimiothérapie concomittante si la maladie est localisée.
+ <br/>
+<br/>Prescription d'EFFERALGAN CODEINE.
+ <br/>
+<br/>Signature CRB.
+ <br/>Questionnaires HADS
+ <br/>Patient potentiellement éligible pour une étude de radiothérapie, 
+ <br/>peut être le protocole DEBIO car très probablement P16 négatif.
+ <br/>Il faudra être très attentif par rapport au sevrage alcoolo-tabagique 
+ <br/>et à l'état nutritionnel.
+ <br/>
+<br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b> Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>11/07/2014 08:50 ORL STM C ANES 
+ <br/> 10:15 ORL STM TDM ORL NM 
+ <br/> 10:15 ORL STM TDM THORAX O 
+ <br/>18/07/2014 07:30 ORL STM ADM CHIR AMB AG 
+ <br/> 08:30 ORL STM PBO SEG CCF 
+ <br/> 08:30 ORL STM PBO CHIR STM 
+ <br/> 10:50 ORL STM ENDOSCOPIE ORL 
+ <br/>24/07/2014 14:30 ORL STM C ORL CTE 
+ <br/> 15:00 ORL STM C NUTR BRD 
+ <br/>25/07/2014 14:00 ORL STM IRM ORL NM 
+ <br/> 16:00 ORL STM ACC UPO OBI 
+ <br/>05/08/2014 10:00 310 TPT C ODONTO TPT 
+ <br/> 10:20 310 TPT C ODONTO TPT 
+ <br/> 10:40 310 TPT C ODONTO TPT 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

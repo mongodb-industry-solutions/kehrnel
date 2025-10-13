@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_119458245" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="51969-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Genetic analysis summary report"/>
+    <title>BMTS : CR N°254575 DEFGEN</title>
+    <effectiveTime value="20210105000000+0000"/>
+    <confidentialityCode code="51969-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Genetic analysis summary report"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20210128000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Praticiens Spécialistes:<br/></p>
+<p>Dr E.ROULEAU <br/>Tel : 0142114408 <br/>Etienne.rouleau@gustaveroussy.fr<br/></p>
+<p>Dr S. COTTERET <br/>Tel : 0142114145 <br/>Sophie.cotteret@gustaveroussy.fr<br/></p>
+<p>Dr L. LACROIX <br/>Tel : 0142114035 <br/>Ludovic.lacroix@gustaveroussy.fr </p>
+<p>Assistante Médicale : <br/>Mme Martine CHAIGNE <br/>Mme Elodie REMY<br/></p>
+<p>Tel : 0142114779 <br/>Fax : 0142114401 <br/></p>
+<p>Service de Génétique Des Tumeurs<br/></p>
+<p>Secteur Tumeurs Solides <br/>Chef de service : Dr E. ROULEAU </p>
+<p><br/></p>
+<p>Réception des prélèvements :<br/></p>
+<p>Tel : 0142114948 </p>
+<p></p>
+<br/>
+<p>GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94805 VILLEJUIF Cedex - France - Tél : 33 (0)1 42 11 42 11 - Fax : 33 (0)1 42 11 53 00 <br/>Centre de lutte contre le cancer autorisé à recevoir les dons et legs - ordonnance du 1 </p>
+<p>er octobre 1945 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Dr Natacha JOYON <br/>Pathologie morphologique <br/>GUSTAVE ROUSSY </p>
+<p>NIP : XXXXXX </p>
+<p>Nom : XXXXXX </p>
+<p>Prénom : XXXXXX </p>
+<p>Nom de naissance : XXXXXX </p>
+<p>Date de naissance : XXXXXX <br/>Sexe : F<br/></p>
+<p>ANALYSES MOLECULAIRES DES ALTERATIONS SOMATIQUES<br/></p>
+<p>Renseignements cliniques et pathologiques : </p>
+<p>Diagnostic : Carcinome mammaire triple négatif </p>
+<p>Localisation : Ganglion claviculaire gauche </p>
+<p>Pathologie : Cancer du sein <br/>Evénement : Métastase </p>
+<p>N° histologique - N° du bloc : 20H11310-1 </p>
+<p>Date du prélèvement : 31/12/2020 </p>
+<p>Date de réception : 05/01/2021 </p>
+<p>Pathologiste : Dr JOYON Natacha </p>
+<p>Date de la prescription : 04/01/2021<br/>Renseignements concernant le prélèvement : <br/>Type de prélèvement : Biopsie <br/>Pourcentage de cellules tumorales : 10 % </p>
+<p>Nature du Matériel : Copeaux </p>
+<p>Référence du prélèvement analysé : COP2100044_ADN_02.02-723457 </p>
+<p>Résultats :<br/></p>
+<p>Analyse non contributive. <br/></p>
+<p><h3>Conclusion</h3> : </p>
+<p> Echec de l'analyse : la quantité et la qualité de l'ADN sont insuffisantes. <br/>Une analyse est en cours sur un autre prélèvement. <br/></p>
+<p>Villejuif, le : 26/01/2021<br/></p>
+<p>Dr COTTERET Sophie <br/>Compte-rendu validé et signé électroniquement. </p>
+<p></p>
+<p></p>
+<p>DEPARTEMENT DE BIOLOGIE ET PATHOLOGIE MEDICALES <br/>SERVICE DE GENETIQUE DES TUMEURS </p>
+<p></p>
+<br/>
+<p> XXXXXX Prenom COP2100044_ADN_02.02 Validé le : 26/01/2021 </p>
+<p>Méthode analytique </p>
+<p>Série FT : 5072 <br/>Technique utilisée : Méthode analytique : <br/>Analyse réalisée par séquençage de nouvelle génération (NGS) avec le kit CE-IVD Sentosa®SQ NSCLC Panel (Vela <br/>Diagnostics) sur la technologie PGM (Thermofisher) couvrant dans 11 gènes les principales mutations dans les exons 18,19,20&21 du gène EGFR (NM_005228.) ; les exons 2,3,4 du gène KRAS (NM_033360) ; les exons 2,3,4 du gène <br/>NRAS (NM_002524) ; les exons 11&15 du gène BRAF (NM_004333) ; les exons 11,13&17du gène KIT (NM_000222) ; les exons 10&21 du gène PIK3CA (NM_006218.2) ; l'exon 3 du gène CTNNB1 (béta-catenine, NM_001904) ; les exons 7,9&14 du gène FGFR3 (NM_000142) ; les exons 5,7&9 du gène PTEN (NM_000314) ; les exons 5,7&8 du gène TP53 (NM_000546) ainsi que l'exon 16 du gène RET (NM_020975). <br/>Limite de détection a été évaluée pour 113 variants à 5% de fréquence allélique avec apport minimal de 5ng d'ADN par réaction. <br/>Non-conformité n'impactant pas la qualité du résultat : NON </p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

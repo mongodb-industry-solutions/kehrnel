@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123634902" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ORL - Dr Ingrid BREUSKIN</title>
+    <effectiveTime value="20190510000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190510000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>SERVICE ORL- COMPTE RENDU DE CONSULTATION<br/><br/>Dicté par : </b> Docteur Ingrid Breuskin
+ <b><br/>Dicté le : </b> 10/05/2019 
+ <b><br/>Service : </b> ORL-CONSULTATIONS ORL 
+ <br/>
+<b>Type de document : </b> ORL CC STM 
+ <br/>
+<b>Ref :</b> 690835 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : XCF
+ <br/>
+<br/>
+<br/>
+<u><b>Rappel</b></u> :
+ <br/>
+<br/>
+<b> Antécédent de carcinome épidermoïde de l'oropharynx bilatéral traité <br/>par radiochimiothérapie en octobre 2014.<br/>Deuxième localisation de carcinome épidermoïde hypopharyngé droit <br/>traité par pharyngolaryngectomie totale de rattrapage et lambeau de <br/>grand pectoral le 13/11/2017.<br/>Problématique de pharyngostome ayant nécessité de multiples <br/>interventions.<br/>In fine reprise de cervicotomie avec rétablissement de la continuité <br/>digestive avec lambeau antéro-latéral de cuisse le 19/03/2018.<br/></b>
+<br/>Consultation à 1 an et demi de la chirurgie du 2ème cancer.
+ <br/>
+<br/>Consultation à 1 an de la reprise pour rétablissement de la 
+ <br/>continuité digestive.
+ <br/>
+<br/>Dans l'ensemble le patient va bien.
+ <br/>Un peu de douleur et de raideur cervicale pour lesquelles il poursuit 
+ <br/>de la kinésithérapie 2 fois par semaine.
+ <br/>Rapporte des crampes avec une douleur élective lors de certain 
+ <br/>mouvement ou lors de certain exercice de phonation.
+ <br/>
+<br/>Voix oesophagienne imparfaitement acquise. Continue une rééducation 
+ <br/>orthophonique régulière.
+ <br/>
+<br/>D'un point de vue alimentation, s'alimente per os en régime 
+ <br/>quasi-normal.
+ <br/>
+<br/>
+<u><b>A l'examen clinique</b></u> :
+ <br/>Patient en état général conservé.
+ <br/>OMS : 1.
+ <br/>Poids : 72 kg.
+ <br/>
+<br/>
+<u>Palpation cervicale</u> : fibrose modérée surtout postérieure. Pas de 
+ <br/>tuméfaction suspecte.
+ <br/>Bel aspect du trachéostome pour lequel le patient utilise toujours un 
+ <br/>cytube. Je lui explique qu'il ne pourra le mettre que la nuit mais 
+ <br/>préfère le conserver de façon permanente.
+ <br/>Pas d'anomalie à l'inspection de la cavité buccale et de l'oropharynx.
+ <br/>
+<br/>
+<u>Nasofibroscopie</u> : bel aspect de l'entonnoir pharyngé et du lambeau. 
+ <br/>Stase salivaire. Pas de lésion.
+ <br/>
+<u>Fibroscopie via le trachéostome </u>: bel aspect de la muqueuse trachéale 
+ <br/>jusqu'à la carène.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <b><br/></b> Examen oncologique rassurant à 1 an et demi d'une 
+ <br/>pharyngo-laryngectomie totale de rattrapage.
+ <br/>
+<br/>Je reverrai le patient en consultation dans 4 mois avec un nouveau 
+ <br/>scanner thoracique de dépistage (ordonnance remise).
+ <br/>
+<br/>Je demande à décaler le rendez-vous avec le Dr TAO du mois de 
+ <br/>novembre 2019 au mois de janvier 2020.
+ <br/>
+<br/>Prescription de GARDENAL et de LEVOTHYROX 25 μg/j.
+ <br/>
+<br/>
+<br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b> Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>14/05/2019 11:30 010 IBN ORTHOPHONIE GYW 
+ <br/>21/05/2019 11:00 010 IBN ORTHOPHONIE GYW 
+ <br/>28/05/2019 10:30 010 IBN ORTHOPHONIE GYW 
+ <br/>06/06/2019 10:45 ORL LMI C ORL LMI 
+ <br/>11/06/2019 11:30 010 IBN ORTHOPHONIE GYW 
+ <br/>18/06/2019 11:30 010 IBN ORTHOPHONIE GYW 
+ <br/>25/06/2019 11:30 010 IBN ORTHOPHONIE GYW 
+ <br/>02/07/2019 11:30 010 IBN ORTHOPHONIE GYW 
+ <br/>27/09/2019 10:40 ORL IBN C ORL IBN 
+ <br/>19/12/2019 09:50 ORL YBS C PLAS YBS 
+ <br/>15/01/2020 09:15 CAM YGT C RX YGT 
+ <br/>15/05/2020 08:50 310 GSN C ODONTO GSN 
+ <br/> 09:00 310 GSN RD PANORAMIQUE 
+ <br/>
+<br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Ingrid BREUSKIN <br/>Le vendredi 10 mai 2019 à 15:10</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

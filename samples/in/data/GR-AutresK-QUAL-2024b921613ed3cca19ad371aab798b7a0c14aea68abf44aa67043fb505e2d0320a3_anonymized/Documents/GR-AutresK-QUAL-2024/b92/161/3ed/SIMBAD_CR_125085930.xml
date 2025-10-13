@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125085930" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°18C02421 2677067 Dr Khadija CHERIF</title>
+    <effectiveTime value="20181004000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181004000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<br/>COMPTE RENDU DE CYTOPATHOLOGIE 
+ <br/>
+<br/>LAVAGE BRONCHIOLO-ALVEOLAIRE
+ <br/>
+<br/>RENSEIGNEMENTS CLINIQUES 
+ <br/>Syndrome myélodysplasique.
+ <br/>Diagnostic présumé : inhalation
+ <br/>
+<br/>TOPOGRAPHIE
+ <br/>Région du poumon.
+ <br/>
+<br/>TECHNIQUE
+ <br/>Heure d'arrivée au laboratoire : 17h40.
+ <br/>12,5 ml de liquide trouble, cytocentrifugé.
+ <br/>- Cellularité : 53 x 103 cellules par ml.
+ <br/>- Présence de contamination bronchique.
+ <br/>- Absence de contamination sanguine.
+ <br/>2 lames(s) colorée(s) au MGG.
+ <br/>2 lame(s) colorée(s) au Papanicolaou.
+ <br/>Techniques complémentaires : 
+ <br/>- coloration(s) spéciale(s) : Perls 
+ <br/>
+<br/>INTERPRETATION
+ <br/>Le matériel prélevé est quantitativement et qualitativement satisfaisant. 
+ <br/>Formule cellulaire établie sur 100 éléments 
+ <br/> - Macrophages 98 % 
+ <br/>- Lymphocytes 2 % 
+ <br/>- Polynucléaires neutrophiles 0 % 
+ <br/>- Polynucléaires éosinophiles 0 % 
+ <br/>- Mastocytes 0 % 
+ <br/>- Sidérophages 0 % 
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>CONCLUSION
+ <br/>
+<br/>LAVAGE BRONCHIOLO-ALVEOLAIRE
+ <br/>Topographie : Région du poumon
+ <br/>Prélèvement satisfaisant pour le diagnostic.
+ <br/>Lavage broncho-alvéolaire peu cellulaire (53.000 cellules/ml), à prédominance macrophagique, avec de nombreuses cellules bronchiques (contamination).
+ <br/>Le score de Gold est évalué à 18.
+ <br/>
+<br/>
+<br/>RCRP0N20--RE 
+ <br/>
+<br/> Dr Khadija CHERIF 
+ <br/> Praticien 
+ <br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

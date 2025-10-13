@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123474251" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>DEPARTEMENT DE MEDECINE - SERVICE GARD</title>
+    <effectiveTime value="20190605000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190605000000+0000"/>
+        <assignedAuthor>
+            <code code="GAR/182" displayName="GARD"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>DEPARTEMENT DE MEDECINE ONCOLOGIQUE - HOSPITALISATION GARD<br/><br/> Dicté par : </b> Docteur Clémence Basse, Interne
+ <b><br/>Dicté le : </b> 16/05/2019 
+ <b><br/>Service : </b> GAR-GARD 
+ <br/>
+<b>Type de document : </b> GAR RH CHIMIO 
+ <br/>
+<b>Ref :</b> 696365 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : Valérie PASQUIET/a
+ <br/>
+<u><b><br/>Interne</b></u> : Clémence BASSE
+ <br/>
+<br/>
+<u><b>HOSPITALISATION SERVICE GARD DU 16 AU 17 MAI 2019<br/></b></u>
+<br/>Mme XXXXXX, 66 ans, est hospitalisée pour la réalisation de la 6ème 
+ <br/>cure de chimiothérapie de type CARBOPLATINE/GEMZAR/AVASTIN dans le 
+ <br/>cadre du protocole ATALANTE pour une 1ère rechute d'un 
+ <br/>adénocarcinome séreux pelvien d'origine ovarienne à composante mixte 
+ <br/>de haut grade jamais réséqué, PLATINE sensible.
+ <br/>
+<u><b><br/></b></u>
+<b>Profil moléculaire</b> : BRCA1 et BRCA2 sauvages en constitutionnel et 
+ <br/>somatique.
+ <br/>
+<b>Protocole signé</b> : ATALANTE.
+ <u><b><br/><br/>Médecin référent</b></u> : Docteur Emeline COLOMBA
+ <br/>
+<br/>
+<u><b>ANTECEDENTS / PATHOLOGIES ASSOCIEES<br/></b></u>
+<br/>- Appendicectomie.
+ <br/>- Thrombose MID diagnostiqué en février 2017, sous anticoagulant.
+ <br/>- Pas d'allergie.
+ <br/>- Pas d'intoxication éthylo-tabagique.
+ <br/>
+<br/>
+<u><b>TRAITEMENT PERSONNEL<br/></b></u>
+<br/>- INNOHEP 0.5 ml (thrombose de la veine saphène interne étendue 
+ <br/>jusqu'à la fémorale commune à la découverte de la pathologie en 
+ <br/>février 2017)
+ <br/>- PRIMPERAN si besoin
+ <br/>- KYTRIL
+ <br/>
+<br/>
+<u><b>INTERCURE<br/></b></u>
+<br/>Pour rappel, au C1 J8, la patiente a présenté une toxicité 
+ <br/>hématologique sur les PNN et l'hémoglobine.
+ <br/>Au C2 J1 la patiente a présenté dans les 48 heures suivants la 
+ <br/>perfusion du CARBOPLATINE une éruption cutanée diffuse, spontanément 
+ <br/>résolutive.
+ <br/>Au C3 J1, à la fin de la perfusion de CARBOPLATINE, la patiente a 
+ <br/>présenté une hypothermie et une éruption cutanée motivant l'arrêt de 
+ <br/>la perfusion.
+ <br/>Lors de la 4ème cure, après un protocole de réintroduction avec 
+ <br/>prémédication, la patiente a pu recevoir l'intégralité de sa 
+ <br/>chimiothérapie.
+ <br/>La toxicité hématologique a motivé l'arrêt du J8 de GEMZAR.
+ <br/>La dermotoxicité du CARBOPLATINE a motivé une diminution des doses.
+ <br/>La patiente a été ponctionnée pour son ascite le 27/04/2019, ce qui a 
+ <br/>permis de retirer 4 litres. Habituellement la patiente est ponctionnée 
+ <br/>toute les 5-6 semaines.
+ <br/>
+<br/>Asthénie grade II.
+ <br/>Nausées grade I.
+ <br/>Alopécie grade I.
+ <br/>Transit : constipation grade I.
+ <br/>Pas de toxicité hématologique notable.
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE<br/></b></u>
+<br/>OMS : 1.
+ <br/>Poids initial : 64 kg
+ <br/>Poids actuel : 62 kg Taille : 1m64 SC : 1.67 m2
+ <br/>TA : 141/91 Pouls : 101 bpm
+ <br/>Température : 37°2
+ <br/>Saturation : 99 % AA
+ <br/>
+<br/>Prise en charge nutritionnelle : non.
+ <br/>Syndrome douloureux : non. EVA d'entrée 0/10.
+ <br/>
+<br/>Auscultation pulmonaire : murmure vésiculaire bilatéral et symétrique.
+ <br/>Auscultation cardiaque : bruits du coeur réguliers, pas de souffle, 
+ <br/>pas de bruit surajouté.
+ <br/>Mollets souples, pas de signe de phlébite. Pas de signe 
+ <br/>d'insuffisance cardiaque droite ni gauche.
+ <br/>Pas d'OMI.
+ <br/>Abdomen : souple, sensible dans son ensemble, volumineux avec 
+ <br/>présence d'ascite de moyenne abondance.
+ <br/>Aires ganglionnaires : libres.
+ <br/>Examen neurologique : sans particularité.
+ <br/>Examen du PAC : propre.
+ <br/>
+<br/>
+<u><b>EXAMENS COMPLEMENTAIRES<br/></b></u>
+<br/>- NFS : leucocytes à 9 180/mm3, PNN à 6 200/mm3, Hb à 11.4 g/dl, 
+ <br/>plaquettes à 492 000/mm3
+ <br/>
+<br/>- Créatinine à 67 μmol/l, 
+ <br/>Débit de filtration glomérulaire (MDRD) 77 ml/mn
+ <br/>
+<br/>- Ionogramme sanguin : sodium à 138 mmo/l, potassium à 4.5 mmol/l, 
+ <br/>calcium corrigé à 2.65 mmol/l, 
+ <br/>
+<br/>- Bilan hépatique : PAL à 122 UI/L, ASAT à 19 UI/L, ALAT à 16 UI/L, 
+ <br/>GGT à 31 UI/L, - Marqueurs :
+ <br/>* CA 125 à 1 191 U/mL (920 le 23/04/2019)
+ <br/>
+<u><b><br/>EN PRATIQUE<br/></b></u>
+<br/>Réalisation de la 6ème cure de chimiothérapie à partir du 16/05/2019 
+ <br/>associant :
+ <br/>
+<br/>* BEVACIZUMAB 15 mg/kg soit 930 mg DT le 16/05/2019
+ <br/>* ATEZOLIZUMAB ou placébo 1 200 mg DT le 16/05/2019
+ <br/>* CARBOPLATINE AUC 4 300 mg DT le 17/05/2019
+ <br/>* GEMZAR 1000 mg/m2 soit 1600 mg DT le 17/05/2019
+ <br/>
+<br/>J1 = J21
+ <br/>
+<br/>Tolérance : Bonne tolérance
+ <br/>
+<br/>
+<u><b>Prescriptions de sortie</b></u> :
+ <br/>- INNOHEP
+ <br/>- PRIMPERAN
+ <br/>- KYTRIL
+ <br/>
+<br/>Ponction d'ascite en HDJ le 24 mai 2019.
+ <br/>Sera revu en consultation le 23 mai 2019 avec le Dr COLOMBA.
+ <br/>Sera réhospitalisée le 5 juin 2019 pour la 7ème cure avec le 
+ <br/>protocole de prémédication.
+ <br/>
+<br/>La patiente quitte le service Gard le 17 mai 2019
+ <br/>
+<br/> Prise en charge palliative NON
+ <br/>
+<br/>
+<b>EVALUATION DE LA CHARGE EN SOINS</b>
+<br/>* Ponction à visée symptomatique NON
+ <br/>* Adaptation du traitement antalgique NON
+ <br/>* Irradiation antalgique NON
+ <br/>* Occlusion intestinale NON
+ <br/>* Transfusion sanguine NON
+ <br/>* Prise en charge de la détresse respiratoire 
+ <br/>Avec désaturation <90% AA NON
+ <br/>* Traitement des divers symptômes vecteurs d'inconfort 
+ <br/>(toux, prurit, nausées, vomissements, anxiété, 
+ <br/>dépression, troubles du sommeil, déshydratation,...) NON
+ <br/>* Soins de nursing OUI 
+ <br/>* Nutrition 
+ <br/> - déjà sous CNO, nutrition entérale/parentérale NON
+ <br/> - mise en route CNO/nutrition entérale/parentale NON
+ <br/>
+<br/>
+<b>PRISE EN CHARGE MULTI-DISCIPLINAIRE<br/></b> * Prise en charge de l'EMASP NON
+ <br/>* Cs CETD (douleur, sophrologie, auriculothérapie) NON
+ <br/>* Cs onco-psychologie 
+ <br/>NON
+ <br/>* Prise en charge sociale NON
+ <br/>* Soins de kinésithérapie NON
+ <br/>* cs diététicienne ou nutritionniste NON
+ <br/>
+<br/>
+<b>MODE DE SORTIE </b>
+<br/>* HAD Santé Service NON
+ <br/>* HAD province NON
+ <br/>* IDE libérale NON
+ <br/>
+<br/>
+<b><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Clémence BASSE <br/>Le mercredi 5 juin 2019 à 10:45 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

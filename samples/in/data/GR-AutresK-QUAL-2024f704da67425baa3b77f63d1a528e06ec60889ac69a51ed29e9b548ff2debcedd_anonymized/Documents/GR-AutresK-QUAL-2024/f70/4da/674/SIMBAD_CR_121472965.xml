@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121472965" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>RADIODIAG RD THORAX RAP</title>
+    <effectiveTime value="20200402000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200402000000+0000"/>
+        <assignedAuthor>
+            <code code="260/45" displayName="RADIODIAGNOSTIC"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur BOURDAIS REMI
+ <br/>
+<br/>Destinataire : GARD
+ <br/> DR INTERNE
+ <br/>
+<b><br/><br/>Dicté par : </b> Docteur Rémi Bourdais, Interne
+ <b><br/>Dicté le : </b> 30/03/2020 
+ <b><br/>Service : </b> 260-RADIODIAGNOSTIC RX 
+ <br/>
+<b>Type de document : </b> 260 CR Générique 
+ <br/>
+<b>Ref :</b> 970023 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________ 
+ <br/>
+<br/>
+<b>Secrétaire</b> : EDG
+ <br/>
+<br/>
+<br/>
+<br/>
+<b>DATE DE L'EXAMEN : 27.3.20<br/><br/><br/> <u>Radiographie pulmonaire de face et profil <br/> </u><br/></b>
+<br/>
+<br/>
+<u><b>INDICATION<br/><br/></b></u> Patient de 67 ans suivi pour un carcinome ovarien métastatique 
+ <br/>pleural. Exploration d'une hypoxémie. 
+ <br/>
+<br/>
+<u><b>RESULTAT<br/><br/></b></u> Epanchement pleural bilatéral prédominant à droite.
+ <br/>Opacités réticulaires droites interstitielles.
+ <br/>Absence de foyer de condensation. 
+ <br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Rémi BOURDAIS <br/>Le lundi 30 mars 2020 à 14:47 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

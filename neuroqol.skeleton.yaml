@@ -1,0 +1,83 @@
+_options:
+  prune_empty: true
+/name/value:
+  from: ''
+/category:
+  code: ''
+  term: ''
+/context/start_time/value:
+  from: ''
+/context/end_time/value:
+  from: ''
+/context/setting:
+  code: ''
+  term: ''
+/context/other_context/name/value:
+  from: ''
+/context/other_context/items[openEHR-EHR-CLUSTER.document_metadata.v0]/name/value:
+  from: ''
+/context/other_context/items[openEHR-EHR-CLUSTER.document_metadata.v0]/items[at0001]/value/value:
+  from: ''
+/context/other_context/items[openEHR-EHR-CLUSTER.document_metadata.v0]/items[at0002]/value/value:
+  from: ''
+/context/other_context/items[openEHR-EHR-CLUSTER.document_metadata.v0]/items[at0003]/value/value:
+  from: ''
+/context/other_context/items[openEHR-EHR-CLUSTER.document_metadata.v0]/items[at0004]/value:
+  code: ''
+  term: ''
+/context/other_context/items[openEHR-EHR-CLUSTER.document_metadata.v0]/items[at0005]/value:
+  code: ''
+  term: ''
+/context/other_context/items[openEHR-EHR-CLUSTER.document_metadata.v0]/items[at0006]/value:
+  code: ''
+  term: ''
+/context/other_context/items[openEHR-EHR-CLUSTER.document_metadata.v0]/items[at0007]/name/value:
+  from: ''
+/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/name:
+  code: ''
+  term: ''
+/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/name/value:
+  from: ''
+/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/name/value:
+  from: ''
+/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/name/value:
+  from: ''
+? /content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1000]/value/symbol/defining_code/code_string
+: from: ''
+  map: {}
+? /content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1010]/value/symbol/defining_code/code_string
+: from: ''
+  map: {}
+? /content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1020]/value/symbol/defining_code/code_string
+: from: ''
+  map: {}
+? /content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1030]/value/symbol/defining_code/code_string
+: from: ''
+  map: {}
+? /content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1040]/value/symbol/defining_code/code_string
+: from: ''
+  map: {}
+? /content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1050]/value/symbol/defining_code/code_string
+: from: ''
+  map: {}
+? /content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1060]/value/symbol/defining_code/code_string
+: from: ''
+  map: {}
+? /content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1070]/value/symbol/defining_code/code_string
+: from: ''
+  map: {}
+/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1900]/value/value:
+  from: ''
+/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1800]/value/magnitude:
+  from: ''
+/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1805]/value/magnitude:
+  from: ''
+/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1810]/value/magnitude:
+  from: ''
+/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/protocol/name/value:
+  from: ''
+/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/protocol/items[openEHR-EHR-CLUSTER.neuroqol_interpretation.v0]/name/value:
+  from: ''
+? /content[openEHR-EHR-OBSERVATION.neuroqol.v0]/protocol/items[openEHR-EHR-CLUSTER.neuroqol_interpretation.v0]/items[at0004]/value/symbol/defining_code/code_string
+: from: ''
+  map: {}

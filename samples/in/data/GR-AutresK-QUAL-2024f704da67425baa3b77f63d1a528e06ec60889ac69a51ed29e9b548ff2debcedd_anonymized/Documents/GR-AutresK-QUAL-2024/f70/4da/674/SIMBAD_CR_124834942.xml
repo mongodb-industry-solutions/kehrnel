@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124834942" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ONCOLOGIE GYNECOLOGIE - DR EMELINE COLOMBA</title>
+    <effectiveTime value="20181112000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181112000000+0000"/>
+        <assignedAuthor>
+            <code code="MDA/270" displayName="MEDECINE A"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>DEPARTEMENT DE MEDECINE - ONCO-UROLOGIE - COMPTE RENDU DE <br/>CONSULTATION <br/><br/> Dicté par : </b> Docteur Emeline Colomba, Interne
+ <b><br/>Dicté le : </b> 08/11/2018 
+ <b><br/>Service : </b> MDA-MEDECINE A 
+ <br/>
+<b>Type de document : </b> MDA CC CONSULTATION 
+ <br/>
+<b>Ref :</b> 525768 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> :HLX/A
+ <br/>
+<br/>
+<b>Je revois ce jour Madame XXXXXX patiente de 66 ans actuellement <br/>sous Avastin en entretien pour un adénocarcinome séreux de haut <br/>grade jamais réséqué.<br/><br/>BRCA1 et 2 non mutée en somatique, constitutionnelle en attente.<br/>Marqueur CA 125 informatif supérieur à 1000 au diagnostic.<br/><br/>Rappel :</b>
+<br/>Première cure réalisée le 31.3.2017 
+ <br/>On rappelle qu`il y avait eu une thrombose veineuse profonde au 
+ <br/>moment du diagnostic pour laquelle elle est traitée par INNOHEP.
+ <br/>Diminution du CARBOPLATINE AUC 4 pour la 5ème cure compte tenu d`une 
+ <br/>thrombopénie grade 2.
+ <br/>Malgré la diminution du CARBOPLATINE, la patiente a présenté une 
+ <br/>thrombopénie de grade 2 retardant la prise en charge chirurgicale.
+ <br/>Scanner d`évaluation du 07.07.2017 : stabilité abdominale, 
+ <br/>disparition de l`épanchement pleural.
+ <br/>PET SCAN : réponse partielle au niveau abdominal et bonne réponse au 
+ <br/>niveau pleural.
+ <br/>Coelioscopie du 09.10.2017 : 12 litres d`ascite évacués.
+ <br/>Instabilité hémodynamique majeure et respiratoire et PCI stable. On 
+ <br/>valide un tt systémique exclusive.
+ <br/>A C7 diminution de la dose de CARBOPLATINE AUC 4 , TAXOL 135 mg/m2 
+ <br/>pour cause d`hémato-toxicité, étant donné une thrombopénie de grade 2 
+ <br/>ayant retardé le rythme de chimiothérapie.
+ <br/>
+<b>Dernière cure de chimiothérapie le 17.11.2017<br/><u></u></b>
+<u> <br/></u>
+<b>Introduction de l`AVASTIN à C8 puis poursuite de l`AVASTIN en <br/>entretien.</b>
+<br/>
+<b><br/>Sur le plan de l'état général celui-ci est tout à fait stable, pas <br/>de trouble du transit pas de douleur. L'ascite est toujours <br/>ponctionnée toutes les 6 semaines et il existe une hernie ombilicale <br/>indolore bien réductible.<br/><br/>Examen clinique : <br/></b> Poids stable aux alentours de 70 kg
+ <br/>Auscultation cardio pulmonaire est claire et symétrique.
+ <br/>Abdomen souple, dépressible , indolore. 
+ <br/>Ascite de moyenne abondance
+ <br/>Pas d'oedème des membres inférieurs.
+ <br/>Les aires ganglionnaires sont libres 
+ <br/>
+<br/>
+<br/>Le bilan biologique réalisé en ville le 6 novembre montre une NFS 
+ <br/>tout à fait normale, une créatine à 67 μmol/L ionogramme normal, une 
+ <br/>albumine à 28 calcémie corrigée à 2,6 bilan hépatique normal et une 
+ <br/>CRP à 44 et un CA 125 à 789 versus 516 le mois dernier.
+ <br/>
+<br/>Sur le plan de l'imagerie le scanner TAP réalisé à l'HPA le 19 
+ <br/>octobre conclut à une stabilité parfaite des adénopathies 
+ <br/>coeliaques connues et de la masse ovarienne. Je ne dispose 
+ <br/>malheureusement pas de la totalité des images du scanner et 
+ <br/>notamment pas des images du pelvis.
+ <br/>
+<b>Dans ce contexte on demande de récupérer la totalité des images sur <br/>le PACS commun de l'HPA et de réaliser une relecture au prochain <br/>comité.<br/></b>
+<br/>
+<b><h3>Conclusion</h3> : <br/></b> Devant la tolérance satisfaisante et la stabilité de l'état clinique 
+ <br/>et scannographique sous réserve de la relecture qui sera réalisé mardi 
+ <br/>13/11 en dépit de l'ascension du CA 125, on poursuit l'Avastin. 
+ <br/>Un nouveau cycle est réalisé ce jour à la dose de 15 mg/kilo soit 
+ <br/>1000 mg dose totale. 
+ <br/> Je reverrai la patiente d'ici 8 semaines pour poursuite de la 
+ <br/>surveillance. 
+ <br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Emeline COLOMBA <br/>Le lundi 12 novembre 2018 à 10:46 </b>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

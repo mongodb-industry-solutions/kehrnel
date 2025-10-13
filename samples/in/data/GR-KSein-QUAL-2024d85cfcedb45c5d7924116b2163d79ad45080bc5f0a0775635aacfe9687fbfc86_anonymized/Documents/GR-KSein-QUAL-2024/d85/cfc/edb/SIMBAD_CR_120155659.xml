@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120155659" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>HMOL : numero de dossier GLIMS : 202760488</title>
+    <effectiveTime value="20201002000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201023000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Dr J. Delahousse (61 92) <br/>Interne D. Combarel (37 69) <br/>Pr A. Paci (47 30) </p>
+<p>Dr A. Arbab (41 65) <br/>Pr A. Bennaceur (40 65) <br/>Interne S. Fodil (37 69) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Dr E. Gallois (40 62) <br/>Pr F. Griscelli (51 93) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>FémininNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>02/10/2020 12:29 </p>
+<p>Sexe : </p>
+<p>02/10/2020 12:00 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>CTE 050 - SEIN </p>
+<p> 1 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>vendredi 23 octobre 2020 </p>
+<p>Complet </p>
+<p>HEMATOLOGIE MOLECULAIRE </p>
+<p> NON CONFORMITE <br/>NC pré-analytique _CJAExamen à effectuer non renseigné </p>
+<p> RENSEIGNEMENTS CLINIQUES </p>
+<p>Bi-cytopénie post-radiothérapie pour cancer du sein CZC </p>
+<p> NATURE DE L'ÉCHANTILLON : MOELLE </p>
+<p>- Panel NGS </p>
+<p>Technique CZC <br/>PANEL 77 gènes : 41 séquences codantes complètes, 36 séquences ciblées <br/>ABL1 (Chr9; NM_007313 ;exons4-9), ADGRV1(chr5 ; NM_032119 ; exons1-90), ANKRD26 (Chr10 ; NM_014915 ; exon1 et 5'UTR), APC (chr5 ; <br/>NM_001127510;exons1-15), ASXL1(chr20;NM_015338;exons11-12), ASXL2(chr2;NM_018263;exons11-12), ATG2B (Chr14 ; 20 polymorphismes), <br/>ATM(chr11;NM_000051;exons2-63), ATRX (chrX ; NM_000489 ; exons1-35), BCOR (chrX; NM_001123385;exons3-16), BCORL1 (chrX ; NM_001184772 ;exons1-13), BRAF (Chr7 ; NM_004333 ; exon15), CALR(Chr19;NM_004343;exon9), CBL(chr11;NM_005188;exons4, 8-9,12,16),CEBPA(chr19;NM_ 001287424;exon1 codant), CHEK2 (chr22 ; NM_001005735 ;exons3-16), CREBBP (chr16 ; NM_004380 ; exons1-31), CSF3R(chr1; NM_156039 ; exons14 et 17), CUX1(chr7 ; NM_001202543 ; exons1-24), DDX41(chr5;NM_016222;exons1-17), DDX54 (chr12 ; NM_001111322 ; exons1-20), DHX29 (chr5 ; NM_019030 ; exons1-27), DIS3 (chr13 ; NM_014953 ; exons1-21), DNMT3A(chr2; NM_022552;exons2-23), EED (chr11 ; NM_001308007 ; exons1-13), EP300 (chr22 ; <br/>NM_001429 ; exons1-31), EPOR (chr19 ; NM_000121 ; exon 8), ERBB4 (chr2 ; NM_005235 ; exons1-28), ETNK1(chr12 NM_018638; exon3), ETV6 (chr12 ; <br/>NM_001987 ; exons1-8), EZH2(chr7;NM_004456;exons2-20), FLT3(chr13;NM_004119;exons8-21), GATA1 (chrX ; NM_002049 ; exon2-4), <br/>GATA2(chr3;NM_032638;exons4-6 ; c.1017_462-703), HRAS(chr11; NM_005343;exons2-3 et Codon 117dans exon4), IDH1(chr2; NM_005896, Codons 130-134dans exon4), IDH2(chr15; NM_002168 ; exon4), JAK2(chr9;NM_004972;exons3-25 ; 46/1 Haplotype ; c.*122G>A), KDM6A (ChrX; NM_001291415 ; exons1-30), <br/>KMT2A(chr11;6 polymorphismes), KIT(chr4;NM_000222;exons2, 8-17), KRAS(chr12; NM_033360 ; exons2 et 4 ; codons57-64 dans exon3), <br/>MPL(chr1;NM_005373;exons1-12), MYC(chr8; NM_002467 ; exon2), NF1(chr17;NM_001042492;exons1-58), NFE2 (chr12 ; NM_001261461 ; exons3-4), <br/>NPM1(chr5;NM_002520;exon11), NRAS(chr1;NM_002524;exons2-3),PHF6(chrX;NM_001015877;exons2-10), PPM1D(chr17 ; NM_003620 ; exon6), PRPF40B(chr12 ; NM_001031698 ; exons1-26), PRPF8 (chr17 ; NM_006445 ; exons2-43), PTPN11(chr12;NM_002834 ;exons3-4;8;11-13), <br/>RAD21(chr8;NM_006265;exons2-14), RUNX1(chr21;NM_001001890;exons3-9), SETBP1(chr18;NM_015559;exon4), SETD2 (chr3 ; NM_014159; exons5-9), <br/>SF1 (chr11 ; NM_004630 ; exons1-13), SF3A1(chr22 ; NM_005877 ; exons1-16), SF3B1(chr2;NM_012433;exons13-16), SH2B3(chr12; NM_005475 ; exons 2-8), <br/>SIMC1 (chr5 ;NM_001308195 ; exons2-10), SMC1A(chrX ;NM_6306;exons1-25), SMC3(chr10;NM_5445 ;exons1-29), SRP72 (chr4 ; NM_006947 ; exons1-19), <br/>SRSF2(chr17; NM_001195427 ; exon1), STAG2(chrX;NM_001042749;exons3-35), SUZ12 (chr17 ; NM_015355 ; exons1-16), TERC (chr3 ; NR_001566 ), TERT(chr5 ; NM_198253 ; exons1-16), TET2(chr4;NM_001127208;exons3-11), THPO (chr3 ; NM_001289998 ; 5'UTR),TP53(chr17; NM_001126112 ; exons2-11 ; <br/>NM_001126113_Exon 10; NM_001126114_Exon 10), U2AF1(chr21;NM_001025203; codon 34 dans exon2 et codon 157 dans exon 6), U2AF2(chr19 ;NM_007279 ; exons1-12), WT1(chr11;NM_024426;exons1-4 ; 7-9), ZRSR2(chrX;NM_005089;exons1-11). <br/>PIPELINE D'ANALYSE : - Pipeline 1 : SOPHIA DDM® - Pipeline 2 : GRIO-DX®NM_002467 ; exon2) </p>
+<p>Haloplex (Agilent), séquençage sur analyseur MiSEQ (Illumina) </p>
+<p>Contrôle qualité du run CZCRUN158-JBHP9 </p>
+<p>Résultat CZCPositif </p>
+<p>Nb de mutations d'intérêt clinique 2 CZC </p>
+<p> <h3>Conclusion</h3> </p>
+<p>Détection d'une hématopoïèse clonale de potentiel indéterminé: <br/>TP53 L194R(6%), PPM1D R581*(3%). </p>
+<p>chr:17 position:7578268 gene:TP53 transcript:NM_000546/5cDNA:c.581T>G protein:p.(Leu194Arg) exon:6chr:17 position:58740836 gene:PPM1D transcript:NM_003620/3cDNA:c.1741C>T protein:p.(Arg581*) exon:6 </p>
+<p>CZC </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 22/10/2020 à 22:11 par : Dr Christophe MARZAC</p>
+<p></p>
+<ul>
+<li>HEMATOLOGIE MOLECULAIRE</li>
+<ul>
+<li>NON CONFORMITE</li>
+<li>Renseignements cliniques</li>
+<li>Nature de l'échantillon : Moelle</li>
+<ul>
+<li>Panel NGS</li>
+</ul>
+<li>Conclusion</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

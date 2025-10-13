@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125962461" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°18H03826 2573561 Dr Marie-Christine MATHIEU</title>
+    <effectiveTime value="20180419000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180522000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>DÉPARTEMENT DE BIOLOGIE ET DE PATHOLOGIE MEDICALES<br/></p>
+<p>114, rue Edouard Vaillant - 94805 VILLEJUIF CEDEX<br/></p>
+<p>N° I.G.R. : 050 XXXXXX <br/>XXXXXX XXXXXX Eliane <br/>Née XXXXXX XXXXXX F <br/> Docteur MINARD-COLIN Véronique <br/>Examen demandé par : <br/>Dr MINARD-COLIN Véronique <br/>CTE 050 - SEIN <br/>Prélevé le 16/04/2018 <br/>Enregistré le 17/04/2018 <br/></p>
+<p> MMU <br/> Examen n° : 18H03826<br/></p>
+<p> CR édité le : 19/04/2018<br/></p>
+<p>Copie à : 1/1 </p>
+<p>ETUDE IMMUNOHISTOCHIMIQUE DE HER2 (c-erbB-2) </p>
+<p>MICROBIOPSIE DE GANGLION SUS-CLAVICULAIRE GAUCHE </p>
+<p> Technique : sur coupe de tissu fixé en Formol et inclus en paraffine avec l'anticorps monoclonal 4B5 (Ventana). </p>
+<p> Résultats : </p>
+<p> <br/>- Métastase d'un adénocarcinome peu diffférencié : absence de marquage.<br/>CONCLUSION </p>
+<p> Métastase d'un adénocarcinome peu diffférencié : Statut HER2 négatif (score 0). </p>
+<p> NB : score évalué selon les recommandations ASCO 2013 </p>
+<p> <br/>PHSGAMB0<br/>SCG, BHSGAMA3<br/>SCGGS, BHSG <br/></p>
+<p> Dr Marie-Christine MATHIEU <br/> Médecin Spécialiste </p>
+<p> <br/></p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

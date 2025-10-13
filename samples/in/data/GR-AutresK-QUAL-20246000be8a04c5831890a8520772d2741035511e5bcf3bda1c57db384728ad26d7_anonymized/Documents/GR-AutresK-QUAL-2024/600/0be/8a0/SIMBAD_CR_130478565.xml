@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_130478565" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ORL - Interne ORL</title>
+    <effectiveTime value="20151104000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20151105000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Docteur Fabienne HAROUN<br/><br/></b></u> Patient suivi pour un carcinome épidermoïde oro-pharyngé vélaire et 
+ <br/>du pilier postérieur droit et gauche classé T3 N2c M0 traité par 
+ <br/>radio-chimiothérapie terminée le 28.10.2014.
+ <br/>
+<br/>Le patient est adressé ce jour par le Docteur TAO pour une suspicion 
+ <br/>d'adénopathie située au niveau de la nuque.
+ <br/>
+<br/>A l'examen clinique, il s'agit plutôt d'un aspect de kyste sébacé 
+ <br/>surinfecté.
+ <br/>La ponction du kyste recueille quelques sérosités ainsi que du pus.
+ <br/>
+<br/>Décision de mise à plat de l'abcès par incision et drainage.
+ <br/>
+<br/>Mise en place d'une mèche d'ALGOSTERIL qui sera retirée dans 48 
+ <br/>heures.
+ <br/>
+<br/>Antibiothérapie pendant 8 jours par AUGMENTIN 1g x 3/jour avec 
+ <br/>antalgiques.
+ <br/>Le reste de l'examen ORL est normal.
+ <br/>
+<br/>Le patient sera revu en consultation dans 48 heures pour réévaluation 
+ <br/>locale après drainage et antibiothérapie.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

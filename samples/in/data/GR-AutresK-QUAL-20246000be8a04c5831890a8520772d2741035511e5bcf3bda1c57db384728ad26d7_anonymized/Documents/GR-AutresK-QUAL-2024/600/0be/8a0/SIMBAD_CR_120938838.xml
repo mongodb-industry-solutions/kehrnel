@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120938838" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>COMPTE-RENDU R.I. PBO SEG RI PBO CHIR _R1</title>
+    <effectiveTime value="20200629000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200629000000+0000"/>
+        <assignedAuthor>
+            <code code="136/300" displayName="CONS. RADIO INTERVENTIONNELLE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<u><b><br/>Saignement ORL gauche</b></u>
+<br/>
+<br/>Date: 29/06/2020 
+ <br/>Opérateur(s) principal: Docteur ROUX Charles 
+ <br/>Opérateur(s) interne: Docteur NAJAFI Arash 
+ <br/>Manipulatrice:Georges Laurence; 
+ <br/>Anesthésiste:Docteur CELESTIN Bernard 
+ <br/>Intervention guidée par: Système d'angiographie Discovery IGS 740, 
+ <br/>mise en service le 11 octobre 2018 (Numéro de système : M45052130, 
+ <br/>Numéro de série manufacturing : D4-18-021).
+ <b><br/><br/>PDS : 92,04 GY.cm2 <br/>DLP : 0 mGy.cm <br/><br/>Produit de contraste: 150 ml de Visipaque 320 <br/><br/><br/><u>Indication</u>: <br/><br/></b> Patient actuellement hospitalisé au Rhône pour carcinome épidermoide 
+ <br/>de l'oropharynx gauche en progression locale avec contact carotidien 
+ <br/>gauche.
+ <br/>Prise en charge pour hémorragie cervicale gauche et buccale.
+ <b><br/> <br/><u>Technique et résultats: <br/></u><br/></b> Désinfection et drapage stérile. 
+ <br/>Ponction de l'artère fémorale commune droite et insertion d'un 
+ <br/>désilet 9F. 
+ <br/>Cathétérisme de l'artère carotide commune gauche avec un cathéter 
+ <br/>vertébral et angiographie. 
+ <br/>Une irrégularité de l'artère carotide commune sans saignement actif 
+ <br/>clair est mise en évidence. Fermeture de l'artère carotide externe 
+ <br/>avec plusieurs Coils et pose d'une endoprothèse vasculaire 
+ <br/>(stentgraft) de 8 mm/10 cm dans les artères carotides interne et 
+ <br/>commune. 
+ <br/>Ablation du matériel et hémostase par Angioseal. 
+ <br/>Le patient continue à saigner sur le lit, nous décidons donc de faire 
+ <br/>une deuxième angiographie. Une ré-angiographie de l'artère carotide 
+ <br/>commune montre plusieurs thrombus dans le stent et une stase. 
+ <br/>Fermeture distale de l'artère carotide interne au niveau du siphon 
+ <br/>avec plusieurs coils et de l'entrée du stent avec un Plug. 
+ <br/>L'angiographie de contrôle montre une stase complète. 
+ <br/>Retrait de la matière et hémostase par Angioseal. 
+ <b><br/> <br/><u>Conclusion</u>: <br/></b>
+<br/>Occlusion de tout l'axe carotidien à gauche, l'hémisphère gauche du 
+ <br/>cerveau est perfusé par la droite. 
+ <b><br/></b>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

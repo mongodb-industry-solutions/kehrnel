@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125462731" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>DIOPP - Consultation de Diététique</title>
+    <effectiveTime value="20180626000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180806000000+0000"/>
+        <assignedAuthor>
+            <code code="DIE/373" displayName="DIETETIQUE - NUTRITION"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Evaluation nutritionnelle réalisée dans le cadre d'une consultation 
+ <br/>diététique pré-allogreffe à J-30 par la diététicienne : BOROWIECKI 
+ <br/>Laura
+ <br/>
+<br/>
+<b>DONNEES ANTHROPOMETRIQUES ET ANALYSE :</b>
+<br/>Poids habituel (septembre 2016) :83Kg
+ <br/>Poids actuel :77Kg 
+ <br/>Taille :1m79 
+ <br/>IMC :24 kg/m2
+ <br/>% perte de poids/poids habituel : - 6 kg soit 7% en 1 an et demi (en 
+ <br/>phase de reprise) 
+ <br/>Force Musculaire (handgrip) : Non mesurée. 
+ <br/>
+<br/>
+<b>VALEURS BIOLOGIQUES :</b>
+<br/>Albumine : 47g/L
+ <br/>Préalbumines : 280mg/L
+ <br/>CRP : 5g/L
+ <br/>
+<br/>
+<b>ETAT NUTRITIONNEL :</b>
+<br/>ABSENCE de dénutrition
+ <br/>
+<br/>
+<b>ESTIMATION DES BESOINS NUTRITIONNELS :</b>
+<br/>Energétique :2310 à 2695Kcal/J (x30 à 35kcal/kg poids/J) 
+ <br/>Protidiques :92 à 115g de protéines/J (x1,2 à 1,5g/kg poids/J)
+ <br/>
+<b><br/>ENQUETE ALIMENTAIRE :</b>
+<br/>A perdu 20 kg au début du traitement (en avril 2017) , est descendu à 
+ <br/>65 kg car n'avait pas d'appétit. Reprise de poids depuis mars 2018. 
+ <br/>Vit à Fort de France et est logé actuellement à Central Park. 
+ <br/>Rappel de ses ingesta: 
+ <br/>Petit déjeuner: 20 à 30g de pain + 1 crème de gruyère ou 1 pain au 
+ <br/>lait + jus de fruits ou fruit. Ne prenait pas de petit déjeuner avant 
+ <br/>sa perte de poids. 
+ <br/>Déjeuner: fluctuant quand il travaillait (en fonction de son activité 
+ <br/>professionnelle: entrepreneur dans les transports). Plus régulier 
+ <br/>depuis qu'il est à la retraite. Entrée à base de crudités+ VP + 
+ <br/>accompagnement varié + sauce (portion standard) + fruit en dessert 
+ <br/>(consomme peu de laitage). 
+ <br/>Collation: (régulière depuis 3 mois), en moyenne 3 biscuits secs +6 
+ <br/>jus de fruits. 
+ <br/>Diner: + léger, un potage + poisson frit ou bouilli + salade + crème 
+ <br/>dessert.
+ <br/>
+<br/>INGESTA (rappel des 24h) : 1800 Kcal/Jour dont 60 g de protéines soit 
+ <br/>78% de ses BE et 65% de ses BP. 
+ <br/>
+<b><br/>DONNEES COMPLEMENTAIRES :</b>
+<br/>Apport hydrique satisfaisant à 2L d'eau par jour. 
+ <br/>Transit régulier. 
+ <br/>
+<br/>
+<b>ACTIVITE PHYSIQUE :</b>
+<br/>Bouge toute la journée, jardine, bricole...
+ <br/>
+<b><br/>DIAGNOSTIC DIETETIQUE</b>
+<br/>- Apports protéino-énergétiques insuffisants en lien à une baisse de 
+ <br/>la 
+ <br/>capacité à pouvoir s'alimenter comme en témoignent l'estimation des 
+ <br/>ingesta inférieurs aux besoins estimés
+ <br/>
+<br/>- Risque d'aggravation de l'état nutritionnel en lien avec une 
+ <br/>prochaine allogreffe qui diminue la capacité à consommer les aliments 
+ <br/>et réduit les choix alimentaires comme en témoignent les effets 
+ <br/>secondaires connus du traitement en cours (perte d'appétit, anorexie, 
+ <br/>troubles digestifs, mucite...) et les contraintes de l'alimentation 
+ <br/>protégée
+ <br/>
+<br/>
+<b>CONSEILS NUTRITIONNELS DONNES :</b>
+<br/>- Conseils hygiéno-diététiques d'enrichissement protéino-énergétiques 
+ <br/>de l'alimentation remis et expliqués
+ <br/>
+<br/>
+<b>EXPLICATIONS DONNEES SUR PEC NUTRITIONNELLE EN PERI ET POST <br/>ALLOGREFFE DE CSP :<br/></b> - alimentation en secteur protégé (régime protégé)
+ <br/>- intérêt de conserver un bon statut nutritionnel et le suivi 
+ <br/>diététique
+ <br/>- intérêt pose d'une sonde naso-gastrique et déroulement de la 
+ <br/>nutrition entérale si besoin
+ <br/>- importance de la pratique d'une activité physique régulière
+ <br/>- utilisation de la complémentation nutritionnelle orale
+ <br/>- nécessité de poursuivre une alimentation protégée en post greffe
+ <br/>
+<br/>
+<b>OBSERVATIONS :</b>
+<br/>A revoir à J-8 s'il a des questions ou s'il a perdu du poids. 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128429256" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 170680126</title>
+    <effectiveTime value="20170309000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170309000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>RESULTATSANALYSES Valeurs PrécédentesUnités Valeurs de <br/>Référence </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>D.N. : </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX </p>
+<p>Femme </p>
+<p>09/03/2017 08:49 </p>
+<p>XXXXXX </p>
+<p>Demande enregistrée le : </p>
+<p>PATIENT : <br/><br/></p>
+<p>XXXXXX SEXE : </p>
+<p>FINDERNJF : </p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Département de Biologie et de Pathologie Médicales </p>
+<p>Biochimie <br/>Dr S. Broutin (40 57) <br/>Dr A. Paci (47 30) <br/>Dr V. Poinsignon (61 92) </p>
+<p>MicrobiologieHématologie <br/>Pr A. Bennaceur (40 65) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr T. Steimle (41 65) <br/>Dr V. Vergé (40 34) </p>
+<p>jeudi 09 mars 2017 </p>
+<p>GOUY Sébastien 060 </p>
+<p>Prescrit par : </p>
+<p>Comité : </p>
+<p>BLOC CHIRURGIE GENERALE </p>
+<p>Villejuif, le </p>
+<p>Service : </p>
+<p>170680126 <br/>Complet </p>
+<p>Type <br/><br/><br/>Ech. </p>
+<p>Val. </p>
+<p>09/03/2017 08:49 Page 1 / 3 </p>
+<p>Dr E. Chachaty (52 34) <br/>Pr F. Griscelli (51 93) <br/>Dr N. Yin (40 62) </p>
+<p>Pharmacologie </p>
+<p>NDP138 mmol/l ( 136 - 146 ) <br/>Potentiométrie indirecte </p>
+<p>SodiumPL. </p>
+<p>NDP3.7 mmol/l ( 3.4 - 4.5 ) <br/>Potentiométrie indirecte </p>
+<p>PotassiumPL. </p>
+<p>NDP104 mmol/l ( 101 - 109 ) <br/>Potentiométrie indirecte </p>
+<p>ChlorePL. </p>
+<p>NDP25 mmol/l ( 21 - 31 ) <br/>PEPC </p>
+<p>Reserve alcalinePL. </p>
+<p>NDP77 g/L ( 66 - 83 ) <br/>Biuret </p>
+<p>ProtidesPL. </p>
+<p>NDP5.2 mmol/l ( 2.8 - 7.2 ) <br/>Uréase-GLDH </p>
+<p>UréePL. </p>
+<p>NDP58 μmol/l ( 49 - 90 ) <br/>Enzymatique raccordée IDMS </p>
+<p>CréatininePL. </p>
+<p>NDP6.6(*) mmol/l ( 4.1 - 5.9 ) <br/>Hexokinase <br/>G6P-DH Valeur de référence pour un patient à jeun </p>
+<p>GlucosePL. </p>
+<p>NDP2.39 mmol/l ( 2.20 - 2.65 ) <br/>Arsenazo III </p>
+<p>CalciumPL. </p>
+<p>NDP0.89 mmol/l ( 0.77 - 1.03 ) <br/>Bleu de xylidyle </p>
+<p>MagnesiumPL. </p>
+<p>batch1.35(*) <br/>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Base calcul CockroftPL. </p>
+<p>batch>60.0(*) mL/mn/1.73m2 < 60 : Insuffisance rénale à explorer si nécessaire. <br/>Si origine afro américaine, le DFG est à multiplier par 1.212 </p>
+<p>Débit de Filtration <br/>Glomérulaire (MDRD) </p>
+<p>PL. </p>
+<p>Ionogramme </p>
+<p>NDP103 UI/L ( 30 - 120 ) <br/>IFCC </p>
+<p>PALPL. </p>
+<p>NDP17 UI/L ( 0 - 35 ) <br/>IFCC </p>
+<p>ASATPL. </p>
+<p>NDP19 UI/L ( 0 - 35 ) <br/>IFCC </p>
+<p>ALATPL. </p>
+<p>NDP23 UI/L ( 0 - 38 ) <br/>IFCC </p>
+<p>GGTPL. </p>
+<p>NDP8 μmol/l ( 5 - 21 ) <br/>DPD </p>
+<p>Bilirubine TotalePL. </p>
+<p>Bilan hépatique / pancréatique </p>
+<p>Sang </p>
+<p>BIOCHIMIE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé par :Validé le : Dr PRADON Caroline,Dr SAADA Véronique</p>
+<p></p>
+<p></p>
+<p>RESULTATS Valeurs de <br/><br/>Référence </p>
+<p>Valeurs PrécédentesUnitésANALYSES </p>
+<p>PATIENT : <br/><br/>BLOC CHIRURGIE GENERALE </p>
+<p>GOUY Sébastien </p>
+<p>060COMITE : </p>
+<p>A :XXXXXX XXXXXX <br/><br/>Prescrit par : </p>
+<p>XXXXXX 170680126DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>Type <br/><br/><br/>Ech. </p>
+<p>Val. </p>
+<p>Page 2 / 3 </p>
+<p>NDP0.14 g/L ( 0.20 - 0.40 ) <br/>Immuno-turbidimétrie </p>
+<p>PréAlbumineS </p>
+<p>NDP38 g/L ( 35 - 52 ) <br/>Vert de bromocrésol </p>
+<p>AlbuminePL. </p>
+<p>Protéines </p>
+<p>NDP4 ng/mL ( 0 - 7 ) <br/>ECLIA </p>
+<p>ACES </p>
+<p>NDP2728 UI/mL ( 0 - 35 ) <br/>ECLIA </p>
+<p>CA 125S </p>
+<p>NDP305 UI/mL ( 0 - 33 ) <br/>ECLIA </p>
+<p>CA 19-9S </p>
+<p>Marqueurs biologiques </p>
+<p>NDP31 % ( 70 - 100 ) <br/>Chronométrique </p>
+<p>Taux de ProthrombinePL </p>
+<p>NDP23.5 s <br/>Chronométrique </p>
+<p>Temps de Quick (Témoin = 12,9s) </p>
+<p>PL </p>
+<p>NDP2.8(*) ( 0.0 - 4.5 ) 0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>INRPL </p>
+<p>NDP34 % ( 70 - 120 ) <br/>Chronométrique </p>
+<p>Facteur IIPL </p>
+<p>NDP120 % ( 70 - 120 ) <br/>Chronométrique </p>
+<p>Facteur VPL </p>
+<p>NDP46 % ( 70 - 120 ) <br/>Chronométrique </p>
+<p>Facteur VIIPL </p>
+<p>NDP14 % ( 70 - 120 ) <br/>Chronométrique </p>
+<p>Facteur XPL </p>
+<p>NDP6.9 g/L ( 2.0 - 4.0 ) <br/>Chronométrique </p>
+<p>FibrinogènePL </p>
+<p>NDP31 s <br/>Chronométrique </p>
+<p>TCK (Témoin = 28s)PL </p>
+<p>NDP1.1 ( 0.0 - 1.1 )TCK RatioPL </p>
+<p>Bilan de coagulation </p>
+<p>HEMOSTASE </p>
+<p>SAE8.6 10*9/L ( 4.0 - 10.0 )LeucocytesSg </p>
+<p>SAE4.42 10*12/L ( 4.00 - 5.20 )HématiesSg </p>
+<p>SAE11.5 g/100mL ( 12.0 - 16.0 )HémoglobineSg </p>
+<p>SAE36.8 % ( 34.0 - 45.0 )HématocriteSg </p>
+<p>SAE83.3 μ3 ( 85.0 - 95.0 )VGMSg </p>
+<p>IOG26.0 pg/cel ( 28.0 - 34.0 )TCMHSg </p>
+<p>IOG31.3 g/100mL ( 32.0 - 36.5 )CCMHSg </p>
+<p>SAE14.6 % ( 0.0 - 16.0 )IDGSg </p>
+<p>IOG553.0 10*9/L ( 150.0-400.0 )PlaquettesSg </p>
+<p>Numeration sanguine (Sang total sur EDTA) <br/>Méthode : XN - SYSMEX </p>
+<p>HEMATOLOGIE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé par :Validé le : Dr PRADON Caroline,Dr SAADA Véronique</p>
+<p></p>
+<p></p>
+<p>RESULTATS Valeurs de <br/><br/>Référence </p>
+<p>Valeurs PrécédentesUnitésANALYSES </p>
+<p>PATIENT : <br/><br/>BLOC CHIRURGIE GENERALE </p>
+<p>GOUY Sébastien </p>
+<p>060COMITE : </p>
+<p>A :XXXXXX XXXXXX <br/><br/>Prescrit par : </p>
+<p>XXXXXX 170680126DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>Type <br/><br/><br/>Ech. </p>
+<p>Val. </p>
+<p>Page 3 / 3 </p>
+<p>IOG81.5 %Polynucléaires NeutrophilesSg </p>
+<p>IOG7.0 10*9/L ( 1.8 - 7.5 )SoitSg </p>
+<p>SAE0.6 %Polynucléaires EosinophilesSg </p>
+<p>SAE0.0 10*9/L ( 0.0 - 0.5 )SoitSg </p>
+<p>SAE0.6 %Polynucléaires BasophilesSg </p>
+<p>SAE0.0 10*9/L ( 0.0 - 0.3 )SoitSg </p>
+<p>SAE11.0 %LymphocytesSg </p>
+<p>SAE1.0 10*9/L ( 1.0 - 4.0 )SoitSg </p>
+<p>SAE6.3 %MonocytesSg </p>
+<p>SAE0.5 10*9/L ( 0.1 - 1.0 )SoitSg </p>
+<p>IOG0.0 %MyelémieSg </p>
+<p>SAE10IDPSg </p>
+<p>sysm9.4 μ3 ( 6.0 - 12.0 )VMPSg </p>
+<p>Formule </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé par :Validé le : Dr PRADON Caroline,Dr SAADA Véronique</p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

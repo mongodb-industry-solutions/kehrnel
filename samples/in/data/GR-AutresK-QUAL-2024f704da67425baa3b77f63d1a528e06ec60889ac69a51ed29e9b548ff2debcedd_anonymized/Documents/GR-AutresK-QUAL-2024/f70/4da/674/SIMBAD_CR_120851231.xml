@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120851231" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 201920077</title>
+    <effectiveTime value="20200710000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200710000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Dr J. Delahousse (61 92) <br/>Interrne D. Combarel (37 69) <br/>Pr A. Paci (47 30) </p>
+<p>Dr A. Arbab (41 65) <br/>Pr A. Bennaceur (40 65) <br/>Interrne S. Fodil (37 69) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Dr E. Gallois (40 62) <br/>Pr F. Griscelli (51 93) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>XXXXXX </p>
+<p>FémininNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>10/07/2020 05:05 </p>
+<p>Sexe : </p>
+<p>10/07/2020 08:00 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>Nom de naissance : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>GARD </p>
+<p> 2 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>GARDPrescrit par : </p>
+<p>vendredi 10 juillet 2020 </p>
+<p>Complet </p>
+<p>BIOCHIMIE </p>
+<p>Information Laboratoire Changement de méthode d'analyse de chimie et d'immuno-analyse à compter du 06/07/2020. Concerne les paramètres portant la notion Atellica. </p>
+<p> IONOGRAMME <br/>Sodium 139 mmol/l ( 136 - 145 )143 07/07/2020 16:30 LLX <br/>Plasma hépariné - Potentiométrie indirecte, Atellica </p>
+<p>Potassium 3.4 mmol/l ( 3.4 - 4.5 )3.4 07/07/2020 16:30 LLX <br/>Plasma hépariné - Potentiométrie indirecte, Atellica </p>
+<p>Chlore 108 mmol/l ( 98 - 107 )108 07/07/2020 16:30 LLX <br/>Plasma hépariné - Potentiométrie indirecte, Atellica </p>
+<p>Reserve alcaline 24 mmol/l ( 20 - 31 )26 07/07/2020 16:30 LLX <br/>Plasma hépariné - Test enzymatique UV, Atellica </p>
+<p>Protides 43 g/L ( 57 - 82 )42 07/07/2020 16:30 LLX <br/>Plasma hépariné - Colorimétrie (Biuret), Atellica </p>
+<p>Créatinine 36 μmol/l ( 44 - 71 )50 07/07/2020 16:30 LLX <br/>Plasma hépariné - Test de coloration enzymatique, Atellica </p>
+<p>Base calcul Cockroft 2.06 1.49 07/07/2020 16:30 LLX </p>
+<p>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Débit de Filtration Glomérulaire (MDRD) 154 mL/mn/1.73m2 106 07/07/2020 16:30 LLX </p>
+<p>< 60 : Insuffisance rénale à explorer si nécessaire. <br/>Si origine afro américaine, le DFG est à multiplier par 1.212 </p>
+<p>Débit de Filtration Glomérulaire (CKD- <br/>EPI) </p>
+<p>106 mL/mn/1.73m2 96 07/07/2020 16:30 LLX </p>
+<p>Estimation du débit de filtration glomérulaire en utilisant le dosage de la créatinine (standardisé ID-MS) 30 - 60 mL/mn/1.73m2 : Insuffisance rénale modérée < 30 mL/mn/1.73m2 : Insuffisance rénale sévère </p>
+<p>Calcium 1.94 mmol/l ( 2.18 - 2.60 )1.91 07/07/2020 16:30 LLX <br/>Plasma hépariné - Test de coloration photométrique (arsenazo III), Atellica </p>
+<p> PROTÉINES <br/>CRP 121.0 mg/l ( < 10.0 )114.2 07/07/2020 16:30 LLX <br/>Plasma hépariné - Immunoturbidimétrie, Atellica </p>
+<p>HEMOSTASE </p>
+<p> RENSEIGNEMENTS CLINIQUES 1er Traitement presc </p>
+<p>_lab1 <br/>Sans traitement </p>
+<p> BILAN DE COAGULATION <br/>Taux de Prothrombine 84 % ( 70 - 100 )89 03/07/2020 16:45 LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>Temps de Quick (Témoin = 13s) 14.6 s 14.1 03/07/2020 16:45 LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 10/07/2020 à 11:31 par : Dr LACROIX Ludovic,Dr VERGÉ Véronique</p>
+<p></p>
+<p></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>GARDPatient : 2 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>GARDPrescrit par : </p>
+<p>INR 1.1 1.1 03/07/2020 16:45 LLX </p>
+<p>0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>TCK (Témoin = 28s) 27 s 27 03/07/2020 16:45 LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK Ratio 1.0 ( < 1.2 )1.0 03/07/2020 16:45 LLX </p>
+<p>HEMATOLOGIE </p>
+<p> NUMERATION SANGUINE (SANG TOTAL SUR EDTA) <br/>MÉTHODE : XN - SYSMEX </p>
+<p>Leucocytes 3.5 10*9/L ( 4.0 - 10.0 )1.6 08/07/2020 08:00 FKR </p>
+<p>Hématies 3.80 10*12/L ( 4.00 - 5.20 )2.80 08/07/2020 08:00 VVE </p>
+<p>Hémoglobine 11.5 g/100mL ( 11.5 - 15.0 )8.2 08/07/2020 08:00 FKR </p>
+<p>Hématocrite 33.5 % ( 34.0 - 45.0 )23.4 08/07/2020 08:00 VVE </p>
+<p>VGM 88.2 μ3 ( 75.0 - 96.0 )83.6 08/07/2020 08:00 VVE </p>
+<p>TCMH 30.3 pg/cel ( 24.0 - 33.0 )29.3 08/07/2020 08:00 VVE </p>
+<p>CCMH 34.3 g/100mL ( 32.0 - 36.0 )35.0 08/07/2020 08:00 VVE </p>
+<p>IDG 15.4 % ( 11.0 - 15.0 )15.9 08/07/2020 08:00 </p>
+<p>Plaquettes 24.0 10*9/L 40.0 08/07/2020 08:00 VVE </p>
+<p>Impédance (150 - 400 x 10^9/L) </p>
+<p> FORMULE <br/>Polynucléaires Neutrophiles 77.0 % 52.0 08/07/2020 08:00 FKR </p>
+<p>FKR0.8 08/07/2020 08:00 ( 1.5 - 7.0 )10*9/Lsoit 2.7 </p>
+<p>Polynucléaires Eosinophiles 1.0 % 1.0 08/07/2020 08:00 VVE </p>
+<p>VVE0.0 08/07/2020 08:00 ( 0.0 - 0.6 )10*9/Lsoit 0.0 </p>
+<p>Polynucléaires Basophiles 0.0 % 0.0 08/07/2020 08:00 VVE </p>
+<p>VVE0.0 08/07/2020 08:00 ( 0.0 - 0.1 )10*9/Lsoit 0.0 </p>
+<p>Lymphocytes 14.0 % 44.0 08/07/2020 08:00 VVE </p>
+<p>VVE0.7 08/07/2020 08:00 ( 1.2 - 4.0 )10*9/Lsoit 0.5 </p>
+<p>Monocytes 5.0 % 3.0 08/07/2020 08:00 VVE </p>
+<p>VVE0.0 08/07/2020 08:00 ( 0.2 - 0.8 )10*9/Lsoit 0.2 </p>
+<p>Métamyelocytes 2.0 % ( 0.0 )! 04/02/2019 16:45 FKR </p>
+<p>Myelocytes 1.0 % ! 04/02/2019 16:45 FKR </p>
+<p>Erythroblastes 7.0 % 1.0 08/07/2020 08:00 FKR </p>
+<p>Formule FKRMicroscopique </p>
+<p>Commentaires FKRAbsence d'agrégats plaquettaires sur le frottis </p>
+<p>IDP 18 10 08/07/2020 08:00 FKR </p>
+<p>VMP 11.7 μ3 ( 7.5 - 11.0 )10.7 08/07/2020 08:00 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 10/07/2020 à 11:31 par : Dr LACROIX Ludovic,Dr VERGÉ Véronique</p>
+<p></p>
+<ul>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Ionogramme</li>
+<li>Protéines</li>
+</ul>
+<li>HEMOSTASE</li>
+<ul>
+<li>Renseignements cliniques</li>
+<li>Bilan de coagulation</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_131439764" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ORL - Dr Stéphane TEMAM</title>
+    <effectiveTime value="20150202000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20150202000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Un peu moins de trois mois après la fin de sa radiochimiothérapie 
+ <br/>CISPLATINE T3 N2c oropharyngé vélaire.
+ <br/>Poursuite de l'intoxication tabagique minime surtout cigarette 
+ <br/>électronique.
+ <br/>60 kg.
+ <br/>Pas de douleur.
+ <br/>Xérostomie grade I selon RTOG, grade II selon SOMA.
+ <br/>Pas de reflux alimentaire par le nez.
+ <br/>Pas de dysphonie.
+ <br/>
+<br/>
+<u><b>A l'examen :</b></u>
+<br/>Bon état général, tonique.
+ <br/>Important jabot sous mental.
+ <br/>Pas de tuméfaction cervicale palpable mais persistance d'une 
+ <br/>radiodermite pigmentée grade II. Desquamation cutanée.
+ <br/>Au niveau endobuccal, pas de limitation d'ouverture buccale.
+ <br/>Bonne protraction linguale.
+ <br/>Plus de radiomucite.
+ <br/>Aspect cicatriciel du voile qui est rétracté avec sténose débutante à 
+ <br/>la jonction oro-nasopharynx.
+ <br/>En nasofibroscopie : base de langue, pharyngolarynx libres et mobiles.
+ <br/>
+<br/>Tepscanner ce jour notamment pour explorer une adénopathie cervicale 
+ <br/>droite qui était jugée persistante lors de l'évaluation en décembre. 
+ <br/>Compte-rendu transmi par téléphone, absence de fixation significative.
+ <br/>
+<br/>On entame donc la surveillance post thérapeutique. Le patient reverra 
+ <br/>le Dr TAO en mai, le Dr BREUSKIN fin juillet. 
+ <br/>Je lui demande de faire attention à ses soins dentaires, prévoir une 
+ <br/>consultation dans six mois.
+ <br/>Au niveau addictologie, le patient est pris en charge à Paul Brousse.
+ <br/>
+<br/>
+<br/>
+<b> <br/> <br/> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b> Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>06/05/2015 09:15 RTE YGT C RX YGT 
+ <br/>17/07/2015 11:40 ORL STM C ORL IBN 
+ <br/> 13:20 ORL STM C ODONTO GSN 
+ <br/>04/11/2015 09:45 RTE YGT C RX YGT 
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

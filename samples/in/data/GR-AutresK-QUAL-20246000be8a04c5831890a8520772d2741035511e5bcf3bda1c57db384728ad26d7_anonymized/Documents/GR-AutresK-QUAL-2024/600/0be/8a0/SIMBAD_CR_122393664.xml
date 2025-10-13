@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122393664" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="47420-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de bilan fonctionnel (par auxiliaire médical)"/>
+    <title>Coordination des soins externes - CSE</title>
+    <effectiveTime value="20191118000000+0000"/>
+    <confidentialityCode code="47420-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de bilan fonctionnel (par auxiliaire médical)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20191118000000+0000"/>
+        <assignedAuthor>
+            <code code="PLC/453" displayName="PLATEAU DE CONSULTATION"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Infirmière coordinatrice : Christine MENDES
+ <br/>
+<br/>Mr XXXXXX est pris en charge par la CSE à la demande du 
+ <br/>Rhone pour la réalisation au domicile de : 
+ <br/>
+<br/>- Nutrition entérale sur sonde naso gastrique exclusive par 3 x 500 
+ <br/>Ml NEF en gravité + poche à eau + administration des traitements QSP 
+ <br/>2 semaines 
+ <br/>pose de GPE demandée: prévue le 09/12/19
+ <br/>- poursuite des soins de trachéostomie (cytube) 
+ <br/>- pansement compressif en rétromandibulaire 
+ <br/> + pst ex lame cervicale gauche : algostérile pour maintien drainge 
+ <br/>collection + mépilex border, 1-2 fois par jour si écoulement trop 
+ <br/>important, QSP 2 semaines renouvelable 
+ <br/>
+<br/>
+<br/>69 KG / -2KG 
+ <br/>Au niveau de la nutrition entérale et de ses soins de trachéostomie 
+ <br/>le patient est autonome . Quelques conseils lui sont rappelés pour le 
+ <br/>domicile. Par sécurité, ordonnance IDE prévue pour supervision. 
+ <br/>
+<br/>
+<br/>
+<br/>Autonome pour les gestes de la vie quotidienne. Monsieur vit avec son 
+ <br/>épouse au 1e étage sans ascenseur. Sort régulièrement du domicile. 
+ <br/>Conduits toujours. 
+ <br/>Pas d'aides à domicile pour le moment mais aimerait bien qu'on 
+ <br/>contacte sa fille afin de faire le point sur les aides possibles. 
+ <br/>
+<br/>Le patient est en cours de chimiothérapie : prochaine hospitalisation 
+ <br/>prévue le 22/11 en hospitalisation pour nouvelle chimio puis J8 et 
+ <br/>J15 en HDJ : un point sera refait sur les soins. pas de 
+ <br/>consultation en petite chirurgie demandé par le médecin. 
+ <br/>surveillance de la température à domicile.
+ <br/>
+<br/>Patient ayant tendance à être constipé, sous morphiniques : 
+ <br/>surveillance et traitement laxatifs prescrits
+ <br/>
+<br/>
+<br/>date des soins 19/11/19
+ <br/>prestataire : LVL et Medsoft
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

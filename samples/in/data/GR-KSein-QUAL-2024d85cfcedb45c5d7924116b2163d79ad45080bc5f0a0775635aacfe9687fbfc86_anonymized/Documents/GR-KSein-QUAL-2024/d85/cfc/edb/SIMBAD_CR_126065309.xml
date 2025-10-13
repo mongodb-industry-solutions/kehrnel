@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126065309" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20180503000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180503000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Compte rendu générique de SENOLOGIE<br/><br/>Dicté par : </b> Docteur Meriem Mokdad Adi
+ <b><br/>Dicté le : </b> 03/05/2018 
+ <b><br/>Service : </b> 050-CTE 050 - SEIN 
+ <br/>
+<b>Type de document : </b> 050 CC Générique 
+ <br/>
+<b>Ref :</b> 411264 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : ORC 
+ <br/>
+<br/>Patiente vue ce jour après la C3 J1 CARBOPLATIN et GEMZAR, HERCEPTIN 
+ <br/>(débutée le 02/05) dans le cadre de la récidive hépatique et osseuse 
+ <br/>de T3 depuis février 2018 d'un cancer du sein droit.
+ <br/>
+<br/>Compte-tenu des toxicités hématologiques nécessitant des transfusions 
+ <br/>de plaquettes et des reports de cure en rapport avec la neutropénie, 
+ <br/>il a été décidé de réduire les doses de GEMZAR à 850 mg/m2 et 
+ <br/>CARBOPLATINE AUC 3 et de supprimer le J8 de GEMZAR.
+ <br/>
+<br/>Intercure :
+ <br/>Neuropathie des extrémités des pieds
+ <br/>La semaine dernière signale un Herpes génital traité par acyclovir
+ <br/>Et une angine virale 
+ <br/>Elle signale une discrète anosmie qui a tendance à aggraver . A 
+ <br/>surveiller 
+ <br/>Myalgies Des cuisses intermittentes, souvent le soir.
+ <br/>
+<br/>
+<u><b>CE JOUR</b></u> :
+ <br/>
+<br/>PS :0
+ <br/>Poids 50Kg 
+ <br/>La patiente a eu une évaluation par TEP le 27 avril à Gustave Roussy 
+ <br/>:
+ <br/>Comparativement au précédent examen TEP-FDG du 08/02/2018:
+ <br/>Réponse métabolique (et morphologique) partielle de la lésion 
+ <br/>hépatique unique du segment VII et de la lésion osseuse isolée du 
+ <br/>pédicule droit de T3.
+ <br/>Absence de nouvelle lésion hyperfixante suspecte de malignité 
+ <br/>par ailleurs.
+ <br/>
+<b><br/></b> FEVG 21/03 58% à refaire en juin , ordonnance remise .
+ <br/>
+<br/>Le traitement par XGEVA n'a pas encore été débuté, il sera validé 
+ <br/>après la consultation chez le dentiste le 22 mai prévue à Gustave 
+ <br/>Roussy.
+ <br/>
+<br/>
+<u><b>EN PRATIQUE</b></u> :
+ <br/>
+<br/>Compte tenu de la bonne réponse au traitement, poursuite de la 
+ <br/>chimiothérapie par CARBOPLATINE GEMCITABINE et HERCEPTINE.
+ <br/>
+<br/>J'explique à la patiente qu'elle va avoir encore trois cures donc 
+ <br/>jusqu'au 4 juillet C6.
+ <br/>
+<br/>Je la reverrai en consultation en juin et on prévoit dès maintenant 
+ <br/>un pet scanner d'évaluation vers la mi juillet à Gustave Roussy.
+ <br/>
+<b>DEMANDE de TEP à faxer ce jour.</b>
+<br/>
+<br/>
+<b><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Meriem MOKDAD ADI <br/>Le jeudi 3 mai 2018 à 13:15 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

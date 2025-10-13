@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122921593" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ONCOLOGIE GYNECOLOGIE - DR EMELINE COLOMBA</title>
+    <effectiveTime value="20190830000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190830000000+0000"/>
+        <assignedAuthor>
+            <code code="060/8" displayName="CTE 060 - GYNECOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>COMPTE RENDU DE CONSULTATION DE GYNECOLOGIE<br/><br/>Dicté par : </b> Docteur Emeline Colomba
+ <b><br/>Dicté le : </b> 29/08/2019 
+ <b><br/>Service : </b> 060-CTE 060 - GYNECOLOGIE 
+ <br/>
+<b>Type de document : </b> 060 CC CONSULTATION 
+ <br/>
+<b>Ref :</b> 777728 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> :HLX/A
+ <b><br/></b>
+<br/>
+<b>Je revois ce jour Madame XXXXXX, âgée de 67 ans, actuellement sous <br/>taxol hebdomadaire pour une deuxième rechute platine résistante d'un <br/>adénocarcinome séreux de haut grade inextirpable.<br/><br/>BRCA sauvage CA 125 informatif<br/><br/>Pour mémoire </b> : Patiente incluse dans ATALANTE C1 J1 de carboplatine 
+ <br/>gemcitabine le 18 janvier , 
+ <br/>C2, toxicité hématologique justifiant l'arrêt du J8 et de 
+ <br/>l'ajustement des doses de Carboplatine jusqu'à un AUC3, allergie au 
+ <br/>carboplatine à C3 avec protocole de désensibilisation.
+ <br/>Bonne réponse clinique et biologique.
+ <br/>
+<br/>
+<b>Progression clinique et biologique et radiologique avec majoration du <br/>syndrome de masse pelvien le 23 juillet 2019 justifiant la sortie du <br/>protocole et de débuter une chimiothérapie par Taxol hebdomadaire que <br/>la patiente réalise à domicile.</b> Sortie du protocole Atalante après 
+ <br/>1cure d'entretien.
+ <b><br/></b>
+<br/>
+<b>Je la revois ce jour 1 mois après le début du Taxol hebdomadaire.<br/></b> Sur le plan clinique, amélioration de la symptomatologie 
+ <br/>digestive, persistance de la nécessité d'une ponction d'ascite tous 
+ <br/>les 15 jours.
+ <br/>L'appétit est meilleur.
+ <br/>Augmentation du poids.
+ <br/>
+<br/>Sur le plan biologique : le bilan réalisé le 27 août montre une 
+ <br/>hémoglobine à 9,3 des polynucléaires neutrophiles à 2620 des 
+ <br/>plaquettes à 333 000 et une créatinine à 62 et 1 bilan hépatique 
+ <br/>satisfaisant et un CA 125 à 806 versus 1500 le 14 août en nette 
+ <br/>baisse.
+ <br/>
+<br/>
+<b>Examen clinique :<br/></b> OMS : 1 
+ <br/>Poids à 60 kg 
+ <br/>Tension à 11/7
+ <br/>Pouls à 80/min 
+ <br/>Température à 37° 
+ <br/>Saturation à 100 % 
+ <br/>
+<br/>Auscultation cardiopulmonaire claire symétrique 
+ <br/>Abdomen souple dépressible indolore , ascite de grande abondance.
+ <br/>Oedème des membres inférieurs de grade 1 
+ <br/>PAC propre , les aires ganglionnaires susclaviculaires sont libres
+ <br/>
+<br/>
+<b><h3>Conclusion</h3> : </b>
+<br/>Tolérance satisfaisante d'une chimiothérapie par Taxol hebdomadaire 
+ <br/>avec efficacité biologique et amélioration clinique modérée.
+ <br/>On poursuit le traitement selon les mêmes modalités et je reverrai 
+ <br/>Madame XXXXXX dans 1 mois.
+ <br/>En attendant elle recevra un nouveau cycle de Taxol hebdomadaire 80 
+ <br/>mg/m2 J1 = à J28.
+ <br/>Je lui remets une ordonnance d'INOHEP pour 6 mois. 
+ <br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Emeline COLOMBA <br/>Le jeudi 29 août 2019 à 17:34</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

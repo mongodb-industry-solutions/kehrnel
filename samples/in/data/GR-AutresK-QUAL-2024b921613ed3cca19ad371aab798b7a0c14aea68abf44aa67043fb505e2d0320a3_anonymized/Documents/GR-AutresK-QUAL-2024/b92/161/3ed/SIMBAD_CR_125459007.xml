@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125459007" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>DIOPP - Consultation de Diététique</title>
+    <effectiveTime value="20180719000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180806000000+0000"/>
+        <assignedAuthor>
+            <code code="DIE/373" displayName="DIETETIQUE - NUTRITION"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Evaluation nutritionnelle réalisée dans le cadre d'une consultation 
+ <br/>diététique pré-allogreffe à J-8 par la diététicienne : BOROWIECKI 
+ <br/>Laura
+ <br/>
+<br/>
+<b>DONNEES ANTHROPOMETRIQUES ET ANALYSE :</b>
+<br/>Poids habituel (septembre 2016) :83Kg
+ <br/>Poids actuel :77Kg 
+ <br/>Taille :1m79 
+ <br/>IMC :24 kg/m2
+ <br/>% perte de poids/poids habituel :-6 kg soit 7% en 1 an et demi 
+ <br/>Force Musculaire (handgrip) :Non mesurée
+ <br/>
+<br/>
+<b>VALEURS BIOLOGIQUES :</b>
+<br/>Albumine : 44g/L
+ <br/>Préalbumines : 290mg/L
+ <br/>CRP : 2,5g/L
+ <br/>
+<br/>
+<b>ETAT NUTRITIONNEL :</b>
+<br/>ABSENCE de dénutrition
+ <br/>
+<b><br/>ESTIMATION DES BESOINS NUTRITIONNELS :</b>
+<br/>Energétique :2310 à 2695 Kcal/J (x30 à 35kcal/kg poids/J) 
+ <br/>Protidiques :92 à 115g de protéines/J (x1,2 à 1,5g/kg poids/J)
+ <br/>
+<br/>
+<b>ENQUETE ALIMENTAIRE :</b>
+<br/>Pas de changement dans ses habitudes alimentaires depuis notre 
+ <br/>dernière consultation mais s'inquiète de ne pas prendre de poids. 
+ <br/>Conseils d'enrichissement et de fractionnement revu ensemble. 
+ <br/>Ordonnance de CNO faite par le Dr Pilorge, conseils donnés sur 
+ <br/>l'interêt de les prendre et comment les prendre. 
+ <br/>
+<br/>A voir à son admission. 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

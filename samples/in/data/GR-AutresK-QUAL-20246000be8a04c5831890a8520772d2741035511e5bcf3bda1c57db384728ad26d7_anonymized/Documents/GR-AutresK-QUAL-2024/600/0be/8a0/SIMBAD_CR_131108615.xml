@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_131108615" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Dr Yun Gan TAO - CONSULTATION DE RADIOTHERAPIE</title>
+    <effectiveTime value="20150506000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20150507000000+0000"/>
+        <assignedAuthor>
+            <code code="RTE/414" displayName="RADIOTHERAPIE EXTERNE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ On est à 6 mois après la radio-chimiothérapie d'un cancer oropharyngé 
+ <br/>vélaire T3 N2c M0, dans GORTEC 2004-01 bras IMRT.
+ <br/>
+<br/>Poids : 63 kg.
+ <br/>OMS : 1.
+ <br/>Se sent un peu fatigué.
+ <br/>Un peu de douleurs musculaires des bras et des jambes.
+ <br/>Xérostomie de grade II selon SOMA, grade I selon critères RTOG.
+ <br/>Pas de douleur au niveau bucco-pharyngé.
+ <br/>Alimentation solide.
+ <br/>
+<br/>A l'examen ce jour : 
+ <br/>Pas de trismus.
+ <br/>Protraction linguale normale.
+ <br/>Pas de lésion suspecte au niveau bucco-pharyngé, surtout au niveau 
+ <br/>vélaire.
+ <br/>On retrouve un aspect cicatriciel du voile qui est rétracté.
+ <br/>En nasofibroscopie, pas de lésion suspecte sur le voile, pas de 
+ <br/>lésion suspecte au niveau pharyngo-laryngé.
+ <br/>Au niveau cervical, on retrouve toujours un jabot sous-mentonnier, 
+ <br/>pas d'adénopathie palpable.
+ <br/>
+<br/>Questionnaire rempli ce jour.
+ <br/>
+<br/>A revoir dans 6 mois en radiothérapie.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

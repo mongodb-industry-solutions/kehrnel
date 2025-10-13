@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127558364" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CR Consultation du 2017-08-31</title>
+    <effectiveTime value="20170831000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170831000000+0000"/>
+        <assignedAuthor>
+            <code code="UPO/332" displayName="UNITE DE PSYCHO_ONCOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Poursuite de l'accompagnement psychologique.
+ <br/>Mme XXXXXX rencontrait également aujourd'hui mon collègue Dr Rouby 
+ <br/>pour évoquer avec lui les retentissement anxieux majeurs de la 
+ <br/>perspective de reprendre son poste dans un cabinet d'avocats aux 
+ <br/>exigences très intenses.
+ <br/>Détresse morale et émotionnelle majeure à l'évocation du contexte de 
+ <br/>travail et de l'investissement physique et psychique nécessaires, qui 
+ <br/>semblent en effet tout à fait contre-indiqués dans le contexte d'après 
+ <br/>traitement.
+ <br/>
+<br/>Elle a rencontré le médecin et l'assistante sociale du travail qui 
+ <br/>ont évoqué avec elle la possibilité d'un arrêt de travail prolongé 
+ <br/>jusqu'à ses 62 ans, ou d'un arrêt plus restreint avec une reprise de 
+ <br/>poste par interim.
+ <br/>
+<br/>Je la reverrai dans 15 jours. 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

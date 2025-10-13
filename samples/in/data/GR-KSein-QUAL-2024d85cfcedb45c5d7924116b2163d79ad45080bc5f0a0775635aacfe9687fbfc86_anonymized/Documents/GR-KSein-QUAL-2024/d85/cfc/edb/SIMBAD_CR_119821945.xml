@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_119821945" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>DEPARTEMENT DE MEDECINE - SERVICE HERAULT</title>
+    <effectiveTime value="20201210000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201210000000+0000"/>
+        <assignedAuthor>
+            <code code="HER/183" displayName="HERAULT"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>COMPTE RENDU D'HOSPITALISATION SERVICE HERAULT<br/><br/> Dicté par : </b> Docteur Baptiste Cervantes, Interne
+ <b><br/>Dicté le : </b> 30/11/2020 
+ <b><br/>Service : </b> HER-HERAULT 
+ <br/>
+<b>Type de document : </b> HER RH MEDECINE 
+ <br/>
+<b>Ref :</b> 1175398 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : Gwéna\'eblle HAMONIC
+ <b><br/></b>
+<br/>
+<b> Nous avons le regret de vous annoncer le décès de votre patiente <br/>survenu dans notre service le 08/12/2020.</b>
+<br/>
+<br/>
+<u><b>HOSPITALISATION SERVICE HERAULT DU 30 NOVEMBRE AU 08 DECEMBRE 2020</b></u>
+<br/>
+<br/>
+<u><b>Interne : Baptiste CERVANTES<br/></b></u>
+<br/>Mme XXXXXX XXXXXX, 63 ans, est hospitalisée pour la prise en 
+ <br/>charge d'une altération de l'état général avec anorexie dans le cadre 
+ <br/>d'un cancer du sein triple négatif multimétastatique diagnostiqué en 
+ <br/>2016, actuellement en 9ème ligne sous XELODA depuis octobre 2020.
+ <br/>
+<b><br/>Médecin référent : Docteur Meriem MOKDAD-ADi<br/></b>
+<br/>
+<u><b>ANTECEDENTS / PATHOLOGIES ASSOCIEES</b></u>
+<br/>Aucun
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE</b></u>
+<b> </b>
+<br/>
+<br/>T2 N0 de 25mm du sein droit diagnostiqué en juillet 2016, carcinome 
+ <br/>canalaire infiltrant de grade III triple négatif. Dans le bilan 2 
+ <br/>micronodules pulmonaires à surveiller. 
+ <br/>
+<br/>Chimiothérapie néo-adjuvante par 6 EC 75 doses denses + 12 TAXOL 
+ <br/>hebdo débutée le 29/08/2016. 
+ <br/>
+<br/>TGS le 23/02/2017 : persistance de 13mm de carcinome métaplasique 
+ <br/>avec une différentiation chondroïde ou ostéoïde, 17mm 
+ <br/>d'intracanalaire, 1GS-. 
+ <br/>
+<br/>Radiothérapie : sein + surimpression terminée le 08/06/2017. 
+ <br/>
+<br/>XELODA adjuvant 6 cycles compte tenu du risque persistant, à 
+ <br/>expliquer à la patiente. 
+ <br/>
+<br/>TEP scanner le 08/02/2018 : Aspect TEP en faveur d'une rechute 
+ <br/>métastatique avec atteinte osseuse de T3 et atteinte hépatique 
+ <br/>(segment VII). 
+ <br/>
+<br/>La patiente avait débuté une chimiothérapie par CARBOPLATINE GEMZAR 
+ <br/>de février à juillet 2018. 
+ <br/>
+<br/>Elle a reçu HERCEPTIN à partir du 02/05 en association avec 
+ <br/>CARBOPLATINE- GEMZAR puis en association avec ENDOXAN débuté en 
+ <br/>juillet 2018. 
+ <br/>
+<br/>Suite au résultat de la biopsie hépatique le 07/03/2018 : 
+ <br/>localisation hépatique d'une prolifération tumorale maligne dont la 
+ <br/>morphologie est tout à fait compatible avec une localisation du 
+ <br/>carcinome mammaire de type métaplasique avec différenciation 
+ <br/>chondroïde et / ou ostéoïde connuRE négatif, RP négatif, présence 
+ <br/>d'une amplification du gène HER2 selon les critères GEFPICS 2014 dans 
+ <br/>les cellules analysées par FISH. 
+ <br/>
+<br/>Il s'agit d'une amplification faible avec la valeur "borderline" de 
+ <br/>ratio qui est à 2,05. 
+ <br/>
+<br/>Le PET scan réalisé le 27/04 avait montré : une réponse métabolique 
+ <br/>partielle de la lésion hépatique unique du segment VII et de la 
+ <br/>lésion osseuse isolée en T3. 
+ <br/>
+<br/>Elle a reçu 6 cycles de CARBOPLATINE GEMZAR débuté le 26 février 
+ <br/>jusqu'au 09/07 marqué par des toxicités importantes sur le plan 
+ <br/>hématologique : thrombopénie et neutropénie. 
+ <br/>
+<br/>PROFEEL : mutation TP53
+ <br/>
+<br/>Sous ENDOXAN depuis le 23/07 jusqu'au 25/10.
+ <br/>
+<br/>Arrêt de l'ENDOXAN pour progression hépatique et osseuse. 
+ <br/>
+<br/>TEP 19/10: comparativement à l'examen précédent de juillet 2018, 
+ <br/>aspect de progression, devant la majoration des lésions 
+ <br/>pré-existantes du foie et de T3, sans nouvelle fixation suspecte. 
+ <br/>
+<br/>IRM rachis 31/10 : globale stabilité de l'atteinte de T3 avec 
+ <br/>atteinte épidurale foraminale droite T3/T4. 
+ <br/>
+<br/>Pas d'apparition de lésion osseuse suspecte. 
+ <br/>
+<br/>Pas de compression médullaire. 
+ <br/>
+<br/>La patiente ne prend pas d'XGEVA car elle appréhende les effets 
+ <br/>secondaires, elle demande un temps de réflexion. 
+ <br/>ERIBULINE en 3ème ligne le 09/11. 
+ <br/>
+<br/>Il était prévu de lui proposer une inclusion dans le protocole MCLA 
+ <br/>cohorte 1 : non éligible car n'avait pas reçu le PERTUZUMAB au 
+ <br/>préalable. 
+ <br/>
+<br/>MCLA cohorte 2, elle n'a pas eu d'hormonothérapie avant, donc ne peut 
+ <br/>être incluse dans VIOLETTE et IMMU132: non éligible compte tenu de la 
+ <br/>faible amplification HER2. 
+ <br/>
+<br/>1ère ligne : CARBOPLATINE / GEMZAR
+ <br/>2ème ligne : ENDOXAN 
+ <br/>3ème ligne : ERIBULINE
+ <br/>4ème ligne : CMF 
+ <br/>5ème ligne : NAVELBINE 
+ <br/>6ème ligne : Taxol jusqu'au 09/03
+ <br/>7ème ligne : Xeloda 
+ <br/>8ème ligne : Carboplatine 
+ <br/>
+<br/>Pour rappel PDL1 négatif (recherché en mars 2018) 
+ <br/>RA négatif (recherché en novembre 2018) 
+ <br/>
+<br/>Je propose aussi de discuter du dossier pour un protocole de phase I: 
+ <br/>Son dossier a été évalué au staff du comité 150 des essais précoces et 
+ <br/>malheureusement nous n'avons pas d'essai thérapeutique de phase I à 
+ <br/>proposer à cette patiente. 
+ <br/>
+<br/>Cependant, cette patiente est potentiellement éligible dans l'étude 
+ <br/>biologique de phase II de type STARTRK-2, a signé le consentement le 
+ <br/>3/10/2020
+ <br/>
+<br/>Je faxe le 8/10 , une fiche de screening pour voir si il y a une 
+ <br/>possibilité pour une inclusion dans un essai de phase I 
+ <br/>
+<br/>IRM cérébrale au CCML en septembre : normale 
+ <br/>
+<br/>Radiothérapie L4 et sacrum terminée 31/08
+ <br/>
+<br/>
+<br/>Ponction pleurale le 17/11/2020 permettant une évacuation de 2L.
+ <br/>
+<br/>
+<u><b>HISTOIRE RECENTE</b></u>
+<br/>
+<br/>Consultation le 23/11/2020 avec son oncologue référent, Dr 
+ <br/>MOKDAD-ADI, qui lui propose de poursuivre le XELODA et d'effectuer 
+ <br/>une ponction d'ascite évacuatrice qui sera réalisée le 25/11/2020 
+ <br/>ainsi qu'un myélogramme afin d'explorer la thrombopénie grade III à 
+ <br/>50 G/L persistante.
+ <br/>
+<br/>Mme XXXXXX est hospitalisée suite à la réalisation de ces 
+ <br/>différents examens qui ont entrainé une fatigue importante.
+ <br/>
+<br/>
+<u><b>TRAITEMENT A L'ARRIVEE</b></u>
+<br/>. DOLIPRANE 500 mg/8h
+ <br/>. ACUPAN 1 amp sur un morceau de sucre, max 4/j si douleurs
+ <br/>. RAMIPRIL 2.5 mg 1 cp/j
+ <br/>. VALACYLOVIR 500 mg matin et soir
+ <br/>. XANAX 0.25 mg 1 cp/j
+ <br/>. SOLUPRED 20 mg matin
+ <br/>. LANSOPRAZOLE 1 cp/j
+ <br/>. MOVICOL 1 sachet/j
+ <br/>. Nutrition parentérale par SMOFKABIVEN 550 kcal/493 ml sur 12H la 
+ <br/>nuit
+ <br/>. CNO type FORTIMEL 2 prises/j
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE A l'ARRIVEE DANS LE SERVICE</b></u>
+<br/>OMS : 4
+ <br/>Poids initial : 51 kg
+ <br/>Poids actuel : 46 kg 
+ <br/>Température : 36°C TA : 120/81 Pouls : 104 bpm
+ <br/>Saturation : 97 % en AA
+ <br/>
+<br/>Prise en charge nutritionnelle : CNO + nutrition parentérale la nuit.
+ <br/>Syndrome douloureux : au niveau abdominal, EVA d'entrée 2/10.
+ <br/>
+<br/> Auscultation pulmonaire : auscultation difficile, patiente 
+ <br/>difficilement mobilisable, diminution du murmure vésiculaire 
+ <br/>bilatéral, pas de toux, pas de crachat, pas de douleur thoracique 
+ <br/>Auscultation cardiaque : bruits du coecur réguliers, sans souffle
+ <br/>OMI bilatéraux prenant partiellement le godet
+ <br/>Abdomen : météorisé avec ascite et hépatomégalie majeure descendant 
+ <br/>jusqu'en fosse iliaque droite et débordant à gauche, abdomen sensible 
+ <br/>dans son ensemble, absence de selles depuis 72 heures mais présence de 
+ <br/>gaz, BHA faibles mais présents
+ <br/>
+<br/>Examen du PAC : propre, en place
+ <br/>
+<br/>
+<u><b>EXAMENS COMPLEMENTAIRES A l'ARRIVEE DANS LE SERVICE</b></u>
+<br/>
+<br/>
+<b>Bilan biologique du 01/12/2020<br/></b> - NFS : leucocytes à 4 900/mm3, PNN à 4 100/mm3, Hb à 10 g/dl, 
+ <br/>plaquettes à 31 000/mm3,
+ <br/>
+<br/>- Créatinine à 40 μmol/l, urée à 10.6 mmol/l, 
+ <br/>clairance de la créatinine à 140 ml/mn,
+ <br/>
+<br/>- Ionogramme sanguin : sodium à 127 mmol/l, potassium à 4.7 mmol/l, 
+ <br/>calcium corrigé à 2.50 mmol/l, protides à 52 g/L,
+ <br/>
+<br/>- Bilan hépatique : PAL à 865 UI/L, ASAT à 325 UI/L, ALAT à 148 UI/L, 
+ <br/>GGT à 1 159 UI/L, bilirubine totale à 67 μmol/L, albumine à 26 g/L, 
+ <br/>
+<br/>- Hémostase : TP à 57 %, fibrinogène à 2.9 g/L.
+ <br/>
+<br/>
+<u><b>EN PRATIQUE</b></u>
+<br/>
+<br/>Hospitalisation dans le cadre d'une altération importante de l'état 
+ <br/>général avec anorexie.
+ <br/>
+<br/>. Nécessité d'une nouvelle évaluation afin de discuter de 
+ <br/>l'efficacité du XELODA
+ <br/>. Décision de poursuite de la nutrition parentérale par SMOFKABIVEN 
+ <br/>et de faire une nouvelle évaluation hépatique
+ <br/>
+<br/>
+<u><b>EVOLUTION DANS LE SERVICE</b></u>
+<br/>
+<br/> * 
+ <u>Sur le plan oncologique</u> : 
+ <br/>
+<br/>Patiente OMS 4.
+ <br/>Réalisation d'un nouveau scanner TAP le 02/12/2020 qui confirme la 
+ <br/>franche progression comparativement au scanner du 08/10/2020 avec 
+ <br/>nette majoration de l'atteinte métastatique pulmonaire, pleurale 
+ <br/>droite et hépatique, avec apparition de carcinose péritonéale.
+ <br/>
+<br/>Dans ce contexte, en accord avec Mme XXXXXX, sa fille et personne 
+ <br/>de confiance, nous décidons d'une prise en charge palliative 
+ <br/>exclusive.
+ <br/>
+<br/>Introduction d'HYPNOVEL le soir à partir du 04/12/2020 puis sur 24 
+ <br/>heures le 05/12/2020.
+ <br/>
+<br/>Evolution rapidement défavorable avec décès de Mme XXXXXX le mardi 
+ <br/>08/12/2020 à 07h00 dans le service, en présence de ses proches.
+ <br/>
+<br/> * 
+ <u>Sur le plan nutritionnel</u> : 
+ <br/>
+<br/>Arrêt de la nutrition parentérale devant l'altération extrêmement 
+ <br/>importante du bilan hépatique et la décision d'une prise en charge 
+ <br/>palliative exclusive.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<br/>
+<br/>Prise en charge palliative d'un cancer du sein triple négatif 
+ <br/>multimétastatique.
+ <br/>Décès de la patiente dans le service le 08/12/2020. 
+ <br/>
+<br/>
+<br/>
+<b>Réactualisation de la FAD le jour de la sortie <br/>NON</b>
+<br/>Prise en charge palliative 
+ <br/>OUI 
+ <br/>
+<br/>
+<b>EVALUATION DE LA CHARGE EN SOINS</b>
+<br/>* Ponction à visée symptomatique 
+ <br/>NON
+ <br/>* Adaptation du traitement antalgique 
+ <br/>OUI
+ <br/>* Irradiation antalgique 
+ <br/>NON
+ <br/>* Occlusion intestinale 
+ <br/>NON
+ <br/>* Transfusion sanguine 
+ <br/>NON
+ <br/>* Prise en charge de la détresse respiratoire 
+ <br/>avec désaturation <90% AA 
+ <br/>NON
+ <br/>* Traitement des divers symptômes vecteurs d'inconfort 
+ <br/>(toux, prurit, nausées, vomissements, anxiété, 
+ <br/>dépression, troubles du sommeil, déshydratation,...) 
+ <br/>OUI 
+ <br/>* Soins de nursing 
+ <br/>OUI 
+ <br/>* Nutrition 
+ <br/> - déja sous CNO, nutrition entérale/parentérale 
+ <br/>OUI
+ <br/> - mise en route CNO/nutrition entérale/parentale 
+ <br/>NON 
+ <br/>
+<br/>
+<b>PRISE EN CHARGE MULTI-DISCIPLINAIRE<br/></b> * Prise en charge de l'EMASP 
+ <br/>OUI 
+ <br/>* Cs CETD (douleur, sophrologie, auriculothérapie) 
+ <br/>NON
+ <br/>* Cs onco-psychologie 
+ <br/>OUI 
+ <br/>* Prise en charge sociale 
+ <br/>NON
+ <br/>* Soins de kinésithérapie 
+ <br/>NON
+ <br/>* cs diététicienne ou nutritionniste 
+ <br/>NON
+ <br/>
+<br/>
+<b>MODE DE SORTIE </b>
+<br/>* HAD Santé Service 
+ <br/>NON
+ <br/>* HAD province 
+ <br/>NON
+ <br/>* IDE libérale 
+ <br/>NON 
+ <br/>
+<b>_________________________________________________<br/>Signé électroniquement par Docteur Baptiste CERVANTES <br/>Le mercredi 9 décembre 2020 à 11:28 </b>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

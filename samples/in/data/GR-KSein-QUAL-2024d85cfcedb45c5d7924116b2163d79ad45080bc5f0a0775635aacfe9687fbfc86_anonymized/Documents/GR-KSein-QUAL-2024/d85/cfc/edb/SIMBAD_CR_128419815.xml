@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128419815" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>MED.NUCLEAIRE MN SCINTI OS</title>
+    <effectiveTime value="20170313000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170313000000+0000"/>
+        <assignedAuthor>
+            <code code="MNU/174" displayName="MEDECINE NUCLEAIRE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur EL FARSAOUI KHADIJA
+ <br/>
+<br/>Destinataire : CTE 050 - SEIN
+ <br/> DR MIAILHE GREGOIRE
+ <br/>
+<br/>
+<b>SCINTIGRAPHIE OSSEUSE AU HDP 99mTc<br/><br/>Dicté par : </b> Khadija EL FARSAOUI, 
+ <b><br/>Dicté le : </b> 10/03/2017
+ <b><br/>Service : </b> Mnu-Medecine Nucleaire
+ <br/>
+<b>Type de document : </b> MNU CE SCINTI OS
+ <b><br/>Ref:</b> 226690 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX
+ <b><br/>Identifiant : </b> XXXXXX
+ <b><br/>Date de naissance : </b> XXXXXX
+ <br/>
+<b>Sexe: </b> Femme 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : ASW
+ <br/>
+<br/>Examen réalisé le : 10/03/2017
+ <br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/><u><br/></u></b> Bilan d'extension d'un cancer du sein. 
+ <br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/><u><br/></u></b> Administration par voie intra-veineuse de 494 MBq de HDP 99mTc.
+ <br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/><u><br/></u></b> - Absence de foyer hyperfixant suspect sur l'ensemble du squelette.
+ <br/>- Fixation ponctuelle de l'arc moyen de la 10ème ou 9ème côte gauche 
+ <br/>d'allure post traumatique. 
+ <br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/><u><br/></u>Absence de signe scintigraphique de localisation osseuse secondaire. <br/></b>
+<br/>
+<br/>
+<br/>EL FARSAOUI, Khadija 
+ <br/>Signé électroniquement par Khadija EL FARSAOUI 
+ <br/>à 16:41 le 10/3/2017
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

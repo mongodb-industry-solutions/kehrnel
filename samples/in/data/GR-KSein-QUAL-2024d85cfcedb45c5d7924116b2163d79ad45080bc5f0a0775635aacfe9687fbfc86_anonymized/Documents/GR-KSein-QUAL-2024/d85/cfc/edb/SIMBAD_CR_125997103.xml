@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125997103" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CR Consultation du 2018-05-16</title>
+    <effectiveTime value="20180516000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180516000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>DEPARTEMENT DE MEDECINE ONCOLOGIQUE - SENOLOGIE<br/>CONSULTATION PROFEEL-SEIN INCLUSION<br/><br/>Dicté par : </b>Andréa Varga
+ <b><br/>Dicté le : </b>20/02/2018 
+ <b><br/>Service : </b>050-CTE 050 - SEIN 
+ <br/>
+<b>Type de document : </b>050 CC PROFEEL-SEIN INCLUSION 
+ <br/>
+<b>Ref :</b> 364299 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b>XXXXXX XXXXXX XXXXXX
+ <b> <br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe</b>
+<b>: </b>Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : CLN/A
+ <br/>
+<br/>CR dicté par : Andrea Varga 
+ <br/> Patiente de 60ans, adressée par le Docteur Mokdad, vue le 20 février 2018 pour discuter de la possibilité d'une inclusion dans le 
+ <b>PROFEEL-SEIN (biopsie liquide pour profilage moléculaire), </b>dans le cadre de la prise en charge thérapeutique d'un cancer du sein RE- RP- HER2- BRCA non muté en Xième ligne de traitement.
+ <br/>
+<u><b>Antécédents (diagnostic et date de début)<br/> </b>Médicaux</u> :hépatite A en 1973, migraine 
+ <br/>
+<br/>
+<u>Chirurgicaux</u> :appendicectomie, intervention pour son cancer du sein (tumorectomie et ganglion sentinelle )
+ <br/>
+<br/>
+<u>Familiaux</u> :grand mère maternelle un cancer du sein à l'âge de 89 ans 
+ <br/>
+<br/>
+<u>Gynécologiques (dates des dernières règles , ménopause)</u> :ménopause depuis l'âge de 54 ans
+ <br/>
+<br/>
+<br/>
+<u><b>Allergie<br/> </b></u>* Produit : aucune, intolérance à l'Aspirine -
+ <br/>
+<u><b>Histoire de la maladie<br/> </b></u>
+<br/>Date du diagnostic : 17 juillet 2017 
+ <br/>Prise en charge initiale : 
+ <br/>TNM au diagnostic : T2 N0 M0
+ <br/>Décrire les différentes lignes traitements : 
+ <br/>* 1ère ligne de 'chimiothérapie : 6 cycles 'EC 75 doses denses suivis par quatre cures de Taxol hebdomadaire . 
+ <br/>Intervention chirurgicale par tumorectomie ganglion sentinelle le 23 février2017 : persistance de 13 mm de carcinome métaplasique avec différenciation chondroide ou osteoide, 17 mm de CIC, 1 GS -.Radiothérapie au niveau du sein avec surimpression du lit tumoral associant du xeloda pendant 6 mois. Arrêt de Xeloda en oct 2017 et poursuite de la surveillance .
+ <br/>Récidive tumorale, objectivé en février 2018 par atteinte osseuse vertébrale T3 et atteinte hépatique. 
+ <br/>
+<u><b>Traitement concomitant en cours: </b></u>Zomig à la demande pour les migraines 
+ <br/>
+<u><b><br/> Symptômes pré-inclusion : </b></u>douleurs tumorales liées à la lésion osseuse T3 
+ <br/>
+<u><b><br/>Examen physique<br/> </b></u>OMS : 0
+ <br/>Anomalies : NCS
+ <br/>
+<u><b>Examens complémentaires<br/> </b>1- Bilan biologique</u> : Date 12/02/2018
+ <br/>* 
+ <u>absence d'anomalie</u> cliniquement significative
+ <br/>
+<br/>
+<br/>
+<u><b>En pratique<br/> </b></u>J'explique ce jour à la patiente les principes, les contraintes et les incertitudes thérapeutiques ainsi que les risques potentiels des effets secondaires des essais thérapeutiques.
+ <br/>
+<br/>
+<br/>Je vérifie les critères d'inclusion et de non inclusion et les éventuels traitements concomitants interdits.
+ <br/>
+<br/>Je remets ce jour à la patiente la notice d'information et le formulaire de consentement éclairé pour l'utilisation de reliquats.
+ <br/>
+<br/>Elle signe ce jour le consentement éclairé (version 6 du 03/06/2016) de participation au protocole de biopsie liquide PROFEEL-SEIN en double exemplaire avec un exemplaire qui lui est remis en main propre. 
+ <br/>
+<br/>La patiente est également avertie du délai d'obtention des résultats. En fonction des anomalies retrouvées, la patiente sera convoquée en consultation.
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Andréa VARGA <br/>Le mardi 3 avril 2018 à 14:36</b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

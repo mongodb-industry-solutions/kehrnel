@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120860081" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BAC : numero de dossier GLIMS : 201830263</title>
+    <effectiveTime value="20200701000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200709000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Dr J. Delahousse (61 92) <br/>Interrne D. Combarel (37 69) <br/>Pr A. Paci (47 30) </p>
+<p>Dr A. Arbab (41 65) <br/>Pr A. Bennaceur (40 65) <br/>Interrne S. Fodil (37 69) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Dr E. Gallois (40 62) <br/>Pr F. Griscelli (51 93) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX José </p>
+<p>DEMANDE N° </p>
+<p>MasculinNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>01/07/2020 09:11 </p>
+<p>Sexe : </p>
+<p>01/07/2020 08:15 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>SOINS AIGUS REANIMATION </p>
+<p> 2 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>jeudi 09 juillet 2020 </p>
+<p>Complet </p>
+<p>Résultats <br/>Valeurs </p>
+<p>Précédentes <br/>Val. </p>
+<p>Valeurs de <br/><br/>Référence </p>
+<p>Analyses Unités <br/></p>
+<p>HÉMOCULTURE : CHAMBRE SOUS-CUTANÉE </p>
+<p>Date et heure de prélèvement : EGA01/07/20 08:15 </p>
+<p> FLACON AÉROBIE : <br/>Résultat flacon aérobie (n°1) EGANégatif le 06/07/20 <br/>Hémoculture - Système automatisé de détection microbienne Virtuo (r) </p>
+<p>Commentaire volume (flacon aérobie) : bactVolume inférieur à 10mL par flacon(recommandation de volume TOTAL minimum prélevé par épisode septiqueinitial de 40mL = 2 hémocultures avec 10mL/flacon) </p>
+<p> FLACON ANAÉROBIE : <br/>Résultat flacon anaérobie (n°1) ECYPositif <br/>Hémoculture - Système automatisé de détection microbienne Virtuo (r) </p>
+<p>Délai de Positivité 43.3 h ECY </p>
+<p>Coloration de Gram (flacon anaérobie) : ECYCocci Gram + en amas : Présence </p>
+<p>Commentaire volume (flacon anaérobie) : bactVolume inférieur à 10mL par flacon(recommandation de volume TOTAL minimum prélevé par épisode septiqueinitial de 40mL = 2 hémocultures avec 10mL/flacon) </p>
+<p> CULTURE : </p>
+<p>- Staphylococcus capitis : flacon anaérobie </p>
+<p> ANTIBIOGRAMME(S) : </p>
+<p>Staphylococcus capitis </p>
+<p>CMI (mg/l) </p>
+<p>OXACILLINE R </p>
+<p>AMOXICILLINE R </p>
+<p>AMOXI/CLAVU R </p>
+<p>TOBRAMYCINE R </p>
+<p>GENTAMICINE R </p>
+<p>ERYTHROMYCINE R </p>
+<p>CLINDAMYCINE R </p>
+<p>PRISTINAMYCINE S </p>
+<p>NORFLOXACINE R </p>
+<p>LEVOFLOXACINE R </p>
+<p>RIFAMPICINE R </p>
+<p>ACIDE FUSIDIQUE S </p>
+<p>FOSFOMYCINE R </p>
+<p>COTRIMOXAZOLE S </p>
+<p>LINEZOLIDE S </p>
+<p>ECY </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 09/07/2020 à 13:09 par : Dr GALLOIS Emmanuelle,Dr CHACHATY Elisabeth</p>
+<p></p>
+<p></p>
+<p>Résultats <br/></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>SOINS AIGUS REANIMATION </p>
+<p>Unités <br/>Valeurs de <br/><br/>Référence </p>
+<p>Patient : </p>
+<p>Val.Analyses <br/>Valeurs </p>
+<p>Précédentes <br/></p>
+<p> 2 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX josé </p>
+<br/>
+<p>Commentaire(s) : ECY- Staphylococcus capitis : La résistance à l'oxacilline est associée à unerésistance à toutes les pénicillines, céphalosporines et carbapénèmeshabituellement utilisés. </p>
+<p>Méthodes : _PYL <br/>A </p>
+<p>Identification microbienne : spectrométrie de masse MALDI-TOF </p>
+<p>Antibiogramme : diffusion <br/>CMI (vancomycine, teicoplanine, colistine) : dilutions en milieu liquide <br/>CMI (autres molécules) : diffusion </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 09/07/2020 à 13:09 par : Dr GALLOIS Emmanuelle,Dr CHACHATY Elisabeth</p>
+<p></p>
+<ul>
+<li>Hémoculture : Chambre sous-cutanée</li>
+<ul>
+<li>Flacon aérobie :</li>
+<li>Flacon anaérobie :</li>
+<li>Culture :</li>
+<li>Antibiogramme(s) :</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

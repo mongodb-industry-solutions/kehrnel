@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126575460" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20180212000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180214000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Patiente de 60 ans, vue ce jour dans le cadre de la prise en charge <br/>d'une récidive métastatique osseuse et hépatique d'un cancer du sein <br/>triple négatif diagnostiqué en 2016 ayant temrminé les traitements <br/>fin <br/>octobre 2017.</b>
+<br/>
+<br/>
+<u><b>CE JOUR</b></u> :
+ <br/>
+<br/>La patiente va bien.
+ <br/>Elle est asymptomatique, OMS à 0.
+ <br/>Poids : 50 kg.
+ <br/>Je rappelle que la patiente se plaint de douleurs au niveau du rachis 
+ <br/>de la hanche droite qui ont motivé la réalisation d'une scintigraphie 
+ <br/>osseuse qui retrouvait une fixation au niveau du rachis T3 et T7.
+ <br/> Une IRM a été réalisée le 01.02 au niveau du rachis cervical et 
+ <br/>dorsal : il existe une raideur au niveau du rachis cervical sur les 
+ <br/>coupes sagittales lésion d'uncodiscarthrose étagée modérée avec 
+ <br/>aspect pincé des disques intervertébraux cervicaux.
+ <br/>Le mur vertébral postérieur est correctement aligné.
+ <br/>Aspect normal du cordon médullaire et des espaces épiduraux.
+ <br/>
+<br/>IRM du bassin réalisée le 05.02 : normale.
+ <br/>
+<br/>PETSCAN réalisé à l'IGR le 08.02 montre une rechute métastatique avec 
+ <br/>atteinte osseuse de T3 et une atteinte hépatique au niveau du segment 
+ <br/>VII avec une lésion hypodense d'environ 3 cm du dôme hépatique, une 
+ <br/>SUV à 7.
+ <br/>
+<br/>Par ailleurs, pas d'autre lésion identifiée.
+ <br/>
+<br/>Sur le plan biologique du 29.01, il n'y avait pas de perturbation du 
+ <br/>bilan hépatique ni d'ascencion du marqueur qui reste normal.
+ <br/>
+<br/>On programme une prise de sang ce jour.
+ <br/>
+<br/>Je propose à la patiente une inclusion dans le protocole SAFIR 02.
+ <br/>
+<br/>Je lui explique qu'elle sera convoquée pour une échographie hépatique 
+ <br/>pour voir la faisabilité d'une biopsie hépatique.
+ <br/>Elle signe ce jour le consentement pour la phase de sélection.
+ <br/>
+<br/>Nous annulons le RDV d'IRM du 26.02 car elle l'a déjà eue.
+ <br/>
+<br/>
+<u><b>EN PRATIQUE</b></u> :
+ <br/>
+<br/>La patiente sera revue avec les résultats.
+ <br/>Je lui explique qu'elle va avoir une chimiothérapie par ERIBULINE J1 
+ <br/>J8 J21.
+ <br/>Je lui explique les effets secondaires du traitement avec une très 
+ <br/>faible probabilité d'alopécie.
+ <br/>On lui enverra les RDV de la chimiothérapie en fonction des dates de 
+ <br/>l'échographie et de la biopsie hépatique.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

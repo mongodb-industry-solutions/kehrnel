@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120949238" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>INTERNE DE GARDE - URGENCES - NUIT ET WEEK-END</title>
+    <effectiveTime value="20200628000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200628000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ \qc
+ <u><b>COMPTE-RENDU DE CONSULTATION DES URGENCES</b></u>
+<br/>
+<br/>
+<u><b>CONSULTATION DU xx/xx/xx<br/></b></u>
+<br/>
+<br/>
+<b>EXAMINATEUR : TERLIZZI Mario (Interne de garde)<br/><br/></b> Patient actuellement hospitalisé au Rhone pour carcinome épidermoide 
+ <br/>de l'oropharynx G en progression locale avec contact carotidien G.
+ <br/>Vu en urgence dans sa chambre à 4h du matin pour hémorragie cervicale 
+ <br/>G et buccale.
+ <br/>A mon arrivée patient assis au bord du lit, cyanosé. Sp02 95% en AA, 
+ <br/>FC 140bpm, PA 160/110mmHg. En dyspnée aigue.
+ <br/>=> Mesures immédiates:
+ <br/>- compression cervicale G
+ <br/>- aspiration sang dans la bouche
+ <br/>- Administration de SOLUMEDROL 60mg et EXACYL 1g en IV
+ <br/>- 02 montée sur trachéostomie
+ <br/>- bio prélevée en urgence
+ <br/>
+<br/>Cliniquement hémodynamique stable, auscultation cardiopulmonaire 
+ <br/>normale hormis tachycardie. Hémorragie cervicale G par un orifice de 
+ <br/>1cm de grand axe à la base du cou G (paquet ganglionnaire).
+ <br/>Le saignement est maîtrisé grâce à la compression et aux mesures 
+ <br/>mises en place.
+ <br/>
+<br/>Episode d'hyperthermie à 39°C sans frissons, prélèvements infectieux 
+ <br/>réalisés.
+ <br/>
+<br/>- Appel interne de chirurgie qui vient évaluer le patient. Appel 
+ <br/>l'ORL d'astreinte qui demande la réalisation d'un angioTDM en urgence 
+ <br/>à la recherche d'un saignement actif.
+ <br/>
+<br/>AngioTDM:
+ <br/>
+<br/>
+<b>Pas d'argument en faveur de saignement actif.<br/>Engainement de la carotide commune gauche jusqu'à la bifurcation avec <br/>trajet fistuleux au contact de l'axe carotidien et risque vasculaire <br/>majeur.<br/><br/>Interne de chirurgie prévenu du résultat. <br/><br/>Résultats bio:<br/>- iono et créat normaux<br/>- Hb 13g/dL Pq 269G/L PNN 10G/L<br/><br/><br/><u>\fs19 <br/></u></b>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

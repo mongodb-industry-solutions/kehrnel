@@ -1,0 +1,834 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:voc="urn:hl7-org:v3/voc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:hl7-org:v3 CDA.xsd">
+    <realmCode code="FR"/>
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id root="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5_2018"/>
+    <code code="PMSI" codeSystem="IGR" codeSystemName="type" displayName="PMSI"/>
+    <title>Diagnostics et Actes PMSI</title>
+    <effectiveTime value="20220524150723+0000"/>
+    <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
+    <languageCode code="fr-FR"/>
+    <recordTarget>
+        <patientRole>
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20220524150723+0000"/>
+        <assignedAuthor>
+            <id root="IGR"/>
+            <code code="" codeSystem="IGR" codeSystemName="type" displayName="PMSI"/>
+            <assignedAuthoringDevice>
+                <softwareName>Simbad</softwareName>
+            </assignedAuthoringDevice>
+        </assignedAuthor>
+    </author>
+    <custodian>
+        <assignedCustodian>
+            <representedCustodianOrganization>
+                <id root="IGR"/>
+                <name>IGR</name>
+                <telecom nullFlavor="UNK"/>
+                <addr nullFlavor="UNK"/>
+            </representedCustodianOrganization>
+        </assignedCustodian>
+    </custodian>
+    <component>
+        <structuredBody>
+            <periodeExercice dateDebut="2018-01" dateFin="2018-12">
+                <evenementsPMSI acquittementAttendu="oui" version="1.06">
+                    <enteteMessage modeTraitement="réel">
+                        <identifiantMessage>GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5_2018</identifiantMessage>
+                        <dateHeureProduction>20220524150723+0000</dateHeureProduction>
+                        <emetteur>
+                            <agents>
+                                <agent categorie="application">
+                                    <code>Simbad</code>
+                                </agent>
+                            </agents>
+                        </emetteur>
+                        <destinataire>
+                            <agents>
+                                <agent categorie="application">
+                                    <code>CONSORE</code>
+                                </agent>
+                            </agents>
+                        </destinataire>
+                    </enteteMessage>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>102416602</emetteur>
+                                    <recepteur>102416602</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>HJM</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>HJM</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2018-11-13</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2018-11-13</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C508</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C773</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZBQK002</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2018-11-13 16:10:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>102371614</emetteur>
+                                    <recepteur>102371614</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>HJM</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>HJM</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2018-10-15</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2018-10-15</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C508</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C773</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>102171731</emetteur>
+                                    <recepteur>102171731</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>HJM</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>HJM</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2018-05-25</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2018-05-25</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C508</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C773</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>ZBQK002</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2018-05-25 09:30:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>102296991</emetteur>
+                                    <recepteur>102296991</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>HJM</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>HJM</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2018-08-23</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2018-08-23</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C508</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C773</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>102222940</emetteur>
+                                    <recepteur>102222940</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>HJM</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>HJM</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2018-07-02</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2018-07-02</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C508</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C773</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>102202364</emetteur>
+                                    <recepteur>102202364</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>HJM</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>HJM</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2018-06-18</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2018-06-18</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C508</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C773</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>102382134</emetteur>
+                                    <recepteur>102382134</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>HJM</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>HJM</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2018-10-22</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2018-10-22</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C508</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C773</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>102242037</emetteur>
+                                    <recepteur>102242037</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>HJM</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>HJM</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2018-07-16</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2018-07-16</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C508</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C773</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>102394478</emetteur>
+                                    <recepteur>102394478</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>HJM</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>HJM</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2018-10-30</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2018-10-30</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C508</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C773</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>102287692</emetteur>
+                                    <recepteur>102287692</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>HJM</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>HJM</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2018-08-16</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2018-08-16</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C508</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C773</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>102212259</emetteur>
+                                    <recepteur>102212259</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>HJM</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>HJM</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2018-06-25</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2018-06-25</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C508</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C773</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>102464653</emetteur>
+                                    <recepteur>102464653</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>HJM</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>HJM</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2018-12-17</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2018-12-17</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C508</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C773</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>DEQP003</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2018-12-17 08:30:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>DEQP003</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2018-12-17 11:15:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>DEQP003</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2018-12-17 09:30:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>DEQP003</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2018-12-17 09:15:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>102182316</emetteur>
+                                    <recepteur>102182316</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>HJM</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>HJM</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2018-06-01</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2018-06-01</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C508</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C773</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>102432999</emetteur>
+                                    <recepteur>102432999</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>HJM</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>HJM</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2018-11-26</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2018-11-26</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C508</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C773</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>DEQP003</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2018-11-26 10:45:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>DEQP003</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2018-11-26 08:45:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>DEQP003</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2018-11-26 09:30:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                        <acte externe="non">
+                                            <CCAM remboursementExceptionnel="non">
+                                                <codeActe>DEQP003</codeActe>
+                                                <codePhase>0</codePhase>
+                                                <codeActivite>1</codeActivite>
+                                                <quantite>1</quantite>
+                                                <dateRealisation>2018-11-26 09:00:00</dateRealisation>
+                                            </CCAM>
+                                        </acte>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>102262373</emetteur>
+                                    <recepteur>102262373</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>HJM</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>HJM</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2018-07-30</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2018-07-30</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C508</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C773</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>102323047</emetteur>
+                                    <recepteur>102323047</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>HJM</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>HJM</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2018-09-12</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2018-09-12</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C508</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C773</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                        <evenementPMSI>
+                            <venue anonyme="non" confidentiel="non" etat="encours" facturable="non" prive="non"/>
+                            <rss>
+                                <identifiantRSS>
+                                    <emetteur>102317062</emetteur>
+                                    <recepteur>102317062</recepteur>
+                                </identifiantRSS>
+                                <rum action="création" classant="non" prestationInterEtablissementA="non">
+                                    <identifiant>
+                                        <emetteur>HJM</emetteur>
+                                    </identifiant>
+                                    <uniteMedicale>
+                                        <code>HJM</code>
+                                        <entree complementMode="0" mode="8">
+                                            <date>2018-09-06</date>
+                                            <heure>00:00:00</heure>
+                                        </entree>
+                                        <sortie complementMode="0" mode="8">
+                                            <date>2018-09-06</date>
+                                            <heure>00:00:00</heure>
+                                        </sortie>
+                                    </uniteMedicale>
+                                    <diagnostics>
+                                        <diagnosticPrincipal>
+                                            <codeCim10>Z511</codeCim10>
+                                        </diagnosticPrincipal>
+                                        <diagnosticRelie>
+                                            <codeCim10>C508</codeCim10>
+                                        </diagnosticRelie>
+                                        <diagnosticsSignificatifs>
+                                            <diagnosticSignificatif>
+                                                <codeCim10>C773</codeCim10>
+                                            </diagnosticSignificatif>
+                                        </diagnosticsSignificatifs>
+                                    </diagnostics>
+                                    <actes>
+                                    </actes>
+                                </rum>
+                            </rss>
+                        </evenementPMSI>
+                </evenementsPMSI>
+            </periodeExercice>
+        </structuredBody>
+    </component>
+</ClinicalDocument>

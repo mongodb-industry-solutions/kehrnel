@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125855242" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION DE CHIRURGIE PLASTIQUE  - Dr Yasmine BENNIS</title>
+    <effectiveTime value="20180607000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180607000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b> Patient de 57 ans suivie à Gustave Roussy pour une deuxième <br/>localisation de carcinome épidermoïde hypo-pharyngé droit traité par <br/>pahryngo-laryngectomie totale de rattrapage et lambeau de grand <br/>pectoral le 13.11.2017.</b>
+<br/>
+<br/>Le patient a présenté dans les suites un pharyngostome ayant 
+ <br/>nécessité de multiples interventions avec notament la réalisation 
+ <br/>d'un lambeau supra-claviculaire et d'un lambeau antéro-latéral de 
+ <br/>cuisse le 19.03.2018.
+ <br/>
+<br/>Consultation de contrôle à 2 mois avec le Dr BREUSKIN qui était 
+ <br/>satisfaisante. 
+ <br/>Le patient continue de s'alimenter en régime liquide et mixé.
+ <br/>Il récupère progressivement de ses multiples interventions.
+ <br/>
+<br/>Il débute l'orthophonie cette semaine pour le travail de la voix 
+ <br/>oesophagienne.
+ <br/>
+<br/>Sur le plan des douleurs, il persiste encore quelques douleurs au 
+ <br/>niveau du prélèvement de l'antéro-latéral de cuisse à gauche avec un 
+ <br/>petit bombement à la partie supérieure de la cuisse. Je le rassure, 
+ <br/>il s'agit d'une oreille cutanée liée au prélèvement qui ne doit pas 
+ <br/>l'inquiéter.
+ <br/>Concernant les douleurs, elles ne sont cependant pas handicapantes et 
+ <br/>n'empêche pas notament le sommeil, on ne met donc pas en place de 
+ <br/>traitement.
+ <br/>
+<br/>
+<u><b>Examen clinique ce jour</b></u>
+<br/>Patient OMS 1
+ <br/>
+<u>Poids</u> : 64Kg donc +1Kg depuis 1 mois.
+ <br/>Le patient a toujours des soins infirmiers pour la cicatrice au 
+ <br/>niveau de la jambe gauche et du creux supra-claviculaire à gauche.
+ <br/>On réalise un soin ce jour avec avivement des bourgeons pour activer 
+ <br/>l'épidermisation.
+ <br/>Au niveau du cou, celui-ci est toujours blindé et fibrosé. On arrête 
+ <br/>par contre les soins au niveau cervical à droite.
+ <br/>Application de nitrate pour le dernier bourgeon.
+ <br/>L'examen du trachéostome montre un orifice bien cicatrisé, sans 
+ <br/>fistule, de bon calibre.
+ <br/>
+<br/>On ne réalise pas ce jour l'examen en nasofibroscopie puisque 
+ <br/>celui-ci a été réalisé par le Dr BREUSKIN.
+ <br/>
+<br/>A la dernière consultation, il a été fait mention d'une fatigue pour 
+ <br/>laquelle on a évoqué une hypothyroïdie. Le patient n'a pas encore eu 
+ <br/>le temps de faire le bilan. Il le réalisera avant la consultation 
+ <br/>avec le Dr BREUSKIN en Juillet.
+ <br/>
+<br/>De notre côté, nous le reverrons en consultation dans 6 mois pour 
+ <br/>contrôle fonctionnel.
+ <br/>
+<br/>Le patient nous signale que le kinésithérapeute n'a pas encore débuté 
+ <br/>les exercices en raison des soins encore en cours. Je rassure le 
+ <br/>patient, tous les exercices de mobilisation et de travail moteur sont 
+ <br/>à débuter dès aujourd'hui, effectivement, pour les massages cervicaux 
+ <br/>et des épaules, il faudra attendre la cicatrisation complète.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

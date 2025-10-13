@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125191607" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>VISITE EN SALLE - Hémato - Transplantation de moelle osseuse</title>
+    <effectiveTime value="20180919000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180919000000+0000"/>
+        <assignedAuthor>
+            <code code="PAR/184" displayName="PARIS"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Dr BOURHIS</b></u>
+<b> - Dr PILORGE - M. GAUDRY - IDE DU SERVICE - ASH - <br/>Diététicienne.</b>
+<br/>
+<u><br/><b>Situation à J33</b></u>
+<b> (J0 le 17.08.18) d'une allogreffe de cellules <br/>souches périphériques, haploidentique, sexe identique de son fils, à <br/>conditionnement d'intensité réduite par radiothérapie splénique 6 Gy, <br/>FLUDARABINE 150 mg/m2, ENDOXAN 29 mg/kg, TBI 2 Gy, J0 le 17.08.18, <br/>dans le cadre du traitement d'une myélofibrose primitive JAK2+ <br/>diagnostiquée en 2015, score DIPSS à 4, splénomégalie à 22 cm, <br/>diagnostiquée le 04/04/2012.<br/>Surveillance initiale au CHU Fort de France, début d'un traitement <br/>par RUXOLITINIB à partir de juin 2017 devant la majoration de la <br/>splénomégalie et de l'hyperleucocytose.<br/>A noter, carcinome prostatique diagnostiqué en novembre 2011. <br/>Traitement par radiothérapie exclusive.<br/>Situation pré-greffe : une hologramme du 17 juillet 2018. Absence de <br/>transformation, persistance de limitation de JACK2 V6117F, <br/>hétérozygote avec une BRAF à 35 %. Adénomégalie à 22 cm en <br/>pré-greffe.</b>
+<br/>
+<br/>
+<br/>
+<u><b>Pour rappel</b></u>
+<b> :</b>
+<br/>
+<br/>Greffe D / R
+ <br/>Masculin / Masculin
+ <br/>95 kg / 72 kg
+ <br/>O+ / B+
+ <br/>CMV + / +
+ <br/>EBV + / +
+ <br/>Toxo - / -
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan des toxicités</b></u> :
+ <br/>
+<br/>Cytopénies au long cours.
+ <br/>Contrôle du myélogramme ce jour.
+ <br/>Pour l'instant, pas d'ébauche de sortie d'aplasie vraie.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan clinique</b></u> :
+ <br/>
+<br/>OMS 3.
+ <br/>81 kg le 18.09.
+ <br/>Poids habituel : 81 kg.
+ <br/>Hémodynamique normale.
+ <br/>VVC en place.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan hématologique</b></u> :
+ <br/>
+<br/>Aplasie persistante.
+ <br/>Ce jour : 0.1 leucocytes, 7.5 Hb, 18 G/L plaquettes. Transfusions 
+ <br/>quotidiennes en plaquettes.
+ <br/>Transfusions en CE au minimum deux fois par semaine.
+ <br/>Réticulocytose effondrée. Patient sous GCSF.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan métabolique</b></u> :
+ <br/>
+<br/>Hypoprotidémie à 131. Hyponatrémie. 
+ <br/>Fonction rénale limite, clairance à 60 mL/min, glycémie en limite 
+ <br/>haute. Bilan phosphocalcique, magnésémie normaux. BH du 17.09 normal 
+ <br/>en dehors d'une bilirubine totale à 40, essentiellement libre.
+ <br/>Echo-doppler hebdomadaire dans les normes.
+ <br/>Nouveau contrôle ce jour, en attente.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan infectieux</b></u> :
+ <br/>
+<br/>CRP à 43.
+ <br/>Apyrétique sous MEROPENEM / VANCOMYCINE. Point d'appel avec nodule 
+ <br/>cutané, oedème palpébral bilatéral.
+ <br/>Pas de foyer infectieux clinique.
+ <br/>Prophylaxie type ACICLOVIR / FLUCONAZOLE / Aérosol de Pentamidine à 
+ <br/>J-1 et toutes les 3 semaines. Aucune documentation microbiologique.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan immunologique</b></u> :
+ <br/>
+<br/>Prophylaxie triple, actuellement sous CICLOSPORINE 100 mg x 2 avec 
+ <br/>une ciclosporinémie > 450 ng/mL le 17.09. Posologie amendée en limite 
+ <br/>basse et MYCOPHENOLATE 800 x 3, débuté à J5, qui sera arrêté à J35. On 
+ <br/>rappelle qu'il a bénéficié de CPM 100 mg/kg en post-greffe.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan nutritionnel</b></u> :
+ <br/>
+<br/>Nutrition parentérale.
+ <br/>SMOFKABIVEN 1000 mL/jour.
+ <br/>Aucune alimentation orale.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan de recherche clinique</b></u> :
+ <br/>
+<br/>Aucun protocole de recherche clinique en cours.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan relationnel</b></u> :
+ <br/>
+<br/>Anxiété dans le contexte de l'aplasie prolongée.
+ <br/>Proposition de suivi psy.
+ <br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>
+<br/>En aplasie prolongée.
+ <br/>Contrôle du myélogramme ce jour.
+ <br/>En l'absence de stigmates de prise, se discutera un complément de 
+ <br/>greffon.
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

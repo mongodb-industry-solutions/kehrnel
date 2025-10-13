@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_129427652" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°16H06893 2180742 Dr Nizar LABAIED</title>
+    <effectiveTime value="20160715000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20160715000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>DÉPARTEMENT DE BIOLOGIE ET DE PATHOLOGIE MEDICALES<br/></p>
+<p>114, rue Edouard Vaillant - 94805 VILLEJUIF CEDEX<br/></p>
+<p>N° I.G.R. : 050 XXXXXX <br/>XXXXXX XXXXXX XXXXXX F <br/> Docteur THOMIN Anne <br/>Examen demandé par : <br/>Dr THOMIN Anne <br/>CTE 050 - SEIN <br/>Prélevé le 11/07/2016 <br/>Enregistré le 12/07/2016 <br/></p>
+<p> LZB <br/> Examen n° : 16H06893<br/></p>
+<p> CR édité le : 15/07/2016<br/></p>
+<p>Copie à : 1/1 </p>
+<p>ETUDE IMMUNOHISTOCHIMIQUE DES RECEPTEURS HORMONAUX </p>
+<p> MICROBIOPSIE DU SEIN DROIT </p>
+<p> Technique : sur coupe de tissu fixé en Formol et inclus en paraffine </p>
+<p> Résultats : </p>
+<p> Récepteurs aux oestrogènes "RE" (clone SP1, Ventana) </p>
+<p> <br/>- Carcinome infiltrant : absence de marquage. <br/>- Glandes non tumorales : non observées. </p>
+<p> Récepteurs à la progesterone "RP" (clone 1E2, Ventana) </p>
+<p> <br/>- Carcinome infiltrant : marquage faible de 5 % des cellules. <br/>- Glandes non tumorales : non observées<br/>CONCLUSION </p>
+<p> Carcinome infiltrant RE négatif RP négatif </p>
+<p> NB : seuil de positivité : 10% de cellules marquées.<br/>HHGSA7B2-3SED <br/></p>
+<p> Dr Nizar LABAIED <br/> Praticien </p>
+<p> <br/></p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

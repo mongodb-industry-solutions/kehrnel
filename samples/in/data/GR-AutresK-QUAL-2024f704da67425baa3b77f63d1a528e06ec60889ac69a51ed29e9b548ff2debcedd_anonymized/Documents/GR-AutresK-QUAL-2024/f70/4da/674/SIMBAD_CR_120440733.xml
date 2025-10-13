@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120440733" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>HOPITAL DE JOUR DE MEDECINE ONCOLOGIQUE ADULTES</title>
+    <effectiveTime value="20200914000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200914000000+0000"/>
+        <assignedAuthor>
+            <code code="HJM/484" displayName="HOPITAL DE JOUR MEDECINE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>DEPARTEMENT DE MEDECINE - HOPITAL DE JOUR MEDECINE <br/><br/> Dicté par : </b> Docteur Thi Hong Van To, Interne
+ <b><br/>Dicté le : </b> 03/03/2020 
+ <b><br/>Service : </b> HJM-HOPITAL DE JOUR MEDECINE 
+ <br/>
+<b>Type de document : </b> HJM CC GENERIQUE 
+ <br/>
+<b>Ref :</b> 950291 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : LTZ/A
+ <br/>
+<br/> Approuvé par :
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<u><b>COMPTE-RENDU DE CONSULTATION EN HOPITAL DE JOUR DE MEDECINE<br/> <br/></b></u>
+<br/>Madame XXXXXX patiente âgée de 67 ans vue en hôpital de jour le 
+ <br/>3.03.2020 pour une 
+ <b>PONCTION D'ASCITE EVACUATRICE</b> et une 
+ <b>PONCTION <br/>PLEURALE</b> dans le cadre de la prise en charge de son adénocarcinome 
+ <br/>séreux de l'ovaire de haut grade de stade IV (pleural initial) non 
+ <br/>réséqué, actuellement platine résistante en cours de chimiothérapie 
+ <br/>par 
+ <b>CAELYX</b> après une progression sous 
+ <b>TAXOL.</b>
+<br/>
+<br/>La patiente a été vue par son médecin référent le Docteur COLOMBA et 
+ <br/>son interne le Docteur GARCIN la semaine dernière qui retrouve une 
+ <br/>bonne tolérance globale à 
+ <b>CAELYX</b> , début de réponse avec un 
+ <br/>espacement des ponctions tous les 15 jours. Par ailleurs, elle 
+ <br/>présentait à la consultation une tachycardie à 170/min, sans douleur 
+ <br/>thoracique et bonne tolérance globale.
+ <br/>Un avis cardiologique a été demandé auprès du Kremlin-Bicêtre qui 
+ <br/>conclut à une tachycardie jonctionnelle ou une fibrillation 
+ <br/>(difficile d'avoir une conclusion exacte à cause de cette tachycardie 
+ <br/>rapide). 
+ <br/>La patiente a ensuite été hospitalisée en cardiologie durant 24h en 
+ <br/>USIC à l'hôpital privé d'Antony. Une résolution spontanée de la 
+ <br/>tachycardie à 110/min pendant l'hospitalisation sans intervention 
+ <br/>particulière. Pas d'exploration cardiologique prévue pour le moment. 
+ <br/>
+<br/>
+<br/>Par ailleurs, pendant l'hospitalisation en cardiologie : découverte 
+ <br/>d'un épanchement pleural à droite de faible abondance. Une ponction 
+ <br/>pleurale est alors ajoutée à ce rendez-vous de ponction d'ascite 
+ <br/>prévue pour aujourd'hui.
+ <br/>
+<br/>La chimiothérapie prévue le jour de consultation avec son médecin 
+ <br/>référent le 27 février est décalée au 6 mars 2020.
+ <br/>
+<br/>
+<br/>La dernière ponction d'ascite évacuatrice a été réalisée le 19 
+ <br/>février qui a ramené 3,5 L d'ascite.
+ <br/>
+<br/>
+<u><b>Examen clinique :<br/><br/></b></u>
+<br/>PS 2.
+ <br/>
+<br/> Apyrétique.
+ <br/>Alitement de +50 % du temps de la journée en raison de douleurs au 
+ <br/>niveau de la colonne vertébrale à la mobilisation qui est contrôlée 
+ <br/>par des antalgiques de palier 3.
+ <br/>
+<br/>
+<br/>Dyspnée au moindre effort.
+ <br/>Saturation à 97 % en air ambiant au repos. 
+ <br/>Diminution du murmure vésiculaire basal droit. Pas d'autre bruit 
+ <br/>surajouté.
+ <br/>Bruits du coeur réguliers sans souffle avec une fréquence cardiaque à 
+ <br/>90/min.
+ <br/>
+<br/> Oedèmes des membres inférieurs bilatéraux stables.
+ <br/>Présence d'une ascite d'abondance avec une hernie ombilicale.
+ <br/>Le ventre est souple. Pas de syndrome occlusif.
+ <br/>La patiente n'a pas réalisé l'injection d'INNOHEP ce matin.
+ <br/>
+<br/>La radiographie de ce jour montre un épanchement pleural à droite qui 
+ <br/>est inférieur sans d'autre lésion parenchyme évidente.
+ <br/>Pas d'argument pour un oedème aigu du poumon 
+ <br/>
+<br/>L'échographie abdominale de repérage retrouve un épanchement de 
+ <br/>grande abondance mais multicloisonnée de façon diffuse. 
+ <br/>Le marquage cutané a été réalisé en fosse iliaque gauche siège des 
+ <br/>locules les plus volumineuses et aussi qu'un repérage en fosse 
+ <br/>iliaque droite.
+ <br/>
+<br/>
+<u><b>Bilan biologique :<br/><br/></b></u> L'hémostase de contrôle ce jour est tout à fait normal avec une TP à 
+ <br/>99 % et TCK ratio à 1,0.
+ <br/>Plaquettes à 550 000/m3. 
+ <br/>
+<br/>
+<br/>
+<u><b>En pratique :<br/><br/><br/></b></u>
+<b>En 1er temps, on réalise une ponction pleurale à droite </b> avec une 
+ <br/>échographie au lit avec les voies d'abord postérieures à un espace 
+ <br/>intercostal sous le point omoplate, après une anesthésie locale, sans 
+ <br/>difficulté technique et qui ramène 
+ <b>650mL</b> du liquide jaune citrin 
+ <br/>légèrement hématique.
+ <br/>
+<br/> Arrêt devant le tarissement du liquide.
+ <br/>Pas de toux, pas de douleur thoracique.
+ <br/>
+<br/>Saturation après la ponction à 97%.
+ <br/>La radio du poumon au lit de contrôle ne trouve pas de pneumothorax 
+ <br/>et retrouve une diminution nette d'épanchement pleural à droite.
+ <br/>Envoi du prélèvement au laboratoire pour une cytologie, bactériologie 
+ <br/>et biochimie.
+ <br/>
+<br/>
+<b>En 2ième temps, on réalise une ponction évacuatrice d'ascite</b> par 
+ <br/>échographie au niveau de la fosse iliaque gauche et à droite : 
+ <br/>présence de multiples cloisons dans la cavité péritonéale.
+ <br/>
+<br/>Evacuation de 
+ <b>3,5L</b> du liquide d'ascite sérohématique.
+ <br/>Bonne tolérance clinique.
+ <br/>Retour à domicile accompagnée de son mari.
+ <br/>
+<br/> Programmation de la prochaine ponction d'ascite dans 10 jours le 
+ <br/>13.03.2020.
+ <br/>
+<br/>
+<br/>La patiente sera revue par son médecin référent le 17.03.2020. 
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Thi Hong Van TO <br/>Le mercredi 27 mai 2020 à 15:30<br/>_________________________________________________<br/>Signé électroniquement par Docteur Bianca CHEAIB <br/>Le jeudi 10 septembre 2020 à 11:10 </b>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

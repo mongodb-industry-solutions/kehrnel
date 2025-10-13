@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126532672" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20180220000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180220000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Compte rendu générique de SENOLOGIE<br/><br/>Dicté par : </b> Docteur Meriem Mokdad Adi
+ <b><br/>Dicté le : </b> 20/02/2018 
+ <b><br/>Service : </b> 050-CTE 050 - SEIN 
+ <br/>
+<b>Type de document : </b> 050 CC Générique 
+ <br/>
+<b>Ref :</b> 364339 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : ORC
+ <br/>
+<br/>Patiente de 60 ans vue ce jour en HDJ avant de débuter une 
+ <br/>chimiothérapie par CARBOPLATINE GEMZAR pour une récidive métastatique 
+ <br/>osseuse et hépatique d'un cancer du sein triple négatif diagnostiqué 
+ <br/>en 2016 ayant terminé les traitements fin octobre 2017.
+ <br/>
+<u><b><br/>CE JOUR</b></u> :
+ <br/>
+<br/>La patiente a eu une consultation avec le docteur VARGA pour la 
+ <br/>signature du consentement et pour une analyse moléculaire rapide dans 
+ <br/>PROFEEL.
+ <br/>
+<br/>Je propose à la patiente de débuter une chimiothérapie par 
+ <br/>Carboplatine Gemzar à partir du 26 février à Chevilly Larue pour la 
+ <br/>C1 J1 J8 , J1 =J21.
+ <br/>
+<br/>Je lui explique les effets secondaires de la chimiothérapie : 
+ <br/>alopécie, troubles digestifs à type de nausées et vomissements, 
+ <br/>trouble du transit.
+ <br/>
+<br/>Et je lui remets les ordonnances des traitements symptomatiques des 
+ <br/>effets secondaires.
+ <br/>
+<br/>Je la reverrai le 8 mars en consultation.
+ <br/>
+<br/>Pour l'instant pas de biopsie du foie.
+ <br/>
+<u><br/></u>
+<b><br/>_________________________________________________<br/>Signé électroniquement par Docteur Meriem MOKDAD ADI <br/>Le mardi 20 février 2018 à 16:41 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

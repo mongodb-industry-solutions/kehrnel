@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125541121" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>HOSPITALISATION SERVICE DITEP</title>
+    <effectiveTime value="20180724000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180724000000+0000"/>
+        <assignedAuthor>
+            <code code="ITH/483" displayName="SIT HOSPITALISATION"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>HOSPITALISATION SERVICE DITEP DU 23/07/18 AU 24/07/18</b></u>
+<br/>
+<br/>
+<br/>
+<u><b>Elise NASSIF (interne)</b></u>
+<br/>
+<br/>Mr XXXXXX, 67 ans, a été hospitalisé pour transfusion de 2 CGR dans 
+ <br/>le cadre d'une myélofibrose primitive en attente d'allogreffe.
+ <br/>
+<br/>
+<u><b>Antécédents</b></u>
+<br/>
+<br/>- AIT en 2006, 2012 et 2015.
+ <br/>- Notion de cavernome portal 2012 associé à une splénomégalie et la 
+ <br/>présence de varices oesophagiennes grade I-II. Contrôle FOGD d'avril 
+ <br/>2017 confirmant les varices oesophagiennes de grade I-II.
+ <br/>- Notion d'une tumeur gastrique avec laparotomie en 1972, bénigne.
+ <br/>- Hernie discale, chirurgie de l'épaule droite. 
+ <br/>- Chirurgie oeil droit (étiologie ?).
+ <br/>- Adénome prostatique pT2c N0 M0 diagnostiqué en novembre 2011 puis 
+ <br/>perdu de vue. Le patient a été traité au printemps 2018 par 
+ <br/>radiothérapie du 26.02 au 07.06.18 puis une hormonothérapie courte. 
+ <br/>Patient vu en consultation d'Urologie le 03.07.18 à Gustave Roussy : 
+ <br/>PSA contrôlé, pas de nécessité de surveillance à court terme. 
+ <br/>Indication à réaliser un taux de PSA tous les 6 mois.
+ <br/>- Mise en évidence d'une thrombose portale en septembre 2017, traitée 
+ <br/>par INNOHEP à dose curative. Reperméabilisation de la veine porte en 
+ <br/>janvier 2018. Passage à un traitement préventif par LOVENOX 0.4 mL.
+ <br/>- vertiges paroxystiques bénins en octobre 2017.
+ <br/>
+<br/>
+<u><b>Mode de vie</b></u> :
+ <br/>
+<br/>Patient Martiniquais, retraité depuis 2006, marié, en Métropôle à 
+ <br/>Central Park depuis le 24/06/2018 avec son épouse.
+ <br/>
+<br/>
+<u><b>Histoire de la maladie :<br/></b></u>
+<br/>Diagnostic en 2015 d'une myélofribrose JAK2 V617+ avec, en 
+ <br/>cytogénétique, un caryotype pseudo-diploïde avec une délétion 13q.
+ <br/>
+<br/>Début d'un traitement par Plavix et Hydréa à partir de janvier 2017 
+ <br/>puis Jakavi 20 mgx2/jour à partir de juillet 2017 + traitement par 
+ <br/>corticothérapie 1 mg/kg à partir de janvier 2018 devant une possible 
+ <br/>composante hémolytique de son anémie.
+ <br/>
+<br/>
+<u><b>Traitement actuel :</b></u>
+<br/>
+<br/>JAKAVI
+ <br/>MOPRAL
+ <br/>LOVENOX
+ <br/>LAMALINE si besoin
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE</b></u>
+<br/>
+<br/>OMS : 1
+ <br/>Hémodynamique stable
+ <br/>Bonne tolérance de l'anémie
+ <br/>
+<br/>Examen clinique sans particularité. 
+ <br/>
+<br/>
+<u><b>EXAMENS COMPLEMENTAIRES</b></u>
+<br/>
+<br/>Biologie :
+ <br/>
+<br/>Anémie à 8 g/dl, pas de thrombopénie, pas de leucopénie.
+ <br/>
+<br/>
+<br/>
+<u><b>EVOLUTION DANS LE SERVICE </b></u>
+<br/>
+<br/>Transfusion de 2 CGR avec une bonne tolérance. Culots globulaires 
+ <br/>irradiés du fait de l'allogreffe prévue début aôut. 
+ <br/>
+<br/>
+<br/>
+<u><b>Prescription de sortie</b></u>
+<br/>
+<br/>Identique au traitement d'entrée.
+ <br/>
+<br/>
+<u><b>Conclusion <br/></b></u>
+<br/>Transfusion de 2 CGR.
+ <br/>
+<br/>Le patient quitte le service Ditep le 24/07/18.
+ <br/>
+<br/> Prise en charge palliative NON
+ <br/>Prise en charge par l'EMASP NON
+ <br/>
+<br/>* Remplissage du formulaire de recueil de données par le patient
+ <br/>concernant son état général NON
+ <br/>* Ponction à visée symptomatique NON
+ <br/>* Adaptation du traitement antalgique NON
+ <br/>* Irradiation antalgique NON
+ <br/>* Occlusion intestinale NON
+ <br/>* Transfusion sanguine OUI 
+ <br/>* Prise en charge de la détresse respiratoire NON
+ <br/>* Consultation onco-psychologie NON
+ <br/>* Prise en charge sociale NON
+ <br/>* Soins de nursing NON
+ <br/>* Soins de kinésithérapie NON
+ <br/>* Prise en charge de la nutrition NON
+ <br/>* Traitement des divers symptômes vecteurs 
+ <br/>d'inconfort NON
+ <br/>- CMA :
+ <br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

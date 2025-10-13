@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122080074" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>HOPITAL DE JOUR DE MEDECINE ONCOLOGIQUE ADULTE</title>
+    <effectiveTime value="20200106000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200106000000+0000"/>
+        <assignedAuthor>
+            <code code="HJM/484" displayName="HOPITAL DE JOUR MEDECINE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>DEPARTEMENT DE MEDECINE - HOPITAL DE JOUR MEDECINE <br/><br/> Dicté par : </b> Docteur Cristina Smolenschi
+ <b><br/>Dicté le : </b> 18/12/2019 
+ <b><br/>Service : </b> HJM-HOPITAL DE JOUR MEDECINE 
+ <br/>
+<b>Type de document : </b> HJM CC GENERIQUE 
+ <br/>
+<b>Ref :</b> 887163 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : QCL/A
+ <br/>
+<br/>CR DU 18.12.2019
+ <br/>
+<br/>Docteur SMOLENSCHI
+ <br/>
+<br/>
+<u><b>COMPTE-RENDU DE CONSULTATION EN HOPITAL DE JOUR DE MEDECINE<br/> </b></u>
+<br/>Patient âgé de 58 ans vu ce jour en présence de son épouse avant le 
+ <br/>C3 - J8 du traitement par 
+ <b>CETUXIMAB </b> dans le cadre de la prise en 
+ <br/>charge d'une rechute ganglionnaire d'un carcinome oropharyngé, en 
+ <br/>cours de chimiothérapie par TPF.
+ <br/>
+<br/>Le patient a eu son C1 - J1 il y a 7 jours. 
+ <br/>
+<br/>
+<b>Intercure</b> : 
+ <br/>Le patient a présenté à domicile des douleurs abdominales 
+ <br/>probablement en rapport avec une constipation. 
+ <br/>Quelques épisodes de chutes ,selon l'infirmière de l'ACSE. 
+ <br/>A savoir qu'il est compliqué de comprendre la tolérance du traitement 
+ <br/>(barrière de la langue) mais de manière globale le traitement est bien 
+ <br/>toléré. 
+ <br/>Il existe une toxicité cutanée de grade I.
+ <br/>
+<br/>
+<b>Examen clinique </b> : 
+ <br/>PS : 1-2.
+ <br/>Tension artérielle : 150/75.
+ <br/>
+<br/>Rash cutané de grade I et xérose cutanée de grade I liés au 
+ <b>CETUXIMAB</b>
+<br/>. 
+ <br/>Abdomen : dépressible, non douloureux ; gastrostomie fonctionnelle ; 
+ <br/>bruit hydroaérique présent. 
+ <br/>Auscultation cardio-pulmonaire : sans particularité. 
+ <br/>
+<br/>
+<b>Bilan biologique</b> (réalisé en ville) : 
+ <br/>NFS : correcte.
+ <br/>Fonction rénale : normale.
+ <br/>Hypocalcémie à de grade I.
+ <br/>Hypomagnésémie de grade II liée au
+ <b>CETUXIMAB</b> . 
+ <br/>Ionogramme : normal. 
+ <br/>
+<br/>
+<b>En pratique</b> : 
+ <br/>Absence de contre-indication à l'administration du 
+ <b>CETUXIMAB</b> .
+ <br/>Le patiente reçoit donc : 
+ <br/>
+<b>- CETUXIMAB 250 mg/m2 soit 430 mg DT.<br/></b> Nous réalisons également une supplémentation du magnésium en 
+ <br/>perfusion intraveineuse. 
+ <br/>
+<br/>Je discute ce jour avec l'infirmière de la CSE qui va contacter 
+ <br/>l'infirmière de ville afin que la surveillance du traitement soit 
+ <br/>meilleure notamment la surveillance du traitement per os. 
+ <br/>
+<br/>Je lui prescris du LACTULOSE à visée laxative. 
+ <br/>
+<br/>Concernant ses chutes, il n'y a pas d'hypotension objectivée. Je 
+ <br/>demande au patient et à son épouse de bien surveiller et qu'en cas de 
+ <br/>réapparitions de ces chutes je leur donne comme consigne de revenir 
+ <br/>aux urgences de Gustave Roussy. 
+ <br/>
+<br/>A savoir que l'ECG réalisé ce jour retrouve un rythme sinusal et 
+ <br/>doute sur un hemibloc de branche gauche.
+ <br/>
+<br/>Dans les antécédents du patient je vois qu'il s'agit d'un patient 
+ <br/>présentant de l'épilepsie avec une dernière crise survenue en 2014.
+ <br/>
+<br/>En l'absence d'explication et en cas de reproduction de ces chutes à 
+ <br/>domicile il faudra éventuellement réaliser une imagerie cérébrale et 
+ <br/>un bilan cardiologique qui nous permettront de faire la part des 
+ <br/>choses. 
+ <br/>
+<br/>Je demande à mes collègues en hôpital de jour de voir ce patient 
+ <br/>avant sa prochaine injection pour voir comment l'intercure s'est 
+ <br/>passée. 
+ <b><br/>_________________________________________________<br/>Signé électroniquement par Docteur Cristina SMOLENSCHI <br/>Le vendredi 20 décembre 2019 à 19:00 </b>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

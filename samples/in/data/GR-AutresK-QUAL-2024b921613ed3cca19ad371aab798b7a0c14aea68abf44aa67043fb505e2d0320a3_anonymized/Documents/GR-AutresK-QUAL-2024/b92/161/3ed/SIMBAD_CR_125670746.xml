@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125670746" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>INTERNE DE GARDE - URGENCES - NUIT ET WEEK-END</title>
+    <effectiveTime value="20180703000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180704000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b> Docteur ? (Hématologue de garde)</b></u> : 
+ <br/>
+<br/>Patient de 67 ans consulte pour altération de l'état général et 
+ <br/>douleurs de l'hypochondre gauche + vertiges dans un contexte de 
+ <br/>myélofibrose primitive JAK2+.
+ <b><br/><br/></b> Pas d'allergie.
+ <b><br/><br/><u>Antécédents</u> : <br/><br/></b> AIT : 2006, 2012 et 2015.
+ <br/>Tumeur bénigne estomac opérée en 1972.
+ <br/>Adénocarcinome prostate diagnostiqué le 15/11/11, traitement par 
+ <br/>radiothérapie 76 Gy prostate, 53 Gy pelvis, actuellement en 
+ <br/>surveillance.
+ <br/>Cavernome portal. 
+ <br/>
+<br/>HDM : MFP JAK 2+, DIPSS 4, splénomégalie, 22 cm diagnostiqué en 
+ <br/>janvier 2015.
+ <br/>Traitement par PLAVIS janvier 2017.
+ <br/>Antécédents infarctus splénique octobre 2017.
+ <br/>Septembre 2017 : thrombose porte.
+ <br/>
+<br/>Actuellement : douleur hypochondre gauche depuis 72 heures avec 
+ <br/>diminution alimentation.
+ <br/>Pas de SFU.
+ <br/>Pas de fièvre, un épisode diarrhéique.
+ <br/>Vertiges ressemblant au VPPB connue.
+ <br/>Pas d'hémorragie digestive.
+ <br/>1 vomissement après scanner. 
+ <br/>
+<br/>NB : projet allogreffe hapto, août 2018 après radiothérapie 
+ <br/>splénique.
+ <b><br/><br/><u>Examen clinique</u> : </b>
+<br/>
+<br/>TA : 125/77 mmHg, pouls : 86 bpm, température : 37.4°C, saturation : 
+ <br/>99% en AA, EVA : 7/10, poids : 78 kg.
+ <br/>Examen abdominal : volumineuse SMG douloureuse à la palpation, pas de 
+ <br/>défense, pas d'autre douleur abdominale.
+ <br/>Examen cardiaque : bruits du coeur réguliers, pas de souffle, pas de 
+ <br/>signe d'IO.
+ <br/>Examen pulmonaire : auscultation normale.
+ <br/>Examen neurologique : paires craniennes normales, pas de déficit 
+ <br/>sensitivo-moteur, pas de syndrome pyramidal, pas de douleur 
+ <br/>thoracique.
+ <br/>
+<br/>
+<u><b>Résultats du bilan para-clinique</b></u> : 
+ <br/>
+<br/>Na : 135 mmol/L, K : 3.8 mmol/L, protides : 79 g/L, créatinine : 76 
+ <br/>μmol/L, Ca : 2.4 mmol/L, LDH : 729 UI/L, CRP : 2.5 mg/L, BH normal.
+ <br/>Hb : 8.5 g/dL, GB : 9.9 g/dL + myélénite, plaquettes : 231 000/mm3, 
+ <br/>TP : 57%, FV : 62%, FII : 82%.
+ <br/>
+<br/>Scanner TAP + IV : pas d'infarctus splénique, lésion lytique de L1 
+ <br/>aspécifique à explorer.
+ <br/>Hypodensités hépatiques d'allure kystique biliaire. 
+ <br/>
+<br/>ECG : pas de trouble de la repolarisation, ni de trouble de la 
+ <br/>conduction, RRS.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> : 
+ <br/>
+<br/>Douleur sur splénomégalie volumineuse, pas de signe de complication 
+ <br/>sur scanner, pas d'autre étiologie retrouvée, se sent mieux sans 
+ <br/>antalgie.
+ <br/>Bilan biologique : pas de déglobulisation, fonction rénale normale.
+ <br/>-> Antalgique et consignes pour hydratation et alimentation et si 
+ <br/>reprise douleur ou nouveau symptôme. 
+ <br/>
+<br/>Retour au domicile.
+ <br/>HA : 17h45.
+ <br/>HD : 21h15.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

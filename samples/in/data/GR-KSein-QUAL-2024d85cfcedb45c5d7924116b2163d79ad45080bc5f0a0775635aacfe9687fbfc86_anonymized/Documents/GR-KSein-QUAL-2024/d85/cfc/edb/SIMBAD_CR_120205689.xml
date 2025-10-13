@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120205689" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 202760373</title>
+    <effectiveTime value="20201002000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201015000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Dr J. Delahousse (61 92) <br/>Interne D. Combarel (37 69) <br/>Pr A. Paci (47 30) </p>
+<p>Dr A. Arbab (41 65) <br/>Pr A. Bennaceur (40 65) <br/>Interne S. Fodil (37 69) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Dr E. Gallois (40 62) <br/>Pr F. Griscelli (51 93) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>FémininNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>02/10/2020 10:53 </p>
+<p>Sexe : </p>
+<p>02/10/2020 10:53 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>CTE 110 - HEMATOLOGIE </p>
+<p> 5 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>PASQUIER FlorencePrescrit par : </p>
+<p>jeudi 15 octobre 2020 </p>
+<p>Complet </p>
+<p>BIOCHIMIE <br/></p>
+<p>Information Laboratoire Changement de méthode d'analyse de chimie et d'immuno-analyse à compter du 06/07/2020. Concerne les paramètres portant la mention Atellica. </p>
+<p> IONOGRAMME <br/>Sodium 137 mmol/l ( 136 - 145 )140 24/08/2020 08:37 FTN <br/>Plasma hépariné - Potentiométrie indirecte, Atellica </p>
+<p>Potassium 3.6 mmol/l ( 3.4 - 4.5 )3.8 24/08/2020 08:37 FTN <br/>Plasma hépariné - Potentiométrie indirecte, Atellica </p>
+<p>Chlore 104 mmol/l ( 98 - 107 )107 24/08/2020 08:37 FTN <br/>Plasma hépariné - Potentiométrie indirecte, Atellica </p>
+<p>Reserve alcaline 28 mmol/l ( 20 - 31 )29 24/08/2020 08:37 FTN <br/>Plasma hépariné - Test enzymatique UV, Atellica </p>
+<p>Protides 70 g/L ( 57 - 82 )67 24/08/2020 08:37 FTN <br/>Plasma hépariné - Colorimétrie (Biuret), Atellica </p>
+<p>Créatinine 60 μmol/l ( 44 - 71 )54 14/09/2020 09:46 FTN <br/>Plasma hépariné - Test de coloration enzymatique, Atellica </p>
+<p>Base calcul Cockroft 1.32 1.47 14/09/2020 09:46 FTN </p>
+<p>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Débit de Filtration Glomérulaire (MDRD) 87 mL/mn/1.73m2 99 14/09/2020 09:46 FTN </p>
+<p>< 60 : Insuffisance rénale à explorer si nécessaire. <br/>Si origine afro américaine, le DFG est à multiplier par 1.212 </p>
+<p>Débit de Filtration Glomérulaire (CKD- <br/>EPI) </p>
+<p>93 mL/mn/1.73m2 96 14/09/2020 09:46 FTN </p>
+<p>Estimation du débit de filtration glomérulaire en utilisant le dosage de la créatinine (standardisé ID-MS) 30 - 60 mL/mn/1.73m2 : Insuffisance rénale modérée < 30 mL/mn/1.73m2 : Insuffisance rénale sévère </p>
+<p>Fer 16.9 μmol/l ( 9.0 - 30.4 ) FTN <br/>Plasma hépariné - Test de coloration photométrique (ferrozine), Atellica </p>
+<p> BILAN HÉPATIQUE / PANCRÉATIQUE <br/>PAL 168 U/l ( 46 - 116 )151 14/09/2020 09:46 FTN <br/>Plasma hépariné - Test de coloration cinétique IFCC, Atellica </p>
+<p>ASAT 177 U/l ( < 40 )155 14/09/2020 09:46 FTN <br/>Plasma hépariné - Test cinétique UV IFCC, Atellica </p>
+<p>ALAT 82 U/l ( < 40 )36 14/09/2020 09:46 FTN <br/>Plasma hépariné - Test cinétique UV IFCC, Atellica </p>
+<p>GGT 318 U/l ( < 38 )168 14/09/2020 09:46 FTN <br/>Plasma hépariné - Test de coloration cinétique, Atellica </p>
+<p>Bilirubine Totale 10 μmol/l ( 5 - 21 )10 14/09/2020 09:46 FTN <br/>Plasma hépariné - Test de coloration photométrique, Atellica </p>
+<p> PROTÉINES </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 15/10/2020 à 14:59 par : Pr GRISCELLI Franck,Dr PRADON Caroline,Dr BROUTIN Sophie,Dr TROALEN Frédéric,Dr GALLOIS Emmanuelle,Dr VERGÉ Véronique</p>
+<p></p>
+<p></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>CTE 110 - HEMATOLOGIEPatient : 5 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>PASQUIER FlorencePrescrit par : </p>
+<p>CRP 18.4 mg/l ( < 10.0 )6.7 06/07/2020 11:50 FTN <br/>Plasma hépariné - Immunoturbidimétrie, Atellica </p>
+<p>LDH 1119 U/l ( < 246 ) FTN </p>
+<p>Résultat contrôléPlasma hépariné - Test de coloration cinétique IFCC, Atellica </p>
+<p>Haptoglobine 1.69 g/L ( 0.40 - 2.80 ) FTN <br/>Serum - Immunoturbidimétrie, Atellica </p>
+<p>Transferrine 1.98 g/L ( 2.50 - 3.80 ) FTN <br/>Plasma hépariné - Immunoturbidimétrie, Atellica </p>
+<p>Coefficient saturation de la transferrine 34.2 % ( 20.0 - 40.0 ) FTN </p>
+<p>Capacité totale de saturation de latransferrine </p>
+<p>50 μmol de Fer/L ( 50 - 90 ) FTN </p>
+<p>La CTST est déterminée par le calcul à partir du dosage de la transferrine selon la formule suivante : CTST = <br/>Transferrine x 25 </p>
+<p> ELECTROPHORÈSE DES PROTÉINES SÉRIQUES </p>
+<p>Protides 67 g/L ( 57 - 82 ) FTN <br/>Serum - Colorimétrie (Biuret), Atellica </p>
+<p>Alb elect 50.1 % ( 55.8 - 66.1 ) FTN <br/>Serum - Electrophorèse capillaire </p>
+<p>Soit 33.5 g/L ( 36.8 - 48.9 ) FTN </p>
+<p>Alpha1 Globulines 7.2 % ( 2.9 - 4.9 ) FTN </p>
+<p>Soit 4.8 g/L ( 1.9 - 3.6 ) FTN </p>
+<p>Alpha2 Globulines 11.6 % ( 7.1 - 11.8 ) FTN </p>
+<p>Soit 7.7 g/L ( 4.7 - 8.7 ) FTN </p>
+<p>Beta Globulines 1 7.1 % ( 4.7 - 7.2 ) FTN </p>
+<p>Soit 4.7 g/L ( 3.1 - 5.3 ) FTN </p>
+<p>Beta Globulines 2 7.5 % ( 3.2 - 6.5 ) FTN </p>
+<p>Soit 5.0 g/L ( 2.1 - 4.8 ) FTN </p>
+<p>Gamma Globulines 16.5 % ( 11.1 - 18.8 ) FTN </p>
+<p>Soit 11.0 g/L ( 7.3 - 13.9 ) FTN </p>
+<p>Interprétation : FTNProfil électrophorétique compatible avec un syndrome inflammatoire </p>
+<p> HORMONOLOGIE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 15/10/2020 à 14:59 par : Pr GRISCELLI Franck,Dr PRADON Caroline,Dr BROUTIN Sophie,Dr TROALEN Frédéric,Dr GALLOIS Emmanuelle,Dr VERGÉ Véronique</p>
+<p></p>
+<p></p>
+<p>Page 3 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>CTE 110 - HEMATOLOGIEPatient : 5 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>PASQUIER FlorencePrescrit par : </p>
+<p>TSH 4.13 mUI/l ( 0.55 - 4.78 ) FTN <br/>Serum - Chimiluminescence, Atellica </p>
+<p>Ferritine 1551 ng/mL ( 10 - 291 ) FTN <br/>Plasma hépariné - Chimiluminescence, Atellica </p>
+<p>Vitamine B12 840 pmol/l ( 156 - 672 ) FTN <br/>Serum - Chimiluminescence, Atellica </p>
+<p>Folates 14.8 nmol/l ( 7.6 - 12.2 ) FTN </p>
+<p>Carencé : < 7,6 nmol/LSerum - Chimiluminescence, Atellica </p>
+<p>HEMOSTASE </p>
+<p> BILAN DE COAGULATION <br/>Taux de Prothrombine 94 % ( 70 - 100 )75 06/07/2020 11:50 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>Temps de Quick (Témoin = 13s) 13.6 s 15.7 06/07/2020 11:50 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>INR 1.0 1.2 06/07/2020 11:50 FTN </p>
+<p>0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>Fibrinogène 4.9 g/L ( 2.0 - 4.0 )3.9 06/07/2020 11:50 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK 24 s 24 06/07/2020 11:50 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK Ratio 0.8 ( < 1.2 )0.8 06/07/2020 11:50 FTN </p>
+<p>HEMATOLOGIE </p>
+<p> NUMERATION SANGUINE (SANG TOTAL SUR EDTA) <br/>MÉTHODE : XN - SYSMEX </p>
+<p>Leucocytes 5.7 10*9/L ( 4.0 - 10.0 )2.7 14/09/2020 08:42 VVE </p>
+<p>Hématies 2.67 10*12/L ( 4.00 - 5.20 )2.49 14/09/2020 08:42 VVE </p>
+<p>Hémoglobine 10.4 g/100mL ( 11.5 - 15.0 )9.6 14/09/2020 08:42 VVE </p>
+<p>Hématocrite 32.1 % ( 34.0 - 45.0 )28.3 14/09/2020 08:42 VVE </p>
+<p>VGM 120.2 μ3 ( 75.0 - 96.0 )113.7 14/09/2020 08:42 VVE </p>
+<p>TCMH 39.0 pg/cel ( 24.0 - 33.0 )38.6 14/09/2020 08:42 VVE </p>
+<p>CCMH 32.4 g/100mL ( 32.0 - 36.0 )33.9 14/09/2020 08:42 VVE </p>
+<p>IDG 15.1 % ( 11.0 - 15.0 )13.5 14/09/2020 08:42 </p>
+<p>Plaquettes 76.0 10*9/L 56.0 14/09/2020 08:42 VVE </p>
+<p>Impédance (150 - 400 x 10^9/L) </p>
+<p> FORMULE <br/>Polynucléaires Neutrophiles 77.6 % 69.0 14/09/2020 08:42 VVE </p>
+<p>VVE1.8 14/09/2020 08:42 ( 1.5 - 7.0 )10*9/Lsoit 4.4 </p>
+<p>Polynucléaires Eosinophiles 0.5 % 2.2 14/09/2020 08:42 VVE </p>
+<p>VVE0.1 14/09/2020 08:42 ( 0.0 - 0.6 )10*9/Lsoit 0.0 </p>
+<p>Polynucléaires Basophiles 0.2 % 0.4 14/09/2020 08:42 VVE </p>
+<p>VVE0.0 14/09/2020 08:42 ( 0.0 - 0.1 )10*9/Lsoit 0.0 </p>
+<p>Lymphocytes 8.5 % 12.7 14/09/2020 08:42 VVE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 15/10/2020 à 14:59 par : Pr GRISCELLI Franck,Dr PRADON Caroline,Dr BROUTIN Sophie,Dr TROALEN Frédéric,Dr GALLOIS Emmanuelle,Dr VERGÉ Véronique</p>
+<p></p>
+<p></p>
+<p>Page 4 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>CTE 110 - HEMATOLOGIEPatient : 5 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>PASQUIER FlorencePrescrit par : </p>
+<p>VVE0.3 14/09/2020 08:42 ( 1.2 - 4.0 )10*9/Lsoit 0.5 </p>
+<p>Monocytes 13.2 % 15.7 14/09/2020 08:42 VVE </p>
+<p>VVE0.4 14/09/2020 08:42 ( 0.2 - 0.8 )10*9/Lsoit 0.8 </p>
+<p>Réticulocytes 2.7 % FKR </p>
+<p>FKR( 25.0 -100.0 )10*9/Lsoit 72.6 </p>
+<p>Myelémie 0.0 % ( 0.0 )0.0 14/09/2020 08:42 FKR </p>
+<p>Commentaire echantillon FKRVérification concordance identité spécimen Impossible </p>
+<p>Formule FKRAutomate </p>
+<p>IDP 11 13 14/09/2020 08:42 VVE </p>
+<p>VMP 10.8 μ3 ( 7.5 - 11.0 )10.8 14/09/2020 08:42 </p>
+<p>MICROBIOLOGIE </p>
+<p> SÉROLOGIE INFECTIEUSE </p>
+<p>- Hépatite B (VHB) </p>
+<p>Antigène HBs : EGANégatif <br/>Sérum - Chimiluminescence, Atellica </p>
+<p> index (Ag HBs) : 0.29 EGA </p>
+<p>Anticorps anti-HBs EGANégatif <br/>Sérum - Chimiluminescence, Atellica </p>
+<p> concentration (Ac HBs) : <3.1 mUI/ml EGA </p>
+<p>Anticorps totaux anti-HBc : EGANégatif <br/>Sérum - Immunodosage sandwich, Atellica </p>
+<p> index (Ac HBc) : <0.07 EGA </p>
+<p>Conclusion sérologie Hépatite B EGAProfil compatible avec une absence de contact avec le virus de l'hépatite B. <br/>En cas de suspicion d'infection récente, un contrôle à 3 mois est nécessaire. </p>
+<p>- Hépatite C (VHC) </p>
+<p>Anticorps totaux anti-VHC GRFNégatif <br/>Sérum - Immunodosage sandwich, Atellica </p>
+<p> index (VHC) : 0.03 GRF </p>
+<p>- Virus de l'Immunodéficience Humaine (VIH) </p>
+<p>Anticorps anti-VIH 1 et 2, antigène p24 : EGANégatif <br/>Sérum - Immunodosage sandwich, Atellica </p>
+<p> index (VIH) : 0.16 EGA </p>
+<p>- Cytomégalovirus (CMV) </p>
+<p>Anticorps IgG anti-CMV : EGAPositif <br/>Sérum - Chimiluminescence, Atellica </p>
+<p> concentration (CMV) : >30.0 AU/mL EGA </p>
+<p>PHARMACOLOGIE </p>
+<p> 2HGA 2-Hydroxy-glutarate 0.53 μmol/l ( 0.00 - 2.00 ) BRS </p>
+<p>A titre d'information, un taux de 2-HGA total >2μM est en faveur d'une mutation IDH chez les patients atteints de <br/>LAM, seule pathologie disposant d'une valeur seuil à l'heure actuelle. </p>
+<p>2-Hydroxy-glutarate D 0.21 μmol/l BRS <br/>Sérum - LC-MS/MS </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 15/10/2020 à 14:59 par : Pr GRISCELLI Franck,Dr PRADON Caroline,Dr BROUTIN Sophie,Dr TROALEN Frédéric,Dr GALLOIS Emmanuelle,Dr VERGÉ Véronique</p>
+<p></p>
+<p></p>
+<p>Page 5 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>CTE 110 - HEMATOLOGIEPatient : 5 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>PASQUIER FlorencePrescrit par : </p>
+<p>2-Hydroxy-glutarate L 0.32 μmol/l BRS <br/>Sérum - LC-MS/MS </p>
+<p>Ratio D/L 0.66 BRS </p>
+<p>Commentaires Pharmaco BRSLa concentration en HGA total n'est pas en faveur d'une mutation IDH. </p>
+<p>EXAMENS SOUS-TRAITES </p>
+<p> BIOCHIMIE <br/>Eléctrophorèse de l'Hémoglobine NDPReçu le : 13/10/2020 </p>
+<p>Erythropoiètine NDPReçu le : 13/10/2020 </p>
+<p> VIROLOGIE <br/>Sérologie IgG+IgM Parvovirus B19 GRFReçu le : 13/10/2020 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 15/10/2020 à 14:59 par : Pr GRISCELLI Franck,Dr PRADON Caroline,Dr BROUTIN Sophie,Dr TROALEN Frédéric,Dr GALLOIS Emmanuelle,Dr VERGÉ Véronique</p>
+<p></p>
+<ul>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Ionogramme</li>
+<li>Bilan hépatique / pancréatique</li>
+<li>Protéines</li>
+<li>Electrophorèse des protéines sériques</li>
+<li>Hormonologie</li>
+</ul>
+<li>HEMOSTASE</li>
+<ul>
+<li>Bilan de coagulation</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+<li>MICROBIOLOGIE</li>
+<ul>
+<li>Sérologie infectieuse</li>
+<ul>
+<li>Hépatite B (VHB)</li>
+<li>Hépatite C (VHC)</li>
+<li>Virus de l'Immunodéficience Humaine (VIH)</li>
+<li>Cytomégalovirus (CMV)</li>
+</ul>
+</ul>
+<li>PHARMACOLOGIE</li>
+<ul>
+<li>2HGA</li>
+</ul>
+<li>EXAMENS SOUS-TRAITES</li>
+<ul>
+<li>Biochimie</li>
+<li>Virologie</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

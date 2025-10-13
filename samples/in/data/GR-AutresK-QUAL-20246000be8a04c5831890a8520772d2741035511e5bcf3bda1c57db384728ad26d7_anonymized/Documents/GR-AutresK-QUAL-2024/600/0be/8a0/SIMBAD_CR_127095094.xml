@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127095094" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>UNITE DE PSYCHO-ONCOLOGIE - Dr Sarah DAUCHY psychiatre</title>
+    <effectiveTime value="20171120000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171121000000+0000"/>
+        <assignedAuthor>
+            <code code="UPO/332" displayName="UNITE DE PSYCHO_ONCOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Entretien réalisé par le Dr Laura NGUYEN, psychiatre addictologue</b></u>
+<br/>
+<br/>Patient âgé de 56 ans qui présente une 2ème localisation de CARCINOME 
+ <br/>EPIDERMOIDE hypopharyngé, du sinus piriforme droit. Le patient est 
+ <br/>actuellement hospitalisé au Rhônesuite à une intervention 
+ <br/>chirurgicale de type pharyngo-laryngectomie totale, réalisée le 
+ <br/>13/11/2017. Une demande de consultation addictologique est faite au 
+ <br/>moment de son hospitalisation pour un sevrage tabagique.
+ <br/>
+<br/>
+<u><b>Mode de vie</b></u> :
+ <br/>
+<br/>Patient d'origine portugaise en France depuis 25 ans.
+ <br/>Il est marié depuis 1991. Deux enfants de 29 et 30 ans.
+ <br/>Ancien maçon. Allocation adulte handicapé. 
+ <br/>Vit en appartement à Villejuif dont il est locataire. 
+ <br/>
+<br/>
+<u><b>Antécédents psychiatrique</b></u> :
+ <br/>
+<br/> On ne retrouve pas de dépression, pas de tentative de suicide, pas 
+ <br/>de suivi.
+ <br/>
+<br/>
+<u><b>Antécédents addictologiques</b></u> :
+ <br/>
+<br/>Tabac :
+ <br/>
+<br/>- Age des premières consommations : 16 ans
+ <br/>- Consommation régulière à partir de 16 ans, dépendance rapide.
+ <br/>- Consommation moyenne rapportée : 1 paquet de cigarettes par 
+ <br/>jour (38 paquets/année)
+ <br/>
+<br/>- Antécédents de sevrage :
+ <br/>
+<br/> sevrage en 2014 lors d'une cure de sevrage OH et tabac à Paul 
+ <br/>Brousse. 
+ <br/>- Consommation actuelle rapportée : abstinence par rapport au 
+ <br/>tabac depuis 2014 mais persistance de l'utilisation d'une cigarette 
+ <br/>électronique avec 11 mg de nicotine. 
+ <br/>
+<br/>Alcool : 
+ <br/>
+<br/>- Age des premières consommations : 14 ans
+ <br/>- Consommation régulière à partir de 16 ans, dépendance rapide. 
+ <br/>- Consommation moyenne rapportée : 1 à 2 bouteilles de vin par 
+ <br/>jour.
+ <br/>- Antécédents de sevrage : sevrage en 2014 lors d'une cure de 
+ <br/>sevrage OH et tabac à Paul Brousse. Abstinence depuis, pas de rechute 
+ <br/>rapportée. 
+ <br/>- Plusieurs épisodes de comitialité dans le cadre de sevrage 
+ <br/>alcoolique.
+ <br/>- Sur le plan juridique : un retrait de permis pour conduite en 
+ <br/>état d'ivresse à 2 reprises.
+ <br/>Suivi par Dr BOUAB en 2014 puis regroupement de sa prise en charge 
+ <br/>addictologique à Paul Brousse où il était déjà suivi en 
+ <br/>psychothérapautique avec une prise en charge tabaco avec Docteur 
+ <br/>DUPONT.
+ <br/>
+<br/>
+<u><b>Antécédents médicaux</b></u> : 
+ <br/>
+<br/>- Cancer du voile et des pilliers postérieurs traité par radio et 
+ <br/>chimiothérapie
+ <br/>- Dupuytren bilatéral sévère invalidante qui justifie une allocation 
+ <br/>adulte handicapé
+ <br/>- Plusieurs épisodes de comitialité dans le cadre de sevrage 
+ <br/>alcoolique. Dernière crise en 2014 traitée par gardenal 100mg*1/j le 
+ <br/>soir.
+ <br/>
+<br/>
+<u><b>TRAITEMENT psychotrope actuel</b></u> : 
+ <br/>
+<br/>0
+ <br/>
+<br/>
+<u>Histoire de la maladie</u> : 
+ <br/>
+<br/>Traitement en 2014 par radiothérapie IMRT - CISPLATINE GORTEC 2014-01 
+ <br/>pour un CARCINOME EPIDERMOIDE vélaire avec adénopathies cervicales 
+ <br/>bilatérales, T3 N2c, sans signe évolutif.
+ <br/>Le 13 Novembre 2017 : réalisation d'une pharyngo-laryngectomie totale 
+ <br/>en territoire irradié, curage cervical droit, hémi-thyroïdectomie 
+ <br/>droit, couverture des sutures pharyngées par lambeau musculaire 
+ <br/>pédiculé de grand pectoral droit +/- musculo-cutané en fonction du 
+ <br/>défect muqueux.
+ <br/>
+<br/>
+<u><b>Entretien ce jour</b></u> :
+ <br/>
+<br/>Entretien réalisé en la présence de sa femme. 
+ <br/>Patient de bon contact, cohérent et adapté. Difficultés à s'exprimer 
+ <br/>en raison de la chirurgie, chose qui le gêne le plus actuellement, 
+ <br/>mais communique volontiers par l'écrit. 
+ <br/>Sur le plan thymique, le moral est satisfaisant. Le sommeil est pour 
+ <br/>le moment perturbé en raison de l'inflammation du cou 
+ <br/>post-chirurgicale, mais Mr XXXXXX parvient à se rendormir 
+ <br/>sans ruminations anxieuses. Il n'est pas retrouvé de symptomatologie 
+ <br/>dépressive, pas d'idées noires. Il n'est pas observé de 
+ <br/>symptomatologie anxieuse majeure, même si le patient évoque son 
+ <br/>inquiétude sur la rémission possible de sa maladie, de façon tout à 
+ <br/>fait adaptée. 
+ <br/>Sur le plan addictologique, Mr Da Silva souhaite un sevrage complet 
+ <br/>par rapport à la cigarette électronique (11 mg de nicotine 
+ <br/>actuellement) qu'il prend depuis 2014. Il est en demande d'aide et 
+ <br/>accepte de prendre des substituts nicotiniques à type de patch. La 
+ <br/>motivation principale actuelle est la santé (cicatrice+++). 
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> : 
+ <br/>
+<br/>Reprise d'un suivi addictologique tabacologique pour une aide au 
+ <br/>sevrage complet.
+ <br/>Mise en place de substituts nicotiniques : Nicopatch de 14 mg/24h.
+ <br/>
+<br/>
+<b>Je repasserai le voir dans 1 semaine lors de son hospitalisation. </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

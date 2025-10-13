@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?><Messages>
+    <M_Compte_rendu_administration>
+        <Patient>
+            <Ipp>GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3</Ipp>
+        </Patient>
+        <dateAlimentation>20231204</dateAlimentation>
+        <Compte_rendu_admin>
+            <Protocole>
+                <Libell�>Therapie Cellulaire Allogreffe</Libell�>
+                <Nature>Classique</Nature>
+            </Protocole>
+                <Cycle id="732322">
+                        <S�quence id="0" jour="0">
+                            <El�ment_administration>
+                                <Dh_d�but_effective>20180811</Dh_d�but_effective>
+                                <Dh_fin_effective>20180811</Dh_fin_effective>
+                                <Composant_administr�>
+                                    <Code_composant>PROD000022</Code_composant>
+                                    <Libell�_composant>FLUDARABINE INJ</Libell�_composant>
+                                    <Quantit�_pr�vue>
+                                        <Nombre>60</Nombre>
+                                        <Unit�>mg</Unit�>
+                                    </Quantit�_pr�vue>
+                                    <Quantit�_administr�e>
+                                        <Nombre>60</Nombre>
+                                        <Unit�>mg</Unit�>
+                                    </Quantit�_administr�e>
+                                </Composant_administr�>
+                            </El�ment_administration>
+                        </S�quence>
+                        <S�quence id="1" jour="1">
+                            <El�ment_administration>
+                                <Dh_d�but_effective>20180812</Dh_d�but_effective>
+                                <Dh_fin_effective>20180812</Dh_fin_effective>
+                                <Composant_administr�>
+                                    <Code_composant>PROD000022</Code_composant>
+                                    <Libell�_composant>FLUDARABINE INJ</Libell�_composant>
+                                    <Quantit�_pr�vue>
+                                        <Nombre>60</Nombre>
+                                        <Unit�>mg</Unit�>
+                                    </Quantit�_pr�vue>
+                                    <Quantit�_administr�e>
+                                        <Nombre>60</Nombre>
+                                        <Unit�>mg</Unit�>
+                                    </Quantit�_administr�e>
+                                </Composant_administr�>
+                            </El�ment_administration>
+                        </S�quence>
+                        <S�quence id="2" jour="2">
+                            <El�ment_administration>
+                                <Dh_d�but_effective>20180813</Dh_d�but_effective>
+                                <Dh_fin_effective>20180813</Dh_fin_effective>
+                                <Composant_administr�>
+                                    <Code_composant>PROD000022</Code_composant>
+                                    <Libell�_composant>FLUDARABINE INJ</Libell�_composant>
+                                    <Quantit�_pr�vue>
+                                        <Nombre>60</Nombre>
+                                        <Unit�>mg</Unit�>
+                                    </Quantit�_pr�vue>
+                                    <Quantit�_administr�e>
+                                        <Nombre>60</Nombre>
+                                        <Unit�>mg</Unit�>
+                                    </Quantit�_administr�e>
+                                </Composant_administr�>
+                            </El�ment_administration>
+                        </S�quence>
+                        <S�quence id="3" jour="3">
+                            <El�ment_administration>
+                                <Dh_d�but_effective>20180814</Dh_d�but_effective>
+                                <Dh_fin_effective>20180814</Dh_fin_effective>
+                                <Composant_administr�>
+                                    <Code_composant>PROD000022</Code_composant>
+                                    <Libell�_composant>FLUDARABINE INJ</Libell�_composant>
+                                    <Quantit�_pr�vue>
+                                        <Nombre>60</Nombre>
+                                        <Unit�>mg</Unit�>
+                                    </Quantit�_pr�vue>
+                                    <Quantit�_administr�e>
+                                        <Nombre>60</Nombre>
+                                        <Unit�>mg</Unit�>
+                                    </Quantit�_administr�e>
+                                </Composant_administr�>
+                            </El�ment_administration>
+                        </S�quence>
+                        <S�quence id="4" jour="4">
+                            <El�ment_administration>
+                                <Dh_d�but_effective>20180815</Dh_d�but_effective>
+                                <Dh_fin_effective>20180815</Dh_fin_effective>
+                                <Composant_administr�>
+                                    <Code_composant>PROD000022</Code_composant>
+                                    <Libell�_composant>FLUDARABINE INJ</Libell�_composant>
+                                    <Quantit�_pr�vue>
+                                        <Nombre>60</Nombre>
+                                        <Unit�>mg</Unit�>
+                                    </Quantit�_pr�vue>
+                                    <Quantit�_administr�e>
+                                        <Nombre>60</Nombre>
+                                        <Unit�>mg</Unit�>
+                                    </Quantit�_administr�e>
+                                </Composant_administr�>
+                            </El�ment_administration>
+                        </S�quence>
+                </Cycle>
+                <Cycle id="732323">
+                        <S�quence id="0" jour="0">
+                            <El�ment_administration>
+                                <Dh_d�but_effective>20180811</Dh_d�but_effective>
+                                <Dh_fin_effective>20180811</Dh_fin_effective>
+                                <Composant_administr�>
+                                    <Code_composant>PROD000018</Code_composant>
+                                    <Libell�_composant>ENDOXAN* INJ</Libell�_composant>
+                                    <Quantit�_pr�vue>
+                                        <Nombre>1200</Nombre>
+                                        <Unit�>mg</Unit�>
+                                    </Quantit�_pr�vue>
+                                    <Quantit�_administr�e>
+                                        <Nombre>1200</Nombre>
+                                        <Unit�>mg</Unit�>
+                                    </Quantit�_administr�e>
+                                </Composant_administr�>
+                            </El�ment_administration>
+                        </S�quence>
+                        <S�quence id="1" jour="1">
+                            <El�ment_administration>
+                                <Dh_d�but_effective>20180812</Dh_d�but_effective>
+                                <Dh_fin_effective>20180812</Dh_fin_effective>
+                                <Composant_administr�>
+                                    <Code_composant>PROD000018</Code_composant>
+                                    <Libell�_composant>ENDOXAN* INJ</Libell�_composant>
+                                    <Quantit�_pr�vue>
+                                        <Nombre>1200</Nombre>
+                                        <Unit�>mg</Unit�>
+                                    </Quantit�_pr�vue>
+                                    <Quantit�_administr�e>
+                                        <Nombre>1200</Nombre>
+                                        <Unit�>mg</Unit�>
+                                    </Quantit�_administr�e>
+                                </Composant_administr�>
+                            </El�ment_administration>
+                        </S�quence>
+                </Cycle>
+                <Cycle id="732325">
+                        <S�quence id="0" jour="0">
+                            <El�ment_administration>
+                                <Dh_d�but_effective>20180820</Dh_d�but_effective>
+                                <Dh_fin_effective>20180820</Dh_fin_effective>
+                                <Composant_administr�>
+                                    <Code_composant>PROD000018</Code_composant>
+                                    <Libell�_composant>ENDOXAN* INJ</Libell�_composant>
+                                    <Quantit�_pr�vue>
+                                        <Nombre>4000</Nombre>
+                                        <Unit�>mg</Unit�>
+                                    </Quantit�_pr�vue>
+                                    <Quantit�_administr�e>
+                                        <Nombre>4000</Nombre>
+                                        <Unit�>mg</Unit�>
+                                    </Quantit�_administr�e>
+                                </Composant_administr�>
+                            </El�ment_administration>
+                        </S�quence>
+                        <S�quence id="1" jour="1">
+                            <El�ment_administration>
+                                <Dh_d�but_effective>20180821</Dh_d�but_effective>
+                                <Dh_fin_effective>20180821</Dh_fin_effective>
+                                <Composant_administr�>
+                                    <Code_composant>PROD000018</Code_composant>
+                                    <Libell�_composant>ENDOXAN* INJ</Libell�_composant>
+                                    <Quantit�_pr�vue>
+                                        <Nombre>4000</Nombre>
+                                        <Unit�>mg</Unit�>
+                                    </Quantit�_pr�vue>
+                                    <Quantit�_administr�e>
+                                        <Nombre>4000</Nombre>
+                                        <Unit�>mg</Unit�>
+                                    </Quantit�_administr�e>
+                                </Composant_administr�>
+                            </El�ment_administration>
+                        </S�quence>
+                </Cycle>
+        </Compte_rendu_admin>
+    </M_Compte_rendu_administration>
+</Messages>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_129234113" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20160905000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20160905000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patiente de 59 ans vue ce jour pour la prise en charge d'un cancer du 
+ <br/>sein triple négatif du sein droit.
+ <br/>
+<br/>La patiente a déjà reçu la première cure d'EC 75 le 29/8.
+ <br/>Tolérance du traitement correcte avec une asthénie grade I pendant la 
+ <br/>première semaine.
+ <br/>
+<br/>Pas de trouble digestif.
+ <br/>
+<br/>OMS = 0
+ <br/>Poids stable.
+ <br/>L'examen clinique ce jour montre un nodule de 2 cm au niveau du 
+ <br/>quadrant supéro-interne droit stable.
+ <br/>Les aires ganglionnaires sont libres.
+ <br/>
+<br/>Le bilan biologique sera réalisé avant la 2ème cure d'EC.
+ <br/>
+<br/>La patiente apporte ce jour les résultats de scanner TAP réalisé le 
+ <br/>17/8 qui est normal mise à part la présence de 2 micronodules plutôt 
+ <br/>isolé dont l'un en base droite qui mesure près de 4,5 mm et un 
+ <br/>micronodule de base gauche également isolé, pour lesquels on 
+ <br/>recontrôlera par un scanner TAP à la fin de tous les traitements.
+ <br/>
+<br/>
+<b>EN PRATIQUE :<br/></b>
+<br/>Poursuite de la chimiothérapie par EC sous réserve d'un bilan 
+ <br/>biologique correct, elle recevra le 19/9 EPIRUBICINE 120 mg et 
+ <br/>CYCLOPHOSPHAMIDE 1200 mg.
+ <br/>
+<br/>La patiente devra avoir une consultation d'oncogénétique à la 
+ <br/>recherche de mutation.
+ <br/>Comme antécédents familiaux, grand-mère maternelle cancer du sein à 
+ <br/>l'âge de 89 ans.
+ <br/>
+<br/>Je reverrai la patiente avant le 4ème cycle d'EC et elle reverra les 
+ <br/>médecin en hopital de jour le 10/10 avant 3ème cycle d'EC.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

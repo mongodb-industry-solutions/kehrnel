@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120264629" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>REUNION DE CONCERTATION PLURIDISCIPLINAIRE HEMATOLOGIE</title>
+    <effectiveTime value="20201106000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201007000000+0000"/>
+        <assignedAuthor>
+            <code code="110/16" displayName="CTE 110 - HEMATOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Service Hématologie : RCP Syndromes myélodysplasiques</b></u>
+<b>.<br/><br/>DATE DE LA RCP : 06.11.2020 <br/>Responsable RCP : Dr PASQUIER <br/>MEDECIN REFERENT : Dr MICOL<br/>MEDECINS PRESENTS :<br/>Hématologues : Dr Pasquier, Dr Micol, Dr Pilorge, Dr Willekens, <br/>internes du service.<br/>Cytologistes : Dr Arbab. <br/>Cytogénéticiens : Dr Cotteret.<br/>Biologie moléculaire : Dr Marzac.<br/>MOTIF DE LA RCP : diagnostic et décision thérapeutique.</b>
+<br/>
+<br/>
+<br/>
+<u><b>ANTECEDENTS MEDICAUX ET COMORBIDITES</b></u> :
+ <br/>- Migraines suite à AVP. 
+ <br/>- Hépatite A en 1973.
+ <br/>- Pyélonéphrite à l'âge de 4 ans.
+ <br/>- Herpès génital (ayant nécessité une césarienne en 1982).
+ <br/>- Péritonite en 1980.
+ <br/>- Zona sous XELODA.
+ <br/>- Douleurs neurologiques sous GABAPENTINE.
+ <br/>- Neuropathie périphérique membres inférieurs.
+ <br/>- Notion d'intolérance à l'aspirine.
+ <br/>
+<br/>
+<u><b>ANTECEDENTS NEOPLASIQUES</b></u> :
+ <br/>- Juillet 2006 : CCI grade III, triple négatif, T2N0Mx. PROFEEL: 
+ <br/>mutation TP53. PDL1 négatif en mars 2018. RA négatif en novembre 2018.
+ <br/>1ère ligne : chimiothérapie néoadjuvante (6 EC 75 doses denses + 12 
+ <br/>TAXOL hebdo débutée le 29/08/2016), chirurgie le 23/02/2017, 
+ <br/>radiothérapie (fin de traitement : 08/06/2017), puis XELODA adjuvant 
+ <br/>6 cycles.
+ <br/>2e ligne : février 2018 : Rechute métastatique osseuse et atteinte: 
+ <br/>CARBOPLATINE GEMZAR de février à juillet 2018, associé à l'Herceptin 
+ <br/>à partir de mai 2018. \'c0 noter toxicité importante sur le plan 
+ <br/>hématologique (neutropénie, thrombopénie).
+ <br/>3e ligne : ENDOXAN de juillet 2018 à octobre 2018, toujours associé à 
+ <br/>l'Herceptine. Progression hépatique et osseuse.
+ <br/>4e ligne : ERIBULINE 
+ <br/>5ème ligne : CMF 
+ <br/>6ème ligne : NAVELBINE 
+ <br/>7e ligne : Taxol jusqu'en mars 2020
+ <br/>8e ligne : TEP scanner juin 2020 : progression osseuse hépatique. 
+ <br/>Arrêt Xeloda. Carboplatine.
+ <br/>Radiothérapie L4 et sacrum à l'été 2020 (fin de traitement de 
+ <br/>radiothérapie le 31.08.2020).
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE</b></u>
+<b>:<br/></b> Thrombopénie depuis août 2020 entre 50 et 100 G/l.
+ <br/>Pas de traitement pour le cancer du sein depuis le 25 août 2020 en 
+ <br/>raison de la thrombopénie.
+ <br/>
+<br/>
+<u><b>PARAMETRES CLINIQUES INITIAUX</b></u> : 
+ <br/>- Age au diagnostic : 63 ans
+ <br/>- Statut OMS au diagnostic : 1
+ <br/>- Splénomégalie: N
+ <br/>- Dysimmunité: N
+ <br/>- Fratrie : NC
+ <br/>- Enfants : 1
+ <br/>- FEVG : NC
+ <br/>
+<br/>
+<u><b>PARAMETRES BIOLOGIQUES INITIAUX</b></u> : 
+ <br/>- Date de diagnostic : 02.10.2020
+ <br/>- Caractère : induit
+ <br/>- NFS : 
+ <br/>Leucocytes : 5.7 G/L
+ <br/>Polynucléaires neutrophiles : 4.4 G/L
+ <br/>Monocytes : 0.8 G/L
+ <br/>Blastes circulants : 0%
+ <br/>Hémoglobine : 10.4 g/dL
+ <br/>Plaquettes : 76 G/L
+ <br/>- Besoins transfusionnels : O/N
+ <br/>- Ferritine : 1551 ng/mL (30 - 300)
+ <br/>- Vit B12: 840 pmol/L (150-720)
+ <br/>- Folates sériques: 14.8 nmol/L (7 - 45.1)
+ <br/>- EPO : 139.6 mlU/ml (2.6 - 18.5)
+ <br/>- Phénotype monocytaire : non fait
+ <br/>- Blastes médullaires : 0% mais moelle hypoplasique possiblement 
+ <br/>prélevée en zone irradiée (pr rappel irradiation du sein en 2017, de 
+ <br/>L4 et du sacrum été 2020)
+ <br/>- Dysplasie multilignée : N. Macro-mégaloblastose de la lignée 
+ <br/>érythroblastique, PNN hypersegmentés non dégranulés et quelques 
+ <br/>métamyélocytes rubannés.
+ <br/>- Immunophénotypage SMD : score d'Ogata non augmenté sous réserve de 
+ <br/>la qualité du prélèvement
+ <br/>- Coloration de Perls : non fait
+ <br/>- Biopsie ostéo-médullaire : non faite
+ <br/>- Caryotype : 46,XX[20]
+ <br/>- FISH : non faite
+ <br/>- Biologie moléculaire : au NGS, TP53 L194R(6%), PPM1D R581*(3%).
+ <br/>- Dosage D-2HG : non augmenté
+ <br/>
+<br/>DIAGNOSTIC OMS 2016 : CCUS, sous réserve de la qualité du prélèvement 
+ <br/>médullaire (cf irradiation thorax et sacrum)
+ <br/>
+<br/>ORGANISATION BIOLOGIE
+ <br/>- Biologie : locale O, exterieure N 
+ <br/>- Matériel congelé : N 
+ <br/>- Formulaire de non opposition : O
+ <br/>
+<br/>
+<u><b>PROBLEME ACTUEL</b></u> : 
+ <br/>Diagnostic et décision thérapeutique.
+ <br/>
+<br/>
+<u><b>PROPOSITION RCP</b></u> : 
+ <br/>Prélèvement médullaire à renouveler si possible, car myélogramme non 
+ <br/>contributif. Revoir les champs d'irradiation pour adapter le site de 
+ <br/>ponction (pour rappel, irradiation sein au printemps 2017, 
+ <br/>irradiation sacrum et L4 à l'été 2020).
+ <br/>Si le diagnostic de CCUS est confirmé, surveillance simple.
+ <br/>
+<br/>- Indication allogreffe : N
+ <br/>- Dossier à présenter au comité greffe : N
+ <br/>- Dossier à représenter : N
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

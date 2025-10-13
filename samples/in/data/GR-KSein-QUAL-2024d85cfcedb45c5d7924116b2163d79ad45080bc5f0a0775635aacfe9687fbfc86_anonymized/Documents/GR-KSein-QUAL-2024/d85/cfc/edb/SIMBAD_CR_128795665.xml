@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128795665" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 163490788</title>
+    <effectiveTime value="20161214000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20161215000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>RESULTATSANALYSES Valeurs PrécédentesUnités Valeurs de <br/>Référence </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>D.N. : </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX </p>
+<p>Femme </p>
+<p>14/12/2016 20:14 </p>
+<p>XXXXXX </p>
+<p>Demande enregistrée le : </p>
+<p>PATIENT : <br/><br/></p>
+<p>XXXXXX SEXE : </p>
+<p>NJF : </p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Département de Biologie et de Pathologie Médicales </p>
+<p>Biochimie <br/>Dr S. Broutin (40 57) <br/>Dr A. Paci (47 30) <br/>Dr V. Poinsignon (61 92) </p>
+<p>MicrobiologieHématologie <br/>Pr A. Bennaceur (40 65) <br/>Dr V. Saada (40 67) <br/>Dr V. Vergé (40 34) </p>
+<p>jeudi 15 décembre 2016 </p>
+<br/>
+<p>Prescrit par : </p>
+<p>Comité : </p>
+<p>ROUERGUE </p>
+<p>Villejuif, le </p>
+<p>Service : </p>
+<p>163490788 <br/>Complet </p>
+<p>Type <br/><br/><br/>Ech. </p>
+<p>Val. </p>
+<p>14/12/2016 20:15 Page 1 / 3 </p>
+<p>Dr E. Chachaty (52 34) <br/>Dr P.L. Woerther (40 62) <br/>Pr F. Griscelli (51 93) </p>
+<p>Pharmacologie </p>
+<p>NDPRésultats diffusés par le technicien de garde par délégation du biologiste d'astreinteConfirmation Technique </p>
+<p>NDPRéalisée par le biologisteValidation Biologique Biochimie <br/></p>
+<p>LAD139 142 08/08/2016 11:52mmol/l ( 136 - 146 ) <br/>Potentiométrie indirecte </p>
+<p>SodiumPL. </p>
+<p>LAD4.1 3.6 08/08/2016 11:52mmol/l ( 3.4 - 4.5 ) <br/>Potentiométrie indirecte </p>
+<p>PotassiumPL. </p>
+<p>LAD104 105 08/08/2016 11:52mmol/l ( 101 - 109 ) <br/>Potentiométrie indirecte </p>
+<p>ChlorePL. </p>
+<p>LAD28 26 08/08/2016 11:52mmol/l ( 21 - 31 ) <br/>PEPC </p>
+<p>Reserve alcalinePL. </p>
+<p>LAD70 72 08/08/2016 11:52g/L ( 66 - 83 ) <br/>Biuret </p>
+<p>ProtidesPL. </p>
+<p>LAD5.1 5.1 08/08/2016 11:52mmol/l ( 2.8 - 7.2 ) <br/>Uréase-GLDH </p>
+<p>UréePL. </p>
+<p>LAD62 70 08/08/2016 11:52μmol/l ( 49 - 90 ) <br/>Enzymatique raccordée IDMS </p>
+<p>CréatininePL. </p>
+<p>LAD6.1(*) 7.2 08/08/2016 11:52mmol/l ( 4.1 - 5.9 ) <br/>Hexokinase <br/>G6P-DH Valeur de référence pour un patient à jeun </p>
+<p>GlucosePL. </p>
+<p>LAD2.49 2.37 08/08/2016 11:52mmol/l ( 2.20 - 2.65 ) <br/>Arsenazo III </p>
+<p>CalciumPL. </p>
+<p>LAD1.18 mmol/l ( 0.81 - 1.45 ) <br/>Molybdate, UV </p>
+<p>PhosphorePL. </p>
+<p>LAD0.87 0.81 08/08/2016 11:52mmol/l ( 0.77 - 1.03 ) <br/>Bleu de xylidyle </p>
+<p>MagnesiumPL. </p>
+<p>batch1.35(*) 1.20 08/08/2016 11:52 <br/>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Base calcul CockroftPL. </p>
+<p>batch>60.0(*) >60.0 08/08/2016 11:52mL/mn/1.73m2 < 60 : Insuffisance rénale à explorer si nécessaire. <br/>Si origine afro américaine, le DFG est à multiplier par 1.212 </p>
+<p>Débit de Filtration <br/>Glomérulaire (MDRD) </p>
+<p>PL. </p>
+<p>Ionogramme </p>
+<p>LAD66 65 08/08/2016 11:52UI/L ( 30 - 120 ) <br/>IFCC </p>
+<p>PALPL. </p>
+<p>LAD27 21 08/08/2016 11:52UI/L ( 0 - 35 ) <br/>IFCC </p>
+<p>ASATPL. </p>
+<p>LAD19 16 08/08/2016 11:52UI/L ( 0 - 35 ) <br/>IFCC </p>
+<p>ALATPL. </p>
+<p>Bilan hépatique / pancréatique </p>
+<p>Sang </p>
+<p>BIOCHIMIE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>14/12/2016 21:02 Validé par :Validé le : Dr PRADON Caroline,Dr SAADA Véronique,Dr DROUARD Laurence</p>
+<p></p>
+<p></p>
+<p>RESULTATS Valeurs de <br/><br/>Référence </p>
+<p>Valeurs PrécédentesUnitésANALYSES </p>
+<p>PATIENT : <br/><br/>ROUERGUE </p>
+<p>050COMITE : </p>
+<p>A :XXXXXX XXXXXX <br/><br/>Prescrit par : </p>
+<p>XXXXXX 163490788DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>Type <br/><br/><br/>Ech. </p>
+<p>Val. </p>
+<p>Page 2 / 3 </p>
+<p>LAD17 14 08/08/2016 11:52UI/L ( 0 - 38 ) <br/>IFCC </p>
+<p>GGTPL. </p>
+<p>LAD42 UI/L ( 0 - 67 ) <br/>Colorimétrie (Imamura) </p>
+<p>LipasePL. </p>
+<p>LAD7 8 08/08/2016 11:52μmol/l ( 5 - 21 ) <br/>DPD </p>
+<p>Bilirubine TotalePL. </p>
+<p>LAD1.7 mg/l ( 0.0 - 5.0 ) <br/>Immuno-turbidimétrie </p>
+<p>CRPPL. </p>
+<p>LAD48 g/L ( 35 - 52 ) <br/>Vert de bromocrésol </p>
+<p>AlbuminePL. </p>
+<p>LAD224 192 08/08/2016 11:52UI/L ( 0 - 247 ) <br/>IFCC </p>
+<p>LDHPL. </p>
+<p>Protéines </p>
+<p>NDPRésultats diffusés par le technicien de garde par délégation du biologiste d'astreintePL Confirmation Technique </p>
+<p>LAD83 77 08/08/2016 11:52% ( 70 - 100 ) <br/>Chronométrique </p>
+<p>Taux de ProthrombinePL </p>
+<p>LAD13.5 13.9 08/08/2016 11:52s <br/>Chronométrique </p>
+<p>Temps de Quick (Témoin = 13s) </p>
+<p>PL </p>
+<p>LAD1.1(*) 1.2 08/08/2016 11:52 ( 0.0 - 4.5 ) 0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>INRPL </p>
+<p>LAD4.3 g/L ( 2.0 - 4.0 ) <br/>Chronométrique </p>
+<p>FibrinogènePL </p>
+<p>LAD29 30 08/08/2016 11:52s <br/>Chronométrique </p>
+<p>TCK (Témoin = 30s)PL </p>
+<p>LAD1.0 1.1 08/08/2016 11:52 ( 0.0 - 1.2 )TCK RatioPL </p>
+<p>Bilan de coagulation </p>
+<p>HEMOSTASE </p>
+<p>SAERésultats diffusés par le technicien de garde par délégation du biologiste d'astreinteConfirmation Technique </p>
+<p>SAERéalisée par le biologisteValidation Biologique Hématologie </p>
+<p>SAE3.1 4.4 19/09/2016 14:0510*9/L ( 4.0 - 10.0 )LeucocytesSg </p>
+<p>SAE2.93 3.96 19/09/2016 14:0510*12/L ( 4.00 - 5.20 )HématiesSg </p>
+<p>SAE9.6 12.1 19/09/2016 14:05g/100mL ( 12.0 - 16.0 )HémoglobineSg </p>
+<p>SAE29.3 37.1 19/09/2016 14:05% ( 34.0 - 45.0 )HématocriteSg </p>
+<p>SAE100.0 93.7 19/09/2016 14:05μ3 ( 85.0 - 95.0 )VGMSg </p>
+<p>SAE32.8 30.6 19/09/2016 14:05pg/cel ( 28.0 - 34.0 )TCMHSg </p>
+<p>SAE32.8 32.6 19/09/2016 14:05g/100mL ( 32.0 - 36.5 )CCMHSg </p>
+<p>sysm14.0 11.7 19/09/2016 14:05% ( 0.0 - 16.0 )IDGSg </p>
+<p>SAE229.0 359.0 19/09/2016 14:0510*9/L ( 150.0-400.0 )PlaquettesSg </p>
+<p>Numeration sanguine (Sang total sur EDTA) <br/>Méthode : XN - SYSMEX </p>
+<p>SAE71.9 57.2 19/09/2016 14:05%Polynucléaires NeutrophilesSg </p>
+<p>SAE2.2 2.5 19/09/2016 14:0510*9/L ( 1.8 - 7.5 )SoitSg </p>
+<p>Formule </p>
+<p>HEMATOLOGIE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>14/12/2016 21:02 Validé par :Validé le : Dr PRADON Caroline,Dr SAADA Véronique,Dr DROUARD Laurence</p>
+<p></p>
+<p></p>
+<p>RESULTATS Valeurs de <br/><br/>Référence </p>
+<p>Valeurs PrécédentesUnitésANALYSES </p>
+<p>PATIENT : <br/><br/>ROUERGUE </p>
+<p>050COMITE : </p>
+<p>A :XXXXXX XXXXXX <br/><br/>Prescrit par : </p>
+<p>XXXXXX 163490788DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>Type <br/><br/><br/>Ech. </p>
+<p>Val. </p>
+<p>Page 3 / 3 </p>
+<p>SAE5.2 0.7 19/09/2016 14:05%Polynucléaires EosinophilesSg </p>
+<p>SAE0.2 0.0 19/09/2016 14:0510*9/L ( 0.0 - 0.5 )SoitSg </p>
+<p>SAE0.6 1.6 19/09/2016 14:05%Polynucléaires BasophilesSg </p>
+<p>SAE0.0 0.1 19/09/2016 14:0510*9/L ( 0.0 - 0.3 )SoitSg </p>
+<p>SAE15.2 26.7 19/09/2016 14:05%LymphocytesSg </p>
+<p>SAE0.5 1.2 19/09/2016 14:0510*9/L ( 1.0 - 4.0 )SoitSg </p>
+<p>SAE7.1 13.8 19/09/2016 14:05%MonocytesSg </p>
+<p>SAE0.2 0.6 19/09/2016 14:0510*9/L ( 0.1 - 1.0 )SoitSg </p>
+<p>SAE0.0 0.0 19/09/2016 14:05%MyelémieSg </p>
+<p>SAE12 10 19/09/2016 14:05IDPSg </p>
+<p>sysm10.4 9.4 19/09/2016 14:05μ3 ( 6.0 - 12.0 )VMPSg </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>14/12/2016 21:02 Validé par :Validé le : Dr PRADON Caroline,Dr SAADA Véronique,Dr DROUARD Laurence</p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

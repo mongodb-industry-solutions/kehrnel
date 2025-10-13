@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125295322" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>ECHOGRAPHIE - ECHO ABDOMEN</title>
+    <effectiveTime value="20180904000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180904000000+0000"/>
+        <assignedAuthor>
+            <code code="ECH/383" displayName="ECHOGRAPHIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Destinataire : PARIS D1
+ <br/> DR BELHADJ-MERZOUG MAYA
+ <br/>
+<br/>
+<b>Dicté par : </b> Docteur Marwa Gargouri
+ <b><br/>Dicté le : </b> 04/09/2018 
+ <b><br/>Service : </b> ECH-ECHOGRAPHIE 
+ <br/>
+<b>Type de document : </b> ECH CR MVO 
+ <br/>
+<b>Ref :</b> 482925 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> :BTZ
+ <br/>Examen réalisé le : 04/096/2018
+ <br/>
+<br/>
+<br/>
+<u><b>ECHO-DOPPLER ABDOMINAL<br/><br/> INDICATION :<br/></b></u> Suspicion de MVO
+ <u><b><br/><br/></b></u>
+<b>MODE B :</b>
+<br/>1)Foie :
+ <br/>- Pré-aortique :13 cm 
+ <br/>- Médio-claviculaire : 16 cm 
+ <br/>- Pré-rénale :17 cm
+ <br/>
+<br/>
+<b>Critères MVO :<u></u></b>
+<u> <br/></u>- Hépatomégalie si augmentation de > 2cm d'au moins 2 des 3 mesures 
+ <br/>vs Baseline : Oui / Non
+ <br/>- Augmentation du foie en pré-aortique : Oui / Non
+ <br/>- Augmentation du foie en médio-claviculaire : Oui / Non
+ <br/>- Augmentation du foie en pré-rénale : Oui / Non
+ <br/>
+<br/>2.Diamètre tronc porte : non évaluable, cavernum porte 
+ <br/>3.Epaisseur paroi de la vésicule biliaire:3 mm > 6 mm : Non 
+ <br/>4.Diamètre des veines sus-hépatiques :7 mm < 3 mm : Non
+ <br/>5.Rate : 20 cm(signes d'hypertension portale) Augmentation > 2cm vs 
+ <br/>Baseline : Non
+ <br/>6.Ascite : Non
+ <br/>
+<br/>
+<b> Nombre de critères échographiques = 1 / 6<br/><br/> Rappel des valeurs normales :<br/></b> Foie, pré-aortique 8-10 cm ; médio-claviculaire 10-12 cm ; 
+ <br/>pré-rénale 12-14cm
+ <br/>Diamètre tronc porte = 12 mm ; paroi vésicule biliaire = 6 mm ; 
+ <br/>diamètre veines sus-hépatiques (mesure à 2cm de la veine cave 
+ <br/>inférieure) > 3mm ; Rate < 12 cm.
+ <br/>
+<br/>
+<u><b>DOPPLER :<br/></b></u>
+<b>Tronc porte :<br/></b> Non évaluable, cavernum porte 
+ <br/>
+<b>Artère hépatique :<br/></b> * Index de résistance : 0.72 > 0,75 :Non
+ <br/>
+<br/>
+<b>Veines sus-hépatiques :<br/></b> * Flux mono/bi/tri-phasique : Bi
+ <br/>
+<b><br/>Veine para-ombilicale :<br/></b> * Flux capté : non
+ <br/>
+<br/>
+<b> Nombre de critères Doppler =0 / 6<br/></b>
+<br/>
+<u><b><h3>Conclusion</h3> :<br/></b></u> A)Nombre de critères écho-doppler présents :1 /12 Si 
+ <br/>\'bf6 MVO = Oui
+ <br/>
+<br/>b)- Signes de MVO débutante : Non
+ <br/>- Hépatomégalie : Oui 
+ <br/>- Epaississement de la paroi vésiculaire : Non
+ <br/>- Ascite : Non
+ <br/>
+<br/>
+<br/>
+<u><b>Observation :</b></u>
+<br/>
+<br/>
+<b>Pas de signe de MVO. <br/>Hépatomégalie inchangée. Cavernome porte avec signes d'hypertension <br/>portale. </b>
+<br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Marwa GARGOURI <br/>Le mardi 4 septembre 2018 à 16:48 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

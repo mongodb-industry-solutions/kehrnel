@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123555313" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>MED.NUCLEAIRE MN TEP FDG 050</title>
+    <effectiveTime value="20190522000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190522000000+0000"/>
+        <assignedAuthor>
+            <code code="MNU/174" displayName="MEDECINE NUCLEAIRE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur HENRY THEOPHRASTE
+ <br/>
+<br/>Destinataire : CTE 050 - SEIN
+ <br/> DR MOKDAD--ADI MERIEM
+ <br/>
+<b>EXAMEN DE TOMOGRAPHIE PAR EMISSION DE POSITONS<br/>TEP-FDG<br/>Dicté par : </b> Docteur Théophraste Henry
+ <b><br/>Dicté le : </b> 22/05/2019 
+ <b><br/>Service : </b> MNU-MEDECINE NUCLEAIRE 
+ <br/>
+<b>Type de document : </b> MNU CE TEP FDG 
+ <br/>
+<b>Ref :</b> 700331 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : UMU
+ <b><br/></b>
+<br/>Examen réalisé le : 22/05/2019
+ <br/>
+<br/>Examen réalisé sur un TEP-TDM DISCOVERY 690 PET-CT, GENERAL 
+ <br/>ELECTRIC, 
+ <br/>mis en service en juin 2011.
+ <br/>- Numéro d'autorisation : M940029
+ <br/>- Numéro d'identification : 266196HM5
+ <br/>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/><u><br/></u>Patiente de 62 ans suivie pour un carcinome canalaire infiltrant du <br/>sein droit, diagnostiqué en 2016, en rechute osseuse et hépatique. <br/>Patiente traitée par ERIBULINE débuté le 9 novembre 2018. <br/>Radiothérapie du rachis thoracique jusqu'au 15 décembre 2018 sur une <br/>lésion de T3 avec atteinte épidurale. <u><br/><br/>TECHNIQUE</u> :<br/><u><br/></u></b> Acquisition TEP standard réalisée 59 minutes après injection par 
+ <br/>voie intraveineuse de 174.0 MBq de 18-FDG.
+ <br/>Glycémie avant injection : 4.8 mmol/l - Durée du jeûne : > 6 heures
+ <br/>Scanner de repérage pour fusion d'images, PDL : 183.63 mGy.cm
+ <br/>- Poids 50 kg - Taille 171 cm
+ <br/>- Site d'injection : Coude droit 
+ <br/>- Heure d'injection 13h45
+ <br/>- Début de l'examen à 14h44
+ <br/>
+<u><b><br/></b></u>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/><br/>Comparaison avec les examens du 20/03/2019, du 10/01/2019 (Nadir) et <br/>du 19/10/2018 (Baseline)<br/><br/><u>Etage cervico-encéphalique :</u></b>
+<br/>
+<u><b><br/></b></u> - Absence de fixation pathologique cérébrale.
+ <br/>
+<br/>- Absence de fixation pathologique des VADS, de la loge thyroïdienne 
+ <br/>ou des aires ganglionnaires cervicales.
+ <br/>
+<br/>- Persistance d'une discrète asymétrie de fixation amygdalienne au 
+ <br/>profit du côté droit, peu spécifique. Poursuite de la disparition des 
+ <br/>ganglions hyperfixants latérocervicaux droits.
+ <br/>
+<br/>
+<br/>
+<u><b>Etage thoracique :<br/><br/></b></u> - Régression partielle de l'hyperfixation avec persistance 
+ <br/>morphologique de plages de condensation mal limitées pulmonaires 
+ <br/>apicales para-vertébrales bilatérales, restant compatibles avec des 
+ <br/>foyers de pneumopathie. Absence de fixation pathologique 
+ <br/>pleuro-pulmonaire par ailleurs.
+ <br/>
+<br/>- Absence de fixation pathologique des aires ganglionnaires 
+ <br/>médiastino-hilaires, axillaires et sus-claviculaires.
+ <br/>
+<br/>- Absence de fixation pathologique des glandes mammaires.
+ <br/>
+<br/>- Absence d'épanchement pleural ou péricardique.
+ <br/>
+<br/>
+<br/>
+<u><b>Etage abdomino-pelvien :<br/></b> <br/></u>- Poursuite de la majoration en intensité et étendue de fixation de 
+ <br/>la lésion hépatique secondaire connue du segment VII par rapport au 
+ <br/>Nadir de Janvier 2019, désormais légèrement plus étendue qu'au 
+ <br/>Baseline (SUVmax à 7,6 vs 6,0 vs 4,8 vs 5,9).
+ <br/>
+<br/>- Absence de fixation pathologique splénique, pancréatique et 
+ <br/>surrénalien.
+ <br/>
+<br/>- Absence de fixation pathologique des aires ganglionnaires 
+ <br/>sous-diaphragmatiques.
+ <br/>
+<br/>
+<br/>
+<u><b>Appareil locomoteur :<br/><br/></b></u> - Poursuite de la régression métabolique complète de la lésion du 
+ <br/>pédicule droit de T3, d'allure secondaire, traitée par radiothérapie.
+ <br/>
+<br/>- Pas de nouveau foyer hyperfixant osseux d'allure secondaire.
+ <br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/><u><br/></u>Comparativement au Nadir de Janvier 2019, progression métabolique <br/>significative de la lésion hépatique isolée hyperfixante, désormais <br/>plus étendue et intense qu'au Baseline.<br/><br/>Pas de nouveau foyer hyperfixant d'allure secondaire par ailleurs.<br/></b>
+<br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Théophraste HENRY <br/>Le mercredi 22 mai 2019 à 15:56 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

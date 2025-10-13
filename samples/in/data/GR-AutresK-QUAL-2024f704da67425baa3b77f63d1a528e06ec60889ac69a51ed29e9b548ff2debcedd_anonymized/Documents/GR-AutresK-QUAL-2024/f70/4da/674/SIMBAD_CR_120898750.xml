@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120898750" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'URGENCE</title>
+    <effectiveTime value="20200703000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200703000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ \qc
+ <b>SERVICE DE M\'c9DECINE D'URGENCE EN ONCOLOGIE<br/><u><br/>Compte-rendu de consultation<br/><br/> </u></b>
+<br/>
+<u><b>CONSULTATION DU 03.07.2020<br/></b></u>
+<br/>
+<u><b>ACCUEIL IAO / L. SESVEREN<br/></b></u> (entre 08h30 et 19h30)
+ <br/>
+<br/>
+<br/>
+<u><b>MEDECIN EXAMINATEUR</b></u> : Dr DAOUDI
+ <br/>
+<br/>
+<u><b>MOTIF DE LA CONSULTATION</b></u> :
+ <br/>Patiente de 
+ <b>67 </b> ans, adressée du bloc RI pour 
+ <b>hypotension à 70/50 <br/>mmHg</b> dans le cadre de la prise en charge d'un adénocarcinome séreux 
+ <br/>de haut grade en rechute platine résistante multi-traité. 
+ <br/>Ascite récidivante et volumineux oedèmes des membres inférieurs en 
+ <br/>lien avec la poursuite évolutive et hypoalbuminémie. 
+ <br/>Profil moléculaire: BRCA 1 et 2 sauvages, en constitutionnel et 
+ <br/>somatique, p53 muté.
+ <br/>Patiente connue de l'EMASP.
+ <br/>
+<br/>
+<br/>
+<u><b>MEDECIN REFERENT</b></u> : Dr COLOMBA
+ <br/>
+<br/>
+<br/>
+<u><b>ANTECEDENTS ONCOLOGIQUES</b></u> :
+ <br/>Diagnostic en février 2017 d'une masse pelviene, probablement 
+ <br/>d'origine ovarienne avec présence d'une ascite et d'une thrombose au 
+ <br/>niveau du membre inférieur droit. 
+ <br/>
+<br/>Mise en place d'un traitement anticoagulant par INNOHEP puis switch 
+ <br/>par PREVISCAN.
+ <br/>
+<br/>Mars 2017: coelioscopie exploratrice qui retrouve une carcinose 
+ <br/>péritonéale. 
+ <br/>Mise en place d'une 1ère ligne de chimiothérapie par CARBOPLATINE + 
+ <br/>TAXOL, débutée le 31/03/17, par la suite les doses ont été réduites 
+ <br/>pour toxicité hématologique, thrombopénie grade II.
+ <br/>
+<br/>Octobre 2017 : coelioscopie exploratrice interrompu par une 
+ <br/>instabilité hémodynamique majeure et respiratoire. Poursuite d'un 
+ <br/>traitement systémique avec reprise de CARBOPLATINE + TAXOL et 
+ <br/>adjonction d'AVASTIN, le 20/10/17, 2 cures puis entretien par AVASTIN 
+ <br/>seul.
+ <br/>
+<br/>Stabilité clinique sous AVASTIN pendant 1 an, ascite ponctionnée 
+ <br/>toutes les 4 semaines.
+ <br/>
+<br/>Octobre 2018 : progression ovarienne, inclusion dans le protocole 
+ <br/>ATALANTE, bras CARBOPLATINE + GEMZAR + AVASTIN +/- ATEZOLIZUMAB, 
+ <br/>débuté le 18/01/2019. 
+ <br/>
+<br/>Juillet 2019 : progression, PLATINE résistante motivant 
+ <br/>l'introduction d'une chimiothérapie par TAXOL hebdomadaire.
+ <br/>
+<br/>Janvier 2020: progression sous TAXOL, nouvelle ligne par CAELYX, 
+ <br/>débutée le 30/01/2020.
+ <br/>
+<br/>Les ponctions d'ascite ont continué toutes les 6 semaines pendant le 
+ <br/>TAXOL puis tous les 10 jours sous traitement par CAELYX.
+ <br/>
+<br/>Début d'une nouvelle ligne de chimiothérapie par GEMCITABINE le 
+ <br/>20/04/2020 pour progression clinique. 
+ <br/>
+<br/>Complications liées à la maladie et au traitement : 
+ <br/>Ascite, nécessitant des ponctions presque toutes les 6 semaines. 
+ <br/>Epanchement pleural droit, ponctionné le 03/03/2020. 
+ <br/>Thrombose du membre inférieur droit inaugurale, traitée par INNOHEP.
+ <br/>
+<br/>
+<br/>
+<u><b>ANTECEDENTS NON ONCOLOGIQUES</b></u> :
+ <br/>- Thrombose MID diagnostiquée en février 2017.
+ <br/>- Cimentoplastie T10 L5 en mars.
+ <br/>- Appendicectomie
+ <br/>- Pas d'allergie
+ <br/>
+<br/> - Handicap : non 
+ <br/> - Pathologie psychiatrique : non 
+ <br/> - Etat grabataire : oui 
+ <br/> - Précarité sociale : non 
+ <br/> - Difficultés de coopération ou incapacité à s'exprimer : non
+ <br/>
+<br/>
+<br/>
+<u><b>TRAITEMENT EN COURS</b></u> :
+ <br/>- OXYNORMORO 10 mg/4h
+ <br/>- OXYCONTIN LP 30 mg x2 et PARACETAMOL.
+ <br/>- INNOHEP 0.6 mL 1 injection SC/j
+ <br/>
+<br/>
+<br/>
+<u><b>HISTOIRE RECENTE</b></u> :
+ <br/>Patiente décrivant une ascite symptomatique avec anorexie associée. 
+ <br/>La patiente a consulté aux urgences la veille pour douleurs 
+ <br/>abdominales, l'examen clinique ayant objectivé une ascite importante. 
+ <br/>Ponction en radiologie interventionnelle prévue ce jour, appel de 
+ <br/>l'interne de radiologie interventionnelle pour hypotension artérielle 
+ <br/>à 70/50 mmHg, contre indiquant la ponction dans l'immédiat. 
+ <br/>
+<br/>
+<br/>
+<u><b>EXAMEN CLINIQUE A L'ARRIVEE</b></u> :
+ <br/>
+<br/>EVA : 3/10 (abdominale).
+ <br/>
+<br/>Pression artérielle : 76/51 mmHg.
+ <br/>Pouls : 101 /min.
+ <br/>Température : 36.2 °C.
+ <br/>Saturation en air ambiant : 98 %.
+ <br/>FR 12/min. 
+ <br/>
+<br/>OMS : 4
+ <br/>Examen abdominal : abdomen difficilement dépressible de par la 
+ <br/>présence d'une ascite abondante ++, pas de douleur à la palpation.
+ <br/>Pas de nausée, pas de vomissement. 
+ <br/>Examen pulmonaire : eupnéique en AA, auscultation claire. 
+ <br/>Examen cardiologique : Bruits du coeur réguliers, sans souffle. 
+ <br/>Examen neurologique : consciente, orientée, examen des membres 
+ <br/>inférieurs non fait, OMI ++ remontant jusqu'à lombilic. 
+ <br/>
+<br/>
+<br/>
+<u><b>EXAMENS COMPLEMENTAIRES A L'ARRIVEE</b></u> :
+ <br/>
+<br/>
+<u><b>Bilan biologique</b></u> :
+ <br/>
+<br/>
+<u>NFS</u> :
+ <br/>Leucocytes 5600 mm3, PNN 5400 mm3, Lymphocytes 200 mm3, 
+ <b>Hb 8.1 g/dL</b> , 
+ <br/>Plq 87000 mm3.
+ <br/>
+<br/>
+<u>Ionogramme</u> :
+ <br/>Na 129 mmol/L, K 5.2 mmol/L, Cl 96 mmol/L, RA 28 mmol/L, Prot 53 g/L,
+ <br/>Créat 107 μmol/L, Glycémie 6.6 mmol/L, Cac 2.56 mmol/L, Ph 1.70 
+ <br/>mmol/L, Mg 0.76 mmol/L, Albumine 19 g/L, LDH 680 UI/L.
+ <br/>
+<br/>
+<u>Bilan hépatique</u> :
+ <br/>PAL 211 UI/L, ASAT 131 UI/L, ALAT 120 UI/L, GGT 51 UI/L,
+ <br/>Bilirubine totale 11 μmol/L.
+ <br/>
+<br/>
+<u>Bilan infectieux</u> :
+ <br/>
+<b>CRP 316.8 mg/L</b> .
+ <br/>
+<br/>Hémocultures : en cours 
+ <br/>ECBU : en attente. 
+ <br/>
+<br/>
+<u>Bilan cardiaque</u> :
+ <br/>Troponines 24 μg/L, BNP 118 pg/mL.
+ <br/>
+<br/>
+<u><b>ECG</b></u> : RSR à 103 bpm, QRS fons, pas de trouble de la repolarisation. 
+ <br/>
+<br/>
+<br/>
+<u><b>INTERVENANTS</b></u> : 
+ <br/>
+<br/> - IDE et actes infirmiers : M. SCHMELTZ
+ <br/> - Médecin spécialiste : Dr. COLOMBA, sénior oncologue référente et 
+ <br/>Dr. ROUX, sénior radiologue interventionnel. 
+ <br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>
+<b>1) Remplissage 500 cc de NaCl permettant de récupérer une <br/>PA à 88/50 mmHg, patiente apyrétique, eupnéique, SpO2 100% en AA. <br/>Echographie de repérage pour ponction d'ascite faite (ascite <br/>abondante et cloisonnée), appel Dr. ROUX, RI: OK pour ponction <br/>d'ascite au bloc, avec envoi du liquide d'ascite en bactériologie. <br/><br/>2) Majoration importante d'un syndrome inflammatoire biologique, sans <br/>fièvre objectivée et sans frisson. <br/>Bilan infectieux complet demandé. <br/>Point d'appel principal étant un aspect érysipéloide des membres <br/>inférieurs sur majoration d'OMI connus. <br/>Initiation d'une antibiothérapie par AUGMENTIN IV. <br/><br/>3) Insuffisance rénale aigue d'allure fonctionnelle. <br/>Surveillance créatininémie demain. <br/>Hydratation IV prudente devant tableau d'oedèmes. <br/>Hyperkaliémie associée, 1 cm de Kayexalate ce soir. <br/><br/>4) Anémie normocytaire multi-factorielle avec ce jour une forte <br/>composante inflammatoire. <br/>Prévoir transfusion CGR le 04.07.2020. <br/><br/>5) Troponinémie à 24 pg/mL, ECG sans particularité, absence de <br/>douleur thoracique, à raisonner dans le contexte septique et <br/>l'insuffisance rénale aigue. Contrôle prévu le 04.07.2020. <br/><br/>6) Altération majeure de l'état général. <br/>Avis Dr. COLOMBA: soins maxmimum en salle. </b>
+<br/>
+<br/>
+<br/>DOSSIER TRANSMIS A LA GARDE. 
+ <br/>
+<br/>
+<br/>Heure d'arrivée : 16h30 
+ <br/>Heure de départ : nd
+ <br/>
+<br/>
+<b>ADMISSION SERVICE ROUERGUE<br/></b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121323684" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>ECHOGRAPHIE - ECHO PLEVRE</title>
+    <effectiveTime value="20200429000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200429000000+0000"/>
+        <assignedAuthor>
+            <code code="ECH/383" displayName="ECHOGRAPHIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur BIDAULT Sophie
+ <br/>Destinataire : GARD
+ <br/> DR GARCIN Louis-Marie
+ <br/>
+<b><br/>Dicté par : </b> Docteur Sophie Bidault
+ <b><br/>Dicté le : </b> 29/04/2020 
+ <b><br/>Service : </b> ECH-ECHOGRAPHIE 
+ <br/>
+<b>Type de document : </b> ECH CE Générique 
+ <br/>
+<b>Ref :</b> 987589 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : UGA
+ <br/>Examen réalisé le : 29/04/2020
+ <br/>
+<br/>
+<br/>
+<br/>
+<b>ECHOGRAPHIE PLEURALE<br/> </b>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> <u><br/></u></b> Repérage avant ponction pleurale droite. 
+ <br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> <u><br/></u>Examen réalisé avec un appareil TOSHIBA APPLIO 500.<br/>Mise en service en février 2017.<br/></b>
+<br/>
+<u><b>RESULTATS<br/><br/></b></u> Epanchement pleural transsonore sans cloison, bilatéral prédominant 
+ <br/>à droite.
+ <br/>
+<br/>
+<b>A droite<br/></b> Un repérage est pratiqué en position assise : piquer dans le cercle 
+ <br/>au bord supérieur de la côte inférieure, à une profondeur de 3 cm.
+ <br/>Epaisseur pariétale :10mm
+ <br/>
+<u><br/></u>
+<b><br/>_________________________________________________<br/>Signé électroniquement par Docteur Sophie BIDAULT <br/>Le mercredi 29 avril 2020 à 10:48 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

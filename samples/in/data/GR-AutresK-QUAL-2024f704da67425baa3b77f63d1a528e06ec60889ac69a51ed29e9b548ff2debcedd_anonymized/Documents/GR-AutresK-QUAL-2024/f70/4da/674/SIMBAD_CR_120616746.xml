@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120616746" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'URGENCE</title>
+    <effectiveTime value="20200817000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200817000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b><br/> </b></u>
+<b>SERVICE DE M\'c9DECINE D'URGENCE EN ONCOLOGIE<br/><u><br/>Compte-rendu de consultation<br/><br/> </u></b>
+<br/>
+<u><b>CONSULTATION DU 17/08/2020<br/></b></u>
+<br/>
+<u><b>ACCUEIL IAO / X<br/></b></u> (entre 08h30 et 19h30) 
+ <br/>
+<br/>
+<u><b>MEDECIN EXAMINATEUR</b></u> : Dr Simona POP
+ <br/>
+<br/>
+<u><b>MOTIF DE LA CONSULTATION</b></u> :
+ <br/>
+<br/>Patiente de 
+ <b>68 </b> ans, consulte pour 
+ <b>fébricules 38.2-38.6°C, sans <br/>frisson <br/>depuis 24H</b> dans le cadre de la prise en charge d'un 
+ <b>adénocarcinome <br/>ovarien séreux de haut grade en rechute platine résistante et <br/>multitraité avec ascite et oedèmes des membres inférieurs, en arrêt <br/>de traitement spécifique depuis juillet 2020.<br/><br/><br/>Actuellement prise en charge palliative exclusive, avec des soins de <br/>confort et ponctions itératives d'ascite, en HDH (par le RI).<br/><br/></b>
+<br/>
+<u><b>MEDECIN REFERENT</b></u> : Dr COLOMBA
+ <br/>
+<br/>
+<br/>
+<u><b>ANTECEDENTS ONCOLOGIQUES</b></u> :
+ <br/>
+<br/>* Diagnostic en février 2017 d'une masse pelvienne, probablement 
+ <br/>d'origine ovarienne avec présence d'une ascite et d'une thrombose au 
+ <br/>niveau du membre inférieur droit. 
+ <br/>
+<br/>Mise en place d'un traitement anticoagulant par INNOHEP puis switch 
+ <br/>par PREVISCAN.
+ <br/>
+<br/>* Mars 2017 : coelioscopie exploratrice qui retrouve une carcinose 
+ <br/>péritonéale. 
+ <br/>Mise en place d'une 1ère ligne de chimiothérapie par CARBOPLATINE + 
+ <br/>TAXOL, débutée le 31/03/17, par la suite les doses ont été réduites 
+ <br/>pour toxicité hématologique, thrombopénie grade II.
+ <br/>
+<br/>* Octobre 2017 : coelioscopie exploratrice interrompue par une 
+ <br/>instabilité hémodynamique majeure et respiratoire. Poursuite d'un 
+ <br/>traitement systémique avec reprise de CARBOPLATINE + TAXOL et 
+ <br/>adjonction d'AVASTIN, le 20/10/2017, 2 cures puis entretien par 
+ <br/>AVASTIN seul.
+ <br/>
+<br/>Stabilité clinique sous AVASTIN pendant 1 an, ascite ponctionnée 
+ <br/>toutes les 4 semaines.
+ <br/>
+<br/>* Octobre 2018 : progression ovarienne, inclusion dans le protocole 
+ <br/>ATALANTE, bras CARBOPLATINE + GEMZAR + AVASTIN +/- ATEZOLIZUMAB, 
+ <br/>débuté le 18/01/2019. 
+ <br/>
+<br/>* Juillet 2019 : progression, PLATINE résistante motivant 
+ <br/>l'introduction d'une chimiothérapie par TAXOL hebdomadaire.
+ <br/>
+<br/>* Janvier 2020 : progression sous TAXOL, nouvelle ligne par CAELYX, 
+ <br/>débutée le 30/01/2020.
+ <br/>Les ponctions d'ascite ont continué toutes les 6 semaines pendant le 
+ <br/>TAXOL puis tous les 10 jours sous traitement par CAELYX.
+ <br/>Début d'une nouvelle ligne de chimiothérapie par GEMCITABINE le 
+ <br/>20/04/2020 pour progression clinique. 
+ <br/>
+<br/>Complications liées à la maladie et au traitement : 
+ <br/>- Ascite, nécessitant des ponctions presque toutes les 6 semaines. 
+ <br/>- Epanchement pleural droit, ponctionné le 03/03/2020. 
+ <br/>- Thrombose du membre inférieur droit inaugurale, traitée par INNOHEP 
+ <br/>0.6ml.
+ <br/>
+<br/>
+<br/>
+<u><b>ANTECEDENTS NON ONCOLOGIQUES</b></u> :
+ <br/>
+<br/> - Handicap : non 
+ <br/> - Pathologie psychiatrique : non 
+ <br/> - Etat grabataire : oui 
+ <br/> - Précarité sociale : non 
+ <br/> - Difficultés de coopération ou incapacité à s'exprimer : non
+ <br/> - TVP membre inférieur droit diagnostiquée en février 2017.
+ <br/> - Cimentoplastie par voie transpédiculaire postérieure dans les 
+ <br/>corps vertébraux de T10, T11, L1, L2, L3, L4 et L5 (tassements pluri 
+ <br/>étagés d'origine ostéoporotique).
+ <br/> - Prothèse fémorale gauche cervicocéphalique et cupule mobile 
+ <br/>Tornier Océane + ciment Palacoas le 06/07/2020 au KB. 
+ <br/> - Appendicectomie.
+ <br/> - Pas d'allergie.
+ <br/>
+<br/>
+<br/>
+<u><b>TRAITEMENT EN COURS</b></u> :
+ <br/>
+<br/>- OXYCONTIN LP 20 mg matin et soir,
+ <br/>- OXYNORMORO 10 mg si douleurs,
+ <br/>- PARACETAMOL 1000 mg/8H, sb,
+ <br/>- INNOHEP 4 500 UI 1 injection SC/jour.
+ <br/>
+<br/>
+<br/>
+<u><b>EXAMEN CLINIQUE A L'ARRIVEE</b></u> :
+ <br/>
+<br/>EVA à l'entrée : 2/10.
+ <br/>
+<br/>Pression artérielle : 90/56 mmHg.
+ <br/>Pouls : 91 /min.
+ <br/>Température : 37.3 °C.
+ <br/>Saturation en air ambiant : 98 %.
+ <br/>
+<br/>OMS : 4.
+ <br/>Examen pulmonaire : eupnéique en air ambiant, pas de toux, pas de 
+ <br/>foyer à l'auscultation.
+ <br/>Examen cardiologique : bruits du coeur réguliers, pas de souffle.
+ <br/>Examen abdominal : abdomen distendu, mais dépressible, peu 
+ <br/>douloureux, EVA 2/10, avec une carcinose diffuse de la paroi 
+ <br/>abdominale antérieure, ascite non tendue, transit conservé, BHA+, pas 
+ <br/>de nausée/vomissement.
+ <br/>Examen neurologique : normal.
+ <br/>OMI : chroniques, bilatéraux, remontant jusqu'à la racine des cuisses.
+ <br/>Examen du PAC : propre, indolore.
+ <br/>Examen cutané : déhiscence de 7 mm, en regard de la cicatrice de la 
+ <br/>face antérieure de la cuisse gauche, connue depuis la chirurgie 
+ <br/>(rétard de cicatrisation). 
+ <br/>
+<br/>
+<u><b>EXAMENS COMPLEMENTAIRES A L'ARRIVEE</b></u> :
+ <br/>
+<br/>
+<u><b>Bilan biologique</b></u> :
+ <br/>
+<br/>
+<u>NFS</u> :
+ <br/>Leucocytes 16800/mm3, PNN 14600/mm3, Hb 7.9 g/dL, Plq 302000/mm3.
+ <br/>
+<br/>
+<u>Ionogramme</u> :
+ <br/>Na 141 mmol/L, K 3.5 mmol/L, Créat 45 μmol/L, Ca 2.37 mmol/L,
+ <br/>Ph 1.08 mmol/L, Mg 0.54 mmol/L, Albumine 18 g/L, LDH 390 UI/L.
+ <br/>
+<br/>
+<u>Bilan hépatique</u> :
+ <br/>Absence de cytolyse.
+ <br/>Bilirubine totale < 6 μmol/L.
+ <br/>
+<br/>
+<u>Bilan infectieux</u> :
+ <br/>CRP 123 mg/L, PCT 0.37 μg/L.
+ <br/>
+<br/>Hémocultures PAC/VVP : en cours.
+ <br/>BU/ECBU : en cours.
+ <br/>Ecouvillonnage face antérieure cuisse droite : en cours.
+ <br/>
+<br/>
+<u><br/><b>Imageries</b></u> :
+ <br/>
+<br/>
+<u>Scanner bassin + fémur gauche</u> :
+ <u><br/></u>
+<br/>Collection superficielle sur le trajet opératoire de la face 
+ <br/>antéro-supérieure de la cuisse gauche, communiquant avec la peau.
+ <br/>Probable ostéite du grand trochanter gauche.
+ <br/>Thrombose de la veine fémorale superficielle droite.
+ <br/>Progression au niveau pelvien.
+ <br/>
+<u><br/></u>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>
+<br/>1. Suspicion d'un sepsis à point d'appel cutané, probable collection 
+ <br/>des parties molles +/- ostéite associée, dans un contexte de 
+ <br/>progression tumorale, chez une patiente grabataire, dénutrie, 
+ <br/>hypoalbuminémie à 18 g/dl, PS 4.
+ <br/>
+<br/>2. Vu, l'importante progression tumorale de la carcinose péritonéale, 
+ <br/>en particulier de la paroi abdominale antérieure, avec "abdomen 
+ <br/>blindé" et nodule de carcinose de 9 cm, une fièvre spécifique, est 
+ <br/>possiblement associée.
+ <br/>
+<br/>3. A noter que la patiente, a été vu, il y a 3 semaines, en 
+ <br/>consultation ortho KB, avec la présence déjà d'un écoulement au 
+ <br/>niveau de la cicatrice, pas de suite selon la patiente.
+ <br/>
+<br/>4. Les images du scanner ainsi que des photos de la cuisse gauche, 
+ <br/>sont envoyées au KB pour avis. 
+ <br/>
+<br/>5. Bilan infectieux, dont écouvillonage cicatrice cuisse gauche.
+ <br/>
+<br/>6. Dossier transmis à la garde.
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b>CONDUITE A TENIR</b></u> :
+ <br/>Bilan biologique.
+ <br/>Bilan infectieux, dont écouvillonage cicatrice cuisse gauche.
+ <br/>Scanner bassin + fémur gauche.
+ <br/>
+<br/>
+<br/>
+<br/>Heure d'arrivée : 11H50
+ <br/>
+<b>ADMISSION SERVICE ROUERGUE</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

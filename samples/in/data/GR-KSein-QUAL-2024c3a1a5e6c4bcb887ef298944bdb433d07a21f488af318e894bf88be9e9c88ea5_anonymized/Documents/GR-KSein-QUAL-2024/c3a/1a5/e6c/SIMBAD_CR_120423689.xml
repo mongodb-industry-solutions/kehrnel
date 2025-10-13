@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120423689" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'URGENCE</title>
+    <effectiveTime value="20200915000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200915000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b><br/> </b></u>
+<b>SERVICE DE M\'c9DECINE D'URGENCE EN ONCOLOGIE<br/><u><br/>Compte-rendu de consultation<br/><br/> </u></b>
+<br/>
+<u><b>CONSULTATION DU 15/09/2020<br/></b></u>
+<br/>
+<u><b>ACCUEIL IAO / R. PARDI<br/></b></u> (entre 08h30 et 19h30) 
+ <br/>
+<br/>
+<u><b>MEDECIN EXAMINATEUR</b></u> : ROCHE Clémence (interne) / Dr RANDRIANOMANANA
+ <br/>
+<br/>
+<u><b>MOTIF DE LA CONSULTATION</b></u> :
+ <br/>
+<br/>Patiente de 
+ <b>41 </b> ans, consulte pour 
+ <b>nausée, vomissement et douleur <br/>abdominale</b> dans le cadre de la prise en charge d'un cancer du sein 
+ <br/>triple négatif.
+ <br/>
+<br/>
+<u><b>MEDECIN REFERENT</b></u> : Dr Meriem Mokdad Adi
+ <br/>
+<br/>
+<u><b>ANTECEDENTS ONCOLOGIQUES</b></u> :
+ <br/>
+<br/>- 2015 : cancer du sein gauche diagnostiqué initialement traité à 
+ <br/>Bergonié par chimiothérapie, chirurgie puis radiothérapie au niveau 
+ <br/>axillaire, CMI et sus claviculaire, triple négatif.
+ <br/>
+<br/>- Récidive en mars 2018, sous NAVELBINE. 
+ <br/>
+<br/>- PET scanner le 20 décembre qui montre, comparativement à l'examen 
+ <br/>précédent de septembre 2018, un aspect de réévolutivité au niveau 
+ <br/>ganglionnaire sus et sous-claviculaire gauche et probablement 
+ <br/>axillaire gauche.
+ <br/>
+<br/>Elle a débuté un traitement par TALAZOPARIB le 12/01/2019 en 2ème 
+ <br/>ligne.
+ <br/>
+<br/>- TEP du XXXXXX : aspect de progression métabolique devant la 
+ <br/>majoration en intensité de fixation de certaines adénopathies 
+ <br/>sus-claviculaires et axillaires gauches malgré la régression 
+ <br/>métabolique du foyer pris pour cible. 
+ <br/>La majoration d'un nodule sous-cutané cervical antérieur gauche.
+ <br/>L'apparition d'un nodule surrénalien gauche fixant d'allure 
+ <br/>secondaire. 
+ <br/>
+<br/>Sous XELODA depuis avril 2019 en 3ème ligne.
+ <br/>
+<br/>- TEP scanner du 02/07/2019 : Nouvelle progression métabolique 
+ <br/>4ème ligne par ENDOXAN oral.
+ <br/>
+<br/>- TEP scanner le 13/12 : progression donc début d'une 6ème ligne par 
+ <br/>CARBOPLATINE / GEMZAR depuis décembre 2019 jusqu'au 28/02/2020.
+ <br/>
+<br/>- TDM TAP de juin 2020 : Progression ganglionnaire 
+ <br/>sous-diaphragmatique devant l'apparition d'adénomégalies 
+ <br/>rétro-péritonéales gauches comparativement au scanner de Février 2020.
+ <br/>
+<br/>- Reprise de CARBOPLATINE / GEMZAR C1J1 22/07/2020.
+ <br/>Dernière cure le 09/09/2020 (C3).
+ <br/>
+<br/>
+<u><b>ANTECEDENTS NON ONCOLOGIQUES</b></u> :
+ <br/>
+<br/>Aucun.
+ <br/>Pas d'allergie connue.
+ <br/>
+<br/>
+<u><b>TRAITEMENT EN COURS</b></u> :
+ <br/>
+<br/>OXYCONTIN 70 mg 2x/jour
+ <br/>OXYNORMORO 20 mg si besoin
+ <br/>
+<br/>
+<u><b>HISTOIRE RECENTE</b></u> :
+ <br/>
+<br/>Douleurs abdominales connues depuis le début de la chimiothérapie 
+ <br/>avec nausée et vomissements quotidiens dans un contexte apyrétique, 
+ <br/>sans trouble du transit.
+ <br/>Non soulagée par les antalgiques de palier 3 actuels et ZOPHREN.
+ <br/>Pas de céphalée. Pas de vertige.
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE A L'ARRIVEE</b></u> :
+ <br/>
+<br/>EVA à l'entrée : 5/10.
+ <br/>Poids à l'entrée : 70 kg.
+ <br/>Taille : 1m65.
+ <br/>
+<br/>Pression artérielle : 122/82 mmHg.
+ <br/>Pouls : 71 /min.
+ <br/>Température : 36.8 °C.
+ <br/>Saturation en air ambiant : 100 %.
+ <br/>
+<br/>OMS : 2.
+ <br/>Examen pulmonaire : Pas de dyspnée. Auscultation claire.
+ <br/>Examen cardiologique : Pas de douleur thoracique. Bruits du coeur 
+ <br/>réguliers, sans souffle perçu. Pas de signe d'insuffisance cardiaque
+ <br/>Examen abdominal : abdomen souple, dépressible mais douleur à la 
+ <br/>palpation sus-pubienne et en fosses iliaques (non systématisée).
+ <br/>Pas de trouble du transit. BHA+.
+ <br/>Examen neurologique : Glasgow 15. Patiente consciente et orientée. 
+ <br/>Pas de déficit sensitivomoteur objectivé, pas de déficit des paires 
+ <br/>craniennes. Pas de céphalée, pas de signe d'HTIC, pas de syndrome 
+ <br/>pyramidal, pas de syndrome cérébelleux.
+ <br/>Examen cutané : lymphoedème du bras gauche connu.
+ <br/>
+<br/>
+<u><b>EXAMENS COMPLEMENTAIRES A L'ARRIVEE</b></u> :
+ <br/>
+<br/>
+<u><b>Bilan biologique</b></u> :
+ <br/>
+<br/>
+<u>NFS</u> :
+ <br/>Leucocytes 1.700/mm3, PNN 1.100/mm3, Hb 12.2 g/dL, Plq 255.000/mm3.
+ <br/>
+<br/>
+<u>Ionogramme</u> :
+ <br/>Na 135 mmol/L, K 3.6 mmol/L, Cl 100 mmol/L, RA 29 mmol/L, Prot 66 g/L,
+ <br/>Urée 3.7 mmol/L, Créat 57 μmol/L, Glycémie 5.4 mmol/L, Ca 2.28 mmol/L,
+ <br/>Ph 1.19 mmol/L, Mg 0.57 mmol/L, Albumine 43 g/L, LDH 10009 UI/L.
+ <br/>
+<br/>
+<u>Bilan hépatique</u> :
+ <br/>PAL 115 UI/L, ASAT 162 UI/L, ALAT 324 UI/L, GGT 344 UI/L,
+ <br/>Bilirubine totale 8 μmol/L.
+ <br/>
+<br/>
+<u>Bilan infectieux</u> :
+ <br/>CRP 9.2 mg/L.
+ <br/>
+<br/>
+<u>Bilan cardiaque</u> :
+ <br/>Troponines < 2 μg/L, BNP 18 pg/mL.
+ <br/>
+<br/>
+<u><b>ECG</b></u> : Rythme régulier et sinusal à 61 bpm. Axe droit. Pas de trouble 
+ <br/>de conduction ou de repolarisation.
+ <br/>
+<br/>
+<u><b>ASP</b></u> : Matières dans le tube digestif. Pas de signe d'occlusion.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> : 
+ <br/>
+<br/>Patiente de 41 ans à 1 semaine de sa dernière cure de chimiothérapie 
+ <br/>par GEMZAR et CARBOPLATINE. 
+ <br/>
+<br/>1/Nausées et vomissement, probablement chimio-induits, sans signe de 
+ <br/>gravité clinique, biologique.
+ <br/>2/Leucopénie à 1.7 G/L, non fébrile, à surveiller.
+ <br/>
+<br/>
+<u><b>CONDUITE A TENIR</b></u> :
+ <br/>
+<br/>- Hydratation, ajout de KCl pour anticiper la perte de potassium sur 
+ <br/>les vomissements + Mg2+ supplémenté.
+ <br/>- Reprise de ses traitements antalgiques ; Equilibration antalgique.
+ <br/>- Majoration des anti-émétiques.
+ <br/>
+<br/>Dossier transmis à la garde
+ <br/>
+<br/>Heure d'arrivée : 16h25
+ <br/>
+<b>ADMISSION SERVICE ROUERGUE<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/></b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

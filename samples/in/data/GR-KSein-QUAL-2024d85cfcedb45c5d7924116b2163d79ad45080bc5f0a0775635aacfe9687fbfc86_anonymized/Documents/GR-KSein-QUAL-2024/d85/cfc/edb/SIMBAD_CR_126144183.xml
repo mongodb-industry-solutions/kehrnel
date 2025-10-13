@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126144183" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM ART PULM</title>
+    <effectiveTime value="20180420000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180420000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>Destinataire : CTE 050 - SEIN
+ <br/> DR MOKDAD--ADI MERIEM
+ <br/>
+<br/>
+<b>ANGIOSCANNER THORACIQUE<br/><br/><br/> Dicté par : </b> Docteur Anne Marie Tardivel
+ <b><br/>Dicté le : </b> 19/04/2018 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Générique 
+ <br/>
+<b>Ref :</b> 404826 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : VZA
+ <br/>Examen n°1764
+ <br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/><br/></b> Suspicion d'embolie pulmonaire. 
+ <br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/><br/></b> Examen réalisé sur un scanner OPTIMA CT660, GENERAL ELECTRIC, mis 
+ <br/>en service le 8 février 2016.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 422272HM5
+ <br/>
+<br/>Réalisation d'une acquisition :
+ <br/>\'a7 Thoracique
+ <br/>
+<br/>Examen réalisé avec injection intraveineuse de produit de contraste.
+ <br/>
+<b>Produit de contraste injecté : Xenetix <br/>Quantité :90 mL <br/>PDL : 178 mGy.cm</b>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/><br/></b> Opacification satisfaisante.
+ <br/>Pas d'embolie pulmonaire jusqu'en segmentaire.
+ <br/>Pas de dilatation du tronc des artères pulmonaires ni des cavités 
+ <br/>droites.
+ <br/>Pas d'épanchement pleural ni péricardique.
+ <br/>Pas de nodule pulmonaire suspect.
+ <br/>Pas d'adénomégalie thoracique.
+ <br/>Lésion focale du dôme hépatique connue. Lésion mixte de l'arc 
+ <br/>postérieur droit de T3 avec fracture non déplacée du pédicule, 
+ <br/>visible sur le TEP de février 2018. 
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/></b>
+<br/>
+<b>Pas d'embolie pulmonaire jusqu'en segmentaire ni de signe <br/>d'hypertension artérielle pulmonaire. <br/>_________________________________________________<br/>Signé électroniquement par Docteur Anne Marie TARDIVEL <br/>Le jeudi 19 avril 2018 à 14:46 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

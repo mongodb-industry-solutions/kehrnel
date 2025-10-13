@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_119220740" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="51969-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Genetic analysis summary report"/>
+    <title>BMTS : CR N°339510 DEFGEN</title>
+    <effectiveTime value="20210203000000+0000"/>
+    <confidentialityCode code="51969-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Genetic analysis summary report"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20210226000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Praticiens Spécialistes:<br/></p>
+<p>Dr E.ROULEAU <br/>Tel : 0142114408 <br/>Etienne.rouleau@gustaveroussy.fr<br/></p>
+<p>Dr S. COTTERET <br/>Tel : 0142114145 <br/>Sophie.cotteret@gustaveroussy.fr<br/></p>
+<p>Dr L. LACROIX <br/>Tel : 0142114035 <br/>Ludovic.lacroix@gustaveroussy.fr </p>
+<p>Assistante Médicale : <br/>Mme Martine CHAIGNE <br/>Mme Elodie REMY<br/></p>
+<p>Tel : 0142114779 <br/>Fax : 0142114401 <br/></p>
+<p>Service de Génétique Des Tumeurs<br/></p>
+<p>Secteur Tumeurs Solides <br/>Chef de service : Dr E. ROULEAU </p>
+<p><br/></p>
+<p>Réception des prélèvements :<br/></p>
+<p>Tel : 0142114948 </p>
+<p></p>
+<br/>
+<p>GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94805 VILLEJUIF Cedex - France - Tél : 33 (0)1 42 11 42 11 - Fax : 33 (0)1 42 11 53 00 <br/>Centre de lutte contre le cancer autorisé à recevoir les dons et legs - ordonnance du 1 </p>
+<p>er octobre 1945 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Dr Natacha JOYON <br/>Pathologie morphologique <br/>GUSTAVE ROUSSY<br/></p>
+<p> NIP : XXXXXX </p>
+<p>Nom : XXXXXX </p>
+<p>Prénom : XXXXXX </p>
+<p>Nom de naissance : XXXXXX </p>
+<p>Date de naissance : XXXXXX <br/>Sexe : F<br/></p>
+<p>ANALYSES MOLECULAIRES DES ALTERATIONS SOMATIQUES<br/></p>
+<p>Renseignements cliniques et pathologiques : </p>
+<p>Diagnostic : Carcinome mammaire triple négatif </p>
+<p>Localisation : Ganglion claviculaire gauche </p>
+<p>Pathologie : Cancer du sein <br/>Evénement : Métastase </p>
+<p>N° histologique - N° du bloc : 20H11310-01 </p>
+<p>Date du prélèvement : 03/02/2021 </p>
+<p>Date de réception : 03/02/2021 </p>
+<p>Pathologiste : Dr JOYON Natacha </p>
+<p>Date de la prescription : 04/01/2021<br/>Renseignements concernant le prélèvement : <br/>Type de prélèvement : Biopsie <br/>Pourcentage de cellules tumorales : 10 % </p>
+<p>Nature du matériel : biopsie congelée </p>
+<p>Référence du prélèvement analysé : BIO2101050_TNA_06.02-729911 </p>
+<p>Résultats :<br/></p>
+<p>Présence d'un variant du gène BRCA1, c.212+3A>G, p.(?), fréquence allélique donnée à titre indicatif: 79% <br/>Présence d'un variant du gène TP53, c.707_728del, p.Tyr236fs, fréquence allélique donnée à titre indicatif: 49% <br/></p>
+<p><h3>Conclusion</h3> :<br/></p>
+<p>Il a été mis en évidence la mutation délétère connue du gène BRCA1. A noter une perte de l'allèle normal dans la tumeur. Présence d'une mutation délétère du gène TP53. Il n'est pas retrouvé d'autres mutations sur les gènes étudiés entre autre PIK3CA. <br/></p>
+<p>Villejuif, le : 26/02/2021<br/></p>
+<p>Dr ROULEAU Etienne <br/>Compte-rendu validé et signé électroniquement. </p>
+<p></p>
+<p></p>
+<p>DEPARTEMENT DE BIOLOGIE ET PATHOLOGIE MEDICALES <br/>SERVICE DE GENETIQUE DES TUMEURS </p>
+<p></p>
+<br/>
+<p> XXXXXX Prenom BIO2101050_TNA_06.02 Validé le : 26/02/2021 </p>
+<p>Tableau des variants : </p>
+<p><br/></p>
+<p>Gène(s) Séquence de </p>
+<p>référence </p>
+<p>Variant Altération protéique </p>
+<p>Classe du variant </p>
+<p>Fréquence allélique </p>
+<p> BRCA1 NM_007294.3 c.212+3A>G p.(?) de classe 5 (délétère) </p>
+<p>79.0 % </p>
+<p> TP53 NM_000546.5 c.707_728del p.Tyr236fs de classe 5 (délétère) </p>
+<p>49.0 % </p>
+<p>Méthode analytique </p>
+<p>Série FT : 5489 <br/>Technique utilisée : Méthode d'analyse : Enrichissement par capture kit HS Agilent dédié panel pan-tumeur/HRD - 65 gènes - Agilent/bed3275611 AKT1 (NM_005163.2), ALK (NM_0043XXXXXX), APC (NM_000038.5), ARID1A (NM_006015.4), ATM (NM_000051.3), BAP1 (NM_004656.3), BARD1 (NM_000465.3), BRAF (NM_001354609.1), BRCA1 (NM_007294.3),BRCA2 (NM_000059.3), <br/>BRIP1(NM_032043.2), CCNE1(NM_001238.3), CDH1 (NM_004360.4), CDK12(NM_016507.3), <br/>CHEK2(NM_001005735.1), CTNNB1(NM_001904.3), DICER1(NM_030621.4), EGFR(NM_005228.4), <br/>ERBB2(NM_004448.3), ESR1(NM_000125.3), EZH2(NM_004456.4), FANCA(NM_000135.2), <br/>FBXW7(NM_033632.3), FGFR1(NM_023110.2), FGFR2(NM_000141.4), FGFR3(NM_000142.4), <br/>FH(NM_000143.3), FOXL2(NM_023067.3), H3F3A(NM_002107.4), HIST1H3B(NM_003537.3), <br/>HRAS(NM_005343.3), IDH1(NM_005896.3), IDH2(NM_002168.3), KIT(NM_000222.2), <br/>KRAS(NM_033360.3), MAP2K1(NM_002755.3), MAP2K2(NM_030662.3), MET(NM_001127500.2), <br/>MLH1(NM_000249.3), MSH2(NM_000251.2), MSH6 (NM_000179.2), MYOD1(NM_002478.4), <br/>NBN(NM_002485.4), NRAS(NM_00252XXXXXX), NTRK1(NM_002529.3), NTRK2(NM_006180.4), <br/>NTRK3(NM_001012338.2), PALB2(NM_024675.3), PDGFRA(NM_006206.5), PIK3CA(NM_006218.2), <br/>PMS2(NM_000535.5), POLD1(NM_002691.3), POLE(NM_006231.3), PTEN(NM_000314.6), <br/>RAD51(NM_001164269.1), RAD51B(NM_001321821.1), RAD51C(NM_058216.2), <br/>RAD51D(NM_001142571.1), RAD54L(NM_001142548.1), RET(NM_020975.5), RNF43 (NM_017763.4), <br/>ROS1(NM_002944.2), SF3B1 (NM_012433.2), STK11(NM_000455.4), TP53(NM_000546.5) Analyse bioinformatique : BWA-MEM v-0.7.12;Samtools v-1.2;Picard-tools v-1.139;GATK Haplotype v-3.4- 46;MutaCaller-1.7;snpEff v-4.0 <br/>Non-conformité n'impactant pas la qualité du résultat : NON<br/>Original adressé à : Dr Natacha JOYON <br/><br/>Copie adressée à : </p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

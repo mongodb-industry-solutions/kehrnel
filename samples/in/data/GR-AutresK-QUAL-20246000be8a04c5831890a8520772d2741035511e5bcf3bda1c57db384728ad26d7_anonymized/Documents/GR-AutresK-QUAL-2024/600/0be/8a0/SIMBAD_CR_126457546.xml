@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126457546" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ANESTHESIE</title>
+    <effectiveTime value="20180302000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180305000000+0000"/>
+        <assignedAuthor>
+            <code code="ANS/286" displayName="ANESTHESIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Patient vu par le Docteur FAIT - Interne d'anesthésie</b></u>
+<br/>
+<br/>Patient de 56 ans adressé en consultation d'anesthésie ce jour.
+ <br/>
+<u>Intervention prévue</u> : Chirurgie étiquetée comme adénectomie mais qui 
+ <br/>est en fait un rétablissement de continuité digestive avec un lambeau 
+ <br/>pectoral prévue le 19/03/2018
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS CHIRURGICAUX</b></u>
+<br/>- PLT à droite + reconstruction en 2017 avec un lambeau libre du 
+ <br/>grand dorsal
+ <br/>- Fermeture d'un pharyngostome avec un antérolatéral de cuisse en 2017
+ <br/>- PE x2
+ <br/>- Chirurgie du dupuytren x2
+ <br/>
+<br/>
+<u>Evénements anesthésiques</u> : 
+ <br/>- Les chirurgies ont été compliquées d'un pharyngostome
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS MEDICAUX</b></u>
+<br/>- Carcinome épidermoïde de l'hypopharynx à droite
+ <br/>- Epilepsie en 2014, pas de crise depuis qu'il est traité
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS CARDIO-VASCULAIRES<br/></b></u> Aucun.
+ <br/>
+<br/>Tabac : Arrêt en 2014
+ <br/>OH : Arrêt en 2014
+ <br/>
+<br/>
+<u><b>ALLERGIE/INTOLERANCES<br/></b></u> Aucune.
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE</b></u>
+<br/>Taille : 1,65 m
+ <br/>Poids : 62 kg, - 7 kg depuis les 6 derniers mois
+ <br/>TA : 10/7
+ <br/>FC : 94
+ <br/>SpO2 : 99 %
+ <br/>
+<br/>Le patient a donc une alimentation exclusive par gastrostomie avec 
+ <br/>des sécrétions assez importantes autour de la canule de trachéo et 
+ <br/>dans la trachéo mais qui sont non purulentes
+ <br/>Auscultation pulmonaire RAS
+ <br/>Examen cardiaque est normal
+ <br/>Le patient a très peu d'activité physique mais il arrive à monter 2 
+ <br/>étages
+ <br/>Pas de douleur thoracique à l'auscultation et à l'effort.
+ <br/>Pas de palpitation à l'effort
+ <br/>
+<br/>NYHA II, >4METs
+ <br/>EVA = 0
+ <br/>
+<br/>
+<u><b>GESTION DES VOIES A\'c9RIENNES</b></u>
+<br/>Mallampati : I
+ <br/>
+<br/>Le patient a actuellement une canule avec un ballonet gonflé changé 
+ <br/>aujourd'hui avec un trachéostome
+ <br/>
+<br/>
+<u><b>TRAITEMENT<br/></b></u> Anti-épileptique dont le patient ne se souvient plus du nom. Je 
+ <br/>l'informe qu'il doit ramener son ordonnance lors de son 
+ <br/>hospitalisation et il faudra de toute façon poursuivre son 
+ <br/>anti-épileptique
+ <br/>
+<br/>Traitement oncologique :Dernière chimio en 2014, dernière 
+ <br/>radiothérapie en 2014-2015 
+ <br/>
+<br/>
+<u><b>BILAN PR\'c9-OP DEMAND\'c9</b></u>
+<br/>Aucun.
+ <br/>
+<br/>Bilan à l'admission : Groupe II/RAI + NFS, iono
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<br/>Pas de contre-indication anesthésique à l'intervention prévue.
+ <br/>ASA II
+ <br/>AG / Protocole vert 
+ <br/>Analgésie post-opératoire par PCA donc le patient a été informé de la 
+ <br/>modalité de la PCA
+ <br/>L'Airway changement par une sonde de MONTANDON
+ <br/>Ordonnance BAT donnée.
+ <br/>Rappel des règles de jeûn fait. 
+ <br/>Informations transfusion faites.
+ <br/>Seuil transfusionnel péri-op : 8 g/l
+ <br/>Prémédication : 0
+ <br/>Antibioprophylaxie par : CEFAZOLINE
+ <br/>Protocole NVPO par DEXAMETHASONE + ONDANSETRON
+ <br/>Patient debout
+ <br/>USCC
+ <br/>
+<br/>
+<b>Temps de préparation d'anesthésie prévu : NR<br/>RISQUE ATNC : C<br/><br/></b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

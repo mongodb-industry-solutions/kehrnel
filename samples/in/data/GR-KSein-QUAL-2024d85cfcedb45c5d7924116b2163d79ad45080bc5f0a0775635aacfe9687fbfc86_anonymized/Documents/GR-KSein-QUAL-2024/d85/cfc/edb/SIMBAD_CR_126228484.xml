@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126228484" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 180980200</title>
+    <effectiveTime value="20180408000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180409000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Pr A. Paci (47 30) <br/>Dr V. Poinsignon (61 92) </p>
+<p>Pr A. Bennaceur (40 65) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr T. Steimle (41 65) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Pr F. Griscelli (51 93) <br/>Dr N. Yin (40 62) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>FemmeNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>08/04/2018 15:42 </p>
+<p>Sexe : </p>
+<p>08/04/2018 15:15 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>ROUERGUE </p>
+<p> 3 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>lundi 09 avril 2018 </p>
+<p>Complet </p>
+<p>Résultats <br/>Valeurs </p>
+<p>Précédentes <br/>Val. </p>
+<p>Valeurs de <br/><br/><br/>Référence </p>
+<p>Analyses Unités <br/><br/></p>
+<p>BIOCHIMIE <br/>Validation du dossier LADRésultats validés par le technicien de garde par délégation du biologiste </p>
+<p>d'astreinte </p>
+<p>Revue bilan Biochimie LADRéalisée par le biologiste </p>
+<p>Ionogramme <br/>Sodium 135 mmol/l ( 136 - 146 )142 26/03/2018 08:59 LAD <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Potassium 4.0 mmol/l ( 3.4 - 4.5 )4.0 26/03/2018 08:59 LAD <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Chlore 101 mmol/l ( 101 - 109 )107 26/03/2018 08:59 LAD <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Reserve alcaline 27 mmol/l ( 21 - 31 )27 26/03/2018 08:59 LAD <br/>Plasma hépariné - PEPC </p>
+<p>Protides 70 g/L ( 66 - 83 )74 26/03/2018 08:59 LAD <br/>Plasma hépariné - Biuret </p>
+<p>Urée 4.0 mmol/l ( 2.8 - 7.2 )5.4 26/03/2018 08:59 LAD <br/>Plasma hépariné - Uréase-GLDH </p>
+<p>Créatinine 66 μmol/l ( 49 - 90 )69 26/03/2018 08:59 LAD <br/>Plasma hépariné - Enzymatique raccordée IDMS </p>
+<p>Glucose 6.4 mmol/l ( 4.1 - 5.9 )5.8 26/03/2018 08:59 LAD </p>
+<p>Valeur de référence pour un patient à jeunPlasma hépariné - Hexokinase <br/>G6P-DH </p>
+<p>Calcium 2.38 mmol/l ( 2.20 - 2.65 )2.46 26/03/2018 08:59 LAD <br/>Plasma hépariné - Arsenazo III </p>
+<p>Phosphore 0.89 mmol/l ( 0.81 - 1.45 )1.19 26/03/2018 08:59 LAD <br/>Plasma hépariné - Molybdate, UV </p>
+<p>Magnesium 0.75 mmol/l ( 0.77 - 1.03 )0.89 26/03/2018 08:59 LAD <br/>Plasma hépariné - Bleu de xylidyle </p>
+<p>Base calcul Cockroft 1.24 1.19 26/03/2018 08:59 LAD </p>
+<p>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Débit de Filtration Glomérulaire (MDRD) >60.0 mL/mn/1.73m2 >60.0 26/03/2018 08:59 LAD </p>
+<p>< 60 : Insuffisance rénale à explorer si nécessaire. <br/>Si origine afro américaine, le DFG est à multiplier par 1.212 </p>
+<p>Bilan hépatique / pancréatique <br/>PAL 85 UI/L ( 30 - 120 )88 26/03/2018 08:59 LAD <br/>Plasma hépariné - IFCC </p>
+<p>ASAT 34 UI/L ( 0 - 35 )24 26/03/2018 08:59 LAD <br/>Plasma hépariné - IFCC </p>
+<p>ALAT 26 UI/L ( 0 - 35 )16 26/03/2018 08:59 LAD <br/>Plasma hépariné - IFCC </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 09/04/2018 à 08:49 par : Dr VERGÉ Véronique,Dr DROUARD Laurence</p>
+<p></p>
+<p></p>
+<p>Résultats <br/></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>ROUERGUE </p>
+<p>Unités <br/><br/>Valeurs de <br/><br/><br/>Référence </p>
+<p>Patient : </p>
+<p>Val.Analyses <br/><br/>Valeurs </p>
+<p>Précédentes <br/></p>
+<p> 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>180980200 <br/><br/>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>GGT 16 UI/L ( 0 - 38 )15 26/03/2018 08:59 LAD <br/>Plasma hépariné - IFCC </p>
+<p>Lipase 34 UI/L ( 0 - 67 )42 14/12/2016 20:14 LAD <br/>Plasma hépariné - Colorimétrie (Imamura) </p>
+<p>Bilirubine Totale 9 μmol/l ( 5 - 21 )6 26/03/2018 08:59 LAD <br/>Plasma hépariné - DPD </p>
+<p>Bilan cardiaque <br/>Troponine IC <0.06 μg/l ( 0.00 - 0.06 ) LAD <br/>Plasma hépariné - ECLIA </p>
+<p>Myoglobine 19 μg/l ( 0 - 70 ) LAD <br/>Plasma hépariné - ECLIA </p>
+<p>Protéines <br/>Procalcitonine 0.06 μg/l ( 0.00 - 0.50 ) LAD <br/>Serum - IFMA </p>
+<p>CRP 4.8 mg/l ( 0.0 - 5.0 )20.3 14/03/2018 18:15 LAD <br/>Plasma hépariné - Immuno-turbidimétrie </p>
+<p>Albumine 42 g/L ( 35 - 52 )45 26/03/2018 08:59 LAD <br/>Plasma hépariné - Vert de bromocrésol </p>
+<p>Créatine Kinase 83 UI/L ( 0 - 145 )94 26/03/2018 08:59 LAD <br/>Plasma hépariné - IFCC </p>
+<p>LDH 229 UI/L ( 0 - 247 )202 26/03/2018 08:59 LAD <br/>Plasma hépariné - IFCC </p>
+<p>HEMOSTASE <br/>Validation du dossier LADRésultats validés par le technicien de garde par délégation du biologiste </p>
+<p>d'astreinte </p>
+<p>Revue bilan Hémostase LADRéalisée par le biologiste </p>
+<p>Bilan de coagulation <br/>Taux de Prothrombine 86 % ( 70 - 100 )85 26/03/2018 08:59 LAD <br/>Plasma Citraté - Chronométrique </p>
+<p>Temps de Quick (Témoin = 12,2s) 13.7 s 13.8 26/03/2018 08:59 LAD <br/>Plasma Citraté - Chronométrique </p>
+<p>INR 1.2 1.2 26/03/2018 08:59 LAD </p>
+<p>0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>Fibrinogène 4.3 g/L ( 2.0 - 4.0 )3.8 26/03/2018 08:59 LAD <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK (Témoin = 29s) 48 s 29 26/03/2018 08:59 LAD </p>
+<p>A contrôler sur un nouvel échantillonPlasma Citraté - Chronométrique </p>
+<p>TCK Ratio 1.6 ( < 1.2 )1.0 26/03/2018 08:59 LAD </p>
+<p>HEMATOLOGIE <br/>Validation du dossier VVERésultats validés par le technicien de garde par délégation du biologiste </p>
+<p>d'astreinte </p>
+<p>Revue bilan Hémato VVERéalisée par le biologiste </p>
+<p>Numeration sanguine (Sang total sur EDTA) <br/><br/>Méthode : XN - SYSMEX </p>
+<p>Leucocytes 3.2 10*9/L ( 4.0 - 10.0 )2.2 26/03/2018 08:59 VVE </p>
+<p>Hématies 3.21 10*12/L ( 4.00 - 5.20 )3.42 26/03/2018 08:59 VVE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 09/04/2018 à 08:49 par : Dr VERGÉ Véronique,Dr DROUARD Laurence</p>
+<p></p>
+<p></p>
+<p>Résultats <br/></p>
+<p>Page 3 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>ROUERGUE </p>
+<p>Unités <br/><br/>Valeurs de <br/><br/><br/>Référence </p>
+<p>Patient : </p>
+<p>Val.Analyses <br/><br/>Valeurs </p>
+<p>Précédentes <br/></p>
+<p> 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>180980200 <br/><br/>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>Hémoglobine 10.2 g/100mL ( 12.0 - 16.0 )10.9 26/03/2018 08:59 VVE </p>
+<p>Hématocrite 30.5 % ( 34.0 - 45.0 )33.2 26/03/2018 08:59 VVE </p>
+<p>VGM 95.0 μ3 ( 85.0 - 95.0 )97.1 26/03/2018 08:59 VVE </p>
+<p>TCMH 31.8 pg/cel ( 28.0 - 34.0 )31.9 26/03/2018 08:59 VVE </p>
+<p>CCMH 33.4 g/100mL ( 32.0 - 36.5 )32.8 26/03/2018 08:59 VVE </p>
+<p>IDG 14.1 % ( 0.0 - 16.0 )13.3 26/03/2018 08:59 VVE </p>
+<p>Plaquettes 141.0 10*9/L ( 150.0-400.0 )339.0 26/03/2018 08:59 VVE </p>
+<p>Formule <br/>Polynucléaires Neutrophiles 83.7 % 36.3 26/03/2018 08:59 VVE </p>
+<p>VVE0.8 26/03/2018 08:59 ( 1.8 - 7.5 )10*9/Lsoit 2.7 </p>
+<p>Polynucléaires Eosinophiles ! 0.5 26/03/2018 08:59 VVE </p>
+<p>VVE0.0 26/03/2018 08:59 ( 0.0 - 0.5 )10*9/Lsoit ! </p>
+<p>Polynucléaires Basophiles ! 0.5 26/03/2018 08:59 VVE </p>
+<p>VVE0.0 26/03/2018 08:59 ( 0.0 - 0.3 )10*9/Lsoit ! </p>
+<p>Lymphocytes ! 42.9 26/03/2018 08:59 VVE </p>
+<p>VVE0.9 26/03/2018 08:59 ( 1.0 - 4.0 )10*9/Lsoit ! </p>
+<p>Monocytes ! 19.8 26/03/2018 08:59 VVE </p>
+<p>VVE0.4 26/03/2018 08:59 ( 0.1 - 1.0 )10*9/Lsoit ! </p>
+<p>Erythroblastes ! 1.0 15/03/2018 07:45 VVE </p>
+<p>IDP 11 10 26/03/2018 08:59 VVE </p>
+<p>VMP 10.3 μ3 ( 6.0 - 12.0 )9.8 26/03/2018 08:59 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 09/04/2018 à 08:49 par : Dr VERGÉ Véronique,Dr DROUARD Laurence</p>
+<p></p>
+<ul>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Ionogramme</li>
+<li>Bilan hépatique / pancréatique</li>
+<li>Bilan cardiaque</li>
+<li>Protéines</li>
+</ul>
+<li>HEMOSTASE</li>
+<ul>
+<li>Bilan de coagulation</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/><br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

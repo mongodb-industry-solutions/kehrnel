@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_131953013" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>REUNION DE CONCERTATION PLURI-DISCIPLINAIRE CCF - TETE ET COU</title>
+    <effectiveTime value="20140724000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20140724000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Chirurgien : Docteur HARTL
+ <br/>Radiothérapeute : Docteur TAO
+ <br/>Radiologue : Docteur AMMARI
+ <br/>
+<br/>
+<br/>Patient âgé de 53 ans, présentant un carcinome épidermoïde de 
+ <br/>l'oropharynx.
+ <br/>
+<br/>
+<b>Antécédents notables<br/></b>
+<br/>Intoxication alcoolo-tabagique chronique importante.
+ <br/>Le patient travaille dans les ménages avec la société ISS.
+ <br/>
+<br/>
+<b>Lésion actuelle<br/><br/></b> Lésion de l'oropharynx au niveau du voile, des 2 piliers 
+ <br/>postérieurs, paroi oropharyngée postérieure.
+ <br/>
+<br/>
+<b>Bilan d'extension<br/><br/></b> - TEP SCANNER : Devrait être réalisé mardi prochain.
+ <br/>- IRM : Devrait être réalisée demain 
+ <br/>
+<br/>
+<b>Classification TNM</b> :
+ <br/>
+<br/>T3 N2C M0 sur la tomodensitométrie thoracique.
+ <br/>A noter P16 avec marquage modéré intense, malgré l'intoxication 
+ <br/>alcoolo-tabagique importante.
+ <br/>
+<br/>
+<b>DECISION THERAPEUTIQUE<br/></b>
+<br/>Le patient sera revu par le Docteur TAO avec ses examens pour la mise 
+ <br/>en place d'une radio-chimiothérapie concomitante.
+ <br/>Ce jour, le diagnostic est expliqué au patient et à son fils qui 
+ <br/>l'accompagne.On explique le déroulement de la radiothérapie et la 
+ <br/>chimiothérapie, et les effets secondaires, notamment la fatigue, la 
+ <br/>dysphagie, les douleurs pharyngées.
+ <br/>On explique clairement au patient qu'il serait souhaitable d'arrêter 
+ <br/>toute intoxication éthylo-tabagique avant le démarrage du 
+ <br/>traitement.Le patient est d'accord pour le rendez-vous en 
+ <br/>addictologie.
+ <br/>
+<br/>
+<b>Recherche clinique : Compte-tenu du marquage P16, patient non <br/>incluable dans le PROTOCOLE EORTC, par contre incluable dans le <br/>PROTOCOLE GORTEC 2004-01</b> .
+ <br/>
+<br/>
+<u>Chek-liste à valider</u> :
+ <br/>Recherche clinique : Oui
+ <br/>Décision en accord avec le médécin référent : Oui
+ <br/>Prise en charge sociale : Non
+ <br/>Consultation addictologie : Oui 
+ <br/>PPS REMIS : Oui 
+ <br/>
+<br/>
+<u><br/></u>Les modalités du traitement ainsi que les conséquences, les effets 
+ <br/>secondaires et les risques éventuels ont été expliqués au patient (et 
+ <br/>à sa famille) qui les accepte.
+ <br/>
+<br/>Le médecin référent IGR est le Dr TEMAM
+ <br/>
+<br/>Fiche comité et EMM enregistrées
+ <br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125124361" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 182730260</title>
+    <effectiveTime value="20180930000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181001000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Pr A. Paci (47 30) <br/>Dr V. Poinsignon (61 92) </p>
+<p>Pr A. Bennaceur (40 65) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr T. Steimle (41 65) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Pr F. Griscelli (51 93) <br/>Dr N. Yin (40 62) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>HommeNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>30/09/2018 20:59 </p>
+<p>Sexe : </p>
+<p>30/09/2018 20:59 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>SOINS AIGUS REANIMATION </p>
+<p> 3 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>lundi 01 octobre 2018 </p>
+<p>Complet </p>
+<p>Résultats <br/>Valeurs </p>
+<p>Précédentes <br/>Val. </p>
+<p>Valeurs de <br/><br/><br/>Référence </p>
+<p>Analyses Unités <br/><br/></p>
+<p>NON CONFORMITE <br/>NC _SV <br/></p>
+<p>A <br/>> Demande non régularisée </p>
+<p>NC pré-analytique _SV <br/><br/>A </p>
+<p>Date et/ou Heure de plvt non renseignée(s) </p>
+<p>NC _SV <br/>A </p>
+<p><br/>> Demande refusée </p>
+<p>NC pré-analytique _SV <br/><br/>A </p>
+<p>Absence d'un ou des spécimens </p>
+<p>BIOCHIMIE <br/>Validation du dossier FTNRésultats validés par le technicien de garde par délégation du biologiste </p>
+<p>d'astreinte </p>
+<p>Revue bilan Biochimie FTNRéalisée par le biologiste </p>
+<p>Gaz <br/>Lact (Sg) 1.1 mmol/l ( 0.5 - 1.6 )1.1 30/09/2018 16:45 <br/>Sang - Ampèrométrie </p>
+<p>Température Patient 39.0 °C Non renseignée 30/09/2018 16:45 FTN </p>
+<p>Oxygénation 21.0 % 21.0 30/09/2018 16:45 </p>
+<p>Veineux _SV <br/>A </p>
+<p>Veineux 30/09/2018 16:45Nature plvt </p>
+<p>pH V corrigé 7.44 ( 7.32 - 7.43 )7.40 30/09/2018 16:45 <br/>Sang - Potentiométrie </p>
+<p>Reserve Alcaline V 26.6 mmol/l ( 25.0 - 29.0 )28.5 30/09/2018 16:45 <br/>Sang - Potentiomètrie </p>
+<p>pCO2 V corrigée 40.9 mmHg ( 45 - 48 )47.0 30/09/2018 16:45 <br/>Sang - Potentiométrie </p>
+<p>pO2 V corrigée 175 mmHg ( 38 - 44 )31.1 30/09/2018 08:40 <br/>Sang - Ampérométrie </p>
+<p>% Saturation O2 V 99.2 % ( 70.0 - 80.0 )65.1 30/09/2018 16:45 </p>
+<p>tO2 V 11.3 % 7.7 30/09/2018 16:45 </p>
+<p>Ionogramme <br/>Sodium 141 mmol/l ( 136 - 146 )141 30/09/2018 16:45 FTN <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Potassium 3.7 mmol/l ( 3.4 - 4.5 )XXXXXX0/09/2018 16:45 FTN <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 01/10/2018 à 08:45 par : Dr TROALEN Frédéric,Dr SAADA Véronique,Dr VERGÉ Véronique</p>
+<p></p>
+<p></p>
+<p>Résultats <br/></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>SOINS AIGUS REANIMATION </p>
+<p>Unités <br/><br/>Valeurs de <br/><br/><br/>Référence </p>
+<p>Patient : </p>
+<p>Val.Analyses <br/><br/>Valeurs </p>
+<p>Précédentes <br/></p>
+<p> 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>182730260 <br/><br/>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>Chlore 104 mmol/l ( 101 - 109 )103 30/09/2018 16:45 FTN <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Reserve alcaline 26 mmol/l ( 21 - 31 )28 30/09/2018 16:45 FTN <br/>Plasma hépariné - PEPC </p>
+<p>Protides 55 g/L ( 66 - 83 )58 30/09/2018 16:45 FTN <br/>Plasma hépariné - Biuret </p>
+<p>Urée 19.5 mmol/l ( 2.8 - 7.2 )18.9 30/09/2018 16:45 FTN <br/>Plasma hépariné - Uréase-GLDH </p>
+<p>Créatinine 170 μmol/l ( 64 - 104 )168 30/09/2018 16:45 FTN <br/>Plasma hépariné - Enzymatique raccordée IDMS </p>
+<p>Calcium 2.12 mmol/l ( 2.20 - 2.65 )2.11 30/09/2018 16:45 FTN <br/>Plasma hépariné - Arsenazo III </p>
+<p>Base calcul Cockroft 0.53 0.53 30/09/2018 16:45 FTN </p>
+<p>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Débit de Filtration Glomérulaire (MDRD) 35.1 mL/mn/1.73m2 35.5 30/09/2018 16:45 FTN </p>
+<p>< 60 : Insuffisance rénale à explorer si nécessaire. <br/>Si origine afro américaine, le DFG est à multiplier par 1.212 </p>
+<p>HEMATOLOGIE <br/>Validation du dossier VVERésultats validés par le technicien de garde par délégation du biologiste </p>
+<p>d'astreinte </p>
+<p>Revue bilan Hémato SAERéalisée par le biologiste </p>
+<p>Numeration sanguine (Sang total sur EDTA) <br/><br/>Méthode : XN - SYSMEX </p>
+<p>Leucocytes Absence d'un oudes spécimens </p>
+<p>0.1 30/09/2018 08:40 VVE </p>
+<p>Hématies Absence d'un oudes spécimens </p>
+<p>2.48 30/09/2018 08:40 VVE </p>
+<p>Hémoglobine Absence d'un oudes spécimens </p>
+<p>7.1 30/09/2018 08:40 VVE </p>
+<p>Hématocrite Absence d'un oudes spécimens </p>
+<p>20.2 30/09/2018 08:40 VVE </p>
+<p>VGM Absence d'un oudes spécimens </p>
+<p>81.5 30/09/2018 08:40 VVE </p>
+<p>TCMH Absence d'un oudes spécimens </p>
+<p>28.XXXXXX0/09/2018 08:40 VVE </p>
+<p>CCMH Absence d'un oudes spécimens </p>
+<p>35.1 30/09/2018 08:40 VVE </p>
+<p>IDG Absence d'un oudes spécimens </p>
+<p>15.2 30/09/2018 08:40 VVE </p>
+<p>Plaquettes Absence d'un oudes spécimens </p>
+<p>21.0 30/09/2018 08:40 VVE </p>
+<p>Formule <br/>Polynucléaires Neutrophiles Absence d'un ou </p>
+<p>des spécimens </p>
+<p>! 30/09/2018 08:40 SAE </p>
+<p>VVE! 30/09/2018 08:40 ( 1.5 - 7.0 )10*9/Lsoit Absence d'un oudes spécimens </p>
+<p>Polynucléaires Eosinophiles Absence d'un oudes spécimens </p>
+<p>! 30/09/2018 08:40 SAE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 01/10/2018 à 08:45 par : Dr TROALEN Frédéric,Dr SAADA Véronique,Dr VERGÉ Véronique</p>
+<p></p>
+<p></p>
+<p>Résultats <br/></p>
+<p>Page 3 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>SOINS AIGUS REANIMATION </p>
+<p>Unités <br/><br/>Valeurs de <br/><br/><br/>Référence </p>
+<p>Patient : </p>
+<p>Val.Analyses <br/><br/>Valeurs </p>
+<p>Précédentes <br/></p>
+<p> 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>182730260 <br/><br/>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>VVE! 30/09/2018 08:40 ( 0.0 - 0.6 )10*9/Lsoit Absence d'un oudes spécimens </p>
+<p>Polynucléaires Basophiles Absence d'un oudes spécimens </p>
+<p>! 30/09/2018 08:40 SAE </p>
+<p>VVE! 30/09/2018 08:40 ( 0.0 - 0.1 )10*9/Lsoit Absence d'un oudes spécimens </p>
+<p>Lymphocytes Absence d'un oudes spécimens </p>
+<p>! 30/09/2018 08:40 SAE </p>
+<p>VVE! 30/09/2018 08:40 ( 1.2 - 4.0 )10*9/Lsoit Absence d'un oudes spécimens </p>
+<p>Monocytes Absence d'un oudes spécimens </p>
+<p>! 30/09/2018 08:40 SAE </p>
+<p>VVE! 30/09/2018 08:40 ( 0.2 - 0.8 )10*9/Lsoit Absence d'un oudes spécimens </p>
+<p>IDP Absence d'un oudes spécimens </p>
+<p>8 30/09/2018 08:40 VVE </p>
+<p>VMP Absence d'un oudes spécimens </p>
+<p>10.5 30/09/2018 08:40 VVE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 01/10/2018 à 08:45 par : Dr TROALEN Frédéric,Dr SAADA Véronique,Dr VERGÉ Véronique</p>
+<p></p>
+<ul>
+<li>NON CONFORMITE</li>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Gaz</li>
+<li>Ionogramme</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/><br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

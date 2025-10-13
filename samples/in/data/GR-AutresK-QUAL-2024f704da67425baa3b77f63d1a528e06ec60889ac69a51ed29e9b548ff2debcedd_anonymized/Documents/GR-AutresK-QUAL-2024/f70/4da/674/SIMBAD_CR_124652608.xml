@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124652608" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>Résumé d'hospitalisation en Hôpital de Jour Chirurgical</title>
+    <effectiveTime value="20181210000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181210000000+0000"/>
+        <assignedAuthor>
+            <code code="PCA/465" displayName="HOPITAL DE JOUR CHIRURGICAL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Admission ce jour en Hôpital de Jour de Chirurgie Ambulatoire
+ <u><b><br/><br/></b></u>
+<br/>
+<b>Motif de l'hospitalisation</b> : RI
+ <br/>
+<br/>
+<br/>
+<b>Intitulé de l'intervention</b> : Biopsie Pelvienne OVARIENNE 
+ <br/>
+<br/>
+<br/>
+<b>Nom de l'opérateur :</b> Docteur AL AHMAR Marc 
+ <br/>
+<b>Mode anesthésique :</b> AL 
+ <br/>
+<br/>Surveillance post-opératoire : simple
+ <br/>
+<br/>
+<b> En cas de problème, veuillez contacter :<br/>* Administratif : 01.42.11.50.52<br/>* Infirmière de régulation (la semaine de 8h30 à 17h) : 01.42.11.46.08<br/>* Service des Urgences (le soir et weekend) : 01.42.11.50.00<br/></b>
+<br/>Score de douleur à la sortie : 0/4
+ <br/>Score des NVPO à la sortie : 1/5
+ <br/>
+<br/>Temps de surveillance : 1h30
+ <br/>Le/La patient(e) sort ce jour pour son domicile à 12h06.
+ <br/>
+<br/>
+<u><b>Documents remis à la sortie</b></u>
+<b> </b> :
+ <br/> - Bulletin de situation (X 2)
+ <br/> - Compte rendu opératoire. Non disponible à la sortie.
+ <br/> - Résumé d'hospitalisation 
+ <br/>
+<br/>
+<b>Ordonnance</b> :
+ <br/> - 
+ <u>Aucune</u>
+<br/>
+<u><b><br/></b></u>
+<b>Prochain rendez-vous </b> :
+ <br/>
+<br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b>Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>19/12/2018 11:00 060 ECB TDM TAP ET 
+ <br/>10/01/2019 08:50 060 ECB CHIM GYNE ECB 
+ <br/>
+<br/>
+<br/>
+<u> Document imprimé sur la page d'identification du dossier patient de <br/>Gustave Roussy et remis en mains propres au patient le <br/>jour de l' intervention</u>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

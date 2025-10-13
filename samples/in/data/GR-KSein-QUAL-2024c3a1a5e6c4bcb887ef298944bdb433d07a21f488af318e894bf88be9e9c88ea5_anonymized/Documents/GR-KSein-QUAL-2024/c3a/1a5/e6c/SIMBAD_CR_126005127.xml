@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126005127" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION PROFEEL SEIN</title>
+    <effectiveTime value="20180515000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180515000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<u><b>Dr ARNEDOS - oncologue médical</b></u>
+<br/>
+<br/>Patiente vue ce jour en présence de son conjoint pour proposer 
+ <br/>l'inclusion dans le cadre du protocole SAFIR02.
+ <br/>
+<br/>
+<u><b>Antécédents pertinents</b></u> :
+ <br/>Allergie à la PENICILLINE.
+ <br/>
+<br/>
+<u><b>Histoire de la maladie et données récentes</b></u> :
+ <br/>
+<br/>- Carcinome canalaire infiltrant de grade III T4dN1M0, Ki67 90%, 
+ <br/>triple négatif en 2016 traité par chimiothérapie par 3 EC et 9 Taxol 
+ <br/>hebdommadaire, radiothérapie (sequence inversée) puis mastectomie 
+ <br/>curage axillaire le 24/08/2016 avec reconstruction immediate par 
+ <br/>lambeau de grand dorsale. Réponse complète ypT0N0
+ <br/>
+<br/>- 
+ <b>MARS 2018</b> : palpation ganglion sus-claviculaire gauche
+ <br/>
+<br/>- 
+ <b>Mammographie du 31.03.18</b> : Remaniements post-thérapeutiques du 
+ <br/>sein gauche avec microcalcifications polymorphes du QSExt. 
+ <br/>ACR4 à gauche, ACR1 à droite.
+ <br/>
+<br/>- 
+ <b>Echographie mammaire, axillaire et sus-claviculaire du 31.03.18</b> : 
+ <br/>Masse tissulaire basi-cervicale gauche d`allure secondaire, 
+ <br/>infiltrant la jugulaire interne gauche d`environ 40x25mm. Elle est 
+ <br/>associée à des petits ganglions sus-claviculaires gauches nécrotiques.
+ <br/>
+<br/>Microbiopsie du ganglion sus claviculaire gauche le 16.04.18 à 
+ <br/>Gustave Roussy : adénocarcinome peu différencié, RE-, RP-, HER2-, 
+ <br/>GATA3+, compatible avec une origine mammaire primitive.
+ <br/>
+<br/>TEP 27/04/18 : confirmation de la récidive ganglionnaire 
+ <br/>sus-claviculaire, axillaire et du groupe du triangle postérieur 
+ <br/>gauche.
+ <br/>Kyste fonctionnel ovarien droit ? A recontrôler.
+ <br/>
+<br/>Bilan biologique ASAT à 3xLSN non cliniquement significatif. 
+ <br/>
+<br/>Indication à une chimiothérapie par TAXOL CARBOPLATINE hebdomadaire, 
+ <br/>traitement chirurgical si faisable puis radiothérapie selon 
+ <br/>l`irradiation antérieure.
+ <br/>
+<br/>Patiente en attente du résultat analyse constitutionnelle d'un panel 
+ <br/>de gènes 
+ <b>BRCA1, BRCA2, PALB2, TP53, PTEN et CDH1.(prise de sang <br/>4/5/2018)<br/></b>
+<br/>
+<u><b>A la consultation ce jour </b></u> :
+ <br/>
+<br/>Je propose à la patiente la possibilité d'être incluse dans le cadre 
+ <br/>du protocole SAFIR02. Le déroulement de l'essai clinique lui est
+ <br/>expliqué.
+ <br/>Patiente avec OMS0
+ <br/>Douleur type neuropatique comme symptomatologie.
+ <br/>
+<br/>Après réflechir, la patient eisgn le CE version 4.0 du 24/03/2017. 
+ <br/>Copie remise à la patiente.
+ <br/>
+<br/>Nous allons récuperer l'échantillon biopsie en FFPE fait pour son 
+ <br/>diagnostique histologique pour analyse dans SAFIR02.
+ <br/>
+<br/>La patiente va débuter sa chimiothérapie le 25/05/2018. 
+ <br/>
+<br/>Nous contacterons directement son médecin réferent une fois les 
+ <br/>resultats disponibles. La patiente est au courant des délais 
+ <br/>pour obtenir ces résultats.
+ <br/>
+<br/>
+<u><b>EN PRATIQUE</b></u> :
+ <br/>
+<br/>Inclusion dans le cadre du protocole SAFIR02.
+ <br/>RDVs dans l'essai seront organisés par l'ARC de l'étude.
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

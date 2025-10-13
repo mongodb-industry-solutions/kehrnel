@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124749373" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ONCOLOGIE GYNECOLOGIE - DR EMELINE COLOMBA</title>
+    <effectiveTime value="20181126000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181126000000+0000"/>
+        <assignedAuthor>
+            <code code="060/8" displayName="CTE 060 - GYNECOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>COMPTE RENDU DE CONSULTATION DE GYNECOLOGIE<br/><br/>Dicté par : </b> Docteur Emeline Colomba
+ <b><br/>Dicté le : </b> 22/11/2018 
+ <b><br/>Service : </b> 060-CTE 060 - GYNECOLOGIE 
+ <br/>
+<b>Type de document : </b> 060 CC CONSULTATION 
+ <br/>
+<b>Ref :</b> 536985 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : HLX/A
+ <br/>
+<br/>Je revois ce jour Madame XXXXXX , patiente de 66 ans 
+ <b>actuellement <br/>sous Avastin en entretien pour un adénocarcinome séreux de haut <br/>Grade stade IV (pleural)jamais réséqué.<br/><br/>BRCA1 et 2 non mutée en somatique, constitutionnelle en attente.<br/>Marqueur CA 125 informatif supérieur à 1000 au diagnostic.<br/><br/>Rappel :</b>
+<br/>Première cure réalisée le 31.3.2017 
+ <br/>On rappelle qu`il y avait eu une thrombose veineuse profonde au 
+ <br/>moment du diagnostic pour laquelle elle est traitée par INNOHEP.
+ <br/>Diminution du CARBOPLATINE AUC 4 pour la 5ème cure compte tenu d`une 
+ <br/>thrombopénie grade 2.
+ <br/>Malgré la diminution du CARBOPLATINE, la patiente a présenté une 
+ <br/>thrombopénie de grade 2 retardant la prise en charge chirurgicale.
+ <br/>Scanner d`évaluation du 07.07.2017 : stabilité abdominale, 
+ <br/>disparition de l`épanchement pleural.
+ <br/>PET SCAN : réponse partielle au niveau abdominal et bonne réponse au 
+ <br/>niveau pleural.
+ <br/>Coelioscopie du 09.10.2017 : 12 litres d`ascite évacués.
+ <br/>Instabilité hémodynamique majeure et respiratoire et PCI stable. On 
+ <br/>valide un tt systémique exclusive.
+ <br/>A C7 diminution de la dose de CARBOPLATINE AUC 4 , TAXOL 135 mg/m2 
+ <br/>pour cause d`hémato-toxicité, étant donné une thrombopénie de grade 2 
+ <br/>ayant retardé le rythme de chimiothérapie.
+ <br/>Introduction de l'AVASTIN le 20.10.2017
+ <br/>
+<br/>
+<b>Dernière cure de chimiothérapie le 17.11.2017<br/>Stabilité clinique sous avastin pendant 1 an, ascite ponctionnée <br/>toutes les 6 semaines.</b>
+<br/>Devant l'ascension du marqueur, un nouveau scanner avait été 
+ <br/>renouvelé le 19 octobre.
+ <br/> La relecture au comité confirme la progression de la masse 
+ <br/>ovarienne sans autre lésion d'allure évolutif. 
+ <br/>Dans le contexte je revois la patiente pour débuter une nouvelle 
+ <br/>ligne notamment dans le cadre du protocole ATALANTE.
+ <br/>
+<br/>
+<b>A l'examen clinique:<br/></b> Poids à 70 kg 
+ <br/>Saturation à 98 %
+ <br/>Température à 37°5 
+ <br/>Pouls 110/min 
+ <br/>Tension à 15/8.
+ <br/>
+<br/>L'ascite est un peu plus gênante ce jour. Le reste de l'examen est 
+ <br/>inchangé.
+ <br/>On tâchera d'avancer la ponction.
+ <br/>
+<br/>
+<b><h3>Conclusion</h3> :</b>
+<br/>J'explique les modalités, les bénéfices escomptés et les effets 
+ <br/>secondaires potentiels du traitement par ATEZOLIZUMAB, Avastin 
+ <br/>associée à une chimiothérapie qui serait le Carboplatine Gemzar. 
+ <br/>Madame XXXXXX a besoin d'un délai de réflexion, je la reverrai la 
+ <br/>semaine prochaine éventuellement pour signature. 
+ <br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Emeline COLOMBA <br/>Le vendredi 23 novembre 2018 à 16:03</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

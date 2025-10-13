@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123859159" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ONCOLOGIE GYNECOLOGIE - DR EMELINE COLOMBA</title>
+    <effectiveTime value="20190405000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190405000000+0000"/>
+        <assignedAuthor>
+            <code code="060/8" displayName="CTE 060 - GYNECOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>COMPTE RENDU DE CONSULTATION DE GYNECOLOGIE<br/><br/>Dicté par : </b> Docteur Emeline Colomba
+ <b><br/>Dicté le : </b> 04/04/2019 
+ <b><br/>Service : </b> 060-CTE 060 - GYNECOLOGIE 
+ <br/>
+<b>Type de document : </b> 060 CC CONSULTATION 
+ <br/>
+<b>Ref :</b> 645965 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : HLX/A
+ <br/>
+<br/>
+<b>Je revois ce jour Madame XXXXXX , âgée de 66 ans, en compagnie de <br/>son mari , vue ce jour avant C3 J1 de Carboplatine Gemcitabine <br/>Avastin et ATEZOLIZUMAB ou placebo dans le cadre du protocole <br/>ATALANTE pour une première rechute platine sensible d'un <br/>adénocarcinome séreux de haut grade jamais réséqué. <br/></b> CA 125 informatif BRCA sauvage en somatique et constitutionnel.
+ <br/>
+<b>Intercure:<br/></b> C1 J1 le 18 janvier 2019 marqué par une toxicité hématologique de 
+ <br/>grade 4 justifiant l' ajustement des doses au Carboplatine AUC 3 et à 
+ <br/>la Gemcitabine 1000 mg/m2 J1 sans J8.
+ <br/>Le C3 a été marqué par une réaction allergique au Carboplatine mais 
+ <br/>dans un contexte où la prémédication par Solumedrol n'avait pas été 
+ <br/>réalisée. 
+ <br/> On propose donc la prochaine cure par du Carboplatine sur 2 heures 
+ <br/>avec une prémédication par 120 mg de Solumédrol 1 ampoule d'Azantac 1 
+ <br/>ampoule de Polaramine et une surveillance en hospitalisation au Gard. 
+ <br/>
+<b> Sur le plan de la tolérance </b> : celle ci est globalement 
+ <br/>satisfaisante , à noter une constipation de grade 1 liée aux 
+ <br/>anti-émétiques. 
+ <br/>Réaction allergique de grade 2 liée au Carboplatine.
+ <br/>
+<br/>
+<b>Sur le plan symptomatique</b> : on observe un bénéfice clinique net de la 
+ <br/>réintroduction des sels de platine après C1.
+ <br/>Toutefois depuis le 21 février la patiente rapporte une réapparition 
+ <br/>plus rapide de l'ascite avec une nouvelle ponction d'ascite de 2,8 
+ <br/>litres le 22 mars. Mais on rappelle que devant la réaction 
+ <br/>allergique, la patiente n'a reçu qu'une petite dose de Carboplatine 
+ <br/>le 14 mars. 
+ <br/>
+<b>Examen clinique :<br/></b> PS : 0
+ <br/>Poids : 61,5 kg 
+ <br/>Tension à 13/8 
+ <br/>Pouls 97/min 
+ <br/>Température à 37°5 
+ <br/>Saturation à 99 % 
+ <br/>Auscultation cardiopulmonaire claire et symétrique 
+ <br/>Abdomen souple dépressible indolore 
+ <br/>Hernie ombilicale connue et non étranglée, pas de nodule de carcinose 
+ <br/>palpé , le transit est normal ,pas d'oedème des membres inférieurs.
+ <br/>Le PAC est propre 
+ <br/>
+<b>Sur le plan biologique</b> : hémoglobine à 10,9 g/dL polynucléaires 
+ <br/>neutrophiles à 6110 plaquettes à 467 000 créatinine à 55 μmol/L 
+ <br/>albumine à 26 et bilan hépatique satisfaisant, CA125 à 949 versus 
+ <br/>1385 le 11 mars versus 1400 base Line. 
+ <br/>
+<br/>
+<b><h3>Conclusion</h3> :<br/></b> La patiente recevra ce jour C3 complet par Carboplatine AUC 3 soit 
+ <br/>300 mg dose totale sur 2 heures, Gemcitabine 1000 mg/m2 soit 1600 mg 
+ <br/>J1 sans J8, BEVACIZUMAB 15 mg/kg soit 923 milligrammes dose totale et 
+ <br/>ATEZOLIZUMAB ou placebo 1200 mg , J1 = J21.
+ <br/>
+<br/>A noter que si le Carboplatine sur 2 heures avec les prémédications 
+ <br/>par Solumedrol Azantac et Polaramine se déroulent bien ce jour en 
+ <br/>hospitalisation au GARD, on organisera le protocole en hôpital de 
+ <br/>jour dorénavant. 
+ <br/>En revanche si on objective une nouvelle réaction allergique malgré 
+ <br/>l'allongement du temps de perfusion et les traitements préventifs on 
+ <br/>passera à un protocole de désensibilisation au GARD de façon 
+ <br/>systématique pour les 4 prochaines cures. 
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Emeline COLOMBA <br/>Le jeudi 4 avril 2019 à 14:03</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

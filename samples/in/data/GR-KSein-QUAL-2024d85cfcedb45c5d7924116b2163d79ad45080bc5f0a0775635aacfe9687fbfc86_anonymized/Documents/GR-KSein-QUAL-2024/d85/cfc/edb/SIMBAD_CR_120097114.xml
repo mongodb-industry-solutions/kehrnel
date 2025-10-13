@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120097114" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 203070350</title>
+    <effectiveTime value="20201102000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201102000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Dr J. Delahousse (61 92) <br/>Interne D. Combarel (37 69) <br/>Pr A. Paci (47 30) </p>
+<p>Dr A. Arbab (41 65) <br/>Pr A. Bennaceur (40 65) <br/>Interne S. Fodil (37 69) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Dr E. Gallois (40 62) <br/>Pr F. Griscelli (51 93) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>FémininNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>02/11/2020 09:44 </p>
+<p>Sexe : </p>
+<p>02/11/2020 09:44 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>CTE 050 - SEIN </p>
+<p> 3 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>lundi 02 novembre 2020 </p>
+<p>Complet </p>
+<p>BIOCHIMIE </p>
+<p>Information Laboratoire Changement de méthode d'analyse de chimie et d'immuno-analyse à compter du 06/07/2020. Concerne les paramètres portant la mention Atellica. </p>
+<p> IONOGRAMME <br/>Sodium 136 mmol/l ( 136 - 145 )139 28/10/2020 02:50 FTN <br/>Plasma hépariné - Potentiométrie indirecte, Atellica </p>
+<p>Potassium 3.8 mmol/l ( 3.4 - 4.5 )4.2 28/10/2020 02:50 FTN <br/>Plasma hépariné - Potentiométrie indirecte, Atellica </p>
+<p>Chlore 104 mmol/l ( 98 - 107 )109 28/10/2020 02:50 FTN <br/>Plasma hépariné - Potentiométrie indirecte, Atellica </p>
+<p>Reserve alcaline 26 mmol/l ( 20 - 31 )25 28/10/2020 02:50 FTN <br/>Plasma hépariné - Test enzymatique UV, Atellica </p>
+<p>Protides 60 g/L ( 57 - 82 )54 28/10/2020 02:50 FTN <br/>Plasma hépariné - Colorimétrie (Biuret), Atellica </p>
+<p>Créatinine 66 μmol/l ( 44 - 71 )58 28/10/2020 02:50 FTN <br/>Plasma hépariné - Test de coloration enzymatique, Atellica </p>
+<p>Base calcul Cockroft 1.20 1.38 28/10/2020 02:50 FTN </p>
+<p>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Débit de Filtration Glomérulaire (MDRD) 78 mL/mn/1.73m2 92 28/10/2020 02:50 FTN </p>
+<p>< 60 : Insuffisance rénale à explorer si nécessaire. <br/>Si origine afro américaine, le DFG est à multiplier par 1.212 </p>
+<p>Débit de Filtration Glomérulaire (CKD- <br/>EPI) </p>
+<p>85 mL/mn/1.73m2 94 28/10/2020 02:50 FTN </p>
+<p>Estimation du débit de filtration glomérulaire en utilisant le dosage de la créatinine (standardisé ID-MS) 30 - 60 mL/mn/1.73m2 : Insuffisance rénale modérée < 30 mL/mn/1.73m2 : Insuffisance rénale sévère </p>
+<p>Glucose 6.0 mmol/l ( 4.1 - 5.9 )4.1 28/10/2020 02:50 FTN <br/>Plasma hépariné - Test enzymatique UV (Hexokinase), Atellica </p>
+<p>Calcium 2.25 mmol/l ( 2.18 - 2.60 )2.06 28/10/2020 02:50 FTN <br/>Plasma hépariné - Test de coloration photométrique (arsenazo III), Atellica </p>
+<p>Calcium Corrigé 2.39 mmol/l ( 2.12 - 2.52 )2.39 27/10/2020 06:00 FTN </p>
+<p>La calcémie corrigée est calculée selon la formule : <br/>Ca corrigé = Ca mesuré(mmol/l) + 1- (albumine (g/l) / 40),applicable uniquement avec albuminémie inférieure ou égale à 40 g/L. </p>
+<p>Magnesium 0.79 mmol/l ( 0.66 - 1.07 )0.81 28/10/2020 02:50 FTN <br/>Plasma hépariné - Test de coloration photométrique, Atellica </p>
+<p> BILAN HÉPATIQUE / PANCRÉATIQUE <br/>PAL 258 U/l ( 46 - 116 )189 28/10/2020 02:50 FTN <br/>Plasma hépariné - Test de coloration cinétique IFCC, Atellica </p>
+<p>ASAT 207 U/l ( < 40 )147 28/10/2020 02:50 FTN <br/>Plasma hépariné - Test cinétique UV IFCC, Atellica </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 02/11/2020 à 12:21 par : Dr TROALEN Frédéric,Dr ARBAB Ahmadreza</p>
+<p></p>
+<p></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>CTE 050 - SEINPatient : 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>ALAT 90 U/l ( < 40 )72 28/10/2020 02:50 FTN <br/>Plasma hépariné - Test cinétique UV IFCC, Atellica </p>
+<p>GGT 548 U/l ( < 38 )419 28/10/2020 02:50 FTN <br/>Plasma hépariné - Test de coloration cinétique, Atellica </p>
+<p>Bilirubine Totale 17 μmol/l ( 5 - 21 )11 28/10/2020 02:50 FTN <br/>Plasma hépariné - Test de coloration photométrique, Atellica </p>
+<p> PROTÉINES <br/>Albumine 34 g/L ( 32 - 48 )32 27/10/2020 06:00 FTN <br/>Plasma hépariné - Test colorimétrique au vert de bromocrésol, Atellica </p>
+<p>LDH 1065 U/l ( < 246 )891 28/10/2020 02:50 FTN </p>
+<p>Résultat contrôléPlasma hépariné - Test de coloration cinétique IFCC, Atellica </p>
+<p> MARQUEURS BIOLOGIQUES <br/>CA 15-3 122 U/ml ( < 32 )Prélèvement non </p>
+<p>parvenu (Purgeautomatique). </p>
+<p>26/10/2020 12:10 FTN </p>
+<p>Serum - Chimiluminescence, Atellica </p>
+<p>HEMOSTASE </p>
+<p> BILAN DE COAGULATION <br/>Taux de Prothrombine 63 % ( 70 - 100 )Prélèvement non </p>
+<p>parvenu (Purgeautomatique). </p>
+<p>26/10/2020 12:10 FTN </p>
+<p>Plasma Citraté - Chronométrique </p>
+<p>Temps de Quick (Témoin = 13s) 17.7 s Prélèvement nonparvenu (Purgeautomatique). </p>
+<p>26/10/2020 12:10 FTN </p>
+<p>Plasma Citraté - Chronométrique </p>
+<p>INR 1.4 Prélèvement nonparvenu (Purgeautomatique). </p>
+<p>26/10/2020 12:10 FTN </p>
+<p>0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>Facteur II 83 % ( 70 - 120 ) FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>Facteur V 167 % ( 70 - 120 ) FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>Facteur VII 35 % ( 70 - 120 ) FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>Facteur X 69 % ( 70 - 120 ) FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK 24 s Prélèvement nonparvenu (Purgeautomatique). </p>
+<p>26/10/2020 12:10 FTN </p>
+<p>Plasma Citraté - Chronométrique </p>
+<p>TCK Témoin 29 s 29 26/10/2020 11:51 FTN </p>
+<p>TCK Ratio 0.8 ( < 1.2 )0.8 26/10/2020 11:51 FTN </p>
+<p>HEMATOLOGIE </p>
+<p> NUMERATION SANGUINE (SANG TOTAL SUR EDTA) <br/>MÉTHODE : XN - SYSMEX </p>
+<p>Leucocytes 4.4 10*9/L ( 4.0 - 10.0 )5.2 28/10/2020 02:50 RVB </p>
+<p>Hématies 2.61 10*12/L ( 4.00 - 5.20 )2.32 28/10/2020 02:50 RVB </p>
+<p>Hémoglobine 10.4 g/100mL ( 11.5 - 15.0 )9.3 28/10/2020 02:50 RVB </p>
+<p>Hématocrite 32.1 % ( 34.0 - 45.0 )28.0 28/10/2020 02:50 RVB </p>
+<p>VGM 123.0 μ3 ( 75.0 - 96.0 )120.7 28/10/2020 02:50 RVB </p>
+<p>TCMH 39.8 pg/cel ( 24.0 - 33.0 )40.1 28/10/2020 02:50 RVB </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 02/11/2020 à 12:21 par : Dr TROALEN Frédéric,Dr ARBAB Ahmadreza</p>
+<p></p>
+<p></p>
+<p>Page 3 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>CTE 050 - SEINPatient : 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>CCMH 32.4 g/100mL ( 32.0 - 36.0 )33.2 28/10/2020 02:50 RVB </p>
+<p>IDG 17.2 % ( 11.0 - 15.0 )16.5 28/10/2020 02:50 </p>
+<p>Plaquettes 53.0 10*9/L 53.0 28/10/2020 02:50 RVB </p>
+<p>Impedance </p>
+<p> FORMULE <br/>Polynucléaires Neutrophiles 79.3 % 84.0 28/10/2020 02:50 RVB </p>
+<p>RVB4.4 28/10/2020 02:50 ( 1.5 - 7.0 )10*9/Lsoit 3.5 </p>
+<p>Polynucléaires Eosinophiles 0.2 % 0.2 28/10/2020 02:50 RVB </p>
+<p>RVB0.0 28/10/2020 02:50 ( 0.0 - 0.6 )10*9/Lsoit 0.0 </p>
+<p>Polynucléaires Basophiles 0.0 % 0.0 28/10/2020 02:50 RVB </p>
+<p>RVB0.0 28/10/2020 02:50 ( 0.0 - 0.1 )10*9/Lsoit 0.0 </p>
+<p>Lymphocytes 6.3 % 6.0 28/10/2020 02:50 RVB </p>
+<p>RVB0.3 28/10/2020 02:50 ( 1.2 - 4.0 )10*9/Lsoit 0.3 </p>
+<p>Monocytes 14.2 % 9.8 28/10/2020 02:50 RVB </p>
+<p>RVB0.5 28/10/2020 02:50 ( 0.2 - 0.8 )10*9/Lsoit 0.6 </p>
+<p>Formule RVBAutomate </p>
+<p>VMP 12.1 μ3 ( 7.5 - 11.0 )10.7 28/10/2020 02:50 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 02/11/2020 à 12:21 par : Dr TROALEN Frédéric,Dr ARBAB Ahmadreza</p>
+<p></p>
+<ul>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Ionogramme</li>
+<li>Bilan hépatique / pancréatique</li>
+<li>Protéines</li>
+<li>Marqueurs biologiques</li>
+</ul>
+<li>HEMOSTASE</li>
+<ul>
+<li>Bilan de coagulation</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121353371" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'URGENCE</title>
+    <effectiveTime value="20200423000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200423000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ \qc
+ <u><b>COMPTE-RENDU DE CONSULTATION DES URGENCES</b></u>
+<br/>
+<br/>
+<u><b>CONSULTATION DU 23/04/2020</b></u>
+<br/>
+<br/>
+<u><b>MEDECIN EXAMINATEUR</b></u> : Dr Merad
+ <br/>
+<u><b><br/>MOTIF DE LA CONSULTATION</b></u> :
+ <br/>Patiente de 63 ans, adressée par le Dr Mokdad pour prise en charge 
+ <br/>d'un oedème de la face et des lèvres apparus ce matin au réveil sans 
+ <br/>fièvre ni douleurs dans le cadre d'un cancer du sein métastatique 
+ <br/>traité par XELODA depuis le 24/03. (changement de marque depuis 
+ <br/>quelques jours autre générique).
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE A L'ARRIVEE</b></u> :
+ <br/>On retrouve un oedème de la face prédominant en sous mentonnier, 
+ <br/>oedème des lèvres. Doute sur petites ulcérations des lévres + une 
+ <br/>petite lésion ulcérée de la langue. Pas typique pour une réaction 
+ <br/>allergique au XELODA. Les muqueuses sont saines. 
+ <br/>Absence de signe respiratoire. 
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>Aprés discussion avec le Dr Mateus qui examine la patiente, nous 
+ <br/>décidons d'un traitement par ACICLOVIR dans l'hypothèse d une 
+ <br/>infection zosterienne pendant 10 jours. Mme XXXXXX est sous 
+ <br/>traitement d'entretien par ZELITREX pour un herpès génital 
+ <br/>récidivant. 
+ <br/>Arrêt du XELODA pour le moment jusqu'a lundi 27/04. Si amélioration 
+ <br/>des symptômes, le XELODA sera repris. 
+ <br/>Les consignes sont données pour revenir aux urgences si aggravation 
+ <br/>des symptômes. 
+ <br/>
+<br/>Heure d'arrivée : 12H15
+ <br/>Heure de départ : ND
+ <br/>
+<b>RETOUR A DOMICILE</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

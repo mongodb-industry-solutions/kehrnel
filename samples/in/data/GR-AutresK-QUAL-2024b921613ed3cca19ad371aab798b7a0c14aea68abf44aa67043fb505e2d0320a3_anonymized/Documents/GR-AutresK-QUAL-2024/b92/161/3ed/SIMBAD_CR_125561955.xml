@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125561955" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation Transplantation Moelle Osseuse- Docteur PILORGE</title>
+    <effectiveTime value="20180719000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180719000000+0000"/>
+        <assignedAuthor>
+            <code code="110/16" displayName="CTE 110 - HEMATOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Mr XXXXXX, âgé de 67 ans, est vu ce jour pour deuxième entretien 
+ <br/>pré-allogreffe dans le cadre du traitement de sa myélofibrose.
+ <br/>
+<br/>
+<u><b>Antécédents</b></u>
+<br/>
+<br/>- AIT en 2006, 2012 et 2015.
+ <br/>- Notion de cavernome portal 2012 associé à une splénomégalie et la 
+ <br/>présence de varices oesophagiennes grade I-II. Contrôle FOGD d'avril 
+ <br/>2017 confirmant les varices oesophagiennes de grade I-II.
+ <br/>- Notion d'une tumeur gastrique avec laparotomie en 1972, bénigne.
+ <br/>- Hernie discale, chirurgie de l'épaule droite. 
+ <br/>- Chirurgie oeil droit (étiologie ?).
+ <br/>- Adénome prostatique pT2c N0 M0 diagnostiqué en novembre 2011 puis 
+ <br/>perdu de vue. Le patient a été traité au printemps 2018 par 
+ <br/>radiothérapie du 26.02 au 07.06.18 puis une hormonothérapie courte. 
+ <br/>Patient vu en consultation d'Urologie le 03.07.18 à Gustave Roussy : 
+ <br/>PSA contrôlé, pas de nécessité de surveillance à court terme. 
+ <br/>Indication à réaliser un taux de PSA tous les 6 mois.
+ <br/>- Mise en évidence d'une thrombose portale en septembre 2017, traitée 
+ <br/>par INNOHEP à dose curative. Reperméabilisation de la veine porte en 
+ <br/>janvier 2018. Passage à un traitement préventif par LOVENOX 0.4 mL.
+ <br/>- vertiges paroxystiques bénins en octobre 2017.
+ <br/>
+<br/>
+<u><b>Mode de vie</b></u> :
+ <br/>
+<br/>Patient Martiniquais, retraité depuis 2006, marié, en Métropôle à 
+ <br/>Central Park depuis le 24/06/2018 avec son épouse.
+ <br/>
+<u><b><br/>Histoire de la maladie</b></u> :
+ <br/>
+<br/>Diagnostic en 2015 d'une myélofribrose JAK2 V617+ avec, en 
+ <br/>cytogénétique, un caryotype pseudo-diploïde avec une délétion 13q.
+ <br/>
+<br/>Début d'un traitement par Plavix et Hydréa à partir de janvier 2017 
+ <br/>puis Jakavi 20 mgx2/jour à partir de juillet 2017 + traitement par 
+ <br/>corticothérapie 1 mg/kg à partir de janvier 2018 devant une possible 
+ <br/>composante hémolytique de son anémie.
+ <br/>
+<u><b><br/>Traitement actuel</b></u> : 
+ <br/>
+<br/>JAKAVI
+ <br/>MOPRAL
+ <br/>LOVENOX
+ <br/>LAMALINE si besoin
+ <br/>
+<br/>
+<u><b>Sur le plan clinique</b></u> : 
+ <br/>
+<br/>OMS : 1
+ <br/>Taille : 1m83
+ <br/>Poids : 77 kg (-4 kg en 1 mois)
+ <br/>TA : 119/72
+ <br/>FC : 68/mn
+ <br/>Auscultation cardio-pulmonaire normale.
+ <br/>Abdomen sensible au niveau de l'hypochondre gauche avec une rate 
+ <br/>ombilicale douloureuse.
+ <br/>Pas de trouble du transit.
+ <br/>Pas de point d'appel infectieux.
+ <br/>Absence de VVC.
+ <br/>
+<br/>
+<u><b>Sur le plan hématologique</b></u> : 
+ <br/>
+<br/>12200 GB dont 4600 PNN et 1000 lymphocytes, 2% de blastes, myélémie à 
+ <br/>31%, 8,4 g/dl d'Hb, 354000 plaquettes
+ <br/>
+<u><b><br/>Sur le plan métabolique</b></u> :
+ <br/>
+<br/>Ionogramme normal, créatinine à 81
+ <br/>BH proche de la normale
+ <br/>Albumine 44 g/l
+ <br/>
+<u><b><br/>Sur le plan infectieux</b></u> :
+ <br/>
+<br/>Apyrétique, sans foyer infectieux avec une CRP à 2,5.
+ <br/>
+<br/>
+<u><b>Bilan pré-greffe du patient</b></u> :
+ <br/>
+<br/>- Consultation odonto du 12/7 normale
+ <br/>- Consultation OPH du 4/07 : normale
+ <br/>- EFR du 27/06 au CCML : DLCO abaissée à 52%
+ <br/>- EFR cardiaque du 27/06 au CCML : normale avec une FEVG à 74%
+ <br/>- écho-doppler hépatique du 26/6 : cavernum porte, 
+ <br/>hépato-splénomégalie avec une rate à 22 cm
+ <br/>- scanner thoracique du 3/07 : lésion lytique de L1 avec une IRM qui 
+ <br/>est prévue le 20/07
+ <br/>- scanner des sinus du 12/7 normal
+ <br/>- consultation hépato du 12/7 : cavernum avec hypertension portale, 
+ <br/>varices oesophagiennes et gastropathie d'HTP avec splénomégalie sans 
+ <br/>ascite, fibroscan quasi normal. Probable HMR. Pas de 
+ <br/>contre-indication à la greffe. Nécessité d'une surveillance stricte 
+ <br/>de son bilan biologique hépatique.
+ <br/>
+<br/>
+<u>Donneur</u> :
+ <br/>
+<br/>- Il s'agit de son fils Rodrigue XXXXXX
+ <br/>- Sexe : M
+ <br/>- Date de naissance / âge : 34 ans, O+, CMV+, haplo-identique
+ <br/>
+<br/>
+<u><b>Sur le plan de l'évaluation</b></u> :
+ <br/>
+<br/>1) 
+ <u>Myélogramme</u> :
+ <br/>. 17/07 : pas d'excès de blastes
+ <br/>
+<br/>2) 
+ <u>BOM </u>:
+ <br/>. 17/7 : résultat en attente
+ <br/>
+<br/>3) 
+ <u>Iconographie</u> : 
+ <br/>. splénomégalie à 22 cm
+ <br/>
+<br/>4) 
+ <u>Biologie moléculaire</u> : 
+ <br/>. en attente
+ <br/>
+<br/>
+<u><b>Deuxième entretien pré-greffe en présence de son épouse</b></u> :
+ <br/>
+<br/>On lui réexplique le déroulement de l'allogreffe : l'indication,
+ <br/>le conditionnement, les effets secondaires du conditionnement,
+ <br/>la toxicité de celui-ci notamment la mucite, l'aplasie attendue
+ <br/>radio-chimio induite, les risques infectieux éventuels ainsi que les
+ <br/>besoins transfusionnels.
+ <br/>On insiste sur les complications immunologiques de type réaction du
+ <br/>greffon contre l'hôte et de l'intérêt de l'effet allogénique du
+ <br/>greffon attendu.
+ <br/>On réexplique également le type d'hospitalisation nécessaire en
+ <br/>secteur protégé, la durée d'environ 4 à 6 semaines suivie d'un séjour
+ <br/>en soins de suite.
+ <br/>On revient également sur l'intérêt de poursuivre une immunosuppression
+ <br/>au long cours entre 3 à 6 mois après l'injection des cellules
+ <br/>souches et la prise en charge ambulatoire rapprochée en hôpital de
+ <br/>jour.
+ <br/>
+<br/>J'explique les complications les plus fréquentes :
+ <br/>. la GVH aigu\'eb et chronique, 
+ <br/>. les infections, 
+ <br/>
+<br/>J'explique les complications les moins fréquentes :
+ <br/>. la possibilité d'une rechute, l'indication d'un myélogramme une 
+ <br/>fois par mois pendant les premiers trois mois ou autres bilans 
+ <br/>d'évaluation 
+ <br/>de la maladie,
+ <br/>. la possibilité d'un rejet du greffon, le suivi par chimérisme, la 
+ <br/>possibilité d'un traitement par réinjection de lymphocytes du donneur,
+ <br/>. la possibilité d'une cystite hémorragique (si traitement par 
+ <br/>ENDOXAN à forte dose),
+ <br/>. la possibilité d'une maladie veino-occlusive (évaluation des 
+ <br/>facteurs de risques individuels avant la greffe par exemple par un 
+ <br/>écho-doppler abdominal et la possibilité de mettre en place un 
+ <br/>traitement préventif si besoin),
+ <br/>. d'autres complications non attendues qui peuvent mettre en danger 
+ <br/>la vie du patient.
+ <br/>
+<br/>J'explique aussi la procédure, l'hospitalisation pendant un minimum 
+ <br/>de 4 à 6 semaines, la sortie en soins de suite, le suivi une fois par 
+ <br/>semaine à l'hôpital de jour post-greffe de Gustave Roussy pendant les 
+ <br/>trois premiers mois avec un décalage progressif en fonction de l'état 
+ <br/>du patient (tous les 15 jours puis toutes les 3 semaines puis une 
+ <br/>fois par mois...), le suivi à long terme, la prise de plusieurs 
+ <br/>médicaments pendant plus de 6 mois, les bilans à réaliser.
+ <br/>
+<br/>
+<u><b>Sur le plan pratique</b></u> :
+ <br/>
+<br/>Myélofribrose JAK2+ non transformée.
+ <br/>
+<br/>Allogreffe haplo-identique, sexe identique à conditionnement 
+ <br/>d'intensité réduite par ENDOXAN 29 mg/kg / FLUDARABINE 150 mg/m2 / 
+ <br/>TBI 2Gy et radiothérapie splénique qui débute le 19/07.
+ <br/>Admission secteur PARIS D1 le 9/08, J0 le 17/08.
+ <br/>
+<br/>
+<br/>Prophylaxie de la GVH par CICLOSPORINE 2 mg/kgx2/jour à partir de J5 
+ <br/>et CELL CEPT 30 mg/kg en 3 fois/jour à partir de J5, ENDOXAN 
+ <br/>post-greffe 50 mg/kg à J3 et J4.
+ <br/>
+<br/>Prophylaxie de la maladie veino-occlusive par HEPARINOTHERAPIE à 
+ <br/>100 ui/kg à débuter à l'admission.
+ <br/>
+<br/>Prophylaxie des infections herpétiques par ZELITREX 500 mgx2/jour.
+ <br/>
+<br/>Prophylaxie de la pneumocystose et de la toxoplasmose par BACTRIM, à 
+ <br/>reprendre en sortie d'aplasie.
+ <br/>
+<br/>
+<b>Score de comorbidité HTT CI = 6 en raison de l'altération de la DLCO <br/>et de la présence de son cancer de prostate.<br/>A garder en mémoire les antécédents d'AIT et d'hépatopathie.<br/></b>
+<br/>Information et consentement éclairé - Allogreffe de cellules souches 
+ <br/>périphériques. Information donnée et consentement signé le 19/02/2018 
+ <br/>(contre-signé par le Docteur PILORGE). 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

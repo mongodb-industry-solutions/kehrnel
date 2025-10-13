@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125419176" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>UNITE D'HOSPITALISATION PARIS</title>
+    <effectiveTime value="20180927000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180813000000+0000"/>
+        <assignedAuthor>
+            <code code="PAR/184" displayName="PARIS"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u> Compte-rendu dicté par Maya BELHADJ</u>
+<br/>
+<br/>
+<br/>
+<u>Médecin référent du patient</u> : Jean-Henri BOURHIS
+ <br/>
+<br/>
+<u>Médecin responsable de l'Unité PARIS D1</u> : Sylvain PILORGE
+ <br/>
+<br/>
+<br/>
+<u><b>HOSPITALISATION DU 09.08.2018 AU 27.09.2018</b></u> (transfert Réanimation) 
+ <br/>
+<br/>
+<br/>
+<b>Monsieur XXXXXX XXXXXX, âgé de 67 ans, est hospitalisé dans le <br/>Service PARIS D1 le 09.08.2018 pour la réalisation d'une allogreffe <br/>de cellules souches périphériques, haploidentique, sexe identique, de <br/>son fils, avec conditionnement d'intensité réduite par radiothérapie <br/>splénique 6 Gy, FLUDARABINE 150 mg/m2, ENDOXAN 29 mg/kg, TBI 2 Gy, J0 <br/>le 17.08.18, dans le cadre du traitement d'une myélofibrose primitive <br/>JAK2+ diagnostiquée en 2015.</b>
+<br/>
+<br/>
+<b><br/>I- <u>MODE DE VIE ET ANTECEDENTS</u></b>
+<br/>
+<br/>
+<u>Mode de vie</u> :
+ <br/>
+<br/>. Marié, son épouse exerce la profession d'aide pour personnes âgées
+ <br/>. Enfant(s) : 3.
+ <br/> - 1 fils décédé à 39 ans d'un AVP
+ <br/> - 1 fils de 30 ans
+ <br/> - 1 fils de 27 ans
+ <br/>. CECOS : refusé le 24.07.18. 
+ <br/>. Profession : travaille dans une entreprise de transport. Retraité 
+ <br/>depuis 2006.
+ <br/>. Tabac : 0
+ <br/>. Alcool : occasionnel
+ <br/>. Sport : marche
+ <br/>. Voyage à l'étranger : Caraïbe / Europe
+ <br/>
+<br/>
+<u>Antécédents</u> : 
+ <br/>
+<br/>
+<u> Familiaux</u> :
+ <br/>
+<br/>
+<b> Parents</b> :
+ <br/>. Père : décédé à 77 ans, oenolisme, cirrhose, pathologie virale
+ <br/>. Mère : décédée à 78 ans, pathologie gynécologique fibrome
+ <br/>
+<b> Fratrie</b> de : 2
+ <br/> - 1 soeur, Béatrice XXXXXX LADEON, 65 ans, non typée, vit en 
+ <br/>Métropole, HTA, anévrisme cérébral opéré récemment en neuro-chirurgie 
+ <br/>en région Parisienne,
+ <br/> - 1/2 frère Roland HAPIN, 83 ans.
+ <br/>Si absence de fratrie compatible :
+ <br/>
+<b> Coup de sonde</b> en janvier 2018.
+ <br/>
+<b> Inscription fichier</b> le 2/02/2018 : pas de 10/10, pas de 9/10.
+ <br/>Enfant : 
+ <br/>- René XXXXXX, haplo-identique, 106 kg, 27 ans CMV-
+ <br/>- Rodrigue XXXXXX, 34 ans, O+, CM+, 95 kg, 1m95, antécédent d'ulcère 
+ <br/>gastro-duodénal et d'oesophagite.
+ <br/>Bilan clinique à faire pour les deux frères.
+ <br/>
+<br/>
+<u> Médicaux</u> :
+ <br/>
+<br/>
+<b>Hématologie</b> :
+ <br/>. Transfusion : jamais avant l'hémopathie. 1ère transfusion en juin 
+ <br/>2017 en culots globulaires
+ <br/>. Donneur de sang : non
+ <br/>. Ictère néo-natal : non
+ <br/>
+<br/>
+<b>Infectieux</b> :
+ <br/>. Hépatite : non
+ <br/>. Varicelle : ne se souvient pas
+ <br/>. Rougeole : ne se souvient pas 
+ <br/>. Maladie infectieuse récente : non, pas de pathologie infectieuse 
+ <br/>des Caraïbes
+ <br/>. Vaccination : à jour 
+ <br/>
+<br/>
+<b>Allergique</b> :
+ <br/>. Asthme : non
+ <br/>. Eczéma : non
+ <br/>. Autres : non
+ <br/>
+<br/>
+<b>Autres</b> :
+ <br/>. accidents ischémiques transitoires en 2006, 2012, 2015 : prévoir 
+ <br/>une IRM cérébrale.
+ <br/>. 2006 : fracture ouverte de la jambe droite.
+ <br/>
+<br/>
+<u> Chirurgicaux</u> :
+ <br/>
+<br/>. 1972 : laparotomie pour intervention sur tumeur bénigne de l'estomac
+ <br/>
+<br/>
+<br/>
+<b>II- <u>HISTOIRE DE LA MALADIE</u></b>
+<br/>
+<b><br/></b> Patient adressé par le service d'Hématologie du CHU de Fort de 
+ <br/>France / Dr MENIANE, en vue d'une transplantation allogénique pour le 
+ <br/>traitement d'un SMP de type myélofibrose primitive JAK2+, score DIPSS 
+ <br/>à 4, splénomégalie à 22 cm, diagnostiqué le 4/04/2012 dans un 
+ <br/>contexte de cavernome portal avec splénomégalie, varices 
+ <br/>oesophagiennes.
+ <br/>
+<br/>Prise en charge initiale : service de gastro-enterologie, CHU la 
+ <br/>Ménard à Fort de France puis à partir de janvier 2015 en parallèle e 
+ <br/>service d'Hématologie à Fort de France. 
+ <br/>Progression de la leucocytose en septembre 2016 avec tableau de 
+ <br/>splénomégalie, thrombose et hypertension portale.
+ <br/>Début de traitement par HU et Plavix en janvier 2017.
+ <br/>RUXOLITINIB à partir de juin 2017, actuellement à 40 mg/jour.
+ <br/>
+<br/>Découverte concomitante d'un carcinome prostatique diagnostiqué le 
+ <br/>15/11/2011, traité par radiothérapie exclusive du 26/02 au 7/06/2018 
+ <br/>à Fort de France (Département de radiothérapie Hôpital Clarac / Pr 
+ <br/>ESCARMANT / Dr LABIDI.
+ <br/>Irradiation de la prostate à 76 Gy, Pelvis à 53 Gy.
+ <br/>
+<br/>RCP TMO le 6/11/2017 : Indication d'une allogreffe retenue. 
+ <br/>
+<br/>
+<br/>
+<b>III- <u>BILAN A L'ENTREE</u></b>
+<br/>
+<br/>
+<b>Examen clinique</b> :
+ <br/>. OMS : 2.
+ <br/>. EVA : 7/10 (épaule).
+ <br/>. Poids : 80 kg / taille : 1m80 / surface corporelle > 2 m2.
+ <br/>. Tension artérielle : 114/72 mmHg.
+ <br/>. Température : 37.2°C.
+ <br/>. signes généraux / symptômes : douleur de l'épaule droite à la 
+ <br/>mobilisation avec diminution des amplitudes articulaires sur 
+ <br/>arthropathie acromio-claviculaire congestive et bursite 
+ <br/>sous-acromiale avec rupture complète distale du tendon du 
+ <br/>supra-épineux (cf. IRM du 09.07.18).
+ <br/>. aires ganglionnaires : libres.
+ <br/>. palpation abdominale : splénomégalie au niveau de l'ombilic, 
+ <br/>douloureuse à la palpation, abdomen souple et dépressible, pas de 
+ <br/>troubles du transit, pas d'hépatomégalie.
+ <br/>. auscultation cardio-pulmonaire : BDC réguliers, pas de souffle, pas 
+ <br/>de signe d'insuffisance cardiaque droite ou gauche. Mollets souples 
+ <br/>et indolores. MV bilatéral et symétrique, pas de bruit surajouté, pas 
+ <br/>de toux, pas de dyspnée.
+ <br/>. examen neurologique : patient conscient et orienté, pupilles 
+ <br/>symétriques et réactives, pas de signe de localisation neurologique.
+ <br/>
+<br/>
+<b>Examens para-cliniques</b> :
+ <br/>- NFS : leucocytes 1300/mm3, PNN 900/mm3, lymphocytes 100/mm3, 
+ <br/>hémoglobine 7.9 g/dl, plaquettes 33000/mm3,
+ <br/>- TP : 61%. Facteur II : 83%. Facteur V : 73%. Facteur VII : 89%. 
+ <br/>Facteur X : 79%. TCA : 1,5. 
+ <br/>- ionogramme sanguin : sodium 139 mmol/l, potassium 4.0 mmol/l, 
+ <br/>chlore 107 mmol/l, réserve alcaline 25 mmol/l, calcium mmol/l, 
+ <br/>phosphore mmol/l, magnesium mmol/l. Protides : 74. 
+ <br/>- Bilan rénal : créatinine 79 μmol/l, urée 6.4 mmol/l, albumine 47 
+ <br/>g/l. Pré-albumine : 0.35.
+ <br/>- bilan hépatique : PAL 91 ui/l, ASAT 39 ui/l, ALAT 46 ui/l, GGT 126 
+ <br/>ui/l, bilirubine totale 23 μmol/l. 
+ <br/>- CRP 0.8 mg/l. 
+ <br/>
+<br/>Radiographie de thorax : normale.
+ <br/>
+<br/>Myélogramme pré-greffe, 17.07.18 : myélofibrose primaire,stade 
+ <br/>fibrotique, non transformée. 
+ <br/>En biologie moléculaire, détection d'une mutation JAK2V617F à l'état 
+ <br/>hétérozygote (VAF 35%).
+ <br/>
+<br/>
+<b>Bilan pré-greffe </b> :
+ <br/>- Consultation odonto du 12/7 normale
+ <br/>- Consultation OPH du 4/07 : normale
+ <br/>- EFR du 27/06 au CCML : DLCO abaissée à 52%
+ <br/>- EFR cardiaque du 27/06 au CCML : normale avec une FEVG à 74%
+ <br/>- écho-doppler hépatique du 26/6 : cavernum porte, 
+ <br/>hépato-splénomégalie avec une rate à 22 cm
+ <br/>- scanner thoracique du 3/07 : lésion lytique de L1 avec une IRM qui 
+ <br/>est prévue le 20/07
+ <br/>- scanner des sinus du 12/7 normal
+ <br/>- consultation hépato du 12/7 : cavernum avec hypertension portale, 
+ <br/>varices oesophagiennes et gastropathie d'HTP avec splénomégalie sans 
+ <br/>ascite, fibroscan quasi normal. Probable HMR. Pas de 
+ <br/>contre-indication à la greffe. Nécessité d'une surveillance stricte 
+ <br/>de son bilan biologique hépatique.
+ <br/>- IRM rachis le 20.07.18 : lésion de L1 de 18 mm évocatrice d'un 
+ <br/>angiome majoritairement graisseux.
+ <br/>
+<br/>Score HCT-CI = 7.
+ <br/>
+<br/>
+<br/>
+<b>IV- <u>ALLOGREFFE DE CELLULES SOUCHES PERIPHERIQUES</u></b>
+<br/>
+<br/>* 
+ <b>DONNEUR</b> :
+ <br/>
+<br/>- Il s'agit de son fils Rodrigue XXXXXX
+ <br/>- Sexe : M
+ <br/>- Age : 34 ans
+ <br/>- O+, CMV+, haplo-identique
+ <br/>
+<br/>* 
+ <b>COMPATIBILITE </b> :
+ <br/>
+<br/>
+<u>Donneur / Receveur</u>
+<br/>
+<br/>- Groupe sanguin D/R : O+ / B+ 
+ <br/>- Compatibilité HLA D/R :
+ <br/> . A 0101 3303 / 0101 2301 
+ <br/> . B 5101 3501 / 5101 4201 
+ <br/> . Cw 1602 0401 / 1602 1701 
+ <br/> . DRB1 1501 1001 / 1501 1503 
+ <br/> . DQB1 0602 0501 / 0602 0602 
+ <br/> . DPB1 0401 0101 / 0401 10501 
+ <br/>- Mismatch :
+ <br/>- Sérologies virales D/R :
+ <br/> . Antigène HBS -/- 
+ <br/>
+<br/> . Anticorps anti-HBS 213.1 / en cours 
+ <br/>
+<br/> . Anticorps totaux anti-HBc -/- 
+ <br/> . PCR HBc -/ 
+ <br/> . Anticorps anti-HCV -/-
+ <br/> . PCR HBV -/
+ <br/> . Anticorps anti-VIH 1+2 (Combo) -/-
+ <br/> . PCR HIV -/
+ <br/> . Anticoprs anti-HTLV 1+2 (Abbott) -/-
+ <br/> . Anticorps anti-CMV (Diasorin) +/+
+ <br/> . Anticorps anti-VZV 
+ <br/> . Anticorps anti-HSV 
+ <br/> . Anticorps anti-EBNA IgG +/+
+ <br/> . Anticorps anti-VCA +/+
+ <br/> . Anticorps antitoxoplasmose IgG -/+
+ <br/> . Anticorps antitoxoplasmose IgM -/-
+ <br/> . VDRL latex -/-
+ <br/> . TPHA -/-
+ <br/>
+<br/>* 
+ <b>CONDITIONNEMENT</b> :
+ <br/>
+<br/>Radiothérapie 6 Gy splénique en 6 séances du 19 au 31.07.18.
+ <br/>FLUDARABINE 30 mg/m2 soit 60 mg DT / jour du 11 au 15.08.18.
+ <br/>ENDOXAN 14.5 mg/kg soit 1200 mg DT / jour les 11 et 12.08.18.
+ <br/>TBI 2 Gy le 16.08.18.
+ <br/>
+<br/>* 
+ <b>GREFFON</b> :
+ <br/>
+<br/>Cellules souches périphériques :
+ <br/>. essai thérapeutique : NR
+ <br/>. G-CSF : NR
+ <br/>. nombre de cytaphérèses : NR
+ <br/>. date des cytaphérèses : NR
+ <br/>. 10.77 x 10.8 cellules nucléées/kg de poids
+ <br/>. 194.2 x 10.4 CFU-GM/kg de poids
+ <br/>. 10.90 x 10.6 CD34/kg de poids
+ <br/>. 4.25 x 10.8 CD3/kg de poids
+ <br/>. traitement des CSP : non 
+ <br/>
+<br/>Réinjection :
+ <br/>. nombre de cellules injectées =
+ <br/> * 7.91 x 108 cellules nucléées décongelées/kg de poids
+ <br/> * 8.01 x 106 CD34 décongelées
+ <br/>
+<br/>* 
+ <b>DATE DE LA GREFFE (J0) LE : 17.08.2018 </b>
+<br/>
+<br/>* 
+ <b>PREVENTION DE LA GVH :<br/></b> CICLOSPORINE 2 mg/kg x 2 / jour soit 160 mg x 2 / jour IVL à partir 
+ <br/>de J5 le 22.08.18.
+ <br/>CELLCEPT 10 mg/kg soit 800 mg x 3 / jour IV à partir de J5 le 
+ <br/>22.08.18.
+ <br/>
+<br/>* 
+ <b>PREVENTION DES INFECTIONS A CMV </b> :
+ <br/>Surveillance PCR x 2 / semaine.
+ <br/>
+<br/>* 
+ <b>PREVENTION DES INFECTIONS A PNEUMOCYSTIS</b> :
+ <br/>Aérosol de Pentacarinat 300 mg à J-1 le 16.08.18 puis toutes les 
+ <br/>trois semaines (deuxième aérosol le 08.09.18).
+ <br/>
+<br/>* 
+ <b>PREVENTION DES INFECTIONS HERPETIQUES </b> :
+ <br/>ZELITREX 500 mg x 2 / jour.
+ <br/>
+<br/>* 
+ <b>PREVENTION DE LA MALADIE VEINO-OCCLUSIVE</b> :
+ <br/>HNF 100U/kg soit 8000 U/jour IVSE.
+ <br/>DELURSAN 2 cps x 3 / jour.
+ <br/>Dépistage hebdomadaire de la MVO par échographie abdominale, dernière 
+ <br/>le 25.09.18 : hépatomégalie. Splénomégalie déjà présente au baseline. 
+ <br/>Pas d'ascite. Epanchement pleural droit, pas d'épanchement 
+ <br/>péricardique.
+ <br/>Au total : 1 critère/12, tableau non en faveur d'une MVO débutante.
+ <br/>
+<br/>
+<br/>
+<b>V- <u>EVOLUTION DANS LE SERVICE ET TRAITEMENTS</u></b>
+<br/>
+<br/>* 
+ <b>NOMBRE DE JOURS D'HOSPITALISATION</b> : 57.
+ <br/>
+<br/>* 
+ <b>PERFORMANCE STATUS</b> :
+ <br/>Avant greffe = 2.
+ <br/>A la sortie = 3.
+ <br/>
+<br/>* 
+ <b>TOXICITE NON HEMATOLOGIQUE</b>
+<br/>
+<br/>Selon codification OMS :
+ <br/>
+<br/>. Nausées, vomissements : nausées grade 3, vomissemens grade 2.
+ <br/>. diarrhée : grade 2.
+ <br/>. mucite : grade 2.
+ <br/>. fonction hépatique : pas de cytolyse, pas de cholestase. Apparition 
+ <br/>d'un ictère mixte à partir du 27.08.18, bilirubine totale stable 
+ <br/>autour de 40 μmol/L et bilirubine conjuguée stable autour de 15 
+ <br/>μmol/L. Echographie abdominale le 12.09.18 : hépatomégalie, cavernome 
+ <br/>porte, avec voies de dérivation notamment spléno-rénale ; 
+ <br/>hétérogénicité du parenchyme hépatique déjà mentionnée notamment sur 
+ <br/>le scanner du 03.07.18. Stabilisation de l'ictère au décours.
+ <br/>. fonction rénale : Apparition d'une insuffisance rénale aigu\'eb 
+ <br/>avec élévation de la créatinine grade I à partir du 22.09.18, stable 
+ <br/>avec créatinine autour de 115 μmol/L (DFG selon MDRD à 55 mL/min). 
+ <br/>. autres (détailler) : /
+ <br/>
+<br/>* 
+ <b>TOLERANCE HEMATOLOGIQUE</b>
+<br/>
+<br/>. PNN < 200 le 13.08.18.
+ <br/>. PNN < 500 le 10.08.18.
+ <br/>. PNN > 500 : non atteint.
+ <br/>. Globules blancs < 1000 le 10.08.18.
+ <br/>. Globules blancs > 1000 : non atteint.
+ <br/>. Plaquettes < 20 000 le 12.08.18.
+ <br/>. Plaquettes > 20 000 : non atteint.
+ <br/>. Plaquettes < 50 000 le 09.08.18.
+ <br/>. Plaquettes > 50 000 : non atteint.
+ <br/>
+<br/>Absence de sortie d'aplasie à J30 post-allogreffe. 
+ <br/>
+<br/>Facteurs de croissance : NIVESTIM 48 à partir du 22.08.18, en cours 
+ <br/>au moment du transfert le 27.09.18.
+ <br/>
+<br/>. nombre de transfusions en CPA = 47.
+ <br/>. nombre de transfusions de culots globulaires = 18.
+ <br/>
+<br/>Réalisation du myélogramme de J30 le 20.09.18 : frottis médullaires 
+ <br/>très pauvres sur lesquels de rares éléments de la lignée 
+ <br/>granulocytaire sont observés, souvent dystrophiques, d'aspect 
+ <br/>stimulé. De rares érythroblastes sont également observés. Pas 
+ <br/>d'infiltration blastique suspecte. Rares macrophages. Aspect de 
+ <br/>mo\'eblle aplasique corrélée à la NFS.
+ <br/>
+<br/>RCP Thérapie cellulaire le 24.09.18 : échec de prise avec aplasie à 
+ <br/>J38 de la greffe.
+ <br/>Réalisation d'une nouvelle greffe avec un greffon CD34+ T-déplété dès 
+ <br/>que possible.
+ <br/>
+<br/>* 
+ <b>INFECTIONS</b>
+<br/>
+<br/>
+<u>Antécédents infectieux avant greffe</u> :
+ <br/>
+<br/>Aucun.
+ <br/>
+<br/>
+<u>Problèmes infectieux pendant hospitalisation greffe</u> :
+ <br/>
+<br/>Introduction d'une antibiothérapie probabiliste par VANCOMYCINE le 
+ <br/>14.08.18 devant un tableau de tunnélite sans fièvre, introduction de 
+ <br/>TAZOCILLINE le 15.08.18 devant un tableau de diverticulite sans 
+ <br/>fièvre.
+ <br/>Apparition d'une fièvre à partir du 17.08.18, sans point d'appel 
+ <br/>infectieux.
+ <br/>Arrêt de la TAZOCILLINE remplacée par du TIENAM le 19.08.18 devant la 
+ <br/>persistance de la fièvre.
+ <br/>Apyrexie à partir du 21.08.18.
+ <br/>Introduction d'un traitement anti-viral par CYMEVAN le 22.08.18 
+ <br/>devant une réactivation CMV.
+ <br/>Persistance de PCR CMV positive sous CYMEVAN durant toute la durée du 
+ <br/>séjour.
+ <br/>Arrêt de la VANCOMYCINE le 25.08.18 après 10 jours de traitement 
+ <br/>suite à l'évolution clinique favorable de la tunnélite sans 
+ <br/>documentation microbiologique.
+ <br/>Réalisation d'un ECBC le 28.08.18 devant la persistance d'une dyspnée 
+ <br/>avec toux productive après déplétion par LASILIX pour un sub-OAP (cf. 
+ <br/>plan cardio-vasculaire) : examen positif à Stenotrophomonas 
+ <br/>maltophilia. Ajout du TAVANIC du 31.08.18 au 07.09.18 ayant permis 
+ <br/>une amélioration de la symptomatologie respiratoire.
+ <br/>Arrêt du TIENAM le 03.09.18 remplacé par du MERONEM devant un 
+ <br/>syndrome confusionnel avec hallucinations.
+ <br/>Reprise de la fièvre le 10.09.18 avec apparition de quelques 
+ <br/>folliculites au niveau des deux genoux. Pas d'autre point d'appel 
+ <br/>infectieux.
+ <br/>Bonne tolérance clinique et hémodynamique de la fièvre.
+ <br/>Le 13.09.18 : apparition d'un oedème palpébral gauche inflammatoire, 
+ <br/>douloureux, sans anomalie de l'oeil. Décision de reprendre la 
+ <br/>VANCOMYCINE à partir de cette date.
+ <br/>Surdosage en VANCOMYCINE le 16.09.18 : diminution de la posologie. 
+ <br/>Arrêt de la VANCOMYCINE le 20.09.18 après 1 semaine de traitement 
+ <br/>devant l'apyrexie, l'absence de documentation microbiologique et 
+ <br/>l'insuffisance rénale aigu\'eb.
+ <br/>Réapparition de la fièvre à partir du 26.09.18 sans nouveau point 
+ <br/>d'appel.
+ <br/>
+<br/> . Nombre de jours avec température > 38°C : 10.
+ <br/>
+<br/> . Nombre de jours d'antibiothérapie parentérale :
+ <br/> - antibactériens : 44.
+ <br/> - antifungiques : 0.
+ <br/> - antiviraux : 37.
+ <br/>
+<br/>* 
+ <b>GVH</b>
+<br/>
+<br/>Pas de signe de GVH aigu\'eb.
+ <br/>
+<br/>* 
+ <b>AUTRES COMPLICATIONS</b>
+<br/>
+<br/>
+<u>Sur le plan neurologique</u> : apparition d'un syndrome confusionnel avec 
+ <br/>hallucinations le 03.09.18.
+ <br/>Réalisation d'un scanner cérébral ne mettant pas en évidence de 
+ <br/>saignement intra-crânien.
+ <br/>Evolution rapidement favorable des troubles après arrêt de l'ACUPAN 
+ <br/>et du TIENAM.
+ <br/>Apparition de céphalées diffuses résistantes aux antalgiques simples 
+ <br/>et à la MORPHINE, sans signe de localisation neurologique associé.
+ <br/>Dans le contexte de thrombopénie, réalisation régulière de scanners 
+ <br/>cérébraux le 23.08.18, le 04.09.18 et le 15.09.18 ne mettant pas en 
+ <br/>évidence de saignement intra-crânien.
+ <br/>Réalisation d'un nouveau scanner cérébral le 26.09.18 mettant en 
+ <br/>évidence un hématome sous-dural frontal bilatéral chronique avec 
+ <br/>resaignement récent, de 16 mm d'épaisseur maximale à droit et 12 mm à 
+ <br/>gauche. Absence d'engagement cérébral en regard.
+ <br/>Avis neuro-chirurgical : pas d'indication chirurgicale.
+ <br/>
+<br/>
+<u>Sur le plan cardio-vasculaire</u> : épisode de sub-OAP le 25.08.18 
+ <br/>d'évolution lentement favorable sous LASILIX.
+ <br/>Persistance au décours d'une surcharge hydrosodée nécessitant très 
+ <br/>régulièrement l'administration de LASILIX.
+ <br/>Désaturation avec réapparition de l'oxygénodépendance à partir du 
+ <br/>25.09.18.
+ <br/>Réalisation d'un scanner thoracique le 26.09.18 mettant en évidence 
+ <br/>un épanchement pleural bilatéral de moyenne abondance plus marqué du 
+ <br/>côté droit et une condensation en verre dépoli du segment apical du 
+ <br/>lobe supérieur droit d'allure vraisemblablement infectieuse.
+ <br/>Au retour du scanner du 26.09.18, découverte de bulles d'air dans le 
+ <br/>cathéter veineux central. Devant cette suspicion d'embolie gazeuse, 
+ <br/>indication théorique au caisson hyperbare mais contre-indication en 
+ <br/>raison du saignement de l'hématome sous-dural.
+ <br/>Prise en charge initiale par oxygénation au masque à haute 
+ <br/>concentration et position déclive.
+ <br/>Le 27.09.18, apparition de signes de détresse respiratoire avec 
+ <br/>crépitants diffus bilatéraux associés à des troubles de la vigilance 
+ <br/>(Glasgow entre 13 et 14).
+ <br/>L'échographie cardiaque réalisée au lit confirme un OAP.
+ <br/>Les gaz du sang retrouvent une acidose respiratoire. Prise en charge 
+ <br/>initiale par LASILIX 40 mg IVD puis transfert en Réanimation.
+ <br/>
+<br/>
+<u>Sur le plan métabolique</u> : apparition le 27.08.18 d'une hyponatrémie 
+ <br/>d'aggravation progressive jusqu'au 04.09.18 où le ionogramme 
+ <br/>retrouvait une natrémie à 123 mmol/L. Lente correction de 
+ <br/>l'hyponatrémie après arrêt de la nutrition parentérale, reprise le 
+ <br/>10.09.18 (natrémie à 130 mmol/L à cette date).
+ <br/>
+<br/>
+<u>Sur le plan ORL</u> : Le 13.09.18, apparition d'un oedème palpébral 
+ <br/>gauche inflammatoire, douloureux, sans anomalie de l'oeil. 
+ <br/>Examen ophtalmologique du 17.09.18 ne retrouvant pas d'étiologie 
+ <br/>évidente.
+ <br/>Réalisation d'un premier scanner des sinus le 15.09.18 ne mettant pas 
+ <br/>en évidence de signes de sinusite aigu\'eb mais un épaississement des 
+ <br/>parties molles palpébrales et de la base du front sans collection 
+ <br/>descellée en son sein.
+ <br/>Un nouveau scanner des sinus réalisé le 26.09.18 avec le scanner 
+ <br/>cérébral et thoracique met en évidence un comblement de l'ethmoïde 
+ <br/>antérieur et des sinus frontaux.
+ <br/>
+<br/>* 
+ <b>AUTRES TRAITEMENTS</b>
+<br/>
+<br/>Nombre de jours sous alimentation parentérale = 36.
+ <br/>Date début = 23.08.18 / Date fin = en cours.
+ <br/>Poids à l'entrée = 80 kg - à la sortie = 80.5 kg.
+ <br/>
+<br/>
+<br/>
+<b>VI- <u>CONCLUSION<br/><br/></u>Monsieur XXXXXX, 67 ans, était hospitalisé pour la réalisation d'une <br/>allogreffe de cellules souches périphériques, haploidentique dans le <br/>cadre du traitement d'une myélofibrose primitive JAK2+ diagnostiquée <br/>en 2015.</b>
+<br/>
+<br/>
+<b>Hospitalisation principalement marquée par</b> :
+ <br/>
+<b>- Multiples épisodes infectieux avec tunnélite, d'évolution favorable <br/>sous VANCOMYCINE.<br/>- Réactivation CMV, stable sous CYMEVAN.<br/>- Pneumopathie à Stenotrophomonas d'évolution favorable sous TAVANIC.<br/>- Aplasie fébrile persistante sous MERONEM.<br/>- Echec de prise de greffe avec comme projet, la réalisation d'une <br/>nouvelle greffe CD34+, T-déplété, de son fils, prévue le 01.10.18.<br/>- Apparition, dans un contexte de thrombopénie profonde et <br/>réfractaire aux transfusions, d'un hématome sous-dural chronique avec <br/>resaignement récent objectivé sur le scanner du 26.09.18.<br/>- Suspicion d'embolie gazeuse le 26.09.18.<br/>- Surcharge hydrosodée avec détresse respiratoire aigu\'eb sur OAP le <br/>27.09.18.</b>
+<br/>
+<b><br/>Monsieur XXXXXX est transféré dans le Service de Réanimation le <br/>27.09.2018 pour la suite de la prise en charge.<br/></b>
+<br/>
+<br/>* 
+ <u><b>Ordonnance au moment du transfert</b></u> :
+ <br/>
+<br/>NaCl 1000 mL/jour.
+ <br/>Vitamine K 10 mg IVL x 3 / semaine.
+ <br/>SMOFKABIVEN 1500 mL / jour.
+ <br/>MERONEM 2 g x 3 / jour.
+ <br/>TRIFLUCAN 400 mg/jour.
+ <br/>CYMEVAN 200 mg x 2 / jour.
+ <br/>CICLOSPORINE 130 mg x 2 / jour.
+ <br/>NIVESTIM 48, 1 injection x 2 / jour.
+ <br/>LANSOPRAZOLE 30 mg / jour.
+ <br/>OXYCONTIN 10 mg x 2 / jour.
+ <br/>OXYNORM ORO 5 mg x 6 / jour si douleur.
+ <br/>DELURSAN 500 mg x 3 / jour.
+ <br/>
+<br/>
+<br/>* Numération formule sanguine le jour du transfert :
+ <br/>Globules blancs à 0.2 G/L, hémoglobine à 8.0 g/dl, plaquettes à 10 
+ <br/>G/L.
+ <br/>
+<br/>* Préciser si patient toujours sous facteurs de croissance au moment 
+ <br/>du transfert : oui.
+ <br/>* Dernière transfusion en culots globulaires le : 27.09.18.
+ <br/>* Dernière transfusion en plaquettes le : 27.09.18.
+ <br/>* Prochain aérosol de Pentacarinat normalement prévu le : 29.09.18.
+ <br/>
+<br/>
+<br/>* EVA à la sortie : 2/10.
+ <br/>
+<br/>
+<br/>
+<b>* <u>Coordonnées Patient</u> : <br/>XXXXXX XXXXXX<br/>PROPRETE<br/>97260 LE MORNE ROUGE<br/>0696294552 / 0596719357<br/>* <u>Coordonnées Médecin traitant</u> :<br/>Marie SCHUR<br/>RUE PRINCIPALE<br/>97260 LE MORNE ROUGE <br/>0596523378<br/></b>
+<br/>
+<br/>
+<b> Prise en charge palliative NON<br/><br/>EVALUATION DE LA CHARGE EN SOINS<br/>* Ponction à visée symptomatique NON<br/>* Adaptation du traitement antalgique OUI <br/>* Irradiation antalgique NON<br/>* Occlusion intestinale NON<br/>* Transfusion sanguine OUI <br/>* Prise en charge de la détresse respiratoire <br/>avec désaturation <90% AA OUI <br/>* Traitement des divers symptômes vecteurs d'inconfort <br/>(toux, prurit, nausées, vomissements, anxiété, <br/>dépression, troubles du sommeil, déshydratation,...) OUI <br/>* Soins de nursing OUI <br/>* Nutrition <br/> - déja sous CNO, nutrition entérale/parentérale NON<br/> - mise en route CNO/nutrition entérale/parentale OUI <br/><br/>PRISE EN CHARGE MULTI-DISCIPLINAIRE<br/>* Prise en charge de l'EMASP NON<br/>* Cs CETD (douleur, sophrologie, auriculothérapie) NON<br/>* Cs onco-psychologie NON<br/>* Prise en charge sociale NON<br/>* Soins de kinésithérapie OUI <br/>* cs diététicienne ou nutritionniste OUI <br/> <br/><br/></b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

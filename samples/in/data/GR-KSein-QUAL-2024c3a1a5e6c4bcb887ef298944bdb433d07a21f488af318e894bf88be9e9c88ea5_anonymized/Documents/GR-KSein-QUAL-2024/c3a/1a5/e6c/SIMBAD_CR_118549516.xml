@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_118549516" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Entretien Service Social</title>
+    <effectiveTime value="20210526000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20210526000000+0000"/>
+        <assignedAuthor>
+            <code code="ASS/266" displayName="SERVICE SOCIAL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Assistante sociale: Léa DIALLO.T<br/>N°de poste: 66.29</b>
+<br/>
+<br/>26/05 :
+ <br/>
+<br/>J'ai eu un entretien avec Mme, en hospitalisation (service UDEP) dans 
+ <br/>le cadre d'une orientation en USP.
+ <br/>
+<br/>Avec son accord et à la demande du service celle-ci est à faire 
+ <br/>parvenir à :
+ <br/>
+<br/>
+<b>- PAUL BROUSSE.</b>
+<br/>
+<br/>Je reste à disposition.
+ <br/>
+<br/>
+<br/> Le médecin autorise l'établissement des prescriptions médicales de transports sanitaires du patient, adaptées à sa situation médicale.
+ 
+
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

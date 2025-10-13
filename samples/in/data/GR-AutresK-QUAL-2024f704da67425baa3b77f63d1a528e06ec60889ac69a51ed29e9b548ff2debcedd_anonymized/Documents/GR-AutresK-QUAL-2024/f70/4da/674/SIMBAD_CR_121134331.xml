@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121134331" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ONCOLOGIE GYNECOLOGIE - DR EMELINE COLOMBA</title>
+    <effectiveTime value="20200602000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200602000000+0000"/>
+        <assignedAuthor>
+            <code code="060/8" displayName="CTE 060 - GYNECOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>COMPTE RENDU DE CONSULTATION DE GYNECOLOGIE<br/><br/>Dicté par : </b> Docteur Emeline Colomba-Blameble
+ <b><br/>Dicté le : </b> 28/05/2020 
+ <b><br/>Service : </b> 060-CTE 060 - GYNECOLOGIE 
+ <br/>
+<b>Type de document : </b> 060 CC CONSULTATION 
+ <br/>
+<b>Ref :</b> 1006375 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : HLX/A
+ <b><br/></b>
+<br/>
+<b>Je revois ce jour Madame XXXXXX , en compagnie de son mari , <br/>patiente de 67 ans actuellement sous Gemcitabine pour un <br/>adénocarcinome séreux de haut grade en rechute platine résistante <br/>multitraité avec une ascite et des volumineux oedèmes des membres <br/>inférieurs en lien avec la poursuite évolutive et hypoalbuminémie <br/>mixte. <br/><br/>Profil moléculaire</b> : BRCA 1 et 2 sauvages, en constitutionnel et 
+ <br/>somatique, p53 muté.
+ <br/>
+<br/>
+<u><b>ANTECEDENTS / PATHOLOGIES ASSOCIEES<br/></b></u>
+<br/>- Appendicectomie
+ <br/>- Thrombose MID diagnostiqué en février 2017, sous anticoagulant
+ <br/>- Pas d'allergie
+ <br/>- Pas d'intoxication éthylo-tabagique
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE</b></u>
+<br/>
+<br/>
+<b> * Fin février 2017</b> : suite à une thrombose inaugurale au niveau du 
+ <br/>membre inférieur droit (thrombose de la veine saphène interne, 
+ <br/>étendue jusqu'à la fémorale commune), découverte sur l'échographie 
+ <br/>doppler d'une masse tissulaire pelvienne, probablement d'origine 
+ <br/>ovarienne à composante mixte mesurant de grand axe 120 mm ; ascite 
+ <br/>d'environ 2 à 3 litres.
+ <br/>Mise en route d'un traitement anticoagulant par INNOHEP à dose 
+ <br/>curative avec un switch par PREVISCAN.
+ <br/>
+<br/>
+<b> * Mars 2017</b> : réalisation d'une coelioscopie exploratrice par le Dr 
+ <br/>CHERIER qui retrouve une carcinose péritonéale avec une milliaire 
+ <br/>diffuse, l'exploration étant limitée compte-tenu de l'adhérence du 
+ <br/>grand épiploon à la paroi antérieure ; PCI à 16/27, cytologie 
+ <br/>Positive ; examen extemporané qui retrouve un adénocarcinome 1ère 
+ <br/>ligne de chimiothérapie par CARBOPLATINE + TAXOL, C1J1 le 31/03/17. 
+ <br/>Chimiothérapie nécessitant des réductions de doses pour toxicité 
+ <br/>hématologique principalement thrombopénie grade II.
+ <br/>
+<br/>
+<b> * Octobre 2017</b> : coelioscopie exploratrice retrouvant un PCI stable 
+ <br/>mais instabilité hémodynamique majeure et respiratoire ayant fait 
+ <br/>surseoir à la chirurgie initialement prévue.
+ <br/>Poursuite d'un traitement systémique exclusif.
+ <br/>
+<br/>Reprise de la chimiothérapie par CARBOPLATINE + TAXOL avec adjonction 
+ <br/>d'AVASTIN, C1J1 le 20/10/17, 2 cures puis entretien par AVASTIN seul.
+ <br/>Stabilité clinique sous AVASTIN pendant 1 an, ascite ponctionnée 
+ <br/>toutes les 6 semaines.
+ <br/>
+<br/>
+<b> * Octobre 2018</b> : progression ovarienne et biologique.
+ <br/>Inclusion dans le protocole ATALANTE, bras CARBOPLATINE + GEMZAR + 
+ <br/>AVASTIN +/- ATEZOLIZUMAB, C1J1 le 18 janvier 2019
+ <br/>A noter que le CARBOPLATINE a été effectué en désensibilisation du 
+ <br/>fait de deux réactions allergiques de grade 2.
+ <br/>C7 J1 dans le cas du protocole ATALANTE réalisé le 10 juin 2019 puis 
+ <br/>1er cycle d'entretien réalisé le 27 juin 2019 (bras ATEZOLIZUMAB 
+ <br/>suite à la levée d'aveugle pour la progression)
+ <br/>
+<br/>
+<b> * 29 juillet 2019</b> : progression devenue PLATINE résistante motivant 
+ <br/>l'introduction d'une chimiothérapie par TAXOL hebdomadaire
+ <br/>
+<b><br/> * Janvier 2020 : </b> progression sous TAXOL. Nouvelle ligne par CAELYX, 
+ <br/>C1 le 30/01/2020, C2 J1 le 06/03/2020.
+ <br/>
+<b><br/> *Avril 2020</b> : Progression biologique et clinique en , on avait 
+ <br/>décidé de débuter une chimiothérapie par Gemcitabine hebdomadaire 
+ <br/>800 mg/m2 du fait du risque de toxicité.
+ <br/>
+<br/>
+<b> Je revois la patiente ce jour après 3 injections de Gemcitabine <br/>hebdomadaire.</b>
+<br/>
+<br/>
+<b>Sur le plan symptomatique,</b> la patiente rapporte un bénéfice 
+ <br/>clinique.
+ <br/>Il persiste la nécessité de ponction d'ascite hebdomadaires 
+ <br/>d'environ 3 L, la dernière a été réalisée le 25 mai en radiologie 
+ <br/>interventionnelle.Amélioration de l'appétit. 
+ <br/>Le poids est à 69,500 kgs
+ <br/>La tolérance clinique de la Gemcitabine est tout à fait correcte, la 
+ <br/>tolérance hématologique est moyenne avec une anémie de grade 3 le 
+ <br/>22 mai 2020 justifiant d'une transfusion de deux culots globulaires.
+ <br/>
+<br/>
+<b>Traitement actuel :<br/></b> - INNOHEP 10 000 UI/jour sc
+ <br/>- OXYCONTIN LP 10 mg matin et soir
+ <br/>- OXYNORMORO 10 mg à la demande
+ <br/>- PARACETAMOL 1 g si besoin 
+ <br/>
+<b><br/>Le bilan biologique du 25 mai retrouvait </b> une albumine à 19 , une 
+ <br/>créatinine à 46 , un CA 125 à 2425 , une hémoglobine à 9 , des 
+ <br/>plaquettes à 366 000 et des polynucléaires neutrophiles à 13 700.
+ <br/>
+<b><br/>Examen clinique ce jour :<br/></b> PS : 3
+ <br/>La patiente rapporte la reprise de son autonomie depuis quelques 
+ <br/>temps , depuis environ 1 semaine. Pouls 98 par minute 
+ <br/>Température à 37°3 
+ <br/>Saturation 99 % 
+ <br/>Poids à 69 kg 500 
+ <br/>Le transit est normal
+ <br/>
+<b><br/>Au total :<br/></b> A noter un épisode d'érésipèle justifiant l'introduction de 
+ <br/>Pyostacine au niveau du membre inférieur gauche dans un contexte de 
+ <br/>lymphoedème multifactorielle il y a 5 jours.
+ <br/>
+<br/>Probable bénéfice clinique de la Gemcitabine qu'on poursuit selon les 
+ <br/>mêmes modalités par 3 injections 800 mg/m2 soit 1400 mg dose totale.
+ <br/>Je reverrai Madame XXXXXX pour une évaluation clinique fin juin.
+ <br/>
+<br/>En cas de toxicité majeure ou de non réponse , on arrêterait 
+ <br/>définitivement la chimiothérapie. 
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Emeline COLOMBA-BLAMEBLE <br/>Le jeudi 28 mai 2020 à 16:45</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

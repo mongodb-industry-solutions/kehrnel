@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_130058324" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ORL - Dr Ingrid BREUSKIN</title>
+    <effectiveTime value="20160219000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20160223000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b> Carcinome épidermoïde oropharyngé vélaire et pilier postérieur droit <br/>et gauche, classé T3 N2C M0, traité par radio-chimiothérapie terminée <br/>le 28 octobre 2014</b> .
+ <br/>
+<br/>Consultation à 1 an et 4 mois de la fin du traitement.
+ <br/>
+<br/>Le patient va globalement bien.
+ <br/>Se sent encore fatigué;
+ <br/>Xérostomie de grade I.
+ <br/>Alimentation quasi normale.
+ <br/>Poids stable.
+ <br/>Plainte d'acouphène.
+ <br/>Plainte également de douleurs bilatérales des épaules et de 
+ <br/>diminution de la mobilité.
+ <br/>
+<br/>Avait passé un scanner en novembre 2015.Le compte-rendu ne montre pas 
+ <br/>de lésion mais les images ne sont pas visualisées.Nous demandons au 
+ <br/>patient de récupérer cet examen.
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE</b></u> : 
+ <br/>
+<br/>OMS : 0
+ <br/>Poids : 70 kg.
+ <br/>Palpation cervicale : Tissus souples.Jabot sous-mentonnier.Pas de 
+ <br/>tuméfaction suspecte.
+ <br/>Absence d'anomalie à l'inspection et la palpation de la cavité 
+ <br/>buccale et de l'oropharynx.Aspect cicatriciel du voile qui est 
+ <br/>rétracté.On retrouve toutefois une petite région leucoplasique de la 
+ <br/>partie postérieure du bord de la langue à droite en avant de la zone 
+ <br/>de jonction.Cette zone fait moins d'1 cm de diamètre et est tout à 
+ <br/>fait souple à la palpation.Il n'y a pas de douleur locale.Il faudra 
+ <br/>simplement surveiller cette région lors des examens ultérieurs.
+ <br/>Nasofibroscopie : Pas de lésion muqueuse suspecte.Mobilité laryngée 
+ <br/>correcte et symétrique.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>
+<br/>Examen oncologique rassurant à plus d'1 an d'une prise en charge par 
+ <br/>radiothérapie d'un carcinome épidermoïde de l'oropharynx.
+ <br/>
+<br/>Le patient sera revu en consultation en mai par le Docteur TAO, et 
+ <br/>sera revu en consultation d'ORL au mois d'août.
+ <br/>
+<br/>Remise d'une ordonnance pour kinésithérapie cervicale et de la 
+ <br/>ceinture scapulaire.
+ <br/>
+<br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b>Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>04/03/2016 15:00 310 GSN C ODONTO GSN 
+ <br/>04/05/2016 09:30 RTE YGT C RX YGT 
+ <br/>12/08/2016 11:20 ORL IBN C ORL IBN 
+ <br/>09/11/2016 10:30 CAM YGT C RX YGT 
+ <br/>12/05/2017 __: 1 ORL IBN C ORL IBN 
+ <br/>08/11/2017 __: 1 CAM YGT C RX YGT 
+ <br/>11/05/2018 __: 1 ORL IBN C ORL IBN 
+ <br/>07/11/2018 __: 1 CAM YGT C RX YGT 
+ <br/>10/05/2019 __: 1 ORL IBN C ORL IBN 
+ <br/>06/11/2019 __: 1 CAM YGT C RX YGT 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

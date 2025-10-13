@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126818616" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM THORAX</title>
+    <effectiveTime value="20180108000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180108000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur BARBE REMY
+ <br/>
+<br/>Destinataire : MORBIHAN
+ <br/> DR INTERNE
+ <br/>
+<br/>
+<br/>
+<b>Compte rendu générique de SCANNER<br/><br/>Dicté par : </b> Docteur Remy Barbe, Interne
+ <b><br/>Dicté le : </b> 05/01/2018 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Générique 
+ <br/>
+<b>Ref :</b> 343286 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX 
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<br/>
+<b>Secrétaire</b> : EDG
+ <br/>
+<br/>Examen réalisé le 05/01/2018
+ <br/>
+<br/>
+<u><b><br/>Examen 145<br/><br/>SCANNER THORACIQUE<br/></b></u>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/><br/></b> Patient de 56 ans opéré d'une pharyngo-laryngectomie totale pour un 
+ <br/>carcinome épidermoïde hypopharyngé du sinus piriforme droit avec 
+ <br/>reconstruction par lambeau musculo-cutané.
+ <br/>Recherche de foyer infectieux pulmonaire. 
+ <br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/><br/></b> Examen réalisé sur un scanner DISCOVERY 750 HD, GENERAL ELECTRIC, 
+ <br/>mis en service en septembre 2012.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 429098CN7
+ <br/>Acquisition volumique centrée sur le thorax, sans injection de 
+ <br/>produit de contraste. PDL = 281,58 mGy.cm
+ <br/>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/><br/></b> Comparativement au scanner du 27 octobre 2017 : 
+ <br/>
+<br/>Apparition d'une condensation parenchymateuse basale gauche associée 
+ <br/>à de multiples micronodules de répartition bronchiolaire et à un 
+ <br/>épaississement des parois bronchiques des deux bases traduisant très 
+ <br/>probablement une broncho-pneumopathie infectieuse.
+ <br/>Pas de nodule ou de masse pulmonaire suspecte. 
+ <br/>Pas d'épanchement pleuro-péricardique.
+ <br/>Pas d'adénomégalie thoracique mais quelques ganglions 
+ <br/>médiastino-hilaires de petit axe infra-centimétriques.
+ <br/>Infiltration du creux axillaire gauche associée à une petite 
+ <br/>collection à la partie inférieure du lambeau de grand dorsal à 
+ <br/>rapporter aux complications post-chirurgie reconstructrice récente.
+ <br/>Trachéostomie, prothèse oesophagienne et sonde nasogastrique en place.
+ <br/>
+<br/>En fenêtre osseuse : pas de lésion évolutive, tassements des plateaux 
+ <br/>supérieurs de T11 et de T12 connus. 
+ <br/>Sur les quelques coupes sous-diaphragmatiques on note un 
+ <br/>pneumopéritoine (déjà visible sur la radiographie de 16h), 
+ <br/>possiblement en rapport avec la pose d'une sonde de gastrostomie ce 
+ <br/>jour.
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/><br/>Condensation parenchymateuse basale gauche associée à un syndrome <br/>micronodulaire bronchiolaire et à un épaississement pariétal <br/>bronchique bibasal traduisant une bronchopneumopathie infectieuse.<br/>Sur les dernières coupes sous-diaphragmatiques, on note un <br/>pneumopéritoine à confronter aux données cliniques, possiblement en <br/>rapport avec la pose d'une gastrostomie ce jour.<br/>Service prévenu.<br/><br/> Rémy BARBE (interne)<br/></b>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121359389" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ONCOLOGIE GYNECOLOGIE - DR EMELINE COLOMBA</title>
+    <effectiveTime value="20200423000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200423000000+0000"/>
+        <assignedAuthor>
+            <code code="060/8" displayName="CTE 060 - GYNECOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b><br/><br/>Dicté par : </b> Docteur Emeline Colomba-Blameble
+ <b><br/>Dicté le : </b> 22/04/2020 
+ <b><br/>Service : </b> 060-CTE 060 - GYNECOLOGIE 
+ <br/>
+<b>Type de document : </b> 060 NO NOTE 
+ <br/>
+<b>Ref :</b> 983142 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : HLX/A
+ <br/>
+<br/>
+<b>Je revois ce jour Madame XXXXXX accompagnée de son mari alors <br/>qu'elle est en entretien avec le docteur PAVLUK à l'hôpital de jour <br/>de soins de support. <br/>On rappelle le contexte d'adénocarcinome séreux de haut grade en <br/>rechute platine résistante multitraité avec une ascite et des <br/>volumineux oedèmes des membres inférieurs en lien avec la poursuite <br/>évolutive et hypoalbuminémie mixte. <br/></b> Patiente PS: 3.
+ <br/>
+<br/>Une nouvelle ligne de chimiothérapie par Gemcitabine a été débutée le 
+ <br/>20 avril 2020 en hôpital de jour 3 semaines sur quatre , le reste des 
+ <br/>injections seront réalisées en HAD. 
+ <br/>Dernière ponction d'ascite réalisée en RI le 14 avril avec retrait 
+ <br/>des 4,2 L. 
+ <br/>La patiente rapporte un bénéfice clinique modéré depuis la 1re 
+ <br/>injection à J3. 
+ <br/>A noter que le bilan biologique retrouvait une protéinurie à 0,4 
+ <br/>gramme par litre. 
+ <br/>
+<b>Le bilan du 16 avril montre </b> une hémoglobine à 9,1, des PNN à 7960, 
+ <br/>des plaquettes à 401 000, calcémie corrigée à 2,62 , une créatinine à 
+ <br/>57, une albumine à 13 gr/l, un bilan hépatique normal et un CA 125 à 
+ <br/>2187. 
+ <br/>A noter qu'on reprend le contexte avec Madame XXXXXX, je lui 
+ <br/>confirme que l'objectif de la GEMCITABINE hebdomadaire à visée 
+ <br/>symptomatique pour améliorer la patiente au niveau de son confort et 
+ <br/>notamment contrôler l'ascite et espacer les ponctions. 
+ <br/>A noter que ce jour la patiente est gênée , en programmera une 
+ <br/>ponction en RI.
+ <br/>Je referai le point avec elle en consultation téléphonique d'ici 15 
+ <br/>jours pour vérifier la tolérance clinico-biologique. 
+ <br/>Sera revue par l'équipe des soins de support dans 1 mois. 
+ <br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Emeline COLOMBA-BLAMEBLE <br/>Le mercredi 22 avril 2020 à 16:54<br/><br/></b>
+<br/>
+<b><br/></b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

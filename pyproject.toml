@@ -10,34 +10,53 @@ readme = "README.md"
 requires-python = ">=3.9"
 authors = [{ name = "Your Name", email = "you@example.com" }]
 
-# hard runtime deps that *every* install needs
+# Hard runtime deps
 dependencies = [
     "PyYAML>=6",
     "tabulate>=0.9",
-    "lxml>=4.9",  # Added for XML parsing
-    "Jinja2>=3.1"  
+    "lxml>=4.9",
+    "Jinja2>=3.1"
 ]
 
 [project.optional-dependencies]
-cli   = ["typer[all]>=0.9", "json5>=0.9", "Jinja2>=3.1"]   
-mongo = ["pymongo>=4"]          # only if you want Mongo persistence
+# CLI tooling
+cli = [
+    "typer[all]>=0.9",
+    "json5>=0.9",
+    "Jinja2>=3.1"
+]
+
+# Translation (OpenAI SDK v1+)
+translate = [
+    "openai>=1.0.0",
+    "python-dotenv>=1.0.0"
+]
+
+# Optional persistence
+mongo = ["pymongo>=4"]
+
+# Optional API stack
 api = [
     "fastapi>=0.104",
     "uvicorn[standard]>=0.24",
-    "motor>=3.3",  # Async MongoDB driver
-    "python-multipart>=0.0.6",  # For file uploads
-    "pydantic>=2.5",
+    "motor>=3.3",
+    "python-multipart>=0.0.6",
+    "pydantic>=2.5"
 ]
+
+# Kitchen-sink install
 all = [
     "typer[all]>=0.9",
     "json5>=0.9",
     "Jinja2>=3.1",
+    "openai>=1.0.0",
+    "python-dotenv>=1.0.0",
     "pymongo>=4",
     "fastapi>=0.104",
     "uvicorn[standard]>=0.24",
     "motor>=3.3",
     "python-multipart>=0.0.6",
-    "pydantic>=2.5",
+    "pydantic>=2.5"
 ]
 
 [project.scripts]
@@ -45,37 +64,31 @@ kehrnel-generate = "cli.generate:app"
 kehrnel-identify = "cli.identify:app"
 kehrnel-skeleton = "cli.skeleton:app"
 kehrnel-map      = "cli.map:app"
+kehrnel-map-skeleton = "cli.map_skeleton:main"
 kehrnel-validate = "cli.validate:app"
 kehrnel-ingest   = "cli.ingest:app"
 kehrnel-transform= "cli.transform:app"
-kehrnel-api      = "api.internal.api_server:main"  
+kehrnel-api      = "api.internal.api_server:main"
 
 # ---------------------------------------------------------------------------
-# tell setuptools to use the `src/` layout
+# Use src/ layout and auto-discover ALL subpackages
 # ---------------------------------------------------------------------------
 [tool.setuptools]
 package-dir = {"" = "src"}
-packages = [
-    "cli",
-    "core",
-    "mapper",
-    "ingest",
-    "persistence",
-    "api",
-    "api.internal",
-    "aql",
-    "transform",
-]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["*"]
 
 # ---------------------------------------------------------------------------
-# Development dependencies
+# Package data
 # ---------------------------------------------------------------------------
 [tool.setuptools.package-data]
 "*" = ["*.yaml", "*.yml", "*.json"]
 "mapper" = ["patterns.yaml"]
 
 # ---------------------------------------------------------------------------
-# Optional: Configure uvicorn for development
+# Optional: uvicorn dev settings
 # ---------------------------------------------------------------------------
 [tool.uvicorn]
 host = "0.0.0.0"

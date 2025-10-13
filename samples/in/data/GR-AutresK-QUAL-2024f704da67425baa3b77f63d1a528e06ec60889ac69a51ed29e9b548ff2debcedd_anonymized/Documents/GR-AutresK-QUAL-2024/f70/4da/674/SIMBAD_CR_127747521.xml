@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127747521" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>HOPITAL DE JOUR DE MEDECINE</title>
+    <effectiveTime value="20170721000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170724000000+0000"/>
+        <assignedAuthor>
+            <code code="HJM/484" displayName="HOPITAL DE JOUR MEDECINE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Docteur BOUTROS</b></u>
+<br/>
+<br/>
+<u><b>Motif</b></u> : Nouvelle de CARBOPLATINE/TAXOL 
+ <br/>
+<br/>
+<u><b>Diagnostic</b></u>
+<b> :</b> adénocarcinome séreux de haut grade de l'ovaire, stade 
+ <br/>IV pleural.
+ <br/>
+<br/>
+<u><b>Médecin référent</b></u> : Dr Judith MICHELS
+ <br/>
+<br/> ***********************
+ <br/>
+<br/>
+<u><b>Intercure<br/></b></u>
+<br/>S'est globalement bien passée.
+ <br/>La patiente est sous INNOHEP pour une thrombose veineuse.
+ <br/>Elle nous signale avoir eu, hier, un épisode de saignement, léger, 
+ <br/>rougeâtre, d'allure anale, dont elle s'est aperçu après avoir uriné.
+ <br/>
+<br/>Il n'y avait pas d'hématurie concomittente.
+ <br/>
+<br/>
+<u><b>Examen clinique<br/></b></u>
+<br/>OMS 0.
+ <br/>Pas de signe de saignement sur l'orifice anal, ni au niveau 
+ <br/>gynécologique externe.
+ <br/>Pas de toucher rectal, ni au niveau gynécologique externe.
+ <br/>Abdomen souple, mais distensible ce jour.
+ <br/>Pas de douleur à la palpation de l'abdomen.
+ <br/>
+<br/>
+<u><b>Bilan biologique (réalisé il y a 48H)<br/><br/></b></u> Globalement correct.
+ <br/>
+<br/>
+<u><b>En pratique</b></u>
+<br/>En concertation avec le DR MICHELS, nous proposons de réduire la dose 
+ <br/>d'INNHOEP à 12 000 UI/j SC, soit 0.7 ml/j SC (dose thérapeutique).
+ <br/>Cette modification est faite, car la patiente pèse 70 kg ce jour.
+ <br/>
+<br/>Par ailleurs, nous réalisons une NFS de contrôle afin d'être sûr 
+ <br/>qu'il n'existe pas de déglobulisation.
+ <br/>
+<br/>La patiente reçoit ce jour : 
+ <br/>
+<br/>
+<b> * CARBOPLATINE AUC4 410 mg DT J1<br/> * TAXOL 175 mg/m2 soit 310 mg DT J1<br/></b>
+<br/>Poursuite des prochains rendez-vous à l'identique.
+ <br/>En cas de répétition des saignements, nous recommandons à la patiente 
+ <br/>de venir aux urgences, afin de pousser les investigations par des 
+ <br/>imageries adéquates.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

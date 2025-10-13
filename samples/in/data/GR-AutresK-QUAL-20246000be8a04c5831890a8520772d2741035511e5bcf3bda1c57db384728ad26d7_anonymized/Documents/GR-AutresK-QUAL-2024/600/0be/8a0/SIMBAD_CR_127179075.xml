@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127179075" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ANESTHESIE - DR SITBON Philippe</title>
+    <effectiveTime value="20171108000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171108000000+0000"/>
+        <assignedAuthor>
+            <code code="ANS/286" displayName="ANESTHESIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patient de 56 ans adressé en consultation d'anesthésie ce jour.
+ <br/>
+<u>Intervention prévue</u> : PLT + evidement bilatéral + lambeau pédiculé de 
+ <br/>grand dordal (7h de chirurgie) le 13/11/17.
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS CHIRURGICAUX</b></u>
+<br/>Pan endoscopie ORL x2
+ <br/>Dupuytren bilatéral
+ <br/>
+<br/>Les anesthésies se sont déroulées sans problème particulier.
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS MEDICAUX</b></u>
+<br/>Cancer du voile et des pilliers postérieurs traité par radio et 
+ <br/>chimiothérapie
+ <br/>Epilepsie avec une dernière crise en 2014
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS CARDIO-VASCULAIRES<br/></b></u> Aucun.
+ <br/>
+<br/>Tabac : sevré depuis 2014
+ <br/>OH : sevré depuis 2004
+ <br/>
+<br/>
+<u><b>ALLERGIE/INTOLERANCES<br/></b></u> Aucune.
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE</b></u>
+<br/>Taille : 165
+ <br/>Poids : 69 pas de perte de poids récente 
+ <br/>TA : 12/8
+ <br/>FC : 78 
+ <br/>SpO2 : 97
+ <br/>Hémostase clinique normale
+ <br/>Auscultation cardio-pulmonaire normale
+ <br/>NYHA II, >4METs
+ <br/>EVA = 2 avec du DOLIPRANE
+ <br/>
+<br/>
+<u><b>GESTION DES VOIES A\'c9RIENNES</b></u>
+<br/>Mallampati : II
+ <br/>DTM > 6cm
+ <br/>OB > 3cm
+ <br/>Repères de JIC : Ok
+ <br/>Dents fragiles signalées : 0
+ <br/>Prothèses dentaires : 0
+ <br/>Cormack NR
+ <br/>
+<br/>
+<u><b>TRAITEMENT<br/></b></u> GARDENAL 100 le soir à poursuivre
+ <br/>
+<br/>
+<u><b>BILAN PR\'c9-OP DEMAND\'c9</b></u>
+<br/>Bilan biologique du 21/10/17 : Leucopénie avec 2400 GB, dont 1600 
+ <br/>poly-nucléaires neutrophiles.
+ <br/>On demande ce jour un nouveau bilan biologique : NFS, IONO, Groupe I 
+ <br/>+ ECG
+ <br/>A l'admission : Groupe II / RAI
+ <br/>
+<br/>
+<u><b>CONCLUSION<br/></b></u> Faire signer au patient le dossier de transfusion 
+ <br/>Pas de contre-indication anesthésique à l'intervention prévue.
+ <br/>ASA II
+ <br/>AG / monitorage Protocole jaune au vu de la durée d'intervention / 
+ <br/>intubation
+ <br/>Ordonnance BAT donnée.
+ <br/>USCC
+ <br/>Rappel des règles de jeûn fait. 
+ <br/>Seuil transfusionnel péri-op : 8 g/l
+ <br/>Antibioprophylaxie par : AUGMENTIN 2g
+ <br/>Protocole NVPO par DEXAMETHASONE + ONDANSETRON
+ <br/>Patient debout
+ <br/>
+<br/>
+<b>Temps de préparation d'anesthésie prévu : 45 min<br/>RISQUE ATNC : C<br/><br/></b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

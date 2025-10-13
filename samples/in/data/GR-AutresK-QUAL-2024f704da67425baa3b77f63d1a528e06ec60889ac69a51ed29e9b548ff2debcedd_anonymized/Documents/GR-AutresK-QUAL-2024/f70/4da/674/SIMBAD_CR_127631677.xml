@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127631677" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 172290027</title>
+    <effectiveTime value="20170817000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170817000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>RESULTATSANALYSES Valeurs PrécédentesUnités Valeurs de <br/>Référence </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>D.N. : </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX </p>
+<p>Femme </p>
+<p>17/08/2017 05:59 </p>
+<p>XXXXXX </p>
+<p>Demande enregistrée le : </p>
+<p>PATIENT : </p>
+<p>XXXXXX SEXE : </p>
+<p>FINDERNJF : </p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Département de Biologie et de Pathologie Médicales </p>
+<p>Biochimie <br/>Dr S. Broutin (40 57) <br/>Pr A. Paci (47 30) <br/>Dr V. Poinsignon (61 92) </p>
+<p>MicrobiologieHématologie <br/>Pr A. Bennaceur (40 65) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr T. Steimle (41 65) <br/>Dr V. Vergé (40 34) </p>
+<p>jeudi 17 août 2017 </p>
+<br/>
+<p>Prescrit par : </p>
+<p>Comité : </p>
+<p>GERS </p>
+<p>Villejuif, le </p>
+<p>Service : </p>
+<p>172290027 <br/>Complet </p>
+<p>Type <br/>Ech. </p>
+<p>Val. </p>
+<p>17/08/2017 06:00 Page 1 / 1 </p>
+<p>Dr E. Chachaty (52 34) <br/>Pr F. Griscelli (51 93) <br/>Dr N. Yin (40 62) </p>
+<p>Pharmacologie </p>
+<p>OSTRésultats diffusés par le technicien de garde par délégation du biologiste d'astreinteConfirmation Technique </p>
+<p>OSTRéalisée par le biologisteValidation Biologique Hématologie </p>
+<p>VVE3.7 4.6 16/08/2017 14:1210*9/L ( 4.0 - 10.0 )LeucocytesSg </p>
+<p>OST2.87 3.46 16/08/2017 14:1210*12/L ( 4.00 - 5.20 )HématiesSg </p>
+<p>OST9.1 10.8 16/08/2017 14:12g/100mL ( 12.0 - 16.0 )HémoglobineSg </p>
+<p>OST27.6 33.1 16/08/2017 14:12% ( 34.0 - 45.0 )HématocriteSg </p>
+<p>VVE96.2 95.7 16/08/2017 14:12μ3 ( 85.0 - 95.0 )VGMSg </p>
+<p>VVE31.7 31.2 16/08/2017 14:12pg/cel ( 28.0 - 34.0 )TCMHSg </p>
+<p>VVE33.0 32.6 16/08/2017 14:12g/100mL ( 32.0 - 36.5 )CCMHSg </p>
+<p>VVE15.9 15.8 16/08/2017 14:12% ( 0.0 - 16.0 )IDGSg </p>
+<p>VVE58.0 79.0 16/08/2017 14:1210*9/L ( 150.0-400.0 )PlaquettesSg </p>
+<p>Numeration sanguine (Sang total sur EDTA) <br/>Méthode : XN - SYSMEX </p>
+<p>VVE42.3 62.7 16/08/2017 14:12%Polynucléaires NeutrophilesSg </p>
+<p>VVE1.6 2.9 16/08/2017 14:1210*9/L ( 1.8 - 7.5 )SoitSg </p>
+<p>VVE0.8 0.2 16/08/2017 14:12%Polynucléaires EosinophilesSg </p>
+<p>VVE0.0 0.0 16/08/2017 14:1210*9/L ( 0.0 - 0.5 )SoitSg </p>
+<p>VVE0.3 0.2 16/08/2017 14:12%Polynucléaires BasophilesSg </p>
+<p>VVE0.0 0.0 16/08/2017 14:1210*9/L ( 0.0 - 0.3 )SoitSg </p>
+<p>VVE51.2 32.4 16/08/2017 14:12%LymphocytesSg </p>
+<p>VVE1.9 1.5 16/08/2017 14:1210*9/L ( 1.0 - 4.0 )SoitSg </p>
+<p>VVE5.4 4.5 16/08/2017 14:12%MonocytesSg </p>
+<p>VVE0.2 0.2 16/08/2017 14:1210*9/L ( 0.1 - 1.0 )SoitSg </p>
+<p>OST0.0 0.0 16/08/2017 14:12%MyelémieSg </p>
+<p>VVE9 10 16/08/2017 14:12IDPSg </p>
+<p>sysm8.9 9.2 16/08/2017 14:12μ3 ( 6.0 - 12.0 )VMPSg </p>
+<p>Formule </p>
+<p>HEMATOLOGIE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>17/08/2017 06:17 Validé par :Validé le : Dr STEIMLE Thomas,Dr VERGÉ Véronique</p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

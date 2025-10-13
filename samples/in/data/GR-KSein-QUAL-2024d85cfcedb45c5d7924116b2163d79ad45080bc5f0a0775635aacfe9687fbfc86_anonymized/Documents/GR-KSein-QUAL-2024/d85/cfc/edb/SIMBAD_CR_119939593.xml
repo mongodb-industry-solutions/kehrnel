@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_119939593" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°20T02432 3123960 Dr Christophe MARZAC</title>
+    <effectiveTime value="20201125000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201125000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<br/>MYELOGRAMME
+ <br/>
+<br/>Renseignements cliniques : Bi-cytopénie macrocytaire à distance de chimiothérapie. Kc du sein irradié multitraité métastatique.
+ <br/>Date de prélèvement : 25/11/2020
+ <br/>But de l'examen : diagnostic
+ <br/>Os ponctionné : sternum Dureté : normale
+ <br/>
+<br/>Richesse : pauvre
+ <br/>SERIE MEGACARYOCYTAIRE : non évaluable très rares éléments
+ <br/>BLASTES : 0 %
+ <br/>
+<br/>SERIE GRANULOCYTAIRE : 71 % - NEUTROPHILES Myéloblastes : 0 % Promyélocytes : 3 % Myélocytes : 4 % Métamyélocytes : 4 % Polynucléaires : 60 % - EOSINOPHILES Myélocytes : 0 % Métamyélocytes : 0 % Polynucléaires : 0 % - BASOPHILES : 0 % SERIE ERYTHROCYTAIRE : 17 % Proérytroblastes : 1 % Eryth. basophiles : 2 % Eryth. polychromatophiles : 5 % Eryth. acidophiles : 9 % SERIE LYMPHOIDE : 6% Lymphoblastes : % Lymphocytes : 3 % Lymphoplasmocytes : % Plasmocytes : 3 % SERIE MONOCYTAIRE : 6 % Promonocytes : % Monocytes : 6 % 
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>CONCLUSION
+ <br/>Prélèvement peu cellulaire possiblement prélevé en zone irradiée. La lignée mégacaryocytaire n'est pas évaluable (1 élément/frottis), les polynucléaires sont souvent hypersegmentés et certains érythroblastes ont une chromatine lâche ou présentent des images de mitose. Pas de cellules extra-hématopoïétiques observées.
+ <br/>Au total: présence de signes carentiels frustes (folates, B12) sans éléments patents en faveur d'un syndrome myélodysplasique.
+ <br/>
+<br/>PCSM0N20 
+ <br/>
+<br/> Dr Christophe MARZAC 
+ <br/> Praticien spécialiste 
+ <br/> Compte rendu validé et signé électroniquement 
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127320976" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>Résumé d'hospitalisation service TARN</title>
+    <effectiveTime value="20171013000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171013000000+0000"/>
+        <assignedAuthor>
+            <code code="TAR/435" displayName="TARN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Date d'entrée : 08/10/2017<br/>Date de sortie : 13/10/2017<br/>_________________________________________________<br/>Patient : XXXXXX_XXXXXX XXXXXX XXXXXX<br/>Identifiant : 2017 03104 WE<br/>Date de naissance : XXXXXX<br/>Sexe : Femme<br/>_________________________________________________<br/></b> Chirurgien référent : Docteur Sébastien GOUY.
+ <br/>Oncologue référent : Docteur Judith MICHELS.
+ <br/>Interne : Frédéric BIGOT, Service de Gynécologie.
+ <br/>Secrétaire : CVZ
+ <b><br/></b>
+<br/>
+<br/>
+<u><b>Motif de l'hospitalisation</b></u>
+<br/>Patiente de 65 ans, hospitalisée pour réalisation d'une coelioscopie 
+ <br/>d'évaluation avec évacuation d'une ascite de grande abondance, mal 
+ <br/>tolérée sur le plan hémodynamique après chimiothérapie première pour 
+ <br/>un adénocarcinome séreux de haut grade de l'ovaire de stade IV 
+ <br/>(atteinte pleurale gauche).
+ <br/>
+<br/>Marqueurs tumoraux informatifs : CA 125 à plus de 1000 UI/ml, CA 19.9 
+ <br/>à 142 UI/ml, CA 15.3 à 154 UI/L
+ <br/>
+<br/>Profil moléculaire : BRCA1 et BRCA2 non mutés en somatique, mutation 
+ <br/>P53, RE+, RP+.
+ <br/>
+<br/>
+<u><b>Antécédents / Pathologies associées</b></u>
+<br/>- Coelioscopie diag le 27/03/2017
+ <br/>- Thrombose veine saphène allant jusqu'à la veine fémorale commune
+ <br/>Pose filtre cave le 27/06/2017.
+ <br/>- Cancer du pancréas chez son père 
+ <br/>
+<br/>
+<u><b>Rappel clinique</b></u>
+<b> :</b>
+<br/>
+<b>* Fin février 2017</b> : suite à une thrombose inaugurale au niveau du 
+ <br/>membre inférieur droit (thrombose de la veine saphène interne, 
+ <br/>étendue jusqu'à la fémorale commune), découverte sur l'échographie 
+ <br/>doppler d'une masse tissulaire pelvienne, probablement d'origine 
+ <br/>ovarienne à composante mixte mesurant de grand axe 120 mm ; ascite 
+ <br/>d'environ 2 à 3 litres.
+ <br/>Mise en route d'un traitement anticoagulant par Innohep à dose 
+ <br/>curative avec un switch par Préviscan.
+ <br/>
+<br/>
+<b>* Mars 2017</b> : réalisation d'une coelioscopie exploratrice par le Dr 
+ <br/>SCHERIER qui retrouve une carcinose péritonéale avec une milliaire 
+ <br/>diffuse, l'exploration étant limitée compte tenu de l'adhérence du 
+ <br/>grand épiploon à la paroi antérieure ; PCI à 16/27, cytologie 
+ <br/>positive ; examen extemporané qui retrouve un adénocarcinome.
+ <br/>
+<br/>Initiation d'une chimiothérapie première par CARBOPLATINE TAXOL dont 
+ <br/>la patiente a reçu sept cures avec une tolérance marquée par une 
+ <br/>anémie et une thrombopénie, ayant contraint à retarder la première 
+ <br/>coelioscopie d'évaluation ainsi que les cures de chimiothérapie.
+ <br/>
+<br/>La première coelioscopie d'évaluation fait état d'une réponse 
+ <br/>partielle.
+ <br/>Diminution du CA 125.
+ <br/>Au tep-scanner, réponse partielle au niveau péritonéale et réponse 
+ <br/>complète métabolique à l'étage pleural.
+ <br/>
+<br/>La patiente devait bénéficié d'une chirurgie de cytoréduction 
+ <br/>complète le 09/10/2017.
+ <br/>Cependant, devant la réapparition d'une ascite de grande abondance, 
+ <br/>et d'un PCI à 16, la patiente est non résécable.
+ <br/>Evacuation d'une ascite de grande abondance (12 litres) avec mauvaise 
+ <br/>tolérance hémodynamique, raison pour laquelle elle a été surveillée 
+ <br/>en 
+ <br/>unité de soins continus.
+ <br/>
+<br/>
+<u><b>Examen clinique</b></u>
+<b>:</b>
+<br/>Poids : 78 Kg Taille : 164 cm OMS : 2
+ <br/> - Examen abdominal : ascite de grande abondance, libre.
+ <br/>Pas de trouble du transit.
+ <br/>Pas de rententissement respiratoire.
+ <br/> - Aires ganglionnaires libres.
+ <br/> - Auscultation cardio-pulmonaire sans particularité.
+ <br/>Oedèmes des membres inférieurs.
+ <br/> - PAC propre et fonctionnel.
+ <br/>
+<br/>
+<u><b>Examen para-clinique</b></u> :
+ <br/>* Biologie du 10/10/2017 : Hémoglobine à 9,1 g/dL, plaquettes à 106 
+ <br/>000/mm3, PNN à 4 200/mm3, ionogramme sanguin normal, créatinine à 55 
+ <br/>μmol/l, albumine à 23 g/l, pré-albumine à 0,11 g/l.
+ <br/>
+<br/>
+<u><b>Evolution dans le service</b></u> :
+ <br/>
+<b> 1. Sur le plan oncologique :</b>
+<br/>Adénocarcinome séreux de haut grade de l'ovaire de stade IV pleural 
+ <br/>avec atteinte péritonéale majeure et ascite de grande abondance.
+ <br/>La maladie ne peut être réséquée pour obtenir une chirurgie de 
+ <br/>cytoréduction complète.
+ <br/>Après discussion avec le Docteur MICHELS, poursuite de la 
+ <br/>chimiothérapie exclusive jusqu'à neuf cures de CARBOPLATINE TAXOL, à 
+ <br/>adapter en fonction de la tolérance hématologique.
+ <br/>Adjonction de l'AVASTIN.
+ <br/>
+<br/>On rappelle qu'une écho-Doppler de contrôle n'avait pas retrouvé de 
+ <br/>thrombose veineuse profonde.
+ <br/>
+<br/>Le dossier de Me XXXXXX va être discuté au comité de gynécologie le 
+ <br/>17/10/2017 pour entériner cette décision.
+ <br/>
+<br/>La situation est longuement exposée à la patiente et à sa famille.
+ <br/>
+<br/>
+<b> 2. Sur le plan abdominal :</b>
+<br/>Ascite de grande abondance.
+ <br/>Ponction d'ascite réalisée le 12/10/2017 : évacuation de 1,7 litres 
+ <br/>d'une ascite séro-hématique.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>Adénocarcinome séreux de haut grade de stade IV pleural de l'ovaire.
+ <br/>Chirurgie de cytoréduction non réalisable.
+ <br/>Poursuite de la prise en charge par chimiothérapie exclusive.
+ <br/>La patiente sera revue par le Docteur MICHELS en consultation le 
+ <br/>19/10/2017.
+ <br/>On prévoit des ponctions d'ascite itératives en hôpital de jour.
+ <br/>
+<br/>
+<br/>
+<br/>Autorisation de retour à domicile le 13/10/2017.
+ <br/>
+<br/>
+<b> \'a4 Traitement de sortie :</b>
+<br/>* PARACETAMOL 1 g x4/jour si douleurs.
+ <br/>* TOPALGIC 50 mg x4/jour si douleurs persistantes.
+ <br/>* ACUPAN si besoin.
+ <br/>* Bains de bouche au Bicarbonate.
+ <br/>* INNOHEP 0,6 ml x1 injectio SC par jour.
+ <br/>
+<br/>
+<br/>Transfusion : Non.
+ <b><br/></b>
+<u>NP = non précisé</u>
+<br/>
+<u><b>DxCARE Synthèse</b></u>
+<b><br/><u>DOSSIER INFIRMIER</u><br/>\'a4 CMA : </b>
+<br/>- douleur irréductible, EVA régulière.
+ <br/>- besoin d'assistance à domicile.
+ <br/>- ajustement entretien dispositif vasculaire : ablation/réfection.
+ <br/>- ajustement et entretien appareil des voies urinaires : 
+ <br/>ablation/réfection.
+ <br/>- ajustement et entretien appareil digestif : ablation/réfection.
+ <br/>- prolongation du séjour en attente d'être admis ailleurs.
+ <br/>- Isolement : prophylactique / infectieux.
+ <br/>
+<b>\'a4 Macrocible entrée<br/></b> Taille : cm
+ <br/> Poids (kg) : 
+ <br/> EVA (sur 10) : 
+ <br/>
+<b>\'a4 Macrocible sortie<br/></b> Poids (kg) : 
+ <br/> EVA (sur 10) : 
+ <br/>
+<b>\'a4 Nutrition :</b>
+<br/> - Etat nutritionnel : 
+ <br/> - Mise en route CNO/nutrition entérale/parentérale :
+ <br/> - Sortie avec CNO/nutrition entérale/parentérale : 
+ <br/> - Suivi nutrition post-opératoire : 
+ <br/>
+<b><br/></b> Type d'intervention : 
+ <b><br/>Grade du séjour : </b>
+<br/>Complications post-opératoires : 
+ <br/>Co-morbidités associées : cf antécédents/pathologies associées
+ <br/>Infection nosocomiale : 
+ <br/>Isolement (prophylactique/infectieux) 
+ <b>: </b>
+<br/>Chirurgie incomplète (ou palliative) : 
+ <br/>Cs service social : 
+ <br/>Cs douleur : 
+ <b><br/></b> Passage EMASP : 
+ <br/>Cs UPO : 
+ <br/>
+<br/>Fiche de sortie remplie par le chirurgien (O/N): 
+ <br/>Fiche de liaison donnée au patient à la sortie (O/N) :
+ <br/>Copie du dernier bilan biologique donnée à la sortie (O/N) :
+ <br/>
+<br/>
+<u><b>Liste des prochains rendez-vous</b></u>
+<b> :</b>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

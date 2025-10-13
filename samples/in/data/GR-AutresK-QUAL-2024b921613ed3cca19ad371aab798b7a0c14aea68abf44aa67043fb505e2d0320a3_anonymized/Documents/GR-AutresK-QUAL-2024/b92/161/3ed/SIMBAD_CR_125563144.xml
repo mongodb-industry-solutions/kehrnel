@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125563144" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°18H07099 2632712 Dr Jacques BOSQ</title>
+    <effectiveTime value="20180719000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180719000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<br/>BIOPSIE OSTEO-MEDULLAIRE DE L'EPINE ILIAQUE POSTERIEURE DROITE 
+ <br/>
+<br/>Prélèvement de qualité peu contributive. 
+ <br/>La carotte biopsique, de 6 mm, comprenant 4 espaces médullaires. est constituée pour 0 % de sa longueur d'une corticale osseuse et pour 100 % d'os spongieux.
+ <br/>Les travées osseuses sont d'aspect normal. La fibrose est absente. La richesse cellulaire est de type 0 - aplasique pour quelqu'un de cet âge.
+ <br/>Les différentes lignées hématopoiétiques se caractérisent comme suit : la lignée érythroblastique est aplasique, la lignée granuleuse est aplasique, la lignée mégacaryocytaire est aplasique.
+ <br/>Absence d'infiltration cellulaire anormale dans les limites des carottes biopsiques.
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>CONCLUSION
+ <br/>
+<br/>Biopsie ostéo-médullaire de l'épine iliaque postérieure droite :
+ <br/>Biopsie médullaire de petite taille, peu contributive, déchiquetée sans éléments hématopoïétiques. Aplasie médullaire. Absence de localisation tumorale maligne.
+ <br/>
+<br/>
+<br/>BHSM0111----D 
+ <br/>
+<br/> Dr Jacques BOSQ 
+ <br/> Médecin Spécialiste 
+ <br/> Compte-rendu validé et signé électroniquement 
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

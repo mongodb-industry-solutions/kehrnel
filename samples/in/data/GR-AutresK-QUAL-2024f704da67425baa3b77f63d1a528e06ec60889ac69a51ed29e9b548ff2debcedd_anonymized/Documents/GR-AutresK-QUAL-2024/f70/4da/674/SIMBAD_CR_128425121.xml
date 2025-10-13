@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128425121" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation de Chirurgie *** Docteur Sébastien Gouy</title>
+    <effectiveTime value="20170309000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170310000000+0000"/>
+        <assignedAuthor>
+            <code code="360/53" displayName="BLOC CHIRURGIE GENERALE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patiente âgée de 64 ans , adressée par le Dr MERLE Martine , pour 
+ <br/>ascite avec masse ovarienne dans un contexte de phlébite inaugurale.
+ <br/>
+<br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS</b></u> :
+ <br/>
+<br/> * 
+ <u>Familiaux</u> :
+ <br/>Cancer du Pancréas chez son père.
+ <br/>
+<br/> * 
+ <u>Médico-chirurgicaux</u> : Néant
+ <br/>
+<u>Allergies</u> :Néant
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE</b></u> :
+ <br/>
+<br/>Patiente sous INNOHEP 1400 suite à la découverte de cette thrombose, 
+ <br/>soit un début de traitement le 22/02/2017 est actuellement sous 
+ <br/>PREVISCAN 1/2 un jour, 1/4 le lendemain.
+ <br/>
+<br/>L'échographie-doppler retrouve également une masse annexielle 
+ <br/>suspecte qui à justifié la réalisation d'une IRM pelvienne le 
+ <br/>24/02/2017, qui retrouve une volumineuse masse tissulaire pelvienne 
+ <br/>probablement ovarienne à composante mixte et mesurée dans son plus 
+ <br/>grand axe à 112mm. Ascite d'environ 2 à 3 litres.
+ <br/>
+<br/>
+<u>Dosage des marqueurs tumoraux</u> : 25/02/2017
+ <br/> * CA 125 : + de 1000.
+ <br/> * CA 19.9 : 142
+ <br/> * CA 15.3 : 154
+ <br/>
+<br/>- 
+ <u><b>Mammographie 17/02/2017</b></u> : 
+ <br/>ACR2 a gauche, ACR3 à droite en raison d'un kyste un peu atypique à 
+ <br/>l'union des QI du sein droit de 7mm avec un contrôle échographique 
+ <br/>dans 4 mois, préconisé.
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE</b></u> :
+ <br/>Poids de forme : 64 Kg
+ <br/>Poids actuel : 77 Kg
+ <br/>Taille : 164,5 cm
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> ,
+ <br/>Patiente de 64 ans avec une probable carcinose péritonéale d'origine 
+ <br/>ovarienne découverte à la suite d'une phlébite. 
+ <br/>
+<br/>Dans ce contexte nous proposons la stratégie suivante:
+ <br/>
+<br/>- réalisation d'un scanner TAP et d'une nouvelle échographie doppler 
+ <br/>du membre inférieur droit, afin de contrôler l'efficacité du 
+ <br/>traitement sur la phlébite ainsi qu'au niveau du membre inférieur 
+ <br/>gauche dans le cadre du bilan d'extension de cette masse de plus de 
+ <br/>10 
+ <br/>cm.
+ <br/>
+<br/>- Consultation d'anesthésie la semaine prochaine avec le résultat de 
+ <br/>l'échographie-doppler afin de pouvoir organiser le relais par INNOHEP.
+ <br/>
+<br/>- Coelioscopie d'évaluation prévue le 27/03/2017 soit après + d'un 
+ <br/>mois de traitement par anticoagulant, anti-coagulation efficace dans 
+ <br/>le cas de cette phlébite.
+ <br/>
+<br/>- En fonction des résultats histologiques nous nous orienterons très 
+ <br/>probablement dans ce contexte vers une chimiothérapie néoadjuvante 
+ <br/>dont les modalités seront redéfinies en fonction des résultats 
+ <br/>définitifs.
+ <br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b>Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>17/03/2017 11:30 360 SGS C ANES 
+ <br/>26/03/2017 14:10 360 SGS ADM GERS 
+ <br/>27/03/2017 08:20 360 SGS PBO SEG GYNE 
+ <br/> 08:20 360 SGS PBO CHIR SGS 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

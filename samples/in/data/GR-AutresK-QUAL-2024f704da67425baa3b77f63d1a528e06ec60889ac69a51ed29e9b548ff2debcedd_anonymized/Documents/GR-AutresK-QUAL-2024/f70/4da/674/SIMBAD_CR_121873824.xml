@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121873824" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°20C00181 2964102 Dr Ranya SOUFAN</title>
+    <effectiveTime value="20200203000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200204000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>DÉPARTEMENT DE BIOLOGIE ET DE PATHOLOGIE MEDICALES<br/></p>
+<p>114, rue Edouard Vaillant - 94805 VILLEJUIF CEDEX<br/></p>
+<p>N° I.G.R. : 060 XXXXXX <br/>XXXXXX XXXXXX XXXXXX <br/>Née XXXXXX XXXXXX F <br/> INTERNE <br/>Examen demandé par : <br/>INTERNE <br/>ROUERGUE <br/>Prélevé le 21/01/2020 <br/>Enregistré le 22/01/2020 <br/></p>
+<p> RSN <br/> Examen n° : 20C00181<br/></p>
+<p> CR édité le : 03/02/2020<br/></p>
+<p>Copie à : 1/1 </p>
+<p>COMPTE RENDU DE CYTOPATHOLOGIE <br/></p>
+<p>LIQUIDE DE PONCTION PERITONEALE </p>
+<p> RENSEIGNEMENTS CLINIQUES <br/>Carcinome séreux de haut grade. </p>
+<p> TOPOGRAPHIE <br/>Grande cavité. </p>
+<p> TECHNIQUE 9 ml de liquide rouge trouble, centrifugé. 2 lames(s) colorée(s) au MGG. 2 lame(s) colorée(s) au Papanicolaou. <br/>Techniques complémentaires : <br/>- inclusion en paraffine </p>
+<p> INTERPRETATION <br/>Le matériel prélevé est quantitativement et qualitativement satisfaisant. <br/>L'étude microscopique met en évidence des cellules tumorales malignes métastatiques </p>
+<p> <br/>CONCLUSION </p>
+<p> LIQUIDE DE PONCTION PERITONEALE <br/>Topographie : Grande cavité <br/>Prélèvement satisfaisant pour le diagnostic. <br/>Présence de cellules tumorales malignes métastatiques. </p>
+<p> Commentaire(s) : Matériel hémorragique, et inflammatoire (à prédominance de polynucléaires neutrophiles), avec de rares cellules atypiques compatibles avec des cellules métastatiques du carcinome séreux de haut grade connu.<br/>LCDP0M00 <br/></p>
+<p> Dr Ranya SOUFAN <br/> Praticien </p>
+<p> Compte-rendu validé et signé électroniquement </p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

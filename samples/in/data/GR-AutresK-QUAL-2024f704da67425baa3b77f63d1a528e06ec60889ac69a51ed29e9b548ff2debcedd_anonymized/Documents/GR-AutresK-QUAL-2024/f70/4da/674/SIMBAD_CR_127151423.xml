@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127151423" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>INTERNE DE GARDE - URGENCES - NUIT ET WEEK-END</title>
+    <effectiveTime value="20171104000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171113000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur DITCHI
+ <br/>
+<br/>
+<u>Motif de consultation</u>
+<br/>Fièvre depuis 24 heures associée à une rhinite + toux.
+ <br/>Pas de signe fonctionnel urinaire, pas de diarrhée.
+ <br/>
+<br/>
+<u>ATCD non carcinologiques et carcinologiques</u>
+<br/>Adénocarcinome séreux ovaire métastatique pleural sous 
+ <br/>CARBOPLATINE-TAXOL-AVASTIN en première ligne.
+ <br/>
+<br/>
+<u>Examen clinique</u>
+<br/>TA 138/79 mmHg, Pouls 117 bpm, Température 39.5°C, Sat 99 % AA, EVA 
+ <br/>5/10.
+ <br/>
+<br/>Bruits du coeur réguliers, pas de souffle.
+ <br/>Murmur vésiculaire bilatéral symétrique, pas de bruit surajouté.
+ <br/>Abdomen souple, dépressible, indolore. Ascite +.
+ <br/>
+<br/>Retour à domicile.
+ <br/>HA : 16H40
+ <br/>HD : 20H00
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

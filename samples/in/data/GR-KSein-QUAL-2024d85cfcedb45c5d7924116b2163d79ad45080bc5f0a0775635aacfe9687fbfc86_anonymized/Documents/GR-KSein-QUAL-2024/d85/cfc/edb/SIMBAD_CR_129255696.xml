@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_129255696" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Lettre du 2016-08-30</title>
+    <effectiveTime value="20160830000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20160830000000+0000"/>
+        <assignedAuthor>
+            <code code="132/26" displayName="CTE 132 - ONCOGENETIQUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Nos références : 16317
+ <br/>Rendez vous prévu le 8 septembre 2016
+ <br/>
+<br/>Madame, 
+ <br/>
+<br/>Votre médecin nous a adressé une demande de consultation 
+ <br/>d'oncogénétique, et il souhaite que vous soyez vue rapidement.
+ <br/>
+<br/>Cette consultation a pour but d'identifier une éventuelle 
+ <br/>prédisposition aux cancers, et pourrait permettre d'optimiser vos 
+ <br/>traitements et d'améliorer votre prise en charge à long terme, ainsi 
+ <br/>que celle de votre famille.
+ <br/>
+<br/>Vous trouverez ci-joint une proposition de rendez-vous.
+ <br/>
+<br/>Ce dernier se déroulera en 2 étapes sur la même demi-journée. Dans un 
+ <br/>premier temps, vous assisterez à une présentation collective sur "les 
+ <br/>prédispositions héréditaires aux cancers". Vous serez ensuite vue 
+ <br/>individuellement par un médecin généticien afin de faire le point sur 
+ <br/>votre histoire personnelle et familiale.
+ <br/>
+<br/>- Si vous êtes intéressée, merci de 
+ <b>compléter le questionnaire <br/>familial ci-joint et de nous le retourner dès que possible.</b> Ce 
+ <br/>questionnaire sera indispensable au collaborateur qui vous recevra en 
+ <br/>consultation. Merci de joindre également les documents médicaux 
+ <br/>pertinents en votre possession permettant de confirmer les différents 
+ <br/>diagnostics. 
+ <br/>
+<br/>- 
+ <b>Si vous ne souhaitez pas venir en consultation, merci d'annuler le <br/>rendez-vous </b> en téléphonant au 01 42 11 51 78 ou le standard au 
+ <br/>01 42 11 42 11 en demandant le poste 32 14 ou 35 56. Cela permettra 
+ <br/>d'attribuer votre créneau horaire à une autre patiente dans votre 
+ <br/>situation. 
+ <br/>
+<br/>Nous somme bien évidemment à votre disposition pour toute question. 
+ <br/>
+<br/>Nous vous prions de croire, Madame, en l'expression de nos 
+ <br/>salutations distinguées.
+ <br/>
+<br/> Le secrétariat de génétique
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

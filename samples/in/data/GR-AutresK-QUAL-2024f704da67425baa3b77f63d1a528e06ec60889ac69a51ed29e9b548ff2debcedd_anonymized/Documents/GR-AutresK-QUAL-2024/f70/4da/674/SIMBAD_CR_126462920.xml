@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126462920" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ONCOLOGIE GYNECOLOGIE - DR EMELINE COLOMBA</title>
+    <effectiveTime value="20180301000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180302000000+0000"/>
+        <assignedAuthor>
+            <code code="060/8" displayName="CTE 060 - GYNECOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patiente vue avec Edith BORCOMAN, Interne.
+ <br/>
+<br/>Patiente de 65 ans vue en cours d'AVASTIN en entretien dans le cadre 
+ <br/>de la prise en charge d'un adénocarcinome séreux de haut grade de 
+ <br/>l'ovaire de stade IV péritonéale et pleural initial, traité par 
+ <br/>chimiothérapie exclusive avec 9 cures de CARBOPLATINE associées à 
+ <br/>l'AVASTIN à partir de C8 puis AVASTIN en entretien.
+ <br/>
+<br/>Dernière chimiothérapie réalisée le 17/11/2017. 
+ <br/>
+<br/>BRCA 1 et 2 non muté en somatique, constitutionnel en attente.
+ <br/>Marqueur CA 125 informatif supérérieur à 1000 au diagnostic.
+ <br/>
+<br/>
+<b>On rappelle qu'il y avait une thrombose veineuse profonde au moment <br/>du diagnostic pour lequel elle est traitée par INNOHEP.<br/></b>
+<br/>
+<b>Pour rappel :<br/></b> Première cure réalisée le 31.3.2017 
+ <br/>
+<br/>Diminution du CARBOPLATINE AUC 4 pour la 5è cure compte tenu d'une 
+ <br/>thrombopénie de grade 2.
+ <br/>Malgré la diminution du CARBOPLATINE, la patiente a présenté une 
+ <br/>thrombopénie de grade 2 retardant la prise en charge chirurgicale.
+ <br/>
+<br/>Scanner d'évaluation du 7.7.2017 : stabilité abdominale, disparition 
+ <br/>de l'épanchement pleural.
+ <br/>
+<br/>PET SCAN : réponse partielle au niveau abdominal et bonne réponse au 
+ <br/>niveau pleural.
+ <br/>
+<br/>Coelioscopie du 9.10.2017 : 12 litres d'ascite évacué.
+ <br/>Instabilité hémodynamique majeure et respiratoire et PCI stable.
+ <br/>
+<br/>A C7 diminution de la dose de CARBOPLATINE AUC 4 , TAXOL 135 mg/m2 
+ <br/>pour cause d'hémato-toxicité, étant donné une thrombopénie de grade 2 
+ <br/>ayant retardé le rythme de chimiothérapie.
+ <br/>
+<br/>Introduction de l'AVASTIN à C8 puis poursuite de l'AVASTIN en 
+ <br/>entretien.
+ <br/>
+<br/>Etant donné la stabilisation uniquement de la maladie avec la 
+ <br/>chimiothérapie, l'ascite importante persistante, il est décidé de 
+ <br/>s'orienter vers un traitement de chimiothérapie exclusive associé à 
+ <br/>l'AVASTIN.
+ <br/>
+<br/>Depuis la dernière consultation, tolérance de l'AVASTIN globalement 
+ <br/>bonne.
+ <br/>
+<br/>Auto-contrôle tensionnel à domicile satisfaisant avec une PA aux 
+ <br/>alentours de 12/8.
+ <br/>
+<br/>Signale un épistaxis de grade 1 au mouchage.
+ <br/>
+<br/>Persistance d'une neuropathie de grade 2 actuellement plutôt stable.
+ <br/>
+<br/>Dernière ponction d'ascite le 09/02/2018 mais il a été arrêté 
+ <br/>uniquement 2,6 l contre d'habitude plutôt 4 litres (dernière ponction 
+ <br/>précédente le 29/12/2018.
+ <br/>
+<br/>Actuellement, la patiente signale une réapparition plus rapide de 
+ <br/>l'ascite mais aussi compte tenu du fait que la dernière ponction n'a 
+ <br/>pas permis d'évacuer autant de liquide.
+ <br/>
+<br/>Par contre, pas douleur abdominale, pas de trouble du transit. 
+ <br/>Commence à se sentir un peu gênée par l'ascite.
+ <br/>
+<br/>Traitement habituel : INNOHEP 0,6 ml.
+ <br/>
+<br/>
+<b>EXAMEN </b>
+<br/>
+<br/>PS : 1
+ <br/>PA : 137/89
+ <br/>FC : 104/mn
+ <br/>T° : 37.1
+ <br/>Saturation : 99%
+ <br/>Poids : 68 kg + 2 kg depuis la dernière consultation en rapport avec 
+ <br/>l'ascite.
+ <br/>Auscultation cardio-pulmonaire sans anomalie, pas d'adénopathie 
+ <br/>palpable, abdomen distendu avec ascite palpable.
+ <br/>BHA +, pas de douleurs, minime hernie de la ligne médiane, 
+ <br/>réductible, indolore.
+ <br/>Pas de signe fonctionnel urinaire ni gynécologique.
+ <br/>PAC propre.
+ <br/>Pas d'anomalie à l'examen gynécologique au spéculum ni aux touchers 
+ <br/>pelviens.
+ <br/>
+<br/>Bilan biologique du 27/02/2018 retrouve un CA 125 en majoration à 154 
+ <br/>versus 94 le 06/02/2018, NFS normale par ailleurs, créatinine à 59 et 
+ <br/>un bilan hépatique normal.
+ <br/>
+<br/>A noter, légère calcémie corrigée augmentée à 2,69 avec une albumine 
+ <br/>à 29g/ litre.
+ <br/>
+<br/>EN PRATIQUE 
+ <br/>
+<br/>Interprétation difficile avec l'ascite du marqueur. 
+ <br/>
+<br/>Nous proposons à la patiente de la revoir en consultation dans un 
+ <br/>mois pour réévaluation avec nouveau bilan biologique.
+ <br/>
+<br/>Nous donnons notre feu vert pour réaliser l'AVASTIN le 2/03/2018 avec 
+ <br/>AVASTIN 15 mg / kg soit 980 mg DT à l'HDJ de Médecine.
+ <br/>
+<br/>Nous prévoyons d'avancer la ponction d'ascite courant de la semaine 
+ <br/>prochaine compte tenu qu'elle devient symptomatique.
+ <br/>
+<br/>Nous donnons également à la patiente une ordonnance pour recontrôler 
+ <br/>la calcémie avec un bilan de hypercalcémie minime avec PTH, CRP 
+ <br/>calcium et phosphore.
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

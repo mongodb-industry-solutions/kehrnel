@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125067978" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 182720150</title>
+    <effectiveTime value="20180929000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181008000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Pr A. Paci (47 30) <br/>Dr V. Poinsignon (61 92) </p>
+<p>Pr A. Bennaceur (40 65) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr T. Steimle (41 65) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Pr F. Griscelli (51 93) <br/>Dr N. Yin (40 62) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>HommeNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>29/09/2018 08:57 </p>
+<p>Sexe : </p>
+<p>29/09/2018 08:57 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>SOINS AIGUS REANIMATION </p>
+<p> 3 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>lundi 08 octobre 2018 </p>
+<p>Complet </p>
+<p>Résultats <br/>Valeurs </p>
+<p>Précédentes <br/>Val. </p>
+<p>Valeurs de <br/><br/><br/>Référence </p>
+<p>Analyses Unités <br/><br/></p>
+<p>BIOCHIMIE <br/>Validation du dossier FTNRésultats validés par le technicien de garde par délégation du biologiste </p>
+<p>d'astreinte </p>
+<p>Revue bilan Biochimie FTNRéalisée par le biologiste </p>
+<p>Gaz <br/>Lact (Sg) 1.1 mmol/l ( 0.5 - 1.6 )0.9 28/09/2018 16:34 <br/>Sang - Ampèrométrie </p>
+<p>Température Patient 39.1 °C 38.1 28/09/2018 16:34 FTN </p>
+<p>Oxygénation 21.0 % 21.0 28/09/2018 16:34 </p>
+<p>Veineux _IHIVeineux 28/09/2018 16:34Nature plvt </p>
+<p>pH V corrigé 7.48 ( 7.32 - 7.43 )7.43 28/09/2018 16:34 <br/>Sang - Potentiométrie </p>
+<p>Reserve Alcaline V 28.0 mmol/l ( 25.0 - 29.0 )25.8 28/09/2018 16:34 <br/>Sang - Potentiomètrie </p>
+<p>pCO2 V corrigée 39.4 mmHg ( 45 - 48 )39.8 28/09/2018 16:34 <br/>Sang - Potentiométrie </p>
+<p>pO2 V corrigée 37.8 mmHg ( 38 - 44 )43.0 28/09/2018 16:34 <br/>Sang - Ampérométrie </p>
+<p>% Saturation O2 V 65.5 % ( 70.0 - 80.0 )76.4 28/09/2018 16:34 </p>
+<p>tO2 V 6.6 % 8.3 28/09/2018 16:34 </p>
+<p>Ionogramme <br/>Sodium 140 mmol/l ( 136 - 146 )138 28/09/2018 16:34 FTN <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Potassium 3.2 mmol/l ( 3.4 - 4.5 )3.2 28/09/2018 16:34 FTN <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Chlore 102 mmol/l ( 101 - 109 )103 28/09/2018 16:34 FTN <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Reserve alcaline 28 mmol/l ( 21 - 31 )27 28/09/2018 16:34 FTN <br/>Plasma hépariné - PEPC </p>
+<p>Protides 55 g/L ( 66 - 83 )53 28/09/2018 16:34 FTN <br/>Plasma hépariné - Biuret </p>
+<p>Urée 18.9 mmol/l ( 2.8 - 7.2 )18.5 28/09/2018 16:34 FTN <br/>Plasma hépariné - Uréase-GLDH </p>
+<p>Créatinine 175 μmol/l ( 64 - 104 )152 28/09/2018 16:34 FTN <br/>Plasma hépariné - Enzymatique raccordée IDMS </p>
+<p>Calcium 2.06 mmol/l ( 2.20 - 2.65 )2.13 27/09/2018 23:12 FTN <br/>Plasma hépariné - Arsenazo III </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 08/10/2018 à 17:53 par : Dr YIN Nicolas,Dr TROALEN Frédéric,Dr VERGÉ Véronique</p>
+<p></p>
+<p></p>
+<p>Résultats <br/></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>SOINS AIGUS REANIMATION </p>
+<p>Unités <br/><br/>Valeurs de <br/><br/><br/>Référence </p>
+<p>Patient : </p>
+<p>Val.Analyses <br/><br/>Valeurs </p>
+<p>Précédentes <br/></p>
+<p> 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>182720150 <br/><br/>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>Phosphore 1.11 mmol/l ( 0.81 - 1.45 )0.65 28/09/2018 07:55 FTN <br/>Plasma hépariné - Molybdate, UV </p>
+<p>Magnesium 0.74 mmol/l ( 0.73 - 1.06 )0.54 28/09/2018 07:55 FTN <br/>Plasma hépariné - Bleu de xylidyle </p>
+<p>Base calcul Cockroft 0.51 0.59 28/09/2018 16:34 FTN </p>
+<p>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Débit de Filtration Glomérulaire (MDRD) 33.9 mL/mn/1.73m2 39.9 28/09/2018 16:34 FTN </p>
+<p>< 60 : Insuffisance rénale à explorer si nécessaire. <br/>Si origine afro américaine, le DFG est à multiplier par 1.212 </p>
+<p>Bilan cardiaque <br/>BNP 3571 pg/ml ( < 400 )3094 28/09/2018 07:55 FTN </p>
+<p><100 pg/mL Insuffisance cardiaque peu probable 100-400 pg/mL Interprétation du résultat difficile >400 pg/mL Insuffisance cardiaque vraisemblable </p>
+<p>Plasma EDTA - ECLIA </p>
+<p>Médicaments <br/>Ciclosporine >450 ng/mL 204 28/09/2018 11:45 FTN </p>
+<p>Taux résiduel : <300 ng/mLSang EDTA - Enzymatique </p>
+<p>HEMOSTASE <br/>Validation du dossier FTNRésultats validés par le technicien de garde par délégation du biologiste </p>
+<p>d'astreinte </p>
+<p>Revue bilan Hémostase FTNRéalisée par le biologiste </p>
+<p>Bilan de coagulation <br/>Taux de Prothrombine 47 % ( 70 - 100 )49 28/09/2018 07:55 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>Temps de Quick (Témoin = 12,2s) 18.1 s 17.6 28/09/2018 07:55 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>INR 2.0 1.9 28/09/2018 07:55 FTN </p>
+<p>0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>Facteur II 83 % ( 70 - 120 )92 28/09/2018 07:55 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>Facteur V 68 % ( 70 - 120 )65 28/09/2018 07:55 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK (Témoin = 29s) 40 s 36 28/09/2018 07:55 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK Ratio 1.4 ( < 1.2 )1.2 28/09/2018 07:55 FTN </p>
+<p>HEMATOLOGIE <br/>Numeration sanguine (Sang total sur EDTA) <br/><br/>Méthode : XN - SYSMEX </p>
+<p>Leucocytes 0.1 10*9/L ( 4.0 - 10.0 )0.1 28/09/2018 07:55 CZC </p>
+<p>Hématies 2.54 10*12/L ( 4.50 - 5.80 )2.19 28/09/2018 07:55 VVE </p>
+<p>Hémoglobine 7.2 g/100mL ( 13.0 - 17.0 )6.4 28/09/2018 07:55 VVE </p>
+<p>Hématocrite 20.4 % ( 39.0 - 49.0 )17.7 28/09/2018 07:55 VVE </p>
+<p>VGM 80.3 μ3 ( 80.0 - 97.0 )80.8 28/09/2018 07:55 VVE </p>
+<p>TCMH 28.3 pg/cel ( 26.0 - 33.0 )29.2 28/09/2018 07:55 VVE </p>
+<p>CCMH 35.3 g/100mL ( 32.0 - 36.0 )36.2 28/09/2018 07:55 VVE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 08/10/2018 à 17:53 par : Dr YIN Nicolas,Dr TROALEN Frédéric,Dr VERGÉ Véronique</p>
+<p></p>
+<p></p>
+<p>Résultats <br/></p>
+<p>Page 3 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>SOINS AIGUS REANIMATION </p>
+<p>Unités <br/><br/>Valeurs de <br/><br/><br/>Référence </p>
+<p>Patient : </p>
+<p>Val.Analyses <br/><br/>Valeurs </p>
+<p>Précédentes <br/></p>
+<p> 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>182720150 <br/><br/>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>IDG 14.8 % ( 11.0 - 15.0 )14.2 28/09/2018 07:55 </p>
+<p>Plaquettes 14.0 10*9/L 11.0 28/09/2018 07:55 CZC </p>
+<p>Impédance </p>
+<p>Formule <br/>Polynucléaires Neutrophiles ! ! 28/09/2018 07:55 CZC </p>
+<p>VVE! 28/09/2018 07:55 ( 1.5 - 7.0 )10*9/Lsoit ! </p>
+<p>Polynucléaires Eosinophiles ! ! 28/09/2018 07:55 CZC </p>
+<p>VVE! 28/09/2018 07:55 ( 0.0 - 0.6 )10*9/Lsoit ! </p>
+<p>Polynucléaires Basophiles ! ! 28/09/2018 07:55 CZC </p>
+<p>VVE! 28/09/2018 07:55 ( 0.0 - 0.1 )10*9/Lsoit ! </p>
+<p>Lymphocytes ! ! 28/09/2018 07:55 CZC </p>
+<p>VVE! 28/09/2018 07:55 ( 1.2 - 4.0 )10*9/Lsoit ! </p>
+<p>Monocytes ! ! 28/09/2018 07:55 CZC </p>
+<p>VVE! 28/09/2018 07:55 ( 0.2 - 0.8 )10*9/Lsoit ! </p>
+<p>IDP 11 12 28/09/2018 07:55 VVE </p>
+<p>VMP 9.7 μ3 ( 7.5 - 11.0 )10.7 28/09/2018 07:55 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 08/10/2018 à 17:53 par : Dr YIN Nicolas,Dr TROALEN Frédéric,Dr VERGÉ Véronique</p>
+<p></p>
+<ul>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Gaz</li>
+<li>Ionogramme</li>
+<li>Bilan cardiaque</li>
+<li>Médicaments</li>
+</ul>
+<li>HEMOSTASE</li>
+<ul>
+<li>Bilan de coagulation</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/><br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

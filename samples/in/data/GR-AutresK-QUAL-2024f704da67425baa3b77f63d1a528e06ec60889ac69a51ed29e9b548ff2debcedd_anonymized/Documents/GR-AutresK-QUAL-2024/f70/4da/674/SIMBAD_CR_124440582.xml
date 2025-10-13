@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124440582" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ONCOLOGIE GYNECOLOGIE - DR EMELINE COLOMBA</title>
+    <effectiveTime value="20190111000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190111000000+0000"/>
+        <assignedAuthor>
+            <code code="060/8" displayName="CTE 060 - GYNECOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>COMPTE RENDU DE CONSULTATION DE GYNECOLOGIE<br/><br/>Dicté par : </b> Docteur Elie El Rassy, Interne
+ <b><br/>Dicté le : </b> 10/01/2019 
+ <b><br/>Service : </b> 060-CTE 060 - GYNECOLOGIE 
+ <br/>
+<b>Type de document : </b> 060 CC CONSULTATION 
+ <br/>
+<b>Ref :</b> 570472 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : HLX/A
+ <br/>
+<br/>Patiente vue avec le DR EL RASSY Elie, interne
+ <br/>Je revois ce jour Madame XXXXXX, patiente de 66 ans actuellement 
+ <br/>sous Avastin en entretien pour un adénocarcinome séreux de haut Grade 
+ <br/>stade IV (pleural) jamais réséqué.
+ <br/>BRCA1 et 2 non mutée en somatique
+ <br/>Protocole ATALANTE signé
+ <br/>
+<b>Rappel :<br/></b> Adénocarcinome séreux de haut Grade stade IV (pleural) jamais 
+ <br/>réséqué avec marqueur CA 125 informatif supérieur à 1000 au 
+ <br/>diagnostic. On rappelle qu'il y avait eu une thrombose veineuse 
+ <br/>profonde au moment du diagnostic pour laquelle elle est traitée par 
+ <br/>INNOHEP
+ <br/>Carboplatine et Taxol première cure le 31.3.2017. Nécessitant des 
+ <br/>réductions de doses pour toxicité hématologiques principalement 
+ <br/>thrombopénie de grade 2. Meilleur réponse: réponse partielle 
+ <br/>Coelioscopie en Octobre 2017: 12 litres d'ascite évacués. Instabilité 
+ <br/>hémodynamique majeure et respiratoire et PCI stable. On valide un tt 
+ <br/>systémique exclusive.
+ <br/>Introduction de l'AVASTIN 20.10.2017 pour un an.
+ <br/>Dernière cure de chimiothérapie 17.11.2017 
+ <br/>Stabilité clinique sous avastin pendant 1 an, ascite ponctionnée 
+ <br/>toutes les 6 semaines.
+ <br/>Devant l'ascension du marqueur, un nouveau scanner avait été 
+ <br/>renouvelé le 19 octobre.
+ <br/>La relecture au comité confirme la progression de la masse ovarienne 
+ <br/>sans autre lésion d'allure évolutif. 
+ <br/>
+<br/>
+<b>Depuis la dernière consultation,<br/></b> On discute avec la patiente du résultat de la sérologie viral qui 
+ <br/>revient positif pour VHC.
+ <br/>
+<br/>
+<b>Examen clinique</b> :
+ <br/>Examen clinique inchangé
+ <br/>Auscultation cardiopulmonaire: sans particularités
+ <br/>Aires ganglionnaires libres
+ <br/>L'ascite est un peu plus gênante ce jour.
+ <br/>
+<b>Examen biologique<br/></b> Sérologie virale retrouve un VHC positif; index 6.75. Par ailleurs 
+ <br/>bilan sans particularités
+ <br/>
+<b>Examen morphologique<br/></b> Echographie cardiaque le 19/12/2018 retrouve une FE à 65%
+ <br/>
+<br/>Scanner baseline /12/2018: masse pelvienne de 140 mm de grand axe, 
+ <br/>Ascite de grande abondance avec lésions de carcinose péritonéale 
+ <br/>péri-hépatiques, la plus volumineux est en regard du dôme hépatique, 
+ <br/>prise comme cible. Pas d'adénomégalie rétropéritonéale ou 
+ <br/>coeliomésentérique.Ganglions inguinaux bilatéraux de taille 
+ <br/>centimétrique et infracentimétrique. Lame d'épanchement pleural 
+ <br/>bilatéral.
+ <b><br/>Au total :</b>
+<br/>On revoit la patiente dans 10 jours avec résultat de la charge virale 
+ <br/>et la nouvelle sérologie pour discuter de l'inclusion dans l'essai 
+ <br/>ATALANTE.
+ <br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Emeline COLOMBA <br/>Le jeudi 10 janvier 2019 à 17:50</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

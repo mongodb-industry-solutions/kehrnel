@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121355815" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>EMASP - CR HDJ SOINS PALLIATIFS - Dr Elena PAVLIUC</title>
+    <effectiveTime value="20200422000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200423000000+0000"/>
+        <assignedAuthor>
+            <code code="134/536" displayName="EMASP"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Secrétaire : ERL 
+ <br/>
+<br/>Date de l'Hôpital de Jour : 22/04/2020
+ <br/>Patiente vue par : Dr PAVLIUC 
+ <br/> IDE : Axelle FOUGERE 
+ <br/>
+<br/>
+<b> L'\'c9TAT CLINIQUE DE Mme XXXXXX N\'c9CESSITE UNE PRISE EN CHARGE <br/>EN <br/>H\'d4PITAL DE JOUR DE SOINS PALLIATIFS POUR \'c9VALUATION ET <br/>SURVEILLANCE M\'c9DICALE.<br/></b>
+<br/>Patiente vue pour la première fois en Hôpital de Jour de Soins 
+ <br/>Palliatifs.
+ <br/>Patiente accompagnée par son mari
+ <br/>
+<br/>
+<b>Oncologue référent : Dr COLOMBA <br/><br/> OMS = 3</b>
+<br/>
+<br/>
+<u><b>INFORMATIONS COMPL\'c9MENTAIRES</b></u>
+<br/>
+<b>Directives anticipées</b> : non abordées
+ <br/>
+<b>Personne de confiance</b>
+<b>déclarée</b> : son mari Mr XXXXXX Joseph 
+ <br/>06.72.76.07.83
+ <br/>
+<b>Intervenants au domicile</b> : infirmière libérale pour les prises de 
+ <br/>sang. 
+ <br/>Hospitalisation à domicile Santé Service, reprise à partir du 
+ <br/>28/04/2020 pour l'administration de la chimiothérapie. 
+ <br/>Son époux gère le quotidien. 
+ <br/>Demande MDPH faite par son médecin traitant il y a environ trois mois 
+ <br/>pour les cartes de stationnement et de priorité. 
+ <br/>Le médecin traitant se déplace au domicile.
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS NOTABLES</b></u>
+<br/>Thrombose du membre inférieur droit en 2017.
+ <br/>Appendicectomie.
+ <br/>Fracture ostéoporotique de L3 à L1, cimentoplastie le 24/03 du T10 à 
+ <br/>L5, compliquée d'une minime fuite de ciment, stabilité des douleurs 
+ <br/>depuis. 
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE ET SES COMPLICATIONS</b></u>
+<br/>Diagnostic en février 2017 d'une masse pelviene, probablement 
+ <br/>d'origine ovarienne avec présence d'une ascite et d'une thrombose au 
+ <br/>niveau du membre inférieur droit. 
+ <br/>
+<br/>Mise en place d'un traitement anticoagulant par INNOHEP puis switch 
+ <br/>par PREVISCAN.
+ <br/>
+<br/>Mars 2017: coelioscopie exploratrice qui retrouve une carcinose 
+ <br/>péritonéale. 
+ <br/>Mise en place d'une 1ère ligne de chimiothérapie par CARBOPLATINE + 
+ <br/>TAXOL, débutée le 31/03/17, par la suite les doses ont été réduites 
+ <br/>pour toxicité hématologique, thrombopénie grade II.
+ <br/>
+<br/>Octobre 2017 : coelioscopie exploratrice interrompu par une 
+ <br/>instabilité hémodynamique majeure et respiratoire. Poursuite d'un 
+ <br/>traitement systémique avec reprise de CARBOPLATINE + TAXOL et 
+ <br/>adjonction d'AVASTIN, le 20/10/17, 2 cures puis entretien par AVASTIN 
+ <br/>seul.
+ <br/>
+<br/>Stabilité clinique sous AVASTIN pendant 1 an, ascite ponctionnée 
+ <br/>toutes les 4 semaines.
+ <br/>
+<br/>Octobre 2018 : progression ovarienne, inclusion dans le protocole 
+ <br/>ATALANTE, bras CARBOPLATINE + GEMZAR + AVASTIN +/- ATEZOLIZUMAB, 
+ <br/>débuté le 18/01/2019. 
+ <br/>
+<br/>Juillet 2019 : progression, PLATINE résistante motivant 
+ <br/>l'introduction d'une chimiothérapie par TAXOL hebdomadaire.
+ <br/>
+<b><br/></b> Janvier 2020
+ <b>: </b> progression sous TAXOL, nouvelle ligne par CAELYX, 
+ <br/>débutée le 30/01/2020.
+ <br/>
+<br/>Les ponctions d'ascite ont continué toutes les 6 semaines pendant le 
+ <br/>TAXOL puis tous les 10 jours sous traitement par CAELYX.
+ <br/>
+<br/>Début d'une nouvelle ligne de chimiothérapie par GEMCITABINE le 
+ <br/>20/04/2020 pour progression clinique. 
+ <br/>
+<br/>
+<b>Complications liées à la maladie et au traitement </b> : 
+ <br/>Ascite, nécessitant des ponctions presque toutes les 6 semaines. 
+ <br/>Epanchement pleural droit, ponctionné le 03/03/2020. 
+ <br/>Thrombose du membre inférieur droit inaugurale, traitée par INNOHEP.
+ <br/>
+<br/>
+<u><b>MODE DE VIE</b></u>
+<br/>Patiente mariée, trois fils dont un qui vit au domicile. 
+ <br/>Le couple habite dans un appartement au 2ème avec ascenseur, la salle 
+ <br/>de bain est avec une douche mais avec une petite marche. 
+ <br/>La patiente est retraitée, était commerçante. 
+ <br/>
+<br/>
+<u><b>TRAITEMENT EN COURS</b></u>
+<br/>Traitement oncologique : GEMCITABINE, débuté le 20/04/2020. 
+ <br/>
+<br/>OXYCONTIN LP 20 mg matin et soir 
+ <br/>OXYNORMORO 10 mg en interdose, en prend très rarement. 
+ <br/>INNOHEP 10.000 ui sous cutané, injections réalisées par son mari. 
+ <br/>PARACETAMOL 1 g, 2 à 4 fois par jour 
+ <br/>MONURIL pris le 20/04/2020. 
+ <br/>Bains de bouche au BICARBONATE, fait ponctuellement
+ <br/>PRIMPERAN si besoin, en prend rarement environ 1/j.
+ <br/>
+<br/>
+<u><b>Biologie du 16/04/2020 </b></u> :
+ <br/>Hémoglobine : 9.1 g/dl
+ <br/>Leucocytes : 10.61 G/l
+ <br/>Plaquettes : 401 G/l 
+ <br/>Sodium : 138 mmol/l
+ <br/>Potassium : 4.2 mmol/l
+ <br/>Albumine : 13 g/l 
+ <br/>Calcium corrigé : 2.62 mmol/l
+ <br/>Créatinine : 57 μmol/l
+ <br/>ASAT : 21 ui/l
+ <br/>ALAT : moins de 6 ui/l
+ <br/>PAL : 131 ui/l
+ <br/>Gamma GT : 25 ui/l
+ <br/>Bilirubine totale : 3.5 μmol/l
+ <br/>CA 125 : 2.187 vs 1.760 le 08/04/2020.
+ <br/>
+<br/>
+<u><b>\'c9VALUATION M\'c9DICO-SOIGNANTE DES SYMPT\'d4MES</b></u>
+<br/>PS : 3
+ <br/>Poids habituel : 58-60 kg Poids actuel : 72 kg
+ <br/>TA : 113/63 Pouls : 105 
+ <br/>Saturation : 97% en AA 
+ <br/>
+<br/>
+<b>Sur le plan douleur </b> : la patiente décrit une gêne abdominale liée à 
+ <br/>l'ascite.
+ <br/>Douleur lombaire basse sur fracture ostéoporotique, a eu une 
+ <br/>cimentoplastie le 24/03/2020, la douleur est bien contrôlée 
+ <br/>actuellement. 
+ <br/>Gêne liée à la lourdeur des membres inférieurs sur oedèmes 
+ <br/>volumineux. 
+ <br/>Douleur du talon gauche et orteils bilatérale. 
+ <br/>A l'examen clinique escarre stade II, pansement fait pendant l'HDJ. 
+ <br/>
+<br/>
+<b>Sur le plan cardio-pulmonaire </b> : la patiente est dyspnéique au 
+ <br/>moindre effort. Une radiographie a été réalisée le 20/04/2020 qui 
+ <br/>retrouve une lame d'épanchement pleural droit mais qui est stable, 
+ <br/>pas besoin de ponction de jour. 
+ <br/>La saturation est à 97% en AA.
+ <br/>Absence de toux, absence d'expectoration, absence de fièvre. 
+ <br/>A l'auscultation, murmure vésiculaire légèrement diminué en base 
+ <br/>droite, pas de bruit surajouté. Les bruits du coeur sont réguliers, 
+ <br/>rapides. Valeurs tensionnelles correctes. 
+ <br/>Volumineux oedèmes des membres inférieurs. 
+ <br/>
+<br/>
+<b>Sur le plan digestif </b> : quelques nausées, prend du PRIMPERAN 
+ <br/>ponctuellement, pas de nausée, le transit est régulier actuellement. 
+ <br/>A l'examen clinique, abdomen tendu, présence d'une ascite, hernie 
+ <br/>ombilical non compliquée. Pas de douleur à la palpation.
+ <br/>Sur le plan nutritionnel, perte d'appétit, avec sensation de satiété 
+ <br/>rapide et pesanteur gastrique. 
+ <br/>Poids ininterprétable compte tenu des oedèmes des membres inférieurs, 
+ <br/>par contre sarcopénie en haut du corps. 
+ <br/>A eu des prescriptions de compléments nutritionnels oraux mais ne les 
+ <br/>prend pas, utilise que très rarement la poudre PROTIFAR. 
+ <br/>Un ECBU a été réalisé la semaine dernière qui retrouve un écoli, un 
+ <br/>traitement par MONURIL a été prescrit le 20/04/2020, selon la 
+ <br/>patiente amélioration des symptômes. 
+ <br/>La patiente utilise des protections pour la nuit, en raison des 
+ <br/>difficultés de mobilité pour aller uriner. 
+ <br/>
+<br/>
+<b>Sur le plan des muqueuses et du tégument</b> : bouche propre. Ascite, 
+ <br/>dernière ponction en date du 14/04/2020 avec évacuation de 4.2 L, 
+ <br/>nécessité de ponctionner dans les jours à venir. 
+ <br/>Rougeur au niveau des épineuses lombaires, pansement fait. 
+ <br/>Escarre stade II au niveau du talon gauche. 
+ <br/>Plaie entre le gros orteil et le deuxième orteil du pied gauche, 
+ <br/>compresses mises en place. 
+ <br/>
+<br/>
+<b>Sur le plan neuro-psychologique </b> : examen neurologique sans 
+ <br/>particularité, en dehors d'une baisse de l'acuité auditive. 
+ <br/>Le sommeil est correct, la patiente n'exprime pas d'anxiété. 
+ <br/>
+<br/>
+<b>Mobilité/autonomie</b> : la patiente est en perte d'autonomie, la 
+ <br/>mobilité est réduite en raison des volumineux oedèmes des membres 
+ <br/>inférieurs, reste autonome pour les soins d'hygiène mais a besoin 
+ <br/>d'aide pour les jambes, refuse des aides pour l'instant. 
+ <br/>Son mari lui met des bas de contention. 
+ <br/>A un fauteuil roulant de transfert qu'elle utilise rarement. Ils ont 
+ <br/>à la maison un lit médicalisé avec un matelas anti-escarre, utilise 
+ <br/>aussi le coussin du fauteuil roulant pour s'asseoir sur une chaise ou 
+ <br/>le fauteuil. 
+ <br/>Les tâches ménagères sont gérées par son mari. 
+ <br/>
+<br/>
+<b>\'c9valuation des connaissances du patient et de son entourage :</b>
+<br/>La patiente a bien entendu les objectifs actuels du traitement et 
+ <br/>l'évolution de la maladie avec le risque d'aggravation, souhaite 
+ <br/>rester à domicile pour l'instant, est bien entouré par son mari et 
+ <br/>ses enfants duquel elle est très proche. Pour l'instant refuse 
+ <br/>l'augmentation des aides avec la possibilité de poursuivre la prise 
+ <br/>en charge par l'HAD en continu.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3> ET PROPOSITIONS</b></u>
+<br/>
+<b>Synthèse de l'état clinique</b> :
+ <br/>Patiente âgée de 67 ans, prise en charge pour un carcinome séreux de 
+ <br/>l'ovaire métastatique au niveau pleural et avec carcinose 
+ <br/>péritonéale, PLATINE résistante, actuellement début d'une nouvelle 
+ <br/>ligne par GEMCITABINE le 20/04/2020 à visée palliative. 
+ <br/>
+<br/>
+<b>Symptômes réfractaires :</b>
+<br/>Dyspnée au moindre effort multi-factorielle, présence d'un 
+ <br/>épanchement pleural de petite abondance non ponctionnable ce jour. 
+ <br/>La patiente a un traitement anti-coagulant.
+ <br/>Syndrome oedémato-ascitique, avec augmentation des besoin de ponction 
+ <br/>évacuatrice d'ascite et des oedèmes volumineux des membres 
+ <br/>inférieurs, 
+ <br/>qui sont très gênant actuellement, réduisant la mobilité. 
+ <br/>Perte d'autonomie sur oedème volumineux et dyspnée. 
+ <br/>Gêne abdominale sur ascite. 
+ <br/>Dénutrition sévère. 
+ <br/>Lésion cutanée de type escarre au niveau lombaire, au niveau du talon 
+ <br/>gauche ainsi qu'une lésion entre le gros orteil et le deuxième orteil 
+ <br/>du pied gauche. 
+ <br/>
+<br/>
+<b>Intervenants </b> : 
+ <br/>Dr COLOMBA oncologue référent, évaluation clinique après la première 
+ <br/>cure de GEMCITABINE, rediscussion des objectifs du traitement. 
+ <br/>
+<br/>
+<b>Propositions</b> :
+ <br/>Proposition d'essayer un traitement diurétique par LASILIX 20 mg avec 
+ <br/>possibilité d'augmenter à 40 si efficacité. 
+ <br/>Prescription de bas de contension avec une paire de bas pied ouvert. 
+ <br/>Prescription des pansements (MEPILEX BORDER, DEXERYL et conveen) pour 
+ <br/>les lésions cutanées. 
+ <br/>Prescription de masques. 
+ <br/>Coussin de positionnement, coussin anti-escarre.
+ <br/>Poursuite du même traitement antalgique. 
+ <br/>Proposition de mettre en place la prise en charge par l'HAD en 
+ <br/>continue que la patiente et son mari refuse pour l'instant. 
+ <br/>
+<br/>
+<b>Projets</b> :
+ <br/>Patiente à revoir dans 4 à 5 semaines.
+ <br/>
+<br/>
+<b>Problèmes à résoudre</b> :
+ <br/>Ascite, organisation d'une ponction d'ascite en RI.
+ <br/>
+<br/>
+<b>Copie à envoyer :</b>
+<br/>- Au médecin traitant : Dr MERLE 
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

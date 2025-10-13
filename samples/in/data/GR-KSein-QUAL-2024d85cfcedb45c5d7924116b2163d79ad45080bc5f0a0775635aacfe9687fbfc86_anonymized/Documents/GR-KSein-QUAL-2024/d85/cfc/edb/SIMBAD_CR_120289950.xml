@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120289950" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>Compte-rendu d'hospitalisation - Service Rouergue</title>
+    <effectiveTime value="20201003000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201005000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b><br/> SERVICE DE M\'c9DECINE D'URGENCE EN ONCOLOGIE<br/><u><br/>Compte-rendu d'hospitalisation<br/><br/> </u><br/><br/>Docteur Mansouria MERAD<br/></b>
+<br/>
+<b> <br/>Patiente de 63 ans, adressée par l'HDJ pour prise en charge d'une <br/>tétraplégie + dysarthrie brutale dans le cadre de la prise en <br/>charge d'une récidive hépatique et osseuse d'un cancer du sein droit <br/>diagnostiqué initialement en 2016 triple négatif, en 8ème ligne par <br/>Carboplatine débuté le 29/6. Persistance d'une thrombopénie malgré <br/>l'arrêt du traitement par Carboplatine justifiant le myélograme du <br/>jour. <br/></b>
+<br/>Atteintes osseuses diffuses avec épidurite en C5-C6 + atteinte 
+ <br/>foraminale droite radiothérapie sur le sacrum + L4 en aout dernier. 
+ <br/>
+<br/>
+<br/>
+<u><b>MEDECIN REFERENT</b></u> : Dr MOKDAD 
+ <br/>
+<br/>
+<br/>
+<u><b>ANTECEDENTS NON ONCOLOGIQUES</b></u> :
+ <br/>
+<br/>Zona récidivant traité par Aciclovir . 
+ <br/>
+<br/>
+<u><b>TRAITEMENT EN COURS</b></u> :
+ <br/>
+<br/>Gabapentine. 
+ <br/>Zelitrex.
+ <br/>
+<br/>
+<br/>
+<u><b>EXAMEN CLINIQUE A L'ARRIVEE</b></u> :
+ <br/>
+<br/>Poids à l'entrée : 50 kg.
+ <br/>Taille : 171 CM.
+ <br/>
+<br/>Pression artérielle : 149/81 mmHg.
+ <br/>Pouls : 88/min.
+ <br/>Température : 36.5°C.
+ <br/>Saturation en air ambiant : 98 %.
+ <br/>
+<br/>OMS :1 
+ <br/>Pas de céphalées. 
+ <br/>Tétraparésie brutale avec dysrarthrie. 
+ <br/>Force musculaire conservée. 
+ <br/>Pas de niveau lésionnel. 
+ <br/>ROT abolits. 
+ <br/>Pas de nystagmus. 
+ <br/>Pas d'anomalie des paires craniennes. 
+ <br/>Pas de paralysie faciale. 
+ <br/>
+<br/>Rythme cardiaque régulier. 
+ <br/>Pas de signe d'insuffisance cardiaque. 
+ <br/>
+<br/>Le reste de l'examen clinique est sans particularité, des hépatalgies 
+ <br/>sont signalées . 
+ <br/>
+<br/>Le geste de BOM s'est déroulé sans problème particulier. 
+ <br/>Pas de douleur. 
+ <br/>Pas de notion d'anxiété majeure pendant le geste. 
+ <br/>
+<br/>
+<br/>
+<u><b>EXAMENS COMPLEMENTAIRES A L'ARRIVEE</b></u> :
+ <br/>
+<br/>
+<u><b>Bilan biologique</b></u> :
+ <br/>
+<br/>
+<u>NFS</u> :
+ <br/>Leucocytes 4 200/mm3, PNN 3 300/mm3 
+ <br/>Lymphocytes 400/mm3
+ <br/>Hémoglobine 9,5g/dL, Plq 68 000 /mm3.
+ <br/>
+<br/>Bilan hépatique : 
+ <br/>Aggravation de la cholestase. 
+ <br/>GGt a 3x N. 
+ <br/>Pas de trouble ionique. 
+ <br/>Pas d insuffisance rénale. 
+ <br/>LDH élevé 1119 UI/L.
+ <br/>CRP 18 mg/l.
+ <br/>
+<br/>Troponine non faite. 
+ <br/>
+<br/>ECG ras. 
+ <br/>
+<br/>
+<br/>
+<u><b>TRAITEMENT ET EVOLUTION DANS LE SERVICE</b></u>
+<b> </b> :
+ <br/>Disparition de la symptomatologie neurologique dans la soirée. L'
+ <br/>imagerie n'est pas contributive; pas d'anomalie vasculaire ni 
+ <br/>médullaire mais la maladie semble évoluer sur le plan pulmonaire. 
+ <br/>La biologie reste stable. Plaquettes 68 000 /mm3.
+ <br/>La patiente critique parfaitement l'épisode de conversion somatique 
+ <br/>de la veille en admettant un très gros choc après l'annonce de la 
+ <br/>pratique du myélogramme hier après sa consultation en hématologie. 
+ <br/>Anxiété majeure qu'elle n a pas verbalisé. Pleure ++ post 
+ <br/>myélogramme avant l'apparition des signes neurologiques. 
+ <br/>
+<br/>L'examen ce matin est strictement normal. Elle attend sa 
+ <br/>chimiothérapie prévue la semaine prochaine avec impatience et 
+ <br/>angoisse car consciente que si cette dérnière venait a être annulée 
+ <br/>en raison la thrombopénie le pronostic à moyen terme serait 
+ <br/>fortement engagé. 
+ <br/>
+<br/>Un message est fait au Dr Mokdad pour l'informer. 
+ <br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>Cancer du sein triple négatif multimétastatique en 8ème ligne. 
+ <br/>Arrêt des traitements en raison d'une thrombopénie depuis Aout 
+ <br/>dernier. 
+ <br/>Myélogramme réalisé le 2/10. 
+ <br/>Conversion somatique post anxiété majeure avec tétraparésie et 
+ <br/>dysarthrie resolutifs en quelques heures. Imagerie cérébrale et 
+ <br/>rachidienne cervicale n'expliquant pas les symptômes ainsi que la 
+ <br/>sémiologie clinique et l'évolution. 
+ <br/>La patiente a un suivi psychiatrique régulier. Evaluation par le Dr 
+ <br/>Rouby pendant son hospitalisation aux urgences . 
+ <br/>
+<br/>
+<br/>Retour à domicile le 03/10/2020
+ <br/>
+<br/>* Prise en charge palliative NON
+ <br/>
+<br/>
+<b>EVALUATION DE LA CHARGE EN SOINS<br/></b> * Ponction à visée symptomatique NON
+ <br/>* Adaptation du traitement antalgique NON
+ <br/>* Irradiation antalgique NON
+ <br/>* Occlusion intestinale NON
+ <br/>* Transfusion sanguine NON
+ <br/>* Prise en charge de la détresse respiratoire
+ <br/>avec désaturation < 90% en AA NON
+ <br/>* Traitement des divers symptômes vecteurs d'inconfort 
+ <br/>(toux, prurit, nausées, vomissements, anxiété, 
+ <br/>dépression, troubles du sommeil, déshydratation...) OUI 
+ <br/>* Soins de nursing NON
+ <br/>* Nutrition : 
+ <br/>- déjà sous CNO, nutrition entérale/parentérale NON
+ <br/>- mise en route d'une nutrition entérale/parentérale NON
+ <br/>
+<br/>
+<b>PRISE EN CHARGE MULTI-DISCIPLINAIRE<br/></b> * Prise en charge de l'EMASP NON
+ <br/>* Consultation CETD (douleur, sophrologie, 
+ <br/>auriculothérapie) NON
+ <br/>* Consultation d'onco-psychologie NON
+ <br/>* Prise en charge sociale NON
+ <br/>* Soins de kinésithérapie NON
+ <br/>* Consultation diététicienne ou nutritionniste NON
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

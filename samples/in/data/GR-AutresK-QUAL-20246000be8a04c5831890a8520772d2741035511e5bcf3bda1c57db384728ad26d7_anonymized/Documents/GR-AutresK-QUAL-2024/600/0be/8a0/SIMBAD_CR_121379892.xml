@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121379892" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>OPHTALMOLOGIE : Dr. Isabelle d'ABBADIE HENRY</title>
+    <effectiveTime value="20200420000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200420000000+0000"/>
+        <assignedAuthor>
+            <code code="OPH/324" displayName="OPHTALMOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>COMPTE RENDU D'OPHTALMOLOGIE<br/><br/>Dicté par : </b> Docteur Isabelle D'abbadie-Henry Ophtalmologiste
+ <b><br/>Dicté le : </b> 20/04/2020 
+ <b><br/>Service : </b> OPH-OPHTALMOLOGIE 
+ <br/>
+<b>Type de document : </b> OPH CC ISA Consultation 
+ <br/>
+<b>Ref :</b> 981578 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire </b> : MIGUET
+ <br/>
+<br/>Patient de 58 ans traité pour un carcinome épidermoïde de 
+ <br/>l'oropharynx par radiochimiothérapie en 2014, suivi de chirurgie en 
+ <br/>2017 et 2018, qui est actuellement sous traitement chimiothérapie.
+ <br/>Il vient me consulter pour une baisse d'acuité visuelle avec douleurs.
+ <br/>
+<br/>
+<b>Acuité visuelle :<br/></b> - OD :-1.00 5 /10ème,
+ <br/>- OG :+1.25 (70°-2.00) 6 /10ème,
+ <br/>- Addition de +2.75 = P2ODG.
+ <br/>
+<b><br/>A la lampe à fente :</b>
+<br/>- Cornées claires, kératite ponctuée superficielle bilatérale fluo + 
+ <br/>hyperhémie conjonctivale 
+ <br/>- Segments antérieurs calmes,
+ <br/>- Tonus :23/23 au tonomètre à air,
+ <br/>- Cristallins clairs.
+ <br/>
+<br/>
+<b>Fond d'oeil :</b>
+<br/>Le fond d'oeil montre des papilles à bords nets, bien colorées et 
+ <br/>sans signe d'oedème. Les reflets maculaires sont normaux.
+ <br/>
+<br/>
+<b>Traitement<br/></b> DEXAFREE 1 goutte 4x/jour dans les deux yeux pendant 2 mois, 
+ <br/>vitamine A COLLYRE et LACRIFLUID et VISMED 1 goutte 4x/jour dans les 
+ <br/>deux yeux pendant 6 mois, associé à la pommade vitamine A dont une 
+ <br/>application le soir sur les paupières pendant 6 mois. 
+ <br/>
+<br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b> Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>21/04/2020 08:10 ORL FRF SG 
+ <br/> =SG MAGNESIUM
+ <br/> 08:30 ORL FRF C ORL FRF TELECONSULT 
+ <br/> 09:35 ORL FRF BILAN ONCO 
+ <br/> 09:50 DIE CMB C NUTR CMB FIN ORDO NE 
+ <br/>22/04/2020 09:00 RHO FFD HDJ CHIMIO 
+ <br/> 09:05 RHO FFD C HDJ A TRAITER 
+ <br/>05/05/2020 09:05 ORL FRF SG 
+ <br/> =SG MAGNESIUM
+ <br/> 09:10 ORL FRF BILAN ONCO 
+ <br/>06/05/2020 09:00 RHO FFD HDJ CHIMIO 
+ <br/> 09:05 RHO FFD C HDJ A TRAITER 
+ <b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Isabelle D'ABBADIE-HENRY <br/>Ophtalmologiste<br/>Le lundi 20 avril 2020 à 12:50</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

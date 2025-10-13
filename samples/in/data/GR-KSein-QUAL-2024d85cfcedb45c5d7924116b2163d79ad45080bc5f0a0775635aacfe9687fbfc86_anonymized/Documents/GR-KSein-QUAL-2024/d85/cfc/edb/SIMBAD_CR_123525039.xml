@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123525039" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 191480245</title>
+    <effectiveTime value="20190528000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190528000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Dr J. Delahousse (61 92) <br/>Pr A. Paci (47 30) </p>
+<p>Dr A. Arbab (41 65) <br/>Pr A. Bennaceur (40 65) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Pr F. Griscelli (51 93) <br/>Dr N. Yin (40 62) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>FémininNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>28/05/2019 08:36 </p>
+<p>Sexe : </p>
+<p>28/05/2019 08:36 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>CTE 050 - SEIN </p>
+<p> 2 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>mardi 28 mai 2019 </p>
+<p>Complet </p>
+<p>BIOCHIMIE </p>
+<p> BILAN HÉPATIQUE / PANCRÉATIQUE <br/>PAL 68 UI/L ( 30 - 120 )75 11/04/2019 09:41 LAD <br/>Plasma hépariné - IFCC </p>
+<p>ASAT 27 UI/L ( < 35 )31 11/04/2019 09:41 LAD <br/>Plasma hépariné - IFCC </p>
+<p>ALAT 24 UI/L ( < 35 )28 11/04/2019 09:41 LAD <br/>Plasma hépariné - IFCC </p>
+<p>GGT 21 UI/L ( < 38 )19 11/04/2019 09:41 LAD <br/>Plasma hépariné - IFCC </p>
+<p>HEMATOLOGIE </p>
+<p> NUMERATION SANGUINE (SANG TOTAL SUR EDTA) <br/>MÉTHODE : XN - SYSMEX </p>
+<p>Leucocytes 3.1 10*9/L ( 4.0 - 10.0 )2.8 11/04/2019 09:41 CZC </p>
+<p>Hématies 3.23 10*12/L ( 4.00 - 5.20 )3.11 11/04/2019 09:41 SAE </p>
+<p>Hémoglobine 11.1 g/100mL ( 11.5 - 15.0 )10.9 11/04/2019 09:41 SAE </p>
+<p>Hématocrite 34.3 % ( 34.0 - 45.0 )33.1 11/04/2019 09:41 SAE </p>
+<p>VGM 106.2 μ3 ( 75.0 - 96.0 )106.4 11/04/2019 09:41 SAE </p>
+<p>TCMH 34.4 pg/cel ( 24.0 - 33.0 )35.0 11/04/2019 09:41 SAE </p>
+<p>CCMH 32.4 g/100mL ( 32.0 - 36.0 )32.9 11/04/2019 09:41 SAE </p>
+<p>IDG 15.1 % ( 11.0 - 15.0 )14.5 11/04/2019 09:41 </p>
+<p>Plaquettes 218.0 10*9/L 210.0 11/04/2019 09:41 SAE </p>
+<p>Impédance (150 - 400 x 10^9/L) </p>
+<p> FORMULE <br/>Polynucléaires Neutrophiles 56.2 % 56.5 11/04/2019 09:41 SAE </p>
+<p>SAE1.6 11/04/2019 09:41 ( 1.5 - 7.0 )10*9/Lsoit 1.8 </p>
+<p>Polynucléaires Eosinophiles 0.0 % 0.0 11/04/2019 09:41 SAE </p>
+<p>SAE0.0 11/04/2019 09:41 ( 0.0 - 0.6 )10*9/Lsoit 0.0 </p>
+<p>Polynucléaires Basophiles 1.3 % 1.1 11/04/2019 09:41 SAE </p>
+<p>SAE0.0 11/04/2019 09:41 ( 0.0 - 0.1 )10*9/Lsoit 0.0 </p>
+<p>Lymphocytes 31.6 % 30.5 11/04/2019 09:41 SAE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 28/05/2019 à 10:36 par : Dr DROUARD Laurence,Dr Christophe MARZAC,Dr SAADA Véronique</p>
+<p></p>
+<p></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>CTE 050 - SEINPatient : 2 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>SAE0.9 11/04/2019 09:41 ( 1.2 - 4.0 )10*9/Lsoit 1.0 </p>
+<p>Monocytes 10.9 % 11.9 11/04/2019 09:41 SAE </p>
+<p>SAE0.3 11/04/2019 09:41 ( 0.2 - 0.8 )10*9/Lsoit 0.3 </p>
+<p>Formule CZCAutomate </p>
+<p>IDP 10 10 11/04/2019 09:41 SAE </p>
+<p>VMP 10.3 μ3 ( 7.5 - 11.0 )10.3 11/04/2019 09:41 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 28/05/2019 à 10:36 par : Dr DROUARD Laurence,Dr Christophe MARZAC,Dr SAADA Véronique</p>
+<p></p>
+<ul>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Bilan hépatique / pancréatique</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

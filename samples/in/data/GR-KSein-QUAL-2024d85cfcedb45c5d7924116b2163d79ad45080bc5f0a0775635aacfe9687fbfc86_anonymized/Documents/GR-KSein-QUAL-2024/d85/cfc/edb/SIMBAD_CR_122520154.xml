@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122520154" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>INTERVENTION</title>
+    <effectiveTime value="20191029000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20191029000000+0000"/>
+        <assignedAuthor>
+            <code code="MOR/178" displayName="MORBIHAN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>SERVICE HOSPITALISATION MORBIHAN - COMPTE RENDU OPERATOIRE<br/><br/>Dicté par : </b> Docteur Mohamed Abdellaoui
+ <b><br/>Dicté le : </b> 29/10/2019 
+ <b><br/>Service : </b> MOR-MORBIHAN 
+ <br/>
+<b>Type de document : </b> MOR CO PE S 
+ <br/>
+<b>Ref :</b> 844341 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : 
+ <b>PBC</b>
+<br/>
+<br/>
+<br/>
+<b>PAN ENDOSCOPIE SOUS ANESTHESIE GENERALE<br/> <u><br/>Opérateur </u> : </b> Docteur ABDELLAOUI
+ <b><br/><u>Anesthésiste</u> : </b> Docteur VERMERSH 
+ <b><br/><u><br/><br/></u>INTERVENTION</b>
+<br/>Anesthésie générale.
+ <br/>Ventilation haute fréquence par cathéter inter-crico-thyroïdien.
+ <br/>Examen réalisé dans d'excellentes conditions.
+ <br/>
+<br/>Examen au laryngoscope et à l'hypopharyngoscope rigide avec optique 
+ <br/>0° de l'ensemble des VADS ne met en évidence aucune lésion suspecte 
+ <br/>notamment au niveau de la loge amygdalienne droite.
+ <br/>Amygdale d'aspect normal et symétrique.
+ <br/>La palpation de la loge amygdalienne et de la base de langue est 
+ <br/>souple.
+ <br/>Réalisation de multiples biopsies de principe superficielle et 
+ <br/>profonde au niveau de l'amygdale droite.
+ <br/>Demande de recherche HPV, carcinome, lymphome.
+ <br/>
+<br/>
+<u><b>Suites opératoires:<br/></b></u> * Sortie ce jour si RAS.
+ <br/>* Antalgique si besoin
+ <br/>*Bains de bouche 
+ <br/>*Alimentation froide, Régime lacté froid jusqu'à demain.
+ <br/>
+<br/>
+<b><h3>Conclusion</h3> :<br/></b> Patiente de 62 ans suivie en oncologie pour carcinome du sein avec 
+ <br/>localisation osseuses et hépatiques. Découverte sur TEP-TDM d'un 
+ <br/>hyper métabolisme intense oropharyngé droit.
+ <br/>Examen clinique normal.
+ <br/>Panendoscopie ne retrouvant pas de lésion suspecte.
+ <br/>On réalise de multiples biopsies au niveau de la loge amygdalienne 
+ <br/>droite.
+ <br/>Le dossier de la patiente sera à discuter au comité ORL avec les 
+ <br/>résultats anatomopathologiques. Dossier à retirer si biopsies 
+ <br/>négatives.
+ <br/>
+<br/>Consultation avec Dr BEN MOUSSA après le comité.
+ <br/>
+<br/>
+<b><br/></b>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Mohamed ABDELLAOUI <br/>Le mardi 29 octobre 2019 à 15:37</b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

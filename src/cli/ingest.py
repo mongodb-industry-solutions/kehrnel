@@ -32,4 +32,4 @@ def from_mongo(
 
 
 if __name__ == "__main__":
-    app()s
+    app()

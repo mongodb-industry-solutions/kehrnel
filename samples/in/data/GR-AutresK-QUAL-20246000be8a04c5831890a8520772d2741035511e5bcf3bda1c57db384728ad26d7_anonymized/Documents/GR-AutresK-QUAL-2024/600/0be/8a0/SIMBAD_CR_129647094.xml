@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_129647094" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION DE RADIOTHERAPIE - EN COURS DE TRAITEMENT</title>
+    <effectiveTime value="20160504000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20160527000000+0000"/>
+        <assignedAuthor>
+            <code code="RTE/414" displayName="RADIOTHERAPIE EXTERNE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Dicté par : </b> Yun Gan TAO 
+ <b><br/>Dicté le : </b> 04/05/2016
+ <b><br/>Service : </b> Rte Radiotherapie Externe
+ <br/>
+<b>Type de document : </b> RTE CC SURV
+ <b><br/>Ref:</b> 39229 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX 
+ <b><br/>Identifiant : </b> XXXXXX
+ <b><br/>Date de naissance : </b> XXXXXX
+ <br/>
+<br/>
+<b>Sexe</b> : Inconnu 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>Secrétaire : EZO
+ <br/>Consultation du 04/05/2016
+ <br/>
+<br/>Nous sommes un peu plus de 1 an et demi après la radiochimiothérapie 
+ <br/>d'un carcinome épidermoïde oropharyngé T3N2c dans l'essai GORTEC 
+ <br/>2004-01, bras IMRT.
+ <br/>
+<br/>Poids : 70 kg 
+ <br/>Indice de KARNOFSKY : 100
+ <br/>Alimentation solide.
+ <br/>Xérostomie de grade I selon SOMA et de grade I selon RTOG.
+ <br/>
+<br/>Il se plaint d'acouphènes modérés de grade I et pas d'hypoacousie.
+ <br/>Il se plaint également de douleurs à l'épaule.
+ <br/>
+<br/>
+<u><b>A l'examen ce jour<br/></b></u> Pas de trismus et la protraction linguale normale.
+ <br/>On retrouve un aspect post-radique au niveau vélaire.
+ <br/>Pas de lésion suspecte à l'inspection et à la palpation au niveau 
+ <br/>buccopharyngé.
+ <br/>
+<br/>
+<u>En nasofibroscopie</u>, on retrouve toujours une sténose au niveau nasal 
+ <br/>et oropharynx.
+ <br/>Pas de lésion suspecte et dans la filière pharyngolaryngée.
+ <br/>
+<br/>Au niveau cervical, pas d'adénopathie palpable.
+ <br/>
+<br/>
+<u>Au total</u> :
+ <br/>Bon contrôle carcinologique, 1 an et demi après la radiothérapie.
+ <br/>
+<br/> Prévoir rendez-vous en chirurgie ORL dans 3 mois.
+ <br/>\'c0 revoir en radiothérapie dans 6 mois comme prévu. 
+ <br/>
+<br/>TAO, Yun Gan 
+ <br/>Signé électroniquement par Yun Gan TAO 
+ <br/>à 17:58 le 4/5/2016
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

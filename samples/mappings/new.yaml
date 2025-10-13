@@ -1,0 +1,524 @@
+# Neuro-QoL Stigma (Short Form) — deterministic CSV→openEHR rules
+
+_input:
+  format     : csv
+  columns    : [paciente, centro, servicio, consulta, etapa, prom, fecha, pregunta, respuesta]
+  date_format: "%d/%m/%Y"
+
+_metadata:
+  title          : neuroqol_v0
+  target_template: neuroqol_v0
+  source_format  : mixed
+  version        : "0.1"
+
+_inputs:
+  csvfile1:
+    format : csv
+    columns: [paciente, centro, servicio, consulta, etapa, prom, fecha, pregunta, respuesta]
+
+_options:
+  prune_empty: true
+  output_filename: "neuroqol_stigma_{{ first.paciente }}_{{ first.consulta }}_{{ index|int }}.json"
+  translation:
+    enabled    : true
+    source_lang: es
+    target_lang: en
+    cache_file : .kehrnel/translations.json
+  autofill_required_defaults: false
+
+envelope:
+  ehr_id:  { from: paciente }
+  date:  { from: fecha }
+  comp: $composition  #indicate here we will embed the full object composed below
+
+composition:
+  header_map:
+    # Only include if you want header/context populated from sources:
+    - path: "/name/value"
+      when: { from_source: csvfile1, condition: "" }
+      from: { from_source: csvfile1, field: "" }
+
+    - path: "/context/start_time/value"
+      when: { from_source: csvfile1, condition: "" }
+      from: { from_source: csvfile1, field: "" }
+      coerce: date_iso
+
+    - path: "/context/setting"
+      when: { from_source: csvfile1, condition: "" }
+      coded_text: { code_from: { from_source: csvfile1, field: "" }, term_from: { from_source: csvfile1, field: "" } }
+
+  content:
+    - observation: "openEHR-EHR-OBSERVATION.neuroqol.v0"
+      map:
+
+        # Q1
+        - path: "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1000]/value"
+          when: { from_source: csvfile1, condition: "" }   # e.g. pregunta ?= "evitaron"
+          type: ordinal
+          from: { from_source: csvfile1, field: "" }
+          choices: []   # fill if you want fixed code/value pairs
+
+        # Q2
+        - path: "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1010]/value"
+          when: { from_source: csvfile1, condition: "" }
+          type: ordinal
+          from: { from_source: csvfile1, field: "" }
+          choices: []
+
+        # Q3 (FULL EXAMPLE)
+        - path: "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1020]/value"
+          when:
+            from_source: csvfile1
+            condition  : 'pregunta ?= "evitó mirarme"'   # your GUI can edit this
+          type: ordinal
+          from:
+            from_source: csvfile1
+            field      : respuesta
+          choices:
+            # Optional: pre-fill if you know them; leave [] otherwise.
+            - { label: "Nunca",         code: "at1021", ordinal: 1 }
+            - { label: "Rara vez",      code: "at1022", ordinal: 2 }
+            - { label: "Algunas veces", code: "at1023", ordinal: 3 }
+            - { label: "A menudo",      code: "at1024", ordinal: 4 }
+            - { label: "Siempre",       code: "at1025", ordinal: 5 }
+
+        # …
+        # Q4..Q8 follow identically with their element node_ids (at1030..at1070)
+
+        # Observations (free text)
+        - path: "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1900]/value"
+          when: { from_source: csvfile1, condition: "" }
+          from: { from_source: csvfile1, field: "" }
+          null_if_empty: true
+
+        # Raw score (DV_COUNT)
+        - path: "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1800]/value/magnitude"
+          when: { from_source: csvfile1, condition: "" }
+          from: { from_source: csvfile1, field: "" }
+          coerce: int
+
+        # T-score (DV_QUANTITY) — quantity macro form
+        - path: "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1805]"
+          when: { from_source: csvfile1, condition: "" }
+          quantity:
+            magnitude_from: { from_source: csvfile1, field: "" }
+            units         : "1"
+
+        # Standard error (SE)
+        - path: "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1810]"
+          when: { from_source: csvfile1, condition: "" }
+          quantity:
+            magnitude_from: { from_source: csvfile1, field: "" }
+            units         : "1"
+
+        # Interpretation (Severity) (ORDINAL)
+        - path: "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/protocol/items[openEHR-EHR-CLUSTER.neuroqol_interpretation.v0]/items[at0004]/value"
+          when: { from_source: csvfile1, condition: "" }
+          type: ordinal
+          from: { from_source: csvfile1, field: "" }
+          choices: []   # or hook to a concept map in your pipeline
+
+
+
+    
+
+    - path: "/context/start_time/value"
+      if: { from_source: csvfile1, condition: "" }
+      get: { from_source: csvfile1, field: "" }
+      type: date
+      transform: 
+        -date_iso
+
+
+        - path: "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/protocol/items[openEHR-EHR-CLUSTER.neuroqol_interpretation.v0]/items[at0004]/value"
+          if: { from_source: csvfile1, condition: "" }
+          get: { from_source: csvfile1, field: "" }
+          type: ordinal
+          choices:   # or hook to a concept map in your pipeline
+            - { label: "Nunca",         code: "at1021" }
+            - { label: "Rara vez",      code: "at1022" }
+            - { label: "Algunas veces", code: "at1023" }
+            - { label: "A menudo",      code: "at1024" }
+            - { label: "Siempre",       code: "at1025" }
+
+
+        - path: "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1900]/value"
+          if: { from_source: csvfile1, condition: "" }
+          get: { from_source: csvfile1, field: "" }
+          type: text
+          tranform:
+            -translate: no-cache
+          null_if_empty: true
+  
+
+
+           
+        - path: "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1810]"
+          if: { from_source: csvfile1, condition: "" }
+          type: text
+          get:
+            magnitude_from: { from_source: csvfile1, field: "" }
+            units         : "1"
+
+
+
+
+_metadata:
+  title          : "Neuro-QoL Stigma (Short Form)"
+  version        : "2.0"
+  target_template: "neuroqol_v0"
+
+inputs:
+  csvfile1:
+    format     : csv
+    columns    : [paciente, centro, servicio, consulta, etapa, prom, fecha, pregunta, respuesta]
+    date_format: "%d/%m/%Y"
+  naveta:
+    format  : csv
+    columns : [paciente]
+
+options:
+  prune_empty: true
+  output:
+    filename_template: "neuroqol_stigma_${paciente}_${consulta}_${index}.json"
+  translation:
+    enabled    : true
+    source_lang: es
+    target_lang: en
+    cache_file : .kehrnel/translations.json
+
+doc_envelope:
+  ehr_id:
+    get: { source: naveta, field: paciente }
+
+select:
+  where:
+    - prom ~= "(?i)^Neuro-?QOL.*Stigma.*Short\\s*Form"
+    - servicio == "VIH eVIHa"
+    - respuesta != "N/A"
+
+group_by: [paciente, servicio, consulta]
+
+at:
+  default_source: csvfile1
+
+_vars:
+  visit_dt:
+    first_from: fecha
+    coerce    : date_iso
+  tscore:
+    # last T-score seen for the group
+    last_from: respuesta
+    coerce   : float
+    when     : 'pregunta ~= "(?i)T-\\s*score|Estigma.*T-Score"'
+  interp_code:
+    ranges:
+      of   : "${tscore}"
+      map  :
+        "0..55.4"   : at0005   # Within normal limits
+        "55.5..59.3": at0006   # Mild
+        "59.4..69.6": at0007   # Moderate
+        "69.7..200" : at0008   # Severe
+      default: at0005
+
+mappings:
+
+  # ─────────────────────────────
+  # COMPOSITION header / context
+  # ─────────────────────────────
+  "/language/code_string":
+    set: "en"
+
+  "/territory/code_string":
+    set: "ES"
+
+  "/category/defining_code/code_string":
+    set: "433"   # event
+
+  "/context/start_time/value":
+    get      : fecha
+    transform: [date_iso]
+
+  # ────────────────────────────────────────────────
+  # CONTEXT.other_context — CLUSTER slots & clusters
+  # (Skeletons for person/device slots left unmapped)
+  # ────────────────────────────────────────────────
+
+  # Document metadata (1)
+  "/context/other_context/items[openEHR-EHR-CLUSTER.document_metadata.v0]/items[at0001]/value":
+    # Authorisation date/time
+    get      : ""
+    transform: [date_iso]
+
+  "/context/other_context/items[openEHR-EHR-CLUSTER.document_metadata.v0]/items[at0002]/value":
+    # Creation date/time
+    get      : ""
+    transform: [date_iso]
+
+  "/context/other_context/items[openEHR-EHR-CLUSTER.document_metadata.v0]/items[at0003]/value":
+    # Publication/registration date/time
+    get      : ""
+    transform: [date_iso]
+
+  "/context/other_context/items[openEHR-EHR-CLUSTER.document_metadata.v0]/items[at0004]/value/defining_code/code_string":
+    # Confidentiality (coded)
+    get: ""
+
+  "/context/other_context/items[openEHR-EHR-CLUSTER.document_metadata.v0]/items[at0005]/value/defining_code/code_string":
+    # Practice setting (coded)
+    get: ""
+
+  "/context/other_context/items[openEHR-EHR-CLUSTER.document_metadata.v0]/items[at0006]/value/defining_code/code_string":
+    # Facility type (coded)
+    get: ""
+
+  "/context/other_context/items[openEHR-EHR-CLUSTER.document_metadata.v0]/items[at0007]/value":
+    # External link (URI)
+    get: ""
+
+  # NOTE: The template contains a second CLUSTER.document_metadata.v0 with the
+  # same archetype_id. If you need both, duplicate the 7 paths above using your
+  # preferred disambiguation strategy (e.g., preprocessing step or name-based).
+
+  # ─────────────────────────────
+  # OBSERVATION: meta / timing
+  # ─────────────────────────────
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data[at0001]/origin/value":
+    get      : fecha
+    transform: [date_iso]
+
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/time/value":
+    get      : fecha
+    transform: [date_iso]
+
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/name/value":
+    set: "Any event"
+
+  # ─────────────────────────────
+  # OBSERVATION: Q1–Q8 (DV_ORDINAL)
+  # Each maps Spanish label → local code; engine builds DV_ORDINAL via OPT.
+  # ─────────────────────────────
+
+  # Q1
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1000]/value/symbol/defining_code/code_string":
+    if : 'pregunta ~= "(?i)evitar(on|on)?|me evitaron|avoid"'
+    map:
+      "Nunca"         : at1001
+      "Rara vez"      : at1002
+      "Raras veces"   : at1002
+      "Algunas veces" : at1003
+      "A menudo"      : at1004
+      "Siempre"       : at1005
+    get: respuesta
+
+  # Q2
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1010]/value/symbol/defining_code/code_string":
+    if : 'pregunta ~= "(?i)excluid|excluido|excluded"'
+    map:
+      "Nunca"         : at1011
+      "Rara vez"      : at1012
+      "Raras veces"   : at1012
+      "Algunas veces" : at1013
+      "A menudo"      : at1014
+      "Siempre"       : at1015
+    get: respuesta
+
+  # Q3
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1020]/value/symbol/defining_code/code_string":
+    if : 'pregunta ~= "(?i)evit(ó|o) mirarme|avoided looking|mirarme"'
+    map:
+      "Nunca"         : at1021
+      "Rara vez"      : at1022
+      "Algunas veces" : at1023
+      "A menudo"      : at1024
+      "Siempre"       : at1025
+    get: respuesta
+
+  # Q4
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1030]/value/symbol/defining_code/code_string":
+    if : 'pregunta ~= "(?i)avergonzad|ashamed"'
+    map:
+      "Nunca"         : at1031
+      "Rara vez"      : at1032
+      "Algunas veces" : at1033
+      "A menudo"      : at1034
+      "Siempre"       : at1035
+    get: respuesta
+
+  # Q5
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1040]/value/symbol/defining_code/code_string":
+    if : 'pregunta ~= "(?i)inc(ó|o)mod|uncomfortable"'
+    map:
+      "Nunca"         : at1041
+      "Rara vez"      : at1042
+      "Algunas veces" : at1043
+      "A menudo"      : at1044
+      "Siempre"       : at1045
+    get: respuesta
+
+  # Q6
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1050]/value/symbol/defining_code/code_string":
+    if : 'pregunta ~= "(?i)limitaciones f(í|i)sicas|physical limitations|avergonzad"'
+    map:
+      "Nunca"         : at1051
+      "Rara vez"      : at1052
+      "Algunas veces" : at1053
+      "A menudo"      : at1054
+      "Siempre"       : at1055
+    get: respuesta
+
+  # Q7
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1060]/value/symbol/defining_code/code_string":
+    if : 'pregunta ~= "(?i)poco amable|unkind|amable"'
+    map:
+      "Nunca"         : at1061
+      "Rara vez"      : at1062
+      "Algunas veces" : at1063
+      "A menudo"      : at1064
+      "Siempre"       : at1065
+    get: respuesta
+
+  # Q8
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1070]/value/symbol/defining_code/code_string":
+    if : 'pregunta ~= "(?i)culpa|fault"'
+    map:
+      "Nunca"         : at1071
+      "Rara vez"      : at1072
+      "Algunas veces" : at1073
+      "A menudo"      : at1074
+      "Siempre"       : at1075
+    get: respuesta
+
+  # Free-text notes (DV_TEXT)
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1900]/value":
+    if        : 'pregunta ~= "(?i)observacion|observaci(ó|o)nes|notes|observations"'
+    get       : respuesta
+    translate : no-cache
+    null_if_empty: true
+
+  # Raw score (DV_COUNT)
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1800]/value/magnitude":
+    if        : 'pregunta ~= "(?i)raw score|puntuaci(ó|o)n bruta|8.?40"'
+    get       : respuesta
+    transform : [int]
+
+  # T-score (DV_QUANTITY)
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1805]/value/magnitude":
+    if        : 'pregunta ~= "(?i)T-\\s*score|Estigma.*T-Score"'
+    get       : respuesta
+    transform : [float]
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1805]/value/units":
+    set: "1"
+
+  # Standard error (DV_QUANTITY)
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1810]/value/magnitude":
+    if        : 'pregunta ~= "(?i)SE|standard error|error est(á|a)ndar"'
+    get       : respuesta
+    transform : [float]
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1810]/value/units":
+    set: "1"
+
+  # ─────────────────────────────
+  # Protocol: interpretation cluster (DV_ORDINAL)
+  # Uses ${interp_code} computed from ${tscore} ranges
+  # ─────────────────────────────
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/protocol/items[openEHR-EHR-CLUSTER.neuroqol_interpretation.v0]/items[at0004]/value/symbol/defining_code/code_string":
+    set     : "${interp_code}"
+
+
+
+
+
+
+
+
+
+
+
+
+    what about always using set:
+
+
+composition:
+  header_map:
+    # Only include if you want header/context populated from sources:
+    path: "/name/value"
+    get:  
+        -source: csvfile1
+        -condition: "" 
+        -from: "" }
+
+    - path: "/context/start_time/value"
+      when: { from_source: csvfile1, condition: "" }
+      from: { from_source: csvfile1, field: "" }
+      coerce: date_iso
+
+  
+************************************
+************************************
+************************************
+************************************
+
+  mappings:
+
+  # ─────────────────────────────
+  # COMPOSITION header / context
+  # ─────────────────────────────
+  - path: "/language/code_string":
+    set: "en"
+
+  - path: "/territory/code_string":
+    set: "ES"
+
+  - path: "/category/defining_code/code_string":
+    set: "433"   # event
+
+  - path: "/context/start_time/value":
+    get: 
+      source: csvfile1
+      from: fecha
+    set:
+      transform: [date_iso]
+
+  - path: "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data[at0001]/origin/value":
+    get:
+      source: csvfile1
+      from: fecha
+    set:
+      transform: [date_iso]
+
+  - path: "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1020]/value/symbol/defining_code/code_string":
+    get: 
+      condition: 'pregunta ~= "(?i)evit(ó|o) mirarme|avoided looking|mirarme"'
+      from: respuesta
+    set:
+    map:
+      "Nunca"         : at1021
+      "Rara vez"      : at1022
+      "Algunas veces" : at1023
+      "A menudo"      : at1024
+      "Siempre"       : at1025  
+
+  # Free-text notes (DV_TEXT)
+    path: "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1900]/value":
+    get:
+      condition: 'pregunta ~= "(?i)observacion|observaci(ó|o)nes|notes|observations"'
+      from       : respuesta
+    set:
+      translate : no-cache
+    null_if_empty: true
+
+    ## Variables
+    path: "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data/events[at0002]/data/items[at1900]/value":
+    get:
+      condition: 'pregunta ~= "(?i)observacion|observaci(ó|o)nes|notes|observations"'
+      from       : respuesta1
+      as: resp1
+    get:
+      condition: 'pregunta ~= "(?i)observacion|observaci(ó|o)nes|notes|observations"'
+      from       : respuesta2
+      as: resp2
+    set:
+      tranform: {resp1} + {resp2} 
+      translate : no-cache
+    null_if_empty: true

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120154881" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>UNITE DE PSYCHO-ONCOLOGIE - Diane BOINON - Psychologue clinicienne</title>
+    <effectiveTime value="20201023000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201023000000+0000"/>
+        <assignedAuthor>
+            <code code="UPO/332" displayName="UNITE DE PSYCHO_ONCOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>UNITE DE PSYCHO-ONCOLOGIE - <br/>DEPARTEMENT DE SOINS DE SUPPORT (DISSPO)<br/><br/>COMPTE RENDU DE CONSULTATION<br/><br/><br/>Dicté par : </b> Madame Diane Boinon, Oncopsychologue
+ <b><br/>Dicté le : </b> 20/10/2020 
+ <b><br/>Service : </b> UPO UNITE DE PSYCHO ONCOLOGIE 
+ <br/>
+<b>Type de document : </b> UPO CC CR CONSULTATION 
+ <br/>
+<b>Ref :</b> 1134717 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire : DTE/A<br/></b>
+<br/>Poursuite du suivi psychothérapeutique avec Mme XXXXXX.
+ <br/>On rappelle qu'il s'agit de la reprise d'un suivi psychothérapeutique 
+ <br/>mené initialement par Ariane CAVACIUTI actuellement en congé maternité.
+ <br/>
+<b><br/><u>\'c0 l'entretien ce jour</u> :<br/></b> La patiente rappelle combien il est important pour elle d'être 
+ <br/>préparée à certains soins pour les vivre dans de bonnes conditions, 
+ <br/>même si ces soins doivent être réalisés en urgence.
+ <br/>Elle est moins angoissée depuis la reprise de sa chimiothérapie orale 
+ <br/>et tente de mieux accepter la reprise de ce traitement pour en limiter 
+ <br/>les effets secondaires. Elle rappelle que sa pulsion de vie l'aide à 
+ <br/>se soigner. Elle croit particulièrement à l'influence de son état 
+ <br/>d'esprit sur le de ses traitements.
+ <br/>
+<br/>Prochaine consultation psychologique programmée le 9 novembre. 
+ <b><br/></b>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Madame Diane BOINON , Oncopsychologue<br/>Le mardi 20 octobre 2020 à 13:05</b>
+<br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

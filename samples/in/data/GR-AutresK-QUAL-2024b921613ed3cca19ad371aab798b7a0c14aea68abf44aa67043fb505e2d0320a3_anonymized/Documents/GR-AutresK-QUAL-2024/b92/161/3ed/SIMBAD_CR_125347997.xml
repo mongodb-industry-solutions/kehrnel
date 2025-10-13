@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125347997" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>VISITE EN SALLE - Hémato - Transplantation de moelle osseuse</title>
+    <effectiveTime value="20180822000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180827000000+0000"/>
+        <assignedAuthor>
+            <code code="PAR/184" displayName="PARIS"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Dr PILORGE</b></u>
+<br/>
+<u><b><br/> Patient de 67 ans, à situation à J5</b></u> d'une allogreffe de cellules 
+ <br/>souches périphériques, haploidentique, sexe identique de son fils, à 
+ <br/>conditionnement d'intensité réduite par radiothérapie splénique 6 Gy, 
+ <br/>FLUDARABINE 150 mg/m2, ENDOXAN 29 mg/kg, TBI 2 Gy, J0 le 17.08.18, 
+ <br/>dans le cadre du traitement d'une myélofibrose primitive JAK2+ 
+ <br/>diagnostiquée en 2015.
+ <br/>Score DIPSS à 4, splénomégalie à 22 cm, diagnostiqué le 04/04/2012.
+ <br/>
+<br/>Surveillance initiale au CHU Fort de France, début d'un traitement 
+ <br/>par RUXOLITINIB à partir de juin 2017 devant la majoration de la 
+ <br/>splénomégalie et de l'hyperleucocytose.
+ <br/>
+<br/>A noter, carcinome prostatique diagnostiqué en novembre 2011. 
+ <br/>Traitement par radiothérapie exclusive.
+ <br/>Situation pré-greffe : une hologramme du 17 juillet 2018. Absence de 
+ <br/>transformation, persistance de limitation de JAK2 V6117F, 
+ <br/>hétérozygote avec une VAF à 35 %. Adénomégalie à 22 cm en pré-greffe.
+ <br/>
+<br/>
+<u><b>Pour rappel</b></u>
+<b> :</b>
+<br/>
+<br/>Greffe D / R
+ <br/>Masculin / Masculin
+ <br/>95 kg / 72 kg
+ <br/>O+ / B+
+ <br/>CMV + / +
+ <br/>EBV + / +
+ <br/>Toxo - / -
+ <br/>
+<br/>
+<u><b>Sur le plan clinique</b></u>
+<b> :</b>
+<br/>
+<br/>OMS 2.
+ <br/>Poids : 79 kg
+ <br/>80 kg à l'entrée.
+ <br/>Fébrile en post greffe. Apyrétique depuis l'ENDOXAN de J4.
+ <br/>Diarrhées depuis le 21.08.
+ <br/>VVC en place.
+ <br/>Nausées et vomissements.
+ <br/>
+<br/>
+<u><b>Sur le plan hématologique</b></u>
+<b> : </b>
+<br/>
+<br/>En aplasie avec des leucocytes < 0.1, Hb 7,2, Plaquettes 11 000.
+ <br/>Transfusion culots et plaquettes ce jour.
+ <br/>
+<br/>
+<u><b>Sur le plan métabolique</b></u>
+<b> :</b>
+<br/>
+<br/>Ionogramme proche de la normale.
+ <br/>Créatinine 45 μmol/L.
+ <br/>Bilan hépatique du 21.08 normal en dehors des Gamma-GT à 3N.
+ <br/>Albumine 33 g/L.
+ <br/>
+<br/>
+<u><b>Sur le plan infectieux</b></u>
+<b> :</b>
+<br/>
+<br/>Fébrile depuis le 17.08 au décours de la réinjection du greffon.
+ <br/>Absence de documentation bactériologique en dehors d'une colonisation 
+ <br/>digestive du 17.08 à Escherichia coli résistant à la Tazocilline.
+ <br/>Traitement probabiliste par TIENAM et VANCOMYCINE depuis le 17.08.
+ <br/>Par ailleurs prophylaxie par FLUCONAZOLE et Aérosol de Pentamidine 
+ <br/>fait à J-1.
+ <br/>Apyrétique ce jour.
+ <br/>
+<u><br/><b>Sur le plan immunologique</b></u>
+<b> :</b>
+<br/>
+<br/>Prophylaxie de la GVH par ENDOXAN post greffe à J3 J4.
+ <br/>Ciclosporine et Cellcept débuté ce jour à J5.
+ <br/>
+<br/>
+<u><b>Sur le plan nutritionnel</b></u>
+<b> :</b>
+<br/>
+<br/>Absence d'alimentation.
+ <br/>Refus de la sonde nasogastrique.
+ <br/>Alimentation parentérale à débuter le 23 août.
+ <br/>
+<br/>
+<u><b>Sur le plan relationnel</b></u>
+<b> :</b>
+<br/>
+<br/>Bon relationnel.
+ <br/>
+<u><br/><b><h3>Conclusion</h3></b></u>
+<b> :</b>
+<br/>
+<br/>J5 post allogreffe haploidentique.
+ <br/>En aplasie, apyrétique.
+ <br/>Diarrhées avec asthénie.
+ <br/>Absence d'alimentation.
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

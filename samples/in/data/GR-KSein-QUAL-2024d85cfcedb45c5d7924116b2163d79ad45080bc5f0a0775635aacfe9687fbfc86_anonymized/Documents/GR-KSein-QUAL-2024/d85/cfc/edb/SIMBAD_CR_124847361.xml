@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124847361" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20181109000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181109000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Compte rendu générique de SENOLOGIE<br/><br/>Dicté par : </b> Docteur Meriem Mokdad Adi
+ <b><br/>Dicté le : </b> 08/11/2018 
+ <b><br/>Service : </b> 050-CTE 050 - SEIN 
+ <br/>
+<b>Type de document : </b> 050 CC Générique 
+ <br/>
+<b>Ref :</b> 526480 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : ORC
+ <br/>
+<br/>Patiente vue ce jour seule, sous ENDOXAN depuis le 23/07 en 
+ <br/>association avec l'HERCEPTINE depuis le 2 mai (présence d'une 
+ <br/>amplification du gêne HER2, amplification faible avec 
+ <br/>les valeurs borderline de ratio qui est à 2,05) dans le cadre de la 
+ <br/>prise en charge d'une récidive hépatique et osseuse d'un cancer du 
+ <br/>sein droit diagnostiqué initialement en 2016.
+ <br/>
+<br/>Pet scan réalisé le 27 avril avait montré :
+ <br/>une réponse métabolique partielle de la lésion hépatique unique du 
+ <br/>segment VII et de la lésion osseuse isolée en T3.
+ <br/>
+<br/>Elle a reçu 6 cycles de CARBOPLATINE GEMZAR débuté le 26 février 
+ <br/>jusqu'au 9/07 marqué par des toxicités importantes sur le plan 
+ <br/>hématologique : thrombopénie et neutropénie.
+ <br/>
+<br/>
+<b>PROFEEL</b> mutation TP53
+ <br/>
+<br/>
+<u><b>CE JOUR :<br/></b></u>
+<br/>PS:0
+ <br/>Poids 50Kg.
+ <br/>Va bien depuis l'arrêt de l'ENDOXAN pour progression hépatique et 
+ <br/>osseuse mais signale une discrète douleur du membre supérieur droit.
+ <br/>Pas d'autres douleurs signalées ce jour.
+ <br/>
+<br/>
+<b>TEP 19/10 Comparativement à l'examen précédent de juillet 2018, <br/>aspect de progression, devant la majoration des lésions <br/>pré-existantes du foie et de T3, sans nouvelle fixation suspecte.<br/><br/>Intérêt d'une IRM du rachis pour mieux évaluer la lésion de T3 <br/>(épidurite débutante ?).<br/></b>
+<br/>IRM rachis 31/10 : 
+ <b>Globale stabilité de l'atteinte de T3 avec <br/>atteinte épidurale foraminale droite T3/T4.<br/>Pas d'apparition de lésions osseuses suspectes.<br/>Pas de compression médullaire.<br/>La patiente ne prend pas d'XGEVA car appréhende les effets <br/>secondaires, elle demande un temps de réflexion.<br/></b>
+<br/>
+<b>Bilan biologique le 19/10 </b> : correct.
+ <br/>
+<b>Echographie cardiaque</b> : FEVG 58% le 6/09.
+ <br/>Il était prévu de lui proposer une inclusion dans le 
+ <b>protocole MCLA </b>
+<br/>cohorte 1 : non éligible car n'avait pas reçu le PERTUZUMAB au 
+ <br/>préalable.
+ <br/>
+<br/>MCLA cohorte 2elle n'a pas eu d'hormonothérapie avant, donc ne peut 
+ <br/>être incluse dans
+ <br/>
+<b>VIOLETTE</b> et 
+ <b>IMMU132 </b> : non éligible compte tenu de la faible 
+ <br/>amplification HER2.
+ <br/>
+<br/>Je propose de débuter une 2 ème ligne par ERIBULINE demain à Chevilly 
+ <br/>Larue avec HERCEPTIN.
+ <br/>
+<br/>
+<u><b>EN PRATIQUE :<br/><br/></b></u> Je la revois en consultation après un cycle d'ERIBULINE.
+ <u><br/></u>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Meriem MOKDAD ADI <br/>Le jeudi 8 novembre 2018 à 16:15 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

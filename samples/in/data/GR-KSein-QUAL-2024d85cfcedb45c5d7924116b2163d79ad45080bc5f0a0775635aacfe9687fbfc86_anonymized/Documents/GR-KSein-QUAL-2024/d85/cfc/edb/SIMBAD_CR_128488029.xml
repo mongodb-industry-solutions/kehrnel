@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128488029" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>RESUME D'HOSPITALISATION - Service de COURT SEJOUR ARDENNES</title>
+    <effectiveTime value="20170224000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170224000000+0000"/>
+        <assignedAuthor>
+            <code code="ARD/191" displayName="ARDENNES"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Hospitalisation au service ARDENNES du 23 au 24/02/2017 pour <br/>chirurgie.</b></u>
+<br/>
+<br/>
+<u><b>RAPPEL CLINIQUE</b></u> :
+ <br/>Patiente de 59 ans, prise en charge à Gustave Roussy pour un 
+ <br/>carcinome canalaire infiltrant triple négatif du sein droit classé 
+ <br/>T2N0M0.
+ <br/>En juillet 2016, autopalpation d'un nodule du sein droit ayant 
+ <br/>conduit à la réalisation d'un bilan sénologique.
+ <br/>Echo-mammographie bilatérale mettant en évidence un nodule 
+ <br/>supéro-interne du sein droit mesurant 25 mm classé ACR5.
+ <br/>Sein gauche classé ACR2.
+ <br/>Aires axillaires libres.
+ <br/>A l'examen clinique initial, on palpe aisément un nodule de 25 mm sur 
+ <br/>un rayon de 2 h à 3 cm du mamelon.
+ <br/>On réalise une microbiopsie de ce nodule qui est en faveur d'un 
+ <br/>carcinome canalaire infiltrant de grade III, RE-, RP-, Her2-.
+ <br/>Un scanner thoraco-abdomino-pelvien est réalisé dans le cadre du 
+ <br/>bilan d'extension mettant en évidence la présence de 2 micro-nodules 
+ <br/>isolés en base pulmonaire droite qui mesurent 4,5 mm et un 
+ <br/>micro-nodule de la base pulmonaire gauche également isolé.
+ <br/>Après discussion en réunion de concertation pluridisciplinaire, on 
+ <br/>propose à la patiente une chimiothérapie néo-adjuvante ainsi qu'un 
+ <br/>contrôle par TDM thoraco-abdomino-pelvien à la fin des traitements.
+ <br/>Chimiothérapie néo-adjuvante par 4 cure d'EC suivie de 4 cures de 
+ <br/>TAXOL.
+ <br/>A l'examen clinique, il existe une bonne réponse à la chimiothérapie 
+ <br/>avec un nodule mesurant 15 mm palpable sur un rayon de 2 h à 3 cm du 
+ <br/>mamelon.
+ <br/>On propose à la patiente une chirurgie avec tumorectomie du sein 
+ <br/>droit et procédure du ganglion sentinelle. 
+ <br/>
+<br/>
+<u><b>INTERVENTION CHIRURGICALE LE</b></u>
+<b> : 23/02/2017<br/><u>OPERATEUR</u> : DR MAZOUNI<br/><u>TITRE DE L'INTERVENTION</u> </b> :
+ <u><b><br/></b></u>
+<b>TUMORECTOMIE DU SEIN DROIT ET GANGLION SENTINELLE HOMOLATERAL SOUS <br/>ANESTHESIE GENERALE</b>
+<br/>
+<br/>
+<u><b>HISTOLOGIE DEFINITIVE</b></u> :
+ <br/>Tumorectomie :
+ <br/>Description de nodule tumoral :
+ <br/>- CARCINOME METAPLASIQUE AVEC DIFFERENCIATION MESENCHYMATEUSE DE TYPE 
+ <br/>CHONDDROIDE ET/OU OSTEOIDE 
+ <br/> Index mitotique : 19 mitoses/2 mm2.
+ <br/> Taille du carcinome infiltrant : 13 mm
+ <br/>- Présence de carcinome canalaire in situ associé, de grade nucléaire 
+ <br/>élevé sans nécrose, représentant 5% du volume tumoral.
+ <br/>- Taille du carcinome in situ et infiltrant : 17 mm.
+ <br/>Limites du carcinome infiltrant avec les recoupes éventuelles :
+ <br/>- Les limites d'exérèse latérales sont toutes supérieures à 2 mm.
+ <br/>- Les limites d'exérèse profondes et superficielles sont supérieures 
+ <br/>à 2 mm.
+ <br/>Limites du carcinome intracanalaire avec les recoupes éventuelles :
+ <br/>- Les limites d'exérèse latérales sont toutes supérieures à 2 mm.
+ <br/>- Les limites d'exérèse profonde et superficielle sont supérieures à 
+ <br/>2 mm.
+ <br/>
+<br/>Ganglion(s) sentinelle(s) : aucun ganglion métastatique (1 GS-).
+ <br/>
+<br/>Réponse au traitement :
+ <br/>- Tumeur mammaire : réponse faible (> 20% de tumeur).
+ <br/>- RCB-II
+ <br/>
+<br/>Classification pTNM : ypT1c ypN0(i-)(sn).
+ <br/>
+<br/>
+<u><b>SUITES OPERATOIRES :</b></u>
+<br/>Simples jusqu'à la sortie.
+ <br/>
+<br/>La patiente quitte le service ARDENNES le 24/02/2017.
+ <br/>
+<b>Prescriptions de sortie</b> :
+ <br/>- Bulletins de situation (x3)
+ <br/>- Rendez-vous
+ <br/>- soins à domicile + matériel pansement
+ <br/>- ablation des fils le 02/03/2017
+ <br/>- Dafalgan
+ <br/>- kinésithérapie (10 séances)
+ <br/>- demande de scintigraphie osseuse faxée ce jour
+ <br/>- arrêt de travail.
+ <br/>
+<br/>La patiente sera revue en consultation post-opératoire par le 
+ <br/>Docteur MIAILHE le 20/03/2017.
+ <br/>
+<br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b>Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>03/03/2017 11:45 UPO COL C UPO COL 
+ <br/>15/03/2017 09:50 ARD GMH DOS RCP 050 
+ <br/>20/03/2017 08:30 ARD GMH CL CHIR GMH 
+ <br/>03/04/2017 09:00 050 MKD BILAN LOG 
+ <br/> 10:15 050 MKD CHIM SENO MKD L 
+ <br/>
+<br/>Dossier radiologique rendu à la patiente : O
+ <br/>
+<br/> ===========================
+ <br/>
+<br/>
+<u><b>DECISION THERAPEUTIQUE DU STAFF DE PATHOLOGIE MAMMAIRE DU 15/03/2017</b></u>
+<br/>1/ Radiothérapie : sein + surimpression.
+ <br/>
+<br/>2/ XELODA adjuvant 6 cycles compte tenu du risque persistant, à 
+ <br/>expliquer à la patiente.
+ <br/>
+<br/>3/ Eligible pour l'étude MATRIVACSEIN.
+ <br/>
+<br/> ===========================
+ <br/>
+<br/>
+<u><b>Transfusion</b></u>
+<b> : N</b>
+<br/>
+<u><b>Isolement</b></u> : N
+ <br/>
+<br/>
+<u><b>MACROCIBLES IDE</b></u>
+<b> :</b>
+<br/>Taille (cm) : 171
+ <br/>Poids de sortie (kg) : 54
+ <br/>EVA d'entrée : 1
+ <br/>EVA sortie : 0
+ <br/>
+<br/>
+<u><b>FICHE DE COMORBIDIT\'c9S</b></u>
+<b>:</b>
+<br/>
+<b>SEJOUR GRADE : 0</b>
+<br/>Co-morbidités associées : RAS
+ <br/>Complications post-opératoires : RAS
+ <br/>
+<br/>
+<u><b> Evolution dans le service</b></u> :
+ <br/>Intervention équipe douleur : N
+ <br/>Prise en charge EMASP : N
+ <br/>Prise en charge UPO : N
+ <br/>Prise en charge nutrition : N
+ <br/>Suivi diététique : N
+ <br/>Prise en charge sociale : N
+ <br/>Isolement (prophylactique ou infectieux) : N
+ <br/>Infection nosocomiale : N
+ <br/>Chirurgie incomplète (ou palliative) : N
+ <br/>
+<b><br/><u>FICHE CMA INF REMPLIE</u></b>
+<b>: O <br/></b> Ajustement et entretien d'un dispositif vasculaire
+ <br/>
+<br/>
+<u><b>PRELEVEMENTS SARM & BMR</b></u>
+<b> : N</b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

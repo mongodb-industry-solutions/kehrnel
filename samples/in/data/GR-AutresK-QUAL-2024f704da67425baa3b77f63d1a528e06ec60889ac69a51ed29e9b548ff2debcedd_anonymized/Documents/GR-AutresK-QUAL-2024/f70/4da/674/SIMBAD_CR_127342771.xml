@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127342771" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>INTERVENTION</title>
+    <effectiveTime value="20171009000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171010000000+0000"/>
+        <assignedAuthor>
+            <code code="TAR/435" displayName="TARN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>COELIOSCOPIE EXPLORATRICE D'\'c9VALUATION DE LA R\'c9S\'c9CABILIT\'c9 <br/>SOUS ANESTH\'c9SIE G\'c9N\'c9RALE.</b>
+<br/>
+<br/>
+<b>OP\'c9RATEURS : DR GOUY / DR SCHERIER<br/>INTERNE : Rocio ZAMBRANO MUNOZ<br/>ANESTH\'c9SISTE : DR <br/> SECR\'c9TAIRE : CVZ </b>
+<br/>
+<br/>
+<u><b>RAPPEL CLINIQUE</b></u> :
+ <br/>Patiente âgée de 65 ans, prise en charge pour un adénocarcinome 
+ <br/>séreux de haut grade d'origine ovarienne de stade IV pleural initial.
+ <br/>
+<br/>La maladie a été découverte lors de l'apparition d'une thrombose du 
+ <br/>membre inférieur.
+ <br/>
+<br/>Marqueurs tumoraux en février 2017 : 
+ <br/> - CA 125 à plus de 1000
+ <br/> - CA 19.9 à 142
+ <br/> - CA 15.3 à 154
+ <br/>
+<br/>Coelioscopie diagnostique réalisée le 27/03/2017 retrouvant un PCI à 
+ <br/>16 et une ascite de moyenne abondance.
+ <br/>
+<br/>Le scanner réalisé le 16/04/2017 retrouve un épanchement pleural 
+ <br/>gauche qui a été ponctionné.
+ <br/>
+<br/>La patiente a été prise en charge par chimiothérapie première de type 
+ <br/>CARBOPLATINE / TAXOL dont les doses ont dû être réduites en raison 
+ <br/>d'une thrombopénie.
+ <br/>Bonne réponse biologique avec un CA 125 diminué à 100 et bonne 
+ <br/>réponse à l'imagerie.
+ <br/>
+<br/>Le Pet-scanner réalisé le 09/08/2017 retrouve une fixation de la 
+ <br/>partie postérieure de la masse pelvienne, en rapport avec un résidu 
+ <br/>tumoral, associée à une ascite de moyenne abondance.
+ <br/>Image hépatique simplement douteuse.
+ <br/>Pas d'autre foyer suspect, notamment au niveau pleural.
+ <br/>
+<br/>Depuis début août, augmentation de l'ascite intra-abdominale.
+ <br/>Coelioscopie d'évaluation réalisée le 31/08/2017 après cinq cures de 
+ <br/>chimiothérapie montrant une bonne réponse de la maladie à 
+ <br/>l'exploration chirurgicale malgré la persistance d'une ascite 
+ <br/>abondante de 7 litres.
+ <br/>
+<br/>La chirurgie a été maintenue après la sixième cure.
+ <br/>Ce jour, volumineuse distension abdominale par une ascite de très 
+ <br/>grande abondance.
+ <br/>A noter qu'à l'induction, instabilité hémodynamique par hypovolémie 
+ <br/>et désaturation.
+ <br/>
+<br/>Afin d'améliorer l'état respiratoire et hémodynamique de la patiente, 
+ <br/>on décide de débuter l'intervention par une évacuation de l'ascite.
+ <br/>
+<br/>
+<u><b>INTERVENTION</b></u> :
+ <br/>Sous anesthésie générale.
+ <br/>Intubation oro-trachéale.
+ <br/>Patiente installée en décubitus dorsal, avec légers roulis sur la 
+ <br/>gauche mieux supportée par la patiente, les deux bras à 90°.
+ <br/>Pas de billot compte tenu de l'état instable.
+ <b><br/></b> Double désinfection cutanéo-muqueuse à la Bétadine.
+ <br/>Prévention des complications de décubitus par gélose aux points 
+ <br/>d'appui.
+ <br/>Mise en place de champs stériles.
+ <br/>Mise en place d'une sonde vésicale à demeure.
+ <br/>
+<br/>Incision latéro-ombilicale.
+ <br/>Open coelioscopie.
+ <br/>
+<br/>Evacuation de plus de 11 litres d'ascite, permettant une amélioration 
+ <br/>modérée de l'état hémodynamique de la patiente, qui reste tout de 
+ <br/>même 
+ <br/>instable sur le plan respiratoire.
+ <br/>
+<br/>Insufflation et réalisation d'un pneumopéritoine harmonieux.
+ <br/>Mise en place d'un trocart de 5mm sur la ligne médiane en sus-pubien.
+ <br/>
+<br/>
+<b> L'exploration de la cavité abdomino-pelvienne retrouve :</b>
+<br/>
+<br/> - 
+ <u>A l'étage sus-mésocolique</u> :
+ <br/>Au niveau de la coupole diaphragmatique droite, on retrouve des 
+ <br/>lésions infra-centimétriques et confluentes de carcinose péritonéale 
+ <br/>au niveau de la pointe hépatique et au niveau de la réflexion 
+ <br/>péritonéale.
+ <br/>On retrouve quelques lésions millimétriques au niveau de la base de 
+ <br/>la vésicule biliaire.
+ <br/>Pas de lésion au niveau de la coupole diaphragmatique gauche.
+ <br/>La rate est inexplorable.
+ <br/>Présence d'un kyste biliaire du segment I connu.
+ <br/>Au niveau du petit épiploon, il existe un nodule centimétrique au 
+ <br/>niveau de la petite courbure gastrique ainsi que des lésions 
+ <br/>millimétriques au niveau de la pars flaccida.
+ <br/>
+<br/> - 
+ <u>A l'étage sous-mésocolique</u> :
+ <br/>Le grand épiploon présente toujours les mêmes adhérences avec la 
+ <br/>paroi antérieure. Accolement probablement par l'intermédiaire de 
+ <br/>nodules de carcinose.
+ <br/>On retrouve plusieurs nodules de carcinose péritonéale centimétriques 
+ <br/>au niveau de l'ensemble du grand épiploon.
+ <br/>La gouttière pariéto-colique gauche est inexplorable.
+ <br/>Au niveau de la gouttière pariéto-colique droite, on retrouve 
+ <br/>plusieurs lésions infra-millimétriques le long de cette dernière.
+ <br/>On retrouve quelques lésions infra-centimétriques au niveau du bas 
+ <br/>fond caecal.
+ <br/>L'appendice est attiré et est accolé par la volumineuse masse 
+ <br/>pelvienne.
+ <br/>L'exploration du grêle et du mésentère ne semble pas retrouver de 
+ <br/>lésion suspecte.
+ <br/>
+<br/> - 
+ <u>A l'étage pelvien</u> : 
+ <br/>On retrouve la volumineuse masse de plus de 12 cm dans le pelvis, qui 
+ <br/>est intimement accolée à la charnière recto-sigmoïdienne.
+ <br/>Le cul de sac de Douglas est inexplorable, ainsi que le cul de sac 
+ <br/>vésico-utérin.
+ <br/>
+<br/>
+<br/>Soit un PCI de haut en bas et de droite à gauche :
+ <br/>- 2,2,0
+ <br/>- 2,3,?
+ <br/>- 2,3,2
+ <br/>- Intestin grêle : 0,0,0,0
+ <br/>
+<b>Soit un PCI total incomplet à 16</b> .
+ <br/>
+<br/>
+<br/>Compte tenu de la volumineuse ascite de 11,3 litres (augmentation 
+ <br/>progressive de l'ascite depuis août), du PCI stable (identique à 
+ <br/>celui de la première coelioscopie), et de l'état instable et précaire 
+ <br/>de la patiente depuis le début de l'anesthésie générale, on décide de 
+ <br/>ne pas réaliser la chirurgie.
+ <br/>Pour des raisons fonctionnelles, on met à plat la volumineuse masse 
+ <br/>kystique pelvienne en la ponctionnant et en l'évacuant.
+ <br/>On adresse une cytologie péritonéale en anatomopathologie.
+ <b><br/><br/><br/></b> Exsufflation et retrait des trocarts.
+ <br/>Fermeture de l'aponévrose du trocart ombilical par un point en X de 
+ <br/>Vicryl 1.
+ <br/>Fermeture cutanée des orifices de trocart par des points inversant de 
+ <br/>Moncryl 3/0.
+ <br/>Infiltration de Chirocaïne à visée antalgique.
+ <br/>Pansement simple.
+ <br/>Sonde vésicale gardée en fin d'intervention.
+ <br/>Compte exact des textiles en fin d'intervention.
+ <br/>Pas de complication per-opératoire.
+ <br/>Pertes sanguines estimées nulles.
+ <br/>Pas de transfusion sanguine.
+ <b><br/></b> Durée opératoire : 1h 
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> : 
+ <b>Coelioscopie exploratrice après six cures de <br/>chimiothérapie première pour une carcinose péritonéale d'un <br/>adénocarcinome séreux de haut grade d'origine ovarienne stade IV <br/>pleural initial.<br/>Réapparition majeure de l'ascite depuis le mois d'août 2017.<br/>Ce jour, évacuation de 11,3 litres d'ascite.<br/>L'exploration coelioscopique montre un PCI stable depuis la première <br/>coelioscopie.<br/>Instabilité majeure hémodynamique et respiratoire de la patiente au <br/>décours de l'induction.<br/>Compte tenu de tous ces éléments, on ne réalise pas la chirurgie.<br/>Indication à poursuivre la chimiothérapie.</b>
+<br/>
+<br/>\fs19 
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

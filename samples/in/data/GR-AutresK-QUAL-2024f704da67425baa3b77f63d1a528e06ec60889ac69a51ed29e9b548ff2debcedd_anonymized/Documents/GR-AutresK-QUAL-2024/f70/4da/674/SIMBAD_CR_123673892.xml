@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123673892" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM TAP ET</title>
+    <effectiveTime value="20190506000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190506000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur CARAMELLA Caroline
+ <br/>Destinataire : CTE 060 - GYNECOLOGIE
+ <br/> DR COLOMBA--BLAMEBLE EMELINE
+ <br/>
+<br/>
+<b>COMPTE-RENDU ESSAIS THERAPEUTIQUES<br/><br/>Dicté par : </b> Docteur Caroline Caramella
+ <b><br/>Dicté le : </b> 03/05/2019 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Essais thérapeutiques 
+ <br/>
+<b>Ref :</b> 686630 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : UGA
+ <br/>Examen n°1919
+ <br/>Examen réalisé le 3/5/2019
+ <br/>
+<br/>
+<br/>
+<b>Nom de PROTOCOLE : ATALANTE<br/>Numéro CSET : 2502</b>
+<br/>
+<b><br/>Critères d'évaluation : RECIST 1.1 / irRECIST (unidimensionnel)<br/><br/>Date du scanner Baseline : 19/12/2018 (140 mm)<br/><br/></b>
+<br/>
+<u><b>INDICATION<br/></b></u> Surveillance protocolaire dans le cadre d'un adénocarcinome séreux 
+ <br/>de haut grade. Protocole contenant une immunothérapie. 
+ <br/>
+<br/>
+<u><b>TECHNIQUE<br/></b></u> Examen réalisé sur un scanner OPTIMA CT660, GENERAL ELECTRIC, mis 
+ <br/>en service le 8 février 2016.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 422272HM5
+ <br/>
+<br/>Réalisation d'une acquisition :
+ <br/>\'a7 Thoracique
+ <br/>\'a7 Abdominale 
+ <br/>\'a7 Pelvienne
+ <br/>
+<br/>Examen réalisé avec injection intraveineuse de produit de contraste.
+ <br/>
+<b>Produit de contraste injecté : 90 cc de XENETIX<br/>PDL : 470 mGy.cm</b>
+<br/>
+<br/>
+<u><b>RESULTATS<br/><br/></b></u>
+<b>Etage thoracique <br/></b> Pas d'apparition d'anomalie parenchymateuse ganglionnaire ou 
+ <br/>pleurale. Persistance de petites lames d'épanchement pleural 
+ <br/>bilatéral.
+ <br/>
+<br/>
+<b>Etage abdomino-pelvien<br/></b> Globale stabilité de la volumineuse masse pelvienne ainsi que de 
+ <br/>l'épanchement liquidien diffus.
+ <br/>Pas d'apparition de nouvelle lésion.
+ <br/>
+<br/>
+<br/>
+<u><b>EVALUATION DES CIBLES</b> <br/></u>C1 : Masse pelvienne Image : 394 Taille : 155mm
+ <br/>
+<b>Somme : 155mm<br/></b>
+<br/>
+<u><b>COMPARAISON AU SCANNER BASELINE<br/><br/></b></u>
+<b> Cibles : +11%<br/></b>
+<br/>
+<b> Lésions(s) non cible(s) : autres lésions de carcinose péritonéale</b>
+<br/> Non disparues et non augmentées de façon significative
+ <br/>
+<br/>
+<b> Nouvelle(s) lésion(s) : Absence<br/></b>
+<b><br/><u>CONCLUSION</u></b>
+<u> <br/></u>
+<b>Stabilité en comparaison au scanner BASELINE.<u></u></b>
+<u> <br/><br/></u>
+<b><br/>_________________________________________________<br/>Signé électroniquement par Docteur Caroline CARAMELLA <br/>Le vendredi 3 mai 2019 à 15:37 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

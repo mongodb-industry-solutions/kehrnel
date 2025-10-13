@@ -1,0 +1,184 @@
+# biology_mapping.yml (v5 — generic-DSL only)
+_metadata:
+  version: "5.0"
+  source_format: "BIOLOGY_CSV"
+  target_template: "T-IGR-BIOLOGY"
+
+_preprocessing:
+  - type: "group_by"
+    group_by_column: "IdentifiantAnalyse"
+    alias: "analysis"
+
+_defaults:
+  language: "fr"
+  territory: "FR"
+
+# ── Composition header ────────────────────────────────────────────────
+"/name/value": "constant:Rapport de Biologie"
+"/language/code_string": "constant:${language}"
+"/territory/code_string": "constant:${territory}"
+"/category/defining_code/code_string": "constant:433"
+"/category/value": "constant:event"
+
+"/composer":
+  builder: party_identified
+  name:
+    from_group: "first"
+    column: "Emetteur"
+
+"/context/start_time":
+  builder: dv_date_time
+  value:
+    transforms:
+      - safe_date:
+          of: [{ group_first: ["DateResultat","DatePrelevement"] }]
+      - dmy_to_iso
+
+"/context/health_care_facility":
+  builder: party_identified
+  name:
+    from_group: "first"
+    column: "Emetteur"
+
+# Context extras (leaf targeting for DV_TEXT)
+"/context/other_context/items[at0002]/value/value":
+  from_group: "key"
+"/context/other_context/items[at0005]/value/value": "constant:final"
+
+# ── Observation (one per composition) ─────────────────────────────────
+"/content/0/language/code_string": "constant:${language}"
+"/content/0/encoding/code_string": "constant:UTF-8"
+
+"/content/0/subject":
+  builder: party_identified
+  identifiers:
+    - builder: dv_identifier
+      issuer: "constant:LAB_SYSTEM"
+      assigner: "constant:LAB_SYSTEM"
+      id:
+        from_group: "first"
+        column: "IPP"
+      type: "constant:PATIENT"
+
+"/content/0/workflow_id":
+  _special_rule: "generate_workflow_id"
+
+# Times
+"/content/0/data/origin":
+  builder: dv_date_time
+  value:
+    transforms:
+      - safe_date: { of: [{ group_first: ["DateResultat","DatePrelevement"] }] }
+      - dmy_to_iso
+
+"/content/0/data/events/0/time":
+  builder: dv_date_time
+  value:
+    transforms:
+      - safe_date: { of: [{ group_first: ["DateResultat","DatePrelevement"] }] }
+      - dmy_to_iso
+
+# Request / protocol identifier (leaf node for DV_TEXT as per template)
+"/content/0/protocol/items[at0094]/items[at0063]/value/value":
+  from_group: "key"
+
+# ── Data items (status + 1 analyte cluster per CSV row) ───────────────
+"/content/0/data/events/0/data/items":
+  - # 1) Overall Test Status
+    _type: "ELEM"
+    name: { value: "constant:Overall test status" }
+    archetype_node_id: "constant:at0073"
+    value:
+      builder: dv_coded_text
+      <<: &overall_status
+        value:
+          coded_map:
+            from: { column: "StatutResultats", scope: "group:first" }
+            value_map: { "F": "Final", "X": "Corrected", "C": "Cancelled" }
+            code_map:  { "F": "at0038", "X": "at0115", "C": "at0074" }
+            terminology_id: "local"
+
+  - # 2) Expand to one CLUSTER per row
+    for_each_row:
+      filter_by:
+        - column: "valid"
+          transforms: ["truthy"]
+          equals: true
+      _type: "CLUSTER"
+      archetype_node_id: "constant:openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+      name: { value: "constant:Laboratory analyte result" }
+      items:
+        - # Analyte name
+          _type: "ELEM"
+          archetype_node_id: "constant:at0024"
+          name: { value: "constant:Analyte name" }
+          value:
+            builder: dv_text
+            value:
+              from: { column: "Test" }
+              transforms: ["trim"]
+              on_missing: "skip"
+
+        - # Analyte result (choice: DV_QUANTITY or DV_TEXT)
+          _type: "ELEM"
+          archetype_node_id: "constant:at0001"
+          name: { value: "constant:Analyte result" }
+          value:
+            builder: choice
+            cases:
+              - when: { equals: { column: "TypeResultat", value: "NM" } }
+                make: dv_quantity
+                magnitude:
+                  from: { column: "Resultat" }
+                  transforms: ["trim","to_number"]
+                units:
+                  prefer: ["Unite","Resultat"]
+                  transforms: [{ parse_units: true }]
+                precision:
+                  from: { column: "Resultat" }
+                  transforms: [{ regex_extract: "(?<=\\.)\\d+", as_number: true }]
+              - when:
+                  equals: { column: "TypeResultat", value: "ST" }
+                  matches: { column: "Resultat", regex: "^[<>]=?\\s*\\d" }
+                make: dv_quantity
+                extract: { column: "Resultat",
+                           regex: "^(?<cmp>[<>]=?)?\\s*(?<mag>-?\\d+(?:[\\.,]\\d+)?)\\s*(?<unit>\\S.*)?$" }
+                magnitude: { from: "$mag", transforms: ["to_number"] }
+                units:
+                  from: "$unit"
+                  default: { column: "Unite" }
+                magnitude_status: { from: "$cmp" }
+              - when:
+                  equals: { column: "TypeResultat", value: "TX" }
+                  matches: { column: "Resultat", regex: "^\\d+(?:[\\.,]\\d+)?\\s*\\S+" }
+                make: dv_quantity
+                extract: { column: "Resultat",
+                           regex: "^(?<mag>-?\\d+(?:[\\.,]\\d+)?)\\s*(?<unit>\\S.*)$" }
+                magnitude: { from: "$mag", transforms: ["to_number"] }
+                units: { from: "$unit" }
+              - else:
+                  make: dv_text
+                  value:
+                    from: { column: "Resultat" }
+                    transforms: ["trim"]
+
+        - # Reference range guidance (free text as leaf DV_TEXT)
+          _type: "ELEM"
+          archetype_node_id: "constant:at0004"
+          name: { value: "constant:Reference range guidance" }
+          value:
+            builder: dv_text
+            value:
+              from: { column: "Normales" }
+              transforms: ["trim"]
+              on_missing: "skip"
+
+        - # (Optional) per-analyte status (mirrors group status)
+          _type: "ELEM"
+          archetype_node_id: "constant:at0005"
+          name: { value: "constant:Result status" }
+          value:
+            builder: dv_coded_text
+            <<: *overall_status
+            emit_if:
+              any_present: ["StatutResultats"]

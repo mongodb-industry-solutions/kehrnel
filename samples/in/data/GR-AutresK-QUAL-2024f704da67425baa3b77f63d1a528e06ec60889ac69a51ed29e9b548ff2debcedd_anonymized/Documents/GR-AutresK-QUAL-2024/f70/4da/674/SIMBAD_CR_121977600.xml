@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121977600" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Note du 2020-01-20</title>
+    <effectiveTime value="20200120000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200120000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patiente vue ce jour en HDJ 
+ <br/>
+<br/>Mme XXXXXX, 67 ans
+ <br/>pour une ponction d'asciet évacuatrice 
+ <br/>Patiente suivie par Dr Colomba pour 2eme rechute platine resistante 
+ <br/>d'un adenocarcinome séreux de haut grade inextirpable en cours de 
+ <br/>traitement par Taxol
+ <br/>La dérniere ponction d'ascite a été réalisé le 13/01/20 avec 
+ <br/>évacuation d'environ 4,5 L de liquide hémorragique 
+ <br/>absence de germe culture négative
+ <br/>
+<br/>Examen clinique ce jour: PS 1
+ <br/>POIDS 64 KG 5POIDS DE FORME 56 KG°
+ <br/>TA 132/83 mmHg 
+ <br/>FC 102
+ <br/>apyrétique 
+ <br/>SpO2 100% eupneique en aa au repos 
+ <br/>ecg normal
+ <br/>asthenique grade II 
+ <br/>Abdomen souple et dépressible, indolore avec des nodules de carcinose
+ <br/>palpable au niveau de la fosse iliaque droite
+ <br/>ascite abondante avec volumineuse hernie ombilicale non etranglée
+ <br/>pas de signe d'encephalopathie hépatique ou d'insuffisance hépatique 
+ <br/>aigue
+ <br/>Circulation collaterales évidentes
+ <br/>OMI de grade II, pas d' argument pour une TVP 
+ <br/>Absence de saignement exteriorisé 
+ <br/>Mv présent et symetrique sans bruit surajouté 
+ <br/>point de répere apres echographie réalisée cejour en fosse iliaque 
+ <br/>gauche
+ <br/>LA patiente me signale d'ailleurs une dysurie depuis deux jours sans 
+ <br/>fièvre ni douleur
+ <br/>Merci de réaliser un ECBU
+ <br/>
+<br/>
+<br/>AU TOTAL
+ <br/>Evacuation ce jour de 500 cc de liquide d'aspect très hemorragique 
+ <br/>L'écoulement du liquide s'arrete, lagré plusieurs tentatifs de 
+ <br/>ponction (epaisser de fibrine ? coagulation?)
+ <br/>pas de prise d'heparine ce jour. 
+ <br/>Constantes stable pendant le geste
+ <br/>Absence de complication au niveau de l'ernie ombilicale
+ <br/>Bonne tolérance hemodynamique mais asthénie importante 
+ <br/>anorexie depuis deux jour à cause du liquide notamment
+ <br/>Vu l'importante asthenie et la difficulté à marcher, 
+ <br/>on prefere hospitalise rla patiente aux Urgences pour réaliser 
+ <br/>si possible une ponction echoguidée, un ECBU et une surveillance 
+ <br/>clinique. 
+ <br/>
+<br/>Bien confraternellement 
+ <br/>Monica Pierro 
+ <br/> interne 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

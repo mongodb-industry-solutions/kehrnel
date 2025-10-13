@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126226336" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Accueil en un jour - service de Pathologie Mammaire</title>
+    <effectiveTime value="20180409000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180409000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>ACCUEIL DIAGNOSTIQUE DE SENOLOGIE EN UN JOUR</b></u>
+<b> <u><br/><br/></u>1) <u>DOCTEUR ANDRE/ ONCOLOGUE<br/></u></b>
+<br/>Patiente de 39 ans adressée par le Dr DEBLED pour prise en charge 
+ <br/>multi-disciplinaire diagnostique d'une probable rechute d'un cancer 
+ <br/>du sein triple négatif.
+ <br/>
+<br/>
+<u><b>ANTECEDENTS</b></u>
+<b> :<u><br/></u></b>
+<br/>Premières règles à : 15 ans.
+ <br/>Dernières règles le : 16.03.18
+ <br/>Contraception en cours : oui 
+ <br/>Si oui, laquelle : Stérilet
+ <br/>
+<br/>G : 2 P : 2
+ <br/>Age au 1er accouchement : 26 ans.
+ <br/>Allaitement : oui.
+ <br/>
+<br/>
+<u>Antécédents de cancer dans la famille</u> : Non
+ <br/>
+<br/>
+<u>Allergies connues</u> : Pénicilline
+ <br/>
+<br/>
+<u>Tabac</u> : Actuel, 10-15/jour
+ <br/>
+<br/>
+<b>ANTECEDENTS MEDICO-CHIRURGICAUX : </b>
+<br/>- Carcinome canalaire infiltrant de grade III T4dN1M0, Ki67 90%, 
+ <br/>triple négatif en 2016 traité par chimiothérapie par 4 EC et Taxol 
+ <br/>hebdommadaire, radiothérapie et mastectomie curage axillaire. Bonne 
+ <br/>réponse, pas de cellule résiduelle.
+ <br/>
+<br/>
+<b>MEDICAMENTS EN COURS :<br/></b> - Aucun
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE ACTUELLE</b></u>
+<b> : <br/></b>
+<br/>- 
+ <b>Mammographie du 31.03.18</b> : Remaniements post-thérapeutiques du 
+ <br/>sein gauche avec microcalcifications polymorphes du QSExt. 
+ <br/>ACR4 à gauche, ACR1 à droite.
+ <br/>
+<br/>- 
+ <b>Echographie mammaire du 31.03.18</b> : Masse tissulaire basi-cervicale 
+ <br/>gauche d'allure secondaire, infiltrant la jugulaire interne gauche 
+ <br/>d'environ 40x25mm. Elle est associée à des petits ganglions 
+ <br/>sus-claviculaires gauches nécrotiques.
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE</b></u>
+<b> : <br/></b>
+<br/>- OMS : 0
+ <u><b><br/></b></u> - Taille : 1m65 Poids : 82Kg Taille de soutien-gorge : 
+ <br/>100E 
+ <br/>
+<br/>Adénopathie palpable sus-claviculaire.
+ <br/>
+<b><br/><u>EXAMENS COMPLEMENTAIRES DEMANDES CE JOUR</u> :<br/></b>
+<br/>- Consultation d'oncogénétique (PRAG)
+ <br/>- Compte tenu de la proximité aux vaisseaux, on propose de réaliser 
+ <br/>une exérèse d'un des nodules le plus rapidement possible pour que la 
+ <br/>patiente puisse débuter un traitement systémique dès que possible.
+ <br/>- Bilan d'extension par PET scanner
+ <br/>
+<b><br/>2) <u>DOCTEUR ANDRE / ONCOLOGUE</u><br/><br/><u></u></b>
+<u> AU TOTAL</u> : 
+ <br/>
+<b><br/></b> Il est indispensable de réaliser un diagnostic des ganglions 
+ <br/>claviculaires en urgence. Nous adressons la patiente à nos collègues 
+ <br/>ORL pour ce faire.
+ <br/>Par ailleurs la patiente réalisera un PET Scanner .
+ <br/>ELle sera revue par un oncologue avec l'ensemble des résultats.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124243854" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>RELECTURE TDM REL TDM ET</title>
+    <effectiveTime value="20190207000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190208000000+0000"/>
+        <assignedAuthor>
+            <code code="260/45" displayName="RADIODIAGNOSTIC"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur HADDAG LEILA
+ <br/>
+<br/>Destinataire : CTE 050 - SEIN
+ <br/> DR MOKDAD--ADI MERIEM
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b>Relecture du scanner baseline du 4.10.2018 et du scanner du 29.11.2018<br/></b></u>
+<br/>
+<b>Protocole </b> : SAFIR 02 BREAST
+ <br/>
+<b>Critères </b> : RECIST 1.1
+ <br/>
+<b>Scanner baseline </b> : 4.10.2018
+ <br/>
+<br/>- 
+ <u><b>Scanner du 4.10.2018 </b></u>
+<b>: BASELINE<br/><br/>Lésion cible :</b>
+<br/>
+<br/>Absence
+ <br/>
+<br/>
+<b>Lésions non cibles :</b>
+<br/>
+<br/>Absence.
+ <br/>
+<br/>-
+ <u><b> Scanner du 29.11.2018 :</b></u>
+<b><br/><br/>Lésion cible :<br/></b>
+<br/>Absence
+ <br/>
+<br/>
+<b>Lésions non cibles :<br/></b>
+<br/>Absence.
+ <br/>
+<br/>
+<b>Nouvelles lésions : <br/></b>
+<br/>Apparition de ganglions suspects sus et sous-claviculaires gauches : 
+ <br/>les plus volumineux sus-claviculaire de 8 mm (image 11) et 
+ <br/>sous-claviculaire de 9 mm (image 39).
+ <br/>
+<b><br/><u>CONCLUSION </u>:<br/><br/>Progression par rapport au scanner baseline.<br/></b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124152510" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°14H06677 2761924 Dr Odile CASIRAGHI</title>
+    <effectiveTime value="20190221000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190221000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>DÉPARTEMENT DE BIOLOGIE ET DE PATHOLOGIE MEDICALES<br/></p>
+<p>114, rue Edouard Vaillant - 94805 VILLEJUIF CEDEX<br/></p>
+<p>N° I.G.R. : 010 XXXXXX <br/>XXXXXX José XXXXXX M <br/> Docteur TEMAM Stéphane <br/>Examen demandé par : <br/>Dr TEMAM Stéphane <br/>CTE 010 - ORL <br/>Prélevé le 17/07/2014 <br/>Enregistré le 17/07/2014 <br/></p>
+<p> OCA <br/> Examen n° : 14H06677<br/></p>
+<p> CR édité le : 21/02/2019<br/></p>
+<p>Copie à : 1/1 </p>
+<p>IMMUNOHISTOCHIMIE P16 ET HYBRIDATION IN SITU HPV16<br/>Type de prélèvement : biopsie <br/>Localisation : paroi oropharyngée postérieure <br/>Côté : non précisé <br/>Evènement : tumeur primitive </p>
+<p>Diagnostic : Carcinome épidermoïde infiltrant non kératinisant <br/>Fixateur : Formol </p>
+<p> Immunohistochimie p16 : <br/>Technique : p16 CINtec® Histology Kit, Roche (réf : 06594441001) <br/>Résultat : marquage modéré non homogène (nucléaire) de 80 % des cellules tumorales. </p>
+<p> (p16 positive : positivité nucléaire et cytoplasmique de modérée à forte intensité, homogène, dans au moins 75 % des cellules tumorales) </p>
+<p> Hybridation in situ HPV16 : <br/>Technique : INFORM® HPV III Family 16 Probe (B), Ventana-Roche (ref : 800-4295) <br/>Résultat : absence de marquage. <br/>Témoin externe : positif (marquage modéré). </p>
+<p> (HPV16 positif : positivité nucléaire, quels que soient l'intensité et le pourcentage de cellules tumorales)<br/>CONCLUSION </p>
+<p> Biopsie - paroi oropharyngée côté non précisé </p>
+<p>p16 : la protéine p16 n'est pas surexprimée (p16-).<br/></p>
+<p>HPV16 : la recherche d'HPV16 par HIS est négative (HPV16-).<br/>BHBXE7T0<br/>VP <br/></p>
+<p> Dr Odile CASIRAGHI <br/> Médecin Spécialiste </p>
+<p> Compte-rendu validé et signé électroniquement </p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

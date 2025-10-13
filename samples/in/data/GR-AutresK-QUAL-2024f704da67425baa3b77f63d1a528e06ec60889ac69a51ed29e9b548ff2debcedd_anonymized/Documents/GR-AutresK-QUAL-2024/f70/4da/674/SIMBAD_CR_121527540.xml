@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121527540" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>COMPTE-RENDU R.I.</title>
+    <effectiveTime value="20200324000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200324000000+0000"/>
+        <assignedAuthor>
+            <code code="136/300" displayName="CONS. RADIO INTERVENTIONNELLE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b><br/> <u></u></b>
+<u> <br/><b>VERTEBROPLASTIE DE T10 A L5</b></u>
+<b><br/> <br/></b>
+<br/>Date: 24/03/2020 
+ <br/>Opérateur(s) principal: Docteur TSELIKAS Lambros 
+ <br/>Opérateur(s) interne: Docteur TOULOUPAS Caroline 
+ <br/>Manipulatrice:Bardoulat Cecile;Debays Laura;FERREIRA Ingrid; 
+ <br/>Anesthésiste:Docteur VOICU Alexandra 
+ <br/>Intervention guidée par: Arceau d'angiographie Alphenix Sky + de 
+ <br/>chez CANON MEDICAL. Mise en service: 
+ <b>le 25 mars 2019</b> . No de série: 
+ <br/>A1B18Y7001
+ <br/> Scanner Aquilion One Genesis Edition de 
+ <br/>chez CANON MEDICAL. Mise en service: 
+ <b>le 25 mars 2019</b> . No de série: 
+ <br/>4KC18X2015
+ <br/>
+<br/>PDS : 74,09 GY.cm2 
+ <br/>DLP : 1072,7 mGy.cm 
+ <br/>
+<br/>Produit de contraste: 0 ml
+ <br/>
+<br/>
+<u><b>INDICATION </b></u>
+<b>:</b>
+<br/>
+<br/>Patiente suivie pour un cancer de l'ovaire métastatique.
+ <br/>Geste réalisé à visée antalgique.
+ <br/>Fracture-tassement vertébral de T11, L1, L3 et L5.
+ <br/>
+<br/>
+<u><b>TECHNIQUE et RESULTATS</b></u>
+<b> :<br/></b>
+<br/>Sous anesthésie générale, en procubitus, et après 
+ <br/>désinfection cutanée : 
+ <br/>Mise en place, sous guidage scanographique, d'aiguilles de 
+ <br/>cimentoplastie par voie transpédiculaire postérieure dans les 
+ <br/>corps vertébraux de T10, T11, L1, L2, L3, L4 et L5.
+ <br/>Injection de quelques millilitres de ciment acrylique sous contrôle 
+ <br/>scopique de profil.
+ <br/>Minime fuite significative avec fuite minime de 1 ml au niveau du 
+ <br/>poumon sans embolie pulmonaire proximale.
+ <br/>Contrôle 3D rotationnel en fin de procédure.
+ <br/>Pas de complication au cours ni au décours du geste.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3> </b></u>
+<b>:<br/></b>
+<br/>Cimentoplastie des vertèbres T10 à L5.
+ <br/>Pas de complication.
+ <br/>
+<br/>Patiente à revoir en consultation de radiologie interventionnelle par 
+ <br/>le Dr DESCHAMPS dans 2 mois avec scanner du rachis entier.
+ <br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b> Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>30/03/2020 16:00 GAR INT TDM THX ABD PEL HOSPI GARD/OK SAY 
+ <br/>01/04/2020 14:00 HJM JHL P ASCITE 
+ <br/> 14:20 060 JHL ECHO ABDOMEN 
+ <br/>02/04/2020 13:50 060 ECB CHIM GYNE ECB CONSULTATION TELEPHONIQUE 
+ <br/>03/04/2020 14:30 HJM ECB HDJ CHIMIO 
+ <br/> 14:35 HJM ECB C HDJ A TRAITER 
+ <br/>05/05/2020 09:00 HJM ECB HDJ CHIMIO 
+ <br/> 09:05 HJM ECB C HDJ A TRAITER 
+ <br/>
+<b>08/06/2020 08:30 136 FDS C RI FDS (scanner en ville, ordonnance <br/>envoyée avec convocation)</b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

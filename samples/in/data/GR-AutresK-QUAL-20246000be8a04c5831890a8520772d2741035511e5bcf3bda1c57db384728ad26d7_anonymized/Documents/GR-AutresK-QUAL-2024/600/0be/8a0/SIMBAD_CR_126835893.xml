@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126835893" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="47420-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de bilan fonctionnel (par auxiliaire médical)"/>
+    <title>Coordination des soins externes - CSE</title>
+    <effectiveTime value="20180104000000+0000"/>
+    <confidentialityCode code="47420-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de bilan fonctionnel (par auxiliaire médical)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180104000000+0000"/>
+        <assignedAuthor>
+            <code code="IGR/129" displayName="INSTITUT GUSTAVE ROUSSY"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Infirmière coordinatrice: JENNIFER LEGENDRE </b>
+<br/>
+<br/>Mr XXXXXX est pris en charge par la CSE à la demande du Rhône 
+ <br/>pour la réalisation au domicile de :
+ <br/>
+<br/>- soins et changement de canule foam cuff 1/jour
+ <br/>- NED sur gastrostomie (posé le 05/01/17)
+ <br/>
+<br/>
+<b>Motif d'hospitalisation : laryngectomie totale, évidement cervical <br/>droit avec couverture par lambeau<br/></b>
+<br/>
+<b>Diagnostic </b> : carcinome épidermoïde de l'hypo-pharynx et du sinus 
+ <br/>périforme droit.
+ <br/>
+<br/>Poids : 63 KG Taille :1m62
+ <br/>EVA : 0
+ <br/>
+<br/>
+<b>Médecin référent IGR </b> : Dr Breuskin
+ <br/>
+<br/>
+<b>Contexte familial </b> :Marié, 2 filles 32 et 29 ans.
+ <br/>
+<br/>
+<b>Personne à contacter : fille, 06.27.12.73.76</b>
+<br/>
+<br/>
+<b>Autonomie :</b>
+<br/>ne souhaite pas d'aide pour le moment, sa femme pourra l'aider à la 
+ <br/>toilette si besoin.
+ <br/>Sa femme étant employé de maison, elle sera régulièrement à domicile 
+ <br/>mais avec des contraintes horaires fluctuantes
+ <br/>Une de ses fille sera présente 1 journée dans la semaine chez le 
+ <br/>patient. 
+ <br/>
+<br/>
+<b>Habitat :</b>
+<br/>Le patient vit en appartement au 1er étage sans ascenceur, n'exprime 
+ <br/>pas de difficulté par rapport à cela.
+ <br/>
+<br/>
+<b>Situation sociale :</b>
+<br/>prise en charge par assistante sociale de l'IGR en cours.
+ <br/>Le patient possède une mutuelle : oui 
+ <br/>
+<br/>
+<b>Etat émotionnel :suivi par psychologue de l'IGR.</b>
+<br/>
+<br/>
+<br/>
+<b>Prise en charge soignante au domicile :<br/><br/></b> Medecin traitant: Dr Pichodou
+ <br/>Infirmier libéral : 2 passages / jour
+ <br/>Prestataire : LVL
+ <br/>
+<br/>
+<br/>
+<b>Date du début des soins au domicile le </b> : 08/01/18.
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

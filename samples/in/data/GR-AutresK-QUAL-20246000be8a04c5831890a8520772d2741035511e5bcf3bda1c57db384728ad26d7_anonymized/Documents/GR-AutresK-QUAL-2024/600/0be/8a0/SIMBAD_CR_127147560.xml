@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127147560" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 173170720</title>
+    <effectiveTime value="20171113000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171113000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Pr A. Paci (47 30) <br/>Dr V. Poinsignon (61 92) </p>
+<p>Pr A. Bennaceur (40 65) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr T. Steimle (41 65) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Pr F. Griscelli (51 93) <br/>Dr N. Yin (40 62) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX josé </p>
+<p>DEMANDE N° </p>
+<p>HommeNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>13/11/2017 14:09 </p>
+<p>Sexe : </p>
+<p>13/11/2017 14:00 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>SOINS CONTINUS CHIRURGICAUX </p>
+<p> 3 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>lundi 13 novembre 2017 </p>
+<p>Complet </p>
+<p>Résultats <br/>Valeurs </p>
+<p>Précédentes <br/>Val. </p>
+<p>Valeurs de <br/><br/><br/>Référence </p>
+<p>Analyses Unités <br/><br/></p>
+<p>BIOCHIMIE <br/>Gaz </p>
+<p>Lact (Sg) 4.0 mmol/l ( 0.5 - 1.6 ) <br/>Sang - Ampèrométrie </p>
+<p>Température Patient 37.6 °C LAD </p>
+<p>Oxygénation 21.0 % </p>
+<p>Artériel _AJANature plvt </p>
+<p>pH A corrigé 7.43 ( 7.35 - 7.45 ) <br/>Sang - Potentiométrie </p>
+<p>Reserve Alcaline A 22.9 mmol/l ( 22.2 - 28.3 ) <br/>Sang - Potentiomètrie </p>
+<p>pCO2 A corrigée 35.5 mmHg ( 35 - 48 ) <br/>Sang - Potentiométrie </p>
+<p>pO2 A corrigée 185 mmHg ( 83 - 108 ) <br/>Sang - Ampérométrie </p>
+<p>% Saturation O2 A 98.6 % ( 95.0 - 99.0 ) </p>
+<p>tO2 A 18.5 % </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 13/11/2017 à 15:56 par : Dr DROUARD Laurence,Dr SAADA Véronique</p>
+<p></p>
+<p></p>
+<p>Résultats <br/></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>SOINS CONTINUS CHIRURGICAUX </p>
+<p>Unités <br/><br/>Valeurs de <br/><br/><br/>Référence </p>
+<p>Patient : </p>
+<p>Val.Analyses <br/><br/>Valeurs </p>
+<p>Précédentes <br/></p>
+<p> 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>173170720 <br/><br/>XXXXXX josé </p>
+<br/>
+<p>Ionogramme <br/>Sodium 138 mmol/l ( 136 - 146 )138 08/11/2017 10:40 LAD <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Potassium 4.0 mmol/l ( 3.4 - 4.5 )3.9 08/11/2017 10:40 LAD <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Chlore 105 mmol/l ( 101 - 109 )99 08/11/2017 10:40 LAD <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Reserve alcaline 22 mmol/l ( 21 - 31 )29 08/11/2017 10:40 LAD <br/>Plasma hépariné - PEPC </p>
+<p>Protides 59 g/L ( 66 - 83 )76 08/11/2017 10:40 LAD <br/>Plasma hépariné - Biuret </p>
+<p>Urée 3.0 mmol/l ( 2.8 - 7.2 )2.6 08/11/2017 10:40 LAD <br/>Plasma hépariné - Uréase-GLDH </p>
+<p>Créatinine 63 μmol/l ( 64 - 104 )58 08/11/2017 10:40 LAD <br/>Plasma hépariné - Enzymatique raccordée IDMS </p>
+<p>Calcium 2.11 mmol/l ( 2.20 - 2.65 )2.40 08/11/2017 10:40 LAD <br/>Plasma hépariné - Arsenazo III </p>
+<p>Phosphore 0.64 mmol/l ( 0.81 - 1.45 )0.90 08/11/2017 10:40 LAD <br/>Plasma hépariné - Molybdate, UV </p>
+<p>Magnesium 0.57 mmol/l ( 0.73 - 1.06 ) LAD <br/>Plasma hépariné - Bleu de xylidyle </p>
+<p>Base calcul Cockroft 1.63 1.77 08/11/2017 10:40 </p>
+<p>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Débit de Filtration Glomérulaire (MDRD) >60.0 mL/mn/1.73m2 >60.0 08/11/2017 10:40 </p>
+<p>< 60 : Insuffisance rénale à explorer si nécessaire. <br/>Si origine afro américaine, le DFG est à multiplier par 1.212 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 13/11/2017 à 15:56 par : Dr DROUARD Laurence,Dr SAADA Véronique</p>
+<p></p>
+<p></p>
+<p>Résultats <br/></p>
+<p>Page 3 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>SOINS CONTINUS CHIRURGICAUX </p>
+<p>Unités <br/><br/>Valeurs de <br/><br/><br/>Référence </p>
+<p>Patient : </p>
+<p>Val.Analyses <br/><br/>Valeurs </p>
+<p>Précédentes <br/></p>
+<p> 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>173170720 <br/><br/>XXXXXX josé </p>
+<br/>
+<p>HEMATOLOGIE <br/>Numeration sanguine (Sang total sur EDTA) <br/><br/>Méthode : XN - SYSMEX </p>
+<p>Leucocytes 11.6 10*9/L ( 4.0 - 10.0 )6.5 08/11/2017 10:40 SAE </p>
+<p>Hématies 3.69 10*12/L ( 4.50 - 5.90 )4.26 08/11/2017 10:40 IRE </p>
+<p>Hémoglobine 12.8 g/100mL ( 13.0 - 17.0 )15.1 08/11/2017 10:40 IRE </p>
+<p>Hématocrite 37.6 % ( 39.0 - 49.0 )43.4 08/11/2017 10:40 IRE </p>
+<p>VGM 101.9 μ3 ( 85.0 - 95.0 )101.9 08/11/2017 10:40 SAE </p>
+<p>TCMH 34.7 pg/cel ( 28.0 - 34.0 )35.4 08/11/2017 10:40 SAE </p>
+<p>CCMH 34.0 g/100mL ( 32.0 - 36.5 )34.8 08/11/2017 10:40 SAE </p>
+<p>IDG 13.2 % ( 0.0 - 16.0 )13.2 08/11/2017 10:40 </p>
+<p>Plaquettes 225.0 10*9/L ( 150.0-400.0 )249.0 08/11/2017 10:40 IRE </p>
+<p>Formule <br/>Polynucléaires Neutrophiles 92.8 % 75.9 08/11/2017 10:40 IRE </p>
+<p>IRE4.9 08/11/2017 10:40 ( 1.8 - 7.5 )10*9/Lsoit 10.8 </p>
+<p>Polynucléaires Eosinophiles 0.0 % 1.1 08/11/2017 10:40 SAE </p>
+<p>SAE0.1 08/11/2017 10:40 ( 0.0 - 0.5 )10*9/Lsoit 0.0 </p>
+<p>Polynucléaires Basophiles 0.1 % 0.6 08/11/2017 10:40 SAE </p>
+<p>SAE0.0 08/11/2017 10:40 ( 0.0 - 0.3 )10*9/Lsoit 0.0 </p>
+<p>Lymphocytes 6.6 % 15.3 08/11/2017 10:40 SAE </p>
+<p>SAE1.0 08/11/2017 10:40 ( 1.0 - 4.0 )10*9/Lsoit 0.8 </p>
+<p>Monocytes 0.5 % 7.1 08/11/2017 10:40 IRE </p>
+<p>IRE0.5 08/11/2017 10:40 ( 0.1 - 1.0 )10*9/Lsoit 0.1 </p>
+<p>Myelémie 0.0 % 0.0 08/11/2017 10:40 IRE </p>
+<p>IDP 11 11 08/11/2017 10:40 SAE </p>
+<p>VMP 10.0 μ3 ( 6.0 - 12.0 )10.1 08/11/2017 10:40 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 13/11/2017 à 15:56 par : Dr DROUARD Laurence,Dr SAADA Véronique</p>
+<p></p>
+<ul>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Gaz</li>
+<li>Ionogramme</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/><br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

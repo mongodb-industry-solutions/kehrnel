@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125922538" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'onco-urologie - Docteur Emeline COLOMBA</title>
+    <effectiveTime value="20180528000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180528000000+0000"/>
+        <assignedAuthor>
+            <code code="MDA/270" displayName="MEDECINE A"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>DEPARTEMENT DE MEDECINE - ONCO-UROLOGIE - COMPTE RENDU DE <br/>CONSULTATION <br/><br/>Dicté par : </b> Docteur Emeline Colomba
+ <b><br/>Dicté le : </b> 25/05/2018 
+ <b><br/>Service : </b> MDA-MEDECINE A 
+ <br/>
+<b>Type de document : </b> MDA CC CONSULTATION 
+ <br/>
+<b>Ref :</b> 422906 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire </b> : QLO
+ <br/>
+<b><br/> Je revois Madame XXXXXX, 65 ans, vue en cours d'AVASTIN en <br/>entretien dans le cadre de la prise en charge d'un adénocarcinome <br/>séreux de haut grade de l'ovaire de stade IV péritonéal et pleural <br/>initial, traité par chimiothérapie exclusive avec 9 cures de <br/>CARBOPLATINE associées à l'AVASTIN à partir de C8 puis AVASTIN en <br/>entretien.</b>
+<br/>
+<br/>
+<b>Dernière chimiothérapie réalisée le 17/11/2017</b> . 
+ <br/>
+<b>BRCA 1 et 2 non muté en somatique, </b> constitutionnel en attente. 
+ <br/>
+<b>Marqueur CA 125 informatif supérieur à 1 000 au diagnostic.<br/></b>
+<br/>
+<b>On rappelle qu'il y avait une thrombose veineuse profonde au moment <br/>du diagnostic pour laquelle elle est traitée par INNOHEP.<br/></b>
+<br/>
+<u><b> Pour rappel :<br/></b></u>
+<b> <br/></b> Première cure réalisée le 31.3.2017 
+ <br/>Diminution du CARBOPLATINE AUC 4 pour la 5ème cure compte tenu d'une 
+ <br/>thrombopénie grade 2.
+ <br/>Malgré la diminution du CARBOPLATINE, la patiente a présenté une 
+ <br/>thrombopénie de grade 2 retardant la prise en charge chirurgicale.
+ <br/>
+<br/>Scanner d'évaluation du 07.07.2017 : stabilité abdominale, 
+ <br/>disparition de l'épanchement pleural.
+ <br/>PET SCAN : réponse partielle au niveau abdominal et bonne réponse au 
+ <br/>niveau pleural.
+ <br/>Coelioscopie du 09.10.2017 : 12 litres d'ascite évacués.
+ <br/>Instabilité hémodynamique majeure et respiratoire et PCI stable.
+ <br/>A C7 diminution de la dose de CARBOPLATINE AUC 4 , TAXOL 135 mg/m2 
+ <br/>pour cause d'hémato-toxicité, étant donné une thrombopénie de grade 2 
+ <br/>ayant retardé le rythme de chimiothérapie.
+ <br/>
+<b>Introduction de l'AVASTIN à C8 puis poursuite de l'AVASTIN en <br/>entretien.</b>
+<br/>Etant donné la stabilisation uniquement de la maladie avec la 
+ <br/>chimiothérapie, de l'ascite importante persistante, il est décidé de 
+ <br/>s'orienter vers un traitement de chimiothérapie exclusive associé à 
+ <br/>l'AVASTIN.
+ <br/>
+<br/>Depuis la dernière consultation, tolérance de l`AVASTIN globalement 
+ <br/>bonne.
+ <br/>Auto-contrôle tensionnel à domicile satisfaisant avec une PA aux 
+ <br/>alentours de 12/8.
+ <br/>
+<br/>Persistance d'une neuropathie de grade 2 actuellement plutôt stable.
+ <br/>Dernière ponction d'ascite le 26 avril 2018: 4 L 200, L'avant 
+ <br/>dernière avait été réalisée le 13 mars de 4 L qui a bien soulagé la 
+ <br/>patiente . 
+ <b><br/></b> La patiente est en excellent état général, a bon appétit et a repris 
+ <br/>du poids . Pas douleur abdominale, pas de trouble du transit. 
+ <br/>
+<u><b> <br/>Traitement habituel :<br/></b></u>
+<br/>- INNOHEP 0,6 ml.
+ <br/>
+<br/>
+<u><b> Examen clinique :</b></u>
+<br/>
+<br/>Saturation : 99 %.
+ <br/>Poids : 68 kg.
+ <br/>Auscultation cardio-pulmonaire sans anomalie, pas d'adénopathie 
+ <br/>palpable, abdomen distendu avec ascite palpable.
+ <br/>BHA +, pas de douleurs, minime hernie de la ligne médiane, 
+ <br/>réductible, indolore.
+ <br/>Pas de signe fonctionnel urinaire, ni gynécologique.
+ <br/>Pas d'examen gynécologique.
+ <br/>PAC propre.
+ <br/>
+<br/>
+<b>Bilan biologique du 02/05/2018 </b> retrouve un CA 125 stable à 213 vs 
+ <br/>185 en mars 2018. Créatinine à 64 μmol/L, calcémie corrigée à 2,7 
+ <br/>mmol/L, bilan hépatique strictement normal, albumine à 31 g/L en 
+ <br/>augmentation par rapport à février. 
+ <br/>
+<br/>
+<u><b> <h3>Conclusion</h3> :</b></u>
+<br/>
+<br/>Stabilité clinique. Lente ascension du CA 125 depuis janvier. Pas de 
+ <br/>nouvelle symptomatologie. 
+ <br/>
+<br/>On poursuit le traitement par AVASTIN selon les mêmes modalités, 
+ <br/>prochaine injection prévue ce jour : 
+ <br/>
+<br/>
+<b> * AVASTIN 15 mg/kg soit 980 mg DT.</b>
+<br/>
+<br/>A noter qu'on signe ce jour en double exemplaire la note 
+ <br/>d'information concernant le protocole OVBIOMARK auquel la patiente 
+ <br/>accepte de participer, la patiente garde une copie.
+ <br/>
+<br/>Je la reverrai en consultation après 3 nouveau cycles.
+ <b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Emeline COLOMBA <br/>Le lundi 28 mai 2018 à 14:13</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

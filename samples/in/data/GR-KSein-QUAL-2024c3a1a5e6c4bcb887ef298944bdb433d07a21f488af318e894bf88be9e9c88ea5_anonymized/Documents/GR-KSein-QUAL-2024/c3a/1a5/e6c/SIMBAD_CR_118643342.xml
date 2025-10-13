@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_118643342" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 211320045</title>
+    <effectiveTime value="20210512000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20210512000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Dr D. Combarel (61 92) <br/>Dr J. Delahousse (61 92) <br/>Pr A. Paci (47 30) </p>
+<p>Dr A. Arbab (41 65) <br/>Pr A. Bennaceur (40 65) <br/>Interne A. Claudel (37 69) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Interne S. Taleb (37 69) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Interne S. Francis (37 69) <br/>Pr F. Griscelli (51 93) <br/>Dr A. Jeblaoui (40 62) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>XXXXXX </p>
+<p>FémininNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>12/05/2021 05:02 </p>
+<p>Sexe : </p>
+<p>12/05/2021 08:00 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>Nom de naissance : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>UNITE D'EXPERTISE PALLIATIVE </p>
+<p> 3 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>ROUENPrescrit par : </p>
+<p>mercredi 12 mai 2021 <br/></p>
+<p>Complet </p>
+<p>BIOCHIMIE </p>
+<p>Information Laboratoire Changement de méthode d'analyse de chimie et d'immuno-analyse à compter du 06/07/2020. Concerne les paramètres portant la mention Atellica. </p>
+<p> IONOGRAMME <br/>Sodium 134 mmol/l ( 136 - 145 )135 10/05/2021 08:00 LLX <br/>Plasma hépariné - Potentiométrie indirecte, Atellica </p>
+<p>Potassium 3.8 mmol/l ( 3.4 - 4.5 )3.2 10/05/2021 08:00 LLX <br/>Plasma hépariné - Potentiométrie indirecte, Atellica </p>
+<p>Chlore 101 mmol/l ( 98 - 107 )97 10/05/2021 08:00 LLX <br/>Plasma hépariné - Potentiométrie indirecte, Atellica </p>
+<p>Reserve alcaline 27 mmol/l ( 20 - 31 )29 10/05/2021 08:00 LLX <br/>Plasma hépariné - Test enzymatique UV, Atellica </p>
+<p>Protides 61 g/L ( 57 - 82 )64 10/05/2021 08:00 LLX <br/>Plasma hépariné - Colorimétrie (Biuret), Atellica </p>
+<p>Urée 3.0 mmol/l ( 3.2 - 8.2 )4.3 10/05/2021 08:00 LLX <br/>Plasma hépariné - Test cinétique UV à l'uréase, Atellica </p>
+<p>Créatinine 40 μmol/l ( 44 - 71 )50 10/05/2021 08:00 LLX <br/>Plasma hépariné - Test de coloration enzymatique, Atellica </p>
+<p>Base calcul Cockroft 2.56 2.02 10/05/2021 08:00 LLX </p>
+<p>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Débit de Filtration Glomérulaire (MDRD) 153 mL/mn/1.73m2 116 10/05/2021 08:00 LLX </p>
+<p>< 60 : Insuffisance rénale à explorer si nécessaire. <br/>Si origine afro américaine, le DFG est à multiplier par 1.212 </p>
+<p>Débit de Filtration Glomérulaire (CKD- <br/>EPI) </p>
+<p>124 mL/mn/1.73m2 115 10/05/2021 08:00 LLX </p>
+<p>Estimation du débit de filtration glomérulaire en utilisant le dosage de la créatinine (standardisé ID-MS) 30 - 60 mL/mn/1.73m2 : Insuffisance rénale modérée < 30 mL/mn/1.73m2 : Insuffisance rénale sévère </p>
+<p>Glucose 6.6 mmol/l ( 4.1 - 5.9 )5.8 03/02/2021 11:49 LLX <br/>Plasma hépariné - Test enzymatique UV (Hexokinase), Atellica </p>
+<p>Calcium 2.33 mmol/l ( 2.18 - 2.60 )2.35 10/05/2021 08:00 LLX <br/>Plasma hépariné - Test de coloration photométrique (arsenazo III), Atellica </p>
+<p>Calcium Corrigé 2.33 mmol/l ( 2.12 - 2.52 )2.30 29/01/2021 08:00 LLX </p>
+<p>La calcémie corrigée est calculée selon la formule : <br/>Ca corrigé = Ca mesuré(mmol/l) + 1- (albumine (g/l) / 40),applicable uniquement avec albuminémie inférieure ou égale à 40 g/L. </p>
+<p>Phosphore 0.98 mmol/l ( 0.78 - 1.65 )1.53 01/02/2021 17:00 LLX <br/>Plasma hépariné - Test de coloration photométrique UV, Atellica </p>
+<p>Acide Urique 226 μmol/l ( 184 - 464 )224 16/09/2020 08:00 LLX <br/>Plasma hépariné - Test de coloration enzymatique, Atellica </p>
+<p>Magnesium 0.52 mmol/l ( 0.66 - 1.07 )0.51 03/02/2021 11:49 LLX <br/>Plasma hépariné - Test de coloration photométrique, Atellica </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 12/05/2021 à 11:11 par : Dr LACROIX Ludovic,Dr Christophe MARZAC</p>
+<p></p>
+<p></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>UNITE D'EXPERTISE PALLIATIVEPatient : 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>211320045 <br/><br/>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>ROUENPrescrit par : </p>
+<p> BILAN HÉPATIQUE / PANCRÉATIQUE <br/>PAL 112 U/l ( 46 - 116 )78 10/05/2021 08:00 LLX <br/>Plasma hépariné - Test de coloration cinétique IFCC, Atellica </p>
+<p>ASAT 22 U/l ( < 40 )23 10/05/2021 08:00 LLX <br/>Plasma hépariné - Test cinétique UV IFCC, Atellica </p>
+<p>ALAT 26 U/l ( < 40 )24 10/05/2021 08:00 LLX <br/>Plasma hépariné - Test cinétique UV IFCC, Atellica </p>
+<p>GGT 242 U/l ( < 38 )198 10/05/2021 08:00 LLX <br/>Plasma hépariné - Test de coloration cinétique, Atellica </p>
+<p>Bilirubine Totale 8 μmol/l ( 5 - 21 )9 10/05/2021 08:00 LLX <br/>Plasma hépariné - Test de coloration photométrique, Atellica </p>
+<p>Bilirubine Conjuguée 2 μmol/l ( < 5 ) LLX <br/>Plasma hépariné - Test de coloration photométrique, Atellica </p>
+<p> PROTÉINES <br/>CRP 136.0 mg/l ( < 10.0 )41.5 10/05/2021 08:00 LLX <br/>Plasma hépariné - Immunoturbidimétrie, Atellica </p>
+<p>Albumine 40 g/L ( 32 - 48 )43 10/05/2021 08:00 LLX <br/>Plasma hépariné - Test colorimétrique au vert de bromocrésol, Atellica </p>
+<p>Créatine Kinase 16 U/l ( < 145 ) LLX <br/>Plasma hépariné - Test cinétique UV N Acétyl cystéine (IFCC), Atellica </p>
+<p>LDH 1332 U/l ( < 246 )1346 10/05/2021 08:00 LLX </p>
+<p>Résultat contrôléPlasma hépariné - Test de coloration cinétique IFCC, Atellica </p>
+<p> MARQUEURS BIOLOGIQUES <br/>CA 15-3 78 U/ml ( < 32 )68 03/02/2021 11:49 LLX <br/>Serum - Chimiluminescence, Atellica </p>
+<p>HEMOSTASE </p>
+<p> RENSEIGNEMENTS CLINIQUES 1er Traitement presc </p>
+<p>_lab1 <br/>Lovenox </p>
+<p> BILAN DE COAGULATION <br/>Taux de Prothrombine 81 % ( 70 - 100 )100 10/05/2021 08:00 LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>Temps de Quick (Témoin = 13s) 15.4 s 13.4 10/05/2021 08:00 LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>INR 1.2 1.0 10/05/2021 08:00 LLX </p>
+<p>0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>Facteur II 106 % ( 70 - 120 ) LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>Facteur V 105 % ( 70 - 120 ) LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>Facteur VII 93 % ( 70 - 120 ) LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>Facteur X 79 % ( 70 - 120 ) LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>Fibrinogène 5.5 g/L ( 2.0 - 4.0 )3.4 15/09/2020 16:35 LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK 27 s 27 10/05/2021 08:00 LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK Ratio 1.0 ( < 1.2 )1.0 10/05/2021 08:00 LLX </p>
+<p>TCK Témoin 28 s 28 10/05/2021 08:00 LLX </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 12/05/2021 à 11:11 par : Dr LACROIX Ludovic,Dr Christophe MARZAC</p>
+<p></p>
+<p></p>
+<p>Page 3 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>UNITE D'EXPERTISE PALLIATIVEPatient : 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>211320045 <br/><br/>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>ROUENPrescrit par : </p>
+<p>TCA Ratio ! LLX </p>
+<p>TCA Témoin ! LLX </p>
+<p>HEMATOLOGIE </p>
+<p> NUMERATION SANGUINE (SANG TOTAL SUR EDTA) <br/>MÉTHODE : XN - SYSMEX </p>
+<p>Leucocytes 17.1 10*9/L ( 4.0 - 10.0 )15.7 10/05/2021 08:00 CZC </p>
+<p>Hématies 3.43 10*12/L ( 4.00 - 5.20 )3.60 10/05/2021 08:00 CZC </p>
+<p>Hémoglobine 11.1 g/100mL ( 11.5 - 15.0 )11.6 10/05/2021 08:00 CZC </p>
+<p>Hématocrite 33.2 % ( 34.0 - 45.0 )34.5 10/05/2021 08:00 CZC </p>
+<p>VGM 96.8 μ3 ( 75.0 - 96.0 )95.8 10/05/2021 08:00 CZC </p>
+<p>TCMH 32.4 pg/cel ( 24.0 - 33.0 )32.2 10/05/2021 08:00 CZC </p>
+<p>CCMH 33.4 g/100mL ( 32.0 - 36.0 )33.6 10/05/2021 08:00 CZC </p>
+<p>IDG 17.8 % ( 11.0 - 15.0 )17.7 10/05/2021 08:00 </p>
+<p>Plaquettes 238.0 10*9/L 264.0 10/05/2021 08:00 CZC </p>
+<p>Impedance </p>
+<p> FORMULE <br/>Polynucléaires Neutrophiles 95.8 % 93.6 10/05/2021 08:00 CZC </p>
+<p>CZC14.7 10/05/2021 08:00 ( 1.5 - 7.0 )10*9/Lsoit 16.3 </p>
+<p>Polynucléaires Eosinophiles 0.1 % 0.2 10/05/2021 08:00 CZC </p>
+<p>CZC<0.1 10/05/2021 08:00 ( 0.0 - 0.6 )10*9/Lsoit <0.1 <br/></p>
+<p>Polynucléaires Basophiles 0.1 % 0.1 10/05/2021 08:00 CZC </p>
+<p>CZC0.0 10/05/2021 08:00 ( 0.0 - 0.1 )10*9/Lsoit 0.0 </p>
+<p>Lymphocytes 1.2 % 1.9 10/05/2021 08:00 CZC </p>
+<p>CZC0.3 10/05/2021 08:00 ( 1.2 - 4.0 )10*9/Lsoit 0.2 </p>
+<p>Monocytes 2.8 % 4.2 10/05/2021 08:00 CZC </p>
+<p>CZC0.7 10/05/2021 08:00 ( 0.2 - 0.8 )10*9/Lsoit 0.5 </p>
+<p>Formule Automate </p>
+<p>VMP 9.8 μ3 ( 7.5 - 11.0 )9.1 10/05/2021 08:00 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 12/05/2021 à 11:11 par : Dr LACROIX Ludovic,Dr Christophe MARZAC</p>
+<p></p>
+<ul>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Ionogramme</li>
+<li>Bilan hépatique / pancréatique</li>
+<li>Protéines</li>
+<li>Marqueurs biologiques</li>
+</ul>
+<li>HEMOSTASE</li>
+<ul>
+<li>Renseignements cliniques</li>
+<li>Bilan de coagulation</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

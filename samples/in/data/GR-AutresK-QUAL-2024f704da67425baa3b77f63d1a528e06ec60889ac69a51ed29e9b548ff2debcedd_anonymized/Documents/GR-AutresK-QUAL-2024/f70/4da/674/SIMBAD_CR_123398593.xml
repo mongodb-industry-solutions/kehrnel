@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123398593" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>DEPARTEMENT DE MEDECINE - SERVICE GARD</title>
+    <effectiveTime value="20190617000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190617000000+0000"/>
+        <assignedAuthor>
+            <code code="GAR/182" displayName="GARD"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>DEPARTEMENT DE MEDECINE ONCOLOGIQUE - HOSPITALISATION GARD<br/><br/> Dicté par : </b> Docteur Clémence Basse, Interne
+ <b><br/>Dicté le : </b> 07/06/2019 
+ <b><br/>Service : </b> GAR-GARD 
+ <br/>
+<b>Type de document : </b> GAR RH CHIMIO 
+ <br/>
+<b>Ref :</b> 722000 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : Valérie PASQUIET/a
+ <br/>
+<br/>
+<u><b>Interne</b></u> : Clémence BASSE
+ <br/>
+<br/>
+<u><b>HOSPITALISATION SERVICE GARD DU 7 AU 8 JUIN 2019<br/>HOSPITALISATION SERVICE GARD DU 8 AU 10 JUIN 2019<br/></b></u>
+<br/>Mme XXXXXX, 66 ans, est hospitalisée pour la réalisation de la 7ème 
+ <br/>cure de chimiothérapie de type CARBOPLATINE/GEMZAR/AVASTIN dans le 
+ <br/>cadre du protocole ATALANTE (sans J8 de GEMZAR) pour une 1ère rechute 
+ <br/>d'un adénocarcinome séreux pelvien d'origine ovarienne à composante 
+ <br/>mixte de haut grade jamais réséqué, PLATINE sensible.
+ <br/>
+<br/>
+<b>Profil moléculaire : </b> BRCA1 et BRCA2 sauvages en constitutionnel et 
+ <br/>somatique.
+ <br/>
+<b>Protocole signé : </b> ATALANTE.
+ <br/>
+<br/>
+<u><b>Médecin référent</b></u>
+<b> :</b> Docteur Emeline COLOMBA
+ <br/>
+<u><b><br/>ANTECEDENTS / PATHOLOGIES ASSOCIEES<br/></b></u>
+<br/>- Appendicectomie.
+ <br/>- Thrombose MID diagnostiqué en février 2017, sous anticoagulant.
+ <br/>- Pas d'allergie.
+ <br/>- Pas d'intoxication éthylo-tabagique.
+ <br/>- Allergie CARBOPLATINE avec tolérance correcte dans le cadre d'une 
+ <br/>protocole de re-sensibilisation
+ <br/>
+<br/>
+<u><b>TRAITEMENT PERSONNEL<br/></b></u>
+<br/>- INNOHEP 0.5 ml (thrombose de la veine saphène interne étendue 
+ <br/>jusqu'à la fémorale commune à la découverte de la pathologie en 
+ <br/>février 2017)
+ <br/>- PRIMPERAN si besoin
+ <br/>- KYTRIL 1 mg matin et soir
+ <br/>
+<br/>
+<u><b>INTERCURE<br/></b></u>
+<br/>C6 de CARBO-GEMZAR-AVASATIN et +/- ATEZOLIZUMAB (ou placebo) bien 
+ <br/>tolérée.
+ <br/>Pas de lésions cutanée à domicile.
+ <br/>Asthénie grade 2 pendant 10 jours post cure.
+ <br/>Pas de nausée.
+ <br/>Pas de fièvre.
+ <br/>Alopécie grade I.
+ <br/>Transit : constipation grade I.
+ <br/>Pas de toxicité hématologique notable.
+ <br/>
+<br/>Ponction d'ascite évacuatrice de 2L le 27/05/2019 (or habituellement 
+ <br/>entre 5L et 6L évacués).
+ <br/>Depuis 3 jours récidive d'une gêne abdominale (probable majoration e 
+ <br/>l'ascite d'après la patiente) avec asthénie grade 2.
+ <br/>
+<br/>
+<br/>
+<u><b>EXAMEN CLINIQUE<br/></b></u>
+<br/>OMS : 1
+ <br/>Poids initial : 64 kg
+ <br/>Poids actuel : 62 kg Taille : 1m64 SC : 1.67 m2
+ <br/>TA : 138/85 Pouls : 99 bpm
+ <br/>Température : 37.2
+ <br/>Saturation : 99%
+ <br/>
+<br/>Prise en charge nutritionnelle : non.
+ <br/>Syndrome douloureux : EVA d'entrée 0/10.
+ <br/>
+<br/>Auscultation pulmonaire : murmure vésiculaire présent, bilatéral et 
+ <br/>symétrique.
+ <br/>Auscultation cardiaque : pas de souffles, bruits du coeur réguliers.
+ <br/>Pas d'OMI, pas de signe de phlébite.
+ <br/>Abdomen : volumineux avec matité avec présence d'ascite en grande 
+ <br/>abondance.
+ <br/>Aires ganglionnaires : libres au niveau cervical, sus et sous 
+ <br/>claviculaires.
+ <br/>Examen neurologique : normal.
+ <br/>Examen du PAC : absence de signes d'inflammation.
+ <br/>
+<br/>
+<u><b>EXAMENS COMPLEMENTAIRES<br/></b></u>
+<br/>- NFS : leucocytes à 8 200/mm3, PNN à 6 300/mm3, Hb à 10.7 g/dl, 
+ <br/>plaquettes à 429 000/mm3
+ <br/>
+<br/>- Créatinine à 71 μmol/l, urée à 5.8 mmol/l 
+ <br/>Débit de filtration glomérulaire (MDRD) >60 ml/mn
+ <br/>
+<br/>- Ionogramme sanguin : sodium à 136 mmo/l, potassium à 3.8 mmol/l, 
+ <br/>calcium corrigé à 2.53 mmol/l, magnésium à 0.70 mmol/l, protides à 79 
+ <br/>g/l
+ <br/>
+<br/>- Bilan hépatique : PAL à 129 UI/L, ASAT à 29 UI/L, ALAT à 17 UI/L, 
+ <br/>GGT à 36 UI/L, bilirubine totale à 5 μmol/l, albumine à 30 g/L, LDH à 
+ <br/>451 UI/L
+ <br/>
+<u><b><br/>EN PRATIQUE<br/></b></u>
+<br/>Réalisation de la 7ème cure de chimiothérapie à partir du 06/06/2019 
+ <br/>associant :
+ <br/>
+<br/>* BEVACIZUMAB 15 mg/kg soit 930 mg DT le 06/06/2019
+ <br/>* ATEZOLIZUMAB ou placébo 1 200 mg DT le 06/06/2019
+ <br/>* CARBOPLATINE AUC 4 300 mg DT le 
+ <br/>07/06/2019 avec protocole de réintroduction lente en 3 poches : 
+ <br/>- 1 poche avec une concentration à 1%, 
+ <br/>- 1 poche avec une concentration à 10%, et 
+ <br/>- 1 poche avec une concentration à 100%
+ <br/>
+<br/>Prémédication par corticoïdes et POLARAMINE
+ <br/>* GEMZAR 1000 mg/m2 soit 1700 mg DT le 07/06/2019
+ <br/>
+<br/>J1 = J21
+ <br/>
+<br/>Tolérance : bonne tolérance
+ <br/>
+<br/>Ponction d'ascite réalisée le 07/06/2019 qui évacue 4.5L de liquide 
+ <br/>d'ascite trouble : stérile.
+ <br/>
+<br/>La patiente quitte le service Gard 08 juin 2019, mais se représente 
+ <br/>une heure après aux urgences serviCe ROUERGUE pour frissons + 
+ <br/>hyperthermie à 40°C , hémodynamique stable. 
+ <br/>Hémocultures + bilan infectieux fait. 
+ <br/>SOLUPRED 120m g IV + POLARAMINE 5 mg IV fait. 
+ <br/>Evolution après 3h : temperature a 37.5°C, absence de frissons , 
+ <br/>hemodynamique stable. 
+ <br/>Réhospitalisation pour surveillance au GARD jusqu'au 10/06/2019. Les 
+ <br/>prélèvements reviennent stériles.
+ <br/>
+<br/>
+<br/>
+<u><b>Prescriptions de sortie</b></u> :
+ <br/>- INNOHEP 0.5 ml/jour
+ <br/>- PRIMPERAN si besoin
+ <br/>- KYTRIL 1mg matin et soir
+ <br/>
+<br/>Sera revu en consultation par Dr COLOMBA le 27 juin 2019.
+ <br/>Sera réhospitalisée le 28 juin 2019 pour sa C8.
+ <br/>
+<br/>La patiente quitte le service Gard 10 juin 2019.
+ <br/>
+<br/> Prise en charge palliative NON
+ <br/>
+<br/>EVALUATION DE LA CHARGE EN SOINS
+ <br/>* Ponction à visée symptomatique NON
+ <br/>* Adaptation du traitement antalgique NON
+ <br/>* Irradiation antalgique NON
+ <br/>* Occlusion intestinale NON
+ <br/>* Transfusion sanguine NON
+ <br/>* Prise en charge de la détresse respiratoire 
+ <br/>Avec désaturation <90% AA NON
+ <br/>* Traitement des divers symptômes vecteurs d'inconfort 
+ <br/>(toux, prurit, nausées, vomissements, anxiété, 
+ <br/>dépression, troubles du sommeil, déshydratation,...) NON
+ <br/>* Soins de nursing OUI 
+ <br/>* Nutrition 
+ <br/> - déjà sous CNO, nutrition entérale/parentérale NON
+ <br/> - mise en route CNO/nutrition entérale/parentale NON
+ <br/>
+<br/>PRISE EN CHARGE MULTI-DISCIPLINAIRE
+ <br/>* Prise en charge de l'EMASP NON
+ <br/>* Cs CETD (douleur, sophrologie, auriculothérapie) NON
+ <br/>* Cs onco-psychologie 
+ <br/>NON
+ <br/>* Prise en charge sociale NON
+ <br/>* Soins de kinésithérapie NON
+ <br/>* cs diététicienne ou nutritionniste NON
+ <br/>
+<br/>MODE DE SORTIE 
+ <br/>* HAD Santé Service NON
+ <br/>* HAD province NON
+ <br/>* IDE libérale NON
+ <br/>
+<br/>
+<br/>
+<br/>
+<b><br/>_________________________________________________<br/>Signé électroniquement par Docteur Clémence BASSE <br/>Le vendredi 14 juin 2019 à 17:37 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

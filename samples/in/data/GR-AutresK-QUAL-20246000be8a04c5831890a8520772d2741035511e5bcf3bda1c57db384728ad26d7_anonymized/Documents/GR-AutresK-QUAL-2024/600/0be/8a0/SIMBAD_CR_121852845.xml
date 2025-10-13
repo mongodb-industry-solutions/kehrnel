@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121852845" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>CONSULTATION ORL - Interne ORL</title>
+    <effectiveTime value="20200206000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200206000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>CONSULTATION ORL - INTERNE ORL<br/><br/>Dicté par : </b> Docteur Etienne Dauzier, Interne
+ <b><br/>Dicté le : </b> 24/12/2019 
+ <b><br/>Service : </b> ORL-CONSULTATIONS ORL 
+ <br/>
+<b>Type de document : </b> ORL CC PETITE CHIRURGIE 
+ <br/>
+<b>Ref :</b> 891251 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire : LIJ</b>
+<b><br/></b>
+<br/>Patient de 58 ans traité en 2014 par radiochimiothérapie pour CE 
+ <br/>vélaire avec adénopathie cervicale bilatérale.
+ <br/>Deuxième localisation hypopharyngée sinus piriforme droit traitée le 
+ <br/>13/11/17 par pharyngolaryngectomie totale droite par le Dr BREUSKIN 
+ <br/>et lambeau musculo-cutané de grand pectoral.
+ <br/>Les suites avaient été marquées par un pharyngostome reconstruit par 
+ <br/>lambeau libre antéro-latéral de cuisse gauche et lambeau pédiculé 
+ <br/>supra-claviculaire en mars 2018.
+ <br/>Le patient présente actuellement une récidive latéro-cervicale 
+ <br/>bilatérale pour lequel il est en cours de chimiothérapie par 
+ <br/>Cetuximab.
+ <br/>Il présente de problème de récidive de fistule pharyngo-cutanée 
+ <br/>gauche pour lequel il est en cours de traitement par pansements et 
+ <br/>soins locaux.
+ <br/>
+<br/>Le patient est adressé ce jour par l'HDJ CHIMIO pour apparition d'un 
+ <br/>nouvel orifice fistuleux situé juste à gauche de l'orifice le plus 
+ <br/>bas connu.
+ <br/>L'examen clinique est rassurant.
+ <br/>Le patient n'est pas fébrile.
+ <br/>La peau péri-orificielle n'est pas inflammatoire.
+ <br/>Il n'y a pas de collection cervicale.
+ <br/>On effectue quelques prélèvements bactériologiques.
+ <br/>Irrigation des orifices fistuleux qui sont tous les 3 en 
+ <br/>communication.
+ <br/>On décide donc de poursuivre la prise en charge pour pansements, 
+ <br/>irrigation et Algostéril.
+ <br/>Le patient revient la semaine prochaine en hospitalisation.
+ <br/>On pourra contrôler, à ce moment là, l'évolution et discuter une 
+ <br/>antibiothérapie adaptée aux prélèvements effectués ce jour.
+ <br/>On prévient par mail le Dr ALKHASHNAM de l'évolution de la 
+ <br/>cicatrisation.
+ <br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Etienne DAUZIER , Interne<br/>Le jeudi 6 février 2020 à 06:48</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

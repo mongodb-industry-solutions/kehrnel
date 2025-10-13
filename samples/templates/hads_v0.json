@@ -1,0 +1,1591 @@
+{
+  "templateId" : "hads_v0",
+  "semVer" : "0.0.1",
+  "version" : "2.3",
+  "defaultLanguage" : "en",
+  "languages" : [ "en" ],
+  "tree" : {
+    "id" : "hads_v0",
+    "name" : "hads_v0",
+    "localizedName" : "hads_v0",
+    "rmType" : "COMPOSITION",
+    "nodeId" : "openEHR-EHR-COMPOSITION.self_reported_data.v1",
+    "min" : 1,
+    "max" : 1,
+    "localizedNames" : {
+      "en" : "hads_v0"
+    },
+    "localizedDescriptions" : {
+      "en" : "Generic container for information provided by an individual."
+    },
+    "aqlPath" : "",
+    "children" : [ {
+      "id" : "coded_text",
+      "name" : "Coded text",
+      "localizedName" : "Coded text",
+      "rmType" : "DV_CODED_TEXT",
+      "nodeId" : "at0001",
+      "min" : 1,
+      "max" : 1,
+      "localizedNames" : {
+        "en" : "Coded text"
+      },
+      "localizedDescriptions" : {
+        "en" : ""
+      },
+      "aqlPath" : "/category[at0001]",
+      "inputs" : [ {
+        "suffix" : "code",
+        "type" : "CODED_TEXT",
+        "list" : [ {
+          "value" : "433",
+          "label" : "event",
+          "localizedLabels" : {
+            "en" : "event"
+          }
+        } ],
+        "terminology" : "openehr"
+      } ],
+      "inContext" : true
+    }, {
+      "id" : "event_context",
+      "name" : "Event Context",
+      "localizedName" : "Event Context",
+      "rmType" : "EVENT_CONTEXT",
+      "nodeId" : "at0002",
+      "min" : 1,
+      "max" : 1,
+      "localizedNames" : {
+        "en" : "Event Context"
+      },
+      "localizedDescriptions" : {
+        "en" : ""
+      },
+      "aqlPath" : "/context[at0002]",
+      "children" : [ {
+        "id" : "document_metadata",
+        "name" : "Document metadata",
+        "localizedName" : "Document metadata",
+        "rmType" : "CLUSTER",
+        "nodeId" : "openEHR-EHR-CLUSTER.document_metadata.v0",
+        "min" : 0,
+        "max" : 1,
+        "localizedNames" : {
+          "en" : "Document metadata"
+        },
+        "localizedDescriptions" : {
+          "en" : "General document-level metadata complementary to COMPOSITION."
+        },
+        "aqlPath" : "/context[at0002]/other_context[at0003]/items[openEHR-EHR-CLUSTER.document_metadata.v0]",
+        "children" : [ {
+          "id" : "authorisation_date_time",
+          "name" : "Authorisation date/time",
+          "localizedName" : "Authorisation date/time",
+          "rmType" : "DV_DATE_TIME",
+          "nodeId" : "at0001",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Authorisation date/time"
+          },
+          "localizedDescriptions" : {
+            "en" : "When the document was authorised or approved."
+          },
+          "aqlPath" : "/context[at0002]/other_context[at0003]/items[openEHR-EHR-CLUSTER.document_metadata.v0]/items[at0001]/value",
+          "inputs" : [ {
+            "type" : "DATETIME"
+          } ]
+        }, {
+          "id" : "creation_date_time",
+          "name" : "Creation date/time",
+          "localizedName" : "Creation date/time",
+          "rmType" : "DV_DATE_TIME",
+          "nodeId" : "at0002",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Creation date/time"
+          },
+          "localizedDescriptions" : {
+            "en" : "When the document content was created."
+          },
+          "aqlPath" : "/context[at0002]/other_context[at0003]/items[openEHR-EHR-CLUSTER.document_metadata.v0]/items[at0002]/value",
+          "inputs" : [ {
+            "type" : "DATETIME"
+          } ]
+        }, {
+          "id" : "publication_registration_date_time",
+          "name" : "Publication/registration date/time",
+          "localizedName" : "Publication/registration date/time",
+          "rmType" : "DV_DATE_TIME",
+          "nodeId" : "at0003",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Publication/registration date/time"
+          },
+          "localizedDescriptions" : {
+            "en" : "When the document was published or registered in a target repository."
+          },
+          "aqlPath" : "/context[at0002]/other_context[at0003]/items[openEHR-EHR-CLUSTER.document_metadata.v0]/items[at0003]/value",
+          "inputs" : [ {
+            "type" : "DATETIME"
+          } ]
+        }, {
+          "id" : "confidentiality",
+          "name" : "Confidentiality",
+          "localizedName" : "Confidentiality",
+          "rmType" : "DV_CODED_TEXT",
+          "nodeId" : "at0004",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Confidentiality"
+          },
+          "localizedDescriptions" : {
+            "en" : "Level of confidentiality/privacy for the document."
+          },
+          "aqlPath" : "/context[at0002]/other_context[at0003]/items[openEHR-EHR-CLUSTER.document_metadata.v0]/items[at0004]/value",
+          "inputs" : [ {
+            "suffix" : "code",
+            "type" : "TEXT"
+          }, {
+            "suffix" : "value",
+            "type" : "TEXT"
+          } ]
+        }, {
+          "id" : "practice_setting",
+          "name" : "Practice setting",
+          "localizedName" : "Practice setting",
+          "rmType" : "DV_CODED_TEXT",
+          "nodeId" : "at0005",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Practice setting"
+          },
+          "localizedDescriptions" : {
+            "en" : "Clinical specialty or practice context."
+          },
+          "aqlPath" : "/context[at0002]/other_context[at0003]/items[openEHR-EHR-CLUSTER.document_metadata.v0]/items[at0005]/value",
+          "inputs" : [ {
+            "suffix" : "code",
+            "type" : "TEXT"
+          }, {
+            "suffix" : "value",
+            "type" : "TEXT"
+          } ]
+        }, {
+          "id" : "facility_type",
+          "name" : "Facility type",
+          "localizedName" : "Facility type",
+          "rmType" : "DV_CODED_TEXT",
+          "nodeId" : "at0006",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Facility type"
+          },
+          "localizedDescriptions" : {
+            "en" : "Type of healthcare facility."
+          },
+          "aqlPath" : "/context[at0002]/other_context[at0003]/items[openEHR-EHR-CLUSTER.document_metadata.v0]/items[at0006]/value",
+          "inputs" : [ {
+            "suffix" : "code",
+            "type" : "TEXT"
+          }, {
+            "suffix" : "value",
+            "type" : "TEXT"
+          } ]
+        }, {
+          "id" : "external_link_uri",
+          "name" : "External link (URI)",
+          "localizedName" : "External link (URI)",
+          "rmType" : "DV_URI",
+          "nodeId" : "at0007",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "External link (URI)"
+          },
+          "localizedDescriptions" : {
+            "en" : "Reference to an external media or document."
+          },
+          "aqlPath" : "/context[at0002]/other_context[at0003]/items[openEHR-EHR-CLUSTER.document_metadata.v0]/items[at0007]/value",
+          "inputs" : [ {
+            "type" : "TEXT"
+          } ]
+        } ]
+      }, {
+        "id" : "administrative_details",
+        "name" : "Administrative details",
+        "localizedName" : "Administrative details",
+        "rmType" : "CLUSTER",
+        "nodeId" : "openEHR-EHR-CLUSTER.administrative_details.v0",
+        "min" : 0,
+        "max" : 1,
+        "localizedNames" : {
+          "en" : "Administrative details"
+        },
+        "localizedDescriptions" : {
+          "en" : "Simple organisational details related to the document."
+        },
+        "aqlPath" : "/context[at0002]/other_context[at0003]/items[openEHR-EHR-CLUSTER.administrative_details.v0]",
+        "children" : [ {
+          "id" : "performing_organisation",
+          "name" : "Performing organisation",
+          "localizedName" : "Performing organisation",
+          "rmType" : "CLUSTER",
+          "nodeId" : "at0005",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Performing organisation"
+          },
+          "localizedDescriptions" : {
+            "en" : "Organisation that performed the activity documented."
+          },
+          "aqlPath" : "/context[at0002]/other_context[at0003]/items[openEHR-EHR-CLUSTER.administrative_details.v0]/items[at0005]",
+          "children" : [ {
+            "id" : "name",
+            "name" : "Name",
+            "localizedName" : "Name",
+            "rmType" : "DV_TEXT",
+            "nodeId" : "at0011",
+            "min" : 0,
+            "max" : 1,
+            "localizedNames" : {
+              "en" : "Name"
+            },
+            "localizedDescriptions" : {
+              "en" : "Organisation name."
+            },
+            "aqlPath" : "/context[at0002]/other_context[at0003]/items[openEHR-EHR-CLUSTER.administrative_details.v0]/items[at0005]/items[at0011]/value",
+            "inputs" : [ {
+              "type" : "TEXT"
+            } ]
+          }, {
+            "id" : "identifier",
+            "name" : "Identifier",
+            "localizedName" : "Identifier",
+            "rmType" : "DV_TEXT",
+            "nodeId" : "at0012",
+            "min" : 0,
+            "max" : 1,
+            "localizedNames" : {
+              "en" : "Identifier"
+            },
+            "localizedDescriptions" : {
+              "en" : "Local or global organisation identifier."
+            },
+            "aqlPath" : "/context[at0002]/other_context[at0003]/items[openEHR-EHR-CLUSTER.administrative_details.v0]/items[at0005]/items[at0012]/value",
+            "inputs" : [ {
+              "type" : "TEXT"
+            } ]
+          } ]
+        }, {
+          "id" : "publishing_organisation",
+          "name" : "Publishing organisation",
+          "localizedName" : "Publishing organisation",
+          "rmType" : "CLUSTER",
+          "nodeId" : "at0007",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Publishing organisation"
+          },
+          "localizedDescriptions" : {
+            "en" : "Organisation that publishes/makes the document available."
+          },
+          "aqlPath" : "/context[at0002]/other_context[at0003]/items[openEHR-EHR-CLUSTER.administrative_details.v0]/items[at0007]",
+          "children" : [ {
+            "id" : "name",
+            "name" : "Name",
+            "localizedName" : "Name",
+            "rmType" : "DV_TEXT",
+            "nodeId" : "at0014",
+            "min" : 0,
+            "max" : 1,
+            "localizedNames" : {
+              "en" : "Name"
+            },
+            "localizedDescriptions" : {
+              "en" : "Organisation name."
+            },
+            "aqlPath" : "/context[at0002]/other_context[at0003]/items[openEHR-EHR-CLUSTER.administrative_details.v0]/items[at0007]/items[at0014]/value",
+            "inputs" : [ {
+              "type" : "TEXT"
+            } ]
+          }, {
+            "id" : "identifier",
+            "name" : "Identifier",
+            "localizedName" : "Identifier",
+            "rmType" : "DV_TEXT",
+            "nodeId" : "at0015",
+            "min" : 0,
+            "max" : 1,
+            "localizedNames" : {
+              "en" : "Identifier"
+            },
+            "localizedDescriptions" : {
+              "en" : "Local or global organisation identifier."
+            },
+            "aqlPath" : "/context[at0002]/other_context[at0003]/items[openEHR-EHR-CLUSTER.administrative_details.v0]/items[at0007]/items[at0015]/value",
+            "inputs" : [ {
+              "type" : "TEXT"
+            } ]
+          } ]
+        }, {
+          "id" : "custodian_organisation",
+          "name" : "Custodian organisation",
+          "localizedName" : "Custodian organisation",
+          "rmType" : "CLUSTER",
+          "nodeId" : "at0010",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Custodian organisation"
+          },
+          "localizedDescriptions" : {
+            "en" : "Organisation responsible for custody of the record."
+          },
+          "aqlPath" : "/context[at0002]/other_context[at0003]/items[openEHR-EHR-CLUSTER.administrative_details.v0]/items[at0010]",
+          "children" : [ {
+            "id" : "name",
+            "name" : "Name",
+            "localizedName" : "Name",
+            "rmType" : "DV_TEXT",
+            "nodeId" : "at0017",
+            "min" : 0,
+            "max" : 1,
+            "localizedNames" : {
+              "en" : "Name"
+            },
+            "localizedDescriptions" : {
+              "en" : "Organisation name."
+            },
+            "aqlPath" : "/context[at0002]/other_context[at0003]/items[openEHR-EHR-CLUSTER.administrative_details.v0]/items[at0010]/items[at0017]/value",
+            "inputs" : [ {
+              "type" : "TEXT"
+            } ]
+          }, {
+            "id" : "identifier",
+            "name" : "Identifier",
+            "localizedName" : "Identifier",
+            "rmType" : "DV_TEXT",
+            "nodeId" : "at0018",
+            "min" : 0,
+            "max" : 1,
+            "localizedNames" : {
+              "en" : "Identifier"
+            },
+            "localizedDescriptions" : {
+              "en" : "Local or global organisation identifier."
+            },
+            "aqlPath" : "/context[at0002]/other_context[at0003]/items[openEHR-EHR-CLUSTER.administrative_details.v0]/items[at0010]/items[at0018]/value",
+            "inputs" : [ {
+              "type" : "TEXT"
+            } ]
+          } ]
+        }, {
+          "id" : "requesting_organisation",
+          "name" : "Requesting organisation",
+          "localizedName" : "Requesting organisation",
+          "rmType" : "CLUSTER",
+          "nodeId" : "at0009",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Requesting organisation"
+          },
+          "localizedDescriptions" : {
+            "en" : "Organisation that requested the activity/document."
+          },
+          "aqlPath" : "/context[at0002]/other_context[at0003]/items[openEHR-EHR-CLUSTER.administrative_details.v0]/items[at0009]",
+          "children" : [ {
+            "id" : "name",
+            "name" : "Name",
+            "localizedName" : "Name",
+            "rmType" : "DV_TEXT",
+            "nodeId" : "at0020",
+            "min" : 0,
+            "max" : 1,
+            "localizedNames" : {
+              "en" : "Name"
+            },
+            "localizedDescriptions" : {
+              "en" : "Organisation name."
+            },
+            "aqlPath" : "/context[at0002]/other_context[at0003]/items[openEHR-EHR-CLUSTER.administrative_details.v0]/items[at0009]/items[at0020]/value",
+            "inputs" : [ {
+              "type" : "TEXT"
+            } ]
+          }, {
+            "id" : "identifier",
+            "name" : "Identifier",
+            "localizedName" : "Identifier",
+            "rmType" : "DV_TEXT",
+            "nodeId" : "at0021",
+            "min" : 0,
+            "max" : 1,
+            "localizedNames" : {
+              "en" : "Identifier"
+            },
+            "localizedDescriptions" : {
+              "en" : "Local or global organisation identifier."
+            },
+            "aqlPath" : "/context[at0002]/other_context[at0003]/items[openEHR-EHR-CLUSTER.administrative_details.v0]/items[at0009]/items[at0021]/value",
+            "inputs" : [ {
+              "type" : "TEXT"
+            } ]
+          } ]
+        } ]
+      }, {
+        "id" : "start_time",
+        "name" : "Start_time",
+        "rmType" : "DV_DATE_TIME",
+        "min" : 1,
+        "max" : 1,
+        "aqlPath" : "/context[at0002]/start_time",
+        "inputs" : [ {
+          "type" : "DATETIME"
+        } ],
+        "inContext" : true
+      }, {
+        "id" : "setting",
+        "name" : "Setting",
+        "rmType" : "DV_CODED_TEXT",
+        "min" : 1,
+        "max" : 1,
+        "aqlPath" : "/context[at0002]/setting",
+        "inputs" : [ {
+          "suffix" : "code",
+          "type" : "TEXT"
+        }, {
+          "suffix" : "value",
+          "type" : "TEXT"
+        } ],
+        "inContext" : true
+      } ]
+    }, {
+      "id" : "hads_hospital_anxiety_and_depression_scale",
+      "name" : "HADS (Hospital Anxiety and Depression Scale)",
+      "localizedName" : "HADS (Hospital Anxiety and Depression Scale)",
+      "rmType" : "OBSERVATION",
+      "nodeId" : "openEHR-EHR-OBSERVATION.hads.v0",
+      "min" : 0,
+      "max" : 1,
+      "localizedNames" : {
+        "en" : "HADS (Hospital Anxiety and Depression Scale)"
+      },
+      "localizedDescriptions" : {
+        "en" : "14-item screening scale with two 7-item subscales (Anxiety and Depression). Each item is scored 0–3; higher scores indicate greater symptom severity. Subscales range 0–21 and the total score 0–42."
+      },
+      "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']",
+      "children" : [ {
+        "id" : "q1._i_feel_nervous_or_wound_up",
+        "name" : "Q1. I feel nervous or 'wound up'",
+        "localizedName" : "Q1. I feel nervous or 'wound up'",
+        "rmType" : "DV_ORDINAL",
+        "nodeId" : "at0115",
+        "min" : 0,
+        "max" : 1,
+        "localizedNames" : {
+          "en" : "Q1. I feel nervous or 'wound up'"
+        },
+        "localizedDescriptions" : {
+          "en" : "Subscale: Anxiety"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/data[at0001]/events[at0002]/data[at0003]/items[at0115]/value",
+        "inputs" : [ {
+          "type" : "CODED_TEXT",
+          "list" : [ {
+            "value" : "at0116",
+            "label" : "Not at all",
+            "localizedLabels" : {
+              "en" : "Not at all"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 0
+          }, {
+            "value" : "at0117",
+            "label" : "From time to time, occasionally",
+            "localizedLabels" : {
+              "en" : "From time to time, occasionally"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 1
+          }, {
+            "value" : "at0118",
+            "label" : "A lot of the time",
+            "localizedLabels" : {
+              "en" : "A lot of the time"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 2
+          }, {
+            "value" : "at0119",
+            "label" : "Most of the time",
+            "localizedLabels" : {
+              "en" : "Most of the time"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 3
+          } ]
+        } ]
+      }, {
+        "id" : "q2._i_still_enjoy_the_things_i_used_to_enjoy",
+        "name" : "Q2. I still enjoy the things I used to enjoy",
+        "localizedName" : "Q2. I still enjoy the things I used to enjoy",
+        "rmType" : "DV_ORDINAL",
+        "nodeId" : "at0120",
+        "min" : 0,
+        "max" : 1,
+        "localizedNames" : {
+          "en" : "Q2. I still enjoy the things I used to enjoy"
+        },
+        "localizedDescriptions" : {
+          "en" : "Subscale: Depression"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/data[at0001]/events[at0002]/data[at0003]/items[at0120]/value",
+        "inputs" : [ {
+          "type" : "CODED_TEXT",
+          "list" : [ {
+            "value" : "at0121",
+            "label" : "Definitely as much",
+            "localizedLabels" : {
+              "en" : "Definitely as much"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 0
+          }, {
+            "value" : "at0122",
+            "label" : "Not quite so much",
+            "localizedLabels" : {
+              "en" : "Not quite so much"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 1
+          }, {
+            "value" : "at0123",
+            "label" : "Only a little",
+            "localizedLabels" : {
+              "en" : "Only a little"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 2
+          }, {
+            "value" : "at0124",
+            "label" : "Hardly at all",
+            "localizedLabels" : {
+              "en" : "Hardly at all"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 3
+          } ]
+        } ]
+      }, {
+        "id" : "q3._i_get_a_sort_of_frightened_feeling_as_if_something_awful_is_about_to_happen",
+        "name" : "Q3. I get a sort of frightened feeling as if something awful is about to happen",
+        "localizedName" : "Q3. I get a sort of frightened feeling as if something awful is about to happen",
+        "rmType" : "DV_ORDINAL",
+        "nodeId" : "at0125",
+        "min" : 0,
+        "max" : 1,
+        "localizedNames" : {
+          "en" : "Q3. I get a sort of frightened feeling as if something awful is about to happen"
+        },
+        "localizedDescriptions" : {
+          "en" : "Subscale: Anxiety"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/data[at0001]/events[at0002]/data[at0003]/items[at0125]/value",
+        "inputs" : [ {
+          "type" : "CODED_TEXT",
+          "list" : [ {
+            "value" : "at0126",
+            "label" : "Not at all",
+            "localizedLabels" : {
+              "en" : "Not at all"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 0
+          }, {
+            "value" : "at0127",
+            "label" : "A little, but it doesn't worry me",
+            "localizedLabels" : {
+              "en" : "A little, but it doesn't worry me"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 1
+          }, {
+            "value" : "at0128",
+            "label" : "Yes, but not too badly",
+            "localizedLabels" : {
+              "en" : "Yes, but not too badly"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 2
+          }, {
+            "value" : "at0129",
+            "label" : "Very definitely and quite badly",
+            "localizedLabels" : {
+              "en" : "Very definitely and quite badly"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 3
+          } ]
+        } ]
+      }, {
+        "id" : "q4._i_can_laugh_and_see_the_funny_side_of_things",
+        "name" : "Q4. I can laugh and see the funny side of things",
+        "localizedName" : "Q4. I can laugh and see the funny side of things",
+        "rmType" : "DV_ORDINAL",
+        "nodeId" : "at0130",
+        "min" : 0,
+        "max" : 1,
+        "localizedNames" : {
+          "en" : "Q4. I can laugh and see the funny side of things"
+        },
+        "localizedDescriptions" : {
+          "en" : "Subscale: Depression"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/data[at0001]/events[at0002]/data[at0003]/items[at0130]/value",
+        "inputs" : [ {
+          "type" : "CODED_TEXT",
+          "list" : [ {
+            "value" : "at0131",
+            "label" : "As much as I always could",
+            "localizedLabels" : {
+              "en" : "As much as I always could"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 0
+          }, {
+            "value" : "at0132",
+            "label" : "Not quite so much now",
+            "localizedLabels" : {
+              "en" : "Not quite so much now"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 1
+          }, {
+            "value" : "at0133",
+            "label" : "Definitely not so much now",
+            "localizedLabels" : {
+              "en" : "Definitely not so much now"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 2
+          }, {
+            "value" : "at0134",
+            "label" : "Not at all",
+            "localizedLabels" : {
+              "en" : "Not at all"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 3
+          } ]
+        } ]
+      }, {
+        "id" : "q5._worrying_thoughts_go_through_my_mind",
+        "name" : "Q5. Worrying thoughts go through my mind",
+        "localizedName" : "Q5. Worrying thoughts go through my mind",
+        "rmType" : "DV_ORDINAL",
+        "nodeId" : "at0135",
+        "min" : 0,
+        "max" : 1,
+        "localizedNames" : {
+          "en" : "Q5. Worrying thoughts go through my mind"
+        },
+        "localizedDescriptions" : {
+          "en" : "Subscale: Anxiety"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/data[at0001]/events[at0002]/data[at0003]/items[at0135]/value",
+        "inputs" : [ {
+          "type" : "CODED_TEXT",
+          "list" : [ {
+            "value" : "at0136",
+            "label" : "Only occasionally",
+            "localizedLabels" : {
+              "en" : "Only occasionally"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 0
+          }, {
+            "value" : "at0137",
+            "label" : "From time to time, but not too often",
+            "localizedLabels" : {
+              "en" : "From time to time, but not too often"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 1
+          }, {
+            "value" : "at0138",
+            "label" : "A lot of the time",
+            "localizedLabels" : {
+              "en" : "A lot of the time"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 2
+          }, {
+            "value" : "at0139",
+            "label" : "A great deal of the time",
+            "localizedLabels" : {
+              "en" : "A great deal of the time"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 3
+          } ]
+        } ]
+      }, {
+        "id" : "q6._i_feel_cheerful",
+        "name" : "Q6. I feel cheerful",
+        "localizedName" : "Q6. I feel cheerful",
+        "rmType" : "DV_ORDINAL",
+        "nodeId" : "at0140",
+        "min" : 0,
+        "max" : 1,
+        "localizedNames" : {
+          "en" : "Q6. I feel cheerful"
+        },
+        "localizedDescriptions" : {
+          "en" : "Subscale: Depression"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/data[at0001]/events[at0002]/data[at0003]/items[at0140]/value",
+        "inputs" : [ {
+          "type" : "CODED_TEXT",
+          "list" : [ {
+            "value" : "at0141",
+            "label" : "Most of the time",
+            "localizedLabels" : {
+              "en" : "Most of the time"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 0
+          }, {
+            "value" : "at0142",
+            "label" : "Sometimes",
+            "localizedLabels" : {
+              "en" : "Sometimes"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 1
+          }, {
+            "value" : "at0143",
+            "label" : "Not often",
+            "localizedLabels" : {
+              "en" : "Not often"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 2
+          }, {
+            "value" : "at0144",
+            "label" : "Not at all",
+            "localizedLabels" : {
+              "en" : "Not at all"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 3
+          } ]
+        } ]
+      }, {
+        "id" : "q7._i_can_sit_at_ease_and_feel_relaxed",
+        "name" : "Q7. I can sit at ease and feel relaxed",
+        "localizedName" : "Q7. I can sit at ease and feel relaxed",
+        "rmType" : "DV_ORDINAL",
+        "nodeId" : "at0145",
+        "min" : 0,
+        "max" : 1,
+        "localizedNames" : {
+          "en" : "Q7. I can sit at ease and feel relaxed"
+        },
+        "localizedDescriptions" : {
+          "en" : "Subscale: Anxiety"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/data[at0001]/events[at0002]/data[at0003]/items[at0145]/value",
+        "inputs" : [ {
+          "type" : "CODED_TEXT",
+          "list" : [ {
+            "value" : "at0146",
+            "label" : "Definitely",
+            "localizedLabels" : {
+              "en" : "Definitely"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 0
+          }, {
+            "value" : "at0147",
+            "label" : "Usually",
+            "localizedLabels" : {
+              "en" : "Usually"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 1
+          }, {
+            "value" : "at0148",
+            "label" : "Not often",
+            "localizedLabels" : {
+              "en" : "Not often"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 2
+          }, {
+            "value" : "at0149",
+            "label" : "Not at all",
+            "localizedLabels" : {
+              "en" : "Not at all"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 3
+          } ]
+        } ]
+      }, {
+        "id" : "q8._i_feel_as_if_i_am_slowed_down",
+        "name" : "Q8. I feel as if I am slowed down",
+        "localizedName" : "Q8. I feel as if I am slowed down",
+        "rmType" : "DV_ORDINAL",
+        "nodeId" : "at0160",
+        "min" : 0,
+        "max" : 1,
+        "localizedNames" : {
+          "en" : "Q8. I feel as if I am slowed down"
+        },
+        "localizedDescriptions" : {
+          "en" : "Subscale: Depression"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/data[at0001]/events[at0002]/data[at0003]/items[at0160]/value",
+        "inputs" : [ {
+          "type" : "CODED_TEXT",
+          "list" : [ {
+            "value" : "at0161",
+            "label" : "Not at all",
+            "localizedLabels" : {
+              "en" : "Not at all"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 0
+          }, {
+            "value" : "at0162",
+            "label" : "Sometimes",
+            "localizedLabels" : {
+              "en" : "Sometimes"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 1
+          }, {
+            "value" : "at0163",
+            "label" : "Very often",
+            "localizedLabels" : {
+              "en" : "Very often"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 2
+          }, {
+            "value" : "at0164",
+            "label" : "Nearly all the time",
+            "localizedLabels" : {
+              "en" : "Nearly all the time"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 3
+          } ]
+        } ]
+      }, {
+        "id" : "q9._i_get_a_sort_of_frightened_feeling_like_butterflies_in_the_stomach",
+        "name" : "Q9. I get a sort of frightened feeling like 'butterflies' in the stomach",
+        "localizedName" : "Q9. I get a sort of frightened feeling like 'butterflies' in the stomach",
+        "rmType" : "DV_ORDINAL",
+        "nodeId" : "at0165",
+        "min" : 0,
+        "max" : 1,
+        "localizedNames" : {
+          "en" : "Q9. I get a sort of frightened feeling like 'butterflies' in the stomach"
+        },
+        "localizedDescriptions" : {
+          "en" : "Subscale: Anxiety"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/data[at0001]/events[at0002]/data[at0003]/items[at0165]/value",
+        "inputs" : [ {
+          "type" : "CODED_TEXT",
+          "list" : [ {
+            "value" : "at0166",
+            "label" : "Not at all",
+            "localizedLabels" : {
+              "en" : "Not at all"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 0
+          }, {
+            "value" : "at0167",
+            "label" : "Occasionally",
+            "localizedLabels" : {
+              "en" : "Occasionally"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 1
+          }, {
+            "value" : "at0168",
+            "label" : "Quite often",
+            "localizedLabels" : {
+              "en" : "Quite often"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 2
+          }, {
+            "value" : "at0169",
+            "label" : "Very often",
+            "localizedLabels" : {
+              "en" : "Very often"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 3
+          } ]
+        } ]
+      }, {
+        "id" : "q10._i_have_lost_interest_in_my_appearance",
+        "name" : "Q10. I have lost interest in my appearance",
+        "localizedName" : "Q10. I have lost interest in my appearance",
+        "rmType" : "DV_ORDINAL",
+        "nodeId" : "at0170",
+        "min" : 0,
+        "max" : 1,
+        "localizedNames" : {
+          "en" : "Q10. I have lost interest in my appearance"
+        },
+        "localizedDescriptions" : {
+          "en" : "Subscale: Depression"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/data[at0001]/events[at0002]/data[at0003]/items[at0170]/value",
+        "inputs" : [ {
+          "type" : "CODED_TEXT",
+          "list" : [ {
+            "value" : "at0171",
+            "localizedLabels" : {
+              "en" : ""
+            },
+            "ordinal" : 0
+          }, {
+            "value" : "at0172",
+            "localizedLabels" : {
+              "en" : ""
+            },
+            "ordinal" : 1
+          }, {
+            "value" : "at0173",
+            "localizedLabels" : {
+              "en" : ""
+            },
+            "ordinal" : 2
+          }, {
+            "value" : "at0174",
+            "localizedLabels" : {
+              "en" : ""
+            },
+            "ordinal" : 3
+          } ]
+        } ]
+      }, {
+        "id" : "q11._i_feel_restless_as_if_i_have_to_be_on_the_move",
+        "name" : "Q11. I feel restless as if I have to be on the move",
+        "localizedName" : "Q11. I feel restless as if I have to be on the move",
+        "rmType" : "DV_ORDINAL",
+        "nodeId" : "at0175",
+        "min" : 0,
+        "max" : 1,
+        "localizedNames" : {
+          "en" : "Q11. I feel restless as if I have to be on the move"
+        },
+        "localizedDescriptions" : {
+          "en" : "Subscale: Anxiety"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/data[at0001]/events[at0002]/data[at0003]/items[at0175]/value",
+        "inputs" : [ {
+          "type" : "CODED_TEXT",
+          "list" : [ {
+            "value" : "at0176",
+            "label" : "Not at all",
+            "localizedLabels" : {
+              "en" : "Not at all"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 0
+          }, {
+            "value" : "at0177",
+            "label" : "Not very much",
+            "localizedLabels" : {
+              "en" : "Not very much"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 1
+          }, {
+            "value" : "at0178",
+            "label" : "Quite a lot",
+            "localizedLabels" : {
+              "en" : "Quite a lot"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 2
+          }, {
+            "value" : "at0179",
+            "label" : "Very much indeed",
+            "localizedLabels" : {
+              "en" : "Very much indeed"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 3
+          } ]
+        } ]
+      }, {
+        "id" : "q12._i_look_forward_with_enjoyment_to_things",
+        "name" : "Q12. I look forward with enjoyment to things",
+        "localizedName" : "Q12. I look forward with enjoyment to things",
+        "rmType" : "DV_ORDINAL",
+        "nodeId" : "at0180",
+        "min" : 0,
+        "max" : 1,
+        "localizedNames" : {
+          "en" : "Q12. I look forward with enjoyment to things"
+        },
+        "localizedDescriptions" : {
+          "en" : "Subscale: Depression"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/data[at0001]/events[at0002]/data[at0003]/items[at0180]/value",
+        "inputs" : [ {
+          "type" : "CODED_TEXT",
+          "list" : [ {
+            "value" : "at0181",
+            "label" : "As much as I ever did",
+            "localizedLabels" : {
+              "en" : "As much as I ever did"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 0
+          }, {
+            "value" : "at0182",
+            "label" : "Rather less than I used to",
+            "localizedLabels" : {
+              "en" : "Rather less than I used to"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 1
+          }, {
+            "value" : "at0183",
+            "label" : "Definitely less than I used to",
+            "localizedLabels" : {
+              "en" : "Definitely less than I used to"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 2
+          }, {
+            "value" : "at0184",
+            "label" : "Hardly at all",
+            "localizedLabels" : {
+              "en" : "Hardly at all"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 3
+          } ]
+        } ]
+      }, {
+        "id" : "q13._i_get_sudden_feelings_of_panic",
+        "name" : "Q13. I get sudden feelings of panic",
+        "localizedName" : "Q13. I get sudden feelings of panic",
+        "rmType" : "DV_ORDINAL",
+        "nodeId" : "at0185",
+        "min" : 0,
+        "max" : 1,
+        "localizedNames" : {
+          "en" : "Q13. I get sudden feelings of panic"
+        },
+        "localizedDescriptions" : {
+          "en" : "Subscale: Anxiety"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/data[at0001]/events[at0002]/data[at0003]/items[at0185]/value",
+        "inputs" : [ {
+          "type" : "CODED_TEXT",
+          "list" : [ {
+            "value" : "at0186",
+            "label" : "Not at all",
+            "localizedLabels" : {
+              "en" : "Not at all"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 0
+          }, {
+            "value" : "at0187",
+            "label" : "Not very often",
+            "localizedLabels" : {
+              "en" : "Not very often"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 1
+          }, {
+            "value" : "at0188",
+            "label" : "Quite often",
+            "localizedLabels" : {
+              "en" : "Quite often"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 2
+          }, {
+            "value" : "at0189",
+            "label" : "Very often indeed",
+            "localizedLabels" : {
+              "en" : "Very often indeed"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 3
+          } ]
+        } ]
+      }, {
+        "id" : "q14._i_can_enjoy_a_good_book_or_radio_or_tv_program",
+        "name" : "Q14. I can enjoy a good book or radio or TV program",
+        "localizedName" : "Q14. I can enjoy a good book or radio or TV program",
+        "rmType" : "DV_ORDINAL",
+        "nodeId" : "at0190",
+        "min" : 0,
+        "max" : 1,
+        "localizedNames" : {
+          "en" : "Q14. I can enjoy a good book or radio or TV program"
+        },
+        "localizedDescriptions" : {
+          "en" : "Subscale: Depression"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/data[at0001]/events[at0002]/data[at0003]/items[at0190]/value",
+        "inputs" : [ {
+          "type" : "CODED_TEXT",
+          "list" : [ {
+            "value" : "at0191",
+            "label" : "Often",
+            "localizedLabels" : {
+              "en" : "Often"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 0
+          }, {
+            "value" : "at0192",
+            "label" : "Sometimes",
+            "localizedLabels" : {
+              "en" : "Sometimes"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 1
+          }, {
+            "value" : "at0193",
+            "label" : "Not often",
+            "localizedLabels" : {
+              "en" : "Not often"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 2
+          }, {
+            "value" : "at0194",
+            "label" : "Very seldom",
+            "localizedLabels" : {
+              "en" : "Very seldom"
+            },
+            "localizedDescriptions" : {
+              "en" : ""
+            },
+            "ordinal" : 3
+          } ]
+        } ]
+      }, {
+        "id" : "anxiety_subscale_score_0_21",
+        "name" : "Anxiety subscale score (0–21)",
+        "localizedName" : "Anxiety subscale score (0–21)",
+        "rmType" : "DV_COUNT",
+        "nodeId" : "at0150",
+        "min" : 0,
+        "max" : 1,
+        "localizedNames" : {
+          "en" : "Anxiety subscale score (0–21)"
+        },
+        "localizedDescriptions" : {
+          "en" : "Sum of items 1,3,5,7,9,11,13."
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/data[at0001]/events[at0002]/data[at0003]/items[at0150]/value",
+        "inputs" : [ {
+          "type" : "INTEGER",
+          "validation" : {
+            "range" : {
+              "minOp" : ">=",
+              "min" : 0,
+              "maxOp" : "<=",
+              "max" : 21
+            }
+          }
+        } ]
+      }, {
+        "id" : "depression_subscale_score_0_21",
+        "name" : "Depression subscale score (0–21)",
+        "localizedName" : "Depression subscale score (0–21)",
+        "rmType" : "DV_COUNT",
+        "nodeId" : "at0151",
+        "min" : 0,
+        "max" : 1,
+        "localizedNames" : {
+          "en" : "Depression subscale score (0–21)"
+        },
+        "localizedDescriptions" : {
+          "en" : "Sum of items 2,4,6,8,10,12,14."
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/data[at0001]/events[at0002]/data[at0003]/items[at0151]/value",
+        "inputs" : [ {
+          "type" : "INTEGER",
+          "validation" : {
+            "range" : {
+              "minOp" : ">=",
+              "min" : 0,
+              "maxOp" : "<=",
+              "max" : 21
+            }
+          }
+        } ]
+      }, {
+        "id" : "observations",
+        "name" : "Observations",
+        "localizedName" : "Observations",
+        "rmType" : "DV_TEXT",
+        "nodeId" : "at0195",
+        "min" : 0,
+        "max" : 1,
+        "localizedNames" : {
+          "en" : "Observations"
+        },
+        "localizedDescriptions" : {
+          "en" : ""
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/data[at0001]/events[at0002]/data[at0003]/items[at0195]/value",
+        "inputs" : [ {
+          "type" : "TEXT"
+        } ]
+      }, {
+        "id" : "time",
+        "name" : "Time",
+        "rmType" : "DV_DATE_TIME",
+        "min" : 1,
+        "max" : 1,
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/data[at0001]/events[at0002]/time",
+        "inputs" : [ {
+          "type" : "DATETIME"
+        } ],
+        "inContext" : true
+      }, {
+        "id" : "hads_anxiety_interpretation",
+        "name" : "HADS Anxiety interpretation",
+        "localizedName" : "HADS Anxiety interpretation",
+        "rmType" : "CLUSTER",
+        "nodeId" : "openEHR-EHR-CLUSTER.hads_anxiety_interpretation.v0",
+        "min" : 0,
+        "max" : 1,
+        "dependsOn" : [ "q2._i_still_enjoy_the_things_i_used_to_enjoy", "anxiety_subscale_score_0_21", "q4._i_can_laugh_and_see_the_funny_side_of_things", "q1._i_feel_nervous_or_wound_up", "q9._i_get_a_sort_of_frightened_feeling_like_butterflies_in_the_stomach", "q5._worrying_thoughts_go_through_my_mind", "q6._i_feel_cheerful", "q10._i_have_lost_interest_in_my_appearance", "q13._i_get_sudden_feelings_of_panic", "q3._i_get_a_sort_of_frightened_feeling_as_if_something_awful_is_about_to_happen", "observations", "q12._i_look_forward_with_enjoyment_to_things", "depression_subscale_score_0_21", "q8._i_feel_as_if_i_am_slowed_down", "q7._i_can_sit_at_ease_and_feel_relaxed", "q14._i_can_enjoy_a_good_book_or_radio_or_tv_program", "q11._i_feel_restless_as_if_i_have_to_be_on_the_move" ],
+        "localizedNames" : {
+          "en" : "HADS Anxiety interpretation"
+        },
+        "localizedDescriptions" : {
+          "en" : "Interpretation band for the HADS Anxiety subscale."
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/protocol[at0107]/items[openEHR-EHR-CLUSTER.hads_anxiety_interpretation.v0]",
+        "children" : [ {
+          "id" : "interpretation_anxiety",
+          "name" : "Interpretation (Anxiety)",
+          "localizedName" : "Interpretation (Anxiety)",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0001",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Interpretation (Anxiety)"
+          },
+          "localizedDescriptions" : {
+            "en" : "Based on the Anxiety subscale score (0–21)."
+          },
+          "annotations" : {
+            "comment" : "There is consensus that questionnaires with less than 50% of responses in their corresponding dimensions \nhave too much bias to be included. Therefore, this minimum percentage of responses is required \n(https://pubmed.ncbi.nlm.nih.gov/27770833/"
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/protocol[at0107]/items[openEHR-EHR-CLUSTER.hads_anxiety_interpretation.v0]/items[at0001]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0002",
+              "label" : "Normal (0–7)",
+              "localizedLabels" : {
+                "en" : "Normal (0–7)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0003",
+              "label" : "Borderline abnormal (8–10)",
+              "localizedLabels" : {
+                "en" : "Borderline abnormal (8–10)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0004",
+              "label" : "Abnormal (11–21)",
+              "localizedLabels" : {
+                "en" : "Abnormal (11–21)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            } ]
+          } ]
+        } ]
+      }, {
+        "id" : "hads_depression_interpretation",
+        "name" : "HADS Depression interpretation",
+        "localizedName" : "HADS Depression interpretation",
+        "rmType" : "CLUSTER",
+        "nodeId" : "openEHR-EHR-CLUSTER.hads_depression_interpretation.v0",
+        "min" : 0,
+        "max" : 1,
+        "dependsOn" : [ "q2._i_still_enjoy_the_things_i_used_to_enjoy", "anxiety_subscale_score_0_21", "q4._i_can_laugh_and_see_the_funny_side_of_things", "q1._i_feel_nervous_or_wound_up", "q9._i_get_a_sort_of_frightened_feeling_like_butterflies_in_the_stomach", "q5._worrying_thoughts_go_through_my_mind", "q6._i_feel_cheerful", "q10._i_have_lost_interest_in_my_appearance", "q13._i_get_sudden_feelings_of_panic", "q3._i_get_a_sort_of_frightened_feeling_as_if_something_awful_is_about_to_happen", "observations", "q12._i_look_forward_with_enjoyment_to_things", "depression_subscale_score_0_21", "q8._i_feel_as_if_i_am_slowed_down", "q7._i_can_sit_at_ease_and_feel_relaxed", "q14._i_can_enjoy_a_good_book_or_radio_or_tv_program", "q11._i_feel_restless_as_if_i_have_to_be_on_the_move" ],
+        "localizedNames" : {
+          "en" : "HADS Depression interpretation"
+        },
+        "localizedDescriptions" : {
+          "en" : "Interpretation band for the HADS Depression subscale."
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/protocol[at0107]/items[openEHR-EHR-CLUSTER.hads_depression_interpretation.v0]",
+        "children" : [ {
+          "id" : "interpretation_depression",
+          "name" : "Interpretation (Depression)",
+          "localizedName" : "Interpretation (Depression)",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0001",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Interpretation (Depression)"
+          },
+          "localizedDescriptions" : {
+            "en" : "Based on the Depression subscale score (0–21)."
+          },
+          "annotations" : {
+            "comment" : "There is consensus that questionnaires with less than 50% of responses in their corresponding dimensions \nhave too much bias to be included. Therefore, this minimum percentage of responses is required \n(https://pubmed.ncbi.nlm.nih.gov/27770833/"
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/protocol[at0107]/items[openEHR-EHR-CLUSTER.hads_depression_interpretation.v0]/items[at0001]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0002",
+              "label" : "Normal (0–7)",
+              "localizedLabels" : {
+                "en" : "Normal (0–7)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0003",
+              "label" : "Borderline abnormal (8–10)",
+              "localizedLabels" : {
+                "en" : "Borderline abnormal (8–10)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0004",
+              "label" : "Abnormal (11–21)",
+              "localizedLabels" : {
+                "en" : "Abnormal (11–21)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            } ]
+          } ]
+        } ]
+      }, {
+        "id" : "language",
+        "name" : "Language",
+        "rmType" : "CODE_PHRASE",
+        "min" : 1,
+        "max" : 1,
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/language",
+        "inContext" : true
+      }, {
+        "id" : "encoding",
+        "name" : "Encoding",
+        "rmType" : "CODE_PHRASE",
+        "min" : 1,
+        "max" : 1,
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/encoding",
+        "inContext" : true
+      }, {
+        "id" : "subject",
+        "name" : "Subject",
+        "rmType" : "PARTY_PROXY",
+        "min" : 1,
+        "max" : 1,
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.hads.v0,'HADS (Hospital Anxiety and Depression Scale)']/subject",
+        "inputs" : [ {
+          "suffix" : "id",
+          "type" : "TEXT"
+        }, {
+          "suffix" : "id_scheme",
+          "type" : "TEXT"
+        }, {
+          "suffix" : "id_namespace",
+          "type" : "TEXT"
+        }, {
+          "suffix" : "name",
+          "type" : "TEXT"
+        } ],
+        "inContext" : true
+      } ]
+    }, {
+      "id" : "language",
+      "name" : "Language",
+      "rmType" : "CODE_PHRASE",
+      "min" : 1,
+      "max" : 1,
+      "aqlPath" : "/language",
+      "inContext" : true
+    }, {
+      "id" : "territory",
+      "name" : "Territory",
+      "rmType" : "CODE_PHRASE",
+      "min" : 1,
+      "max" : 1,
+      "aqlPath" : "/territory",
+      "inContext" : true
+    }, {
+      "id" : "composer",
+      "name" : "Composer",
+      "rmType" : "PARTY_PROXY",
+      "min" : 1,
+      "max" : 1,
+      "aqlPath" : "/composer",
+      "inputs" : [ {
+        "suffix" : "id",
+        "type" : "TEXT"
+      }, {
+        "suffix" : "id_scheme",
+        "type" : "TEXT"
+      }, {
+        "suffix" : "id_namespace",
+        "type" : "TEXT"
+      }, {
+        "suffix" : "name",
+        "type" : "TEXT"
+      } ],
+      "inContext" : true
+    } ]
+  }
+}

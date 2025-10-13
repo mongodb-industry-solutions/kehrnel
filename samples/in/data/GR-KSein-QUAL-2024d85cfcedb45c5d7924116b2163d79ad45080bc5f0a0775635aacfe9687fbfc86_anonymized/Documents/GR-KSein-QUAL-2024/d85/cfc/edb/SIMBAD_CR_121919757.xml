@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121919757" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°20H00678 2959381 Dr Lalie ROGER BUSCH</title>
+    <effectiveTime value="20200127000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200128000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>DÉPARTEMENT DE BIOLOGIE ET DE PATHOLOGIE MEDICALES<br/></p>
+<p>114, rue Edouard Vaillant - 94805 VILLEJUIF CEDEX<br/></p>
+<p>N° I.G.R. : 050 XXXXXX <br/>XXXXXX XXXXXX George XXXXXX F <br/> Madame Le Docteur MOKDA-ADI Meriem <br/>Examen demandé par : Pathologie Mammaire <br/>Dr MOKDA-ADI Meriem <br/>CTE 050 - SEIN <br/>Prélevé le 21/01/2020 <br/>Enregistré le 21/01/2020 <br/></p>
+<p> RGO <br/> Examen n° : 20H00678<br/></p>
+<p> CR édité le : 27/01/2020<br/></p>
+<p>Copie à : 1/1 </p>
+<p>ETUDE IMMUNOHISTOCHIMIQUE DE HER2 (c-erbB-2) </p>
+<p> micro-biopsie hépatique DROIT(E) </p>
+<p> Technique : sur coupe de tissu fixé en Formol et inclus en paraffine avec l'anticorps monoclonal 4B5 (Ventana). </p>
+<p> Résultats : </p>
+<p> <br/>- Métastase hépatique : marquage membranaire continu, faible de 15 % des cellules <br/>CONCLUSION </p>
+<p> Métastase hépatique : Statut HER2 équivoque en immunohistochimie (score 2+). </p>
+<p> Une étude de l'amplification du gène HER2 par hybridation in situ est demandée. </p>
+<p> NB : score évalué selon les recommandations ASCO 2018 </p>
+<p> <br/>HHFFAMB2 <br/></p>
+<p> Dr Lalie ROGER BUSCH <br/> Praticien </p>
+<p> Compte rendu validé et signé électroniquement </p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

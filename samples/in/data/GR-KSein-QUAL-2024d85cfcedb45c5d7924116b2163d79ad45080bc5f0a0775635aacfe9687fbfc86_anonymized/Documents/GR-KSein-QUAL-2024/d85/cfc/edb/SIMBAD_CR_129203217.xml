@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_129203217" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncogénétique - DR Patrick BENUSIGLIO</title>
+    <effectiveTime value="20160908000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20160912000000+0000"/>
+        <assignedAuthor>
+            <code code="132/26" displayName="CTE 132 - ONCOGENETIQUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patiente vue sous délégation du Docteur BENUSIGLIO par Yoan DITCHI, 
+ <br/>interne.
+ <br/>
+<br/>Patiente adressée par le Docteur MOKDAD en raison de ses antécédents 
+ <br/>personnels.
+ <br/>
+<br/>Profession : travaille dans un cabinet de juristes.
+ <br/>Venue seule 
+ <br/>
+<br/>
+<b>ANTECEDENTS</b>
+<br/>* 
+ <b>Personnels</b> : 
+ <br/>Patiente âgée de 59 ans.
+ <br/>
+<br/>Cancer du sein droit triple négatif à l'âge de 59 ans.
+ <br/>Actuellement traité par chimiothérapie avec chirurgie et 
+ <br/>radiothérapie prévue.
+ <br/>
+<br/>Antécédents médicaux : 
+ <br/>Adénome hypophysaire.
+ <br/>Antécédents gynécologiques : 
+ <br/>Ménarche à 14 ans.
+ <br/>Ménopausée à 54 ans.
+ <br/>G1, P1 avec diagnostic de kyste ovarien durant la grossesse.
+ <br/>Pas d'histologie.
+ <br/>Suivi gynécologique 2x/an.
+ <br/>Présence au niveau des seins de microcalcifications en 2004 sans 
+ <br/>autre détail.
+ <br/>Dernier frottis en mai 2016 considéré comme normal.
+ <br/>Tabac : 20 paquets/année sevré. 
+ <br/>
+<br/>* 
+ <b>Familiaux</b> : 
+ <br/>La branche paternelle n'est pas connue.
+ <br/>
+<br/>Au niveau de la branche maternelle qui est de petite taille, on 
+ <br/>retrouve uniquement un cancer du sein chez sa grand-mère à l'âge de 
+ <br/>89 ans.
+ <br/>
+<br/>
+<b><h3>Conclusion</h3></b> : 
+ <br/>
+<br/>En raison de son antécédent personnel de cancer du sein triple 
+ <br/>négatif à l'âge de 59 ans, on retient chez cette patiente 
+ <br/>l'indication d'analyse constitutionnelle des gènes BRCA1 et BRCA2 
+ <br/>avec une probabilité faible d'identifier une mutation.
+ <br/>
+<br/>Présentation des bases de l'oncogénétique. 
+ <br/>
+<br/>Discussion des manifestations associées aux mutations de BRCA1 et 
+ <br/>BRCA2 et de la prise en charge habituelle des individus porteurs : 
+ <br/>-Augmentation de risque de cancer du sein (ou de second cancer du 
+ <br/>sein en cas d'antécédent). On recommande un dépistage renforcé avec 
+ <br/>IRM et d'une mammographie annuelles. Dans certains cas, une chirurgie 
+ <br/>prophylactique peut être discutée. 
+ <br/>-Augmentation de risque de cancer de l'ovaire. On recommande un 
+ <br/>dépistage échographique annuel dès 35 ans, puis une chirurgie 
+ <br/>prophylactique à la quarantaine, lorsque le risque augmente et la 
+ <br/>ménopause approche. 
+ <br/>-Chez les hommes, augmentation du risque de cancer de la prostate 
+ <br/>justifiant un dépistage, et petit risque de cancer du sein. 
+ <br/>
+<br/>Les recommandations de prise en charge seraient personnalisées et 
+ <br/>validées collégialement. 
+ <br/>
+<br/>Le risque de transmettre la mutation à la descendance serait de 50% 
+ <br/>pour chaque enfant (transmission dominante). 
+ <br/>
+<br/>L'identification d'une mutation permet également dans un petit nombre 
+ <br/>de cas d'adapter la prise en charge médico-chirurgicale à plus court 
+ <br/>terme, par exemple geste chirurgical, chimiothérapie d'entretien ou 
+ <br/>inclusion dans un essai clinique.
+ <br/>
+<br/>L'absence de mutation ne permettrait pas d'exclure catégoriquement 
+ <br/>une prédisposition génétique au cancer par l'intermédiaire d'une 
+ <br/>mutation dans un gène encore inconnu ou trop mal connu pour être 
+ <br/>intégré à la pratique clinique, ou d'une mutation dans les gènes 
+ <br/>étudiés non détectable avec les techniques actuelles. En l'absence de 
+ <br/>mutation, il n'y aurait pas de test génétique disponible pour le 
+ <br/>reste de la famille et des conseils de surveillance seraient donnés 
+ <br/>en fonction du contexte. 
+ <br/>
+<br/>Décision d'analyse génétique. Prescription d'une analyse des gènes 
+ <br/>BRCA1 et BRCA2. Prélèvement sanguin ce jour après signature d'un 
+ <br/>consentement éclairé. 
+ <br/>
+<br/>Les résultats des tests génétiques pourraient modifier la prise 
+ <br/>en charge thérapeutique; nous demandons les résultats en urgence. 
+ <br/>Résultats souhaités pour 
+ <b>le 8 NOVEMBRE 2016 (PRAG)</b> . 
+ <br/>
+<br/>Nous recontacterons la patiente lorsque les résultats seront 
+ <br/>disponibles et l'inviterons à ce moment-là à prendre un nouveau 
+ <br/>rendez-vous pour une consultation de rendu. Les résultats ne 
+ <br/>seront communiqués dans un premier temps qu'à la patiente. 
+ <br/>
+<br/>En cas d'identification d'une mutation, elle informera les membres 
+ <br/>de sa famille désignés lors de la consultation, conformément aux 
+ <br/>dispositions légales, afin qu'ils puissent s'ils le souhaitent 
+ <br/>réaliser à leur tour un test génétique. Nous serions à disposition 
+ <br/>pour l'assister dans cette démarche. 
+ <br/>
+<br/>Compte-rendu relu et validé par le DR BENUSIGLIO.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

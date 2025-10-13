@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120584490" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>LETTRE DE LIAISON</title>
+    <effectiveTime value="20200822000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200821000000+0000"/>
+        <assignedAuthor>
+            <code code="GAR/182" displayName="GARD"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>SERVICE GARD - LETTRE DE LIAISON<br/><br/>Dicté par : </b> Docteur Tiphaine Lambert, Interne
+ <b><br/>Dicté le : </b> 20/08/2020 
+ <b><br/>Service : </b> GAR-GARD 
+ <br/>
+<b>Type de document : </b> GAR NO LETTRE DE LIAISON 
+ <br/>
+<b>Ref :</b> 1077372 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire </b> : CSS/A
+ <br/>
+<u><b><br/> </b></u>
+<br/>
+<u><b>HOSPITALISATION SERVICE GARD - 01 42 11 43 01<br/> </b></u>
+<br/>
+<u><b><br/>Médecin référent Gustave Roussy</b></u> : Dr Emeline COLOMBA
+ <br/>114 rue Edouard Vaillant - 94805 VILLEJUIF CEDEX
+ <br/>
+<br/>
+<u><b>Patient pris en charge par l'interne</b></u> : Tiphaine LAMBERT
+ <br/>114 rue Edouard Vaillant - 94805 VILLEJUIF CEDEX
+ <br/>
+<br/>
+<u><b>Date du séjour</b></u> : 17/08 au 22/08/2020.
+ <br/>
+<u><b>Modalité d'entrée</b></u> : urgence.
+ <br/>
+<u><b>Modalité de sortie</b></u> : HAD.
+ <br/>
+<br/>
+<u><b>Traitement d'entrée/personnel</b></u>
+<b> </b> :
+ <br/>- OXYCONTIN LP 20 mg matin et soir,
+ <br/>- OXYNORMORO 10 mg si douleurs,
+ <br/>- PARACETAMOL 1000 mg/8H, sb,
+ <br/> - INNOHEP 4 500 UI 1 injection SC/jour.
+ <br/>
+<br/>
+<u><b>Motif d'hospitalisation</b></u> : transférée des urgences pour la suite de la 
+ <br/>prise en charge de fébricules 38.2-38.6°C, sans frissons depuis 24H 
+ <br/>dans le cadre de la prise en charge d'un adénocarcinome ovarien 
+ <br/>séreux de haut grade en rechute platine résistante et multitraité 
+ <br/>avec ascite et oedèmes des membres inférieurs, en arrêt de traitement 
+ <br/>spécifique depuis juillet 2020.
+ <br/>
+<br/>
+<u><b>Synthèse médicale du séjour</b></u> :
+ <br/>Episode septique en rapport avec une collection sous-cutanée sur 
+ <br/>retard de cicatrisation dans les suites d'une PTH gauche compliquée 
+ <br/>d'ostéite.
+ <br/>Absence d'indication de drainage. Retour à domicile avec 
+ <br/>antibiothérapie adaptée prolongée. 
+ <br/>
+<br/>
+<b> L'état de santé autorise la sortie médicale.<br/><u> <br/>BMR</u></b> : NON.
+ <br/>
+<u><b>Transfusion</b></u> : NON.
+ <br/>
+<u><b>Pose de DMI</b></u> : NON.
+ <br/>
+<u><b>Bilans sanguins</b></u> : imprimés et remis au patient le jour de la sortie.
+ <br/>
+<u><b>Examens radiologiques</b></u> : TDM des MI le 17/08/2020.
+ <br/>
+<u><b>Recommandations et surveillance</b></u> : OUI.
+ <br/>
+<u><b>Annonce des éléments en attente</b></u> : aucun.
+ <br/>
+<br/>
+<u><b>Traitement de sortie</b></u> :
+ <br/>- OXYCONTIN LP 20 mg matin et soir,
+ <br/>- OXYNORMORO 10 mg si douleurs,
+ <br/>- PARACETAMOL 1000 mg/8H, sb,
+ <br/>- INNOHEP 4 500 UI 1 injection SC/jour.
+ <br/>- ROCEPHINE 2 gr / J pendant 3 semaines
+ <br/>- LEVOFLOXACINE 500 mg x 2/J pendant 3 semaines
+ <br/>
+<br/>
+<u><b>Prochain rendez-vous</b></u> :
+ <br/>Sera revue en consultation téléphonique le 10/09/20 avec le Dr 
+ <br/>COLOMBA.
+ <br/>
+<br/>
+<b> Document imprimé sur la page d'identification du dossier patient de <br/>Gustave Roussy et remis en main propre au patient le jour de la <br/>sortie.<br/></b>
+<br/>
+<b>__________________________<br/>Signé électroniquement par Docteur Tiphaine LAMBERT , Interne<br/>Le vendredi 21 août 2020 à 13:29<br/></b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

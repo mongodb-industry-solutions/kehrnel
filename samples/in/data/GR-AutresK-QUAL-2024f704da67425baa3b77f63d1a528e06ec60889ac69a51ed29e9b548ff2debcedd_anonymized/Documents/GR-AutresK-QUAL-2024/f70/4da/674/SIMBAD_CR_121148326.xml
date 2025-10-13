@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121148326" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>TEST COVID-19</title>
+    <effectiveTime value="20200520000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200528000000+0000"/>
+        <assignedAuthor>
+            <code code="PLC/453" displayName="PLATEAU DE CONSULTATION"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Demande de prélèvement pour test au COVID-19</b></u>
+<br/>
+<br/>
+<b>Date de la demande</b> : 07/05/2020
+ <br/>
+<b>Médecin demandeur</b> : Dr COLOMBA
+ <br/>
+<b>Poste</b> : 3854
+ <br/>
+<br/>
+<b>Indication</b> : Suivi oncovid
+ <br/>
+<br/>
+<br/>----------------------
+ <br/>
+<br/>Date de prélèvement : 20/05/2020 Heure : 9h05
+ <br/>
+<br/>TA : 109/68 mmHg
+ <br/>FC : 103/mn
+ <br/>T° : 37,3°C
+ <br/>FR : 30/mn
+ <br/>SaO2 : 99% en AA / sous L d'O2
+ <br/>
+<br/>Alerte médecin : non
+ <br/>
+<br/>
+<b>Evaluation IDE </b> :
+ <br/>Etat général
+ <br/>Diarrhée : NON
+ <br/>Toux : NON
+ <br/>Confusion : NON
+ <br/>Appel infectieux verbalisé : NON
+ <br/>Troubles du goût / de l'odorat : NON
+ <br/>Chûtes récentes : OUI 
+ <br/>
+<br/>
+<b>Orientation</b> : Domicile 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

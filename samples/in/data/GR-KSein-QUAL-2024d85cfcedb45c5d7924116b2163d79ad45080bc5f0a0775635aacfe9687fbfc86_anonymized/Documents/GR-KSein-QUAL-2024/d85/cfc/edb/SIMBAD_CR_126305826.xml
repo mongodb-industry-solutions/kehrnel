@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126305826" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>HOPITAL DE JOUR DE MEDECINE</title>
+    <effectiveTime value="20180326000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180327000000+0000"/>
+        <assignedAuthor>
+            <code code="HJM/484" displayName="HOPITAL DE JOUR MEDECINE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Docteur Margarida MATIAS</b></u>
+<br/>
+<br/>Patiente vient ce jour pour une nouvelle cure de 
+ <b>CARBOPLATINE/GEMZAR</b> .
+ <br/>
+<br/>Cependant sa prise de sang montre une neutropénie à 320.
+ <br/>
+<br/>Ce jour la NFS de contrôle montre 700 neutrophiles avec le reste du 
+ <br/>bilan correct.
+ <br/>
+<br/>Dans cette condition, nous n'administrons pas ce jour la 
+ <br/>chimiothérapie.
+ <br/>
+<br/>Nous décalons la chimiothérapie à la semaine prochaine qui est déjà 
+ <br/>prévue à Chevilly. Et nous décalerons le reste J1/J8, J1 = J21.
+ <br/>
+<br/>Cliniquement, la patiente n'est pas bien, elle n'a pas de fièvre, pas 
+ <br/>de signe infectieux mais elle doit bien surveiller la fièvre.
+ <br/>
+<br/>En cas de fièvre, elle doit consulter très rapidement un médecin et 
+ <br/>de prendre des antibiotiques prescrites.
+ <br/>
+<br/>Elle reviendra mardi avec une nouvelle prise de sang. 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

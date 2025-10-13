@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_131551630" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Dr Yun Gan TAO - CONSULTATION DE RADIOTHERAPIE</title>
+    <effectiveTime value="20141231000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20141231000000+0000"/>
+        <assignedAuthor>
+            <code code="RTE/414" displayName="RADIOTHERAPIE EXTERNE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b> Monsieur XXXXXX, 1 mois et demi après la ardiochimiothérapie <br/>d'un cancer oropharyngé vélaire, T3 N2c, dans l'essai GORTEC 2004-01 <br/>bras IMRT.</b>
+<br/>
+<br/>Poids ce jour : 59 kg. 
+ <br/>Alimentation solide. 
+ <br/>Xérostomie de grade III.
+ <br/>Douleur intermittente au niveau bucco-pharyngé, il prend du 
+ <br/>CODOLIPRANE maximum 2 /jour. 
+ <br/>Il présente de temps en temps, des sifflements de l'oreille droite 
+ <br/>mais pas d'hypoacousie. 
+ <br/>
+<br/>
+<u><b>L'EXAMEN CE JOUR</b></u>
+<br/>
+<br/>OMS : 0.
+ <br/>Pas de trismus. 
+ <br/>Protraction linguale normale. 
+ <br/>On retrouve un aspect cicatriciel au niveau vélaire avec une 
+ <br/>amputation de la luette. 
+ <br/>Pas de lésion suspecte au niveau bucco-pharyngé. 
+ <br/>
+<br/>En nasofibroscopie, on retrouve plutôt une sténose de l'entrée 
+ <br/>oropharyngée, pas de lésion suspecte au niveau pharyngo-laryngé et 
+ <br/>les cordes vocales sont bien mobiles. 
+ <br/>
+<br/>Au niveau cervical, on retrouve encore un ganglion centimétrique au 
+ <br/>niveau II à droite mais pas d'autre ganglion palpable. 
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<br/>
+<br/>Une réponse clinique complète au niveau oropharyngé.
+ <br/>
+<b> <br/>Il persiste encore un ganglion pour lequel je demande un scanner <br/>cervico-thoracique et également un PETscan pour l'évaluer, dans 4 <br/>semaines environ avant la consultation du Dr TEMAM pour décider s'il <br/>est nécessaire d'envisager un curage cervical droit. <br/> Je le reverrai de mon côté dans 4 mois. </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

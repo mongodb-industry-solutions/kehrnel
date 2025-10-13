@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_119874809" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>UNITE DE PSYCHO-ONCOLOGIE - Diane BOINON - Psychologue clinicienne</title>
+    <effectiveTime value="20201203000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201203000000+0000"/>
+        <assignedAuthor>
+            <code code="UPO/332" displayName="UNITE DE PSYCHO_ONCOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>UNITE DE PSYCHO-ONCOLOGIE - <br/>DEPARTEMENT DE SOINS DE SUPPORT (DISSPO)<br/><br/>COMPTE RENDU DE CONSULTATION<br/><br/><br/>Dicté par : </b> Madame Diane Boinon, Oncopsychologue
+ <b><br/>Dicté le : </b> 01/12/2020 
+ <b><br/>Service : </b> UPO UNITE DE PSYCHO ONCOLOGIE 
+ <br/>
+<b>Type de document : </b> UPO CC CR CONSULTATION 
+ <br/>
+<b>Ref :</b> 1176597 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire : DTE/a<br/><br/></b> Patiente que nous voyons ce jour à son chevet au service Hérault 
+ <br/>hospitalisée depuis hier pour altération de l'état général.
+ <br/>
+<b><br/></b> On rappelle qu'il s'agit de la reprise d'un suivi 
+ <br/>psychothérapeutique mené initialement par Ariane CAVACIUTI 
+ <br/>actuellement en congé maternité.
+ <br/>
+<br/>
+<u><b>\'c0 l'entretien ce jour<br/></b></u> La patiente a pu entendre la nécessité de suspendre son traitement 
+ <br/>par Xeloda compte tenu de l'importance des toxicités et du faible 
+ <br/>bénéfice de ce traitement. La patiente n'est pas débordée par 
+ <br/>l'angoisse et parvient à se protéger psychiquement dans ce contexte. 
+ <br/>Elle oscille entre son espoir d'une vie prolongée sans les toxicités 
+ <br/>de ce traitement et la crainte d'une reprise de la maladie qui 
+ <br/>pourrait être fatale. Dans ce contexte, la patiente a pu clôturer ses 
+ <br/>démarches testamentaires pour ne pas peser sur ses proches, ce qui la 
+ <br/>soulage. Sa fille qui est sa personne de confiance et qui vit en 
+ <br/>Australie sera contactée demain matin par l'équipe médicale, ce qui 
+ <br/>convient tout à fait à la patiente pour qu'elle ait une explication 
+ <br/>claire sur sa situation médicale actuelle. Elle nous explique de 
+ <br/>nouveau les difficultés que sa fille risque de rencontrer pour la 
+ <br/>rejoindre dans le contexte de la crise sanitaire du Covid-19, 
+ <br/>notamment l'attente des autorisations de sortie du territoire.
+ <br/>La patiente reconnaît aujourd'hui qu'elle ne peut plus rester seule à 
+ <br/>domicile. 
+ <br/>
+<br/>Patiente que nous reverrons la semaine prochaine si elle était 
+ <br/>toujours hospitalisée à GR.
+ <br/>
+<br/>
+<br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Madame Diane BOINON , Oncopsychologue<br/>Le mardi 1 décembre 2020 à 15:53</b>
+<br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

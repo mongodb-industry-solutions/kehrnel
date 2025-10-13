@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123543070" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ONCOLOGIE GYNECOLOGIE - DR EMELINE COLOMBA</title>
+    <effectiveTime value="20190524000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190524000000+0000"/>
+        <assignedAuthor>
+            <code code="060/8" displayName="CTE 060 - GYNECOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>COMPTE RENDU DE CONSULTATION DE GYNECOLOGIE<br/><br/>Dicté par : </b> Docteur Emeline Colomba
+ <b><br/>Dicté le : </b> 16/05/2019 
+ <b><br/>Service : </b> 060-CTE 060 - GYNECOLOGIE 
+ <br/>
+<b>Type de document : </b> 060 CC CONSULTATION 
+ <br/>
+<b>Ref :</b> 695511 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : HLX/A
+ <b><br/></b>
+<br/>
+<b>Je revois ce jour Madame XXXXXX , patiente âgée de 66 ans, vue <br/>avant le 5eme cycle de Carboplatine Gemcitabine pour une première <br/>rechute d'un adénocarcinome séreux de haut grade jamais réséqué , <br/>platine sensible dans le cadre du protocole ATALANTE.<br/>Pour mémoire </b> : C1 J1 le 18 janvier , C2 le 21 février, le C2 avait 
+ <br/>été décalé pour une thrombopénie avec hémorragie digestive et 
+ <br/>déglobulisation puis une neutropénie, réalisé le 14 mars mais le 
+ <br/>Carboplatine n'a pas été réalisé .On rappelle la toxicité 
+ <br/>hématologique justifiant l'arrêt du J8 et de l'ajustement des doses 
+ <br/>de Carboplatine jusqu'à un AUC3.
+ <br/>Elle reçoit finalement le C3 au Gard le 4 avril 2019 de Carboplatine 
+ <br/>AUC4 300 mg dose totale interrompu après la moitié 150 mg justifiant 
+ <br/>le passage à un protocole de désensibilisation.
+ <br/>En réalité la cure du 9 avril correspond bien au C3 , C4 le 27 avril 
+ <br/> A noter qu'on réalise que lors du C4 a priori la patiente n' a reçu 
+ <br/>que 150 mg de Carboplatine selon le protocole de désensibilisation 
+ <br/>qui avait été repris.
+ <b> <br/></b> D'autre part il existait également une réaction anaphylactique au 
+ <br/>Carboplatine justifiant de protocole de désensibilisation et 
+ <br/>d'optimisation du traitement de la prémédication médicamenteuse anti 
+ <br/>allergique, depuis la tolérance est meilleure.
+ <br/>
+<b>Sur le plan symptomatique,</b> dernière ponction d'ascite le 27 avril de 
+ <br/>4 L , habituellement la patiente est plutôt ponctionnée toutes les 5 
+ <br/>à 6 semaines. 
+ <br/>A noter que devant l'ajustement des doses de Carboplatine la 
+ <br/>patiente remarque une réapparition plus rapide de l'ascite. 
+ <br/>Nausées de grade 1 liées au traitement.
+ <br/>Asthénie grade 2 liée au traitement, alopécie de grade 1 liée au 
+ <br/>traitement.
+ <br/>Constipation de grade 1 liée au traitement.
+ <br/>
+<br/>
+<b>Examen clinique :<br/></b> PS : O
+ <br/> Poids à 62 kg 
+ <br/>Fréquence respiratoire à 18.
+ <br/>T° : 36°9
+ <br/>Pouls à 94/ minute 
+ <br/>Tension à 13/8 
+ <br/>Saturation à 100 % 
+ <br/>Bandelette urinaire : protéinurie 0,3 gramme par litre 
+ <br/>Examen clinique sans particularité ascite de faible abondance.
+ <br/>
+<br/>
+<b>Traitement actuel :<br/></b> - INOHEP 0.5 ml le matin
+ <br/>
+<b><br/>Sur le plan biologique </b> : le bilan réalisé mardi retrouve une 
+ <br/>hémoglobine à 11,4 des plaquettes à 499 000 des polynucléaires 
+ <br/>neutrophiles à 6200 créatinine à 67, une calcémie corrigée à 2,6 
+ <br/>limite, une albumine à 26 g/L , bilan hépatique satisfaisant et un CA 
+ <br/>125 à 1191 versus 920 le 23 avril en légère ascension.
+ <br/>
+<br/>Le scanner TAP renouvelé après 5 cycles montre une globale stabilité 
+ <br/>de la lésion cible pelvienne, pas d'autres lésions d'allure évolutive.
+ <br/>
+<br/>
+<b><h3>Conclusion</h3> :<br/></b> On poursuit la séquence thérapeutique.
+ <br/>La patiente recevra ce jour au GARD selon le protocole de 
+ <br/>désensibilisation Gemcitabine 1000 mg/m2 soit 1600 mg dose totale J1 
+ <br/>sans J8, J1 = J21 et Carboplatine AUC 3 pour 1 dose totale de 300 
+ <br/>mg selon le protocole de désensibilisation associé au BEVACIZUMAB 15 
+ <br/>mg/kg et l'ATEZOLIZUMB ou le placebo 1200 mg J1 =J21.
+ <br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Emeline COLOMBA <br/>Le jeudi 23 mai 2019 à 14:36</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

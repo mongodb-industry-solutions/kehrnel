@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127539156" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>INTERVENTION</title>
+    <effectiveTime value="20170831000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170905000000+0000"/>
+        <assignedAuthor>
+            <code code="TAR/435" displayName="TARN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>COELIOSCOPIE EXPLORATRICE D'\'c9VALUATION DE LA R\'c9S\'c9CABILIT\'c9 <br/>SOUS ANESTH\'c9SIE G\'c9N\'c9RALE.</b>
+<br/>
+<br/>
+<b>OP\'c9RATEUR : DR BENTIVEGNA<br/>INTERNE : Vincent BALAYA<br/>ANESTH\'c9SISTE : DR BOURGAIN<br/> SECR\'c9TAIRE : CVZ </b>
+<br/>
+<br/>
+<u><b>RAPPEL CLINIQUE</b></u> :
+ <br/>Patiente âgée de 65 ans, prise en charge pour un adénocarcinome 
+ <br/>séreux de haut grade d'origine ovarienne de stade IV pleural initial.
+ <br/>
+<br/>La maladie a été découverte lors de l'apparition d'une thrombose du 
+ <br/>membre inférieur pour laquelle la patiente est actuellement sous 
+ <br/>INNOHEP.
+ <br/>
+<br/>Marqueurs tumoraux en février 2017 : 
+ <br/> - CA 125 à plus de 1000
+ <br/> - CA 19.9 à 142
+ <br/> - CA 15.3 à 154
+ <br/>
+<br/>Coelioscopie diagnostique réalisée le 27/03/2017 retrouvant un PCI à 
+ <br/>16 et une ascite de moyenne abondance.
+ <br/>
+<br/>Le scanner réalisé le 16/04/2017 retrouve un épanchement pleural 
+ <br/>gauche qui a été ponctionné.
+ <br/>
+<br/>La patiente a été prise en charge par chimiothérapie première de type 
+ <br/>CARBOPLATINE / TAXOL dont les doses ont dû être réduites en raison 
+ <br/>d'une thrombopénie.
+ <br/>Jusqu'à présent, cinq cures ont été réalisées. La dernière date du 
+ <br/>21/07/2017.
+ <br/>Bonne réponse biologique avec un CA 125 diminué à 100 et bonne 
+ <br/>réponse à l'imagerie.
+ <br/>
+<br/>Le Pet-scanner réalisé le 09/08/2017 retrouve une fixation de la 
+ <br/>partie postérieure de la masse pelvienne, en rapport avec un résidu 
+ <br/>tumoral, associée à une ascite de moyenne abondance.
+ <br/>Image hépatique simplement douteuse.
+ <br/>Pas d'autre foyer suspect, notamment au niveau pleural.
+ <br/>
+<br/>
+<br/>Depuis un mois, augmentation de l'ascite intra-abdominale.
+ <br/>Décision de réaliser une coelioscopie d'évaluation afin de mettre en 
+ <br/>évidence une éventuelle réponse partielle à la chimiothérapie, ou une 
+ <br/>éventuelle faisabilité d'une chirurgie de cytoréduction.
+ <br/>
+<br/>
+<u><b>INTERVENTION</b></u> :
+ <br/>Sous anesthésie générale.
+ <br/>Intubation oro-trachéale.
+ <br/>Patiente installée en décubitus dorsal, les deux bras le long du 
+ <br/>corps.
+ <br/>Vérification des points d' appuis pour prévenir les complications de 
+ <br/>décubitus.
+ <br/>Double désinfection cutanéo-muqueuse à la Bétadine.
+ <br/>Mise en place de champs stériles.
+ <br/>Mise en place d' une sonde vésicale à demeure.
+ <br/>
+<br/>Incision latéro-ombilicale.
+ <br/>Open coelioscopie.
+ <br/>Introduction facile du trocart d' open.
+ <br/>Insufflation et réalisation d' un pneumopéritoine harmonieux.
+ <br/>Mise en place d' un trocart de 5mm en fosse iliaque gauche.
+ <br/>
+<br/>
+<b> L'exploration de la cavité abdomino-pelvienne retrouve :</b>
+<br/>
+<b>Présence d'ascite (7 litres aspirés).<br/>Très étonnement, malgré cette volumineuse ascite, il n'existe pas de <br/>milliaire de carcinose et une bonne réponse à la chimiothérapie.<br/></b>
+<br/> - 
+ <u>A l'étage sus-mésocolique</u> :
+ <br/>Quelques nodules millimétriques en nombre de trois ou quatre sur la 
+ <br/>partie plus aticale de la coupole diaphragmatique droite.
+ <br/>La coupole diaphragmatique gauche est indemne de lésion.
+ <br/>Petit nodule millimétrique du petit épiploon.
+ <br/>
+<br/> - 
+ <u>A l'étage sous-mésocolique</u> :
+ <br/>Présence d'une adhérence épiplo-pariétale sur une probable lésion de 
+ <br/>carcinose centimétrique.
+ <br/>Présence d'un nodule infra-centimétrique sur la gouttière 
+ <br/>pariéto-colique droite et gauche.
+ <br/>
+<br/> - 
+ <u>A l'étage pelvien</u> : 
+ <br/>Présence d'une très volumineuse masse à paroi lisse, atteignant la 
+ <br/>ligne ombilicale transverse et empêchant de visualiser correctement 
+ <br/>le pelvis.
+ <br/>Néanmoins, on ne retrouve pas de lésion de carcinose pariétale hormis 
+ <br/>quelques petits nodules au niveau de la fosse iliaque gauche.
+ <br/>Le sigmoïde est complètement pris dans la masse tumorale.
+ <br/>
+<br/>Soit un PCI de haut en bas et de droite à gauche :
+ <br/>-1,1,0
+ <br/>-1,2,1
+ <br/>-0,3,3
+ <br/>- Intestin grêle : 0,0,0,0
+ <br/>
+<b>Soit un PCI total à 12</b> .
+ <br/>
+<br/>
+<b> Gestes réalisés :</b>
+<br/>
+<b>\'a4</b> Large biopsie d'un nodule de carcinose de la gouttière 
+ <br/>pariéto-colique droite, envoyée pour le protocole OVBIOMARK.
+ <br/>
+<br/>
+<b>\'a4</b> Cytologie péritonéale directe.
+ <br/>
+<br/>
+<br/>Vérification de l'hémostase.
+ <br/>Exsufflation et retrait des trocarts.
+ <br/>Fermeture de l' aponévrose du trocart ombilical par un point en X de 
+ <br/>Vicryl 1.
+ <br/>Fermeture cutanée des orifices de trocart par des points inversant de 
+ <br/>Moncryl 3/0.
+ <br/>Infiltration de Chirocaïne à visée antalgique.
+ <br/>Pansement simple.
+ <br/>Retrait de la sonde vésicale.
+ <br/>Compte exact des textiles en fin d'intervention.
+ <br/>Pas de complication per-opératoire.
+ <br/>Pertes sanguines estimées nulles.
+ <br/>Pas de transfusion sanguine.
+ <b><br/></b> Durée opératoire : 40 minutes.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> : 
+ <b>Coelioscopie d'évaluation dans le cadre de la prise en <br/>charge d'un adénocarcinome séreux de haut grade d'origine ovarienne <br/>de stade IV pleural initial.<br/>Réalisation de cinq cures de chimiothérapie néo-adjuvantes ayant <br/>permis de retrouver une bonne réponse de la maladie au niveau <br/>biologique, radiologique et à l'exploration chirurgicale, malgré la <br/>persistance d'une ascite abondante.<br/>On confirme donc la prise en charge par chirurgie de débulking après <br/>une sixième cure de chimiothérapie, qui devra prévoir une pelvectomie <br/>postérieure avec hystérectomie totale et annexextomie bilatérale, une <br/>omentectomie infra-gastrique, une fulguration de la coupole <br/>diaphragmatique droite. En cas de découverte d'autres lésions, <br/>d'autres gestes peuvent être réalisés.</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

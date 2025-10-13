@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125141836" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20180927000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180927000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Compte rendu générique de SENOLOGIE<br/><br/>Dicté par : </b> Docteur Meriem Mokdad Adi
+ <b><br/>Dicté le : </b> 27/09/2018 
+ <b><br/>Service : </b> 050-CTE 050 - SEIN 
+ <br/>
+<b>Type de document : </b> 050 CC Générique 
+ <br/>
+<b>Ref :</b> 498897 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : EJL
+ <br/>
+<br/>Patiente vue ce jour en présence de son époux dans le cadre du 
+ <br/>protocole SAFIR02, pour la prise en charge d`une récidive d`un cancer 
+ <br/>du sein gauche diagnostiqué initialement en 2016, triple négatif et 
+ <br/>actuellement en récidive ganglionnaire susclaviculaire et axillaire.
+ <br/>
+<br/>
+<b>Mutation constitutionnelle du gène BRCA1. (Sous réserve de l`analyse <br/>d`un deuxième prélèvement réalisé le 6/09).<br/></b> La dernière injection de Taxolremonte au 12 septembre 2018.
+ <br/>
+<br/>La patiente apporte ce jour les résultats du pet scanner réalisé à 
+ <br/>Antony le 21 septembre qui montre une réponse métabolique complète de 
+ <br/>la récidive ganglionnaire susclaviculaire (il persiste une fixation 
+ <br/>résiduelle qui du fait de son caractère allongé est compatible avec 
+ <br/>une fixation fonctionnelle sur le muscle scalène antérieur, à 
+ <br/>confronter à un scanner diagnostique) et axillaire.
+ <b><br/><br/></b> J' explique à la patiente que compte tenu de la toxicité 
+ <br/>hématologique en rapport avec les traitements, on procède à la 
+ <br/>randomisation le 11/10 dans le cadre du protocole SAFIR 02 : Bras 
+ <br/>standard avec poursuite du Taxol à dose réduite versus bras avec 
+ <br/>Olaparib.
+ <br/>
+<br/>Je la reverrai en consultation le 11/10 pour les résultats de la 
+ <br/>randomisation et un début de traitement probablement à partir du 15 
+ <br/>octobre. 
+ <br/>
+<br/>
+<b>Consultation ce jour </b>
+<br/>
+<br/>PS : 1
+ <br/>Poids : 82Kg.
+ <br/>Examen clinique : Je ne retrouve pas d`adénopathie sus claviculaire 
+ <br/>gauche interne.
+ <br/>Lymphoedème du bras gauche en cours de drainage.
+ <br/>
+<br/>
+<b>Echodoppler du bras gauche </b> réalisé le 11 septembre : négatif.
+ <br/>
+<b>Echographie hépatique réalisée le 11 septembre</b> : stéatose hépatique, 
+ <br/>pas d'autre lésion.
+ <br/>
+<b>Mammographie réalisée en mars</b> : remaniements post-thérapeutiques du 
+ <br/>sein gauche avec cependant un foyer de plus d` une dizaine de 
+ <br/>microcalcifications polymorphes, du quadrant supéro-externe gauche, 
+ <br/>d`analyse difficile, qui pourrait être en rapport avec des 
+ <br/>calcifications de cytostéatonécrose post thérapeutique, mais à 
+ <br/>confronter impérativement dans ce contexte à un avis, et probablement 
+ <br/>des macrobiopsies complémentaires.
+ <br/>
+<br/>La patiente a eu uniquement la biopsie au niveau de l`adénopathie 
+ <br/>susclaviculaire.
+ <br/>
+<br/>Un contrôle par échographie à Gustave Roussy a été réalisé le 13/07 : 
+ <br/>Absence de lésion suspecte du lambeau, la lésion de 2 cm décrite à la 
+ <br/>palpation dans le quadrant supéro-externe gauche correspond à un 
+ <br/>aspect post-thérapeutique en échographie.
+ <br/>Absence de lésion d`allure évolutive du sein droit.
+ <br/>Les deux creux axillaires sont libres.
+ <br/>
+<br/>Pas de bilan biologique ce jour. 
+ <br/>
+<b> <br/><u>EN PRATIQUE<br/></u><br/></b> Je la reverrai en consultation le 11/10 après la randomisation.
+ <br/>
+<br/>
+<b><br/>_________________________________________________<br/>Signé électroniquement par Docteur Meriem MOKDAD ADI <br/>Le jeudi 27 septembre 2018 à 11:25 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

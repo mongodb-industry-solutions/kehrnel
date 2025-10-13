@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120938799" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="10213-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anesthésie"/>
+    <title>CR Anesthesie Post-Op</title>
+    <effectiveTime value="20200629000000+0000"/>
+    <confidentialityCode code="10213-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anesthésie"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200629000000+0000"/>
+        <assignedAuthor>
+            <code code="ANS/286" displayName="ANESTHESIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Prénom <br/><br/><br/>Nom </p>
+<p>N° Patient <br/><br/><br/>D. de N. </p>
+<p>No PBO <br/><br/><br/>Taille <br/><br/><br/>Poids <br/><br/><br/>Age </p>
+<p>Anesthésie le <br/><br/><br/>Classe ASAJosé </p>
+<p>DA SILVA... </p>
+<p>XXXXXX XXXXXX </p>
+<p>728707 165 cm 64 kg </p>
+<p>59 ans </p>
+<p>29.06.2020 2U </p>
+<p>ATNC <br/><br/><br/>Induction: </p>
+<p>INTERVENTION CHIRURGICALE 3445 Embolisation artérielle Artères et veines du cou et de la tête Gauche carotide </p>
+<p>IADEAnesthesiste Chirurgien <br/>Dr ROUX Charles MY EvelyneDr CELESTIN Bernard </p>
+<p>Consultation pre-anesthésique .Non .Non .Non </p>
+<p>BMR : <br/>D.I.D : </p>
+<p>D.T.M : </p>
+<p>Mallampati : <br/>ODB: </p>
+<p>Pacemaker : </p>
+<p>Eval. Prémé: </p>
+<p>Technique Anesthésie Allergies Durées <br/>Non connue Durée anesthésie </p>
+<p>Durée chirurgie 2 h 14 min <br/>Admission SSPI 19:07 <br/>Sortie SSPI 20:02 </p>
+<p>Sédation </p>
+<p>Anesthésie locale </p>
+<p>Voies Aériennes 16:41, Déjà en place, , Trachéotomie, Canule de Shiley, 8 </p>
+<p>Voies Veineuses 16:38, VVP, Cathlon VVP, 20g, Main, Gauche, .Facile 16:28, VVP, Cathlon VVP, 20g, Main, Droit, Déjà en place, </p>
+<p>Loco-Régionale </p>
+<p>Position & Protections 16:28 Installation Décubitus dorsal 16:28 Position Table Niveau 16:28 Position Bras Gauche Long du corps 16:28 Position Bras Droit Long du corps </p>
+<p>Temps chirurgicaux </p>
+<p>Monitorage et Equipements </p>
+<p>Notes IntraOP </p>
+<p>Drainages </p>
+<p>Temps 29/06/2020 19:04 -Sortie de salle 29/06/2020 18:51 -Fin d'intervention 29/06/2020 16:37 -Time out fait 29/06/2020 16:37 -Début de chirurgie 29/06/2020 16:28 -Prêt pour chirurgie 29/06/2020 16:24 -Début d'anesthesie 29/06/2020 16:24 -Patient en salle 29/06/2020 16:02 Salle prête </p>
+<p>ENTREES BALANCE <br/>Produits sanguins <br/></p>
+<p>Entrées Solutés </p>
+<p>TOTAL </p>
+<p>1100 ml </p>
+<p>2023 ml </p>
+<p>3123 ml 600 ml 2523 ml </p>
+<p>SORTIES <br/>Balance des fluides </p>
+<p>Autres </p>
+<p>Pertes sang bloc </p>
+<p>600 mlUrines </p>
+<p>RedonsDate d'impression: 29/06/20 20:02 Page 1/3</p>
+<p></p>
+<p></p>
+<p>Prénom <br/><br/><br/>Nom </p>
+<p>N° Patient <br/><br/><br/>D. de N. </p>
+<p>No PBO <br/><br/><br/>Taille <br/><br/><br/>Poids <br/><br/><br/>Age </p>
+<p>Anesthésie le <br/><br/><br/>Classe ASAJosé </p>
+<p>DA SILVA... </p>
+<p>XXXXXX XXXXXX </p>
+<p>728707 165 cm 64 kg </p>
+<p>59 ans </p>
+<p>29.06.2020 2U </p>
+<p>ATNC <br/><br/><br/>Induction: </p>
+<p>SSPI <br/>ExtubationArrivée SSPI Personnels SSPI <br/></p>
+<p>19:07 Dr ROUX Charles <br/>BARA Rafiatou </p>
+<p>Dr CELESTIN Bernard </p>
+<p>... </p>
+<p>Bilan d ́entrée <br/>Score EDS: 0 Patient Eveillé , NVPO: 1 Rien , Mal de gorge: .Non , Agitation: .Non </p>
+<p>Surveillance 19:59 EVS 1 Douleur faible 19:59 NVPO 1 Rien 19:59 Score EDS 0 Patient Eveillé 19:23 Score EDS 0 Patient Eveillé 19:23 NVPO 1 Rien 19:23 Agitation .Non 19:23 Mal de gorge .Non </p>
+<p>LABO ACTES SSPI <br/>16:42 Hémocue 11.6g </p>
+<p>Signes Vitaux Manuels Notes SSPI <br/>20:01 Départ en réanimation avec l'anesthésiste. Ventilatioinau ballon.desaturation a 75 % ==> instauration du respiratuer avec drcelestin <br/>Son de urin aire posée a 19h20 ==> clampage a 500 cc </p>
+<p>INSTRUCTIONS POSTOP <br/>Instructions Générales Instructions chirurgicales </p>
+<p>ANALGESIQUES & ALR <br/>Remifentanil 25 μg/ml, 125 μg, I.V. perf, Commencé :29/06/2020 16:25, Arrêté :29/06/2020 19:04, PRIMEA-04 <br/>> Voie 2 </p>
+<p>ANTIBIOTIQUES </p>
+<p>AUTRES DROGUES </p>
+<p>Propofol 10 mg/ml, 30 mg, I.V. bolus, Administré :29/06/2020 16:53 </p>
+<p>Furosemide, 20 mg, I.V. bolus, Administré :29/06/2020 19:48 <br/>Noradrenaline 0.01 mg/ml, 0,03 mg, I.V. bolus, Administré :29/06/2020 18:07 <br/>Noradrenaline 0.01 mg/ml, 0,02 mg, I.V. bolus, Administré :29/06/2020 17:19 <br/>Acide tranexamique, 1 g, I.V. perf, Administré :29/06/2020 16:41 </p>
+<p>Produits sanguins <br/>CGR homologue, 300 ml, Inj, Administré :29/06/2020 18:44, 7120156838- <br/>CGR homologue, 300 ml, Inj, Administré :29/06/2020 18:24, 165201374541 <br/>Plasma, 200 ml, Inj, Administré :29/06/2020 18:09, 73191492332 <br/>CGR homologue, 300 ml, Inj, Administré :29/06/2020 18:01, 164200758311 <br/>Date d'impression: 29/06/20 20:02 Page 2/3</p>
+<p></p>
+<p></p>
+<p>Prénom <br/><br/><br/>Nom </p>
+<p>N° Patient <br/><br/><br/>D. de N. </p>
+<p>No PBO <br/><br/><br/>Taille <br/><br/><br/>Poids <br/><br/><br/>Age </p>
+<p>Anesthésie le <br/><br/><br/>Classe ASAJosé </p>
+<p>DA SILVA... </p>
+<p>XXXXXX XXXXXX </p>
+<p>728707 165 cm 64 kg </p>
+<p>59 ans </p>
+<p>29.06.2020 2U </p>
+<p>ATNC <br/><br/><br/>Induction: </p>
+<p>Totaux fluides & produits sanguins <br/>Plasma 200 ml <br/>Ringer 1000 ml <br/>CGR homologue 900 ml </p>
+<p>Ringer 1000 ml <br/></p>
+<p>Bilan de Sortie <br/>Score EDS 0 Patient Eveillé, Patient Normotherme , Pansements tachés , NVPO 1 Rien, EVS 1 Douleur faible, Départavec O2 .Oui </p>
+<p>Evénements Remarquables (IntraOP/PostOP): .Oui </p>
+<p>Evénements Remarquables Chirurgicaux </p>
+<p>DestinationScore d'Aldrete Heure de sortieMédecin autorisant la sortie <br/>Réanimation 29/06/20 20:02 </p>
+<p>Date d'impression: 29/06/20 20:02 Page 3/3</p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

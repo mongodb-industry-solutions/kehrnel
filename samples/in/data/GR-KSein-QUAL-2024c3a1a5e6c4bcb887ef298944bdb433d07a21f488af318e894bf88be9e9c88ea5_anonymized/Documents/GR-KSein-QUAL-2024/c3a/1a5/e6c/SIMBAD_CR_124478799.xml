@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124478799" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20190107000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190107000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Compte rendu générique de SENOLOGIE<br/><br/>Dicté par : </b> Docteur Meriem Mokdad Adi
+ <b><br/>Dicté le : </b> 07/01/2019 
+ <b><br/>Service : </b> 050-CTE 050 - SEIN 
+ <br/>
+<b>Type de document : </b> 050 CC Générique 
+ <br/>
+<b>Ref :</b> 567052 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>
+<b>_____________________________________________________________<br/></b>
+<br/>
+<b>Secrétaire </b> : ORC
+ <br/>
+<br/>Patiente vue ce jour en présence de son époux pour la prise en charge 
+ <br/>d'une récidive en mars 2018 d'un cancer du sein gauche diagnostiqué 
+ <br/>initialement en 2015 traité à Bergonié par chimiothérapie, chirurgie 
+ <br/>puis radiothérapie au niveau axillaire, CMI et sus claviculaire, 
+ <br/>triple négatif et actuellement en récidive ganglionnaire 
+ <br/>susclaviculaire et axillaire.
+ <br/>
+<br/>PETscanner le 20 décembre qui montre, comparativement à l'examen 
+ <br/>précédent de septembre 2018, un aspect de réévolutivité au niveau 
+ <br/>ganglionnaire sus et sous-claviculaire gauche et probablement 
+ <br/>axillaire gauche.
+ <br/>
+<br/>Pas d'autre localisation mise en évidence.
+ <br/>
+<br/>Echographie avec cytoponction au niveau ganglionnaire
+ <br/>susclaviculaire le plus volumineux le 21/12 :
+ <br/>Présence de cellules tumorales malignes métastatiques.
+ <br/>L'aspect est compatible avec une origine mammaire.
+ <br/>
+<br/>Je propose à la patiente de débuter un traitement par TALAZOPARIB, je 
+ <br/>reste en attente de la réponse du laboratoire. 
+ <br/>La demande a été faite le 21 décembre.
+ <br/>
+<br/>
+<u><b>EN PRATIQUE :<br/></b></u>
+<br/>Elle débutera le traitement dès que le médicament sera disponible.
+ <br/>
+<br/>Je contacterai la patiente par téléphone pour fixer un rdv de 
+ <br/>consultation avant de débuter le traitement.
+ <br/>
+<b><br/>_________________________________________________<br/>Signé électroniquement par Docteur Meriem MOKDAD ADI <br/>Le lundi 7 janvier 2019 à 10:24 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

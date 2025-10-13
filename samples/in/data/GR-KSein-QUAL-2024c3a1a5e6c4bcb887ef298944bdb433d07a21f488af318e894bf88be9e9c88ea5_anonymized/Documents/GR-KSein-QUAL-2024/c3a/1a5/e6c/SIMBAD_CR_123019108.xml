@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123019108" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>ECHOGRAPHIE - ECHO DOP MS</title>
+    <effectiveTime value="20190813000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190813000000+0000"/>
+        <assignedAuthor>
+            <code code="ECH/383" displayName="ECHOGRAPHIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur TAZDAIT Melodie
+ <br/>Destinataire : ROUERGUE
+ <br/> DR ANTOUN Sami
+ <b><br/><br/>Dicté par : </b> Mélodie Tazdait
+ <b><br/>Dicté le : </b> 13/08/2019 
+ <b><br/>Service : </b> ECH-ECHOGRAPHIE 
+ <br/>
+<b>Type de document : </b> ECH CE DOP VEINEUX MB SUP 
+ <br/>
+<b>Ref :</b> 768120 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : UGA
+ <br/>Examen réalisé le : 13/8/2019
+ <br/>
+<br/>
+<br/>
+<b>ECHOGRAPHIE DOPPLER VEINEUX DU MEMBRE SUPERIEUR GAUCHE</b>
+<br/>
+<br/>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> <u><br/></u></b> Recherche de thrombophlébite du membre supérieur gauche : 
+ <br/>augmentation du lymphoedème récent avec douleurs prédominant à la 
+ <br/>face postérieure de l'avant bras chez une patiente suivie pour cancer 
+ <br/>du sein gauche en récidive ganglionnaire axillaire et sus-claviculaire.
+ <br/>
+<br/>
+<u><b>TECHNIQUE<br/></b></u>
+<b>Examen réalisé avec un appareil TOSHIBA APPLIO 500.<br/>Mise en service en février 2017.</b>
+<br/>
+<u><b><br/>RESULTATS<br/><br/></b></u> Les veines jugulaires, sus-claviculaires et axillaires apparaissent 
+ <br/>perméables avec toutefois un ralentissement du flux, faisant suspecter 
+ <br/>un obstacle, possiblement compressif d'amont.
+ <br/>Le tronc veineux jugulo-sous-clavier gauche n'est pas visualisable 
+ <br/>(douleurs liées à une lésion ganglionnaire fistulisée à la peau). 
+ <br/>Perméabilité des veines humérales, radiales et ulnaires.
+ <br/>Perméabilité des veines céphaliques et basiliques.
+ <br/>Importante infiltration des tissus mous sous-cutanés à la face 
+ <br/>antérieure et postérieure de l'avant bras. 
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> <u><br/></u>Absence de signe échographique en faveur d'une thrombose veineuse <br/>profonde ou superficielle du membre supérieur gauche.<br/>En revanche, ralentissement du flux au sein des veines axillaire, <br/>sus-clavière et jugulaire interne, faisant suspecter un obstacle <br/>d'amont : compression d'origine ganglionnaire? A confronter aux <br/>données d'un scanner injecté.<br/><br/>_________________________________________________<br/>Signé électroniquement par Mélodie TAZDAIT <br/>Le mardi 13 août 2019 à 11:36 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

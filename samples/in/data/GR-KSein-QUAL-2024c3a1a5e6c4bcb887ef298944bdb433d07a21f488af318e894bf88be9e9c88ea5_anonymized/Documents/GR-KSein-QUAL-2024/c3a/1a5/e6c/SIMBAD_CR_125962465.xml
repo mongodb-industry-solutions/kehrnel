@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125962465" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°18H03826 2573549 Dr Marie-Christine MATHIEU</title>
+    <effectiveTime value="20180419000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180522000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>DÉPARTEMENT DE BIOLOGIE ET DE PATHOLOGIE MEDICALES<br/></p>
+<p>114 rue Edouard Vaillant - 94805 VILLEJUIF CEDEX </p>
+<p>N° I.G.R. : 050 XXXXXX <br/>XXXXXX XXXXXX Eliane XXXXXX <br/>Examen demandé par : Docteur MINARD-COLIN Véronique <br/>Dr MINARD-COLIN Véronique <br/>CTE 050 - SEIN <br/>Prélevé le 16/04/2018 <br/>Enregistré le 17/04/2018 <br/></p>
+<p> EDZ <br/> Examen n° : 18H03826<br/>CR édité le : 19/04/2018 </p>
+<p><br/></p>
+<p>Copie à : 1/1<br/></p>
+<p>MICRO-BIOPSIE SOUS REPÉRAGE D'UN GANGLION SUS-CLAVICULAIRE GAUCHE<br/></p>
+<p> Il a été réalisé une carotte biopsique (18G), mesurant 5 mm de long.<br/>À l'examen microscopique, ce prélèvement est essentiellement constitué par un tissu fibro-hyalin, contenant une prolifération carcinomateuse écrasée et mal analysable. Celle ci est constituée par des cellules de taille moyenne, à noyaux modérément irréguliers entre eux, hyper-chromatiques et à cytoplasme mal visible. Ces cellules s'agencent en petites travées, parfois en éléments isolés. <br/>Une étude immunohistochimique a été réalisée et montre : <br/>* une positivité des cellules tumorales pour CK7 (marquage de 70% des cellules). <br/>* une expression de GATA 3 (marquage faible à modéré de 60% des cellules). <br/>* une absence d'expression de GCDFP15 et de mammaglobine. <br/>* une absence d'expression des récepteurs aux œstrogènes, à la progestérone et de HER2 (cf. compte rendu joint).<br/>CONCLUSION : <br/>Métastase d'un ADÉNOCARCINOME PEU DIFFÉRENCIÉ (RE-, RP-, HER2-, GATA 3+) compatible avec une origine mammaire primitive, étant donné les antécédents de la patiente. <br/>Résultat donné dans les limites de ce prélèvement de petite taille.<br/>PHSGAMB0<br/>SCG, BHSGAMA3<br/>SCGGS, BHSG <br/> Dr Marie-Christine MATHIEU <br/> Médecin Spécialiste </p>
+<p> <br/></p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

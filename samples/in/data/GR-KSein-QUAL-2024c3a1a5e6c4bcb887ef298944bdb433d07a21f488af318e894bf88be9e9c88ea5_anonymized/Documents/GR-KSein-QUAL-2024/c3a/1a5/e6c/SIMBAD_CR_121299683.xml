@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121299683" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20200504000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200504000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patiente âgée de 40 ans, entretien téléphonique ce jour dans le cadre 
+ <br/>de la prise en charge d'une récidive en mars 2018, sous Navelbine , 
+ <br/>débutée depuis 3semaines pour un cancer du sein gauche diagnostiqué 
+ <br/>initialement en 2015 traité à Bergonié par chimiothérapie, chirurgie 
+ <br/>puis radiothérapie au niveau axillaire, CMI et sus claviculaire, 
+ <br/>triple négatif et actuellement en récidive ganglionnaire 
+ <br/>sus-claviculaire et axillaire.
+ <br/>
+<br/>Randomisation le 11/10 dans le cadre du protocole SAFIR 02 : Bras 
+ <br/>standard avec poursuite du TAXOL à dose réduite( -20%) versus bras 
+ <br/>avec OLAPARIB.
+ <br/>
+<br/>1ère ligne :TAXOL à dose réduite (-20%) de mai jusqu'à décembre 2018 
+ <br/>avec carboplatine qui a été arrêté rapidement pour toxicité 
+ <br/>hématologique .
+ <br/>
+<br/>PET scanner le 20 décembre qui montre, comparativement à l'examen 
+ <br/>précédent de septembre 2018, un aspect de réévolutivité au niveau 
+ <br/>ganglionnaire sus et sous-claviculaire gauche et probablement 
+ <br/>axillaire gauche.
+ <br/>
+<br/>Pas d'autre localisation mise en évidence.
+ <br/>
+<br/>Echographie avec cytoponction au niveau ganglionnaire 
+ <br/>susclaviculaire, le plus volumineux le 21/12 :
+ <br/>Présence de cellules tumorales malignes métastatiques.
+ <br/>L'aspect est compatible avec une origine mammaire.
+ <br/>
+<br/>Elle a débuté un traitement par TALAZOPARIB le 12/01/2019 en 2ème 
+ <br/>ligne.
+ <br/>
+<br/>La patiente a été hospitalisée à Cognacq Jay en janvier 2019 : 
+ <br/>diminution de 47% du lymphoedème gauche.
+ <br/>Dr DUMONT contacté après progression sous TALAZOPARIB début avril 
+ <br/>pour une inclusion dans le protocole BASKET avec PEMBRO/LANZAPARIB à 
+ <br/>partir de la deuxième ligne : le protocole n'est pas encore ouvert.
+ <br/>
+<br/>TEP du XXXXXX:
+ <br/>Comparativement à l'examen précédent de décembre 2018 (Baseline), 
+ <br/>aspect de progression métabolique devant :
+ <br/>- La majoration en intensité de fixation de certaines adénopathies 
+ <br/>sus-claviculaires et axillaires gauches malgré la régression 
+ <br/>métabolique du foyer pris pour cible. 
+ <br/>- La majoration d'un nodule sous-cutané cervical antérieur gauche.
+ <br/>- L'apparition d'un nodule surrénalien gauche fixant d'allure 
+ <br/>secondaire. 
+ <br/>
+<br/>Sous XELODA depuis avril 2019 en 3ème ligne 
+ <br/>
+<br/>Les résultats du TEP scanner réalisé à l'IGR le 2 juillet 
+ <br/>2019 :
+ <br/>On note une progression métabolique devant la majoration en intensité 
+ <br/>et étendue de fixation des foyers déjà décrits.
+ <br/>Asymétrie de fixation oropharyngée au profil du côté droit à 
+ <br/>confronter à un examen ORL plus marqué sur l'examen que sur l'examen 
+ <br/>précédent.
+ <br/>Absence de nouveau foyer suspect par ailleurs. 
+ <br/>
+<br/>Bilan biologique réalisé le 2 juillet 2019 correct sans anomalie avec 
+ <br/>le CA 15-3 ce jour à 17.
+ <br/>
+<br/>Dossier présenté à la RCP le 3 juillet 2019 où on propose une 
+ <br/>4ème ligne par ENDOXAN oral.
+ <br/>
+<br/>A savoir Une IRM du crâne le 19/08/2019:Pas de lésion suspecte 
+ <br/>décelée à l'étage cérébral.
+ <br/>
+<br/>La patiente va consulter en urgence le 12/08/2019 pour un épisode de 
+ <br/>rectorragie.
+ <br/>
+<br/>TDM TAP : Masse secondaire de la surrénale gauche. Adénopathies 
+ <br/>rétropéritonéales. Pas d'anomalie par ailleurs expliquant la 
+ <br/>symptomatologie de la patiente.
+ <br/>Puis hospitalisée pour une douleur du membre inférieur gauche.
+ <br/>Un doppler du bras gauche absence de thrombose.
+ <br/>
+<br/>Et devant la forte suspicion de progression début de d' eribuline 
+ <br/>Depuis le 19/08/2019 en 5ème ligne 
+ <br/>
+<br/>TEP scanner le 13/12 : progression donc début d'une 6ème ligne par 
+ <br/>CARBOPLATINE / GEMZAR depuis décembre 2019 juusqu'au 28/02/2020. 
+ <br/>
+<br/>
+<b>Ce jour</b> :
+ <br/>
+<br/>La patiente va bien ce jour. 
+ <br/>PS :0 
+ <br/>Poids : 77Kg 
+ <br/>
+<br/>Première prise de navelbine marquée par une asthénie , nausées 
+ <br/>A la 2ème prise , un eu un épisode de vomissement dans la nuit 
+ <br/>
+<br/>la patiente est en confinement en campagne. 
+ <br/>
+<br/>Rapporte une petite gêne au niveau du bras gauche, traitées par 
+ <br/>OXYCONTIN, 
+ <br/>à 30mg matin et soir et pas d'interdose d'OXYNORM.
+ <br/>A palpé , une masse de la taille d' un grain de riz au niveau sus 
+ <br/>claviculaire gauche 
+ <br/>
+<br/>TDM TAP le 27/02/2020 : aspect de réponse partielle par rapport au 
+ <br/>PET scanner de décembre 2019.
+ <br/>
+<br/>Au dernier examen clinique en janvier : persistance de nodules sous 
+ <br/>claviculaires gauches mesurant pour le plus volumineux 1cm maximum. 
+ <br/>Compte tenu de la situation actuelle et du risque de contamination 
+ <br/>par COVID19, la patiente a débuté une chimiothérapie orale par 
+ <br/>NAVELBINE .
+ <br/>
+<br/>
+<b>En pratique</b> : 
+ <br/>
+<br/>Poursuite de la NAVELBINE. 
+ <br/>On prévoit une nouvelle évaluation par TDM TAP en juin en ville, 
+ <br/>après 8 semaines de traitement. 
+ <br/>La patiente ne pourra pas se déplacer car elle est en campagne à 
+ <br/>200KM et garde ses enfants. 
+ <br/>
+<br/>J' insiste pour qu' elle m' informe de la date du scanner et me 
+ <br/>transmette les CD pour relecture en comparaison au scanner de février 
+ <br/>réalisé à GR, avant la consultation en juin . 
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120657189" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>HOPITAL DE JOUR DE MEDECINE DE CHEVILLY LARUE - Unité Vendée</title>
+    <effectiveTime value="20200810000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200810000000+0000"/>
+        <assignedAuthor>
+            <code code="CHL/511" displayName="CHEVILLY STRUCTURE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Hôpital de jour Médecine</b></u>
+<br/>
+<br/>
+<br/>_____________________________________
+ <br/>
+<br/>
+<b>Patient:</b> XXXXXX XXXXXX XXXXXX
+ <br/>
+<b>Identifiant: </b> XXXXXX
+ <br/>
+<b>Date de naissance: </b> XXXXXX
+ <br/>
+<b>Sexe: </b> Féminin
+ <br/>_____________________________________
+ <br/>
+<br/>
+<br/>Hospitalisation pour administration d'un traitement systématique
+ <br/>en Hôpital de jour de Médecine Oncologique.
+ <br/>
+<br/>
+<b>MOTIF :</b>
+<br/>Patiente de 63 ans prise en charge dans le cadre d'un cancer du sein 
+ <br/>métastatique.
+ <br/>
+<br/>
+<b>INTERCURE : </b>
+<br/>La patiente a été vue en consultation le 06/08/2020 (en l'absence du 
+ <br/>Dr MOKDAD ADI) pour la prise en charge de douleurs lombo-sacrées.
+ <br/>Une IRM a été faite récemment dans le cadre de ses douleurs.
+ <br/>
+<br/>
+<b>CE JOUR : </b>
+<br/>PS : 1
+ <br/>Taille : 171 cm
+ <br/>Poids : 51 Kg
+ <br/>T : 35.9°C
+ <br/>TA : 121/80 mmHg
+ <br/>EVA : 0
+ <br/>
+<br/>Le dossier de la patiente sera discuté aujourd'hui en RCP douleur 
+ <br/>osseuse.
+ <br/>
+<br/>Prescription de IBUFETUM crème pour les douleurs.
+ <br/>
+<br/>La patiente reçoit ce jour :
+ <br/>
+<br/>
+<b> => CARBOPLATINE (PARAPLATINE*) INJ dose 170 mg</b>
+<br/>
+<br/> Validé par le Docteur BOUSRIH CHAYMA
+ <br/>Administré par LOEUILLET Alexandra
+ <br/>
+<br/>
+<br/>Bonne tolérance immédiate.
+ <br/>
+<br/>Sortie de la patiente
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

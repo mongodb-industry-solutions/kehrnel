@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128335252" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>Résumé d'hospitalisation service TARN</title>
+    <effectiveTime value="20170330000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170330000000+0000"/>
+        <assignedAuthor>
+            <code code="TAR/435" displayName="TARN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>HOSPITALISATION DU 26/03 AU 30/03 2017. </b>
+<br/>
+<br/>
+<u><b>Motif de l'hospitalisation</b></u>
+<br/>Chirurgie.
+ <br/>
+<br/>
+<u><b>Antécédents / Pathologies associées</b></u>
+<br/>- Phlébite découverte le 24/02/2017.
+ <br/>- Tabac : 0, OH : 0
+ <br/>- Pas d'allergie.
+ <br/>
+<b><br/><u>Rappel clinique</u> :</b>
+<br/>Patiente âgée de 64 ans.
+ <br/>A la suite d'une thrombose du membre inférieur, découverte d'une 
+ <br/>volumineuse masse tissulaire pelvienne mixte, mesurée à 11 cm de plus 
+ <br/>grand axe, avec une ascite de grande abondance.
+ <br/>
+<br/>Dosage des marqueurs tumoraux au 25/02/2017 :
+ <br/> * CA 125 : + de 1000.
+ <br/> * CA 19.9 : 142
+ <br/> * CA 15.3 : 154
+ <br/>
+<br/>Après un mois de traitement par anticoagulant à dose curative, 
+ <br/>indication à une coelioscopie diagnostique et d'évaluation.
+ <br/>L'échographie Doppler des membres inférieurs réalisée le 26/03/2017 
+ <br/>montre une thrombose de la crosse de la saphène interne et de la 
+ <br/>veine saphène interne, sans extension à la veine fémorale commune.
+ <br/>
+<br/>
+<b>* <u>Intervention chirurgicale réalisée le 27 MARS 2017</u> </b> (DR SCHERIER) :
+ <br/>
+<b>COELIOSCOPIE DIAGNOSTIQUE. <br/><br/></b> Conclusion : coelioscopie diagnostique et exploratrice : carcinose 
+ <br/>péritonéale avec milliaire diffuse.
+ <br/>Exploration limitée compte tenu de l'adhérence du grand épiploon à la 
+ <br/>paroi antérieure. PCI à 16/27.
+ <br/>Indication à une chimiothérapie première.
+ <br/>
+<b> <br/></b> La patiente est transférée en unité de soins continus du 27 au 
+ <br/>28/03/2017 pour surveillance post-opératoire.
+ <b> <br/></b>
+<br/>
+<b>\'a4 <u>Cytologie</u> : </b>
+<br/>Lavage péritonéal : Présence de cellules tumorales malignes 
+ <br/>métastatiques.
+ <br/>
+<br/>
+<b>\'a4 <u>Histologie définitive</u> : </b>
+<br/>
+<br/>Localisation péritonéale d'un ADENOCARCINOME SEREUX DE HAUT GRADE 
+ <br/>(présence d'un contingent micropapillaire minoritaire). 
+ <br/>
+<br/>
+<b>Suites opératoires</b> :
+ <br/>Ponction au niveau pleural gauche ramenant 1.8 litres le 
+ <br/>29/03/2017.
+ <br/>La patiente est vue par l'interne de gynécologie qui lui annonce le 
+ <br/>début d'une chimiothérapie en 1ère intension.
+ <br/>Effets indésirables de la chimiothérapie expliqués à la patiente en 
+ <br/>présence de son mari.
+ <br/>
+<br/> La patiente est transférée dans le service Gard pour la suite de la 
+ <br/>prise en charge. 
+ <br/>
+<br/>
+<br/>* Son dossier sera discuté au comité de gynécologie le 04/04/2017.
+ <br/>* Consultation d'Oncologie médicale avec le Dr MICHELS le 05/04/2017.
+ <br/>* Pose de chambre implantable prévue le 12/04/2017.
+ <br/>* Première cure de chimiothérapie le 13/04/2017.
+ <br/>* Consultation post-opératoire avec le Dr GOUY le 18/05/2017.
+ <br/>
+<br/>
+<br/>
+<u><b>Décision du comité</b></u>
+<b> </b>
+<br/>
+<br/>La comité propose dans ce contexte, une chimiothérapie néo-adjuvante 
+ <br/>par TAXOL-CARBOPPLATINE avec ré-évaluation après 3 cycles par une 
+ <br/>nouvelle coelioscopie si l'échographie doppler des membres inférieurs 
+ <br/>retrouvent une disparition complète de la phlébite.
+ <b><br/></b>
+<br/>
+<br/>Transfusion : Non.
+ <b><br/></b>
+<u>NP = non précisé</u>
+<br/>
+<u><b>DxCARE Synthèse</b></u>
+<b><br/><u>DOSSIER INFIRMIER</u><br/>\'a4 CMA : </b>
+<br/>- ajustement entretien dispositif vasculaire : réfection.
+ <br/>
+<b>\'a4 Macrocible entrée<br/></b> Taille : 164 cm
+ <br/> Poids (kg) : 75
+ <br/> EVA (sur 10) : NP
+ <br/>
+<br/>
+<u><b>Liste des prochains rendez-vous</b></u>
+<b> :</b>
+<br/>05/04/2017 16:30 TAR AMG ACC GYNE JSM 
+ <br/>12/04/2017 12:50 TAR GMH SG 
+ <br/> =SG CEPHA-KAOLIN
+ <br/> =SG LMG
+ <br/> =SG QUICK
+ <br/> 14:00 TAR GMH ADM CHIR AMB AL 
+ <br/> 14:50 TAR GMH PBO SEG KT 
+ <br/> 14:50 TAR GMH PBO CHIR _AS 
+ <br/> 16:00 TAR GMH LIT PCA 30 
+ <br/>20/04/2017 09:00 DMD AMG HDJ CHIMIO CHL 
+ <br/>12/05/2017 09:00 DMD AMG HDJ CHIMIO 
+ <br/>02/06/2017 09:00 DMD AMG HDJ CHIMIO 
+ <br/>23/06/2017 09:00 DMD AMG HDJ CHIMIO 
+ <br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

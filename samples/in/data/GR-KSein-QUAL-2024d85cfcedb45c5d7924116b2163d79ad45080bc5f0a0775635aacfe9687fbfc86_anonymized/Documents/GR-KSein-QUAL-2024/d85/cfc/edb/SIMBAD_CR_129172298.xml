@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_129172298" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 162630657</title>
+    <effectiveTime value="20160919000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20160919000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>RESULTATSANALYSES Valeurs PrécédentesUnités Valeurs de <br/>Référence </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>D.N. : </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX </p>
+<p>Femme </p>
+<p>19/09/2016 14:05 </p>
+<p>XXXXXX </p>
+<p>Demande enregistrée le : </p>
+<p>PATIENT : </p>
+<p>XXXXXX SEXE : </p>
+<p>NJF : </p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Département de Biologie et de Pathologie Médicales </p>
+<p>Biochimie <br/>Dr S. Broutin (40 57) <br/>Dr A. Paci (47 30) <br/>Dr V. Poinsignon (40 57) </p>
+<p>MicrobiologieHématologie <br/>Pr A. Bennaceur (40 65) <br/>Dr V. Saada (40 67) <br/>Dr V. Vergé (40 34) </p>
+<p>lundi 19 septembre 2016 </p>
+<br/>
+<p>Prescrit par : </p>
+<p>COMITE : </p>
+<p>CTE 050 - SEIN </p>
+<p>Villejuif, le </p>
+<p>Service : </p>
+<p>162630657 <br/>Complet </p>
+<p>Type <br/>Ech. </p>
+<p>Val. </p>
+<p>19/09/2016 14:05 Page 1 / 1 </p>
+<p>Dr E. Chachaty (52 34) <br/>Dr P.L. Woerther (40 62) <br/>Pr F. Griscelli (51 93) </p>
+<p>Pharmacologie </p>
+<p>VVE4.4 4.3 08/08/2016 11:5210*9/L ( 4.0 - 10.0 )LeucocytesSg </p>
+<p>KMM3.96 4.36 08/08/2016 11:5210*12/L ( 4.00 - 5.20 )HématiesSg </p>
+<p>KMM12.1 13.9 08/08/2016 11:52g/100mL ( 12.0 - 16.0 )HémoglobineSg </p>
+<p>VVE37.1 41.0 08/08/2016 11:52% ( 37.0 - 47.0 )HématocriteSg </p>
+<p>VVE93.7 94.0 08/08/2016 11:52μ3 ( 85.0 - 95.0 )VGMSg </p>
+<p>VVE30.6 31.9 08/08/2016 11:52pg/cel ( 28.0 - 34.0 )TCMHSg </p>
+<p>VVE32.6 33.9 08/08/2016 11:52g/100mL ( 32.0 - 36.5 )CCMHSg </p>
+<p>sysm11.7 11.9 08/08/2016 11:52% ( 0.0 - 16.0 )IDGSg </p>
+<p>VVE359.0 225.0 08/08/2016 11:5210*9/L ( 150.0-400.0 )PlaquettesSg </p>
+<p>Numeration sanguine (Sang total sur EDTA) <br/>Méthode : XN - SYSMEX </p>
+<p>VVE57.2 60.0 08/08/2016 11:52%Polynucléaires NeutrophilesSg </p>
+<p>VVE2.5 2.6 08/08/2016 11:5210*9/L ( 1.8 - 7.5 )SoitSg </p>
+<p>VVE0.7 0.7 08/08/2016 11:52%Polynucléaires EosinophilesSg </p>
+<p>VVE0.0 0.0 08/08/2016 11:5210*9/L ( 0.0 - 0.5 )SoitSg </p>
+<p>VVE1.6 0.7 08/08/2016 11:52%Polynucléaires BasophilesSg </p>
+<p>VVE0.1 0.0 08/08/2016 11:5210*9/L ( 0.0 - 0.3 )SoitSg </p>
+<p>VVE26.7 31.4 08/08/2016 11:52%LymphocytesSg </p>
+<p>VVE1.2 1.4 08/08/2016 11:5210*9/L ( 1.0 - 4.0 )SoitSg </p>
+<p>VVE13.8 7.2 08/08/2016 11:52%MonocytesSg </p>
+<p>VVE0.6 0.3 08/08/2016 11:5210*9/L ( 0.1 - 1.0 )SoitSg </p>
+<p>KMM0.0 0.0 08/08/2016 11:52%MyelémieSg </p>
+<p>VVE10 11 08/08/2016 11:52IDPSg </p>
+<p>sysm9.4 10.0 08/08/2016 11:52μ3 ( 6.0 - 12.0 )VMPSg </p>
+<p>Formule </p>
+<p>HEMATOLOGIE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>19/09/2016 14:38 Validé par :Validé le : Dr VERGÉ Véronique</p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

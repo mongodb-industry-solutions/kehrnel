@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122493245" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ORL - Dr Ingrid BREUSKIN</title>
+    <effectiveTime value="20191104000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20191104000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>SERVICE ORL- COMPTE RENDU DE CONSULTATION<br/><br/>Dicté par : </b> Docteur Ingrid Breuskin
+ <b><br/>Dicté le : </b> 18/10/2019 
+ <b><br/>Service : </b> ORL-CONSULTATIONS ORL 
+ <br/>
+<b>Type de document : </b> ORL CC STM 
+ <br/>
+<b>Ref :</b> 827496 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : COSTE FLAVIE
+ <br/>
+<br/>
+<b><br/></b> Patient vu avec les résultats d'un bilan d'imagerie.
+ <br/>
+<br/>Le Pet scanner montre une fixation péri-carotidienne gauche et une 
+ <br/>adénopathie en IIa droite.
+ <br/>La biopsie en radiologie interventionnelle est en faveur d'une 
+ <br/>récidive du carcinome épidermoïde connu.
+ <br/>Le patient a passé une échographie cardiaque qui montre une FEVG à 
+ <br/>62%.
+ <br/>
+<br/>Mr DA SILVA est vu en présence de sa fille.
+ <br/>Je lui annonce la récidive du carcinome épidermoïde.
+ <br/>Je lui explique que le traitement consistera en une chimiothérapie 
+ <br/>mais que l'objectif de la chimiothérapie est de contrôler la maladie 
+ <br/>ou de la faire régresser mais qu'elle n'aura pas un objectif curatif.
+ <br/>
+<br/>Je leur explique que le schéma consistera soit un EXTREME soit un 
+ <br/>Tpex ou un autre type de chimiothérapie qui sera décidé par le Dr 
+ <br/>FERRAND la semaine prochaine.
+ <br/>
+<br/>De principe je prévois de revoir le patient dans 4 à 6 mois et je 
+ <br/>reste bien entendu à la disposition du Dr FERRAND pour revoir le 
+ <br/>patient plus précocement si nécessaire.
+ <br/>
+<br/>
+<br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b> Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>07/11/2019 10:00 RHO BOM HDJ CHIMIO 
+ <br/> 10:05 RHO BOM C HDJ A TRAITER 
+ <br/>13/11/2019 10:00 RHO BOM HDJ CHIMIO 
+ <br/> 10:05 RHO BOM C HDJ A TRAITER 
+ <br/>22/11/2019 12:35 ORL FRF BILAN ONCO 
+ <br/>
+<br/>
+<br/>
+<b>_________________________________________________<br/>Signé électroniquement par Docteur Ingrid BREUSKIN <br/>Le lundi 28 octobre 2019 à 18:48</b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123514121" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 182760168</title>
+    <effectiveTime value="20181003000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190529000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Dr J. Delahousse (61 92) <br/>Pr A. Paci (47 30) </p>
+<p>Dr A. Arbab (41 65) <br/>Pr A. Bennaceur (40 65) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Pr F. Griscelli (51 93) <br/>Dr N. Yin (40 62) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>MasculinNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>03/10/2018 07:58 </p>
+<p>Sexe : </p>
+<p>03/10/2018 07:34 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>SOINS AIGUS REANIMATION </p>
+<p> 3 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>mercredi 29 mai 2019 </p>
+<p>Complet </p>
+<p>NON CONFORMITE </p>
+<p>NC analytique _AA <br/>G </p>
+<p>Prélèvement non conforme </p>
+<p>BIOCHIMIE </p>
+<p> GAZ <br/>Lact (Sg) Prélèvement non </p>
+<p>conforme </p>
+<p>0.7 03/10/2018 01:15 LAD </p>
+<p>Sang - Ampèrométrie </p>
+<p>Température Patient 37.2 °C 38.1 03/10/2018 01:15 LAD </p>
+<p>Veineux _ISL <br/>E </p>
+<p>Veineux 03/10/2018 01:15Nature plvt </p>
+<p>pH V corrigé Prélèvement nonconforme </p>
+<p>7.37 03/10/2018 01:15 LAD </p>
+<p>Sang - Potentiométrie </p>
+<p>Reserve Alcaline V Prélèvement nonconforme </p>
+<p>27.4 03/10/2018 01:15 LAD </p>
+<p>Sang - Potentiomètrie </p>
+<p>pCO2 V corrigée Prélèvement nonconforme </p>
+<p>49.0 03/10/2018 01:15 LAD </p>
+<p>Sang - Potentiométrie </p>
+<p>pO2 V corrigée Prélèvement nonconforme </p>
+<p>53.0 03/10/2018 01:15 LAD </p>
+<p>Sang - Ampérométrie </p>
+<p>% Saturation O2 V Prélèvement nonconforme </p>
+<p>83.1 03/10/2018 01:15 LAD </p>
+<p> IONOGRAMME <br/>Sodium 143 mmol/l ( 136 - 146 )144 02/10/2018 17:10 NDP <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Potassium 3.8 mmol/l ( 3.4 - 4.5 )3.4 02/10/2018 17:10 NDP <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Chlore 106 mmol/l ( 101 - 109 )107 02/10/2018 17:10 NDP <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Reserve alcaline 28 mmol/l ( 21 - 31 )28 02/10/2018 17:10 NDP <br/>Plasma hépariné - PEPC </p>
+<p>Protides 56 g/L ( 66 - 83 )53 02/10/2018 17:10 NDP <br/>Plasma hépariné - Biuret </p>
+<p>Urée 25.6 mmol/l ( 2.8 - 7.2 )25.0 02/10/2018 17:10 NDP <br/>Plasma hépariné - Uréase-GLDH </p>
+<p>Créatinine 198 μmol/l ( 64 - 104 )198 02/10/2018 17:10 NDP <br/>Plasma hépariné - Enzymatique raccordée IDMS </p>
+<p>Calcium 2.15 mmol/l ( 2.20 - 2.65 )2.11 01/10/2018 18:00 NDP <br/>Plasma hépariné - Arsenazo III </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 03/10/2018 à 16:20 par : Dr DROUARD Laurence,Dr PRADON Caroline,Dr Christophe MARZAC,Dr VERGÉ Véronique</p>
+<p></p>
+<p></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>SOINS AIGUS REANIMATIONPatient : 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>Phosphore 1.48 mmol/l ( 0.81 - 1.45 )1.25 01/10/2018 06:21 NDP <br/>Plasma hépariné - Molybdate, UV </p>
+<p>Magnesium 1.07 mmol/l ( 0.73 - 1.06 )0.94 01/10/2018 06:21 NDP <br/>Plasma hépariné - Bleu de xylidyle </p>
+<p>Base calcul Cockroft 0.45 0.45 02/10/2018 17:10 NDP </p>
+<p>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Débit de Filtration Glomérulaire (MDRD) 29.4 mL/mn/1.73m2 29.4 02/10/2018 17:10 NDP </p>
+<p>< 60 : Insuffisance rénale à explorer si nécessaire. <br/>Si origine afro américaine, le DFG est à multiplier par 1.212 </p>
+<p> BILAN CARDIAQUE <br/>BNP 3622 pg/ml ( < 400 )3228 02/10/2018 08:35 LAD </p>
+<p><100 pg/mL Insuffisance cardiaque peu probable 100-400 pg/mL Interprétation du résultat difficile >400 pg/mL Insuffisance cardiaque vraisemblable </p>
+<p>Plasma EDTA - ECLIA </p>
+<p> MÉDICAMENTS <br/>Ciclosporine 238 ng/mL 266 01/10/2018 13:30 LAD </p>
+<p>Taux résiduel : <300 ng/mLSang EDTA - Enzymatique </p>
+<p>HEMATOLOGIE </p>
+<p> NUMERATION SANGUINE (SANG TOTAL SUR EDTA) <br/>MÉTHODE : XN - SYSMEX </p>
+<p>Leucocytes <0.1 10*9/L ( 4.0 - 10.0 )<0.1 02/10/2018 17:10 CZC </p>
+<p>Hématies 2.61 10*12/L ( 4.50 - 5.80 )2.57 02/10/2018 17:10 VVE </p>
+<p>Hémoglobine 7.6 g/100mL ( 13.0 - 17.0 )7.4 02/10/2018 17:10 VVE </p>
+<p>Hématocrite 22.1 % ( 39.0 - 49.0 )21.3 02/10/2018 17:10 VVE </p>
+<p>VGM 84.7 μ3 ( 80.0 - 97.0 )82.9 02/10/2018 17:10 VVE </p>
+<p>TCMH 29.1 pg/cel ( 26.0 - 33.0 )28.8 02/10/2018 17:10 VVE </p>
+<p>CCMH 34.4 g/100mL ( 32.0 - 36.0 )34.7 02/10/2018 17:10 VVE </p>
+<p>IDG 16.4 % ( 11.0 - 15.0 )16.0 02/10/2018 17:10 VVE </p>
+<p>Plaquettes 32.0 10*9/L 21.0 02/10/2018 17:10 CZC </p>
+<p>Impédance (150 - 400 x 10^9/L) </p>
+<p> FORMULE <br/>Polynucléaires Neutrophiles ! ! 02/10/2018 17:10 CZC </p>
+<p>VVE! 02/10/2018 17:10 ( 1.5 - 7.0 )10*9/Lsoit ! </p>
+<p>Polynucléaires Eosinophiles ! ! 02/10/2018 17:10 CZC </p>
+<p>VVE! 02/10/2018 17:10 ( 0.0 - 0.6 )10*9/Lsoit ! </p>
+<p>Polynucléaires Basophiles ! ! 02/10/2018 17:10 CZC </p>
+<p>VVE! 02/10/2018 17:10 ( 0.0 - 0.1 )10*9/Lsoit ! </p>
+<p>Lymphocytes ! ! 02/10/2018 17:10 CZC </p>
+<p>VVE! 02/10/2018 17:10 ( 1.2 - 4.0 )10*9/Lsoit ! </p>
+<p>Monocytes ! ! 02/10/2018 17:10 CZC </p>
+<p>VVE! 02/10/2018 17:10 ( 0.2 - 0.8 )10*9/Lsoit ! </p>
+<p>IDP 9 13 02/10/2018 17:10 CZC </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 03/10/2018 à 16:20 par : Dr DROUARD Laurence,Dr PRADON Caroline,Dr Christophe MARZAC,Dr VERGÉ Véronique</p>
+<p></p>
+<p></p>
+<p>Page 3 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>SOINS AIGUS REANIMATIONPatient : 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>VMP 9.6 μ3 ( 7.5 - 11.0 )11.7 02/10/2018 17:10 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 03/10/2018 à 16:20 par : Dr DROUARD Laurence,Dr PRADON Caroline,Dr Christophe MARZAC,Dr VERGÉ Véronique</p>
+<p></p>
+<ul>
+<li>NON CONFORMITE</li>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Gaz</li>
+<li>Ionogramme</li>
+<li>Bilan cardiaque</li>
+<li>Médicaments</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

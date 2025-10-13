@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124162333" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION DE GYNECOLOGIE - Docteur Patricia PAUTIER</title>
+    <effectiveTime value="20190220000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190220000000+0000"/>
+        <assignedAuthor>
+            <code code="060/8" displayName="CTE 060 - GYNECOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>COMPTE RENDU DE CONSULTATION DE GYNECOLOGIE<br/><br/>Dicté par : </b> Docteur Felix Blanc Durand
+ <b><br/>Dicté le : </b> 20/02/2019 
+ <b><br/>Service : </b> 060-CTE 060 - GYNECOLOGIE 
+ <br/>
+<b>Type de document : </b> 060 CC CONSULTATION 
+ <br/>
+<b>Ref :</b> 611910 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : TJH
+ <br/>
+<br/>
+<b>P atiente vue par le Docteur Felix BLANC DURAND (interne) .<br/></b>
+<br/>
+<b>Patiente de 66 ans vue dans le cadre de la prise en charge d'un <br/>carcinome séreux ovarien de haut grade de stade IV initial <br/>inextirpable, prise en charge médicale exclusive , en première <br/>rechute platine sensible dans le protocole ATALANTE.<br/></b>
+<br/>Consultation avant C2 J1 de CARBOPLATINE GEMZAR AVASTIN plus ou moins 
+ <br/>ATEZOLIZUMAB.
+ <br/>
+<br/>La tolérance de la première cure a été médiocre compte-tenu de la 
+ <br/>toxicité hématologique majeure. Neutropénie grade IV et thrombopénie 
+ <br/>grade IV compliquée d'une hémorragie digestive sur un épistaxis 
+ <br/>déglutie.
+ <br/>En revanche pas de nausée, pas de vomissement, pas de douleur.
+ <br/>Xérose cutanée de grade I.
+ <br/>
+<u><b><br/>A l'examen clinique</b></u> :
+ <br/>
+<br/>OMS : 1.
+ <br/>Poids : 59 kg.
+ <br/>TA : 127/84.
+ <br/>Pouls : 104/min.
+ <br/>Saturation : 99 %.
+ <br/>Abdomen souple, dépressible, indolore.
+ <br/>Ascite présente mais non gênante.
+ <br/>Le reste de l'examen est sans particularité.
+ <br/>
+<br/>Au niveau biologique, pas de bilan biologique récent.
+ <br/>
+<br/>Endoscopie digestive réalisée dans le cadre de l'exploration des 
+ <br/>saignements digestifs ne retrouvant pas de lésion digestive haute.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>
+<br/>Sous réserve d'un bilan biologique réalisé ce jour, nous validons le 
+ <br/>C2 J1 de CARBOPLATINE-GEMZAR BEVACIZUMAB plus ou moins ATEZOLIZUMAB à 
+ <br/>doses diminuées soit CARBOPLATINE AUC3 GEMCITABINE 1000 mg/m2 sans J8.
+ <br/>BEVACIZUMAB 15 mg/kg.
+ <br/>ATEZOLIZUMAB ou placebo 1 200 mg dose totale en flat dose.
+ <br/>
+<br/>Nous reverrons la patiente conformément au protocole. 
+ <br/>
+<br/>
+<b><br/></b>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Patricia PAUTIER <br/>Le mercredi 20 février 2019 à 18:47</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

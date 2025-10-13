@@ -1,0 +1,666 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?><Messages>
+    <M_Compte_rendu_administration>
+        <Patient>
+            <Ipp>GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7</Ipp>
+        </Patient>
+        <dateAlimentation>20231204</dateAlimentation>
+        <Compte_rendu_admin>
+            <Protocole>
+                <Libellé>CDDP</Libellé>
+                <Nature>Classique</Nature>
+            </Protocole>
+                <Cycle id="497872">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20140912</Dh_début_effective>
+                                <Dh_fin_effective>20140912</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000014</Code_composant>
+                                    <Libellé_composant>CISPLATYL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>170</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>170</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="497873">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20141003</Dh_début_effective>
+                                <Dh_fin_effective>20141003</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000014</Code_composant>
+                                    <Libellé_composant>CISPLATYL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>160</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>160</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="497874">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20141024</Dh_début_effective>
+                                <Dh_fin_effective>20141024</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000014</Code_composant>
+                                    <Libellé_composant>CISPLATYL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>160</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>160</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+        </Compte_rendu_admin>
+        <Compte_rendu_admin>
+            <Protocole>
+                <Libellé>CDDP DOCETAXEL CETUXIMAB</Libellé>
+                <Nature>Classique</Nature>
+            </Protocole>
+                <Cycle id="809538">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20191030</Dh_début_effective>
+                                <Dh_fin_effective>20191030</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000038</Code_composant>
+                                    <Libellé_composant>DOCETAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20191030</Dh_début_effective>
+                                <Dh_fin_effective>20191030</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000019</Code_composant>
+                                    <Libellé_composant>CETUXIMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>720</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>720</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="2" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20191030</Dh_début_effective>
+                                <Dh_fin_effective>20191030</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000014</Code_composant>
+                                    <Libellé_composant>CISPLATYL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="809539">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20191122</Dh_début_effective>
+                                <Dh_fin_effective>20191122</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000014</Code_composant>
+                                    <Libellé_composant>CISPLATYL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>120</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>120</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="6">
+                            <Elément_administration>
+                                <Dh_début_effective>20191128</Dh_début_effective>
+                                <Dh_fin_effective>20191128</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000019</Code_composant>
+                                    <Libellé_composant>CETUXIMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>440</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>440</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="2" jour="12">
+                            <Elément_administration>
+                                <Dh_début_effective>20191204</Dh_début_effective>
+                                <Dh_fin_effective>20191204</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000019</Code_composant>
+                                    <Libellé_composant>CETUXIMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>440</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>440</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="814266">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20191122</Dh_début_effective>
+                                <Dh_fin_effective>20191122</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000019</Code_composant>
+                                    <Libellé_composant>CETUXIMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>700</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>700</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20191122</Dh_début_effective>
+                                <Dh_fin_effective>20191122</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000038</Code_composant>
+                                    <Libellé_composant>DOCETAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="809540">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20191211</Dh_début_effective>
+                                <Dh_fin_effective>20191211</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000038</Code_composant>
+                                    <Libellé_composant>DOCETAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20191211</Dh_début_effective>
+                                <Dh_fin_effective>20191211</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000014</Code_composant>
+                                    <Libellé_composant>CISPLATYL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="2" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20191211</Dh_début_effective>
+                                <Dh_fin_effective>20191211</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000019</Code_composant>
+                                    <Libellé_composant>CETUXIMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>430</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>430</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="3" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20191218</Dh_début_effective>
+                                <Dh_fin_effective>20191218</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000019</Code_composant>
+                                    <Libellé_composant>CETUXIMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>430</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>430</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="4" jour="13">
+                            <Elément_administration>
+                                <Dh_début_effective>20191224</Dh_début_effective>
+                                <Dh_fin_effective>20191224</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000019</Code_composant>
+                                    <Libellé_composant>CETUXIMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>430</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>430</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="809541">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20200102</Dh_début_effective>
+                                <Dh_fin_effective>20200102</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000038</Code_composant>
+                                    <Libellé_composant>DOCETAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20200102</Dh_début_effective>
+                                <Dh_fin_effective>20200102</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000019</Code_composant>
+                                    <Libellé_composant>CETUXIMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>430</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>430</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="2" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20200102</Dh_début_effective>
+                                <Dh_fin_effective>20200102</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000014</Code_composant>
+                                    <Libellé_composant>CISPLATYL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="3" jour="6">
+                            <Elément_administration>
+                                <Dh_début_effective>20200108</Dh_début_effective>
+                                <Dh_fin_effective>20200108</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000019</Code_composant>
+                                    <Libellé_composant>CETUXIMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>430</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>430</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="4" jour="13">
+                            <Elément_administration>
+                                <Dh_début_effective>20200115</Dh_début_effective>
+                                <Dh_fin_effective>20200115</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000019</Code_composant>
+                                    <Libellé_composant>CETUXIMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>430</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>430</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+        </Compte_rendu_admin>
+        <Compte_rendu_admin>
+            <Protocole>
+                <Libellé>CETUXIMAB</Libellé>
+                <Nature>Classique</Nature>
+            </Protocole>
+                <Cycle id="811354">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20191106</Dh_début_effective>
+                                <Dh_fin_effective>20191106</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000019</Code_composant>
+                                    <Libellé_composant>CETUXIMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>450</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>450</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="812210">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20191113</Dh_début_effective>
+                                <Dh_fin_effective>20191113</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000019</Code_composant>
+                                    <Libellé_composant>CETUXIMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>450</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>450</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="818065">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20191212</Dh_début_effective>
+                                <Dh_fin_effective>20191212</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000019</Code_composant>
+                                    <Libellé_composant>CETUXIMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>430</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>430</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="822394">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20200129</Dh_début_effective>
+                                <Dh_fin_effective>20200129</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000019</Code_composant>
+                                    <Libellé_composant>CETUXIMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>850</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>850</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="822395">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20200212</Dh_début_effective>
+                                <Dh_fin_effective>20200212</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000019</Code_composant>
+                                    <Libellé_composant>CETUXIMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>850</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>850</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="822396">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20200226</Dh_début_effective>
+                                <Dh_fin_effective>20200226</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000019</Code_composant>
+                                    <Libellé_composant>CETUXIMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>850</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>850</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="822397">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20200310</Dh_début_effective>
+                                <Dh_fin_effective>20200310</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000019</Code_composant>
+                                    <Libellé_composant>CETUXIMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>850</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>850</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+        </Compte_rendu_admin>
+        <Compte_rendu_admin>
+            <Protocole>
+                <Libellé>NIVOLUMAB</Libellé>
+                <Nature>Classique</Nature>
+            </Protocole>
+                <Cycle id="834579">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20200325</Dh_début_effective>
+                                <Dh_fin_effective>20200325</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000358</Code_composant>
+                                    <Libellé_composant>NIVOLUMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>240</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>240</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="834580">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20200408</Dh_début_effective>
+                                <Dh_fin_effective>20200408</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000358</Code_composant>
+                                    <Libellé_composant>NIVOLUMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>240</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>240</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="834581">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20200422</Dh_début_effective>
+                                <Dh_fin_effective>20200422</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000358</Code_composant>
+                                    <Libellé_composant>NIVOLUMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>240</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>240</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="834582">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20200505</Dh_début_effective>
+                                <Dh_fin_effective>20200505</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000358</Code_composant>
+                                    <Libellé_composant>NIVOLUMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>240</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>240</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="834584">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20200602</Dh_début_effective>
+                                <Dh_fin_effective>20200602</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000358</Code_composant>
+                                    <Libellé_composant>NIVOLUMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>240</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>240</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+        </Compte_rendu_admin>
+    </M_Compte_rendu_administration>
+</Messages>

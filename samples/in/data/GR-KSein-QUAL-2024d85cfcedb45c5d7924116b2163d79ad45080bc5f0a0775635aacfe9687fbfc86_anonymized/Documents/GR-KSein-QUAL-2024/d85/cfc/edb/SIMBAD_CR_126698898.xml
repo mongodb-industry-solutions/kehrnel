@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126698898" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Docteur Hanene OUESLATI</title>
+    <effectiveTime value="20180125000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180125000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>DEPARTEMENT DE MEDECINE ONCOLOGIQUE-SENOLOGIE<br/>CONSULTATION DE SURVEILLANCE<br/><br/> Dicté par : </b> Sarah Differding
+ <b><br/>Dicté le : </b> 10/01/2018 
+ <b><br/>Service : </b> 050-CTE 050 - SEIN 
+ <br/>
+<b>Type de document : </b> 050 CC SURV 
+ <br/>
+<b>Ref :</b> 345229 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>
+<b>_____________________________________________________________<br/></b>
+<br/>
+<b>Secrétaire</b> : ORC
+ <br/>
+<br/>Patiente de 60 ans suivie pour un carcinome mammaire droit triple 
+ <br/>négatif.
+ <br/>
+<br/>
+<u><b>RAPPEL</b></u>
+<b> :<u><br/></u></b>
+<br/>- T2N0 de 25 mm du sein droit, carcinome canalaire infiltrant de 
+ <br/>grade III triple négatif.
+ <br/>Dans le bilan, 2 micronodules pulmonaires à surveiller.
+ <br/>23.02.17 : TGS après 6 EC 75 dose dense et 4 cycles de TAXOL 
+ <br/>hebdomadaire : persistance de 13 mm de carcinome métaplasique avec 
+ <br/>différenciation chondroïde ou ostéoïde, 17 mm intracanalaire, 1GS-.
+ <br/>Tolérance à la chimiothérapie satisfaisante.
+ <br/>
+<br/>08.06.17 : radiothérapie au niveau du sein à la dose de 50 Gy en 25 
+ <br/>fractions de 2Gy et surimpression du lit tumoral à une dose de 16 Gy 
+ <br/>en 8x2 Gy.
+ <br/>
+<br/>XELODA adjuvant 6 cycles jusqu'en octobre 2017.
+ <br/>
+<br/>
+<u><b>A LA CONSULTATION CE JOUR</b></u>
+<b> :<u><br/></u></b>
+<br/>La patiente nous dit présenter des douleurs osseuses au niveau de la 
+ <br/>hanche droite ainsi que entre les 2 omoplates depuis la période des 
+ <br/>fêtes de fin d'année.
+ <br/>Ces douleurs sont maintenant présentes quotidiennement, et la 
+ <br/>réveillent régulièrement la nuit.
+ <br/>
+<br/>A l'examen clinique :
+ <br/>L'examen mammaire ne retrouve pas de masse suspecte bilatéralement.
+ <br/>Les aires axillo sus claviculaires bilatérales sont libres.
+ <br/>Franche douleur à la palpation du rachis dorsal ainsi qu'à la 
+ <br/>mobilisation de la hanche droite.
+ <br/>
+<br/>Le bilan biologique réalisé le 13.12.17 en ville montre une élévation 
+ <br/>du marqueur CA 15.3 à 14,1 sachant que celui ci était dosé à 8 en 
+ <br/>octobre.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3> </b></u>
+<b>:<u><br/><br/></u></b> Nous préconisons la réalisation d'une scintigraphie osseuse en 
+ <br/>raison de douleurs osseuses chez une patiente suivie pour un 
+ <br/>carcinome mammaire droit triple négatif.
+ <br/>
+<br/>Nous reverrons la patiente après la réalisation de cette 
+ <br/>scintigraphie pour discuter des résultats et de la poursuite de la 
+ <br/>prise en charge.
+ <br/>
+<br/>
+<br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Sarah DIFFERDING <br/>Le mercredi 24 janvier 2018 à 14:59 </b>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

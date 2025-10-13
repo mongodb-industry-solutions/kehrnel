@@ -17,7 +17,8 @@ from bson import ObjectId
 import motor.motor_asyncio
 from functools import lru_cache         
 from contextlib import suppress
-from cli.skeleton import main as skeleton_cli
+from mapper.skeleton import build_skeleton
+
 from io import StringIO
 import sys
 
@@ -47,7 +48,7 @@ try:
     from mapper.handlers.xml_handler import XMLHandler
     from mapper.handlers.csv_handler import CSVHandler
     from mapper.utils.macro_expander import expand_macros
-    from cli.skeleton import main as _skeleton_cli 
+    from cli.map_skeleton import main as _skeleton_cli 
 
 except ImportError as e:
     print(f"Warning: Some kehrnel components are not implemented yet: {e}")
@@ -352,21 +353,6 @@ async def identify_document(
         with suppress(FileNotFoundError):
             tmp_path.unlink()
 
-@app.post("/api/internal/generate-skeleton")
-async def generate_skeleton(templateContent: str,
-                            useMacros: bool = True):
-    tmp = await save_temp_file(templateContent.encode(),
-                               '.opt' if '<template' in templateContent else '.json')
-    buf, _stdout = StringIO(), sys.stdout
-    sys.stdout = buf                 
-    try:
-        skeleton_cli.callback(Path(tmp), useMacros, Path("-"))
-    finally:
-        sys.stdout = _stdout
-        tmp.unlink(missing_ok=True)
-
-    return {"skeleton": buf.getvalue()}
-
 @app.get("/api/internal/mappings")
 async def get_mappings():
     """Retrieve all existing mapping definitions"""
@@ -441,6 +427,30 @@ async def save_mapping(mapping: MappingDefinition):
             )
         else:
             raise HTTPException(status_code=500, detail=f"Database error: {error_msg}")
+
+
+@app.post("/api/internal/generate-skeleton")
+async def generate_skeleton(
+    templateContent: str,
+    useMacros: bool = True,
+    includeHeader: bool = False,
+    helpers: bool = True,
+):
+    tmp = await save_temp_file(
+        templateContent.encode("utf-8"),
+        ".opt" if "<template" in templateContent[:200].lower() else ".json",
+    )
+    try:
+        data = build_skeleton(tmp, use_macros=useMacros, include_header=includeHeader, include_helpers=helpers)
+        # Return both YAML and JSON, so GUI can pick either
+        import yaml as _yaml
+        return {
+            "mappingYaml": _yaml.safe_dump(data, sort_keys=False, allow_unicode=True),
+            "mappingJson": data,
+        }
+    finally:
+        tmp.unlink(missing_ok=True)
+
 
 @app.post("/api/internal/transform")
 async def transform_document(

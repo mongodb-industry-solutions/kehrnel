@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126635460" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CR Thérapie Cellulaire - Thérapie Cellulaire</title>
+    <effectiveTime value="20180202000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180205000000+0000"/>
+        <assignedAuthor>
+            <code code="LTC/377" displayName="LABO. THERAPIE CELLULAIRE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>NOM NAISSANCE prénom </p>
+<p>typages familiaux </p>
+<p>fratrie 1 </p>
+<p>demi-fratrie </p>
+<p>enfants </p>
+<p>parents 3 </p>
+<p>D Naissance </p>
+<p>LADEON Beatrice 18/01/1953 refus </p>
+<p>BARDOUX Jean Christophe06/07/1984 </p>
+<p>XXXXXX Rene Pierre 03/09/1991 </p>
+<p>XXXXXX Rodrigue 07/05/1984 </p>
+<p>coup de sonde </p>
+<p>02/02/2018 </p>
+<p>fils 04/12/2017 fdf haplo identique </p>
+<p>sœur </p>
+<p>Centre Donneur </p>
+<p>Fiche de compatibilité </p>
+<p>- </p>
+<p>DONNEUR - RECEVEUR </p>
+<p>CTD/R1/FOR/046/V00 </p>
+<p>Date d'application : </p>
+<p>10/10/2016 </p>
+<br/>
+<p>fils 21/11/2017 strasbourg haplo identique </p>
+<p>XXXXXX XXXXXX </p>
+<p>lien familial date typage </p>
+<p>fils 21/12/2017 fdf haplo identique </p>
+<p>lieu compatibilité </p>
+<p>Pas de 10/10, pas de 9/10. Possibles cordons. </p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

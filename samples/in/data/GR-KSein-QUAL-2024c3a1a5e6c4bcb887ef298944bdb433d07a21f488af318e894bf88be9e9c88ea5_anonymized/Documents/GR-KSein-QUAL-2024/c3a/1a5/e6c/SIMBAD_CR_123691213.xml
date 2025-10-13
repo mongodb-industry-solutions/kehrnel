@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123691213" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20190502000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190502000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Compte rendu générique de SENOLOGIE<br/><br/>Dicté par : </b> Docteur Meriem Mokdad Adi
+ <b><br/>Dicté le : </b> 02/05/2019 
+ <b><br/>Service : </b> 050-CTE 050 - SEIN 
+ <br/>
+<b>Type de document : </b> 050 CC Générique 
+ <br/>
+<b>Ref :</b> 685065 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : 
+ <b>ESD/a<br/></b>
+<br/>
+<b>Patiente vue ce jour pour la prise en Charge d'une récidive en mars <br/>2018, sous xeloda débuté le 15/04/2019 pour un cancer du sein gauche <br/>diagnostiqué initialement en 2015 traité à Bergonié par <br/>chimiothérapie, chirurgie puis radiothérapie au niveau axillaire, CMI <br/>et sus claviculaire, triple négatif et actuellement en récidive <br/>ganglionnaire susclaviculaire et axillaire.<br/></b>
+<br/>Randomisation le 11/10 dans le cadre du protocole SAFIR 02 : Bras 
+ <br/>standard avec poursuite du TAXOL à dose réduite( -20%) versus bras 
+ <br/>avec OLAPARIB.
+ <br/>
+<br/>TAXOL à dose réduite (-20%).
+ <br/>
+<br/>PET scanner le 20 décembre qui montre, comparativement à l'examen 
+ <br/>précédent de septembre 2018, un aspect de réévolutivité au niveau 
+ <br/>ganglionnaire sus et sous-claviculaire gauche et probablement 
+ <br/>axillaire gauche.
+ <br/>
+<br/>Pas d'autre localisation mise en évidence.
+ <br/>
+<br/>Echographie avec cytoponction au niveau ganglionnaire susclaviculaire 
+ <br/>le plus volumineux le 21/12 :
+ <br/>Présence de cellules tumorales malignes métastatiques.
+ <br/>L'aspect est compatible avec une origine mammaire.
+ <br/>
+<br/>Elle a débuté un traitement par TALAZOPARIB le 12/01.
+ <br/>La patiente a été hospitalisée à Cognacq Jay en janvier 2019 : 
+ <br/>diminution de 47% du 
+ <br/>lymphoedème gauche.
+ <br/>Dr DUMONT contacté après progression sous Talazoparib début avril 
+ <br/>pour une inclusion dans le protocole BASKET avec PEMBRO/LANZAPARIB à 
+ <br/>partir de la deuxième ligne : le protocole n'est pas encore ouvert.
+ <br/>
+<br/>
+<u><b>CONSULTATION CE JOUR <br/><br/></b></u> PS: 0.
+ <br/>Poids : 92 kg. 
+ <br/>
+<b><br/>Taille : 165 cm.<br/>SC 1.99.<br/><u><br/></u></b> La patiente va bien.
+ <br/>PS: 0.
+ <br/>Bonne tolérance du xeloda. 
+ <br/>Diarrhées intermittentes : 4-5 selles par jour pendant 2 jours.
+ <br/>Pas de syndrome mains-pieds.
+ <br/>Elle rapporte des douleurs au niveau lombaire et du bassin depuis 1 
+ <br/>semaine au repos et au changement de position (quand elle passe de la 
+ <br/>position assise à la position debout, sensation de blocage).
+ <br/>La douleur est reproduite à la pression des épineuses. 
+ <br/>Pour rappel, la patiente n'est pas métastatique osseuse : je propose 
+ <br/>de réaliser une IRM du rachis lombaire et du bassin.
+ <br/>La patiente constate une stabilité des nodules sous cutanés au niveau 
+ <br/>basicervical gauche.
+ <br/>A l'examen clinique : palpation des nodules basicervicaux gauches : 2 
+ <br/>cm au niveau basithoracique et un second sous claviculaire d'1 cm.
+ <br/>
+<br/>Bilan biologique correct, CA 15.3 à 14 du XXXXXX.
+ <br/>
+<br/>
+<b>TEP du XXXXXX:<br/>Comparativement à l'examen précédent de décembre 2018 (Baseline), <br/>aspect de progression métabolique devant :<br/>- La majoration en intensité de fixation de certaines adénopathies <br/>sus-claviculaires et axillaires gauches malgré la régression <br/>métabolique du foyer pris pour cible. <br/>- La majoration d'un nodule sous-cutané cervical antérieur gauche.<br/>- L'apparition d'un nodule surrénalien gauche fixant d'allure <br/>secondaire. <br/><u><br/>EN PRATIQUE :</u></b>
+<br/>
+<u><b><br/></b></u> Je reverrai la patiente début juin pour une évaluation de la 
+ <br/>tolérance et je lui explique qu'on refera une évaluation par TEP scan 
+ <br/>après 4 cycles de XELODA, donc début juillet le 02/07/19.
+ <br/>
+<b><br/>_________________________________________________<br/>Signé électroniquement par Docteur Meriem MOKDAD ADI <br/>Le jeudi 2 mai 2019 à 10:52 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

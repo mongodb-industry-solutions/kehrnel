@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122755637" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ORL - Dr Ingrid BREUSKIN</title>
+    <effectiveTime value="20190925000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190925000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>SERVICE ORL- COMPTE RENDU DE CONSULTATION<br/><br/>Dicté par : </b> Docteur Ingrid Breuskin
+ <b><br/>Dicté le : </b> 19/09/2019 
+ <b><br/>Service : </b> ORL-CONSULTATIONS ORL 
+ <br/>
+<b>Type de document : </b> ORL CC STM 
+ <br/>
+<b>Ref :</b> 794375 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : COSTE FLAVIE
+ <br/>
+<br/>
+<b><br/></b>
+<br/>
+<br/>Patient vu en consultation d'urgence ce jour.
+ <br/>Depuis 1 mois, oedème du faciès et douleurs cervicales gauches 
+ <br/>irradiant vers le membre supérieur gauche.
+ <br/>A fait également des syncopes à 2 reprises.
+ <br/>
+<br/>A passé un scanner ORL qui montre une prise de contraste à centre 
+ <br/>nécrotique péri carotidienne gauche.
+ <br/>
+<br/>
+<u><b>A l'examen clinique</b></u> :
+ <br/>Patient en état général conservé.
+ <br/>OMS : 1.
+ <br/>Poids : 72 kg.
+ <br/>
+<br/>La palpation cervicale ressent une tuméfaction du côté gauche 
+ <br/>douloureuse à la palpation.
+ <br/>
+<br/>Le patient prend actuellement du DOLIPRANE 1g/j, du LEVOTHYROX et 
+ <br/>GARDENAL.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<br/>Le tableau clinique et l'image radiologique sont évocatrices d'une 
+ <br/>récidive loco-régionale.
+ <br/>On explique ceci au patient.
+ <br/>
+<br/>
+<u>On complète le bilan par</u> :
+ <br/>- Un Pet scanner (demande faxée au KB).
+ <br/>- Une biopsie en RI ici à l'institut soit sous scanner soit sous 
+ <br/>échographie.
+ <br/>- Un bilan sang onco avec recherche en déficit DPD.
+ <br/>- Une échographie cardiaque (ordonnance remise).
+ <br/>- Un dossier en comité avec l'ensemble des résultats.
+ <br/>- On programme après l'avis du comité, une consultation avec 
+ <br/>moi-même, une consultation en oncologie médicale et une pose de 
+ <br/>chambre implantable.
+ <br/>
+<br/>Il s'agira probablement d'une indication de chimiothérapie. Si la 
+ <br/>lésion est unique, on pourra discuter en RCP d'une réirradiation 
+ <br/>sachant que la 1ère irradiation date de 2014.
+ <br/>
+<br/>Prescription d'EFFERALGAN codéiné.
+ <br/>
+<br/>La situation est expliquée au patient en présence de son épouse et 
+ <br/>par téléphone à sa fille.
+ <br/>Toute la famille en est très affectée.
+ <br/>
+<br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b> Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>03/10/2019 10:30 010 IBN ORTHOPHONIE GYW 
+ <br/>09/10/2019 10:30 010 IBN ORTHOPHONIE GYW 
+ <br/>11/10/2019 15:1XXXXXX6 RZA ACC CHIR EXT 
+ <br/> 15:30 136 RZA PBO SEG RIL 
+ <br/> 15:30 136 RZA PBO CHIR _R1 
+ <br/>16/10/2019 10:30 010 IBN ORTHOPHONIE GYW 
+ <br/>17/10/2019 14:00 ORL IBN DOS ORL CTE biopsie péri-carotidienne RI 
+ <br/>11/10 
+ <br/>18/10/2019 16:30 ORL IBN C ORL IBN 
+ <br/>22/10/2019 10:30 ORL FRF CL ORL FRF 
+ <br/>23/10/2019 10:30 010 IBN ORTHOPHONIE GYW 
+ <br/>24/10/2019 10:00 ORL GYW C ORL LMI 
+ <br/>30/10/2019 10:30 010 IBN ORTHOPHONIE GYW 
+ <br/>19/12/2019 09:50 ORL YBS C PLAS LKH 
+ <br/>15/01/2020 09:15 CAM YGT C RX YGT 
+ <br/>15/05/2020 08:50 310 GSN C ODONTO GSN 
+ <br/> 09:00 310 GSN RD PANORAMIQUE 
+ <br/>
+<br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Ingrid BREUSKIN <br/>Le vendredi 20 septembre 2019 à 17:00</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

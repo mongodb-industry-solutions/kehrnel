@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_131804289" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION DE RADIOTHERAPIE - EN COURS DE TRAITEMENT</title>
+    <effectiveTime value="20141006000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20141007000000+0000"/>
+        <assignedAuthor>
+            <code code="RTE/414" displayName="RADIOTHERAPIE EXTERNE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Consultation hebdomadaire de radiothérapie <br/>réalisée par le Docteur Yun Gan TAO.<br/>Date de la consultation : 06/10/2014.</b></u>
+<br/>
+<br/>Nom du patient : XXXXXX.
+ <br/>N° IGR : 201409502 DL.
+ <br/>Date de naissance : XXXXXX.
+ <br/>
+<br/>
+<b>Traitement pour T.M., voile du palais.</b>
+<br/>
+<br/>
+<u>Type de traitement </u>: radiothérapie exclusive.
+ <br/>
+<u>Recherche clinique </u>: GORTEC 2004-01. 
+ <br/>
+<br/>
+<b>Dose atteinte ce jour : 34,00 Gy. </b>
+<br/>
+<u><br/>Examen clinique ce jour </u>:
+ <br/>OMS : 1 symptômes, mais ambulation presque totale.
+ <br/>EVA : 01. 
+ <br/>Poids : 63,00 kg (-3,1 %).
+ <br/>
+<br/>
+<u>Effets Indésirables </u>:
+ <br/>Mucite : grade 1, érythème muqueux.
+ <br/>Radiodermite : absence. 
+ <br/>Dysphagie : 0 absence. 
+ <br/>
+<br/>
+<u>Tolérance Chimio </u>: nausées, mais bonne, tolérée. 
+ <br/>
+<br/>
+<u>Biologie </u>:
+ <br/>Créatinine. (mmol/l) : 55,00.
+ <br/>Neutrophiles : 2. 
+ <br/>
+<br/>
+<u>Traitements en cours </u>: 
+ <br/>Xylocaïne : non. 
+ <br/>Compléments alimentaires 2,00 / j. 
+ <br/>Autre traitement : bain de bouche bicarbonate GLYCOTHYMOLINE. 
+ <br/>
+<br/>
+<u>Prescription ce jour </u>:
+ <br/>Antalgique IGR : palier I. 
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

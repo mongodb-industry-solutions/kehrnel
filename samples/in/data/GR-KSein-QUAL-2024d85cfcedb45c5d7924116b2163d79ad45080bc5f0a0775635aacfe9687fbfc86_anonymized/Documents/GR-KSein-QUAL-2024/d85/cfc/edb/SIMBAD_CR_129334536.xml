@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_129334536" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 162210585</title>
+    <effectiveTime value="20160808000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20160809000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>RESULTATSANALYSES Valeurs PrécédentesUnités Valeurs de <br/>Référence </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>D.N. : </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX </p>
+<p>Femme </p>
+<p>08/08/2016 11:52 </p>
+<p>XXXXXX </p>
+<p>Demande enregistrée le : </p>
+<p>PATIENT : <br/><br/></p>
+<p>XXXXXX SEXE : </p>
+<p>NJF : </p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Département de Biologie et de Pathologie Médicales </p>
+<p>Biochimie <br/>Dr S. Broutin (40 57) <br/>Dr A. Paci (47 30) <br/>Dr V. Poinsignon (40 57) </p>
+<p>MicrobiologieHématologie <br/>Pr A. Bennaceur (40 65) <br/>Dr V. Saada (40 67) <br/>Dr V. Vergé (40 34) </p>
+<p>mardi 09 août 2016 </p>
+<br/>
+<p>Prescrit par : </p>
+<p>COMITE : </p>
+<p>CTE 050 - SEIN </p>
+<p>Villejuif, le </p>
+<p>Service : </p>
+<p>162210585 <br/>Complet </p>
+<p>Type <br/><br/><br/>Ech. </p>
+<p>Val. </p>
+<p>08/08/2016 11:52 Page 1 / 3 </p>
+<p>Dr E. Chachaty (52 34) <br/>Dr P.L. Woerther (40 62) <br/>Pr F. Griscelli (51 93) </p>
+<p>Pharmacologie </p>
+<p>LLX142 mmol/l ( 136 - 146 ) <br/>Potentiométrie indirecte </p>
+<p>SodiumPL. </p>
+<p>LLX3.6 mmol/l ( 3.4 - 4.5 ) <br/>Potentiométrie indirecte </p>
+<p>PotassiumPL. </p>
+<p>LLX105 mmol/l ( 101 - 109 ) <br/>Potentiométrie indirecte </p>
+<p>ChlorePL. </p>
+<p>LLX26 mmol/l ( 21 - 31 ) <br/>PEPC </p>
+<p>Reserve alcalinePL. </p>
+<p>LLX72 g/L ( 66 - 83 ) <br/>Biuret </p>
+<p>ProtidesPL. </p>
+<p>LLX5.1 mmol/l ( 2.8 - 7.2 ) <br/>Uréase-GLDH </p>
+<p>UréePL. </p>
+<p>LLX70 μmol/l ( 49 - 90 ) <br/>Enzymatique raccordée IDMS </p>
+<p>CréatininePL. </p>
+<p>LLX7.2(*) mmol/l ( 4.1 - 5.9 ) <br/>Hexokinase <br/>G6P-DH Valeur de référence pour un patient à jeun </p>
+<p>GlucosePL. </p>
+<p>LLX2.37 mmol/l ( 2.20 - 2.65 ) <br/>Arsenazo III </p>
+<p>CalciumPL. </p>
+<p>LLX0.81 mmol/l ( 0.77 - 1.03 ) <br/>Bleu de xylidyle </p>
+<p>MagnesiumPL. </p>
+<p>batch1.20(*) <br/>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Base calcul CockroftPL. </p>
+<p>batch>60.0(*) mL/mn/1.73m2 < 60 : Insuffisance rénale à explorer si nécessaire. <br/>Si origine afro américaine, le DFG est à multiplier par 1.212 </p>
+<p>Débit de Filtration <br/>Glomérulaire (MDRD) </p>
+<p>PL. </p>
+<p>Ionogramme </p>
+<p>LLX65 UI/L ( 30 - 120 ) <br/>IFCC </p>
+<p>PALPL. </p>
+<p>LLX21 UI/L ( 0 - 35 ) <br/>IFCC </p>
+<p>ASATPL. </p>
+<p>LLX16 UI/L ( 0 - 35 ) <br/>IFCC </p>
+<p>ALATPL. </p>
+<p>LLX14 UI/L ( 0 - 38 ) <br/>IFCC </p>
+<p>GGTPL. </p>
+<p>LLX8 μmol/l ( 5 - 21 ) <br/>DPD </p>
+<p>Bilirubine TotalePL. </p>
+<p>Bilan hépatique / pancréatique </p>
+<p>Sang </p>
+<p>BIOCHIMIE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé par :Validé le : Pr GRISCELLI Franck,Dr LACROIX Ludovic,Dr VERGÉ Véronique,Dr SAADA</p>
+<p></p>
+<p></p>
+<p>RESULTATS Valeurs de <br/><br/>Référence </p>
+<p>Valeurs PrécédentesUnitésANALYSES </p>
+<p>PATIENT : <br/><br/>CTE 050 - SEIN </p>
+<p>050COMITE : </p>
+<p>A :XXXXXX XXXXXX <br/><br/>Prescrit par : </p>
+<p>XXXXXX 162210585DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>Type <br/><br/><br/>Ech. </p>
+<p>Val. </p>
+<p>Page 2 / 3 </p>
+<p>LLX192 UI/L ( 0 - 247 ) <br/>IFCC </p>
+<p>LDHPL. </p>
+<p>Protéines </p>
+<p>LLX7 UI/mL ( 0 - 30 ) <br/>ECLIA </p>
+<p>CA 15-3S </p>
+<p>Marqueurs biologiques </p>
+<p>LLX77 % ( 70 - 100 ) <br/>Chronométrique </p>
+<p>Taux de ProthrombinePL </p>
+<p>LLX13.9 s <br/>Chronométrique </p>
+<p>Temps de Quick (Témoin = 13s) </p>
+<p>PL </p>
+<p>LLX1.2(*) ( 0.0 - 4.5 ) 0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>INRPL </p>
+<p>LLX30 s <br/>Chronométrique </p>
+<p>TCK (Témoin = 28s)PL </p>
+<p>LLX1.1 ( 0.0 - 1.2 )TCK RatioPL </p>
+<p>Bilan de coagulation </p>
+<p>HEMOSTASE </p>
+<p>SAE4.3 10*9/L ( 4.0 - 10.0 )LeucocytesSg </p>
+<p>SAE4.36 10*12/L ( 4.00 - 5.20 )HématiesSg </p>
+<p>SAE13.9 g/100mL ( 12.0 - 16.0 )HémoglobineSg </p>
+<p>SAE41.0 % ( 37.0 - 47.0 )HématocriteSg </p>
+<p>VVE94.0 μ3 ( 85.0 - 95.0 )VGMSg </p>
+<p>SAE31.9 pg/cel ( 28.0 - 34.0 )TCMHSg </p>
+<p>SAE33.9 g/100mL ( 32.0 - 36.5 )CCMHSg </p>
+<p>SAE11.9 % ( 0.0 - 16.0 )IDGSg </p>
+<p>SAE225.0 10*9/L ( 150.0-400.0 )PlaquettesSg </p>
+<p>Numeration sanguine (Sang total sur EDTA) <br/>Méthode : XN - SYSMEX </p>
+<p>SAE60.0 %Polynucléaires NeutrophilesSg </p>
+<p>SAE2.6 10*9/L ( 1.8 - 7.5 )SoitSg </p>
+<p>SAE0.7 %Polynucléaires EosinophilesSg </p>
+<p>SAE0.0 10*9/L ( 0.0 - 0.5 )SoitSg </p>
+<p>SAE0.7 %Polynucléaires BasophilesSg </p>
+<p>SAE0.0 10*9/L ( 0.0 - 0.3 )SoitSg </p>
+<p>SAE31.4 %LymphocytesSg </p>
+<p>SAE1.4 10*9/L ( 1.0 - 4.0 )SoitSg </p>
+<p>SAE7.2 %MonocytesSg </p>
+<p>SAE0.3 10*9/L ( 0.1 - 1.0 )SoitSg </p>
+<p>VVE0.0 %MyelémieSg </p>
+<p>SAE11IDPSg </p>
+<p>Formule </p>
+<p>HEMATOLOGIE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé par :Validé le : Pr GRISCELLI Franck,Dr LACROIX Ludovic,Dr VERGÉ Véronique,Dr SAADA</p>
+<p></p>
+<p></p>
+<p>RESULTATS Valeurs de <br/><br/>Référence </p>
+<p>Valeurs PrécédentesUnitésANALYSES </p>
+<p>PATIENT : <br/><br/>CTE 050 - SEIN </p>
+<p>050COMITE : </p>
+<p>A :XXXXXX XXXXXX <br/><br/>Prescrit par : </p>
+<p>XXXXXX 162210585DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>Type <br/><br/><br/>Ech. </p>
+<p>Val. </p>
+<p>Page 3 / 3 </p>
+<p>sysm10.0 μ3 ( 6.0 - 12.0 )VMPSg </p>
+<p>GRFNégatifSE Ac anti HBs <br/>ECLIA </p>
+<p>GRF0.0 mUI/ml <br/>ECLIA </p>
+<p>Index Ac HBsSE </p>
+<p>GRFNégatifSE Ac anti HBc (IgG+IgM) <br/>ECLIA </p>
+<p>GRF0.14 <br/>ECLIA </p>
+<p>Index Ac HBCSE </p>
+<p>Hepatite B (Beckman) </p>
+<p>GRFNégatifSE Ac anti HCV (IgG) <br/>ECLIA </p>
+<p>GRF0.04 <br/>ECLIA </p>
+<p>Index Ac HCVSE </p>
+<p>Hepatite C (Beckman) </p>
+<p>SEROLOGIE </p>
+<p>VIROLOGIE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé par :Validé le : Pr GRISCELLI Franck,Dr LACROIX Ludovic,Dr VERGÉ Véronique,Dr SAADA</p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

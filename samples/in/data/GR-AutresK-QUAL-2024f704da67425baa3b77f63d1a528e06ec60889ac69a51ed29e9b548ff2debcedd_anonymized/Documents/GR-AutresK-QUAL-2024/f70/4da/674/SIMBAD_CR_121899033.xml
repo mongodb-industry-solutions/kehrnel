@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121899033" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Note du 2020-01-30</title>
+    <effectiveTime value="20200130000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200130000000+0000"/>
+        <assignedAuthor>
+            <code code="060/8" displayName="CTE 060 - GYNECOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<u><b>SERVICE DE GYNECOLOGIE - NOTE<br/> </b></u>
+<b><br/><br/>Dicté par : </b> Docteur Louis-Marie Garcin, Interne
+ <b><br/>Dicté le : </b> 28/01/2020 
+ <b><br/>Service : </b> 060-CTE 060 - GYNECOLOGIE 
+ <br/>
+<b>Type de document : </b> 060 NO NOTE 
+ <br/>
+<b>Ref :</b> 918689 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : HLX/A
+ <br/>
+<br/>
+<b>Dr Louis Marie GARCIN, Interne<br/>Service de gynécologie oncologie<br/></b>
+<br/>
+<br/>
+<b>Pour rappel :</b> patiente âgée de 67 ans, présentant un cancer de 
+ <br/>l'ovaire avec carcinose péritonéale non opérable depuis près de 2 ans.
+ <br/>
+<br/>Actuellement, la patiente est platine résistante et doit débuter une 
+ <br/>nouvelle ligne par CAELYX.
+ <br/>Patiente hospitalisée depuis le 22.1.2020 pour altération de l'état 
+ <br/>général.
+ <br/>
+<br/>La patiente présente notamment des douleurs lombaires très 
+ <br/>handicapantes et sont peu soulagées par les antalgiques de palier 3.
+ <br/>
+<br/>Au scanner du 23.1.2020, il est noté des fractures tassement d'allure 
+ <br/>dégénérative de D11 et de L3 sans recul du mur postérieur.
+ <br/>
+<br/>Nous voulions discuter l'intérêt et la possibilité d'une 
+ <br/>cimentoplastie de ces vertèbres.
+ <br/>Dossier adresser au comité douleurs osseuses lundi 3.2.2020
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Louis-Marie GARCIN , Interne<br/>Le jeudi 30 janvier 2020 à 14:17<br/><br/></b>
+<br/>
+<b><br/></b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

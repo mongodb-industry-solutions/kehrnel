@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125680636" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20180703000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180703000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Compte rendu générique de SENOLOGIE<br/><br/>Dicté par : </b> Docteur Meriem Mokdad Adi
+ <b><br/>Dicté le : </b> 02/07/2018 
+ <b><br/>Service : </b> 050-CTE 050 - SEIN 
+ <br/>
+<b>Type de document : </b> 050 CC Générique 
+ <br/>
+<b>Ref :</b> 445823 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : ORC
+ <br/>
+<br/>Patiente vue ce jour à J15 C2 de TAXOL CARBOPLATINE dans le cadre du 
+ <br/>protocole SAFIR02, pour la prise en charge d` une récidive d` un 
+ <br/>cancer du sein gauche diagnostiqué initialement en 2016, triple 
+ <br/>négatif et actuellement en récidive ganglionnaire susclaviculaire et 
+ <br/>axillaire.
+ <br/>
+<br/>
+<u><b>CONSULTATION CE JOUR<br/><br/></b></u> Asthénie grade 1 voir 2 surtout après la cure de taxol / 
+ <br/>carboplatine 
+ <br/>Nausées + vomissements après le carboplatine 
+ <br/>Je lui propose de renforcer le traitement antiémétique par la 
+ <br/>prescription d'EMEND.
+ <br/>PS : 0.
+ <br/>Poids : 82Kg.
+ <br/>Examen clinique : adénopathie sus claviculaire gauche interne 
+ <br/>mesurant environ 1 cm.
+ <br/>Palpation au niveau du QSE gauche, d'une masse mesurant 2 cm environ.
+ <br/>
+<br/>Mammographie réalisée en mars : remaniements post-thérapeutiques du 
+ <br/>sein gauche avec cependant un foyer de plus d'une dizaine de 
+ <br/>microcalcifications polymorphes, du quadrant supéro-externe gauche, 
+ <br/>d'analyse difficile, qui pourrait être en rapport avec des 
+ <br/>calcifications de cytostéatonécrose post thérapeutique, mais à 
+ <br/>confronter impérativement dans ce contexte à un avis, et probablement 
+ <br/>des macrobiopsies complémentaires.
+ <br/>
+<br/>La patiente a eu uniquement la biopsie au niveau de l'adénopathie 
+ <br/>susclaviculaire.
+ <br/>
+<br/>Je propose de faire un contrôle par échographie à Gustave Roussy et 
+ <br/>si besoin biopsie.
+ <br/>
+<br/>A signaler que sur le TEP réalisé en ville le 27 avril on ne mettait 
+ <br/>pas en évidence de fixations au niveau du sein gauche, ce TEP 
+ <br/>confirmait la récidive ganglionnaire susclaviculaire, axillaire, et 
+ <br/>du groupe du triangle postérieur gauche. 
+ <br/>
+<br/> Bilan biologique réalisé en ville normal.
+ <br/>
+<br/>
+<u><b> EN PRATIQUE<br/><br/></b></u> Elle recevra ce jour le J15 C2 de TAXOL.
+ <br/>
+<br/>Sera revue en consultation au mois d'août avec les résultats du pet 
+ <br/>scanner qui sera réalisé à l'hôpital privé d'Antony. 
+ <br/>
+<br/>Je la reverrai en septembre.
+ <br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Meriem MOKDAD ADI <br/>Le lundi 2 juillet 2018 à 15:12 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

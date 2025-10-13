@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_119673043" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>Résumé d'hospitalisation en Hôpital de Jour Chirurgical</title>
+    <effectiveTime value="20201231000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201231000000+0000"/>
+        <assignedAuthor>
+            <code code="PCA/465" displayName="HOPITAL DE JOUR CHIRURGICAL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b> Admission ce jour en Hôpital de Jour de Chirurgie Ambulatoire<u> <br/><br/>Médecin traitant :Médecin traitant</u></b>
+<u> <br/></u>DOCTEUR BUSSY BERNARD
+ <br/>23 RUE AMPERE
+ <br/>94400 VITRY SUR SEINE
+ <br/>01 46 80 59 11
+ <br/>
+<u><b><br/><br/>Rappel clinique</b></u> :
+ <br/>La patiente présente une progression au niveau de l'adénopathie 
+ <br/>sus-claviculaire gauche avec des douleurs mixtes avec une composante 
+ <br/>neuropathique importante au niveau du membre supérieur gauche, raison 
+ <br/>pour laquelle elle est hospitalisée au mois de novembre pour 
+ <br/>équilibration antalgique.
+ <br/>
+<br/>
+<br/>
+<b>Motif de l'hospitalisation</b> :
+ <br/>Progression au niveau de l'adénopathie sus-claviculaire gauche
+ <br/>
+<br/>
+<br/>
+<b>Traitement à l'entrée : </b>
+<br/>Traitement oncologique : TAXOL hebdomadaire
+ <br/>PCA de MORPHINE avec 7 mg/h et 8 mg de bolus, trois bolus par heure 
+ <br/>augmenté il y a 72 heures.
+ <br/>Mise en place d'une PCA de KETAMINE avec 1 mg/h depuis 72 heures.
+ <br/>LAROXYL IV. 25 mg le soir sur 12h
+ <br/>LAROXYL en solution buvable 7 gouttes le matin et 7 gouttes le midi.
+ <br/>NEURONTIN 600 mg matin midi et soir augmenté de 400 il y a 72 heures.
+ <br/>PARACETAMOL 3 x par jour.
+ <br/>LANSOPRAZOLE 30 mg le soir
+ <br/>PRIMPERAN si besoin.
+ <br/>
+<br/>
+<b>Intitulé de l'intervention</b> : 
+ <br/>
+<br/>
+<b> BIOPSIE GANGLIONNAIRE CLAVICULAIRE GAUCHE SOUS SCANNER.</b>
+<br/>
+<br/>
+<b>Nom de l'opérateur :</b> Docteur VARIN 
+ <br/>
+<b>Mode anesthésique :</b> AL 
+ <br/>Surveillance post-opératoire : simple
+ <br/>
+<br/>
+<b> En cas de problème, veuillez contacter :<br/>* Administratif : 01.42.11.58.77<br/>* Médecin de Radiologie Interventionnelle : 01.42.11.42.11 demander <br/>le DECT 26.33<br/>* Infirmière de régulation (la semaine de 8h30 à 18h) : 01.42.11.46.08<br/>* Service des Urgences (le soir et weekend) : 01.42.11.50.00</b>
+<br/>
+<br/>Temps de surveillance : 15 min
+ <br/>Retour à domicile à : 16h
+ <br/>
+<br/>
+<u><b>Documents remis à la sortie</b></u>
+<b> </b> :
+ <br/> - Bulletin de situation (X 2)
+ <br/> - Compte rendu opératoire (non disponible à la sortie ) 
+ <br/> - Résumé d'hospitalisation 
+ <br/> - Bon de transport 
+ <br/>
+<br/>
+<b>Poursuite du traitement d'entrée </b> :
+ <br/>Traitement oncologique : TAXOL hebdomadaire
+ <br/>PCA de MORPHINE avec 7 mg/h et 8 mg de bolus, trois bolus par heure 
+ <br/>augmenté il y a 72 heures.
+ <br/>Mise en place d'une PCA de KETAMINE avec 1 mg/h depuis 72 heures.
+ <br/>LAROXYL IV. 25 mg le soir sur 12h
+ <br/>LAROXYL en solution buvable 7 gouttes le matin et 7 gouttes le midi.
+ <br/>NEURONTIN 600 mg matin midi et soir augmenté de 400 il y a 72 heures.
+ <br/>PARACETAMOL 3 x par jour.
+ <br/>LANSOPRAZOLE 30 mg le soir
+ <br/>PRIMPERAN si besoin.
+ <br/>
+<br/>
+<b>Ordonnances</b> : " Pas de prescription médicamenteuse de sortie "
+ <br/>
+<br/> Consignes post-opératoires transmises à l'oral par l'infimière avant 
+ <br/>la sortie.
+ <br/>
+<br/>Pas de recommandation particulière.
+ <br/>
+<u><b> <br/></b></u>
+<b>Prochain rendez-vous </b> : 
+ <br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b>Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>04/01/2021 15:45 050 MKD TDM ABD+PELV 
+ <br/>06/01/2021 08:00 HJM MKD HDJ CHIMIO 
+ <br/> 08:05 HJM MKD C HDJ A TRAITER 
+ <br/>13/01/2021 09:00 HJM MKD HDJ CHIMIO 
+ <br/> 09:05 HJM MKD C HDJ A TRAITER 
+ <br/>19/01/2021 11:00 134 PPV HDJ SP 
+ <br/> 11:05 134 PPV C SP 
+ <br/>03/02/2021 12:30 HJM MKD HDJ CHIMIO 
+ <br/> 12:35 HJM MKD C HDJ A TRAITER 
+ <br/>10/02/2021 09:30 HJM MKD HDJ CHIMIO 
+ <br/> 09:35 HJM MKD C HDJ A TRAITER 
+ <br/>
+<br/>
+<br/> Document imprimé sur la page d'identification du dossier patient de 
+ <br/>Gustave Roussy remis en mains propres au patient et envoyé à son 
+ <br/>médecin traitant le jour de l' intervention.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

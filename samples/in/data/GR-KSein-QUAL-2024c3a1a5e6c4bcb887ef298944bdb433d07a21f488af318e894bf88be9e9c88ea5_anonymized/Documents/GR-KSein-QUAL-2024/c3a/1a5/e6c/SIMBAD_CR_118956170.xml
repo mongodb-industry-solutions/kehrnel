@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_118956170" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>EMASP - CR HOSPI SOINS PALLIATIFS - Docteur Elena PAVLIUC</title>
+    <effectiveTime value="20210401000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20210401000000+0000"/>
+        <assignedAuthor>
+            <code code="134/536" displayName="EMASP"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Département Interdisciplinaire D'Organisation Du Parcours Patients - <br/>DIOPP<br/><br/><br/> Dicté par : </b> Docteur Eléna Pavliuc
+ <b><br/>Dicté le : </b> 30/03/2021 
+ <b><br/>Service : </b> 134 - EMASP 
+ <br/>
+<b>Type de document : </b> 134 CC CONSULTATION H 
+ <br/>
+<b>Ref :</b> 1305563 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire :</b> TEC/A 
+ <br/>
+<br/>
+<u><b>EVALUATION AU LIT DU PATIENT PAR L'EMASP<br/> </b></u>
+<br/>
+<b>Date de l'évaluation initiale : 5 novembre 2020<br/></b>
+<br/>Patiente vue par Dr Pavliuc 
+ <br/>Patiente vue pour la première fois, à la demande de l'équipe médicale 
+ <br/>du service de Herault.
+ <br/>
+<br/>
+<u><b>Oncologue référent</b></u>
+<b> : </b> Dr Mokdad
+ <br/>
+<br/>
+<u><b>MOTIF DE L'INTERVENTION DE L'EMASP</b></u>
+<b> :</b>
+<br/>Gestion du traitement antalgique pour des douleurs sur l'adénopathie 
+ <br/>cervicale et sus-claviculaire.
+ <br/>
+<br/>
+<u><b>Contexte </b></u> : 
+ <br/>Patiente suivie pour un cancer du sein métastatique au niveau 
+ <br/>ganglionnaire, en cours de traitement par Taxol débuté le 4 novembre 
+ <br/>sachant qu'elle a eu déjà avant du Taxol et c'est une reprise.
+ <br/>
+<br/>
+<u><b>EVALUATION DES SYMPT\'d4MES</b></u>
+<b> :</b>
+<br/>PS :3
+ <br/>
+<br/>
+<u>symptômes</u>: 
+ <br/>La patiente présente un oecdème de compression au niveau du membre 
+ <br/>supérieur gauche, la douleur est mixte avec une composante 
+ <br/>neuropathique importante.
+ <br/>
+<br/>
+<u><b>EVALUATION DES CONNAISSANCES DU PATIENT ET DE SON ENTOURAGE</b></u>
+<b> :</b>
+<br/>Difficultés d'aborder le sujet sensible de l'évolution de la maladie, 
+ <br/>la patiente a bien entendu la progression actuelle et le rechallenge 
+ <br/>de Taxol mais elle a aussi entendu le peu de chances d'efficacité du 
+ <br/>Taxol. Elle se met à pleurer et il est difficile d'approfondir le 
+ <br/>sujet.
+ <br/>Elle a 2 fils à domicile, habite avec son compagnon, le père des 
+ <br/>enfants habite dans le sud de la France.
+ <br/>
+<br/>
+<u><b>PROPOSITIONS APR\'c8S L'EVALUATION INITIALE</b></u>
+<b> :</b>
+<br/>La patiente n'a pas actuellement d'antalgique pour les douleurs 
+ <br/>neuropathiques, a eu du Lyrica mais qui a été efficace et qui a été 
+ <br/>arrêté.
+ <br/>La morphine en PCA rotation faite hier, paracétamol si besoin, 
+ <br/>proposition d'introduire le Neurontin et essayer la kétamine, 
+ <br/>discussion sur l'intérêt des corticoïdes.
+ <br/>Proposer du Versatis et le Paracétamol en systématique et essayer le 
+ <br/>Laroxyl en gouttes la journée et I.V. le soir.
+ <br/>
+<br/>
+<u><b>EVOLUTION ET DEVENIR</b></u>
+<b> :</b>
+<br/>Prise de nouvelles le 12 novembre : nette amélioration des douleurs 
+ <br/>avec la kétamine, le Laroxyl et la PCA, projet de retour à domicile 
+ <br/>avec l'HAD.
+ <br/>Proposition d'un suivi un HDJ soins palliatifs, rendez-vous prévu le 
+ <br/>10 décembre.
+ <br/>
+<br/>La patiente sort au domicile avec l'HAD santé service le 16 novembre.
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<b>Courrier rédigé avec un logiciel de reconnaissance vocale pouvant <br/>comporter quelques imperfections orthographiques.</b>
+<br/>
+<br/>
+<br/>
+<br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Eléna PAVLIUC <br/>Le mardi 30 mars 2021 à 16:12</b>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/> Le médecin autorise l'établissement des prescriptions médicales de 
+ <br/>transports sanitaires du patient, adaptées à sa situation médicale. 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

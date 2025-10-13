@@ -1,56 +1,70 @@
-# src/mapper/mapping_engine.py   
-
+# src/mapper/mapping_engine.py
 from __future__ import annotations
-from pathlib import Path
-from typing import Any, Dict, Protocol
+from typing import Any, Dict, Optional, Callable
+import os
+import sys
+
+NO_TRANSLATE_SUFFIX = (
+    "/language/code_string",
+    "/territory/code_string",
+    "/defining_code/code_string",
+)
+
+def _log_tx(jpath: str, mode: Any, src: str, dst: str) -> None:
+    if not os.environ.get("KEHRNEL_TRANSLATE_LOG"):
+        return
+    def _short(s: str) -> str:
+        s = s.replace("\n", " ")
+        return (s[:120] + "…") if len(s) > 121 else s
+    print(f"[tx] {mode or 'auto'}  {jpath} :: '{_short(src)}' -> '{_short(dst)}'", file=sys.stderr)
 
 
-class SourceHandler(Protocol):
-    def can_handle(self, path: Path) -> bool: ...
-    def load_source(self, path: Path) -> Any: ...
-    def extract_value(self, src: Any, rule: Dict | str) -> Any: ...
-    def preprocess_mapping(self, mapping: Dict, src: Any) -> Dict: ...
+def _maybe_translate(gen: Any, jpath: str, value: Any, mode: Any) -> Any:
+    """
+    Translate only when the mapping rule explicitly asks for it:
+      translate: true | "on" | "no-cache" | "nocache" | "no_cache"
+    Any other value (None, False, "off") → no translation.
+    """
+    if not isinstance(value, str):
+        return value
 
-from mapper.utils.macro_expander import expand_macros
-from mapper.utils.jinja_env      import env as _JINJA
-
-def _render_template(tpl: str, ctx: dict) -> str:
-    return _JINJA.from_string(tpl).render(ctx)
-
-def apply_mapping(generator, mapping, handler, source_tree, skeleton):
-    # ① expand @code/@term/… macros once
-    mapping = expand_macros(mapping)
-
-    for jpath, rule in mapping.items():
-        if jpath.startswith("_"):
-            continue
-
-        # ② default / null_flavour bookkeeping
-        default   = rule.pop("default",   None) if isinstance(rule, dict) else None
-        nlf       = rule.pop("null_flavour", None) if isinstance(rule, dict) else None
-
-        # ③ evaluate rule (Jinja2 template strings supported)
+    # opt-in only
+    if mode in (True, "on", "no-cache", "nocache", "no_cache"):
+        tx = getattr(gen, "translator", None)
+        if not tx:
+            return value
+        persist = (mode not in ("no-cache", "nocache", "no_cache"))
         try:
-            value = handler.extract_value(source_tree, rule)
+            out = tx.translate(value, persist=persist)
+            if out != value:
+                _log_tx(jpath, mode, value, out)
+            return out
+        except Exception:
+            return value
 
-            # treat pure strings starting with "{{" "}}" as Jinja templates
-            if isinstance(value, str) and "{{" in value and "}}" in value:
-                value = _render_template(value, {"maps_to": value})
+    # default: do not translate
+    return value
 
-            if value in (None, "", []) and default is not None:
-                value = default
-            elif value in (None, "", []) and nlf:
-                value = {
-                    "null_flavour": {
-                        "value": nlf,
-                        "_type": "DV_CODED_TEXT"
-                    }
-                }
+# ⬇️ Restore this – used by core/generator.py
+def apply_mapping(gen: Any, flat_map: Dict[str, Dict[str, Any]], composition: Dict, *_, **__) -> Dict:
+    """
+    Apply path-keyed rules to the pre-built composition skeleton.
 
-            if value not in (None, "", []):
-                generator._set_value_at_path(skeleton, jpath, value)
+    flat_map: { "/json/path": {"literal": <value>, "translate": <mode?>, ...}, ... }
+    """
+    set_fn: Optional[Callable[[Dict, str, Any], None]] = getattr(gen, "set_at_path", None)
+    if set_fn is None:
+        set_fn = getattr(gen, "_set_value_at_path", None)
+    if set_fn is None:
+        raise AttributeError("Generator has no set_at_path/_set_value_at_path")
 
-        except Exception as exc:
-            print(f"[WARN] {jpath}: {exc}")
+    for path, spec in (flat_map or {}).items():
+        if not isinstance(spec, dict):
+            continue
+        if "literal" not in spec:
+            continue
+        val = spec["literal"]
+        val = _maybe_translate(gen, path, val, spec.get("translate", None))
+        set_fn(composition, path, val)
 
-    return skeleton
+    return composition

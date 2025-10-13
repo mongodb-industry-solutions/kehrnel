@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121221316" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>COMPTE-RENDU R.I.</title>
+    <effectiveTime value="20200518000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200518000000+0000"/>
+        <assignedAuthor>
+            <code code="136/300" displayName="CONS. RADIO INTERVENTIONNELLE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>Date: 18/05/2020 
+ <br/>Opérateur(s) principal: Docteur DELPLA ALEXANDRE 
+ <br/>Opérateur(s) interne: Docteur TOULOUPAS Caroline 
+ <br/>Manipulatrice:Faucher Fabien; 
+ <br/>
+<br/>Intervention guidée par: - Echographie 
+ <br/>
+<br/>PDS : 0 GY.cm2 
+ <br/>DLP : 0 mGy.cm 
+ <br/>
+<br/>Produit de contraste: 0 ml
+ <br/>
+<br/>
+<br/>
+<b>PONCTION D'ASCITE</b>
+<br/>
+<br/>
+<br/>
+<b>Indication :<br/></b>
+<br/>Patiente suivie pour un cancer de l'ovaire avec carcinose péritonéale.
+ <br/>Ascite réfractaire.
+ <br/>Ponction itérrative sous contrôle échographique en raison d'une 
+ <br/>ascite cloisonnée.
+ <br/>
+<br/>
+<b>Technique & Résultat :<br/></b>
+<br/>En décubitus dorsal, après désinfection cutanée, anesthésie locale 
+ <br/>(xylocaïne).
+ <br/>Ponction sous contrôle échographique avec une aiguille de Yueh de 
+ <br/>l'ascite.
+ <br/>Evacuation d'ascite d'aspect sero-hématique.
+ <br/>Pas de complication.
+ <br/>
+<br/>
+<b><h3>Conclusion</h3></b>
+<br/>Ponction/évacuation d'ascite.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

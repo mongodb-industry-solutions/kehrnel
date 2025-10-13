@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120893550" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 190350868</title>
+    <effectiveTime value="20190205000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200706000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Dr J. Delahousse (61 92) <br/>Interrne D. Combarel (37 69) <br/>Pr A. Paci (47 30) </p>
+<p>Dr A. Arbab (41 65) <br/>Pr A. Bennaceur (40 65) <br/>Interrne S. Fodil (37 69) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Dr E. Gallois (40 62) <br/>Pr F. Griscelli (51 93) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>XXXXXX </p>
+<p>FémininNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>05/02/2019 08:43 </p>
+<p>Sexe : </p>
+<p>04/02/2019 16:45 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>Nom de naissance : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>FINISTERE D2 </p>
+<p> 1 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>lundi 06 juillet 2020 </p>
+<p>Complet </p>
+<p>MICROBIOLOGIE </p>
+<p> SÉROLOGIE INFECTIEUSE </p>
+<p>- Hépatite B (VHB) </p>
+<p>Antigène HBs : GRFNégatif <br/>Sérum - Access HBs Ag (EIA) </p>
+<p> index (Ag HBs) : 0.39 Prélèvement nonparvenu </p>
+<p>04/02/2019 16:00 GRF </p>
+<p>Anticorps anti-HBs GRFNégatif <br/>Sérum - Access HBc Ab (EIA) </p>
+<p> concentration (Ac HBs) : 0.0 mUI/ml Prélèvement nonparvenu </p>
+<p>04/02/2019 16:00 GRF </p>
+<p>Anticorps totaux anti-HBc : GRFNégatif <br/>Sérum - Access HBc Ab (EIA) </p>
+<p> index (Ac HBc) : 0.14 Prélèvement nonparvenu </p>
+<p>04/02/2019 16:00 GRF </p>
+<p>Conclusion sérologie Hépatite B GRFProfil compatible avec une absence de contact avec le virus de l'hépatite B. <br/>En cas de suspicion d'infection récente, un contrôle à 3 mois est nécessaire. </p>
+<p>- Hépatite C (VHC) </p>
+<p>Anticorps totaux anti-VHC GRFIndéterminé <br/>Sérum - Access HCV Ab V3 (EIA) </p>
+<p> index (VHC) : Indéterminé Prélèvement nonparvenu </p>
+<p>04/02/2019 16:00 GRF </p>
+<p>Discordance entre serologie de dépistage (POSITIF) et sérologie de confirmation (NEGATIF) <br/>A contrôler sur un nouveau sérum </p>
+<p>EXAMENS SOUS-TRAITES </p>
+<p> VIROLOGIE <br/>Sérologie VHC (confirmation) GRFReçu le : 06/07/2020 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 06/07/2020 à 10:02 par : Pr GRISCELLI Franck</p>
+<p></p>
+<ul>
+<li>MICROBIOLOGIE</li>
+<ul>
+<li>Sérologie infectieuse</li>
+<ul>
+<li>Hépatite B (VHB)</li>
+<li>Hépatite C (VHC)</li>
+</ul>
+</ul>
+<li>EXAMENS SOUS-TRAITES</li>
+<ul>
+<li>Virologie</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

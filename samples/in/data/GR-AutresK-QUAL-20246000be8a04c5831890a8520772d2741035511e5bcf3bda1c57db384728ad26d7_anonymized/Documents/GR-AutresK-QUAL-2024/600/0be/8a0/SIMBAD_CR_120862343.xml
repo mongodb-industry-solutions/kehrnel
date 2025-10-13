@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120862343" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>EMASP - CR HDJ SOINS PALLIATIFS - Dr Anda SAMPETREAN</title>
+    <effectiveTime value="20200709000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200709000000+0000"/>
+        <assignedAuthor>
+            <code code="134/536" displayName="EMASP"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>Equipe Mobile d'Accompagnement et de Soins Palliatifs (EMASP) - <br/>Département de Soins de Support (DISSPO)<br/><br/>CONSULTATION HOPITAL DE JOUR SOINS PALLIATIFS<br/><br/> <br/> Dicté par : Docteur Anda Sampetrean<br/>Dicté le : 22/06/2020 <br/>Service : 134 - EMASP <br/>Type de document : 134 CC HDJ <br/>Ref :1026968 <br/>_____________________________________________________________<br/><br/>Patient : José XXXXXX<br/>Identifiant :XXXXXX <br/>Date de naissance :XXXXXX <br/>Sexe: Masculin <br/>_____________________________________________________________ </b>
+<br/>
+<b><br/>Secrétaire :</b> ERL/a 
+ <b><br/></b>
+<br/>Date de l'Hôpital de Jour : 19/06/2020
+ <br/>Patient vu par : Dr SAMPETREAN IDE : Aline DE OLIVEIRA 
+ <br/>
+<br/>
+<b> L'ETAT CLINIQUE DE Mr DA SILVA NECESSITE UNE PRISE EN CHARGE EN <br/>H\'d4PITAL DE JOUR DE SOINS PALLIATIFS POUR EVALUATION ET <br/>SURVEILLANCE MEDICALE.<br/><br/>OMS = 2</b>
+<br/>
+<br/>Patient vu pour la première fois en Hôpital de Jour de Soins 
+ <br/>Palliatifs. 
+ <br/>Patient accompagné par son épouse.
+ <br/>
+<br/>
+<b>Oncologue référent : Dr F.R. FERRAND </b>
+<br/>
+<br/>
+<u><b>INFORMATIONS COMPLEMENTAIRES</b></u>
+<br/>
+<b>Directives anticipées</b> : non abordées 
+ <br/>
+<b>Personne de confiancedéclarée</b> :sa fille, Madame RAFAEL BENAO DE JESUS 
+ <br/>Elisabeth 
+ <br/>
+<b>Intervenants au domicile</b> :IDE 
+ <br/>
+<br/>
+<u><b>Antécédents chirurgicaux<br/></b></u> - Carcinome épidermoïde hypopharyngé (récidive) traité par PLT avec 
+ <br/>lambeau de grand pectoral et lambeau antéro-latéral de cuisse, 
+ <br/>- Trachéotomie, 
+ <br/>- Opéré d'une maladie de Dupuytren à 2 reprises (à gauche et à 
+ <br/>droite).
+ <br/>
+<br/>
+<u><b>Antécédents médicaux</b></u>
+<br/>- Crise comitiale généralisée avec dernier évènement il y a plus de 
+ <br/>10 ans, pas de suivi neurologique, que l'on recommande notamment sur 
+ <br/>le plan thérapeutique, 
+ <br/>- Psoriasis diffus essentiellement aux mains et aux avant-pieds, pas 
+ <br/>de traitement systémique, 
+ <br/>- Hypothyroïdie, 
+ <br/>
+<br/>
+<u><b>Allergie</b></u>
+<br/>Aucune.
+ <u><b><br/></b></u>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE ET SES COMPLICATIONS</b></u>
+<br/>Diagnostic d'un carcinome épidermoïde oropharyngé HPV négatif 
+ <br/>initialement traité en 2014 par radio chimiothérapie, avec une 
+ <br/>première récidive locale en mars 2018 opérée.
+ <br/>Deuxième récidive locale en octobre 2019, avec une chimiothérapie par 
+ <br/>TPEX- 4 cycles finis en janvier 2020, réévaluation montrant une bonne 
+ <br/>réponse métabolique. 
+ <br/>Progression après 2 mois de traitement d'entretien par CETUXIMAB, 
+ <br/>avec changement du traitement par immunothérapie avec NIVOLUMAB.
+ <br/>
+<br/>Screening KOTIP : HRAS non muté, mutation oncogénique délétère de 
+ <br/>TP53, variante de signification inconnue de CDK N2A. 
+ <br/>
+<br/>
+<u><b>HISTOIRE RECENTE</b></u> : 
+ <br/>Réévaluation par scanner le 10/06/2020, montrant une progression des 
+ <br/>masses cervicales selon RECIST apparition d'un épanchement pleural 
+ <br/>gauche. Cette progression entraine un trajet fistuleux au contact de 
+ <br/>l'axe carotidien gauche entrainant un risque vasculaire. 
+ <br/>Consultation avec son oncologue référent le 16/06/2020, le Dr 
+ <br/>FERRAND, et discussion en staff Onco ORL le même jour avec 
+ <br/>proposition thérapeutiques :
+ <br/>- mono-chimiothérapie de type 5 FU, METHOTREXATE ou une reprise de 
+ <br/>TAXANE.
+ <br/>- inclusion dans un essai clinique de phase I, ou inclusion si 
+ <br/>patient non incluable dans un essai de phase I, inclusion dans le 
+ <br/>protocole UPSTREAM (bras combo d'immunothérapie MONALIZUMAB 
+ <br/>DURVALUMAB) 
+ <br/>- soins de confort exclusifs.
+ <br/>- un avis auprès des radiologues interventionnels a été pris le même 
+ <br/>jour de la consultation avec le docteur FERRAND, concernant le risque 
+ <br/>hémorragique de la tumeur. 
+ <br/>
+<br/>
+<u><b>MODE DE VIE</b></u>
+<br/>- marié, a trois enfants (30,35 et 41 ans) 
+ <br/>- habite dans un appartement avec son épouse. Appartement au 1er 
+ <br/>étage sans ascenseur, salle de bain avec baignoire.
+ <br/>Invalidité catégorie II.
+ <br/>
+<br/>
+<u><b>TRAITEMENT ACTUEL</b></u>
+<br/>- PULMICORT aérosol.
+ <br/>- TERBUTALINE aérosol 
+ <br/>- DUROGESIC 75 μg
+ <br/>- LEVOTHYROX 25 μg
+ <br/>- ORAMORPH 20 mg (environ 3-4 par jour)
+ <br/>SOLUPRED 60 mg depuis le 11/06 (pendant 2 semaines)
+ <br/>- PYOSTACINE 500 mg 2 comprimés x 3 fois/jour depuis le 11/06 pendant 
+ <br/>2 semaines.
+ <br/>- PRIMPERAN 1 comprimé 3x/jour si besoin
+ <br/>- Huile de PARAFFINE
+ <br/>- GARDENAL 100 mg/jour
+ <br/>
+<br/>
+<u><b>BIOLOGIE du 15/06/2020<br/></b></u> Hémoglobine : 13,6 g/dL
+ <br/>Leucocytes : 9800 /mmc
+ <br/>PNN : 7200 /mmc
+ <br/>Plaquettes : 292 000/mmc
+ <br/>Sodium : 138 mmol/L
+ <br/>Potassium : 3,9 mmol/L
+ <br/>Créatinine : 52 μmol/L avec une clairance de la créatinine à 111 
+ <br/>mL/min 
+ <br/>Calcium corrigé : 2,52 mmol/L
+ <br/>Phosphore : 1,24 mmol/L
+ <br/>Magnésium : 0,81 mmol/L
+ <br/>Bilan hépatique quasi normale 
+ <br/>Albumine : 40 g/L
+ <br/>TP : 84 % 
+ <br/>
+<br/>
+<u><b>EVALUATION MEDICO-SOIGNANTE DES SYMPT\'d4MES</b></u>
+<br/>PS : 2
+ <br/>Poids : 70 kg
+ <br/>TA : 121/78 Pouls : 71 
+ <br/>
+<br/>Saturation : 93% en AA Température : 36
+ <br/>
+<br/>
+<b>Sur le plan douleur </b> :
+ <br/>- Douleur localisée au niveau cervical plutôt du côté gauche avec 
+ <br/>irradiation au niveau occipital, à l'épaule gauche et au bras gauche. 
+ <br/>La douleur est décrite comme une douleur qui serre, qui pince et brûle 
+ <br/>parfois. 
+ <br/>Patient sous traitement par DUROGESIC 75 μg/h patch, avec des 
+ <br/>interdoses d'ORAMORPH à 20 mg, il prend aux alentours de 3-4 
+ <br/>interdoses par jour, avec un soulagement partiel des douleurs. 
+ <br/>Traitement augmenté il y a 2 jours par son MT. Se dit mieux soulagé.
+ <br/>- Les douleurs de fond sont cotées à 6-7/10 avec un soulagement à 
+ <br/>2-3/10 après les interdoses d'ORAMORPH.
+ <b><br/><br/>Sur le plan cardio-pulmonaire </b> :
+ <br/>- Pas de gêne respiratoire, pas de toux.
+ <br/>- Patient qui a été trachéotomisé le mois de mars 2020, depuis des 
+ <br/>aérosols de PULMICORT et TERBUTALINE ont été mis en place, avec une 
+ <br/>bonne tolérance et un soulagement respiratoire à priori.
+ <br/>-Auscultation cardio-pulmonaire sans particularité.
+ <br/>
+<br/>
+<b>Sur le plan digestif </b> : 
+ <br/>- abdomen souple, dépressible, indolore à la palpation. Patient avec 
+ <br/>une GPE qui a été mise en place en novembre 2019, orifice non 
+ <br/>inflammatoire, pas de fuite.
+ <br/>- a présenté hier des nausées avec des vomissements, symptomatologie 
+ <br/>que le patient met sur l'augmentation du DUROGESIC de 50 à 75 μg, 
+ <br/>avec une bonne réponse à la prise de PRIMPERAN. Episode isolé.
+ <br/>- Tendance à la constipation, une selle tous les 2 jours. 
+ <br/>- Nous dit boire au plus 300 mL d'eau par jour.
+ <br/>- passe 3 poches de 500 mL d'alimentation entérale par jour, une 
+ <br/>poche sur 2 heures avec bonne tolérance. 
+ <br/>
+<br/>
+<b>Sur le plan des muqueuses et du tégument</b> :
+ <br/>- Tumeur cervicale gauche, suintante, non examinée ce jour à cause du 
+ <br/>pansement. 
+ <br/>- Pas d'escarre. 
+ <br/>- Pas de lésion endobuccale.
+ <br/>
+<br/>
+<b>Sur le plan neuropsychologique </b> :
+ <br/>- Insomnies causées par les douleurs au niveau de la tumeur qui le 
+ <br/>réveillent la nuit. 
+ <br/>- Pas de crise épileptique depuis plus de 10 ans.
+ <br/>- Du point de vue moral, patient relativement en colère par le manque 
+ <br/>de réponse au traitement, et le besoin de recommencer une nouvelle 
+ <br/>ligne de traitement.
+ <br/>
+<br/>
+<b>Mobilité/autonomie</b> : 
+ <br/>- Le patient reste au fauteuil ou alité plus de 50% de la journée.
+ <br/>- Il arrive à faire sa toilette.
+ <br/>- Son épouse cuisine.
+ <br/>
+<br/>
+<b>Evaluation des connaissances du patient et de son entourage :</b>
+<br/>- Nous demandons au patient ce qu'il pense des options thérapeutiques 
+ <br/>proposées par le Dr Ferrand, il nous dit qu'il laisse la décision à 
+ <br/>l'équipe médicale qui sont les spécialistes. 
+ <br/>Je lui explique que la décision est une décision conjointe et que ses 
+ <br/>souhaits sont très important à choisir un traitement. 
+ <br/>Je lui explique encore une fois les options thérapeutiques, je lui 
+ <br/>explique l'effet escompté de ses traitements. 
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3> ET PROPOSITIONS</b></u>
+<br/>
+<b>Synthèse de l'état clinique et des symptômes réfractaires</b> :
+ <br/>Patiente de 59 ans, pris en charge pour un carcinome épidermoïde de 
+ <br/>l'oropharynx HPV négatif, en progression locale après une 2e ligne de 
+ <br/>traitement par NIVOLUMAB. 
+ <br/>
+<b><br/>Symptômes réfractaires :<br/></b> - douleurs cervicales au niveau de la tumeur, avec soulagement 
+ <br/>partiel après la l'augmentation du DUROGESIC à 75 μg, il y a 2 jours. 
+ <br/>
+<b><br/><br/>Propositions</b> :
+ <br/>- adapter les doses d'ORAMORPH à 30 mg d'interdose pour la dose de 
+ <br/>DUROGESIC de 75 μg.
+ <br/>- Rajout de LAROXYL 5 gouttes le soir, pour couvrir la composante 
+ <br/>neuropathique de la douleur cervicale.
+ <br/>- Mise en place d'un traitement par IMOVANE 7,5 mg au coucher pour 
+ <br/>améliorer l'insomnie.
+ <br/>
+<br/>
+<b>Projets</b> :
+ <br/>Le patient sera revu en HDJ de soins palliatifs dans 4-6 semaines.
+ <br/>Consultation avec le Dr FERRAND prévue le 30/06/2020.
+ <br/>Rendez-vous prévu ce jour en petite chirurgie pour biopsie en vue de 
+ <br/>l'inclusion dans un essai de phase I 
+ <br/>
+<br/>
+<b>Copie à envoyer :</b>
+<br/>- Au médecin traitant : Dr PICHODOU
+ <br/>
+<br/>
+<b>Courrier rédigé avec un logiciel de reconnaissance vocale pouvant <br/>comporter quelques imperfections orthographiques.<br/></b>
+<br/>
+<br/>
+<b><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Anda SAMPETREAN <br/>Le mardi 7 juillet 2020 à 18:47</b>
+<br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

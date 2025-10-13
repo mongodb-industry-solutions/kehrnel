@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_119699462" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>EMASP - CR HDJ SOINS PALLIATIFS - Dr Elena PAVLIUC</title>
+    <effectiveTime value="20201228000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201228000000+0000"/>
+        <assignedAuthor>
+            <code code="134/536" displayName="EMASP"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>Equipe Mobile d'Accompagnement et de Soins Palliatifs (EMASP) - <br/>Département de Soins de Support (DISSPO)<br/><br/>COMPTE RENDU DE CONSULTATION - HOPITAL DE JOUR SOINS PALLIATIFS<br/> Dicté par : Docteur Eléna Pavliuc<br/>Dicté le : 08/12/2020 <br/>Service : 134 - EMASP <br/>Type de document : 134 CC HDJ <br/>Ref :1184547 <br/>_____________________________________________________________<br/><br/>Patient : XXXXXX XXXXXX XXXXXX né(e) XXXXXX<br/>Identifiant :XXXXXX <br/>Date de naissance :XXXXXX <br/>Sexe: Féminin <br/>_____________________________________________________________<br/>Secrétaire : ERL/A <u><br/><br/></u></b> Date de l'Hôpital de Jour : 04/12/2020
+ <br/>Patiente vue par : Dr PAVLIUC IDE : Aline DE OLIVEIRA
+ <br/>
+<br/>
+<b> L'ETAT CLINIQUE DE Mme XXXXXX NECESSITE UNE PRISE EN CHARGE EN <br/>H\'d4PITAL DE JOUR DE SOINS PALLIATIFS POUR EVALUATION ET <br/>SURVEILLANCE MEDICALE.<br/></b>
+<br/>Patiente vue pour la première fois en Hôpital de Jour de Soins 
+ <br/>Palliatifs.
+ <br/>Patiente venue seule
+ <br/>
+<br/>
+<b>Oncologue référent : Dr MOKDAD<br/><br/> OMS = 3 <br/></b>
+<br/>
+<u><b>INFORMATIONS COMPLEMENTAIRES</b></u>
+<br/>
+<b>Directives anticipées</b> : non rédigées
+ <br/>
+<b>Personne de confiance</b> : son époux
+ <br/>
+<b>Intervenants au domicile</b> : la patiente prise en charge par l'HAD 
+ <br/>santé service avec deux passages par jour des infirmières, a une PCA 
+ <br/>de MORPHINE et une PCA de KETAMINE
+ <br/>
+<br/>
+<u><b>ANTECEDENTS NOTABLES</b></u>
+<br/>Aucun, pas d'allergie connue. 
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE ET SES COMPLICATIONS</b></u>
+<br/>- 2015 : cancer du sein gauche diagnostiqué initialement traité à 
+ <br/>Bergonié par chimiothérapie, chirurgie puis radiothérapie au niveau 
+ <br/>axillaire, CMI et sus claviculaire, triple négatif.
+ <br/>
+<br/>- Récidive en mars 2018, sous NAVELBINE. 
+ <br/>
+<br/>- PET scanner le 20 décembre qui montre, comparativement à l'examen 
+ <br/>précédent de septembre 2018, un aspect de réévolutivité au niveau 
+ <br/>ganglionnaire sus et sous-claviculaire gauche et probablement 
+ <br/>axillaire gauche.
+ <br/>
+<br/>Elle a débuté un traitement par TALAZOPARIB le 12/01/2019 en 2ème 
+ <br/>ligne.
+ <br/>- TEP du XXXXXX : aspect de progression métabolique devant la 
+ <br/>majoration en intensité de fixation de certaines adénopathies 
+ <br/>sus-claviculaires et axillaires gauches malgré la régression 
+ <br/>métabolique du foyer pris pour cible. 
+ <br/>La majoration d'un nodule sous-cutané cervical antérieur gauche.
+ <br/>L'apparition d'un nodule surrénalien gauche fixant d'allure 
+ <br/>secondaire. 
+ <br/>
+<br/>Sous XELODA depuis avril 2019 en 3ème ligne.
+ <br/>
+<br/>- TEP scanner du 02/07/2019 : Nouvelle progression métabolique 4ème 
+ <br/>ligne par ENDOXAN oral.
+ <br/>
+<br/>- Aout 2019: Nouvelle progression; 5ème ligne de traitement par 
+ <br/>ERIBULINE pour 5 cycles.
+ <br/>
+<br/>- TEP scanner le 13/12 : progression donc début d'une 5ème ligne par 
+ <br/>CARBOPLATINE / GEMZAR depuis décembre 2019 jusqu'au 28/02/2020.
+ <br/>
+<br/>- TDM TAP de juin 2020 : Progression ganglionnaire 
+ <br/>sous-diaphragmatique devant l'apparition d'adénomégalies 
+ <br/>rétro-péritonéales gauches comparativement au scanner de Février 2020.
+ <br/>
+<br/>- Reprise de CARBOPLATINE / GEMZAR C1J1 22/07/2020.
+ <br/>Dernière cure le 09/09/2020 (C3).
+ <br/>
+<br/>Fin octobre 2020 : progression surtout au niveau de l'adénopathie 
+ <br/>sus-claviculaire proposition d'une nouvelle chimiothérapie par 
+ <br/>PACLITAXEL C1 J1 débuté le 4/11/2020.
+ <br/>
+<br/>
+<u><b>Complications de la maladie :</b></u>
+<br/>La patiente présente une progression au niveau de l'adénopathie 
+ <br/>sus-claviculaire gauche avec des douleurs mixtes avec une composante 
+ <br/>neuropathique importante au niveau du membre supérieur gauche, raison 
+ <br/>pour laquelle elle est hospitalisée au mois de novembre pour 
+ <br/>équilibration antalgique.
+ <br/>
+<br/>
+<u><b>MODE DE VIE</b></u>
+<br/>La patiente est mariée, a deux fils d'une première union de 10 et 15 
+ <br/>ans, le fils de 15 ans est à la maison avec elle et le fils cadet est 
+ <br/>avec son père dans le sud de la France.
+ <br/>La patiente habite dans une maison avec étage, la chambre est au 
+ <br/>rez-de-chaussée par contre la salle de bain est à l'étage.
+ <br/>
+<br/>
+<u><b>TRAITEMENT EN COURS</b></u>
+<br/>Traitement oncologique : TAXOL hebdomadaire
+ <br/>PCA de MORPHINE avec 7 mg/h et 8 mg de bolus, trois bolus par heure 
+ <br/>augmenté il y a 72 heures.
+ <br/>Mise en place d'une PCA de KETAMINE avec 1 mg/h depuis 72 heures.
+ <br/>LAROXYL IV. 25 mg le soir sur 12h
+ <br/>LAROXYL en solution buvable 7 gouttes le matin et 7 gouttes le midi.
+ <br/>NEURONTIN 600 mg matin midi et soir augmenté de 400 il y a 72 heures.
+ <br/>PARACETAMOL 3 x par jour.
+ <br/>LANSOPRAZOLE 30 mg le soir
+ <br/>PRIMPERAN si besoin.
+ <br/>
+<br/>
+<u><b>BIOLOGIE du 01/12/2020<br/></b></u> hémoglobine 10,7 g/dl, leucocytes 2,37 G/l, plaquettes 295 G/l,
+ <br/>sodium 136 mmol/l, potassium 4,5 mmol/l, albumine 31 g/l, 
+ <br/>calcium corrigé 2,58 mmol/l, créatinine 55 μmol/l, 
+ <br/>ASAT 32 ui/l, ALAT 22 ui/l, PAL 146 ui/l, Gamma GT 423 ui/l, 
+ <br/>bilirubine 3,8 μmol/l
+ <br/>
+<br/>
+<u><b>EVALUATION MEDICO-SOIGNANTE DES SYMPT\'d4MES</b></u>
+<br/>PS : PS3 en raison de la dyspnée
+ <br/>Poids actuel : 71 kg
+ <br/>TA : 123/85 Pouls : 107 Saturation : 95 % 
+ <br/>
+<br/>
+<br/>
+<b>Sur le plan douleur </b> : la patiente se plaint d'une douleur intense au 
+ <br/>niveau du membre supérieur gauche avec nette composante neuropathique 
+ <br/>avec des décharges, des sensations de compression. Douleur qui 
+ <br/>augmente, les antalgiques ont été augmentés il y a 72h, la PCA de 
+ <br/>MORPHINE, le NEURONTIN et mise en place de KETAMINE. 
+ <br/>Selon la patiente, elle ressent une légère amélioration mais la 
+ <br/>douleur n'est pas contrôlée. 
+ <br/>Ce jour, on réaugmente les antalgiques KETAMINE 2 mg, LAROXYL à 37 mg 
+ <br/>le soir et NEURONTIN à 800 mg matin midi et soir et la MORPHINE on 
+ <br/>augmente que les bolus à 9 mg. 
+ <br/>Discussion avec la patiente si ces mesures ne sont pas efficaces 
+ <br/>proposition d'une hospitalisation pour discuter la mise en place de 
+ <br/>la METHADONE.
+ <br/>
+<br/>
+<b>Sur le plan cardio-pulmonaire </b> : la patiente présente une majoration 
+ <br/>de la dyspnée depuis environ trois semaines à l'effort, pas de 
+ <br/>fièvre, pas de toux, pas de douleur thoracique.
+ <br/>A l'examen clinique la patiente est tachycarde saturation à 95 %, pas 
+ <br/>de signe insuffisance cardiaque. N'a pas de traitement anticoagulant 
+ <br/>préventif, a été arrêté à sa sortie à domicile. 
+ <br/>Compte tenu du contexte de maladie évolutive et mobilité réduite en 
+ <br/>raison des douleurs, de l'asthénie et de la dyspnée, décision de mise 
+ <br/>en place d'un traitement anticoagulant par INNOHEP à dose curative et 
+ <br/>demande d'angioscanner qui est prévu le 8 décembre.
+ <br/>
+<br/>
+<b>Sur le plan digestif </b> : pas de nausée, pas de vomissement. 
+ <br/>Constipation, malgré la prise de Movicol, fait un lavement par 
+ <br/>NORMACOL environ une fois par semaine plus ou moins MICROLAX.
+ <br/>Abdomen souple dépressible indolore, pas de trouble urinaire.
+ <br/>
+<br/>
+<b>Sur le plan nutritionnel</b> : perte d'appétit, mange moins.
+ <br/>
+<br/>
+<b>Sur le plan des muqueuses et du tégument </b> : nodule sous clavier 
+ <br/>droit, oecdème du membre supérieur droit.
+ <br/>
+<br/>
+<b>Sur le plan neuro-psychologique </b> : le sommeil est correct, avec le 
+ <br/>LAROXYL IV le soir.
+ <br/>Pas d'anxiété mais par contre baisse du moral à cause des douleurs.
+ <br/>Déficit moteur au niveau du membre supérieur gauche.
+ <br/>
+<br/>
+<b>Mobilité/autonomie</b> : la patiente reste autonome pour les soins 
+ <br/>d'hygiène, se mobilise de moins en moins en raison de la dyspnée. 
+ <br/>Impotence fonctionnelle du membre supérieur gauche donc au quotidien 
+ <br/>il y a des activités qu'elle ne peut pas réaliser avec une seule main.
+ <br/>
+<br/>
+<b>Evaluation des connaissances du patient et de son entourage :<br/></b> On n'insiste pas ce jour ce jour sur la maladie, je lui explique 
+ <br/>l'intérêt de faire un scanner pour éliminer une embolie pulmonaire 
+ <br/>car son état respiratoire m'inquiète. 
+ <br/>La patiente a bien compris déjà avant, la gravité de la maladie et le 
+ <br/>risque de dégradation. 
+ <br/>On discute ce jour de la possibilité d'une réhospitalisation pour 
+ <br/>essayer d'équilibrer le traitement antalgique, la patiente est plutôt 
+ <br/>d'accord avec cette idée car au premier plan actuellement ça reste la 
+ <br/>douleur.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3> ET PROPOSITIONS</b></u>
+<br/>
+<b>Synthèse de l'état clinique </b> :
+ <br/>Patiente âgée de 41 ans suivie pour un cancer du sein triple négatif 
+ <br/>évolutif après plusieurs lignes de traitement la prise en charge 
+ <br/>initiale date de 2015, actuellement mise en place de TAXOL 
+ <br/>hebdomadaire. 
+ <br/>Sur le plan clinique majoration des douleurs et de l'adénopathie sous 
+ <br/>clavière droite. Majoration de la dyspnée qui est au moindre effort 
+ <br/>mais sans désaturation.
+ <br/>
+<br/>
+<b>Symptômes </b> : 
+ <br/>Douleurs très intenses au niveau du membre supérieur gauche, douleur 
+ <br/>mixte avec une importante composante neuropathique par compression.
+ <br/>Majoration des traitements antalgiques.
+ <br/>Majoration progressive les dernières semaines de la dyspnée qui est 
+ <br/>actuellement au moindre effort mais sans désaturation, suspicion dans 
+ <br/>ce contexte d'embolie pulmonaire, demande d'angioscanner qui est prévu 
+ <br/>le 8/12 et début d'un traitement par INNOHEP à évaluer en fonction du 
+ <br/>scanner et si absence d'embolie pulmonaire passer au LOVENOX 0.4.
+ <br/>Asthénie importante.
+ <br/>Tendance à la constipation.
+ <br/>Mobilité réduite en raison de la dyspnée l'asthénie et la douleur. 
+ <br/>
+<br/>
+<b>Propositions </b> :
+ <br/>INNOHEP 0.6 ml fait pendant l'HDJ prescrit jusqu'au scanner et puis 
+ <br/>réévaluation.
+ <br/>Prescription d'une écharpe compte tenu de la lourdeur du membre 
+ <br/>supérieur gauche ainsi que l'impotence fonctionnelle.
+ <br/>Prescription du PARACETAMOL en systématique 3 x par jour.
+ <br/>Prescription de la corticothérapie à 40 mg le matin.
+ <br/>Majoration des bolus de MORPHINE et on garde 7 mg/h et bolus à 9 mg
+ <br/>Majoration de la KETAMINE 2 mg/h
+ <br/>Majoration de du NEURONTIN à 800 mg matin midi et soir.
+ <br/>Majoration du LAROXYL à 37 mg le soir 
+ <br/>Poursuite de LAROXYL en gouttes jusqu'à 7 gouttes deux fois par jour 
+ <br/>LANSOPRAZOLE et PRIMPERAN. 
+ <b><br/></b>
+<br/>
+<b>Projets</b> : patiente à revoir fin janvier, évaluation la semaine 
+ <br/>prochaine de l'adaptation du traitement antalgique et si inefficace 
+ <br/>proposition d'une hospitalisation pour discuter la mise en place de 
+ <br/>la METHADONE.
+ <br/>
+<br/>
+<b>Problèmes à résoudre</b> : adaptation du traitement antalgique
+ <br/>Angioscanner qui est prévu le 8/12 puis adapter le traitement 
+ <br/>anticoagulant
+ <br/>
+<br/>
+<b>Copie à envoyer : </b> Au médecin traitant : Dr BUSSY 
+ <br/>
+<br/>
+<b>Courrier rédigé avec un logiciel de reconnaissance vocale pouvant <br/>comporter quelques imperfections orthographiques.<br/>_________________________________________________<br/>Signé électroniquement par Docteur Eléna PAVLIUC <br/>Le jeudi 24 décembre 2020 à 15:36</b>
+<br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

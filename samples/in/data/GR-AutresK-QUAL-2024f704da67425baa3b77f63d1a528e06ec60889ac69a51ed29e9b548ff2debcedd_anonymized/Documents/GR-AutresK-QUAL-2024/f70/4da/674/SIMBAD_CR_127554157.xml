@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127554157" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 172440145</title>
+    <effectiveTime value="20170901000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170901000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>RESULTATSANALYSES Valeurs PrécédentesUnités Valeurs de <br/>Référence </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>D.N. : </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX </p>
+<p>Femme </p>
+<p>01/09/2017 09:00 </p>
+<p>XXXXXX </p>
+<p>Demande enregistrée le : </p>
+<p>PATIENT : <br/></p>
+<p>XXXXXX SEXE : </p>
+<p>FINDERNJF : </p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Département de Biologie et de Pathologie Médicales </p>
+<p>Biochimie <br/>Dr S. Broutin (40 57) <br/>Pr A. Paci (47 30) <br/>Dr V. Poinsignon (61 92) </p>
+<p>MicrobiologieHématologie <br/>Pr A. Bennaceur (40 65) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr T. Steimle (41 65) <br/>Dr V. Vergé (40 34) </p>
+<p>vendredi 01 septembre 2017 </p>
+<p>CTE 060 - GYNECOLOGIE 060 </p>
+<p>Prescrit par : </p>
+<p>Comité : </p>
+<p>TARN </p>
+<p>Villejuif, le </p>
+<p>Service : </p>
+<p>172440145 <br/>Complet </p>
+<p>Type <br/><br/>Ech. </p>
+<p>Val. </p>
+<p>01/09/2017 08:20 Page 1 / 2 </p>
+<p>Dr E. Chachaty (52 34) <br/>Pr F. Griscelli (51 93) <br/>Dr N. Yin (40 62) </p>
+<p>Pharmacologie </p>
+<p>LAD137 140 16/08/2017 14:12mmol/l ( 136 - 146 ) <br/>Potentiométrie indirecte </p>
+<p>SodiumPL. </p>
+<p>LAD3.5 3.7 16/08/2017 14:12mmol/l ( 3.4 - 4.5 ) <br/>Potentiométrie indirecte </p>
+<p>PotassiumPL. </p>
+<p>LAD104 104 16/08/2017 14:12mmol/l ( 101 - 109 ) <br/>Potentiométrie indirecte </p>
+<p>ChlorePL. </p>
+<p>LAD26 25 16/08/2017 14:12mmol/l ( 21 - 31 ) <br/>PEPC </p>
+<p>Reserve alcalinePL. </p>
+<p>LAD60 73 16/08/2017 14:12g/L ( 66 - 83 ) <br/>Biuret </p>
+<p>ProtidesPL. </p>
+<p>Ionogramme </p>
+<p>LAD70 140 01/04/2017 08:00UI/L ( 30 - 120 ) <br/>IFCC </p>
+<p>PALPL. </p>
+<p>LAD30 22 01/04/2017 08:00UI/L ( 0 - 35 ) <br/>IFCC </p>
+<p>ASATPL. </p>
+<p>LAD21 21 01/04/2017 08:00UI/L ( 0 - 35 ) <br/>IFCC </p>
+<p>ALATPL. </p>
+<p>LAD22 53 01/04/2017 08:00UI/L ( 0 - 38 ) <br/>IFCC </p>
+<p>GGTPL. </p>
+<p>Bilan hépatique / pancréatique </p>
+<p>LAD101 2848 19/04/2017 15:29UI/mL ( 0 - 35 ) <br/>ECLIA </p>
+<p>CA 125S </p>
+<p>LAD61 305 09/03/2017 08:49UI/mL ( 0 - 33 ) <br/>ECLIA </p>
+<p>CA 19-9S </p>
+<p>Marqueurs biologiques </p>
+<p>Sang </p>
+<p>BIOCHIMIE </p>
+<p>SAE5.8 Demandedupliquée </p>
+<p>17/08/2017 06:0010*9/L ( 4.0 - 10.0 )LeucocytesSg </p>
+<p>SAE3.18 Demandedupliquée </p>
+<p>17/08/2017 06:0010*12/L ( 4.00 - 5.20 )HématiesSg </p>
+<p>SAE10.2 Demandedupliquée </p>
+<p>17/08/2017 06:00g/100mL ( 12.0 - 16.0 )HémoglobineSg </p>
+<p>Numeration sanguine (Sang total sur EDTA) <br/>Méthode : XN - SYSMEX </p>
+<p>HEMATOLOGIE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>01/09/2017 12:05 Validé par :Validé le : Dr DROUARD Laurence,Dr SAADA Véronique</p>
+<p></p>
+<p></p>
+<p>RESULTATS Valeurs de <br/>Référence </p>
+<p>Valeurs PrécédentesUnitésANALYSES </p>
+<p>PATIENT : <br/>TARN </p>
+<p>CTE 060 - GYNECOLOGIE </p>
+<p>060COMITE : </p>
+<p>A :XXXXXX XXXXXX <br/>Prescrit par : </p>
+<p>XXXXXX 172440145DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>Type <br/><br/>Ech. </p>
+<p>Val. </p>
+<p>Page 2 / 2 </p>
+<p>SAE31.3 Demandedupliquée </p>
+<p>17/08/2017 06:00% ( 34.0 - 45.0 )HématocriteSg </p>
+<p>SAE98.4 Demandedupliquée </p>
+<p>17/08/2017 06:00μ3 ( 85.0 - 95.0 )VGMSg </p>
+<p>SAE32.1 Demandedupliquée </p>
+<p>17/08/2017 06:00pg/cel ( 28.0 - 34.0 )TCMHSg </p>
+<p>SAE32.6 Demandedupliquée </p>
+<p>17/08/2017 06:00g/100mL ( 32.0 - 36.5 )CCMHSg </p>
+<p>SAE15.4 Demandedupliquée </p>
+<p>17/08/2017 06:00% ( 0.0 - 16.0 )IDGSg </p>
+<p>SAE351.0 Demandedupliquée </p>
+<p>17/08/2017 06:0010*9/L ( 150.0-400.0 )PlaquettesSg </p>
+<p>SAE64.0 Demandedupliquée </p>
+<p>17/08/2017 06:00%Polynucléaires NeutrophilesSg </p>
+<p>SAE3.7 Demandedupliquée </p>
+<p>17/08/2017 06:0010*9/L ( 1.8 - 7.5 )SoitSg </p>
+<p>SAE0.2 Demandedupliquée </p>
+<p>17/08/2017 06:00%Polynucléaires EosinophilesSg </p>
+<p>SAE0.0 Demandedupliquée </p>
+<p>17/08/2017 06:0010*9/L ( 0.0 - 0.5 )SoitSg </p>
+<p>SAE0.2 Demandedupliquée </p>
+<p>17/08/2017 06:00%Polynucléaires BasophilesSg </p>
+<p>SAE0.0 Demandedupliquée </p>
+<p>17/08/2017 06:0010*9/L ( 0.0 - 0.3 )SoitSg </p>
+<p>SAE28.0 Demandedupliquée </p>
+<p>17/08/2017 06:00%LymphocytesSg </p>
+<p>SAE1.6 Demandedupliquée </p>
+<p>17/08/2017 06:0010*9/L ( 1.0 - 4.0 )SoitSg </p>
+<p>SAE7.6 Demandedupliquée </p>
+<p>17/08/2017 06:00%MonocytesSg </p>
+<p>SAE0.4 Demandedupliquée </p>
+<p>17/08/2017 06:0010*9/L ( 0.1 - 1.0 )SoitSg </p>
+<p>SAE0.0 0.0 17/08/2017 05:59%MyelémieSg </p>
+<p>SAE9 Demandedupliquée </p>
+<p>17/08/2017 06:00IDPSg </p>
+<p>sysm8.9 Demandedupliquée </p>
+<p>17/08/2017 06:00μ3 ( 6.0 - 12.0 )VMPSg </p>
+<p>Formule </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>01/09/2017 12:05 Validé par :Validé le : Dr DROUARD Laurence,Dr SAADA Véronique</p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

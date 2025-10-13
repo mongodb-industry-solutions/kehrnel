@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128335356" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>INTERVENTION</title>
+    <effectiveTime value="20170327000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170330000000+0000"/>
+        <assignedAuthor>
+            <code code="TAR/435" displayName="TARN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>OP\'c9RATEUR : DR SCHERIER<br/>INTERNE : DJAAFRI Fatiha<br/>ANESTH\'c9SISTE : DR BOUROCHE<br/> SECR\'c9TAIRE : CVZ <br/><br/> COELIOSCOPIE DIAGNOSTIQUE. <br/><br/> <u>RAPPEL CLINIQUE</u> :</b>
+<br/>Patiente âgée de 64 ans.
+ <br/>A la suite d'une thrombose du membre inférieur, découverte d'une 
+ <br/>volumineuse masse tissulaire pelvienne mixte, mesurée à 11 cm de plus 
+ <br/>grand axe, avec une ascite de grande abondance.
+ <br/>
+<br/>Dosage des marqueurs tumoraux au 25/02/2017 :
+ <br/> * CA 125 : + de 1000.
+ <br/> * CA 19.9 : 142
+ <br/> * CA 15.3 : 154
+ <br/>
+<br/>Après un mois de traitement par anticoagulant à dose curative, 
+ <br/>indication à une coelioscopie diagnostique et d'évaluation.
+ <br/>L'échographie Doppler des membres inférieurs réalisée le 26/03/2017 
+ <br/>montre une thrombose de la crosse de la saphène interne et de la 
+ <br/>veine saphène interne, sans extension à la veine fémorale commune.
+ <br/>
+<br/>
+<u><b>INTERVENTION</b></u>
+<br/>Sous anesthésie générale.
+ <br/>Intubation oro-trachéale.
+ <br/>Patiente installée en décubitus dorsal, les deux bras le long du 
+ <br/>corps.
+ <br/>Vérification des points d'appuis pour prévenir les complications de 
+ <br/>décubitus.
+ <br/>Double désinfection cutanéo-muqueuse à la Bétadine.
+ <br/>Mise en place de champs stériles.
+ <br/>Mise en place d'une sonde vésicale à demeure.
+ <br/>
+<br/>Open-coelioscopie sous-ombilicale.
+ <br/>Introduction facile du trocart d'open.
+ <br/>Insufflation et réalisation d'un pneumopéritoine harmonieux.
+ <br/>Mise en place d'un trocart de 5 mm en sus-pubien médian.
+ <br/>
+<br/>
+<u><b> L'exploration de la cavité abdomino-pelvienne retrouve</b></u>
+<b> : </b>
+<br/>Ascite de moyenne abondance.
+ <br/>
+<br/> - 
+ <u>A l'étage sus-mésocolique</u> : 
+ <br/>Il existe, au niveau de l'espace sus-mésocolique, une milliaire 
+ <br/>carcinomateuse.
+ <br/>Au niveau de la coupole diaphragmatique, s'ajoute des nodules 
+ <br/>carcinomateux centimétriques.
+ <br/>
+<br/> - 
+ <u>A l'étage sous-mésocolique</u> :
+ <br/>L'ensemble du Glisson, des coupoles, du ligament triangulaire, du 
+ <br/>ligament suspenseur du foie est couvert de cette milliaire 
+ <br/>carcinomateuse.
+ <br/>La vésicule biliaire présente également les mêmes éléments.
+ <br/>Lé pédicule hépatique semble macroscopiquement sain.
+ <br/>A gauche, l'impression de milliaire est identique.
+ <br/>La rate est non explorable.
+ <br/>Le grand épiploon est totalement envahi par de la carcinose 
+ <br/>péritonéale et son bord libre est intimement accolé à la paroi 
+ <br/>abdominale antérieure en sous-ombilicale.
+ <br/>L'exploration de la gouttière pariéto-colique gauche et de la fosse 
+ <br/>iliaque gauche est totalement impossible.
+ <br/>En soulevant la galette épiploïque, on remarque le grêle explorable 
+ <br/>qui est couvert de la milliaire carcinomateuse déjà décrite.
+ <br/>On retrouve également cette milliaire au niveau du caecum.
+ <br/>
+<br/> - 
+ <u>Au niveau pelvien</u> :
+ <br/>Mise en évidence dans les limites de l'exploration liées à 
+ <br/>l'adhérence du grand épiploon à la paroi antérieure, une volumineuse 
+ <br/>lésion qui semble ovarienne de plus de 10 cm comblant tout le pelvis.
+ <br/>On retrouve la milliaire carcinomateuse au niveau de tout le 
+ <br/>péritoine antérieur avec quelques nodules centimétriques de carcinose.
+ <br/>Le cul de sac vésico-utérin, l'utérus et le cul de sac de Douglas 
+ <br/>sont totalement inexplorables.
+ <br/>
+<br/>Soit un PCI de haut en bas, de droite à gauche :
+ <br/>- 3,2,1
+ <br/>- 1,3,?
+ <br/>- 1,3,?
+ <br/>- Intestin grêle : 1,1,?,?
+ <br/>
+<b>Soit un PCI incomplet à 16.</b>
+<br/>
+<br/>
+<u><b> Gestes réalisés </b></u>
+<b>:</b>
+<br/>Cytologie péritonéale directe et prélèvement d'ascite pour le 
+ <br/>protocole OVBIOMARK.
+ <br/>
+<br/>Prélèvement de deux nodules de carcinose adressés en examen 
+ <br/>extemporané : adénocarcinome.
+ <br/>Prélèvements pour histologie définitive.
+ <br/>
+<br/>Exsufflation et retrait des trocarts.
+ <br/>Fermeture de l'aponévrose du trocart ombilical par un point en X de 
+ <br/>Vicryl 0.
+ <br/>Vicryl 3/0 rapide sur la peau.
+ <br/>Retrait de la sonde vésicale.
+ <br/>Compte exact des textiles en fin d'intervention.
+ <br/>Saignements négligeables.
+ <br/>Pas de complication per-opératoire, pas de transfusion sanguine.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> : coelioscopie diagnostique et exploratrice : carcinose <br/>péritonéale avec milliaire diffuse.<br/>Exploration limitée compte tenu de l'adhérence du grand épiploon à la <br/>paroi antérieure. PCI à 16/27.<br/>Indication à une chimiothérapie première.</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

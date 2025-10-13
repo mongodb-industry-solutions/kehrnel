@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121132029" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="29551-9" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Prescription de médicaments"/>
+    <title>Ordonnance</title>
+    <effectiveTime value="20200602000000+0000"/>
+    <confidentialityCode code="29551-9" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Prescription de médicaments"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200602000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

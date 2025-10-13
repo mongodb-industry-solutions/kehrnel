@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126334971" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20180322000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180322000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Compte rendu générique de SENOLOGIE<br/><br/>Dicté par : </b> Docteur Meriem Mokdad Adi
+ <b><br/>Dicté le : </b> 22/03/2018 
+ <b><br/>Service : </b> 050-CTE 050 - SEIN 
+ <br/>
+<b>Type de document : </b> 050 CC Générique 
+ <br/>
+<b>Ref :</b> 380016 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : ASV
+ <br/>
+<br/>Patiente de 61 ans.
+ <br/>
+<u><b><br/>RAPPEL DU CONTEXTE</b></u>
+<b> :<br/><u><br/></u></b> T2 N0 de 25 mm du sein droit, carcinome canalaire infiltrant de 
+ <br/>grade III triple négatif. Dans le bilan 2 micronodules pulmonaires à 
+ <br/>surveiller.
+ <br/>
+<br/>Chimiothérapie néo-adjuvante par 6 EC 75 dose dense + 12 TAXOL 
+ <br/>Hebdo débuter le 29/08/2016.
+ <br/>
+<br/>TGS le 23/2/17 : persistance de 13 mm de carcinome métaplasique avec 
+ <br/>différenciation chondroide ou ostéoïde, 17 mm d'intracanalaire,1GS-. 
+ <br/>
+<br/>Radiothérapie : sein + surimpression terminer le 08/06/2017.
+ <br/>
+<br/>XELODA adjuvant 6 cycles compte tenu du risque persistant, à 
+ <br/>expliquer à la patiente.
+ <br/>
+<br/>TEP scanner 08/02/2018: 
+ <b>Aspect TEP en faveur d'une rechute <br/>métastatique avec atteinte osseuse de T3 et atteinte hépatique <br/>(segment VII).</b>
+<br/>
+<br/>Débuter une chimiothérapie par Carboplatine Gemzar à partir du 26 
+ <br/>février à Chevilly Larue pour la C1 J1 J8 , J1 =J21.
+ <br/>
+<br/>
+<u><b>Evènements depuis la dernière consultation</b></u>
+<b> :<u><br/></u></b>
+<br/>Biopsie Hépatique segment VI le 07/03/2018 - le résultat seras 
+ <br/>disponible dans environ 10 jours max. 
+ <br/>
+<br/> =================
+ <br/>
+<br/>Patiente vue ce jour après le premier cycle de Carboplatine Gemzar 
+ <br/>pour une récidive métastatique osseuse et hépatique .
+ <br/>
+<br/>La patiente a été biopsiée au niveau hépatique le 7 mars : 
+ <br/>Métastase de carcinome mammaire de type métaplasique RE-, RP -, 
+ <br/>HER2++ , FISH en cours .
+ <br/>
+<br/>La patiente a été hospitalisée aux urgences pendant l'Intercure le 
+ <br/>14/03 pour une thrombopénie grade 4 avec pétéchies , ecchymoses ,une 
+ <br/>neutropénie grade 4 sans fièvre . Elle a été transfusée en plaquettes .
+ <br/>Elle rapporte également des vertiges, tachycardie avec asthénie+++ et 
+ <br/>myalgies.
+ <br/>
+<br/>Dernière échographie cardiaque réalisée le 21 mars : FEVG 58%.
+ <br/>
+<br/>Le dernier bilan biologique du 21 mars : PNN 320 , taux de 
+ <br/>plaquettes normal, créatinine à 82.
+ <br/>
+<br/>Par contre, la patiente me signale un amaigrissement -2.5Kg , Poids 
+ <br/>49Kg alors que le poids habituel est de 53.5Kg 
+ <br/>Je propose une réduction de dose au prochain cycle prévu le 26 mars 
+ <br/>avec Carboplatine AUC 3 et Gemzar 850 mg /m2. 
+ <br/>
+<br/>Je prévois le J1 C2 le 26 mars à Villejuif car la patiente aura son 
+ <br/>bilan biologique le jour même et si la NFS est normale , elle 
+ <br/>recevra exceptionnellement le J1 à Villejuif 
+ <br/>On prévoira bien sûr le J8 à Chevilly Larue .
+ <br/>
+<br/>Je lui remets également une ordonnance G-CSF à faire à partir de J 10 
+ <br/>pendant 3 jours à chaque cure .
+ <br/>
+<br/>Je lui remets également une ordonnance pour une Consultation chez son 
+ <br/>dentiste avant de débuter un traitement par XGEVA .
+ <br/>
+<br/>Elle sera revue en consultation par mes collègues en hôpital de jour 
+ <br/>et je la reverrai en consultation avant le 3ème cycle de Carboplatine 
+ <br/>Gemzar .
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<u><br/></u>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Meriem MOKDAD ADI <br/>Le jeudi 22 mars 2018 à 09:51 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121579977" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM OROPHARYNX TDM TAP O</title>
+    <effectiveTime value="20200316000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200316000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur GARCIA GABRIEL
+ <br/>
+<br/>Destinataire : CTE 010 - ORL
+ <br/> DR FERRAND FRANCOIS-REGIS
+ <br/>
+<br/>
+<b><br/>Dicté par : </b> Docteur Gabriel Garcia
+ <b><br/>Dicté le : </b> 13/03/2020 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Générique 
+ <br/>
+<b>Ref :</b> 959353 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : EDG
+ <br/>
+<br/>Examen réalisé le 13 mars 2020 
+ <br/>
+<br/>
+<u><b>Examen 1106<br/><br/><br/><br/> SCANNER ORL ET THORACO ABDOMINO PELVIEN<br/> </b></u>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/><br/></b> Patient pris en charge pour récidive latéro-cervicale bilatérale 
+ <br/>d'un carcinome épidermoïde oropharyngé actuellement sous cétuximab en 
+ <br/>maintenance après TPEX.
+ <br/>Début du cétuximab en maintenance en janvier 2020. 
+ <br/>
+<br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/><br/></b> Examen réalisé sur un scanner DISCOVERY 750 HD, GENERAL ELECTRIC, 
+ <br/>mis en service en septembre 2012.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 429098CN7
+ <br/>Réalisation d'une acquisition :
+ <br/>\'a7 Cervicale
+ <br/>\'a7 Thoracique
+ <br/>\'a7 Abdominale 
+ <br/>\'a7 Pelvienne
+ <br/>Examen réalisé avec injection intraveineuse de produit de contraste.
+ <br/>Produit de contraste injecté : Xenetix 
+ <br/>Quantité : 140 mL
+ <br/>PDL : 378 (ORL) 531 (thorax) mGy.cm
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :</b>
+<br/>
+<br/>
+<b> Comparaison à l'examen de novembre 2019.<br/><br/> A l'étage cervical : </b>
+<br/>Augmentation de taille de la récidive latéro-cervicale droite au 
+ <br/>contact de la bifurcation carotidienne mesurant ce jour 26 mm (série 
+ <br/>2 image 104) contre 16 mm en novembre 2019.
+ <br/>Stabilité de la récidive latéro-cervicale gauche autour de la 
+ <br/>carotide commune mesurant ce jour 40 mm (série 2 image 141) contre 43 
+ <br/>mm sur l'examen précédent.
+ <br/>Régression partielle du trajet fistuleux latérocervical gauche.
+ <br/>Aspect d'engainement circonférentiel de la carotide primitive gauche.
+ <br/>Absence d'anomalie des glandes salivaires.
+ <br/>Absence de lésion osseuse lytique ou condensante suspecte.
+ <br/>Absence d'anomalie thyroïdienne.
+ <br/>
+<br/>
+<br/>
+<b> A l'étage thoracique :<br/></b> Absence de condensation parenchymateuse suspecte de localisation 
+ <br/>secondaire.
+ <br/>Atélectasies basales bilatérales. 
+ <br/>Absence d'adénopathie médiastinale, des chaînes mammaires internes ou 
+ <br/>axillaires bilatérales.
+ <br/>Absence d'épanchement pleural.
+ <br/>Lame d'épanchement péricardique. 
+ <br/>Infiltration athéromateuse calcifiée du réseau coronaire.
+ <br/>Absence d'anomalie pariétale.
+ <br/>Absence de lésion osseuse lytique ou condensant suspecte.
+ <br/>
+<br/>
+<br/>
+<b> A l'étage abdomino-pelvien :<br/></b> Foie de taille normale sans lésion focale suspecte.
+ <br/>Pas de dilatation des voies biliaires intra ou extra-hépatiques.
+ <br/>Perméabilité des systèmes veineux portes et hépatiques.
+ <br/>Pas d'anomalie de la vésicule biliaire.
+ <br/>Absence de lésion d'allure évolutive de la rate.
+ <br/>Pas d'anomalie focale suspecte du pancréas. Pas de dilatation du 
+ <br/>canal de Wirsung.
+ <br/>Reins de taille normale sans lésion focale suspecte. Pas de 
+ <br/>dilatation des cavités pyélocalicielles.
+ <br/>Pas d'anomalie des voies urinaires.
+ <br/>Absence d'argument pour une carcinose péritonéale.
+ <br/>Absence de lésion suspecte des portions explorées du tube digestif.
+ <br/>Sonde de gastrostomie en place.
+ <br/>Panniculite mésentérique. 
+ <br/>Absence de lésion osseuse lytique ou condensant suspecte. 
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/><br/>Tendance à la progression de la récidive latéro-cervicale droite. <br/>Stabilité de la récidive latérocervicale gauche.<br/>Globalement selon RECIST 1.1 : stabilité.<br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Gabriel GARCIA <br/>Le vendredi 13 mars 2020 à 09:21 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

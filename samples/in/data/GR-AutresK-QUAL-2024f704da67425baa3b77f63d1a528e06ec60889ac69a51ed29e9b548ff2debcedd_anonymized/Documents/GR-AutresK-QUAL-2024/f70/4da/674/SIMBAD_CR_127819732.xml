@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127819732" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ANESTHESIE</title>
+    <effectiveTime value="20170710000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170710000000+0000"/>
+        <assignedAuthor>
+            <code code="ANS/286" displayName="ANESTHESIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patiente de 64 ans adressée en consultation d'anesthésie ce jour.
+ <br/>
+<br/>
+<u>Intervention prévue</u> : Pose filtre cave coelioscopie diag + 
+ <br/>thoracoscopique le 24/08/2017
+ <br/>Il n'y a pas encore de date de pose de filtre cave, la radiologie 
+ <br/>interventionnelle est prévenue elle contactera la patiente à son 
+ <br/>domicile pour lui proposer les dates de pose de filtre cave .
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS CHIRURGICAUX</b></u>
+<br/>- Coelio diag le 27/03/2017
+ <br/>
+<br/>Les anesthésies se sont déroulées sans problème particulier.
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS MEDICAUX</b></u>
+<br/>- Thrombose veine saphène allant jusqu'à la veine fémorale commune
+ <br/>Thrombus sequellaire : Décision pose filtre cave le 27/06/2017
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS CARDIO-VASCULAIRES<br/></b></u>
+<br/>Tabac : O
+ <br/>OH : O
+ <br/>
+<br/>
+<u><b>ALLERGIE/INTOLERANCES<br/></b></u> Aucune.
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE</b></u>
+<br/>Taille : 165cm
+ <br/>Poids : 70kg
+ <br/>TA : 125/84
+ <br/>FC : 106/min
+ <br/>SpO2 : 99% 
+ <br/>
+<br/>Pas de dyspnée, pas de douleur thoracique. En effet au scanner fait 
+ <br/>le 07/07/2017 on observe une disparitioàn de l'epanchemment pleural)
+ <br/>
+<br/>NYHA II, >4METs
+ <br/>EVA = 0
+ <br/>
+<br/>
+<u><b>GESTION DES VOIES A\'c9RIENNES</b></u>
+<br/>Mallampati : II
+ <br/>DTM > 6cm
+ <br/>OB > 3cm
+ <br/>Repères de JIC : Ok
+ <br/>Dents fragiles signalées : Oui
+ <br/>Prothèses dentaires : Inferieure
+ <br/>
+<br/>
+<u><b>TRAITEMENT<br/></b></u> - INNOHEP 0.7 ml SC x1/j. Arrêt 24h avec la pose du filtre cave.
+ <br/>
+<br/>Arret des anti-coagulants 24h avant.
+ <br/>
+<br/>Traitement oncologique : 
+ <br/>6 cures de CARBOPLATINE
+ <br/>
+<br/>
+<u><b>BILAN PR\'c9-OP DEMAND\'c9</b></u>
+<br/>Bilan biologique du 06/07/2017
+ <br/>Hb = 10.4 g
+ <br/>Plaquettes = 259 000
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<br/>Pas de contre-indication anesthésique à l'intervention prévue.
+ <br/>ASA III
+ <br/>AG / Protocole vert / Intubation , ISR parce que la patiente a 
+ <br/>toujours de l'ascite de moyenne abondance
+ <br/>Ordonnance BAT déjà donnée.
+ <br/>Rappel des règles de jeûn fait. 
+ <br/>Informations transfusion
+ <br/>Seuil transfusionnel péri-op : 8 g/l
+ <br/>Antibioprophylaxie selon protocole
+ <br/>Protocole NVPO par DEXAMETHASONE + ONDANSETRON
+ <br/>Patient debout
+ <br/>
+<br/>
+<b>Temps de préparation d'anesthésie prévu : NR<br/>RISQUE ATNC : C<br/><br/></b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

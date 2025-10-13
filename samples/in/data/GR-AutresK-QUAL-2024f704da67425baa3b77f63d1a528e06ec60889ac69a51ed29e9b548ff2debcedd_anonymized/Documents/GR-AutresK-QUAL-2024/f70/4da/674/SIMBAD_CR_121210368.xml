@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121210368" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>HOPITAL DE JOUR DE MEDECINE ONCOLOGIQUE ADULTES</title>
+    <effectiveTime value="20200519000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200519000000+0000"/>
+        <assignedAuthor>
+            <code code="HJM/484" displayName="HOPITAL DE JOUR MEDECINE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>DEPARTEMENT DE MEDECINE - HOPITAL DE JOUR MEDECINE <br/><br/> Dicté par : </b> Docteur Reda El Hazzaz, Interne
+ <b><br/>Dicté le : </b> 11/05/2020 
+ <b><br/>Service : </b> HJM-HOPITAL DE JOUR MEDECINE 
+ <br/>
+<b>Type de document : </b> HJM CC GENERIQUE 
+ <br/>
+<b>Ref :</b> 994151 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : QCL/A
+ <br/>
+<br/>CR DU 11.05.2020
+ <br/>
+<br/>Docteur LE HAZZAZ- Docteur BOUTROS
+ <br/>
+<br/>
+<u><b>COMPTE-RENDU DE CONSULTATION EN HOPITAL DE JOUR DE MEDECINE<br/> </b></u>
+<br/>
+<b> Patiente âgée de 67 ans admise en hôpital de jour pour la réalisation <br/>d'une ponction d'ascite évacuatrice dans le cadre de la prise en <br/>charge d'un carcinome séreux de l'ovaire de haut grade, stade IV, <br/>pleural, platine résistant, sous chimiothérapie par GEMCITABINE.<br/></b>
+<br/>
+<b>Examen clinique</b> : 
+ <br/>OMS : 2.
+ <br/>Apyrétique, pas de signe d'appel infectieux.
+ <br/>
+<br/>Abdomen : ballonné avec une hernie ombilicale qui est stable.
+ <br/>Présence à la palpation de masses abdominales qui sont répartis sur 
+ <br/>l'abdomen.
+ <br/>La patiente a réalisé une échographie abdominale qui a mis en 
+ <br/>évidence un épanchement intra-péritonéal de grande abondance qui est 
+ <br/>multi-cloisonné. Un repérage a été réalisé au niveau de la fosse 
+ <br/>iliaque gauche et de la fosse iliaque droite.
+ <br/>
+<br/>
+<b>En pratique </b> : 
+ <br/>Je rappelle que la patiente a réalisé ses trois dernières ponctions 
+ <br/>d'ascite au bloc de radiologie interventionnelle vu l'impossibilité 
+ <br/>de retirer du liquide en hôpital de jour.
+ <br/>
+<br/>
+<b>Aujourd'hui nous avons donc essayé de ponctionner la patiente dans <br/>les deux repères réalisés en radiologie mais sans résultat, sans <br/>pouvoir ramener du liquide.<br/></b>
+<br/>Nous avons donc contacté l'interne du bloc de radiologie 
+ <br/>interventionnelle et nous avons programmé aujourd'hui même une 
+ <br/>ponction en radiologie interventionnelle.
+ <br/>
+<br/>Le prochain rendez-vous de ponction d'ascite prévu en hôpital de jour 
+ <br/>est annulé et un autre rendez-vous est programmé une fois par semaine 
+ <br/>au bloc de radiologie interventionnelle. 
+ <b><br/>_________________________________________________<br/>Signé électroniquement par Docteur Reda EL HAZZAZ <br/>Le jeudi 14 mai 2020 à 11:57<br/>_________________________________________________<br/>Signé électroniquement par Docteur Céline BOUTROS <br/>Le jeudi 14 mai 2020 à 12:40 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

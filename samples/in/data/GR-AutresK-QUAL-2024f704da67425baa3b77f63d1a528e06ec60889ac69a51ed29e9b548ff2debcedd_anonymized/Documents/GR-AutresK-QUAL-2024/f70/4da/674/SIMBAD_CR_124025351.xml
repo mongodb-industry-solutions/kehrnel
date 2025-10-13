@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124025351" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION DE GYNECOLOGIE MEDICALE - DR ALEXANDRA LEARY</title>
+    <effectiveTime value="20190313000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190313000000+0000"/>
+        <assignedAuthor>
+            <code code="060/8" displayName="CTE 060 - GYNECOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patiente vue pour un J1 C3 CARBOPLATINE /GEMZAR / AVASTIN +/- 
+ <br/>ATEZOLIZUMAB dans le cadre du protocole ATALANTE.
+ <br/>
+<br/>Diminution des doses de chimiothérapie pour très mauvaise tolérance 
+ <br/>au niveau d'une neutropénie de grade 4 et d'une thrombopénie de grade 
+ <br/>4.
+ <br/>
+<br/>Résultat le C2 avait été décalé de 2 semaines et elle a reçu 
+ <br/>CARBOPLATINE AUC3, GEMCI 1000 sans J8, cette dernière cure s'est 
+ <br/>beaucoup mieux déroulée.
+ <br/>
+<br/>A eu 2 ou 3 jours de petits crachats sanguinolent ainsi qu'un petit 
+ <br/>saignement rectal associé à une hémorroïde pendant 3 jours.
+ <br/>A fait une NFS 48h plus tard qui était normale.
+ <br/>
+<br/>A l'impression que l'appetit s'améliore et que l'ascite se réaccumule 
+ <br/>moins vite.
+ <br/>Dernière ponction d'ascite le 5 février 2019 d'à peu près 4 litres.
+ <br/>
+<br/>A l'impression que l'ascite commence à se réaccumuler mais n'a pas 
+ <br/>encore besoin de ponction.
+ <br/>
+<br/>
+<b>EXAMEN </b>
+<br/>
+<br/>OMS : 1
+ <br/>Poids : 62,5 kg ayant été à 59 kg il y a 3 semaines.
+ <br/>TA : 13/8
+ <br/>Pouls : 87/mn
+ <br/>T° : 37,3 
+ <br/>Saturation : 98% 
+ <br/>L'examen cardio-pulmonaire est normal.
+ <br/>L'abdomen est distendu avec une ascite mais l'abdomen est souple, les 
+ <br/>bruites hydro-aériques sont présents.
+ <br/>
+<br/>Le bilan biologique : 
+ <br/>
+<br/>La NFS est normale.
+ <br/>Les plaquettes sont à 288.
+ <br/>La créatinine est à 62.
+ <br/>L'albumine remonte doucement, elle est passée de 25 puis 27 puis 28. 
+ <br/>
+<br/>Le CA 125 qui avait initialement diminué puisqu'il était passé de 
+ <br/>1400 à 600, remonte doucement 890,1 300 mais dans le contexte d'une 
+ <br/>ascite il est difficile à interprêter.
+ <br/>
+<br/>
+<b>EN PRATIQUE</b>
+<br/>
+<br/>Poursuite du traitement à l'HDJ.
+ <br/>
+<br/>
+<b>CARBOPLATINE AUC 3 <br/>GEMCITABINE 1000 mg J1 SEULEMENT.<br/>BEVACUZIMAB 15 mg / kg et ATEZOLIZUMAB ou placebo 1200 mg.<br/><br/></b>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

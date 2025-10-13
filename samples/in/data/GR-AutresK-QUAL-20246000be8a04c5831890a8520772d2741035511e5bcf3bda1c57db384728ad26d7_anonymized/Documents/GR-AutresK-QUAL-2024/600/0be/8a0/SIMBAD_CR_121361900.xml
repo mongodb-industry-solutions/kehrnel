@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121361900" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ONCOLOGIE MEDICALE ORL : DR.FERRAND</title>
+    <effectiveTime value="20200421000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200422000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b> Patient de 58 ans vu ce jour pour 3ème injection de NIVOLUMAB en 2ème <br/>ligne dans le cadre de la récidive latérocervicale bilatérale d'un <br/>carcinome oropharyngé HPV-.<br/><br/></b> HRAS non muté, mutation oncogénique délétère de TP53 et variante de 
+ <br/>signification inconnue de CDKN2A.
+ <br/>
+<br/>Patient trachéotomisé et gastrostomisé.
+ <br/>
+<br/>Antécédents et histoire de la maladie dans mon mot du 17/03/20.
+ <br/>
+<br/>
+<u><b>Ce jour</b></u>
+<br/>Progression latérocervicale bilatérale sous maintenance post TPEX 
+ <br/>attestée au scanner du 13/03 dernier avec une augmentation plus 
+ <br/>importante à droite.
+ <br/>
+<br/>Sur un plan symptomatique, le patient est plus douloureux et 
+ <br/>symptomatique à gauche avec des douleurs actuellement mal contrôlées 
+ <br/>latérocervicales gauches à type d'odynophagie et irradiation dans 
+ <br/>l'épaule et le bras gauche. Douleurs à composantes neuropathiques 
+ <br/>majeures. 
+ <br/>
+<br/>C1 NIVOLUMAB le 25/03.
+ <br/>
+<br/>Sur le plan alimentaire, alimentation par gastrostomie avec 3 
+ <br/>poches/jours et un poids stable mesuré ce jour à 71 kg.
+ <br/>
+<br/>
+<u><b>Examen clinique</b></u>
+<br/>OMS : 0.
+ <br/>Poids : 71 kg.
+ <br/>
+<br/>Auscultation pulmonaire libre et symétrique.
+ <br/>Pas de nouveauté à l'examen clinique extra-cervicale.
+ <br/>Persistance d'une minime pertuis de pharyngostome à gauche avec 
+ <br/>production minime.
+ <br/>Paquet ganglionnaire dur et sensible latéro cervical gauche dont les 
+ <br/>limites sont difficiles à apprécier.
+ <br/>Le patient par ailleurs signale une difficulté de la mobilité de la 
+ <br/>langue depuis quelques semaines avec des morsures de langue traitées 
+ <br/>par PAROEX et pas d'augmentation lésionnelle oropharyngée.
+ <br/>
+<br/>
+<u><b>Bilan biologique</b></u>
+<br/>Le bilan du jour montre une numération normale. Le reste n'est pas 
+ <br/>encore disponible.
+ <br/>Le dernier bilan du 07/04 ne montrait pas de toxicité significative.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<br/>Dans ces conditions, je propose au patient de poursuivre le 
+ <br/>traitement par NIVOLUMAB avec une évaluation prévue au début du mois 
+ <br/>de juin et surtout de modifier le traitement antalgique avec une 
+ <br/>augmentation du SKENAN à 30 mg matin et soir, ORAMORPH qui reste à 20 
+ <br/>mg alterné avec le DOLIPRANE, et LYRICA qu'on augmente par paliers 
+ <br/>avec 50 mg le matin et soir en plus du 25 mg le midi pendant une 
+ <br/>semaine puis 50 x 3 puis 75 mg, 50 , 75 mg si douleurs non contrôlées 
+ <br/>et tolérance correcte.
+ <br/>
+<br/>Poursuite du traitement avec NIVOLUMAB qui sera administré demain. 
+ <br/>Evaluation clinique dans 15 jours, surtout sur le plan des douleurs, 
+ <br/>qui avaient été annonciatrices d'une récidive précédemment.
+ <br/>
+<br/>Sur le plan de la sensation, difficulté à respirer, celle-ci est 
+ <br/>plutôt de prédominance nocturne au coucher et je fais prendre des 
+ <br/>automesures tensionnelles au patient le soir.
+ <br/>
+<br/>Exploration de la filière trachéale sinusienne ne montre pas 
+ <br/>d'obstruction mais quelques sécrétions bronchiques un peu plus 
+ <br/>augmentées (antibiothérapie de 7 jours préalable qu'on ne renouvelle 
+ <br/>pas) et pour lequel on prescrit dont des aérosols de sérum 
+ <br/>physiologique.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

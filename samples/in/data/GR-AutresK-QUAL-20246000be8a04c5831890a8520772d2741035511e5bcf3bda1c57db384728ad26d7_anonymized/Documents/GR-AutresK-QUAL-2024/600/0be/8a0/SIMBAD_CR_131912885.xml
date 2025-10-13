@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_131912885" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="47420-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de bilan fonctionnel (par auxiliaire médical)"/>
+    <title>Consultation infirmière de Chirurgie - Plateau des Consultations</title>
+    <effectiveTime value="20140818000000+0000"/>
+    <confidentialityCode code="47420-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de bilan fonctionnel (par auxiliaire médical)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20140818000000+0000"/>
+        <assignedAuthor>
+            <code code="PLC/453" displayName="PLATEAU DE CONSULTATION"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Infirmière d'odontologie : </b> Mme BELINGA Marthe
+ <br/>
+<br/>Suite à la consultation infimière concernant le port des GPGF, 
+ <br/>M DA SILVA a été informé de :
+ <br/>
+<br/>1 - l'utilité des GPGF
+ <br/>2 - la nécessité de se brosser les dents avant la pose des GPGF
+ <br/>3 - la quantité de gel à utiliser (de la grosseur d'une noisette)
+ <br/>4 - le temps de pose des GPGF de 5 mn
+ <br/>5 - la duré d'utilisation à vie
+ <br/>6 - la nécessité de se rincer la bouche après l'application des GPGF
+ <br/>7 - le nettoyage des GPGF à l'eau tiède
+ <br/>8 - l'importance d'informer le dentiste traitant de la réalisation 
+ <br/> d'une radiothérapie
+ <br/>
+<br/>Ce traitement préventif par GPGF semble au patient :
+ <br/>
+<br/>supprimer les items non concernés
+ <br/> - facile 
+ <br/>- important
+ <br/>- obligatoire
+ <br/>
+<br/>Le patient est informé du risque de non port des GPGF qui est un 
+ <br/>développement rapide de caries dentaires avec l'infection de l'os si 
+ <br/>elles sont situées sur une zone irradiée pouvant plus tard être à 
+ <br/>l'origine d'une fracture spontanée de la mâchoire.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

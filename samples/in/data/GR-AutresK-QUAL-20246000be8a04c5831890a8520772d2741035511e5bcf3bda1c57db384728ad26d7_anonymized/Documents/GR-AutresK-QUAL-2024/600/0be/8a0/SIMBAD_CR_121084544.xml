@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121084544" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="47420-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de bilan fonctionnel (par auxiliaire médical)"/>
+    <title>Coordination des soins externes - CSE</title>
+    <effectiveTime value="20200609000000+0000"/>
+    <confidentialityCode code="47420-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de bilan fonctionnel (par auxiliaire médical)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200609000000+0000"/>
+        <assignedAuthor>
+            <code code="PLC/453" displayName="PLATEAU DE CONSULTATION"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Infirmière coordinatrice : Jacqueline ENG</b>
+<br/>
+<br/>Note : 
+ <br/>
+<br/>La CSE a été contacté lors du passage de Mr XXXXXX espace 6 
+ <br/>le 05/06/2020 pour refaire le point sur sa situation au domicile et 
+ <br/>ses besoins 
+ <br/>
+<br/>
+<br/>Entretien téléphonique avec l'épouse, la nièce et la fille du patient 
+ <br/>car non vu espace 6 : 
+ <br/>
+<br/>Mr XXXXXX semble mal soulagé par le patch de DUROGESIC + 
+ <br/>interdoses qu'il prend en totalité d'après son épouse + Doliprane : 
+ <br/>je l'oriente vers son médecin traitant Dr PICHODOU (01 46 77 91 34) à 
+ <br/>Vitry sur Seine que je joint ce jour au téléphone 
+ <br/>
+<br/>La fille de Mr décrit une situation financière difficile (une seule 
+ <br/>paye...Mme est en chômage tecnhnique pour cause de COVID actuellement)
+ <br/>Elle ne conduit pas la voiture familiale et Mr ne conduit plus non 
+ <br/>plus (difficultées pour se déplacer ++ car taxi trop cher..). Pas 
+ <br/>d'entourage de voisinage proche. La fille ne vit pas en 
+ <br/>région parisienne. 
+ <br/>La fille relate des difficultées pour ses parents sur tous les points 
+ <br/>pour gérer la maladie (psychologique, matériel, douleur)
+ <br/>
+<br/>Mr XXXXXX est vu régulièrement par les oRL pour cause de 
+ <br/>problèmes de cicatrisation chronique (collection de pus cervicale 
+ <br/>ayant necessité des TTT par antibiothérapie + des soins locaux)
+ <br/>
+<br/>Le visage est gonflé, les infirmiers disent que le cou est très 
+ <br/>problèmatique (coule ++ son épouse avait tenté de refaire le 
+ <br/>pansement pour son confort avant que les infirmières arrivent...)
+ <br/>
+<br/>Le Dr BREUSKIN demande à la CSE de faxer une demande d'HDJ soins de 
+ <br/>support en accord avec la fille du patient 
+ <br/>
+<br/>Cabinet infirmier : 07 76 22 36 29 (Mme DIAUARA)
+ <br/>Dr BREUSKIN : dect : 35 16
+ <br/>CSE : 63 95 
+ <br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

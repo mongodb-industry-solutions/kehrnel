@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121856157" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>RESUME d'HOSPITALISATION - Service de chirurgie " GERS"</title>
+    <effectiveTime value="20200205000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200205000000+0000"/>
+        <assignedAuthor>
+            <code code="GER/434" displayName="GERS"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>POLE CHIRURGICAL ET INTERVENTIONNEL - SERVICE HOSPITALISATION GERS<br/>COMPTE RENDU D'HOSPITALISATION<br/><br/>Dicté par : </b> Docteur Louis-Marie Garcin, Interne
+ <b><br/>Dicté le : </b> 22/01/2020 
+ <b><br/>Service : </b> GER-GERS 
+ <br/>
+<b>Type de document : </b> GER RH MEDECINE 
+ <br/>
+<b>Ref :</b> 914157 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire </b> : vv.
+ <br/>
+<b><br/>Date d'entrée </b> : 21/01/2020
+ <br/>
+<b>Date de sortie</b> : 05/02/2020
+ <br/>
+<b><br/>Médecin référent</b> : 
+ <b>Docteur COLOMBA</b>
+<br/>
+<br/>
+<u><b>Motif d'hospitalisation</b></u>
+<br/>Patiente âgée de 67 ans, hospitalisée par le biais des urgences pour 
+ <br/>suite de prise en charge d'une ascite, d'une fièvre et d'une anémie 
+ <br/>chez une patiente en attente d'une nouvelle ligne de chimiothérapie 
+ <br/>par CAELYX après une progression sous TAXOL dans le cadre d'un 
+ <br/>adénocarcinome séreux de l'ovaire de haut grade stade 4 (pleural 
+ <br/>initial, non réséqué, actuellement platine résistant)
+ <br/>
+<br/>
+<b>Profil moléculaire</b> : BRCA1 et BRCA2 sauvages en constitutionnel et 
+ <br/>somatique.
+ <br/>
+<br/>
+<u><b> ANTECEDENTS / PATHOLOGIES ASSOCIEES<br/> <br/></b></u> * Appendicectomie.
+ <br/>* Thrombose MID diagnostiqué en février 2017, sous anticoagulant.
+ <br/>* Pas d'allergie.
+ <br/>* Pas d'intoxication éthylo-tabagique.
+ <br/>
+<br/>
+<u><b> HISTOIRE DE LA MALADIE<br/><br/></b></u> * Fin février 2017 : suite à une thrombose inaugurale au niveau du 
+ <br/>membre inférieur droit (thrombose de la veine saphène interne, 
+ <br/>étendue jusqu'à la fémorale commune), découverte sur l'échographie 
+ <br/>doppler d'une masse tissulaire pelvienne, probablement d'origine 
+ <br/>ovarienne à composante mixte mesurant de grand axe 120 mm ; ascite 
+ <br/>d'environ 2 à 3 litres.
+ <br/>
+<br/>Mise en route d'un traitement anticoagulant par INNOHEP à dose 
+ <br/>curative avec un switch par PREVISCAN.
+ <br/>
+<br/>* Mars 2017 : réalisation d'une coelioscopie exploratrice par le Dr 
+ <br/>CHERIER qui retrouve une carcinose péritonéale avec une milliaire 
+ <br/>diffuse, l'exploration étant limitée compte-tenu de l'adhérence du 
+ <br/>grand épiploon à la paroi antérieure ; PCI à 16/27, cytologie 
+ <br/>Positive ; examen extemporané qui retrouve un adénocarcinome 1ère 
+ <br/>ligne de chimiothérapie par CARBOPLATINE + TAXOL, C1J1 le 31/03/17. 
+ <br/>Chimiothérapie nécessitant des réductions de doses pour toxicité 
+ <br/>hématologique principalement thrombopénie grade II.
+ <br/>* Octobre 2017 :coelioscopie exploratrice retrouvant un PCI stable 
+ <br/>mais instabilité hémodynamique majeure et respiratoire ayant fait 
+ <br/>surseoir à la chirurgie initialement prévue.
+ <br/>
+<br/>Poursuite d'un traitement systémique exclusif.
+ <br/>
+<br/>Reprise de la chimiothérapie par CARBOPLATINE + TAXOL avec adjonction 
+ <br/>d'AVASTIN, C1J1 le 20/10/17, 2 cures puis entretien par AVASTIN seul.
+ <br/>
+<br/>Stabilité clinique sous AVASTIN pendant 1 an, ascite ponctionnée 
+ <br/>toutes les 6 semaines.
+ <br/>
+<br/>* Octobre 2018 : progression ovarienne et biologique.
+ <br/>Inclusion dans le protocole ATALANTE, bras CARBOPLATINE + GEMZAR + 
+ <br/>AVASTIN +/- ATEZOLIZUMAB, C1J1 le 18 janvier 2019
+ <br/>
+<br/>A noter que le Carboplatine a été effectué en désensibilisation du 
+ <br/>fait de deux réactions allergiques de grade 2.
+ <br/>
+<br/>C7 J1 dans le cas du protocole ATALANTE réalisé le 10 juin 2019 puis 
+ <br/>premier cycle d'entretien réalisé le 27 juin 2019
+ <br/>
+<br/>29 juillet 2019 : progression devenue PLATINE résistante motivant 
+ <br/>l'introduction d'une chimiothérapie par TAXOL hebdomadaire
+ <br/>
+<br/>
+<u><b> HISTOIRE RECENTE<br/></b></u>
+<br/>Consultation le 9 janvier 2021 avec le Docteur COLOMBA : impression 
+ <br/>clinique et scanographique de progression pour laquelle il est 
+ <br/>envisagé une nouvelle ligne de chimiothérapie par CAELYX (début prévu 
+ <br/>le 30 janvier 2000).
+ <br/>
+<br/>Le 20/01/2020, la patiente consulte aux urgences pour douleurs 
+ <br/>abdominales sur récidive de l'ascite et fièvre. 
+ <br/>L'évolution aux urgences est marquée par :
+ <br/>
+<br/>- 
+ <u> Sur le plan abdominal</u> : 
+ <br/>Ponction évacuatrice d'ascite en fosse iliaque droite permettant 
+ <br/>d'évacuer 7500 cc de liquide améliorant la symptomatologie.
+ <br/>
+<br/>- 
+ <u> Sur le plan infectieux</u> : 
+ <br/>. Fièvre à 38°8 pour laquelle un bilan infectieux complet est réalisé 
+ <br/>et une antibiothérapie probabiliste par TAZOCILLINE initiée (en 
+ <br/>association à une dose d'aminosides devant une hypotension 
+ <br/>artérielle).
+ <br/>
+<u><br/></u> - 
+ <u>Sur le plan hématologique:</u>
+<br/>. Anémie à 6,5 nécessitant une transfusion de deux culots globulaires
+ <br/>
+<br/> La patiente est ensuite transférée au GERS pour suite de prise en 
+ <br/>charge.
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE<br/></b></u> . PS : 2
+ <br/>. Tension : 85/56 
+ <br/>. Pouls : 88 
+ <br/>. Température 36°8 
+ <br/>. Saturation 97 % en air ambiant 
+ <br/>. Poids (après évacuation de l'ascite) à 57 kg 
+ <br/>. Examen cardiaque : bruits du coeur réguliers sans souffle, pas de 
+ <br/>signe d'insuffisance cardiaque droite ou gauche, extrémités chaudes, 
+ <br/>mollets souples. Pas de marbrure
+ <br/>. Examen pulmonaire : eupnéïque en air ambiant, auscultation claire
+ <br/>. Abdomen : souple, persistance d'une ascite moins abondante depuis 
+ <br/>la ponction. Bruits hydroaériques présents. Gaz présents. Notion de 
+ <br/>constipation. 
+ <br/>. Examen urinaire : la patiente rapporte une dysurie et quelques 
+ <br/>brûlures urinaires. Douleur à la percussion de la fosse lombaire 
+ <br/>gauche.
+ <br/>. Sur le plan neurologique : patiente consciente et orientée , 
+ <br/>Glasgow 15
+ <br/>. PAC propre, non inflammatoire
+ <br/>
+<br/>
+<u><b> EXAMENS COMPLEMENTAIRES<br/><br/>Bilan biologique</b></u>
+<br/>Sodium 141 ; potassium 3,7 ; créatinine 89 soit un DFG à 58 mL/min ; 
+ <br/>CRP 71,8 
+ <br/>Bilan hépatique complet normal 
+ <br/>Hémoglobine 7,5 ; globules blancs 10 000 dont PNN 8400 ; plaquettes 
+ <br/>312 000 
+ <br/>CA125 : 159
+ <br/>VGM 80, réticulocytes 120 000, LDH 315, haptoglobine normale, 
+ <br/>bilirubine libre normale, vit B9 et B12 normales, TSH normale, 
+ <br/>ferritine 351, CST 24%
+ <br/>
+<br/>
+<u><b> Bilan infectieux</b></u>
+<br/>Hémoculture PAC et périphérique le 21 janvier : négative
+ <br/>Ponction d'ascite le 21 janvier : négative
+ <br/>ECBU fait le 21 janvier positif à bacille Gram négatif.
+ <br/>
+<br/>
+<u><b> EVOLUTION DANS LE SERVICE<br/><br/></b></u> - 
+ <u> Sur le plan infectieux</u>
+<br/>Patiente fébrile initialement à 38°8. Existence d'un syndrome 
+ <br/>inflammatoire avec une CRP à 71. Hyperleucocytose à 10 000. Point 
+ <br/>d'appel clinique avec signe fonctionnel urinaire (dysurie et brûlure) 
+ <br/>associé à une douleur à la percussion de la fosse lombaire gauche.
+ <br/>L'ECBU est positif à bacille Gram négatif 
+ <br/>Donc, tableau de probable pyélonéphrite aigüe gauche sans 
+ <br/>insuffisance rénale associée. On poursuit la TAZOCILLINE initiée aux 
+ <br/>urgences en attendant le résultat de l'antibiogramme.
+ <br/>Finalement l'ECBU est positif à E.Coli. Relai par Ciflox pour une 
+ <br/>durée totale de 10 jours.
+ <br/>Le reste du bilan infectieux et notamment les hémocultures est négatif
+ <br/>
+<br/>- 
+ <u> Sur le plan de l'anémie</u>
+<br/>Patiente présentant une anémie à 6.5 g/dl à l'entrée sans signe de 
+ <br/>mauvaise tolérance. Transfusion de deux culots globulaires aux 
+ <br/>urgences et nouvelle transfusion de 2CG le 23/01.
+ <br/>Pas de saignement extériorisé. TR normal.
+ <br/>Le bilan complet d'anémie conclue à une anémie mixte (inflammatoire 
+ <br/>et carence martiale). Hb de sortie à 10.7.
+ <br/>
+<br/>- 
+ <u> Sur le plan abdominal</u>
+<br/>Patiente présentant une ascite récidivante en rapport avec une 
+ <br/>progression tumorale. Réalisation d'une ponction évacuatrice aux 
+ <br/>urgences de 7500 cc permettant d'améliorer les douleurs abdominales 
+ <br/>et la constipation. Nouvelle ponction écho-guidée le 27/01 évacuant 
+ <br/>3000cc. Dernière ponction faite le 04/2/20 en RI interventionnel 
+ <br/>(ascite très cloisonnée à l'échographie de repérage) évacuant 3600cc. 
+ <br/>
+<br/> - 
+ <u>Sur le plan des douleurs</u>
+<br/>Douleurs lombaires partiellement soulagées par antalgiques de pallier 
+ <br/>III, en rapport avec des tassements récents des vertèbres L3-L1.
+ <br/>Comité Doulos le 04/02/20: proposition cimentoplastie étendue de T11 
+ <br/>à L5, à but antalgique et de prévention de la casquette fracturaire 
+ <br/>ostéoporotique.
+ <br/>
+<br/>- 
+ <u> Sur le plan oncologique </u>
+<br/>Patiente présentant une progression sous TAXOL. 
+ <br/>Comme convenu, C1 CAELYX réalisée le 30 janvier à la dose de 50mg/m2 
+ <br/>soit une dose totale de 80mg. Bonne tolérance.
+ <br/>
+<br/>
+<u><b> Traitement de sortie</b></u>
+<br/>LASILIX 20 mg le matin
+ <br/>MAG 2 : 1 cp matin et soir
+ <br/>CACIT VIt D3 500mg : 1cp par jour
+ <br/>LANSOYL : 1 à 3/j si constipation
+ <br/>ACUPAN : 1 amp x3/j si douleur
+ <br/>OXYCODONE 20 mg matin et soir
+ <br/>OXYNORM 5 mg x6/j si douleurs
+ <br/>PARACETAMOL 1 g : 1cp matin, midi et soir
+ <br/>VERSATIS PATCH : 1 patch par jour sur 12h
+ <br/>PRIMPERAN 1 x 3/j si nausées
+ <br/>BICARBONATE DE SODIUM : 1 bdb x4/j
+ <br/>INNOHEP 0.5 : une injection sous-cutanée par jour
+ <br/>
+<br/>
+<u><b> <h3>Conclusion</h3></b></u>
+<br/>Pyélonéphrite aigu\'eb gauche documentée à E.Coli. Evolution 
+ <br/>favorable sous Tazocilline relayée par Ciflox.
+ <br/>
+<br/>Anémie mixte (inflammatoire et carence martiale).
+ <br/>
+<br/>Lombalgie sur fractures-tassements. 
+ <br/>Proposition de cimentoplastie en RI.
+ <br/>
+<br/>Progression sous TAXOL dans le cadre d'un adénocarcinome séreux de 
+ <br/>l'ovaire de haut grade stade 4 (pleural initial, non réséqué, 
+ <br/>actuellement platine résistant).
+ <br/>Nouvelle ligne débutée par CAELYX (C1 le 30/01/2020)
+ <br/>
+<br/>Autorisation de retour à domicile le 05/02/2020
+ <br/>Prochaine cure de CAELYX prévue le 27/02/20 (RdV avec Dr Colomba le 
+ <br/>même jour)
+ <b><br/><br/>Documents et ordonnances remis à la sortie</b>
+<br/>- Bulletins de situation.
+ <br/>- Prochains rendez-vous.
+ <br/>
+<br/>Transfusion : Oui 4 CG.
+ <br/>Patient non opéré 
+ <br/>
+<b><br/></b> Prise en charge palliative NON
+ <br/>
+<br/>
+<b>EVALUATION DE LA CHARGE EN SOINS</b>
+<br/>* Ponction à visée symptomatique OUI 
+ <br/>* Adaptation du traitement antalgique OUI 
+ <br/>* Irradiation antalgique NON
+ <br/>* Occlusion intestinale NON
+ <br/>* Transfusion sanguine OUI 
+ <br/>* Prise en charge de la détresse respiratoire 
+ <br/>Avec désaturation <90% AA NON
+ <br/>* Traitement des divers symptômes vecteurs d'inconfort 
+ <br/>(toux, prurit, nausées, vomissements, anxiété, 
+ <br/>Dépression, troubles du sommeil, déshydratation,...) OUI 
+ <br/>* Soins de nursing 
+ <br/>OUI 
+ <br/>* Nutrition 
+ <br/> - déja sous CNO, nutrition entérale/parentérale NON
+ <br/> - mise en route CNO/nutrition entérale/parentale NON
+ <br/>
+<br/>
+<b>PRISE EN CHARGE MULTI-DISCIPLINAIRE<br/></b> * Prise en charge de l'EMASP NON
+ <br/>* Cs CETD (douleur, sophrologie, auriculothérapie) NON
+ <br/>* Cs onco-psychologie NON
+ <br/>* Prise en charge sociale OUI
+ <br/>* Soins de kinésithérapie NON
+ <br/>* cs diététicienne ou nutritionniste NON
+ <br/>
+<br/>
+<b><br/>_________________________________________________<br/>Signé électroniquement par Docteur Louis-Marie GARCIN , Interne<br/>Le mercredi 5 février 2020 à 15:17</b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

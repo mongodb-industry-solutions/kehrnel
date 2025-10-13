@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125485163" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°18T02813 2639348 Dr Christophe MARZAC</title>
+    <effectiveTime value="20180801000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180801000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<br/>ANALYSES MOLECULAIRES DES HEMOPATHIES
+ <br/>
+<br/>Renseignements cliniques :
+ <br/>MFP JAK2+ diagnostiquée en 2012
+ <br/>Hydréa + Ruxolitinib depuis juin 2017
+ <br/>ATCD: Kc de prostate traité par radiothérapie
+ <br/>
+<br/>Etude à visée maladie résiduelle
+ <br/>
+<br/> Prélèvement de moelle en date du 2018-07-17
+ <br/>
+<br/>Gène : JAK2V617F 
+ <br/>Technique : Kit MutaQuant@QIAGEN AS-PCR
+ <br/>Résultat : positif
+ <br/>
+<br/>Ratio allélique : 35.61 % 
+ <br/>
+<br/>Gène : MPL W515 
+ <br/>Technique : PCR temps réel
+ <br/>Résultat : négatif
+ <br/>
+<br/>
+<br/>
+<br/>CONCLUSION
+ <br/>
+<br/>Détection d'une mutation JAK2V617F à l'état hétérozygote. Panel myéloïde à discuter.
+ <br/>
+<br/>PYSM0180 
+ <br/>
+<br/> Dr Christophe MARZAC 
+ <br/> Praticien spécialiste 
+ <br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

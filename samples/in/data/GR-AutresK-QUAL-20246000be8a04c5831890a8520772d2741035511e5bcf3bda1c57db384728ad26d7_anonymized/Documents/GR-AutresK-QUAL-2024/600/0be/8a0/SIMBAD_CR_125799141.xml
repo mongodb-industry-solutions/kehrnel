@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125799141" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ORL - Interne ORL</title>
+    <effectiveTime value="20180615000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180615000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Dr SABRAN<br/><br/></b> Patient âgé de 57 ans qui a pour antécédent un carcinome épidermoïde 
+ <br/>de l'oropharynx bilatéral traité par radiochimiothérapie en octobre 
+ <br/>2014.
+ <br/>
+<br/>Deuxième localisation de carcinome épidermoïde hypopharyngée droite 
+ <br/>traitée par pharyngolaryngectomie totale de rattrapage et lambeau de 
+ <br/>grand pectoral le 13/11/17. 
+ <br/>
+<br/>Problématique de pharyngostomie ayant necessité de multiples 
+ <br/>interventions. In fine, reprise de cervicotomie avec rétablissement 
+ <br/>de la 
+ <br/>continuité digestive avec lambeau antéro latéral de cuisse le 
+ <br/>13/03/18.
+ <br/>
+<br/>Consulte en petite chirurgie à 3 mois post opératoire.
+ <br/>
+<br/>Le patient va bien, il s'alimente dorénavant uniquement par la 
+ <br/>bouche. Il faudra donc voir avec la nutritioniste et l'ortophoniste 
+ <br/>pour l'éventuelle ablation de la sonde de gastrostomie. Celle ci 
+ <br/>n'étant a priori plus necessaire. Le poids étant stable sans utiliser 
+ <br/>l'alimentation via la gastrostomie. Il n'y a pas de douleur 
+ <br/>invalidante. L'état général reste conservé.
+ <br/>
+<br/>L'OMS est à 1. A la nasofibroscopie via le trachéostome, on ne 
+ <br/>retrouve pas de lésion suspecte jusqu'à la carène. Il n'y a pas 
+ <br/>d'écoulement, pas de sténose trachéale.
+ <br/>
+<br/>La nasofibroscopie par voie nasale retrouve un entonnoir pharyngé 
+ <br/>d'aspect tout à fait correct avec un lambeau bien vivant.
+ <br/>
+<br/>Aspect tout à fait correct du lambeau supra claviculaire gauche, la 
+ <br/>zone prélevée est en cours de bourgeonnement, comme c'est le cas 
+ <br/>aussi pour la zone prélevée de lambeau de cuisse.
+ <br/>
+<br/>La palpation cervicale retrouve toujours une fibrose cervicale 
+ <br/>modérée. Il n'y a pas d'adénopathie suspecte. 
+ <br/>
+<br/>Pour les douleurs, le patient est toujours sous TRAMADOL 50mg x 2 le 
+ <br/>soir, celle ci le soulage mais il présente néanmoins sans ce 
+ <br/>traitement toujours quelques douleurs au niveau des zones de 
+ <br/>prélèvements de lambeau. Il présente toujours des diffcultés 
+ <br/>d'endormissement pour lequel est prescrit du ZOPICLONE 7.5 mg par 
+ <br/>jour le soir. 
+ <br/>
+<br/>Patient rendez vous en ortophonie le 18/06/18.
+ <br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b>Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>18/06/2018 15:30 010 IBN ORTHOPHONIE GYW 
+ <br/>22/06/2018 10:00 010 IBN ORTHOPHONIE GYW 
+ <br/>25/06/2018 09:40 010 OMR RV TEL CSE 
+ <br/> 10:30 010 IBN ORTHOPHONIE GYW 
+ <br/>29/06/2018 11:30 010 IBN ORTHOPHONIE GYW 
+ <br/>20/07/2018 10:20 ORL IBN C ORL IBN 
+ <br/>23/07/2018 10:10 DIE CMB C NUTR CMB FIN ORDO NE 23.07/LVL 
+ <br/>07/11/2018 09:15 CAM YGT C RX YGT 
+ <br/>13/12/2018 14:10 ORL YBS C PLAS YBS 
+ <br/>15/03/2019 09:00 310 GSN RD PANORAMIQUE 
+ <br/> 09:10 310 GSN C ODONTO GSN 
+ <br/>10/05/2019 10:20 ORL IBN C ORL IBN 
+ <br/>06/11/2019 __: 1 CAM YGT C RX YGT 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

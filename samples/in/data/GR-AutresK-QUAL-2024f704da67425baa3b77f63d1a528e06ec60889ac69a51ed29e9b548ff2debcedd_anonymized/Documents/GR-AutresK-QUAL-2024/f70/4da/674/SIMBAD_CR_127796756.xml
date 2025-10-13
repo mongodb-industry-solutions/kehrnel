@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127796756" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ANESTHESIE : DOSSIER SEUL POUR AVIS</title>
+    <effectiveTime value="20170713000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170713000000+0000"/>
+        <assignedAuthor>
+            <code code="ANS/286" displayName="ANESTHESIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>DOSSIER AVIS/DR WYNIECKI<br/> <br/></b></u>
+<b>Dossier pour avis en vu d'une coelioscopie suivi d'un debulking.</b>
+<br/>
+<br/> Je demande l'avis au Dr DE BAERE concernant l'indication ou non d'un 
+ <br/>filtre cave.
+ <br/>Etant donné que la thrombose séquellaire concerne uniquement le tronc 
+ <br/>saphène interne et ne présente pas d'extension profonde.
+ <br/>Il n'y a pas d'indication à un filtre cave.
+ <br/>
+<br/>Par conséquent le geste du 21/07/2017 doit être annulé.
+ <br/>De principe il faudra que les gynécologues prévoient un écho-doppler 
+ <br/>de contrôle avant le Debulking afin de s'assurer qu'il n'y ait pas eu 
+ <br/>d'extension de thrombose veineuse profonde sinon il n'y a pas d'autre 
+ <br/>geste à prévoir.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

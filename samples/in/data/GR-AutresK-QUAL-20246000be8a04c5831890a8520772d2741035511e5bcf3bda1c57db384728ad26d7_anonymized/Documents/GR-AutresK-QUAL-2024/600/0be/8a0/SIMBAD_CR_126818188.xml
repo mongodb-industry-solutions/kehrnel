@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126818188" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Note du 2018-01-05</title>
+    <effectiveTime value="20180105000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180108000000+0000"/>
+        <assignedAuthor>
+            <code code="MOR/178" displayName="MORBIHAN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Docteur David MANGIN - Interne ORL</b></u>
+<br/>
+<br/>
+<br/>Compte-rendu de la visite d'anesthésie.
+ <br/>Réponse au remplissage avec tension post-remplissage à 10.6.
+ <br/>Tachycardie persistante à 109.
+ <br/>ECG normal.
+ <br/>Radio de thorax normale.
+ <br/>Abdomen souple et dépressible.
+ <br/>L'anesthésiste, le Docteur JAMMES d'AYZAC Aline, pense qu'il s'agit 
+ <br/>d'une hypotension avec tachycardie et fièvre post-opératoire qui 
+ <br/>selon elle est classique.
+ <br/>Je lui demande s'il y a une indication à mettre des antibiotiques 
+ <br/>aujourd'hui, elle me réponds qu'il n'y a pas d'indication à mettre 
+ <br/>sous antibiotiques ce jour et que l'on peut attendre de voir demain 
+ <br/>l'évolution du patient.
+ <br/>On surveille donc l'évolution clinique.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

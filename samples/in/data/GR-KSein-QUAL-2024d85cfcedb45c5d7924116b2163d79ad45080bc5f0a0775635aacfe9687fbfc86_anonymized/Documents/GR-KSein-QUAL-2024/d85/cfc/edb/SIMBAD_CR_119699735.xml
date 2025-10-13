@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_119699735" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>EMASP - CR HDJ SOINS PALLIATIFS - Dr Elena PAVLIUC</title>
+    <effectiveTime value="20201228000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201228000000+0000"/>
+        <assignedAuthor>
+            <code code="134/536" displayName="EMASP"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>Equipe Mobile d'Accompagnement et de Soins Palliatifs (EMASP) - <br/>Département de Soins de Support (DISSPO)<br/><br/>COMPTE RENDU DE CONSULTATION - HOPITAL DE JOUR SOINS PALLIATIFS<br/><br/><br/> Dicté par : </b> Docteur Eléna Pavliuc
+ <b><br/>Dicté le : </b> 18/11/2020 
+ <b><br/>Service : </b> 134 - EMASP 
+ <br/>
+<b>Type de document : </b> 134 CC HDJ 
+ <br/>
+<b>Ref :</b> 1162316 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire :</b> ERL/A 
+ <u><b><br/></b></u> Date de l'Hôpital de Jour : 09/11/2020
+ <br/>Patiente vue par : Dr PAVLIUC Elena IDE : Aline DE OLIVEIRA
+ <br/>
+<br/>
+<b> L'ETAT CLINIQUE DE Mme XXXXXX NECESSITE UNE PRISE EN CHARGE EN <br/>H\'d4PITAL DE JOUR DE SOINS PALLIATIFS POUR EVALUATION ET <br/>SURVEILLANCE MEDICALE.<br/></b>
+<br/>Patiente vue pour la première fois en Hôpital de Jour de Soins 
+ <br/>Palliatifs.
+ <br/>Patiente venue seule
+ <br/>
+<br/>
+<b>Oncologue référent : </b> Dr MOKDAD 
+ <b><br/><br/> OMS = 2 <br/></b>
+<br/>
+<u><b>INFORMATIONS COMPLEMENTAIRES</b></u>
+<br/>
+<b>Directives anticipées</b> : abordées mais non rédigées
+ <br/>
+<b>Personne de confiance</b> : non désignée, réfléchit encore, personne à 
+ <br/>prévenir en cas d'urgence son compagnon Marc BRUY\'c8RE et son amie 
+ <br/>Frédérique
+ <br/>
+<b>Intervenants au domicile</b> : passage des infirmières matin et soir du 
+ <br/>lundi au vendredi pour la nutrition parentérale, prestataire HOMEPERF.
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE ET SES COMPLICATIONS</b></u>
+<br/>Carcinome canalaire infiltrant T2 N0 diagnostiqué en juillet 2016. 
+ <br/>Chimiothérapie néoadjuvante par 6 EC +12 TAXOL débutée en août 2016.
+ <br/>Radiothérapie en juin 2017.
+ <br/>XELODA adjuvant 6cycles.
+ <br/>Février 2018 : TEP en faveur d'une rechute métastatique avec atteinte 
+ <br/>osseuse T3 et atteinte hépatique. Chimiothérapie par CARBOPLATINE 
+ <br/>GEMZAR de février à juillet 2018.
+ <br/>Rajout HERCEPTINE à partir de mai 2018 en association avec 
+ <br/>CARBOPLATINE GEMZAR puis à partir du mois de juillet association avec 
+ <br/>ENDOXAN.
+ <br/>Arrêt ENDOXAN en octobre 2018 pour progression hépatique et osseuse.
+ <br/>L3 : ERIBULINE débutée en novembre 2018.
+ <br/>L4 : CMF
+ <br/>L5 :NAVELBINE 
+ <br/>L6 : TAXOL 
+ <br/>L7 : XELODA 
+ <br/>L8 : CARBOPLATINE. 
+ <br/>L9 : XELODA débutée en octobre 2020.
+ <br/>
+<br/>
+<b>Complications liées à la maladie et aux traitements </b>
+<br/>Radiothérapie au niveau L4 et sacrum terminée en août 2020.
+ <br/>
+<br/>
+<u><b>MODE DE VIE</b></u>
+<br/>La patiente est juriste à la retraite depuis juin 2019.
+ <br/>Vit dans un appartement au rez-de-chaussée, il y a trois marches pour 
+ <br/>y accéder.
+ <br/>\'c0 une fille qui vit en Australie. 
+ <br/>\'c0 un compagnon qui vit avec elle le week-end, s'occupe des tâches 
+ <br/>ménagères, courses et repas. 
+ <br/>
+<br/>
+<u><b>TRAITEMENT EN COURS</b></u>
+<br/>Traitement oncologique XELODA depuis le 14 octobre 
+ <br/>SMOFKABIVEN 550 la nuit du lundi au vendredi depuis le 27 octobre
+ <br/>ACUPAN, prend environ 2 amp/jour
+ <br/>1/2 ampoule de vitamine K mercredi vendredi lundi pour deux semaines.
+ <br/>DOLIPRANE prend rarement .
+ <br/>PREDNISONE 20 mg depuis une semaine diminution de 40 mg. 
+ <br/>RAMIPRIL 2,5 mg le soir 
+ <br/>VALACICLOVIR 500 mg matin et soir 
+ <br/>XANAX 0.25 mg environ quatre fois par semaine
+ <br/>PANTOPRAZOLE 40 mg le soir 
+ <br/>MACROGOL 1 sachet tous les jours 
+ <br/>
+<br/>
+<u><b>BIOLOGIE du 06/11/2020<br/></b></u> Hémoglobine 9,6 g/dl, leucocytes 3730/mm\'b3, plaquettes 47 000
+ <br/>
+<br/>
+<u><b>EVALUATION MEDICO-SOIGNANTE DES SYMPT\'d4MES</b></u>
+<br/>PS : 2 Poids actuel : 51 kg
+ <br/>
+<br/>
+<b>Sur le plan douleur </b> :la patiente se plaint des douleurs au niveau 
+ <br/>abdominal au niveau de l'hypocondre et flanc droit avec irradiation 
+ <br/>au niveau lombaire côté droit.
+ <br/>La patiente se plaint aussi d'une sensation de brûlure à 
+ <br/>l'inspiration profonde au niveau bronchique. Prend de l'ACUPAN 
+ <br/>environ 2x/j, évite les prises de PARACETAMOL par rapport à 
+ <br/>l'atteinte hépatique. 
+ <br/>Pour l'instant dit que le traitement antalgique lui convient à ces 
+ <br/>posologies-là. On a évoqué rapidement les possibilités sur le plan 
+ <br/>des médicaments en cas de majoration des douleurs.
+ <br/>
+<br/>
+<b>Sur le plan cardio-pulmonaire </b> : dyspnée à l'effort, limitée au 
+ <br/>quotidien par cette gêne. \'c0 l'oxygène à la maison l'utilise après 
+ <br/>les efforts.
+ <br/>A l'examen clinique murmure vésiculaire quasi aboli à droite. 
+ <br/>La patiente s'est présentée aux urgences un week-end à cause de la 
+ <br/>gêne respiratoire, l'épanchement pleural a été mis en évidence mais 
+ <br/>n'a pas été ponctionné car thrombopénie. 
+ <br/>Organisation d'une ponction pleurale pour la semaine prochaine 
+ <br/>précédée d'une transfusion de plaquettes. 
+ <br/>
+<br/>
+<b>Sur le plan digestif </b> : pas de nausée, pas de vomissement, le transit 
+ <br/>est régulier avec la prise de MACROGOL.
+ <br/>
+<br/>
+<b>Sur le plan nutritionnel </b> : mange très peu, décision au mois 
+ <br/>d'octobre de mise en place d'une nutrition parentérale complémentaire 
+ <br/>5 jours par semaine. 
+ <br/>\'c0 l'examen clinique abdomen sensible à la palpation surtout côté 
+ <br/>droit volumineuse hépatomégalie jusqu'à en fosse iliaque droite.
+ <br/>
+<br/>
+<b>Sur le plan des muqueuses et du tégument </b> : présence de pétéchies et 
+ <br/>purpura au niveau des membres supérieurs et inférieurs. PAC d'aspect 
+ <br/>normal.
+ <br/>
+<br/>
+<b>Sur le plan neuro-psychologique </b> :le sommeil est perturbé par les 
+ <br/>douleurs, dort actuellement sur le canapé car n'arrive pas dormir 
+ <br/>dans le lit, vient d'acheter un surmatelas à mémoire de forme. 
+ <br/>Pas de syndrome anxiodépressif, l'examen neurologique est sans 
+ <br/>particularité.
+ <br/>
+<br/>
+<b>Mobilité/autonomie</b> : la patiente reste autonome pour les soins 
+ <br/>d'hygiène et pour les déplacements, est seule à la maison dans la 
+ <br/>semaine, le week-end son compagnon s'occupe des tâches ménagères. 
+ <br/>Cette organisation convient à la patiente. Discussion sur l'intérêt 
+ <br/>d'un lit médicalisé mais la patiente n'a pas de place pour l'avoir à 
+ <br/>la maison.
+ <br/>
+<br/>
+<b>Evaluation des connaissances du patient et de son entourage :<br/>L</b> a patiente est très au clair avec la gravité de sa maladie, connaît 
+ <br/>très bien l'objectif du traitement antitumoral actuel, de ralentir la 
+ <br/>maladie. Souhaite se battre le plus longtemps possible mais souhaite 
+ <br/>aussi qu'elle soit informée dès qu'on s'aperçoit de la progression de 
+ <br/>la maladie et de l'inefficacité du traitement, ne veut pas 
+ <br/>d'acharnement thérapeutique. 
+ <br/>Sa fille est au courant de la situation médicale. Son compagnon, 
+ <br/>selon la patiente est moins au clair parce qu'il a plutôt une 
+ <br/>attitude optimiste. 
+ <br/>Réfléchit à la personne de confiance car sa fille est loin et ne sent 
+ <br/>pas son compagnon assez forts pour assumer cette responsabilité, 
+ <br/>réfléchit à une amie ou deux. 
+ <br/>Proposition de rédiger les directives anticipées ce qui peut être 
+ <br/>plus facile pour la personne de confiance. La patiente a déjà le 
+ <br/>formulaire et va réfléchir.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3> ET PROPOSITIONS</b></u>
+<br/>
+<b>Synthèse de l'état clinique </b> :
+ <br/>Patiente âgée de 63 ans suivie pour un cancer canalaire infiltrant 
+ <br/>triple négatif métastatique au niveau hépatique, osseux et 
+ <br/>pleuro-pulmonaire en cours de 9e ligne par XELODA. 
+ <br/>
+<br/>
+<b>Symptômes réfractaires</b> : 
+ <br/>Dyspnée à l'effort sur épanchement pleural, n'a jamais été ponctionné 
+ <br/>car thrombopénie.
+ <br/>Douleurs au niveau abdominal sur hépatomégalie qui sont bien 
+ <br/>contrôlées actuellement selon la patiente avec de l'ACUPAN.
+ <br/>Dénutrition sévère nécessitant la mise en place depuis quatre 
+ <br/>semaines d'une nutrition parentérale complémentaire.
+ <br/>Perte d'autonomie mais la patiente reste autonome pour les soins 
+ <br/>d'hygiène, les tâches ménagères sont assurées par son compagnon pour 
+ <br/>l'instant. 
+ <br/>
+<br/>
+<b>Propositions </b> : 
+ <br/>Poursuite du traitement habituel, poursuite de la PREDNISOLONE à 20 
+ <br/>mg.
+ <br/>Mise en place d'un traitement par SERESTA à la place du XANAX 1 à 3 
+ <br/>comp./jour si anxiété, vitamine K 1 ampoule à boire 24 heures avant 
+ <br/>la ponction pleurale.
+ <br/>Organisation d'une ponction pleurale précédée d'une transfusion de 
+ <br/>plaquettes compte tenu d'une thrombopénie autour de 47 000. 
+ <br/>
+<br/>
+<b>Projets</b> : Patiente à revoir le 31 décembre.
+ <br/>
+<br/>
+<b>Copie à envoyer : </b> Au médecin traitant : Dr GOBY 
+ <br/>
+<br/>
+<b>Courrier rédigé avec un logiciel de reconnaissance vocale pouvant <br/>comporter quelques imperfections orthographiques.</b>
+<br/>
+<br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Eléna PAVLIUC <br/>Le jeudi 24 décembre 2020 à 15:16</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

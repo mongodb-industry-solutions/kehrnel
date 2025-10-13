@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125504641" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Note du 2018-07-30</title>
+    <effectiveTime value="20180730000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180730000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ VILLEJUIF (Gustave Roussy) : Patiente B01-157 PE VA, née en XXXXXX, 
+ <br/>39 ans (Dr Arnedos) 
+ <br/>
+<br/>Analyses génomiques: 
+ <br/>NGS : échec 
+ <br/>CGH : amplification JAK2, cycline E1, remaniements KRAS et RPTOR/AKT3 
+ <br/>non retenus 
+ <br/>
+<br/>Avis commission : conforme au guide V7.0 du 22/06/2018 
+ <br/>Patient non éligible à la sous étude 1 (absence de cibles) 
+ <br/>Patient éligible à la sous étude 2 « immunothérapie » 
+ <br/>
+<br/>Commentaire : 
+ <br/>Au vue du profil CGH très remanié une consultation d' oncogénétique 
+ <br/>est recommandée.
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

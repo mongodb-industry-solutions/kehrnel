@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_129327129" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CR Consultation du 2016-08-08</title>
+    <effectiveTime value="20160808000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20160810000000+0000"/>
+        <assignedAuthor>
+            <code code="UPO/332" displayName="UNITE DE PSYCHO_ONCOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Premier entretien avec Madame XXXXXX XXXXXX venue en consultation 
+ <br/>sur conseils du DR THOMAS suite à une manifestation émotive marquée 
+ <br/>pendant l'entretien avec ce dernier.
+ <br/>
+<br/>
+<u><b>Pathologie</b></u> : Patiente prise en charge pour un cancer du sein 
+ <br/>canalaire infiltrant grade III diagnostiqué en juillet 2016.
+ <br/>La patiente va commencer sans doute la chimiothérapie la semaine 
+ <br/>prochaine.
+ <br/>
+<br/>Pas d'antécédent médical.
+ <br/>
+<br/>
+<u><b>Antécédents psychologiques</b></u> : Mentionne un épisode dépressif en 2006, 
+ <br/>traité par STABLON pendant 1 an et demi avec arrêt très progressif du 
+ <br/>traitement. Actuellement pas de traitement psychotrope.
+ <br/>
+<br/>
+<u><b>Contexte de vie</b></u> : Patiente de 59 ans , vit seule depuis 2014 où elle 
+ <br/>a connu une rupture amoureuses difficile. A une fille qui vit en 
+ <br/>Australie depuis 6 ans qui est mariée et travaille là-bas. Mentionne 
+ <br/>un cercle d'amis proches, d'un soutien tout à fait positif. Travaille 
+ <br/>comme juriste dans un cabinet d'affaires encore en activité au jour 
+ <br/>de 
+ <br/>l'entretien.
+ <br/>
+<u><b><br/>Eléments de l'entretien </b></u> : La patiente mentionne en début d'entretien 
+ <br/>sa volonté d'une communication transparente avec les médecins. Elle 
+ <br/>réclame en effet à avoir les informations les plus claires possibles 
+ <br/>sur sa situation médicale et les traitements à venir afin de pouvoir 
+ <br/>s'adapter au mieux.
+ <br/>Elle met en avant sa capacité à affronter des nouvelles difficiles et 
+ <br/>elle souhaite pouvoir informer sa fille qui est très loin de la 
+ <br/>situation afin que celle-ci puisse savoir si elle doit se rendre en 
+ <br/>France ou si elle peut différer sa venue.
+ <br/>
+<br/>L'entretien sera ensuite très vite centré essentiellement sur la 
+ <br/>question professionnelle. On rappelle que Madame XXXXXX est juriste 
+ <br/>dans un cabinet d'affaires et s'investit énormément dans sa 
+ <br/>profession. 
+ <br/>Elle évoque d'emblée une inquiétude très ancienne autour du travail, 
+ <br/>de la nécessité de subvenir seule aux besoins de sa fille, inquiétude 
+ <br/>qui perdure aujourd'hui avec une recherche de stabilité financière et 
+ <br/>professionnelle. Elle évoque sa grande culpabilité à se mettre en 
+ <br/>arrêt de travail, contre-balancée par un réel désir de s'arrêter, se 
+ <br/>disant fatiguée psychiquement et physiquement.
+ <br/>Elle évoque sa crainte d'être seule chez elle pendant les 
+ <br/>traitements, de rester inactive, elle souhaiterait pouvoir continuer 
+ <br/>à travailler mais à un rythme moindre et se pose beaucoup de 
+ <br/>questions sur ce point. Longue discusssion autour de la question 
+ <br/>professionnelle.
+ <br/>
+<br/>Par ailleurs, la patiente évoque les dernières années dont certaines 
+ <br/>ont été particulièrement difficiles. On revient sur l'antécédent 
+ <br/>dépressif en 2006 qui faisait suite à la fois à un harcèlement 
+ <br/>professionnel et au deuil de sa filleule ainsi qu'à des difficultés 
+ <br/>personnelles. Elle évoquera en 2014 une rupture amoureuse (qui était 
+ <br/>une question de survie) et un licenciement professionnel.
+ <br/>On repère des signes d'une anxiété de caractère avec beaucoup 
+ <br/>d'anticipation sur l'avenir (inquiétude pour la retraite, les 
+ <br/>finances) l'anxiété est ciblée sur la situation professionnelle, les 
+ <br/>possibles conséquences de la maladie sur celle-ci. La patiente 
+ <br/>s'avoue d'un tempérament anxieux mais sans caractère pathologique 
+ <br/>excessif, le sommeil reste correct avec néanmoins des 
+ <br/>antihistaminiques qui facilitent l'endormissement.
+ <br/>Il n'y pas de signe de dépression , l'humeur est correcte. On relève 
+ <br/>une émotivité tout à fait contrôlée et de bon aloi. La patiente a 
+ <br/>tout à fait envie de continuer des activités et sait s'entourer 
+ <br/>adéquatement. Sa crainte est ciblée autour de l'arrêt de travail et 
+ <br/>avec la peur d'un fléchissement thymique à ce moment là. On note des 
+ <br/>défenses 
+ <br/>opérantes, de minimalisation de la maladie mais avec un recul 
+ <br/>critique. La patiente avoue avoir peur de l'inconnu de la maladie et 
+ <br/>avoir un fort besoin de contrôle.
+ <br/>
+<br/> A la fin de l'entretien, elle évoquera le suicide de sa mère 
+ <br/>lorsqu'elle avait 15 ans sans entrer plus avant dans les détails.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>On ne repère pas de caractère psychopathologique inquiétant ce jour. 
+ <br/>A noter une anxiété ciblée sur la maladie et les traitements. Un 
+ <br/>accompagnement psychologique peut être indiqué lors de cette période. 
+ <br/>On propose à la patiente de la revoir prochainement.
+ <br/>
+<b> <br/>Prochain RDV le 18/08.</b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

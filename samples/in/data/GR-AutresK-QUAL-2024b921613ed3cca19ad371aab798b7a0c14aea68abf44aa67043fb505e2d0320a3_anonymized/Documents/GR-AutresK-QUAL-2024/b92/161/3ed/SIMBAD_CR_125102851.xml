@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125102851" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 182760003</title>
+    <effectiveTime value="20181003000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181003000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Pr A. Paci (47 30) <br/>Dr V. Poinsignon (61 92) </p>
+<p>Pr A. Bennaceur (40 65) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr T. Steimle (41 65) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Pr F. Griscelli (51 93) <br/>Dr N. Yin (40 62) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>HommeNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>03/10/2018 01:15 </p>
+<p>Sexe : </p>
+<p>03/10/2018 01:15 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>REANIMATION </p>
+<p> 1 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>mercredi 03 octobre 2018 </p>
+<p>Complet </p>
+<p>Résultats <br/>Valeurs </p>
+<p>Précédentes <br/>Val. </p>
+<p>Valeurs de <br/>Référence </p>
+<p>Analyses Unités </p>
+<p>BIOCHIMIE <br/>Validation du dossier LADRésultats validés par le technicien de garde par délégation du biologiste </p>
+<p>d'astreinte </p>
+<p>Revue bilan Biochimie LADRéalisée par le biologiste </p>
+<p>Gaz <br/>Na (Sg) 143 mmol/l ( 136 - 146 ) <br/>Sang - Potentiométrie </p>
+<p>K (Sg) 4.1 mmol/l ( 3.4 - 4.5 ) <br/>Sang - Potentiométrie </p>
+<p>Cl (Sg) 109 mmol/l ( 98 - 106 ) <br/>Sang - Potentiométrie </p>
+<p>Créat (Sg) 217 μmol/l ( 53 - 106 ) <br/>Sang - Ampèrométrie </p>
+<p>Gluc (Sg) 6.2 mmol/l ( 3.9 - 5.8 ) <br/>Sang - Ampèrométrie </p>
+<p>Calcium Ionisé 1.17 mmol/l ( 1.15 - 1.29 ) <br/>Sang - Potentiométrie </p>
+<p>Lact (Sg) 0.7 mmol/l ( 0.5 - 1.6 )1.0 02/10/2018 17:10 <br/>Sang - Ampèrométrie </p>
+<p>Température Patient 38.1 °C 37.3 02/10/2018 17:10 LAD </p>
+<p>Oxygénation 21.0 % 21.0 02/10/2018 17:10 </p>
+<p>Veineux _IHIVeineux 02/10/2018 17:10Nature plvt </p>
+<p>pH V corrigé 7.37 ( 7.32 - 7.43 )7.42 02/10/2018 17:10 <br/>Sang - Potentiométrie </p>
+<p>Reserve Alcaline V 27.4 mmol/l ( 25.0 - 29.0 )26.8 02/10/2018 17:10 <br/>Sang - Potentiomètrie </p>
+<p>pCO2 V corrigée 49.0 mmHg ( 45 - 48 )41.9 02/10/2018 17:10 <br/>Sang - Potentiométrie </p>
+<p>pO2 V corrigée 53.0 mmHg ( 38 - 44 )46.7 02/10/2018 17:10 <br/>Sang - Ampérométrie </p>
+<p>% Saturation O2 V 83.1 % ( 70.0 - 80.0 )80.3 02/10/2018 17:10 </p>
+<p>tO2 V 8.6 % 8.1 02/10/2018 17:10 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 03/10/2018 à 10:13 par : Dr DROUARD Laurence</p>
+<p></p>
+<ul>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Gaz</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125014098" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>Analyse CR CERBA : n° GLIMS :  182670385</title>
+    <effectiveTime value="20181016000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181016000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Transmis par INSTITUT GUSTAVE ROUSSY BIOCHIMIE </p>
+<p>Vos références : 182670385 01304 </p>
+<p>Enregistré le : 12.10.2018 Edité le : 16.10.2018 </p>
+<p>Ex envoyé(s) au(x) : Laboratoire<br/></p>
+<p>l RECHERCHE D'ADN DE TOXOPLASMA GONDII (PCR) </p>
+<p>Réactif : Sacace </p>
+<p>Prélèvement : 24.09.2018 Sang EDTA 08h 00 </p>
+<p>Présence d'ADN de Toxoplasma gondii. </p>
+<p>Résultat à corréler aux données cliniques et biologiques. </p>
+<p>Changement de technique à compter du 25/06/2018. </p>
+<p>Les résultats de ces examens biologiques ont été transmis de façon sécurisée à Santé publique France (http://www. santepubliquefrance.fr ), établissement public en charge dela production de statistiques sur la fréquence des maladies infectieuses. Conformément aux dispositions de la loi informatique et libertés, vous disposez, à tout moment, d'undroit d'accès, de rectification, et d'opposition à l'ensemble des données transmises à Santé publique France qui vous concernent en vous adressant à : DMI-Projet-3labos@santepubliquefrance.fr ou à Santé publique France, Direction des maladies infectieuses, 12 rue du Val d'Osne, 94415 Saint-Maurice Cedex France </p>
+<p>Laura Verdurme (01 34 40 20 20) </p>
+<p>Compte rendu complet </p>
+<br/>
+<p>Biologistes co-responsables : Sylvie Cado, Nesrine Day <br/>Biologistes médicaux Médecins anatomo-cytopathologistes <br/>H. Belaouni A. Ganon J.D. Poveda C. Bergeron (Responsable) <br/>B. Caron Servan S. Haim-Boukobza S. Samaan M. Bonnière M. Grossin <br/>J.M. Costa P Kleinfinger S. Schmit S. Chanel K. Hadid <br/>M.M. Coude I. Lacroix S. Trombert Y. Elouaret L. Miranda <br/>I. Cuvelier L. Lohmann D. Trost (Biologiste généticien) A. Gaulier <br/>S. Defasque S. Mehlal Sedkaoui M. Valduga <br/>F. Floch Y. Pepino L. Verdurme </p>
+<p>Conformément aux textes en vigueur, votre échantillon biologique pourra être éliminé, utilisé et/ou transféré à des fins scientifiques ou de contrôles qualité, hors génétique humaine, de manière anonyme etrespectant le secret médical sauf opposition formulée auprès de notre Service de la Relation Client. </p>
+<p>SELAFA CERBA - 7/11 rue de l'Equerre - Parc d'activités "Les Béthunes" - 95310 Saint Ouen l'Aumône - France - ENREGISTREMENT N°95.9 -Tel : 01 34 40 20 20 - FAX : 01 34 40 21 29 <br/>SRC@lab-cerba.com - www.lab-cerba.com </p>
+<p>XXXXXX <br/>XXXXXX-XXXXXX </p>
+<p>Né(e) le XXXXXX Sexe : M Dossier n° : 18Q0169282 </p>
+<p>Y /w 750-101 /s 750-101 </p>
+<p><br/> INSTITUT GUSTAVE ROUSSY BIOCHIMIE 114 RUE E VAILLANT 94805 VILLEJUIF CEDEX </p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

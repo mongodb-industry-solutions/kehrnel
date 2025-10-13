@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121688473" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM THX ABD PEL</title>
+    <effectiveTime value="20200228000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200228000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur BIDAULT Francois
+ <br/>
+<br/>Destinataire : CTE 050 - SEIN
+ <br/> DR MOKDAD--ADI MERIEM
+ <br/>
+<b>Dicté par : </b> Docteur Oceane Blot, Interne/ Dr Francois BIDAULT
+ <b><br/>Dicté le : </b> 27/02/2020 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Générique 
+ <br/>
+<b>Ref :</b> 945908 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : 
+ <b>OIT<br/>Examen n°: 1606</b>
+<br/>Examen réalisé le : 27/02/2020.
+ <br/>
+<br/>
+<br/>
+<b>SCANNER THORACO-ABDOMINO-PELVIEN<br/> <br/></b>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> <br/></b> Patiente de 40 ans suivie pour un cancer du sein gauche traité en 
+ <br/>2015 par chimiothérapie, chirurgie et radiothérapie. Récidive 
+ <br/>ganglionnaire en mars 2018, 6e ligne de traitement par Carboplatine 
+ <br/>et Gemcitabine débutée le 17 décembre 2019.
+ <br/>Scanner de réévaluation. 
+ <br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> <br/></b> Examen réalisé sur un scanner DISCOVERY 750 HD, GENERAL ELECTRIC, 
+ <br/>mis en service en septembre 2012.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 429098CN7
+ <br/>
+<br/>Réalisation d'une acquisition :
+ <br/>\'a7 Thoracique
+ <br/>\'a7 Abdominale 
+ <br/>\'a7 Pelvienne
+ <br/>Examen réalisé avec injection intraveineuse de produit de contraste.
+ <br/>
+<br/>
+<b>Produit de contraste injecté : Xenetix <br/>Quantité : 110cc<br/>PDL : 891 mGy.cm<br/></b>
+<br/>
+<br/>
+<u><b>RESULTATS<br/></b></u>
+<b><br/> Comparaison avec le pet scanner du 13 décembre 2019: <br/><br/>Etage thoracique</b> :
+ <br/>Probable diminution en taille du nodule la racine du membre gauche 
+ <br/>qui mesurait 9 x 7 mm contre 5x4mm (série 3 - image 2) ce jour mais 
+ <br/>situé sur les dernières coupes.
+ <br/>Stabilité de l'infiltration tissulaire axillaire gauche.
+ <br/>Régression de l'adénopathie mammaire interne gauche.
+ <br/>Absence d'adénopathie à droite. 
+ <br/>Absence de lésion secondaire parenchymateuse.
+ <br/>Absence d'adénopathie médiastino-hilaire.
+ <br/>Absence d'épanchement pleuropéricardique.
+ <br/>Absence d'embolie pulmonaire proximale.
+ <br/>
+<br/>
+<b>Etage abdomino-pelvien</b> :
+ <br/>Foie de taille et de morphologie normales, absence de lésion focale.
+ <br/>Perméabilité conservée du système porte.
+ <br/>Absence de dilatation des voies biliaires.
+ <br/>Absence de lésion focale rénale, splénique et pancréatique.
+ <br/>Surrénales fines.
+ <br/>Absence d'adénopathie abdomino-pelvienne.
+ <br/>Absence d'épanchement intrapéritonéal.
+ <br/>Absence de lésion osseuse secondaire.
+ <br/>Dispositif intra-utérin.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> <br/><br/>Aspect de réponse partielle par rapport au pet scanner de décembre <br/>2019. <br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Francois BIDAULT <br/>Le jeudi 27 février 2020 à 13:11 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

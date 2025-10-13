@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123570469" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>LETTRE DE LIAISON</title>
+    <effectiveTime value="20190521000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190521000000+0000"/>
+        <assignedAuthor>
+            <code code="GAR/182" displayName="GARD"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>SERVICE GARD - LETTRE DE LIAISON<br/><br/>Dicté par : </b> Docteur Clémence Basse, Interne
+ <b><br/>Dicté le : </b> 17/05/2019 
+ <b><br/>Service : </b> GAR-GARD 
+ <br/>
+<b>Type de document : </b> GAR NO LETTRE DE LIAISON 
+ <br/>
+<b>Ref :</b> 696709 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : Valérie PASQUIET/a
+ <br/>
+<u><b><br/>HOSPITALISATION SERVICE GARD - 01 42 11 43 01<br/> </b></u>
+<br/>
+<u><b><br/>Médecin référent Gustave Roussy</b></u> : Docteur Emeline COLOMBA
+ <br/>114 rue Edouard Vaillant - 94805 VILLEJUIF CEDEX
+ <br/>
+<br/>
+<u><b>Patient pris en charge par l'interne</b></u> : Clémence BASSE
+ <br/>114 rue Edouard Vaillant - 94805 VILLEJUIF CEDEX
+ <br/>
+<br/>
+<u><b>Date du séjour</b></u> : 16 au 17 mai 2019
+ <br/>
+<u><b>Modalité d'entrée</b></u> : domicile 
+ <br/>
+<u><b>Modalité de sortie</b></u> : domicile 
+ <br/>
+<br/>
+<u><b>Traitement d'entrée</b></u> :
+ <br/>- INNOHEP 0.5 ml (thrombose de la veine saphène interne étendue 
+ <br/>jusqu'à la fémorale commune à la découverte de la pathologie en 
+ <br/>février 2017)
+ <br/>- PRIMPERAN si besoin
+ <br/>- KYTRIL 1 mg matin et soir pendant 3 jours
+ <br/>
+<br/>
+<u><b>Motif d'hospitalisation</b></u> : Hospitalisée pour la réalisation de la 6ème 
+ <br/>cure de chimiothérapie de type CARBOPLATINE/GEMZAR/AVASTIN dans le 
+ <br/>cadre du protocole ATALANTE pour une 1ère rechute d'un 
+ <br/>adénocarcinome séreux pelvien d'origine ovarienne à composante mixte 
+ <br/>de haut grade jamais réséqué, PLATINE sensible.
+ <br/>
+<br/>
+<u><b>Synthèse médicale du séjour</b></u> :
+ <br/>Réalisation de la 6ème cure de chimiothérapie à partir du 16/05/2019 
+ <br/>avec protocole de désensibilisation et prémédication par 120mg 
+ <br/>METHYLPRENISOLONE + 1 ampoule de POLARAMINE:
+ <br/>
+<br/>* BEVACIZUMAB 15 mg/kg soit 930 mg DT le 16/05/2019
+ <br/>* ATEZOLIZUMAB ou placébo 1 200 mg DT le 16/05/2019
+ <br/>* CARBOPLATINE AUC 300 mg DT le 17/05/2019 (1 poche de 3 
+ <br/>mg, puis 1 poche de 30mg puis 1 poche de 300 mg selon le protocole de 
+ <br/>la pharmacie)
+ <br/>* GEMZAR 1600 mg DT le 17/05/2019
+ <br/>
+<br/>J1 = J21
+ <br/>
+<br/>Tolérance : apparition de quelques macules érythémateuses aux 
+ <br/>avant-bras à 45 min de la fin de la perfusion. Hémodynamique stable. 
+ <br/>Ampoule de POLARAMINE IV de nouveau permet de terminer la 
+ <br/>chimiothérapie avec une bonne tolérance globale.
+ <u><b><br/><br/><br/>BMR</b></u> : NON
+ <br/>
+<u><b>Transfusion</b></u> : NON. 
+ <br/>
+<u><b>Bilans sanguins</b></u> : imprimés et remis au patient le jour de la sortie.
+ <br/>
+<u><b>Examens radiologiques</b></u> : aucun.
+ <br/>
+<u><b>Recommandations et surveillance</b></u> : OUI.
+ <br/>
+<u><b>Annonce des éléments en attente</b></u> : aucun.
+ <br/>
+<u><b>Traitement de sortie</b></u> :
+ <br/>- INNOHEP 0.5 ml 
+ <br/>- PRIMPERAN 10mg si besoin
+ <br/>- KYTRIL 1 mg matin et soir si besoin
+ <br/>
+<br/>
+<u><b>Prochain rendez-vous</b></u> :
+ <br/>- HDJ pour ponction d'ascite le 23/05/2019
+ <br/>- admission Gard le 05/06/2019
+ <br/>
+<br/>
+<b> Document imprimé sur la page d'identification du dossier patient de <br/>Gustave Roussy et remis en main propre au patient le jour de la <br/>sortie.<u> <br/></u></b>
+<br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Clémence BASSE , Interne<br/>Le mardi 21 mai 2019 à 10:20<br/></b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

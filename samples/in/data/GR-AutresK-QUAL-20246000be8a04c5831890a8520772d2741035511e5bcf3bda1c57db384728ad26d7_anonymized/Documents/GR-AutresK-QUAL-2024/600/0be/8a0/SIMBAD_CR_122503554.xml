@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122503554" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>RESUME D'HOSPITALISATION FAISANT FONCTION DE LETTRE DE LIAISON</title>
+    <effectiveTime value="20191031000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20191031000000+0000"/>
+        <assignedAuthor>
+            <code code="RHO/179" displayName="RHONE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>SERVICE D'HOSPITALISATION RHONE - COMPTE RENDU D'HOSPITALISATION <br/>CHIMIOTHERAPIE + 24 HEURES<br/><br/>Dicté par : </b> Docteur Oana Toca, Interne
+ <b><br/>Dicté le : </b> 30/10/2019 
+ <b><br/>Service : </b> RHO-RHONE 
+ <br/>
+<b>Type de document : </b> RHO RH HOSPI + 24 H (S) 
+ <br/>
+<b>Ref :</b> 845993 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : 
+ <b>YRB<u><br/><br/></u></b> Approuvé par : XAY
+ <br/>
+<br/>
+<br/>
+<u><b>Docteur TOCA/Docteur IACOB<br/></b></u>
+<br/>
+<u><b>Chirurgien référent IGR</b></u> : Dr BREUSKIN
+ <br/>
+<br/>
+<u><b>Oncologue référent IGR </b></u>
+<b>: Dr FERRAND<br/></b>
+<br/>
+<u><b>Date d'entrée</b></u>
+<b> </b> : 30/10/2019
+ <br/>
+<br/>
+<u><b>Motif d'hospitalisation</b></u>
+<b> </b> : 
+ <b><br/></b> Patient âgé de 58 ans, hospitalisé pour sa 1ère cure de 
+ <br/>chimiothérapie par CISPLATINE-DOCETAXEL-CETUXIMAB, dans le cadre de 
+ <br/>la prise en charge d'une récidive latéro cervicale bilatérale d'un 
+ <br/>carcinome oropharyngé, HPV-, traité initialement par 
+ <br/>radiochimiothérapie en octobre 2014 avec chirurgie de rattrapage en 
+ <br/>novembre 2017 et mars 2018.
+ <b><br/><br/><u>Antécédents médico-chirurgicaux</u></b>
+<br/>
+<u><b>Chirurgicaux</b> <br/></u>- carcinome épidermoïde hypopharyngé (récidive) traité par PLT avec 
+ <br/>lambeau de grand pectoral et lambeau antéro-latéral de cuisse, 
+ <br/>- trachéotomie, 
+ <br/>- opéré d'une maladie de Dupuytren à 2 reprises (à gauche et à 
+ <br/>droite).
+ <br/>
+<br/>
+<u><b>Médicaux</b></u>
+<br/>- crise comitiale généralisée avec dernier évènement il y a plus de 
+ <br/>10 ans, pas de suivi neurologique, que l'on recommande notamment sur 
+ <br/>le plan thérapeutique, 
+ <br/>- psoriasis diffus essentiellement aux mains et aux avant-pieds, pas 
+ <br/>de traitement systémique, 
+ <br/>- hypothyroïdie, 
+ <br/>- pas d'allergie.
+ <br/>
+<br/>
+<u><b>Mode de vie</b></u>
+<b> <br/></b> - Marié, 
+ <br/>- 3 enfants ne vivant pas au domicile, 
+ <br/>- il vit dans un appartement de plain pied, 
+ <br/>- ancien travailleur du bâtiment essentiellement peinture,
+ <br/>- Pas de voyage outre-mer connu, 
+ <br/>- tabagisme sevré en 2014, 
+ <br/>- pas de réel mésusage alcoolique mais sevré également.
+ <br/>
+<br/>
+<u> Traitements</u>
+<br/>- LEVOTHYROX 25 μg/j, 
+ <br/>- GARDENAL 100 mg le soir, 
+ <br/>- EFFERALGAN codéiné 6 prises par jour actuellement.
+ <br/>
+<br/>
+<u><b>Histoire de la maladie</b></u>
+<br/>- Prise en charge pour un carcinome épidermoïde initialement de 
+ <br/> l'oropharynx vélaire et des piliers postérieurs bilatéralement 
+ <br/> traité par radiochimiothérapie en octobre 2014.
+ <br/>
+<b>* Août 2017 </b> : Seconde localisation de carcinome épidermoïde de 
+ <br/> l' hypopharynx droit.
+ <br/>- 
+ <u> 13/11/17</u> : Traitement par pharyngo-laryngectomie totale droite et 
+ <br/> reconstruction par lambeau musculo-cutané de grand pectoral.
+ <br/> Suites compliquées d'un pharyngostome à plusieurs reprises.
+ <br/> Monté d'un lambeau de grand dorsal le 06/12/2017.
+ <br/> Malgré les reprises, persistance d'un pharyngostome et déhiscence 
+ <br/> des sutures avec pharyngostome large.
+ <br/>- 
+ <u> 19/03/18</u> : reprise de cervicotomie pour rétablissement de la 
+ <br/> continuité digestive et réfection d'un trachéostome dans le 
+ <br/> contexte de pharyngostome large post-PLT de rattrapage avec
+ <br/> fermeture par un lambeau libre antéro-latéral de cuisse prélevé à
+ <br/> gauche et lambeau pédiculé supra-claviculaire avec anastomose de
+ <br/> perforante delto-acromial prélevé à gauche.
+ <br/>- Récidive latéro-cervical gauche nécrotique envahissant les tissus 
+ <br/> mous, péri carotidienne non résécable et adénopathie en 2 à droite 
+ <br/> envahissant la veine jugulaire découverte à l'été 2019 par la 
+ <br/> majoration d'un oedème du visage et de douleur.
+ <br/> Biopsié, AP : Carcinome épidermoïde HPV-, P16-.
+ <br/>- 
+ <u> RCP ORL du 17/10/19</u> : décision d'un traitement systémique (pas de 
+ <br/> réirradiation envisagée).
+ <br/>- Echographie cardiaque du 30/09/19 : FEVG 62 % sans autre anomalie
+ <br/> notable.
+ <br/>- 
+ <u> Pet scan le 02/10/19</u> :aspect évocateur de récidive locale cervicale
+ <br/> gauche et ganglionnaire controlatéral sans autre lésion à distance.
+ <br/>- 
+ <u> 21/10/19</u> : pose d'une chambre implantable.
+ <br/>- Audiogramme non fait.
+ <br/>
+<b><br/></b>
+<br/>
+<u><b>Examen clinique et biologique à l'entrée</b></u>
+<br/>OMS 1
+ <br/>Poids : 72,4 kg
+ <br/>Taille : 161 cm
+ <br/>SC : m2
+ <br/>IMC : kg/m2
+ <br/>TA : 143/85 mmHg
+ <br/>FC : 82 bpm
+ <br/>T : 36,3°C.
+ <br/>EVA : 7/10.
+ <br/>Saturation : 98% en AA
+ <br/>Trachéotomie : en place et fonctionnelle.
+ <br/>Alimentation : par voie orale, normale.
+ <br/>
+<br/>
+<u>Au plan clinique loco-régional</u> :
+ <br/>Examen ORL : pas de lésion suspecte au niveau de la cavité buccale. 
+ <br/>Adénopathie : non palpable sur un cou fibreux.
+ <br/>Auscultation cardio-pulmonaire : sans particularité.
+ <br/>Abdomen : souple et dépressible, indolore, sans masse palpable, pas 
+ <br/>de hépatosplénomégalie.
+ <br/>Transit : régulier.
+ <br/>Pas d'oedème des membres inférieurs.
+ <br/>
+<br/>
+<u>Au plan bio-hématologique le 30/10/19 </u> : 
+ <br/>Hémoglobine : 9,6g/dl
+ <br/>Leucocytes : 6,7/mm3
+ <br/>PNN : 5,6/mm3
+ <br/>Plaquettes : 207 000/mm3
+ <br/>Créatininémie à 73μmol/l.
+ <br/>Ionogramme : Magnésium 0,58 mmol/l, Potassium 3,6 mmol/l, Sodium 140
+ <br/>mmol/l, Phosphore 0,85 mmol/l, Calcium 2,23 mmol/l, Calcium corrigé 
+ <br/>2,30 mmol/l.
+ <br/>Bilan hépatique : ASAT 35 UI/l, ALAT17 UI/l, Gamma GT 20 UI/l, PAL 
+ <br/>120 UI/l, Bilirubine totale5 μmol/l
+ <br/>Albumine : 37g/l
+ <br/>TP : 100 %
+ <br/>
+<br/>
+<u><b>Evolution dans le service<br/></b></u>
+<b>Au plan oncologique :<br/><u></u></b>
+<u> Administration de sa 1ère cure de chimiothérapie par <br/>DOCETAXEL-CISPLATINE-CETUXIMAB le 31/10/19</u> : 
+ <br/>
+<br/> CISPLATINE 75 mg/m2 soit 130 mg DT 
+ <br/> CETUXIMAB 400 mg/m2 soit 720 mg DT
+ <br/> DOCETAXEL 75 mg/m2 soit 130 mg DT
+ <br/>
+<br/>Bonne tolérance immédiate de la chimiothérapie.
+ <br/>
+<br/>
+<b>Au plan antalgique :<br/></b> Présence de douleurs au niveau du cour et de la tête.
+ <br/>Début de traitement par SKENAN à 20 mg et ORAMORPH 5 mg.
+ <br/>
+<br/>
+<b>- Visite du 31/10/2019, Dr IACOB et Dr TOCA<br/></b> Patient hospitalisé pour son 1ère cure de chimiothérapie par 
+ <br/>DOCETAXEL-CISPLATINE-CETUXIMAB. Cetuximab actuellement en cours avec 
+ <br/>bonne tolérance.
+ <br/>Le patient était douloureux à son arrivée dans le service, on arrête 
+ <br/>le DAFALGAN CODEINE et on débute le SKENAN 20 mg 2x/jour avec des 
+ <br/>interdoses d'ORAMORPH à 5 mg. Ce jour le patient se dit moins 
+ <br/>douloureux, on continue la surveillance pour décider si une 
+ <br/>augmentation de dose est nécessaire.
+ <br/>On note également une constipation pour laquelle un début de 
+ <br/>traitement par laxatif par MOVICOL. Un ionogramme de contrôle est 
+ <br/>prévu demain avec sortie par la suite si bilan normal.
+ <br/>Le patient sera en consultation par le Dr FERRAND le 10/12/2019, je 
+ <br/>ne voie pas de rendez-vous de scanner de prévu, on va donc organiser 
+ <br/>cela. 
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3> :</b></u>
+<br/>- 1ère cure de TPEx.
+ <br/>- Bonne tolérance dans l'immédiat.
+ <br/>
+<br/>
+<br/>
+<u><b>Prochains rendez-vous :</b></u>
+<br/>13/11/2019 10:00, HDJ CHIMIO 
+ <br/> 10:05, C HDJ A TRAITER 
+ <br/>22/11/2019 12:35, BILAN ONCO 
+ <br/> 14:00, ADM RHONE-ALP 
+ <br/>
+<br/>
+<br/>Poids à la sortie : 72,4 kg
+ <br/>EVA à la sortie : 0/10
+ <br/>
+<b><br/><u>Sortie à domicile le</u> : 01/11/2019<br/></b> - Bulletins de situation x3.
+ <br/>- Bon de transport par VSL
+ <br/>- Convocation
+ <br/>
+<br/>
+<br/>
+<u><b>Traitement de sortie</b></u>
+<b> :<br/>- En cas de fièvre :</b>
+<br/>A débuter seulement en cas de fièvre > 38°.3 C (appeler le service et 
+ <br/>refaire une prise de sang)
+ <br/>
+<b>AMOXICILLINE acide clavulanique</b> 1 Gr x 3/J pendant 7 jours.
+ <br/>
+<b>CIPROFLOXACINE </b> 500 mg 1 cp x 2/J pendant 7 jours.
+ <br/>
+<b><br/>- En cas de diarrhées :<br/>IMODIUM </b> 2 gél après la 1 ère selle liquide puis 1 gél toutes les 6H 
+ <br/>avec max 6 gél par jour.
+ <br/>
+<b>SMECTA </b> 3 sachets/J
+ <br/>
+<br/>
+<b>- En cas de nausées :</b>
+<br/>
+<b>PRIMPERAN </b> 10 mg 1 cp x 3/J.
+ <br/>
+<br/>
+<b>- En cas de constipation :</b>
+<br/>
+<b>MOVICOL </b> 2 sachets /J le matin.
+ <br/>
+<br/>
+<b>- Si douleurs :</b>
+<br/>
+<b>DOLIPRANE </b> 1 Gr x 3/J si besoin.
+ <br/>
+<br/>
+<b>- En cas de peau sèche :</b>
+<br/>DEXERYL crème, 4 applications/j. Renouvelable.
+ <br/>
+<br/>
+<b>- En cas de mucite ou aphtes :</b>
+<br/>TRIFLUCAN 100 mg, le matin pendant 7 jours. Renouvelable.
+ <br/>
+<br/>
+<br/>
+<b>- En systématique :</b>
+<br/>- NFS, plaquettes, iono, urée et créat + calcium + phosphore + 
+ <br/>magnésium + Albumine + BH + Bilirubine + CRP chaque semaine et 48 h 
+ <br/>avant la prochaine hospitalisation (et en cas de fièvre ou bilan 
+ <br/>perturbé) par une IDE à domicile pendant 1 mois, à faxer au RHO, 1er 
+ <br/>contrôle le 05/11, 11/11 et 19/11/2019.
+ <br/>
+<br/>- Bains de bouche par BICARBONATE 1.4%, 6-10 fois par jour.
+ <br/>+ ULCAR 3 sachets dans le flacon de bicarbonate pendant 7 jours si 
+ <br/>besoin (en cas de mucite).
+ <br/>+ FUNGIZONE 3-4 cuillères à café de suspension buvable par jour 
+ <br/>pendant 5 jours si besoin (en cas de mucite).
+ <br/>- DOXYCYCLINE 100 mg : 1 cp/jour.
+ <br/>- DEXERYL : 4 appl/jour. 
+ <br/>- MAG 2, 2 cp 3x/jour.
+ <br/>- LEVOTHYROX 25μg, 1x/jour.
+ <br/>- LANSOPRAZOLE 30 mg, 1 cp/jour.
+ <br/>- GARDENAL 100 mg, 1 cp/jour.
+ <br/>- PRIMPERAN 10 mg, 1 cp 3x/j avant chaque repas.
+ <br/>- ZOPHREN LYOC 8 mg, 2x/jour pendant 5 jours.
+ <br/>- NIVESTIM 48 MU/0,5 ml, 1 injection sous cutanée par jour pendant 5 
+ <br/>jours du 01/11/2019 au 05/11/2019.
+ <br/>
+<br/>
+<b>A faire pratiquer par une IDE au domicile y compris le weekend et les <br/>jours fériés :</b>
+<br/>- NIVESTIM 48 MU/0,5 ml, 1 injection sous cutanée par jour pendant 5 
+ <br/>jours du 01/11/2019 au 05/11/2019.
+ <br/>
+<br/>
+<b>Faire pratiquer par une IDE au domicile y compris le weekend et les <br/>jours fériés, autant de passage que nécessaire, y compris la nuit :</b>
+<br/>- Soins de trachéotomie
+ <br/> Nettoyage.
+ <br/> Nettoyage et le changement de la canule.
+ <br/> Réfection du pansement sec.
+ <br/> Surveillance quotidienne des sécrétions bronchiques et de l'état 
+ <br/> respiratoire.
+ <br/> \'c9ducation du patient à l'aspiration et changement de la 
+ <br/>canule.
+ <br/>
+<b><br/></b>
+<br/>
+<b> CMA :Ajustement entretien dispositif vasculaire (VVC-KT) <br/>Réfection <br/></b>
+<br/>
+<u><b>Conformément à l'article R710-2-1 du code de Santé Publique</b></u>
+<b> :<br/> <br/></b> Transfusion de produits sanguins labiles : NON.
+ <br/>Portage de germe multirésistant : NON.
+ <br/>
+<br/> Prise en charge palliative : OUI 
+ <br/>
+<b>Prise en charge par l'équipe mobile de soins palliatifs OUI<br/></b> Si OUI :
+ <br/>
+<br/>Pose Gastrostomie ou pose SNO : NON
+ <br/>Ponction à visée symptomatique : OUI 
+ <br/>Adaptation du traitement antalgique : NON
+ <br/>Irradiation antalgique : OUI 
+ <br/>Chimiothérapie palliative : NON
+ <br/>Chirurgie de propreté: OUI 
+ <br/>Prise en charge saignement : OUI 
+ <br/>Transfusion sanguine : OUI 
+ <br/>Prise en charge de la détresse respiratoire +/- trachéo OUI 
+ <br/>Nutrition : 
+ <br/>- déjà sous CNO, nutrition entérale/parentérale OUI 
+ <br/>- mise en route d'une nutrition entérale/parentérale OUI 
+ <br/>Occlusion intestinale OUI 
+ <br/>Traitement des divers symptômes vecteurs d'inconfort
+ <br/>(toux, prurit, nausées, vomissements, anxiété, 
+ <br/>dépression, troubles du sommeil, déshydratation, ...) NON
+ <br/>Consultation onco-psychologie : OUI
+ <br/>Kinésithérapie : OUI
+ <br/>Nursing : OUI 
+ <br/>
+<br/>Organisation retour domicile - soins de suite
+ <br/>prise en charge sociale OUI
+ <br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

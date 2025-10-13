@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_118941786" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>EMASP - CR HDJ SOINS PALLIATIFS - Docteur Christine MATEUS</title>
+    <effectiveTime value="20210402000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20210402000000+0000"/>
+        <assignedAuthor>
+            <code code="134/536" displayName="EMASP"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>Département Interdisciplinaire D'Organisation Du Parcours Patients - <br/>DIOPP<br/>COMPTE RENDU DE CONSULTATION - HOPITAL DE JOUR SOINS PALLIATIFS<br/><br/><br/> Dicté par : </b> Docteur Christine Mateus
+ <b><br/>Dicté le : </b> 01/04/2021 
+ <b><br/>Service : </b> 134 - EMASP 
+ <br/>
+<b>Type de document : </b> 134 CC HDJ 
+ <br/>
+<b>Ref :</b> 1309463 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire :</b> ERL/A
+ <u><b><br/></b></u> Date de l'Hôpital de Jour : 02/04/2021
+ <br/>Patiente vue par : Dr MATEUS IDE : Aline DE OLIVEIRA
+ <br/>
+<br/>
+<b> L'ETAT CLINIQUE DE Mme XXXXXX XXXXXX NECESSITE UNE PRISE EN CHARGE EN <br/>H\'d4PITAL DE JOUR DE SOINS PALLIATIFS POUR EVALUATION ET <br/>SURVEILLANCE MEDICALE.<br/></b>
+<br/>Patiente régulièrement suivie en Hôpital de Jour de Soins Palliatifs.
+ <br/>Patiente venue seule.
+ <br/>
+<br/>
+<b>Oncologue référent : Dr MOKDAD <br/><br/>OMS = 3<br/></b>
+<br/>
+<u><b>INFORMATIONS COMPLEMENTAIRES</b></u>
+<br/>
+<b>Directives anticipées</b> : non rédigées
+ <br/>
+<b>Personne de confiance</b> : son époux
+ <br/>
+<b>Intervenants au domicile</b> : la patiente prise en charge par l'HAD 
+ <br/>santé service avec deux passages par jour des infirmières, pour PCA 
+ <br/>de MORPHINE 
+ <br/>
+<br/>
+<u><b>ANTECEDENTS NOTABLES</b></u>
+<b> </b> Aucun, pas d'allergie connue. 
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE ET SES COMPLICATIONS</b></u>
+<br/>Cancer du sein gauche triple négatif diagnostiqué en 2015 
+ <br/>initialement et traité à Bergonié par chimiothérapie, chirurgie puis 
+ <br/>radiothérapie au niveau axillaire, CMI et sus claviculaire.
+ <br/>Récidive en mars 2018. Traitement par :
+ <br/>- L1 NAVELBINE de mars à Déc 2018 : progression ganglionnaire sus et 
+ <br/>sous-claviculaire 
+ <br/>gauche et probablement axillaire gauche. 
+ <br/>- L2 par TALAZOPARIB de janvier à avril 2019 : progression 
+ <br/>ganglionnaire, majoration d'un nodule sous-cutané cervical antérieur 
+ <br/>gauche et apparition d'un nodule 
+ <br/>surrénalien gauche.
+ <br/>
+<b>- </b> L3 par XELODA de avril à Juillet 2019 : nouvelle progression 
+ <br/>métabolique 
+ <br/>- L4 par ENDOXAN arrêt en aout 2019 sur progression
+ <br/>- L5 par ERIBULINE 5 cycles reçus de aout à Décembre 2019 : 
+ <br/>progression 
+ <br/>- L6 par CARBOPLATINE / GEMZAR jusqu'au 28/02/2020 ; arrêté sur 
+ <br/>progression 
+ <br/>- L7 NAVELBINE Durant la période COVID en rechallenge
+ <br/>- L8 CARBOPLATINE / GEMZAR de juillet à octobre 2020
+ <br/>- L9 PACLITAXEL de novembre à décembre 2020. Arrêt sur progression
+ <br/>- L10 CMF + Radiothérapie antalgique sur adénopathie claviculaire 
+ <br/>gauche de 22/12 au 30/12/2020 en 5 séances de 4 Gy.
+ <br/>
+<br/>
+<b>Histoire de la maladie récente<br/></b> La patiente a été hospitalisée à l'UDEP au mois de février pour 
+ <br/>reprise des traitements antalgiques. La patiente était sous PCA de 
+ <br/>MORPHINE et PCA de KETAMINE depuis octobre 2020. La KETAMINE a pu 
+ <br/>être interrompue en majorant les co-antalgiques par LAROXYL NEURONTIN 
+ <br/>et corticoïdes.
+ <br/>La patiente est prise en charge par l'HAD. Elle a interrompu 
+ <br/>progressivement depuis plusieurs semaines l'ensemble de ses 
+ <br/>traitements co-antalgiques : corticoïdes, NEURONTIN, NORSET, XANAX.
+ <br/>
+<br/>
+<u><b>MODE DE VIE</b></u>
+<br/>La patiente est mariée, a deux fils d'une première union de 10 et 15 
+ <br/>ans, le fils de 15 ans est à la maison avec elle et le fils cadet est 
+ <br/>avec son père dans le sud de la France ; elle vit aussi avec le fils 
+ <br/>de son mari actuel.
+ <br/>La patiente habite dans une maison avec étage, la chambre est au 
+ <br/>rez-de-chaussée par contre la salle de bain est à l'étage.
+ <br/>
+<br/>
+<u><b>TRAITEMENT EN COURS<br/></b></u> PCA MORPHINE 8 mg/h avec bolus 10 mg, 3 bolus sur la matinée. En 
+ <br/>fait entre 10 et 20 par jour dernièrement.
+ <br/>PCA KETAMINE 2 mg/h mise en place de novembre 2020 à février 2021
+ <br/>PARACETAMOL si besoin 2 grammes par jour
+ <br/>MICROLAX si besoin
+ <br/>MOVICOL arrêt à cause des vomissements
+ <br/>Bains de bouche ELUDRIL
+ <br/>PRIMPERAN 3 x par jour
+ <br/>LAROXYL I.V. 25 mg sur la nuit
+ <br/>LANSOPRAZOLE 30 mg
+ <br/>LOVENOX 0.4ml : 1 inj le matin 
+ <br/>MOVENTIG 25mg le matin arrêté par la patiente car non efficace depuis 
+ <br/>1 mois
+ <br/>NORSET 15mg le soir arrêté par la patiente car prise difficile depuis 
+ <br/>1 mois
+ <br/>XANAX 0.25mg si besoin arrêté par la patiente car prise difficile 
+ <br/>depuis 1 mois
+ <br/>MICROLAX si besoin
+ <br/>CORTANCYL arrêté depuis 1 mois
+ <br/>NEURONTIN 800 mg matin midi et soir arrêté par la patiente car prise 
+ <br/>difficile depuis 1 mois
+ <br/>HALDOL en goutte : 5 gouttes matin midi et soir avant les repas prise 
+ <br/>difficile
+ <br/>ZOPHREN 8 mg matin et soir en si besoin
+ <br/>
+<br/>
+<u><b>BIOLOGIE du 30/03/2021</b></u>
+<br/>ionogramme sanguin normal, créatinine 46 μmol/l
+ <br/>calcium 2.32 mmol/l, albumine 38 g/l, calcium corrigé 2.38 mmol/l
+ <br/>Bilan hépatique : ASAT 108, ALAT 246, PAL 209, GGT 433, 5.6 μmol/l
+ <br/>Hb 12.2 G/dl, PNN 1200, lymphocytes 370, plaquettes 107.000/mm3
+ <br/>
+<br/>
+<u><b>EVALUATION MEDICO-SOIGNANTE DES SYMPT\'d4MES</b></u>
+<br/>Poids habituel : 72 kgs Poids actuel : 58 kgs (-15 kgs en 6 
+ <br/>mois)
+ <br/>TA : 13/8 mmHg Pouls : 80/min Saturation :98% en 
+ <br/>AA 
+ <br/>
+<br/>
+<b>Sur le plan douleur </b> : la patiente nous rapporte deux types de 
+ <br/>douleurs :
+ <br/>- Des douleurs en rapport avec la compression du bras gauche 
+ <br/>nociceptives et neuropathiques. Cette douleur est plutôt en 
+ <br/>amélioration.
+ <br/>- Des douleurs abdominales à type de spasmes crampes. Les bolus ne la 
+ <br/>soulage pas. Le SPASFON la soulage partiellement.
+ <br/>- Apparition de douleurs plutôt rachidiennes dorsolombaires qui se 
+ <br/>sont majorées sur ces dernières semaines et qui deviennent 
+ <br/>insomniantes.
+ <br/>
+<br/>
+<b>Sur le plan cardio-pulmonaire </b> : Pas de toux pas de crachats. Dyspnée 
+ <br/>à l'effort. Diminution du murmure vésiculaire sur l'hémichamp gauche. 
+ <br/>Probable épanchement pleural sur la base gauche.
+ <br/>
+<br/>
+<b>Sur le plan digestif </b> : nausées vomissements dans les suites mais 
+ <br/>également en dehors de la chimiothérapie. Anorexie. Probable 
+ <br/>candidose oro oecsophagienne que le médecin traitant a traitée par 
+ <br/>TRIFLUCAN pendant 10 jours avec une amélioration des symptômes. 
+ <br/>Transit ralenti régulier tous les 3 jours.
+ <br/>Abdomen souple indolore pas de masse ni d'hépatosplénomégalie 
+ <br/>palpable. Rares bruits hydroaériques.
+ <br/>
+<br/>
+<b>Sur le plan des muqueuses et du tégument </b> : langue qui reste 
+ <br/>dépapillée.
+ <br/>Palpation d'une adénopathie pré claviculaire gauche 2 cm nouvellement 
+ <br/>apparue
+ <br/>
+<br/>
+<b>Sur le plan neuro-psychologique </b> : Pas de déficit sensitivomoteur. 
+ <br/>Pas de dysurie. Pas de trouble sphinctérien. Douleur à la palpation 
+ <br/>du rachis à hauteur de T10 T12 et en lombaire haut.
+ <br/>Pas de trouble anxiodépressif exprimé mais patiente extrêmement 
+ <br/>fermée réservée.
+ <br/>
+<br/>
+<b>Mobilité/autonomie</b> : la patiente nous rapporte pouvoir faire des 
+ <br/>activités d'environ 1 à 2 heures sans somnolence. Elle nécessite en 
+ <br/>revanche de réaliser des siestes après ses activités pour récupérer. 
+ <br/>Elle reste autonome dans les gestes de la vie courante
+ <br/>
+<br/>
+<b>Evaluation des connaissances du patient et de son entourage :</b>
+<br/>Nous n'avons pas pu aborder ce point au cours de l'HDJ. En reprenant 
+ <br/>l'ensemble des consultations soins palliatifs et l'hospitalisation à 
+ <br/>l'UDEP il semble que l'anticipation d'une phase d'aggravation n'ait 
+ <br/>pas pu être verbalisée.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3> ET PROPOSITIONS</b></u>
+<br/>
+<b>Synthèse de l'état clinique </b> : 
+ <br/>Patiente de 41 ans prise en charge pour un cancer du sein 
+ <br/>métastatique ganglionnaire évoluant depuis mars 2018 en progression 
+ <br/>après plusieurs lignes de traitement dont certaines en rechallenge.
+ <br/>Nouvelle ligne par CMF débutée en décembre 2020. Patiente en possible 
+ <br/>progression clinique avec apparition d'une adénopathie 
+ <br/>pré-claviculaire gauche et majoration des douleurs osseuses 
+ <br/>rachidiennes. Elle doit refaire une imagerie en mai 2021. Nous 
+ <br/>avancerons cette imagerie en cas de non amélioration antalgique.
+ <br/>
+<br/>
+<b>Symptômes réfractaires et propositions :</b>
+<br/>- Douleurs rachidiennes en majoration possiblement en lien avec la 
+ <br/>progression de la maladie ou l'arrêt des traitements par la patiente 
+ <br/>elle-même. Nous réintroduisons CORTANCYL 20 mg/jour. Nous majorons le 
+ <br/>LAROXYL à 37,5 mg le soir avec 5 gouttes en cas de douleur la journée 
+ <br/>fois 3/jour
+ <br/>- Douleurs abdominales avec un transit très ralenti pour lequel nous 
+ <br/>prescrivons du DEBRIDAT et du DUPHALAC.
+ <br/>
+<br/>
+<br/>
+<b>Projets</b> : patiente à revoir d'ici 6 à 8 semaines. Nous rediscuterons 
+ <br/>de son dossier dans 15 jours trois semaines avec le comité HAD. En 
+ <br/>cas de non amélioration antalgique nous discuterons d'une majoration 
+ <br/>de la MORPHINE ou d'une rotation, la patiente étant sous morphine 
+ <br/>depuis plus de six mois. Nous discuterons également d'avancer 
+ <br/>l'imagerie.
+ <br/>
+<br/>
+<b>Tableaux des opioïdes</b> : (tableau extérieur)
+ <br/>
+<br/>+---------------------+---------+----------+--------------------+
+ <br/>| Molécule opioïde | Date de | Date de | Motif interruption |
+ <br/>| | début | fin | |
+ <br/>+=====================+=========+==========+====================+
+ <br/>| OXYCODONE pour | 06/2019 | 04/11/20 | Inefficace |
+ <br/>| douleurs cervicales | | | |
+ <br/>+---------------------+---------+----------+--------------------+
+ <br/>| PCA Morphine | 04/11/20| | |
+ <br/>+---------------------+---------+----------+--------------------+
+ <br/>
+<br/>
+<b>Copie à envoyer : </b> Au médecin traitant : DR BUSSY 
+ <br/>
+<br/>
+<b>Courrier rédigé avec un logiciel de reconnaissance vocale pouvant <br/>comporter quelques imperfections orthographiques.</b>
+<br/>
+<br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Christine MATEUS <br/>Le vendredi 2 avril 2021 à 13:38</b>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/> Le médecin autorise l'établissement des prescriptions médicales de 
+ <br/>transports sanitaires du patient, adaptées à sa situation médicale. 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_129129255" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CR Consultation du 2016-09-28</title>
+    <effectiveTime value="20160928000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20160928000000+0000"/>
+        <assignedAuthor>
+            <code code="UPO/332" displayName="UNITE DE PSYCHO_ONCOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Entretien ce jour avec Mme XXXXXX, en cours de traitement par 
+ <br/>chimiothérapie.
+ <br/>
+<br/>Rapporte quelques effets secondaires gênants, mais dans l'ensemble la 
+ <br/>tolérance reste correcte.
+ <br/>La patiente revient sur la perte de ses cheveux, et décrit avec 
+ <br/>grande émotion le moment de raser ses cheveux avant la chimiothérapie.
+ <br/>
+<br/>Comme d'habitude, elle tend à se défendre de sa propre émotion en la 
+ <br/>minimisant. Toutefois la patiente dispose de bonnes ressources 
+ <br/>d'adaptation qui lui permettent de gérer les difficultés qui se 
+ <br/>présentent.
+ <br/>
+<br/>Mme XXXXXX a commencé le Qi gong à Chevilly Larue ainsi que 
+ <br/>l'atelier arts plastiques, et s'est inscrite à la session de MBSR qui 
+ <br/>commence le 6 octobre. 
+ <br/>
+<br/>Elle revient longuement sur ses préoccupations anxieuses concernant 
+ <br/>le travail, les finances et la préparation de sa retraite, avec 
+ <br/>l'idée sous-jacente qu'il lui faut "se débrouiller seule". On repère 
+ <br/>une anxiété anticipatoire mais qui reste pour le moment contenue. 
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> : manifestations émotives qui restent tout à fait adaptées 
+ <br/>à la situation. 
+ <br/>Absence de signe psychopathologique inquiétant
+ <br/>
+<br/>Prochain RV le 27 octobre
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

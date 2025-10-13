@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122782963" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ONCOLOGIE GYNECOLOGIE - DR EMELINE COLOMBA</title>
+    <effectiveTime value="20190920000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190920000000+0000"/>
+        <assignedAuthor>
+            <code code="060/8" displayName="CTE 060 - GYNECOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>COMPTE RENDU DE CONSULTATION DE GYNECOLOGIE<br/><br/>Dicté par : </b> Docteur Emeline Colomba
+ <b><br/>Dicté le : </b> 19/09/2019 
+ <b><br/>Service : </b> 060-CTE 060 - GYNECOLOGIE 
+ <br/>
+<b>Type de document : </b> 060 CC CONSULTATION 
+ <br/>
+<b>Ref :</b> 793718 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : HLX/A
+ <b><br/></b>
+<br/>
+<b>Je vois ce jour à Madame XXXXXX, âgée de 67 ans, actuellement sous <br/>taxol hebdomadaire pour une deuxième rechute platine résistante d'un <br/>adénocarcinome séreux de haut grade inextirpable.<br/><br/>BRCA sauvage CA 125 informatif<br/><br/>Pour mémoire </b> : Patiente incluse dans ATALANTE C1 J1 de carboplatine 
+ <br/>gemcitabine le 18 janvier , 
+ <br/>C2, toxicité hématologique justifiant l'arrêt du J8 et de 
+ <br/>l'ajustement des doses de Carboplatine jusqu'à un AUC3, allergie au 
+ <br/>carboplatine à C3 avec protocole de désensibilisation.
+ <br/>Bonne réponse clinique et biologique.
+ <br/>
+<br/>
+<b>Progression clinique et biologique et radiologique avec majoration du <br/>syndrome de masse pelvien le 23 juillet 2019 justifiant la sortie du <br/>protocole et de débuter une chimiothérapie par Taxol hebdomadaire que <br/>la patiente réalise à domicile.<br/></b> Sortie du protocole Atalante après 1 cure d'entretien.
+ <b><br/></b>
+<br/>
+<b>Je la revois ce jour 2 mois après le début de Taxol hebdomadaire.<br/><br/>Sur le plan clinique : </b> l'appétit est meilleur.Amélioration des 
+ <br/>douleurs abdominale, ponction d'ascite espacées de tous les 15 jours 
+ <br/>à 3 semaines.
+ <br/>
+<b><br/>A noter ce matin chute sur le parking de Gustave Roussy avec <br/>traumatisme facial et épistaxis.<br/><br/></b> Une échographie abdominale réalisée le 5 septembre retrouve une 
+ <br/>volumineuse ascite.
+ <b><br/></b> Dernière ponction le 5 septembre de 3,300 millilitres
+ <br/>
+<br/>
+<br/>
+<b>A l'examen clinique :<br/></b> PS : 1 
+ <br/>Tension à 15/8 
+ <br/>Pouls 100/min 
+ <br/>Température à 37° 
+ <br/>Saturation à 99 % 
+ <br/>Poids à 63 kg 
+ <b><br/></b> Oedèmes des membres inférieurs bilatéraux prenant le godet 
+ <br/>potentiellement liés au traitement. 
+ <br/>Abdomen souple dépressible indolore, ascite 
+ <br/>Auscultation cardiopulmonaire claire et symétrique.
+ <br/>Aires ganglionnaires libres 
+ <br/>Il existe une oedème au niveau de la racine du nez 
+ <br/>Pas de céphalées, et pas d'argument pour un malaise.
+ <br/>Patiente bien orientée. 
+ <br/>Pas d'argument pour une HTIC. 
+ <br/>Pas de déficit sensitivo-moteur 
+ <br/>
+<b><br/>Sur le plan de la tolérance :<br/></b> Celle ci est tout à fait satisfaisante, pas de neuropathie, on 
+ <br/>note simplement des oedèmes des membres inférieurs de grade 1 - 2 
+ <br/>liés au traitement pour lequel le médecin traitant propose un 
+ <br/>traitement par diurétiques. 
+ <br/>
+<b><br/><br/>Sur le plan biologique : </b> hémoglobine du 17 à 10 grammes par 
+ <br/>décilitre, PNN à 2520, plaquettes à 340 000 créatinine à 60 bilan 
+ <br/>hépatique normal et CA125 à 355 versus 800.
+ <br/>
+<b><br/>Au total :<br/></b> Excellente tolérance du Taxol hebdomadaire avec une réponse 
+ <br/>biologique et clinique.
+ <br/>On poursuit selon les mêmes modalités : Taxol 80 mg/m2 J1 = J8 = 
+ <br/>J15, J1 = J28; 
+ <br/>Je reverraI Madame XXXXXX dans 4-6 semaines avec un premier 
+ <br/>scanner d'évaluation.
+ <br/>
+<br/>A noter que pour le traumatisme facial on l'adresse aux urgences 
+ <br/>orthopédiques du KB, la patiente préfère aller à celles de l'HPA, on 
+ <br/>lui remet un courrier. 
+ <br/>
+<br/>On rappelle qu'elle a été vue par le réanimateur et qu'il n'y avait 
+ <br/>pas de critère de gravité. 
+ <br/>
+<br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Emeline COLOMBA <br/>Le jeudi 19 septembre 2019 à 15:21</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

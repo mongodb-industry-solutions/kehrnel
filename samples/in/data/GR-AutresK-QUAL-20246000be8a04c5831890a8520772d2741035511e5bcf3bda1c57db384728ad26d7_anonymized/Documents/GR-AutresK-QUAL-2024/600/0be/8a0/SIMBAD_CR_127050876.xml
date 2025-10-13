@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127050876" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 173320200</title>
+    <effectiveTime value="20171128000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171128000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Pr A. Paci (47 30) <br/>Dr V. Poinsignon (61 92) </p>
+<p>Pr A. Bennaceur (40 65) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr T. Steimle (41 65) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Pr F. Griscelli (51 93) <br/>Dr N. Yin (40 62) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX José </p>
+<p>DEMANDE N° </p>
+<p>HommeNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>28/11/2017 08:10 </p>
+<p>Sexe : </p>
+<p>28/11/2017 10:00 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>RHONE D2 </p>
+<p> 3 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>CTE 010 - ORLPrescrit par : </p>
+<p>mardi 28 novembre 2017 </p>
+<p>Partiel </p>
+<p>Résultats <br/>Valeurs </p>
+<p>Précédentes <br/>Val. </p>
+<p>Valeurs de <br/><br/><br/>Référence </p>
+<p>Analyses Unités <br/><br/></p>
+<p>NON CONFORMITE <br/>NC pré-analytique _MA </p>
+<p>TR <br/>Prélèvement non parvenu </p>
+<p>NC pré-analytique _FR <br/>BA </p>
+<p>Demande dupliquée </p>
+<p>BIOCHIMIE <br/>Ionogramme </p>
+<p>Sodium Demande dupliquée 138 28/11/2017 09:00 LLX <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Potassium Demande dupliquée 4.0 28/11/2017 09:00 LLX <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Chlore Demande dupliquée 99 28/11/2017 09:00 LLX <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Reserve alcaline Demande dupliquée 31 28/11/2017 09:00 LLX <br/>Plasma hépariné - PEPC </p>
+<p>Protides Demande dupliquée 69 28/11/2017 09:00 LLX <br/>Plasma hépariné - Biuret </p>
+<p>Urée Demande dupliquée 5.8 28/11/2017 09:00 LLX <br/>Plasma hépariné - Uréase-GLDH </p>
+<p>Créatinine Demande dupliquée 46 28/11/2017 09:00 LLX <br/>Plasma hépariné - Enzymatique raccordée IDMS </p>
+<p>Calcium Demande dupliquée 2.27 28/11/2017 09:00 LLX <br/>Plasma hépariné - Arsenazo III </p>
+<p>Base calcul Cockroft ! 2.23 28/11/2017 09:00 _FR <br/>BA </p>
+<p>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Débit de Filtration Glomérulaire (MDRD) ! >60.0 28/11/2017 09:00 _FR <br/>BA </p>
+<p>Protéines <br/>CRP Demande dupliquée 199.6 28/11/2017 09:00 LLX <br/>Plasma hépariné - Immuno-turbidimétrie </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé par : Dr STEIMLE Thomas,Dr LACROIX Ludovic</p>
+<p></p>
+<p></p>
+<p>Résultats <br/></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>RHONE D2 </p>
+<p>Unités <br/><br/>Valeurs de <br/><br/><br/>Référence </p>
+<p>Patient : </p>
+<p>Val.Analyses <br/><br/>Valeurs </p>
+<p>Précédentes <br/></p>
+<p> 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>173320200 <br/><br/>XXXXXX josé </p>
+<br/>
+<p>CTE 010 - ORLPrescrit par : </p>
+<p>HEMATOLOGIE <br/>Numeration sanguine (Sang total sur EDTA) <br/><br/>Méthode : XN - SYSMEX </p>
+<p>Leucocytes Prélèvement nonparvenu </p>
+<p>10.1 28/11/2017 09:00 OST </p>
+<p>Hématies Prélèvement nonparvenu </p>
+<p>3.47 28/11/2017 09:00 OST </p>
+<p>Hémoglobine Prélèvement nonparvenu </p>
+<p>11.7 28/11/2017 09:00 IRE </p>
+<p>Hématocrite Prélèvement nonparvenu </p>
+<p>34.6 28/11/2017 09:00 OST </p>
+<p>VGM Prélèvement nonparvenu </p>
+<p>99.7 28/11/2017 09:00 OST </p>
+<p>TCMH Prélèvement nonparvenu </p>
+<p>33.7 28/11/2017 09:00 OST </p>
+<p>CCMH Prélèvement nonparvenu </p>
+<p>33.8 28/11/2017 09:00 OST </p>
+<p>IDG Prélèvement nonparvenu </p>
+<p>14.0 28/11/2017 09:00 OST </p>
+<p>Plaquettes Prélèvement nonparvenu </p>
+<p>711.0 28/11/2017 09:00 IRE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé par : Dr STEIMLE Thomas,Dr LACROIX Ludovic</p>
+<p></p>
+<p></p>
+<p>Résultats <br/></p>
+<p>Page 3 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>RHONE D2 </p>
+<p>Unités <br/><br/>Valeurs de <br/><br/><br/>Référence </p>
+<p>Patient : </p>
+<p>Val.Analyses <br/><br/>Valeurs </p>
+<p>Précédentes <br/></p>
+<p> 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<p>173320200 <br/><br/>XXXXXX josé </p>
+<br/>
+<p>CTE 010 - ORLPrescrit par : </p>
+<p>Formule <br/>Polynucléaires Neutrophiles Prélèvement non </p>
+<p>parvenu </p>
+<p>79.6 28/11/2017 09:00 IRE </p>
+<p>OST8.1 28/11/2017 09:00 ( 1.8 - 7.5 )10*9/Lsoit Prélèvement nonparvenu </p>
+<p>Polynucléaires Eosinophiles Prélèvement nonparvenu </p>
+<p>1.7 28/11/2017 09:00 IRE </p>
+<p>OST0.2 28/11/2017 09:00 ( 0.0 - 0.5 )10*9/Lsoit Prélèvement nonparvenu </p>
+<p>Polynucléaires Basophiles Prélèvement nonparvenu </p>
+<p>0.3 28/11/2017 09:00 IRE </p>
+<p>OST0.0 28/11/2017 09:00 ( 0.0 - 0.3 )10*9/Lsoit Prélèvement nonparvenu </p>
+<p>Lymphocytes Prélèvement nonparvenu </p>
+<p>8.9 28/11/2017 09:00 IRE </p>
+<p>OST0.9 28/11/2017 09:00 ( 1.0 - 4.0 )10*9/Lsoit Prélèvement nonparvenu </p>
+<p>Monocytes Prélèvement nonparvenu </p>
+<p>9.5 28/11/2017 09:00 IRE </p>
+<p>OST1.0 28/11/2017 09:00 ( 0.1 - 1.0 )10*9/Lsoit Prélèvement nonparvenu </p>
+<p>IDP Prélèvement nonparvenu </p>
+<p>10 28/11/2017 09:00 OST </p>
+<p>VMP Prélèvement nonparvenu </p>
+<p>9.7 28/11/2017 09:00 OST </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé par : Dr STEIMLE Thomas,Dr LACROIX Ludovic</p>
+<p></p>
+<ul>
+<li>NON CONFORMITE</li>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Ionogramme</li>
+<li>Protéines</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/><br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

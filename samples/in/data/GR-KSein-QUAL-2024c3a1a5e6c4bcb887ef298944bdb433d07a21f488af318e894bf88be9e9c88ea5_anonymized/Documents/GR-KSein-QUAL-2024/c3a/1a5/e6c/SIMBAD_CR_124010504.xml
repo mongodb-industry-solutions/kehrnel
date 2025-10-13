@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124010504" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20190315000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190315000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Compte rendu générique de SENOLOGIE<br/><br/>Dicté par : </b> Docteur Meriem Mokdad Adi
+ <b><br/>Dicté le : </b> 14/03/2019 
+ <b><br/>Service : </b> 050-CTE 050 - SEIN 
+ <br/>
+<b>Type de document : </b> 050 CC Générique 
+ <br/>
+<b>Ref :</b> 629535 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : 
+ <b>ORC<br/><br/></b> Patiente vue ce jour seule pour la prise en charge d'une 
+ <br/>récidive en mars 2018 d'un cancer du sein gauche diagnostiqué 
+ <br/>initialement en 2015 traité à Bergonié par chimiothérapie, chirurgie 
+ <br/>puis radiothérapie au niveau axillaire, CMI et sus claviculaire, 
+ <br/>triple négatif et actuellement en récidive ganglionnaire 
+ <br/>susclaviculaire et axillaire.
+ <br/>
+<br/>PETscanner le 20 décembre qui montre, comparativement à l'examen 
+ <br/>précédent de septembre 2018, un aspect de réévolutivité au niveau 
+ <br/>ganglionnaire sus et sous-claviculaire gauche et probablement 
+ <br/>axillaire gauche.
+ <br/>
+<br/>Pas d'autre localisation mise en évidence.
+ <br/>
+<br/>Echographie avec cytoponction au niveau ganglionnaire
+ <br/>susclaviculaire le plus volumineux le 21/12 :
+ <br/>Présence de cellules tumorales malignes métastatiques.
+ <br/>L'aspect est compatible avec une origine mammaire.
+ <br/>
+<br/>Elle a débuté un traitement par TALAZOPARIB le 12/01.
+ <br/>La patiente a été hospitalisée à Cognacq Jay en janvier 2019 : 
+ <br/>diminution de 47% du 
+ <br/>lymphoedème gauche.
+ <br/>
+<br/>
+<u><b>CONSULTATION CE JOUR <br/><br/></b></u> La patiente va bien
+ <br/>PS:0.
+ <br/>Bonne tolérance du traitement.
+ <br/>La patiente constate une augmentation des nodules sous cutanés au 
+ <br/>niveau basicervical gauche.
+ <br/>A l'examen clinique : palpation des nodules basicervicaux gauches : 
+ <br/>1 cm au niveau basithoracique et un second sous claviculaire d'1,5cm.
+ <br/>
+<br/>Bilan biologique le 13/03 correct et celui du 15/02 avec CA15-3 à 
+ <br/>25.90
+ <u><b><br/><br/>EN PRATIQUE :<br/><br/></b></u> Je reverrai la patiente le 4 avril avec les résultats du TEP prévu à 
+ <br/>GR et un bilan biologique à GR également.
+ <br/>
+<br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Meriem MOKDAD ADI <br/>Le jeudi 14 mars 2019 à 10:27 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

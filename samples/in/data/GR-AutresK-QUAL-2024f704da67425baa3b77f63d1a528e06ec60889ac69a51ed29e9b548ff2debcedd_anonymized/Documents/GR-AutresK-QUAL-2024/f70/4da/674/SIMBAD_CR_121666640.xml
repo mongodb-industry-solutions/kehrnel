@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121666640" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 200630594</title>
+    <effectiveTime value="20200303000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200303000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Dr J. Delahousse (61 92) <br/>Pr A. Paci (47 30) </p>
+<p>Dr A. Arbab (41 65) <br/>Pr A. Bennaceur (40 65) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Dr E. Gallois (40 62) <br/>Pr F. Griscelli (51 93) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>XXXXXX </p>
+<p>FémininNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>03/03/2020 12:53 </p>
+<p>Sexe : </p>
+<p>03/03/2020 12:53 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>Nom de naissance : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>HOPITAL DE JOUR MEDECINE </p>
+<p> 2 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>mardi 03 mars 2020 </p>
+<p>Complet </p>
+<p>HEMOSTASE </p>
+<p> RENSEIGNEMENTS CLINIQUES 1er Traitement prescInnohep </p>
+<p>Posologie presc0.5/j </p>
+<p> BILAN DE COAGULATION <br/>Taux de Prothrombine 99 % ( 70 - 100 )89 03/02/2020 08:00 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>Temps de Quick (Témoin = 13s) 13.2 s 14.1 03/02/2020 08:00 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>INR 1.0 1.1 03/02/2020 08:00 NDP </p>
+<p>0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>TCK (Témoin = 28s) 27 s 26 03/02/2020 08:00 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK Ratio 1.0 ( < 1.2 )0.9 03/02/2020 08:00 NDP </p>
+<p>HEMATOLOGIE </p>
+<p> NUMERATION SANGUINE (SANG TOTAL SUR EDTA) <br/>MÉTHODE : XN - SYSMEX </p>
+<p>Leucocytes 13.7 10*9/L ( 4.0 - 10.0 )3.6 18/02/2020 12:30 FKR </p>
+<p>Hématies 3.90 10*12/L ( 4.00 - 5.20 )3.31 18/02/2020 12:30 SAE </p>
+<p>Hémoglobine 10.4 g/100mL ( 11.5 - 15.0 )9.1 18/02/2020 12:30 SAE </p>
+<p>Hématocrite 33.7 % ( 34.0 - 45.0 )28.6 18/02/2020 12:30 SAE </p>
+<p>VGM 86.4 μ3 ( 75.0 - 96.0 )86.4 18/02/2020 12:30 SAE </p>
+<p>TCMH 26.7 pg/cel ( 24.0 - 33.0 )27.5 18/02/2020 12:30 SAE </p>
+<p>CCMH 30.9 g/100mL ( 32.0 - 36.0 )31.8 18/02/2020 12:30 SAE </p>
+<p>IDG 18.0 % ( 11.0 - 15.0 )18.3 18/02/2020 12:30 SAE </p>
+<p>Plaquettes 551.0 10*9/L 443.0 18/02/2020 12:30 SAE </p>
+<p>Impédance (150 - 400 x 10^9/L) </p>
+<p> FORMULE <br/>Polynucléaires Neutrophiles 84.8 % 70.7 18/02/2020 12:30 FKR </p>
+<p>FKR2.6 18/02/2020 12:30 ( 1.5 - 7.0 )10*9/Lsoit 11.6 </p>
+<p>Polynucléaires Eosinophiles 0.1 % 0.0 18/02/2020 12:30 SAE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 03/03/2020 à 14:50 par : Dr PRADON Caroline,Dr SAADA Véronique</p>
+<p></p>
+<p></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>HOPITAL DE JOUR MEDECINEPatient : 2 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>SAE0.0 18/02/2020 12:30 ( 0.0 - 0.6 )10*9/Lsoit 0.0 </p>
+<p>Polynucléaires Basophiles 0.4 % 0.5 18/02/2020 12:30 SAE </p>
+<p>SAE0.0 18/02/2020 12:30 ( 0.0 - 0.1 )10*9/Lsoit 0.1 </p>
+<p>Lymphocytes 9.4 % 17.8 18/02/2020 12:30 SAE </p>
+<p>SAE0.6 18/02/2020 12:30 ( 1.2 - 4.0 )10*9/Lsoit 1.3 </p>
+<p>Monocytes 5.3 % 11.0 18/02/2020 12:30 SAE </p>
+<p>SAE0.4 18/02/2020 12:30 ( 0.2 - 0.8 )10*9/Lsoit 0.7 </p>
+<p>Formule FKRAutomate </p>
+<p>IDP 8 8 18/02/2020 12:30 SAE </p>
+<p>VMP 8.4 μ3 ( 7.5 - 11.0 )8.5 18/02/2020 12:30 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 03/03/2020 à 14:50 par : Dr PRADON Caroline,Dr SAADA Véronique</p>
+<p></p>
+<ul>
+<li>HEMOSTASE</li>
+<ul>
+<li>Renseignements cliniques</li>
+<li>Bilan de coagulation</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

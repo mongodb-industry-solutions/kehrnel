@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125547667" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION DE RADIOTHERAPIE</title>
+    <effectiveTime value="20180723000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180723000000+0000"/>
+        <assignedAuthor>
+            <code code="RTE/414" displayName="RADIOTHERAPIE EXTERNE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>CONSULTATION LONGUE ANNONCE DE PRE-RADIOTHERAPIE EXTERNE<br/><br/>Dicté par : </b> Docteur Valentine Martin
+ <b><br/>Dicté le : </b> 05/07/2018 
+ <b><br/>Service : </b> RTE-RADIOTHERAPIE EXTERNE 
+ <br/>
+<b>Type de document : </b> RTE CC CLA2 
+ <br/>
+<b>Ref :</b> 448991 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant : </b> XXXXXX 
+ <b><br/>Date de naissance : </b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire </b> : XTH/AMD/A
+ <br/>
+<br/>Je vois ce jour en consultation Mr XXXXXX, âgé de 67 ans, accompagné 
+ <br/>de son épouse, pour radiothérapie splénique dans le cadre d'une 
+ <br/>myélofibrose.
+ <br/>
+<br/>
+<u><b>ANTECEDENTS MEDICAUX PERSONNELS<br/></b></u>
+<b><br/></b> Splénomégalie à 22 cm découverte en février 2012, dans un contexte 
+ <br/>de cavernome portal avec varices oesophagiennes.
+ <br/>Adénocarcinome prostatique, diagnostiqué le 15 novembre 2011, traité 
+ <br/>par radiothérapie exclusive du 26 février au 7 juin 2018 à Fort de 
+ <br/>France (prostate 76 Gy, pelvis 53 Gy).
+ <br/>Thrombose portale diagnostiquée en septembre 2017, traitée par 
+ <br/>INNOHEP à dose curative puis LOVENOX à dose préventive.
+ <br/>
+<br/>
+<u><b>ANTECEDENTS CHIRURGICAUX<br/><br/></b></u> Pas d'antécédent chirurgical connu.
+ <br/>
+<br/>
+<u><b>TRAITEMENT ACTUEL<br/><br/></b></u> JAKAVI 20 mg 2x/jour depuis juin 2017 associé à une corticothérapie 
+ <br/>depuis février 2018 40 mg/jour 
+ <br/>EPO toutes les 3 semaines 
+ <br/>LOVENOX 04 ml/jour
+ <br/>OMEPRAZOLE 20 mg/jour
+ <br/>PARACETAMOL si besoin
+ <br/>LAMALINE pour les douleurs au niveau de l'épaule droite.
+ <br/>
+<u><br/><b>MODE DE VIE</b></u>
+<b><br/><br/></b> Vit en Martinique.
+ <br/>Retraité depuis 2006 d'une entreprise de transports.
+ <br/>Marié, 3 enfants dont un décédé d'un AVP.
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE</b></u>
+<b> <br/><br/></b> Diagnostic en avril 2012 d'un cavernome portal avec présence d'une 
+ <br/>splénomégalie non chiffrée et la présence de varices oesophagiennes 
+ <br/>de grade I-II.
+ <br/>Apparition en 2015 d'une hyperleucocytose associée à une myélémie et 
+ <br/>la présence de dacryocytes et de 4% de blastes circulants. 
+ <br/>BOM (date non connue et examen non disponible dans le dossier) : 
+ <br/>hyperplasie mégacaryocytaire avec présence de mégacaryocytes 
+ <br/>dystrophiques regroupés en Cluster associée à une hypoplasie 
+ <br/>érythroblastique et une fibrose médullaire non gradée associée à une 
+ <br/>ostéosclérose grade III. Absence d'excès de blastes.
+ <br/>Caryotype juin 2017 : pseudo-diploïde avec une del13 (compte-rendu 
+ <br/>non disponible dans le dossier), à priori présence d'une mutation 
+ <br/>JAK2 V617F positive. 
+ <br/>
+<br/>Il s'agit donc d'une myélofibrose primitive JAK2 V617F positive.
+ <br/>Traitement par PLAVIX et HYDREA à partir de janvier 2017 puis JAKAVI 
+ <br/>20 mg x2/jour à partir de juillet 2017.
+ <br/>Le JAKAVI a permis une reprise du poids (le patient avait perdu plus 
+ <br/>de 20 Kg) ainsi qu'une amélioration globale de l'état général.
+ <br/>Introduction d'une corticothérapie à 1mg/Kg/jour le 30.01.18 devant 
+ <br/>une composante hémolytique de l'anémie. 
+ <br/>Par ailleurs, le patient est sous EPO ARANESP 500 μg toutes les trois 
+ <br/>semaines, date de début non précisée.
+ <br/>
+<br/>Une allogreffe de CSP est prévue à Gustave Roussy en août 2018 
+ <br/>précédée d'une radiothérapie splénique. 
+ <br/>
+<br/>
+<u><b>CONSULTATION CE JOUR<br/><br/></b></u> OMS 2.
+ <br/>Asthénie et quelques vertiges.
+ <br/>Absence de douleurs.
+ <br/>Transit normal.
+ <br/>Bouffées de chaleur dans le contexte de castration chimique de son 
+ <br/>adénocarcinome prostatique. 
+ <br/>Splénomégalie à plus de 4 travers de doigt, sensible à la palpation.
+ <br/>Le reste de la palpation abdominale est sans particularité.
+ <br/>Auscultation cardiaque : tachycarde régulière sans souffle.
+ <br/>Auscultation pulmonaire sans particularités.
+ <br/>Absence de syndrome hémorragique.
+ <br/>Reste de l'examen clinique sans particularités.
+ <br/>
+<br/>Dernier bilan biologique en date de 3 juillet 2018 : leucocytes 9 900 
+ <br/>dont polynucléaire neutrophile 4 300 et lymphocyte 800.
+ <br/>Hémoglobine 8,5 g/dL.
+ <br/>Plaquettes 231 000/mm3.
+ <br/>
+<br/>
+<u><b>EN PRATIQUE<br/></b></u>
+<b> <u><br/></u></b> Radiothérapie splénique à la dose de 6 Gy en 10 fractions de 0,6 Gy.
+ <br/>
+<br/>Le déroulement ainsi que les effets secondaires potentiels, à savoir 
+ <br/>la thrombopénie, sont expliqués au patient qui les comprend et les 
+ <br/>accepte.
+ <br/>Scanner de centrage prévu le 17/07/2018 pour un début de traitement 
+ <br/>le 23 juillet 2018. 
+ <br/>On récupèrera à le dossier de radiothérapie prostatique de la 
+ <br/>Martinique.
+ <br/>Par la suite, Mr XXXXXX recevra une TBI 2 Gy avant sa greffe. 
+ <br/>
+<br/>
+<b>_________________________________________________<br/>Signé électroniquement par Docteur Valentine MARTIN <br/>Le lundi 23 juillet 2018 à 10:56 </b>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124215459" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ORL - Interne ORL</title>
+    <effectiveTime value="20190207000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190213000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>DR MARTHAN Jessica</b></u>
+<b> <br/><br/>Je vois cette patiente qui est suivie pour un cancer du sein avec <br/>récidive hépatique et osseuse diagnostiqué initialement en 2016.<br/>Elle est sous 3ème ligne d'ERIBULINE. </b>
+<br/>
+<br/>Dans le suivi de son cancer, elle réalise des TEP-scanners, un en été 
+ <br/>2018 et un le 10/01/19 qui retrouve une fixation oropharyngée et des 
+ <br/>adénopathies cervicales qui apparaissent après chaque injection 
+ <br/>d'ERIBULINE sans fièvre.
+ <br/>
+<br/>Une IRM oropharyngée a été réalisée et ne retrouve rien d'anormal au 
+ <br/>niveau oroharyngé, ni des adénopathies qui sont inexistantes à l'IRM.
+ <br/>En effet, Madame XXXXXX a été traitée par antibiothérapie après son 
+ <br/>Pet-scan du 10/01/19 et les ganglions ont disparu depuis.
+ <br/>
+<br/>A l'examen nasofibroscopique : je ne retrouve aucune lésion du 
+ <br/>carrefour oropharyngé.
+ <br/>En bouche : pas de lésion également, pas d'érythème, pas de lésion à 
+ <br/>type d'angine. 
+ <br/>Devant l'IRM rassurante et l'examen rassurant, devant la régression 
+ <br/>des adénopathies je lui ai dit de contrôler dans 3 mois, elle a un 
+ <br/>Tep-scanner prévu le 20/03/19. 
+ <br/>
+<br/>
+<b>Il faudrait lui redonner un RDV avec un senior d'ORL le Dr HAROUN <br/>pour contrôle et surveillance de cette fixation du Tep-scanner.</b>
+<br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b> Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>15/02/2019 10:30 HJM MKD HDJ CHIMIO CHL 
+ <br/> 10:35 HJM MKD C HDJ SANS CHL 
+ <br/>18/02/2019 16:30 UPO CCV C UPO CCV 
+ <br/>01/03/2019 11:30 HJM MKD HDJ CHIMIO CHL 
+ <br/> 11:35 HJM MKD C HDJ CHL 
+ <br/>08/03/2019 10:30 HJM MKD HDJ CHIMIO CHL 
+ <br/> 10:35 HJM MKD C HDJ CHL 
+ <br/>11/03/2019 09:45 050 MKD CHIM SENO MKD L 
+ <br/>20/03/2019 09:30 050 MKD BILAN LOG 
+ <br/> 10:00 050 MKD MN INJ TEP FDG 
+ <br/> 11:30 050 MKD MN TEP FDG 050 
+ <br/>22/03/2019 09:30 HJM MKD HDJ CHIMIO CHL 
+ <br/> 09:35 HJM MKD C HDJ CHL 
+ <br/>25/03/2019 09:30 050 MKD CHIM SENO MKD L 
+ <br/>29/03/2019 10:30 ORL FNH C ORL FNH 
+ <br/> 15:00 HJM MKD HDJ CHIMIO CHL 
+ <br/> 15:05 HJM MKD C HDJ CHL 
+ <br/>12/04/2019 10:00 HJM MKD HDJ CHIMIO CHL 
+ <br/> 10:05 HJM MKD C HDJ CHL 
+ <br/>17/04/2019 11:45 C0B BRD C NUTR BRD CHL 
+ <br/>19/04/2019 10:00 HJM MKD HDJ CHIMIO CHL 
+ <br/> 10:05 HJM MKD C HDJ CHL 
+ <br/>03/05/2019 10:00 HJM MKD HDJ CHIMIO CHL 
+ <br/> 10:05 HJM MKD C HDJ CHL 
+ <br/>10/05/2019 10:00 HJM MKD HDJ CHIMIO CHL 
+ <br/> 10:05 HJM MKD C HDJ CHL 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

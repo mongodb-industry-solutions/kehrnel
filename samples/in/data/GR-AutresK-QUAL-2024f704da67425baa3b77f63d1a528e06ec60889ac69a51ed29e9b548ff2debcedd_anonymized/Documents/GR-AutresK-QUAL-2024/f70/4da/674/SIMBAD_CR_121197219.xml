@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121197219" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Traçabilité DMI</title>
+    <effectiveTime value="20200324000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200520000000+0000"/>
+        <assignedAuthor>
+            <code code="BCH/476" displayName="BLOC CHIRURGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Date 24/03/2020 </p>
+<p>XXXXXX XXXXXX </p>
+<p>Né(e) le : XXXXXX </p>
+<p>IPP : XXXXXX </p>
+<p>Vous trouverez ci-dessous les informations relatives aux DMI posés : </p>
+<p> LISTE DES DMI IMPLANTÉS </p>
+<p>Nom : </p>
+<p>Date de pose : 24/03/2020 </p>
+<p>Fournisseur Descriptif du produit <br/>N° de Lot </p>
+<p>N° de série PoseurService de pose </p>
+<p>MELANGEUR ET INJECTEUR DE CIMENT VCIK REF <br/>PHAR012287 </p>
+<p>STRYKER FRANCE </p>
+<p>IMPÉtat : </p>
+<br/>
+<p>TSLDMI450 </p>
+<p>RI_SERVICE </p>
+<p>CIMENT BIOMET V REF PHAR011641THIEBAUD </p>
+<p>IMPÉtat : </p>
+<p>832BAH1705 </p>
+<p>TSLDMI450 </p>
+<p>RI_SERVICE </p>
+<br/>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

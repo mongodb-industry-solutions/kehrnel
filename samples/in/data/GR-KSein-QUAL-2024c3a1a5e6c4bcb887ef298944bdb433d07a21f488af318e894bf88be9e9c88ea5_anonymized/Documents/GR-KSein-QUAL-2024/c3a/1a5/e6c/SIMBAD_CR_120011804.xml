@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120011804" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ANESTHESIE - Docteur Jamie ELMAWIEH</title>
+    <effectiveTime value="20201116000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201116000000+0000"/>
+        <assignedAuthor>
+            <code code="ANS/286" displayName="ANESTHESIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b> VUE SANS DOSSIER MEDICAL <br/><br/>DEPARTEMENT D'ANESTHESIE - COMPTE RENDU DE CONSULTATION D'ANESTHESIE <br/>AMBULATOIRE<br/><br/>Dicté par : </b> Docteur Jamil Elmawieh
+ <b><br/>Dicté le : </b> 16/11/2020 
+ <b><br/>Service : </b> ANS-ANESTHESIE 
+ <br/>
+<b>Type de document : </b> ANS CC ANES AMBU 
+ <br/>
+<b>Ref :</b> 1159824 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : LND 
+ <br/>
+<br/>Patiente de 41 ans adressée en consultation d'anesthésie ce jour.
+ <br/>
+<br/>
+<u>Intervention prévue</u> : colo/fibro le 23/11/20
+ <br/>
+<br/>
+<u>Diagnostic</u> : douleurs gastriques
+ <br/>
+<br/>
+<u><b>ANTECEDENTS CHIRURGICAUX</b></u>
+<br/>- Mastectomie gauche + curage en 2016
+ <br/>
+<br/>Les anesthésies se sont déroulées sans problème particulier.
+ <br/>
+<br/>
+<u><b>ANTECEDENTS MEDICAUX</b></u>
+<br/>- Récidive tumorale du sein gauche avec douleurs neuropathiques 
+ <br/>épaule gauche suite à un syndrome compressif tumoral
+ <br/>- Hospitalisée récemment pour la prise en charge antalgique, sortie 
+ <br/>avec PCA de morphine à domicile
+ <br/>
+<br/>Tabac : O
+ <br/>OH : O
+ <br/>
+<br/>
+<u><b>ALLERGIE/INTOLERANCES<br/></b></u> PENICILLINE
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE</b></u>
+<br/>Taille : 1m65
+ <br/>Poids : 70 kg (perte récente de 7 kg en 2 mois)
+ <br/>TA : 125/80
+ <br/>FC : --- 
+ <br/>SpO2 :---
+ <br/>
+<br/>EVA = 2 
+ <br/>
+<br/>Pas de syndrome hémorragique clinique
+ <br/>Auscultation cardio-pulmonaire normale
+ <br/>NYHA II, >4METs 
+ <br/>
+<br/>
+<u><b>GESTION DES VOIES AERIENNES</b></u>
+<br/>Mallampati : I
+ <br/>DTM > 6cm
+ <br/>OB > 3cm
+ <br/>Repères de JIC : Ok
+ <br/>Dents fragiles signalées : +
+ <br/>
+<br/>
+<u><b>BILAN PRE-OP DEMANDE</b></u>
+<br/>Aucun.
+ <br/>
+<br/>
+<u><b>TRAITEMENT<br/></b></u> - BICARBONATE DE SODIUM 3-6 bains de bouche par jour
+ <br/>- LANSOPRAZOLE 30mg le soir
+ <br/>- PARACETAMOL 1g toutes les 8h
+ <br/>- GABAPENTINE 400mg matin midi et soir
+ <br/>- Si accès douloureux : AMITRYPTYLINE 5 gouttes toutes les 4h
+ <br/>- PRIMPERAN 10mg x3/J en si besoin
+ <br/>- ZOPHREN 8mg x2/J avec la chimio pendant 3 jours
+ <br/>- MOVICOL 1 à 2 sachets 3 fois par jour en si besoin 
+ <br/>
+<br/>En IV:
+ <br/>- Chlorhydrate de morphine en PCA : débit continu 5mg/h, bolus 6mg 
+ <br/>toutes les 10 min si besoin
+ <br/>- AMITRYPTYLINE 25mg en 3h le soir dans 100 mL NaCl
+ <br/>
+<br/>
+<b> Les traitements sont à continuer jusqu'au jour de l'intervention sauf <br/>mention spécifique. </b>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<br/>Pas de contre-indication anesthésique à l'intervention prévue.
+ <br/>ASA II
+ <br/>
+<b>RISQUE ATNC : C<br/></b>
+<br/>AG AIVOC propofol/ Protocole vert / prise en charge des V.A.S. par 
+ <br/>lunettes O2
+ <br/>
+<br/>Prévention NVPO peropératoire par DEXAMETHASONE + ONDANSETRON
+ <br/>Patient debout
+ <br/>
+<b>OK ambulatoire / Accompagnant ok / dossier donné / ordonnance <br/>d'antalgiques donnée</b>
+<br/>
+<br/>
+<u><b>Règles de jeûne préopératoire :<br/></b></u> - Solides jusqu'à H-6
+ <br/>- Nutrition entérale jusqu'à H-6
+ <br/>- Boissons (liquides clairs sans alcool) jusqu'à H-2
+ <br/>
+<br/>
+<u><b>Visite préanesthésique</b></u> : 
+ <br/>
+<u><b><br/></b></u> Dr.......................... Date :....................
+ <br/>
+<br/>Nouvelle information : 0 Oui 0 Non
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Jamil ELMAWIEH <br/>Le lundi 16 novembre 2020 à 11:45</b>
+<br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

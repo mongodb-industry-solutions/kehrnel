@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124181685" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>Résumé d'hospitalisation en Hôpital de Jour Chirurgical</title>
+    <effectiveTime value="20190219000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190219000000+0000"/>
+        <assignedAuthor>
+            <code code="PCA/465" displayName="HOPITAL DE JOUR CHIRURGICAL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Admission ce jour en Ambulatoire Express
+ <u><b><br/><br/>Rappel clinique</b></u> :
+ <br/>Patiente présentant des rectorragies modérées sur un terrain 
+ <br/>d'épistaxis à répétition.
+ <br/>
+<br/>
+<b>Motif de l'hospitalisation</b> : ENDO
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS CHIRURGICAUX</b></u>
+<br/>- coelioscopie en mars 2017 et août 2017
+ <br/>- PAC 
+ <br/>- ponction d'ascite / pleurale 
+ <br/>- debulking simple (hystérectomie / annexectomie) en octobre 2017
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS MEDICAUX/CARDIO-VASCULAIRES</b></u>
+<br/>- thrombose saphène 
+ <br/>
+<br/>
+<b>Intitulé de l'intervention</b> : GASTROSCOPIE 
+ <br/>
+<br/>
+<b>Nom de l'opérateur :</b> Docteur BURTIN
+ <br/>
+<b>Nom de l'anesthésiste :</b> Docteur BILLARD
+ <br/>
+<b>Mode anesthésique :</b> AG
+ <br/>
+<br/>Surveillance post-opératoire : simple
+ <br/>
+<br/>
+<b> En cas de problème, veuillez contacter :<br/>* Administratif : 01.42.11.56.25<br/>* Infirmière de régulation (la semaine de 8h30 à 17h) : 01.42.11.67.31<br/>* Service des Urgences (le soir et weekend) : 01.42.11.50.00<br/></b>
+<br/>Score de douleur à la sortie : 0/4
+ <br/>Score des NVPO à la sortie : 1/5
+ <br/>
+<br/>Temps de surveillance : 1h30
+ <br/>Heure de sortie : 12h30
+ <br/>Le/La patient(e) sort ce jour pour son domicile.
+ <br/>
+<br/>
+<u><b>Documents remis à la sortie</b></u>
+<b> </b> :
+ <br/> - Bulletin de situation (X 2)
+ <br/> - Compte rendu opératoire
+ <br/> - Rapport anesthésique
+ <br/> - Résumé d'hospitalisation 
+ <br/>
+<u><b><br/></b></u>
+<b> Prochain rendez-vous :<br/> <br/> LISTE RENDEZ-VOUS PREVUS<br/> <br/> Date Heure Demandeurs Libellé d'acte * commentaires<br/><br/>20/02/2019 08:15 060 PPR UR <br/> =UR BANDELETTES<br/> 08:30 060 PPR CHIM GYNE PPR <br/>21/02/2019 10:30 DMD FXB HDJ CHIMIO AF <br/> 10:30 060 ECB HDJ RV ET <br/>01/03/2019 10:00 DMD FXB HDJ CHIMIO AF <br/>08/03/2019 14:30 DMD FXB HDJ CHIMIO AF <br/>13/03/2019 10:35 060 ECB C GYNE AAY <br/>22/03/2019 08:00 DMD FXB HDJ CHIMIO AF <br/>29/03/2019 10:00 DMD FXB HDJ CHIMIO AF <br/>03/05/2019 14:30 060 ECB TDM TAP ET </b>
+<br/>
+<br/>
+<br/>
+<u> Document imprimé sur la page d'identification du dossier patient de <br/>Gustave Roussy et remis en mains propres au patient le <br/>jour de l' intervention</u>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

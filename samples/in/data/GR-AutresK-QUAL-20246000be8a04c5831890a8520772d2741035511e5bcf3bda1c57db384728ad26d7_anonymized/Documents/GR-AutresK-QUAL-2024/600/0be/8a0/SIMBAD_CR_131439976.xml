@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_131439976" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM THORAX O TDM OROPHARYNX</title>
+    <effectiveTime value="20150130000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20150202000000+0000"/>
+        <assignedAuthor>
+            <code code="260/45" displayName="RADIODIAGNOSTIC"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur KASBI MYRIAM
+ <br/>
+<br/>Destinataire : CTE 010 - ORL
+ <br/> DR TAO Yun Gan
+ <br/>
+<br/>N° Examen : 688
+ <br/>
+<br/>
+<br/>
+<u><b>SCANNER CERVICAL ET THORACIQUE<br/> </b></u>
+<br/>
+<br/>
+<b>Indication</b>
+<br/>
+<br/> \sa200\lang12 Patient traité par radio-chimiothérapie pour un cancer 
+ <br/>oropharyngé vélaire.
+ <br/>Scanner de contrôle afin d'évaluer la nécessité d'un curage cervical 
+ <br/>droit.
+ <br/>
+<br/>
+<b>Technique :</b>
+<br/>Produit de contraste : 80 cc de Xenetix + 55 cc.
+ <br/>
+<br/>
+<u>Au niveau cervical :</u>
+<br/>Acquisition hélicoïdale (32 x 0,625, pitch 0,5), reconstructions de
+ <br/>coupes de 1mm jointives, axiales, coronales et sagittales (filtres
+ <br/>parties molles et os).
+ <br/>DLP : 277 mGy.cm.
+ <br/>
+<br/>
+<u>Au niveau thoracique :</u>
+<br/>Acquisition hélicoïdale (64 x 0,625mm, pitch 0,9), reconstructions de
+ <br/>coupes de 5mm jointives, axiales, coronales et sagittales (filtre
+ <br/>médiastinal), axiales (filtre parenchymateux pulmonaire),
+ <br/>reconstructions de coupes axiales MIP d'épaisseur de 8mm tous les 5mm.
+ <br/>DLP : 118 mGy.cm.
+ <br/>
+<br/>
+<br/>
+<b>Résultat<br/><br/></b> Comparaison avec le précédent examen du 11 juillet 2014.
+ <br/>
+<br/>
+<u> A l'étage cervical</u>
+<b> :<br/></b> Nette diminution en taille de l'adénomégalie sous-angulo-maxillaire 
+ <br/>droite. Elle mesure ce jour 12,5 \'d7 9 mm versus 28,5 par 23 mm sur 
+ <br/>le scanner de juillet 2014.
+ <br/>Adénopathie de la chaîne II gauche précédemment mesurée à 10 \'d7 16 
+ <br/>mm, ayant nettement régressé en taille et mesurant ce jour 7 \'d7 7 
+ <br/>mm.
+ <br/>Discrète augmentation en taille du ganglion occipital latéralisé à 
+ <br/>gauche, mesurant ce jour 7 mm versus 5 mm sur le scanner de juillet.
+ <br/>Par ailleurs, au niveau des différentes chaînes cervicales quelques 
+ <br/>ganglions infracentimétriques à hile conservé.
+ <b><br/><br/><u></u></b>
+<u> A l'étage thoracique</u>
+<b> :<br/></b> Absence d'adénomégalie médiastinale
+ <br/>Absence d'anomalie pleuro-parenchymateuse évolutive décelable. 
+ <br/>On note quelques bandes d'atélectasie au niveau des bases pulmonaires.
+ <br/>
+<b><br/><u></u></b>
+<u> En fenêtre adaptée</u> :
+ <br/>Absence de lésion osseuse suspecte décelable.
+ <br/>Stabilité des tassements des corps vertébraux de T8, T11 et T12.
+ <br/>
+<b><br/><br/>Conclusion <br/><br/></b> Nette régression en taille des adénomégalies cervicales. 
+ <br/>Il ne persiste à gauche que quelques ganglions infracentimétriques.
+ <br/>L'adénopathie sous-angulo-maxillaire droite mesure ce jour 12,5 \'d7 
+ <br/>9 mm.
+ <br/>Absence d'autre anomalie décelable.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

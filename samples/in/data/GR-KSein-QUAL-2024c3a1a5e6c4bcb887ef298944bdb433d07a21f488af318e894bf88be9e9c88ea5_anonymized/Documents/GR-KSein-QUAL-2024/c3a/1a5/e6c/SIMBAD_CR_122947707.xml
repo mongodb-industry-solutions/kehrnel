@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122947707" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>EXAMEN IRM IRM CRANE</title>
+    <effectiveTime value="20190827000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190827000000+0000"/>
+        <assignedAuthor>
+            <code code="IRM/301" displayName="RADIODIAGNOSTIC-IRM"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur MOALLA SALMA
+ <br/>
+<br/>Destinataire : HERAULT
+ <br/> DR INTERNE
+ <br/>
+<br/>
+<b>Compte rendu générique de RADIODIAGNOSTIC - IRM<br/><br/>Dicté par : </b> Docteur Salma Moalla
+ <b><br/>Dicté le : </b> 19/08/2019 
+ <b><br/>Service : </b> IRM-RADIODIAGNOSTIC IRM 
+ <br/>
+<b>Type de document : </b> IRM CR Générique 
+ <br/>
+<b>Ref :</b> 770991 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b><br/>Secrétaire</b> : OZZ
+ <br/>
+<br/>Examen réalisé le 19 août 2019.
+ <br/>Examen n°2841.
+ <br/>
+<b><br/> <u>IRM CEREBRALE<br/> </u></b>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/><u><br/></u></b> Patiente de 40 ans, prise en charge pour une néoplasie mammaire en 
+ <br/>progression ganglionnaire et cutanée. 
+ <br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/><u><br/></u></b> Séquences axiales 3D T1, axiales diffusion, axiales T2, axiales 
+ <br/>Swan, axiales 3D T1 GADOLINIUM.
+ <br/>Injection de 15 CC de Dotarem.
+ <br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/><u><br/></u></b> Pas de prise de contraste suspecte décelée, intra ou extra-axiale, 
+ <br/>sus ou sous-tentorielle.
+ <br/>Les structures médianes sont en place.
+ <br/>Pas de dilatation des structures ventriculaires.
+ <br/>Perméabilité conservée des sinus veineux.
+ <br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/><u><br/></u></b> Pas de lésion suspecte décelée à l'étage cérébral.
+ <u><br/></u>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Salma MOALLA <br/>Le jeudi 22 août 2019 à 15:46 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

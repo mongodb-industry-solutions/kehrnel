@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122225897" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 193450755</title>
+    <effectiveTime value="20191211000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20191212000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Dr J. Delahousse (61 92) <br/>Pr A. Paci (47 30) </p>
+<p>Dr A. Arbab (41 65) <br/>Pr A. Bennaceur (40 65) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Dr E. Gallois (40 62) <br/>Pr F. Griscelli (51 93) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX José </p>
+<p>DEMANDE N° </p>
+<p>MasculinNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>11/12/2019 19:03 </p>
+<p>Sexe : </p>
+<p>11/12/2019 18:00 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>MORBIHAN </p>
+<p> 2 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>jeudi 12 décembre 2019 </p>
+<p>Complet </p>
+<p>BIOCHIMIE </p>
+<p>Validation du dossier FTNRésultats validés par le technicien de garde par délégation du biologisted'astreinte </p>
+<p>Revue bilan Biochimie FTNRéalisée par le biologiste </p>
+<p> IONOGRAMME <br/>Sodium 133 mmol/l ( 136 - 146 )136 10/12/2019 10:00 FTN <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Potassium 3.0 mmol/l ( 3.4 - 4.5 )4.2 10/12/2019 10:00 FTN <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Chlore 95 mmol/l ( 101 - 109 )96 10/12/2019 10:00 FTN <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Reserve alcaline 34 mmol/l ( 21 - 31 )28 10/12/2019 10:00 FTN <br/>Plasma hépariné - PEPC </p>
+<p>Protides 64 g/L ( 66 - 83 )69 10/12/2019 10:00 FTN <br/>Plasma hépariné - Biuret </p>
+<p>Urée 3.1 mmol/l ( 2.8 - 7.2 )3.7 10/12/2019 10:00 FTN <br/>Plasma hépariné - Uréase-GLDH </p>
+<p>Créatinine 36 μmol/l ( 64 - 104 )44 10/12/2019 10:00 FTN <br/>Plasma hépariné - Enzymatique raccordée IDMS </p>
+<p>Glucose 6.2 mmol/l ( 4.1 - 5.9 )4.6 10/12/2019 10:00 FTN </p>
+<p>Valeur de référence pour un patient à jeunPlasma hépariné - Hexokinase <br/>G6P-DH </p>
+<p>Calcium 2.07 mmol/l ( 2.20 - 2.65 )2.25 10/12/2019 10:00 FTN <br/>Plasma hépariné - Arsenazo III </p>
+<p>Phosphore 0.75 mmol/l ( 0.81 - 1.45 )1.05 10/12/2019 10:00 FTN <br/>Plasma hépariné - Molybdate, UV </p>
+<p>Magnesium 0.69 mmol/l ( 0.73 - 1.06 )0.73 08/12/2019 18:20 FTN <br/>Plasma hépariné - Bleu de xylidyle </p>
+<p>Base calcul Cockroft 2.78 2.28 10/12/2019 10:00 FTN </p>
+<p>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Débit de Filtration Glomérulaire (MDRD) >60 mL/mn/1.73m2 >60 10/12/2019 10:00 FTN </p>
+<p>< 60 : Insuffisance rénale à explorer si nécessaire. <br/>Si origine afro américaine, le DFG est à multiplier par 1.212 </p>
+<p>Débit de Filtration Glomérulaire (CKD- <br/>EPI) </p>
+<p>130 mL/mn/1.73m2 ( 80 - 120 )120 10/12/2019 10:00 </p>
+<p>Estimation du débit de filtration glomérulaire en utilisant le dosage de la créatinine (standardisé ID-MS) 30 - 60 mL/min : Insuffisance rénale modérée < 30 mL/min : Insuffisance rénale sévère </p>
+<p> BILAN HÉPATIQUE / PANCRÉATIQUE <br/>PAL 100 UI/L ( 30 - 120 )103 10/12/2019 10:00 FTN <br/>Plasma hépariné - IFCC </p>
+<p>ASAT 23 UI/L ( < 50 )Hémolysé 10/12/2019 10:00 FTN <br/>Plasma hépariné - IFCC </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 12/12/2019 à 08:57 par : Dr TROALEN Frédéric,Dr VERGÉ Véronique,Dr ARBAB Ahmadreza</p>
+<p></p>
+<p></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>MORBIHANPatient : 2 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX josé </p>
+<br/>
+<p>Plasma hépariné - IFCC </p>
+<p>ALAT 15 UI/L ( < 50 )15 10/12/2019 10:00 FTN <br/>Plasma hépariné - IFCC </p>
+<p>GGT 109 UI/L ( < 55 )111 10/12/2019 10:00 FTN <br/>Plasma hépariné - IFCC </p>
+<p>Bilirubine Totale 7 μmol/l ( 5 - 21 )Hémolysé 10/12/2019 10:00 FTN <br/>Plasma hépariné - DPD </p>
+<p>HEMATOLOGIE </p>
+<p>Validation du dossier RVBRésultats validés par le technicien de garde par délégation du biologisted'astreinte </p>
+<p>Revue bilan Hémato VVERéalisée par le biologiste </p>
+<p> NUMERATION SANGUINE (SANG TOTAL SUR EDTA) <br/>MÉTHODE : XN - SYSMEX </p>
+<p>Leucocytes 5.8 10*9/L ( 4.0 - 10.0 )5.2 10/12/2019 10:00 RVB </p>
+<p>Hématies 3.68 10*12/L ( 4.50 - 5.80 )3.98 10/12/2019 10:00 VVE </p>
+<p>Hémoglobine 12.0 g/100mL ( 13.0 - 17.0 )13.3 10/12/2019 10:00 VVE </p>
+<p>Hématocrite 35.1 % ( 39.0 - 49.0 )38.1 10/12/2019 10:00 VVE </p>
+<p>VGM 95.4 μ3 ( 80.0 - 97.0 )95.7 10/12/2019 10:00 RVB </p>
+<p>TCMH 32.6 pg/cel ( 26.0 - 33.0 )33.4 10/12/2019 10:00 RVB </p>
+<p>CCMH 34.2 g/100mL ( 32.0 - 36.0 )34.9 10/12/2019 10:00 RVB </p>
+<p>IDG 15.9 % ( 11.0 - 15.0 )15.9 10/12/2019 10:00 RVB </p>
+<p>Plaquettes 226.0 10*9/L 208.0 10/12/2019 10:00 RVB </p>
+<p>Impédance (150 - 400 x 10^9/L) </p>
+<p> FORMULE <br/>Polynucléaires Neutrophiles 78.0 % 61.1 10/12/2019 10:00 VVE </p>
+<p>VVE3.2 10/12/2019 10:00 ( 1.5 - 7.0 )10*9/Lsoit 4.5 </p>
+<p>Polynucléaires Eosinophiles 0.0 % 0.2 10/12/2019 10:00 VVE </p>
+<p>VVE0.0 10/12/2019 10:00 ( 0.0 - 0.6 )10*9/Lsoit 0.0 </p>
+<p>Polynucléaires Basophiles 0.2 % 0.4 10/12/2019 10:00 VVE </p>
+<p>VVE0.0 10/12/2019 10:00 ( 0.0 - 0.1 )10*9/Lsoit 0.0 </p>
+<p>Lymphocytes 17.1 % 29.1 10/12/2019 10:00 VVE </p>
+<p>VVE1.5 10/12/2019 10:00 ( 1.2 - 4.0 )10*9/Lsoit 1.0 </p>
+<p>Monocytes 4.7 % 9.2 10/12/2019 10:00 VVE </p>
+<p>VVE0.5 10/12/2019 10:00 ( 0.2 - 0.8 )10*9/Lsoit 0.3 </p>
+<p>Formule VVEAutomate </p>
+<p>IDP 13 12 10/12/2019 10:00 RVB </p>
+<p>VMP 10.8 μ3 ( 7.5 - 11.0 )10.3 10/12/2019 10:00 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 12/12/2019 à 08:57 par : Dr TROALEN Frédéric,Dr VERGÉ Véronique,Dr ARBAB Ahmadreza</p>
+<p></p>
+<ul>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Ionogramme</li>
+<li>Bilan hépatique / pancréatique</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

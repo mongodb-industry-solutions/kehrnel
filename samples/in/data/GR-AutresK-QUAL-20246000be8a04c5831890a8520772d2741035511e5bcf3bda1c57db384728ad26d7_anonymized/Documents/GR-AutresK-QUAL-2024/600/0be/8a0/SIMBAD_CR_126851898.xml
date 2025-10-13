@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126851898" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Entretien Service Social</title>
+    <effectiveTime value="20180102000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180102000000+0000"/>
+        <assignedAuthor>
+            <code code="ASS/266" displayName="SERVICE SOCIAL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Assistante sociale, Sabrina REVEL, poste 6184<br/><br/></b> J'ai rencontré ce jour la fille de Monsieur XXXXXX.
+ <br/>
+<br/>Nous faisons le point sur le retour à domicile qui devrait se faire 
+ <br/>la semaine prochaine.
+ <br/>
+<br/>Par ailleurs, nous discutons des démarches suivantes:
+ <br/>
+<br/>- Demande de passage en 3ème catégorie (pension d'invalidité)
+ <br/>- Demande de PCH aide-humaine afin que son épouse soit indemnisée 
+ <br/>pour l'aide apportée
+ <br/>- Demande d'installation d'une douche (car baignoire actuellement)
+ <br/>
+<br/>Je propose de faire un mail à la MDPH afin de savoir si la famille 
+ <br/>doit faire une nouvelle demande MDPH pour la PCH ou si un simple 
+ <br/>courrier suffit. 
+ <br/>En sachant que début Novembre, la famille a envoyé un dossier de 
+ <br/>renouvellement MDPH pour les cartes.
+ <br/>
+<br/>Pour la pension d'invalidité et les travaux d'aménagement du 
+ <br/>domicile, la fille de Monsieur va se mettre en lien avec le 
+ <br/>secrétariat du Docteur BREUSKIN afin d'obtenir les certificats 
+ <br/>médicaux nécessaires.
+ <br/>
+<br/>Je reste à la disposition de Monsieur XXXXXX et de sa 
+ <br/>famille.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126037906" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>PETITE CHIRURGIE ORL</title>
+    <effectiveTime value="20180413000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180509000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Patient qui vient ce jour pour contrôle cicatrisation au niveau <br/>cervical et au niveau de la cuisse droite.<br/></b>
+<br/>Au niveau cervical, bon état local avec évolution de la 
+ <br/>cicatrisation, pas de signe de surinfection. Changement de pansement 
+ <br/>réalisé ce jour.
+ <br/>Continuer les soins à domicile.
+ <br/>A l'examen, aucun signe de pharyngostome.
+ <br/>
+<br/>Au niveau de la cuisse droite, il existe une petite partie nécrosée.
+ <br/>On réalise une détersion ce jour avec exérèse de la partie nécrosée.
+ <br/>Nettoyage au sérum physiologique.
+ <br/>Pansement au tulle gras au et MEPILEX Border.
+ <br/>Continuer les soins à domicile.
+ <br/>
+<br/>Le patient sera revu la semaine prochaine en petite chirurgie pour 
+ <br/>contrôle de la cicatrisation.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

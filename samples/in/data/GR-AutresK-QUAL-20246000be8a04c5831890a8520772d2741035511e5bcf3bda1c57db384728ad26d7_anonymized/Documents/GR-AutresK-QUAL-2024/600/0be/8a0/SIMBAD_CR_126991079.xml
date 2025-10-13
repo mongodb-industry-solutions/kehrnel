@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126991079" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°17H11282 2485436 Dr Aïcha BEN-LAKHDAR</title>
+    <effectiveTime value="20171207000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171207000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<br/>CURAGE CERVICAL GANGLIONNAIRE DROIT :
+ <br/>
+<br/>
+<br/>Groupe sous-digastrique-IIA : 1N+ R+/2N
+ <br/>(blocs 2 à 4)
+ <br/>
+<br/>Groupe sus-rétro-spinal-IIB : 3N- 
+ <br/>(bloc 5)
+ <br/>
+<br/>Groupe sus-omo-hyoïdien-IIII : 4N-
+ <br/>(blocs 6 et 7)
+ <br/>
+<br/>Groupe sus-claviculaire-IV : 5N-
+ <br/>(blocs 8 à 11)
+ <br/>
+<br/>RÉSULTAT :
+ <br/>À droite : 1N+ R+/14N
+ <br/>
+<br/>TYPE HISTOLOGIQUE :
+ <br/>CARCINOME INFILTRANT ÉPIDERMOÏDE MOYENNEMENT A PEU DIFFÉRENCIÉ PEU KÉRATINISANT
+ <br/>
+<br/>
+<br/>
+<br/>OHALE7T3--SPD, IHAHE7T4--SPD, IHSGEMT4--SDD 
+ <br/>
+<br/>Dr Lucian CRACIUN Dr Aïcha BEN-LAKHDAR 
+ <br/>Interne Praticien 
+ <br/> Compte-rendu validé et signé électroniquement 
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

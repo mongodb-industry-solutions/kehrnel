@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_131952778" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION DE NUTRITION - Docteur Bruno RAYNARD</title>
+    <effectiveTime value="20140724000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20140724000000+0000"/>
+        <assignedAuthor>
+            <code code="133/267" displayName="ANALGESIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patient de 53 ans, pris en charge pour un carcinome épidermoïde ORL 
+ <br/>localisé qui pourrait bénéficier d'une radiochimiothérapie 
+ <br/>concomitante.
+ <br/>
+<br/>Monsieur XXXXXX pèse habituellement 65 kg pour 1 m 65 et pèse 
+ <br/>actuellement 65 kg. Son poids est stable entre 62 et 65 kg depuis 
+ <br/>plusieurs mois, voire plusieurs années. 
+ <br/>
+<br/>Cependant, ses ingesta oraux spontanés sont actuellement estimés à 
+ <br/>1000 kcal par jour à l'exclusion des boissons alcoolisées qui 
+ <br/>représentent environ 250 à 300 g d'alcool par jour. Il s'agit de vin 
+ <br/>rouge consommé à partir de 10-11h du matin chez un patient qui se 
+ <br/>lève vers 4h30 du matin pour aller travailler (il fait du ménage) et 
+ <br/>rentre à la maison vers 9h30-10h. Il fume par ailleurs 1 paquet de 
+ <br/>cigarettes à filtre par jour.
+ <br/>
+<br/>A noter qu'il a déjà fait plusieurs épisodes de comitialité dans le 
+ <br/>cadre de sevrage alcoolique. Il n'a jamais fait de programme de 
+ <br/>sevrage de l'alcool ou du tabac à proprement parler. Sa motivation au 
+ <br/>sevrage est relativement limitée.
+ <br/>
+<br/>Ce patient est à haut risque de dénutrition mais la priorité est 
+ <br/>actuellement au sevrage de l'alcool et du tabac qui nécessitera 
+ <br/>peut-être une hospitalisation. Je ne pourrais évaluer correctement 
+ <br/>son état nutritionnel et la nécessité d'un recours à une nutrition 
+ <br/>artificielle qu'une fois le programme de sevrage entamé.
+ <br/>
+<br/>Dans ce contexte et comme le recommande la SFNEP, une gastrostomie 
+ <br/>radiologique systématique avant radiochimiothérapie est recommandée.
+ <br/>
+<br/>Je laisse au Comité ORL, après l'évaluation par le Docteur BOUAB, le 
+ <br/>loisir d'organiser la gastrostomie percutanée et la mise en route 
+ <br/>d'une nutrition entérale per radiochimiothérapie.
+ <br/>
+<br/>Je peux revoir Monsieur XXXXXX en consultation en fonction 
+ <br/>des prochains rendez-vous à venir et en particulier avant ou au début 
+ <br/>de la radiochimiothérapie.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121288435" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>LETTRE DE LIAISON</title>
+    <effectiveTime value="20200506000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200506000000+0000"/>
+        <assignedAuthor>
+            <code code="GAR/182" displayName="GARD"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>SERVICE GARD - LETTRE DE LIAISON<br/><br/>Dicté par : </b> Docteur Thomas Pudlarz, Interne
+ <b><br/>Dicté le : </b> 06/05/2020 
+ <b><br/>Service : </b> GAR-GARD 
+ <br/>
+<b>Type de document : </b> GAR NO LETTRE DE LIAISON 
+ <br/>
+<b>Ref :</b> 991380 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : Valérie PASQUIET/a
+ <br/>
+<u><b><br/> </b></u>
+<br/>
+<u><b>HOSPITALISATION SERVICE GARD - 01 42 11 43 01<br/> </b></u>
+<br/>
+<u><b><br/>Médecin référent Gustave Roussy</b></u> : Docteur Emeline COLOMBA
+ <br/>114 rue Edouard Vaillant - 94805 VILLEJUIF CEDEX
+ <br/>
+<br/>
+<u><b>Patient pris en charge par l'interne</b></u> : Thomas PUDLARZ
+ <br/>114 rue Edouard Vaillant - 94805 VILLEJUIF CEDEX
+ <br/>
+<br/>
+<u><b>Date du séjour</b></u> : 24/04/2020 au 06/05/2020
+ <br/>
+<u><b>Modalité d'entrée</b></u> : domicile 
+ <br/>
+<u><b>Modalité de sortie</b></u> : domicile HAD
+ <br/>
+<br/>
+<u><b>Traitement d'entrée/personnel</b></u>
+<b> </b> :
+ <br/>- INNOHEP 10 000 UI/jour sc
+ <br/>- OXYCONTIN LP 10 mg matin et soir
+ <br/>- OXYNORMORO 10 mg à la demande
+ <br/>- PARACETAMOL 1 g si besoin 
+ <br/>
+<br/>
+<u><b>Motif d'hospitalisation</b></u> : transférée du service Rouergue pour la 
+ <br/>suite de la prise en charge d'une fièvre, d'une ascite, d'une dyspnée 
+ <br/>dans un contexte de carcinome séreux de l'ovaire de haut grade stade 
+ <br/>IV pleural, PLATINE résistante, actuellement sous GEMCITABINE.
+ <br/>
+<br/>
+<u><b>Synthèse médicale du séjour</b></u> :
+ <br/>Anasarque avec ascite et épanchement pleural drainé permettant une 
+ <br/>amélioration des symptome de la patiente.
+ <br/>Injection de GEMZAR le 02/05/2020 à la dose de 1600 mg DT
+ <br/>Poursuite du GEMZAR hebdomadaire à domicile en HAD, prochaine 
+ <br/>injection le 12/05/2020.
+ <br/>Etat de dénutrition sévère. 
+ <br/>Prise en charge par l'EMASP.
+ <br/>
+<br/>
+<br/>
+<b> L'état de santé autorise la sortie médicale.<br/><u> <br/>BMR</u></b> : non.
+ <br/>
+<u><b>Transfusion</b></u> : 2 culots globulaires le 24/04/2020 et 1 culot 
+ <br/>globulaire le 26/04/2020.
+ <br/>
+<u><b>Pose de DMI</b></u> : non.
+ <br/>
+<u><b>Bilans sanguins</b></u> : imprimés et remis au patient le jour de la sortie.
+ <br/>
+<u><b>Examens radiologiques</b></u> : radiographie thoracique le 26/04/2020, 
+ <br/>angio-scanner thoracique le 27/04/2020, échographie plèvre et 
+ <br/>radiographie thoracique le 29/04/2020.
+ <br/>
+<u><b>Recommandations et surveillance</b></u> oui.
+ <br/>
+<u><b>Annonce des éléments en attente</b></u> : aucun.
+ <br/>
+<br/>
+<u><b>Traitement de sortie</b></u> :
+ <br/>- Traitement d'entrée/personnel inchangé. 
+ <br/>Si modification :
+ <br/>- Compléments nutritionnels oraux 
+ <br/>- OXYCONTIN LP 10 mg matin et soir 
+ <br/>- OXYNORMORO 5 mg 6 fois/jour si douleur 
+ <br/>- SPASFON 2 cp 3 fois/jour
+ <br/>- PARACETAMOL 1 g 4 fois/jour si douleur 
+ <br/>- ACUPAN 20 mg 3 fois/jour si douleur 
+ <br/> - INNOHEP 12000UI 1inj SC par jour 
+ <br/>
+<u><b><br/>Prochain rendez-vous</b></u> :
+ <br/>- HDJ pour ponction d'ascite les 11 et 14/05/2020
+ <br/>- HDJ soins de support le 20/05/2020
+ <br/>- Consultation Dr COLOMBA le 28/05/2020
+ <br/>
+<br/>
+<br/>
+<b> Document imprimé sur la page d'identification du dossier patient de <br/>Gustave Roussy et remis en main propre au patient le jour de la <br/>sortie.<u> <br/></u></b>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Thomas PUDLARZ , Interne<br/>Le mercredi 6 mai 2020 à 10:05<br/></b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

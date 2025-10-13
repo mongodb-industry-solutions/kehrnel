@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120839522" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>CONSULTATION ORL - Interne ORL</title>
+    <effectiveTime value="20200327000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200713000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ CONSULTATION ORL - INTERNE ORL
+ <br/>
+<br/>Dicté par : Docteur Nathanel Edery, Interne
+ <br/>Dicté le : 27/03/2020 
+ <br/>Service : ORL-CONSULTATIONS ORL 
+ <br/>Type de document : ORL CC PETITE CHIRURGIE 
+ <br/>Ref : 969172 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>Patient : José XXXXXX 
+ <br/>Identifiant : XXXXXX 
+ <br/>Date de naissance : XXXXXX 
+ <br/>Sexe : Masculin 
+ <br/>_____________________________________________________________
+ <br/>Secrétaire : MIGUET
+ <br/>
+<br/>
+<b> Patient vu ce jour en consultation, qui est suivi en oncologie pour <br/>un carcinome oropharyngé en progression. </b>
+<br/>
+<br/>Il consulte ce jour pour écoulement purulent par une fistule 
+ <br/>latérocervicale à gauche.
+ <br/>L'orifice de la trachéotomie normal, pas de signe inflammatoire, pas 
+ <br/>de sécrétions. 
+ <br/>
+<br/>A l'examen de la fistule : 
+ <br/>On retrouve effectivement un écoulement purulent très faible 
+ <br/>abondance. 
+ <br/>
+<br/>Je réalise ce jour des prélèvement bactériologique et je le mets sous 
+ <br/>antibiotique. 
+ <br/>
+<br/>A noter que lors du prélèvement, saignement sous-cutané en raison de 
+ <br/>l'inflammation qu'il ne se tarit pas spontanément malgré la 
+ <br/>compression. 
+ <br/>
+<br/>Je fais un pansement compressif et je contacte ses infirmières 
+ <br/>libérales pour leurs expliquer la suite du protocole pansement, 
+ <br/>reconsulter si il existe une récidive hémorragique ou une persistance 
+ <br/>du saignement lors du retrait du pansement compressif dans 48 heures.
+ <br/>
+<br/>
+<br/>______________________
+ <br/>Docteur Nathanel EDERY
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

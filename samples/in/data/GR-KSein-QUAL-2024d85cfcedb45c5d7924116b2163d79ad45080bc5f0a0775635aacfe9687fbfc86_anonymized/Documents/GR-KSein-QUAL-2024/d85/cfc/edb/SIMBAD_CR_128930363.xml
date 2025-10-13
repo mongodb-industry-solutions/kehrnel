@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128930363" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>HOPITAL DE JOUR DE MEDECINE DE CHEVILLY LARUE - Unité Vendée</title>
+    <effectiveTime value="20161114000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20161115000000+0000"/>
+        <assignedAuthor>
+            <code code="CHL/511" displayName="CHEVILLY STRUCTURE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>COMPTE-RENDU D'HOSPITALISATION DE JOUR DU 14.11.2016</b>
+<br/>
+<br/>
+<u>Motif</u> : 
+ <br/>
+<br/>
+<b>Madame XXXXXX XXXXXX</b> , 59 ans, est vue ce jour pour C1 J1 de 
+ <br/>TAXOL en néoadjuvant pour un cancer du sein triple négatif.
+ <br/>
+<br/> ***********************************
+ <br/>
+<u><br/>Intercure</u> : 
+ <br/>
+<br/>Pas de nausée, pas de vomissement,
+ <br/>Neutropénie de grade I,
+ <br/>Anémie de grade I.
+ <br/>
+<br/>
+<u>Examen clinique</u> : 
+ <br/>
+<br/>OMS = 0
+ <br/>Tension artérielle à 96/66
+ <br/>Température à 36.9°C
+ <br/>Poids à 52 kg
+ <br/>Saturation à 99% en air ambiant 
+ <br/>Pouls à 75
+ <br/>
+<br/>
+<u>Examens complémentaires</u> :
+ <br/>
+<br/>Le bilan biologique réalisé en externe retrouve : 
+ <br/>
+<br/>- NFS : leucocytes à 2.080/mm3, PNN à 1.231/mm3, Hb à 9.1 g/dl, 
+ <br/>plaquettes à 90.000/mm3.
+ <br/>
+<br/>
+<u>En pratique</u> : 
+ <br/>
+<br/>Réalisation de la cure de chimiothérapie comme suit : 
+ <br/>
+<br/> * TAXOL 80 mg/m2 soit 130 mg DT
+ <br/>
+<br/>Bonne tolérance immédiate du traitement.
+ <br/>
+<br/>
+<u>Prescription de sortie</u> : 
+ <br/>
+<br/> * VOGALENE 1 gélule x 2 par jour si besoin.
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

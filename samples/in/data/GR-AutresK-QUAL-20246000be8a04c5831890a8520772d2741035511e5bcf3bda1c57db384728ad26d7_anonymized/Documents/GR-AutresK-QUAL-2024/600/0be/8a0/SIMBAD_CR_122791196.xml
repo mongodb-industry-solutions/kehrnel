@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122791196" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="47420-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de bilan fonctionnel (par auxiliaire médical)"/>
+    <title>Compte-rendu téléphonique infirmier - Plateau des Consultations</title>
+    <effectiveTime value="20190919000000+0000"/>
+    <confidentialityCode code="47420-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de bilan fonctionnel (par auxiliaire médical)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190919000000+0000"/>
+        <assignedAuthor>
+            <code code="PLC/453" displayName="PLATEAU DE CONSULTATION"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Infirmière coordinatrice de chirurgie</b></u>
+<b> :</b> Magali PIRIDJANIANS
+ <b><br/></b>
+<br/>
+<u><b>Chirurgien référent</b></u>
+<b> :</b> Dr BREUSKIN
+ <br/>
+<br/>
+<b> Antécédent de carcinome épidermoïde de l'oropharynx bilatéral traité <br/>par radiochimiothérapie en octobre 2014.<br/>Deuxième localisation de carcinome épidermoïde hypopharyngé droit <br/>traité par pharyngolaryngectomie totale de rattrapage et lambeau de <br/>grand pectoral le 13/11/2017.<br/>Problématique de pharyngostome ayant nécessité de multiples <br/>interventions.<br/>In fine reprise de cervicotomie avec rétablissement de la continuité <br/>digestive avec lambeau antéro-latéral de cuisse le 19/03/2018.</b>
+<br/>
+<b><br/><u>Motif de l'appel</u> : se présente spontanément sur l'espace 6 pour <br/>douleur et gonflement au niveau de sa trachéo. Le patient a rdv <br/>demain avec le Dr BREUSKIN</b>
+<br/>
+<b><br/><u>Orientation</u> (en référence à l'arbre décisionnel):</b> rdv enregistré à 
+ <br/>14h pour aujourd'hui.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

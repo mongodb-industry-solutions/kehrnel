@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125475024" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°18T02449 2639225 Dr Christophe MARZAC</title>
+    <effectiveTime value="20180802000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180802000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>DÉPARTEMENT DE BIOLOGIE ET DE PATHOLOGIE MEDICALES<br/></p>
+<p>114, rue Edouard Vaillant - 94805 VILLEJUIF CEDEX<br/></p>
+<p>N° I.G.R. : 110 XXXXXX <br/>XXXXXX XXXXXX XXXXXX XXXXXX M <br/> Docteur BOURHIS Jean-Henri <br/>Examen demandé par : <br/>Dr BOURHIS Jean-Henri <br/>CTE 110 - HEMATOLOGIE <br/>Prélevé le 26/06/2018 <br/>Enregistré le 26/06/2018 <br/></p>
+<p> EELQ <br/> Examen n° : 18T02449<br/></p>
+<p> CR édité le : 02/08/2018<br/></p>
+<p>Copie à : 1/1 </p>
+<p>ANALYSES MOLECULAIRES DES HEMOPATHIES </p>
+<p> Renseignements cliniques : <br/>MFP JAK2+ diagnostiquée en 2012 <br/>Caryotype pseudo diploïde del13q <br/>Hydréa + Ruxolitinib depuis juin 2017 <br/>ATCD: Kc de prostate traité par radiothérapie </p>
+<p> Bilan pré-alloG <br/>Etude à visée maladie résiduelle </p>
+<p> Prélèvement sanguin en date du 2018-06-26 </p>
+<p> Gène : JAK2V617F <br/>Technique : Kit MutaQuant@QIAGEN AS-PCR <br/>Résultat : positif </p>
+<p> Ratio allélique : 46.96 % </p>
+<p> Gène : MPL W515 <br/>Technique : PCR temps réel <br/>Résultat : négatif<br/></p>
+<p><h3>Conclusion</h3> </p>
+<p>Détection d'une mutation JAK2V617F à l'état hétérozygote avec absence de mutation </p>
+<p>MPLW515L/W515K<br/>LYSA0180 <br/></p>
+<p> Dr Christophe MARZAC <br/> Praticien spécialiste </p>
+<p> <br/></p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

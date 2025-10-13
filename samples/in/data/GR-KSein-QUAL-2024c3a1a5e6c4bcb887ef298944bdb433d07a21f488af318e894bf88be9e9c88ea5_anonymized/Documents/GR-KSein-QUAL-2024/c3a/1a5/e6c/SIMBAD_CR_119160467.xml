@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_119160467" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>Réunion de Concertation Pluridisciplinaire Moléculaire</title>
+    <effectiveTime value="20210304000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20210305000000+0000"/>
+        <assignedAuthor>
+            <code code="150/479" displayName="CTE 150 - ESSAIS PRECOCES"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Biologie </b> : Docteur Ludovic LACROIX, Docteur Etienne ROULEAU, Docteur 
+ <br/>Damien VASSEUR
+ <br/>
+<b>Cytogénétique </b> : Docteur Nathalie AUGER
+ <br/>
+<b>Oncologie Médicale</b> : Docteur Mihaela ALDEA, Docteur Arnaud BAYLE, 
+ <br/>Docteur Félix BLANC-DURAND, Docteur Arthur GERAUD, Docteur Véronica 
+ <br/>GOLDBARG, Docteur Julien HADOUX, Docteur Antoine HOLLEBECQUE, 
+ <br/>Professeur Antoine ITALIANO, Docteur Patricia MARTIN-ROMANO, Docteur 
+ <br/>Santiago PONCE, Docteur Cristina SMOLENSCHI
+ <br/>
+<br/>Compte rendu préparé par le Dr Blanc-Durand
+ <br/>
+<br/>
+<b>Informations dossier</b>
+<br/>Nom et prénom du patient : XXXXXX XXXXXX
+ <br/>Age : 41 ans
+ <br/>N° dossier GR : 2018-05260 EK
+ <br/>Médecin réfèrent : Dr Mokdad-Adi
+ <br/>
+<br/>
+<b>Histoire de la maladie</b>
+<br/>Histologie : CCI triple négatif
+ <br/>
+<br/>
+<b>Traitements</b>
+<br/>Traitements antérieurs :
+ <br/>NAVELBINE en 1ère ligne 
+ <br/>TALAZOPARIB le 12/01/2019 en 2ème ligne
+ <br/>XELODA depuis avril 2019 en 3ème ligne
+ <br/>4ème ligne par ENDOXAN oral
+ <br/>5ème ligne de traitement par ERIBULINE pour 5 cycles
+ <br/>6ème ligne par CARBOPLATINE-GEMZAR relais par NAVELBINE de mars à 
+ <br/>juillet 2020
+ <br/>Reprise de CARBOPLATINE-GEMZAR, C1 J1 22/07/2020
+ <br/>Poursuite du carboplatine seul depuis le 30/09/2020
+ <br/>
+<br/>Traitement actuel : CMF
+ <br/>
+<br/>
+<b>Altérations connues</b>
+<br/>Mutation BRCA1 constitutionnelle
+ <br/>
+<br/>
+<b>Motif du passage en RCP</b>
+<br/>Dossier présenté pour discuter la prise en charge thérapeutique en 
+ <br/>fonction du profil moléculaire.
+ <br/>
+<br/>Protocole biopsie : FMI Liquide
+ <br/>Numéro protocole/biopsie : 210340522
+ <br/>Biopsie à progression
+ <br/>Site biopsie : sang, 23 % de cellules tumorales
+ <br/>Date biopsie : 03/02/2021
+ <br/>Panel : Foundation One Liquid CDx
+ <br/>
+<br/>BRCA1 deletion exons 12-16 (2 %), splice site 212+3A>G 
+ <br/>(65,5 %)
+ <br/>CD274 (PD-L1) amplification
+ <br/>PDCD1LG2 (PD-L2) amplification
+ <br/>CHEK2 splice site 1096-1G>A (0,48 %)
+ <br/>CCNE1 amplification
+ <br/>CTNNA1 splice site 2434-1G>C (5,6 %), N398fs*24 (4,7 %)
+ <br/>DNMT3A splice site 1475-1G>C (0,5 %)
+ <br/>JAK2 amplification
+ <br/>NTRK1 amplification - equivocal
+ <br/>TP53 Y236fs*4 (19,6 %)
+ <br/>
+<br/>TMB : 4
+ <br/>Statut MSS : MSI-High non détecté
+ <br/>
+<br/>
+<b><h3>Conclusion</h3></b>
+<br/>Pas d'orientation thérapeuique.
+ <br/>---------------------------------------------------------------
+ <br/>Classification :
+ <br/>- ESCAT tier IA (BRCA1)
+ <br/>- OncoKB 1 (BRCA1)
+ <br/>Orientation thérapeutique : non
+ <br/>Thérapie ciblée : déjà reçue
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

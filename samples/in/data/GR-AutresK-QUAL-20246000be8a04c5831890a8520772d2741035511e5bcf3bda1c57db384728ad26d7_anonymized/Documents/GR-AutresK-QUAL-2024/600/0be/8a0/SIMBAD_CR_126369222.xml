@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126369222" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ORL - Dr Ingrid BREUSKIN</title>
+    <effectiveTime value="20180316000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180316000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Consultation de petite chirurgie</b></u> :
+ <br/>
+<br/>Patient vu ce jour en consultation en présence de son épouse en 
+ <br/>consultation de petite chirurgie avant chirurgie de rétablissement de 
+ <br/>la continuité digestive programmée le 19/03 prochain.
+ <br/>
+<br/>L'état local est tout à fait stable.
+ <br/>Propre.
+ <br/>On confirme l'intervention programmée.
+ <br/>
+<br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b> Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>18/03/2018 13:00 MOR IBN ADM MOR DIR FAIRE A L'ADM GROUPE II/RAI + 
+ <br/>NFS + IONO 
+ <br/>19/03/2018 07:45 MOR IBN PBO SEG CCF 
+ <br/> 07:45 MOR IBN PBO CHIR IBN 
+ <br/> 07:45 MOR IBN PBO CHIR LKH 
+ <br/>11/04/2018 09:40 010 OMR RV TEL CSE 
+ <br/>16/04/2018 09:30 DIE CMB C NUTR CMB LVL/FIN ORDO NE 17.04 
+ <br/>11/05/2018 __: 1 ORL IBN C ORL IBN visite de suivi 2004-01 / ne 
+ <br/>pas annuler 
+ <br/>07/11/2018 09:15 CAM YGT C RX YGT 
+ <br/>15/03/2019 09:00 310 GSN RD PANORAMIQUE 
+ <br/> 09:10 310 GSN C ODONTO GSN 
+ <br/>10/05/2019 __: 1 ORL IBN C ORL IBN 
+ <br/>06/11/2019 __: 1 CAM YGT C RX YGT 
+ <br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

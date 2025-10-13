@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125962496" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°17H11282 2489087 Dr Odile CASIRAGHI</title>
+    <effectiveTime value="20180522000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180522000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<br/>PHARYNGO-LARYNGECTOMIE TOTALE avec HEMITHYROIDECTOMIE DROITE 
+ <br/>
+<br/>MACROSCOPIE
+ <br/>
+<br/>Pièce opératoire arrivée orientée à l'état frais mesurant 9 × 6,5 × 6 cm.
+ <br/>
+<br/>On observe une lésion végétante blanchâtre de 35 × 24 mm du sinus piriforme droit, située sur l'angle et la paroi externe du sinus piriforme, le carrefour des trois replis droit remontant sur l'oropharynx.
+ <br/>Cette lésion est située à 6 mm de la limite supérieure, 2 mm de la limite inférieure et à 6 mm de la limite postéro-latérale.
+ <br/>
+<br/>Le lobe droit thyroïdien mesure 4 × 3,5 × 1,5 cm.
+ <br/>
+<br/>Une recoupe orientée de la partie inférieure du sinus piriforme droit mesurant 3,5 × 0,5 × 0,3 cm est arrivée à l'état frais.
+ <br/>
+<br/>Prélèvements d'un fragment de tumeur avant décalcification (bloc 1). Prélèvement de la limite trachéale (bloc 13), et de la limite muqueuse supérieure selon des coupes sagittales de la partie latérale (bloc 14) à la partie interne (bloc 15). Inclusion du reste de la pièce selon effectuées dans un plan axial de haut en bas (gros blocs 16-22). Prélèvements du lobe thyroïdien droit (bloc 23). Prélèvements de la recoupe oesophagienne (Pot 2, bloc 12, inclusion en totalité, orientation : bleu = inférieur, jaune = supérieur, vert = arrière, rouge = avant).
+ <br/>
+<br/>MICROSCOPIE
+ <br/>
+<br/>o Type histologique
+ <br/>
+<br/>CARCINOME EPIDERMOÏDE MOYENNEMENT A PEU DIFFERENCIE INFILTRANT PEU KERATINISANT, présentant un aspect basaloïde avec des massifs centrés par de la nécrose tumorale.
+ <br/>Mode d'infiltration : superficiel et diffus.
+ <br/>Profondeur maximale d'invasion : 2 mm.
+ <br/>Présence d'engainement périnerveux (EPN+) et d'emboles carcinomateux vasculaires (E+).
+ <br/>
+<br/> La recoupe adressée à part de la partie inférieure du sinus piriforme droit est indemne.
+ <br/>o Topographie
+ <br/>
+<br/>On confirme les données de l'examen macroscopique.
+ <br/>La tumeur s'étend en superficie au niveau de l'angle et la paroi interne et externe du sinus piriforme droit. Extension vers le carrefour des trois replis droit ainsi qu'au niveau de la face linguale de l'épiglotte.
+ <br/>Absence d'envahissement cartilagineux. Le lobe thyroïdien est indemne.
+ <br/>Présence d'un ganglion cervical pré-laryngé indemne (1N-).
+ <br/>
+<br/>o Limites d'exérèse
+ <br/>
+<br/>Les limites trachéale, oesophagienne sont indemnes. 
+ <br/>Les limites les plus proches du carcinome infiltrant : 
+ <br/>- La limite supérieure : 4 mm
+ <br/>- limite latérale droite du sinus piriforme : 3 mm 
+ <br/>- limité postérieure du sinus piriforme : 4 mm 
+ <br/>Le reste des limites latérales sont à distance de la tumeur.
+ <br/>
+<br/>o Immunohistochimie
+ <br/>
+<br/>Expression intense et diffuse pour l'anticorps anti-p16 ; p16+++.
+ <br/>His en cours pour HPV16.
+ <br/>
+<br/>CONCLUSION : 
+ <br/>
+<br/>CARCINOME EPIDERMOÏDE MOYENNEMENT A PEU DIFFERENCIE INFILTRANT PEU KERATINISANT, de 35 mm de grand axe et de 2 mm d'épaisseur maximale.
+ <br/>Présence d'engainement périnerveux (EPN+). Présence d'emboles carcinomateux vasculaires (E+).
+ <br/>Absence d'envahissement cartilagineux. Le lobe thyroïdien est indemne.
+ <br/>
+<br/>Exérèse à considérer comme complète sur pièce opératoire et après recoupe avec la limite la plus proche évaluée à 3 mm au niveau de la paroi latérale droite.
+ <br/>
+<br/>Présence d'un ganglion cervical pré-laryngé indemne (1N-).
+ <br/>
+<br/>
+<br/>
+<br/>COMPTE-RENDU COMPLEMENTAIRE
+ <br/>
+<br/>- Recherche d'HPV-HR par CISH : négative (HPV16-)
+ <br/>- Par ailleurs, l'immunomarquage par l'anti-p16 a été revu : on pbserve un epositivité de forte intensité dasn toutes les cellules carcinomateuses, mais cette positivité est seulement nucléaire (et non pas nucléaire et cytoplasmique) : on conclut donc à l'absence de surexpression de la p16 (p16-).
+ <br/>
+<br/>
+<br/>
+<br/>OHALE7T3--SPD, IHAHE7T4--SPD, IHSGEMT4--SDD, IHSG 
+ <br/>
+<br/>Dr Lucian CRACIUN Dr Odile CASIRAGHI 
+ <br/>Interne Médecin Spécialiste 
+ <br/> Compte-rendu validé et signé électroniquement 
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

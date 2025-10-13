@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127034608" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>INTERVENTION</title>
+    <effectiveTime value="20171129000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171130000000+0000"/>
+        <assignedAuthor>
+            <code code="MOR/178" displayName="MORBIHAN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>TENTATIVE DE FERMETURE D'UN PHARYNGOSTOME SOUS ANESTHESIE GENERALE<br/> <br/><u>Opérateurs</u> : Docteurs BREUSKIN Ingrid / GUERLAIN Joanne<br/><u>Aide </u> : Docteur MANGIN Florian <br/><u>Anesthésiste</u> : Docteur COLEGRAVE Nora </b>
+<br/>
+<br/>
+<br/>
+<b>RAPPEL CLINIQUE</b>
+<br/>Patient de 56 ans, à J16 post-opératoire d'une pharyngolaryngectomie 
+ <br/>totale avec lambeau pédiculé de grand dorsal droit en fer à cheval.
+ <br/>Patient présentant un pharyngostome évoluant depuis 10 jours avec 
+ <br/>échec du traitement par pansement compressif.
+ <br/>Persistance de la fistule cervicale gauche.
+ <br/>Décision de reprise chirurgicale.
+ <br/>
+<br/>
+<br/>
+<b>INTERVENTION</b>
+<br/>Anesthésie générale.
+ <br/>Mise en place d'une sonde de Montandon.
+ <br/>Décubitus dorsal.
+ <br/>Billot sous les épaules.
+ <br/>Désinfection à la BETADINE Dermique.
+ <br/>Champage stérile.
+ <br/>
+<br/>
+<u>Constations</u> :
+ <br/>Il existe un pharyngostome avec un écoulement sâle au niveau 
+ <br/>sous-mandibulaire gauche.
+ <br/>Le lambeau cutané cervical gauche s'est rétracté avec une exposition 
+ <br/>du muscle sterno-cléido-mastoïdien à gauche.
+ <br/>
+<br/>Reprise de l'incision cervicale gauche et sur la partie haute du 
+ <br/>trachéostome.
+ <br/>
+<br/>
+<u>Constations per-opératoires </u>:
+ <br/>La palette cutanée du grand pectoral s'est rétractée.
+ <br/>Au niveau de la base de langue droite, il existe un lâchage des 
+ <br/>sutures entre la palette cutanée et la base de langue mais celle-ci 
+ <br/>est bien colmatée avec le muscle du grand pectoral et il n'y a pas de 
+ <br/>fuite à ce niveau.
+ <br/>Au niveau de la base de langue gauche, il existe une désunion 
+ <br/>importante qui s'étend sur toute la partie latérale gauche de la 
+ <br/>paroi pharyngée latérale et du lambeau.
+ <br/>La palette cutanée est également désunie au niveau inférieur avec une 
+ <br/>rétraction des tissus au niveau de la palette cutanée du grand 
+ <br/>pectoral.
+ <br/>Décision de réaliser un geste local ce jour et de rediscuter des 
+ <br/>modalités de reconstruction ultérieure que l'on pourrait proposer au 
+ <br/>patient.
+ <br/>
+<br/>Mise en place d'un Salivary tube.
+ <br/>Sur la partie basse, réalisation de points directs de la muqueuse 
+ <br/>pharyngée.
+ <br/>Réamarrage du lambeau sur la partie latérale gauche de la paroi 
+ <br/>pharyngée postérieure.
+ <br/>En haut, réamarrage du lambeau au niveau de la base de langue et au 
+ <br/>niveau du ventre antérieur du digastrique.
+ <br/>Tentative de capitonnage par le muscle du grand pectoral qui est déjà 
+ <br/>rétracté mais que l'on suture au muscle sterno-cléido-mastoïdien.
+ <br/>Remise en place de la peau en laissant des zones cruantées avec 
+ <br/>suture de la peau directement au muscle sterno-cléido-mastoïdien par 
+ <br/>des points de VICRYL 3/0.
+ <br/>A droite du trachéostome, fermeture par des points sous-cutanés de 
+ <br/>VICRYL 3/0 et des points cutanés de FILAPEAU 3/0.
+ <br/>
+<br/>
+<br/>
+<b><h3>Conclusion</h3></b>
+<br/>Tentative de geste local pour fermeture de pharyngostome à J16 d'une 
+ <br/>pharyngolaryngectomie totale avec mise en place d'un lambeau pédiculé 
+ <br/>de grand pectoral en fer à cheval.
+ <br/>Les sutures sont réalisées en tension sur un Salivary tube.
+ <br/>Pansement compressif et surveillance.
+ <br/>
+<br/>Le dossier sera rediscuté avec les plasticiens pour voir quelles 
+ <br/>propositions nous pouvons faire pour le patient.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

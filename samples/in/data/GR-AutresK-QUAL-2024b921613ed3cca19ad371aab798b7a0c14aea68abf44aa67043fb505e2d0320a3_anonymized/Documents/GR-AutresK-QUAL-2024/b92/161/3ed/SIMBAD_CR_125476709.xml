@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125476709" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM THORAX TDM SINUS</title>
+    <effectiveTime value="20180802000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180802000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur TARDIVEL ANNE MARIE
+ <br/>
+<br/>Destinataire : CTE 110 - HEMATOLOGIE
+ <br/> DR BOURHIS Jean Henri
+ <br/>
+<br/>
+<br/>
+<b>Compte rendu générique de SCANNER<br/><br/>Dicté par : </b> Docteur Anne Marie Tardivel
+ <b><br/>Dicté le : </b> 01/08/2018 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Générique 
+ <br/>
+<b>Ref :</b> 464689 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : 
+ <u><b>EDG</b></u>
+<br/>
+<br/>Examen réalisé le : 01.08.18
+ <br/>
+<br/>
+<u><b>Examen 5847<br/><br/><br/> SCANNER DES SINUS ET DU THORAX<br/> </b></u>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/><br/></b> Bilan infectieux.
+ <br/>
+<br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/><br/></b> Examen réalisé sur un scanner DISCOVERY 750 HD, GENERAL ELECTRIC, 
+ <br/>mis en service en septembre 2012.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 429098CN7
+ <br/>Réalisation d'une acquisition :
+ <br/>\'a7 Sinusienne
+ <br/>\'a7 Thoracique
+ <br/>Examen réalisé sans injection de produit de contraste
+ <br/>PDL : 51 mGy.cm (sinus) et 352 mGy.cm (thorax)
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/><br/></b> Pneumatisation et aération normale des sinus de la face et des 
+ <br/>cellules mastoïdiennes. 
+ <br/>Pas de condensation parenchymateuse pulmonaire. Pas de nodule 
+ <br/>pulmonaire.
+ <br/>Pas d'épanchement pleural ni péricardique.
+ <br/>Gynécomastie bilatérale.
+ <br/>Pas d'adénomégalie thoracique dans les limites d'une acquisition en 
+ <br/>contraste spontané.
+ <br/>Ostéocondensation diffuse du rachis hétérogène en rapport avec 
+ <br/>l'hémopathie.
+ <br/>Pas de fracture tassement. Intégrité du mur postérieur.
+ <br/>
+<br/>Sur les coupes abdominales hautes : hépato-splénomégalie avec 
+ <br/>hypertrophie du foie gauche. Cavernome porte et dérivation veineuse 
+ <br/>porto-systémique notamment inter- spléno-rénale.
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/><br/></b> Absence de foyer infectieux sinusien ou thoracique.
+ <br/>
+<b><br/>_________________________________________________<br/>Signé électroniquement par Docteur Anne Marie TARDIVEL <br/>Le mercredi 1 août 2018 à 17:37 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

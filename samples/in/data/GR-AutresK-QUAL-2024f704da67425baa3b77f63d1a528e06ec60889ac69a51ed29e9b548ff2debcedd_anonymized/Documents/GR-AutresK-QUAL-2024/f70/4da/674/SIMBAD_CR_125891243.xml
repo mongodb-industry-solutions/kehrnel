@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125891243" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>INTERNE DE GARDE - URGENCES - NUIT ET WEEK-END</title>
+    <effectiveTime value="20180531000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180601000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u>Docteur BOILEVE</u>
+<br/>
+<br/>Depuis 3 jours, perte rosées
+ <br/>
+<br/>Ce jour, pertes rouges de faible abondance (petite protection)
+ <br/>Pas de SFU associés
+ <br/>
+<br/>Cancer des ovaires : adénocarcinome séreux de haut grade de l'ovaire 
+ <br/>droit stade IV, atteinte péritonéale et pleurale
+ <br/>9 cures de Carboplatine, Avastin à partir de C8 puis Avastin seul 
+ <br/>depuis dernière cure le 25.5.2018
+ <br/>
+<br/>
+<u>Examen clinique</u>
+<br/>
+<br/>TA 158/90 mmHg, Pouls 93, T 37.3, SAT 97, EVA 0/10
+ <br/>Sur le plan gynécologique, pas de douleur à la palpation, pas de SFU, 
+ <br/>pas de dysparésie.
+ <br/>Spéculum : saignements originaires de l'endocol de faible abondance
+ <br/>Sur le plan abdominal, souple et indolore, dépressible, hernie 
+ <br/>ombilicale réductible, pas de trouble du transit
+ <br/>Pas de constipation
+ <br/>
+<br/>Le reste de l'examen clinique est sans particulatité
+ <br/>
+<br/>
+<u>Résultats bilan<br/></u>
+<br/>Aucun
+ <br/>
+<br/>
+<u>AU TOTAL</u>
+<br/>
+<br/>Métrorragies dans le cadre d'un adénocarcinome séreux de haut grade 
+ <br/>de l'ovaire droit en cours de traitement par Avastin.
+ <br/>Saignements secondaires à la tumeur
+ <br/>EI de l'Avastin.
+ <br/>
+<br/>Echographie endo vaginale en ville et appel Dr COLOMBA pour 
+ <br/>consultation avec résultats de l'imagerie.
+ <br/>
+<br/>Retour domicile
+ <br/>
+<br/>ha 22h41
+ <br/>HD 1H00
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

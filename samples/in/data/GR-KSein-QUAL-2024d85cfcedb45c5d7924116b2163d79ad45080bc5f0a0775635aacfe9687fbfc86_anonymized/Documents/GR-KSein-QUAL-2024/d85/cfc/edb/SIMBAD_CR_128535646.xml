@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128535646" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'anesthésie : Dr BOUROCHE</title>
+    <effectiveTime value="20170213000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170213000000+0000"/>
+        <assignedAuthor>
+            <code code="ANS/286" displayName="ANESTHESIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Intervention prévue : 23/02/17 pour TGS droite
+ <br/>
+<br/>
+<u><b>Antécédents chirurgicaux</b></u>
+<br/>* Appendicectomie
+ <br/>* Cesarienne sous AG
+ <br/>
+<br/>Pas d'évènements anesthésiques. 
+ <br/>
+<br/>
+<u><b>Antécédents médicaux</b></u>
+<br/>* Hépatite à 14 ans
+ <br/>* Varices
+ <br/>* RGO traité
+ <br/>* Toux chronique
+ <br/>* Neuropathie au TAXOL
+ <br/>* Colique néphrétique
+ <br/>
+<br/>
+<br/>
+<u><b>Antécédents cardio-vasculaires</b></u>
+<br/>* Palpitation
+ <br/>* Pas d'angor. 
+ <br/>
+<br/>
+<u><b>Allergie</b></u>
+<br/>Tegadem + latex
+ <br/>
+<br/>Tabac : sevré en 2003
+ <br/>Alcool : 0
+ <br/>
+<br/>
+<u><b>Examen clinique</b></u>
+<br/>Age : 59 ans
+ <br/>Poids : 54 kg
+ <br/>Taille : 1m71
+ <br/>TA : 133/77
+ <br/>SpO2 : 98
+ <br/>FC : 69
+ <br/>Gestion des voies aériennes : Mallampati I, DTM>6, OB>3, pas de 
+ <br/>prothèse dentaire mais des bridges, dents 11 et 21 sous pivot.
+ <br/>PAC à gauche.
+ <br/>Hémostase clinique normale
+ <br/>Auscultation cardio-respiratoire normale
+ <br/>NYHA I, > 4 METs
+ <br/>EVA 8/10 au niveau des jambes mais ne souhaite pas de traitement
+ <br/>
+<br/>
+<u><b>Bilan demandé CE JOUR<br/></b></u> NFS car elle a eu du TAXOL le 30/01/17
+ <br/>Sérologie VIH à la demande de la patiente.
+ <br/>
+<br/>(
+ <b>le résultat de ce bilan fera l'objet d'une note s'il est anormal</b> )
+ <br/>
+<br/>
+<u><b>Traitement en cours : <br/></b></u> * PENTOPRAZOLE
+ <br/>
+<u><b><br/> <br/>CONCLUSION</b></u>
+<br/>
+<b>ASA II.<br/>Protocole anesthésique : anesthésie générale, protocole vert + ML.<br/>Ordonnance BAT donnée<br/>Prévention des NVPO : Dexa-Ondansétron.<br/>Antibioprophylaxie : CEFAZOLINE<br/>Temps de préparation d'anesthésie prévu : 30 min</b>
+<br/>
+<br/>
+<b>RISQUE ATNC : C<br/></b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

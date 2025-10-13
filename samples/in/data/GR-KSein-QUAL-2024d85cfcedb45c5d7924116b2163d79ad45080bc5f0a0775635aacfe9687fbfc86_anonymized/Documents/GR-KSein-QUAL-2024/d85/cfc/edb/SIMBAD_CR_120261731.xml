@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120261731" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Docteur Florence PASQUIER - Hématologie Clinique</title>
+    <effectiveTime value="20201008000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201008000000+0000"/>
+        <assignedAuthor>
+            <code code="110/16" displayName="CTE 110 - HEMATOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>SERVICE D'HEMATOLOGIE - COMPTE RENDU DE CONSULTATION<br/><br/><br/>Dicté par : </b> Docteur Florence Pasquier
+ <b><br/>Dicté le : </b> 05/10/2020 
+ <b><br/>Service : </b> 110-CTE 110 - HEMATOLOGIE 
+ <br/>
+<b>Type de document : </b> 110 CC CONSULTATION 
+ <br/>
+<b>Ref :</b> 1119301 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : COB
+ <br/>Approuvé par : COB
+ <br/>
+<br/>Je vois ce jour en consultation XXXXXX XXXXXX 63 ans, pour 
+ <br/>exploration d'une bicytopénie.
+ <br/>
+<br/>
+<u><b>Antécédents</b></u>
+<b> :<br/></b>
+<br/>-Juillet 2006 : CCI grade III, triple négatif, T2N0Mx. PROFEEL 
+ <br/>:mutation TP53. PDL1 négatif en mars 2018, RA négatif recherché en 
+ <br/>novembre 2018.
+ <br/>1ère ligne : chimiothérapie néoadjuvante (6 EC 75 doses denses + 12 
+ <br/>TAXOL hebdo débutée le 29/08/2016), chirurgie le 23/02/2017, 
+ <br/>radiothérapie (fin de traitement : 08/06/2017), puis XELODA adjuvant 
+ <br/>6 cycles.
+ <br/>2e ligne : février 2018 : Rechute métastatique osseuse et atteinte: 
+ <br/>CARBOPLATINE GEMZAR de février à juillet 2018, associé à l'Herceptin 
+ <br/>à partir de mai 2018. \'c0 noter toxicité importante sur le plan 
+ <br/>hématologique (neutropénie, thrombopénie).
+ <br/>3e ligne : ENDOXAN de juillet 2018 à octobre 2018, toujours associé à 
+ <br/>l'Herceptine. Progression hépatique et osseuse.
+ <br/>4e ligne : ERIBULINE 
+ <br/>5ème ligne : CMF 
+ <br/>6ème ligne : NAVELBINE 
+ <br/>7e ligne : Taxol jusqu'en mars 2020
+ <br/>8e ligne : TEP scanner juin 2020 : progression osseuse hépatique. 
+ <br/>Arrêt Xeloda. Carboplatine.
+ <br/>Radiothérapie L4 et sacrum à l'été 2020 (fin de traitement de 
+ <br/>radiothérapie le 31.08.2020).
+ <br/>- Migraines suite à AVP. 
+ <br/>- Hépatite A en 1973.
+ <br/>- Pyélonéphrite à l'âge de 4 ans.
+ <br/>- Herpès génital (ayant nécessité une césarienne en 1982).
+ <br/>- Péritonite en 1980.
+ <br/>- Zona sous XELODA.
+ <br/>- Douleurs neurologiques sous GABAPENTINE.
+ <br/>- Neuropathie périphérique membres inférieurs.
+ <br/>- Notion d'intolérance à l'aspirine.
+ <br/>
+<br/>
+<u><b>Histoire hématologique</b></u>
+<b> :<br/></b> Thrombopénie depuis août 2020 entre 50 et 100 G/l.
+ <br/>Pas de traitement pour le cancer du sein depuis le 25 août 2020 en 
+ <br/>raison de la thrombopénie.
+ <br/>
+<br/>
+<u><b>Traitement en cours</b></u>
+<b> : <br/></b> Zelitrex
+ <br/>Gabapentine
+ <br/>Ramipril
+ <br/>Doliprane
+ <br/>Macrogol si besoin
+ <br/>Prednisolone à visée antalgique jusqu'au 1er octobre 2020 inclus
+ <br/>
+<br/>
+<u><b>Mode de vie</b></u>
+<b> : </b>
+<br/>Juriste dans un cabinet d'avocat d'affaires.
+ <br/>Divorcé.
+ <br/>En couple.
+ <br/>Une fille qui vit en Australie.
+ <br/>
+<br/>
+<u><b>Le jour de la consultation</b></u>
+<b> : <br/></b>
+<br/>- 
+ <u> D'un point de vue clinique</u> :
+ <br/>
+<br/>OMS 1.
+ <br/>Gêne hépatique due aux lésions métastatiques, essoufflement 
+ <br/>(épanchement pleural).
+ <br/>Absence de syndrome infectieux, anémique ou hémorragique.
+ <br/>Pas de signes généraux.
+ <br/>
+<br/>- 
+ <u> D'un point de vue biologique</u> : 
+ <br/>
+<br/>Leucocytes 4,2 G/l avec une formule normale mise à part des 
+ <br/>lymphocytes 04 G/l, hémoglobine 9,5 g/dl avec un VGM à 120 μm, 
+ <br/>réticulocytes 72 G/l, plaquettes 76 G/l.
+ <br/>Fonction rénale, ionogramme sanguin, fer sérique, haptoglobine, TSH, 
+ <br/>TP TCA : normaux
+ <br/>Bilan inflammatoire : augmentation des alpha un et des bêta 2 
+ <br/>globulines à l'EPS, fibrinogène à 4,9 g/l, CRP 18,4 mg/l, 
+ <br/>ferritinémie à 1550 ng/ml (10 - 291).
+ <br/>Absence de carence en vitamine B12 et en folates qui sont au 
+ <br/>contraire augmentés
+ <br/>LDH 1119 unités/l (< 246)
+ <br/>2HG, EPO, bilan médullaire : en cours
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/></b>
+<br/>Bicytopénie persistante chez une patiente suivie pour un cancer du 
+ <br/>sein métastatique.
+ <br/>On organise ce jour une évaluation médullaire.
+ <br/>
+<br/>Passage en RCP myéloïde le 9 octobre 2020.
+ <br/>
+<br/>Consultation Dr MICOL le 16 octobre 2020.
+ <br/>
+<b><br/></b> Signature le 02/10/20 du consentement pour utilisation à des fins de 
+ <br/>recherche des reliquats tumoraux.
+ <br/>
+<b><br/>_________________________________________________<br/>Signé électroniquement par Docteur Florence PASQUIER <br/>Le mercredi 7 octobre 2020 à 16:00</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

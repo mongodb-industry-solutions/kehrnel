@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120950576" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°20H04962 3038759 Dr Marion CLASSE</title>
+    <effectiveTime value="20200626000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200626000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>DÉPARTEMENT DE BIOLOGIE ET DE PATHOLOGIE MEDICALES<br/></p>
+<p>114, rue Edouard Vaillant - 94805 VILLEJUIF CEDEX<br/></p>
+<p>N° I.G.R. : 010 XXXXXX <br/>XXXXXX José XXXXXX M <br/> Madame Le Docteur BREUSKIN Ingrid <br/>Examen demandé par : Service ORL +5 <br/>Dr BREUSKIN Ingrid <br/>CTE 010 - ORL <br/>Prélevé le 19/06/2020 <br/>Enregistré le 19/06/2020 <br/></p>
+<p> KCL <br/> Examen n° : 20H04962<br/></p>
+<p> CR édité le : 26/06/2020<br/></p>
+<p>Copie à : 1/1 </p>
+<p>BIOPSIE(S) </p>
+<p> Renseignements cliniques : <br/>Carcinome épidermoïde de l'oropharynx HPV- actuellement en récidive latéro-cervicale bilatérale en cours de traitement par NIVOLUMAB après traitement par radiochimiothérapie en 2014 puis chirurgie de rattrapage en 2017 et de 2018. </p>
+<p> <br/>- Cervical gauche : (3 fragment(s), 4 niveau(x), bloc(s) n° 1) <br/>- N° bloc représentatif de la tumeur (petit bloc sans décalcification) : 1 </p>
+<p>Diagnostic : CARCINOME ÉPIDERMOÏDE <br/>Il s'agit de fragment dont l'aspect évoque un tissu de granulation bordé par un épithélium malpighien présentant des foyers de carcinomes épidermoïdes. L'aspect est très inhabituel, et d'interprétation délicate dans ce contexte de tissu de granulation. Il est impossible de préciser le caractère infiltrant. L'aspect global évoque un trajet fistuleux colonisé par un carcinome épidermoïde. A confronter avec les données cliniques. </p>
+<p> <br/></p>
+<p><br/>PHXC7410<br/>G, PHXCE5T0<br/>G <br/></p>
+<p> Dr Marion CLASSE <br/> Praticien </p>
+<p> Compte rendu validé et signé électroniquement </p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

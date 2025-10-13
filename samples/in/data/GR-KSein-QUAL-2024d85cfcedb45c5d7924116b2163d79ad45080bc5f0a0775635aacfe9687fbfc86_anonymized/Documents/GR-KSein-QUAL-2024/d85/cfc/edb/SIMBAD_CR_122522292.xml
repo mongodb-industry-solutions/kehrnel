@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122522292" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="10213-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anesthésie"/>
+    <title>CR Anesthesie Post-Op</title>
+    <effectiveTime value="20191029000000+0000"/>
+    <confidentialityCode code="10213-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anesthésie"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20191029000000+0000"/>
+        <assignedAuthor>
+            <code code="ANS/286" displayName="ANESTHESIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Prénom <br/><br/><br/><br/>Nom </p>
+<p>N° Patient <br/><br/><br/><br/>D. de N. </p>
+<p>No PBO <br/><br/><br/><br/>Taille <br/><br/><br/><br/>Poids <br/><br/><br/><br/>Age </p>
+<p>Anesthésie le <br/><br/><br/><br/>Classe ASABrigitte </p>
+<p>XXXXXX </p>
+<p>XXXXXX XXXXXX </p>
+<p>714880 171 cm 52 kg </p>
+<p>62 ans </p>
+<p>29.10.2019 2 </p>
+<p>ATNC <br/><br/><br/><br/>Induction: Normale </p>
+<p>C </p>
+<p>INTERVENTION CHIRURGICALE 65 Pan endoscopie </p>
+<p>IADEAnesthesiste Chirurgien <br/>DUNYACH Chloe Dr BENMOUSSA REBIBO </p>
+<p>Nadia <br/>LE QUEAU Thérèse <br/>ARNAUD Coralie </p>
+<p>Dr VERMERSCH Charlotte </p>
+<p>Consultation pre-anesthésique .Non .Non </p>
+<p>> 65 mm </p>
+<p>1 > 35mm </p>
+<p>.Non </p>
+<p>BMR : <br/>D.I.D : </p>
+<p>D.T.M : </p>
+<p>Mallampati : <br/>ODB: </p>
+<p>Pacemaker : </p>
+<p>Eval. Prémé: </p>
+<p>Technique Anesthésie Allergies Durées <br/>Autre. Durée anesthésie 45 min </p>
+<p>Durée chirurgie 23 min <br/>Admission SSPI 11:59 <br/>Sortie SSPI 13:01 </p>
+<p>Anesthésie générale </p>
+<p>aspirine, intolerance Tramadol </p>
+<p>Voies Aériennes Pré-oxygénation: 29/10/2019 11:14 11:18, 11:52, Jet ventilation, GR 300, Intercricothyroidien, Difficulté, Facile, Cormack, 1 </p>
+<p>Voies Veineuses 11:09, VVP, Cathlon VVP, 20g, Main, Gauche, .Facile </p>
+<p>Loco-Régionale </p>
+<p>Position & Protections 11:21 Installation Décubitus dorsal 11:21 Position Table Niveau 11:21 Position Bras Gauche Long du corps 11:21 Protection Oculaire Renforcée 11:21 Points de compression OK 11:21 Position Bras Droit Long du corps </p>
+<p>Temps chirurgicaux 11:24, Tps chir ORL, Endoscopie </p>
+<p>Monitorage et Equipements <br/>Site SpO2 Doigt <br/>Site PNI Bras droit <br/>Site curarisation Adducteur du Pouce <br/>Réchauffeur Air <br/>ECG 3 fils <br/>Couverture </p>
+<p>Notes IntraOP </p>
+<p>Drainages </p>
+<p>Temps 29/10/2019 11:57 -Sortie de salle 29/10/2019 11:52 -Fin d'anesthésie 29/10/2019 11:43 -Fin d'intervention <br/>Date d'impression: 29/10/19 13:02 Page 1/4</p>
+<p></p>
+<p></p>
+<p>Prénom <br/><br/><br/><br/>Nom </p>
+<p>N° Patient <br/><br/><br/><br/>D. de N. </p>
+<p>No PBO <br/><br/><br/><br/>Taille <br/><br/><br/><br/>Poids <br/><br/><br/><br/>Age </p>
+<p>Anesthésie le <br/><br/><br/><br/>Classe ASABrigitte </p>
+<p>XXXXXX </p>
+<p>XXXXXX XXXXXX </p>
+<p>714880 171 cm 52 kg </p>
+<p>62 ans </p>
+<p>29.10.2019 2 </p>
+<p>ATNC <br/><br/><br/><br/>Induction: Normale </p>
+<p>C </p>
+<p>29/10/2019 11:21 -Prêt pour chirurgie 29/10/2019 11:20 -Début de chirurgie 29/10/2019 11:18 -Time out fait 29/10/2019 11:14 Pré-oxygénation 29/10/2019 11:07 -Début d'anesthesie 29/10/2019 11:07 -Patient en salle 29/10/2019 11:01 Salle prête </p>
+<p>ENTREES BALANCE <br/>Produits sanguins </p>
+<p>Entrées Solutés </p>
+<p>TOTAL </p>
+<p>657 ml </p>
+<p>657 ml 657 ml </p>
+<p>SORTIES <br/>Balance des fluides </p>
+<p>Autres </p>
+<p>Pertes sang bloc </p>
+<p>Urines </p>
+<p>Redons </p>
+<p>Date d'impression: 29/10/19 13:02 Page 2/4</p>
+<p></p>
+<p></p>
+<p>Prénom <br/><br/><br/><br/>Nom </p>
+<p>N° Patient <br/><br/><br/><br/>D. de N. </p>
+<p>No PBO <br/><br/><br/><br/>Taille <br/><br/><br/><br/>Poids <br/><br/><br/><br/>Age </p>
+<p>Anesthésie le <br/><br/><br/><br/>Classe ASABrigitte </p>
+<p>XXXXXX </p>
+<p>XXXXXX XXXXXX </p>
+<p>714880 171 cm 52 kg </p>
+<p>62 ans </p>
+<p>29.10.2019 2 </p>
+<p>ATNC <br/><br/><br/><br/>Induction: Normale </p>
+<p>C </p>
+<p>SSPI <br/>ExtubationArrivée SSPI Personnels SSPI <br/>11:5211:59 YSSAAD Martine </p>
+<p>Dr BENMOUSSA REBIBO Nadia <br/><br/>Dr VERMERSCH Charlotte </p>
+<p>... </p>
+<p>Bilan d ́entrée <br/>Score EDS: 0 Patient Eveillé , NVPO: 1 Rien , Mal de gorge: .Oui , EVS: 2 Douleur modérée , Agitation: .Non </p>
+<p>12:03: O2 additionnel par: Lunettes O2 </p>
+<p>Surveillance 13:01 EVS 2 Douleur modérée 13:01 NVPO 1 Rien 13:00 Score EDS 0 Patient Eveillé 11:59 Score EDS 0 Patient Eveillé 11:59 EVS 2 Douleur modérée 11:59 NVPO 1 Rien 11:59 Agitation .Non 11:59 Mal de gorge .Oui </p>
+<p>LABO ACTES SSPI <br/></p>
+<p>Signes Vitaux Manuels Notes SSPI <br/>13:01 Patiente douloureuse au niveau du cou -> paracétamolet acupan effectués -> légère amélioration mais douleurtoujours présente -> Patiente refuse le tramadol et leparacétamol </p>
+<p>INSTRUCTIONS POSTOP <br/>Instructions Générales Instructions chirurgicales </p>
+<p>ANALGESIQUES & ALR <br/>Nefopam, 20 mg, I.V. SE, Administré :29/10/2019 12:04 <br/>Paracetamol i.v, 1 g, I.V. bolus, Administré :29/10/2019 11:21 <br/>Remifentanil 25 μg/ml, 135 μg, I.V. perf, Commencé :29/10/2019 11:09, Arrêté :29/10/2019 11:42, PRIMEA-09 <br/>> Voie 2 </p>
+<p>ANTIBIOTIQUES </p>
+<p>AUTRES DROGUES </p>
+<p>Propofol 10 mg/ml, 494 mg, I.V. perf, Commencé :29/10/2019 11:10, Arrêté :29/10/2019 11:41, PRIMEA-09 <br/>> Voie 1 </p>
+<p>Ephédrine, 6 mg, I.V. bolus, Administré :29/10/2019 11:20 <br/>Dexamethasone, 8 mg, I.V. bolus, Administré :29/10/2019 11:21 <br/>Produits sanguins </p>
+<p>Totaux fluides & produits sanguins <br/>Ringer 0 ml </p>
+<p>Date d'impression: 29/10/19 13:02 Page 3/4</p>
+<p></p>
+<p></p>
+<p>Prénom <br/><br/><br/><br/>Nom </p>
+<p>N° Patient <br/><br/><br/><br/>D. de N. </p>
+<p>No PBO <br/><br/><br/><br/>Taille <br/><br/><br/><br/>Poids <br/><br/><br/><br/>Age </p>
+<p>Anesthésie le <br/><br/><br/><br/>Classe ASABrigitte </p>
+<p>XXXXXX </p>
+<p>XXXXXX XXXXXX </p>
+<p>714880 171 cm 52 kg </p>
+<p>62 ans </p>
+<p>29.10.2019 2 </p>
+<p>ATNC <br/><br/><br/><br/>Induction: Normale </p>
+<p>C </p>
+<p>Ringer 500 ml </p>
+<p>Bilan de Sortie <br/>Score EDS 0 Patient Eveillé, Score de CHUNG OK , Score Clinique OK , Patient Normotherme , Pansement propre </p>
+<p>, NVPO 1 Rien, EVS 2 Douleur modérée, Départ avec O2 .Non </p>
+<p>Evénements Remarquables (IntraOP/PostOP): .Non / .Non </p>
+<p>Evénements Remarquables Chirurgicaux </p>
+<p>DestinationScore d'Aldrete Heure de sortieMédecin autorisant la sortie 10 29/10/19 13:01 </p>
+<p>Date d'impression: 29/10/19 13:02 Page 4/4</p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

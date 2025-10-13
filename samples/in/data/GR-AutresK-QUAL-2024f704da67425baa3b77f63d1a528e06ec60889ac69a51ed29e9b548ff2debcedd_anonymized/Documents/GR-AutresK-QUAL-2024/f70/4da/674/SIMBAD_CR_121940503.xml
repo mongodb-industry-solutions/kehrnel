@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121940503" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM ABD+PELV</title>
+    <effectiveTime value="20200124000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200124000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Destinataire : GERS
+ <br/> DR INTERNE
+ <br/>
+<br/>
+<b>SCANNER THORACO-ABDOMINO-PELVIEN<br/><br/><br/> Dicté par : </b> Docteur Rémi Bourdais, Interne & Sana HARGUEM
+ <b><br/>Dicté le : </b> 23/01/2020 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Générique 
+ <br/>
+<b>Ref :</b> 914789 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : 
+ <b>DMI<br/><br/>EXAMEN N. 349<br/></b>
+<br/>
+<br/>
+<br/>Examen réalisé le : 23 janvier 2020 
+ <br/>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/></b> Patiente de 67 ans suivie pour carcinome séreux ovarien de haut 
+ <br/>grade métastatique pleural et péritonéal. Traitement initial par 
+ <br/>Carboplatine Taxol avec Avastin en entretien. Hospitalisation pour 
+ <br/>fièvre et douleurs dorsolombaires avec ECBU positif. Persistance du 
+ <br/>sepsis et de la douleur à 48 heures d'antibiothérapie large spectre.
+ <br/>
+<u><b><br/>TECHNIQUE</b></u>
+<b> :<br/></b> Examen réalisé sur un scanner OPTIMA CT660, GENERAL ELECTRIC, mis 
+ <br/>en service le 8 février 2016.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 422272HM5
+ <br/>
+<br/>Réalisation d'une acquisition :
+ <br/>\'a7 Thoracique
+ <br/>\'a7 Abdominale 
+ <br/>\'a7 Pelvienne
+ <br/>
+<br/>Examen réalisé avec injection intraveineuse de produit de contraste.
+ <br/>
+<br/>
+<b>Produit de contraste injecté : Xenetix <br/>Quantité : 80 CC <br/>PDL : 446 mGy.cm<br/></b>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/></b> Examen comparé aux scanners du 2 janvier 2020 
+ <br/>Sur les coupes abdominales hautes, apparition d'un épanchement 
+ <br/>pleural de moyenne abondance et de troubles de ventilation des bases. 
+ <br/>
+<u><br/></u>Ascite de grande abondance globalement stable avec un épaississement 
+ <br/>diffus des feuillets péritonéaux d'aspect plus nodulaire ce jour et 
+ <br/>notamment dans le flanc droit (i 127 s2).
+ <br/>Apparition de lésions de carcinose péritonéale diffuse. 
+ <br/>Stabilité en taille de la lésion hépatique hypodense du segment I.
+ <br/>
+<br/>Prise de contraste homogène du parenchyme rénal sans dilatation 
+ <br/>pyélocalicielle.
+ <br/>Absence de lésion pancréatique.
+ <br/>Absence de lésion splénique.
+ <br/>Stabilité de la masse ovarienne mesurée à 15 cm de grand axe. 
+ <br/>
+<br/>Fracture tassement d'allure dégénérative de D11 et L3 sans recul du 
+ <br/>mur postérieur.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/><br/></b> Epanchement pleural bilatéral de moyenne abondance.
+ <br/>Ascite de grande abondance avec un épaississement diffus des 
+ <br/>feuillets péritonéaux d'aspect plus nodulaire ce jour et notamment 
+ <br/>dans le flanc droit suspect de progression.
+ <br/>Pas d'anomalie rénale.
+ <br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Sana HARGUEM ZAYANI <br/>Le jeudi 23 janvier 2020 à 13:04 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

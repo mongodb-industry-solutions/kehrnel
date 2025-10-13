@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124736798" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Note du 2018-11-27</title>
+    <effectiveTime value="20181127000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181127000000+0000"/>
+        <assignedAuthor>
+            <code code="136/300" displayName="CONS. RADIO INTERVENTIONNELLE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>FICHE REPONSE POUR ACCORD BIOPSIE IMAGERIE THERAPEUTIQUE</b></u>
+<br/>
+<br/>
+<u><b>PROTOCOLE</b></u> : ATALANTE 
+ <br/>
+<br/>
+<u><b>Demandeur</b></u> : Docteur COLOMBA-BLAMEBLE (4376)
+ <br/>
+<u><b>Medecin RI</b></u> : Docteur CHASSAING
+ <br/>
+<br/>
+<u><b>Organe</b></u> : ovaire
+ <br/>
+<br/>
+<u><b>R\'c9PONSE ACCORD</b></u>
+<b> :</b> OUI
+ <br/>
+<br/>
+<u><b>Moyen de guidage + Salle</b></u> : ECHO 
+ <br/>
+<br/>
+<br/>
+<u><b>En</b></u> : Ambulatoire 
+ <br/>
+<br/>
+<u><b>Position</b></u> : décubitus 
+ <br/>
+<br/>
+<u><b>Bilan sanguin à prévoir</b></u> : Oui 
+ <br/> préciser : NFS TP
+ <br/>
+<br/>
+<u><b>Prise d'anticoagulants ou antiagrégants</b></u> : Oui INNOHEP ne sera pas 
+ <br/>réalisé le jour même de la biopsie
+ <br/>
+<br/>
+<br/>
+<u><b>Notifications supplémentaires</b></u> : 
+ <br/>
+<br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b> Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>
+<b>10/12/2018 07:15 136 HCX ADM CHIR AMB AL <br/> 08:00 136 HCX PBO SEG RI <br/> 08:00 136 HCX PBO CHIR _R1 <br/> 09:30 136 HCX LIT PCA 120 </b>
+<br/>10/01/2019 08:50 060 ECB CHIM GYNE ECB 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

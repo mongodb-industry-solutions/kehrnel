@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125090982" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM CRANE TDM THORAX</title>
+    <effectiveTime value="20181004000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181004000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur GARCIA GABRIEL
+ <br/>
+<br/>Destinataire : SOINS AIGUS REANIMATION
+ <br/> DR INTERNE
+ <br/>
+<br/>
+<br/>
+<b>Compte rendu générique de SCANNER<br/><br/>Dicté par : </b> Gabriel Garcia
+ <b><br/>Dicté le : </b> 03/10/2018 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Générique 
+ <br/>
+<b>Ref :</b> 503405 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : 
+ <u><b>EDG</b></u>
+<br/>
+<br/>Examen réalisé le 3 octobre 2018
+ <br/>
+<br/>
+<u><b>Examen 7445<br/><br/><br/> SCANNER CEREO-THORACIQUE<br/><br/> </b></u>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/><br/></b> Arrêt cardio-respiratoire. Bilan étiologique.
+ <br/>
+<br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/><br/></b> Examen réalisé sur un scanner DISCOVERY 750 HD, GENERAL ELECTRIC, 
+ <br/>mis en service en septembre 2012.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 429098CN7
+ <br/>Réalisation d'une acquisition :
+ <br/> Cérébrale
+ <br/> Thoracique
+ <br/>Examen réalisé sans et avec injection de produit de contraste
+ <br/>Produit de contraste injecté : Xenetix 
+ <br/>Quantité : 90 mL
+ <br/>PDL : attachés aux images PACS 
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/><br/> A l'étage encéphalique : <br/></b> Discrète majoration de l'hématome sous-dural chronique frontal droit 
+ <br/>avec signe de re-saignement récent, de façon relativement comparable à 
+ <br/>l'examen précédent. Il mesure ce jour 13 mm d'épaisseur maximale 
+ <br/>contre 9 mm sur l'examen précédent.
+ <br/>Stabilité et de l'hématome sous-dural chronique avec signe de 
+ <br/>re-saignement récent hémisphérique gauche.
+ <br/>Absence de nouvelle lésion par ailleurs.
+ <br/>Absence de thrombose veineuse cérébrale.
+ <br/>Absence de signe d'ischémie aigüe. Absence d'oedème cérébral. 
+ <br/>
+<br/>
+<br/>
+<b> A l'étage thoracique : <br/></b> Epanchement pleural bilatéral de moyenne abondance prédominant à 
+ <br/>droite avec collapsus alvéolaire au contact d'aspect compatible avec 
+ <br/>un foyer infectieux lobaire supérieur droit.
+ <br/>Epaississement des septa inter-lobulaires et des espaces 
+ <br/>péri-broncho-vasculaires prédominant aux apex de façon bilatérale 
+ <br/>probablement en rapport avec une surcharge vasculaire qui n'est pas 
+ <br/>surprenante en post arrêt cardio-respiratoire.
+ <br/>Absence d'embolie pulmonaire proximale ou segmentaire.
+ <br/>Absence d'épanchement péricardique.
+ <br/>Hépatosplénomégalie connue.
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<u></u></b>
+<u> <br/><br/></u>
+<b>1. Discrète majoration de l'hématome sous-dural chronique frontal <br/>droit avec signe de resaignement récent (déjà présent sur le scanner <br/>précédent) sans signe de complication par ailleurs. Cet aspect ne <br/>peut pas expliquer l'arrêt cardiorespiratoire.<br/>2. Hématome sous-dural chronique avec signe de resaignement récent <br/>hémisphérique gauche stable.<br/>3. Absence d'embolie pulmonaire.<br/><br/>_________________________________________________<br/>Signé électroniquement par Gabriel GARCIA <br/>Le mercredi 3 octobre 2018 à 21:06 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

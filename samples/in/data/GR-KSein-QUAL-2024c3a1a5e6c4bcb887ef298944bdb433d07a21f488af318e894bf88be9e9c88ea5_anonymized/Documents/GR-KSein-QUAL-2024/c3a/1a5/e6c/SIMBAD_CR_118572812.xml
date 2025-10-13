@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_118572812" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°21C01369 3223684 Dr Mohamed Amine BANI</title>
+    <effectiveTime value="20210521000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20210521000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<br/>COMPTE RENDU DE CYTOPATHOLOGIE 
+ <br/>
+<br/>PONCTION PLEURALE
+ <br/>Prélèvement sous repérage échographique.
+ <br/>
+<br/>RENSEIGNEMENTS CLINIQUES 
+ <br/>Carcinome du sein triple négatif
+ <br/>
+<br/>TOPOGRAPHIE
+ <br/>Région de la plèvre.
+ <br/>
+<br/>LATERALITE
+ <br/>
+<br/>TECHNIQUE
+ <br/>11 ml de liquide orangé trouble, centrifugé.
+ <br/>1 lames(s) colorée(s) au MGG.
+ <br/>1 lame(s) colorée(s) au Papanicolaou.
+ <br/>Techniques complémentaires : 
+ <br/>- inclusion en paraffine
+ <br/>
+<br/>INTERPRETATION
+ <br/>Le matériel prélevé est quantitativement et qualitativement satisfaisant. 
+ <br/>L'étude microscopique met en évidence des cellules tumorales malignes métastatiques
+ <br/>
+<br/>
+<br/>CONCLUSION
+ <br/>
+<br/>PONCTION PLEURALE 
+ <br/>Topographie : Région de la plèvre
+ <br/>Prélèvement satisfaisant pour le diagnostic.
+ <br/>Présence de cellules tumorales malignes métastatiques.
+ <br/>
+<br/> Dr Mohamed Amine BANI 
+ <br/>
+<br/>
+<br/>COMPTE-RENDU COMPLEMENTAIRE
+ <br/>
+<br/>En immunohistochimie les cellules tumorales expriment de façon hétérogène GATA3.
+ <br/>Pas d'expression des récepteurs hormonaux.
+ <br/>Statut HER2 : négatif (score 1).
+ <br/>
+<br/>
+<br/>
+<br/>CCRS0M02-----GS 
+ <br/>
+<br/> Dr Mohamed Amine BANI 
+ <br/> Praticien 
+ <br/> Compte rendu validé et signé électroniquement 
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

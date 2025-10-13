@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121628697" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION DE RADIOLOGIE INTERVENTIONNELLE ONCOLOGIQUE</title>
+    <effectiveTime value="20200309000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200309000000+0000"/>
+        <assignedAuthor>
+            <code code="136/300" displayName="CONS. RADIO INTERVENTIONNELLE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>CONSULTATION NOUVEAU PATIENT<br/><br/>Dicté par : </b> Docteur Frederic Deschamps
+ <b><br/>Dicté le : </b> 09/03/2020 
+ <b><br/>Service : </b> 136-CONS. RADIO INTERVENTIONNELLE 
+ <br/>
+<b>Type de document : </b> 136 CS CONSULTATION NOUVEAU PATIENT 
+ <br/>
+<b>Ref :</b> 954481 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : JNC
+ <br/>
+<br/>
+<br/>Patiente vue en compagnie de son fils dans les suites d'une 
+ <br/>discussion en staff des douleurs osseuses. Elle présente des 
+ <br/>fractures vertébrales multiples en T11 L1 L3 L4 et L5. On rappelle 
+ <br/>que cette patiente est vue régulièrement pour des ponctions d'ascite 
+ <br/>sur un carcinome ovarien.
+ <br/>
+<br/>Idéalement il faudrait réaliser une vertébroplastie multiétagée, en 
+ <br/>procubitus, sous anesthésie générale (prévoir 3 heures), en salle 
+ <br/>Sky+. J'explique l'intérêt antalgique et de consolidation d'une 
+ <br/>vertébroplastie allant des étages T10 à L5. Le nombre d'étages sera 
+ <br/>bien sûr à réévaluer en fonction du scanner préopératoire réalisé 
+ <br/>après l'anesthésie générale. 
+ <br/>Schéma remis.
+ <br/>
+<br/>Explications sur les données pratiques de la réalisation du geste, 
+ <br/>ses avantages et inconvénients, ce qu'il / elle comprend et accepte.
+ <br/>
+<br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b> Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>
+<b>10/03/2020 07:30 136 FDS DOS ANES </b>
+<br/>13/03/2020 09:30 HJM TZO ECHO ABDOMEN + fax avant ponction 
+ <br/>d'ascite 
+ <br/> 10:00 HJM TZO P ASCITE 
+ <br/>
+<b>24/03/2020 11:00 136 FDS ADM ARD RI <br/> 12:00 136 FDS PBO SEG RI <br/> 12:00 136 FDS PBO CHIR FDS </b>
+<br/>02/04/2020 13:50 060 ECB CHIM GYNE ECB 
+ <br/>03/04/2020 14:30 HJM ECB HDJ CHIMIO 
+ <br/> 14:35 HJM ECB C HDJ A TRAITER 
+ <br/>05/05/2020 09:00 HJM ECB HDJ CHIMIO 
+ <br/> 09:05 HJM ECB C HDJ A TRAITER 
+ <br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Frederic DESCHAMPS <br/>Le lundi 9 mars 2020 à 11:01 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

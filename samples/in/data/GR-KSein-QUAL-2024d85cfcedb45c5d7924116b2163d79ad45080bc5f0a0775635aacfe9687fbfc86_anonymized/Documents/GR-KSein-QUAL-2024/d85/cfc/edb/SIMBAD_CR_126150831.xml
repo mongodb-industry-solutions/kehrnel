@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126150831" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20180419000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180419000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Compte rendu générique de SENOLOGIE<br/><br/>Dicté par : </b> Docteur Meriem Mokdad Adi
+ <b><br/>Dicté le : </b> 19/04/2018 
+ <b><br/>Service : </b> 050-CTE 050 - SEIN 
+ <br/>
+<b>Type de document : </b> 050 CC Générique 
+ <br/>
+<b>Ref :</b> 404551 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : SFC
+ <br/>
+<br/>Patiente vue ce jour avant C3J1 carboplatine -Gemzar pour une 
+ <br/>récidive hépatique et osseuse T3 depuis fevrier 2018 d'un cancer du 
+ <br/>sein droit .
+ <br/>
+<br/>La patiente à eu une toxicité hématologique de la 2e cure : 
+ <br/>thrombopénie grade 4 ayant nécessité une transfusion le 17 avril.
+ <br/>Elle a présenté également une bronchite , juste avant le J8- C2 avec 
+ <br/>une fièvre à 39° survenue après le J8. Elle a consulté aux urgences où 
+ <br/>elle a été mise sous Augmentin pendant 1 semaine.
+ <br/>
+<br/>Ce jour la patiente ne signale une dyspnée depuis 3 jours, importante.
+ <br/>Je demande ce jour un angioscanner d'urgence afin d'éliminer une 
+ <br/>embolie pulmonaire 
+ <br/>Par ailleurs, pas de signe de phlébite. 
+ <br/>
+<br/>Je contacte ce jour le docteur Valent pour avoir les résultats du 
+ <br/>HER2.
+ <br/> Il semblerait que la FISH soit amplifiée avec un ratio à 2,05 mais 
+ <br/>avant de le valider il préfère revoir les blocs.
+ <br/>
+<br/>Je propose à la patiente de supprimer le J8 compte-tenu des 
+ <br/>toxicités, pour rappel les doses ont déjà été réduites avec 
+ <br/>Gemcitabine 850 mg /m2et Carboplatine AUC 3.
+ <br/>La patiente est également sous G-CSF , à partir de J5 pendant 5 jours.
+ <br/>
+<br/>
+<u><b>EN PRATIQUE </b></u> :
+ <br/>
+<br/>Elle recevra sa 3e cure le 26 avril.
+ <br/>L'XGEVA n'a pas encore été débuté pour un problème dentaire au 
+ <br/>niveau de la 38 pour laquelle la patiente va avoir une extraction. ( 
+ <br/>pour l'instant impossible compte-tenu des problèmes de thrombopénie ) 
+ <br/>. 
+ <br/>Je demande rapidement de prévoir un rendez-vous en stomatologie à 
+ <br/>Gustave Roussy pour discuter de l'indication ou pas de l'extraction 
+ <br/>de la 38 afin de pouvoir débuter l'XGEVA.
+ <br/>
+<br/>Un pet scanner d'évaluation est prévu le 27 avril.
+ <br/>Je contacterai la patiente pour lui communiquer les résultats du pet 
+ <br/>scanner.
+ <br/> Je la reverrai en consultation le 3 mai 2018.
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><br/></u>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Meriem MOKDAD ADI <br/>Le jeudi 19 avril 2018 à 11:37 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

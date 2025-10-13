@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122489495" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>EXAMEN IRM IRM RACHIS XSEG</title>
+    <effectiveTime value="20191104000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20191104000000+0000"/>
+        <assignedAuthor>
+            <code code="IRM/301" displayName="RADIODIAGNOSTIC-IRM"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur KASRAOUI Ines
+ <br/>Destinataire : CTE 050 - SEIN
+ <br/> DR MOKDAD--ADI MERIEM
+ <br/>
+<b><br/>Dicté par : </b> Docteur Thomas Samoyeau, Interne et Dr Ines KASRAOUI
+ <b><br/>Dicté le : </b> 31/10/2019 
+ <b><br/>Service : </b> IRM-RADIODIAGNOSTIC IRM 
+ <br/>
+<b>Type de document : </b> IRM CR Générique 
+ <br/>
+<b>Ref :</b> 847063 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : UGA
+ <br/>Examen réalisé le : 31/10/2019
+ <br/>Examen n°2890
+ <br/>
+<br/>
+<b>IRM RACHIDIENNE</b>
+<br/>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> <u><br/></u></b> Patiente de 62 ans prise en charge pour un carcinome canalaire 
+ <br/>infiltrant du sein droit diagnostiqué en 2016 en rechute 
+ <br/>sous-hépatique.
+ <br/>Sur le TEP scanner de septembre fixation pathologique en regard du 
+ <br/>pédicule droit de T3, (précédemment traité par radiothérapie), du 
+ <br/>corps vertébral de C5 et de fixations moins intenses mais suspectes 
+ <br/>de T12 et L4. 
+ <br/> Notion de suspicion d'épidurite en T3 sur un pet scanner du 19 
+ <br/>octobre dont nous ne disposons pas. 
+ <br/>
+<br/>
+<u><b> TECHNIQUE<br/></b></u> Examen réalisé sur une IRM 3T.
+ <br/>Acquisition sagittale T2, sagittale T1 sans puis avec injection de 
+ <br/>Gadolinium (dotarem 10 cc) et suppression du signal de la graisse. 
+ <br/>Réalisation d'axiale T1 injecté sur les anomalies de signal 
+ <br/>rachidien. 
+ <br/>
+<br/>
+<u><b>RESULTATS<br/><br/></b></u> Remplacement médullaire rehaussé des corps vertébraux de C5 et C6 
+ <br/>associé à une épidurite antérieure sans effet de masse sur la moelle 
+ <br/>en regard qui est de morphologie et de signal normaux.
+ <br/>Remplacement médullaire rehaussé du pédicule droit de T3 sans 
+ <br/>épidurite associée.
+ <br/>Pas d'anomalie de signal ni de prise de contraste suspecte des 
+ <br/>vertèbres T12 et L4.
+ <br/>
+<br/>
+<b>Par ailleurs,<br/></b> Pas d'autre anomalie de signal ou de prise de contraste des 
+ <br/>vertèbres.
+ <br/>Pas d'anomalie de signal ou de prise de contraste pathologique 
+ <br/>médullaire ou leptoméningée.
+ <br/>Rétrolisthésis de grade 1 de L2. Respect de l'alignement vertébral 
+ <br/>par ailleurs.
+ <br/>Discopathies dégénératives étagées du rachis lombaire marquées à 
+ <br/>l'étage L5-S1 associées à une protrusion discale venant au contact 
+ <br/>des racines S1 à leurs émergences.
+ <br/>Pas d'anomalie de hauteur des corps des disques intervertébraux.
+ <br/>Pas d'anomalie de la charnière cervico-occipitale, cône terminal se 
+ <br/>projetant en regard de T12 de signal normal.
+ <br/>
+<br/>
+<u><b>CONCLUSION<br/></b></u>
+<b>Localisations secondaires aux étages C5, C6 et T3. <br/>Epidurite antérieure à l'étage C5 sans effet de masse sur le cordon <br/>médullaire en regard.<br/>_________________________________________________<br/>Signé électroniquement par Docteur Inès KASRAOUI <br/>Le dimanche 3 novembre 2019 à 15:54 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

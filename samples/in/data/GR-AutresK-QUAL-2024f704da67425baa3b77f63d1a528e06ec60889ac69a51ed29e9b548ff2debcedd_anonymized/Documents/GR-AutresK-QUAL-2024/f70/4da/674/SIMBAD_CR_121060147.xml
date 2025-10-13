@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121060147" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>EMASP - CR HDJ SOINS PALLIATIFS - Dr Elena PAVLIUC</title>
+    <effectiveTime value="20200520000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200611000000+0000"/>
+        <assignedAuthor>
+            <code code="134/536" displayName="EMASP"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Secrétaire : ERL 
+ <br/>
+<br/>Date de l'Hôpital de Jour : 20/05/2020
+ <br/>Patiente vue par : Dr PAVLIUC 
+ <br/> IDE : Axelle FOUGERE 
+ <br/>
+<br/>
+<b> L'\'c9TAT CLINIQUE DE Mme XXXXXX N\'c9CESSITE UNE PRISE EN CHARGE <br/>EN H\'d4PITAL DE JOUR DE SOINS PALLIATIFS POUR \'c9VALUATION ET <br/>SURVEILLANCE M\'c9DICALE.<br/></b>
+<br/>Patiente régulièrement suivie en Hôpital de Jour de Soins Palliatifs.
+ <br/>Patiente venue seule ce jour. 
+ <br/>
+<br/>
+<b>Oncologue référent : Dr COLOMBA <br/><br/> OMS = 3</b>
+<br/>
+<br/>
+<u><b>INFORMATIONS COMPL\'c9MENTAIRES</b></u>
+<br/>
+<b>Directives anticipées</b> : non abordées 
+ <br/>
+<b>Personne de confiance</b> : son mari Mr XXXXXX Joseph 06.72.67.07.83
+ <br/>
+<b>Intervenants au domicile</b> : La patiente est prise en charge par l'HAD 
+ <br/>santé service, passage d'une infirmière tous les jours pour le 
+ <br/>traitement, les constantes, réalisation de la chimiothérapie les 
+ <br/>mardis, soins d'hygiène. 
+ <br/>Le médecin traitant se déplace au domicile.
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS NOTABLES</b></u>
+<br/>Thrombose du membre inférieur droit en 2017.
+ <br/>Appendicectomie.
+ <br/>Fracture ostéoporotique de L3 à L1, cimentoplastie le 24/03 du T10 à 
+ <br/>L5, compliquée d'une minime fuite de ciment, stabilité des douleurs 
+ <br/>depuis. 
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE ET SES COMPLICATIONS</b></u>
+<br/>Diagnostic en février 2017 d'une masse pelviene, probablement 
+ <br/>d'origine ovarienne avec présence d'une ascite et d'une thrombose au 
+ <br/>niveau du membre inférieur droit. 
+ <br/>
+<br/>Mise en place d'un traitement anticoagulant par INNOHEP puis switch 
+ <br/>par PREVISCAN.
+ <br/>
+<br/>Mars 2017: coelioscopie exploratrice qui retrouve une carcinose 
+ <br/>péritonéale. 
+ <br/>Mise en place d'une 1ère ligne de chimiothérapie par CARBOPLATINE + 
+ <br/>TAXOL, débutée le 31/03/17, par la suite les doses ont été réduites 
+ <br/>pour toxicité hématologique, thrombopénie grade II.
+ <br/>
+<br/>Octobre 2017 : coelioscopie exploratrice interrompu par une 
+ <br/>instabilité hémodynamique majeure et respiratoire. Poursuite d'un 
+ <br/>traitement systémique avec reprise de CARBOPLATINE + TAXOL et 
+ <br/>adjonction d'AVASTIN, le 20/10/17, 2 cures puis entretien par AVASTIN 
+ <br/>seul.
+ <br/>
+<br/>Stabilité clinique sous AVASTIN pendant 1 an, ascite ponctionnée 
+ <br/>toutes les 4 semaines.
+ <br/>
+<br/>Octobre 2018 : progression ovarienne, inclusion dans le protocole 
+ <br/>ATALANTE, bras CARBOPLATINE + GEMZAR + AVASTIN +/- ATEZOLIZUMAB, 
+ <br/>débuté le 18/01/2019. 
+ <br/>
+<br/>Juillet 2019 : progression, PLATINE résistante motivant 
+ <br/>l'introduction d'une chimiothérapie par TAXOL hebdomadaire.
+ <br/>
+<b><br/></b> Janvier 2020
+ <b>: </b> progression sous TAXOL, nouvelle ligne par CAELYX, 
+ <br/>débutée le 30/01/2020.
+ <br/>
+<br/>Les ponctions d'ascite ont continué toutes les 6 semaines pendant le 
+ <br/>TAXOL puis tous les 10 jours sous traitement par CAELYX.
+ <br/>
+<br/>Début d'une nouvelle ligne de chimiothérapie par GEMCITABINE le 
+ <br/>20/04/2020 pour progression clinique. 
+ <br/>
+<br/>
+<b>Complications liées à la maladie et au traitement </b> : 
+ <br/>Ascite, nécessitant des ponctions presque toutes les 6 semaines. 
+ <br/>Epanchement pleural droit, ponctionné le 03/03/2020. 
+ <br/>Thrombose du membre inférieur droit inaugurale, traitée par INNOHEP.
+ <br/>
+<br/>
+<u><b>MODE DE VIE</b></u>
+<br/>Patiente mariée, a trois fils dont un qui vit au domicile. 
+ <br/>Le couple habite dans un appartement au 2ème avec ascenseur, la salle 
+ <br/>de bain est avec une douche mais avec une petite marche. 
+ <br/>La patiente est retraitée, était commerçante. 
+ <br/>
+<br/>
+<u><b>TRAITEMENT EN COURS</b></u>
+<br/>Traitement oncologique : GEMCITABINE, une fois par semaine. 
+ <br/>
+<br/>1 CNO par jour 
+ <br/>INNOHEP 10.000 ui
+ <br/>OXYCONTIN LP 20 mg matin et soir 
+ <br/>OXYNORMORO 10 mg entre 0 et 2 fois par jour.
+ <br/>PARACETAMOL 1 g, 2 fois par jour.
+ <br/>POLARAMINE si besoin. 
+ <br/>ZOPHREN post-chimiothérapie. 
+ <br/>ACUPAN si besoin 
+ <br/>SPASFON si besoin 
+ <br/>PRIMPERAN 10 mg 1 cp si besoin. 
+ <br/>LANSOYL si besoin. 
+ <br/>
+<br/>
+<u><b>BIOLOGIE du 16/05/2020</b></u>
+<br/>Hémoglobine : 7.2 g/dl 
+ <br/>Leucocytes : 13.7 G/l 
+ <br/>Plaquettes : 332 G/l 
+ <br/>Sodium : 140 mmol/l
+ <br/>Potassium : 3.9 mmol/l
+ <br/>Albumine : 13 g/l 
+ <br/>Calcium corrigé : 2.51 mmol/l
+ <br/>Créatinine : 48 μmol/l
+ <br/>ASAT : 98 ui/l
+ <br/>ALAT : 71 ui/l
+ <br/>PAL : 222 ui/l
+ <br/>Gamma GT : 64 ui/l
+ <br/>Bilirubine totale : 5.5 μmol/l
+ <br/>
+<br/>
+<u><b>\'c9VALUATION M\'c9DICO-SOIGNANTE DES SYMPT\'d4MES</b></u>
+<br/>PS : 3
+ <br/>TA : 113/70 Pouls : 101 
+ <br/>Saturation : 98% Température : 37.3
+ <br/>
+<br/>
+<b>Sur le plan douleur </b> : la patiente décrit une douleur au niveau du 
+ <br/>membre inférieur gauche à la mobilisation. 
+ <br/>Une douleur au niveau du coccyx surtout le matin, au réveil. 
+ <br/>Douleur au niveau du membre inférieur droit mais moins intense que le 
+ <br/>membre inférieur gauche. 
+ <br/>A l'examen clinique, présence d'oedèmes importants des membres 
+ <br/>inférieurs et signe inflammatoire avec un aspect d'érysipèle. Mise en 
+ <br/>place d'une antibiothérapie par PYOSTACINE pendant 14 jours. 
+ <br/>
+<br/>
+<b>Sur le plan cardio-pulmonaire </b> : pas de toux, pas d'expectoration, de 
+ <br/>gêne respiratoire actuellement sauf aux efforts intenses, sachant que 
+ <br/>la patiente a eu une ponction d'ascite le 18/05/2020. 
+ <br/>A l'examen clinique murmure vésiculaire symétrique et bilatéral, pas 
+ <br/>de bruit surajouté, les bruits du coeur sont réguliers mais rapides. 
+ <br/>Saturation correcte à 98%. Présence des oedèmes des membres 
+ <br/>inférieurs importants. 
+ <br/>
+<br/>
+<b>Sur le plan digestif </b> : pas de nausée, pas de vomissement, le transit 
+ <br/>est correct. 
+ <br/>Abdomen ascitique, ponction d'ascite en radiologie interventionnelle 
+ <br/>une fois par semaine, dernière ponction le 18/05/2020, évacuation de 
+ <br/>3L. 
+ <br/>
+<b><br/>Sur le plan nutritionnel</b> : la patiente prend 1 complément 
+ <br/>nutritionnel par jour, fait des efforts pour avoir trois repas par 
+ <br/>jour, la quantité des repas est aussi en fonction du liquide 
+ <br/>d'ascite. 
+ <br/>
+<br/>
+<b>Sur le plan des muqueuses et du tégument</b> : oedèmes importants des 
+ <br/>membres inférieurs. 
+ <br/>Aspect d'érysipèle au niveau des deux jambes mais plus important à 
+ <br/>gauche avec apparition des signes inflammatoire au niveau de la 
+ <br/>cuisse gauche, sachant que la patiente a déjà eu une antibiothérapie 
+ <br/>pour un aspect d'érysipèle pendant l'hospitalisation. Reprise d'une 
+ <br/>antibiothérapie par PYOSTACINE pour 14 jours. 
+ <br/>Xérostomie.
+ <br/>
+<br/>
+<b>Sur le plan neuro-psychologique </b> : sommeil plutôt correct mais se 
+ <br/>réveille pour aller aux toilettes la nuit, fait des siestes après le 
+ <br/>repas du midi. 
+ <br/>Sur le plan psychologique, la patiente dit avoir le moral qui 
+ <br/>remonte, depuis la sortie d'hospitalisation car présente une 
+ <br/>amélioration de l'état général. 
+ <br/>La patiente est très entourée par sa famille, "dit vivre au jour le 
+ <br/>jour et profite de ce qu'elle peut". 
+ <br/>
+<br/>
+<b>Mobilité/autonomie</b> : la patiente ressent une amélioration au niveau 
+ <br/>de la mobilité, de son état général depuis la sortie de 
+ <br/>l'hospitalisation et l'organisation des ponctions d'ascite 
+ <br/>régulièrement. 
+ <br/>Se mobilise un peu plus. 
+ <br/>Est aidée par son époux pour la toilette et pour les bas de 
+ <br/>contention. 
+ <br/>Marche sans aide à son rythme à l'intérieur de son domicile. 
+ <br/>Signale une chute à domicile mais sans gravité.
+ <br/>Sort très peu à l'extérieur. 
+ <br/>Matériel médical à la maison : lit médicalisé, fauteuil roulant 
+ <br/>pliant mais qu'elle n'utilise pas, coussin anti-escarre, canne.
+ <br/>
+<br/>
+<b>\'c9valuation des connaissances du patient et de son entourage :</b>
+<br/>La patiente a bien entendu la gravité de la situation actuelle, 
+ <br/>l'objectif de la chimiothérapie récente par GEMCITABINE qui a diminué 
+ <br/>le liquide d'ascite et en cas de mauvaise tolérance, arrêt de cette 
+ <br/>chimiothérapie sans autre solution thérapeutique. 
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3> ET PROPOSITIONS</b></u>
+<br/>
+<b>Synthèse de l'état clinique</b> :
+ <br/>Patiente âgée de 67 ans, prise en charge pour un carcinome séreux de 
+ <br/>l'ovaire métastatique au niveau pleural et avec carcinose 
+ <br/>péritonéale, platine résistante. Actuellement sous une nouvelle ligne 
+ <br/>de chimiothérapie par GEMCITABINE débutée le 24/04/2020 à visée 
+ <br/>palliative, présence d'une légère amélioration clinique. 
+ <br/>La patiente a besoin des ponctions d'ascite itératives. 
+ <br/>Prise en charge actuellement par l'HAD Santé Service. 
+ <br/>
+<br/>
+<b>Symptômes réfractaires :</b>
+<br/>Dyspnée d'effort multi-factorielle. 
+ <br/>Syndrome oedémato-ascitique, ponction d'ascite en radiologie 
+ <br/>interventionnelle une fois par semaine, oedèmes volumineux des 
+ <br/>membres inférieurs. 
+ <br/>Aspect d'érysipèle au niveau des membres inférieurs, mise en place 
+ <br/>d'une antibiothérapie par PYOSTACINE. 
+ <br/>Perte d'autonomie mais qui s'améliore doucement actuellement. 
+ <br/>Gêne abdominale sur ascite qui est fluctuante en fonction de la 
+ <br/>quantité du liquide d'ascite. 
+ <br/>Dénutrition sévère. 
+ <br/>
+<br/>
+<b>Propositions</b> :
+ <br/>Prescription de PYOSTACINE 1 g matin, midi et soir pendant 15 jours. 
+ <br/>BICARBONATE de sodium pour les bains de bouche. 
+ <br/>ARTISIAL pour hydratation de la muqueuse buccale. 
+ <br/>FUROZEMIDE 20 mg 1 cp le matin. 
+ <br/>SPIRONOLACTONE 25 mg 1/2 cp le matin compte tenu du syndrome 
+ <br/>oedémato-ascitique. 
+ <br/>
+<br/>
+<b>Projets</b> :
+ <br/>Transfusion de 2 CG le 22/05/2020 pour une anémie à 7.2 d'hémoglobine.
+ <br/>Patiente à revoir le 08/07/2020. 
+ <br/>
+<br/>
+<b>Copie à envoyer :</b>
+<br/>- Au médecin traitant : Dr MERLE 
+ <br/> - Au médecin coordinateur de l'HAD.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

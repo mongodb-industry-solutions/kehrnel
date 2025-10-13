@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120894874" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 201870064</title>
+    <effectiveTime value="20200705000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200706000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Dr J. Delahousse (61 92) <br/>Interrne D. Combarel (37 69) <br/>Pr A. Paci (47 30) </p>
+<p>Dr A. Arbab (41 65) <br/>Pr A. Bennaceur (40 65) <br/>Interrne S. Fodil (37 69) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Dr E. Gallois (40 62) <br/>Pr F. Griscelli (51 93) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX José </p>
+<p>DEMANDE N° </p>
+<p>MasculinNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>05/07/2020 05:38 </p>
+<p>Sexe : </p>
+<p>05/07/2020 08:00 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>XXXXXX </p>
+<p>XXXXXX <br/></p>
+<p>Villejuif, le </p>
+<p>RHONE </p>
+<p> 3 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>ROUENPrescrit par : </p>
+<p>lundi 06 juillet 2020 </p>
+<p>Complet </p>
+<p>BIOCHIMIE </p>
+<p>Validation du dossier LLXRésultats validés par le technicien de garde par délégation du biologisted'astreinte </p>
+<p>Revue bilan Biochimie LLXRéalisée par le biologiste </p>
+<p> IONOGRAMME <br/>Sodium 136 mmol/l ( 136 - 146 )136 04/07/2020 07:15 LLX <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Potassium 3.5 mmol/l ( 3.4 - 4.5 )3.6 04/07/2020 07:15 LLX <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Chlore 105 mmol/l ( 101 - 109 )104 04/07/2020 07:15 LLX <br/>Plasma hépariné - Potentiométrie indirecte </p>
+<p>Reserve alcaline 25 mmol/l ( 21 - 31 )20 04/07/2020 07:15 LLX <br/>Plasma hépariné - PEPC </p>
+<p>Protides 63 g/L ( 66 - 83 )73 04/07/2020 07:15 LLX <br/>Plasma hépariné - Biuret </p>
+<p>Créatinine 47 μmol/l ( 64 - 104 )42 04/07/2020 07:15 LLX <br/>Plasma hépariné - Enzymatique raccordée IDMS </p>
+<p>Base calcul Cockroft 2.12 2.37 04/07/2020 07:15 LLX </p>
+<p>Pour l'estimation de la clairance à la créatinine, la base de calcul est à multiplier par le poids en kg. </p>
+<p>Débit de Filtration Glomérulaire (MDRD) >60 mL/mn/1.73m2 >60 04/07/2020 07:15 LLX </p>
+<p>< 60 : Insuffisance rénale à explorer si nécessaire. <br/>Si origine afro américaine, le DFG est à multiplier par 1.212 </p>
+<p>Débit de Filtration Glomérulaire (CKD- <br/>EPI) </p>
+<p>116 mL/mn/1.73m2 ( 80 - 120 )121 04/07/2020 07:15 </p>
+<p>Estimation du débit de filtration glomérulaire en utilisant le dosage de la créatinine (standardisé ID-MS) 30 - 60 mL/min : Insuffisance rénale modérée < 30 mL/min : Insuffisance rénale sévère </p>
+<p>Glucose 7.8 mmol/l ( 4.1 - 5.9 )7.9 02/07/2020 08:10 LLX </p>
+<p>Valeur de référence pour un patient à jeunPlasma hépariné - Hexokinase <br/>G6P-DH </p>
+<p>Calcium 2.04 mmol/l ( 2.20 - 2.65 )2.12 04/07/2020 07:15 LLX <br/>Plasma hépariné - Arsenazo III </p>
+<p>Calcium Corrigé 2.34 mmol/l ( 2.12 - 2.52 )2.29 30/06/2020 07:10 LLX </p>
+<p>La calcémie corrigée est calculée selon la formule : <br/>Ca corrigé = Ca mesuré(mmol/l) + 1- (albumine (g/l) / 40),applicable uniquement avec albuminémie inférieure ou égale à 40 g/L. </p>
+<p>Phosphore 0.78 mmol/l ( 0.81 - 1.45 )0.45 04/07/2020 07:15 LLX <br/>Plasma hépariné - Molybdate, UV </p>
+<p>Acide Urique 108 μmol/l ( 208 - 428 )392 26/06/2020 13:10 LLX <br/>Plasma hépariné - Uricase PAP </p>
+<p>Magnesium 0.92 mmol/l ( 0.73 - 1.06 )0.81 04/07/2020 07:15 LLX <br/>Plasma hépariné - Bleu de xylidyle </p>
+<p> BILAN HÉPATIQUE / PANCRÉATIQUE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 06/07/2020 à 09:07 par : Dr PRADON Caroline,Dr LACROIX Ludovic,Dr VERGÉ Véronique</p>
+<p></p>
+<p></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>RHONEPatient : 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX josé </p>
+<br/>
+<p>ROUENPrescrit par : </p>
+<p>PAL 133 UI/L ( 30 - 120 )66 30/06/2020 07:10 LLX <br/>Plasma hépariné - IFCC </p>
+<p>ASAT 41 UI/L ( < 50 )60 30/06/2020 07:10 LLX <br/>Plasma hépariné - IFCC </p>
+<p>ALAT 52 UI/L ( < 50 )17 30/06/2020 07:10 LLX <br/>Plasma hépariné - IFCC </p>
+<p>GGT 474 UI/L ( < 55 )92 30/06/2020 07:10 LLX <br/>Plasma hépariné - IFCC </p>
+<p>Bilirubine Totale 17 μmol/l ( 5 - 21 )9 29/06/2020 08:00 LLX <br/>Plasma hépariné - DPD </p>
+<p>Bilirubine Conjuguée 8 μmol/l ( < 3 )3 05/01/2018 15:20 LLX <br/>Plasma hépariné - DPD </p>
+<p> PROTÉINES <br/>CRP 150.3 mg/l ( < 5.0 )185.5 04/07/2020 07:15 LLX <br/>Plasma hépariné - Immuno-turbidimétrie </p>
+<p>Albumine 28 g/L ( 35 - 52 )31 30/06/2020 07:10 LLX <br/>Plasma hépariné - Vert de bromocrésol </p>
+<p>Créatine Kinase 60 UI/L ( < 171 )49 26/06/2020 13:10 LLX <br/>Plasma hépariné - IFCC </p>
+<p>LDH 431 UI/L ( < 248 )145 26/06/2020 13:10 LLX <br/>Plasma hépariné - IFCC </p>
+<p>HEMOSTASE </p>
+<p>Validation du dossier LLXRésultats validés par le technicien de garde par délégation du biologisted'astreinte </p>
+<p>Revue bilan Hémostase NDPRéalisée par le biologiste </p>
+<p> RENSEIGNEMENTS CLINIQUES 1er Traitement presc </p>
+<p>_lab1 <br/>Sans traitement </p>
+<p> BILAN DE COAGULATION <br/>Taux de Prothrombine 69 % ( 70 - 100 )68 04/07/2020 07:15 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>Temps de Quick (Témoin = 13s) 16.7 s 16.8 04/07/2020 07:15 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>INR 1.3 1.3 04/07/2020 07:15 NDP </p>
+<p>0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>Facteur II 109 % ( 70 - 120 )113 29/06/2020 20:30 LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>Facteur V 127 % ( 70 - 120 )163 29/06/2020 20:30 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>Facteur VII 65 12/11/2019 08:00 LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>Facteur X 73 12/11/2019 08:00 LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>Fibrinogène 8.0 g/L ( 2.0 - 4.0 )5.7 30/06/2020 07:10 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK (Témoin = 28s) 29 s 27 30/06/2020 07:10 LLX <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK Ratio 1.0 ( < 1.2 )1.0 30/06/2020 07:10 LLX </p>
+<p>HEMATOLOGIE </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 06/07/2020 à 09:07 par : Dr PRADON Caroline,Dr LACROIX Ludovic,Dr VERGÉ Véronique</p>
+<p></p>
+<p></p>
+<p>Page 3 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>RHONEPatient : 3 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX josé </p>
+<br/>
+<p>ROUENPrescrit par : </p>
+<p>Validation du dossier VVERésultats validés par le technicien de garde par délégation du biologisted'astreinte </p>
+<p>Revue bilan Hémato VVERéalisée par le biologiste </p>
+<p> NUMERATION SANGUINE (SANG TOTAL SUR EDTA) <br/>MÉTHODE : XN - SYSMEX </p>
+<p>Leucocytes 9.9 10*9/L ( 4.0 - 10.0 )14.7 04/07/2020 07:15 VVE </p>
+<p>Hématies 4.09 10*12/L ( 4.50 - 5.80 )4.61 04/07/2020 07:15 VVE </p>
+<p>Hémoglobine 12.6 g/100mL ( 13.0 - 17.0 )14.2 04/07/2020 07:15 VVE </p>
+<p>Hématocrite 37.2 % ( 39.0 - 49.0 )41.9 04/07/2020 07:15 VVE </p>
+<p>VGM 91.0 μ3 ( 80.0 - 97.0 )90.9 04/07/2020 07:15 VVE </p>
+<p>TCMH 30.8 pg/cel ( 26.0 - 33.0 )30.8 04/07/2020 07:15 VVE </p>
+<p>CCMH 33.9 g/100mL ( 32.0 - 36.0 )33.9 04/07/2020 07:15 VVE </p>
+<p>IDG 15.1 % ( 11.0 - 15.0 )14.9 04/07/2020 07:15 VVE </p>
+<p>Plaquettes 243.0 10*9/L 229.0 04/07/2020 07:15 VVE </p>
+<p>Impédance (150 - 400 x 10^9/L) </p>
+<p> FORMULE <br/>Polynucléaires Neutrophiles 81.7 % 90.9 04/07/2020 07:15 VVE </p>
+<p>VVE13.4 04/07/2020 07:15 ( 1.5 - 7.0 )10*9/Lsoit 8.1 <br/></p>
+<p>Polynucléaires Eosinophiles 2.7 % 1.5 04/07/2020 07:15 VVE </p>
+<p>VVE0.2 04/07/2020 07:15 ( 0.0 - 0.6 )10*9/Lsoit 0.3 </p>
+<p>Polynucléaires Basophiles 0.2 % 0.1 04/07/2020 07:15 VVE </p>
+<p>VVE0.0 04/07/2020 07:15 ( 0.0 - 0.1 )10*9/Lsoit 0.0 </p>
+<p>Lymphocytes 8.1 % 3.4 04/07/2020 07:15 VVE </p>
+<p>VVE0.5 04/07/2020 07:15 ( 1.2 - 4.0 )10*9/Lsoit 0.8 </p>
+<p>Monocytes 7.3 % 4.1 04/07/2020 07:15 VVE </p>
+<p>VVE0.6 04/07/2020 07:15 ( 0.2 - 0.8 )10*9/Lsoit 0.7 </p>
+<p>Myelémie 0.0 % ( 0.0 )0.0 04/07/2020 07:15 VVE </p>
+<p>Formule VVEAutomate </p>
+<p>IDP 14 13 04/07/2020 07:15 VVE </p>
+<p>VMP 11.3 μ3 ( 7.5 - 11.0 )10.9 04/07/2020 07:15 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 06/07/2020 à 09:07 par : Dr PRADON Caroline,Dr LACROIX Ludovic,Dr VERGÉ Véronique</p>
+<p></p>
+<ul>
+<li>BIOCHIMIE</li>
+<ul>
+<li>Ionogramme</li>
+<li>Bilan hépatique / pancréatique</li>
+<li>Protéines</li>
+</ul>
+<li>HEMOSTASE</li>
+<ul>
+<li>Renseignements cliniques</li>
+<li>Bilan de coagulation</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

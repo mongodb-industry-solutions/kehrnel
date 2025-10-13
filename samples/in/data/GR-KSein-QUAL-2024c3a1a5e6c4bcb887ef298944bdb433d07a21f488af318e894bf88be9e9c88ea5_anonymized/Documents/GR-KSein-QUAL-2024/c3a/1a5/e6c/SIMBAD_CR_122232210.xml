@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122232210" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'analgésie : Docteur Marie-Anne SEVEQUE</title>
+    <effectiveTime value="20191211000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20191211000000+0000"/>
+        <assignedAuthor>
+            <code code="133/267" displayName="ANALGESIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>SERVICE ANALGESIE - COMPTE RENDU GENERIQUE<br/><br/>Dicté par : </b> Docteur Marie-Anne Seveque
+ <b><br/>Dicté le : </b> 22/11/2019 
+ <b><br/>Service : </b> 133 - ANALGESIE 
+ <br/>
+<b>Type de document : </b> 133 CC GENERIQUE 
+ <br/>
+<b>Ref :</b> 865025 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<u><b><br/></b></u>
+<b>Secrétaire </b> :
+ <b> FFS/A.<br/></b>
+<br/>
+<br/>- Je vois ce jour en consultation d'analgésie, madame XXXXXX XXXXXX.
+ <br/>Patiente âgée de 40 ans, suivie à Gustave Roussy pour la prise en 
+ <br/>charge d'un cancer du sein triple négatif diagnostiqué en 2015, 
+ <br/>traité par chimiothérapie, chirurgie et radiothérapie axillaire CMI 
+ <br/>et sus-claviculaire initialement à Bergonié.
+ <br/>Récidive ganglionnaire en mai 2018 traitée par Taxol, puis en 
+ <br/>décembre 2018 traitée par TALAZOPARIB.
+ <br/>Progression ganglionnaire en 2019 traitée par Xeloda puis par Endoxan 
+ <br/>débuté en juillet 2019. Changement de chimiothérapie en août 2019 
+ <br/>devant une suspicion de progression avec début d'ERIBULINE. Elle est 
+ <br/>actuellement sous ERIBULINE. Bonne tolérance et à priori réponse 
+ <br/>thérapeutique clinique et radiologique à l'ERIBULINE.
+ <br/>
+<br/>
+<u>Dans ses antécédents</u> : pas d'antécédent particulier.
+ <br/>
+<br/>
+<u>Allergie</u> : à la Penicilline.
+ <br/>
+<br/>
+<u>Mode de vie</u> : Professeur des écoles, en arrêt depuis mai 2017, vit à 
+ <br/>Vitry-sur-Seine, deux enfants (14 et 9 ans). 
+ <br/>
+<br/>
+<u>Sur le plan de la symptomatologie douloureuse</u> :
+ <br/>- Elle a présenté en été 2016 des douleurs scapulaires gauches qui se 
+ <br/>sont améliorées avec les traitements spécifiques.
+ <br/>- Un lymphoedème du bras gauche est apparu à l'été 2018 et pris en 
+ <br/>charge à Cognacq-JAY efficacement.
+ <br/>- Depuis août 2019, les douleurs se majorent avec une augmentation 
+ <br/>progressive des morphiniques.
+ <br/>- Ces douleurs apparaissent à distance des chimiothérapies avec une 
+ <br/>intensité croissante au fur et à mesure du temps.
+ <br/>- Cette douleur est située au niveau du bras gauche et de la main 
+ <br/>gauche sauf le 5ème doigt, ainsi qu'au niveau scapulaire gauche. Ces 
+ <br/>douleurs sont à type de : "élancements, d'éclairs, de coups de 
+ <br/>poignard, d'écrasement, d'étau, d'arrachement du bras, de 
+ <br/>picotements, de fourmillements et d'engourdissements" . 
+ <br/>Cette douleur est qualifiée de : " épuisante, oppressante et 
+ <br/>insupportable" avec une intensité de plus en plus importante depuis 1 
+ <br/>semaine ; avec une intensité minimale à 5/10, au moment de la 
+ <br/>consultation à 7/10 et au maximum à + de 10 jusqu'à en pleurer.
+ <br/>Il existe des douleurs qui la réveillent la nuit. La douleur est donc 
+ <br/>avec un fond permanent quasiment insupportable et des pics fréquents 
+ <br/>(jusqu'à 10 à 20 pics) lorsqu'elle est à distance de la 
+ <br/>chimiothérapie.Le retentissement est majeur sur la vie quotidienne et 
+ <br/>sur le moral.
+ <br/>Sur le plan de l'état général, elle perd du poids et mange peu.
+ <br/>
+<br/>Un traitement par Oxycontin a été mis en place et augmenté de 40 à 60 
+ <br/>mg hier avec des prises d'interdoses d'Oxynorm 10 mg toutes les 4 
+ <br/>heures. L'ACUPAN est inefficace.
+ <br/>Pas d'autre traitement pour la douleur, ni pour d'autres étiologies.
+ <br/>Le traitement par morphinique est bien toléré, une constipation 
+ <br/>gérée, pas de nausées, pas de clonies, une discrète somnolence.
+ <br/>
+<br/>
+<br/>
+<u>Cliniquement</u> :
+ <br/>- OMS = 0. Tension à 109/75 mmHg. Pouls : 88/mn. Poids : 79 kilos. 
+ <br/>Lymphoedème du bras gauche, allodynie de l'avant bras gauche, 
+ <br/>dysesthésies au niveau du bras gauche et au niveau scapulaire avec 
+ <br/>une mobilité réduite de l'épaule gauche.
+ <br/>- Auscultation cardio-pulmonaire sans particularité. Le reste de 
+ <br/>l'examen clinique est sans particularité. 
+ <br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/></b> - Douleurs mixtes, nociceptives et neuropathiques secondaires à 
+ <br/>l'évolution ganglionnaire d'un cancer du sein triple négatif.
+ <br/>- Je maintiens l'Oxycontin à 60 mg en augmentant l'Oxynorm à 20 mg 
+ <br/>puisque ce traitement est bien toléré.
+ <br/>- On pourra changer de morphiniques si le soulagement était 
+ <br/>insuffisant.
+ <br/>- Instauration de Neurontin à doses progressivement croissantes ainsi 
+ <br/>que du Laroxyl jusqu'à 20 gouttes le soir pour la composante 
+ <br/>neuropathique.
+ <br/>
+<br/>Remise du livret sur " Mieux vivre" pour les techniques non 
+ <br/>médicamenteuses type sophrologie et Chi Gong puisque madame XXXXXX 
+ <br/>fait ses chimios à Chevilly-Larue.
+ <br/>
+<br/>
+<br/>
+<b> -> Je lui remets nos coordonnées pour qu'elle nous joigne, si besoin.<br/>-> Je prévois de la revoir le 16 décembre à 12H00.<br/></b>
+<br/>
+<b><br/>_________________________________________________<br/>Signé électroniquement par Docteur Marie-Anne SEVEQUE <br/>Le mercredi 11 décembre 2019 à 11:25</b>
+<br/>
+<br/>
+<br/>
+<br/>
+<b> </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

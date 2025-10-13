@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122028599" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 200130811</title>
+    <effectiveTime value="20200113000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200113000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Dr J. Delahousse (61 92) <br/>Pr A. Paci (47 30) </p>
+<p>Dr A. Arbab (41 65) <br/>Pr A. Bennaceur (40 65) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Dr E. Gallois (40 62) <br/>Pr F. Griscelli (51 93) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>XXXXXX </p>
+<p>FémininNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>13/01/2020 16:31 </p>
+<p>Sexe : </p>
+<p>13/01/2020 16:10 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>Nom de naissance : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>CTE 060 - GYNECOLOGIE </p>
+<p> 2 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>lundi 13 janvier 2020 </p>
+<p>Complet </p>
+<p>HEMOSTASE </p>
+<p> RENSEIGNEMENTS CLINIQUES 1er Traitement _SL </p>
+<p>H <br/>Innohep </p>
+<p> BILAN DE COAGULATION <br/>Taux de Prothrombine 91 % ( 70 - 100 )99 19/09/2019 12:25 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>Temps de Quick (Témoin = 13s) 13.9 s 13.0 19/09/2019 12:25 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>INR 1.1 1.0 19/09/2019 12:25 FTN </p>
+<p>0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>Fibrinogène 9.3 g/L ( 2.0 - 4.0 )6.6 19/09/2019 12:25 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK (Témoin = 28s) 27 s 2XXXXXX/09/2019 12:25 FTN <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK Ratio 1.0 ( < 1.2 )1.0 19/09/2019 12:25 FTN </p>
+<p>HEMATOLOGIE </p>
+<p> NUMERATION SANGUINE (SANG TOTAL SUR EDTA) <br/>MÉTHODE : XN - SYSMEX </p>
+<p>Leucocytes 7.6 10*9/L ( 4.0 - 10.0 )5.4 03/10/2019 08:19 RVB </p>
+<p>Hématies 3.25 10*12/L ( 4.00 - 5.20 )3.13 03/10/2019 08:19 RVB </p>
+<p>Hémoglobine 9.0 g/100mL ( 11.5 - 15.0 )8.5 03/10/2019 08:19 RVB </p>
+<p>Hématocrite 27.9 % ( 34.0 - 45.0 )27.4 03/10/2019 08:19 RVB </p>
+<p>VGM 85.8 μ3 ( 75.0 - 96.0 )87.5 03/10/2019 08:19 RVB </p>
+<p>TCMH 27.7 pg/cel ( 24.0 - 33.0 )27.2 03/10/2019 08:19 RVB </p>
+<p>CCMH 32.3 g/100mL ( 32.0 - 36.0 )31.0 03/10/2019 08:19 RVB </p>
+<p>IDG 20.0 % ( 11.0 - 15.0 )21.7 03/10/2019 08:19 RVB </p>
+<p>Plaquettes 351.0 10*9/L 382.0 03/10/2019 08:19 RVB </p>
+<p>Impédance (150 - 400 x 10^9/L) </p>
+<p> FORMULE <br/>Polynucléaires Neutrophiles 77.8 % 65.7 03/10/2019 08:19 RVB </p>
+<p>RVB3.6 03/10/2019 08:19 ( 1.5 - 7.0 )10*9/Lsoit 6.0 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 13/01/2020 à 17:55 par : Dr TROALEN Frédéric,Dr ARBAB Ahmadreza</p>
+<p></p>
+<p></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>CTE 060 - GYNECOLOGIEPatient : 2 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>Polynucléaires Eosinophiles 0.1 % 0.0 03/10/2019 08:19 RVB </p>
+<p>RVB0.0 03/10/2019 08:19 ( 0.0 - 0.6 )10*9/Lsoit 0.0 </p>
+<p>Polynucléaires Basophiles 0.3 % 0.4 03/10/2019 08:19 RVB </p>
+<p>RVB0.0 03/10/2019 08:19 ( 0.0 - 0.1 )10*9/Lsoit 0.0 </p>
+<p>Lymphocytes 17.3 % 28.9 03/10/2019 08:19 RVB </p>
+<p>RVB1.6 03/10/2019 08:19 ( 1.2 - 4.0 )10*9/Lsoit 1.3 </p>
+<p>Monocytes 4.5 % 5.0 03/10/2019 08:19 RVB </p>
+<p>RVB0.3 03/10/2019 08:19 ( 0.2 - 0.8 )10*9/Lsoit 0.3 </p>
+<p>Formule RVBAutomate </p>
+<p>IDP 8 9 03/10/2019 08:19 RVB </p>
+<p>VMP 8.5 μ3 ( 7.5 - 11.0 )8.6 03/10/2019 08:19 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 13/01/2020 à 17:55 par : Dr TROALEN Frédéric,Dr ARBAB Ahmadreza</p>
+<p></p>
+<ul>
+<li>HEMOSTASE</li>
+<ul>
+<li>Renseignements cliniques</li>
+<li>Bilan de coagulation</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

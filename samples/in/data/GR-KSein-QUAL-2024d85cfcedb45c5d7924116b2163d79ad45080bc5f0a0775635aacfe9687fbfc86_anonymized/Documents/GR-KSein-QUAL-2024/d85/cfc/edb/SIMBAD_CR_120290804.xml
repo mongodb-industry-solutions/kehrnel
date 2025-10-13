@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120290804" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM ADENOPATH</title>
+    <effectiveTime value="20201005000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201005000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur BALLEYGUIER Corinne
+ <br/>
+<br/>Destinataire : CTE 050 - SEIN
+ <br/> DR INTERNE
+ <br/>
+<br/>
+<br/>
+<br/>
+<b>SCANNER ENCEPHALO-CERVICAL<br/> <br/><br/> Dicté par : </b> Docteur Tania Ah Sing, Interne ET DR BALLEYGUIER
+ <b><br/>Dicté le : </b> 02/10/2020 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Générique 
+ <br/>
+<b>Ref :</b> 1118481 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : 
+ <b>LRQ<br/></b> Numéro d'examen : 7292
+ <br/>
+<br/>
+<br/>Examen réalisé le : 2 octobre 2020
+ <br/>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/></b> Patiente de 63 ans prise en charge pour une récidive hépatique et 
+ <br/>osseuse d'un cancer du sein droit triple négatif.
+ <br/>Apparition d'une tétraplégie et d'une dysarthrie brutale au décours 
+ <br/>d'une biopsie ostéomédullaire, partiellement résolutive spontanément.
+ <br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/></b> Examen réalisé sur un scanner OPTIMA CT660, GENERAL ELECTRIC, mis 
+ <br/>en service le 8 février 2016.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 422272HM5
+ <br/>
+<br/>Réalisation d'une acquisition :
+ <br/>\'a7 Cérébrale
+ <br/>\'a7 Cervicale
+ <br/>Examen réalisé sans et avec injection de produit de contraste
+ <br/>
+<br/>
+<b>Produit de contraste injecté : Xenetix<br/>Quantité : 90 cc<br/><br/>PDL : 910 mGy.cm<br/></b>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/><u></u></b>
+<u>\'c0 l'étage encéphalique :<br/></u>Absence de saignement intracrânien.
+ <br/>Absence de lésion ou de prise de contraste suspecte intra ou 
+ <br/>extra-axiale.
+ <br/>Système ventriculaire de morphologie normale.
+ <br/>Structures médianes en place.
+ <br/>Absence d'anomalie des artères du polygone de Willis.
+ <br/>Artère vertébrale droite hypoplasique.
+ <br/>Perméabilité des sinus veineux.
+ <br/>Aération normale des sinus de la face.
+ <br/>
+<br/>
+<u>A l'étage cervical :<br/></u>Absence d'adénomégalie cervicale.
+ <br/>Perméabilité des vaisseaux du cou.
+ <br/>
+<br/>Lésions ostéolytiques des corps vertébraux de C5 et C6 avec discrète 
+ <br/>épidurite antérieure connue (cf IRM du 10 août 2020), sans 
+ <br/>rétrécissement canalaire significatif.
+ <br/>Par ailleurs, en limite de champ d'exploration, apparition de 
+ <br/>multiples micronodules pulmonaires bilatéraux comparativement au TEP 
+ <br/>scanner de juin 2020, faisant suspecter une évolution métastatique 
+ <br/>pulmonaire.
+ <br/>Epanchement pleural droit.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/>Absence de lésion suspecte de localisation secondaire à l'étage <br/>encéphalique.<br/>Absence d'anomalie des axes vasculaires à destinée encéphalique.<br/>Lésions ostéolytiques connues de C5 et C6 avec discrète épidurite <br/>antérieure, sans rétrécissement canalaire significatif.<br/><br/>Apparition par rapport au TEP scanner de juin 2020 de multiples <br/>micronodules pulmonaires bilatéraux associés à un épanchement pleural <br/>droit faisant suspecter une évolution métastatique pulmonaire. <br/><br/>A compléter par un TDM TAP (demandé faxée ce jour au secrétariat des <br/>RDV scanner).<br/><br/></b>
+<br/>
+<b><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Corinne BALLEYGUIER <br/>Le vendredi 2 octobre 2020 à 18:49 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

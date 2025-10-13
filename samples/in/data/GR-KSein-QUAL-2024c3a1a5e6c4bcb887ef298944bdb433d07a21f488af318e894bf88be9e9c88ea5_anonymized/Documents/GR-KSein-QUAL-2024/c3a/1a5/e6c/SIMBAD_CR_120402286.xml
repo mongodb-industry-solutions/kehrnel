@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120402286" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM THX ABD PEL TDM CRANE</title>
+    <effectiveTime value="20200918000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200918000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur TAZDAIT Melodie
+ <br/>
+<br/>Destinataire : CTE 050 - SEIN
+ <br/> DR MOKDAD--ADI MERIEM
+ <br/>
+<br/>
+<b>SCANNER CEREBRAL, THORACIQUE, ABDOMINO-PELVIEN<br/><br/>Dicté par : </b> Docteur Elsa Talab Berthou, Interne - Docteur Mélodie 
+ <br/>TAZDAIT 
+ <b><br/>Dicté le : </b> 17/09/2020 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Générique 
+ <br/>
+<b>Ref :</b> 1101844 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire </b> : 
+ <b>OPR</b>
+<br/>
+<br/>Examen 6812
+ <br/>Examen réalisé le : 17 septembre 2020
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/><br/></b> Patiente de 41 ans.
+ <br/>Cancer du sein triple négatif, en progression, actuellement sous 
+ <br/>CARBOPLATINE/GEMZAR avec C1J1 le 22 juillet 2020. 
+ <br/>
+<br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/></b>
+<br/>Examen réalisé sur un scanner OPTIMA CT660, GENERAL ELECTRIC, mis 
+ <br/>en service le 8 février 2016.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 422272HM5
+ <br/>Réalisation d'une acquisition :
+ <br/>- Cérébrale
+ <br/>- Thoracique
+ <br/>- Abdominale 
+ <br/>- Pelvienne
+ <br/>
+<br/>Examen réalisé avec injection intraveineuse de produit de contraste.
+ <br/>
+<b>Produit de contraste injecté : XENETIX<br/>Quantité : 100 cc<br/><br/>PDL : 842 + 541 mGy.cm<br/><br/><u>RESULTAT</u> :<br/>Examen comparé au Baseline de la ligne de traitement actuelle du <br/>26/06/2020.<br/></b>
+<br/>
+<b> \'c0 l'étage cérébral :<u> <br/></u> Comparativement à l'IRM du 19/08/2019 </b> : 
+ <br/>Absence de prise de contraste parenchymateuse ou méningée d'allure 
+ <br/>évolutive.
+ <br/>Structures médianes en place.
+ <br/>Système ventriculaire de taille stable.
+ <br/>Les espaces péricérébraux sont libres.
+ <br/>Pas d'anomalie de la fosse postérieure.
+ <br/>
+<u><b><br/></b></u>
+<b> \'c0 l'étage thoracique :<u> <br/></u></b> Stabilité des adénopathies non cibles car non mesurables 
+ <br/>sus-claviculaire gauche.
+ <br/>Stabilité également de l'infiltration rétro pectorale gauche mal 
+ <br/>mesurable.
+ <br/>Pas de nouvelle lésion ganglionnaire thoracique par ailleurs en 
+ <br/>particulier axillaire ou mammaire interne. 
+ <br/>Absence d'épanchement pleuropéricardique.
+ <br/>Absence d'embolie pulmonaire proximale.
+ <br/>Absence de nodule parenchymateux d'allure évolutive.
+ <br/>Absence de condensation parenchymateuse.
+ <br/>Régression partielle des troubles de ventilation lobaire inférieure 
+ <br/>gauche et lingulaire à type de bande d'atélectasie sous-segmentaire. 
+ <br/>Persistance de quelques images en verre dépoli sous-pleurales 
+ <br/>postéro-basales gauches.
+ <br/>
+<u><b><br/></b></u>
+<b> \'c0 l'étage abdomino-pelvien : <br/></b> Stabilité des adénopathies rétropéritonéales qui avaient progressé 
+ <br/>sur le scanner de juin 2020, on prend pour cible la lésion 
+ <br/>ganglionnaire latéroaortique située en arrière de la veine rénale 
+ <br/>gauche mesurant 19 mm de XXXXXX axe (image 257) contre 20 mm sur le 
+ <br/>Baseline de juin 2020.
+ <br/>Absence de lésion focale hépatique, splénique, pancréatique ou rénale.
+ <br/>Pas d'apparition de lésion suspecte de carcinose péritonéale 
+ <br/>nouvellement apparue.
+ <br/>Absence d'épanchement intra-abdominal.
+ <br/>Dispositif intra utérin en place.
+ <br/>Pas de syndrome de masse pelvien.
+ <br/>En fenêtre osseuse, absence de lésion condensante ou lytique d'allure 
+ <br/>évolutive, absence de fracture.
+ <b><br/><br/><u><br/>CONCLUSION</u> :<br/><br/>Stabilité de l'atteinte ganglionnaire, sus et sous-diaphragmatiques <br/>comparativement au Baseline du 26/06/2020.<br/><u></u></b>
+<u> <br/></u>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Mélodie TAZDAIT <br/>Le jeudi 17 septembre 2020 à 11:00 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

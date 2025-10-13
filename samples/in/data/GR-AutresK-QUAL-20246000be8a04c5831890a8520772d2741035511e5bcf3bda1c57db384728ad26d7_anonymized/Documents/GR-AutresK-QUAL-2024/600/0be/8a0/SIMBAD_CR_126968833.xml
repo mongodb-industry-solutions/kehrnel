@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126968833" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>COMPTE-RENDU DE VISITE EN HOSPITALISATION - Docteur BREUSKIN</title>
+    <effectiveTime value="20171212000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171212000000+0000"/>
+        <assignedAuthor>
+            <code code="MOR/178" displayName="MORBIHAN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Patient opéré d'une pharyngo-laryngectomie totale avec couverture par <br/>lambeau musculo-cutané grand pectoral le 13.11.2017.<br/></b>
+<br/>Pharyngostome dans les suites post-opératoires.
+ <br/>Reprise de cervicotomie le 29.11.2017.
+ <br/>Montée d'un lambeau musculo-cutané de grand dorsal le 6.12.2017.
+ <br/>
+<br/>Ce jour, il persiste un écoulement bas situé dans la partie 
+ <br/>supérieure du trachéostome.
+ <br/>Le pharyngostome est donc toujours présent.
+ <br/>Il est vraisemblablement localisé dans la partie basse de la suture 
+ <br/>du néo-pharynx.
+ <br/>
+<br/>Par ailleurs, la prothèse phonatoire a été extrudée.
+ <br/>Il existe donc une fistule trachéo-oesophagienne de 7 mm de hauteur.
+ <br/>Derrière, on visualise le Salivary Tube.
+ <br/>
+<br/>On demande la réalisation d'un pansement compressif pour permettre de 
+ <br/>contrôler le pharyngostome bas situé.
+ <br/>Nous allons suivre l'évolution de la fistule trachéo-oesophagienne 
+ <br/>liée à la prothèse phonatoire.
+ <br/>Si celle-ci n'a pas du tout tendance à se refermer, je discuterai du 
+ <br/>dossier avec le Docteur KOLB pour voir si un geste local de fermeture 
+ <br/>doit à nouveau être envisagé.
+ <br/>
+<br/>Par ailleurs, d'un point de vue histologique, présence d'un ganglion.
+ <br/>Résection considérée comme incomplète.
+ <br/>Vu les troubles de cicatrisation et ces constatations, pas 
+ <br/>d'indication retenue à une ré-irradiation en Réunion de Concertation 
+ <br/>Pluri-disciplinaire.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128899876" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>HOPITAL DE JOUR DE MEDECINE DE CHEVILLY LARUE - Unité Vendée</title>
+    <effectiveTime value="20161121000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20161122000000+0000"/>
+        <assignedAuthor>
+            <code code="CHL/511" displayName="CHEVILLY STRUCTURE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>COMPTE-RENDU D'HOSPITALISATION DE JOUR DU 21.11.2016</b>
+<br/>
+<br/>
+<u>Motif</u> : 
+ <br/>
+<br/>
+<b>Madame XXXXXX XXXXXX</b> , 59 ans, est vue ce jour pour C1 J8 de 
+ <br/>PACLITAXEL en néoadjuvant dans le cadre de la prise en charge d'un 
+ <br/>cancer du sein triple négatif.
+ <br/>
+<br/> ***********************************
+ <br/>
+<br/>
+<u>Intercure</u> : 
+ <br/>
+<br/>Pas de nausée, pas de vomissement,
+ <br/>Bonne tolérance de la chimiothérapie.
+ <br/>
+<br/>
+<u>Examen clinique</u> : 
+ <br/>
+<br/>OMS = 0
+ <br/>Tension artérielle à 130/73
+ <br/>Température à 36.8°C
+ <br/>Poids à 52 kg
+ <br/>Saturation à 97% en air ambiant 
+ <br/>Pouls à 75
+ <br/>
+<br/>
+<u>Examens complémentaires</u> :
+ <br/>
+<br/>Le bilan biologique réalisé en externe retrouve : 
+ <br/>
+<br/>- NFS : leucocytes à 3.600/mm3, PNN à 2.614/mm3, Hb à 9.8 g/dl, 
+ <br/>plaquettes à 309.000/mm3,
+ <br/>- Ionogramme sanguin : sodium à 140 mmol/l, potassium à 4.1 mmol/l.
+ <br/>
+<br/>
+<u>En pratique</u> : 
+ <br/>
+<br/>Réalisation de la cure de chimiothérapie comme suit : 
+ <br/>
+<br/> * PACLITAXEL 80 mg/m2 soit 130 mg DT
+ <br/>
+<br/>Bonne tolérance immédiate du traitement.
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

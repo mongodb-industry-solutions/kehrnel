@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124429557" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20190114000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190114000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Compte rendu générique de SENOLOGIE<br/><br/>Dicté par : </b> Docteur Meriem Mokdad Adi
+ <b><br/>Dicté le : </b> 14/01/2019 
+ <b><br/>Service : </b> 050-CTE 050 - SEIN 
+ <br/>
+<b>Type de document : </b> 050 CC Générique 
+ <br/>
+<b>Ref :</b> 572841 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : ORC
+ <br/>
+<br/>Patiente vue ce jour seule, sous ERIBULINE en 3ème ligne depuis 
+ <br/>novembre 2018, dans le cadre de la prise en charge d'une récidive 
+ <br/>hépatique et osseuse d'un cancer du sein droit diagnostiqué 
+ <br/>initialement en 2016.
+ <br/>
+<u><br/><b>RAPPEL</b></u>
+<b> :<br/><br/></b> T2 N0 de 25 mm du sein droit diagnostiqué en juillet 2016 , 
+ <br/>carcinome canalaire infiltrant de grade III triple négatif. Dans le 
+ <br/>bilan 2 micronodules pulmonaires à surveiller.
+ <br/>
+<br/>Chimiothérapie néo-adjuvante par 6 EC 75 dose dense + 12 TAXOL 
+ <br/>Hebdo débuter le 29/08/2016.
+ <br/>
+<br/>TGS le 23/2/17 : persistance de 13 mm de carcinome métaplasique avec 
+ <br/>différenciation chondroide ou ostéoïde, 17 mm d'intracanalaire,1GS-. 
+ <br/>
+<br/>Radiothérapie : sein + surimpression terminer le 08/06/2017.
+ <br/>
+<br/>XELODA adjuvant 6 cycles compte tenu du risque persistant, à 
+ <br/>expliquer à la patiente.
+ <br/>
+<br/>TEP scanner 08/02/2018: 
+ <b>Aspect TEP en faveur d'une rechute <br/>métastatique avec atteinte osseuse de T3 et atteinte hépatique <br/>(segment VII).</b>
+<br/>
+<br/>Débuter une chimiothérapie par Carboplatine Gemzar à partir du 26 
+ <br/>février à Chevilly Larue pour la C1 J1 J8 , J1 =J21.
+ <br/>
+<br/>Biopsie Hépatique segment VI le 07/03/2018 - le résultat seras 
+ <br/>disponible dans environ 10 jours max. 
+ <b><br/></b>
+<br/>Pet scan réalisé le 27 avril avait montré :
+ <br/>une réponse métabolique partielle de la lésion hépatique unique du 
+ <br/>
+<br/>segment VII et de la lésion osseuse isolée en T3.
+ <br/>
+<br/>Elle a reçu 6 cycles de CARBOPLATINE GEMZAR débuté le 26 février 
+ <br/>jusqu'au 9/07 marqué par des toxicités importantes sur le plan 
+ <br/>hématologique : thrombopénie et neutropénie.
+ <br/>
+<br/>
+<b>PROFEEL</b> mutation TP53
+ <br/>Sous ENDOXAN depuis le 23/07 jusqu'au 25/10
+ <br/>Arrêt de l'ENDOXAN pour progression hépatique et osseuse 
+ <br/>
+<b>TEP 19/10 Comparativement à l'examen précédent de juillet 2018, <br/>aspect de progression, devant la majoration des lésions <br/>pré-existantes du foie et de T3, sans nouvelle fixation suspecte.<br/><br/>Intérêt d'une IRM du rachis pour mieux évaluer la lésion de T3 <br/>(épidurite débutante ?).<br/></b>
+<br/>IRM rachis 31/10 : 
+ <b>Globale stabilité de l'atteinte de T3 avec <br/>atteinte épidurale foraminale droite T3/T4.<br/>Pas d'apparition de lésions osseuses suspectes.<br/>Pas de compression médullaire.<br/>La patiente ne prend pas d'XGEVA car appréhende les effets <br/>secondaires, elle demande un temps de réflexion.<br/></b> Eribuline en 3ème ligne le 9/11 
+ <br/>
+<br/>Il était prévu de lui proposer une inclusion dans le 
+ <b>protocole MCLA </b>
+<br/>cohorte 1 : non éligible car n'avait pas reçu le PERTUZUMAB au 
+ <br/>préalable.
+ <br/>
+<br/>MCLA cohorte 2elle n'a pas eu d'hormonothérapie avant, donc ne peut 
+ <br/>\'catre incluse dans 
+ <b>VIOLETTE </b> et 
+ <b>IMMU132 </b> : non éligible compte tenu 
+ <br/>de la faible amplification HER2.
+ <br/>
+<br/>
+<u><b>CE JOUR :<br/><br/></b></u>
+<b>Ps:0.<br/>Poids 48Kg.<br/><br/> En intercure :<br/></b> Neuropathie des extrémités grade I 
+ <br/>Crampes au niveau des membres inférieurs persistantes 
+ <br/>Angine sans fièvre avec adénopathie cervicale 
+ <br/>
+<br/>Rapporte une arythmie, Rdv en cardiologie le 6/12 : FEVG 54% mise 
+ <br/>sous RAMIPRIL 1.25mg, contrôle le 7/01 : stable.
+ <br/>
+<b>Bilan biologique le 10/01 </b> : correct.
+ <br/>
+<br/>
+<b>TEP réalisé le 10/01 :<br/></b> Comparativement à l'examen précédent d'octobre 2018, aspect TEP de 
+ <br/>
+<br/>réponse métabolique partielle :
+ <br/>- Nette diminution en étendue de la fixation en regard de la lésion 
+ <br/>secondaire hépatique unique.
+ <br/>- Diminution en intensité de fixation de la lésion T3 traitée par 
+ <br/>radiothérapie (néanmoins l'évaluation est précoce par rapport à la 
+ <br/>fin de la radiothérapie : on pourrait proposer un contrôle en fin de 
+ <br/>mars 2019 pour mieux évaluer la réponse ce niveau).
+ <br/>- Absence de nouvelle lésion. 
+ <br/>Par ailleurs on signale la persistance d'une hyperfixation 
+ <br/>oropharyngée prédominant à droite, associée à des fixations 
+ <br/>ganglionnaires cervicales bilatérales, possiblement d'origine 
+ <br/>inflammatoire, mais persistant sur un intervalle de plusieurs mois : 
+ <br/>à comparer à la clinique. 
+ <br/>
+<br/>Devant la persistance de la symptomatologie oropharyngée : dysphagie 
+ <br/>(angine), adénopathie cervicale après chaque injection d'ERIBULINE, 
+ <br/>sans fièvre.
+ <br/>
+<br/>Je lui remets une ordonnance pour faire une IRM oropharyngée 
+ <br/>(demandée par l'ORL en juillet en cas de persistance des signes) puis 
+ <br/>on organisera un rendez-vous en consultation ORL.
+ <br/>
+<br/>La patiente doit se faire opérer d'une cataracte bilatérale à Thiais, 
+ <br/>rendez-vous de consultation ophtalmologie le 23 janvier.
+ <br/>Je l'informe qu'elle pourra programmer l'intervention à partir du 
+ <br/>20/02 donc on reportera la reprise de l'ERIBULINE.
+ <br/>
+<br/>La patiente me contactera par mail pour m'informer de la date 
+ <br/>opératoire fixée.
+ <br/>
+<u><b> <br/>EN PRATIQUE :<br/><br/></b></u> Poursuite de l'ERIBULINE.
+ <br/>
+<u><b><br/></b></u> Je la revois en consultation début mars avec les résultats 
+ <br/>d'un bilan biologique puis fin mars avec les résultats d'un TEP scan 
+ <br/>(demande faxée ce jour), ce programme sera peut être modifié en 
+ <br/>fonction des cycles reçus par rapport à l'intervention de la 
+ <br/>cataracte.
+ <b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Meriem MOKDAD ADI <br/>Le lundi 14 janvier 2019 à 10:24 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

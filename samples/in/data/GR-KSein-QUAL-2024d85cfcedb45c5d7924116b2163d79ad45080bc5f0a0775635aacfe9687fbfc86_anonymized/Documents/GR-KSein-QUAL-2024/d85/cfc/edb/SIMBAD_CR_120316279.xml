@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120316279" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>UNITE DE PSYCHO-ONCOLOGIE - Diane BOINON - Psychologue clinicienne</title>
+    <effectiveTime value="20200929000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200930000000+0000"/>
+        <assignedAuthor>
+            <code code="UPO/332" displayName="UNITE DE PSYCHO_ONCOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Reprise du suivi psychothérapeutique initié en 2017 par Laure CAMPO 
+ <br/>puis en 2018 par Ariane CAVACIUTI.
+ <br/>
+<br/>Pour rappel, patiente en cours de chimiothérapie dans le cadre d'une 
+ <br/>rechute hépatique et osseuse d'un cancer sein droit diagnostiqué en 
+ <br/>2016. Est en 8ème ligne de chimiothérapie.
+ <br/>
+<br/>
+<u><b>Contexte de vie</b></u> :
+ <br/>Patiente de 63 ans, divorcée, une fille qui vit en Australie. Une 
+ <br/>patite fille. Travaillait comme juriste dans un cabinet d'affaire.
+ <br/>
+<br/>
+<u><b>Antécédents psychiatriques</b></u> :
+ <br/>Notion d'un épisode dépressif en 2006 traité par STABLON pendant 1 an 
+ <br/>et demi avec arrêt progressif du traitement.
+ <br/>Suivi psychothérapeutique à l'UPO depuis 2017 avec Laure CAMPO puis
+ <br/>Ariane CAVACIUTI. 
+ <br/>Nous prenons le relais en l'absence de notre collègue Ariane 
+ <br/>CAVACIUTI.
+ <br/>
+<br/>
+<u><b>Eléments significatifs de l'entretien</b></u> :
+ <br/>La patiente reprendra au cours de cette séance les différentes 
+ <br/>avancées qu'elle a identifiées avec le travail fait avec mes 2 autres 
+ <br/>collègues psychologues. Elle a notamment accepté l'arrêt de son 
+ <br/>activité professionnelle et reconnaît que ce métier l'avait épuisé.
+ <br/>Elle a pu avec l'arrêt de cette activité donner la priorité à ses 
+ <br/>soins et investir certains domaines de sa vie non investis 
+ <br/>jusqu'alors.
+ <br/>Plus récemment au cours de son dernier suivi psychothérapeutique elle 
+ <br/>a pu libérer une part de ses émotions liée à son histoire personnelle 
+ <br/>contre laquelle elle s'est toujours défendue.
+ <br/>La patiente qui est actuellement maintenant sans chimiothérapie 
+ <br/>depuis 6 semaines s'inquiète de l'évolution de sa maladie et 
+ <br/>verbalise ce jour ses inquiétudes quant au prochain petscan.
+ <br/>Nous convenons avec la patiente de reprendre son suivi 
+ <br/>psychothérapeutique et nous la reverrons le 20 octobre. 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

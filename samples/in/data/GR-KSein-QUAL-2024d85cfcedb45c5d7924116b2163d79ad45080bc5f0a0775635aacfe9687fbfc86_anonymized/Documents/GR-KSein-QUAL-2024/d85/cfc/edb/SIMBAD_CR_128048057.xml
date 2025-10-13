@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128048057" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION EN COURS DE RADIOTHERAPIE</title>
+    <effectiveTime value="20170526000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170529000000+0000"/>
+        <assignedAuthor>
+            <code code="RTE/414" displayName="RADIOTHERAPIE EXTERNE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Consultation hebdomadaire de radiothérapie</b></u>
+<br/>
+<br/>
+<b>Nom du patient </b> : XXXXXX, XXXXXX 
+ <br/>
+<b>Numéro dossier</b> : XXXXXX
+ <br/>
+<b>Date de naissance</b> : XXXXXX
+ <br/>
+<br/>
+<u>Date de consultation : 26/05/2017</u>
+<br/>
+<br/>
+<b>Consultation réalisée par : Guillaume KLAUSNER</b>
+<br/>
+<br/>
+<u>Territoire d'irradiation, dose prévue</u> : 
+ <br/>
+<br/>* SEIN 50,00 Gy
+ <br/>* BOOST LIT TUMORAL 16,00 Gy
+ <br/>
+<br/>
+<br/>
+<b>Dose à ce jour : 48 Gy</b>
+<br/>
+<br/>
+<u>Evaluation</u> :
+ <br/>EVA - 02
+ <br/>OMS - 0 Activité normale 
+ <br/>
+<br/>
+<u>Effets indésirables </u>:
+ <br/>Dermatite liée à rad. - Erythème léger ou desquamation sèche
+ <br/>Erythème cutané - 1
+ <br/>Topographie Erythème Sein - UQ Inf
+ <br/>Oesophagite - 0
+ <br/>
+<br/>
+<u>Notes Sein Hebdo</u> - Douleur QSI du sein droit.
+ <br/>
+<br/>
+<u>Prescription</u> - Poursuite de la radiothérapie.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

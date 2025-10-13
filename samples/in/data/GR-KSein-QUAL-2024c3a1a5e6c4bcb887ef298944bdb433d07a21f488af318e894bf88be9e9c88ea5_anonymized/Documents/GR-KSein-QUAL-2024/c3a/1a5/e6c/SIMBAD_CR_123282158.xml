@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123282158" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>REUNION DE CONCERTATION PLURIDISCIPLINAIRE</title>
+    <effectiveTime value="20190703000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190703000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>ONCOLOGUES : <br/> \qj</b> DR DELALOGE - DR PISTILLI - DR DELUCHE - DR MOKDAD - DR DJEHAL
+ <br/>
+<br/>
+<b>Interne : </b>
+<br/>
+<br/>
+<b>ONCOLOGUES RADIOTHERAPEUTES<br/></b> DR ROBERTI
+ <br/>
+<br/>
+<b>CHIRURGIENS<br/></b> DR CONVERSANO
+ <br/>
+<br/>
+<b>ANATOMO-PATHOLOGISTE</b>
+<br/>DR 
+ <br/>
+<br/>
+<b>RADIOLOGUE<br/></b> DR HADDAG
+ <b><br/></b>
+<br/>
+<b>INFIRMIERE ATTACHE DE RECHERCHE CLINIQUE<br/></b> Jacqueline DENEUVE
+ <br/>
+<br/>
+<b>Secrétaires Médicales<br/></b> Virginie MINVILLE - Margaux DUPREZ
+ <br/>
+<br/>
+<b>COMPTE-RENDU DICTE PAR : DR MOKDAD<br/><br/></b> Patiente de 40 ans
+ <br/>
+<b>Récidive en mars 2018 au niveau ganglionnaire susclaviculaire et <br/>axillaire, diagnostiqué initialement en 2015 traité à Bergonié par <br/>chimiothérapie, chirurgie puis radiothérapie au niveau axillaire, CMI <br/>et sus claviculaire, triple négatif <br/></b>
+<br/>Randomisation le 11/10 dans le cadre du protocole SAFIR 02 : Bras 
+ <br/>standard versus bras avec OLAPARIB : bras poursuite du TAXOL à dose 
+ <br/>réduite( -20%) avec carboplatine le 25/5/18 jusqu'au 13/11/18 avec 
+ <br/>une hémato-toxicité importante.
+ <br/>
+<br/>PET scanner le 20 décembre qui montre, comparativement à l'examen 
+ <br/>précédent de septembre 2018, un aspect de réévolutivité au niveau 
+ <br/>ganglionnaire sus et sous-claviculaire gauche et probablement 
+ <br/>axillaire gauche.
+ <br/>
+<br/>Pas d'autre localisation mise en évidence.
+ <br/>
+<br/>Mise sous TALAZOPARIB le 12/1/19.
+ <br/>
+<br/>Progression en avril 2019 sur le TEP scanner du XXXXXX/19.
+ <br/>
+<br/>Sous xeloda débuté le 15/04/2019 pour un cancer du sein gauche 
+ <br/>
+<br/>TEP scanner de juillet 2019 : progression métabolique 
+ <br/>
+<br/>
+<b>EN PRATIQUE </b> :
+ <br/>
+<br/>On propose une nouvelle ligne par ENDOXAN orale.
+ <br/>
+<br/>En cas de progression sous ENDOXAN, on pourra proposer ERIBULINE.
+ <br/>
+<b><br/>Proposition thérapeutique conforme au référentiel REMAGUS <br/>CURIE-GUSTAVE ROUSSY 2019-2020</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

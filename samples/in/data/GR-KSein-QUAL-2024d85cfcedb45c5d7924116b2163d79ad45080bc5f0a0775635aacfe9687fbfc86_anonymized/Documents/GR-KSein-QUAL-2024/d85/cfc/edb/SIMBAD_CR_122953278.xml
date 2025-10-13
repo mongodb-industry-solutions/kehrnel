@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122953278" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Entretien d'Orientation - Programme Mieux Vivre Le Cancer</title>
+    <effectiveTime value="20190826000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190826000000+0000"/>
+        <assignedAuthor>
+            <code code="UPO/332" displayName="UNITE DE PSYCHO_ONCOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patient(e) vu(e) en entretien de suivi dans le cadre du 
+ <br/>Programme Mieux Vivre Le Cancer. 
+ <br/>
+<br/>
+<br/>Mme XXXXXX est reçue pour un entretien de suivi en vue de sa 
+ <br/>réinscription aux activités du programme. On rappelle qu'il s'agit 
+ <br/>d'une patiente prise en charge depuis 2016 pour un kr du sein au 
+ <br/>stade métastatique depuis 2018. 
+ <br/>
+<br/>Contexte médical: après une période très difficile, elle dit aller un 
+ <br/>peu mieux sur le plan physique à la faveur de son nouveau traitement 
+ <br/>CT.
+ <br/>
+<br/>Contexte suivi MVIV: Elle a suivi le cours d'APA (Estelle) en juillet 
+ <br/>qui lui a fait du bien. Le traitement reçu actuellement est très 
+ <br/>fatigant (CT ttes les 3 semaines avec des périodes post injection de 
+ <br/>qques jours de fatigue +++). Elle souhaite poursuivre les activités 
+ <br/>Mieux Vivre qui constituent un véritable soutien, en particulier:
+ <br/>qi gong
+ <br/>APA (Estelle)
+ <br/>atelier d'arts plastiques 
+ <br/>
+<br/>
+<b>4. <u>CONDITIONS PHYSIQUE ET PSYCHOLOGIQUE PER\'c7UES</u> (MDASI)</b>
+<br/>
+<br/>Intensité des symptômes perçus : 
+ <br/>Douleur : 0
+ <br/>Fatigue : 0
+ <br/>Nausées : 0
+ <br/>Troubles du sommeil : 3
+ <br/>Inquiétude : 0
+ <br/>Essoufflement : 4
+ <br/>Troubles de la mémoire : 0
+ <br/>Perte d' appétit : 0
+ <br/>Somnolence : 0
+ <br/>Sécheresse de la bouche : 2
+ <br/>Tristesse : 0
+ <br/>Vomissements : 0
+ <br/>Engourdissement/fourmillement : 4
+ <br/>
+<br/>Autre(s) symptôme(s) ou difficultés signalé(es) : [champ libre]
+ <br/>
+<br/>Impact des symptômes perçus :
+ <br/>Activité générale : 0
+ <br/>Humeur : 0
+ <br/>Travail : 0
+ <br/>Relation avec les autres : 0
+ <br/>Aptitude à la marche : 0
+ <br/>Entrain : 0
+ <br/>
+<br/>
+<br/>
+<b>7. <u>CONCLUSION</u><br/></b>
+<br/>Inscrition de Mme XXXXXX à:
+ <br/>cours de qi gong 9h30
+ <br/>atelier d'arts plastiques
+ <br/>cours APA Estelle
+ <br/>
+<br/>On explique les nouvelles modalités d'assiduité aux cours et la 
+ <br/>nécessité de se réinscrire après chaque trimestre.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

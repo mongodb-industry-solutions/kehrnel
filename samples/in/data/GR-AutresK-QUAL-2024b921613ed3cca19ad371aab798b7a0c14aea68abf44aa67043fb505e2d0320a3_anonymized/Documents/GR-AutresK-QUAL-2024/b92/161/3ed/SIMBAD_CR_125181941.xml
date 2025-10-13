@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125181941" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°18T03624 2668548 Dr Véronique VERGÉ</title>
+    <effectiveTime value="20180920000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180920000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>DÉPARTEMENT DE BIOLOGIE ET DE PATHOLOGIE MEDICALES<br/></p>
+<p>114, rue Edouard Vaillant - 94805 VILLEJUIF CEDEX<br/></p>
+<p>N° I.G.R. : 110 XXXXXX <br/>XXXXXX XXXXXX XXXXXX XXXXXX M <br/> Docteur PILORGE Sylvain <br/>Examen demandé par : <br/>Dr PILORGE Sylvain <br/>CTE 110 - HEMATOLOGIE <br/>Prélevé le 19/09/2018 <br/>Enregistré le 19/09/2018 <br/></p>
+<p> MCE <br/> Examen n° : 18T03624<br/></p>
+<p> CR édité le : 20/09/2018<br/></p>
+<p>Copie à : 1/1 </p>
+<p>MYELOGRAMME<br/></p>
+<p>Renseignements cliniques : aplasie persistante à J33 d'une allogreffe pour myélofibrose <br/>Date de prélèvement : 19/09/2018 <br/>But de l'examen : suivi <br/>Os ponctionné : sternum Dureté : normale </p>
+<p> Richesse : désertique <br/>SERIE MEGACARYOCYTAIRE : non vue <br/>BLASTES : % </p>
+<p> SERIE GRANULOCYTAIRE : 0 % </p>
+<p>SERIE ERYTHROCYTAIRE : 0 % </p>
+<p> SERIE LYMPHOIDE : 0% </p>
+<p>SERIE MONOCYTAIRE : 0 % </p>
+<p> <br/>Commentaires : <br/>Frottis médullaires très pauvres sur lesquels de rares éléments de la lignée granulocytaire sont observés, souvent dystrophiques, d'aspect stimulé (basophilie, granulations marquées). De rares érythroblastes sont également observés. Pas d'infiltration blastique suspecte. Rares macrophages.<br/>CONCLUSION <br/>Aspect de moelle aplasique corrélé à la NFS.<br/>ACSMH740 <br/></p>
+<p> Dr Véronique VERGÉ <br/> Praticien Assistant </p>
+<p> <br/></p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

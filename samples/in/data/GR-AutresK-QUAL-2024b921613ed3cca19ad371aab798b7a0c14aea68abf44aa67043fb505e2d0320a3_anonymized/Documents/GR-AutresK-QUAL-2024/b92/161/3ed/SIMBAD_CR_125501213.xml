@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125501213" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation transplantation moelle osseuse - DR J.H. BOURHIS</title>
+    <effectiveTime value="20180724000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180730000000+0000"/>
+        <assignedAuthor>
+            <code code="110/16" displayName="CTE 110 - HEMATOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ \qc
+ <u><b>TROISIEME ENTRETIEN PRE-ALLOGREFFE LE 24.07.2018<br/>DEUXIEME ENTRETIEN PRE-ALLOGREFFE, Dr PILORGE LE 19.07.2018</b></u>
+<b><br/><u>PREMIER ENTRETIEN PRE-ALLOGREFFE LE 26.06.2018</u><br/> <br/><br/><br/>Mr XXXXXX, patient de 67 ans, né le XXXXXX, adressé par le <br/>service d'Hématologie du CHU de Fort de France / Dr MENIANE, en vue <br/>d'une transplantation allogénique pour le traitement d'un SMP de type <br/>myélofibrose primitive JAK2+, score DIPSS à 4, splénomégalie à 22 cm, <br/>diagnostiqué le 4/04/2012 dans un contexte de cavernome portal avec <br/>splénomégalie, varices oesophagiennes.<br/><br/>Prise en charge initiale : service de gastro-enterologie, CHU la <br/>Ménard à Fort de France puis à partir de janvier 2015 en parallèle e <br/>service d'Hématologie à Fort de France. <br/>Progression de la leucocytose en septembre 2016 avec tableau de <br/>splénomégalie, thrombose et hypertension portale.<br/>Début de traitement par HU et Plavix en janvier 2017.<br/>RUXOLITINIB à partir de juin 2017, fluctuellement à 40 mg/jour.<br/><br/>Découverte concomitante d'un carcinome prostatique diagnostiqué par <br/>histologie le 15/11/2011, traité par radiothérapie exclusive du 26/02 <br/>au 7/06/2018 à Fort de France (Département de radiothérapie Hôpital <br/>Clarac / Pr ESCARMANT / Dr LABIDI.<br/>Irradiation de la prostate à 76 Gy, Pelvis à 53 Gy.<br/><br/>RCP TMO le 6/11/2017 : Indication d'une allogreffe retenue. <br/><br/>Inscription au fichier le 2/02/2018 : pas de 10/10, pas de 9/10.<br/><br/>Proposition de transplantation haplo-identique à partir de ses fils.<br/>Transplantation haplo-identique 6/12ème à conditionnement <br/>d'intensité réduite par HTBI 2 Gy le 16/08/2018, CYCLOPHOSPHAMIDE 29 <br/>mg/kg / FLUDARABINE 150 mg/m2 / CYCLOSPHOPHAMIDE post-greffe 100 <br/>mg/kg DT soit 50 mg/kg à J3 et J4, Radiothérapie splénique pendant 15 <br/>jours à partir du 19/07/2018, Admission Département d'Hématologie <br/>secteur greffe service PARIS D1 le 9/08/2018, J0 le 17/08/2018.<br/></b>
+<br/>
+<br/>
+<u><b>Antécédents</b></u> :
+ <br/>
+<br/>
+<u>Antécédents personnels et mode de vie</u> :
+ <br/>
+<br/>. Marié, son épouse exerce la profession d'aide pour personnes âgées
+ <br/>. Enfant(s) : 3.
+ <br/> - 1 fils décédé à 39 ans d'un AVP
+ <br/> - 1 fils de 30 ans
+ <br/> - 1 fils de 27 ans
+ <br/>. CECOS : refusé ce jour. 
+ <br/>
+<br/>. Profession : travaille dans une entreprise de transport. Retraité 
+ <br/>depuis 2006.
+ <br/>
+<br/>. Tabac : 0
+ <br/>. Alcool : occasionnel
+ <br/>. Sport : marche
+ <br/>. Voyage à l'étranger : Caraïbe / Europe
+ <br/>
+<br/>
+<u>Antécédents Familiaux</u> :
+ <br/>
+<br/>
+<b> Parents</b> :
+ <br/>. Père : DCD à 77 ans, oenolisme, cirrhose, pathologie virale
+ <br/>. Mère : DCD à 78 ans, pathologie gynécologique fibrome
+ <br/>
+<b> Fratrie</b> de : 2
+ <br/> - 1 soeur, Béatrice XXXXXX LADEON, 65 ans, non typée, vit en 
+ <br/>Métropole, HTA, anévrisme cérébral opéré récemment en neuro-chirurgie 
+ <br/>en région Parisienne,
+ <br/> - 1/2 frère Roland HAPIN, 83 ans.
+ <br/>
+<br/>Si absence de fratrie compatible :
+ <br/>
+<b> Coup de sonde</b> en janvier 2018.
+ <br/>
+<b> Inscription fichier</b> le 2/02/2018 : pas de 10/10, pas de 9/10.
+ <br/>Enfant : 
+ <br/>- René XXXXXX, haplo-identique, 106 kg, 27 ans CMV-
+ <br/>- Rodrigue XXXXXX, 34 ans, O+, CM+, 95 kg, 1m95, antécédent d'ulcère 
+ <br/>gastro-duodénal et d'oesophagite.
+ <br/>Bilan clinique à faire pour les deux frères.
+ <br/>
+<br/>
+<u>Antécédents Médicaux</u> :
+ <br/>
+<br/>
+<b>Hématologie</b> :
+ <br/>. Transfusion : jamais avant l'hémopathie. 1ère transfusion en juin 
+ <br/>2017 en culots globulaires
+ <br/>. Donneur de sang : non
+ <br/>. Ictère néo-natal : non
+ <br/>
+<br/>
+<b>Infectieux</b> :
+ <br/>. Hépatite : non
+ <br/>. Varicelle : ne se souvient pas
+ <br/>. Rougeole : ne se souvient pas 
+ <br/>. Maladie infectieuse récente : non, pas de pathologie infectieuse 
+ <br/>des Caraïbes
+ <br/>. Vaccination : à jour 
+ <br/>
+<br/>
+<b>Allergique</b> :
+ <br/>. Asthme : non
+ <br/>. Eczéma : non
+ <br/>. Autres : non
+ <br/>
+<br/>
+<b>Autres</b> :
+ <br/>. accidents ischémiques transitoires en 2006, 2012, 2015 : prévoir 
+ <br/>une IRM cérébrale.
+ <br/>. 2006 : fracture ouverte de la jambe droite.
+ <br/>
+<br/>
+<u>Antécédents chirurgicaux</u> :
+ <br/>
+<br/>. 1972 : laparotomie pour intervention sur tumeur bénigne de l'estomac
+ <br/>
+<br/>
+<br/>
+<u>Prise de médicaments</u> :
+ <br/>
+<br/>Avant l'hémopathie : aucun.
+ <br/>Ce jour : pas d'ordonnance en cours. 
+ <br/>
+<br/>Sur le compte-rendu de Fort de France du 8/02/2018 :
+ <br/>
+<br/>1/ traitement spécifique par ROXULITINIB, JAKAVI débuté en juin 2017 
+ <br/>à 20 mg x2 soit 40 mg/jour
+ <br/>2/ Stéroïdes 80 mg/jour en février 2018 puis 40 mg/jour
+ <br/>3/ Facteurs de croissance : DARBEPOIETINE 500 Ug toutes les 3 semaines
+ <br/>4/ Traitement anti-coagulant : LOVENOX 0,4 ml/jour
+ <br/>5/ OMEPRAZOLE 20 mg
+ <br/>
+<br/>
+<br/>
+<u><b>Histoire de la maladie</b></u> :
+ <br/>
+<br/>15/04/2012 : diagnostic de cavernome portal avec splénomégalie non 
+ <br/>chiffrée, varices oesophagiennes grade 2. Prise en charge dans le 
+ <br/>service de gastro-entérologie à la Ménard.
+ <br/>
+<br/>19/01/2015 : leucocytose à 18 giga avec myélémie, dacryocytose et 4% 
+ <br/>de blastose circulante.
+ <br/>
+<br/>Septembre/octobre 2016 : diagnostic de myélofibrose primitive, 
+ <br/>splénomégalie à 15 cm, thrombose portale, HTP.
+ <br/>
+<br/>Altération de l'état général avec perte de plus de 20 kg en 2017.
+ <br/>
+<br/>Depuis son précédent passage, toux, expectoration dans un contexte 
+ <br/>d'apyrexie. Depuis le 22.07.2018, mouchages clairs, céphalées.
+ <br/>Hémoculture et ECBU du 19.07 -> négatifs. 
+ <br/>Complément par TDM sinus-thorax avant l'hospitalisation.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan thérapeutique</b></u> :
+ <br/>
+<br/>1/ abstention thérapeutique initiale d'avril 2012 à octobre 2016.
+ <br/>HYDREA 1 g/jour depuis janvier 2017, réhaussé à 2 g/jour en avril 
+ <br/>2017.
+ <br/>ROXULITINIB débuté en juin 2017, dose rapidement croissante, 
+ <br/>actuellement à 40 mg/jour (20 mgx2).
+ <br/>
+<br/>2/ HYDREA Janvier 2017.
+ <br/>
+<br/>3/ RUXOLITINIB Juin 2017.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan de l'évaluation</b></u> :
+ <br/>
+<br/>1) 
+ <u>Myélogramme : BOM</u> :
+ <br/>. avril 2012 : non parvenue
+ <br/>. octobre 2016 : BM : hyperplasie mégacaryocytaire, dystrophie 
+ <br/>mégacaryocytaire, hypoplasie, érythroblastie et fibrose médullaire, 
+ <br/>ostéosclérose, fibrose maligne médullaire de type MF3
+ <br/>. 17.07.2018 : myélofibrose
+ <br/>
+<br/>2) 
+ <u>Cytogénétique</u> : 
+ <br/>. juin 2017 : pseudo-diploïdie, délétion du 13q
+ <br/>. profil NGS à faire réaliser
+ <br/>
+<br/>3) 
+ <u>Iconographie</u> :
+ <br/>. avril 2012 : splénomégalie non chiffrée
+ <br/>. octobre 2016 : splénomégalie à 16 cm?
+ <br/>. TDm du 13/09/2017 : thrombose portale cave, cavernome péri-portal, 
+ <br/>??? vésiculaire
+ <br/>. écho-doppler du 26/06/2018 à l'IGR : cavernome portal, 
+ <br/>hépato-splénomégalie avec une hépatomégalie à 15 cm, splénomégalie à 
+ <br/>22 cm et cavernome portal.
+ <br/>. Fibro-scan réalisé le 12.07.2018 : angiome de L1.
+ <br/>. IRM cérébrale du 13.07.2018, dans un contexte d'antécédent d'AIT : 
+ <b><br/></b> Séquelle corticale frontale antérieure droite d'origine vasculaire.
+ <br/>. Biopsie médullaire du 17.07.2018 : pas d'envahissement tumorale, 
+ <br/>aplasie médullaire.
+ <br/>
+<br/>4) 
+ <u>Reconstitution immunitaire</u> :
+ <br/>. Gammaglobuline à 12 g/L le 26/06/2018 
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan clinique</b></u> :
+ <br/>
+<br/>OMS = 0
+ <br/>Taille : 1 m 79 (taille habituelle : 1 m 79 remesurée).
+ <br/>Poids à 77 kg (poids habituel : 79 kg).
+ <br/>Surface corporelle : 1,99 m2.
+ <br/>Pression artérielle : 113/72 mmHg
+ <br/>Rythme cardiaque : 68/min.
+ <br/>Saturation en air ambiant à 99 %.
+ <br/>Apyrétique à 37.
+ <br/>Examen clinique :
+ <br/>EVA = 3/10 du fait de splénalgie. 
+ <br/>Splénomégalie à 25 cm, en cours d'irradiation.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan hématologique (23.07.18)</b></u> :
+ <br/>
+<br/>6.8 leucocytes dont 4.2 polynucléaires neutrophiles, lymphopénie à 
+ <br/>0.1, anémie à 8 g/dl d'hémoglobine, normocytaire, normochrome, 
+ <br/>myélémie, réticulocytes non dosés, plaquettes normales à 239.
+ <br/>
+<br/>Transfusion en culots globulaires le 24.07.2018 : sans rendement 
+ <br/>véritable. Seuil transfusionnel en hémoglobine à 7 g, plaquettes à 20 
+ <br/>giga.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan de l'hémostase</b></u> :
+ <br/>
+<br/>Hémostase non réalisée.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan métabolique</b></u> :
+ <br/>
+<br/>Aucun.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan infectieux</b></u> :
+ <br/>
+<br/>CRP : normale.
+ <br/>Apyrétique sans prophylaxie.
+ <br/>
+<br/>Sérologies virales :
+ <br/> . Antigène HBS négatif 
+ <br/> . Anticorps anti-HBS positif 
+ <br/> . Anticorps totaux anti-HBc négatif (vaccination?)
+ <br/> . Anticorps anti-HCV négatif
+ <br/> . Anticorps anti-VIH 1+2 (Combo) négatif 
+ <br/> . Anticoprs anti-HTLV 1+2 (Abbott) négatif
+ <br/> . Anticorps anti-CMV (Diasorin) positif
+ <br/> . Anticorps anti-VZV positif
+ <br/> . Anticorps anti-HSV positif
+ <br/> . Anticorps anti-EBNA IgG X
+ <br/> . Anticorps anti-VCA IgG positif
+ <br/> . Anticorps antitoxoplasmose IgG positif
+ <br/> . Anticorps antitoxoplasmose IgM négatif 
+ <br/> . VDRL latex négatif
+ <br/> . TPHA négatif
+ <br/>
+<br/>
+<br/>
+<u><b>Troisième entretien pré-greffe en présence de son épouse</b></u> :
+ <br/>
+<br/>1) On explique au patient l'
+ <b>intérêt d'une indication d'allogreffe de <br/>cellules hématopoïétiques</b> .
+ <br/>
+<br/>2) On explique le 
+ <b>déroulement d'une allogreffe</b> :
+ <br/> . conditionnement (radio)chimiothérapique et immunosuppresseur,
+ <br/> . toxicité de ce conditionnement,
+ <br/> . aplasie chimio-induite,
+ <br/> . complications infectieuses potentielles,
+ <br/> . complications immunologiques de type réaction du greffon contre
+ <br/> l'hôte,
+ <br/> . effet allogénique du greffon.
+ <br/> . induction d'une tolérance entre donneur et receveur sur une
+ <br/> période d'environ trois mois.
+ <br/> . la toxicité du conditionnement à long terme (stérilité définitive
+ <br/> obtenue.
+ <br/> . la nécessité d'une sonde naso-gastrique.
+ <br/>
+<br/>3) On explique la nécessité d'une 
+ <b>hospitalisation en secteur flux<br/>laminaire</b> pendant 4 à 6 semaines puis d'une convalescence pendant
+ <br/>4 à 6 semaines à la Fondation E. RIST/ à l'Hôpital de BLIGNY.
+ <br/>On fait part du traitement immunosuppresseur au long cours entre 3 à 6
+ <br/>mois après la transplantation, un suivi en hôpital de jour ambulatoire
+ <br/>hémato-greffe pendant environ 3 mois.
+ <br/>
+<br/>4) On explique le 
+ <b>bilan pré-greffe</b> :
+ <br/>
+<br/>- Consultation odonto du 12/7 normale
+ <br/>- Consultation OPH du 4/07 : normale
+ <br/>- EFR du 27/06 au CCML : DLCO abaissée à 52%
+ <br/>- EFR cardiaque du 27/06 au CCML : normale avec une FEVG à 74%
+ <br/>- écho-doppler hépatique du 26/6 : cavernum porte, 
+ <br/>hépato-splénomégalie avec une rate à 22 cm
+ <br/>- scanner thoracique du 3/07 : lésion lytique de L1 avec une IRM qui 
+ <br/>est prévue le 20/07
+ <br/>- scanner des sinus du 12/7 normal
+ <br/>- consultation hépato du 12/7 : cavernum avec hypertension portale, 
+ <br/>varices oesophagiennes et gastropathie d'HTP avec splénomégalie sans 
+ <br/>ascite, fibroscan quasi normal. Probable HMR. Pas de 
+ <br/>contre-indication à la greffe. Nécessité d'une surveillance stricte 
+ <br/>de son bilan biologique hépatique.
+ <br/>- nouveau TDM sinus thorax avant l'admission du fait de la 
+ <br/>symptomatologie ce jour, pas de foyer infectieux sur l'examen 
+ <br/>précédent du 12.07.
+ <br/>
+<br/>
+<br/>
+<u><b>Sur le plan pratique</b></u> :
+ <br/>
+<br/>Allogreffe haplo-identique 6/12ème, sexe identique de son fils 
+ <b>à <br/>conditionnement d'intensité réduite par HTBI 2Gy le 16/08/2018, <br/>CYCLOPHOSPHAMIDE 29 mg/kg / FLUDARABINE 150 mg/m2 / CYCLOSPHOPHAMIDE <br/>post-greffe 100 mg/kg DT soit 50 mg/kg à J3 et J4, Radiothérapie <br/>splénique pendant 15 jours à partir du 23/07/2018, Admission <br/>Département d'Hématologie secteur greffe service PARIS D1 le <br/>9/08/2018, J0 le 17/08/2018.<br/></b>
+<br/>
+<b> Greffe(D/R</b> ) : 6/12ème de son fils Rodrigue XXXXXX, 34 ans, O+, CM+, 
+ <br/>95 kg, 1m95, antécédent d'ulcère gastro-duodénal et d'oesophagite.
+ <br/>
+<br/>. Sexe : M/M
+ <br/>. Groupe sanguin : O+/ 
+ <br/>. CMV : +/+ 
+ <br/>. EBV EBNA IgG : X/+
+ <br/>. Toxoplasmose IgG : X /+
+ <br/>. Poids : 95 kg / 77 kg
+ <br/>
+<br/>. Prophylaxie de la
+ <b> </b> GVH par CICLOSPORINE 2 mg/kg pour une 
+ <br/>ciclosporinémie thérapeutique à 300 ng/ml et METHOTREXATE COURT 15 
+ <br/>mg/m2 à J1, 10 mg/m2 à J3 et 10 mg/m2 à J6 .
+ <br/>
+<br/>. Prophylaxie de la maladie veino-occlusive
+ <b> </b> par HEPARINOTHERAPIE à 
+ <br/>100 ui/kg à débuter à l'admission.
+ <br/>
+<br/>. Prophylaxie des infections herpétiques par ACICLOVIR 1 500 mg/m2 à 
+ <br/>débuter à l'admission .
+ <br/>
+<br/> Consentement éclairé pour enregistrement des données cliniques et 
+ <br/>biologiques après greffe de cellules hématopoïétiques (moelle 
+ <br/>osseuse, sang périphérique, sang de cordon) pour la base de données 
+ <br/>de PROMISE / EMBT signé le 26/06/2018 (contre-signé par le Docteur 
+ <br/>BOURHIS).
+ <b><br/></b>
+<br/>Consentement éclairé : autorisation pour l'utilisation à des fins de 
+ <br/>recherche des reliquats de prélèvements effectués à des fins 
+ <br/>diagnostiques et/ou thérapeutiques signé le 26/06/2018 (contre-signé 
+ <br/>par le Docteur BOURHIS).
+ <br/>
+<br/> Autorisation pour transfusion de produits sanguins labiles signée le 
+ <br/>(contre-signée par le Docteur BOURHIS).
+ <br/>
+<br/>Consentement de participation au projet Cryostem receveur majeur 
+ <br/>NON signé (NON contre-signé par le Docteur BOURHIS).
+ <br/>
+<br/>Information et consentement éclairé - Allogreffe de cellules souches 
+ <br/>périphériques. Information donnée et consentement NON signé 
+ <br/>(NON contre-signé par le Docteur BOURHIS). 
+ <br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

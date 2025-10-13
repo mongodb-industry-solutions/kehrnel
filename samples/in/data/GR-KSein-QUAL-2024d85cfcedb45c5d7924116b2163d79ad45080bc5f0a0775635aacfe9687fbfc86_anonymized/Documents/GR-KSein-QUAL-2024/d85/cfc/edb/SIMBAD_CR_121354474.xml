@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121354474" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20200423000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200423000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Consultation téléphonique ce jour avec Me XXXXXX dans le cadre de 
+ <br/>la prise en charge d'une récidive hépatique et osseuse d'un cancer du 
+ <br/>sein droit diagnostiqué initialement en 2016 triple négatif, en 7ème 
+ <br/>ligne par Xeloda .
+ <br/>
+<br/>
+<u><b>CE JOUR<br/></b></u>
+<br/>Poids 49.6 versus 51.5 kg
+ <br/>
+<br/>Patiente va bien 
+ <br/>
+<br/>L'oecdème signalé depuis le 18/03 a complètement disparu et elle 
+ <br/>arrive à marcher correctement (oecdème du dos du pied droit avec 
+ <br/>douleur et chaleur), pas de radiographie de faite : patiente ne 
+ <br/>souhaite pas se déplacer dans le contexte COVID-19.
+ <br/>
+<br/>Tolérance du xeloda correcte, marquée par un syndrome mains pieds 
+ <br/>plus important au niveau des pieds mais pas du tout gênant.
+ <br/>Pas de diarrhée.
+ <br/>Mucite grade 1.
+ <br/>
+<br/>Elle décrit l' apparitiion d' un oecdème de la joue droite ce matin, 
+ <br/>sans fièvre ni douleur.
+ <br/>
+<br/>La patiente m' envoie une photo par mail, je contacte ce jour le Dr 
+ <br/>Merad qui me demande de l' orienter aux urgences de GR.
+ <br/>
+<br/>Je lui demande d' arrêter le xeloda.
+ <br/>
+<br/>Par ailleurs, prélèvement vaginal réalisé en ville suite à la 
+ <br/>suspicion d' une infection négatif.
+ <br/>
+<br/>
+<u><b>EN PRATIQUE<br/></b></u>
+<br/>- Je la reverrais en consultation dans une semaine en fonction du 
+ <br/>traitement qui sera proposé aux urgences pour reprendre le xeloda.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

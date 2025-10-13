@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_130486814" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Dr Yun Gan TAO - CONSULTATION DE RADIOTHERAPIE</title>
+    <effectiveTime value="20151104000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20151104000000+0000"/>
+        <assignedAuthor>
+            <code code="RTE/5" displayName="CTE 040 - ESTOMAC"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b> Patient vu à 1 an de la fin de la radio-chimiothérapie d'un carcinome <br/>oropharyngé vélaire T3 N2c M0, dans GORTEC 2004-01 bras IMRT.</b>
+<br/>
+<br/>
+<br/>
+<u><b>Ce jour à la consultation</b></u> :
+ <br/>
+<br/>Poids : 70 kg.
+ <br/>OMS : 0.
+ <br/>Il est toujours un peu fatigué, et depuis 1 peu plus d'un mois il 
+ <br/>sent une douleur au niveau occipital cervical postérieur. Il existe 
+ <br/>aussi une masse inflammatoire cervicale postérieure au niveau médian.
+ <br/>Alimentation solide.
+ <br/>Xérostomie de grade II selon SOMA, grade I selon RTEG.
+ <br/>Pas de douleur au niveau bucco-pharyngé.
+ <br/>
+<br/>
+<u><b>Examen clinique ce jour</b></u> :
+ <br/>
+<br/>Pas de trismus.
+ <br/>Protection linguale normale, on retrouve un aspect post-radique 
+ <br/>cicatriciel au niveau vélaire.
+ <br/>Pas de lésion suspecte au niveau bucco-pharyngé.
+ <br/>En nasofibroscopie, on retrouve une sténose entre nasopharynx et 
+ <br/>oropharynx liée à une rétraction de voile, pas de lésion suspecte 
+ <br/>dans la filière pharyngo-laryngée.
+ <br/>Au niveau cervical, pas d'adénopathie évidente palpable, et au niveau 
+ <br/>cervical postérieur occipital, on retrouve une masse sous-cutanée 
+ <br/>inflammatoire de 2 cm de grand axe pour laquelle je demande une 
+ <br/>cytoponction en petite chirurgie ORL ce jour.
+ <br/>Je lui prescris également un scanner cervico-thoracique, ordonnance 
+ <br/>remise, évaluation à faire rapidement près de son domicile et il nous 
+ <br/>enverra le résultat.
+ <br/>
+<br/>
+<u><b>En pratique</b></u> :
+ <br/>
+<br/>Dès que nous aurons les résultats de la cytoponction et du scanner, 
+ <br/>on pourra le reconvoquer si besoin.
+ <br/>
+<br/>Rendez-vous avec le Docteur BREUSKIN dans 3 mois.
+ <br/>
+<br/>Je le reverrai dans 6 mois.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120098787" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'URGENCE</title>
+    <effectiveTime value="20201102000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201102000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Compte-rendu de consultation - Rouergue<br/><br/>Dicté par : </b> Sami Antoun
+ <b><br/>Dicté le : </b> 26/10/2020 
+ <b><br/>Service : </b> ROU-ROUERGUE 
+ <br/>
+<b>Type de document : </b> ROU CC Consultation 
+ <br/>
+<b>Ref :</b> 1140857 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire </b> : 
+ <b>BUC</b>
+<br/>
+<br/>
+<u><b>MOTIF DE LA CONSULTATION</b></u>
+<br/>Patiente de 63 ans consulte aux urgences adressée par l'équipe de 
+ <br/>sénologie oncologique pour prise en charge d'une 
+ <b>dyspnée et d'une <br/>dénutrition</b> .
+ <br/>
+<br/>
+<u><b>ANTECEDENTS ONCOLOGIQUES</b></u>
+<br/>Je rappelle que cette patiente a été prise en charge pour un c
+ <b>ancer <br/>du sein droit triple négatif métastatique au niveau hépatique et <br/>osseux </b> en 9e ligne de traitement par XELODA. (Le compte-rendu 
+ <br/>détaillé de la l'évolution tumorale étant la consultation du 26/10 du 
+ <br/>Dr MOKDAD).
+ <br/>
+<br/>
+<u><b>HISTOIRE RECENTE</b></u>
+<br/>L'histoire récente est celle de la présence lors de la consultation 
+ <br/>du Dr MOKDAD d'une dyspnée, d'une exacerbation des douleurs dans 
+ <br/>l'hypocondre droit ainsi que d'un amaigrissement récent. La patiente 
+ <br/>est adressée aux urgences pour prise en charge.
+ <br/>
+<u><b><br/>EXAMEN CLINIQUE A L'ARRIVEE</b></u>
+<br/>\'c0 son arrivée, l'hémodynamique est stable, la tension artérielle 
+ <br/>systolique est à 116 mmHg, la patiente est tachycarde à 107/min, elle 
+ <br/>est apyrétique et la saturation en air ambiant est satisfaisante, 
+ <br/>cependant il persiste une polypnée à la parole.
+ <br/>L'auscultation pulmonaire met en évidence une diminution du murmure 
+ <br/>vésiculaire à droite. Il n'existe pas de signe en faveur de foyer 
+ <br/>infectieux.
+ <br/>L'hépatomégalie est importante, hétérogène, nodulaire, douloureuse à 
+ <br/>la palpation.
+ <br/>
+<br/>
+<u><b>EXAMENS COMPLEMENTAIRES A L'ARRIVEE</b></u>
+<br/>Sur le plan biologique, il n'existe pas de trouble 
+ <br/>ydroélectrolytique. Il n'existe pas d'insuffisance rénale.
+ <br/>On note, comme attendu, une perturbation du bilan hépatique avec une 
+ <br/>cytolyse sur les ASAT à cinq fois la normale et sur les ALAT à deux 
+ <br/>fois la normale. \'c0 signaler que la perturbation du bilan hépatique 
+ <br/>ne s'est pas aggravée d'une manière importante par rapport au bilan du 
+ <br/>03/10/2020.
+ <br/>Le syndrome inflammatoire est modéré avec une CRP à 19,3 mg/l. La 
+ <br/>numération formule sanguine retrouve la thrombopénie à 70 000/mm\'b3.
+ <br/>Radiographie pulmonaire met en évidence l'épanchement pleural droit.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<br/>La patiente présente donc différentes problématiques :
+ <br/>1. Il existe cette polypnée à la parole. L'épanchement pleural devra 
+ <br/>être ponctionné mais néanmoins, étant donné l'hépatomégalie il serait 
+ <br/>intéressant de faire un repérage échographique avant.
+ <br/>2. La douleur pose le problème de la prise en charge. En effet la 
+ <br/>patiente est réticente à l'utilisation d'antalgiques. Le DOLIPRANE 
+ <br/>peut entraîner des perturbations hépatiques, la patiente ne souhaite 
+ <br/>pas l'utiliser. La tolérance au TOPALGIC ainsi qu'aux morphiniques 
+ <br/>selon la patiente est médiocre. Après discussion le traitement va 
+ <br/>être l'association d'ACUPAN si douleur et de DOLIPRANE à 500 mg/8 h.
+ <br/>3. Le problème de la thrombopénie est complexe. En effet, cette 
+ <br/>thrombopénie peut-être liée à un envahissement médullaire comme elle 
+ <br/>peut être le témoin d'un éventuel hypersplénisme et/ou d'une 
+ <br/>consommation plaquettaire associée à une CIVD comme il peut être 
+ <br/>observé quelquefois dans les métastases hépatiques des cancers du 
+ <br/>sein.
+ <br/>4. Le problème qui inquiète le plus la patiente est celui de la 
+ <br/>dénutrition. En effet, elle exprime la crainte de mourir de faim. Ce 
+ <br/>problème est complexe, étant donné l'atteinte hépatique, 
+ <br/>l'aggravation de l'épanchement pleural lors de la nutrition 
+ <br/>parentérale, le métabolisme hépatique des nutriments qui peut être 
+ <br/>perturbé.... 
+ <br/>
+<b><br/>Heure d'arrivée : 14H55<br/>ADMISSION SERVICE ROUERGUE<br/><br/>_________________________________________________<br/>Signé électroniquement par Sami ANTOUN <br/>Le lundi 26 octobre 2020 à 18:29 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

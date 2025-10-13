@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_119611824" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°20H11310 3144890 Dr Natacha JOYON</title>
+    <effectiveTime value="20210108000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20210108000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<br/>BIOPSIE GANGLION LYMPHATIQUE CLAVICULAIRE GAUCHE
+ <br/>
+<br/>
+<br/>Renseignements cliniques : cancer du sein triple négatif métastatique en progression.
+ <br/>
+<br/>
+<br/>Il a été transmis 2 fragments frais de 0.6 cm. Inclusion en totalité et analyse sur plusieurs niveaux de coupe après coloration standard à l'HES. 
+ <br/>Deux prélèvements ont été transmis cryopréservés. 
+ <br/>
+<br/>
+<br/>A l'examen microscopique, ces fragments intéressent un tissu fibreux infiltré par une prolifération adénocarcinomateuse sous la forme de travées et de cellules isolées, aux atypies cytologiques modérées à marquées avec de très rares mitoses (1 mitoses / 2mm2). Présence d'une importante nécrose tumorale. 
+ <br/>Absence de parenchyme ganglionnaire sur les fragments analysés.
+ <br/>
+<br/>L'étude immunohistochimique montre que les cellules tumorales sont :
+ <br/>- CK7 : marquage membranaire d'intensité modérée 50%
+ <br/>- Gata3 : rares noyaux positif avec intensité faible 10%
+ <br/>- GCDFP15 : négatif
+ <br/>- Mammaglobine : négatif
+ <br/>- Récepteurs des oestrogènes : absence de marquage
+ <br/>- Récepteur de la progestérone : absence de marquage
+ <br/>- Récepteurs aux androgènes : absence de marquage
+ <br/>- HER2 : absence de marquage
+ <br/>- Chromogranine A : absence de marquage
+ <br/>- Synaptophysine : absence de marquage
+ <br/>- TTF1 : négatif
+ <br/>- WT1 : négatif
+ <br/>- Sox10 : négatif
+ <br/>- CDX2 : négatif
+ <br/>
+<br/>
+<br/>
+<br/>CONCLUSION : 
+ <br/>
+<br/>Localisation d'un adénocarcinome peu différencié CK7(+) d'immunophénotype pauvre. La faible expression du Gata3 (10%) pourrait s'accorder avec une origine mammaire compte-tenu des antécédents de la patiente.
+ <br/>Présence d'une importante nécrose tumorale. 
+ <br/>Absence d'expression des récepteurs hormonaux. Absence d'expression de HER2. 
+ <br/>Absence de parenchyme ganglionnaire sur les fragments analysés.
+ <br/>
+<br/>Une étude moléculaire est en cours et fera l'objet d'un CR séparé. 
+ <br/>
+<br/>PHSGA7A0 
+ <br/>
+<br/> Dr Natacha JOYON 
+ <br/> Praticien 
+ <br/> Compte rendu validé et signé électroniquement 
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

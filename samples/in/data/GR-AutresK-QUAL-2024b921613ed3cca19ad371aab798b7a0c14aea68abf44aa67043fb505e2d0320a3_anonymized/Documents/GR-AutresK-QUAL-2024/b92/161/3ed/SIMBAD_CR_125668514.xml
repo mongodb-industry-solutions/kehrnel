@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125668514" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM ABD+PELV</title>
+    <effectiveTime value="20180704000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180704000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur MIHOUBI FADILA
+ <br/>
+<br/>Destinataire : ROUERGUE
+ <br/> DR INTERNE
+ <br/>
+<br/>
+<br/>
+<b>Compte rendu générique de SCANNER<br/><br/>Dicté par : </b> Docteur Lisa Mazzolini-Edwards interne et DR MIHOUBI
+ <b><br/>Dicté le : </b> 03/07/2018 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Générique 
+ <br/>
+<b>Ref :</b> 447216 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : EDG
+ <br/>
+<br/>Examen réalisé le : 03/07/18
+ <br/>
+<br/>
+<u><b>Examen 5049<br/><br/><br/> SCANNER ABDOMINO PELVIEN<br/> </b></u>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/><br/></b> Patient de 67 ans suivi pour une myélofibrose primitive avec 
+ <br/>splénomégalie volumineuse présentant une altération de l'état général 
+ <br/>avec vertiges associés à une douleur et une défense à la palpation de 
+ <br/>la rate, sans déglobulisation.
+ <br/>
+<b><br/><br/><u>TECHNIQUE</u> :<br/><br/></b> Examen réalisé sur un scanner DISCOVERY 750 HD, GENERAL ELECTRIC, 
+ <br/>mis en service en septembre 2012.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 429098CN7
+ <br/>
+<br/>Réalisation d'une acquisition :
+ <br/> Thoracique
+ <br/> Abdominale 
+ <br/> Pelvienne
+ <br/>Examen réalisé avec injection intraveineuse de produit de contraste.
+ <br/>Produit de contraste injecté : Xenetix 
+ <br/>Quantité : 110cc
+ <br/>PDL :1482 mGy.cm
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/><br/></b> Splénomégalie mesurée à 24 cm dans le plan coronal et 17 cm dans le 
+ <br/>plan antéro-postérieur. Présence d'une hypodensité sous-capsulaire du 
+ <br/>pôle inférieur (image 188 série 6), rétrospectivement déjà visible sur 
+ <br/>l'IRM du 17 octobre 2017, en faveur d'une séquelle d'infarctus 
+ <br/>splénique. Rehaussement splénique homogène par ailleurs 
+ <br/>Absence d'extravasation de produit de contraste à la phase artérielle 
+ <br/>ou veineuse. 
+ <br/>Hépatomégalie homogène en dehors d'une hypodensité du segment 3 de 8 
+ <br/>mm (image 92 série 7) et une 2eme millimétrique.
+ <br/>Visibilité des voies biliaires intra-hépatiques sans dilatation des 
+ <br/>voies biliaires principales ni anomalie vésiculaire, ni obstacle 
+ <br/>d'aval visualisé (en rapport avec le cavernome porte?).
+ <br/>Cavernome porte avec voies de dérivation porto-systémiques spléno 
+ <br/>rénales. Pas de thrombose visible.
+ <br/>Intégrité morphologique des surrénales, du pancréas et des reins (en 
+ <br/>dehors d'un kyste cortical polaire supérieur droit).
+ <br/>Absence de distension digestive ou d'anomalie de rehaussement 
+ <br/>pariétal. 
+ <br/>Densification graisseuse du flanc droit centrée par de la graisse, 
+ <br/>pouvant correspondre à une appendagite ancienne car déjà visible sur 
+ <br/>l'irm du 17 octobre 2017.
+ <br/>Quelques ganglions coelio-mésentériques infra-centimétriques
+ <br/>Absence d'épanchement liquidien intra-péritonéal.
+ <br/>Absence de pneumopéritoine.
+ <br/>
+<br/>
+<br/>
+<b> En fenêtre osseuse :<br/></b> Densification diffuse du rachis pouvant être en rapport avec la 
+ <br/>myélofibrose.
+ <br/>lésion lytique du corps vertébral de L1 latéralisée à gauche, de 9 
+ <br/>mm, rétrospectivement déjà présente sur l'IRM d'octobre 2017, 
+ <br/>aspécifique.
+ <br/>
+<u><b><br/><br/><br/>CONCLUSION</b></u>
+<b> :<br/><br/>Absence de complication splénique récente décelée.<br/>Lésion lytique du corps vertébral de L1 aspécifique nécessitant une <br/>exploration dédiée par IRM rachidienne. <br/>Hypodensités hépatiques d'allure kystique biliaires à confronter à <br/>une échographie ciblée (lors du prochain contrôle par échographie <br/>abdominale dans le cadre du suivi)<br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Fadila MIHOUBI-BOUVIER <br/>Le mardi 3 juillet 2018 à 20:33 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

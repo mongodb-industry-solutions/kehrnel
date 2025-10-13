@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122999424" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>Compte-rendu d'hospitalisation - Service Rouergue</title>
+    <effectiveTime value="20190816000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190816000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b> Patiente de 40 ans, hospitalisée dans le service ROUERGUE du 12/08 au <br/>14/08/2019 pour douleur du membre inférieur gauche sur lymphoedème, <br/>nausées et vomissements</b> .
+ <br/>
+<br/>
+<u><b>Médecin référent à GR</b></u> : Dr DELALOGE
+ <br/>
+<br/>Douleur du MIG sur lymphoedème + nausées/vomissements alimentaires 
+ <br/>depuis 4 jours. 
+ <br/>Derniere selle hier. Gaz +.
+ <br/>
+<br/>
+<u>Traitement actuel</u> : 
+ <br/>OXYCONTIN 20 1-0-1
+ <br/>OXYNORM si besoin non pris
+ <br/>ENDOXAN.
+ <br/>
+<br/>
+<u><b>Antécédents carcinologiques</b></u> :
+ <br/>Cancer du sein gauche diagnostiqué initialement en 2015 traité à 
+ <br/>Bergonié par chimiothérapie, chirurgie puis radiothérapie au niveau 
+ <br/>axillaire, CMI et sus claviculaire, triple négatif et actuellement en 
+ <br/>récidive ganglionnaire susclaviculaire et axillaire sous endoxan 
+ <br/>depuis début juillet 2019.
+ <br/>
+<br/>
+<br/>
+<u><b>Examen clinique à l'arrivée</b></u> :
+ <br/>
+<u>Constantes</u> : EVA 7/10, TA 117/78 mmHg, SpO2 99 % en AA, pouls 77 BPM.
+ <br/>
+<br/>Nodules de perméation basicervicaux connus. 
+ <br/>Volumineux lymphoedème du bras gauche avec hypoesthésie et impotence 
+ <br/>fonctionnelle du fait de la douleur.
+ <br/>Pas de trajet de veinite.
+ <br/>Légèrement inflammatoire. 
+ <br/>Auscultation cardiopulmonaire, pas de signe d'IC.
+ <br/>Abdomen souple, BHA+ mais faible.
+ <br/>ECG : RRS, pas de trouble de la conduction ni de la repolarisation. 
+ <br/>Pas de cephalée, pas de syndrome cérébelleux. Pas de déficit 
+ <br/>sensitivo-moteur.
+ <br/>
+<br/>
+<u><b>Résultats du bilan para-clinique à l'arrivée</b></u> :
+ <br/>
+<u>Biologie</u> : ionogramme normal, créatinine 72 μmol/l, augmentation des 
+ <br/>GammaGT 6N, et des ALAT à 1.5 UI/L, biliburine totale 7 μmol/l, CRP 
+ <br/>négative, troponine <6,leucocytes 3900/mm3, PNN 2500/mm3, plaquettes 
+ <br/>258000/mm3, Hb 14.8 g/l. 
+ <br/>
+<br/>
+<u><b>Conduite à tenir</b></u> :
+ <br/>1/ Eliminer thrombose surajoutée : Doppler demandé, mise sous LOVENOX 
+ <br/>0.4x2. 
+ <br/>2/ Adaptation antalgique : PCA OXYCODONE 1mg/h + bolus 1mg + 
+ <br/>PERFALGAN si besoin.
+ <br/>2/ ASP en attente + antiémétique.
+ <br/>
+<br/>
+<u><b>Evolution dans le service 12/08/19 - S. BAKKAR</b></u>
+<br/>1 episode de rectorragie
+ <br/>Pas d'hematémèse, pas de récidive des vomissements.
+ <br/>Abdomen souple mais hépatalgie à la palpation, BHA+.
+ <br/>ASP : pas de NHA? stase stercorale, pas de pneumopéritoine.
+ <br/>TDM AP demandé.
+ <br/>
+<br/>TDM TAP : Masse secondaire de la surrénale gauche. Adénopathies 
+ <br/>rétropéritonéales. Pas d'anomalie par ailleurs expliquant la 
+ <br/>symptomatologie de la patiente. 
+ <br/>
+<br/>
+<u><b>Evolution dans le service 13 au 14.08.2019 - Dr. DAOUDI/ ROCHE <br/>Clémence (ext)</b></u>
+<br/>Evolution dans le service des urgences de Madame XXXXXX, patiente de 
+ <br/>40 ans suivie pour un carcinome mammaire en progression ganglionnaire 
+ <br/>axillaire et sus-claviculaire.
+ <br/>
+<br/>
+<u>Motif d'hospitalisation</u> : douleur lymphoedème du MSG et douleur 
+ <br/>abdominale + nausées et vomissements.
+ <br/>
+<br/>Pour rappel : 
+ <br/>Cancer du sein triple négatif découvert en 2015, BRCA1 muté, traité 
+ <br/>par chimiothérapie, chirurgie et radiothérapie axillaire, CMI et 
+ <br/>sus-claviculaire.
+ <br/>* récidive ganglionnaire en mai 2018 traitée par TAXOL
+ <br/>* nouvelle récidive en décembre 2018 traitée par TALAZOPARIB
+ <br/>* progression ganglionnaire en 2019 traitée par XELODA (avril 2019) 
+ <br/>puis par ENDOXAN débuté en juillet 2019 (traitement actuel).
+ <br/>
+<br/>Autre : consultation en février 2019 à la fondation Cognacq Jay pour 
+ <br/>lymphoedème d'apparition progressive sous chimiothérapie, avec 
+ <br/>douleur et impotence fonctionnelle. Regression sous physiothérapie 
+ <br/>décongestive et bandages.
+ <br/>
+<br/>
+<b>Allergie : pénicilline</b>
+<br/>
+<br/>Aux urgences le 12/08 : Hyperalgie du MSG depuis 4/5 jours, 
+ <br/>d'apparition progressive sur lymphoedème post curage et 
+ <br/>radiothérapie, connue depuis 1 an, chronique.
+ <br/>De plus nausées et vomissements également depuis 4/5 jours. 
+ <br/>Notion d'un épisode de rectorragie dans un contexte de constipation 
+ <br/>aigüe avec effort de poussée ++ cette nuit (hémorroïdes décrites par 
+ <br/>la patiente).
+ <br/>Pas de notion de fièvre ou de frisson.
+ <br/>
+<br/>PEC sur la garde : 
+ <br/>- initiation d'une anticoagulation curative par LOVENOX 0.4 mL x2 
+ <br/>dans l'éventualité d'une thrombose du MSG
+ <br/>- Adaptation antalgique : PCA OXYCODONE 1mg/h + bolus 1mg + PERFALGAN 
+ <br/>si besoin.
+ <br/>
+<br/>
+<br/>Bilan bio : * Cytolyse mineure et cholestase avec GGT augmenté 
+ <br/>mais ces perturbations du bilan hépatique sont connus depuis presque 
+ <br/>1 an.
+ <br/>* Ionogramme sanguin sans particularité, notamment pas 
+ <br/>d'hyperkaliémie (à surveiller car lésion surrénale gauche).
+ <br/>* Pas de SIB
+ <br/>* Pas d'anémie ou de thrombopénie.
+ <br/>
+<br/>Examens d'imagerie :
+ <br/>* TDM AP : Lésion secondaire de la surrénale gauche (mais connue 
+ <br/>depuis juillet, évolutivité ?). Adénopathies rétropéritonéales.
+ <br/>Pas d'anomalie par ailleurs expliquant la symptomatologie de la 
+ <br/>patiente au niveau digestif.
+ <br/>* Echo Doppler du MS demandée pour éliminer une thombose : Absence de 
+ <br/>signe échographique en faveur d'une thrombose veineuse profonde ou 
+ <br/>superficielle du membre supérieur gauche.
+ <br/>En revanche, ralentissement du flux au sein des veines axillaire, 
+ <br/>sus-clavière et jugulaire interne, faisant suspecter un obstacle 
+ <br/>d'amont : compression d'origine ganglionnaire? A confronter aux 
+ <br/>données d'un scanner injecté
+ <br/>
+<br/>Examen clinique ce jour :
+ <br/>Constantes : TA 104/71 FC 64 bpm. T 36.8 °C
+ <br/>EVA 5/10.
+ <br/>BMI 35
+ <br/>
+<br/>* Examen neuro : patiente consciente et orientée. G15. Pas de trouble 
+ <br/>des paires craniennes, pas de troubles oculomoteur ni de signe 
+ <br/>oculaire objectivé (pas de signe d'HTIC). 
+ <br/>Pas de signe de Babinski. ROT +/+.
+ <br/>Pas de trouble moteur du MSG, mais radiculalgie sur un probable 
+ <br/>trajet C7/C8. 
+ <br/>* Examen abdo : abdomen souple, dépressible et indolore. BHA+. 
+ <br/>Constipation depuis plusieurs jours, avec efforts de poussée 
+ <br/>objectivant des rectorragies.
+ <br/>Pas d'hémorroïde externe visualisée mais douleur au TR (probable 
+ <br/>hemorroïdes internes ?), sans sang ni selles au doigté.
+ <br/>* Examen cardio-pulmonaire : BDC régulier, sans souffle perçu.
+ <br/>Eupnéique en AA. MV bilatéral et symétrique, sans bruit surajouté.
+ <br/>* Examen cutané : lymphoedème du membre gauche, chronique depuis 1 
+ <br/>an, non augmenté de volume selon la patiente. 2 nodules de perméation 
+ <br/>sus-claviculaires, dont un d'apparition récente. Pouls radial perçu. 
+ <br/>Pas de circulation collatérale veineuse.
+ <br/>Pas de signe en faveur d'une infection.
+ <br/>
+<br/>
+<u><b>Conduite à tenir</b></u> :
+ <br/>- Maintien de l'anticoagulation currative et scanner injecté dans 
+ <br/>48/72h pour éliminer de manière certaine une thrombose (et éliminer 
+ <br/>dans le doute une métastase osseuse).
+ <br/>- Laxatifs en systématique.
+ <br/>- Surveillance rectorragie. Si récidive discuter d'une 
+ <br/>rectosigmoïdoscopie.
+ <br/>
+<br/>Le 14/08/2019
+ <br/>
+<br/>Examen clinique ce jour :
+ <br/>
+<u>Constantes</u> :
+ <br/>Peu douloureuse (douleurs du MSG principalement le matin au réveil) 
+ <br/>sous 2mg/h PCA OXYCODONE.
+ <br/>
+<br/>* Examen abdominal : abdomen souple, dépressible et indolore. Selles 
+ <br/>ce matin, sans récidive de rectorragie.
+ <br/>Pas de récidive de vomissement mais toujours présence de nausées.
+ <br/>* Examen cardiopulmonaire : bruits du coeur réguliers, sans souffle. 
+ <br/>Mollets souples et indolores.
+ <br/>Eupnéique en air ambiant. Murmure vésiculaire bilatéral et 
+ <br/>symétrique, un peu diminué aux bases. Doute sur de très légers 
+ <br/>crépitants également aux bases.
+ <br/>* Examen cutané : lymphoedème du membre supérieur gauche sans rougeur 
+ <br/>ni chaleur. Pas de modification de volume par rapport à la veille.
+ <br/>Erythème du membre inférieur droit, au niveau du mollet, d'apparition 
+ <br/>progressive avec extension de la lésion (notamment entre hier et 
+ <br/>aujourd'hui), non chaude, non douloureuse. Pas de point de piqûre 
+ <br/>visualisé. La patiente pense qu'il s'agirait d'une piqûre de 
+ <br/>moustique (elle habite à Vitry, pas de balade en forêt récente, 
+ <br/>possède un chien).
+ <br/>Aucun argument pour un tableau infectieux.
+ <br/>* Examen neurologique : semblable au précédent.
+ <br/>
+<br/>Bilan biologique :
+ <br/>- Pas de SIB.
+ <br/>- Bilan hépatique toujours perturbé (mais connu).
+ <br/>- Hypomagnesémie.
+ <br/>Supperposable au précedant pour le reste.
+ <br/>
+<br/>Conduite à tenir :
+ <br/>- Base de NaCl pour l'hydratation en vue du scanner injecté mais à 
+ <br/>faible dose, supplémentation Mg2+.
+ <br/>- Poursuite des traitements en cours qui semblent bien soulager la 
+ <br/>patiente (notamment PCA à dose augmentée la veille (1 -> 2 mg/h), 
+ <br/>MOVICOL, PRIMPERAN)
+ <br/>- Prévoir relais oral pour les antalgiques.
+ <br/>- Poursuite de l'anticoagulation encore ce jour en attendant 
+ <br/>l'angioTDM thoracique à 17h45. 
+ <br/>- Surveillance lésion érythémateuse face postérieure mollet droit 
+ <br/>(délimitation au stylo faite).
+ <br/>- Dossier prévu au 
+ <u><b>comité 050 le 21.08.2019</b></u> . 
+ <br/>
+<br/>
+<b>Patiente transférée le 14/08/2019 dans le service HERAULT pour suite <br/>de la prise en charge.</b>
+<br/>
+<br/>
+<br/>* Prise en charge palliative NON
+ <br/>
+<br/>
+<b>EVALUATION DE LA CHARGE EN SOINS<br/></b> * Ponction à visée symptomatique NON
+ <br/>* Adaptation du traitement antalgique OUI 
+ <br/>* Irradiation antalgique NON
+ <br/>* Occlusion intestinale NON
+ <br/>* Transfusion sanguine NON
+ <br/>* Prise en charge de la détresse respiratoire
+ <br/>avec désaturation < 90% en AA NON
+ <br/>* Traitement des divers symptômes vecteurs d'inconfort 
+ <br/>(toux, prurit, nausées, vomissements, anxiété, 
+ <br/>dépression, troubles du sommeil, déshydratation...) OUI 
+ <br/>* Soins de nursing OUI 
+ <br/>* Nutrition : 
+ <br/>- déjà sous CNO, nutrition entérale/parentérale NON
+ <br/>- mise en route d'une nutrition entérale/parentérale NON
+ <br/>
+<br/>
+<b>PRISE EN CHARGE MULTI-DISCIPLINAIRE<br/></b> * Prise en charge de l'EMASP NON
+ <br/>* Consultation CETD (douleur, sophrologie, 
+ <br/>auriculothérapie) NON
+ <br/>* Consultation d'onco-psychologie NON
+ <br/>* Prise en charge sociale NON
+ <br/>* Soins de kinésithérapie NON
+ <br/>* Consultation diététicienne ou nutritionniste NON
+ <br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

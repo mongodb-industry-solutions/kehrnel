@@ -1,0 +1,256 @@
+# HADS (Hospital Anxiety and Depression Scale) mapping
+
+meta:
+  target_webtemplate: hads_v0
+  default_source: csv1
+  translation:
+    enabled: true
+    source_lang: es
+    target_lang: en
+    cache_file: .kehrnel/translations.json
+
+sources:
+  csv1:
+    type: csv
+    columns: [paciente, centro, servicio, consulta, etapa, prom, fecha, pregunta, respuesta]
+    date_format: "%d/%m/%Y"
+
+input:
+  from: csv1
+  where:
+    - 'prom ~= "(?i)^HADS"'
+    - 'servicio == "VIH eVIHa"'
+    - 'respuesta != "N/A"'
+  group_by: [paciente, servicio, consulta]
+
+output:
+  prune_empty: true
+  filename: "hads_{{ first.paciente }}_{{ first.consulta }}_{{ index|int }}.json"
+  composition_key: canonicalJSON
+
+  # These keys are emitted at the ROOT of the JSON document.
+  # You may reference {{ comp }} (the built COMPOSITION), {{ first }}, {{ rows }}
+  envelope:
+    ehr_id:
+      get:   { from: paciente }
+      transform: [strip]
+
+    composition_date:
+      expr: "{{ comp.context.start_time.value }}"
+      transform: [wrap_date]
+
+    archetype_node_id:
+      expr: "{{ comp.archetype_details.archetype_id.value }}"
+
+    last_processed:
+      expr: "{{ now_utc_iso() }}"
+      transform: [wrap_date]
+
+mappings:
+
+  # ───────── COMPOSITION header ─────────
+  "/language/code_string": { set: "en" }
+  "/territory/code_string": { set: "ES" }
+  "/category/defining_code/code_string": { set: "433" }   # event
+
+  "/context/start_time/value":
+    get: { from: csv1, column: fecha }
+    transform: [date_iso]
+
+  # ───────── OBSERVATION scaffolding / timing ─────────
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/language/code_string": { set: "en" }
+
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/data[at0001]/events[at0002]/name/value":
+    set: "Any event"
+
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/data[at0001]/events[at0002]/time/value":
+    get: { from: csv1, column: fecha }
+    transform: [date_iso]
+    overwrite: last
+
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/data[at0001]/origin/value":
+    get: { from: csv1, column: fecha }
+    transform: [date_iso]
+    overwrite: last
+
+  # ───────── HADS items (Q1..Q14) → DV_ORDINAL **value** (use at-codes) ─────────
+  # Q1. at0115 → at0116..at0119
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0115]/value":
+    when: 'pregunta ~= "^\s*1\.\s*Me siento tenso o nervioso:\s*$"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "(?i)^(nunca|not at all)$": at0116
+      "(?i)^(de vez en cuando|a veces|from time to time.*|ocasion(?:almente)?)$": at0117
+      "(?i)^(con mucha frecuencia|a lot of the time)$": at0118
+      "(?i)^(muchas veces|la mayor parte del tiempo|most of the time|todos los d[ií]as)$": at0119
+
+  # Q2. at0120 → at0121..at0124
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0120]/value":
+    when: 'pregunta ~= "^\s*2\.\s*Todav[ií]a disfruto con lo que antes me gustaba:\s*$"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "(?i)^(tanto como siempre|como siempre|al igual que siempre lo hice|definitely as much)$": at0121
+      "(?i)^(no tanto ahora|no lo bastante|not quite so much)$": at0122
+      "(?i)^(s[oó]lo un poco|solo un poco|definitivamente menos ahora|only a little)$": at0123
+      "(?i)^(casi nada|nada|hardly at all)$": at0124
+
+  # Q3. at0125 → at0126..at0129
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0125]/value":
+    when: 'pregunta ~= "^\s*3\.\s*Tengo una sensaci[oó]n de miedo, como si algo horrible me fuera a suceder:\s*$"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "(?i)^(nada|not at all)$": at0126
+      "(?i)^(un poco, pero no me preocupa|a little.*)$": at0127
+      "(?i)^(s[ií], pero no.*(demasiado|muy fuerte)|yes, but not too badly)$": at0128
+      "(?i)^(definitivamente.*muy fuerte|very definitely.*badly)$": at0129
+
+  # Q4. at0130 → at0131..at0134
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0130]/value":
+    when: 'pregunta ~= "^\s*4\.\s*Puedo re[ií]rme y ver el lado divertido de las cosas:\s*$"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "(?i)^(tanto como siempre|como siempre|al igual que siempre lo hice|as much as i always could)$": at0131
+      "(?i)^(no tanto ahora|not quite so much now)$": at0132
+      "(?i)^(definitivamente menos ahora|casi nunca|definitely not so much now)$": at0133
+      "(?i)^(nada|not at all)$": at0134
+
+  # Q5. at0135 → at0136..at0139
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0135]/value":
+    when: 'pregunta ~= "^\s*5\.\s*Tengo mi mente llena de preocupaciones:\s*$"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "(?i)^(s[oó]lo en ocasiones|solo ocasionalmente|only occasionally)$": at0136
+      "(?i)^(a veces(,? aunque no muy a menudo)?|de vez en cuando|from time to time.*)$": at0137
+      "(?i)^(con bastante frecuencia|a lot of the time)$": at0138
+      "(?i)^(la mayor[ií]a de las veces|a great deal of the time)$": at0139
+
+  # Q6. at0140 → at0141..at0144
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0140]/value":
+    when: 'pregunta ~= "^\s*6\.\s*Me siento alegre:\s*$"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "(?i)^(la mayor parte del tiempo|casi siempre|most of the time)$": at0141
+      "(?i)^(a veces|sometimes)$": at0142
+      "(?i)^(no muy a menudo|not often)$": at0143
+      "(?i)^(nada|nunca|not at all)$": at0144
+
+  # Q7. at0145 → at0146..at0149
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0145]/value":
+    when: 'pregunta ~= "^\s*7\.\s*Puedo estar sentado confortablemente y sentirme relajado:\s*$"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "(?i)^(definitivamente|siempre|definitely)$": at0146
+      "(?i)^(por lo general|usually)$": at0147
+      "(?i)^(no muy a menudo|not often)$": at0148
+      "(?i)^(nada|nunca|not at all)$": at0149
+
+  # Q8. at0160 → at0161..at0164
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0160]/value":
+    when: 'pregunta ~= "^\s*8\.\s*Me siento como si cada d[ií]a estuviera m[aá]s lento:\s*$"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "(?i)^(nada|nunca|not at all)$": at0161
+      "(?i)^(a veces|sometimes)$": at0162
+      "(?i)^(muy a menudo|very often)$": at0163
+      "(?i)^(casi todo el tiempo|por lo general, en todo momento|nearly all the time)$": at0164
+
+  # Q9. at0165 → at0166..at0169
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0165]/value":
+    when: 'pregunta ~= "^\s*9\.\s*Tengo una sensaci[oó]n extraña, como si tuviera mariposas en el est[oó]mago:\s*$"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "(?i)^(nada|nunca|not at all)$": at0166
+      "(?i)^(ocasionalmente|en ciertas ocasiones|occasionally)$": at0167
+      "(?i)^(bastante a menudo|con bastante frecuencia|quite often)$": at0168
+      "(?i)^(muy a menudo|very often)$": at0169
+
+  # Q10. at0170 → at0171..at0174
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0170]/value":
+    when: 'pregunta ~= "^\s*10\.\s*He perdido inter[eé]s en mi aspecto personal:\s*$"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "(?i)^(me cuido tanto como siempre|me preocupa al igual que siempre|definitely as much)$": at0171
+      "(?i)^(puede que no me cuide tanto|podr[ií]a.*poco m[aá]s de cuidado)$": at0172
+      "(?i)^(no me cuido tanto como deber[ií]a|no me preocupo tanto como debiera)$": at0173
+      "(?i)^(definitivamente|totalmente)$": at0174
+
+  # Q11. at0175 → at0176..at0179
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0175]/value":
+    when: 'pregunta ~= "^\s*11\.\s*Me siento inquieto, como si no pudiera parar de moverme:\s*$"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "(?i)^(nada|not at all)$": at0176
+      "(?i)^(no mucho|not very much)$": at0177
+      "(?i)^(bastante|quite a lot)$": at0178
+      "(?i)^(mucho|very much indeed)$": at0179
+
+  # Q12. at0180 → at0181..at0184
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0180]/value":
+    when: 'pregunta ~= "^\s*12\.\s*.*(optimista|disfruto|look forward).*:\s*$"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "(?i)^(igual que siempre|como siempre|as much as i ever did)$": at0181
+      "(?i)^(algo menos que antes|rather less than i used to)$": at0182
+      "(?i)^(definitivamente menos que antes|mucho menos.*acostumbraba)$": at0183
+      "(?i)^(casi nada|nada|hardly at all)$": at0184
+
+  # Q13. at0185 → at0186..at0189
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0185]/value":
+    when: 'pregunta ~= "^\s*13\.\s*Me asaltan pensamientos repentinos de p[aá]nico:\s*$"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "(?i)^(nada|not at all)$": at0186
+      "(?i)^(no muy a menudo|rara vez|not very often)$": at0187
+      "(?i)^(bastante a menudo|quite often)$": at0188
+      "(?i)^(muy frecuentemente|very often indeed)$": at0189
+
+  # Q14. at0190 → at0191..at0194
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0190]/value":
+    when: 'pregunta ~= "^\s*14\.\s*Me divierto con un buen libro, programa de radio o televisi[oó]n:\s*$"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "(?i)^(a menudo|often)$": at0191
+      "(?i)^(a veces|sometimes)$": at0192
+      "(?i)^(no muy a menudo|not often)$": at0193
+      "(?i)^(muy rara vez|very seldom)$": at0194
+
+  # ───────── Free text observations ─────────
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0195]/value/value":
+    when: 'pregunta ~= "^\s*observaciones\s*$"'
+    get: { from: csv1, column: respuesta }
+    translate: no-cache
+    null_if_empty: true
+
+  # ───────── Subscale totals (DV_COUNT.magnitude) ─────────
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0150]/value/magnitude":
+    when: 'pregunta ~= "(?i)^\s*ansiedad\s*$"'
+    get: { from: csv1, column: respuesta }
+    transform: [int]
+    overwrite: last
+
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0151]/value/magnitude":
+    when: 'pregunta ~= "(?i)^\s*depresi[oó]n\s*$"'
+    get: { from: csv1, column: respuesta }
+    transform: [int]
+    overwrite: last
+
+  # ───────── Interpretations (DV_ORDINAL via ranges → at-codes) ─────────
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/protocol[at0107]/items[openEHR-EHR-CLUSTER.hads_anxiety_interpretation.v0]/items[at0001]/value":
+    when: 'pregunta ~= "(?i)^\s*ansiedad\s*$"'
+    get: { from: csv1, column: respuesta }
+    transform: [int]
+    map_ranges:
+      "0..7"  : at0002   # Normal
+      "8..10" : at0003   # Borderline
+      "11..21": at0004   # Abnormal
+    overwrite: last
+
+  "/content[openEHR-EHR-OBSERVATION.hads.v0]/protocol[at0107]/items[openEHR-EHR-CLUSTER.hads_depression_interpretation.v0]/items[at0001]/value":
+    when: 'pregunta ~= "(?i)^\s*depresi[oó]n\s*$"'
+    get: { from: csv1, column: respuesta }
+    transform: [int]
+    map_ranges:
+      "0..7"  : at0002   # Normal
+      "8..10" : at0003   # Borderline
+      "11..21": at0004   # Abnormal
+    overwrite: last

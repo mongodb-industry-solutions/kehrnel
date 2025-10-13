@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122775674" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>MED.NUCLEAIRE MN TEP FDG 050</title>
+    <effectiveTime value="20190923000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190923000000+0000"/>
+        <assignedAuthor>
+            <code code="MNU/174" displayName="MEDECINE NUCLEAIRE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur GRIMALDI SERENA
+ <br/>
+<br/>Destinataire : CTE 050 - SEIN
+ <br/> DR MOKDAD--ADI MERIEM
+ <br/>
+<b>EXAMEN DE TOMOGRAPHIE PAR EMISSION DE POSITONS<br/>TEP-FDG<br/>Dicté par : </b> Docteur Séréna Grimaldi
+ <b><br/>Dicté le : </b> 20/09/2019 
+ <b><br/>Service : </b> MNU-MEDECINE NUCLEAIRE 
+ <br/>
+<b>Type de document : </b> MNU CE TEP FDG 
+ <br/>
+<b>Ref :</b> 795035 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : UMU
+ <b><br/></b>
+<br/>
+<br/>
+<b>Examen réalisé le : 20/09/19<br/><br/></b>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<u><br/></u></b> Patiente de 62 ans suivie pour un carcinome canalaire infiltrant du 
+ <br/>sein droit, diagnostiqué en 2016, en rechute osseuse et hépatique. 
+ <br/>Evaluation sous CMF débuté le 31 mai 2019. 
+ <br/>
+<u><b><br/><br/>TECHNIQUE</b></u>
+<b> :<u><br/></u></b> Acquisition TEP standard/corps entier réalisée 58 minutes après 
+ <br/>injection par voie intraveineuse de 171.6 MBq de 18-FDG.
+ <br/>Glycémie avant injection : 4.9 mmol/l - Durée du jeûne : > 10 heures
+ <br/>
+<br/>Examen réalisé sur un TEP-TDM DISCOVERY 690 PET-CT, GENERAL 
+ <br/>ELECTRIC, 
+ <br/>mis en service en juin 2011.
+ <br/>- Numéro d'autorisation : M940029
+ <br/>- Numéro d'identification : 266196HM5
+ <br/>
+<br/>Scanner de repérage pour fusion d'images, PDL : 152.65 mGy.cm
+ <br/>- Poids 49 Kg - Taille 171 cm
+ <br/>- Site d'injection : coude droit 
+ <br/>- Heure d'injection 11h30
+ <br/>- Début de l'examen à 12h28
+ <br/>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/><br/><br/>Comparaison avec l'examen précédent du 22/05/2019 (baseline).<br/><br/><u>Au niveau cranio-cervical :<br/><br/></u></b> - Absence d'anomalie de fixation du parenchyme cérébral.
+ <br/>- Comblement du sinus maxillaire droit fixant, d'allure inflammatoire.
+ <br/>- Majoration d'une fixation amygdalienne droite, intense ce jour 
+ <br/>(SUVmax 7,9) , associé à deux foyers ganglionnaires latérocervicaux 
+ <br/>du secteur II homolatéral (SUVmax 3,3- 6 mm pour le plus fixant) : à 
+ <br/>comparer à l'examen ORL. 
+ <br/>- Absence de fixation suspecte des aires ganglionnaires 
+ <br/>latéro-cervicales et des voies aéro-digestives supérieures.
+ <br/>
+<br/>
+<u><b>Au niveau thoracique:<br/></b></u> -Absence de foyer de fixation suspect au niveau pleuro-pulmonaire. 
+ <br/>Régression partielle de la fixation en regard des condensations 
+ <br/>pulmonaires paravertébrales d'allure postradique. 
+ <br/>- Absence d'anomalie de fixation des aires mammaires.
+ <br/>- Absence de fixation pathologique au niveau ganglionnaire.
+ <br/>
+<br/>
+<br/>
+<u><b>Au niveau abdominopelvien :<br/></b></u> - Nette majoration en étendue (malgré une légère diminution en 
+ <br/>intensité de fixation) de la lésion hépatique des segments VII-VIII. 
+ <br/>SUVmax 5,9 versus 7,6- environ 6 cm versus 4 cm 
+ <br/>- Absence d'anomalie de fixation au niveau viscéral et ganglionnaire.
+ <br/>
+<br/>
+<br/>
+<u><b>Au niveau ostéomédullaire :<br/></b></u> - réapparition d'une fixation pathologique en regard du pédicule 
+ <br/>droit de T3, précédemment traité par radiothérapie : SUVmax 2,4
+ <br/>- apparition d'une fixation d'allure secondaire du corps vertébral de 
+ <br/>C5 (SUVmax 3,2) et de fixations moins intenses mais suspectes au 
+ <br/>niveau de T12 et L4. Absence d'anomalie en regard sur la TDM de 
+ <br/>repérage, absence de lésion menaçante. 
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/><u><br/></u>Comparativement à l'examen du 22 mai 2019 (baseline pour le <br/>traitement en cours), progression métabolique :<br/><br/>- Nette majoration en taille de la lésion hépatique préexistante<br/>- Apparition/réapparition de fixations osseuses pathologiques. <br/><br/>Par ailleurs, majoration d'une fixation oropharyngée droite, associé <br/>ce jour à des fixations ganglionnaires cervicales homolatérales, à <br/>comparer à l'examen ORL. <br/></b>
+<br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Séréna GRIMALDI <br/>Le vendredi 20 septembre 2019 à 14:10 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

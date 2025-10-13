@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121521256" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20200323000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200325000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Consultation téléphonique ce jour avec une patiente en 6ème ligne par 
+ <br/>TAXOL depuis le 23/12/2019, dans le cadre de la prise en charge d'une 
+ <br/>récidive hépatique et osseuse d'un cancer du sein droit diagnostiqué 
+ <br/>initialement en 2016 triple négatif. 
+ <br/>
+<br/>La patiente n'est pas éligible pour le protocole MCLA128 car il 
+ <br/>fallait avoir reçu une ligne d'hormonothérapie. 
+ <br/>
+<br/>
+<b>VIOLETTE, IMMU132</b> : non éligible compte tenu de la faible 
+ <br/>amplification HER2.
+ <br/>
+<b>DS8201-A-U302 </b> : faible amplification sur la biopsie hépatique 
+ <br/>réalisée en 2018 plus un délai de 3 semaines environ avant le début 
+ <br/>du traitement et la relecture centralisée. 
+ <br/>
+<br/>
+<b>RAPPEL :</b>
+<br/>
+<br/>T2 N0 de 25mm du sein droit diagnostiqué en juillet 2016, carcinome 
+ <br/>canalaire infiltrant de grade III triple négatif. Dans le bilan 2 
+ <br/>micronodules pulmonaires à surveiller. 
+ <br/>
+<br/>Chimiothérapie néo-adjuvante par 6 EC 75 doses denses + 12 TAXOL 
+ <br/>hebdo débutée le 29/08/2016. 
+ <br/>
+<br/>TGS le 23/02/2017 : persistance de 13mm de carcinome métaplasique 
+ <br/>avec une différentiation chondroide ou ostéoide, 17mm 
+ <br/>d'intracanalaire, 1GS-. 
+ <br/>
+<br/>Radiothérapie : sein + surimpression terminée le 08/06/2017. 
+ <br/>
+<br/>XELODA adjuvant 6 cycles compte tenu du risque persistant, à 
+ <br/>expliquer à la patiente. 
+ <br/>
+<br/>TEP scanner le 08/02/2018 : Aspect TEP en faveur d'une rechute 
+ <br/>métastatique avec atteinte osseuse de T3 et atteinte hépatique 
+ <br/>(segment VII). 
+ <br/>
+<br/>La patiente avait débuté une chimiothérapie par CARBOPLATINE GEMZAR 
+ <br/>de février à juillet 2018. 
+ <br/>
+<br/>Elle a reçu HERCEPTIN à partir du 02/05 en association avec 
+ <br/>CARBOPLATINE- GEMZAR puis en association avec ENDOXAN débuté en 
+ <br/>juillet 2018. 
+ <br/>
+<br/>Suite au résultat de la biopsie hépatique le 07/03/2018 : 
+ <br/>localisation hépatique d'une prolifération tumorale maligne dont la 
+ <br/>morphologie est tout à fait compatible avec une localisation du 
+ <br/>carcinome mammaire de type métaplasique avec différenciation 
+ <br/>chondroide et / ou ostéoide connu
+ <br/>RE négatif, RP négatif, présence d'une amplification du gène HER2 
+ <br/>selon les critères GEFPICS 2014 dans les cellules analysées par FISH. 
+ <br/>
+<br/>Il s'agit d'une amplification faible avec la valeur "borderline" de 
+ <br/>ratio qui est à 2,05. 
+ <br/>
+<br/>Le PET scan réalisé le 27/04 avait montré : une réponse métabolique 
+ <br/>partielle de la lésion hépatique unique du segment VII et de la 
+ <br/>lésion osseuse isolée en T3. 
+ <br/>
+<br/>Elle a reçu 6 cycles de CARBOPLATINE GEMZAR débuté le 26 février 
+ <br/>jusqu'au 09/07 marqué par des toxicités importantes sur le plan 
+ <br/>hématologique : thrombopénie et neutropénie. 
+ <br/>
+<br/>
+<b>PROFEEL :</b> mutation TP53
+ <br/>Sous ENDOXAN depuis le 23/07 jusqu'au 25/10.
+ <br/>Arrêt de l'ENDOXAN pour progression hépatique et osseuse. 
+ <br/>
+<b>TEP 19/10</b> : comparativement à l'examen précédent de jullet 2018, 
+ <br/>aspect de progression, devant la majoration des lésions 
+ <br/>pré-existantes du foie et de T3, sans nouvelle fixation suspecte. 
+ <br/>
+<br/>Intérêt d'une IRM du rachis pour mieux évaluer la lésion T3 
+ <br/>(épidurite débutante ?). 
+ <br/>
+<br/>IRM rachis 31/10 : globale stabilité de l'atteinte de T3 avec 
+ <br/>atteinte épidurale foraminale droite T3/T4. 
+ <br/>Pas d'apparition de lésion osseuse suspecte. 
+ <br/>Pas de compression médullaire. 
+ <br/>La patiente ne prend pas d'XGEVA car elle appréhende les effets 
+ <br/>secondaires, elle demande un temps de réflexion. 
+ <br/>ERIBULINE en 3ème ligne le 09/11. 
+ <br/>
+<br/>Il était prévu de lui proposer une inclusion dans le protocole MCLA 
+ <br/>cohorte 1 : non éligible car n'avait pas reçu le PERTUZUMAB au 
+ <br/>préalable. 
+ <br/>MCLA cohorte 2, elle n'a pas eu d'hormonothérapie avant, donc ne peut 
+ <br/>être incluse dans 
+ <b>VIOLETTE </b> et 
+ <b>IMMU132</b> : non éligible compte tenu de 
+ <br/>la faible amplification HER2. 
+ <br/>
+<br/>Cataracte à droite opérée en ambulatoire le 21/02, bonnes suites 
+ <br/>opératoires. 
+ <br/>Biopsie hépatique le 21 janvier : localisation hépatique d'un 
+ <br/>carcinome mammaire triple négatif. 
+ <br/>
+<br/>1ère ligne : CARBOPLATINE / GEMZAR
+ <br/>2ème ligne : ENDOXAN 
+ <br/>3ème ligne : ERIBULINE
+ <br/>4ème ligne : CMF 
+ <br/>5ème ligne : NAVELBINE 
+ <br/>
+<br/>TEP du 25/11 à Marie Lannelongue : aspect de progression 
+ <br/>morphologique de la volumineuse lésion hépatique connue mais 
+ <br/>nécrotiques ce jour. 
+ <br/>Persistance de 2 lésions osseuses de C5 et T3 sans apparition de 
+ <br/>nouvelle lésion. 
+ <br/>Discrète fixation ganglionnaire amygdalienne droite restant peu 
+ <br/>spécifique. 
+ <br/>J'informe la patiente des résultats du TEP et propose une nouvelle 
+ <br/>relecture à Gustave Roussy avant de décider de poursuivre le 
+ <br/>traitement et de refaire une évaluation TEP à Gustave Roussy dans 2 
+ <br/>mois. 
+ <br/>
+<br/>6ème ligne : TAXOL 
+ <br/>Une consultation ORL + BIOPSIE : biopsie réalisée le 29/10 au niveau 
+ <br/>de l'amygdale droite : tissu normal, P16: absence de surexpression. 
+ <br/>
+<br/>
+<u>Ce jour :</u>
+<br/>
+<br/>PS : 1
+ <br/>Poids : 5kg 
+ <br/>Asthénie grade I 
+ <br/>Tolérance moyenne du TAXOL, neuropathie au niveau des pieds bien 
+ <br/>gérée par l'acupuncture débutée en novembre (plus marquée à gauche), 
+ <br/>une séance par semaine. 
+ <br/>Arthralgies diffuses plus marquées au niveau des orteils. 
+ <br/>Crampes des pieds et des mollets récurrentes. 
+ <br/>Bilan biologique ce jour : correct notamment la fonction hépatique 
+ <br/>avec la persistance d'une anémie à 10. 
+ <br/>
+<br/>TEP scanner le 17/0.
+ <br/>J'informe la patiente des résultats du TEP et lui propose de débuter 
+ <br/>un traitement par XELODA qu'elle a déjà reçu en 2017. 
+ <br/>
+<br/>
+<u>En pratique :</u>
+<br/>
+<br/>Nouvelle ligne par XELODA 
+ <br/>
+<br/>Je la recontacterai dans un mois par téléphone pour une évaluation de 
+ <br/>la tolérance avec un bilan biologique. 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125024443" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Lettre du 2018-10-15</title>
+    <effectiveTime value="20181015000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181015000000+0000"/>
+        <assignedAuthor>
+            <code code="132/26" displayName="CTE 132 - ONCOGENETIQUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>SERVICE ONCOGENETIQUE - COURRIER<br/><br/>Dicté par : </b> Docteur Olivier Caron
+ <b><br/>Dicté le : </b> 12/10/2018 
+ <b><br/>Service : </b> 132-CONSULTATION DE GENETIQUE 
+ <br/>
+<b>Type de document : </b> 132 LT LETTRE 
+ <br/>
+<b>Ref :</b> 509928 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : AGI
+ <br/>
+<br/>Nos références : 20327
+ <br/>
+<br/>Chère Madame,
+ <br/>
+<br/>Comme convenu lors de la dernière consultation de génétique, voici le 
+ <br/>résultat définitif de votre analyse génétique, qui confirme la 
+ <br/>présence d'une anomalie dans le gène BRCA1.
+ <br/>
+<br/>Ceci permet d'expliquer en partie votre propre histoire médicale. 
+ <br/>
+<br/>L'identification de cette anomalie génétique permet également de la 
+ <br/>rechercher dans votre famille, chez tous les apparentés majeurs, 
+ <br/>volontaires. Pour les jeunes femmes, nous recommandons de ne faire le 
+ <br/>test que vers 25 ans environ. Il n'y a pas de recommandation d'âge 
+ <br/>pour les hommes, chez lesquels le test reste indiqué. Cette analyse 
+ <br/>n'est possible qu'après avoir réalisé une consultation 
+ <br/>d'oncogénétique. 
+ <br/>
+<br/>Il vous appartient légalement de leur transmettre cette information. 
+ <br/>N'hésitez pas à nous solliciter en cas de difficultés. A l'extrême, 
+ <br/>vous pourriez nous charger de cette tâche, toutefois dans le cadre 
+ <br/>d'une procédure lourde.
+ <br/>Pour faciliter la démarche, vous pourrez transmettre à vos apparentés
+ <br/>une copie de votre résultat, accompagnée du courrier qui leur est 
+ <br/>destiné. Vos apparentés peuvent venir consulter à Gustave Roussy. 
+ <br/>Pour ceux qui habitent loin, nous pouvons leur transmettre les 
+ <br/>coordonnées de nos confrères, si nécessaire.
+ <br/>
+<br/>Par ailleurs, la révélation d'une prédisposition et l'importance de 
+ <br/>communiquer ce type d'information dans une famille peut entraîner des 
+ <br/>difficultés psychologiques. Notre psychologue est tout à fait prête à 
+ <br/>vous recevoir si vous en ressentez le besoin.
+ <br/>
+<br/>Enfin, un résultat de génétique est une information dite "sensible", 
+ <br/>qu'il est important de ne diffuser qu'aux professionnels de santé qui 
+ <br/>vous prendront en charge. Cela n'intéresse ni votre employeur, ni 
+ <br/>votre banquier, ni votre assureur, par exemple. Je reste à votre 
+ <br/>disposition, de même que nos conseillères en génétique, pour tout 
+ <br/>renseignement complémentaire qui vous semblerait utile.
+ <br/>
+<br/>Je vous prie de croire, Chère Madame, en l'expression de mes 
+ <br/>salutations distinguées.
+ <br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Olivier CARON <br/>Le vendredi 12 octobre 2018 à 19:00</b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

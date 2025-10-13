@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127179764" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>REUNION DE CONCERTATION PLURI-DISCIPLINAIRE CCF - TETE ET COU</title>
+    <effectiveTime value="20171107000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171108000000+0000"/>
+        <assignedAuthor>
+            <code code="010/1" displayName="CTE 010 - ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Chirurgien : DR TEMAM
+ <br/>Radiothérapeute : DR TAO
+ <br/>Radiologue : DR GARCIA
+ <br/>Oncologue : DR BASTE
+ <br/>
+<br/>
+<br/>Patient âgé de 56 ans, qui présente une 2ème localisation de 
+ <br/>CARCINOME EPIDERMOIDE hypopharyngé, sinus piriforme droit.
+ <br/>
+<br/>
+<b>Antécédents notables<br/></b> Pas de comorbidité significative.
+ <br/>
+<br/>
+<b>Localisations antérieures<br/></b> Traitement en 2014 par radiothérapie IMRT - CISPLATINE GORTEC 
+ <br/>2014-01 pour un CARCINOME EPIDERMOIDE vélaire avec adénopathies 
+ <br/>cervicales bilatérales, T3 N2c, sans signe évolutif.
+ <br/>
+<br/>
+<b>Lésion actuelle<br/></b> Actuellement, douleurs pharyngées droites évoluant depuis plusieurs 
+ <br/>mois permettant de révéler une 2ème localisation superficielle mais 
+ <br/>localement étendue au niveau des muqueuses, prenant les 2 versants de 
+ <br/>la partie supérieure du sinus piriforme droit, mal limitée, avec une 
+ <br/>mobilité laryngée préservée.
+ <br/>
+<br/>
+<b>Adénopathies</b>
+<br/>Pas d'adénopathie cervicale clinique ou radiologique.
+ <br/>
+<br/>
+<b>Bilan d'extension<br/></b> Scanner thoracique négatif.
+ <br/>
+<br/>
+<b>Classification TNM</b> :
+ <br/>T2 Nx M0 en territoire irradié pour le précédent cancer, sur tissu 
+ <br/>scléreux au niveau cervical et au niveau muqueux, résécable.
+ <br/>
+<br/>
+<b>DECISION THERAPEUTIQUE<br/></b> On propose une pharyngo-laryngectomie totale en territoire irradié, 
+ <br/>curage cervical droit, hémi-thyroïdectomie droit, couverture des 
+ <br/>sutures pharyngées par lambeau musculaire pédiculé de grand pectoral 
+ <br/>droit +/- musculo-cutané en fonction du défect muqueux.
+ <br/>
+<br/>Discussion d'une réirradiation post-opératoire en fonction des suites 
+ <br/>et de l'histologie.
+ <br/>
+<br/>Le patient accepte la prise en charge.
+ <br/>
+<br/>Il est potentiellement éligible pour la mise en place d'un implant 
+ <br/>phonatoire.
+ <br/>On organise une consultation avec les orthophonistes, si possible 
+ <br/>avec un patient appareillé (sera vu lors du plan d'enseignement).
+ <br/>Il est souhaitable qu'il soit revu également par le Dr BREUSKIN avant 
+ <br/>la chirurgie.
+ <br/>
+<br/>
+<b>Recherche clinique</b>
+<br/>Non.
+ <br/>
+<br/>
+<u>Chek-liste à valider</u> :
+ <br/>Recherche clinique : Non
+ <br/>PPS REMIS : Oui 
+ <br/>Décision en accord avec le médécin référent : Oui 
+ <br/>Soins de support : 
+ <br/> * Prise en charge sociale : Non nécessaire 
+ <br/> * Consultation addictologie : Non nécessaire 
+ <br/> * Prise en charge nutritionnelle : Non nécessaire 
+ <br/> * antalgiques adaptés : Oui 
+ <br/> * Psychologique HADS : Non
+ <br/>
+<br/>
+<u><br/></u>Les modalités du traitement ainsi que les conséquences, les effets 
+ <br/>secondaires et les risques éventuels ont été expliqués au patient (et 
+ <br/>à sa famille) qui les accepte.
+ <br/>
+<br/>Le médecin référent IGR est le Dr BREUSKIN.
+ <br/>
+<br/>Fiche comité enregistrée.
+ <br/>
+<br/>
+<br/> LISTE RENDEZ-VOUS PREVUS
+ <br/>
+<br/> Date Heure Demandeurs Libellé d'acte * commentaires
+ <br/>
+<br/>09/11/2017 15:00 ORL IBN C ASS FSV 
+ <br/>10/11/2017 16:55 ORL IBN C ORL IBN 
+ <br/>12/11/2017 13:00 MOR IBN ADM RHO DIR 
+ <br/>13/11/2017 08:30 MOR IBN PBO SEG THYR 
+ <br/> 08:30 MOR IBN PBO CHIR IBN 
+ <br/>21/12/2017 09:00 CAM YGT C RX ORL SURV1 
+ <br/>09/03/2018 08:40 310 GSN RD PANORAMIQUE 
+ <br/> 08:50 310 GSN C ODONTO GSN 
+ <br/>11/05/2018 __: 1 ORL IBN C ORL IBN visite de suivi 2004-01 / ne 
+ <br/>pas annuler 
+ <br/>07/11/2018 __: 1 CAM YGT C RX YGT 
+ <br/>10/05/2019 __: 1 ORL IBN C ORL IBN 
+ <br/>06/11/2019 __: 1 CAM YGT C RX YGT 
+ <br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

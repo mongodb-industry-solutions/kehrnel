@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120588774" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>HOPITAL DE JOUR DE MEDECINE ONCOLOGIQUE ADULTES</title>
+    <effectiveTime value="20200821000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200821000000+0000"/>
+        <assignedAuthor>
+            <code code="HJM/484" displayName="HOPITAL DE JOUR MEDECINE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>DEPARTEMENT DE MEDECINE - HOPITAL DE JOUR MEDECINE <br/><br/> Dicté par : </b> Docteur Lucia Carril
+ <b><br/>Dicté le : </b> 17/08/2020 
+ <b><br/>Service : </b> HJM-HOPITAL DE JOUR MEDECINE 
+ <br/>
+<b>Type de document : </b> HJM CC GENERIQUE 
+ <br/>
+<b>Ref :</b> 1073762 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : PAM/A
+ <br/>
+<br/> Approuvé par :
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<u><b>COMPTE-RENDU DE CONSULTATION EN HOPITAL DE JOUR DE MEDECINE<br/> <br/></b></u>
+<br/>Je vois ce jour a Mme XXXXXX en raison d'une fièvre au domicile. 
+ <br/>Elle est suivie dans le cadre d'une adénocarcinome séreux de haut 
+ <br/>grade en rechute platine résistant et multitraité, actuellement en 
+ <br/>traitement palliatif exclusif devant une altération clinique avec un 
+ <br/>PS à 4.
+ <br/>Bonne prise en charge au domicile ; patiente déjà suivie par les 
+ <br/>Soins de Support. 
+ <br/>Elle a été hospitalisée de 7 au 17 de juillet dans les suites de la 
+ <br/>prise en charge d'une fracture de col du fémur traumatique traitée 
+ <br/>par prothèse fémorale le 6/7/20. Complications associées : érysipèle 
+ <br/>avec bonne évolution sous antibiotiques. 
+ <br/>
+<br/>
+<u><b>Sur le plan clinique<br/></b></u> Elle est vue ce jour pour être transfusée en raison d'une anémie 
+ <br/>avec Hb à 8.0 le 13/8.
+ <br/>Elle rapporte une fièvre à 38°7 hier soir. 
+ <br/>Ce jour, pas de fièvre mais la patiente a pris du Doliprane avant de 
+ <br/>venir car elle avait 38°ce matin.
+ <br/>
+<br/>
+<br/>Pas de symptôme suggestif de COVID ou respiratoire. 
+ <br/>
+<br/> Pas de trouble digestif.
+ <br/>Pas de syndrome urinaire. 
+ <br/>PAC propre sans signe inflammatoire. Cependant, pus dans le plaie 
+ <br/>chirurgicale.
+ <br/>
+<br/>
+<br/>Accompagnée par un membre de sa famille.
+ <br/>
+<u><b>EXAMEN CLINIQUE<br/><br/></b></u> PS 4
+ <br/>TA 100/66 (cachectique).
+ <br/>FC 92. 
+ <br/>SatO2 97. 
+ <br/>Température 37°. 
+ <br/>
+<br/>PAC propre. 
+ <br/>Pas de mucite.
+ <br/>
+<br/>Auscultation cardio-pulmonaire sans particularité. 
+ <br/>Abdomen distendu avec ascite, non douleureuse à la palpation ; avec 
+ <br/>hernie ombilicale déjà connue, stable.
+ <br/>Membres inférieurs sans signe de TVP ou d'érysipèle. Plaie couverte, 
+ <br/>les pansements viennent d'être refaits par l'infirmière qui a 
+ <br/>constaté du pus.
+ <br/>Pas de bilan biologique ce jour. 
+ <br/>On discute le cas avec le médecin des urgences ; on adresse la 
+ <br/>patiente aux urgences pour compléter le bilan et mettre une 
+ <br/>antibiothérapie en place.
+ <br/>La transfusion sera réalisée aux Urgences.
+ <br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Lucia CARRIL <br/>Le jeudi 20 août 2020 à 17:30 </b>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126357759" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>Docteur Lilly ON - Interne service des Urgences/Rouergue</title>
+    <effectiveTime value="20180319000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180319000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ \qc
+ <b> Compte-rendu d'hospitalisation <br/>dans le service ROUERGUE<br/> <br/>Dicté par : </b> Docteur Lilly On
+ <b><br/>Dicté le : </b> 19/03/2018 
+ <b><br/>Service : </b> ROU-ROUERGUE 
+ <br/>
+<b>Type de document : </b> ROU RH Hospitalisation 
+ <br/>
+<b>Ref :</b> 377882 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire </b> : TIN
+ <br/>
+<br/>
+<b>Patiente de 60 ans hospitalisée dans le service ROUERGUE du 14 au 15 <br/>mars 2018 pour anémie, thrombopénie et neutropénie non fébrile à J9 <br/>de sa dernière chimiothérapie.</b>
+<br/>
+<br/>
+<u>Médecin référent à Gustave Roussy</u> : Docteur MOKDAD-ADI.
+ <br/>
+<br/>
+<u>Antécédents carcinologiques</u>
+<br/>
+<br/>Patiente suivie pour un cancer du sein triple négatif métastatique au 
+ <br/>niveau osseux et hépatique, traitée par chimiothérapie par 
+ <br/>CARBOPLATINE AUC 4 / GEMZAR (C1 J8 le 05.03.2018).
+ <br/>
+<br/>
+<u>Autres antécédents</u>
+<br/>
+<br/>Neuropathie au TAXOL.
+ <br/>Colique néphrétique.
+ <br/>
+<br/>
+<u>Examen clinique à l'arrivée</u>
+<br/>
+<br/>TA 142/72 mmHg ; pouls 72/min ; T 36,7°C ; satO2 100 % en AA ; EVA 
+ <br/>4/10 ; poids 50 kg.
+ <br/>Hémodynamique stable, apyrétique.
+ <br/>Examen cardio-pulmonaire normal.
+ <br/>Pas de saignement digestif ou urologique.
+ <br/>Purpura des membres inférieurs modéré, pas de bulle hémorragique 
+ <br/>buccale.
+ <br/>
+<br/>
+<u>Résultats du bilan para-clinique à l'arrivée</u>
+<br/>
+<br/>Hb 9 g/dl ; plaquettes 7 000/mm3 ; GB 1 200/mm3 dont PNN 300/mm3 
+ <br/>Reste du bilan normal notamment CRP 20 mg/l.
+ <br/>
+<br/>
+<u>Evolution dans le service</u>
+<br/>
+<br/>La patiente présente une thrombopénie à 10 000 plaquettes/mm3, sans 
+ <br/>signe de gravité clinique, pour laquelle une transfusion de 
+ <br/>plaquettes a été réalisée le 14.03.2018 avec un bon rendement 
+ <br/>plaquettaire.
+ <br/>La patiente présente également une neutropénie à 200 PNN/mm3, sans 
+ <br/>syndrome fébrile associé, qui ne nécessite pas de débuter une 
+ <br/>antibiothérapie mais une surveillance clinique de la température.
+ <br/>De plus, la patiente présente une anémie normocytaire à 9,4 g/dl 
+ <br/>contrôlée le lendemain à 8,8 g/dl, sans mauvaise tolérance clinique, 
+ <br/>chez une patiente non coronarienne et jeune, ne nécessitant donc pas 
+ <br/>de transfusion de culot globulaire.
+ <br/>
+<br/>La patiente rentre à domicile le 15.03.2018 avec un bilan de contrôle 
+ <br/>à 48 heures.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> <br/></b>
+<br/>
+<b>Pancytopénie chimio-induite ayant nécessité la transfusion d'un culot <br/>plaquettaire chez une patiente suivie pour un cancer du sein triple <br/>négatif, multi-métastatique.<br/>Retour à domicile le 15.03.2018.</b>
+<br/>
+<br/>
+<b> <br/>* Prise en charge palliative NON<br/><br/>EVALUATION DE LA CHARGE EN SOINS<br/></b> * Ponction à visée symptomatique NON
+ <br/>* Adaptation du traitement antalgique NON
+ <br/>* Irradiation antalgique NON
+ <br/>* Occlusion intestinale NON
+ <br/>* Transfusion sanguine OUI 
+ <br/>* Prise en charge de la détresse respiratoire
+ <br/>avec désaturation < 90% en AA NON
+ <br/>* Traitement des divers symptômes vecteurs d'inconfort 
+ <br/>(toux, prurit, nausées, vomissements, anxiété, 
+ <br/>dépression, troubles du sommeil, déshydratation...) OUI 
+ <br/>* Soins de nursing NON
+ <br/>* Nutrition : 
+ <br/>- déjà sous CNO, nutrition entérale/parentérale NON
+ <br/>- mise en route d'une nutrition entérale/parentérale NON
+ <br/>
+<br/>
+<b>PRISE EN CHARGE MULTI-DISCIPLINAIRE<br/></b> * Prise en charge de l'EMASP NON
+ <br/>* Consultation CETD (douleur, sophrologie, 
+ <br/>auriculothérapie) NON
+ <br/>* Consultation d'onco-psychologie NON
+ <br/>* Prise en charge sociale NON
+ <br/>* Soins de kinésithérapie NON
+ <br/>* Consultation diététicienne ou nutritionniste NON
+ <br/>
+<b><br/>____________________<br/>Docteur Lilly ON </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

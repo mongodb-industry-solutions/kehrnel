@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125672827" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Docteur Florence PASQUIER - Hématologie Clinique</title>
+    <effectiveTime value="20180703000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180704000000+0000"/>
+        <assignedAuthor>
+            <code code="110/16" displayName="CTE 110 - HEMATOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Je vois ce jour en consultation Mr XXXXXX XXXXXX, 67 ans, suivi 
+ <br/>depuis 2015 pour une myélofibrose primitive. 
+ <br/>
+<br/>
+<u><b>Antécédents</b></u>
+<br/>
+<br/>- AIT en 2006, 2012 et 2015.
+ <br/> - Notion de cavernome portal 2012 associé à une splénomégalie et la 
+ <br/>présence de varices oesophagiennes grade I-II. Contrôle FOGD d'avril 
+ <br/>2017 confirmant l'EVO grade I-II.
+ <br/>- Notion d'une tumeur gastrique avec laparotomie en 1972, bénigne.
+ <br/>- Hernie discale, chirurgie de l'épaule droite. 
+ <br/>- Chirurgie oeil droit (étiologie ?).
+ <br/>- Adénome prostatique pT2c N0 M0 diagnostiqué en novembre 2011 puis 
+ <br/>perdu de vue. Le patient a été traité au printemps 2018 par 
+ <br/>radiothérapie du 26.02 au 07.06.18 puis une hormonothérapie courte. 
+ <br/>Patient vu en consultation d'Urologie le 03.07.18 à Gustave Roussy : 
+ <br/>PSA contrôlé, pas de nécessité de surveillance à court terme. 
+ <br/>Indication à réaliser un taux de PSA tous les 6 mois.
+ <br/>- Mise en évidence d'une thrombose portale en septembre 2017, traitée 
+ <br/>par INNOHEP à dose curative. Reperméabilisation de la veine porte en 
+ <br/>janvier 2018. Passage à un traitement préventif par LOVENOX 0.4 mL.
+ <br/>- vertiges paroxystiques bénins en octobre 2017.
+ <br/>
+<br/>
+<u><b>Traitement au domicile</b></u>
+<br/>
+<br/>JAKAVI 20 mg x2/jour depuis juin 2017, corticothérapie depuis février 
+ <br/>2018 actuellement 40 mg/jour.
+ <br/>EPO toutes les trois semaines.
+ <br/>LOVENOX 0.4 mL/jour.
+ <br/>OMEPRAZOLE 20 mg/jour. 
+ <br/>
+<br/>
+<u><b>Mode de vie</b></u>
+<br/>
+<br/>Le patient vit en Martinique.
+ <br/>Retraité depuis 2006 (travaillait dans une entreprise de transport). 
+ <br/>Il est marié, a 3 enfants dont 1 décédé d'un AVP.
+ <br/>Une soeur non typable pour raison médicale, un demi-frère. 
+ <br/>
+<br/>
+<u><b>Histoire de la maladie</b></u>
+<br/>
+<br/>Diagnostic en avril 2012 d'un cavernome portal avec présence d'une 
+ <br/>splénomégalie non chiffrée et la présence de varices oesophagiennes 
+ <br/>de grade I-II.
+ <br/>Apparition en 2015 d'une hyperleucocytose associée à une myélémie et 
+ <br/>la présence de dacryocytes et de 4% de blastes circulants. 
+ <br/>BOM (date non connue et examen non disponible dans le dossier) : 
+ <br/>hyperplasie mégacaryocytaire avec présence de mégacaryocytes 
+ <br/>dystrophiques regroupés en Cluster associée à une hypoplasie 
+ <br/>érythroblastique et une fibrose médullaire non gradée associée à une 
+ <br/>ostéosclérose grade III. Absence d'excès de blastes.
+ <br/>Caryotype juin 2017 : pseudo-diploïde avec une del13 (compte-rendu 
+ <br/>non disponible dans le dossier), a priori présence d'une mutation 
+ <br/>JAK2 V617F positive. 
+ <br/>
+<br/>Il s'agit donc d'une myélofibrose primitive JAK2 V617F positive.
+ <br/>Traitement par PLAVIX et HYDREA à partir de janvier 2017 puis JAKAVI 
+ <br/>20 mg x2/jour à partir de juillet 2017.
+ <br/>Le JAKAVI a permis une reprise du poids (le patient avait perdu plus 
+ <br/>de 20 Kg) ainsi qu'une amélioration globale de l'état général.
+ <br/>Introduction d'une corticothérapie à 1mg/Kg/jour le 30.01.18 devant 
+ <br/>une composante hémolytique de l'anémie. 
+ <br/>Par ailleurs, le patient est sous EPO ARANESP 500 μg toutes les trois 
+ <br/>semaines, date de début non précisée.
+ <br/>
+<br/>Octobre 2017 : mise en évidence d'un infarctus splénique devant des 
+ <br/>douleurs abdominales associées à un AEG. 
+ <br/>
+<br/>Une allogreffe de CSP est prévue à Gustave Roussy en août 2018 
+ <br/>précédée d'une radiothérapie splénique. 
+ <br/>
+<br/>
+<u><b>Le jour de la consultation</b></u>
+<br/>
+<br/>- 
+ <u> D'un point de vue clinique</u>
+<br/>
+<br/>OMS 2-3.
+ <br/>Le patient présente depuis quelques jours une altération de l'état 
+ <br/>général avec des vertiges positionnels, anorexie depuis 3 jours. 
+ <br/>Pâleur cutanéo-muqueuse. 
+ <br/>Vertiges au changement de position.
+ <br/>Absence de syndrome hémorragique ou infectieux. 
+ <br/>La palpation abdominale retrouve une volumineuse splénomégalie avec 
+ <br/>une douleur et une défense au niveau du flanc gauche.
+ <br/>A noter que le patient a été hospitalisé en octobre 2017 pour une 
+ <br/>altération de l'état général et des douleurs abdominales qui étaient 
+ <br/>dûes à un infarctus splénique. Il présentait également des vertiges 
+ <br/>dû à un vertige paroxystique bénin. 
+ <br/>
+<br/>- 
+ <u> D'un point de vue biologique</u>
+<br/>
+<br/>Leucocytes 9.9 G/L, myélémie 28%, blastes 2%, Hb 8.5 g/dL et 
+ <br/>plaquettes 231 G/L.
+ <br/>Fonctions rénale et hépatique, lipase, CRP : normaux. 
+ <br/>Fer sérique 5.4 μmol/L.
+ <br/>LDH 729 UI/L.
+ <br/>TP 57%.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<br/>
+<br/>Myélofibrose primitive DIPSS+ intermédiaire 2 actuellement.
+ <br/>
+<br/>Le patient présente ce jour une altération générale avec une douleur 
+ <br/>et une défense au niveau du flanc gauche correspondant à la rate 
+ <br/>volumineuse, ainsi que des vertiges pouvant évoquer des VPB.
+ <br/>Le patient est orienté vers les urgences pour la réalisation d'un 
+ <br/>scanner abdominal en urgence. 
+ <br/>
+<br/>Allogreffe prévue en août 2018 avec RTE splénique auparavant.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

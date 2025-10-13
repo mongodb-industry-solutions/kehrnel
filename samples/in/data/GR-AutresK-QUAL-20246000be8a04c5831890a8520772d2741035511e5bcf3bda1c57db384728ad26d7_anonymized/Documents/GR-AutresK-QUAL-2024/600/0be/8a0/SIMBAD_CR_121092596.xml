@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121092596" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>CONSULTATION ORL - Interne ORL</title>
+    <effectiveTime value="20200608000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200608000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>CONSULTATION ORL - INTERNE ORL<br/><br/>Dicté par : </b> Docteur Tiffany Rigal, Interne
+ <b><br/>Dicté le : </b> 19/05/2020 
+ <b><br/>Service : </b> ORL-CONSULTATIONS ORL 
+ <br/>
+<b>Type de document : </b> ORL CC PETITE CHIRURGIE 
+ <br/>
+<b>Ref :</b> 1000584 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire : WAI</b>
+<b><br/></b>
+<br/>
+<b> Patiente de 59 ans, suivie par le Dr FERRAND et le Dr BREUSKIN qui <br/>est actuellement en entretien de chimiothérapie par CETUXIMAB pour <br/>une poursuite évolutive cervicale d'un carcinome épidermoïde <br/>pharyngo-laryngé traité par laryngectomie totale.<br/></b>
+<br/>Ce jour, le patiente reconsulte après sa séance d'HDJ chimiothérapie 
+ <br/>qui a été annulée du fait de la persistance de l'écoulement cervical 
+ <br/>gauche.
+ <br/>
+<u><b><br/>Examen clinique:<br/></b></u> Ce jour, la patient est en bon état général, ne présente pas de 
+ <br/>fièvre, on note un léger bruit inspiratoire en rapport avec un 
+ <br/>bouchon trachéal retiré ce jour.
+ <br/>L'examen cervical est similaire à la consultation précédente, sans 
+ <br/>abcès localisé, légèrement érythémateux au bord de l'orifice avec un 
+ <br/>écoulement plus abondant.
+ <br/>On note un syndrome inflammatoire modéré à la prise de sang avec 11 
+ <br/>000 leucocytes.
+ <br/>L'examen pulmonaire est normal.
+ <br/>
+<br/>Le prélèvement bactériologique réalisé à la dernière consultation 
+ <br/>retrouve des germes multisensibles.
+ <br/>Après avis du Dr BREUSKIN et du Dr IACOB, on décide de démarrer une 
+ <br/>antibiothérapie par Augmentin 1G x3 pendant 10 jours.
+ <br/>Le patient sera revu au terme de cette antibiothérapie, en 
+ <br/>consultation avec le Dr BREUSKIN.
+ <br/>
+<br/>D'un point de vue carcinologique, la question d'une progression se 
+ <br/>pose qui serait peut être à l'origine de cette majoration de 
+ <br/>écoulement.
+ <br/>Le Dr IACOB a donc prévu une réévaluation par le Dr FERRAND, le 2 
+ <br/>juin, pour discuter d'un scanner de réévaluation et la poursuite de 
+ <br/>la chimiothérapie.
+ <br/>On recommande également au patient de bien continuer ses aérosols qui 
+ <br/>sont à domicile pour éviter la récidive de bouchons intra-trachéaux.
+ <br/>
+<b><br/>____________________<br/>Docteur Etienne DAUZIER</b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

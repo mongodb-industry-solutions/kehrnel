@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125545735" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>EXAMEN IRM IRM RACHIS XSEG</title>
+    <effectiveTime value="20180723000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180723000000+0000"/>
+        <assignedAuthor>
+            <code code="IRM/301" displayName="RADIODIAGNOSTIC-IRM"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur AMMARI SAMY
+ <br/>
+<br/>Destinataire : CTE 110 - HEMATOLOGIE
+ <br/> DR CASTILLA-LLORENTE CRISTINA
+ <br/>
+<br/>
+<br/>
+<b>Compte rendu générique de RADIODIAGNOSTIC - IRM<br/><br/>Dicté par : </b> Docteur Lara Antonios interne et DR AMMARI
+ <b><br/>Dicté le : </b> 20/07/2018 
+ <b><br/>Service : </b> IRM-RADIODIAGNOSTIC IRM 
+ <br/>
+<b>Type de document : </b> IRM CR Générique 
+ <br/>
+<b>Ref :</b> 458165 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : 
+ <u><b>EDG<br/></b></u>
+<br/> Examen réalisé le : 20.07.18
+ <br/>
+<br/>
+<u><b>Examen 2548<br/><br/> IRM RACHIDIENNE<br/><br/><br/> </b></u>
+<br/>
+<u><b>INDICATION</b></u>
+<b> : <br/><br/></b> Patient pris en charge pour une myélofibrose. Antécédent de cancer 
+ <br/>prostatique traité par radiothérapie et hormonothérapie.
+ <br/>Evaluation d'une lésion lytique de L1 visible sur le scanner du 3 
+ <br/>juillet 2018. 
+ <br/>
+<br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> : <br/><br/></b> IRM 1.5T. Séquences sagittales T1 IDEAL, T2 STIR et T1FS après 
+ <br/>injection de gadolinium. Axiale T1FS injectée centrée sur L1.
+ <br/>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/><u><br/></u></b> Anomalie de signal diffuse de la moelle osseuse en hyposignal T1 
+ <br/>témoignant d'une infiltration médullaire diffuse en rapport avec sa 
+ <br/>myélofibrose.
+ <br/>
+<br/>La lésion de L1 visualisée sur le scanner correspond à une lésion 
+ <br/>lacunaire de 9 mm du plateau vertébral supérieur latéralisée à 
+ <br/>gauche, visible sur la séquence in-phase en hypersignal, avec chute 
+ <br/>du signal sur la séquence out-phase, ne prenant pas le contraste 
+ <br/>après injection de gadolinium. 
+ <br/>Cet aspect est en rapport avec une lésion bénigne, évocatrice en 
+ <br/>premier d'un angiome à composante majoritairement graisseux.
+ <br/>
+<br/>Pas de lésion osseuse suspecte par ailleurs.
+ <br/>Pas d'anomalie de signal du cordon médullaire.
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/><u><br/></u></b> La lésion de L1 mesure 18 sur le scanner correspond à une lésion 
+ <br/>osseuse évocatrice en premier d'un angiome majoritairement graisseux. 
+ <br/>
+<u><br/></u>
+<b><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Lara ANTONIOS <br/>Le vendredi 20 juillet 2018 à 15:42<br/>_________________________________________________<br/>Signé électroniquement par Docteur Samy AMMARI <br/>Le vendredi 20 juillet 2018 à 16:47 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

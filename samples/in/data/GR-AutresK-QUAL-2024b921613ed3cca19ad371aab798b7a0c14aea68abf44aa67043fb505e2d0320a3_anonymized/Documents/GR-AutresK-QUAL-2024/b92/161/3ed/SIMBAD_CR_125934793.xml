@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125934793" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>REUNION DE CONCERTATION PLURIDISCIPLINAIRE</title>
+    <effectiveTime value="20180528000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180525000000+0000"/>
+        <assignedAuthor>
+            <code code="110/16" displayName="CTE 110 - HEMATOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>TRANSPLANTATION DE MOELLE OSSEUSE / ALLOGREFFE</b></u>
+<b> <br/><br/>Nom, Prénom : </b> XXXXXX XXXXXX
+ <br/>
+<b> Date de naissance</b> : XXXXXX
+ <br/>
+<b> Age</b> : 66 ans
+ <br/>
+<b> Numéro dossier</b> : 110 2017 16235 HN
+ <br/>
+<b> </b>
+<br/>
+<b> Médecin référent à FORT DE FRANCE : </b> Docteur MENIANE 
+ <br/>
+<b> Prise en charge financière </b> : oui
+ <br/>
+<br/>
+<b> Date de première présentation RCP</b>
+<b> TMO </b> : 06.11.17
+ <br/>
+<br/>
+<u><b>Diagnostic</b></u> : 
+ <br/>
+<br/>
+<b> Date de diagnostic</b> : septembre 2016
+ <br/>
+<b> Age au diagnostic</b> : 65 ans
+ <br/>
+<b> Diagnostic OMS 2008 </b> : myélofibrose primitive Jak2+ 
+ <br/>
+<b> Caractère</b> (de novo / secondaire) : de novo 
+ <br/>
+<b> Leucocytose </b> (septembre 2016) : 30 000/mm3
+ <br/>
+<b> Hémoglobine </b> (septembre 2016) : 9,4 g/dl
+ <b> <br/>Nombre de cytopénies : </b> 1
+ <b> <br/>Besoins transfusionnels : </b> non renseignés
+ <b> <br/>Dysplasie multi-lignée : </b> mégacaryocyte dystrophique
+ <b> <br/>Biopsie ostéo-médullaire </b> du 19.06.17 : hyperplasie mégacaryocytaire, 
+ <br/>mégacaryocyte dystrophique, hypoplasie érythroblastique, fibrose 
+ <br/>médullaire marquée avec ostéosclérose. Fibrose médullaire 3. Absence 
+ <br/>de blaste.
+ <b> <br/>Caryotype </b> (juin 2017) : pseudodiploïdie, del13.
+ <b> <br/>FISH : </b> normale.
+ <b> <br/>Biologie moléculaire : </b> Jak2.
+ <b> <br/>Score DIPSS : </b> 4/5 (leucocytose, blastes circulants, anémie, 
+ <br/>altération de l'état général).
+ <br/>
+<b> Scanner thoraco-abdomino-pelvien</b> : thrombose portale avec volumineux 
+ <br/>cavernum périportal. Diverticulose colique. Splénomégalie non 
+ <br/>chiffrée.
+ <br/>
+<b> Fibroscopie gastrique</b> du 11.10.17 : varices oesophagiennes grade I 
+ <br/>et II.
+ <b> <br/></b>
+<br/>
+<br/>
+<u><b>Histoire de la maladie et traitements</b></u> :
+ <br/>
+<br/>- 04.04.12 : cavernum portal avec splénomégalie et varice 
+ <br/>oesophagienne.
+ <br/>
+<br/>- 19.01.15 : leucocytose 18 Giga/L, myélémie 5 %, blastes 3 %, 
+ <br/>hémoglobine 12 g/dl, plaquettes 430 000/mm3.
+ <br/>
+<br/>- Septembre 2016 : globules blancs 30 000/mm3, plaquettes 660 
+ <br/>000/mm3, myélémie 4 % de blastes, Jak2+.
+ <br/>Splénomégalie avec thrombose portale et hypertension portale.
+ <br/>Début d'un traitement par PLAVIX et HYDREA en janvier 2017.
+ <br/>
+<br/>- Avril 2017 : perte de poids (poids de 81 kg à 65 kg sur 6 mois).
+ <br/>
+<br/>- Juin 2017 : diagnostic de myélofibrose sur la biopsie 
+ <br/>ostéo-médullaire.
+ <br/>
+<br/>Actuellement traitement par JAKAVI et INNOHEP et PROPANOLOL 120 mg 
+ <br/>par jour.
+ <br/>
+<br/>A noter fibroscopie, coloscopie pour contrôle des varices 
+ <br/>oesophagiennes, diverticulose colique, polype du côlon sigmoïde, 
+ <br/>absence de lésion suspecte.
+ <br/>Gastropathie d'hypertension portale, varices oesophagiennes grade I 
+ <br/>et II. 
+ <br/>Indication à un bétabloquant et ligatures.
+ <br/>
+<br/>
+<br/>
+<u><b>Antécédents</b></u> :
+ <br/>
+<br/>. Cavernome portal le 04.04.1912 avec SMG, VO:I et II.
+ <br/>. Trois AIT (2006, 2012 et 2015).
+ <br/>. Cancer de la prostate non traité.
+ <br/>. Fracture ouverte de la jambe en 2006, opérée.
+ <br/>. Tumeur gastrique en 1972 opérée (bénigne).
+ <br/>
+<br/>
+<br/>
+<u><b>Receveur</b></u> :
+ <br/>
+<br/>
+<b> Poids habituel</b> : 81 kg ; 72 kg le 13.09.17.
+ <br/>
+<b> Taille</b> : en attente
+ <br/>
+<b> Sérologie CMV </b> : en attente 
+ <br/>
+<b> Groupe sanguin</b> : en attente
+ <br/>
+<b> Groupage HLA </b> :
+ <br/>Anti-coprs anti HLA : négatif
+ <br/>
+<br/>
+<br/>
+<u><b>Donneur</b></u> :
+ <br/>
+<br/>
+<b> Fratrie </b> : 1 soeur Mme LADEON Béatrice non typée. Refuse le typage.
+ <br/>
+<b> Parents</b> : en attente
+ <br/>
+<b>Enfant(s)</b> : 3 enfants (Rodrigue 34 ans haplo-identique, 
+ <br/>Jean-Christophe de 34 ans haplo-identique de deux mères différentes 
+ <br/>et René de 27 ans haplo-identique)
+ <br/>
+<b>Coup de sonde : </b> pas de donneur 10/10, ni 9/10
+ <b> <br/>Inscription fichier : 02.02.2018<br/>Résultats recherche </b> : XXXXXX Rodrigue 34 ans, o+ cmv+ 95 KG, 195 
+ <br/>cm, antécédent d'UGD et oesophagite
+ <br/>XXXXXX Rene, 106 kg, 27 ans, CMV-, 
+ <br/>
+<b> Donneur sélectionné </b> : XXXXXX Rodrigue 34 ans, o+ cmv+ 95 KG, 195 
+ <br/>cm, antécédent d'UGD et oesophagite
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b>Conclusion de la RCP transplantation de moelle osseuse</b></u> :
+ <br/>
+<br/>Myélofibrose Jak2+, score DIPSS 4/5, splénomégalie à 5 cm sous la 
+ <br/>dernière côte.
+ <br/>Actuellement traitement par JAKAVI + INNOHEP + bétabloquant depuis 
+ <br/>juin 2017.
+ <br/>Cavernum portal avec varices oesophagiennes grade I et II.
+ <br/>Antécédent de la prostate a priori non traité (dernier PSA à 
+ <br/>18 ng/ml).
+ <br/>
+<br/>
+<b> Indication d'allogreffe</b> : oui.
+ <br/>
+<br/>Evaluation clinique des trois enfants.
+ <br/>Avis urologique avec dosage de PSA, échographie pelvienne et avis 
+ <br/>urologique à son arrivée en métropole.
+ <br/>Traitement par radiothérapie et hormonothérapie sur Fort de France.
+ <br/>
+<b>Récupérer les comptes rendus diagnostic ainsi que la chronologie des <br/>traitements du carcinome prostatique <br/><br/>Patient en cours de radiothérapie à Fort de France pour la pathologie <br/>prostatique <br/><br/>L'équipe de Fort de France nous tiendra au courant de la <br/>disponibilité du patient<br/><br/>Mail du 08.02.2018 Dr.MENIANE à reporté de plusieurs mois.</b>
+<br/>
+<br/>
+<u>Procédure d'allogreffe en suspens</u> : 
+ <br/>
+<u><br/><b> Radiothérapie splénique</b></u> 15 jours avant l'allogreffe 
+ <br/>soit à partir du 16.07.2018 
+ <br/>
+<br/>
+<b>ANNULATION de l'Allogreffe</b> de CSP à conditionnement d'intensité 
+ <br/>réduite par BUSULFAN 6,4 mg/kg - FLUDARABINE 150 mg/m2 et 
+ <br/>THYMOGLOBULINE 5 mg/kg : admission Département d'hématologie secteur 
+ <br/>greffe Unité PARIS le 30.07.2018, JO le 08.08.18.
+ <br/>
+<br/>
+<br/>
+<b>Allogreffe de CSP à conditionnement haplo-identique à conditionnement <br/>d'intensité réduite par FTBI 2 Gy le <u>07.08.2018</u><br/> à J-1 - CICLOPHOSPHAMIDE 29 mg/kg - FLUDARABINE 150 mg/m2 et <br/>CICLOPHOSPHAMIDE post-greffe à 100 mg/kg dose totale soit 50 mg/kg à <br/>J3 et J4 : admission Département d'hématologie secteur greffe unité <br/>PARIS le 30.07.2018 , JO le 08.08.2018 . </b>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

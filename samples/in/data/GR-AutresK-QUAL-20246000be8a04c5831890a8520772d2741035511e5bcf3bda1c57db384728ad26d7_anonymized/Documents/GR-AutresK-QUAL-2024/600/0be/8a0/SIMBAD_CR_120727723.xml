@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120727723" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>RESUME D'HOSPITALISATION FAISANT FONCTION DE LETTRE DE LIAISON</title>
+    <effectiveTime value="20200730000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200730000000+0000"/>
+        <assignedAuthor>
+            <code code="RHO/179" displayName="RHONE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>SERVICE D'HOSPITALISATION RHONE - COMPTE RENDU D'HOSPITALISATION <br/>CHIMIOTHERAPIE + 24 HEURES<br/><br/>Dicté par : </b> Docteur Leonardo Muratori, Interne
+ <b><br/>Dicté le : </b> 26/06/2020 
+ <b><br/>Service : </b> RHO-RHONE 
+ <br/>
+<b>Type de document : </b> RHO RH HOSPI + 24 H (S) 
+ <br/>
+<b>Ref :</b> 1031933 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : IAV
+ <u><b><br/></b></u> Approuvé par : 
+ <b>Dr IACOB</b>
+<br/>
+<br/>
+<u><b>Docteur MURATORI /Docteur IACOB<br/></b></u>
+<br/>
+<u><b>Chirurgien référent IGR</b></u> : Dr BREUSKIN
+ <br/>
+<u><b>Oncologue référent IGR </b></u>
+<b>: Dr BILLARD-SANDU<br/></b>
+<br/>
+<u><b>Date d'entrée</b></u>
+<b> </b> : 26/06/2020
+ <br/>
+<br/>
+<u><b>Motif d'hospitalisation</b></u>
+<b> </b> : 
+ <b><br/></b> Patient âgé de 59 ans, hospitalisé pour équilibration de la douleur, 
+ <br/>dans le cadre de la prise en charge d'un carcinome épidermoïde 
+ <br/>oropharyngé en récidive latérocervicale bilatéral en cours de 
+ <br/>traitement par NIVOLUMAB de 2ème ligne.
+ <b><br/><u> <br/>Antécédents chirurgicaux<br/></u></b> - Carcinome épidermoïde hypopharyngé (récidive) traité par PLT avec 
+ <br/>lambeau de grand pectoral et lambeau antéro-latéral de cuisse, 
+ <br/>- Trachéotomie, 
+ <br/>- Opéré d'une maladie de Dupuytren à 2 reprises (à gauche et à 
+ <br/>droite).
+ <br/>
+<br/>
+<u><b>Antécédents médicaux</b></u>
+<br/>- Crise comitiale généralisée avec dernier évènement il y a plus de 
+ <br/>10 ans, pas de suivi neurologique, que l'on recommande notamment sur 
+ <br/>le plan thérapeutique, 
+ <br/>- Psoriasis diffus essentiellement aux mains et aux avant-pieds, pas 
+ <br/>de traitement systémique, 
+ <br/>- Hypothyroïdie, 
+ <br/>
+<br/>
+<u><b>Allergie</b></u>
+<br/>Aucune.
+ <br/>
+<b><br/><u>Histoire de la maladie :<br/></u></b> Pour mémoire, traitement initial par radiochimiothérapie en octobre 
+ <br/>2014 jusqu'à mars 2018.
+ <br/>Récidive biopsiée en octobre 2019. 
+ <br/>C1 Tpex le 30/10/19.
+ <br/>C4 le 03/01/20 : réponse métabolique.
+ <br/>Progression après 2 mois de traitement d'entretien par CETUXIMAB le 
+ <br/>13/03/20.
+ <br/>C1 NIVOLUMAB le 25/03.
+ <br/>C6 NIVOLUMAB le 02/06.
+ <br/>Screening KOTIP : HRAS non muté, mutation oncogénique délétère de 
+ <br/> TP53,variante de signification inconnue de CDKN2A.
+ <b><br/><u></u></b>
+<u> <br/><b>Intercure</b></u>
+<b> :</b>
+<br/>- Le 25/06/2020 : consultation en petite chirurgie pour sonde de 
+ <br/>gastrostomie mal posée. Remplacement de la sonde. Absence de douleurs 
+ <br/>pendant le geste.
+ <br/>- Le 23/06/2020 : consultation à l'hôpital de jour en soin palliatif, 
+ <br/>la douleur n'est pas bien contrôlée malgré le DUROGESIC et interdose 
+ <br/>d'ORAMORPH. 
+ <br/>- Le 26/03/2020 :hospitalisation pour équilibration antalgique avec 
+ <br/>mise en place PCA Morphine
+ <br/>
+<br/>
+<u><b>Examen clinique et biologique à l'entrée</b></u>
+<br/>OMS 2 
+ <br/>Poids : 73 kg
+ <br/>Taille : 161 cm
+ <br/>SC : 1 m2
+ <br/>IMC : 16,99 kg/m2
+ <br/>TA : 114/73mmHg
+ <br/>FC : 81 bpm
+ <br/>T : 37,1°C.
+ <br/>EVA : 8/10 (épaule)
+ <br/>Saturation : 93% en AA
+ <br/>Trachéotomie : en place
+ <br/>Alimentation : par gastrostomie exclusive
+ <br/>
+<br/>
+<u>Au plan clinique loco-régional</u> :
+ <br/>Examen ORL : RAS 
+ <br/>Adénopathie : non palpable
+ <br/>Auscultation cardio-pulmonaire : sans particularité 
+ <br/>Abdomen : souple et dépressible, indolore, sans masse palpable, pas 
+ <br/>de hépatosplénomégalie.
+ <br/>Transit : tendance à la constipation
+ <br/>Pas d'oedème des membres inférieurs.
+ <br/>
+<br/>
+<u>Au plan bio-hématologique</u> : 
+ <br/>Hémoglobine : 13,8 g/dl
+ <br/>Leucocytes : 12800/mm3
+ <br/>PNN : 10800/mm3
+ <br/>Plaquettes : 258000/mm3
+ <br/>Créatininémie à 51 μmol/l.
+ <br/>Ionogramme : Magnésium 0,8 mmol/l, Potassium 4 mmol/l, Sodium 137 
+ <br/>mmol/l, Phosphore 0,8 mmol/l, Calcium 2,5 mmol/l.
+ <br/>Bilan hépatique : Normal / ASAT 18 UI/l, ALAT 15 UI/l, Gamma GT 83 
+ <br/>UI/l, 
+ <br/>PAL 88 UI/l, 
+ <br/>Albumine : 37 g/l
+ <br/>
+<u><b><br/>Evolution dans le service</b></u>
+<br/>
+<b>- Au plan antalgique:</b>
+<br/>Début PCA de morphine à 4mg/h avec bolus de 4 mg et LAROXYL 12,5 mg 
+ <br/>le soir, le 26/06/2020 avec amélioration de la douleur.
+ <br/>
+<br/>
+<b>- Au plan ORL:<br/></b> Le 28/06/2020 vers 4h du matin hémorragie au niveau cervical gauche 
+ <br/>et au niveau de la cavite buccale.
+ <br/>
+<br/>
+<u><b>Vu par l'interne de garde</b></u> : 
+ <br/>A mon arrivée patient assis au bord du lit, cyanosé. Sp02 95% en AA, 
+ <br/>FC 140 bpm, PA 160/110 mmHg. 
+ <br/>En dyspnée aigue.
+ <br/>
+<b>=> Mesures immédiates:</b>
+<br/>- compression cervicale G
+ <br/>- aspiration sang dans la bouche
+ <br/>- Administration de SOLUMEDROL 60 mg et EXACYL 1g en IV
+ <br/>- 02 montée sur trachéostomie
+ <br/>Cliniquement hémodynamique stable, auscultation cardiopulmonaire 
+ <br/>normale hormis tachycardie. 
+ <br/>Hémorragie cervicale gauche par un orifice de 1cm de grand axe à la 
+ <br/>base du cou G (paquet ganglionnaire). Le saignement est maîtrisé 
+ <br/>grâce à la compression et aux mesures mises en place.
+ <br/>
+<br/>Appel interne de chirurgie qui vient évaluer le patient. Appel l'ORL 
+ <br/>d'astreinte qui demande la réalisation d'un angioTDM en urgence à la 
+ <br/>recherche d'un saignement actif.
+ <br/>
+<u>Angioscanner</u> :
+ <br/>Pas d'argument en faveur de saignement actif.Engainement de la 
+ <br/>carotide commune gauche jusqu'à la bifurcation avec trajet fistuleux 
+ <br/>au contact de l'axe carotidien et risque vasculaire majeur.
+ <br/>
+<br/>
+<u>Avis RI et decision d'embolisation le 29/06/2020</u>:
+ <br/>Occlusion de tout l'axe carotidien à gauche, l'hémisphère gauche du 
+ <br/>cerveau est perfusé par la droite. 
+ <br/>
+<br/>Patient tranfere en USCC pour surveillance apres le geste.
+ <br/>
+<br/>
+<br/>
+<u><b>Conformément à l'article R710-2-1 du code de Santé Publique</b></u>
+<b> :<br/></b> Transfusion de produits sanguins labiles : NON.
+ <br/>Portage de germe multirésistant : NON.
+ <br/>
+<br/>
+<b><br/>_________________________________________________<br/>Signé électroniquement par Docteur Mariana IACOB <br/>Le mercredi 29 juillet 2020 à 18:08</b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

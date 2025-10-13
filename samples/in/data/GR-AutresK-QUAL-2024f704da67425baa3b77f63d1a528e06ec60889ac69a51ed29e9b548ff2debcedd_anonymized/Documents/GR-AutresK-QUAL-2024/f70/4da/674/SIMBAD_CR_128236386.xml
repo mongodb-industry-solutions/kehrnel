@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128236386" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>HOPITAL DE JOUR DE MEDECINE DE CHEVILLY LARUE - Unité Vendée</title>
+    <effectiveTime value="20170420000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170421000000+0000"/>
+        <assignedAuthor>
+            <code code="CHL/511" displayName="CHEVILLY STRUCTURE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>COMPTE-RENDU D'HOSPITALISATION DE JOUR DU 20.04.2017</b>
+<br/>
+<br/>
+<u>Motif</u> :
+ <br/>
+<br/>
+<b>Madame XXXXXX XXXXXX</b> , 64 ans, est vue ce jour pour C2 de 
+ <br/>chimiothérapie par CARBOPLATINE - TAXOL dans le cadre de la prise en 
+ <br/>charge initiale d'un cancer de l'ovaire probablement séreux de haut 
+ <br/>grade avec atteinte péritonéale et probablement pleurale.
+ <br/>
+<br/> *************************************
+ <br/>
+<br/>
+<u>Intercure</u> : 
+ <br/>
+<br/>La première chimiothérapie était plutôt bien tolérée en dehors d'une 
+ <br/>asthénie de grade 1 pendant les trois premiers jours,
+ <br/>Nausées de grade 1,
+ <br/>
+<br/>Le tout est par la suite rentré dans l'ordre avec une amélioration de 
+ <br/>l'état général et du dynamisme. 
+ <br/>
+<br/>
+<u>Examen clinique</u> : 
+ <br/>
+<br/>OMS = 1
+ <br/>Tension artérielle à 152/89
+ <br/>Apyrétique
+ <br/>Poids à 69 kg
+ <br/>Saturation à 98% en air ambiant
+ <br/>Pouls à 98
+ <br/>EN = 0
+ <br/>
+<br/>Transit conservé.
+ <br/>
+<br/>Le reste de l'examen clinique est sans particularité.
+ <br/>
+<br/>
+<u>Examens complémentaires</u> : 
+ <br/>
+<br/>Le bilan biologique réalisé en externe retrouve : 
+ <br/>
+<br/>- NFS : leucocytes à 5.000/mm3, PNN à 2.940/mm3, Hb à 11.7 g/dl, 
+ <br/>plaquettes à 444.000/mm3,
+ <br/>- Créatinine à 65 μmol/l, 
+ <br/>- Ionogramme sanguin : normal,
+ <br/>- Bilan hépatique : normal,
+ <br/>- Pas de marqueurs ce jour.
+ <br/>
+<br/>
+<u>En pratique</u> : 
+ <br/>
+<br/>Réalisation de la cure de chimiothérapie comme suit : 
+ <br/>
+<br/> * PACLITAXEL 175 mg/m2 soit 310 mg DT en trois heures avec 
+ <br/>prémédication
+ <br/> * CARBOPLATINE AUC5 soit 560 mg DT
+ <br/>
+<br/>Bonne tolérance immédiate du traitement.
+ <br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

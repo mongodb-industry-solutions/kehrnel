@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:voc="urn:hl7-org:v3/voc">
+    <id root="Fiche tumeur n°2418497"/>
+
+    <recordTarget>
+        <patientRole>
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+
+
+    <custodian>
+        <assignedCustodian>
+            <representedCustodianOrganization>
+                <id/>
+                <name>IGR</name>
+                <telecom nullFlavor="UNK"/>
+                <addr nullFlavor="UNK"/>
+            </representedCustodianOrganization>
+        </assignedCustodian>
+    </custodian>
+    <component>
+        <structuredBody>
+            <component>
+                <section>
+                    <title>Fiche Tumeur</title>
+                    <text>
+                        <ficheTumeur id="2418497_1188713">
+                            <dateCreation>2018-04-17</dateCreation>
+                            <dateDiagnostic>2018-04-17</dateDiagnostic>
+                            <lesionAnterieure/>
+                            <lesionSimultanee/>
+                            <codeGdeLocalisation ref="CIM">C77</codeGdeLocalisation>
+                            <codeSiege ref="CIM">C77.0</codeSiege>
+                            <cote>gauche</cote>
+                            <categorie>maligne</categorie>
+                            <codeLesionnel>AMA3</codeLesionnel>
+                            <TNMs>
+                                <TNM>
+                                    <type>c</type>
+                                    <T/>
+                                    <N/>
+                                    <M/>
+                                </TNM>
+                                <TNM>
+                                    <type>p</type>
+                                    <T/>
+                                    <N/>
+                                </TNM>
+                            </TNMs>
+                            <recidiveLocale/>
+                            <dateRecidive/>
+                            <recidiveMetastatique/>
+                            <dateMetastase/>
+                        </ficheTumeur>
+                    </text>
+                </section>
+            </component>
+        </structuredBody>
+    </component>
+</ClinicalDocument>

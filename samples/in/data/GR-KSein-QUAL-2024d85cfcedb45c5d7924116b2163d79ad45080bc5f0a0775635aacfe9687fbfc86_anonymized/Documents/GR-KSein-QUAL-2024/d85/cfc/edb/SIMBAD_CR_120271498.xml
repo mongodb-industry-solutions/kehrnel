@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120271498" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>HOPITAL DE JOUR D'HEMATOLOGIE - PRELEVEMENTS MEDULLAIRES</title>
+    <effectiveTime value="20201002000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201007000000+0000"/>
+        <assignedAuthor>
+            <code code="HHJ/528" displayName="HDJ HEMATO"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>HOPITAL DE JOUR D'HEMATOLOGIE - PRELEVEMENTS MEDULLAIRES</b></u>
+<br/>
+<br/>Date de l'examen : 02.10.20
+ <br/>Médecin réalisant l'acte : NC
+ <br/>IDE : Madame LUGUINI
+ <br/>Heure de prise en charge : NC
+ <br/>
+<br/>
+<br/>
+<u><b>Motif de la demande (de biopsie médullaire - myélogramme)</b></u> :
+ <br/>
+<br/>Bicytopénie.
+ <br/>
+<br/>
+<br/>
+<u><b>Acte(s) réalisé(s</b></u> ) :
+ <br/>
+<br/>
+<b>Myélogramme</b>
+<br/>. Siège du prélèvement : iliaque
+ <br/>. Nombre de ponction(s) réalisée(s) : 1
+ <br/>. Conditions du prélèvement pour le patient : normales
+ <br/>
+<br/>
+<br/>
+<u><b>Prélèvements effectivement réalisés</b></u> :
+ <br/>
+<br/>. Les prélèvements demandés ont été réalisés : en totalité. 
+ <br/>. Information du patient et/ou personne l'accompagnant pour le 
+ <br/>pansement : oui
+ <br/>
+<br/>
+<br/>
+<u><b>Analgésie</b></u> :
+ <br/>
+<br/>. Patch EMLA : NC
+ <br/>. Anesthésie locale XYLOCAINE : oui
+ <br/>. Prélèvement sous ENTONOX / KALINOX : NC
+ <br/>
+<br/>. EVA pendant le geste : 0/10 
+ <br/>. EVA après le geste : 3/10
+ <br/>
+<br/>. Tension artérielle avant le geste : NC mmHg 
+ <br/>. Tension artérielle après le geste : 127/86 mmHg
+ <br/>
+<br/>. Pouls avant le geste : NC/min
+ <br/>. Pouls après le geste : 107/min
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

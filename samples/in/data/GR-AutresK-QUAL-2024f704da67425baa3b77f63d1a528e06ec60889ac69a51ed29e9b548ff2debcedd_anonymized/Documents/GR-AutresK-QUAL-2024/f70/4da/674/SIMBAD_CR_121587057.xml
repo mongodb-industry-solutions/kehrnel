@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121587057" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ANESTHESIE - Dr Migena DEMIRI</title>
+    <effectiveTime value="20200313000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200313000000+0000"/>
+        <assignedAuthor>
+            <code code="ANS/286" displayName="ANESTHESIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b> Pas de dictée numérique, CR dactylographié selon la fiche jaune </b>
+<br/>
+<b> <br/>Patiente de 66 ans adressée en consultation d'anesthésie ce jour.</b>
+<br/>
+<br/>
+<u>Intervention prévue</u> : 
+ <br/>
+<br/>
+<b> FIBROSCOPIE OESO-GASTRIQUE <br/>PR\'c9VUE LE 19.02.19</b>
+<br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS CHIRURGICAUX</b></u>
+<br/>- coelioscopie en mars 2017 et août 2017
+ <br/>- PAC 
+ <br/>- ponction d'ascite / pleurale 
+ <br/>- debulking simple (hystérectomie / annexectomie) en octobre 2017
+ <br/>- FOGD 
+ <br/>
+<br/>Les anesthésies se sont déroulées sans problème particulier.
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS MEDICAUX/CARDIO-VASCULAIRES</b></u>
+<br/>- thrombose veineuse profonde à la découverte du cancer : thrombose 
+ <br/>saphène sous anticoagulation, efficace
+ <br/>- Carcinome ovarien 
+ <u><b><br/></b></u>
+<br/>Tabac : O
+ <br/>OH : O
+ <br/>
+<br/>
+<u><b>ALLERGIE/INTOLERANCES<br/></b></u> Aucune.
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE</b></u>
+<br/>Taille : 165 cm 
+ <br/>Poids : 62 kg 
+ <br/>
+<br/>Patiente fatiguée 
+ <br/>Hémostase clinique anormale sous INNOHEP 
+ <br/>Auscultation cardio-pulmonaire normale, dyspnée de repos
+ <br/>Elle a eu ce jour, une ponction d'ascite, ascite importante évacuée 
+ <br/>tous les 10 jours => prochaine évacuation d'ascite le 23.03.2020
+ <br/>
+<b><br/>NYHA II,</b>
+<b><4METs </b>
+<br/>
+<br/>
+<u><b>GESTION DES VOIES A\'c9RIENNES</b></u>
+<br/>
+<b>Cormack I </b>
+<br/>
+<br/>
+<u><b>TRAITEMENT<br/></b></u>
+<b>INNOHEP 0.5 mL 1/J le matin arrêt à H-24<br/></b> LASILIX 20 mg 1-0-0
+ <br/>CACIT D 3 1/J
+ <br/>OXYCODONE 10 mg 1-0-1
+ <br/>PARACETAMOL 
+ <br/>
+<br/>
+<b> Traitement oncologique</b> : -
+ <br/>
+<br/>
+<u><b>BILAN PR\'c9-OP DEMAND\'c9</b></u>
+<br/>
+<b> Bilan biologique du 13.03.2020 </b> : DFG à 93, Hb à 8.4, plq 475000, 
+ <br/>
+<br/>
+<b> ETT du 27.02.2020</b> : FEVG à 65%, pas de valvulopathie, minime lame 
+ <br/>d'épanchement péricardique.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<br/>Pas de contre-indication anesthésique à l'intervention prévue.
+ <br/>
+<b>ASA III<br/>AG / Protocole vert / intubation en séquence rapide </b>
+<br/>
+<br/>Rappel des règles de jeûn fait. 
+ <br/>Prémédication : 0
+ <br/>Antibioprophylaxie par : CEFAZOLINE 
+ <br/>Protocole NVPO par DEXAMETHASONE + ONDANSETRON
+ <br/>Patiente debout
+ <br/>
+<br/>
+<b>Temps de préparation d'anesthésie prévu : 30 min <br/>RISQUE ATNC : C<br/></b>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

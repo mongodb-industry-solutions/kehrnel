@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128491457" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="10213-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anesthésie"/>
+    <title>CR Anesthesie Post-Op</title>
+    <effectiveTime value="20170223000000+0000"/>
+    <confidentialityCode code="10213-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anesthésie"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170223000000+0000"/>
+        <assignedAuthor>
+            <code code="ANS/286" displayName="ANESTHESIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Prénom <br/><br/><br/><br/>Nom </p>
+<p>N° Patient <br/><br/><br/><br/>D. de N. </p>
+<p>No PBO <br/><br/><br/><br/>Taille <br/><br/><br/><br/>Poids <br/><br/><br/><br/>Age </p>
+<p>Anesthésie le <br/><br/><br/><br/>Classe ASABrigitte </p>
+<p>XXXXXX </p>
+<p>XXXXXX XXXXXX </p>
+<p>656474 171 cm 54 kg </p>
+<p>59 ans </p>
+<p>23.02.2017 2 </p>
+<p>ATNC <br/><br/><br/><br/>Induction: </p>
+<p>C </p>
+<p>INTERVENTION CHIRURGICALE 130 Tumorectomie + Gg Sentinelle </p>
+<p>IADEAnesthesiste Chirurgien <br/>Dr MIAILHE Grégoire LE QUEAU ThérèseDr VESA Bianca </p>
+<p>Consultation pre-anesthésique .Non .Non </p>
+<p>> 65 mm </p>
+<p>1 > 35mm </p>
+<p>.Non </p>
+<p>BMR : <br/>D.I.D : </p>
+<p>D.T.M : </p>
+<p>Mallampati : <br/>ODB: </p>
+<p>Pacemaker : </p>
+<p>Eval. Prémé: </p>
+<p>Technique Anesthésie Allergies Durées <br/>Latex Durée anesthésie 1 h 49 min </p>
+<p>Durée chirurgie 1 h 10 min <br/>Admission SSPI 13:21 <br/>Sortie SSPI 15:35 </p>
+<p>Anesthésie générale </p>
+<p>tegaderm </p>
+<p>Voies Aériennes 11:36, 13:12, Sonde Intubation, Normale, 7, Orale, Difficulté, Facile, Cormack, 1, Pression ballonnet, 30 mmHg </p>
+<p>Voies Veineuses 11:22, VVP, Cathlon VVP, 18g, Main, Gauche, .Facile </p>
+<p>Loco-Régionale </p>
+<p>Position & Protections 11:54 Position Table Niveau 11:54 Installation Décubitus dorsal 11:54 Position Bras Droit Abduction 11:54 Auscultation Symetrique 11:54 Position Bras Gauche Abduction 11:54 Organes Genitaux OK 11:54 Protection Oculaire Simple 11:54 Points de compression OK </p>
+<p>Temps chirurgicaux </p>
+<p>Monitorage et Equipements <br/>ECG 3 fils <br/>Site curarisation Adducteur du Pouce <br/>Site PNI Bras gauche <br/>Site SpO2 Doigt </p>
+<p>Notes IntraOP 11:48 echec de mise en place de ML X 2, donc decission d'IOT Cormack 1, sans particularité anatomique </p>
+<p>Drainages </p>
+<p>Date d'impression: 23 févr. 2017 15:35:50 Page 1/4</p>
+<p></p>
+<p></p>
+<p>Prénom <br/><br/><br/><br/>Nom </p>
+<p>N° Patient <br/><br/><br/><br/>D. de N. </p>
+<p>No PBO <br/><br/><br/><br/>Taille <br/><br/><br/><br/>Poids <br/><br/><br/><br/>Age </p>
+<p>Anesthésie le <br/><br/><br/><br/>Classe ASABrigitte </p>
+<p>XXXXXX </p>
+<p>XXXXXX XXXXXX </p>
+<p>656474 171 cm 54 kg </p>
+<p>59 ans </p>
+<p>23.02.2017 2 </p>
+<p>ATNC <br/><br/><br/><br/>Induction: </p>
+<p>C </p>
+<p>ENTREES BALANCE <br/>Produits sanguins </p>
+<p>Entrées Solutés </p>
+<p>TOTAL </p>
+<p>1158 ml </p>
+<p>1158 ml </p>
+<p>10 ml </p>
+<p>10 ml 1148 ml </p>
+<p>SORTIES <br/>Balance des fluides </p>
+<p>Autres </p>
+<p>Pertes sang bloc </p>
+<p>Urines </p>
+<p>Redons </p>
+<p>Date d'impression: 23 févr. 2017 15:35:50 Page 2/4</p>
+<p></p>
+<p></p>
+<p>Prénom <br/><br/><br/><br/>Nom </p>
+<p>N° Patient <br/><br/><br/><br/>D. de N. </p>
+<p>No PBO <br/><br/><br/><br/>Taille <br/><br/><br/><br/>Poids <br/><br/><br/><br/>Age </p>
+<p>Anesthésie le <br/><br/><br/><br/>Classe ASABrigitte </p>
+<p>XXXXXX </p>
+<p>XXXXXX XXXXXX </p>
+<p>656474 171 cm 54 kg </p>
+<p>59 ans </p>
+<p>23.02.2017 2 </p>
+<p>ATNC <br/><br/><br/><br/>Induction: </p>
+<p>C </p>
+<p>SSPI <br/>ExtubationArrivée SSPI Personnels SSPI <br/>13:1213:21 YSSAAD Martine Dr VESA Bianca </p>
+<p>Bilan d ́entrée <br/>Agitation: .Non , EVS: 1 Douleur faible , Frissons: .Non , Mal de gorge: .Non , NVPO: 1 Rien , Score EDS: 0 Patient Eveillé , <br/>Temp°C.: 35.5 </p>
+<p>13:22: O2 additionnel par: Lunettes O2 </p>
+<p>Surveillance 13:21 Frissons .Non 13:21 Mal de gorge .Non 13:21 Agitation .Non 13:21 EVS 1 Douleur faible 13:21 NVPO 1 Rien 13:21 Score EDS 0 Patient Eveillé 15:33 NVPO 1 Rien 15:33 EVS 0 Douleur nulle 15:34 Score EDS 0 Patient Eveillé </p>
+<p>LABO ACTES SSPI <br/></p>
+<p>Signes Vitaux Manuels Notes SSPI <br/></p>
+<p>INSTRUCTIONS POSTOP <br/>Instructions Générales Instructions chirurgicales </p>
+<p>ANALGESIQUES & ALR <br/>Remifentanil 25 μg/ml, 321 μg, I.V. perf, Commencé :23/02/17 11:22, Arrêté :23/02/17 13:03, PRIMEA-08 <br/>> Voie 2 <br/>Ketamine 10 mg/ml, 15 mg, I.V. bolus, Administré :23/02/17 11:44 <br/>Tramadol, 100 mg, I.V. bolus, Administré :23/02/17 12:06 <br/>Nefopam, 20 mg, I.V. SE, Administré :23/02/17 12:06 <br/>Paracetamol i.v, 1 g, I.V. bolus, Administré :23/02/17 12:06 <br/>Morphine 1 mg/ml, 2 mg, I.V. bolus, Administré :23/02/17 14:13 <br/>Morphine 1 mg/ml, 2 mg, I.V. bolus, Administré :23/02/17 14:25 </p>
+<p>QUANTITÉ VOLUME TOTAL DÉBIT HEURE VOIE <br/><br/>Lidocaine 10 mg/ml </p>
+<p>Bolus 20 mg 2 ml 11:26 I.V. <br/>Levobupivacaine 2.5 mg/ml </p>
+<p>Bolus 25 mg 10 ml 13:03 Infiltration <br/>ANTIBIOTIQUES </p>
+<p>QUANTITÉ VOLUME TOTAL DÉBIT HEURE VOIE <br/><br/></p>
+<p>Date d'impression: 23 févr. 2017 15:35:50 Page 3/4</p>
+<p></p>
+<p></p>
+<p>Prénom <br/><br/><br/><br/>Nom </p>
+<p>N° Patient <br/><br/><br/><br/>D. de N. </p>
+<p>No PBO <br/><br/><br/><br/>Taille <br/><br/><br/><br/>Poids <br/><br/><br/><br/>Age </p>
+<p>Anesthésie le <br/><br/><br/><br/>Classe ASABrigitte </p>
+<p>XXXXXX </p>
+<p>XXXXXX XXXXXX </p>
+<p>656474 171 cm 54 kg </p>
+<p>59 ans </p>
+<p>23.02.2017 2 </p>
+<p>ATNC <br/><br/><br/><br/>Induction: </p>
+<p>C </p>
+<p>QUANTITÉ VOLUME TOTAL DÉBIT HEURE VOIE <br/><br/>Cefazoline </p>
+<p>Bolus 2 g 0 ml 11:38 I.V. </p>
+<p>AUTRES DROGUES <br/>Ondansetron, 4 mg, I.V. bolus, Administré :23/02/17 12:07 </p>
+<p>Propofol 10 mg/ml, 130 mg, I.V. bolus, Administré :23/02/17 11:27 <br/>Propofol 10 mg/ml, 50 mg, I.V. bolus, Administré :23/02/17 11:32 </p>
+<p>Succinylcholine 10 mg/ml, 60 mg, I.V. bolus, Administré :23/02/17 11:35 </p>
+<p>Ephédrine, 6 mg, I.V. bolus, Administré :23/02/17 12:09 <br/>Ephédrine, 6 mg, I.V. bolus, Administré :23/02/17 12:14 </p>
+<p>Dexamethasone, 8 mg, I.V. bolus, Administré :23/02/17 11:34 <br/>Ondansetron, 4 mg, I.V. bolus, Administré :23/02/17 12:07 </p>
+<p>Produits sanguins </p>
+<p>Totaux fluides & produits sanguins <br/>Ringer 500 ml </p>
+<p>Ringer 500 ml </p>
+<p>Bilan de Sortie <br/>Départ avec O2 .Non, EVS 0 Douleur nulle, NVPO 1 Rien, Pansement propre , Score EDS 0 Patient Eveillé </p>
+<p>Evénements Remarquables (IntraOP/PostOP): .Non </p>
+<p>Evénements Remarquables Chirurgicaux </p>
+<p>DestinationScore d'Aldrete Heure de sortieMédecin autorisant la sortie 10 23/02/17 15:35 </p>
+<p>Date d'impression: 23 févr. 2017 15:35:50 Page 4/4</p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

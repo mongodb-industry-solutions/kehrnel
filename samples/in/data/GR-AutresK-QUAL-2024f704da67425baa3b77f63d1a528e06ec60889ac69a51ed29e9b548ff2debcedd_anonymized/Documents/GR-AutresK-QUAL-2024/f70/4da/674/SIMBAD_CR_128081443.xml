@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128081443" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ONCOLOGIE GYNECOLOGIE - DR JUDITH MICHELS</title>
+    <effectiveTime value="20170518000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170522000000+0000"/>
+        <assignedAuthor>
+            <code code="060/8" displayName="CTE 060 - GYNECOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Nous voyons ce jour Madame XXXXXX, âgée de 64 ans, pour la prise en <br/>charge d'un adénocarcinome séreux de haut grade, stade IV pleural, <br/>d'origine ovarienne.<br/>CA 125 informatif à 1000.</b>
+<br/>
+<br/>Thrombose veineuse profonde du membre inférieur droit au diagnostic.
+ <br/>Pas de tabac.
+ <br/>Kyste mammaire atypique pour lequel une nouvelle échographie est 
+ <br/>prévue en juin 2017.
+ <br/>
+<br/>
+<u>Antécédents familiaux</u> : cancer du pancréas chez son père, cancer de 
+ <br/>la prostate à 76 ans chez un oncle maternel.
+ <br/>
+<br/>Nous la voyons ce jour après 3 cures de CARBOPLATINE-TAXOL.
+ <br/>Elle a eu une ponction pleurale depuis le début de la maladie.
+ <br/>
+<br/>Elle trouve que les douleurs abdominales vont nettement mieux.
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE</b></u>
+<br/>
+<br/>OMS = 0.
+ <br/>Poids : 69 kgs.
+ <br/>Tension : 15/8.
+ <br/>Saturation : 100%.
+ <br/>Pouls : 107/min.
+ <br/>Température : 37°4.
+ <br/>
+<br/>Biologiquement, le CA 125 est à 451.
+ <br/>La numération est normale.
+ <br/>
+<br/>
+<u><b>EN PRATIQUE</b></u>
+<br/>
+<br/>Poursuite de la chimiothérapie par CARBOPLATINE - TAXOL.
+ <br/>
+<br/>Elle refera un nouveau doppler après C5 et reverra le Docteur GOUY.
+ <br/>Nouveau scanner TAP avant C6 début juillet pour une éventuelle 
+ <br/>coelio-thoracoscopie prévue après C6.
+ <br/>Nous prévoyons une consultation en onco-génétique.
+ <br/>
+<br/>Je la reverrai à la prochaine cure afin d'évaluer la tolérance.
+ <br/>Elle ne souhaite pas de soutien psychologique pour le moment.
+ <br/>PPS remis ce jour.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

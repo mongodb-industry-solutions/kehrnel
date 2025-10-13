@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122092492" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>RESUME D'HOSPITALISATION FAISANT FONCTION DE LETTRE DE LIAISON</title>
+    <effectiveTime value="20200103000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200103000000+0000"/>
+        <assignedAuthor>
+            <code code="RHO/179" displayName="RHONE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>SERVICE D'HOSPITALISATION RHONE - COMPTE RENDU D'HOSPITALISATION <br/>CHIMIOTHERAPIE + 24 HEURES<br/><br/>Dicté par : </b> Docteur Nardjes Djehal
+ <b><br/>Dicté le : </b> 02/01/2020 
+ <b><br/>Service : </b> RHO-RHONE 
+ <br/>
+<b>Type de document : </b> RHO RH HOSPI + 24 H (S) 
+ <br/>
+<b>Ref :</b> 894998 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire </b> : XAY
+ <u><b><br/><br/></b></u> Approuvé par : 
+ <b>Docteur BERNICHON</b>
+<br/>
+<br/>
+<br/>
+<u><b>Docteur DJEHAL/Docteur BERNICHON<br/></b></u>
+<br/>
+<u><b>Chirurgien référent IGR</b></u> : Dr BREUSKIN
+ <br/>
+<br/>
+<u><b>Oncologue référent IGR </b></u>
+<b>: Dr FERRAND<br/></b>
+<br/>
+<u><b>Date d'entrée</b></u>
+<b> </b> : 02/01/2020
+ <br/>
+<br/>
+<u><b>Motif d'hospitalisation</b></u>
+<b> </b> : 
+ <b><br/></b> Patient de 58 ans hospitalisé pour sa 4ème cure de chimiothérapie 
+ <br/>par CISPLATINE-DOCETAXEL-CETUXIMAB, dans le cadre de la prise en 
+ <br/>charge d'une récidive latéro-cervicale bilatérale d'un carcinome 
+ <br/>oropharyngé traité initialement par radiochimiothérapie en octobre 
+ <br/> 2014 avec chirurgie de rattrapage en novembre 2017 et mars 2018.
+ <br/>
+<b><br/><u>Antécédents médico-chirurgicaux<br/>Chirurgicaux <br/></u></b> - carcinome épidermoïde hypopharyngé (récidive) traité par PLT avec 
+ <br/>lambeau de grand pectoral et lambeau antéro-latéral de cuisse, 
+ <br/>- trachéotomie, 
+ <br/>- opéré d'une maladie de Dupuytren à 2 reprises (à gauche et à 
+ <br/>droite).
+ <br/>
+<br/>
+<u><b>Médicaux</b></u>
+<br/>- crise comitiale généralisée avec dernier évènement il y a plus de 
+ <br/>10 ans, pas de suivi neurologique, que l'on recommande notamment sur 
+ <br/>le plan thérapeutique, 
+ <br/>- psoriasis diffus essentiellement aux mains et aux avant-pieds, pas 
+ <br/>de traitement systémique, 
+ <br/>- hypothyroïdie, 
+ <br/>- pas d'allergie.
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE</b></u>
+<br/>- Prise en charge pour un carcinome épidermoïde initialement de 
+ <br/>l'oropharynx vélaire et des piliers postérieurs bilatéralement traité 
+ <br/>par radiochimiothérapie en octobre 2014.
+ <br/>- Août 2017 : Seconde localisation de carcinome épidermoïde de l' 
+ <br/>hypopharynx droit.
+ <br/>- 13/11/17 : Traitement par pharyngo-laryngectomie totale droite et 
+ <br/>reconstruction par lambeau musculo-cutané de grand pectoral. Suites 
+ <br/>compliquées d'un pharyngostome à plusieurs reprises. Monté d'un 
+ <br/>lambeau de grand dorsal le 06/12/2017. Malgré les reprises, 
+ <br/>persistance d'un pharyngostome et déhiscence des sutures avec 
+ <br/>pharyngostome large.
+ <br/>- 19/03/18 : reprise de cervicotomie pour rétablissement de la 
+ <br/>continuité digestive et réfection d'un trachéostome dans le contexte 
+ <br/>de pharyngostome large post-PLT de rattrapage avec fermeture par un 
+ <br/>lambeau libre antéro-latéral de cuisse prélevé à gauche et lambeau 
+ <br/>pédiculé supra-claviculaire avec anastomose de perforante 
+ <br/>delto-acromial prélevé à gauche.
+ <br/>- Récidive latéro-cervical gauche nécrotique envahissant les tissus 
+ <br/>mous, péri carotidienne non résécable et adénopathie en 2 à droite 
+ <br/>envahissant la veine jugulaire découverte à l'été 2019 par la 
+ <br/>majoration d'un oedème du visage et de douleur. Biopsié, AP : 
+ <br/>Carcinome épidermoïde HPV-, P16-.
+ <br/>- RCP ORL du 17/10/19 : décision d'un traitement systémique (pas de 
+ <br/>réirradiation envisagée).
+ <br/>
+<br/>
+<b>- Début d'un traitement par Tpex (C1 le 30/10/19)<br/><u></u></b>
+<u> <br/>Intercure</u> : 
+ <br/>Sans anomalie.
+ <br/>
+<br/>
+<u><b>Examen clinique et biologique à l'entrée</b></u>
+<br/>OMS 1
+ <br/>Poids : 67,2 kg
+ <br/>Taille : 161 cm
+ <br/>SC : 1,71m2
+ <br/>IMC : 25,92 kg/m2
+ <br/>TA : 93/63 mmHg
+ <br/>FC : 92 bpm
+ <br/>T : 36,3°C.
+ <br/>EVA : 3/10.
+ <br/>Saturation : 97% en AA
+ <br/>Trachéotomie : en place et fonctionnelle.
+ <br/>Alimentation : par gastrostomie.
+ <br/>
+<br/>
+<u>Au plan clinique loco-régional</u> :
+ <br/>Examen ORL : absence de mucite.
+ <br/>Adénopathie : palpation d'une induration cervicale gauche 
+ <br/>difficilement individualisable du fait de la peau cartonnée post 
+ <br/>radiothérapie. Palpation sensible.
+ <br/>Auscultation cardio-pulmonaire : sans particularité. Le patient 
+ <br/>signale une douleur costale postérieure bien soulagée par le 
+ <br/>traitement antalgique.
+ <br/>Abdomen : souple et dépressible, indolore, sans masse palpable, pas 
+ <br/>de hépatosplénomégalie.
+ <br/>Transit : normal.
+ <br/>Pas d'oedème des membres inférieurs.
+ <br/>
+<br/>
+<u>Au plan bio-hématologique</u> : 02/01/2020
+ <br/>Hémoglobine : 12,9 g/dl
+ <br/>Leucocytes : 9 500/mm3
+ <br/>PNN : 6 900/mm3
+ <br/>Plaquettes : 367 000/mm3
+ <br/>Créatininémie 44 μmol/l.
+ <br/>Ionogramme : Magnésium 0,75 mmol/l, Potassium 3,6 mmol/l, Sodium 137 
+ <br/>mmol/l, Phosphore 0,97 mmol/l, Calcium corrigé 2,39 mmol/l.
+ <br/>Bilan hépatique : ASAT 19 UI/l, ALAT 14 UI/l, Gamma GT 68 UI/l, PAL 
+ <br/>112 UI/l, Albumine : 37 g/l
+ <br/>TP : 96%
+ <br/>
+<br/>
+<u><b>Evolution dans le service<br/></b></u>
+<b>- Au plan oncologique<br/><u></u></b>
+<u> Administration de sa 4 ème cure de chimiothérapie par</u>
+<br/>CISPLATINE-DOCETAXEL-CETUXIMAB le 03/02/2020 : 
+ <br/>
+<br/> CISPLATINE 75 mg/m2 soit 130 mg DT
+ <br/> CETUXIMAB 250 mg/m2 soit 430 mg DT
+ <br/> DOCETAXEL 75 mg/m2 soit 100 mg (réduction de dose de 20%)
+ <br/>
+<br/>Bonne tolérance immédiate de la chimiothérapie.
+ <br/>
+<br/>La relecture du dernier TDM ne peut pas être réalisée car les images 
+ <br/>ne sont pas numérisées, on demande au patient de nous ramener le CD 
+ <br/>afin de l'intégrer dans le systéme informatique.
+ <br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3> :<br/></b></u> Administration de la C4 TPEX.
+ <br/>
+<br/>
+<u><b>Prochains rendez-vous :</b></u>
+<br/>
+<br/>06/01/2020 09:00, PTE CHIR ORL 
+ <br/>08/01/2020 10:35, RV EXTERIEUR TEP scanner Bicetre 
+ <br/> 13:20, BILAN ONCO 
+ <br/> 13:30, HDJ CHIMIO 
+ <br/> 13:35, C HDJ A TRAITER 
+ <br/>14/01/2020 09:10, C ORL FRF 
+ <br/> 10:30, RV TEL CSE 
+ <br/>15/01/2020 08:00, HDJ CHIMIO 
+ <br/> 08:05, C HDJ A TRAITER 
+ <br/> 08:15, BILAN ONCO 
+ <br/> 09:15, C RX YGT 
+ <br/>
+<br/>Poids à la sortie : 62.2kg
+ <br/>EVA à la sortie : 4/10 côté gauche.
+ <br/>
+<b><br/><u>Sortie à domicile le</u> : 03/01/2020<br/></b> - Bulletins de situation x3 .
+ <br/>- Bon de transport par ambulance 
+ <br/>- Lettre de liaison remise en main propre au patient ce jour
+ <br/>- Convocation
+ <br/>- Dernière prise de sang.
+ <br/>
+<br/>
+<u><b>Traitement de sortie</b></u>
+<b> :<br/>- En cas de fièvre :</b>
+<br/>A débuter seulement en cas de fièvre > 38°.3 C (appeler le service et 
+ <br/>refaire une prise de sang)
+ <br/>
+<br/>
+<b>AMOXICILLINE acide clavulanique</b> 1 Gr x 3/J pendant 7 jours.
+ <br/>
+<b>CIPROFLOXACINE </b> 500 mg 1 cp x 2/J pendant 7 jours.
+ <br/>
+<b><br/>- En cas de diarrhées :<br/>IMODIUM </b> 2 gél après la 1 ère selle liquide puis 1 gél après chaque 
+ <br/>selle liquide , max 8gel/j.
+ <br/>
+<b>SMECTA </b> 3 sachets/J
+ <br/>
+<br/>
+<b>- En cas de nausées :</b>
+<br/>
+<b>PRIMPERAN </b> 10 mg 1 cp x 3/J.
+ <br/>
+<br/>
+<b>- En cas de constipation :</b>
+<br/>
+<b>MOVICOL</b> 2 sachets /J le matin.
+ <br/>
+<br/>
+<b>- Si douleurs :</b>
+<br/>
+<b>DOLIPRANE</b> 1 Gr x 3/J si besoin.
+ <br/>
+<b><br/>- En cas de peau sèche <br/>DEREXIL </b> crème, 2 tubes. Renouvelable.
+ <br/>
+<b><br/>- En cas de mucite ou d'aphtes :<br/>TRIFLUCAN </b> 100mg le matin x 7/j. Renouvelable.
+ <br/>
+<b><br/>- En systématique :</b>
+<br/>- NFS, plaquettes, iono, urée et créat + calcium + phosphore + 
+ <br/>magnésium + Albumine + BH + Bilirubine + CRP chaque semaine et 48 h 
+ <br/>avant la prochaine hospitalisation prévue le 23/01/2020 (et en cas de 
+ <br/>fièvre ou bilan perturbé) par une IDE à domicile pendant 1 mois, à 
+ <br/>faxer au RHO, 1er contrôle le 06/01/2020 .
+ <br/>- Bains de bouche par BICARBONATE 1.4%, 6-10 fois par jour.
+ <br/>
+<b>En cas de mucite (aphtes avec inflammation de la bouche)<br/></b> Ajouter ds les bains de bouches ULCAR 3 sachets ds le flacons de 
+ <br/>bicarbonate pendant 7j.
+ <br/>
+<b>Si apparition de taches blanches ds la bouche<br/> </b> Faire des bains de bouches avec FUNGIZONE 3 à 4 cuillères à café 
+ <br/>de suspension buvable par jours pendant 5 jours.
+ <br/>- DOXYCYCLINE 100 mg : 1 cp/jour pendant 1 mois.
+ <br/>- DEXERYL : 4 appl/jour pendant 1 mois. 
+ <br/>- Mag 2 : 2cp x3/j.
+ <br/>- SKENA 20mg : x2/jours pendant 28 jours.
+ <br/>- ORAMORPH 10mg : chaque 4h si besoin. 
+ <br/>- THYROXINE 150ug/ml : 25 microgrammes matin pendant 30 jours.
+ <br/>- GARDENAL 100mg : 1cp coucher pendant 30 jours.
+ <br/>- PANTOPRAZOLE 40mg : 1ml à 21h pendant 30 jours.
+ <br/>- LYRICA 25mg : 2 gel x3/j pendant 30 jours.
+ <br/>- MUCOMYSTENDO 1g/5ml : 1 amp toutes les 4h pendant 30, en aérosols + 
+ <br/>sérum physiologique alors posologie= 1 amp.
+ <br/>- EMEND 80mg : 1le matin pendant 2 jours.
+ <br/>- ZOPHREN 8 mg : 1cp x2/j pendant 4 jours.
+ <br/>
+<br/>
+<b> CMA : Ajustement entretien dispositif vasculaire (VVC-KT) Réfection<br/></b>
+<br/>
+<u><b>Conformément à l'article R710-2-1 du code de Santé Publique</b></u>
+<b> :<br/> <br/></b> Transfusion de produits sanguins labiles : NON.
+ <br/>Portage de germe multirésistant : NON. Prise en charge palliative : 
+ <br/> OUI - NON
+ <br/>
+<b>Prise en charge par l'équipe mobile de soins palliatifs OUI <br/></b> Si OUI :
+ <br/>Pose Gastrostomie ou pose SNO : NON
+ <br/>Ponction à visée symptomatique : NON
+ <br/>Adaptation du traitement antalgique : NON
+ <br/>Irradiation antalgique : NON
+ <br/>Chimiothérapie palliative : OUI
+ <br/>Chirurgie de propreté: NON
+ <br/>Prise en charge saignement : NON
+ <br/>Transfusion sanguine : NON
+ <br/>Prise en charge de la détresse respiratoire +/- trachéo NON
+ <br/>Nutrition : 
+ <br/>- déjà sous CNO, nutrition entérale/parentérale OUI 
+ <br/>- mise en route d'une nutrition entérale/parentérale NON
+ <br/>Occlusion intestinale NON
+ <br/>Traitement des divers symptômes vecteurs d'inconfort
+ <br/>(toux, prurit, nausées, vomissements, anxiété, 
+ <br/>dépression, troubles du sommeil, déshydratation, ...) OUI
+ <br/>Consultation onco-psychologie : NON
+ <br/>Kinésithérapie : NON
+ <br/>Nursing : OUI 
+ <br/>Organisation retour domicile - soins de suite
+ <br/>prise en charge sociale OUI 
+ <br/>
+<br/>
+<b><br/><br/>____________________<br/>Docteur Nardjes DJEHAL</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

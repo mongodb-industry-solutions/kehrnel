@@ -1,0 +1,599 @@
+{
+  "ehr_id": "4179",
+  "composition_date": {
+    "$date": "2024-02-15T00:00:00Z"
+  },
+  "archetype_node_id": "openEHR-EHR-COMPOSITION.self_reported_data.v1",
+  "last_processed": {
+    "$date": "2025-10-13T10:52:58.375562Z"
+  },
+  "canonicalJSON": {
+    "_type": "COMPOSITION",
+    "name": {
+      "_type": "DV_TEXT",
+      "value": "hads_v0"
+    },
+    "archetype_details": {
+      "archetype_id": {
+        "value": "openEHR-EHR-COMPOSITION.self_reported_data.v1"
+      },
+      "rm_version": "1.0.4",
+      "template_id": {
+        "value": "hads_v0"
+      }
+    },
+    "language": {
+      "_type": "CODE_PHRASE",
+      "terminology_id": {
+        "_type": "TERMINOLOGY_ID",
+        "value": "ISO_639-1"
+      },
+      "code_string": "en"
+    },
+    "territory": {
+      "_type": "CODE_PHRASE",
+      "terminology_id": {
+        "_type": "TERMINOLOGY_ID",
+        "value": "ISO_3166-1"
+      },
+      "code_string": "ES"
+    },
+    "category": {
+      "_type": "DV_CODED_TEXT",
+      "value": "event",
+      "defining_code": {
+        "_type": "CODE_PHRASE",
+        "terminology_id": {
+          "_type": "TERMINOLOGY_ID",
+          "value": "openehr"
+        },
+        "code_string": "433"
+      }
+    },
+    "composer": {
+      "_type": "PARTY_IDENTIFIED",
+      "name": "Max Mustermann"
+    },
+    "context": {
+      "_type": "EVENT_CONTEXT",
+      "start_time": {
+        "_type": "DV_DATE_TIME",
+        "value": "2024-02-15T00:00:00"
+      },
+      "setting": {
+        "_type": "DV_CODED_TEXT",
+        "value": "home",
+        "defining_code": {
+          "_type": "CODE_PHRASE",
+          "terminology_id": {
+            "_type": "TERMINOLOGY_ID",
+            "value": "openehr"
+          },
+          "code_string": "225"
+        }
+      },
+      "health_care_facility": {
+        "_type": "PARTY_IDENTIFIED",
+        "name": "DOE, John"
+      }
+    },
+    "content": [
+      {
+        "_type": "OBSERVATION",
+        "name": {
+          "_type": "DV_CODED_TEXT",
+          "defining_code": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "local"
+            },
+            "code_string": "at0000"
+          },
+          "value": "HADS (Hospital Anxiety and Depression Scale)"
+        },
+        "archetype_details": {
+          "archetype_id": {
+            "value": "openEHR-EHR-OBSERVATION.hads.v0"
+          },
+          "rm_version": "1.0.4"
+        },
+        "language": {
+          "_type": "CODE_PHRASE",
+          "terminology_id": {
+            "_type": "TERMINOLOGY_ID",
+            "value": "ISO_639-1"
+          },
+          "code_string": "en"
+        },
+        "encoding": {
+          "_type": "CODE_PHRASE",
+          "terminology_id": {
+            "_type": "TERMINOLOGY_ID",
+            "value": "IANA_character-sets"
+          },
+          "code_string": "UTF-8"
+        },
+        "subject": {
+          "_type": "PARTY_SELF"
+        },
+        "provider": {
+          "_type": "PARTY_SELF"
+        },
+        "workflow_id": {
+          "_type": "OBJECT_REF",
+          "namespace": "unknown",
+          "type": "ANY",
+          "id": {
+            "_type": "GENERIC_ID",
+            "value": "3185b159-d3d6-474c-a31b-b0aeddf72430",
+            "scheme": "scheme"
+          }
+        },
+        "data": {
+          "_type": "HISTORY",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "History"
+          },
+          "events": [
+            {
+              "_type": "POINT_EVENT",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "Any event"
+              },
+              "data": {
+                "_type": "ITEM_TREE",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Questionnaire items"
+                },
+                "items": [
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Q1. I feel nervous or 'wound up'"
+                    },
+                    "value": {
+                      "_type": "DV_ORDINAL",
+                      "value": 1,
+                      "symbol": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "From time to time, occasionally",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local"
+                          },
+                          "code_string": "at0117"
+                        }
+                      }
+                    },
+                    "archetype_node_id": "at0115"
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Q2. I still enjoy the things I used to enjoy"
+                    },
+                    "value": {
+                      "_type": "DV_ORDINAL",
+                      "value": 0,
+                      "symbol": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "Definitely as much",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local"
+                          },
+                          "code_string": "at0121"
+                        }
+                      }
+                    },
+                    "archetype_node_id": "at0120"
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Q3. I get a sort of frightened feeling as if something awful is about to happen"
+                    },
+                    "value": {
+                      "_type": "DV_ORDINAL",
+                      "value": 0,
+                      "symbol": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "Not at all",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local"
+                          },
+                          "code_string": "at0126"
+                        }
+                      }
+                    },
+                    "archetype_node_id": "at0125"
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Q4. I can laugh and see the funny side of things"
+                    },
+                    "value": {
+                      "_type": "DV_ORDINAL",
+                      "value": 0,
+                      "symbol": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "As much as I always could",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local"
+                          },
+                          "code_string": "at0131"
+                        }
+                      }
+                    },
+                    "archetype_node_id": "at0130"
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Q5. Worrying thoughts go through my mind"
+                    },
+                    "value": {
+                      "_type": "DV_ORDINAL",
+                      "value": 1,
+                      "symbol": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "From time to time, but not too often",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local"
+                          },
+                          "code_string": "at0137"
+                        }
+                      }
+                    },
+                    "archetype_node_id": "at0135"
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Q6. I feel cheerful"
+                    },
+                    "value": {
+                      "_type": "DV_ORDINAL",
+                      "value": 0,
+                      "symbol": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "Most of the time",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local"
+                          },
+                          "code_string": "at0141"
+                        }
+                      }
+                    },
+                    "archetype_node_id": "at0140"
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Q7. I can sit at ease and feel relaxed"
+                    },
+                    "value": {
+                      "_type": "DV_ORDINAL",
+                      "value": 0,
+                      "symbol": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "Definitely",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local"
+                          },
+                          "code_string": "at0146"
+                        }
+                      }
+                    },
+                    "archetype_node_id": "at0145"
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Q8. I feel as if I am slowed down"
+                    },
+                    "value": {
+                      "_type": "DV_ORDINAL",
+                      "value": 0,
+                      "symbol": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "Not at all",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local"
+                          },
+                          "code_string": "at0161"
+                        }
+                      }
+                    },
+                    "archetype_node_id": "at0160"
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Q9. I get a sort of frightened feeling like 'butterflies' in the stomach"
+                    },
+                    "value": {
+                      "_type": "DV_ORDINAL",
+                      "value": 0,
+                      "symbol": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "Not at all",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local"
+                          },
+                          "code_string": "at0166"
+                        }
+                      }
+                    },
+                    "archetype_node_id": "at0165"
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Q10. I have lost interest in my appearance"
+                    },
+                    "value": {
+                      "_type": "DV_ORDINAL",
+                      "value": 0,
+                      "symbol": {
+                        "_type": "DV_CODED_TEXT",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local"
+                          },
+                          "code_string": "at0171"
+                        }
+                      }
+                    },
+                    "archetype_node_id": "at0170"
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Q11. I feel restless as if I have to be on the move"
+                    },
+                    "value": {
+                      "_type": "DV_ORDINAL",
+                      "value": 0,
+                      "symbol": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "Not at all",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local"
+                          },
+                          "code_string": "at0176"
+                        }
+                      }
+                    },
+                    "archetype_node_id": "at0175"
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Q12. I look forward with enjoyment to things"
+                    },
+                    "value": {
+                      "_type": "DV_ORDINAL",
+                      "value": 0,
+                      "symbol": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "As much as I ever did",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local"
+                          },
+                          "code_string": "at0181"
+                        }
+                      }
+                    },
+                    "archetype_node_id": "at0180"
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Q13. I get sudden feelings of panic"
+                    },
+                    "value": {
+                      "_type": "DV_ORDINAL",
+                      "value": 1,
+                      "symbol": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "Not very often",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local"
+                          },
+                          "code_string": "at0187"
+                        }
+                      }
+                    },
+                    "archetype_node_id": "at0185"
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Q14. I can enjoy a good book or radio or TV program"
+                    },
+                    "value": {
+                      "_type": "DV_ORDINAL",
+                      "value": 0,
+                      "symbol": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "Often",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local"
+                          },
+                          "code_string": "at0191"
+                        }
+                      }
+                    },
+                    "archetype_node_id": "at0190"
+                  }
+                ],
+                "archetype_node_id": "at0003"
+              },
+              "archetype_node_id": "at0002",
+              "time": {
+                "_type": "DV_DATE_TIME",
+                "value": "2025-02-26T00:00:00"
+              }
+            }
+          ],
+          "archetype_node_id": "at0001",
+          "origin": {
+            "_type": "DV_DATE_TIME",
+            "value": "2025-02-26T00:00:00"
+          }
+        },
+        "protocol": {
+          "_type": "ITEM_TREE",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Protocol"
+          },
+          "items": [
+            {
+              "_type": "CLUSTER",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "HADS Anxiety interpretation"
+              },
+              "archetype_details": {
+                "archetype_id": {
+                  "value": "openEHR-EHR-CLUSTER.hads_anxiety_interpretation.v0"
+                },
+                "rm_version": "1.0.4"
+              },
+              "items": [
+                {
+                  "_type": "ELEMENT",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Interpretation (Anxiety)"
+                  },
+                  "value": {
+                    "_type": "DV_ORDINAL",
+                    "value": 1,
+                    "symbol": {
+                      "_type": "DV_CODED_TEXT",
+                      "value": "Normal (0–7)",
+                      "defining_code": {
+                        "_type": "CODE_PHRASE",
+                        "terminology_id": {
+                          "_type": "TERMINOLOGY_ID",
+                          "value": "local"
+                        },
+                        "code_string": "at0002"
+                      }
+                    }
+                  },
+                  "archetype_node_id": "at0001"
+                }
+              ],
+              "archetype_node_id": "openEHR-EHR-CLUSTER.hads_anxiety_interpretation.v0"
+            },
+            {
+              "_type": "CLUSTER",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "HADS Depression interpretation"
+              },
+              "archetype_details": {
+                "archetype_id": {
+                  "value": "openEHR-EHR-CLUSTER.hads_depression_interpretation.v0"
+                },
+                "rm_version": "1.0.4"
+              },
+              "items": [
+                {
+                  "_type": "ELEMENT",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Interpretation (Depression)"
+                  },
+                  "value": {
+                    "_type": "DV_ORDINAL",
+                    "value": 1,
+                    "symbol": {
+                      "_type": "DV_CODED_TEXT",
+                      "value": "Normal (0–7)",
+                      "defining_code": {
+                        "_type": "CODE_PHRASE",
+                        "terminology_id": {
+                          "_type": "TERMINOLOGY_ID",
+                          "value": "local"
+                        },
+                        "code_string": "at0002"
+                      }
+                    }
+                  },
+                  "archetype_node_id": "at0001"
+                }
+              ],
+              "archetype_node_id": "openEHR-EHR-CLUSTER.hads_depression_interpretation.v0"
+            }
+          ],
+          "archetype_node_id": "at0107"
+        },
+        "archetype_node_id": "openEHR-EHR-OBSERVATION.hads.v0"
+      }
+    ],
+    "archetype_node_id": "openEHR-EHR-COMPOSITION.self_reported_data.v1"
+  }
+}

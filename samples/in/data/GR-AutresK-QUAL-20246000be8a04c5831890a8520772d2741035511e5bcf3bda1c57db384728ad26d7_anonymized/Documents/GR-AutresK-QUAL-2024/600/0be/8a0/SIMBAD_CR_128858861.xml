@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128858861" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Dr Yun Gan TAO - CONSULTATION DE RADIOTHERAPIE</title>
+    <effectiveTime value="20161109000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20161130000000+0000"/>
+        <assignedAuthor>
+            <code code="RTE/414" displayName="RADIOTHERAPIE EXTERNE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>CONSULTATION DE SURVEILLANCE DE RADIOTHERAPIE EXTERNE<br/><br/>Dicté par : </b> Yun Gan TAO, 
+ <b><br/>Dicté le : </b> 09/11/2016
+ <b><br/>Service : </b> Rte Radiotherapie Externe
+ <br/>
+<b>Type de document : </b> RTE CC SURV
+ <b><br/>Ref:</b> 90942 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX 
+ <b><br/>Identifiant : </b> XXXXXX
+ <b><br/>Date de naissance : </b> XXXXXX
+ <br/>
+<b>Sexe: </b> Homme 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : LDN/*
+ <br/>
+<br/>
+<b>Monsieur XXXXXX, deux ans après la radiochimiothérapie d'un <br/>carcinome oropharyngé vélaire T3 N1c M0, dans l'Essai Gortec 2004-01, <br/>bras IMRT.<br/></b>
+<br/>Toujours une xérostomie de grade 1 selon le critère RTOG et de grade 
+ <br/>2 selon le critère SOMA.
+ <br/>Alimentation solide.
+ <br/>Depuis quelques semaines, il présente d'une gêne pharyngée mais pas 
+ <br/>de dysphagie.
+ <br/>
+<u><b><br/>EXAMEN CE JOUR<br/></b></u>
+<br/>Indice de Karnofski : 90.
+ <br/>Le poids est de 71 kg.
+ <br/>Pas de trismus et protraction linguale normale.
+ <br/>Pas de lésion suspecte au niveau buccopharyngé à l'inspection et à la 
+ <br/>palpation, surtout au niveau du plancher buccal postérieur ou dans la 
+ <br/>région vélo-amygdalienne droite.
+ <br/>
+<br/>En nasofibroscopie, on ne trouve pas de lésion suspecte dans la base 
+ <br/>de langue, ni dans la région sous-amygdalienne bilatérale et 
+ <br/>pharyngolarynx bien mobile.
+ <br/>
+<br/>Au niveau cervical, on retrouve une fibrose cutanée de grade 1 et pas 
+ <br/>d'adénopathie palpable.
+ <br/>
+<br/>
+<b>Je lui prescrit un scanner cervicothoracique, il montera le résultat <br/>à son Médecin Traitant et nous enverra les images et le résultat. <br/>Un rendez-vous est prévu en radiothérapie dans un an, on pourra <br/>éventuellement l'avancer si on retrouve des lésions suspectes sur le <br/>scanner</b> . 
+ <br/>
+<br/>
+<br/>TAO, Yun Gan 
+ <br/>Signé électroniquement par Yun Gan TAO 
+ <br/>à 13:06 le 14/11/2016
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

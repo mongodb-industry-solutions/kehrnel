@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120864330" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>RESUME D'HOSPITALISATION FAISANT FONCTION DE LETTRE DE LIAISON</title>
+    <effectiveTime value="20200709000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200709000000+0000"/>
+        <assignedAuthor>
+            <code code="RHO/179" displayName="RHONE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>SERVICE D'HOSPITALISATION RHONE - COMPTE RENDU D'HOSPITALISATION <br/>CHIMIOTHERAPIE + 24 HEURES<br/><br/>Dicté par : </b> Docteur Juliette Hershkovitch, Interne
+ <b><br/>Dicté le : </b> 06/07/2020 
+ <b><br/>Service : </b> RHO-RHONE 
+ <br/>
+<b>Type de document : </b> RHO RH HOSPI + 24 H (S) 
+ <br/>
+<b>Ref :</b> 1039360 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : IAV
+ <br/>Approuvé par : 
+ <b>Dr IACOB</b>
+<br/>
+<br/>
+<u><b>Docteur HERSHKOVITCH/Docteur IACOB<br/></b></u>
+<br/>
+<u><b>Chirurgien référent IGR</b></u> : Dr BREUSKIN
+ <br/>
+<u><b>Oncologue référent IGR </b></u>
+<b>: Dr FERRAND<br/></b>
+<br/>
+<u><b>Date d'entrée</b></u>
+<b> </b> : 26/06/2020
+ <br/>
+<br/>
+<u><b>Motif d'hospitalisation</b></u>
+<b> </b> : 
+ <b><br/></b> Patient de 59 ans hospitalisé pour équilibration antalgique dans le 
+ <br/>cadre de la prise en 
+ <br/>charge d'une récidive latéro-cervicale bilatérale d'un carcinome 
+ <br/>oropharyngé traité initialement par radiochimiothérapie en octobre 
+ <br/>2014 avec chirurgie de rattrapage en novembre 2017 et mars 2018.
+ <br/>
+<b><br/><u>Antécédents médico-chirurgicaux<br/>Chirurgicaux <br/></u></b> - carcinome épidermoïde hypopharyngé (récidive) traité par PLT avec 
+ <br/>lambeau de grand pectoral et lambeau antéro-latéral de cuisse, 
+ <br/>- trachéotomie, 
+ <br/>- opéré d'une maladie de Dupuytren à 2 reprises (à gauche et à 
+ <br/>droite).
+ <br/>
+<br/>
+<u><b>Médicaux</b></u>
+<br/>- crise comitiale généralisée avec dernier évènement il y a plus de 
+ <br/>10 ans, pas de suivi neurologique, que l'on recommande notamment sur 
+ <br/>le plan thérapeutique, 
+ <br/>- psoriasis diffus essentiellement aux mains et aux avant-pieds, pas 
+ <br/>de traitement systémique, 
+ <br/>- hypothyroïdie, 
+ <br/>- pas d'allergie.
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE</b></u>
+<br/>- Prise en charge pour un carcinome épidermoïde initialement de 
+ <br/>l'oropharynx vélaire et des piliers postérieurs bilatéralement traité 
+ <br/>par radiochimiothérapie en octobre 2014.
+ <br/>- 
+ <u>Août 2017</u> : Seconde localisation de carcinome épidermoïde de l' 
+ <br/>hypopharynx droit.
+ <br/>- 
+ <u>13/11/17</u> : Traitement par pharyngo-laryngectomie totale droite et 
+ <br/>reconstruction par lambeau musculo-cutané de grand pectoral. Suites 
+ <br/>compliquées d'un pharyngostome à plusieurs reprises. Monté d'un 
+ <br/>lambeau de grand dorsal le 06/12/2017. Malgré les reprises, 
+ <br/>persistance d'un pharyngostome et déhiscence des sutures avec 
+ <br/>pharyngostome large.
+ <br/>- 
+ <u>19/03/18</u> : reprise de cervicotomie pour rétablissement de la 
+ <br/>continuité digestive et réfection d'un trachéostome dans le contexte 
+ <br/>de pharyngostome large post-PLT de rattrapage avec fermeture par un 
+ <br/>lambeau libre antéro-latéral de cuisse prélevé à gauche et lambeau 
+ <br/>pédiculé supra-claviculaire avec anastomose de perforante 
+ <br/>delto-acromial prélevé à gauche.
+ <br/>- Récidive latéro-cervical gauche nécrotique envahissant les tissus 
+ <br/>mous, péri carotidienne non résécable et adénopathie en 2 à droite 
+ <br/>envahissant la veine jugulaire découverte à l'été 2019 par la 
+ <br/>majoration d'un oedème du visage et de douleur. Biopsié, AP : 
+ <br/>Carcinome épidermoïde HPV-, P16-.
+ <br/>- 
+ <u>RCP ORL du 17/10/19</u> : décision d'un traitement systémique (pas de 
+ <br/>réirradiation envisagée).
+ <br/>
+<br/>
+<b>-Début d'un traitement par Tpex (C1 le 30/10/19)</b>
+<br/>
+<br/>- 
+ <u><b>10/06/2020 TDM</b></u>
+<b> </b> progression des masses cervicales selon RECIST 
+ <br/>apparition d'un épanchement pleural gauche. Cette progression 
+ <br/>entraine un trajet fistuleux au contact de l'axe carotidien gauche 
+ <br/>entrainant un risque vasculaire. 
+ <br/>Consultation avec son oncologue référent le 16/06/2020, le Dr 
+ <br/>FERRAND, et discussion en staff Onco ORL le même jour avec 
+ <br/>proposition thérapeutiques :
+ <br/>- mono-chimiothérapie de type 5 FU, METHOTREXATE ou une reprise de 
+ <br/>TAXANE.
+ <br/>- inclusion dans un essai clinique de phase I, ou inclusion si 
+ <br/>patient non incluable dans un essai de phase I, inclusion dans le 
+ <br/>protocole UPSTREAM (bras combo d'immunothérapie MONALIZUMAB 
+ <br/>DURVALUMAB) 
+ <br/>
+<u><br/>Histoire récente</u> :
+ <br/>Patient réévaluer en hôpital de jour EMASP par Dr SAMPETREAN le 
+ <br/>26/06/2020, décision de débuter une PCA de morphine à 4mg/h avec 
+ <br/>bolus de 4 mg. Patient hospitalise dans le service Rhone pour 
+ <br/>équilibration antalgique.
+ <br/>Dans la nuit du 28/06 au 29/06 saignement par un orifice de la 
+ <br/>cicatrice en cervical gauche et par la bouche
+ <br/>AngioTDM : Pas d'argument en faveur de saignement actif.
+ <br/>Engainement de la carotide commune gauche jusqu'à la bifurcation avec 
+ <br/>trajet fistuleux au contact de l'axe carotidien et risque vasculaire 
+ <br/>majeur.
+ <br/>Embolisation en RI le 29/06 : Fermeture distale de l'artère carotide 
+ <br/>interne au niveau du siphon avec plusieurs coils et de l'entrée du 
+ <br/>stent avec un Plug. Occlusion de tout l'axe carotidien à gauche, 
+ <br/>l'hémisphère gauche du cerveau est perfusé par la droite. Transfusion 
+ <br/>de CGR dans les suites.
+ <br/>Transfert en Réanimation pour difficultés de déventilation ensuite.
+ <br/>Retour dans le service le 04/07/20
+ <br/>
+<br/>
+<u><b>Examen clinique et biologique à l'entrée</b></u>
+<br/>OMS 3
+ <br/>Poids : 73 kg
+ <br/>Taille : 161 cm
+ <br/>SC : 1m2
+ <br/>IMC : 302.12 kg/m2
+ <br/>TA : 114/73 mmHg
+ <br/>FC : 81 bpm
+ <br/>T : 37,1°C.
+ <br/>EVA : /10.
+ <br/>Saturation : 93 % en AA
+ <br/>Trachéotomie : Trachéostome, canule à ballonnet dégonflé
+ <br/>Alimentation : Gastrostomie. Issue d'un liquide noirâtre depuis 
+ <br/>quelques jours : probablement liquide gastrique et vieux sang ingéré. 
+ <br/>En déclive et Périkabiven à l'arrivée de réanimation
+ <br/>
+<br/>
+<u>Au plan clinique loco-régional</u> :
+ <br/>Examen ORL : Poche de recueil avec traces de vieux sang en cervical 
+ <br/>gauche.
+ <br/>Adénopathie : non palpées.
+ <br/>Auscultation cardio-pulmonaire : sans particularité 
+ <br/>Abdomen : sans masse palpable, pas de hépatosplénomégalie. Léger 
+ <br/>empattement en latéral gauche de la gastrostomie qui est en déclive
+ <br/>Pas d'oedème des membres inférieurs.
+ <br/>
+<br/>
+<u>Au plan bio-hématologique</u> : le 03/07/200
+ <br/>Hémoglobine : 13,9 g/dl
+ <br/>Leucocytes : 16 100/mm3
+ <br/>Ionogramme : Normal, Potassium 3,5 mmol/l, Sodium 133 mmol/l.
+ <br/>
+<br/>
+<u><b>Evolution dans le service</b></u>
+<br/>
+<b>- Visite du 07/07/2020 : Dr MAYACHE-BADIS, Dr IACOB, Dr BERNICHON, Dr <br/>MURATORI, Dr HERSHKOVITCH</b>
+<br/>Le patient nous a été transféré ce week end de réanimation suite à un 
+ <br/>passage au bloc pour une hémorragie massive d'origine tumorale, 
+ <br/>l'embolisation de tout l'axe carotidien à eut lieu la semaine 
+ <br/>dernière.
+ <br/>Il s'agit d'un patient grabataire OMS 4, mis à jeun depuis plusieurs 
+ <br/>jours, la sonde de GPE en déclive ramène du liquide biliaire, il ne 
+ <br/>semble pas logique de proposer un traitement anti tumoral, 
+ <br/>actuellement on s'oriente vers une prise en charge purement 
+ <br/>palliative, on rappellera cet après-midi la fille du patient afin de 
+ <br/>valider le protocole par HYPNOVEL /MORPHINE en cas de saignement 
+ <br/>massif, dans l'attente d'un transfert en USP le patient reste 
+ <br/>hospitalisé au RHONE, on réduit les apports hydrique : SMOFKABIVEN 
+ <br/>sur 48h la nuit et on rajoute du SCOBUREN dans la base.
+ <br/>Le patient a réalisé 24 demande pour 12 reçu dans ce cas on augmente 
+ <br/>également la dose de l'OXYCODONE on passe de 6mg en gramme et à 7mg 
+ <br/>ainsi que les doses du bolus de 6 à 7.
+ <br/>On demande également un nouveau passage de l'équipe de l'EMASP pour 
+ <br/>une réévaluation.
+ <br/>
+<br/>
+<b>- Au plan oncologique : <br/><u></u></b>
+<u> Staff oncologique le 30/06/20</u> : Compte tenu de la progression rapide 
+ <br/>sous TPEx puis nivolumab : soins de confort exclusifs ou Methotrexate 
+ <br/>si amélioration post embolisation.
+ <br/>
+<u>Evaluation par EMASP le 06/07/20</u>
+<br/>Pas de récidive du saignement durant l'hospitalisation. Localement : 
+ <br/>collecteur en place recueillant un peu de vieux sang.
+ <br/>Accord avec fille du patient que si récidive de saignement mise en 
+ <br/>place d'un protocole de sédation
+ <br/>
+<br/>
+<b>- Au plan uro-digestif :</b>
+<br/>Abdomen dépressible, souple, peu douloureux.
+ <br/>Gastrostomie en déclive : liquide gastrique
+ <br/>Alimentation par Smofkabiven
+ <br/>Globe urinaire le 07/07 : sondage urinaire et surveillance de diurèse
+ <br/>
+<br/>
+<b>- Au plan infectieux :<br/></b> Fièvre après vomissements, début TAZOCILLINE le 29/06 pour 10 jours 
+ <br/>au total, pas de récidive
+ <br/>Radio de thorax le 06/07 : amélioration au niveau du foyer 
+ <br/>parenchymateux gauche
+ <br/>
+<br/>
+<b>- Au plan douleur :</b>
+<br/>Majoration des doses de PCA d'Oxycodone à 7mg/h et 7mg par bolus 
+ <br/>(3/h). Patient bien soulagé ensuite. Pas d'hallucinations ou de 
+ <br/>cauchemars.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3> :<br/></b></u> - Patient hospitalisé pour mise en place de PCA, soulagé après 
+ <br/>adaptation des doses.
+ <br/>- Pneumopathie d'inhalation pour laquelle le patient a été traité par 
+ <br/>10 jours de TAZOCILLINE 4g 4 fois par jour.
+ <br/>- 
+ <u>Saignement le 28/06</u> : embolisation en Radio Interventionnelle de 
+ <br/>l'axe carotidien gauche. Pas de déficit ensuite.
+ <br/>- Passage en Réanimation pour difficultés de ventilation initialement 
+ <br/>puis sevré. Pas de récidive du saignement.
+ <br/>- Sondage urinaire pour globe le 07/07/20.
+ <br/>- Transfer en USP Paul brousse le 09/07/2020.
+ <br/>
+<br/>
+<u><b>Prochains rendez-vous :</b></u>
+<br/>31/07/2020 14:00, ADM RHONE-ALP 
+ <br/>
+<br/>Poids à la sortie : 74 kg
+ <br/>EVA à la sortie : 0/10
+ <br/>
+<b><br/><u>Sortie vers USP Paul Brousse le</u> : 09/07/20<br/></b> - Bulletins de situation x3
+ <br/>- Bon d'économat par ambulance
+ <br/>- Lettre de liaison remise en main propre au patient ce jour
+ <br/>- Convocation
+ <br/>- Dernière prise de sang
+ <br/>- prescription médicale
+ <br/>- Feuille décisionnelle
+ <br/>- feuille de liaison infirmière
+ <br/>
+<br/>
+<u><b>Prescriptions médicales</b></u>
+<b> :<br/>Aérosol<br/></b> - PULMICORT 0,5 mg, par oxygène à 8L/mn, 1 dose par nébuliseur 
+ <br/>3x/jour, durée 15 mn.
+ <br/>- BRICANYL 5 mg, par oxygène à 8L/mn, 1 dose par nébuliseur 3x/jour, 
+ <br/>durée 15 mn.
+ <br/>
+<br/>
+<b>PCA - Voie intraveineuse<br/></b> OXYNORM 10 mg soit 1000 mg pour 100 ml + bolus de 7 mg/heure, nombre 
+ <br/>de bolus 3x/heure avec une période réfractaire de 7 mn.
+ <br/>
+<br/>
+<b>Perfusion - Voie intraveineuse<br/></b> - LAROXYL 50 mg, 12,5 mg le soir.
+ <br/>- PRIMPERAN 10 mg, 10 mg toutes les 8 heures.
+ <br/>- PANTOPRAZOLE 40 mg, 40 mg 2x/jour.
+ <br/>- GARDENAL 40 mg, 100 mg à 14 heure.
+ <br/>- NaCl 0,9%, 1 poche 500 ml
+ <br/>+ 1 ampoule de PHOCYTAN 0,66 mmol
+ <br/>+ 1 ampoules de MAGNESIUM SULFATE 1,5 g
+ <br/>+ 2 ampoule de SCOBUREN 20 mg
+ <br/>- OXYNORM 10 mg,7 mg le matin.
+ <br/>
+<br/>
+<b>Seringue électrique - Voie intraveineuse<br/></b> - NEFOPAM 20 mg/2ml, 120 mg/jour.
+ <br/>- PIPERACILLINE TAZOBACTAM 4 gr, 4 gr/jour.
+ <br/>
+<br/>
+<b>Médicaments - Voie auriculaire<br/></b> - CERULYSE 5 gr, 10 gouttes/jour.
+ <br/>
+<b><br/>Médicament - Voie intraveineuse<br/></b> - MIDAZOLAM 5 mg, 5 mg à la demande, max. 10 mg/24 heures.
+ <br/>- L-THYROXINE 200 μg, 12,5 μg/jour.
+ <br/>- PARACETAMOL 1gr, 1gr toutes les 8 heures.
+ <br/>
+<br/>
+<b>Médicaments - Voie orale<br/></b> - MOVICOL, 2 sachets 3x/jour.
+ <br/>
+<br/>
+<b>Médicament - Voie veineuse centrale stricte<br/></b> - SMOFKABIVEN E 1100 KCAL, 1 poche à midi. 
+ <br/>
+<b><br/></b>
+<br/>
+<b> CMA :Surveillance de trachéostomie Réfection<br/>Surveillance de gastrostomie Réfection<br/>Surveillance de stomies des voies urinaires <br/>Réfection>>sonde urinaire<br/>Ajustement entretien dispositif vasculaire (VVC-KT) Réfection<br/>Surveillance particulière <br/>. Etat grabataire<br/>. Douleur irréductible (rebelle traitée+EN entrée, sortie, au cours)<br/>Social Prolongation du séjour en attente d'être admis ailleurs <br/></b>
+<br/>
+<u><b>Conformément à l'article R710-2-1 du code de Santé Publique</b></u>
+<b> : <br/></b> Transfusion de produits sanguins labiles : NON.
+ <br/>Portage de germe multirésistant : NON.
+ <br/>
+<br/> Prise en charge palliative : OUI
+ <br/>
+<b>Prise en charge par l'équipe mobile de soins palliatifs OUI</b>
+<br/>Si OUI :
+ <br/>
+<br/>Pose Gastrostomie ou pose SNO : NON
+ <br/>Ponction à visée symptomatique : NON
+ <br/>Adaptation du traitement antalgique : OUI
+ <br/>Irradiation antalgique : NON
+ <br/>Chimiothérapie palliative : NON
+ <br/>Chirurgie de propreté: NON
+ <br/>Prise en charge saignement : OUI
+ <br/>Transfusion sanguine : NON
+ <br/>Prise en charge de la détresse respiratoire +/- trachéo NON
+ <br/>Nutrition : 
+ <br/>- déjà sous CNO, nutrition entérale/parentérale OUI 
+ <br/>- mise en route d'une nutrition entérale/parentérale NON
+ <br/>Occlusion intestinale NON
+ <br/>Traitement des divers symptômes vecteurs d'inconfort
+ <br/>(toux, prurit, nausées, vomissements, anxiété, 
+ <br/>dépression, troubles du sommeil, déshydratation, ...) OUI
+ <br/>Consultation onco-psychologie : NON
+ <br/>Kinésithérapie : OUI
+ <br/>Nursing : OUI
+ <br/>
+<br/>Organisation retour domicile - soins de suite
+ <br/>prise en charge sociale USP OUI
+ <br/>
+<br/>
+<b><br/>_________________________________________________<br/>Signé électroniquement par Docteur Mariana IACOB <br/>Le jeudi 9 juillet 2020 à 09:34</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

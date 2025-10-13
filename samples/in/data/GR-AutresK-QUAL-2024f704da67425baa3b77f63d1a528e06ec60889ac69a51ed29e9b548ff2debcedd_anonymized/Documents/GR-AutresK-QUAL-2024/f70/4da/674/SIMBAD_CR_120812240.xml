@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120812240" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <title>BHV : numero de dossier GLIMS : 201990082</title>
+    <effectiveTime value="20200717000000+0000"/>
+    <confidentialityCode code="11502-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'examens biologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200717000000+0000"/>
+        <assignedAuthor>
+            <code code="DBP/466" displayName="DEPARTEMENT DE BIO-PATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Dr L. Drouard (40 22) <br/>Dr L. Lacroix (40 35) <br/>Dr C. Pradon (40 24) <br/>Dr F. Troalen (40 33) </p>
+<p>Biochimie Microbiologie </p>
+<p>Département de Biologie et de Pathologie Médicales <br/>Hématologie </p>
+<p>Dr S. Broutin (40 57) <br/>Dr J. Delahousse (61 92) <br/>Interrne D. Combarel (37 69) <br/>Pr A. Paci (47 30) </p>
+<p>Dr A. Arbab (41 65) <br/>Pr A. Bennaceur (40 65) <br/>Interrne S. Fodil (37 69) <br/>Dr C. Marzac (51 31) <br/>Dr V. Saada (40 67) <br/>Dr V. Vergé (40 34) </p>
+<p>Dr E. Chachaty (52 34) <br/>Dr E. Gallois (40 62) <br/>Pr F. Griscelli (51 93) </p>
+<p>Pharmacologie </p>
+<p>Prélèvement effectué le : </p>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<p>DEMANDE N° </p>
+<p>XXXXXX </p>
+<p>FémininNé(e) le : </p>
+<p>NIP/IPP : </p>
+<p>17/07/2020 05:39 </p>
+<p>Sexe : </p>
+<p>17/07/2020 08:00 </p>
+<br/>
+<p>Patient : </p>
+<p>Demande enregistrée le : </p>
+<p>Nom de naissance : </p>
+<p>XXXXXX </p>
+<p>XXXXXX </p>
+<p>Villejuif, le </p>
+<p>GARD </p>
+<p> 2 </p>
+<p>Service : </p>
+<p>Comité : </p>
+<p>Page 1 / </p>
+<br/>
+<p>GARDPrescrit par : </p>
+<p>vendredi 17 juillet 2020 </p>
+<p>Complet </p>
+<p>HEMOSTASE </p>
+<p> RENSEIGNEMENTS CLINIQUES 1er Traitement presc </p>
+<p>_lab1 <br/>Sans traitement </p>
+<p> BILAN DE COAGULATION <br/>Taux de Prothrombine 86 % ( 70 - 100 )86 13/07/2020 08:00 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>Temps de Quick (Témoin = 13s) 14.4 s 14.4 13/07/2020 08:00 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>INR 1.1 1.1 13/07/2020 08:00 NDP </p>
+<p>0,8 - 1,2 : Sans traitement AVK 2 - 3 : Avec traitement AVK (jusqu'à 4 en cas de prothèse cardiaque ou de prévention de thromboses artérielles) </p>
+<p>Fibrinogène 4.6 g/L ( 2.0 - 4.0 )4.3 13/07/2020 08:00 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK (Témoin = 28s) 27 s 26 13/07/2020 08:00 NDP <br/>Plasma Citraté - Chronométrique </p>
+<p>TCK Ratio 0.9 ( < 1.2 )0.9 13/07/2020 08:00 NDP </p>
+<p>HEMATOLOGIE </p>
+<p> NUMERATION SANGUINE (SANG TOTAL SUR EDTA) <br/>MÉTHODE : XN - SYSMEX </p>
+<p>Leucocytes 29.4 10*9/L ( 4.0 - 10.0 )Prélèvement nonparvenu (Purgeautomatique). </p>
+<p>15/07/2020 08:00 VVE </p>
+<p>Hématies 3.25 10*12/L ( 4.00 - 5.20 )Prélèvement nonparvenu (Purgeautomatique). </p>
+<p>15/07/2020 08:00 VVE </p>
+<p>Hémoglobine 9.9 g/100mL ( 11.5 - 15.0 )Prélèvement nonparvenu (Purgeautomatique). </p>
+<p>15/07/2020 08:00 VVE </p>
+<p>Hématocrite 30.2 % ( 34.0 - 45.0 )Prélèvement nonparvenu (Purgeautomatique). </p>
+<p>15/07/2020 08:00 VVE </p>
+<p>VGM 92.9 μ3 ( 75.0 - 96.0 )Prélèvement nonparvenu (Purgeautomatique). </p>
+<p>15/07/2020 08:00 RVB </p>
+<p>TCMH 30.5 pg/cel ( 24.0 - 33.0 )Prélèvement nonparvenu (Purgeautomatique). </p>
+<p>15/07/2020 08:00 RVB </p>
+<p>CCMH 32.8 g/100mL ( 32.0 - 36.0 )Prélèvement nonparvenu (Purgeautomatique). </p>
+<p>15/07/2020 08:00 RVB </p>
+<p>IDG 16.9 % ( 11.0 - 15.0 )Prélèvement nonparvenu (Purgeautomatique). </p>
+<p>15/07/2020 08:00 RVB </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 17/07/2020 à 10:47 par : Dr Christophe MARZAC,Dr ARBAB Ahmadreza,Dr PRADON Caroline,Dr VERGÉ Véronique</p>
+<p></p>
+<p></p>
+<p>Page 2 / </p>
+<p>XXXXXX </p>
+<p>A : </p>
+<p>Comité : </p>
+<p>GARDPatient : 2 </p>
+<p>DEMANDE N° </p>
+<p>NIP/IPP : </p>
+<br/>
+<p>XXXXXX XXXXXX XXXXXX </p>
+<br/>
+<p>GARDPrescrit par : </p>
+<p>Plaquettes 347.0 10*9/L Prélèvement nonparvenu (Purgeautomatique). </p>
+<p>15/07/2020 08:00 RVB </p>
+<p>Impédance (150 - 400 x 10^9/L) </p>
+<p> FORMULE <br/>Polynucléaires Neutrophiles 84.1 % Prélèvement non </p>
+<p>parvenu (Purgeautomatique). </p>
+<p>15/07/2020 08:00 CZC </p>
+<p>CZCPrélèvement nonparvenu (Purgeautomatique). </p>
+<p>15/07/2020 08:00 ( 1.5 - 7.0 )10*9/Lsoit 24.7 </p>
+<p>Polynucléaires Eosinophiles 0.1 % Prélèvement nonparvenu (Purgeautomatique). </p>
+<p>15/07/2020 08:00 RVB </p>
+<p>RVBPrélèvement nonparvenu (Purgeautomatique). </p>
+<p>15/07/2020 08:00 ( 0.0 - 0.6 )10*9/Lsoit 0.0 </p>
+<p>Polynucléaires Basophiles 0.4 % Prélèvement nonparvenu (Purgeautomatique). </p>
+<p>15/07/2020 08:00 RVB </p>
+<p>RVBPrélèvement nonparvenu (Purgeautomatique). </p>
+<p>15/07/2020 08:00 ( 0.0 - 0.1 )10*9/Lsoit 0.1 <br/></p>
+<p>Lymphocytes 5.1 % Prélèvement nonparvenu (Purgeautomatique). </p>
+<p>15/07/2020 08:00 RVB </p>
+<p>RVBPrélèvement nonparvenu (Purgeautomatique). </p>
+<p>15/07/2020 08:00 ( 1.2 - 4.0 )10*9/Lsoit 1.5 </p>
+<p>Monocytes 6.5 % Prélèvement nonparvenu (Purgeautomatique). </p>
+<p>15/07/2020 08:00 CZC </p>
+<p>CZCPrélèvement nonparvenu (Purgeautomatique). </p>
+<p>15/07/2020 08:00 ( 0.2 - 0.8 )10*9/Lsoit 1.9 </p>
+<p>Myelémie 3.8 % ( 0.0 )0.0 03/07/2020 16:45 CZC </p>
+<p>Formule CZCAutomate </p>
+<p>IDP 9 Prélèvement nonparvenu (Purgeautomatique). </p>
+<p>15/07/2020 08:00 RVB </p>
+<p>VMP 9.4 μ3 ( 7.5 - 11.0 )Prélèvement nonparvenu (Purgeautomatique). </p>
+<p>15/07/2020 08:00 </p>
+<p>INSTITUT DE CANCEROLOGIE GUSTAVE ROUSSY 114, rue Edouard Vaillant - 94 805 VILLEJUIF Cedex - France - Tél : 01 42 11 42 11 - Fax : 01 42 11 53 00 </p>
+<p>N° SIREN 775 74 11 01 CODE APE 8610Z CCP PARIS 709 26 Z </p>
+<p>Validé le : 17/07/2020 à 10:47 par : Dr Christophe MARZAC,Dr ARBAB Ahmadreza,Dr PRADON Caroline,Dr VERGÉ Véronique</p>
+<p></p>
+<ul>
+<li>HEMOSTASE</li>
+<ul>
+<li>Renseignements cliniques</li>
+<li>Bilan de coagulation</li>
+</ul>
+<li>HEMATOLOGIE</li>
+<ul>
+<li>Numeration sanguine (Sang total sur EDTA) <br/>Méthode : XN - SYSMEX</li>
+<li>Formule</li>
+</ul>
+</ul>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

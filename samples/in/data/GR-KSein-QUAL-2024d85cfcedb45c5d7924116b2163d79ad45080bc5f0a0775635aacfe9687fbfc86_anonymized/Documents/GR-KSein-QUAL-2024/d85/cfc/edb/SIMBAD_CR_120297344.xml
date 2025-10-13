@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120297344" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <title>n°20T02038 3095115 Dr Christophe MARZAC</title>
+    <effectiveTime value="20201002000000+0000"/>
+    <confidentialityCode code="11526-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anatomie et de cytologie pathologiques"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201002000000+0000"/>
+        <assignedAuthor>
+            <code code="452/204" displayName="HISTOPATHOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>DÉPARTEMENT DE BIOLOGIE ET DE PATHOLOGIE MEDICALES<br/></p>
+<p>114, rue Edouard Vaillant - 94805 VILLEJUIF CEDEX<br/></p>
+<p>N° I.G.R. : 050 XXXXXX <br/>XXXXXX XXXXXX George XXXXXX F <br/> Docteur PASQUIER Florence <br/>Examen demandé par : <br/>Dr PASQUIER Florence <br/>CTE 110 - HEMATOLOGIE <br/>Prélevé le 02/10/2020 <br/>Enregistré le 02/10/2020 <br/></p>
+<p> CZC <br/> Examen n° : 20T02038<br/></p>
+<p> CR édité le : 02/10/2020<br/></p>
+<p>Copie à : 1/1 </p>
+<p>MYELOGRAMME<br/></p>
+<p>Renseignements cliniques : Pancytopénie; cancer du sein métastatique multitraité, actuellement sous carboplatine. <br/>Date de prélèvement : 02/10/2020 <br/>But de l'examen : diagnostic <br/>Os ponctionné : non précisé Dureté : non précisée </p>
+<p> Richesse : pauvre <br/>SERIE MEGACARYOCYTAIRE : non évaluable rares éléments <br/>BLASTES : 0 % </p>
+<p> SERIE GRANULOCYTAIRE : 47 % <br/>- NEUTROPHILES <br/> Myéloblastes : 0 % <br/> Promyélocytes : 1 % <br/> Myélocytes : 4 % <br/> Métamyélocytes : 4 % <br/> Polynucléaires : 36 %<br/>- EOSINOPHILES <br/> Myélocytes : % <br/> Métamyélocytes : % <br/> Polynucléaires : 1 %<br/>- BASOPHILES : 1 % </p>
+<p>SERIE ERYTHROCYTAIRE : 36 % <br/>Proérytroblastes : 3 % <br/>Eryth. basophiles : 3 % <br/>Eryth. polychromatophiles : 11 % <br/>Eryth. acidophiles : 19 %<br/>SERIE LYMPHOIDE : 11% <br/>Lymphoblastes : % <br/>Lymphocytes : 8 % <br/>Lymphoplasmocytes : % <br/>Plasmocytes : 3 % </p>
+<p>SERIE MONOCYTAIRE : 6 % <br/>Promonocytes : % <br/>Monocytes : 6 %<br/></p>
+<p><br/>CONCLUSION <br/>Moelle hypoplasique possiblement prélevée en zone irradiée (grains "vides"). Au plan morphologique il existe une macro-mégaloblastose de la lignée érythroblastique associée à des polynucléaires neutrophiles hypersegmentés non dégranulés et quelques métamyélocytes rubannés. <br/>Pas de cellules extra-hématopoïétiques observées. <br/>L'ensemble évoque une origine toxique ou une carence fonctionnelle, à interpréter avec les dosages de folates/B12. </p>
+<p> PCSM0N20 <br/></p>
+<p> Dr Christophe MARZAC <br/> Praticien spécialiste </p>
+<p> Compte rendu validé et signé électroniquement </p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

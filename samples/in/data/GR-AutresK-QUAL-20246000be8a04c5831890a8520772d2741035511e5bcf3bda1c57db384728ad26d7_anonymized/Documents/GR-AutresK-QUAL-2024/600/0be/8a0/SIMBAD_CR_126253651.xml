@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126253651" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>Compte-rendu d'hospitalisation - Service MORBIHAN</title>
+    <effectiveTime value="20180404000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180404000000+0000"/>
+        <assignedAuthor>
+            <code code="MOR/178" displayName="MORBIHAN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>Docteur BREUSKIN</b>
+<br/>
+<br/>Patient à J16 post-opératoire.
+ <br/>Le patient va bien.
+ <br/>Petite désunion au niveau du trachéostome et au niveau de la prise de 
+ <br/>lambeau supra-claviculaire.
+ <br/>Aucun signe de pharyngostome.
+ <br/>
+<br/>On retire ce jour le salivary tube.
+ <br/>On confirme l'examen de TOGD.
+ <br/>Comme suggéré par le Docteur TEMAM, on valide une sortie demain sans 
+ <br/>reprise d'alimentation per-os.
+ <br/>
+<br/>On prévoit un rendez-vous en petite chirurgie dans le courant de la 
+ <br/>semaine prochaine et la semaine suivante (le 20.4).
+ <br/>
+<br/>On valide la sortie demain avec pansement à réaliser.
+ <br/>Prévoir une consultation avec le Dr ALKHASHNAM dans 2 mois.
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120938578" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>RESUME D'ENTREE - SERVICE REANIMATION</title>
+    <effectiveTime value="20200630000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200630000000+0000"/>
+        <assignedAuthor>
+            <code code="SAR/487" displayName="SOINS AIGUS REANIMATION"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b> Monsieur XXXXXX, âgé de 59 ans, a été admis dans le service <br/>de réanimation le 29 Juin 2020 à 20h15 pour difficultés de sevrage <br/>ventilatoire post opératoire.</b>
+<br/>
+<br/>
+<u>Médecin référent</u> : Dr FERRAND (oncologue).
+ <br/>Personne de confiance : sa fille, Madame RAFAEL BENAO DE JESUS 
+ <br/>Elisabeth 0627013395.
+ <br/>Directives anticipées : non abordées.
+ <br/>
+<br/>
+<u><b>Mode de vie</b></u>
+<b> :</b>
+<br/>
+<br/>- Situation familiale : marié, 3 enfants (30, 35 et 41 ans).
+ <br/>- Profession : ancien maçon. 
+ <br/>- Lieu de vie : habite dans un appartement avec son épouse. 
+ <br/>Appartement au 1er étage sans ascenseur, salle de bain avec baignoire.
+ <br/>Invalidité catégorie II.
+ <br/>- Patient d'origine portugaise en France depuis 25 ans.
+ <br/>- Tabac : Tabagisme chronique depuis l'âge de 16 ans, 38 PA, sevré en 
+ <br/>2014.
+ <br/>- Alcool : Alcoolisme chronique très sévère environ deux bouteilles 
+ <br/>de vin par jour, bière et pastis plus occasionnelle. Sevré en 2014.
+ <br/>
+<br/>
+<u><b>Antécédents familiaux</b></u>
+<b> :<br/></b>
+<br/>- Cancer du poumon chez un frère.
+ <br/>
+<br/>
+<u><b>Antécédents médicaux</b></u>
+<b> :<br/><br/></b> - Psoriasis diffus essentiellement aux mains et aux avant-pieds, 
+ <br/>pas de traitement systémique. 
+ <br/>- Crise comitiale généralisée avec dernier évènement il y a plus de 
+ <br/>10 ans, pas de suivi neurologique. 
+ <br/>- Hypothyroïdie.
+ <b><br/><br/><u>Allergie</u> : pas d'allergie connue.<br/><br/><u>Vaccinations</u> : anti-grippale et anti-pneumococcique : à demander.<br/><br/><u>Antécédents chirurgicaux</u> :</b>
+<br/>
+<br/>- 2017 Carcinome épidermoïde hypopharyngé (récidive) traité par PLT 
+ <br/>avec lambeau de grand pectoral et lambeau antéro-latéral de cuisse. 
+ <br/>
+<br/>- Trachéotomie. 
+ <br/>- Opéré d'une maladie de Dupuytren à 2 reprises (à gauche et à 
+ <br/>droite).
+ <br/>
+<br/>
+<u><b>Traitements habituels</b></u>
+<b> :</b>
+<br/>
+<br/>- LEVOTHYROX 25 μg.
+ <br/>- GARDENAL 100 mg 1 cp au coucher.
+ <br/>
+<br/>
+<u><b>Histoire de la maladie carcinologique</b></u>
+<b> :</b>
+<br/>
+<br/>- 2014: Diagnostic d'un carcinome épidermoïde oropharyngé HPV négatif 
+ <br/>et P16- initialement traité en 2014 par radio chimiothérapie, 
+ <br/>chirurgie de rattrapage en 2017 et nouvelle récidive locale en mars 
+ <br/>2018 opérée.
+ <br/>
+<br/>- Récidive locale en octobre 2019, avec une chimiothérapie par TPEX 
+ <br/>avec 4 cycles fini en janvier 2020, réévaluation montrant une bonne 
+ <br/>réponse métabolique.
+ <br/>
+<br/>- Progression après 2 mois de traitement d'entretien par CETUXIMAB le 
+ <br/>13/03/2020.
+ <br/>
+<br/>- Changement du traitement par immunothérapie avec NIVOLUMAB.
+ <br/>C1 NIVOLUMAB le 25/03. C6 NIVOLUMAB le 02/06.
+ <br/>
+<br/>- Réévaluation par scanner le 10/06/2020, montrant une progression 
+ <br/>des masses cervicales et apparition d'un épanchement pleural gauche.
+ <br/>Cette progression entraine un trajet fistuleux au contact de l'axe 
+ <br/>carotidien gauche entrainant un risque vasculaire. 
+ <br/>
+<br/>- Consultation avec son oncologue référent le 16/06/2020, le Dr 
+ <br/>FERRAND, et discussion en staff Onco ORL le même jour avec 
+ <br/>proposition thérapeutiques :
+ <br/>Arret du NIVOLUMAB et proposition de tenter un essai de phase 1
+ <br/>- Mono-chimiothérapie de type 5 FU, METHOTREXATE ou une reprise de 
+ <br/>TAXANE.
+ <br/>- Inclusion dans un essai clinique de phase I, inclusion dans le 
+ <br/>protocole UPSTREAM (bras combo d'immunothérapie MONALIZUMAB 
+ <br/>DURVALUMAB).
+ <br/>- Soins de confort exclusifs.
+ <br/>Un avis auprès des radiologues interventionnels a été pris le même 
+ <br/>jour de la consultation avec le Dr FERRAND, concernant le risque 
+ <br/>hémorragique de la tumeur. 
+ <br/>
+<br/>
+<u><b>Histoire de la maladie récente</b></u>
+<b> :</b>
+<br/>
+<br/>Intercure :
+ <br/>- 23/06/2020 : consultation à l'hôpital de jour en soin palliatif, la 
+ <br/>douleur n'est pas bien contrôlée malgré le DUROGESIC et interdose 
+ <br/>d'ORAMORPH. 
+ <br/>- 25/06/2020 : consultation en petite chirurgie pour sonde de 
+ <br/>gastrostomie mal posée. Remplacement de la sonde. Absence de douleurs 
+ <br/>pendant le geste.
+ <br/>- Le 26/06/2020 : décision de réévaluer le patient pour une 
+ <br/>éventuelle hospitalisation et de plus de PCA de morphine en situation 
+ <br/>d'hospitalisation.
+ <br/>
+<br/>Du 26/06 au 28/06 : hospitalisation au Rhone pour équilibration de la 
+ <br/>douleur : saignement cervical gauche et buccal dans la nuit du 27 au 
+ <br/>28 sans déglobulisation. Il est décidé que s'il y a de nouveaux un 
+ <br/>épidsode de saignement massif, le patient serait embolisé en RI.
+ <br/>
+<br/>- Scanner du 28/06 : Pas d'argument en faveur de saignement actif. 
+ <br/>Engainement de la carotide commune gauche jusqu'à la bifurcation avec 
+ <br/>trajet fistuleux au contact de l'axe carotidien et risque vasculaire 
+ <br/>majeur.
+ <br/>
+<br/>- Nouveau saignement le 29/06 donc passage en RI pour embolisation 
+ <br/>artérielle : artères et veines du cou et de la tête à gauche. 
+ <br/>
+<br/>En radiologie interventionnelle le Dr ROUX réalise :
+ <br/>- Une irrégularité de l'artère carotide commune sans saignement actif 
+ <br/> clair est mise en évidence.
+ <br/>- Fermeture de l'artère carotide externe avec plusieurs coils.
+ <br/>- Pose d'une endoprothèse vasculaire (stentgraft) de 8 mm/10 cm dans 
+ <br/>les artères carotides interne et commune. 
+ <br/>- Le patient continue de saigner sur le lit, nous décidons donc de 
+ <br/>faire une deuxième angiographie. Une ré-angiographie de l'artère 
+ <br/>carotide commune montre plusieurs thrombus dans le stent et une 
+ <br/>stase. 
+ <br/>Fermeture distale de l'artère carotide interne au niveau du siphon 
+ <br/>avec plusieurs coils et de l'entrée du stent avec un Plug. 
+ <br/>L'angiographie de contrôle montre une stase complète. 
+ <br/>Retrait de la matière et hémostase par Angioseal. 
+ <br/>
+<br/>Au total est réalisé une occlusion de tout l'axe carotidien à gauche, 
+ <br/>l'hémisphère gauche du cerveau est perfusé par la droite. 
+ <br/>
+<br/>Remplissage de 1000 ml de Ringer, transfusion de 3 CGR homologue et 1 
+ <br/>PFC. (+ 1 CGR et 1 PFC avant l'intervention).
+ <br/>
+<br/>En sortie de bloc, le patient présente des difficultés de sevrage 
+ <br/>ventilatoire, avec une désaturation à 75%. Mis en VACI en SSPI. 
+ <br/>Transfert en réanimation pour suite de la prise en charge.
+ <br/>
+<br/>
+<b>A L'ARRIVEE DANS LE SERVICE DE REANIMATION</b>
+<br/>
+<br/>
+<u><b>Examen clinique</b></u>
+<b> :<br/></b>
+<br/>Poids habituel = 65 Kg Poids à J3 = 67,5 Kg.
+ <br/>Taille = 1m65.
+ <br/>
+<br/>Pouls : 145/min.
+ <br/>Pression artérielle : 112/76 mmHg.
+ <br/>Température : 36,6°C.
+ <br/>SpO2 : 94%.
+ <br/>Fréquence respiratoire : 22/min.
+ <br/>
+<br/>BPS = 3.
+ <br/>Glasgow = 15.
+ <br/>
+<br/>- 
+ <u>Au plan général</u> : patient trachéotomisé, avec un oedeme 
+ <br/>cervico-facial important. Saignements au niveau cervical. 
+ <br/>
+<br/>- 
+ <u>Au plan cardio-vasculaire</u> : pouls périphériques palpés.
+ <br/>Pas de marbrures, mollets souples et indolores. L'auscultation 
+ <br/>retrouve des bruits du coeur réguliers sans souffle surajouté. 
+ <br/>
+<br/>- 
+ <u>Au plan pulmonaire</u> : ventilé en VAC 80% de FiO2 sur sa 
+ <br/>trachéotomie, sature à 93%. Auscultation peu contributive, le patient 
+ <br/>est emcombré. 
+ <br/>
+<br/>- 
+ <u>Au plan neurologique</u> : Glasgow 15. Pas de déficit sensitivo moteur. 
+ <br/>
+<br/>- 
+ <u>Au plan digestif</u> : abdomen souple et dépressible, bruits 
+ <br/>hydroaériques présents.
+ <br/>
+<br/>
+<u><b>Examens complémentaires</b></u>
+<b> :</b>
+<br/>
+<br/>- 
+ <u>Radiographie thoracique</u> : opacités alvéolaires bilatérales, 
+ <br/>extensives à droite.
+ <br/>
+<br/>
+<u><b>Bilan biologique</b></u> :
+ <br/>
+<br/>- 
+ <u>Ionogramme sanguin</u> : sodium 139 mmol/l, potassium 3,9 mmol/l, 
+ <br/>chlore 95 mmol/l, réserve alcaline 33 mmol/l, protides 75 g/l, 
+ <br/>urée 4,6 mmol/l, créatinine 48 μmol/l, glucose 9,2 mmol/l, 
+ <br/>calcium 2,21 mmol/l, phosphore 1,28 mmol/l, magnésium 0,64 mmol/l, 
+ <br/>albumine 31 g/l.
+ <br/>- 
+ <u>NFS</u> : GB 18 100/mm3, PNN 16 500/mm3, lymphocytes 700/mm3, 
+ <br/>Hb 14,4 g/dl, hématocrite 44,1%, plaquettes 221 000/mm3.
+ <br/>- 
+ <u>CRP</u> = 163,1 mg/l.
+ <br/>- 
+ <u>Bilan hépatique</u> : PAL 69 UI/L, ASAT 55 UI/l, ALAT 17 UI/l, 
+ <br/>GGT 93 UI/l, bilirubine totale 9 μmol/l.
+ <br/>- 
+ <u>Hémostase</u> : TP 79%, FII 113%, FV 163%, Fibrinogène 6,3 g/l.
+ <br/>- 
+ <u>Gaz du sang</u> : pH 7,32 , PaO2 87,8 mmHg, PaCO2 60,2 mmHg, 
+ <br/>réserve alcaline 29,6 mmol/l, saturation 95,8%. Lactate 2,1 mmol/l.
+ <br/>
+<br/>
+<b>PRISE EN CHARGE THERAPEUTIQUE INITIALE<br/></b>
+<br/>- Monitorage continu des constantes vitales et surveillance locale. 
+ <br/>- Pansement comrpessif cervical post-RI. 
+ <br/>- Ventilation en VAC sur trachéotomie. Aérosolthérapie.
+ <br/>- Reprise solumédrol IV.
+ <br/>- Déplétion par Lasilix devant des signes de surcharge 
+ <br/>post-transfusion massive, avec nécessité d'aspirations itératives de 
+ <br/>sécrétions type OAP par la trachéotomie.
+ <br/>- Contrôle de l'analgésie : PCA de morphine insuffisante, relayée par 
+ <br/>sufentanil, avec sédation légère par Propofol faibles doses devant 
+ <br/>l'agitation et l'anxiété majeure.
+ <br/>
+<b><br/>CONCLUSION INITIALE<br/><br/></b> - Patient de 59 ans, admis post radio-embolisation pour hémorragie 
+ <br/>ORL (embolisation de tout l'axe carotidien gauche) pour surveillance.
+ <br/>- Poursuite de la ventilation mécanique du fait d'une probable 
+ <br/>pneumopathie d'inhalation.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

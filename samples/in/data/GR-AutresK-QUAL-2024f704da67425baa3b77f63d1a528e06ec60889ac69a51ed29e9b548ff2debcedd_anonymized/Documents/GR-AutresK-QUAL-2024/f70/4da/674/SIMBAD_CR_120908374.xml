@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120908374" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>INTERNE DE GARDE - URGENCES - NUIT ET WEEK-END</title>
+    <effectiveTime value="20200702000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200702000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b><br/> </b></u>
+<b>SERVICE DE M\'c9DECINE D'URGENCE EN ONCOLOGIE<br/><u><br/>Compte-rendu de consultation<br/><br/> </u></b>
+<br/>
+<u><b>CONSULTATION DU 02/07/2020<br/></b></u>
+<br/>
+<u><b>ACCUEIL IAO / X<br/></b></u> (entre 08h30 et 19h30) 
+ <br/>
+<br/>
+<u><b>MEDECIN EXAMINATEUR</b></u> : Dr TEMAR
+ <br/>
+<br/>
+<u><b>MOTIF DE LA CONSULTATION</b></u> : DOULEURS ABDOMINALES, dénutrition.
+ <br/>
+<br/>
+<u><b>MEDECIN REFERENT</b></u> : Dr Colomba
+ <br/>
+<br/>
+<br/>Patiente agée de 67 ans sous Gemcitabine depuis le 20 avril 2020 pour 
+ <br/>un adénocarcinome séreux de haut grade en rechute platine résistante 
+ <br/>multitraité avec une ascite et des volumineux oedèmes des membres 
+ <br/>inférieurs en lien avec la poursuite évolutive et hypoalbuminémie 
+ <br/>mixte. 
+ <br/>
+<br/>Profil moléculaire: BRCA 1 et 2 sauvages, en constitutionnel et 
+ <br/>somatique, p53 muté.
+ <br/>
+<br/>
+<br/>
+<u><b>ANTECEDENTS NON ONCOLOGIQUES</b></u> :
+ <br/>
+<br/>- Appendicectomie
+ <br/>- Thrombose membre inférieur droit diagnostiqué en février 2017, sous 
+ <br/>anticoagulant.
+ <br/>- Pas d'allergie.
+ <br/>- Pas d'intoxication éthylo-tabagique.
+ <br/>
+<br/>
+<br/>
+<u><b>TRAITEMENT EN COURS</b></u> :
+ <br/>OXYNORMORO et OXYCONTIN LP 20 mg x2 et PARACETAMOL.
+ <br/>
+<br/>
+<br/>
+<u><b>HISTOIRE RECENTE</b></u> :
+ <br/>
+<br/>* Janvier 2020: progression sous TAXOL. Nouvelle ligne par CAELYX, 
+ <br/>C1 le 30/01/2020, C2 J1 le 06/03/2020.
+ <br/>
+<br/>*Avril 2020: Progression biologique et clinique, on avait 
+ <br/>décidé de débuter une chimiothérapie par Gemcitabine hebdomadaire 
+ <br/>800 mg/m2 du fait du risque de toxicité.
+ <br/>
+<br/>Toxicité hématologique notable avec sensation d'un bénéfice clinique.
+ <br/>
+<br/>A noter une nouvelle injection le 3/06 et le 10/06 et pas 
+ <br/>d'injection le 16.6.2020 à cause d'une anémie.
+ <br/>1re injection d'EPO réalisée le 25/06/2020, mal tolérée.
+ <br/>
+<br/>Derniere ponction d'ascite faite le 26/06/2020, la prochaine prévue 
+ <br/>pour demain le 03/07/2020.
+ <br/>
+<br/>
+<br/>
+<u><b>EXAMEN CLINIQUE A L'ARRIVEE</b></u> :
+ <br/>
+<br/>EVA à l'entrée : 4/10.
+ <br/>Poids à l'entrée : 68kg.
+ <br/>
+<br/>Pression artérielle : 88/56 mmHg.
+ <br/>Pouls : 115 /min.
+ <br/>Température : 37°C.
+ <br/>Saturation en air ambiant : 100 %.
+ <br/>
+<br/>OMS :2 paleur cutanéo-muqueuse.
+ <br/>Examen pulmonaire :RAS.
+ <br/>Examen cardiologique :RAS.
+ <br/>Examen abdominal : abdomen très distendu, peau tendue et fine, 
+ <br/>circulation veineuse, très sensible, un peu douloureux.
+ <br/>Aires ganglionnaires : libres.
+ <br/>Examen neurologique :RAS.
+ <br/>OMI : membres inferieurs très oedemateux.
+ <br/>
+<br/>Emission de gaz et de selles ce matin après une constipation de 2 
+ <br/>jours.
+ <br/>Pas de fièvre ni de syndrome inflammatoire clinique.
+ <br/>
+<br/>
+<u><b>EXAMENS COMPLEMENTAIRES A L'ARRIVEE</b></u> :
+ <br/>
+<br/>
+<u><b>Bilan biologique</b></u> :
+ <br/>
+<br/>
+<u>NFS</u> :
+ <br/>Leucocytes 20.5 G/L, PNN 20.2 G/L, Lymphocytes 0.2 G/L, Hb 9 g/dL, 
+ <br/>Plq 124000 mm3.
+ <br/>
+<br/>
+<u>Ionogramme</u> :
+ <br/>Na 130 mmol/L, K 4.5 mmol/L, Cl 97 mmol/L, RA 25 mmol/L, Prot 53 g/L,
+ <br/>Urée 17.4 mmol/L, Créat 85 μmol/L, Ca 1.93 mmol/L, Albumine 19 g/L, 
+ <br/>LDH 668 UI/L.
+ <br/>
+<br/>
+<u>Bilan hépatique</u> :
+ <br/>PAL 209 UI/L, ASAT 72 UI/L, ALAT 87 UI/L, GGT 47 UI/L,
+ <br/>Bilirubine totale 9 μmol/L.
+ <br/>
+<br/>
+<u>Bilan infectieux</u> :
+ <br/>CRP 264 mg/L.
+ <br/>
+<br/>
+<u>Radiographie thoracique</u>: normale
+ <br/>
+<br/>
+<u>ASP</u> : aérocolie.
+ <br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3>:<br/><br/></b></u>
+<b>Au final et après interrogatoire, patiente consulte car ne s'alimente <br/>pas depuis 3 jours avec des douleurs abdominales dues à la majoration <br/>de son ascite qui sera ponctionnée demain, troubles éléctrolytiques <br/>et hypoprotidémie dues à l'ascite, et toxicité hematologique avec <br/>lymphopénie sevrée, mise sce jour sous BACTRIM FORTE, prescription de <br/>bains de bouche à base de bicarbonates et de compléments alimentaires.<br/><br/></b>
+<br/>
+<u><b>CONDUITE A TENIR</b> :<br/></u>Aucune urgence ce jour, la patiente souhaitant sortir, reprise de 
+ <br/>l'alimentation ce jour(prise d'un repas complet aux urgences) après 
+ <br/>applications de bains de bouche.
+ <br/>La patiente aura sa ponction d'ascite demain.
+ <br/>Transmettre au medecin référent pour éventuelle discussion du 
+ <br/>traitement actuel car toxicité hemato.
+ <br/>Sortie ce jour.
+ <br/>
+<br/>
+<br/>Heure d'arrivée : 16h20
+ <br/>Heure de départ : nd
+ <br/>
+<br/>
+<b>RETOUR A DOMICILE <br/></b>
+<br/>
+<br/>
+<u><b><br/></b></u>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

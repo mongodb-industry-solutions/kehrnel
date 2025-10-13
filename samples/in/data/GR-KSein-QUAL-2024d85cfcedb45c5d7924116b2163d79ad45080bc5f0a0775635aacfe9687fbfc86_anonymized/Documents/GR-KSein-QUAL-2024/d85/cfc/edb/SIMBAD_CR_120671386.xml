@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120671386" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Docteur Mohamed KHETTAB - Consultation surveillance seins</title>
+    <effectiveTime value="20200806000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200807000000+0000"/>
+        <assignedAuthor>
+            <code code="CHL/511" displayName="CHEVILLY STRUCTURE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Je vois ce jour Madame XXXXXX XXXXXX, 63 ans, dans le cadre de la <br/>prise en charge d'un cancer du sein droit diagnostiqué initialement <br/>en 2016 triple négatif, en 8ème ligne de traitement par CARBOPLATINE <br/>débuté le 29/06/2020.</b>
+<br/>
+<br/>En l'absence du Docteur MOKDAD-ADI, je la vois pour la prise en 
+ <br/>charge de douleurs lombosacrées d'apparition récente.
+ <br/>Je rappelle que la patiente a bénéficié de 2 irradiations au niveau 
+ <br/>cervical et dorsal à Gustave Roussy. 
+ <br/>Ces douleurs sont apparues il y a environ 4-5 semaines avec une 
+ <br/>augmentation en intensité. 
+ <br/>Lors de la dernière injection de CARBOPLATINE (le 27/07/2020) nous 
+ <br/>avons demandé une IRM lombosacrée. 
+ <br/>Cette IRM faite le 04/08/2020 est en faveur d'une localisation 
+ <br/>secondaire postéro latérale droite de L4 étendue à la racine L4 
+ <br/>foraminale et à l'espace dural antérieur droit. Volumineuse 
+ <br/>localisation secondaire sacrée gauche n'atteignant pas le trou sacré 
+ <br/>gauche mais vraisemblablement le tronc lombo-sacré gauche en avant. 
+ <br/>Discartrhose L5-S1 (Traumatisme pendant l'adolescence). 
+ <br/>
+<br/>A l'examen : 
+ <br/>La patiente a des douleurs au niveau du bas du dos (lombo-sacrées) et 
+ <br/>une autre origine de douleurs commençant par le bassin gauche avec 
+ <br/>irradiation au niveau de la face antéro externe de la cuisse et de la 
+ <br/>jambe jusqu'au 5ème orteil du pied gauche.
+ <br/>Ces douleurs sont majorées par la position debout (charge), 
+ <br/>s'améliorant lors de la position allongée. Quelques réveils pendant 
+ <br/>la nuit (mauvaise posture).
+ <br/>Ces douleurs sont soulagées par la prise de DOLIPRANE, la patiente 
+ <br/>prend rarement le traitement (EFFERALGAN), Madame XXXXXX étant 
+ <br/>intolérante au : ACUPAN, TRAMADOL, Morphiniques. 
+ <br/>
+<br/>En pratique : 
+ <br/>
+<br/>Nous posons la question au comité os de la prise en charge 
+ <br/>(radiothérapie ?).
+ <br/>J'invite la patiente à prendre du DOLIPRANE de façon anticipée et ne 
+ <br/>pas dépasser 4 g/jour. 
+ <br/>Prescription d'une crème de KETOPROFENE. 
+ <br/>Une IRM cervico-dorsale est prévue lundi matin le 10/08/2020.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

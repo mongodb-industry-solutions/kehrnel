@@ -1,0 +1,185 @@
+# samples/mappings/neuroqol.yaml
+meta:
+  target_webtemplate: neuroqol_v0
+  default_source: csv1
+  translation:
+    enabled: true
+    source_lang: es
+    target_lang: en
+    cache_file: .kehrnel/translations.json
+
+sources:
+  csv1:
+    type: csv
+    columns: [paciente, centro, servicio, consulta, etapa, prom, fecha, pregunta, respuesta]
+    date_format: "%d/%m/%Y"
+
+input:
+  from: csv1
+  where:
+    - 'servicio == "VIH eVIHa"'
+    - 'respuesta != "N/A"'
+    - 'respuesta !~= "^\\s*$"'
+  group_by: [paciente, servicio, consulta]
+
+output:
+  prune_empty: true
+  filename: "neuroqol_{{ first.paciente }}_{{ first.consulta }}_{{ index|int }}.json"
+  composition_key: canonicalJSON
+
+  envelope:
+    ehr_id:            { get: { from: paciente }, transform: [strip] }
+    composition_date:  { expr: "{{ comp.context.start_time.value }}", transform: [wrap_date] }
+    archetype_node_id: { expr: "{{ comp.archetype_details.archetype_id.value }}" }
+    last_processed:    { expr: "{{ now_utc_iso() }}", transform: [wrap_date] }
+
+mappings:
+
+  # ───────── COMPOSITION header ─────────
+  "/language/code_string": { set: "en" }
+  "/territory/code_string": { set: "ES" }
+  "/category/defining_code/code_string": { set: "433" }
+
+  "/context/start_time/value":
+    get: { from: csv1, column: fecha }
+    transform: [date_iso]
+
+  # ───────── OBSERVATION scaffolding / timing ─────────
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/language/code_string": { set: "en" }
+
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data[at0001]/events[at0002]/name/value":
+    set: "Any event"
+
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data[at0001]/events[at0002]/time/value":
+    get: { from: csv1, column: fecha }
+    transform: [date_iso]
+    overwrite: last
+
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data[at0001]/origin/value":
+    get: { from: csv1, column: fecha }
+    transform: [date_iso]
+    overwrite: last
+
+  # ───────── EXACT QUESTION TEXT (Spanish) → ORDINAL CODES ─────────
+  # Q1
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at1000]/value":
+    when: 'pregunta == "Debido a mi enfermedad, algunas personas me evitaron"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "Nunca":         at1001
+      "Rara vez":      at1002
+      "Algunas veces": at1003
+      "A menudo":      at1004
+      "Siempre":       at1005
+
+  # Q2 
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at1010]/value":
+    when: 'pregunta ~= "(?i)excluid[oa]"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "(?i)^nunca$":          at1011
+      "(?i)^rara\\s*vez$":    at1012
+      "(?i)^algunas?\\s*veces$": at1013
+      "(?i)^a\\s*menudo$":    at1014
+      "(?i)^siempre$":        at1015
+
+  # Q3
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at1020]/value":
+    when: 'pregunta == "Debido a mi enfermedad, la gente evitó mirarme"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "Nunca":         at1021
+      "Rara vez":      at1022
+      "Algunas veces": at1023
+      "A menudo":      at1024
+      "Siempre":       at1025
+
+  # Q4
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at1030]/value":
+    when: 'pregunta == "Me sentí avergonzado/a de mi enfermedad"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "Nunca":         at1031
+      "Rara vez":      at1032
+      "Algunas veces": at1033
+      "A menudo":      at1034
+      "Siempre":       at1035
+
+  # Q5
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at1040]/value":
+    when: 'pregunta == "Debido a mi enfermedad, algunas personas parecieron sentirse incómodos conmigo"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "Nunca":         at1041
+      "Rara vez":      at1042
+      "Algunas veces": at1043
+      "A menudo":      at1044
+      "Siempre":       at1045
+
+  # Q6
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at1050]/value":
+    when: 'pregunta == "Me sentí avergonzado/a debido a mis limitaciones físicas"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "Nunca":         at1051
+      "Rara vez":      at1052
+      "Algunas veces": at1053
+      "A menudo":      at1054
+      "Siempre":       at1055
+
+  # Q7
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at1060]/value":
+    when: 'pregunta == "Debido a mi enfermedad, la gente fue poco amable conmigo"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "Nunca":         at1061
+      "Rara vez":      at1062
+      "Algunas veces": at1063
+      "A menudo":      at1064
+      "Siempre":       at1065
+
+  # Q8
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at1070]/value":
+    when: 'pregunta == "Algunas personas actuaron como si fuera mi culpa tener esta enfermedad"'
+    get:  { from: csv1, column: respuesta }
+    map:
+      "Nunca":         at1071
+      "Rara vez":      at1072
+      "Algunas veces": at1073
+      "A menudo":      at1074
+      "Siempre":       at1075
+
+  # Observations (free text) – do NOT translate, keep as-is
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at1900]/value/value":
+    when: 'pregunta == "Observaciones"'
+    get: { from: csv1, column: respuesta }
+    translate: no-cache
+    null_if_empty: true
+        
+  # T-score (accepts variants like "Estigma (T-Score)" / "T Score" / "T-score")
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at1805]/value/magnitude":
+    when: 'pregunta ~= "(?i)\\b(t\\s*[-–]?\\s*score)\\b"'
+    get: { from: csv1, column: respuesta }
+    transform:
+      # normalize commas to dots, then parse
+      - regex_sub: ["(,)", "."]
+      - float
+    overwrite: last
+
+  # REQUIRED units so DV_QUANTITY isn't pruned
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at1805]/value/units":
+    when: 'pregunta ~= "(?i)\\b(t\\s*[-–]?\\s*score)\\b"'
+    set: "1"
+    overwrite: last
+
+  # Severity band from T-score (optional convenience)
+  "/content[openEHR-EHR-OBSERVATION.neuroqol.v0]/protocol[at0107]/items[openEHR-EHR-CLUSTER.neuroqol_interpretation.v0]/items[at0004]/value":
+    when: 'pregunta == "Estigma (T-Score)"'
+    get: { from: csv1, column: respuesta }
+    transform: [float]
+    map_ranges:
+      "0..55.4"   : at0005   # Within normal limits
+      "56.2..59.3": at0006   # Mild
+      "60.1..69.6": at0007   # Moderate
+      "70.8..200" : at0008   # Severe
+    overwrite: last

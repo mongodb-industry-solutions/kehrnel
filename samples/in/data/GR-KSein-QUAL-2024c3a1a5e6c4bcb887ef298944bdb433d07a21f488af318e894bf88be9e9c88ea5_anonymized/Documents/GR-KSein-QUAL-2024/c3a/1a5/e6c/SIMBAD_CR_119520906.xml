@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_119520906" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION DE FIN DE TRAITEMENT DE RADIOTHERAPIE EXTERNE</title>
+    <effectiveTime value="20210120000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20210120000000+0000"/>
+        <assignedAuthor>
+            <code code="RTE/414" displayName="RADIOTHERAPIE EXTERNE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>RESUME DE FIN DE RADIOTHERAPIE<br/><br/>Dicté par : </b> Kevin Berthelot
+ <b><br/>Dicté le : </b> 07/01/2021 
+ <b><br/>Service : </b> RTE-ONCOLOGIE RADIOTHERAPIE 
+ <br/>
+<b>Type de document : </b> RTE CZ FIN DE TT 031 
+ <br/>
+<b>Ref :</b> 1212600 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire : FTV**<u><br/><br/></u>Compte rendu de fin de traitement de Madame XXXXXX, 41 ans. <br/></b> Madame XXXXXX a reçu une radiothérapie antalgique dans le cadre d'une 
+ <br/>récidive cervicale gauche d'un cancer du sein. Une irradiation avait 
+ <br/>été réalisée lors du traitement initial en 2015 à Bordeaux.
+ <br/>
+<br/>
+<u><b>PLANIFICATION ET DEROULEMENT DU TRAITEMENT</b></u> :
+ <br/>
+<b> <br/></b> Acquisition des données anatomiques par coupes scanographiques 
+ <br/>jointives en vue d'une dosimétrie prévisionnelle, respectant les 
+ <br/>recommandations publiées.
+ <br/>
+<br/>La radiothérapie s'est donc déroulée du 22 décembre au 30 décembre 
+ <br/>2020 au cours de cinq séances de 4 Gy. Sur l'appareil versa HD n° 5 
+ <br/>et l'appareil versa HD n° 2 en technique IM RT, avec une interruption 
+ <br/>de plus de 3 jours entre le 23 décembre et le 28 décembre.
+ <br/>
+<br/>
+<b> Il a été réalisé une radiothérapie à la dose de 20 Gy au niveau de <br/>la récidive cervicale gauche<br/><br/></b> Technique : IMRT
+ <br/>Fractionnement : 4 Gy par séance, 5 séances par semaine.
+ <br/>Appareil : VERSA 
+ <br/>Date de début de la radiothérapie : 22.12.2020
+ <br/>Date de fin de la radiothérapie : 30.12.2020
+ <br/>Nombre de séances : 5
+ <br/>Nombre de jours (étalement) : 5
+ <br/>Interruption : NON 
+ <br/>
+<br/> Le compte rendu technique détaillé est disponible sur demande.
+ <br/>
+<br/>
+<br/>
+<u><b>TOLERANCE ET POINTS PARTICULIERS EN FIN DE RADIOTHERAPIE</b></u>
+<br/>
+<br/>Au décours de la radiothérapie la patiente présente une amélioration 
+ <br/>de ses douleurs, mais présente également un abcès de la gencive du 
+ <br/>côté gauche en proximité de zones irradiées. Une consultation chez un 
+ <br/>dentiste a été pris et a permis d'évacuer du pus. La patiente n'a pas 
+ <br/>présenté de syndrome fébrile mais une antibiothérapie a été 
+ <br/>entreprise à visée préventive de complications infectieuses.
+ <br/>Absence de dysphagie ou d'autres symptômes au décours de la 
+ <br/>radiothérapie.
+ <br/>
+<br/>
+<u><b>SUIVI ULTERIEUR, RECOMMANDATIONS ET FUTURS RENDEZ-VOUS<br/></b></u>
+<br/>Prochaine consultation le 18/01/2021 avec le Docteur MOKDAD-ADI 
+ <br/>(oncologue médical) pour la suite de la prise en charge.
+ <br/>
+<br/>Nous restons à la disposition de la patiente et de nos confrères 
+ <br/>oncologues médicaux.
+ <br/>
+<br/>
+<br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Kevin BERTHELOT <br/>Le jeudi 7 janvier 2021 à 12:00</b>
+<br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124637396" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION EN COURS DE RADIOTHERAPIE</title>
+    <effectiveTime value="20181207000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181211000000+0000"/>
+        <assignedAuthor>
+            <code code="RTE/414" displayName="RADIOTHERAPIE EXTERNE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Consultation hebdomadaire de radiothérapie
+ <br/>
+<br/>Nom du patient : XXXXXX, XXXXXX XXXXXX 
+ <br/>
+<br/>Numéro dossier : XXXXXX
+ <br/>Date de naissance : XXXXXX
+ <br/>
+<br/>Date de consultation : 07/12/2018
+ <br/>
+<br/>Consultation réalisée par : Wael Salem ZRAFI
+ <br/>
+<br/>Territoire d'irradiation, dose prévue : 
+ <br/>
+<br/>* PTV1 T3-T4 30,00 Gy
+ <br/>
+<br/>
+<br/>
+<b>Dose à ce jour : 15 Gy</b>
+<br/>
+<br/>Evaluation :
+ <br/>EVA - Pas de douleur
+ <br/>OMS - 0 Activité normale
+ <br/>Poids (kg) (pc en kg) - 52 
+ <br/>
+<br/>Effets indésirables :
+ <br/>Dermatite liée à rad. - Aucune
+ <br/>Erythème cutané - 0
+ <br/>Oesophagite - Pas d'oesophagite
+ <br/>
+<br/>Notes Sein Hebdo - poursuite de l'irradiation 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

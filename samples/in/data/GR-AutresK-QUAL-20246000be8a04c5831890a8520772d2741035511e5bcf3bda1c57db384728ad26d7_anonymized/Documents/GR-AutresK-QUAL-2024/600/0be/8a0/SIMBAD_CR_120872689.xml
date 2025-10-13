@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120872689" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>EMASP - CR HOSPI SOINS PALLIATIFS - Dr Anda SAMPETREAN</title>
+    <effectiveTime value="20200708000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200708000000+0000"/>
+        <assignedAuthor>
+            <code code="134/536" displayName="EMASP"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>Equipe Mobile d'Accompagnement et de Soins Palliatifs (EMASP) - <br/>Département de Soins de Support (DISSPO)<br/><br/><br/> Dicté par : </b> Docteur Anda Sampetrean
+ <b><br/>Dicté le : </b> 06/07/2020 
+ <b><br/>Service : </b> 134 - EMASP 
+ <br/>
+<b>Type de document : </b> 134 CC CONSULTATION H 
+ <br/>
+<b>Ref :</b> 1039322 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire :</b> TEC/a 
+ <br/>
+<br/>
+<u><b>EVALUATION AU LIT DU PATIENT PAR L'EMASP<br/> </b></u>
+<br/>
+<b>Date de l'évaluation initiale : 06/07/2020<br/></b>
+<br/>Patient vu par : Dr SAMPETREAN 
+ <br/>Patient vu régulièrement en Hôpital de Jour et en lit identifié.
+ <br/>
+<br/>
+<u><b>Oncologue référent</b></u>
+<b> : Dr FERRAND<br/><u><br/>INFORMATIONS COMPLEMENTAIRES</u> :<br/>Directives anticipées</b> : non abordées 
+ <br/>
+<b>Personne de confiance déclarée </b> : sa fille, Madame RAFAEL BENAO DE 
+ <br/>JESUS Elisabeth 
+ <br/>
+<b>Intervenants au domicile </b> : IDE 
+ <br/>
+<br/>
+<u><b>Antécédents chirurgicaux<br/></b></u> - Carcinome épidermoïde hypopharyngé (récidive) traité par PLT avec 
+ <br/>lambeau de grand pectoral et lambeau antéro-latéral de cuisse, 
+ <br/>- Trachéotomie, 
+ <br/>- Opéré d'une maladie de Dupuytren à 2 reprises (à gauche et à 
+ <br/>droite).
+ <br/>
+<br/>
+<u><b>Antécédents médicaux</b></u>
+<br/>- Crise comitiale généralisée avec dernier évènement il y a plus de 
+ <br/>10 ans, pas de suivi neurologique, que l'on recommande notamment sur 
+ <br/>le plan thérapeutique, 
+ <br/>- Psoriasis diffus essentiellement aux mains et aux avant-pieds, pas 
+ <br/>de traitement systémique, 
+ <br/>- Hypothyroïdie, 
+ <br/>- Allergie : aucune.
+ <u><b><br/></b></u>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE ET SES COMPLICATIONS</b></u>
+<br/>Diagnostic d'un carcinome épidermoïde oropharyngé HPV négatif 
+ <br/>initialement traité en 2014 par radio chimiothérapie, avec une 
+ <br/>première récidive locale en mars 2018 opérée.
+ <br/>Deuxième récidive locale en octobre 2019, avec une chimiothérapie par 
+ <br/>TPEX- 4 cycles finis en janvier 2020, réévaluation montrant une bonne 
+ <br/>réponse métabolique. 
+ <br/>Progression après 2 mois de traitement d'entretien par CETUXIMAB, 
+ <br/>avec changement du traitement par immunothérapie avec NIVOLUMAB.
+ <br/>
+<br/>Screening KOTIP : HRAS non muté, mutation oncogénique délétère de 
+ <br/>TP53, variante de signification inconnue de CDK N2A. 
+ <br/>
+<br/>
+<u><b>HISTOIRE RECENTE</b></u> : 
+ <br/>Réévaluation par scanner le 10/06/2020, montrant une progression des 
+ <br/>masses cervicales selon RECIST apparition d'un épanchement pleural 
+ <br/>gauche. Cette progression entraine un trajet fistuleux au contact de 
+ <br/>l'axe carotidien gauche entrainant un risque vasculaire. 
+ <br/>Consultation avec son oncologue référent le 16/06/2020, le Dr 
+ <br/>FERRAND, et discussion en staff Onco ORL le même jour avec 
+ <br/>proposition thérapeutiques :
+ <br/>- mono-chimiothérapie de type 5 FU, METHOTREXATE ou une reprise de 
+ <br/>TAXANE.
+ <br/>- inclusion dans un essai clinique de phase I, ou inclusion si 
+ <br/>patient non incluable dans un essai de phase I, inclusion dans le 
+ <br/>protocole UPSTREAM (bras combo d'immunothérapie MONALIZUMAB 
+ <br/>DURVALUMAB) 
+ <br/>- soins de confort exclusifs.
+ <br/>- un avis auprès des radiologues interventionnels a été pris le même 
+ <br/>jour de la consultation avec le docteur FERRAND, concernant le risque 
+ <br/>hémorragique de la tumeur. 
+ <br/>- 23/06/2020 : consultation à l'hôpital de jour en soin palliatif, la 
+ <br/>douleur n'est pas bien contrôlée malgré le DUROGESIC et interdose 
+ <br/>d'ORAMORPH. 
+ <br/>- 25/06/2020 : consultation en petite chirurgie pour sonde de 
+ <br/>gastrostomie mal posée. Remplacement de la sonde. Absence de douleurs 
+ <br/>pendant le geste.
+ <br/>- Le 26/06/2020 : décision de réévaluer le patient pour une 
+ <br/>éventuelle hospitalisation et de plus de PCA de morphine en situation 
+ <br/>d'hospitalisation.
+ <br/>
+<br/>Du 26/06 au 28/06 : hospitalisation au Rhone pour équilibration de la 
+ <br/>douleur : saignement cervical gauche et buccal dans la nuit du 27 au 
+ <br/>28 sans déglobulisation. Il est décidé que s'il y a de nouveaux un 
+ <br/>épidsode de saignement massif, le patient serait embolisé en RI.
+ <br/>
+<br/>- Scanner du 28/06 : Pas d'argument en faveur de saignement actif. 
+ <br/>Engainement de la carotide commune gauche jusqu'à la bifurcation avec 
+ <br/>trajet fistuleux au contact de l'axe carotidien et risque vasculaire 
+ <br/>majeur.
+ <br/>
+<br/>- Nouveau saignement le 29/06 donc passage en RI pour embolisation 
+ <br/>artérielle : artères et veines du cou et de la tête à gauche. 
+ <br/>
+<br/>En radiologie interventionnelle le Dr ROUX réalise :
+ <br/>- Une irrégularité de l'artère carotide commune sans saignement actif 
+ <br/> clair est mise en évidence.
+ <br/>- Fermeture de l'artère carotide externe avec plusieurs coils.
+ <br/>- Pose d'une endoprothèse vasculaire (stentgraft) de 8 mm/10 cm dans 
+ <br/>les artères carotides interne et commune. 
+ <br/>- Le patient continue de saigner sur le lit, nous décidons donc de 
+ <br/>faire une deuxième angiographie. Une ré-angiographie de l'artère 
+ <br/>carotide commune montre plusieurs thrombus dans le stent et une 
+ <br/>stase. 
+ <br/>Fermeture distale de l'artère carotide interne au niveau du siphon 
+ <br/>avec plusieurs coils et de l'entrée du stent avec un Plug. 
+ <br/>L'angiographie de contrôle montre une stase complète. 
+ <br/>Retrait de la matière et hémostase par Angioseal. 
+ <br/>
+<br/>Au total est réalisé une occlusion de tout l'axe carotidien à gauche, 
+ <br/>l'hémisphère gauche du cerveau est perfusé par la droite. 
+ <br/>
+<br/>En sortie de bloc, le patient présente des difficultés de sevrage 
+ <br/>ventilatoire, avec une désaturation à 75%, prise en charge en 
+ <br/>réanimation pour la suite de la prise en charge.
+ <br/>
+<br/>Le 30/06/2020 staff oncologie médicale CCF : compte-tenu de la 
+ <br/>progression rapide sous typEx puis Nivolumab, soins de confort 
+ <br/>exclusifs ou Méthotrexate si amélioration post-embolisation.
+ <br/>
+<br/>
+<u><b>MODE DE VIE</b></u>
+<br/>- marié, a 3enfants (30, 35 et 41 ans) 
+ <br/>- habite dans un appartement avec son épouse. Appartement au 1er 
+ <br/>étage sans ascenseur, salle de bain avec baignoire.
+ <br/>Invalidité catégorie II.
+ <br/>
+<br/>
+<u><b>TRAITEMENT EN COURS</b></u>
+<br/>PULMICORT aérosol.
+ <br/>TERBUTALINE aérosol 
+ <br/>DUROGESIC 75 μg/h tous les 3 jours
+ <br/>LEVOTHYROX 25 μg
+ <br/>ORAMORPH 30 mg interdose 
+ <br/>LAROXYL 5 gouttes le soir
+ <br/>IMOVANE 7,5 mg le soir
+ <br/>PRIMPERAN 1 comprimé 3x/jour si besoin
+ <br/>Huile de PARAFFINE
+ <br/>GARDENAL 100 mg/jour
+ <br/>
+<br/>
+<u><b>BIOLOGIE du 06/07/2020 :<br/></b></u> Hémoglobine 11,9 g/dl, leucocytes 10 400, PNN 8600, plaquettes 283 
+ <br/>000 
+ <br/>Sodium 135 mmol/l, potassium 3,6 mmol/l
+ <br/>Créatinine 49 μmol/l avec une clairance de la créatinine à 114 ml/min
+ <br/>Calcium corrigé 2,34 mmol/l, magnésium 0,8 mmol/l, phosphore 1,02 
+ <br/>mmol/l 
+ <br/>Bilan hépatique avec ASAT 25 UI/l, ALAT 43 UI/l, PAL 119 UI/l, Gamma 
+ <br/>GT 455 UI/l 
+ <br/>Bilirubine totale 21 μmol/litre 
+ <br/>CRP 176,6 mg/l 
+ <br/>Albumine 29 g/l
+ <br/>
+<br/>
+<u><b>EVALUATION MEDICO-SOIGNANTE DES SYMPT\'d4MES</b></u>
+<b> :</b>
+<br/>PS : 4
+ <br/>TA 134/81 Pouls 105/min 
+ <br/>Température 36,7° FR 21/min 
+ <br/>Sat O2 98 % sous 2 l d'oxygène 
+ <br/>
+<br/>
+<b>Sur le plan des douleurs </b> :
+ <br/>Persistance des douleurs au niveau tumoral, cotées à 7/10 de fond, 
+ <br/>soulagées par les bolus de PCA
+ <br/>PCA Oxycodone à 6 mg/h de base avec des bolus à 6 mg, avec bonne 
+ <br/>tolérance pour l'instant. Alentours 15 demandes sur 8 reçus par jour. 
+ <br/>PSE Acupan 120 mg/jour.
+ <br/>M. Da Silva se dit soulagé par les bolus avec un effet qui persiste.
+ <br/>
+<br/>
+<b>Sur le plan cardio-pulmonaire </b> :
+ <br/>Sous traitement par Tazocilline pour une pneumopathie d'inhalation 
+ <br/>suite aux épisodes de saignement. ECBC positif à protéus mirabilis 
+ <br/>sensible à la Tazocilline.
+ <br/>Fistule tumorale à la peau au niveau cervical gauche, avec 
+ <br/>extériorisation de saignement (poche de stomie adaptée, saignement de 
+ <br/>sang rouge foncé de petite quantité).
+ <br/>Trachéotomie en place, oxygénothérapie adaptée.
+ <br/>A priori, pas de difficulté respiratoire.
+ <br/>
+<br/>
+<b>Sur le plan digestif </b> : 
+ <br/>GPE en place, liquide noirâtre visible au niveau de la sonde, mise en 
+ <br/>aspiration ce jour (sang avalé ?).
+ <br/>Abdomen souple non douloureux à la palpation.
+ <br/>
+<br/>
+<b>Sur le plan des muqueuses et du tégument</b> :
+ <br/>Infiltration tumorale cervicale avec troubles trophiques au niveau du 
+ <br/>visage, tumeur fistulisée au niveau cervical gauche avec saignements 
+ <br/>à 
+ <br/>type de petites quantités.
+ <br/>Pas d'OMI.
+ <br/>
+<br/>
+<b>Sur le plan neuropsychologique </b> :
+ <br/>Le patient s'endort pendant le l'interrogatoire, mais il répond quand 
+ <br/>même aux questions.
+ <br/>Me dit se lever plusieurs fois par nuit, sommeil non récupérateur
+ <br/>
+<br/>
+<b>Sur le plan de la Mobilité / Autonomie :<br/></b> Patient grabataire
+ <br/>
+<br/>
+<br/>
+<u><b>EVALUATION DES CONNAISSANCES DU PATIENT ET DE SON ENTOURAGE</b></u>
+<b> :</b>
+<br/>Interrogatoire difficile à cause de la somnolence du patient.
+ <br/>Discussion avec les oncologues sur l'avenir, un transfert en USP 
+ <br/>serait le plus raisonnable, vu l'arrêt des traitements spécifiques 
+ <br/>dans le contexte d'altération de l'état général et progression 
+ <br/>tumorale clinique.
+ <br/>
+<br/>
+<u><b>PROPOSITIONS APR\'c8S L'EVALUATION INITIALE</b></u>
+<b> :</b>
+<br/>Poursuite de la PCA d'Oxycodone à la même dose, avec possibilité 
+ <br/>d'augmenter les doses si douleurs non soulagées.
+ <br/>PSE Hypnovel 0,2 mg/h pendant la nuit si persistance des troubles du 
+ <br/>sommeil.
+ <br/>
+<br/>
+<u><b>EVOLUTION ET DEVENIR</b></u>
+<b> :</b>
+<br/>- Pneumopathie d'inhalation pour laquelle le patient a été traité par 
+ <br/>10 jours de TAZOCILLINE 4g 4 fois par jour.
+ <br/>- Saignement le 28/06 : radioembolisation de l'axe carotidien gauche. 
+ <br/>Pas de déficit ensuite. Passage en Réanimation pour difficultés de 
+ <br/>ventilation initialement puis sevré. Pas de récidive du saignement.
+ <br/>- Transfer en USP Paul Brousse le 09/07/2020.
+ <br/>
+<br/>
+<br/>
+<b>Courrier rédigé avec un logiciel de reconnaissance vocale pouvant <br/>comporter quelques imperfections orthographiques.</b>
+<br/>
+<br/>
+<br/>
+<br/>
+<b><br/><br/>Docteur Anda SAMPETREAN</b>
+<br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

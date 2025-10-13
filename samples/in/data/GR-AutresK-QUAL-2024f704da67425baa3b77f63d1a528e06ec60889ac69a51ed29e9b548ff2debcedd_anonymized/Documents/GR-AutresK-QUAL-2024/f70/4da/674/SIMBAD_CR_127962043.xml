@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127962043" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncogénétique - DR. Olivier CARON</title>
+    <effectiveTime value="20170613000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170613000000+0000"/>
+        <assignedAuthor>
+            <code code="132/26" displayName="CTE 132 - ONCOGENETIQUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patiente vue sous délégation du Docteur CARON
+ <br/>
+<br/>Patiente vue par le Docteur Pernelle LAVAUD, interne.
+ <br/>
+<br/>Patiente adressée par le Docteur MICHELS en raison de ses antécédents 
+ <br/>personnels de cancer ovarien séreux de haut grade.
+ <br/>Profession : femme au foyer.
+ <br/>Origine : polonaise.
+ <br/>Venue accompagnée de son époux.
+ <br/>
+<br/>
+<b>ANTECEDENTS</b>
+<br/>* 
+ <b>Personnels</b> : 
+ <br/>Patiente âgée de 64 ans.
+ <br/>
+<br/>Age à la ménarche : 14 ans.
+ <br/>Ménopause : 49 ans. Pas de traitement hormonal substitutif.
+ <br/>G3 P3.
+ <br/>Pas d'intoxication alcoolo-tabagique.
+ <br/>
+<br/>Découverte du cancer de l'ovaire suite à une thrombose veineuse 
+ <br/>profonde inaugurale en février 2017.
+ <br/>Devant des localisations péritonéales et pleurales, une 
+ <br/>chimiothérapie première par CARBOPLATINE et TAXOL est débutée dont la 
+ <br/>patiente a reçu la 4ème cure le 05 juin.
+ <br/>
+<br/>Pas d'autre antécédent médical particulier.
+ <br/>
+<br/>Mammographie et échographie réalisées en février 2017 classée ACR3 à 
+ <br/>droite avec un kyste du quandrant inférieur du sein droit de 7 mm. Le 
+ <br/>contrôle en juin était rassurant (aux dures de la patiente résultats 
+ <br/>non vus).
+ <br/>
+<br/>* 
+ <b>Familiaux</b> : 
+ <br/>. Enfants : 3 garçons de 28, 30 et 33 ans.
+ <br/>. Fratrie : 1 frère décédé à un jeune âge suite à un accident.
+ <br/>
+<br/>. Branche maternelle :
+ <br/>Cancer de la prostate chez un oncle à l'âge de 76 ans.
+ <br/>Pas d'autre antécédent de cancer dans la famille.
+ <br/>
+<br/>. Branche paternelle :
+ <br/>Père décédé d'un cancer du pancréas à l'âge de 50 ans.
+ <br/>Le reste de la famille est malheureusement décédé de manière précoce 
+ <br/>dans les camps de concentration durant la seconde guerre mondiale et 
+ <br/>n'est donc pas informatif.
+ <br/>
+<br/>
+<b><h3>Conclusion</h3></b> : 
+ <br/>
+<br/>Devant l'antécédent personnel de carcinome ovarien séreux de haut 
+ <br/>grade à l'âge de 64 ans il est légitime de rechercher une 
+ <br/>prédisposition génétique au cancer sein/ovaire chez cette patiente.
+ <br/>
+<br/>On retient l'indication d'analyse constitutionnelle des gènes BRCA1, 
+ <br/>BRCA2 avec une probabilité faible d'identifier une mutation.
+ <br/>
+<br/>
+<b>EN PRATIQUE </b> : 
+ <br/>
+<br/>Explications sur les causes multifactorielles du cancer, le rôle des 
+ <br/>facteurs génétiques, environnementaux et de leur interaction.
+ <br/>
+<br/>Explications sur le syndrome de prédisposition héréditaire au cancer 
+ <br/>du sein et de l'ovaire, son mode de transmission, les risques de 
+ <br/>cancers associés, les moyens de dépistage et de prévention 
+ <br/>(chirurgie).
+ <br/>
+<br/>Prescription d'une analyse constitutionnelle des gènes BRCA1 et BRCA2 
+ <br/>après avoir informé la patiente des avantages et inconvénients de 
+ <br/>connaître son statut génétique.
+ <br/>Consentements éclairés signés.
+ <br/>Prélèvement sanguin fait ce jour. 
+ <br/>
+<br/>On insiste sur des délais d'environ 6 mois.
+ <br/>
+<br/>L'identification d'une mutation délétère permettrait la réalisation 
+ <br/>des tests présymptomatiques dans la famille.
+ <br/>La patiente aurait la responsabilité légale de communiquer cette 
+ <br/>information à ses proches. Nous l'assisterions dans cette démarche.
+ <br/>
+<br/>La patiente sera informée par courrier de la mise à disposition des 
+ <br/>résultats, qui lui seront communiqués au cours d'une nouvelle 
+ <br/>consultation afin de les commenter et de préciser la conduite à tenir 
+ <br/>et la surveillance à préconiser chez ses apparentés.
+ <br/>
+<br/>Compte-rendu relu et validé par le DR CARON.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

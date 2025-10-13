@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125428597" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'URGENCE</title>
+    <effectiveTime value="20180810000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180810000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u>Médecin examinateur</u> : GALLET
+ <br/>
+<br/>
+<u>Motif de consultation et histoire actuelle</u>
+<br/>Patient venu aux urgences pour dyspnée d'effort à minima et 
+ <br/>encombrement bronchique.
+ <br/>Pas de notion de fausse route, de fièvre ou de sueur inhabituelle.
+ <br/>Notion de douleur épigastrique intermittente.
+ <br/>
+<br/>
+<u>Antécédents</u>
+<br/>Carcinome épidermoïde de l'oropharynx bilatéral traité par 
+ <br/>radiochimiothérapie en octobre 2014.
+ <br/>Deuxième localisation de carcinome épidermoïde hypopharyngé droit 
+ <br/>traité par pharyngolaryngectomie totale de rattrapage et lambeau de 
+ <br/>grand pectoral le 13/11/2017. Problématique de pharyngostome ayant 
+ <br/>nécessité de multiples interventions. Reprise de cervicotomie avec 
+ <br/>rétablissement de la continuité digestive avec lambeau entéro-latéral 
+ <br/>de cuisse le 19/03/2018.
+ <br/>
+<br/>
+<u>Examen clinique</u>
+<br/>Constantes : TA = 125/73 mmHg, pouls = 90 b/mn, T° = 36,3°C, SAT en 
+ <br/>AA = 100%, EVA = 4/10, poids = 67 kg.
+ <br/>Murmure vésiculaire bilatéral, symétrique, sans bruit surajouté.
+ <br/>Encombrement avec graillonement intense à chaque respiration, crachat 
+ <br/>abondant.
+ <br/>Abdomen souple, indolore, dépressible.
+ <br/>Pas de trouble du transit.
+ <br/>Pas de SFU.
+ <br/>Bruits du coeur clairs et réguliers, sans souffle perçu.
+ <br/>
+<br/>
+<u>Résultats du bilan para-clinique</u>
+<br/>PNN à 7,9 G/L mais Hématocrite à 43,8% contre 36,5% il y a 4 mois et 
+ <br/>albumine a 41 g/L contre 37 g/L il y a 5 mois = possible 
+ <br/>déshydratation.
+ <br/>CRP stable.
+ <br/>Ionogramme, Bilan hépatique, hémostase sans particularité.
+ <br/>Troponine négative.
+ <br/>
+<br/>ECG : rythme sinusal et régulier, QRS fin, pas de trouble de la 
+ <br/>repolarisation.
+ <br/>
+<br/>
+<u>AU TOTAL</u>
+<br/>Dyspnée minime sur encombrement.
+ <br/>
+<br/>
+<u>Conduite à tenir</u>
+<br/>Aspiration bronchique ramenant du liquide clair. Plus de dyspnée 
+ <br/>après l'aspiration.
+ <br/>Consigne donnée de bien s'hydrater et de reconsulter si fièvre ou 
+ <br/>apparition de crachat jaunatre.
+ <br/>
+<br/>
+<b>RETOUR A DOMICILE</b>
+<br/>Heure d'arrivée : 10h35
+ <br/>Heure de départ : ND
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

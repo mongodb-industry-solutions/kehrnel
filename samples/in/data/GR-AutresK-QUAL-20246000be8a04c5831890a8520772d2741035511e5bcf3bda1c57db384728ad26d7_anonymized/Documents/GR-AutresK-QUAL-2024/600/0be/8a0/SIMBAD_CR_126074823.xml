@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126074823" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>PETITE CHIRURGIE ORL</title>
+    <effectiveTime value="20180427000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180502000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Patient vu par l'Interne CULIE Dorian<br/><br/><br/></b></u> Patient vu une semaine après la reprise alimentaire.
+ <br/>Cette dernière est toujours difficile, en raison d'une diffulté de 
+ <br/>progression du bol alimentaire dans la cavité buccale ainsi que 
+ <br/>l'oropharynx. Il arrive cependant à prendre les textures très lisses 
+ <br/>comme les yaourts ou les purées.
+ <br/>
+<br/>D'un point de vue des cicatrices, il existe une petite zone en 
+ <br/>cicatrisation dirigée au niveau cervical droit, en bonne évolution.
+ <br/>Le bourgeon péri-trachéostomial qui était cautérisé la semaine 
+ <br/>dernière ne nécessite pas de cautérisation ce jour. 
+ <br/>
+<br/>Au niveau de la zone de prélèvement du lambeau supra claviculaire 
+ <br/>gauche, la zone est en bourgeonnement sans complication. Idem au 
+ <br/>niveau de la zone de prélèvement de cuisse gauche. Le trachéostome 
+ <br/>est propre et bien ouvert. Pas de signe de fistule ce jour.
+ <br/>
+<br/>L'examen endo-buccal est marqué par une paralysie du XII avec des 
+ <br/>difficultés de latéralisation des mouvements de la langue.
+ <br/>
+<br/>
+<br/>
+<u>CONCLUSION<br/></u>Bonne cicatrisation des différents sites en cicatrisation dirigée.
+ <br/>Difficulté de reprise alimentaire nécessitant une rééducation 
+ <br/>orthophonique. 
+ <br/>Patient à revoir prochainement en petite chirurgie pour surveillance 
+ <br/>de l'évolution de la cicatrisation ainsi qu'évaluation des bilans des 
+ <br/>apports nutritionnels oraux.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

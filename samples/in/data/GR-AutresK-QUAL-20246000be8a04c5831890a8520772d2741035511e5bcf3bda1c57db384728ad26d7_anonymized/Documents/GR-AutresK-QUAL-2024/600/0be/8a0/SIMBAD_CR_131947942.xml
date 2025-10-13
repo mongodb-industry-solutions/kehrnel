@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_131947942" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>EXAMEN IRM IRM ORL NM</title>
+    <effectiveTime value="20140725000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20140728000000+0000"/>
+        <assignedAuthor>
+            <code code="260/45" displayName="RADIODIAGNOSTIC"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur AMMARI SAMY
+ <br/>
+<br/>Destinataire : CONSULTATIONS ORL
+ <br/> DR TEMAM Stéphane
+ <br/>
+<br/>
+<br/>
+<br/>Examen 2657
+ <br/>==========
+ <br/>
+<br/>
+<u><b>IRM ORL<br/></b></u>
+<br/>
+<br/>
+<u><b>INDICATION<br/><br/></b></u> Bilan d'une tumeur de de l'oropharynx.
+ <u><b><br/><br/>TECHNIQUE<br/><br/></b></u> Séquence axiale T2, axiale T1, axiale, coronale et sagitale T1 après 
+ <br/>injection de gadolinium.
+ <u><b><br/><br/>RESULTAT<br/><br/></b></u> Présence d'un épaississement du voile du palais étendu vers le 
+ <br/>tensile lingual droit et gauche prédominant à droite, avec une 
+ <br/>extension vers la paroi oropharyngée postérieure gauche.
+ <br/>Il s'y associe des ganglions cervicaux du secteur IIA drite, de 30 mm 
+ <br/>et IIB de 9 mm, et un ganglion IIA gauche de 20 mm.
+ <br/>Absence d'autre lésion de la filière oropharyngée.
+ <u><b><br/><br/>CONCLUSION<br/><br/></b></u>
+<b>Masse du voile du palais étendu vers le tensile lingual droit et <br/>gauche avec une extension de la paroi <br/>oropharyngée postérieure gauche.<br/>Ganglions bilatéraux du secteur IIA et IIB droits et gauches. </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

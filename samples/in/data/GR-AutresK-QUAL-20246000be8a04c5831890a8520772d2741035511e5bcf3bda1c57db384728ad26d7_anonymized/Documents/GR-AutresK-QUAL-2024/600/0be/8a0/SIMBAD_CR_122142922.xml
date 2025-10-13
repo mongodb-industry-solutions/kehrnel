@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122142922" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="47420-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de bilan fonctionnel (par auxiliaire médical)"/>
+    <title>Compte-rendu téléphonique infirmier - Plateau des Consultations</title>
+    <effectiveTime value="20191224000000+0000"/>
+    <confidentialityCode code="47420-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de bilan fonctionnel (par auxiliaire médical)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20191224000000+0000"/>
+        <assignedAuthor>
+            <code code="PLC/453" displayName="PLATEAU DE CONSULTATION"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Infirmière coordinatrice de chirurgie</b></u>
+<b> :</b> CORSET Carole
+ <b><br/></b>
+<br/>Patient en cours de chimiothérapie (erbitux) pour récidive 
+ <br/>loco-régionale.
+ <br/>Pharyngostome avec 2 écoulements latéro-cervicaux gauche.
+ <br/>
+<br/>
+<b><br/><u>Motif de l'appel</u> : L'IDEL signale la présence d'une troisième fistule <br/>avec écoulement +++. Le contour des fistules est inflammatoire. <br/>Douleurs +++ lors du pansement le 23/12/2019. Pas de fièvre.<br/>Actuellement le patient est en hôpital de jour pour sa chimiothérapie.<br/>Viendra vers 14h30-15 h pour contrôle.<br/></b>
+<br/>
+<b><br/><u>Orientation</u> (en référence à l'arbre décisionnel):</b>
+<u><b>ESP 6 à 14H30<br/></b></u>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

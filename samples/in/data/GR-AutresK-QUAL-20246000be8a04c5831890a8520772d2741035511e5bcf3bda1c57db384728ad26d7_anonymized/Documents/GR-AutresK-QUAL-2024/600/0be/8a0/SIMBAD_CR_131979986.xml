@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_131979986" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ANESTHESIE - Dr Grégoire WEIL</title>
+    <effectiveTime value="20140711000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20140711000000+0000"/>
+        <assignedAuthor>
+            <code code="ANS/286" displayName="ANESTHESIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Compte-rendu non dicté et dactylographié selon la feuille jaune
+ <br/>
+<br/>Patient âgé de 53 ans adressé en consultation d'anesthésie
+ <br/>pour
+ <br/>
+<br/>
+<u><b>ANTECEDENTS CHIRURGICAUX</b></u>
+<br/>Dupuytren bilatéral
+ <br/>
+<br/>
+<u><b>ANTECEDENTS MEDICAUX</b></u>
+<br/>aucun
+ <br/>
+<br/>
+<u><b>ALLERGIE</b></u>
+<br/>Non connue.
+ <br/>Tabac : 1 paquet/J, environ 35 PA 
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE</b></u>
+<br/>Taille : 1M65
+ <br/>Poids : 64 KG
+ <br/>NYHA I, >4METs
+ <br/>Pas de syndrome hémorragique 
+ <br/>EVA = 0
+ <br/>
+<br/>Intubation : Mallampati III, DTM>6cm, OB>3cm.
+ <br/>Repères de JIC ok. 
+ <br/>
+<br/>
+<u><b>TRAITEMENT ACTUEL</b></u>
+<br/>AUCUN
+ <br/>_____________________________________________________________________
+ <br/>
+<u><b>BILAN PRE OP DEMANDE</b></u> :
+ <br/>Aucun (x)
+ <br/>
+<br/>_______________________________________________________________________
+ <br/>
+<u><b>RISQUE DE TRANSMISSION D'E.S.S.T</b></u>
+<br/>
+<br/>A - Patient suspect ou atteint ()
+ <br/>B - Antécédents à risque ()
+ <br/>C - Pas de risque particulier (x)
+ <br/>
+<br/>_______________________________________________________________________
+ <br/>
+<u><b><h3>Conclusion</h3> :</b></u>
+<br/>ASA II
+ <br/>Pas de contre-indication anesthésique à l'intervention prévue.
+ <br/>Protocole vert.
+ <br/>Protocole anesthésique : AG, JET
+ <br/>Pas de prémédication 
+ <br/>
+<br/>
+<b>Temps de préparation d'anesthésie prévu : 3O mn</b>
+<br/>
+<b><br/></b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

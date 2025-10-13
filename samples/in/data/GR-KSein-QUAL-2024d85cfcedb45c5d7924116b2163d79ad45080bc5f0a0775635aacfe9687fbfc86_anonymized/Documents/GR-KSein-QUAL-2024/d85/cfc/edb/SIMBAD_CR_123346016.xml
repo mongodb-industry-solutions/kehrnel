@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_123346016" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CR Consultation du 2019-06-24</title>
+    <effectiveTime value="20190624000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190624000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Compte rendu générique de SENOLOGIE<br/><br/>Dicté par : </b>Docteur Meriem Mokdad Adi
+ <b><br/>Dicté le : </b>24/06/2019 
+ <b><br/>Service : </b>050-CTE 050 - SEIN 
+ <br/>
+<b>Type de document : </b>050 CC Générique 
+ <br/>
+<b>Ref :</b> 732890 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b>XXXXXX XXXXXX XXXXXX
+ <b> <br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe</b>
+<b>: </b>Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : 
+ <b>VME/A<br/><br/> Patiente vue ce jour seule, encours de CMF en 4ème ligne depuis <br/>mai 2019, dans le cadre de la prise en charge d'une récidive <br/>hépatique et osseuse d'un cancer du sein droit diagnostiqué <br/>initialement en 2016.<br/><br/></b>La patiente n'est pas éligible pour le protocole MCLA 128 
+ <br/>car il fallait avoir reçu une ligne d'hormonothérapie.
+ <br/>
+<br/>
+<b>VIOLETTE </b>et 
+ <b>IMMU132 </b>: non éligible compte tenu de la faible 
+ <br/>amplification HER2.
+ <br/>
+<u><br/><b>RAPPEL</b></u>
+<b> :<br/><br/></b>T2 N0 de 25 mm du sein droit diagnostiqué en juillet 2016 , 
+ <br/>carcinome canalaire infiltrant de grade III triple négatif. Dans le 
+ <br/>bilan 2 micronodules pulmonaires à surveiller.
+ <br/>
+<br/>Chimiothérapie néo-adjuvante par 6 EC 75 dose dense + 12 TAXOL 
+ <br/>Hebdo débuter le 29/08/2016.
+ <br/>
+<br/>TGS le 23/2/17 : persistance de 13 mm de carcinome métaplasique avec 
+ <br/>différenciation chondroide ou ostéoïde, 17 mm d'intracanalaire,1GS-. 
+ <br/>
+<br/>Radiothérapie : sein + surimpression terminer le 08/06/2017.
+ <br/>
+<br/>XELODA adjuvant 6 cycles compte tenu du risque persistant, à 
+ <br/>expliquer à la patiente.
+ <br/>
+<br/>TEP scanner 08/02/2018: 
+ <b>Aspect TEP en faveur d'une rechute <br/>métastatique avec atteinte osseuse de T3 et atteinte hépatique <br/>(segment VII).</b>
+<br/>
+<br/>Débuter une chimiothérapie par Carboplatine Gemzar à partir du 26 
+ <br/>février à Chevilly Larue pour la C1 J1 J8 , J1 =J21.
+ <br/>
+<br/>Biopsie Hépatique segment VI le 07/03/2018 - le résultat sera
+ <br/>disponible dans environ 10 jours max. 
+ <b><br/></b>
+<br/>Pet scan réalisé le 27 avril avait montré :
+ <br/>une réponse métabolique partielle de la lésion hépatique unique du 
+ <br/>segment VII et de la lésion osseuse isolée en T3.
+ <br/>
+<br/>Elle a reçu 6 cycles de CARBOPLATINE GEMZAR débuté le 26 février 
+ <br/>jusqu'au 9/07 marqué par des toxicités importantes sur le plan 
+ <br/>hématologique : thrombopénie et neutropénie.
+ <br/>
+<br/>
+<b>PROFEEL : </b>mutation TP53
+ <br/>Sous ENDOXAN depuis le 23/07 jusqu'au 25/10.
+ <br/>Arrêt de l'ENDOXAN pour progression hépatique et osseuse. 
+ <br/>
+<b>TEP 19/10 Comparativement à l'examen précédent de juillet 2018, <br/>aspect de progression, devant la majoration des lésions <br/>pré-existantes du foie et de T3, sans nouvelle fixation suspecte.<br/><br/>Intérêt d'une IRM du rachis pour mieux évaluer la lésion de T3 <br/>(épidurite débutante ?).<br/></b>
+<br/>IRM rachis 31/10 : 
+ <b>Globale stabilité de l'atteinte de T3 avec <br/>atteinte épidurale foraminale droite T3/T4.<br/>Pas d'apparition de lésions osseuses suspectes.<br/>Pas de compression médullaire.<br/>La patiente ne prend pas d'XGEVA car appréhende les effets <br/>secondaires, elle demande un temps de réflexion.<br/></b>ERIBULINE en 3ème ligne le 9/11. 
+ <br/>
+<br/>Il était prévu de lui proposer une inclusion dans le 
+ <b>protocole MCLA </b>
+<br/>cohorte 1 : non éligible car n'avait pas reçu le PERTUZUMAB au 
+ <br/>préalable.
+ <br/>MCLA cohorte 2, elle n'a pas eu d'hormonothérapie avant, donc ne peut être incluse dans 
+ <b>VIOLETTE </b>et 
+ <b>IMMU132 </b>: non éligible compte tenu de la faible amplification HER2.
+ <br/>
+<br/>Cataracte à droite opérée en ambulatoire le 21/02, bonnes suites 
+ <br/>opératoires.
+ <br/>
+<br/>
+<u><b>CE JOUR :<br/><br/></b></u>Ps:0.
+ <br/>Poids 50 Kg.
+ <b><br/>Bilan biologique du 5/06: normal <br/></b>Tolérance du CMF correct mis à part : sinusite pdt une semaine , perte d'appétit , torticolis depuis 2 semaines suite à une mauvaise position 
+ <br/>
+<br/>
+<b>TEP réalisé le 22/05:<br/><br/>Comparativement au Nadir de Janvier 2019, progression métabolique <br/>significative de la lésion hépatique isolée hyperfixante, désormais <br/>plus étendue et intense qu'au Baseline.<br/><br/>Pas de nouveau foyer hyperfixant d'allure secondaire par ailleurs.<br/></b>
+<br/>
+<u><b>EN PRATIQUE :<br/> <br/></b></u> Poursuite du CMF sous Granocyte 34 
+ <br/>
+<br/>Je la reverrai en consultation en juillet puis le 16/09 avec les résultats du TEP 
+ <br/>
+<b><br/> <br/></b>
+<br/>
+<br/>
+<br/>
+<u><br/> </u>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Meriem MOKDAD ADI <br/>Le lundi 24 juin 2019 à 14:23 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

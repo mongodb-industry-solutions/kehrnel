@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122728962" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION DE CARDIOLOGIE</title>
+    <effectiveTime value="20190927000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190930000000+0000"/>
+        <assignedAuthor>
+            <code code="CHL/511" displayName="CHEVILLY STRUCTURE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Consultation de Madame XXXXXX XXXXXX, 62 ans.
+ <br/>
+<br/>
+<b>Terrain carcinologique </b> : 
+ <br/>Récidive hépatique et osseuse d'une néoplasie mammaire droite, 
+ <br/>diagnostic initial en 2016. 
+ <br/>Dans les thérapeutiques réalisées en 2016 : PACLITAXEL, 
+ <br/>EPIRUBICINE/ENDOXAN, TAXOL, XELODA, puis en 2018 CARBOPLATINE/GEMSAR, 
+ <br/>HERCEPTIN depuis mai associé à CARBOPLATINE/GEMZAR.
+ <br/>Actuellement proposée à une reprise du traitement par HERCEPTIN. 
+ <br/>
+<br/>Elle ne me rapporte aucun antécédent cardio-vasculaire particulier.
+ <br/>
+<br/>
+<b>Facteurs de risque</b> : tabac sevré estimé aux alentours de 40 PA.
+ <br/>
+<br/>
+<b>Son traitement actuel comporte RAMIPRIL 2.5 mg 1/jour, VALACICLOVIR, <br/>PANTOPRAZOLE, NAVELBINE, PARACETAMOL.</b>
+<br/>
+<br/>Les 2 dernières échographies cardiaques retrouvaient une fonction VG 
+ <br/>aux alentours de 53%, strain global longitudinal -17%.
+ <br/>
+<br/>
+<b>Sur le plan fonctionnel</b> , elle est asymptomatique. 
+ <br/>
+<br/>
+<b>Cliniquement</b> , bruits du coeur réguliers sans souffle, pas de souffle 
+ <br/>vasculaire, TA 123/77 mmHg. 
+ <br/>
+<br/>
+<b>ECG </b> : sinusal, régulier, QRS fins d'axe normal sans trouble de 
+ <br/>repolarisation. FC 76/min. 
+ <br/>
+<br/>
+<b>ETT </b> : VG non dilaté non hypertrophié, FEVG 60% en Simpson biplan, 
+ <br/>pressions de remplissage basses, bonne fonction diastolique, pas de 
+ <br/>dilatation des cavités droites, bonne fonction ventriculaire droite.
+ <br/>Insuffisance aortique de grade 2/4, centrale sur valve tricuspide, 
+ <br/>pas d'autre valvulopathie significative, insuffisance tricuspide 
+ <br/>minime, pas d'HTAP. 
+ <br/>Strain global longitudinal faussé, mesuré à -14%. 
+ <br/>
+<br/>
+<b>En pratique,<br/>- Pas de contre-indication à la reprisse de l'HERCEPTIN,<br/>- Poursuite des surveillances échographiques régulières dans le cadre <br/>du protocole.<br/>- Poursuite du RAMIPRIL. </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

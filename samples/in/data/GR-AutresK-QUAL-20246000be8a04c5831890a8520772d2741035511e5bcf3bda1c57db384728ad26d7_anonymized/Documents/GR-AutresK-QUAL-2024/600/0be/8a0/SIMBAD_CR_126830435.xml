@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126830435" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>COMPTE-RENDU R.I.</title>
+    <effectiveTime value="20180105000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180105000000+0000"/>
+        <assignedAuthor>
+            <code code="136/300" displayName="CONS. RADIO INTERVENTIONNELLE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b><br/>Intervention </b>
+<br/>
+<br/>Date: 05/01/2018 
+ <br/>Opérateur(s) principal: Docteur BARAT MAXIME 
+ <br/>Manipulatrice: 
+ <br/>Anesthésiste: 
+ <br/>Intervention guidée par: - Angio C 
+ <br/>
+<br/>
+<br/>
+<b>GASTROSTOMIE PERCUTANEE</b>
+<br/>
+<br/>
+<b>INDICATION</b> :
+ <br/>Patient suivi pour une néoplasie ORL.
+ <br/>Gastrostomie d' alimentation
+ <br/>
+<br/>
+<b>TECHNIQUE et RESULTATS</b> :
+ <br/>Repérage du bord gauche du foie sous guidage échographique.
+ <br/>Mise en place d' un cathéter de 5Fr nasogastrique et injection d' 
+ <br/>1mg de Glucagon pour distension gastrique
+ <br/>Après désinfection cutanée et anesthésie locale (10ml de Xylocaïne + 
+ <br/>19 ml de Naroperine), mise en place de 2 points d' ancrage sous 
+ <br/>guidage fluoroscopique
+ <br/>Ponction et dilatation progressive sur guide de l' orifice de 
+ <br/>gastrostomie.
+ <br/>Au travers d' un dilatateur pelable, pose d' une sonde de 
+ <br/>gastrostomie de 16 Fr.
+ <br/> Pas de complication au cours ni au décours du geste.
+ <br/>A noter que la 3ème ancre s'est rompu lors de la pose, elle n'a donc 
+ <br/>pas été conservée.
+ <br/>
+<br/>
+<b><br/>CONCLUSION</b> :
+ <br/>Mise en place d' une sonde de gastrostomie de 16Fr.
+ <br/>2 points d' ancrage.
+ <br/>
+<br/>
+<br/>PDS : 2,77 GY.cm2 
+ <br/>DLP : 0 mGy.cm 
+ <br/>
+<br/>Produit de contraste: 25 ml de Visipaque 350 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

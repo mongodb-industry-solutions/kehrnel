@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122486750" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'URGENCE</title>
+    <effectiveTime value="20191104000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20191104000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ \f0\fs19 
+ <br/>
+<br/>
+<u><b>Consultation du 04/11/2019<br/></b> <br/><br/><b>Médecin examinateur</b></u> : Dr Simona Pop
+ <br/>
+<b>Oncologue référent = Dr Ferrand</b>
+<br/>
+<br/>
+<u><b>Motif de consultation et histoire actuelle</b></u> :
+ <br/>Douleurs abdominales, nausées, sans vomissement, constipation, depuis 
+ <br/>3 jours.
+ <br/>
+<br/>Patient de 58 ans, suivie pour une récidive latéro cervicale 
+ <br/>bilatérale d'un carcinome oropharyngé, HPV-, traité initialement par 
+ <br/>radiochimiothérapie en octobre 2014 avec chirurgie de rattrapage en 
+ <br/>novembre 2017 et mars 2018.
+ <br/>
+<br/>1ère cure de chimiothérapie par CISPLATINE-DOCETAXEL-CETUXIMAB, 
+ <br/>réalisée le 31/10/2019.
+ <br/>
+<br/>
+<u><b>Antécédents</b></u> :
+ <br/>Chirurgicaux
+ <br/>- carcinome épidermoïde hypopharyngé (récidive) traité par PLT avec 
+ <br/>lambeau du grand pectoral et lambeau antéro-latéral de cuisse, 
+ <br/>- trachéotomie, 
+ <br/>- opéré d'une maladie de Dupuytren à 2 reprises (à gauche et à 
+ <br/>droite).
+ <br/>
+<br/>Médicaux
+ <br/>- crise comitiale généralisée avec dernier évènement il y a plus de 
+ <br/>10 ans, pas de suivi neurologique, que l'on recommande notamment sur 
+ <br/>le plan thérapeutique, 
+ <br/>- psoriasis diffus essentiellement aux mains et aux avant-pieds, pas 
+ <br/>de traitement systémique, 
+ <br/>- hypothyroïdie, 
+ <br/>- pas d'allergie.
+ <br/>
+<br/>
+<u><b>HDM</b></u> : 
+ <br/>Histoire de la maladie
+ <br/>- Prise en charge pour un carcinome épidermoïde initialement de 
+ <br/> l'oropharynx vélaire et des piliers postérieurs bilatéralement 
+ <br/> traité par radiochimiothérapie en octobre 2014.
+ <br/>* Août 2017 : Seconde localisation de carcinome épidermoïde de 
+ <br/> l' hypopharynx droit.
+ <br/>- 13/11/17 : Traitement par pharyngo-laryngectomie totale droite et 
+ <br/> reconstruction par lambeau musculo-cutané de grand pectoral.
+ <br/> Suites compliquées d'un pharyngostome à plusieurs reprises.
+ <br/> Monté d'un lambeau de grand dorsal le 06/12/2017.
+ <br/> Malgré les reprises, persistance d'un pharyngostome et déhiscence 
+ <br/> des sutures avec pharyngostome large.
+ <br/>- 19/03/18 : reprise de cervicotomie pour rétablissement de la 
+ <br/> continuité digestive et réfection d'un trachéostome dans le 
+ <br/>contexte de pharyngostome large post-PLT de rattrapage avec 
+ <br/>fermeture par un lambeau libre antéro-latéral de cuisse prélevé à 
+ <br/>gauche et lambeau pédiculé supra-claviculaire avec anastomose de 
+ <br/>perforante delto-acromiale prélevé à gauche.
+ <br/>- Récidive latéro-cervical gauche nécrotique envahissant les tissus 
+ <br/> mous, péri carotidienne non résécable et adénopathie en 2 à droite 
+ <br/> envahissant la veine jugulaire découverte à l'été 2019 par la 
+ <br/> majoration d'un oedème du visage et de douleur.
+ <br/> Biopsié, AP : Carcinome épidermoïde HPV-, P16-.
+ <br/>- RCP ORL du 17/10/19 : décision d'un traitement systémique (pas de 
+ <br/> réirradiation envisagée).
+ <br/>Echographie cardiaque du 30/09/19 : FEVG 62 % sans autre anomalie 
+ <br/>notable.
+ <br/>- Pet scan le 02/10/19 :aspect évocateur de récidive locale cervicale 
+ <br/>gauche et ganglionnaire controlatérale sans autre lésion à distance.
+ <br/>- 21/10/19 : pose d'une chambre implantable.
+ <br/>
+<br/>
+<u><b>Traitement actuel</b></u> : 
+ <br/>Doxycycline 100 mg 1/jour
+ <br/>Levothyrox 25 μg 1/jour
+ <br/>Skenan LP 20 mg x2/jour
+ <br/>Oramorph 5 mg/4H, sb 
+ <br/>Gardenal 100 mg, le soir
+ <br/>Movicol
+ <br/>
+<br/>
+<br/>
+<u><b>Examen clinique</b></u> :
+ <br/>
+<br/>
+<u>Constantes</u> :
+ <br/>T° 36.6°C, TA 124/76 mmHg, FC 104/min, Sat 02 96% en aa.
+ <br/>OMS 1-2.
+ <br/>Asthénie.
+ <br/>BDC réguliers, pas de souffle.
+ <br/>Mollets souples, indolores.
+ <br/>Pas d'OMI.
+ <br/>Eupnéique en aa.
+ <br/>Pas de toux ni dyspnée.
+ <br/>Auscultation pulmonaire : MV symétrique, bilatéral, qq ronchis à la 
+ <br/>base droite, pas de foyer des crépitants.
+ <br/>Abdomen pléthorique, dépressible, sans défense.
+ <br/>BHA +
+ <br/>Constipation, dernières selles il y a 3 jours.
+ <br/>S'alimente par voie orale; pas de fausse route.
+ <br/>
+<br/>
+<u><b>Résultats du bilan para-clinique</b></u> :
+ <br/>Bilan biologique (04/11) : Hb 14.4 g/dl, GB 9900/mm3, PNN 9200/mm3, 
+ <br/>plaquettes 239000/mm3, créatinine 61 μmol/l, Na 134 mmol/l, K 3.7 
+ <br/>mmol/l, 
+ <br/>Ca corrigée 2.28 mmol/l, Mg 0.79 mmol/l, CRP 142 mg/l.
+ <br/>
+<br/>RP : en attente
+ <br/>ASP : en attente
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>1. Tolérance clinique médiocre de la chimiothérapie.
+ <br/>2. Mucite candidosique avec oesophagite probable; on prescrit du 
+ <br/>Triflucan IV, 400 mg dose de charge ce soir, puis 200 mg/jour à 
+ <br/>partir de demain.
+ <br/>3. Traitement symptomatique, Movicol/Lansoyl et un lavement par 
+ <br/>Normacol demain matin.
+ <br/>4. Surveillance des constantes, et bilan infectieux si fièvre
+ <br/>5. Hospitalisation ce soir
+ <br/>6. Dossier transmis à la garde.
+ <br/>
+<br/>
+<u><b>Conduite à tenir</b></u> :
+ <br/>RP
+ <br/>ASP
+ <br/>Hémocultures PAC/VVP si fièvre.
+ <br/>
+<br/>
+<br/>
+<b>ADMISSION SERVICE MORBIHAN </b>
+<br/>
+<br/>Heure d'arrivée : 13h20
+ <br/>Heure de départ : nd
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>\fs19 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

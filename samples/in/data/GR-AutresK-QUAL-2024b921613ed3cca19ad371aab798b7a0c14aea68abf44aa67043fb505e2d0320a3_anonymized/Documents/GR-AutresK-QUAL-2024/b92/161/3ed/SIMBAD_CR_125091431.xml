@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125091431" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>REUNION DE CONCERTATION PLURIDISCIPLINAIRE INFECTIEUSE</title>
+    <effectiveTime value="20181004000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024b921613ed3cca19ad371aab798b7a0c14aea68abf44aa67043fb505e2d0320a3"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181004000000+0000"/>
+        <assignedAuthor>
+            <code code="SAR/487" displayName="SOINS AIGUS REANIMATION"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>PLATEAU DES SOINS AIGUS - SERVICE SAR -REANIMATION<br/>REUNION DE CONCERTATION PLURIDISCIPLINAIRE INFECTIEUSE <br/>(REANIMATION-USCM/DSA)<br/><br/><br/>Dicté par : </b> Docteur Annabelle Stoclin
+ <b><br/>Dicté le : </b> 04/10/2018 
+ <b><br/>Service : </b> SAR-REANIMATION 
+ <br/>
+<b>Type de document : </b> SAR NO RCPR 
+ <br/>
+<b>Ref :</b> 503683 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : EDN
+ <br/>
+<br/>
+<b><br/><u>Participants</u> :</b> Dr A.STOCLIN, Dr A.GAFFINEL, Dr A.HAMMAMI, Dr A.M'RAD 
+ <br/>et Internes (L.ABDELADIM, P. CORBAUX,M. FIRMIN, J. PEGLIASCO) 
+ <br/>(Réanimation USCM, DSA).
+ <br/>Docteur Bertrand GACHOT (Infectiologie, DSA).
+ <b><br/></b> Docteur E.CHACHATY et N.YIN (service de Microbiologie).
+ <br/>Docteur F. NETZER (service Pharmacie).
+ <br/>
+<br/>
+<br/>- 
+ <u><b>Pour mémoire</b></u> : patient de 67 ans, à J7 de réanimation pour détresse 
+ <br/>respiratoire avec probable OAP. Monsieur XXXXXX a été allogreffé le 
+ <br/>17/08 pour une myélofibrose. Devant l'absence de prise de greffe, il 
+ <br/>a été regreffé le 01/10.
+ <br/>
+<br/>- Un ECBC le 28/08 a mis en évidence du Stenotrophomonas maltophilia 
+ <br/>pour lequel le patient a reçu 7 jours de Tavanic.
+ <br/>
+<br/>- Monsieur XXXXXX est sous Meropenem depuis le 03/09, sous Cymevan 
+ <br/>depuis le 22/09, sous Voriconazole depuis le 26/09.
+ <br/>
+<br/>- L'antigénurie légionelle est négative ainsi que toutes les 
+ <br/>hémocultures.
+ <br/>
+<br/>- L'ECBC du 28/09 montre du Staphylocoque coagulase négative.
+ <br/>
+<br/>- En réanimation le 28/09, un traitement par Tavanic et Zyvoxid a été 
+ <br/>introduit (Zyvoxid maximum 7 jours devant l'ECBC positif à SCN).
+ <br/>
+<br/>- Le 03/10, le patient est sous 5 à 6 litres d'oxygène et sous VNI 2h 
+ <br/>toutes les 4h. Il crache sale (verdâtre). Le patient est fébrile avec 
+ <br/>un syndrome inflammatoire biologique important. La PCT du 02/10 est à 
+ <br/>16,91 μg/l et la CRP du 01/10 est à 283 mg/l.
+ <br/>L'abdomen est très volumineux mais souple, tympanique.
+ <br/>Monsieur XXXXXX présente une selle liquide par jour, il n'y a pas de 
+ <br/>Clostridium difficile toxinogène dans les selles, la PCR est 
+ <br/>également 
+ <br/>négative.
+ <br/>A l'échographie, la vésicule biliaire est normale.
+ <br/>Un examen parasitologique des selles a été demandé et du Stromectol 
+ <br/>prescrit le 01/10 mais donné et vomi le 03/10.
+ <br/>
+<br/>
+<b>CONCLUSION DIAGNOSTIQUE ET THERAPEUTIQUE<br/></b>
+<br/>- Zyvoxid maximum 7 jours.
+ <br/>
+<br/>- Le 04/10, nous apprenons la présence d'angilules dans l'examen 
+ <br/>parasitologique des selles. Le Stromectol de la veille a été vomis. 
+ <br/>Nous retentons un traitement par Stromectol via la sonde 
+ <br/>nasogastrique puisque le patient a été intubé le 03/10 dans la soirée 
+ <br/>et appelons en urgence la pharmacie pour commander de l'Ivermectine 
+ <br/>en 
+ <br/>sous cutanée. Une revue de la littérature va être faite en urgence 
+ <br/>par le Dr GACHOT pour voir si un autre traitement IV est possible.
+ <b><br/><br/>____________________<br/>Docteur Annabelle STOCLIN</b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

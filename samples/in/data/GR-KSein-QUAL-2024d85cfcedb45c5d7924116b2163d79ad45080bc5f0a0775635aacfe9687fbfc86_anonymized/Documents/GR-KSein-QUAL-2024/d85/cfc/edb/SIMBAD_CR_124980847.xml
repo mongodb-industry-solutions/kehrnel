@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124980847" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>MED.NUCLEAIRE MN TEP FDG 050</title>
+    <effectiveTime value="20181019000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181019000000+0000"/>
+        <assignedAuthor>
+            <code code="MNU/174" displayName="MEDECINE NUCLEAIRE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur GRIMALDI SERENA
+ <br/>
+<br/>Destinataire : CTE 050 - SEIN
+ <br/> DR MOKDAD--ADI MERIEM
+ <br/>
+<br/>
+<br/>
+<b>EXAMEN DE TOMOGRAPHIE PAR EMISSION DE POSITONS<br/>TEP-FDG<br/><br/>Dicté par : </b> Docteur Séréna Grimaldi
+ <b><br/>Dicté le : </b> 19/10/2018 
+ <b><br/>Service : </b> MNU-MEDECINE NUCLEAIRE 
+ <br/>
+<b>Type de document : </b> MNU CE TEP FDG 
+ <br/>
+<b>Ref :</b> 514089 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : BHI
+ <br/>
+<br/>
+<br/>Examen réalisé le : 19/10/2018
+ <br/>
+<br/>
+<u><b><br/>INDICATION</b></u>
+<b> :<u><br/></u></b>
+<br/>Patiente de 61 ans prise en charge pour un carcinome canalaire 
+ <br/>infiltrant triple négatif du sein droit, diagnostiqué en 2016, en 
+ <br/>rechute osseuse et hépatique. Traitement sous Herceptine-Endoxan , 
+ <br/>débuté en juillet 2018
+ <br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<u><br/></u></b>
+<br/>Acquisition TEP standard/corps entier réalisée 59 minutes après 
+ <br/>injection par voie intraveineuse de 168,9 MBq de 18-FDG.
+ <br/>Glycémie avant injection : 5,3 mmol/l - Durée du jeûne : > 6 heures
+ <br/>Scanner de repérage pour fusion d'images, PDL : 142,95 mGy.cm
+ <br/>- Poids 48 kg - Taille 171 m
+ <br/>- Site d'injection : coude droit 
+ <br/>- Heure d'injection 10 h 27
+ <br/>- Début de l'examen à 11 h 26
+ <br/>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/></b>
+<br/> Comparaison avec l'examen précédent du 05/07/2018.
+ <br/>
+<u><b> <br/>1. Etage cervico-encéphalique :<br/></b></u>
+<br/>- Absence de foyer hyperfixant suspect cérébral.
+ <br/>- Diminution de l`asymétrie de fixation amygdalienne prédominante à 
+ <br/>droite, manquant de spécificité, à confronter à l'examen clinique.
+ <br/>
+<u><b><br/>2. Etage thoracique :<br/><br/></b></u> - Absence d'anomalie de fixation des aires mammaires
+ <br/>- Absence de foyer hyperfixant suspect des aires ganglionnaires.
+ <br/>- Absence de foyer hyperfixant suspect pleuro-pulmonaire. Stabilité 
+ <br/>d'un micronodule du lobe inférieur droit non fixant aspécifique. 
+ <br/>
+<u><b><br/>3. Etage abdomino-pelvien :<br/></b></u>
+<br/>- Franche majoration en étendue et stabilité en intensité de fixation 
+ <br/>de la lésion hépatique secondaire préexistante du segment VII : SUVmax 
+ <br/>5,9 versus 5,1 - environ 35 mm versus 18 mm .
+ <br/>- Minime hétérogénéité de fixation par ailleurs sur le parenchyme 
+ <br/>hépatique, sans autre foyer formellement pathologique. 
+ <br/>- Absence de foyer hyperfixant suspect du parenchyme splénique, 
+ <br/>pancréatique, surrénalien et des aires ganglionnaires 
+ <br/>sous-diaphragmatiques.
+ <br/>
+<u><b><br/>4. Etage musculo-squelettique :<br/></b></u>
+<br/>- Augmentation en étendue et intensité de fixation du foyer 
+ <br/>hyperfixant pré-existant du pédicule droit de T3, d'allure secondaire 
+ <br/>: SUVmax 5,7 versus 4,7 . 
+ <br/>- absence de nouvelle lésion osseuse suspecte.
+ <br/>- Apparition d'un foyer de fixation de l'arc antérieur de la 10e côte 
+ <br/>droite, semblant en rapport avec une fracture traumatique.
+ <br/>
+<u><b><br/>CONCLUSION</b></u>
+<b> :<u><br/></u>Comparativement à l'examen précédent de juillet 2018, aspect de <br/>progression, devant la majoration des lésions pré-existantes du foie <br/>et de T3, sans nouvelle fixation suspecte.<br/>Intérêt d'une IRM du rachis pour mieux évaluer la lésion de T3 <br/>(épidurite débutante ?).</b>
+<br/>
+<br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Séréna GRIMALDI <br/>Le vendredi 19 octobre 2018 à 12:25 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128490067" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>INTERVENTION</title>
+    <effectiveTime value="20170223000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170223000000+0000"/>
+        <assignedAuthor>
+            <code code="ARD/191" displayName="ARDENNES"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>TUMORECTOMIE DU SEIN DROIT ET GANGLION SENTINELLE HOMOLATERAL SOUS <br/>ANESTHESIE GENERALE</b>
+<br/>
+<br/>
+<u><b>Opérateurs </b></u> : Docteurs MIAILHE Grégoire / DJAAFRI Fatiha
+ <br/>
+<u><b>Anesthésiste</b></u> : Docteur VESA Bianca
+ <br/>
+<br/>
+<br/>
+<b>Indication</b>
+<br/>Patiente de 59 ans, prise en charge à Gustave Roussy pour un 
+ <br/>carcinome canalaire infiltrant triple négatif du sein droit classé 
+ <br/>T2N0M0.
+ <br/>En juillet 2016, autopalpation d'un nodule du sein droit ayant 
+ <br/>conduit à la réalisation d'un bilan sénologique.
+ <br/>Echo-mammographie bilatérale mettant en évidence un nodule 
+ <br/>supéro-interne du sein droit mesurant 25 mm classé ACR5.
+ <br/>Sein gauche classé ACR2.
+ <br/>Aires axillaires libres.
+ <br/>A l'examen clinique initial, on palpe aisément un nodule de 25 mm sur 
+ <br/>un rayon de 2 h à 3 cm du mamelon.
+ <br/>On réalise une microbiopsie de ce nodule qui est en faveur d'un 
+ <br/>carcinome canalaire infiltrant de grade III, RE-, RP-, Her2-.
+ <br/>Un scanner thoraco-abdomino-pelvien est réalisé dans le cadre du 
+ <br/>bilan d'extension mettant en évidence la présence de 2 micro-nodules 
+ <br/>isolés en base pulmonaire droite qui mesurent 4,5 mm et un 
+ <br/>micro-nodule de la base pulmonaire gauche également isolé.
+ <br/>Après discussion en réunion de concertation pluridisciplinaire, on 
+ <br/>propose à la patiente une chimiothérapie néo-adjuvante ainsi qu'un 
+ <br/>contrôle par TDM thoraco-abdomino-pelvien à la fin des traitements.
+ <br/>Chimiothérapie néo-adjuvante par 4 cure d'EC suivie de 4 cures de 
+ <br/>TAXOL.
+ <br/>A l'examen clinique, il existe une bonne réponse à la chimiothérapie 
+ <br/>avec un nodule mesurant 15 mm palpable sur un rayon de 2 h à 3 cm du 
+ <br/>mamelon.
+ <br/>On propose à la patiente une chirurgie avec tumorectomie du sein 
+ <br/>droit et procédure du ganglion sentinelle.
+ <br/>
+<br/>
+<br/>
+<b>INTERVENTION</b>
+<br/>Anesthésie générale.
+ <br/>Bras à 90°.
+ <br/>Détersion et double désinfection du champ opératoire.
+ <br/>Champage stérile.
+ <br/>
+<br/>1/ 
+ <u>Ganglion sentinelle axillaire droit</u> :
+ <br/>Injection pré-opératoire de technicium. 
+ <br/>Incision du creux axillaire sur 2 cm.
+ <br/>Incision du tissu cellulo-graisseux et de l'aponévrose 
+ <br/>clavi-pectoro-axillaire.
+ <br/>Repérage aisément d'un ganglion chaud adressé en examen extemporané.
+ <br/>Examen extemporané : sans argument pour une infiltation métastatique.
+ <br/>Pas de radioactivité résiduelle.
+ <br/>Fermeture de l'aponévrose clavi-delto-pectorale par un point en X de 
+ <br/>VICRYL 2/0.
+ <br/>Suture cutanée par des points inversants de VICRYL 3/0 rapide.
+ <br/>
+<br/>2/ 
+ <u>Tumorectomie du sein droit avec oncoplastie de type Round Block</u> :
+ <br/>Double incision péri-aréolaire.
+ <br/>Désépidermisation péri-aréolaire.
+ <br/>Large décollement cutanéo-muqueux.
+ <br/>Tumorectomie centrée sur la tumeur qui est palpable.
+ <br/>Examen extemporané de la pièce de tumorectomie : nodule de 17 mm, à 
+ <br/>distance des berges.
+ <br/>Pièce adressée orientée en anatomopathologie.
+ <br/>Hémostase.
+ <br/>Clipage du lit tumoral.
+ <br/>Mise en place d'un Manovac dans la loge de tumorectomie.
+ <br/>Plastie glandulaire par lambeau de glissement.
+ <br/>Suture cutanée par des points inversants de VICRYL 3/0 incolore puis 
+ <br/>par des points simples de FILAPEAU 4/0.
+ <br/>
+<br/>Compte des champs et des compresses exact en fin d'intervention.
+ <br/>
+<br/>Pas de complication per-opératoire.
+ <br/>Pas de transfusion sanguine.
+ <br/>
+<br/>
+<b><h3>Conclusion</h3></b>
+<br/>Tumorectomie ganglion sentinelle du sein droit après chimiothérapie 
+ <br/>néo-adjuvante pour un carcinome canalaire infiltrant de grade III, 
+ <br/>triple négatif, classé T2N0M0 avant la chimiothérapie.
+ <br/>Il existe une indication à réaliser un contrôle de scanner thoracique 
+ <br/>au décours des traitements.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

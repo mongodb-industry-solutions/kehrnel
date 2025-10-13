@@ -1,0 +1,288 @@
+{
+  "_type": "COMPOSITION",
+  "name": {
+    "_type": "DV_TEXT",
+    "value": "PMSI Extract"
+  },
+  "archetype_details": {
+    "archetype_id": {
+      "value": "openEHR-EHR-COMPOSITION.report.v1"
+    },
+    "rm_version": "1.0.4",
+    "template_id": {
+      "value": "T-IGR-PMSI-EXTRACT"
+    }
+  },
+  "language": {
+    "_type": "CODE_PHRASE",
+    "terminology_id": {
+      "_type": "TERMINOLOGY_ID",
+      "value": "ISO_639-1"
+    },
+    "code_string": "fr-FR"
+  },
+  "territory": {
+    "_type": "CODE_PHRASE",
+    "terminology_id": {
+      "_type": "TERMINOLOGY_ID",
+      "value": "ISO_3166-1"
+    },
+    "code_string": "FR"
+  },
+  "category": {
+    "_type": "DV_CODED_TEXT",
+    "value": "event",
+    "defining_code": {
+      "_type": "CODE_PHRASE",
+      "terminology_id": {
+        "_type": "TERMINOLOGY_ID",
+        "value": "openehr"
+      },
+      "code_string": "433"
+    }
+  },
+  "composer": {
+    "_type": "PARTY_IDENTIFIED",
+    "name": "IGR"
+  },
+  "context": {
+    "_type": "EVENT_CONTEXT",
+    "start_time": {
+      "_type": "DV_DATE_TIME",
+      "value": "2022-05-27T10:45:58+00:00"
+    },
+    "end_time": {
+      "_type": "DV_DATE_TIME",
+      "value": "2022-05-27T10:45:58+00:00"
+    },
+    "setting": {
+      "_type": "DV_CODED_TEXT",
+      "value": "home",
+      "defining_code": {
+        "_type": "CODE_PHRASE",
+        "terminology_id": {
+          "_type": "TERMINOLOGY_ID",
+          "value": "openehr"
+        },
+        "code_string": "225"
+      }
+    },
+    "health_care_facility": {
+      "_type": "PARTY_IDENTIFIED",
+      "name": "DOE, John"
+    },
+    "other_context": {
+      "_type": "ITEM_TREE",
+      "name": {
+        "_type": "DV_TEXT",
+        "value": "Tree"
+      },
+      "items": [
+        {
+          "_type": "ELEMENT",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Periode Debut"
+          },
+          "value": {
+            "_type": "DV_TEXT",
+            "value": "2017-01"
+          },
+          "archetype_node_id": "at0002"
+        },
+        {
+          "_type": "ELEMENT",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Periode Fin"
+          },
+          "value": {
+            "_type": "DV_TEXT",
+            "value": "2017-12"
+          },
+          "archetype_node_id": "at0005"
+        }
+      ],
+      "archetype_node_id": "at0001"
+    }
+  },
+  "content": [
+    {
+      "_type": "ADMIN_ENTRY",
+      "name": {
+        "_type": "DV_TEXT",
+        "value": "IGS PMSI STAY"
+      },
+      "archetype_details": {
+        "archetype_id": {
+          "value": "openEHR-EHR-ADMIN_ENTRY.igs_pmsi_stay.v0"
+        },
+        "rm_version": "1.0.4"
+      },
+      "language": {
+        "_type": "CODE_PHRASE",
+        "terminology_id": {
+          "_type": "TERMINOLOGY_ID",
+          "value": "ISO_639-1"
+        },
+        "code_string": "fr"
+      },
+      "encoding": {
+        "_type": "CODE_PHRASE",
+        "terminology_id": {
+          "_type": "TERMINOLOGY_ID",
+          "value": "IANA_character-sets"
+        },
+        "code_string": "UTF-8"
+      },
+      "subject": {
+        "_type": "PARTY_SELF"
+      },
+      "provider": {
+        "_type": "PARTY_SELF"
+      },
+      "workflow_id": {
+        "_type": "OBJECT_REF",
+        "namespace": "openEHR-Mapper",
+        "type": "ANY",
+        "id": {
+          "_type": "GENERIC_ID",
+          "value": "auto",
+          "scheme": "scheme"
+        }
+      },
+      "data": {
+        "_type": "ITEM_TREE",
+        "name": {
+          "_type": "DV_TEXT",
+          "value": "Item tree"
+        },
+        "items": [
+          {
+            "_type": "CLUSTER",
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "IGR PMSI Stay Segment cluster"
+            },
+            "archetype_details": {
+              "archetype_id": {
+                "value": "openEHR-EHR-CLUSTER.igr_pmsi_stay_segment_cluster.v0"
+              },
+              "rm_version": "1.0.4"
+            },
+            "items": [
+              {
+                "_type": "CLUSTER",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Stay Meta"
+                },
+                "items": [
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Stay Type"
+                    },
+                    "value": {
+                      "_type": "DV_CODED_TEXT",
+                      "defining_code": {
+                        "_type": "CODE_PHRASE",
+                        "terminology_id": {
+                          "_type": "TERMINOLOGY_ID",
+                          "value": "local"
+                        },
+                        "code_string": "at0020"
+                      },
+                      "value": "Hospitalisation complète"
+                    },
+                    "archetype_node_id": "at0004"
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "PMSI Source"
+                    },
+                    "value": {
+                      "_type": "DV_CODED_TEXT",
+                      "defining_code": {
+                        "_type": "CODE_PHRASE",
+                        "terminology_id": {
+                          "_type": "TERMINOLOGY_ID",
+                          "value": "local"
+                        },
+                        "code_string": "at0023"
+                      },
+                      "value": "RSS Batch"
+                    },
+                    "archetype_node_id": "at0005"
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Entry Date/Time"
+                    },
+                    "value": {
+                      "_type": "DV_DATE_TIME",
+                      "value": "T"
+                    },
+                    "archetype_node_id": "at0008"
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Exit Date/Time"
+                    },
+                    "value": {
+                      "_type": "DV_DATE_TIME",
+                      "value": "T"
+                    },
+                    "archetype_node_id": "at0010"
+                  }
+                ],
+                "archetype_node_id": "at0001"
+              },
+              {
+                "_type": "CLUSTER",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Diagnostic List"
+                },
+                "items": [
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Diagnosis Role"
+                    },
+                    "value": {
+                      "_type": "DV_CODED_TEXT",
+                      "defining_code": {
+                        "_type": "CODE_PHRASE",
+                        "terminology_id": {
+                          "_type": "TERMINOLOGY_ID",
+                          "value": "local"
+                        },
+                        "code_string": "at0042"
+                      },
+                      "value": "Principal"
+                    },
+                    "archetype_node_id": "at0040"
+                  }
+                ],
+                "archetype_node_id": "at0002"
+              }
+            ],
+            "archetype_node_id": "openEHR-EHR-CLUSTER.igr_pmsi_stay_segment_cluster.v0"
+          }
+        ],
+        "archetype_node_id": "at0001"
+      },
+      "archetype_node_id": "openEHR-EHR-ADMIN_ENTRY.igs_pmsi_stay.v0"
+    }
+  ],
+  "archetype_node_id": "openEHR-EHR-COMPOSITION.report.v1"
+}

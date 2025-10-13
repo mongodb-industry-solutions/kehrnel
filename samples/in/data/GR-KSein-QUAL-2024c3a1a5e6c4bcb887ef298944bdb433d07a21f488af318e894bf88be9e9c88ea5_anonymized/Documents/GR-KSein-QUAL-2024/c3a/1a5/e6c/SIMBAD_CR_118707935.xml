@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_118707935" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Soins infirmiers - Service Rouergue</title>
+    <effectiveTime value="20210503000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20210504000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ \qc
+ <b><br/>SERVICE DE M\'c9DECINE AIGU\'cb EN CANCEROLOGIE<u><br/><br/>SOINS INFIRMIERS</u></b>
+<br/>
+<br/>
+<u><b>CONSULTATION DU 03/05/2021</b></u>
+<br/>
+<br/>
+<u><b>INFIRMIER(\'c8RE)</b></u> : Juliette GUERTIN
+ <br/>
+<br/>
+<u><b>MOTIF</b></u> :
+ <br/>Patiente de 42 ans, se présente aux urgences pour PAC bouché.
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE</b></u> : 
+ <br/>
+<u>Constantes</u> :
+ <br/>PA 117/56 mmHg, Pouls 95/min, Température 36.5°C.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>
+<br/>PAC repiqué => bon débit, bon rendement.
+ <br/>
+<br/>Heure d'arrivée : 16H15
+ <br/>Heure de départ : ND
+ <br/>
+<b>RETOUR A DOMICILE</b>
+<br/>
+<br/>
+<br/> Le médecin autorise l'établissement des prescriptions médicales de transports sanitaires du patient, adaptées à sa situation médicale.
+ 
+
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

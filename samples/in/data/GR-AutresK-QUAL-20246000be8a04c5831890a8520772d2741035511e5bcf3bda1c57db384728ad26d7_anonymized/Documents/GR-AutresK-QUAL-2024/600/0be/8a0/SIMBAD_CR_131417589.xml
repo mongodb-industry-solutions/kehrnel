@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_131417589" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>MED.NUCLEAIRE MN TEP FDG 010</title>
+    <effectiveTime value="20150202000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20150209000000+0000"/>
+        <assignedAuthor>
+            <code code="070/9" displayName="CTE 070 - TUMEURS ENDOCRINES"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>EXAMEN DE TOMOGRAPHIE PAR EMISSION DE POSITONS/ TEP-FDG<br/>DR Docteur DERCLE LAURENT</b></u>
+<br/>
+<br/>
+<u><b>Indication </b></u>
+<br/>
+<br/>Evaluation d'efficacité thérapeutique. 
+ <br/>Carcinome oropharyngé vélaire classé T3 N2N0. HPV+,P16+. 
+ <br/>Traité par radio-chimiothérapie. 
+ <br/>Réponse complète clinique. 
+ <br/>
+<br/>
+<u><b>Technique </b></u>
+<b><br/></b>
+<br/>Acquisition TEP réalisée 60 minutes après injection par voie
+ <br/>intraveineuse de 195
+ <br/>MBq de 18-FDG.
+ <br/>Glycémie avant injection : 5,3 mmol/l.
+ <br/>Scanner de repérage pour fusion d'images, PDL : 182 mGy.cm
+ <br/>
+<br/>
+<u><b>Résultat </b></u>
+<br/>
+<br/>
+<b>Comparaison à la précédente TEP du 30/07/2014 : </b>
+<br/>
+<br/>- Réponse métabolique complète sur le site du primitif.
+ <br/>- Réponse métabolique probablement complète ganglionnaire :
+ <br/>persistance d'un ganglion de 7 mm, faiblement fixant (SUV = 2,8), 
+ <br/>dans le territoire cervical III à gauche.
+ <br/>
+<b><br/>Etage thoracique </b> :
+ <br/>- Pas de nodule intra-parenchymateux pulmonaire évolutif.
+ <br/>- Pas d'épanchement pleural ou péricardique.
+ <br/>- Pas d'adénopathie.
+ <br/>- Pas d'apparition de nouvelle lésion.
+ <br/>- Importante calcification coronarienne.
+ <br/>
+<br/>
+<b>Etage abdomino-pelvien :</b>
+<br/>- Pas d'anomalie de fixation suspecte hépatique, splénique, 
+ <br/>surrénalienne ou pancréatique. 
+ <br/> Pas d'adénopathie.
+ <br/>- Pas d'épanchement intra-péritonéal.
+ <br/>
+<br/>
+<b>Au niveau osseux : </b>
+<br/>- Persistance d'une ostéocondensation à limites nettes, probablement 
+ <br/>quiescente, non hyperfixante, du tiers supérieur de l'humérus gauche.
+ <br/>- Pas de lésion suspecte.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> </b>
+<br/>
+<br/>
+<b>Probable réponse métabolique complète.<br/>Persistance d'un ganglion dans le territoire cervical III à gauche, <br/>à surveiller.</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

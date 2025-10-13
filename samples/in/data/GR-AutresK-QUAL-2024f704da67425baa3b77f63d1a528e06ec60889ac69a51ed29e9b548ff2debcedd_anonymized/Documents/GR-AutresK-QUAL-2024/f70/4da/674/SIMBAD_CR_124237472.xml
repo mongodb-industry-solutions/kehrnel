@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124237472" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ONCOLOGIE GYNECOLOGIE - DR EMELINE COLOMBA</title>
+    <effectiveTime value="20190211000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190211000000+0000"/>
+        <assignedAuthor>
+            <code code="060/8" displayName="CTE 060 - GYNECOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>COMPTE RENDU DE CONSULTATION DE GYNECOLOGIE<br/><br/>Dicté par : </b> Docteur Elie El Rassy, Interne
+ <b><br/>Dicté le : </b> 07/02/2019 
+ <b><br/>Service : </b> 060-CTE 060 - GYNECOLOGIE 
+ <br/>
+<b>Type de document : </b> 060 CC CONSULTATION 
+ <br/>
+<b>Ref :</b> 592754 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : HLX/A
+ <br/>
+<br/>
+<b>Patiente vue avec le DR EL RASSY Elie, Interne<br/><br/>Patiente âgée de 66 ans, vue ce jour pour C2-J1, dans le cadre du <br/>protocole ATALANTE, pour une première rechute platine sensible d'un <br/>adénocarcinome séreux de haut grade stade IV initial, jamais réséqué.<br/><br/>CA 125 informatif<br/>BRCA1 et 2 non muté<br/>Rappel :</b>
+<br/>Adénocarcinome séreux de haut Grade stade IV (pleural) jamais 
+ <br/>réséqué avec marqueur CA 125 informatif supérieur à 1000 au 
+ <br/>diagnostic. On rappelle qu'il y avait eu une thrombose veineuse 
+ <br/>profonde au moment du diagnostic pour laquelle elle est traitée par 
+ <br/>INNOHEP.
+ <br/>Carboplatine et Taxol première cure le 31.3.2017 nécessitant des 
+ <br/>réductions de doses pour toxicité hématologique, principalement 
+ <br/>thrombopénie de grade 2. 
+ <br/>Réponse partielle Coelioscopie en Octobre 2017: 12 litres d'ascite 
+ <br/>évacués. Instabilité hémodynamique majeure et respiratoire et PCI 
+ <br/>stable. 
+ <br/>On valide un traitement systémique exclusif.
+ <br/>Introduction de l'AVASTIN 20.10.2017 pour un an. Dernière cure de 
+ <br/>chimiothérapie 17.11.2017.
+ <br/>Stabilité clinique sous avastin pendant 1 an, ascite ponctionnée 
+ <br/>toutes les 6 semaines.
+ <br/>Devant l'ascension du marqueur, un nouveau scanner avait été 
+ <br/>renouvelé le 19 octobre.
+ <br/>La relecture au comité confirme la progression de la masse ovarienne 
+ <br/>sans autre lésion d'allure évolutive. 
+ <br/>Inclusion dans le protocole ATALANTE bras Carboplatine Gemzar Avastin 
+ <br/>plus ou moins ATEZOLIZUMAB, C1 J1 le 17 janvier 2019. 
+ <br/>
+<b>DEPUIS LA DERNI\'c8RE CONSULTATION :<br/><br/></b> Patiente en bon état général à l'exception d'une fatigue grade II 
+ <br/>lié au traitement.
+ <br/>
+<br/>La patiente a été hospitalisée en intercure pour épistaxis grade I, 
+ <br/>Hémoptysie grade III et rectorragies grade III. Les bilans sanguins 
+ <br/>retrouvaient une anémie grade II Hb 7.8, thrombopénie grade VI plq 24 
+ <br/>000, neutropénie grade IV neutrophile 500 neutropenie de grade IV lié 
+ <br/>à la chimiothérapie..
+ <br/>
+<b>En consultation aujourd'hui,<br/></b> Absence de fievre ou de frisson
+ <br/>La patiente se plaint par ailleurs d'un vertige persistant. Absence 
+ <br/>de signes neurologiques associés.
+ <br/>
+<br/>
+<b>Traitements actuels:</b> innohep 0.6 ml par jour en suspens
+ <br/>
+<b>Examen clinique</b>
+<br/>PS: 1 Poids 62 kg (stable)
+ <br/>PA 122/81 mmHg FC 102 bpm
+ <br/>Abdomen souple et dépressible.
+ <br/>Aucultation cardio-pulmonaire claire. 
+ <br/>
+<b>Examen biologique<br/></b> Augmentation des chiffres de plaquettes et de d'hémoglobine. 
+ <br/>Persistance d'une neutropénie grade IV lié à la chimiothérapie. Le 
+ <br/>reste du bilan est en cours.
+ <b><br/></b>
+<br/>
+<b><h3>Conclusion</h3>:<br/></b> On ajourne le C2 d'une semaine avec réduction de la dose 
+ <br/>carboplatine AUC 3 et annulation de gemcitabine J8. 
+ <br/>La patiente consultera alors Dr Colomba dans une semaine avec un 
+ <br/>bilan onco qu'elle fera à GR pour évaluation biologique.
+ <br/>On reprend aujourd'hui l'Innohep à 0.5 mL en sous cutané par jour 
+ <br/>pour une thrombose veineuse ancienne.
+ <br/>On fait une demande de gastroscopie pour évaluation d'une cause 
+ <br/>gastrique pour les rectorragies. On prescrit aujourd'hui un IPP pour 
+ <br/>un mois.
+ <br/>La patiente fera une IRM cérébrale en ville pour évaluation de son 
+ <br/>vertige et elle nous tiendra au courant du résultat.
+ <br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Emeline COLOMBA <br/>Le jeudi 7 février 2019 à 17:43</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

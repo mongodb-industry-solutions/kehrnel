@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120287302" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20201005000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201005000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Compte rendu générique de SENOLOGIE<br/><br/>Dicté par : </b> Docteur Meriem Mokdad Adi
+ <b><br/>Dicté le : </b> 05/10/2020 
+ <b><br/>Service : </b> 050-CTE 050 - SEIN 
+ <br/>
+<b>Type de document : </b> 050 CC Générique 
+ <br/>
+<b>Ref :</b> 1119085 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : gyv/a
+ <br/>
+<br/>
+<br/>Patiente âgée de 41 ans, vue ce jour en présence de son époux dans le 
+ <br/>cadre de la prise en charge d'une récidive en mars 2018, sous 
+ <br/>Navelbine , débutée depuis en mars pour un cancer du sein gauche 
+ <br/>diagnostiqué initialement en 2015 traité à Bergonié par 
+ <br/>chimiothérapie, chirurgie puis radiothérapie au niveau axillaire, CMI 
+ <br/>et sus claviculaire, triple négatif et actuellement en récidive 
+ <br/>ganglionnaire sus-claviculaire et axillaire.
+ <br/>
+<br/>
+<u><b>ANTECEDENTS / PATHOLOGIES ASSOCIEES</b></u>
+<br/>Aucun.
+ <br/>Pas d'allergie connue.
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE</b></u>
+<br/>
+<br/>- 2015 : cancer du sein gauche diagnostiqué initialement traité à 
+ <br/>Bergonié par chimiothérapie, chirurgie puis radiothérapie au niveau 
+ <br/>axillaire, CMI et sus claviculaire, triple négatif.
+ <br/>
+<br/>- Récidive en mars 2018, 
+ <b>sous NAVELBINE, 1 ère ligne </b>
+<br/>
+<br/>- PET scanner le 20 décembre qui montre, comparativement à l'examen 
+ <br/>précédent de septembre 2018, un aspect de réévolutivité au niveau 
+ <br/>ganglionnaire sus et sous-claviculaire gauche et probablement 
+ <br/>axillaire gauche.
+ <br/>
+<br/>Elle a débuté un traitement par 
+ <b>TALAZOPARIBle 12/01/2019 en 2ème <br/>ligne.<br/></b>
+<br/>- TEP du XXXXXX : aspect de progression métabolique devant la 
+ <br/>majoration en intensité de fixation de certaines adénopathies 
+ <br/>sus-claviculaires et axillaires gauches malgré la régression 
+ <br/>métabolique du foyer pris pour cible. 
+ <br/>La majoration d'un nodule sous-cutané cervical antérieur gauche.
+ <br/>
+<br/>L'apparition d'un nodule surrénalien gauche fixant d'allure 
+ <br/>secondaire. 
+ <br/>
+<br/>
+<b>Sous XELODA depuis avril 2019 en 3ème ligne.<br/></b>
+<br/>- TEP scanner du 02/07/2019 : Nouvelle progression métabolique 
+ <b>4ème <br/>ligne par ENDOXAN oral.<br/><br/></b> - Aout 2019: Nouvelle progression; 
+ <b>5ème ligne de traitement par <br/>ERIBULINE pour 5 cycles.<br/><br/></b> - TEP scanner le 13/12 : progression donc début d'une 
+ <b>6ème ligne par <br/>CARBOPLATINE / GEMZAR </b> depuis décembre 2019 jusqu'au 28/02/2020.
+ <br/>
+<br/>En mars , pendant le confinement , relais par NAVELBINE de mars à 
+ <br/>juillet .
+ <br/>
+<br/>- TDM TAP de juin 2020 : Progression ganglionnaire 
+ <br/>sous-diaphragmatique devant l'apparition d'adénomégalies 
+ <br/>rétro-péritonéales gauches comparativement au scanner de Février 2020.
+ <br/>
+<br/>- Reprise de CARBOPLATINE / GEMZAR C1J1 22/07/2020
+ <br/>Dernière cure le 09/09/2020 (C3) en association avec le Gemzar .
+ <br/>Poursuite du carboplatine seul depuis le 30/09.
+ <br/>
+<br/>
+<u><b>Ce jour :<br/><br/></b></u> PS:2
+ <br/>Poids 67Kg 
+ <br/>Présente des douleurs depuis 1 mois au niveau épigastrique 
+ <br/>HOSPITALISATION SERVICE HERAULT DU 16 AU 24 SEPTEMBRE 2020 pour 
+ <br/>vomissements et douleurs abdominales .
+ <br/>TDM TAP et cérébral le 17/09: stabilité.
+ <br/>
+<br/>Examen clinique ce jour retrouve une augmentation des adénopathies 
+ <br/>depuis une semaine selon la patiente : les nodules mesurent environ 
+ <br/>1 cm en sous-claviculaire gauche et un autre nodule en cervical haut 
+ <br/>d'environ 2 cm avec au-dessus un magma d'adénopathies cervicales 
+ <br/>droites mesurant environ 2.5 à 3cm.
+ <br/>
+<br/>La patiente se plaint toujours de douleurs au niveau sous-costal 
+ <br/>gauche irradiant vers la région épigastrique à type de brulure , 
+ <br/>exacerbée par les repas, avec une EVA 10/10 , et garde un fond 
+ <br/>douloureux à 5-6/10.
+ <br/>
+<br/>Elle rapporte également des douleurs abdominales à type de crampes et 
+ <br/>de coliques .
+ <br/>
+<br/>Actuellement elle est sous Oxycontin 60 mg 2 x par jour associé à des 
+ <br/>interdoses qu'elle ne prenait pas et qu'elle prend régulièrement 
+ <br/>environ 5 à 6 interdoses par jour d'Oxynorm à 20 mg.
+ <br/>
+<br/>Je propose d'augmenter la dose d'Oxycontin 70 x 2 avec les mêmes 
+ <br/>doses d'Oxynorm
+ <br/>
+<br/>Je propose à la patiente d'explorer ses douleurs épigastriques par la 
+ <br/>réalisation d'une fibroscopie gastrique. La patiente a déjà eu 
+ <br/>l'ordonnance lors de son dernier passage en hôpital de jour mais n'a 
+ <br/>pas pu avoir de rendez-vous pris chez elle.
+ <br/>
+<br/>Je faxe ce jour une demande pour essayer d'avoir un rendez-vous à 
+ <br/>Gustave Roussy.
+ <br/>
+<br/>On essaiera d'organiser également une consultation douleurs 
+ <br/>rapidement .
+ <br/>
+<br/>Je vais voir la possibilité dune inclusion dans un protocole de 
+ <br/>recherche .
+ <br/>
+<br/>
+<u><b>En pratique :<br/><br/></b></u> Poursuite du Carboplatine hebdomadaire.
+ <br/>
+<br/>Je la reverrai en consultation le 19/10 avec les résultats d'un bilan 
+ <br/>biologique à GR 
+ <br/>
+<br/>
+<br/> ____________________________
+ <br/>
+<b>Courrier rédigé avec un logiciel de reconnaissance vocale pouvant <br/>comporter quelques imperfections orthographiques.<br/><u></u></b>
+<u> <br/></u>
+<br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Meriem MOKDAD ADI <br/>Le lundi 5 octobre 2020 à 12:52 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

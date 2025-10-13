@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_119543850" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20210118000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20210118000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Compte rendu de consultation de SENOLOGIE<br/><br/>Dicté par : </b> Docteur Meriem Mokdad Adi
+ <b><br/>Dicté le : </b> 18/01/2021 
+ <b><br/>Service : </b> 050-CTE 050 - SEIN 
+ <br/>
+<b>Type de document : </b> 050 CC Générique 
+ <br/>
+<b>Ref :</b> 1223956 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : kbd
+ <br/>
+<br/>
+<b> Patiente âgée de 41 ans, vue en consultation avant une nouvelle cure <br/>de CMF en 7ème ligne, débuté le 10/12, dans le cadre <br/>de la prise en charge d'un cancer du sein métastatique au niveau <br/>ganglionnaire et pleural.</b>
+<br/>
+<br/>
+<u><b>Intercure </b></u> :
+ <br/>
+<br/>La radiothérapie s'est donc déroulée du 22 décembre au 30 décembre 
+ <br/>2020 au cours de cinq séances de 4 Gy sur l'adénopathie sus 
+ <br/>claviculaire gauche .
+ <br/>Problème d'abcès dentaire gauche qui va être évacué demain en ville.
+ <br/>Elle va arrêter l'INNOHEP ce jour pour le geste dentaire prévue 
+ <br/>demain.
+ <br/>La patiente a été soulagée par la radiothérapie, toujours sous PCA de 
+ <br/>MORPHINE et KETAMINE, LAROXYL aux mêmes doses. 
+ <br/>Elle doit voir l'équipe de la douleur ce jour.
+ <br/>A arrêter les corticoïdes depuis plus de 03 semaines.
+ <br/>
+<br/>
+<u><b>Examen clinique</b></u> :
+ <br/>
+<br/>PS : 2. 
+ <br/>Poids : 62 Kg versus 70 kg.
+ <br/>Prend 02 compléments alimentaires par jour 
+ <br/>Biopsie ganglionnaire claviculaire gauche : 
+ <br/>triple négatif.
+ <br/>
+<br/>
+<u><b>Dernier scanner du 08/12/2020</b></u> : Absence d'embolie pulmonaire.
+ <br/>Majoration de l'épanchement pleural gauche avec collapsus alvéolaire 
+ <br/>au contact expliquant, au moins en partie, la symptomatologie.
+ <br/>Absence d'opacification de la veine pulmonaire supérieure gauche par 
+ <br/>envahissement tumoral hilaire gauche, pouvant également contribuer à 
+ <br/>la dyspnée.
+ <br/>Epanchement péricardique.
+ <br/>Progression oncologique par ailleurs en comparaison au 12/11/2020.
+ <br/>
+<br/>
+<br/>
+<u><b>En pratique</b></u> :
+ <br/>
+<br/>
+<b>Poursuite de la chimiothérapie par CMF.<br/></b> Prévoir une nouvelle évaluation à partir du 15 février par scanner 
+ <br/>thoraco abdominopelvien demande faxée ce jour.
+ <br/>Je propose à la patiente une inclusion dans le protocole RAGNAR, la 
+ <br/>patiente est d'accord pour une biopsie liquide.
+ <br/>On prévoira la prise de sang le 3 février lors de sa prochaine venue 
+ <br/>pour le prochain cycle de CMF.
+ <br/>
+<br/>
+<br/>Je reverrai la patiente en consultation avec les résultats du scanner 
+ <br/>le 15 ou le 22 février en fonction de la date du scanner. 
+ <b><br/></b>
+<br/>
+<br/>
+<br/>
+<br/> ____________________________
+ <br/>
+<b>Courrier rédigé avec un logiciel de reconnaissance vocale pouvant <br/>comporter quelques imperfections orthographiques.<br/><u></u></b>
+<u> <br/></u>
+<br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Meriem MOKDAD ADI <br/>Le lundi 18 janvier 2021 à 12:24 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

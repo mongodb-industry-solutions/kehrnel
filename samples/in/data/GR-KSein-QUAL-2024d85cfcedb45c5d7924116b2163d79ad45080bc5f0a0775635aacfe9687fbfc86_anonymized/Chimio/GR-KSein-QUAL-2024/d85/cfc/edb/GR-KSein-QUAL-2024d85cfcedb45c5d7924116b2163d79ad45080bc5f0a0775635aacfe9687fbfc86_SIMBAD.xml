@@ -1,0 +1,2078 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?><Messages>
+    <M_Compte_rendu_administration>
+        <Patient>
+            <Ipp>GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86</Ipp>
+        </Patient>
+        <dateAlimentation>20231204</dateAlimentation>
+        <Compte_rendu_admin>
+            <Protocole>
+                <Libellé>EC</Libellé>
+                <Nature>Classique</Nature>
+            </Protocole>
+                <Cycle id="609248">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20160829</Dh_début_effective>
+                                <Dh_fin_effective>20160829</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000021</Code_composant>
+                                    <Libellé_composant>EPIRUBICINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>120</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>120</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20160829</Dh_début_effective>
+                                <Dh_fin_effective>20160829</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000018</Code_composant>
+                                    <Libellé_composant>ENDOXAN* INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1200</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1200</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="609249">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20160919</Dh_début_effective>
+                                <Dh_fin_effective>20160919</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000021</Code_composant>
+                                    <Libellé_composant>EPIRUBICINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>120</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>120</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20160919</Dh_début_effective>
+                                <Dh_fin_effective>20160919</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000018</Code_composant>
+                                    <Libellé_composant>ENDOXAN* INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1200</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1200</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="609250">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20161010</Dh_début_effective>
+                                <Dh_fin_effective>20161010</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000021</Code_composant>
+                                    <Libellé_composant>EPIRUBICINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>120</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>120</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20161010</Dh_début_effective>
+                                <Dh_fin_effective>20161010</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000018</Code_composant>
+                                    <Libellé_composant>ENDOXAN* INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1200</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1200</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="609251">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20161031</Dh_début_effective>
+                                <Dh_fin_effective>20161031</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000018</Code_composant>
+                                    <Libellé_composant>ENDOXAN* INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1200</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1200</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20161031</Dh_début_effective>
+                                <Dh_fin_effective>20161031</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000021</Code_composant>
+                                    <Libellé_composant>EPIRUBICINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>120</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>120</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+        </Compte_rendu_admin>
+        <Compte_rendu_admin>
+            <Protocole>
+                <Libellé>PACLITAXEL</Libellé>
+                <Nature>Classique</Nature>
+            </Protocole>
+                <Cycle id="613375">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20161114</Dh_début_effective>
+                                <Dh_fin_effective>20161114</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20161121</Dh_début_effective>
+                                <Dh_fin_effective>20161121</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="2" jour="14">
+                            <Elément_administration>
+                                <Dh_début_effective>20161128</Dh_début_effective>
+                                <Dh_fin_effective>20161128</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="613376">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20161212</Dh_début_effective>
+                                <Dh_fin_effective>20161212</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20161219</Dh_début_effective>
+                                <Dh_fin_effective>20161219</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="613377">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20161226</Dh_début_effective>
+                                <Dh_fin_effective>20161226</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20170102</Dh_début_effective>
+                                <Dh_fin_effective>20170102</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="2" jour="14">
+                            <Elément_administration>
+                                <Dh_début_effective>20170109</Dh_début_effective>
+                                <Dh_fin_effective>20170109</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="613378">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20170116</Dh_début_effective>
+                                <Dh_fin_effective>20170116</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20170123</Dh_début_effective>
+                                <Dh_fin_effective>20170123</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="2" jour="14">
+                            <Elément_administration>
+                                <Dh_début_effective>20170130</Dh_début_effective>
+                                <Dh_fin_effective>20170130</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="819519">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20191223</Dh_début_effective>
+                                <Dh_fin_effective>20191223</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="8">
+                            <Elément_administration>
+                                <Dh_début_effective>20191231</Dh_début_effective>
+                                <Dh_fin_effective>20191231</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="2" jour="15">
+                            <Elément_administration>
+                                <Dh_début_effective>20200107</Dh_début_effective>
+                                <Dh_fin_effective>20200107</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="819525">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20200113</Dh_début_effective>
+                                <Dh_fin_effective>20200113</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>130</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20200120</Dh_début_effective>
+                                <Dh_fin_effective>20200120</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="2" jour="14">
+                            <Elément_administration>
+                                <Dh_début_effective>20200127</Dh_début_effective>
+                                <Dh_fin_effective>20200127</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="819526">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20200203</Dh_début_effective>
+                                <Dh_fin_effective>20200203</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20200210</Dh_début_effective>
+                                <Dh_fin_effective>20200210</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="2" jour="14">
+                            <Elément_administration>
+                                <Dh_début_effective>20200217</Dh_début_effective>
+                                <Dh_fin_effective>20200217</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="819527">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20200224</Dh_début_effective>
+                                <Dh_fin_effective>20200224</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20200302</Dh_début_effective>
+                                <Dh_fin_effective>20200302</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="2" jour="14">
+                            <Elément_administration>
+                                <Dh_début_effective>20200309</Dh_début_effective>
+                                <Dh_fin_effective>20200309</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000037</Code_composant>
+                                    <Libellé_composant>PACLITAXEL INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>100</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+        </Compte_rendu_admin>
+        <Compte_rendu_admin>
+            <Protocole>
+                <Libellé>CARBO GEMCI</Libellé>
+                <Nature>Classique</Nature>
+            </Protocole>
+                <Cycle id="702357">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20180226</Dh_début_effective>
+                                <Dh_fin_effective>20180226</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000024</Code_composant>
+                                    <Libellé_composant>GEMCITABINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1600</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1600</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20180226</Dh_début_effective>
+                                <Dh_fin_effective>20180226</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000036</Code_composant>
+                                    <Libellé_composant>CARBOPLATINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>370</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>370</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="2" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20180305</Dh_début_effective>
+                                <Dh_fin_effective>20180305</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000024</Code_composant>
+                                    <Libellé_composant>GEMCITABINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1600</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1600</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="702362">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20180403</Dh_début_effective>
+                                <Dh_fin_effective>20180403</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000024</Code_composant>
+                                    <Libellé_composant>GEMCITABINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1400</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1400</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20180403</Dh_début_effective>
+                                <Dh_fin_effective>20180403</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000036</Code_composant>
+                                    <Libellé_composant>CARBOPLATINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>230</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>230</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="2" jour="6">
+                            <Elément_administration>
+                                <Dh_début_effective>20180409</Dh_début_effective>
+                                <Dh_fin_effective>20180409</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000024</Code_composant>
+                                    <Libellé_composant>GEMCITABINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1400</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1400</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="702363">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20180502</Dh_début_effective>
+                                <Dh_fin_effective>20180502</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000024</Code_composant>
+                                    <Libellé_composant>GEMCITABINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1400</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1400</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20180502</Dh_début_effective>
+                                <Dh_fin_effective>20180502</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000036</Code_composant>
+                                    <Libellé_composant>CARBOPLATINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>250</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>250</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="718395">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20180524</Dh_début_effective>
+                                <Dh_fin_effective>20180524</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000024</Code_composant>
+                                    <Libellé_composant>GEMCITABINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1400</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1400</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20180524</Dh_début_effective>
+                                <Dh_fin_effective>20180524</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000036</Code_composant>
+                                    <Libellé_composant>CARBOPLATINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>270</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>270</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="715289">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20180618</Dh_début_effective>
+                                <Dh_fin_effective>20180618</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000036</Code_composant>
+                                    <Libellé_composant>CARBOPLATINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>240</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>240</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20180618</Dh_début_effective>
+                                <Dh_fin_effective>20180618</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000024</Code_composant>
+                                    <Libellé_composant>GEMCITABINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1400</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1400</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="715290">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20180709</Dh_début_effective>
+                                <Dh_fin_effective>20180709</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000036</Code_composant>
+                                    <Libellé_composant>CARBOPLATINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>250</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>250</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20180709</Dh_début_effective>
+                                <Dh_fin_effective>20180709</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000024</Code_composant>
+                                    <Libellé_composant>GEMCITABINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1400</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1400</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+        </Compte_rendu_admin>
+        <Compte_rendu_admin>
+            <Protocole>
+                <Libellé>TRASTUZUMAB</Libellé>
+                <Nature>Classique</Nature>
+            </Protocole>
+                <Cycle id="713125">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20180502</Dh_début_effective>
+                                <Dh_fin_effective>20180502</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000048</Code_composant>
+                                    <Libellé_composant>TRASTUZUMAB (HERCEPT</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>390</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>390</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="713126">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20180523</Dh_début_effective>
+                                <Dh_fin_effective>20180523</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000048</Code_composant>
+                                    <Libellé_composant>TRASTUZUMAB (HERCEPT</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>290</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>290</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="713127">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20180618</Dh_début_effective>
+                                <Dh_fin_effective>20180618</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000048</Code_composant>
+                                    <Libellé_composant>TRASTUZUMAB (HERCEPT</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>290</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>290</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="713128">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20180709</Dh_début_effective>
+                                <Dh_fin_effective>20180709</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000048</Code_composant>
+                                    <Libellé_composant>TRASTUZUMAB (HERCEPT</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>290</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>290</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="715292">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20180730</Dh_début_effective>
+                                <Dh_fin_effective>20180730</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000048</Code_composant>
+                                    <Libellé_composant>TRASTUZUMAB (HERCEPT</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>290</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>290</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="727603">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20180820</Dh_début_effective>
+                                <Dh_fin_effective>20180820</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000048</Code_composant>
+                                    <Libellé_composant>TRASTUZUMAB (HERCEPT</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>300</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>300</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="727604">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20180910</Dh_début_effective>
+                                <Dh_fin_effective>20180910</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000048</Code_composant>
+                                    <Libellé_composant>TRASTUZUMAB (HERCEPT</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>300</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>300</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="727605">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20181001</Dh_début_effective>
+                                <Dh_fin_effective>20181001</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000048</Code_composant>
+                                    <Libellé_composant>TRASTUZUMAB (HERCEPT</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>300</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>300</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="727606">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20181022</Dh_début_effective>
+                                <Dh_fin_effective>20181022</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000048</Code_composant>
+                                    <Libellé_composant>TRASTUZUMAB (HERCEPT</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>300</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>300</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="727607">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20181109</Dh_début_effective>
+                                <Dh_fin_effective>20181109</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000048</Code_composant>
+                                    <Libellé_composant>TRASTUZUMAB (HERCEPT</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>300</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>300</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+        </Compte_rendu_admin>
+        <Compte_rendu_admin>
+            <Protocole>
+                <Libellé>ERIBULINE</Libellé>
+                <Nature>Classique</Nature>
+            </Protocole>
+                <Cycle id="748105">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20181109</Dh_début_effective>
+                                <Dh_fin_effective>20181109</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000344</Code_composant>
+                                    <Libellé_composant>HALAVEN INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20181116</Dh_début_effective>
+                                <Dh_fin_effective>20181116</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000344</Code_composant>
+                                    <Libellé_composant>HALAVEN INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="748106">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20181130</Dh_début_effective>
+                                <Dh_fin_effective>20181130</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000344</Code_composant>
+                                    <Libellé_composant>HALAVEN INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="748108">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20181221</Dh_début_effective>
+                                <Dh_fin_effective>20181221</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000344</Code_composant>
+                                    <Libellé_composant>HALAVEN INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20181228</Dh_début_effective>
+                                <Dh_fin_effective>20181228</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000344</Code_composant>
+                                    <Libellé_composant>HALAVEN INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="748109">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20190111</Dh_début_effective>
+                                <Dh_fin_effective>20190111</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000344</Code_composant>
+                                    <Libellé_composant>HALAVEN INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20190118</Dh_début_effective>
+                                <Dh_fin_effective>20190118</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000344</Code_composant>
+                                    <Libellé_composant>HALAVEN INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="748110">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20190208</Dh_début_effective>
+                                <Dh_fin_effective>20190208</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000344</Code_composant>
+                                    <Libellé_composant>HALAVEN INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="759368">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20190215</Dh_début_effective>
+                                <Dh_fin_effective>20190215</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000344</Code_composant>
+                                    <Libellé_composant>HALAVEN INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="14">
+                            <Elément_administration>
+                                <Dh_début_effective>20190301</Dh_début_effective>
+                                <Dh_fin_effective>20190301</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000344</Code_composant>
+                                    <Libellé_composant>HALAVEN INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="759369">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20190322</Dh_début_effective>
+                                <Dh_fin_effective>20190322</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000344</Code_composant>
+                                    <Libellé_composant>HALAVEN INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20190329</Dh_début_effective>
+                                <Dh_fin_effective>20190329</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000344</Code_composant>
+                                    <Libellé_composant>HALAVEN INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="759370">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20190412</Dh_début_effective>
+                                <Dh_fin_effective>20190412</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000344</Code_composant>
+                                    <Libellé_composant>HALAVEN INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20190419</Dh_début_effective>
+                                <Dh_fin_effective>20190419</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000344</Code_composant>
+                                    <Libellé_composant>HALAVEN INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="759371">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20190503</Dh_début_effective>
+                                <Dh_fin_effective>20190503</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000344</Code_composant>
+                                    <Libellé_composant>HALAVEN INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20190510</Dh_début_effective>
+                                <Dh_fin_effective>20190510</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000344</Code_composant>
+                                    <Libellé_composant>HALAVEN INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>1,9</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+        </Compte_rendu_admin>
+        <Compte_rendu_admin>
+            <Protocole>
+                <Libellé>CMF</Libellé>
+                <Nature>Classique</Nature>
+            </Protocole>
+                <Cycle id="783832">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20190531</Dh_début_effective>
+                                <Dh_fin_effective>20190531</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000023</Code_composant>
+                                    <Libellé_composant>5-FLUOROURACILE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>780</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>780</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20190531</Dh_début_effective>
+                                <Dh_fin_effective>20190531</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000031</Code_composant>
+                                    <Libellé_composant>METHOTREXATE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>62</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>62</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="2" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20190531</Dh_début_effective>
+                                <Dh_fin_effective>20190531</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000018</Code_composant>
+                                    <Libellé_composant>ENDOXAN* INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>930</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>930</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="3" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20190607</Dh_début_effective>
+                                <Dh_fin_effective>20190607</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000031</Code_composant>
+                                    <Libellé_composant>METHOTREXATE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>62</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>62</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="4" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20190607</Dh_début_effective>
+                                <Dh_fin_effective>20190607</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000018</Code_composant>
+                                    <Libellé_composant>ENDOXAN* INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>930</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>930</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="5" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20190607</Dh_début_effective>
+                                <Dh_fin_effective>20190607</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000023</Code_composant>
+                                    <Libellé_composant>5-FLUOROURACILE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>780</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>780</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="783833">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20190628</Dh_début_effective>
+                                <Dh_fin_effective>20190628</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000023</Code_composant>
+                                    <Libellé_composant>5-FLUOROURACILE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>780</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>780</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20190628</Dh_début_effective>
+                                <Dh_fin_effective>20190628</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000031</Code_composant>
+                                    <Libellé_composant>METHOTREXATE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>62</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>62</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="2" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20190628</Dh_début_effective>
+                                <Dh_fin_effective>20190628</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000018</Code_composant>
+                                    <Libellé_composant>ENDOXAN* INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>930</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>930</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="3" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20190705</Dh_début_effective>
+                                <Dh_fin_effective>20190705</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000018</Code_composant>
+                                    <Libellé_composant>ENDOXAN* INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>930</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>930</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="4" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20190705</Dh_début_effective>
+                                <Dh_fin_effective>20190705</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000023</Code_composant>
+                                    <Libellé_composant>5-FLUOROURACILE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>780</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>780</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="5" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20190705</Dh_début_effective>
+                                <Dh_fin_effective>20190705</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000031</Code_composant>
+                                    <Libellé_composant>METHOTREXATE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>62</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>62</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="783834">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20190805</Dh_début_effective>
+                                <Dh_fin_effective>20190805</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000031</Code_composant>
+                                    <Libellé_composant>METHOTREXATE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>62</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>62</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20190805</Dh_début_effective>
+                                <Dh_fin_effective>20190805</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000023</Code_composant>
+                                    <Libellé_composant>5-FLUOROURACILE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>780</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>780</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="2" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20190805</Dh_début_effective>
+                                <Dh_fin_effective>20190805</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000018</Code_composant>
+                                    <Libellé_composant>ENDOXAN* INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>930</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>930</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="3" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20190812</Dh_début_effective>
+                                <Dh_fin_effective>20190812</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000023</Code_composant>
+                                    <Libellé_composant>5-FLUOROURACILE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>780</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>780</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="4" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20190812</Dh_début_effective>
+                                <Dh_fin_effective>20190812</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000031</Code_composant>
+                                    <Libellé_composant>METHOTREXATE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>62</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>62</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="5" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20190812</Dh_début_effective>
+                                <Dh_fin_effective>20190812</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000018</Code_composant>
+                                    <Libellé_composant>ENDOXAN* INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>930</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>930</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="783835">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20190902</Dh_début_effective>
+                                <Dh_fin_effective>20190902</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000023</Code_composant>
+                                    <Libellé_composant>5-FLUOROURACILE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>780</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>780</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20190902</Dh_début_effective>
+                                <Dh_fin_effective>20190902</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000031</Code_composant>
+                                    <Libellé_composant>METHOTREXATE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>62</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>62</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="2" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20190902</Dh_début_effective>
+                                <Dh_fin_effective>20190902</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000018</Code_composant>
+                                    <Libellé_composant>ENDOXAN* INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>930</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>930</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="3" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20190909</Dh_début_effective>
+                                <Dh_fin_effective>20190909</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000023</Code_composant>
+                                    <Libellé_composant>5-FLUOROURACILE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>780</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>780</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="4" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20190909</Dh_début_effective>
+                                <Dh_fin_effective>20190909</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000018</Code_composant>
+                                    <Libellé_composant>ENDOXAN* INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>930</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>930</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="5" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20190909</Dh_début_effective>
+                                <Dh_fin_effective>20190909</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000031</Code_composant>
+                                    <Libellé_composant>METHOTREXATE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>62</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>62</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+        </Compte_rendu_admin>
+        <Compte_rendu_admin>
+            <Protocole>
+                <Libellé>TRASTUZUMAB v3</Libellé>
+                <Nature>Classique</Nature>
+            </Protocole>
+                <Cycle id="803703">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20190930</Dh_début_effective>
+                                <Dh_fin_effective>20190930</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000247</Code_composant>
+                                    <Libellé_composant>TRASTUZUMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>410</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>410</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="803704">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20191021</Dh_début_effective>
+                                <Dh_fin_effective>20191021</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000247</Code_composant>
+                                    <Libellé_composant>TRASTUZUMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>310</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>310</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="803705">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20191111</Dh_début_effective>
+                                <Dh_fin_effective>20191111</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000247</Code_composant>
+                                    <Libellé_composant>TRASTUZUMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>310</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>310</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="803706">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20191202</Dh_début_effective>
+                                <Dh_fin_effective>20191202</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000247</Code_composant>
+                                    <Libellé_composant>TRASTUZUMAB INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>310</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>310</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+        </Compte_rendu_admin>
+        <Compte_rendu_admin>
+            <Protocole>
+                <Libellé>CARBO</Libellé>
+                <Nature>Classique</Nature>
+            </Protocole>
+                <Cycle id="849490">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20200629</Dh_début_effective>
+                                <Dh_fin_effective>20200629</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000036</Code_composant>
+                                    <Libellé_composant>CARBOPLATINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>170</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>170</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20200706</Dh_début_effective>
+                                <Dh_fin_effective>20200706</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000036</Code_composant>
+                                    <Libellé_composant>CARBOPLATINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>160</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>160</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="2" jour="14">
+                            <Elément_administration>
+                                <Dh_début_effective>20200713</Dh_début_effective>
+                                <Dh_fin_effective>20200713</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000036</Code_composant>
+                                    <Libellé_composant>CARBOPLATINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>170</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>170</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="849491">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20200720</Dh_début_effective>
+                                <Dh_fin_effective>20200720</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000036</Code_composant>
+                                    <Libellé_composant>CARBOPLATINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>170</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>170</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="7">
+                            <Elément_administration>
+                                <Dh_début_effective>20200727</Dh_début_effective>
+                                <Dh_fin_effective>20200727</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000036</Code_composant>
+                                    <Libellé_composant>CARBOPLATINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>180</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>180</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="2" jour="14">
+                            <Elément_administration>
+                                <Dh_début_effective>20200803</Dh_début_effective>
+                                <Dh_fin_effective>20200803</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000036</Code_composant>
+                                    <Libellé_composant>CARBOPLATINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>160</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>160</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+                <Cycle id="849492">
+                        <Séquence id="0" jour="0">
+                            <Elément_administration>
+                                <Dh_début_effective>20200810</Dh_début_effective>
+                                <Dh_fin_effective>20200810</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000036</Code_composant>
+                                    <Libellé_composant>CARBOPLATINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>170</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>170</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                        <Séquence id="1" jour="9">
+                            <Elément_administration>
+                                <Dh_début_effective>20200819</Dh_début_effective>
+                                <Dh_fin_effective>20200819</Dh_fin_effective>
+                                <Composant_administré>
+                                    <Code_composant>PROD000036</Code_composant>
+                                    <Libellé_composant>CARBOPLATINE INJ</Libellé_composant>
+                                    <Quantité_prévue>
+                                        <Nombre>170</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_prévue>
+                                    <Quantité_administrée>
+                                        <Nombre>170</Nombre>
+                                        <Unité>mg</Unité>
+                                    </Quantité_administrée>
+                                </Composant_administré>
+                            </Elément_administration>
+                        </Séquence>
+                </Cycle>
+        </Compte_rendu_admin>
+    </M_Compte_rendu_administration>
+</Messages>

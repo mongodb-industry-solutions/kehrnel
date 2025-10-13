@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127558244" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="10213-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anesthésie"/>
+    <title>CR Anesthesie Post-Op</title>
+    <effectiveTime value="20170831000000+0000"/>
+    <confidentialityCode code="10213-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'anesthésie"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170831000000+0000"/>
+        <assignedAuthor>
+            <code code="ANS/286" displayName="ANESTHESIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<p></p>
+<p>Prénom <br/><br/><br/><br/>Nom </p>
+<p>N° Patient <br/><br/><br/><br/>D. de N. </p>
+<p>No PBO <br/><br/><br/><br/>Taille <br/><br/><br/><br/>Poids <br/><br/><br/><br/>Age </p>
+<p>Anesthésie le <br/><br/><br/><br/>Classe ASAMyriam </p>
+<p>XXXXXX </p>
+<p>XXXXXX XXXXXX </p>
+<p>670337 165 cm 70 kg </p>
+<p>65 ans </p>
+<p>31.08.2017 3 </p>
+<p>ATNC <br/><br/><br/><br/>Induction: Normale </p>
+<p>INTERVENTION CHIRURGICALE </p>
+<p>IADEAnesthesiste Chirurgien <br/>Dr BOURGAIN Jean-Louis Dr BENTIVEGNA Enrica ROQUE Aurélie </p>
+<p>Etudiant(e) IADE: AULIBE <br/>Dr BOURGAIN Jean-Louis </p>
+<p>Consultation pre-anesthésique 2BMR : </p>
+<p>D.I.D : <br/>D.T.M : </p>
+<p>Mallampati : <br/>ODB: </p>
+<p>Pacemaker : </p>
+<p>Eval. Prémé: </p>
+<p>Technique Anesthésie Allergies Durées <br/>Non connue Durée anesthésie 2 h 1 min </p>
+<p>Durée chirurgie 1 h 8 min <br/>Admission SSPI 16:20 <br/>Sortie SSPI 17:23 </p>
+<p>Anesthésie générale </p>
+<p>Voies Aériennes Pré-oxygénation: 31/08/2017 14:11, Mode de ventilation: VC 14:20, 16:11, Sonde Intubation, Normale, 7, Orale, Difficulté, Facile, Cormack, 1, Pression ballonnet, 30 mmHg, <br/>Ausculation Symetrique, </p>
+<p>Voies Veineuses 14:09, VVP, Cathlon VVP, 20g, Main, Droit, .Facile </p>
+<p>Loco-Régionale </p>
+<p>Position & Protections 14:24 Installation Décubitus dorsal 14:24 Position Table Niveau 14:24 Position Bras Gauche Long du corps 14:24 Protection Oculaire Simple 14:24 Points de compression OK 14:24 Position Bras Droit Long du corps </p>
+<p>Temps chirurgicaux 15:36, Tps chir Viscérale, CO2 Exsufflation 15:03, Tps Endoscopie digestive, PONCTION ASCITE 7 Litres 14:53, Tps chir Viscérale, CO2 Insufflation, pression 12 mmhg </p>
+<p>Monitorage et Equipements <br/>Site température Oesophagienne <br/>Site SpO2 Doigt <br/>Site curarisation Adducteur du Pouce <br/>Réchauffeur Air <br/>ECG 3 fils </p>
+<p>Notes IntraOP </p>
+<p>Drainages </p>
+<p>Temps 31/08/2017 16:14 -Sortie de salle 31/08/2017 16:12 -Fin d'anesthésie <br/>Date d'impression: 31/08/17 17:24 Page 1/4</p>
+<p></p>
+<p></p>
+<p>Prénom <br/><br/><br/><br/>Nom </p>
+<p>N° Patient <br/><br/><br/><br/>D. de N. </p>
+<p>No PBO <br/><br/><br/><br/>Taille <br/><br/><br/><br/>Poids <br/><br/><br/><br/>Age </p>
+<p>Anesthésie le <br/><br/><br/><br/>Classe ASAMyriam </p>
+<p>XXXXXX </p>
+<p>XXXXXX XXXXXX </p>
+<p>670337 165 cm 70 kg </p>
+<p>65 ans </p>
+<p>31.08.2017 3 </p>
+<p>ATNC <br/><br/><br/><br/>Induction: Normale </p>
+<p>31/08/2017 15:59 -Fin d'intervention 31/08/2017 14:51 -Début de chirurgie 31/08/2017 14:50 -Time out fait 31/08/2017 14:25 -Prêt pour chirurgie 31/08/2017 14:11 Pré-oxygénation 31/08/2017 14:11 -Début d'anesthesie 31/08/2017 13:59 -Patient en salle </p>
+<p>ENTREES BALANCE <br/>Produits sanguins </p>
+<p>Entrées Solutés </p>
+<p>TOTAL </p>
+<p>1669 ml </p>
+<p>1669 ml </p>
+<p>7000 ml </p>
+<p>7000 ml -5331 ml </p>
+<p>SORTIES <br/>Balance des fluides </p>
+<p>Autres </p>
+<p>Pertes sang bloc </p>
+<p>Urines </p>
+<p>Redons </p>
+<p>Date d'impression: 31/08/17 17:24 Page 2/4</p>
+<p></p>
+<p></p>
+<p>Prénom <br/><br/><br/><br/>Nom </p>
+<p>N° Patient <br/><br/><br/><br/>D. de N. </p>
+<p>No PBO <br/><br/><br/><br/>Taille <br/><br/><br/><br/>Poids <br/><br/><br/><br/>Age </p>
+<p>Anesthésie le <br/><br/><br/><br/>Classe ASAMyriam </p>
+<p>XXXXXX </p>
+<p>XXXXXX XXXXXX </p>
+<p>670337 165 cm 70 kg </p>
+<p>65 ans </p>
+<p>31.08.2017 3 </p>
+<p>ATNC <br/><br/><br/><br/>Induction: Normale </p>
+<p>SSPI <br/>ExtubationArrivée SSPI Personnels SSPI <br/>16:1116:20 PERCIER Anne-Blandine Dr BOURGAIN Jean-Louis </p>
+<p>... </p>
+<p>Bilan d ́entrée <br/>Score EDS: 1 Patient Somnolent , NVPO: 1 Rien , Mal de gorge: .Non , EVS: 0 Douleur nulle , Agitation: .Non </p>
+<p>16:21: O2 additionnel par: Lunettes O2, 16:05: Mode de ventilation: VC, 15:49: Mode de ventilation: VC, 15:33: Modede ventilation: VC, 15:17: Mode de ventilation: VC, 15:02: Mode de ventilation: VC, 14:46: Mode de ventilation: VC, 14:30: Mode de ventilation: VC, 14:21: Mode de ventilation: VC </p>
+<p>Surveillance 17:23 EVS 0 Douleur nulle 17:23 NVPO 1 Rien 17:23 Score EDS 0 Patient Eveillé 16:20 Score EDS 1 Patient Somnolent 16:20 EVS 0 Douleur nulle 16:20 NVPO 1 Rien 16:20 Agitation .Non 16:20 Mal de gorge .Non </p>
+<p>LABO ACTES SSPI <br/></p>
+<p>Signes Vitaux Manuels Notes SSPI <br/></p>
+<p>INSTRUCTIONS POSTOP <br/>Instructions Générales Instructions chirurgicales </p>
+<p>ANALGESIQUES & ALR <br/>Nefopam, 20 mg, I.V. SE, Administré :31/08/2017 14:42 <br/>Tramadol, 100 mg, I.V. bolus, Administré :31/08/2017 14:40 <br/>Paracetamol i.v, 1 g, I.V. bolus, Administré :31/08/2017 14:39 <br/>Ketamine 10 mg/ml, 21 mg, I.V. bolus, Administré :31/08/2017 14:18 <br/>Remifentanil 25 μg/ml, 339 μg, I.V. perf, Commencé :31/08/2017 14:12, Arrêté :31/08/2017 15:41, PRIMEA-16 <br/>> Voie 2 </p>
+<p>Enregistrements sans prescription </p>
+<p>Levobupivacaine 2.5 mg/ml <br/>Enregistrement Quantité Volume Débit Heure Voie ID Poche Enregistré par </p>
+<p>Bolus 50 mg 20 ml 15:48 Infiltration Roque Aurelie </p>
+<p>Lidocaine 10 mg/ml <br/>Enregistrement Quantité Volume Débit Heure Voie ID Poche Enregistré par </p>
+<p>Bolus 20 mg 2 ml 14:14 I.V. bolus Roque Aurelie </p>
+<p>Date d'impression: 31/08/17 17:24 Page 3/4</p>
+<p></p>
+<p></p>
+<p>Prénom <br/><br/><br/><br/>Nom </p>
+<p>N° Patient <br/><br/><br/><br/>D. de N. </p>
+<p>No PBO <br/><br/><br/><br/>Taille <br/><br/><br/><br/>Poids <br/><br/><br/><br/>Age </p>
+<p>Anesthésie le <br/><br/><br/><br/>Classe ASAMyriam </p>
+<p>XXXXXX </p>
+<p>XXXXXX XXXXXX </p>
+<p>670337 165 cm 70 kg </p>
+<p>65 ans </p>
+<p>31.08.2017 3 </p>
+<p>ATNC <br/><br/><br/><br/>Induction: Normale </p>
+<p>ANTIBIOTIQUES </p>
+<p>AUTRES DROGUES <br/>Ondansetron, 4 mg, I.V. bolus, Administré :31/08/2017 14:40 <br/><br/>Propofol 10 mg/ml, 154 mg, I.V. bolus, Administré :31/08/2017 14:14 <br/>Atracurium 10 mg/ml, 5 mg, I.V. bolus, Administré :31/08/2017 15:10 <br/>Atracurium 10 mg/ml, 25 mg, I.V. bolus, Administré :31/08/2017 14:23 <br/>Succinylcholine 10 mg/ml, 70 mg, I.V. bolus, Administré :31/08/2017 14:17 </p>
+<p>Neostigmine 0.5 mg/ml, 1 mg, I.V. bolus, Administré :31/08/2017 16:08 <br/>Ephédrine, 3 mg, I.V. bolus, Administré :31/08/2017 15:47 <br/>Ephédrine, 6 mg, I.V. bolus, Administré :31/08/2017 15:46 <br/>Ephédrine, 6 mg, I.V. bolus, Administré :31/08/2017 15:05 <br/>Ephédrine, 3 mg, I.V. bolus, Administré :31/08/2017 15:03 <br/>Ephédrine, 6 mg, I.V. bolus, Administré :31/08/2017 14:27 <br/>Ephédrine, 6 mg, I.V. bolus, Administré :31/08/2017 14:26 <br/>Ondansetron, 4 mg, I.V. bolus, Administré :31/08/2017 14:40 <br/><br/>Dexamethasone, 8 mg, I.V. bolus, Administré :31/08/2017 14:18 </p>
+<p>Produits sanguins </p>
+<p>Totaux fluides & produits sanguins <br/>Ringer 1000 ml </p>
+<p>Ringer 500 ml </p>
+<p>Bilan de Sortie <br/>Score EDS 0 Patient Eveillé, Score Clinique OK , Patient Normotherme , Pansement propre , NVPO 1 Rien, EVS 0 <br/>Douleur nulle, Départ avec O2 .Non </p>
+<p>Evénements Remarquables (IntraOP/PostOP): .Non / .Non </p>
+<p>Evénements Remarquables Chirurgicaux </p>
+<p>DestinationScore d'Aldrete Heure de sortieMédecin autorisant la sortie 10 Service Hospitalisation 31/08/17 17:23 </p>
+<p>Date d'impression: 31/08/17 17:24 Page 4/4</p>
+<p></p>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

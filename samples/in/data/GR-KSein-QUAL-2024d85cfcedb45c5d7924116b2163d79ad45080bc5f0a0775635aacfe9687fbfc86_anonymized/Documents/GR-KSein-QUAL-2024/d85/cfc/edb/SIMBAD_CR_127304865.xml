@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_127304865" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20171016000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171017000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patiente de 60 ans vue ce jour en cours de XELODA en adjuvant pour un 
+ <br/>cancer du sein droit triple négatif.
+ <br/>
+<br/>
+<u><b>CE JOUR</b></u> :
+ <br/>
+<br/> La patiente présente des effets secondaires en rapport avec le 
+ <br/>XELODA, syndrome main pied grade I, pareil qu'à la consultation de 
+ <br/>début septembre.
+ <br/>Par contre à l'examen clinique elle me signale l'apparition d'un 
+ <br/>méplat en sus aréolaire avec le sein qui est un peu plus douloureux 
+ <br/>que d'habitude.
+ <br/>Sachant que la radiothérapie s'est terminée en juin et la patiente a 
+ <br/>été opérée le 11.02.17.
+ <br/>
+<br/>A l'examen clinique :
+ <br/>Pas de masse palpable.
+ <br/>Je propose à la patiente de faire un contrôle écho/mammo le 19.10 et 
+ <br/>je la reverrai en consultation le jour même avec les résultats.
+ <br/>
+<br/> Le bilan biologique réalisé ce jour est normal, CA 15.3 à 8.
+ <br/>On note des leucocytes à 2,7, hématies à 3,34.
+ <br/>
+<br/>La patiente est à son 6ème cycle de XELODA.
+ <br/>Elle a refait un scanner TAP le 11.9 qui était normal.
+ <br/>
+<br/>
+<u><b>EN PRATIQUE</b></u> :
+ <br/>
+<br/>Je la reverrai le jeudi.
+ <br/>
+<br/>Sous réserve d'une écho/mammographie normale, on débutera la 
+ <br/>surveillance en alternance avec le radiothérapeute.
+ <br/>
+<br/>Je lui explique le rythme de la surveillance avec une consultation 
+ <br/>2x/an (oncologue médical et radiothérapeute), une mammographie par an 
+ <br/>et 2 bilans biologiques par an.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

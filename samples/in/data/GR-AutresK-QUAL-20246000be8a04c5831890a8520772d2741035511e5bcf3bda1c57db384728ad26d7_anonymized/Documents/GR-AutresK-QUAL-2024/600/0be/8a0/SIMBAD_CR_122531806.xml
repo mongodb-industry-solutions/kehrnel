@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122531806" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ONCOLOGIE MEDICALE ORL : DR.FERRAND</title>
+    <effectiveTime value="20191023000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20191028000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b> Patient de 58 ans vu pour la première fois ce jour en présence de son <br/>épouse et d'une de ses filles (Elisabeth), dans le cadre de la prise <br/>en charge d'une récidive latéro-cervicale bilatérale d'un carcinome <br/>oropahryngé, HPV-, traité initialement par radiochimiothérapie en <br/>octobre 2014, avec chirurgie de rattrapage en novembre 2017 et mars <br/>2018.<br/><br/><u> MODE DE VIE</u> <br/></b> - Marié, 
+ <br/>- 3 enfants ne vivant pas au domicile, 
+ <br/>- il vit dans un appartement de plain pied, 
+ <br/>- ancien travailleur du batiment essentiellement peinture,
+ <br/>- Pas de voyage outre-mer connu, 
+ <br/>- tabagisme sevré en 2014, 
+ <br/>- pas de réel mésusage alcoolique mais sevré également.
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS CHIRURGICAUX</b></u>
+<br/>- carcinome épidermoïde hypopharyngé (récidive) traité par PLT avec 
+ <br/>lambeau de grand pectoral et lambeau antéro-latéral de cuisse, 
+ <br/>- trachéotomie, 
+ <br/>- opéré d'une maladie de Dupuytren à 2 reprises (à gauche et à 
+ <br/>droite).
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS M\'c9DICAUX</b></u>
+<br/>- crise comitiale généralisée avec dernier évènement il y a plus de 
+ <br/>10 ans, pas de suivi neurologique, que l'on recommande notamment sur 
+ <br/>le plan thérapeutique, 
+ <br/>- psoriasis diffus essentiellement aux mains et aux avant-pieds, pas 
+ <br/>de traitement systémique, 
+ <br/>- hypothyroïdie, 
+ <br/>- pas d'allergie.
+ <br/>
+<br/>
+<u> Traitements</u>
+<br/>- LEVOTHYROX 25 μg/j, 
+ <br/>- GARDENAL 100 mg le soir, 
+ <br/>- EFFERALGAN codéiné 6 prises par jour actuellement.
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE</b></u>
+<br/>- Prise en charge pour un carcinome épidermoïde initialement de 
+ <br/> l'oropharynx vélaire et des piliers postérieurs bilatéralement 
+ <br/> traité par radiochimiothérapie en octobre 2014.
+ <br/>- Août 2017 : Seconde localisation de carcinome épidermoïde de 
+ <br/> l'hypopharynx droit.
+ <br/>- 13/11/17 : Traitement par pharyngo-laryngectomie totale droite et 
+ <br/> reconstruction par lambeau musculo-cutané de grand pectoral.
+ <br/> Suites compliquées d'un pharyngostome à plusieurs reprises.
+ <br/> Monté d'un lambeau de grand dorsal le 06/12/2017.
+ <br/> Malgré les reprises, persistance d'un pharyngostome et dehiscence 
+ <br/> des sutures avec pharyngostome large.
+ <br/>- 19/03/18 : reprise de cervicotomie pour rétablissement de la 
+ <br/> continuité digestive et réfection d'un trachéostome dans le 
+ <br/>contexte 
+ <br/> de pharyngostome large post-PLT de rattrapage avec fermeture par un 
+ <br/> lambeau libre antéro-latéral de cuisse prélevé à gauche et lambeau 
+ <br/> pédiculé supra-claviculaire avec anastomose de perforante 
+ <br/> delto-acromial prélevé à gauche.
+ <br/>- Récidive latéro-cervical gauche nécrotique envahissant les tissus 
+ <br/> mous, péricarotidienne non résécable et adénopathie en 2 à droite 
+ <br/> envahissant la veine jugulaire découverte à l'été 2019 par la 
+ <br/> majoration d'un oedème du visage et de douleur.
+ <br/> Biopsié, AP : Carcinome épidermoïde HPV-, P16-.
+ <br/>- RCP ORL du 17/10/19 : décision d'un traitement systémique (pas de 
+ <br/> réirraidiation envisagée).
+ <br/>
+<br/>
+<u><b>CE JOUR</b></u>
+<br/>
+<u> Bilan pré-thérapeutique</u>
+<br/>Pose d'une chambre implantable pré-pectorale droite le 21/10/19.
+ <b> <br/></b> Echographie cardiaque le 30/09/19 : FEVG à 62% sans autre anomalie 
+ <br/>notable.
+ <br/>Bilan d'extension par tepscan le 02/10/19 avec un aspect évocateur de 
+ <br/>récidive locale cervicale gauche et ganglionnaire contro-latérale 
+ <br/>sans autre lésion à distance.
+ <br/>
+<b> <br/><u></u></b>
+<u> Sur le plan biologique</u>
+<br/>Le bilan du 25/09/19 montre une fonction rénale normale avec une 
+ <br/>créatinine à 61 μmol/l, ionogramme normal, calcémie normale, bilan 
+ <br/>hépatique normal en dehors d'un GGT à 2x la normal, 
+ <br/>hypertriglycéridémie à 2,46 mmol/l, bilan d'hémostase normal, 
+ <br/>numération normale sans lymphopénie.
+ <br/>
+<br/>Phénotypage DPD normal (uracilémie à 6,8 ng/ml).
+ <br/>
+<br/>
+<u> Sur le plan clinique</u>
+<br/>OMS : 0.
+ <br/>Poids : 75 kg.
+ <br/>Taille : 161 cm.
+ <br/>Oedème du visage prédominant à droite avec un oedème sous palpébral 
+ <br/>prenant l'ensemble de la cavité céphalique.
+ <br/>Adénopathie non palpable sur un cou fibrosé.
+ <br/>Auscultation cardiopulmonaire normale.
+ <br/>Mollet souple, non douloureux.
+ <br/>Pas d'OMI.
+ <br/>Apyrétique.
+ <br/>TA : 115/72 mmHg.
+ <br/>Pouls : 100 bpm, régulier.
+ <br/>Saturation : 97 % en air ambiant.
+ <br/>Pas de trouble neurologique périphérique.
+ <br/>Psoriasis au niveau du dos des mains et des avant-pieds.
+ <br/>Rétractation tendineuse modérée au niveau des mains ne gênant pas 
+ <br/>pour les actes de la vie quotidienne.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>Dans ces conditions, il n'y a pas de contre indication à la 
+ <br/>réalisation de protocole TPEX pour lequel j'explique l'ensemble des 
+ <br/>effets secondaires et remis une fiche d'information.
+ <br/>Nous réaliserons 4 cures de chimiothérapie avec une évaluation par 
+ <br/>tepscan à l'issue de la 4ème cure puis un traitement de maintenance 
+ <br/>en cas de réponse.
+ <br/>
+<br/>Nous signons ce jour en double exemplaire la note d'information et 
+ <br/>consentement du formulaire KOTIP EUDRACT 2015 0043512 pour la 
+ <br/>recherche d'une anomalie de la voie RAS.
+ <br/>
+<br/>Première cure de chimiothérapie en cours d'organisation probablement 
+ <br/>pour cette semaine.
+ <br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

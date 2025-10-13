@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122435501" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM ADENOPATH TDM THORAX</title>
+    <effectiveTime value="20191113000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20191113000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur GARCIA GABRIEL
+ <br/>
+<br/>Destinataire : RHONE
+ <br/> DR INTERNE
+ <br/>
+<b>Compte rendu générique de SCANNER<br/><br/><br/> Dicté par : </b> Docteur Gabriel Garcia
+ <b><br/>Dicté le : </b> 08/11/2019 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Générique 
+ <br/>
+<b>Ref :</b> 853013 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : LRQ
+ <br/>Numéro d'examen : 8023
+ <br/>
+<br/>
+<br/>Examen réalisé le 8 novembre 2019
+ <br/>
+<br/>
+<br/>
+<u><b>SCANNER CERVICO-THORACIQUE<br/> <br/></b></u>
+<br/>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/></b> Patient pris en charge pour récidive locale et ganglionnaire d'un 
+ <br/>carcinome épidermoïde de l'hypopharynx. Masse rénitente douloureuse 
+ <br/>basi-cervicale gauche. Bilan. 
+ <br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/></b> Examen réalisé sur un scanner DISCOVERY 750 HD, GENERAL ELECTRIC, 
+ <br/>mis en service en septembre 2012.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 429098CN7
+ <br/>Réalisation d'une acquisition :
+ <br/>\'a7 Cervicale
+ <br/>\'a7 Thoracique
+ <br/>Examen réalisé avec injection intraveineuse de produit de contraste.
+ <br/>
+<b>Produit de contraste injecté : Xenetix <br/>Quantité :130 mL <br/>PDL : 508 (ORL) 343 (thorax) mGy.cm<br/></b>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :</b>
+<br/>
+<br/>
+<b> Comparaison au scanner du 19 septembre 2019.<br/></b>
+<br/>
+<b> A l'étage cervical : </b>
+<br/>Apparition d'une abcédation de la récidive en profondeur du lambeau 
+ <br/>en région latéro-cervicale gauche. Cette abcédation mesure 64 x 44 mm 
+ <br/>dans le plan axial et 93 mm de hauteur, avec contenu aérique 
+ <br/>témoignant soit de la présence de germes anaérobies, soit d'une 
+ <br/>fistule avec l'entonnoir pharyngé. Cette fistule n'est pas 
+ <br/>formellement visualisé, intérêt d'un complément d'exploration par 
+ <br/>opacification une fois l'abcès mis à plat. En inférieur l'abcès 
+ <br/>s'étend jusqu'en avant de la clavicule gauche.
+ <br/>L'abcès vient au contact de la carotide primitive gauche de façon 
+ <br/>hémicirconférentielle.
+ <br/>Trachéotomie en place.
+ <br/>Pas de modification de l'aspect scanographique par ailleurs. 
+ <br/>
+<br/>
+<b> A l'étage thoracique :<br/><br/></b> Apparition d'une condensation parenchymateuse lobaire inférieure 
+ <br/>gauche compatible avec une atélectasie.
+ <br/>Absence de nodule suspect de localisation secondaire.
+ <br/>Absence d'adénopathie médiastinale, des chaînes mammaires internes ou 
+ <br/>axillaires bilatérales.
+ <br/>Absence d'épanchement pleural.
+ <br/>Absence d'épanchement péricardique.
+ <br/>Absence d'anomalie des gros vaisseaux.
+ <br/>Absence d'anomalie pariétale.
+ <br/>Absence de lésion osseuse lytique ou condensant suspecte.
+ <br/>
+<br/>Troubles perfusionnels hépatiques.
+ <br/>
+<br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<u></u></b>
+<u> <br/><br/></u>
+<b>Apparition d'une abcédation de la récidive en profondeur du lambeau à <br/>gauche. Cet abcès s'étend en inférieur jusqu'en avant de la clavicule <br/>gauche. Engainement hémicirconférentielle de la carotide primitive <br/>gauche.<br/>Intérêt de rechercher une fistule entre la masse abcédée et <br/>l'entonnoir pharyngé une fois l'abcès mis à plat.<br/>Oncologue prévenu par téléphone.<br/></b>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Gabriel GARCIA <br/>Le vendredi 8 novembre 2019 à 16:18 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120098445" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>Compte-rendu d'hospitalisation - Service Rouergue</title>
+    <effectiveTime value="20201102000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20201102000000+0000"/>
+        <assignedAuthor>
+            <code code="ROU/193" displayName="ROUERGUE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ \qc
+ <b> Compte-rendu type d'hospitalisation <br/>dans le service ROUERGUE<br/> <br/>Dicté par : </b> Sami Antoun
+ <b><br/>Dicté le : </b> 28/10/2020 
+ <b><br/>Service : </b> ROU-ROUERGUE 
+ <br/>
+<b>Type de document : </b> ROU RH Hospitalisation 
+ <br/>
+<b>Ref :</b> 1142526 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire </b> : BUC 
+ <b><br/></b>
+<br/>Patiente de 63 ans 
+ <b>hospitalisée aux urgences du 26 au 28/10/2020</b>
+<br/>pour prise en charge d'une problématique multiple : 
+ <b>dyspnée, <br/>dénutrition, douleurs prédominantes à l'hypocondre droit</b> .
+ <br/>
+<br/>
+<u><b>ANTECEDENTS ONCOLOGIQUES</b></u>
+<br/>Je rappelle que cette patiente a été prise en charge pour un c
+ <b>ancer <br/>du sein droit triple négatif métastatique au niveau hépatique et <br/>osseux </b> en 9e ligne de traitement par XELODA. (Le compte-rendu 
+ <br/>détaillé de l'évolution tumorale étant la consultation du 26/10 du 
+ <br/>Dr MOKDAD).
+ <br/>
+<br/>
+<u><b>HISTOIRE RECENTE</b></u>
+<br/>L'histoire récente est celle de la présence lors de la consultation 
+ <br/>du Dr MOKDAD d'une dyspnée, d'une exacerbation des douleurs dans 
+ <br/>l'hypocondre droit ainsi que d'un amaigrissement récent. La patiente 
+ <br/>est adressée aux urgences pour prise en charge.
+ <br/>
+<u><b><br/>EXAMEN CLINIQUE A L'ARRIVEE</b></u>
+<br/>\'c0 son arrivée, l'hémodynamique est stable, la tension artérielle 
+ <br/>systolique est à 116 mmHg, la patiente est tachycarde à 107/min, elle 
+ <br/>est apyrétique et la saturation en air ambiant est satisfaisante, 
+ <br/>cependant il persiste une polypnée à la parole.
+ <br/>L'auscultation pulmonaire met en évidence une diminution du murmure 
+ <br/>vésiculaire à droite. Il n'existe pas de signe en faveur de foyer 
+ <br/>infectieux.
+ <br/>L'hépatomégalie est importante, hétérogène, nodulaire, douloureuse à 
+ <br/>la palpation.
+ <br/>
+<br/>
+<u><b>EXAMENS COMPLEMENTAIRES A L'ARRIVEE</b></u>
+<br/>Sur le plan biologique, il n'existe pas de trouble 
+ <br/>hydroélectrolytique. Il n'existe pas d'insuffisance rénale.
+ <br/>On note, comme attendu, une perturbation du bilan hépatique avec une 
+ <br/>cytolyse sur les ASAT à cinq fois la normale et sur les ALAT à deux 
+ <br/>fois la normale. \'c0 signaler que la perturbation du bilan hépatique 
+ <br/>ne s'est pas aggravée d'une manière importante par rapport au bilan 
+ <br/>du 03/10/2020.
+ <br/>Le syndrome inflammatoire est modéré avec une CRP à 19,3 mg/l. La 
+ <br/>numération formule sanguine retrouve la thrombopénie à 70 000/mm\'b3.
+ <br/>La radiographie pulmonaire met en évidence l'épanchement pleural 
+ <br/>droit.
+ <br/>
+<br/>
+<br/>
+<u><b> Evolution du 28/10/2020<br/></b></u>
+<br/>1. Concernant le problème respiratoire, la patiente est modérément 
+ <br/>dyspnéique. Après discussion avec le Dr MOKDAD, référente oncologique 
+ <br/>de la patiente, il est décidé de surseoir à la ponction pleurale. En 
+ <br/>effet, à la lecture du scanner, l'épanchement pleural est suspendu. 
+ <br/>Je 
+ <br/>ne suis pas sûre que le bénéfice/risque actuellement soit en faveur 
+ <br/>de 
+ <br/>la ponction pleurale. La patiente recevra de l'oxygène à la demande 
+ <br/>au 
+ <br/>domicile. Elle utilisera l'oxygène lors des efforts.
+ <br/>
+<br/>2. Problème du traitement antalgique lié à la douleur. La patiente 
+ <br/>est très réticente à l'utilisation des antalgiques habituels. 
+ <br/>L'équilibre antalgique semble être obtenu avec du DOLIPRANE 500 mg/8 
+ <br/>h et de l'ACUPAN à la demande. Durant son hospitalisation le syndrome 
+ <br/>algique semble contrôlé.
+ <br/>
+<br/>3. Reste le problème nutritionnel. En effet, je pense que sur le plan 
+ <br/>"technique", il n'est pas indiqué de mettre en place une nutrition 
+ <br/>artificielle chez cette patiente. La problématique est probablement 
+ <br/>que nous sommes en face d'une cachexie réfractaire. Néanmoins, sur le 
+ <br/>plan psychologique la patiente a besoin d'un support nutritionnel. On 
+ <br/>instaure une nutrition parentérale douce à 500 cal/jour de 20 heures 
+ <br/>à 8 heures 5 jours sur 7 : la patiente verra le Dr CHEMAMA pour une 
+ <br/>consultation de nutrition de surveillance.
+ <br/>
+<br/>4. Le problème majeur, je pense, est que cette patiente présente une 
+ <br/>anxiété importante. Elle est dans le contrôle de la maladie.
+ <br/>
+<br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>Problématiques multiples avec comme composante majeure une anxiété 
+ <br/>importante. Mise en place d'une nutrition parentérale partielle. 
+ <br/>Equilibre antalgique obtenu. Oxygénothérapie à domicile. 
+ <br/>
+<br/>
+<br/>* Prise en charge palliative NON
+ <br/>
+<br/>
+<b>EVALUATION DE LA CHARGE EN SOINS<br/></b> * Ponction à visée symptomatique NON
+ <br/>* Adaptation du traitement antalgique OUI 
+ <br/>* Irradiation antalgique NON
+ <br/>* Occlusion intestinale NON
+ <br/>* Transfusion sanguine NON
+ <br/>* Prise en charge de la détresse respiratoire
+ <br/>avec désaturation < 90% en AA NON
+ <br/>* Traitement des divers symptômes vecteurs d'inconfort 
+ <br/>(toux, prurit, nausées, vomissements, anxiété, 
+ <br/>dépression, troubles du sommeil, déshydratation...) OUI 
+ <br/>* Soins de nursing NON
+ <br/>* Nutrition : 
+ <br/>- déjà sous CNO, nutrition entérale/parentérale NON
+ <br/>- mise en route d'une nutrition entérale/parentérale OUI 
+ <br/>
+<br/>
+<b>PRISE EN CHARGE MULTI-DISCIPLINAIRE<br/></b> * Prise en charge de l'EMASP NON
+ <br/>* Consultation CETD (douleur, sophrologie, 
+ <br/>auriculothérapie) NON
+ <br/>* Consultation d'onco-psychologie NON
+ <br/>* Prise en charge sociale NON
+ <br/>* Soins de kinésithérapie NON
+ <br/>* Consultation diététicienne ou nutritionniste NON
+ <br/>
+<br/>
+<br/>__________________________________________________________________
+ <br/>
+<b>Signé électroniquement par Sami ANTOUN <br/>Le mercredi 28 octobre 2020 à 11:55 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

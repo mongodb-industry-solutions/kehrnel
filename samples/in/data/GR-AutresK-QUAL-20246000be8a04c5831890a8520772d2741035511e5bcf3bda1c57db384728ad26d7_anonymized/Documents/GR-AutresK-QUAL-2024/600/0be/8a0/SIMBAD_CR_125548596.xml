@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125548596" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ORL - Dr Ingrid BREUSKIN</title>
+    <effectiveTime value="20180720000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180723000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Rappel</b></u> : 
+ <br/>
+<br/>
+<b> Antécédent de carcinome épidermoïde de l'oropharynx bilatéral traité <br/>par radiochimiothérapie en octobre 2014.<br/>Deuxième localisation de carcinome épidermoïde hypopharyngé droit <br/>traité par pharyngolaryngectomie totale de rattrapage et lambeau de <br/>grand pectoral le 13/11/2017.<br/>Problématique de pharyngostome ayant nécessité de multiples <br/>interventions.<br/>In fine reprise de cervicotomie avec rétablissement de la continuité <br/>digestive avec lambeau antéro-latéral de cuisse le 19/03/2018.<br/></b>
+<br/>Consultation à 8 mois d'une pharyngo-laryngectomie totale de 
+ <br/>rattrapage et à 4 mois de la fermeture de pharyngostome.
+ <br/>
+<br/>Le patient va globalement bien.
+ <br/>OMS : 1.
+ <br/>S'alimente per os en petit morceau. Me dit que les repas sont lents.
+ <br/>Le poids est stable.
+ <br/>La gastrostomie a été retirée.
+ <br/>Pas de douleur mais une gêne au niveau cervical avec tiraillement et 
+ <br/>fibrose gênante.
+ <br/>N'a pas encore débuté la kinésithérapie au niveau cervical suite à un 
+ <br/>retard de cicatrisation au niveau du lambeau supra-claviculaire.
+ <br/>
+<br/>Voix oesophagienne en cours d'acquisition. Décrit des fuites nasales.
+ <br/>
+<br/>A passé un bilan sanguin le 16/07/2018 avec une TSH un peu élevée à 
+ <br/>5,05. Prescription de LEVOTHYROX 25 μg/j et bilan de TSH à faire dans 
+ <br/>3 mois.
+ <br/>
+<br/>A passé un scanner cervico-thoracique post-thérapeutique. On note une 
+ <br/>petite prise de contraste au niveau du néo-pharynx du côté droit qui 
+ <br/>sera à surveiller. Je demande une relecture.
+ <br/>
+<br/>
+<u><b>Examen clinique</b></u> :
+ <br/>
+<br/>Patient en état général conservé.
+ <br/>OMS : 1.
+ <br/>
+<br/>
+<u>Palpation cervicale</u> : fibrose modérée à importante. Un peu d'oedème. 
+ <br/>Pas de tuméfaction suspecte. 
+ <br/>Bel aspect du trachéostome.
+ <br/>Au niveau du lambeau supra-claviculaire gauche il persiste un peu de 
+ <br/>tissu de granulation sur une pastille d'1 cm2. Application de 
+ <br/>BETNEVAL et pansement mepilex.
+ <br/>Aucune anomalie à l'inspection de la cavité buccale et de 
+ <br/>l'oropharynx.
+ <br/>
+<u>Naso-fibroscopie</u> : bel aspect de l'entonnoir pharyngé et du lambeau. 
+ <br/>Stase salivaire. Pas de lésion suspecte. Calibre du néopharynx de 
+ <br/>petite taille. 
+ <br/>
+<u>Fibroscopie via le trachéostome</u> : bel aspect des muqueuses jusqu'à la 
+ <br/>carène.
+ <br/>
+<br/>Au niveau de la prise du lambeau antéro-latéral de cuisse, il existe 
+ <br/>également du tissu de granulation qui a tendance à un peu 
+ <br/>bourgeonner. Application de BETNEVAL et pansement mepilex.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u> :
+ <br/>
+<br/>Examen oncologique satisfaisant à 8 mois d'un pharyngo-laryngectomie 
+ <br/>totale de rattrapage et 4 mois d'une reprise chirurgicale de 
+ <br/>rétablissement de la continuité digestive.
+ <br/>
+<br/>Ordonnance refaite ce jour pour LEVOTHYROX, GARDENAL, STILNOX.
+ <br/>
+<br/>J'encourage le patient à débuter la kinésithérapie sachant que la 
+ <br/>cicatrisation du lambeau supra-claviculaire est quasi complètement 
+ <br/>acquise.
+ <br/>
+<br/>Patient qui sera revu en consultation de radiothérapie dans 3 mois et 
+ <br/>je le reverrai pour ma part 2-3 mois plus tard.
+ <br/>
+<br/>D'un point de vu prise en charge des séquelles, je lui parle ce jour 
+ <br/>d'une cure possible à la Roche Posay. Remise du flyer d'information. 
+ <br/>Le patient ne manifeste pas de souhait de faire une cure thermale.
+ <br/>
+<br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b>Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>25/07/2018 10:30 010 IBN ORTHOPHONIE GYW 
+ <br/>30/07/2018 10:30 010 IBN ORTHOPHONIE GYW 
+ <br/>01/08/2018 10:30 010 IBN ORTHOPHONIE GYW 
+ <br/> 11:30 ORL IBN PTE CHIR ORL 
+ <br/>03/08/2018 09:40 010 OMR RV TEL CSE 
+ <br/>27/08/2018 10:30 010 IBN ORTHOPHONIE GYW 
+ <br/>29/08/2018 10:30 010 IBN ORTHOPHONIE GYW 
+ <br/>18/09/2018 10:30 010 IBN ORTHOPHONIE GYW 
+ <br/>19/09/2018 10:30 010 IBN ORTHOPHONIE GYW 
+ <br/>25/09/2018 10:30 010 IBN ORTHOPHONIE GYW 
+ <br/>26/09/2018 10:30 010 IBN ORTHOPHONIE GYW 
+ <br/>03/10/2018 10:30 010 IBN ORTHOPHONIE GYW 
+ <br/>09/10/2018 10:30 010 IBN ORTHOPHONIE GYW 
+ <br/>10/10/2018 10:00 CAM YGT C RX YGT 
+ <br/>13/12/2018 14:10 ORL YBS C PLAS YBS 
+ <br/>21/12/2018 10:40 ORL IBN C ORL IBN 
+ <br/>15/03/2019 09:00 310 GSN RD PANORAMIQUE 
+ <br/> 09:10 310 GSN C ODONTO GSN 
+ <br/>10/05/2019 10:20 ORL IBN C ORL IBN 
+ <br/>06/11/2019 __: 1 CAM YGT C RX YGT 
+ <br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126880094" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Note du 2017-12-27</title>
+    <effectiveTime value="20171227000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171227000000+0000"/>
+        <assignedAuthor>
+            <code code="136/300" displayName="CONS. RADIO INTERVENTIONNELLE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<u><b>Note d'IMT</b></u> :
+ <br/> DELPLA - interne
+ <br/>
+<br/>
+<br/>Tout à fait d'accord pour réaliser une gastrostomie d'alimentation
+ <br/>chez ce patient.
+ <br/>
+<br/>A programmer par vos soins :
+ <br/>Admission la veille de la gastrostomie
+ <br/>Verifier l'absence de prise d'anti coagulant ou d'anti agrégant 
+ <br/>plaquettaire ainsi que la normalité du bilan d'hémostase.
+ <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<b> LISTE RENDEZ-VOUS PREVUS</b>
+<br/>
+<br/>
+<u><b> Date Heure Demandeurs Libellé d'acte * commentaires</b></u>
+<br/>
+<br/>02/01/2018 12:00 ASS FSV C ASS FSV RV fille patient pour 
+ <br/>informations 
+ <br/>
+<b>05/01/2018 17:00 136 DNG PBO SEG RIL <br/> 17:00 136 DNG PBO CHIR TDB</b>
+<br/>02/02/2018 12:00 MOR IBN CL ORL IBN 
+ <br/>09/02/2018 10:35 MOR IBN RV EXTERIEUR Admission service H2 pr 
+ <br/>Arterio CCML 
+ <br/>13/02/2018 11:00 MOR IBN CL PLAS KOL 
+ <br/>21/02/2018 09:15 MOR IBN TDM THORAX O 
+ <br/>02/03/2018 15:10 MOR IBN C ANES 
+ <br/> 15:45 MOR IBN CL ORL IBN 
+ <br/>09/03/2018 08:40 310 GSN RD PANORAMIQUE 
+ <br/> 08:50 310 GSN C ODONTO GSN 
+ <br/>16/03/2018 10:00 MOR IBN PTE CHIR ORL appeler IBN 
+ <br/>18/03/2018 13:15 MOR IBN ADM RHO DIR 
+ <br/>19/03/2018 08:00 MOR IBN PBO SEG CCF 
+ <br/> 08:00 MOR IBN PBO CHIR IBN 
+ <br/> 08:00 MOR IBN PBO CHIR KOL 
+ <br/>11/05/2018 __: 1 ORL IBN C ORL IBN visite de suivi 2004-01 / ne 
+ <br/>pas annuler 
+ <br/>07/11/2018 09:15 CAM YGT C RX YGT 
+ <br/>10/05/2019 __: 1 ORL IBN C ORL IBN 
+ <br/>06/11/2019 __: 1 CAM YGT C RX YGT 
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

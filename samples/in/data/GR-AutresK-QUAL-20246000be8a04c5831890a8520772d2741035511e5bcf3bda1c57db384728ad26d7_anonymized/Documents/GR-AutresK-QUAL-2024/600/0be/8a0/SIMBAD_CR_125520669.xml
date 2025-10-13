@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125520669" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>RELECTURE TDM REL TDM</title>
+    <effectiveTime value="20180726000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180726000000+0000"/>
+        <assignedAuthor>
+            <code code="260/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Destinataire : CONSULTATIONS ORL
+ <br/> DR BREUSKIN INGRID
+ <br/>
+<br/>
+<b><br/>Dicté par : </b> Gabriel Garcia
+ <b><br/>Dicté le : </b> 26/07/2018 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Relecture SCANNER 
+ <br/>
+<b>Ref :</b> 461104 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : RRR
+ <br/>
+<br/>
+<br/>
+<u><b>Relecture de l'examen : 19 juin 2018 <br/>En comparaison avec : 20 décembre 2017 <br/></b></u>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/><u><br/></u></b> Patient pris en charge en 2014 pour carcinome épidermoïde de 
+ <br/>l'oropharynx bilatéral traité par radio-chimiothérapie. Deuxième 
+ <br/>localisation hypopharyngée traitée par pharyngolaryngectomie totale 
+ <br/>de rattrapage et lambeau de grand pectoral en novembre 2017. 
+ <br/>Problématique de pharyngostome ayant nécessité de multiples 
+ <br/>interventions et une reprise de cervicotomie avec rétablissement de 
+ <br/>la continuité digestive avec lambeau antéro-latéral de cuisse en mars 
+ <br/>2018.
+ <br/>Contrôle à 4 mois.
+ <br/>Visualisation d'une prise de contraste sur le scanner du 19 juin 2018 
+ <br/>au contact du néo-pharynx, à surveiller. Relecture.
+ <br/>
+<br/>
+<u><b>RESULTAT ET <h3>Conclusion</h3></b></u>
+<b> :<br/><u><br/></u></b> Aspect post-thérapeutique sans signe de récidive locale ou 
+ <br/>ganglionnaire.
+ <br/>Il existe des prises de contraste du néo-pharynx (en particulier 
+ <br/>série 10 image 173) plutôt régulières, d'allure inflammatoire, sans 
+ <br/>argument pour une récidive. 
+ <br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Gabriel GARCIA <br/>Le jeudi 26 juillet 2018 à 11:48 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

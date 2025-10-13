@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_126903873" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>SCANNER TDM ORL</title>
+    <effectiveTime value="20171221000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20171221000000+0000"/>
+        <assignedAuthor>
+            <code code="SCA/173" displayName="RADIODIAGNOSTIC-SCANNER"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>Destinataire : CTE 010 - ORL
+ <br/> DR INTERNE
+ <br/>
+<b><br/>Dicté par : </b> Michael Majer
+ <b><br/>Dicté le : </b> 20/12/2017 
+ <b><br/>Service : </b> SCA-RADIODIAGNOSTIC SCANNER 
+ <br/>
+<b>Type de document : </b> SCA CR Générique 
+ <br/>
+<b>Réf :</b> 337410 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> José XXXXXX 
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Masculin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : BCY
+ <br/>Examen n° 5981
+ <br/>
+<br/>Examen réalisé le : 20 décembre 2017 
+ <br/>
+<br/>
+<b>SCANNER ORL</b>
+<br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/><br/></b> Pharyngolaryngectomie totale le 13 novembre 2017 avec lambeau de 
+ <br/>grand dorsal. 
+ <br/>Reprise tentative de fermeture d'un pharyngostome.
+ <br/>Fistule oesotrachéale persistante. 
+ <br/>Probable nécrose musculaire du lambeau de grand dorsal. 
+ <br/>Recherche de collection profonde. 
+ <br/>
+<br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/><br/></b> Examen réalisé sur un scanner OPTIMA CT660, GENERAL ELECTRIC, mis 
+ <br/>en service le 8 février 2016.
+ <br/>- Numéro d'autorisation : M940093
+ <br/>- Numéro d'identification : 422272HM5
+ <br/>
+<br/>
+<br/>Réalisation d'une acquisition :
+ <br/>- Cervicale
+ <br/>
+<br/>Examen réalisé sans et avec injection de produit de contraste.
+ <br/>
+<b>Produit de contraste injecté : Xenetix <br/>Quantité :100 CC <br/>PDL : 1979 mGy.cm<br/><br/></b>
+<br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/><br/></b> Présence de bulles d'air au sein de la graisse du lambeau de grand 
+ <br/>dorsal gauche avec mise en évidence d'une communication entre 
+ <br/>l'oropharynx et ce lambeau.
+ <br/>Pas d'anomalie du rehaussement musculaire du lambeau.
+ <br/>Petite collection de 17 x 15 mm sous l'angle mandibulaire gauche 
+ <br/>semblant fistulisée à la peau en avant du sterno-cléido-mastoïdien.
+ <br/>Collection siège de bulles d'air située à la partie inférieure du 
+ <br/>lambeau de grand dorsal, en sous-claviculaire, mesurant 32 x 27 
+ <br/>millimètres s'étendant dans l'aire axillaire gauche et en avant du 
+ <br/>petit pectoral.
+ <br/>
+<br/>Absence de bulle d'air au sein de la partie droite du lambeau.
+ <br/>Pas d'adénomégalie cervicale.
+ <br/>Pas de fuite de produit contraste.
+ <br/>Pas d'image de pseudo anévrisme. 
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/><br/>Pas d'argument pour une nécrose du lambeau.<br/>Communication entre l'oropharynx et la partie gauche du lambeau siège <br/>de multiples bulles d'air.<br/>2 collections à la partie supérieure et inférieure du lambeau, la <br/>plus volumineuse mesurant 3 cm de plus grand axe. <br/></b>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Michael MAJER <br/>Le mercredi 20 décembre 2017 à 11:42 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

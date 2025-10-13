@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_120333042" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <title>COMITE SOINS PALLIATIFS - DISSPO</title>
+    <effectiveTime value="20200928000000+0000"/>
+    <confidentialityCode code="34794-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR de réunion de concertation pluridisciplinaire"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200928000000+0000"/>
+        <assignedAuthor>
+            <code code="134/536" displayName="EMASP"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<br/>
+<b>Equipe Mobile d'Accompagnement et de Soins Palliatifs (EMASP) - <br/>Département de Soins de Support (DISSPO)<br/><br/><br/> Dicté par : </b> Docteur Eléna Pavliuc
+ <b><br/>Dicté le : </b> 20/09/2020 
+ <b><br/>Service : </b> 134 - EMASP 
+ <br/>
+<b>Type de document : </b> 134 NO NOTE 
+ <br/>
+<b>Ref :</b> 1104390 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX né(e) XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b><br/>Participants</b> : 
+ <br/>Dr Elena PAVLIUC - EMASP
+ <br/>Dr Nicolas GANDRILLE - Médecin Coordinateur HAD - Santé Service
+ <br/>Déborah RUIZ - ICH Santé Service
+ <br/>Laila YASSINE - IDEC UDEP/EMASP 
+ <br/>Axelle FOUGERE - IDE EMASP 
+ <br/>
+<br/>
+<b>Compte-rendu réalisé par le Docteur PAVLIUC.<br/></b> La patiente n'a pas été revue en HDJ son palliatifs depuis longtemps 
+ <br/>car elle vient régulièrement en hospitalisation pour altération de 
+ <br/>l'état général, a des ponctions d'ascite en radiologie 
+ <br/>interventionnelle environ une fois par semaine ce qui est assez 
+ <br/>fatigant pour elle, elle a annulé une fois un rendez-vous d'HDJ. 
+ <br/>Une visite au domicile par l'EMAD de santé service est réalisée le 
+ <br/>31/08 pour évaluation des symptômes d'inconfort et vomissements. 
+ <br/>La patiente est sous antibiothérapie pour une collection purulente 
+ <br/>sur le trajet opératoire du fémur gauche avec ostéite, traitement 
+ <br/>antibiotique modifié par le médecin traitant par AUGMENTIN et 
+ <br/>ROCEPHINE. Discussion ce jour du sens de cette antibiothérapie qui 
+ <br/>inclut du bêtalactamines, décision de poursuivre la ROCEPHINE et 
+ <br/>arrêter l'AUGMENTIN.
+ <br/>Des propositions ont été faites par l'EMAD sur le plan thérapeutique, 
+ <br/>on valide la proposition des corticoïdes dans cette situation 
+ <br/>palliative avancée pour le confort. 
+ <br/>La patiente avoir un rendez-vous en radiologie interventionnelle 
+ <br/>rapidement pour une ponction d'ascite. 
+ <br/>Le mari est très présent et très adapté, le maintien au domicile est 
+ <br/>possible.
+ <br/>
+<br/>
+<b><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Eléna PAVLIUC <br/>Le lundi 28 septembre 2020 à 18:23</b>
+<br/>
+<br/>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128389660" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ANESTHESIE : Dr MOTAMED</title>
+    <effectiveTime value="20170317000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170317000000+0000"/>
+        <assignedAuthor>
+            <code code="ANS/286" displayName="ANESTHESIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patiente de 64 ans adressée en consultation d'anesthésie ce jour.
+ <br/>
+<u>Intervention prévue</u> : Coelioscopie le 27/03/2017.
+ <br/>Diagnostic : une masse ovarienne.
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS CHIRURGICAUX</b></u>
+<br/>- APD
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS MEDICAUX</b></u>
+<br/>- Phlébite découverte le 24/02/2017, qui montre une thrombose de sa 
+ <br/>saphène interne mais qui ne s'étend plus à la fémorale commune, ce 
+ <br/>qui était le cas, avant le début de son traitement.
+ <br/>
+<br/>
+<u><b>ANT\'c9C\'c9DENTS CARDIO-VASCULAIRES<br/></b></u> Pas d'angor
+ <br/>Tabac : O
+ <br/>OH : O
+ <br/>
+<br/>
+<u><b>ALLERGIE/INTOLERANCES<br/></b></u> Aucune.
+ <br/>
+<br/>
+<u><b>EXAMEN CLINIQUE</b></u>
+<br/>Taille : 164 cm
+ <br/>Poids : 76 kg
+ <br/>TA : 14/9
+ <br/>FC : 106
+ <br/>SpO2 : 95 %
+ <br/>La patiente dit qu'elle est un peu essouflée.
+ <br/>Dyspnée d'effort
+ <br/>EVA = 0
+ <br/>
+<br/>
+<u><b>GESTION DES VOIES A\'c9RIENNES</b></u>
+<br/>Mallampati : II
+ <br/>DTM > 6cm
+ <br/>OB > 3cm
+ <br/>Repères de JIC : Ok
+ <br/>Prothèses dentaires : INF
+ <br/>
+<br/>
+<u><b>TRAITEMENT<br/></b></u> Patiente mise sous anti coagulant.
+ <br/>- PREVISCAN que l'on arrête 5 jours avant. Elle sera sous INNOHEP. 
+ <br/>Elle aura un contrôle après 48h.
+ <br/>
+<br/>
+<u><b>BILAN</b></u>
+<br/>Le TDM du thorax montre un épanchement pleural de moyenne abondance.
+ <br/>
+<br/>
+<u>Bilan biologique ce jour</u> :
+ <br/>ECG.
+ <br/>
+<br/>
+<u>Bilan à l'admission</u> : 
+ <br/>Groupe II - RAI - ANTI Xa - IONO - NFS
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<br/>Pas de contre-indication anesthésique à l'intervention prévue.
+ <br/>ASA III
+ <br/>AG / Intubation séquence rapide 
+ <br/>Elle a de l'ascite
+ <br/>Ordonnance BAT donnée.
+ <br/>Antibioprophylaxie par : 0
+ <br/>Protocole NVPO par DEXAMETHASONE + ONDANSETRON
+ <br/>
+<br/>
+<b>Temps de préparation d'anesthésie prévu : 30 min<br/>RISQUE ATNC : C<br/><br/></b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

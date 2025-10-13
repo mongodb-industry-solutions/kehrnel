@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_122023803" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ONCOLOGIE MEDICALE ORL : DR.FERRAND</title>
+    <effectiveTime value="20200114000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200114000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b> Patient de 58 ans vu ce jour pour évaluation en première ligne de <br/>chimiothérapie par TPEX d'une récidive latéro-cervicale bilatérale <br/>d'un carcinome oropahryngé, HPV-, traité initialement par <br/>radiochimiothérapie en octobre 2014, avec chirurgie de rattrapage en <br/>novembre 2017 et mars 2018. HRAS non muté,mutation oncogénique <br/>délétère de TP53,variante de signification inconnue de CDKN2A.<br/><br/><u> Mode de vie</u> <br/></b> - Marié, 
+ <br/>- 3 enfants ne vivant pas au domicile, 
+ <br/>- il vit dans un appartement de plain pied, 
+ <br/>- ancien travailleur du batiment essentiellement peinture,
+ <br/>- Pas de voyage outre-mer connu, 
+ <br/>- tabagisme sevré en 2014, 
+ <br/>- pas de réel mésusage alcoolique mais sevré également.
+ <br/>
+<br/>
+<u><b>Antécédents chirurgicaux</b></u>
+<br/>- carcinome épidermoïde hypopharyngé (récidive) traité par PLT avec 
+ <br/>lambeau de grand pectoral et lambeau antéro-latéral de cuisse, 
+ <br/>- trachéotomie, 
+ <br/>- opéré d'une maladie de Dupuytren à 2 reprises (à gauche et à 
+ <br/>droite).
+ <br/>
+<br/>
+<u><b>Antécédents médicaux</b></u>
+<br/>- crise comitiale généralisée avec dernier évènement il y a plus de 
+ <br/>10 ans, pas de suivi neurologique, que l'on recommande notamment sur 
+ <br/>le plan thérapeutique, 
+ <br/>- psoriasis diffus essentiellement aux mains et aux avant-pieds, pas 
+ <br/>de traitement systémique, 
+ <br/>- hypothyroïdie, 
+ <br/>- pas d'allergie.
+ <br/>
+<br/>
+<u><b>Traitements</b></u>
+<br/>- LEVOTHYROX 25 μg matin, 
+ <br/>- GARDENAL 100 mg 1 comprimé au coucher, 
+ <br/>- PANTOPRAZOLE 40 mg 1/jour, 
+ <br/>- LYRICA 50 mgx3/jour,
+ <br/>- TOLEXINE 100 mg 1/jour.
+ <br/>
+<br/>NB : SKENAN 20 mg et ORAMOPRH arrêté.
+ <br/>
+<br/>
+<u><b>Histoire de la maladie</b></u>
+<br/>- Prise en charge pour un carcinome épidermoïde initialement de 
+ <br/>l'oropharynx vélaire et des piliers postérieurs bilatéralement traité 
+ <br/>par radiochimiothérapie en octobre 2014.
+ <br/>- Août 2017 : Seconde localisation de carcinome épidermoïde de l' 
+ <br/>hypopharynx droit.
+ <br/>- 13/11/17 : Traitement par pharyngo-laryngectomie totale droite et 
+ <br/>reconstruction par lambeau musculo-cutané de grand pectoral. Suites 
+ <br/>compliquées d'un pharyngostome à plusieurs reprises. Monté d'un 
+ <br/>lambeau de grand dorsal le 06/12/2017. Malgré les reprises, 
+ <br/>persistance d'un pharyngostome et déhiscence des sutures avec 
+ <br/>pharyngostome large.
+ <br/>- 19/03/18 : reprise de cervicotomie pour rétablissement de la 
+ <br/>continuité digestive et réfection d'un trachéostome dans le contexte 
+ <br/>de pharyngostome large post-PLT de rattrapage avec fermeture par un 
+ <br/>lambeau libre antéro-latéral de cuisse prélevé à gauche et lambeau 
+ <br/>pédiculé supra-claviculaire avec anastomose de perforante 
+ <br/>delto-acromial prélevé à gauche.
+ <br/>- Récidive latéro-cervical gauche nécrotique envahissant les tissus 
+ <br/>mous, péri carotidienne non résécable et adénopathie en 2 à droite 
+ <br/>envahissant la veine jugulaire découverte à l'été 2019 par la 
+ <br/>majoration d'un oedème du visage et de douleur. Biopsié, AP : 
+ <br/>Carcinome épidermoïde HPV-, P16-.
+ <br/>- RCP ORL du 17/10/19 : décision d'un traitement systémique (pas de 
+ <br/>réirradiation envisagée).
+ <br/>
+<br/>
+<b>- Début d'un traitement par Tpex (C1 le 30/10/19) et C4 le 03/01/2020.<br/><br/><u>Ce jour</u><br/></b> Tolérance correcte, marquée par une toxicité cutanée de grade I. Pas 
+ <br/>de neuropathie significative (on posera la question du LYRICA), dans 
+ <br/>la mesure où le patient sent une sensation de striction au niveau 
+ <br/>cervical.
+ <br/>
+<br/>NB : Audiogramme montrant une hypoacousie neurosensorielle, 
+ <br/>bilatérale, prédominant à 45 DB. Il était précessif au traitement.
+ <br/>Sur un plan subjectif, le patient n'a pas de sentiment de baisse de 
+ <br/>l'audition.
+ <br/>
+<br/>
+<u><b>Examen clinique</b></u>
+<br/>OMS : 1. Arrive en fauteuil ce jour même si la marche n'est pas 
+ <br/>perturbée.
+ <br/>Poids : 69 kg.
+ <br/>TA : 110/70 mmHg.
+ <br/>Pouls : 94 puls/min régulier.
+ <br/>Saturation : 98 % en air ambiant.
+ <br/>
+<br/>Apyrétique.
+ <br/>Auscultation pulmonaire libre et symétrique.
+ <br/>Persistance d'une perméation latéro-cervicale basse à gauche avec un 
+ <br/>pansement par jour. Nous ne l'avons pas renouvellé ce jour.
+ <br/>
+<br/>Sur le plan de l'efficacité, le patient a réalisé un TEP scanner à 
+ <br/>l'hôpital Bicêtre le 08/01 comparé au TEP scanner du 02/10/19 
+ <br/>montrant une réponse métabolique partielle en critère persiste au 
+ <br/>niveau de la masse latéro-cervicale gauche nécrotique et fistulisé à 
+ <br/>la peau et au niveau de l'adénopathie contro-latérale du secteur II, 
+ <br/>sans autre anomalie par ailleurs.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<br/>Dans ces conditions, j'explique donc à Monsieur DA SILVA que nous 
+ <br/>allons débuter comme prévu le traitement d'entretien par CETUXIMAB 
+ <br/>tous les 15 jours en HDJ.
+ <br/>
+<br/>Je le reverrai en consultation au courant du mois de mars avec un 
+ <br/>nouveau TEP scanner et un scanner cervico-thoracique.
+ <br/>
+<br/>Je lui explique également que l'analyse du protocole KOTIP n'a pas 
+ <br/>mis en évidence de mutation HRAS et donc pas incluable dans cet 
+ <br/>essai. Il a été mis en évidence en revanche une mutation oncogénique 
+ <br/>délétère de TP53 ainsi qu'une variante de signification inconnue de 
+ <br/>CDKN2A.
+ <br/>
+<br/>Patient théoriquement incluable dans UPSTREAM, après une séquence 
+ <br/>d'immunothérapie qu'il pourra réalisée par ailleurs dans le cadre du 
+ <br/>protocole CA224048 randomisant NIVOLUMAB avec association IPILIMUMAB 
+ <br/>ou Inhibiteur IDO.
+ <br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

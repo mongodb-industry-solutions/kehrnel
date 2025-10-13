@@ -1,0 +1,164 @@
+{
+  "ehr_id": "3862",
+  "composition_date": {
+    "$date": "2023-01-10T00:00:00Z"
+  },
+  "archetype_node_id": "openEHR-EHR-COMPOSITION.self_reported_data.v1",
+  "last_processed": {
+    "$date": "2025-10-13T10:48:54.817737Z"
+  },
+  "canonicalJSON": {
+    "_type": "COMPOSITION",
+    "name": {
+      "_type": "DV_TEXT",
+      "value": "neuroqol_v0"
+    },
+    "archetype_details": {
+      "archetype_id": {
+        "value": "openEHR-EHR-COMPOSITION.self_reported_data.v1"
+      },
+      "rm_version": "1.0.4",
+      "template_id": {
+        "value": "neuroqol_v0"
+      }
+    },
+    "language": {
+      "_type": "CODE_PHRASE",
+      "terminology_id": {
+        "_type": "TERMINOLOGY_ID",
+        "value": "ISO_639-1"
+      },
+      "code_string": "en"
+    },
+    "territory": {
+      "_type": "CODE_PHRASE",
+      "terminology_id": {
+        "_type": "TERMINOLOGY_ID",
+        "value": "ISO_3166-1"
+      },
+      "code_string": "ES"
+    },
+    "category": {
+      "_type": "DV_CODED_TEXT",
+      "value": "event",
+      "defining_code": {
+        "_type": "CODE_PHRASE",
+        "terminology_id": {
+          "_type": "TERMINOLOGY_ID",
+          "value": "openehr"
+        },
+        "code_string": "433"
+      }
+    },
+    "composer": {
+      "_type": "PARTY_IDENTIFIED",
+      "name": "Max Mustermann"
+    },
+    "context": {
+      "_type": "EVENT_CONTEXT",
+      "start_time": {
+        "_type": "DV_DATE_TIME",
+        "value": "2023-01-10T00:00:00"
+      },
+      "setting": {
+        "_type": "DV_CODED_TEXT",
+        "value": "home",
+        "defining_code": {
+          "_type": "CODE_PHRASE",
+          "terminology_id": {
+            "_type": "TERMINOLOGY_ID",
+            "value": "openehr"
+          },
+          "code_string": "225"
+        }
+      },
+      "health_care_facility": {
+        "_type": "PARTY_IDENTIFIED",
+        "name": "DOE, John"
+      }
+    },
+    "content": [
+      {
+        "_type": "OBSERVATION",
+        "name": {
+          "_type": "DV_CODED_TEXT",
+          "defining_code": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "local"
+            },
+            "code_string": "at0000"
+          },
+          "value": "Neuro-QoL Stigma"
+        },
+        "archetype_details": {
+          "archetype_id": {
+            "value": "openEHR-EHR-OBSERVATION.neuroqol.v0"
+          },
+          "rm_version": "1.0.4"
+        },
+        "language": {
+          "_type": "CODE_PHRASE",
+          "terminology_id": {
+            "_type": "TERMINOLOGY_ID",
+            "value": "ISO_639-1"
+          },
+          "code_string": "en"
+        },
+        "encoding": {
+          "_type": "CODE_PHRASE",
+          "terminology_id": {
+            "_type": "TERMINOLOGY_ID",
+            "value": "IANA_character-sets"
+          },
+          "code_string": "UTF-8"
+        },
+        "subject": {
+          "_type": "PARTY_SELF"
+        },
+        "provider": {
+          "_type": "PARTY_SELF"
+        },
+        "workflow_id": {
+          "_type": "OBJECT_REF",
+          "namespace": "unknown",
+          "type": "ANY",
+          "id": {
+            "_type": "GENERIC_ID",
+            "value": "58317cce-0c5b-4c3a-9f12-cc840490ddd0",
+            "scheme": "scheme"
+          }
+        },
+        "data": {
+          "_type": "HISTORY",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "History"
+          },
+          "events": [
+            {
+              "_type": "POINT_EVENT",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "Any event"
+              },
+              "archetype_node_id": "at0002",
+              "time": {
+                "_type": "DV_DATE_TIME",
+                "value": "2023-01-10T00:00:00"
+              }
+            }
+          ],
+          "archetype_node_id": "at0001",
+          "origin": {
+            "_type": "DV_DATE_TIME",
+            "value": "2023-01-10T00:00:00"
+          }
+        },
+        "archetype_node_id": "openEHR-EHR-OBSERVATION.neuroqol.v0"
+      }
+    ],
+    "archetype_node_id": "openEHR-EHR-COMPOSITION.self_reported_data.v1"
+  }
+}

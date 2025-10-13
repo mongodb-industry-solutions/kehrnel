@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_128345581" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <title>COMPTE-RENDU DE SORTIE D'UNITE DE SOINS CHIRURGICAUX CONTINUS</title>
+    <effectiveTime value="20170328000000+0000"/>
+    <confidentialityCode code="11493-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR hospitalier (séjour)"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20170328000000+0000"/>
+        <assignedAuthor>
+            <code code="SCC/488" displayName="SOINS CONTINUS CHIRURGICAUX"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Anesthésiste : Dr DEMIRI</b>
+<br/>
+<br/>Hospitalisée 
+ <b>du 27.03.17 au 28.03.17 </b> en post-opératoire d'une 
+ <br/>coelioscopie digestive.
+ <br/>
+<br/>
+<b>Critères d'admission en USCC</b>
+<br/>Haut risque de décompensation d'une comorbidité.
+ <br/>Risque de défaillance cardio-respiratoire ou neurologique.
+ <br/>
+<br/>Pas de complication thrombo-embolique, cardio-vasculaire,
+ <br/>respiratoire, métabolique, neurologique ou infectieuse.
+ <br/>
+<br/>
+<b>Etat respiratoire :</b>
+<br/>Extubé.
+ <br/>
+<br/>
+<b>Statut nutritionnel</b>
+<br/>Dénutrition absente. Alimentation orale.
+ <br/>
+<br/>
+<b>Allergie</b>
+<br/>Non connue.
+ <br/>
+<br/>
+<b>Saignement péri-opératoire</b>
+<br/>Saignement per-opératoire évalué à : 0 ml
+ <br/>Pertes dans les drains depuis la sortie du bloc : NR
+ <br/>Transfusion péri-opératoire (bloc ou SSPI ou USCC) : 0 CG/PCF/C.Plaq.
+ <br/>Seuil transfusionnel recommandé après sortie de l'USCC : 8 g/dl
+ <br/>
+<br/>
+<b>Au plan analgésique</b>
+<br/>Analgésie équilibrée.
+ <br/>Evaluation régulière de l'EVA. EVA au repos = NR
+ <br/>Pas de nausées, ni vomissements post-opératoires.
+ <br/>
+<br/>
+<b>Complications chirurgicales</b>
+<br/>Aucune. 
+ <br/>
+<br/>
+<b>La patiente est transférée dans le Service de Chirurgie "TARN"<br/>le 28.03.17 pour poursuite de la prise en charge.</b>
+<br/>
+<br/>
+<b>COMMENTAIRES ET CONCLUSION<br/>Oxygéno-dépendance à 4L/min due à une diminution de la réserve <br/>fonctionnelle plumonaire liée à des épanchements bilatéraux et une <br/>dysfonction diaphragmatique due à la masse intra-abdominale.<br/><br/>IGS II = 25<br/><br/></b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

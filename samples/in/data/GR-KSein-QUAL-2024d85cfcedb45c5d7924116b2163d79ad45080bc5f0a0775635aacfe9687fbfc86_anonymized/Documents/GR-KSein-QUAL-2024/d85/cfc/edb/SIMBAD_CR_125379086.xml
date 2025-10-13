@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_125379086" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>HOPITAL DE JOUR DE MEDECINE DE CHEVILLY LARUE - Unité Vendée</title>
+    <effectiveTime value="20180820000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20180821000000+0000"/>
+        <assignedAuthor>
+            <code code="CHL/511" displayName="CHEVILLY STRUCTURE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patiente âgée de 61 ans vue ce jour pour une cure 
+ <br/>d'HERCEPTINE-ENDOXAN dans le cadre d'une récidive hépatique et 
+ <br/>osseuse d'un carcinome mammaire droit diagnostiqué initialement en 
+ <br/>2016.
+ <b><br/><br/>Intercure <br/><br/></b> Crampes des orteils pour lesquelles on prévoit de recontrôler le 
+ <br/>ionogramme, possible neuropathie au CARBOPLATINE résiduel.
+ <br/>
+<br/>Bonne tolérance de l'ENDOXAN per os.
+ <b><br/><br/>Examen clinique ce jour <br/><br/></b> OMS 0
+ <br/>TA 117/75
+ <br/>FC 79
+ <br/>T°37.1°C
+ <br/>Saturation 95%
+ <b><br/><br/>En pratique :<br/></b>
+<br/>Administration ce jour de la cure comme suit :
+ <br/>
+<br/>Bonne tolérance clinique au traitement.
+ <br/>
+<br/>Prochaine échographie cardiaque le 6 septembre.
+ <b><br/></b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

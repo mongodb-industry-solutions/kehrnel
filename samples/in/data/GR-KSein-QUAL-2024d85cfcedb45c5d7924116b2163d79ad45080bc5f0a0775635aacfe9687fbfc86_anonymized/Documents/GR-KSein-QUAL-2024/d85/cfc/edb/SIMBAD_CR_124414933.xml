@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124414933" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>HOPITAL DE JOUR DE MEDECINE DE CHEVILLY LARUE - Unité Vendée</title>
+    <effectiveTime value="20181221000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20190115000000+0000"/>
+        <assignedAuthor>
+            <code code="CHL/511" displayName="CHEVILLY STRUCTURE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Patiente âgée de 61 ans, vue ce jour dans le cadre de son carcinome 
+ <br/>mammaire.
+ <br/>
+<br/>
+<b>**********************************************<br/> <br/></b>
+<br/>
+<u><b>INTERCURE<br/><br/></b></u> La patiente signale des herpes génitales a minima à raison de 2 
+ <br/>mois, soit plus de 6 par an chez une patiente immunodéprimée avec des 
+ <br/>lymphocytes à 400/mm3.
+ <br/>Je la mets donc sous ZELITREX préventif 1 g par jour au long cours.
+ <br/>Elle présente également au cours de la radiothérapie antalgique, une 
+ <br/>dysphagie qu'elle impute à la radiothérapie (patiente qui se 
+ <br/>documente beaucoup notamment sur internet).
+ <br/>Je lui explique que la radiothérapie a été plutôt courte et localisée 
+ <br/>sur les vertébres thoraciques, et que sa symptomatologie ressemble 
+ <br/>plus à une mycose, je lui prescris un traitement par FUNGIZONE 1 
+ <br/>gargarisme x3/jour puis avaler la solution pendant 21 jours.
+ <br/>
+<br/>
+<u><b>EXAMENS COMPLEMENTAIRES<br/><br/></b></u> Bilan biologique satisfaisant permettant la réalisation du 
+ <br/>traitement.
+ <br/>
+<u><b><br/>EN PRATIQUE<br/><br/></b></u> Réalisation du traitement aux doses suivantes : 
+ <br/>
+<br/>* ERIBULINE 1.9 mg en DT
+ <br/>
+<br/>Pas de contre indication à la sortie de la patiente.
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124543479" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <title>MED.NUCLEAIRE MN TEP FDG 050</title>
+    <effectiveTime value="20181226000000+0000"/>
+    <confidentialityCode code="11528-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR d'imagerie médicale"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024c3a1a5e6c4bcb887ef298944bdb433d07a21f488af318e894bf88be9e9c88ea5"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181226000000+0000"/>
+        <assignedAuthor>
+            <code code="MNU/174" displayName="MEDECINE NUCLEAIRE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+ 
+ 
+ Docteur GRIMALDI SERENA
+ <br/>
+<br/>Destinataire : CTE 050 - SEIN
+ <br/> DR MOKDAD--ADI MERIEM
+ <br/>
+<b>EXAMEN DE TOMOGRAPHIE PAR EMISSION DE POSITONS<br/>TEP-FDG<br/> Dicté par : </b> Docteur Séréna Grimaldi
+ <b><br/>Dicté le : </b> 20/12/2018 
+ <b><br/>Service : </b> MNU-MEDECINE NUCLEAIRE 
+ <br/>
+<b>Type de document : </b> MNU CE TEP FDG 
+ <br/>
+<b>Ref :</b> 558754 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : 
+ <u><b>XST</b></u>
+<br/>
+<br/>Examen réalisé le : 20/12/2018
+ <br/>
+<br/>
+<u><b>INDICATION</b></u>
+<b> :<br/><u><br/></u></b> Patient de 39 ans suivie pour un cancer du sein gauche triple 
+ <br/>négatif dans un contexte de mutation BRCA un initialement 
+ <br/>diagnostiqué en 2015. Les récidives ganglionnaires susclaviculaires 
+ <br/>gauches, en réponse complète en sur la TEP de septembre 2018. 
+ <br/>Surveillance sous Taxol à dose réduite dans le cadre du protocole 
+ <br/>SAFIR 02.
+ <br/>
+<br/>
+<u><b>TECHNIQUE</b></u>
+<b> :<br/><u><br/></u></b> Acquisition TEP standard réalisée 74 minutes après injection par 
+ <br/>voie intraveineuse de 312,6 MBq de 18-FDG.
+ <br/>
+<br/>Glycémie avant injection : 5 mmol/l - Durée du jeûne : > 6 heures
+ <br/>
+<br/>Scanner de repérage pour fusion d'images, PDL : 484,67mGy.cm
+ <br/>
+<br/>- Poids 90 Kg - Taille 165 Cm
+ <br/>- Site d'injection : coude droit 
+ <br/>- Heure d'injection 13h22.
+ <br/>- Début de l'examen à 14h36.
+ <br/>
+<br/>
+<u><b>RESULTAT</b></u>
+<b> :<br/><br/></b> Comparaison avec l'examen précédent du 21/09/2018 (nadir).
+ <br/>
+<br/>
+<u>Au niveau du crâne</u> :
+ <br/>
+<br/>- Absence d'anomalie de fixation au niveau encéphalique.
+ <br/>- majoration de l'asymétrie de fixation du larynx, avec un foyer plus 
+ <br/>intense au niveau rétrocricoïdienne a droite, possiblement d'origine 
+ <br/>fonctionnelle, à re contrôler lors du prochain examen en raison de 
+ <br/>son caractère focal. 
+ <br/>- Absence d'hyperfixation suspecte de la sphère ORL.
+ <br/>
+<br/>
+<u>Au niveau cervico- thoracique</u> :
+ <br/>
+<br/>- réapparition d'une atteinte secondaire ganglionnaire au niveau 
+ <br/>susclaviculaire (secteurs IV-V) et sus claviculaires gauches, sous 
+ <br/>forme d'au moins 4 foyers de fixation pathologique. L'atteinte 
+ <br/>ganglionnaire reste moins étendue que sur l'examen d'avril 2018. 
+ <br/>Cibles :
+ <br/>* Foyer le plus intense au niveau sous claviculaire en avant de l'arc 
+ <br/>antérieur de la 1re côte gauche : SUVmax 16,2
+ <br/>- majoration d'une fixation diffuse linéaire du creux axillaire 
+ <br/>gauche, d'aspect peu spécifique, mais en correspondance d'une région 
+ <br/>franchement pathologique sur l'examen d'avril 2018, dont suspectes 
+ <br/>dans le contexte.
+ <br/>- Absence de fixation suspecte des aires mammaires.
+ <br/>- Absence d'hyperfixation suspecte au niveau pleuropulmonaire et des 
+ <br/>aires ganglionnaires médiastino-hilaires. Apparition d'une atélectasie 
+ <br/>pulmonaire du lobe inférieur gauche non fixante, peu spécifique, à 
+ <br/>comparer aux données cliniques. 
+ <br/>
+<br/>
+<u>Au niveau abdomino-pelvien</u> :
+ <br/>
+<br/>- aspect hétérogène du parenchyme hépatique, sans foyer formellement 
+ <br/>pathologique.
+ <br/>- Absence d'hyperfixation suspecte par ailleurs au niveau viscéral et 
+ <br/>ganglionnaire.
+ <br/>
+<br/>
+<u>Au niveau ostéomédullaire</u> :
+ <br/>
+<br/>- Absence d'anomalie de fixation sur les segments osseux examinés.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<b> :<br/><u><br/></u>Comparativement à l'examen précédent de septembre 2018, aspect de <br/>réévolutivité au niveau ganglionnaire sus- et sous-claviculaire <br/>gauche, et probablement axillaire gauche. <br/>Absence de fixation suspecte sur le reste de l'examen. <br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Séréna GRIMALDI <br/>Le jeudi 20 décembre 2018 à 16:16 </b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

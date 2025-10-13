@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121569852" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION ONCOLOGIE MEDICALE ORL : DR.FERRAND</title>
+    <effectiveTime value="20200317000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-20246000be8a04c5831890a8520772d2741035511e5bcf3bda1c57db384728ad26d7"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200317000000+0000"/>
+        <assignedAuthor>
+            <code code="ORL/21" displayName="CONSULTATIONS ORL"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b> Consultation téléphonique en raison de l'épidémie de Coronavirus<br/><br/>Patient de 58 ans en cours de traitement par CETUXIMAB bi-mensuel <br/>dans le cadre de la maintenance après 1ère ligne par TPEX d'une <br/>récidive <br/>latéro-cervicale bilatérale d'un carcinome oropharyngé, HPV-, traité <br/>initialement par radiochimiothérapie en octobre 2014, avec chirurgie <br/>de rattrapage en novembre 2017 et mars 2018. HRAS non muté, mutation <br/>oncogénique délétère de TP53,variante de signification inconnue de <br/>CDKN2A.<br/><br/><u> Antécédents médico-chirurgicaux<br/>Chirurgicaux<br/></u></b> - Carcinome épidermoïde hypopharyngé (récidive) traité par PLT avec 
+ <br/>lambeau de grand pectoral et lambeau antéro-latéral de cuisse, 
+ <br/>- Trachéotomie, 
+ <br/>- Opéré d'une maladie de Dupuytren à 2 reprises (à gauche et à 
+ <br/>droite).
+ <br/>
+<br/>
+<u><b>Médicaux</b></u>
+<br/>- Crise comitiale généralisée avec dernier évènement il y a plus de 
+ <br/>10 ans, pas de suivi neurologique, que l'on recommande notamment sur 
+ <br/>le plan thérapeutique, 
+ <br/>- Psoriasis diffus essentiellement aux mains et aux avant-pieds, pas 
+ <br/>de traitement systémique, 
+ <br/>- Hypothyroïdie, 
+ <br/>
+<br/>
+<u><b>Allergie</b></u>
+<br/>Pas d'allergie.
+ <br/>
+<br/>Traitement habituel
+ <br/>- LEVOTHYROX 25 μg,
+ <br/>- GARDENAL 100 mg 1 comprimé au coucher.
+ <br/>
+<br/>
+<u><b>Ce jour<br/></b></u> Consultation téléphonique avec absence de nouvel évènement depuis la 
+ <br/>dernière injection.
+ <br/>Le patient est globalement contrôlé par PARACETAMOL et ORAMORPH avec 
+ <br/>cependant une petite irradiation en sus-claviculaire droit.
+ <br/>
+<br/>
+<u><b>Examen clinique</b></u>
+<br/>OMS : 0.
+ <br/>Poids : 71 kg (+2 kg depuis janvier).
+ <br/>
+<br/>
+<u><b>Bilan biologique</b></u>
+<br/>Pas d'anomalie systématique sur le plan biologique
+ <br/>
+<br/>
+<u><b>Imagerie</b></u>
+<br/>Scanner cervico-TAP du 13/03/2020 montrant une progression au niveau 
+ <br/>latéro-cervical droit.
+ <br/>
+<br/>
+<u><b><h3>Conclusion</h3></b></u>
+<br/>Explication de cette progression et compte tenu de l'absence d'essai 
+ <br/>clinique en cours de cette épidémie de Coronavirus, nous proposons un 
+ <br/>traitement par NIVOLUMAB qu'il commencera le 25/03 prochain.
+ <br/>
+<br/>On organise une consultation de tolérance téléphonique à 1 mois et 
+ <br/>une consultation d'évaluation après le mois de juin avec un scanner 
+ <br/>ORL et TAP à l'IGR. 
+ <br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

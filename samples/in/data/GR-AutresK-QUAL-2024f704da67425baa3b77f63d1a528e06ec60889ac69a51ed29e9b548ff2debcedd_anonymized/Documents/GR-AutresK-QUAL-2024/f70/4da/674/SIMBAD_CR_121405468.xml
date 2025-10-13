@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_121405468" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>CONSULTATION D'ONCOLOGIE GYNECOLOGIE - DR EMELINE COLOMBA</title>
+    <effectiveTime value="20200415000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-AutresK-QUAL-2024f704da67425baa3b77f63d1a528e06ec60889ac69a51ed29e9b548ff2debcedd"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20200415000000+0000"/>
+        <assignedAuthor>
+            <code code="060/8" displayName="CTE 060 - GYNECOLOGIE"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>COMPTE RENDU DE CONSULTATION DE GYNECOLOGIE<br/><br/>Dicté par : </b> Docteur Emeline Colomba-Blameble
+ <b><br/>Dicté le : </b> 09/04/2020 
+ <b><br/>Service : </b> 060-CTE 060 - GYNECOLOGIE 
+ <br/>
+<b>Type de document : </b> 060 CC CONSULTATION 
+ <br/>
+<b>Ref :</b> 976705 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<b>Secrétaire</b> : HLX/A
+ <b><br/></b>
+<br/>
+<b><br/>Consultation téléphonique exceptionnelle du fait du contexte <br/>épidémique COVID 19. <br/><br/></b> Mme XXXXXX, 67 ans suivie dans un contexte de carcinome séreux de 
+ <br/>l'ovaire de haut grade stade IV pleural, platine résistante, 
+ <br/>actuellement sous CAELYX.
+ <br/>
+<br/>
+<b>Profil moléculaire</b> : BRCA 1 et 2 sauvages, en constitutionnel et 
+ <br/>somatique, p53 muté.
+ <br/>
+<br/>
+<u><b>ANTECEDENTS / PATHOLOGIES ASSOCIEES<br/></b></u>
+<br/>- Appendicectomie
+ <br/>- Thrombose MID diagnostiqué en février 2017, sous anticoagulant
+ <br/>- Pas d'allergie
+ <br/>- Pas d'intoxication éthylo-tabagique
+ <br/>
+<br/>
+<u><b>HISTOIRE DE LA MALADIE</b></u>
+<br/>
+<br/>
+<b> * Fin février 2017</b> : suite à une thrombose inaugurale au niveau du 
+ <br/>membre inférieur droit (thrombose de la veine saphène interne, 
+ <br/>étendue jusqu'à la fémorale commune), découverte sur l'échographie 
+ <br/>doppler d'une masse tissulaire pelvienne, probablement d'origine 
+ <br/>ovarienne à composante mixte mesurant de grand axe 120 mm ; ascite 
+ <br/>d'environ 2 à 3 litres.
+ <br/>
+<br/>Mise en route d'un traitement anticoagulant par INNOHEP à dose 
+ <br/>curative avec un switch par PREVISCAN.
+ <br/>
+<br/>
+<b> * Mars 2017</b> : réalisation d'une coelioscopie exploratrice par le Dr 
+ <br/>CHERIER qui retrouve une carcinose péritonéale avec une milliaire 
+ <br/>diffuse, l'exploration étant limitée compte-tenu de l'adhérence du 
+ <br/>grand épiploon à la paroi antérieure ; PCI à 16/27, cytologie 
+ <br/>Positive ; examen extemporané qui retrouve un adénocarcinome 1ère 
+ <br/>ligne de chimiothérapie par CARBOPLATINE + TAXOL, C1J1 le 31/03/17. 
+ <br/>Chimiothérapie nécessitant des réductions de doses pour toxicité 
+ <br/>hématologique principalement thrombopénie grade II.
+ <br/>
+<br/>
+<b> * Octobre 2017</b> : coelioscopie exploratrice retrouvant un PCI stable 
+ <br/>mais instabilité hémodynamique majeure et respiratoire ayant fait 
+ <br/>surseoir à la chirurgie initialement prévue.
+ <br/>Poursuite d'un traitement systémique exclusif.
+ <br/>
+<br/>Reprise de la chimiothérapie par CARBOPLATINE + TAXOL avec adjonction 
+ <br/>d'AVASTIN, C1J1 le 20/10/17, 2 cures puis entretien par AVASTIN seul.
+ <br/>Stabilité clinique sous AVASTIN pendant 1 an, ascite ponctionnée 
+ <br/>toutes les 6 semaines.
+ <br/>
+<br/>
+<b> * Octobre 2018</b> : progression ovarienne et biologique.
+ <br/>Inclusion dans le protocole ATALANTE, bras CARBOPLATINE + GEMZAR + 
+ <br/>AVASTIN +/- ATEZOLIZUMAB, C1J1 le 18 janvier 2019
+ <br/>A noter que le CARBOPLATINE a été effectué en désensibilisation du 
+ <br/>fait de deux réactions allergiques de grade 2.
+ <br/>C7 J1 dans le cas du protocole ATALANTE réalisé le 10 juin 2019 puis 
+ <br/>1er cycle d'entretien réalisé le 27 juin 2019 (bras ATEZOLIZUMAB 
+ <br/>suite à la levée d'aveugle pour la progression)
+ <br/>
+<br/>
+<b> * 29 juillet 2019</b> : progression devenue PLATINE résistante motivant 
+ <br/>l'introduction d'une chimiothérapie par TAXOL hebdomadaire
+ <br/>
+<b><br/> * Janvier 2020 : </b> progression sous TAXOL. Nouvelle ligne par CAELYX, 
+ <br/>C1 le 30/01/2020, C2 J1 le 06/03/2020.
+ <br/>
+<br/>
+<u><b>HISTOIRE RECENTE<br/></b></u>
+<br/>On rappelle que la patiente a été hospitalisée au Gard pour une 
+ <br/>désaturation sur une pleurésie néoplasique dans les suites d'une 
+ <br/>cimentoplastie pluri-étagée pour une ostéoporose fracturaire. 
+ <br/>Evolution favorable après une ponction pleurale de 600 mL le 3 mars 
+ <br/>2020.
+ <br/>
+<br/>
+<b>Sur le plan oncologique,</b> il existait la persistance d'une ascite de 
+ <br/>grande abondance ponctionnée tous les 10 jours avec un CA 125 en 
+ <br/>augmentation à 642 versus 161 au baseline du CAELYX. 
+ <br/>
+<br/>
+<b>Le scanner TAP</b> montrait une progression de l'épanchement pleural et 
+ <br/>de l'ascite avec une stabilité des masses. Dans ce contexte le CAELYX 
+ <br/>avait été arrêté.
+ <br/>Une nouvelle ponction d'ascite réalisée en radiologie 
+ <br/>interventionnelle le 1 avril a ramené 3,5 L. 
+ <br/>
+<br/>Depuis la patiente est retournée à domicile, elle se plaint 
+ <br/>essentiellement d'un syndrome oedémateux avec de volumineux oedèmes 
+ <br/>des membres inférieurs plutôt en augmentation.
+ <br/>
+<br/>Se dit en meilleur état général à distance de l'hospitalisation.
+ <br/>Appétit correct.On refait le point avec la patiente et son fils.
+ <br/>
+<br/>La famille avait noté une amélioration clinique après le début du 
+ <br/>Caelyx et sont demandeurs de le poursuivre. 
+ <br/>
+<br/>Je leur explique que dans le contexte devant l'état clinique et la 
+ <br/>dénutrition , il est délicat de poursuivre une chimiothérapie, 
+ <br/>toutefois si on envisage de traiter la patiente, je serai plutôt 
+ <br/>d'avis de proposer une nouvelle ligne pour optimiser le bénéfice 
+ <br/>clinique. 
+ <br/>
+<br/>Je lui propose de débuter une ligne de Gemcitabine hebdomadaire 
+ <br/>1000 milligrammes/m2 du fait des antécédents de toxicité 
+ <br/>hématologique. 
+ <br/>
+<br/>Je l'informe qu'on réévaluera rapidement les bénéfices cliniques de 
+ <br/>cette chimiothérapie.
+ <br/>
+<br/>En cas d'absence de bénéfice , on arrêtera définitivement les 
+ <br/>traitements oncologiques et on se focalisera sur une prise en charge 
+ <br/>palliative symptomatique exclusive. 
+ <br/>
+<br/>La patiente comprend la situation.
+ <br/>
+<br/>
+<b>Le dernier bilan biologique</b> retrouve une hémoglobine à 7,62 , des PNN 
+ <br/>à 5620 , des plaquettes à 522 , une albumine à 14 , une calcémie 
+ <br/>corrigée à 2,6, une créatinine à 60 g , un bilan hépatique normal et 
+ <br/> un CA 125 à 1760 qui a doublé en 1 mois. 
+ <br/>
+<br/>
+<b><h3>Conclusion</h3> :<br/></b>
+<br/>On prévoit de débuter du Gemcitabine hebdomadaire à domicile .
+ <br/>
+<br/>On remettra à la patiente demain en HDJ les ordonnances de 
+ <br/>traitements préventifs et d'Oxycontin 20 matin et soir .
+ <br/>Je ferai le point en consultation téléphonique pour avoir une idée du 
+ <br/>bénéfice clinique. 
+ <br/>
+<br/>
+<br/>
+<br/>
+<b><br/><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Emeline COLOMBA-BLAMEBLE <br/>Le vendredi 10 avril 2020 à 18:46</b>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>

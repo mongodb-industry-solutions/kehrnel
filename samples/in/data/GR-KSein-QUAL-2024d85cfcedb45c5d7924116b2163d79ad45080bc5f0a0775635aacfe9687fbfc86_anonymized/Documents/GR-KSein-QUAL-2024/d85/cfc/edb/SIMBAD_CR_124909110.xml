@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0">
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId root="2.16.840.1.113883.2.8.2.1"/>
+    <templateId root="1.2.250.1.213.1.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.2.20"/>
+    <id extension="SIMBAD_CR_124909110" root="1.2.250.1.247.2.12.340000207.0.0.164856132.0"/>
+    <code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <title>Consultation d'Oncologie médicale du Docteur Meriem MOKDAD-ADI</title>
+    <effectiveTime value="20181031000000+0000"/>
+    <confidentialityCode code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="CR ou fiche de consultation ou de visite"/>
+    <languageCode code="fr-FR"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole classCode="PAT">
+            <id extension="GR-KSein-QUAL-2024d85cfcedb45c5d7924116b2163d79ad45080bc5f0a0775635aacfe9687fbfc86"/>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20181031000000+0000"/>
+        <assignedAuthor>
+            <code code="050/7" displayName="CTE 050 - SEIN"/>
+        </assignedAuthor>
+    </author>
+    <component><component>
+ <section>
+  <title>Corps du document</title>
+  <text>
+   <![CDATA[<h3>Contenu</h3>
+<b>Compte rendu générique de SENOLOGIE<br/><br/>Dicté par : </b> Docteur Meriem Mokdad Adi
+ <b><br/>Dicté le : </b> 29/10/2018 
+ <b><br/>Service : </b> 050-CTE 050 - SEIN 
+ <br/>
+<b>Type de document : </b> 050 CC Générique 
+ <br/>
+<b>Ref :</b> 519396 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Patient : </b> XXXXXX XXXXXX XXXXXX
+ <b><br/>Identifiant :</b> XXXXXX 
+ <b><br/>Date de naissance :</b> XXXXXX 
+ <br/>
+<b>Sexe: </b> Féminin 
+ <br/>_____________________________________________________________
+ <br/>
+<br/>
+<b>Secrétaire</b> : ORC
+ <br/>
+<br/>Patiente vue ce jour seule, sous ENDOXAN depuis le 23/07 en 
+ <br/>association avec l'HERCEPTINE depuis le 2 mai (présence d'une 
+ <br/>amplification du gêne HER2, amplification faible avec 
+ <br/>les valeurs borderline de ratio qui est à 2,05) dans le cadre de la 
+ <br/>prise en charge d'une récidive hépatique et osseuse d'un cancer du 
+ <br/>sein droit diagnostiqué initialement en 2016.
+ <br/>
+<br/>La patiente a débuté le traitement par ENDOXAN le 23 juillet pendant 
+ <br/>1 semaine puis l'a interrompu pendant 3 semaines suite à une 
+ <br/>neutropénie à 800. 
+ <br/>Reprise de l'ENDOXAN le 13/8 en continu.
+ <br/>Pet scan réalisé le 27 avril avait montré :
+ <br/>une réponse métabolique partielle de la lésion hépatique unique du 
+ <br/>segment VII et de la lésion osseuse isolée en T3.
+ <br/>
+<br/>Elle a reçu 6 cycles de CARBOPLATINE GEMZAR débuté le 26 février 
+ <br/>jusqu'au 9/07 marqué par des toxicités importantes sur le plan 
+ <br/>hématologique : thrombopénie et neutropénie .
+ <br/>
+<br/>
+<u><b>CE JOUR :<br/></b></u>
+<br/>PS:0
+ <br/>Poids 50Kg.
+ <br/>Patiente fatiguée avec des troubles de la concentration secondaires.
+ <br/>
+<br/>Echographie cardiaque : FEVG 58% le 6/09.
+ <br/>
+<br/>
+<b>TEP 19/10 Comparativement à l'examen précédent de juillet 2018, <br/>aspect de progression, devant la majoration des lésions <br/>pré-existantes du foie et de T3, sans nouvelle fixation suspecte.<br/>Intérêt d'une IRM du rachis pour mieux évaluer la lésion de T3 <br/>(épidurite débutante ?).<br/><br/>Bilan biologique le 19/10 </b> : correct.
+ <br/>
+<br/>J'informe la patiente des résultats du TEP lors de la consultation du 
+ <br/>25/10.
+ <br/>
+<br/>Patiente non éligible pour le protocole MCLA 128 car il fallait avoir 
+ <br/>reçu une ligne d'hormonothérapie.
+ <br/>
+<br/>Nous n'avons pas ce jour les résultats du récepteur androgénique non 
+ <br/>réalisé en 2016 sur le sein et en 03/2018 sur le foie.
+ <br/>
+<br/>Je contacte ce jour le médecin pour l'IRM du rachis dorsal dont le 
+ <br/>RDV jusqu'à ce jour, n'est toujours pas affiché suite à un problème 
+ <br/>de secrétariat.
+ <br/>
+<br/>
+<u><b>EN PRATIQUE :<br/><br/></b></u> Je recontacterai la patiente par mail pour l'informer de l'inclusion 
+ <br/> pour l'essai START et également du rendez-vous de l'IRM pour la 
+ <br/>suspicion d'épidurite T3.
+ <u><br/><br/></u>
+<b><br/><br/><br/>_________________________________________________<br/>Signé électroniquement par Docteur Meriem MOKDAD ADI <br/>Le lundi 29 octobre 2018 à 14:34 </b>
+<br/>
+<br/>
+]]>
+  </text>
+ </section>
+</component></component>
+</ClinicalDocument>
