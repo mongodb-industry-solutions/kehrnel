@@ -11,17 +11,80 @@ logger = logging.getLogger(__name__)
 STORED_QUERY_COLL_NAME = "stored_queries"
 EHR_COLL_NAME = "ehr"
 COMPOSITION_COLL_NAME = "compositions"
-FLATTEN_COMPOSITION_COLL_NAME = "compositionsFullPath"
+FLATTEN_COMPOSITION_COLL_NAME = "flatten_compositions"
+SHORTEN_COMPOSITION_COLL_NAME = "flatten_compositions"
+CODES_COLL_NAME = "_codes"
 
 
-async def execute_aql_query(pipeline: List[Dict[str, Any]], db: AsyncIOMotorDatabase) -> List[Dict[str, Any]]:
+async def detect_collection_format(db: AsyncIOMotorDatabase) -> str:
     """
-    Executes a MongoDB aggregation pipeline against the compositions collection.
+    Detects which collection format to use by checking for data structure.
+    Returns either 'shortened' or 'full' based on the format found.
     """
     try:
-        cursor = db[FLATTEN_COMPOSITION_COLL_NAME].aggregate(pipeline)
-        print("Pipeline:", pipeline)
-        return await cursor.to_list(length=None)
+        # Check FLATTEN_COMPOSITION_COLL_NAME collection first since it's the preferred collection
+        shorten_count = await db[SHORTEN_COMPOSITION_COLL_NAME].count_documents({})
+        if shorten_count > 0:
+            # Sample a document to determine the format within FLATTEN_COMPOSITION_COLL_NAME
+            sample = await db[SHORTEN_COMPOSITION_COLL_NAME].find_one({})
+            if sample and 'cn' in sample:
+                # Check if this is shortened format (short p paths like '7') or full format (long archetype paths)
+                first_cn_element = sample['cn'][0] if sample['cn'] else {}
+                p_value = first_cn_element.get('p', '')
+                
+                # If p value is short (like '7', '-4.7', etc.) it's shortened format
+                # If p value is long (like 'at0021/at0017/openEHR-EHR-ACTION...') it's full format
+                if len(p_value) < 20 and not p_value.startswith('at'):  # Short path = shortened format
+                    logger.info(f"Using shortened format from collection: {SHORTEN_COMPOSITION_COLL_NAME}")
+                    return 'shortened'
+                else:  # Long archetype path = full format
+                    logger.info(f"Using full format from collection: {SHORTEN_COMPOSITION_COLL_NAME}")
+                    return 'full'
+            elif sample and 'data' in sample and 'cn' not in sample:
+                # Direct nested structure without cn array = shortened format
+                logger.info(f"Using shortened format from collection: {SHORTEN_COMPOSITION_COLL_NAME}")
+                return 'shortened'
+        
+        # Fallback to check compositionsFullPath collection
+        full_count = await db[FLATTEN_COMPOSITION_COLL_NAME].count_documents({})
+        if full_count > 0:
+            sample = await db[FLATTEN_COMPOSITION_COLL_NAME].find_one({})
+            if sample and 'cn' in sample:
+                logger.info(f"Using full format from collection: {FLATTEN_COMPOSITION_COLL_NAME}")
+                return 'full'
+        
+        # Default to full format if unclear
+        logger.warning("Could not detect collection format, defaulting to full format")
+        return 'full'
+        
+    except PyMongoError as e:
+        logger.error(f"Error detecting collection format: {e}")
+        return 'full'  # Default fallback
+
+
+async def execute_aql_query(pipeline: List[Dict[str, Any]], db: AsyncIOMotorDatabase, collection_format: str = None) -> List[Dict[str, Any]]:
+    """
+    Executes a MongoDB aggregation pipeline against the appropriate compositions collection.
+    """
+    try:
+        # Auto-detect format if not specified
+        if collection_format is None:
+            collection_format = await detect_collection_format(db)
+        
+        # Determine which collection to use based on what's available
+        # Check FLATTEN_COMPOSITION_COLL_NAME first since it's the preferred collection
+        shorten_count = await db[SHORTEN_COMPOSITION_COLL_NAME].count_documents({})
+        if shorten_count > 0:
+            collection_name = SHORTEN_COMPOSITION_COLL_NAME
+            logger.info(f"Executing query against collection: {collection_name}")
+        else:
+            # Fallback to compositionsFullPath
+            collection_name = FLATTEN_COMPOSITION_COLL_NAME
+            logger.info(f"Executing query against collection: {collection_name}")
+        
+        cursor = db[collection_name].aggregate(pipeline)
+        doc_result = await cursor.to_list(length=None)
+        return doc_result
     except PyMongoError as e:
         logger.error(f"AQL query execution failed in repository: {e}")
         raise e

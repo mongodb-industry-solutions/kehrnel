@@ -25,6 +25,7 @@ from .context_mapper import ContextMapper
 from .condition_processor import ConditionProcessor
 from .pipeline_builder import PipelineBuilder
 from .path_resolver import PathResolver
+from .format_resolver import FormatResolver
 from .value_formatter import ValueFormatter
 from .aql_transformer import AQLtoMQLTransformer
 
@@ -34,6 +35,7 @@ __all__ = [
     'ConditionProcessor',
     'PipelineBuilder',
     'PathResolver',
+    'FormatResolver',
     'ValueFormatter',
     'AQLtoMQLTransformer'
 ]

@@ -55,15 +55,17 @@ def rebuild_composition(flat, ar_map, at_map, keys, vals):
     """
     Reconstructs a canonical openEHR Composition from its flattened representation.
     """
-    from .at_code_codec import get_reverse_mappings
+    from .at_code_codec import CODE_BOOK, CACHE_LOCK
     
     exp = ShortcutExpander(keys, vals)
     
-    # Get the actual reverse mappings from the loaded codes
-    ar_reverse, at_reverse = get_reverse_mappings()
+    # Get the forward mappings from the loaded codes (CodeBook.__init__ will reverse them)
+    with CACHE_LOCK:
+        ar_forward = CODE_BOOK["ar_code"].copy()  # {string: int}
+        at_forward = CODE_BOOK["at"].copy()       # {string: int}
     
-    # Use the loaded reverse mappings instead of the passed parameters
-    cb = CodeBook(ar_reverse, at_reverse)
+    # Use the loaded forward mappings (CodeBook will reverse them internally)
+    cb = CodeBook(ar_forward, at_forward)
     path2obj = {}
     root = None
     

@@ -1,6 +1,5 @@
 from fastapi import status
-from src.api.v1.ehr.models import ErrorResponse
-from src.api.v1.aql.models import QueryResponse
+from src.api.v1.common.models import ErrorResponse
 
 # TODO: Add the API responses for the AQL query execution
 

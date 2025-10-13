@@ -34,7 +34,6 @@ def get_ingestion_service(request: Request) -> IngestionService:
     return IngestionService(flattener=flattener, repository=repository)
 
 
-
 @router.post(
     "/body",
     status_code=status.HTTP_201_CREATED,
