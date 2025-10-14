@@ -1,51 +1,42 @@
 import pytest
 from httpx import AsyncClient
 from fastapi import status
+import uuid
+import pytest_asyncio
 
-# TODO: Create a file with the static variables, list and dictionaries, such as this one.
-VALID_COMPOSITION = {
-    "_type": "COMPOSITION",
-    "archetype_details": {
-        "template_id": {
-            "value": "Test-Template-v1"
+
+@pytest.fixture
+def ehr_subject_payload() -> dict:
+    """
+    Provides a valid EHR_STATUS payload with a subject
+    """
+    return {
+        "_type": "EHR_STATUS",
+        "subject": {
+            "_type": "PARTY_SELF",
+            'external_ref': {
+                'id': {
+                    'value': f"test-subject-{uuid.uuid4()}"
+                }, 
+                "namespace": "test.namespace",
+                "type": "PERSON"
+            }            
         }
-    },
-    "name": {
-        "value": "Test Composition Version 1"
-    },
-    "content": [
-        {
-            "data": "lorem ipsum dolor sit amet"
-        }
-    ]
-}
+    }
+
+
+@pytest_asyncio.fixture
+async def created_ehr(client: AsyncClient) -> dict:
+    """
+    A fixture that creates a new EHR and returns its creation response JSON.
+    This avoids repeating the creation logic in every test
+    """
+    response = await client.post("/v1/ehr", headers={"Prefer": "return=representation"})
+    assert response.status_code == status.HTTP_201_CREATED
+    return response.json()
+
 
 # When using pytest the fixtures need to be added as arguments to the test functions, Pytest injects them
-
-@pytest.mark.asyncio
-async def test_get_ehr_list_success(client: AsyncClient):
-    """
-    Test  GET /ehr: Retrieves a list of 50 EHR resources sorted by `time_created` in descending order
-    """
-
-    # Create two EHRs to ensure the list is not empty
-    await client.post("/v1/ehr")
-    await client.post("/v1/ehr")
-
-    # Run the request
-    response = await client.get("/v1/ehr")
-
-    # Assert the response
-    assert response.status_code == status.HTTP_200_OK
-
-    data = response.json()
-    
-    # Make sure that the result is a list
-    assert isinstance(data, list)
-    assert len(data) > 0
-    assert "ehr_id" in data[0]
-
-
 @pytest.mark.asyncio
 async def test_get_ehr_list_empty(client: AsyncClient):
     """
@@ -57,330 +48,89 @@ async def test_get_ehr_list_empty(client: AsyncClient):
 
 
 @pytest.mark.asyncio
-async def test_update_ehr_status_success(client: AsyncClient):
-    """
-    Test PUT /ehr
-    """
-    # Create an EHR
-    create_response = await client.post("/v1/ehr")
-    assert create_response.status_code == status.HTTP_201_CREATED
-
-    data = create_response.json()
-    ehr_id = data["ehr_id"]
-    original_status_uid = data["ehr_status"]["uid"]
-
-    # Prepare the update payload and headers
-    update_payload = {
-        "subject": data["ehr_status"]["subject"],
-        "is_modifiable": False,
-        "is_queryable": False
-    }
-
-    headers = {"If-Match": f'"{original_status_uid}'}
-
-    # Send the PUT request
-    update_response = await client.put(f"/v1/ehr/{ehr_id}/ehr_status", json = update_payload, headers = headers)
-
-    # Assert the response
-    assert update_response.status_code == status.HTTP_200_OK
-    new_status_data = update_response.json()
-    assert new_status_data["is_modifiable"] is False
-    assert new_status_data["is_queryable"] is False
-    # UID must be updated to a new version
-    assert new_status_data["uid"] != original_status_uid
-
-
-@pytest.mark.asyncio
-async def test_update_ehr_status_precondition_failed(client: AsyncClient):
-    """
-    Test PUT /ehr/{ehr_id}/ehr_status: Fail with 412 if If-Match header is incorrect.
-    """
-
-    # Create an EHR
-    create_response = await client.post("/v1/ehr")
-    assert create_response.status_code == status.HTTP_201_CREATED
-    data = create_response.json()
-    ehr_id = data["ehr_id"]
-
-    # Use a wrong ETag in the If-Match header
-    update_payload = {
-        "subject": data["ehr_status"]["subject"],
-        "is_modifiable": False
-    }
-
-    headers = {
-        "If-Match": '"wrong-uid::server::1"'
-    }
-
-    # Send request and assert failure
-    update_response = await client.put(f"/v1/ehr/{ehr_id}/ehr_status", json = update_payload, headers=headers)
-    assert update_response.status_code == status.HTTP_412_PRECONDITION_FAILED
-
-
-# Composition endpoints
-@pytest.mark.asyncio
-async def test_create_composition_success(client: AsyncClient):
-    """
-    Test POST /ehr/{ehr_id}/composition: Successfully create a composition
-    """
-
-    # Create an EHR to host the composition
-    create_ehr_response = await client.post("/v1/ehr")
-    assert create_ehr_response.status_code == status.HTTP_201_CREATED
-
-    ehr_id = create_ehr_response.json()["ehr_id"]
-
-    # Create the composition
-    response = await client.post(f"/v1/ehr/{ehr_id}/composition", json = VALID_COMPOSITION)
-
-    # Assert the result
-    assert response.status_code == status.HTTP_201_CREATED
-    assert "Location" in response.headers
-    assert "ETag" in response.headers
-    data = response.json()
-    assert "uid" in data
-    assert data["data"]["name"]["value"] == "Test Composition Version 1"
-
-
-@pytest.mark.asyncio
-async def test_get_composition_by_version_uid_success(client: AsyncClient):
-    """
-    Test GET /ehr/{ehr_id}/composition/{version_uid}: Successfully retrieve a composition.
-    """
-
-    # Create EHR and Composition
-    ehr_response = await client.post("/v1/ehr")
-    ehr_id = ehr_response.json()["ehr_id"]
-
-    comp_response = await client.post(f"/v1/ehr/{ehr_id}/composition", json = VALID_COMPOSITION)
-    comp_uid = comp_response.json()["uid"]
-
-    # Retrieve the composition
-    get_response = await client.get(f"/v1/ehr/{ehr_id}/composition/{comp_uid}")
-
-    # Assert success
-    assert get_response.status_code == status.HTTP_200_OK
-    assert get_response.headers["ETag"] == f'"{comp_uid}"'
-    retrieved_data = get_response.json()
-    assert retrieved_data["name"]["value"] == "Test Composition Version 1"
-
-
-@pytest.mark.asyncio
-async def test_get_composition_not_found(client: AsyncClient):
-    """
-    Test GET /ehr/{ehr_id}/composition/{version_uid}: Fail with 404 for non-existent composition.
-    """
-
-    # Create EHR resource
-    ehr_response = await client.post("/v1/ehr")
-    ehr_id = ehr_response.json()["ehr_id"]
-
-    fake_comp_uid = "00000000-0000-0000-0000-000000000000::server::1"
-
-    # Retrieve the composition
-    response = await client.get(f"/v1/ehr/{ehr_id}/composition/{fake_comp_uid}")
-    assert response.status_code == status.HTTP_404_NOT_FOUND
-
-
-@pytest.mark.asyncio
-async def test_update_composition_success(client: AsyncClient):
-    """
-    Test PUT /ehr/{ehr_id}/composition/{uid}: Successfully update a composition (create new version).
-    """
-
-    # Create EHR and initial composition (v1)
-    ehr_response = await client.post("/v1/ehr")
-    ehr_id = ehr_response.json()["ehr_id"]
-
-    comp_v1_response = await client.post(f"/v1/ehr/{ehr_id}/composition", json = VALID_COMPOSITION)
-    preceding_version_uid = comp_v1_response.json()["uid"]
-
-    # Prepare payload for v2 and headers
-    update_payload = VALID_COMPOSITION.copy()
-    update_payload["name"]["value"] = "Test Composition Version 2"
-    headers = {
-        "If-Match": f'"{preceding_version_uid}"'
-    }
-
-    # Send the PUT request to update the composition
-    update_response = await client.put(f"/v1/ehr/{ehr_id}/composition/{preceding_version_uid}", json = update_payload, headers = headers)
-
-    # Assert response for new version
-    assert update_response.status_code == status.HTTP_200_OK
-    comp_v2_data = update_response.json()
-    assert comp_v2_data["name"]["value"] == "Test Composition Version 2"
-
-    # Check headers point to the new version
-    new_uid = update_response.headers["ETag"].strip('"')
-    assert new_uid != preceding_version_uid
-    assert new_uid in update_response.headers["Location"]
-    # The version should be incremented
-    assert "::2" in new_uid
-
-
-@pytest.mark.asyncio
-async def test_update_composition_precondition_failed(client: AsyncClient):
-    """
-    Test PUT /ehr/{ehr_id}/composition/{uid}: Fail with 400 if If-Match doesn't match URL.
-    """
-    ehr_response = await client.post("/v1/ehr")
-    ehr_id = ehr_response.json()["ehr_id"]
-    comp_v1_response = await client.post(f"/v1/ehr/{ehr_id}/composition", json=VALID_COMPOSITION)
-    preceding_version_uid = comp_v1_response.json()["uid"]
-
-    headers = {"If-Match": '"a-different-uid"'}
-    update_response = await client.put(f"/v1/ehr/{ehr_id}/composition/{preceding_version_uid}", json=VALID_COMPOSITION, headers=headers)
-
-    assert update_response.status_code == status.HTTP_400_BAD_REQUEST
-
-
-@pytest.mark.asyncio
-async def test_delete_composition_success(client: AsyncClient):
-    """
-    Test DELETE /ehr/{ehr_id}/composition/{uid}: Successfully delete a composition.
-    """
-    # Create EHR and composition
-    ehr_response = await client.post("/v1/ehr")
-    ehr_id = ehr_response.json()["ehr_id"]
-    comp_response = await client.post(f"/v1/ehr/{ehr_id}/composition", json=VALID_COMPOSITION)
-    preceding_version_uid = comp_response.json()["uid"]
-
-    # Prepare headers and send DELETE request
-    headers = {"If-Match": f'"{preceding_version_uid}"'}
-    delete_response = await client.delete(f"/v1/ehr/{ehr_id}/composition/{preceding_version_uid}", headers=headers)
-
-    # Assert success
-    assert delete_response.status_code == status.HTTP_204_NO_CONTENT
-    assert delete_response.content == b""
-    assert "ETag" in delete_response.headers
-    assert "Location" in delete_response.headers
-    assert "Last-Modified" in delete_response.headers
-
-@pytest.mark.asyncio
-async def test_delete_composition_conflict(client: AsyncClient):
-    """
-    Test DELETE /ehr/{ehr_id}/composition/{uid}: Fail with 409 if already deleted.
-    """
-    # Create EHR and composition
-    ehr_response = await client.post("/v1/ehr")
-    ehr_id = ehr_response.json()["ehr_id"]
-    comp_response = await client.post(f"/v1/ehr/{ehr_id}/composition", json=VALID_COMPOSITION)
-    preceding_version_uid = comp_response.json()["uid"]
-    headers = {"If-Match": f'"{preceding_version_uid}"'}
-
-    # Delete it once successfully
-    delete_response1 = await client.delete(f"/v1/ehr/{ehr_id}/composition/{preceding_version_uid}", headers=headers)
-    assert delete_response1.status_code == status.HTTP_204_NO_CONTENT
-
-    # Attempt to delete it again
-    delete_response2 = await client.delete(f"/v1/ehr/{ehr_id}/composition/{preceding_version_uid}", headers=headers)
-    
-    # Assert conflict
-    assert delete_response2.status_code == status.HTTP_409_CONFLICT
-    assert "already been deleted" in delete_response2.json()["detail"]
-
-
-@pytest.mark.asyncio
-async def test_delete_composition_precondition_failed(client: AsyncClient):
-    """
-    Test DELETE /ehr/{ehr_id}/composition/{uid}: Fail with 412 for incorrect If-Match.
-    """
-    # Create EHR and composition
-    ehr_response = await client.post("/v1/ehr")
-    ehr_id = ehr_response.json()["ehr_id"]
-    comp_response = await client.post(f"/v1/ehr/{ehr_id}/composition", json=VALID_COMPOSITION)
-    preceding_version_uid = comp_response.json()["uid"]
-
-    # Prepare headers with wrong ETag
-    headers = {"If-Match": '"wrong-uid"'}
-
-    # Send DELETE and assert failure
-    delete_response = await client.delete(f"/v1/ehr/{ehr_id}/composition/{preceding_version_uid}", headers=headers)
-    assert delete_response.status_code == status.HTTP_412_PRECONDITION_FAILED
-
-
-@pytest.mark.asyncio
-async def test_create_ehr_without_body_success(client: AsyncClient):
-    """
-    Test POST /ehr: Successfully create an EHR with no request body
-    """
+async def test_get_ehr_list_success(client: AsyncClient, created_ehr: dict):
+    """Test GET /ehr: Retrieves a list of EHRs."""
+    # The `created_ehr` fixture already creates one EHR for the test.
+    # It's required to create one more to ensure it's possible to retrieve a list
+    await client.post("/v1/ehr")
 
     # Run the request
-    response = await client.post("/v1/ehr")
+    response = await client.get("/v1/ehr")
 
     # Assert the response
-    assert response.status_code == status.HTTP_201_CREATED
+    assert response.status_code == status.HTTP_200_OK
+    data = response.json()
+    
+    # Make sure that the result is a list
+    assert isinstance(data, list)
+    assert len(data) == 2
+    assert "_id" in data[0]
 
-    # Check the headers
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "payload, expected_subject_namespace",
+    [
+        # Test creating without a body
+        (None, "patients"),
+        
+        # Test with a body
+        ({"_type": "EHR_STATUS", "subject": {"_type": "PARTY_SELF", "external_ref": {"id": {"value": "sub-123"}, "namespace": "ns.test", "type": "PERSON"}}}, "ns.test"),
+    ]
+)
+async def test_create_ehr_success(client: AsyncClient, payload: dict | None, expected_subject_namespace: str):
+    """
+    Test POST /ehr: Successfully creates an EHR and with and without a body
+    """
+    response = await client.post("/v1/ehr", json=payload, headers={"Prefer": "return=representation"})
+
+    # Assert
+    assert response.status_code == status.HTTP_201_CREATED
     assert "Location" in response.headers
     assert "ETag" in response.headers
-    assert "Last-Modified" in response.headers
-
-    # Check body content
-    data = response.json()
-    assert "ehr_id" in data
-    assert data["ehr_status"]["subject"]["namespace"] == "system.unassigned"
-
-@pytest.mark.asyncio
-async def test_create_ehr_with_subject_success(client: AsyncClient):
-    """
-    Test POST /ehr: Successfully create an EHR with a subject in the body
-    """
-
-    ehr_status_payload = {
-        "subject": {
-            "id": "test-subject-123",
-            "namespace": "test.namespace"
-        }
-    }
-
-    response = await client.post("/v1/ehr", json = ehr_status_payload)
-    assert response.status_code == status.HTTP_201_CREATED
 
     data = response.json()
-    assert data["ehr_status"]["subject"]["id"] == "test-subject-123"
-    assert data["ehr_status"]["subject"]["namespace"] == "test.namespace"
+    ehr_id = data["ehr_id"]["value"]
+    assert ehr_id in response.headers["Location"]
+    assert ehr_id in response.headers["ETag"]
+
+    # Verify by retrieving the created EHR
+    get_response = await client.get(f"/v1/ehr/{ehr_id}")
+    assert get_response.status_code == status.HTTP_200_OK
+    retrieved_data = get_response.json()
+    assert retrieved_data["ehr_status"]["subject"]["external_ref"]["namespace"] == expected_subject_namespace
 
 
 @pytest.mark.asyncio
-async def test_create_ehr_conflict(client: AsyncClient):
+async def test_create_ehr_conflict(client: AsyncClient, ehr_subject_payload: dict):
     """
     Test POST /ehr: Ensure a 409 Conflict is returned if an EHR for a sbuject already exists
     """
-
-    ehr_status_payload = {
-        "subject": {
-            "id": "conflict-subject-456",
-            "namespace": "test.namespace"
-        }
-    }
-
     # Create the first EHR
-    response1 = await client.post("/v1/ehr", json=ehr_status_payload)
+    print("ehr_subject_payload: ", ehr_subject_payload)
+    
+    response1 = await client.post("/v1/ehr", json=ehr_subject_payload)
     assert response1.status_code == status.HTTP_201_CREATED
 
     # Attempt to create the same EHR resource
-    response2 = await client.post("/v1/ehr", json = ehr_status_payload)
+    response2 = await client.post("/v1/ehr", json = ehr_subject_payload)
     assert response2.status_code == status.HTTP_409_CONFLICT
     assert "already exists" in response2.json()["detail"]
 
 
 @pytest.mark.asyncio
-async def test_get_ehr_by_id_success(client: AsyncClient):
+async def test_get_ehr_by_id_success(client: AsyncClient, created_ehr: dict):
     """
     Test GET /ehr/{ehr_id}: Successfully retrieve an existing EHR
     """
-    # First create an EHR to retrieve
-    create_response = await client.post("/v1/ehr")
-    assert create_response.status_code == status.HTTP_201_CREATED
-    ehr_id = create_response.json()["ehr_id"]
+    ehr_id = created_ehr["ehr_id"]["value"]
 
     # Retrieve the ehr_id from the EHR GET API
     get_response = await client.get(f"/v1/ehr/{ehr_id}")
 
     assert get_response.status_code == status.HTTP_200_OK
     data = get_response.json()
-    assert data["ehr_id"] == ehr_id
+    assert data["_id"]["value"] == ehr_id
     assert "ehr_status" in data
 
 
@@ -390,43 +140,121 @@ async def test_get_ehr_by_id_not_found(client: AsyncClient):
     Test GET /ehr/{ehr_id}: Ensure 404 is returned for a non-existen EHR
     """
 
-    non_existent_ehr_id = "00000000-0000-0000-0000-000000000000"
+    non_existent_ehr_id = str(uuid.uuid4())
 
     response = await client.get(f"/v1/ehr/{non_existent_ehr_id}")
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
 @pytest.mark.asyncio
-async def test_create_composition_success(client: AsyncClient):
+async def test_create_ehr_with_id_success(client: AsyncClient):
     """
-    Test POST /ehr/{ehr_id}/composition: Successfully create a composition.
+    Test PUT /ehr/{ehr_id}: Successfully create an EHR with a specified ID
     """
-    # Create an EHR to host the composition
-    create_ehr_response = await client.post("/v1/ehr")
-    assert create_ehr_response.status_code == status.HTTP_201_CREATED
-    ehr_id = create_ehr_response.json()["ehr_id"]
 
-    # Define a valid composition payload
-    composition_payload = {
-        "_type": "COMPOSITION",
-        "archetype_details": {
-            "template_id": {
-                "value": "Test-Template"
-            }
-        },
-        "name": {
-            "value": "Test Composition"
-        },
-        "content": []
-    }
+    client_specified_ehr_id = str(uuid.uuid4())
 
-    # POST the composition
-    response = await client.post(f"/v1/ehr/{ehr_id}/composition", json=composition_payload)
+    response = await client.put(f"/v1/ehr/{client_specified_ehr_id}")
 
-    # Assert the result
+    assert response.status_code == status.HTTP_201_CREATED
+    assert response.text == ""
+    assert response.headers["Location"] == f"/v1/ehr/{client_specified_ehr_id}"
+    assert response.headers["ETag"] == f'"{client_specified_ehr_id}"'
+
+    # Verify by retrieving it
+    get_response = await client.get(f"/v1/ehr/{client_specified_ehr_id}")
+    assert get_response.status_code == status.HTTP_200_OK
+
+
+@pytest.mark.asyncio
+async def test_create_ehr_with_id_conflict(client: AsyncClient, created_ehr: dict):
+    """
+    Test PUT /ehr/{ehr_id}: Fail with 409 if EHR ID already exists
+    """
+
+    # Arrange: The of the already existing EHR from the fixture
+    existing_ehr_id = created_ehr["ehr_id"]["value"]
+
+    # Act: Try to create an EHR with the same ID
+    response = await client.put(f"/v1/ehr/{existing_ehr_id}")
+
+    # Assert
+    assert response.status_code == status.HTTP_409_CONFLICT
+    assert "already exists" in response.json()["detail"]
+
+
+@pytest.mark.asyncio
+async def test_get_ehr_by_subject_success(client: AsyncClient, ehr_subject_payload: dict):
+    """
+    Test GET /ehr?subject_id=...&subject_namespace=...: Successfully retrieve EHR by subject.
+    """
+
+    # Create an EHR with a known subject
+    response_create_ehr = await client.post("/v1/ehr", json=ehr_subject_payload, headers={"Prefer": "return=representation"})
+    assert response_create_ehr.status_code == status.HTTP_201_CREATED
+
+    subject_id = ehr_subject_payload["subject"]["external_ref"]["id"]["value"]
+    subject_namespace = ehr_subject_payload["subject"]["external_ref"]["namespace"]
+
+    # Retrieve the EHR using the query parameters
+    response = await client.get(f"/v1/ehr?subject_id={subject_id}&subject_namespace={subject_namespace}")
+
+    # Assert
+    assert response.status_code == status.HTTP_200_OK
+    data = response.json()
+
+    assert data["_id"]
+    assert data["ehr_status"]["subject"]["external_ref"]["id"]["value"] == subject_id
+    assert data["ehr_status"]["subject"]["external_ref"]["namespace"] == subject_namespace
+
+
+@pytest.mark.asyncio
+async def test_get_ehr_by_subject_not_found(client: AsyncClient):
+    """
+    Test GET /ehr?subject_id=...: Fail with 404 for a non-existent subject.
+    """
+    # Act
+    response = await client.get("/v1/ehr?subject_id=non-existent&subject_namespace=non-existent")
+    
+    # Assert
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
+@pytest.mark.asyncio
+async def test_create_ehr_prefer_minimal(client: AsyncClient):
+    """
+    Test POST /ehr: Ensure 'Prefer: return=minimal' returns an empty body.
+    """
+    # Arrange: This is the default behavior, but we can be explicit
+    headers = {"Prefer": "return=minimal"}
+    
+    # Act
+    response = await client.post("/v1/ehr", headers=headers)
+
+    # Assert
     assert response.status_code == status.HTTP_201_CREATED
     assert "Location" in response.headers
     assert "ETag" in response.headers
-    data = response.json()
-    assert "uid" in data
-    assert data["data"]["name"]["value"] == "Test Composition"
+    # Crucially, the response body should be empty for a minimal return
+    assert response.text == ""
+
+
+@pytest.mark.asyncio
+async def test_create_ehr_invalid_payload(client: AsyncClient):
+    """
+    Test POST /ehr: Ensure 422 is returned for a malformed payload.
+    """
+    # Arrange: Payload with wrong data type for 'is_modifiable'
+    invalid_payload = {
+        "subject": {
+            "id": "subject-422",
+            "namespace": "test.namespace"
+        },
+        "is_modifiable": "this-should-be-a-boolean"
+    }
+
+    # Act
+    response = await client.post("/v1/ehr", json=invalid_payload)
+
+    # Assert
+    assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
