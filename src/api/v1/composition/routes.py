@@ -12,7 +12,7 @@ from src.transform.core import Transformer
 from src.api.v1.composition.service import (
     add_composition, 
     retrieve_composition,
-    retrieve_and_unflatten_composition, # New Import
+    retrieve_and_unflatten_composition,
     update_composition,
     delete_composition_by_preceding_uid,
     retrieve_revision_history,
@@ -72,6 +72,7 @@ def get_transformer(request: Request) -> Transformer:
 async def create_composition_endpoint(
     ehr_id: str,
     response: Response,
+    request: Request,
     composition_create: CompositionCreate = Body(
         ...,
         description = "The composition object to be created, structured according to a template"
@@ -90,11 +91,15 @@ async def create_composition_endpoint(
     Upon successfull creation, the new `composition` object is returned, and the `Location`, `ETag`, and `Last-Modified` headers are set.
     """
 
+    target_search = request.app.state.config.get("target",{})
+    merge_search = target_search.get("search_compositions_merge")
+    
     new_composition = await add_composition(
         ehr_id = ehr_id,
         composition_create = composition_create,
         db = db,
-        flattener = flattener
+        flattener = flattener,
+        merge_search_docs=merge_search
     )
 
     # Response Headers
