@@ -92,7 +92,7 @@ async def create_composition_endpoint(
     """
 
     target_search = request.app.state.config.get("target",{})
-    merge_search = target_search.get("search_compositions_merge")
+    merge_search = target_search.get("search_compositions_merge", False)
     
     new_composition = await add_composition(
         ehr_id = ehr_id,
