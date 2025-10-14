@@ -47,6 +47,7 @@ async def add_composition(
     composition_create: CompositionCreate,
     db: AsyncIOMotorDatabase,
     flattener: CompositionFlattener,
+    merge_search_docs: bool = False,
     committer_name: str = "System"
 ) -> Composition:
     """
@@ -145,6 +146,7 @@ async def add_composition(
             contribution_doc = contribution.model_dump(by_alias = True),
             flattened_base_doc = flattened_base_doc,
             flattened_search_doc = flattened_search_doc,
+            merge_search_docs=merge_search_docs,
             db = db
         )
     except PyMongoError as e:
