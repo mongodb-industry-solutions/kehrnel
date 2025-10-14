@@ -95,7 +95,8 @@ async def insert_composition_contribution_and_update_ehr(
     contribution_doc: dict,
     db: AsyncIOMotorDatabase,
     flattened_base_doc: Optional[Dict] = None,
-    flattened_search_doc: Optional[Dict] = None
+    flattened_search_doc: Optional[Dict] = None,
+    merge_search_docs: bool = False
 ):
     """
     Inserts a new Composition, its Contribution, its flattened versions,
@@ -106,6 +107,7 @@ async def insert_composition_contribution_and_update_ehr(
         async with session.start_transaction():
             try:
                 composition_doc["ehr_id"] = ehr_id
+                composition_uid = composition_doc["_id"]
 
                 # Insert the new Contribution document
                 await db[EHR_CONTRIBUTIONS_COLL].insert_one(contribution_doc, session = session)
@@ -115,22 +117,35 @@ async def insert_composition_contribution_and_update_ehr(
 
                 # Insert the flattened versions if they exist
                 if flattened_base_doc and flattened_search_doc:
-                    composition_uid = composition_doc["_id"]
-
                     # Use the canonical version UID as the _id for flattened docs for consistency
                     flattened_base_doc["_id"] = composition_uid
+                    await db[FLAT_COMPOSITIONS_COLL_NAME].insert_one(flattened_base_doc, session=session)
 
                     has_search_data = flattened_search_doc and flattened_search_doc.get("sn")
 
                     if has_search_data:
-                        flattened_search_doc["_id"] = composition_uid
+                        if not merge_search_docs:
+                            flattened_search_doc["_id"] = composition_uid
+                            await db[SEARCH_COMPOSITIONS_COLL_NAME].insert_one(flattened_search_doc, session=session)
+                        else:
+                            search_sub_doc = {
+                                "comp_id": composition_uid,
+                                "tid": flattened_search_doc.get("tid"),
+                                "sn": flattened_search_doc.get("sn", [])
+                            }
+                            
+                            filter_query = {"_id": ehr_id}
+                            update_operation = {
+                                "$push": {"comps": search_sub_doc},
+                                "$setOnInsert": {"ehr_id": ehr_id}
+                            }
 
-                    # Insert the flattened base document
-                    await db[FLAT_COMPOSITIONS_COLL_NAME].insert_one(flattened_base_doc, session=session)                
-
-                    # Insert the flattened search document if it has content
-                    if has_search_data:
-                        await db[SEARCH_COMPOSITIONS_COLL_NAME].insert_one(flattened_search_doc, session=session)
+                            await db[SEARCH_COMPOSITIONS_COLL_NAME].update_one(
+                                filter_query,
+                                update_operation,
+                                upsert=True,
+                                session=session
+                            )
 
                 # Update the EHR document by pushin the new IDs to ther respective lists
                 update_criteria = {
