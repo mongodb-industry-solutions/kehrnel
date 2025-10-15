@@ -145,7 +145,7 @@ async def execute_ast_query(
 )
 async def debug_aql_to_mql_query(
     request: Request,
-    aql: str = Body(..., media_type="text/plain", description="The AQL query string to translate.", example="SELECT c/uid/value as composition_uid, c/name/value as name FROM COMPOSITION c"),
+    aql: str = Body(..., media_type="text/plain", description="The AQL query string to translate.", example="SELECT c/uid/value as uid FROM EHR e CONTAINS COMPOSITION c"),
     ehr_id: str = Query(
         None,
         description="Optional EHR ID to scope the query. This will add a `$match` stage for the `ehr_id` in the generated pipeline",
