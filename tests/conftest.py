@@ -48,6 +48,8 @@ async def test_db(test_db_client: AsyncIOMotorClient) -> AsyncGenerator[AsyncIOM
     await db["contributions"].delete_many({})
     await db["compositions"].delete_many({})
     await db["templates"].delete_many({})
+    await db["_codes"].delete_many({})
+    await db["flatten_compositions"].delete_many({})
 
     yield db
 
@@ -56,6 +58,8 @@ async def test_db(test_db_client: AsyncIOMotorClient) -> AsyncGenerator[AsyncIOM
     await db["contributions"].delete_many({})
     await db["compositions"].delete_many({})
     await db["templates"].delete_many({})
+    await db["_codes"].delete_many({})
+    await db["flatten_compositions"].delete_many({})
 
 
 # API Client Fixture
