@@ -160,6 +160,7 @@ async def debug_aql_to_mql_query(
         mql_pipeline = await build_aql_pipeline(ast_data, db, ehr_id)
     
         return {
+            "success": True,
             "aql_query": aql,
             "ast": ast_data,
             "mql_pipeline": mql_pipeline
