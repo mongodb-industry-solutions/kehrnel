@@ -12,7 +12,7 @@ stored_query_responses = {
         "description": "Stored query was updated successfully or retrieved",
         "content": {
             "text/plain": {
-                "example": "SELECT c FROM EHR e CONTAINS COMPOSITION c"
+                "example": "SELECT c/uid/value as uid FROM EHR e CONTAINS COMPOSITION c"
             }
         }
     },
