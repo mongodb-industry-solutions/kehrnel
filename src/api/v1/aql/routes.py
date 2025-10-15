@@ -1,7 +1,7 @@
 # src/api/v1/aql/routes.py
 
 from starlette.responses import JSONResponse
-from fastapi import APIRouter, Depends, status, Body, Response, Request
+from fastapi import APIRouter, Depends, status, Body, Response, Request, Query
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import List, Dict, Any
 
@@ -14,8 +14,8 @@ from src.api.v1.aql.service import (
     process_aql_query,
     process_aql_ast_query
 )
-from src.api.v1.aql.models import StoredQuerySummary, QueryResponse
-from src.api.v1.aql.api_responses import stored_query_responses
+from src.api.v1.aql.models import StoredQuerySummary, QueryResponse, AQLtoMQLDebugResponse, AQLtoMQLDebugErrorResponse
+from src.api.v1.aql.api_responses import stored_query_responses, aql_to_mql_debug_responses
 from src.aql_parser.validator import validate_aql_syntax
 
 router = APIRouter(
@@ -134,17 +134,32 @@ async def execute_ast_query(
 
 @router.post(
     "/aql/mql",
-    summary="Debug AQL to MQL query pipeline",
-    description="Returns the generated MongoDB pipeline"
+    summary="Translate AQL to MongoDB Query Language (MQL)",
+    description=(
+        "Parses an AQL query and translates it into the corresponding MongoDB Aggregation Pipeline (MQL). "
+        "Allows users to understand how their AQL queries are being interpreted and executed against the underlying MongoDB database"
+        "It does NOT execute the query."
+    ),
+    response_model=AQLtoMQLDebugResponse,
+    responses=aql_to_mql_debug_responses
 )
 async def debug_aql_to_mql_query(
     request: Request,
-    aql: str = Body(..., media_type="text/plain", description="The AQL query string to parse."),
-    ehr_id: str = None,
+    aql: str = Body(..., media_type="text/plain", description="The AQL query string to translate.", example="SELECT c/uid/value as composition_uid, c/name/value as name FROM COMPOSITION c"),
+    ehr_id: str = Query(
+        None,
+        description="Optional EHR ID to scope the query. This will add a `$match` stage for the `ehr_id` in the generated pipeline",
+        example="a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6"
+    ),
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
 ):
     """
-    Returns the generated MongoDB aggregation pipeline from an AQL query
+    Translates an AQL query into its corresponding MongoDB Aggregation Pipeline.
+
+    This endpoint provides a transparent view of the translation layer:
+    - **aql_query**: The original query sent.
+    - **ast**: The intermediate Abstract Syntax Tree representation.
+    - **mql_pipeline**: The final MongoDB pipeline ready for execution.
     """
     try:
         from src.aql_parser.parser import AQLParser
@@ -159,24 +174,24 @@ async def debug_aql_to_mql_query(
         
         mql_pipeline = await build_aql_pipeline(ast_data, db, ehr_id)
     
-        return {
-            "success": True,
-            "aql_query": aql,
-            "ast": ast_data,
-            "mql_pipeline": mql_pipeline
-        }
+        return AQLtoMQLDebugResponse(
+            success=True,
+            aql_query=aql,
+            ast=ast_data,
+            mql_pipeline=mql_pipeline
+        )
         
     except Exception as e:
-        return {
-            "success": False,
-            "message": f"Failed to parse AQL: {str(e)}",
-            "original_query": aql,
-            "ast": None,
-            "mql_pipeline": None,
-            "error": str(e)
-        }
+        error_response_body = AQLtoMQLDebugErrorResponse(
+            message=f"Failed to process AQL: {str(e)}",
+            original_query=aql,
+            error=str(e)
+        ).model_dump()
 
-
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content=error_response_body
+        )
 
 @router.post(
     "/ast/debug",
