@@ -78,7 +78,7 @@ class AQLtoMQLDebugResponse(BaseModel):
         json_schema_extra = {
             "example": {
                 "success": True,
-                "aql_query": "SELECT c/uid/value as uid FROM COMPOSITION c",
+                "aql_query": "SELECT c/uid/value as uid FROM EHR e CONTAINS COMPOSITION c",
                 "ast": {
                     "select": {
                         "columns": [
