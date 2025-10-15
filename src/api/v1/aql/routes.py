@@ -1,5 +1,6 @@
 # src/api/v1/aql/routes.py
 
+from starlette.responses import JSONResponse
 from fastapi import APIRouter, Depends, status, Body, Response, Request
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import List, Dict, Any
@@ -129,6 +130,51 @@ async def execute_ast_query(
             "error": str(e),
             "errorType": type(e).__name__
         }
+
+
+@router.post(
+    "/aql/mql",
+    summary="Debug AQL to MQL query pipeline",
+    description="Returns the generated MongoDB pipeline"
+)
+async def debug_aql_to_mql_query(
+    request: Request,
+    aql: str = Body(..., media_type="text/plain", description="The AQL query string to parse."),
+    ehr_id: str = None,
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Returns the generated MongoDB aggregation pipeline from an AQL query
+    """
+    try:
+        from src.aql_parser.parser import AQLParser
+        from .service import build_aql_pipeline
+        
+        parser = AQLParser(aql)
+        ast_data = parser.parse()
+
+        # aql = Original query
+        # ast_data = Parsed query
+        # mql_pipeline = MongoDB Aggregation Pipeline
+        
+        mql_pipeline = await build_aql_pipeline(ast_data, db, ehr_id)
+    
+        return {
+            "aql_query": aql,
+            "ast": ast_data,
+            "mql_pipeline": mql_pipeline
+        }
+        
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Failed to parse AQL: {str(e)}",
+            "original_query": aql,
+            "ast": None,
+            "mql_pipeline": mql_pipeline,
+            "error": str(e)
+        }
+
 
 
 @router.post(
