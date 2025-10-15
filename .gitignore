@@ -184,3 +184,5 @@ cython_debug/
 
 # Gio's exceptions
 config.json
+*next_steps.py
+*next_steps.txt
