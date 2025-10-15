@@ -171,7 +171,7 @@ async def debug_aql_to_mql_query(
             "message": f"Failed to parse AQL: {str(e)}",
             "original_query": aql,
             "ast": None,
-            "mql_pipeline": mql_pipeline,
+            "mql_pipeline": None,
             "error": str(e)
         }
 
