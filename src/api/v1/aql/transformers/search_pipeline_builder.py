@@ -55,22 +55,27 @@ class SearchPipelineBuilder:
         if additional_match:
             pipeline.append(additional_match)
 
-        # 3. Build the $addFields stage for LET variables
+        # 3. Build the $lookup stage to get complete composition data
+        lookup_stage = self.build_lookup_stage(ast)
+        if lookup_stage:
+            pipeline.append(lookup_stage)
+
+        # 4. Build the $addFields stage for LET variables
         let_stage = self.build_let_stage()
         if let_stage:
             pipeline.append(let_stage)
 
-        # 4. Build the $project stage from the SELECT clause  
+        # 5. Build the $project stage from the SELECT clause  
         project_stage = await self.build_project_stage(ast)
         if project_stage:
             pipeline.append(project_stage)
 
-        # 5. Build the $sort stage from ORDER BY clause
+        # 6. Build the $sort stage from ORDER BY clause
         sort_stage = self.build_sort_stage(ast)
         if sort_stage:
             pipeline.append(sort_stage)
         
-        # 6. Build the $limit stage from LIMIT clause
+        # 7. Build the $limit stage from LIMIT clause
         limit_stage = self.build_limit_stage(ast)
         if limit_stage:
             pipeline.append(limit_stage)
@@ -347,6 +352,226 @@ class SearchPipelineBuilder:
             
         return None
 
+    def build_lookup_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Builds $lookup stage to get complete composition data from flatten_compositions.
+        This enables hybrid data access: search index for filtering, full data for projection.
+        """
+        # Check if we need full composition data based on SELECT clause
+        if self._needs_full_composition_data(ast):
+            logger.info("Adding $lookup stage to get complete composition data from flatten_compositions")
+            return {
+                "$lookup": {
+                    "from": "flatten_compositions",
+                    "localField": "_id",
+                    "foreignField": "_id",
+                    "as": "full_composition"
+                }
+            }
+        else:
+            logger.debug("No metadata fields detected - skipping $lookup stage for optimal performance")
+        return None
+
+    def _needs_full_composition_data(self, ast: Dict[str, Any]) -> bool:
+        """
+        Determines if the query needs full composition data based on SELECT clause.
+        Returns True if any selected field requires data not available in search collection.
+        """
+        columns = ast.get("select", {}).get("columns", {})
+        if not columns:
+            return False
+        
+        for col_data in columns.values():
+            path = col_data.get("path") or col_data.get("value", {})
+            if path.get("type") == "dataMatchPath":
+                aql_path = self._extract_aql_path_from_path_object(path)
+                if aql_path and self._is_composition_metadata_path(aql_path):
+                    return True
+        return False
+
+    def _is_composition_metadata_path(self, aql_path: str) -> bool:
+        """
+        Determines if an AQL path refers to composition metadata that might not be
+        available in the search collection's reduced sn array.
+        """
+        if not aql_path:
+            return False
+            
+        # Composition metadata patterns that are often missing from search collection
+        metadata_patterns = [
+            '/name/value',
+            '/name/defining_code',
+            '/context/start_time',
+            '/context/end_time', 
+            '/context/setting',
+            '/context/location',
+            '/context/health_care_facility',
+            '/context/participations',
+            '/composer',
+            '/category',
+            '/territory',
+            '/language'
+        ]
+        
+        # Check if path contains any metadata patterns
+        for pattern in metadata_patterns:
+            if pattern in aql_path:
+                return True
+                
+        # Also check for root composition elements (usually have simple path patterns)
+        variable = aql_path.split('/')[0]
+        if variable == self.composition_alias:
+            # If it's a composition path but not uid/value (which we handle specially)
+            if not aql_path.endswith('/uid/value'):
+                # Check if it's likely a root composition field
+                path_parts = aql_path.split('/')
+                if len(path_parts) <= 3:  # e.g., c/name/value
+                    return True
+        
+        return False
+
+    async def _build_hybrid_field_projection(self, aql_path: str, alias: str) -> Dict[str, Any]:
+        """
+        Builds projection logic that intelligently routes field access between 
+        search collection (sn array) and full composition data (cn array from lookup).
+        """
+        try:
+            path_regex_pattern, data_path = await self.format_resolver.translate_aql_path(aql_path)
+            
+            # Determine if this is likely composition metadata
+            is_metadata = self._is_composition_metadata_path(aql_path)
+            
+            if is_metadata:
+                logger.debug(f"Using metadata-priority projection for {aql_path} (prefers full_composition)")
+            else:
+                logger.debug(f"Using performance-priority projection for {aql_path} (prefers search collection)")
+            
+            if path_regex_pattern is None:
+                # Direct field access
+                if data_path == "comp_id":
+                    return "$comp_id"
+                else:
+                    return f"${data_path}"
+            else:
+                # Complex path - use hybrid logic
+                if is_metadata:
+                    # For metadata fields, prefer full composition data
+                    return {
+                        "$let": {
+                            "vars": {
+                                "full_comp": {"$first": "$full_composition"},
+                                "search_element": {
+                                    "$first": {
+                                        "$filter": {
+                                            "input": "$sn",
+                                            "as": "item",
+                                            "cond": {"$regexMatch": {"input": "$$item.p", "regex": path_regex_pattern}}
+                                        }
+                                    }
+                                }
+                            },
+                            "in": {
+                                "$cond": {
+                                    "if": {"$ne": ["$$full_comp", None]},
+                                    "then": {
+                                        # Try to get from full composition first
+                                        "$let": {
+                                            "vars": {
+                                                "full_element": {
+                                                    "$first": {
+                                                        "$filter": {
+                                                            "input": "$$full_comp.cn",
+                                                            "as": "item",
+                                                            "cond": {"$regexMatch": {"input": "$$item.p", "regex": path_regex_pattern}}
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "in": {
+                                                "$cond": {
+                                                    "if": {"$ne": ["$$full_element", None]},
+                                                    "then": f"$$full_element.{data_path}",
+                                                    "else": {
+                                                        # Fallback to search collection
+                                                        "$cond": {
+                                                            "if": {"$ne": ["$$search_element", None]},
+                                                            "then": f"$$search_element.{data_path}",
+                                                            "else": None
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "else": {
+                                        # No full composition, use search collection
+                                        "$cond": {
+                                            "if": {"$ne": ["$$search_element", None]},
+                                            "then": f"$$search_element.{data_path}",
+                                            "else": None
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                else:
+                    # For non-metadata fields, prefer search collection (performance)
+                    return {
+                        "$let": {
+                            "vars": {
+                                "search_element": {
+                                    "$first": {
+                                        "$filter": {
+                                            "input": "$sn",
+                                            "as": "item",
+                                            "cond": {"$regexMatch": {"input": "$$item.p", "regex": path_regex_pattern}}
+                                        }
+                                    }
+                                },
+                                "full_comp": {"$first": "$full_composition"}
+                            },
+                            "in": {
+                                "$cond": {
+                                    "if": {"$ne": ["$$search_element", None]},
+                                    "then": f"$$search_element.{data_path}",
+                                    "else": {
+                                        # Fallback to full composition if not in search
+                                        "$cond": {
+                                            "if": {"$ne": ["$$full_comp", None]},
+                                            "then": {
+                                                "$let": {
+                                                    "vars": {
+                                                        "full_element": {
+                                                            "$first": {
+                                                                "$filter": {
+                                                                    "input": "$$full_comp.cn",
+                                                                    "as": "item",
+                                                                    "cond": {"$regexMatch": {"input": "$$item.p", "regex": path_regex_pattern}}
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                    "in": {
+                                                        "$cond": {
+                                                            "if": {"$ne": ["$$full_element", None]},
+                                                            "then": f"$$full_element.{data_path}",
+                                                            "else": None
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "else": None
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+        except Exception as e:
+            logger.warning(f"Could not resolve path {aql_path}: {e}")
+            return f"${alias}"
+
     def build_let_stage(self) -> Optional[Dict[str, Any]]:
         """
         Constructs the $addFields stage for LET variables.
@@ -404,83 +629,17 @@ class SearchPipelineBuilder:
                         else:
                             projection[alias] = f"${alias}"
                     
-                    # Handle composition-level paths
+                    # Handle composition-level paths with hybrid data routing
                     elif variable == self.composition_alias:
                         # Special handling for composition UID - it's stored in document _id
                         if '/uid/value' in aql_path or aql_path.endswith('/uid/value'):
                             projection[alias] = "$_id"
                         else:
-                            # For other composition paths, use translate_aql_path
-                            try:
-                                path_regex_pattern, data_path = await self.format_resolver.translate_aql_path(aql_path)
-                                
-                                if path_regex_pattern is None:
-                                    # Direct field access (for cases like composition fields at document root)
-                                    if data_path == "comp_id":
-                                        projection[alias] = "$comp_id"
-                                    else:
-                                        projection[alias] = f"${data_path}"
-                                else:
-                                    # Use sn array filtering logic with dynamic p-patterns for search collection
-                                    projection[alias] = {
-                                        "$let": {
-                                            "vars": {
-                                                "target_element": {
-                                                    "$first": {
-                                                        "$filter": {
-                                                            "input": "$sn",
-                                                            "as": "item",
-                                                            "cond": {"$regexMatch": {"input": "$$item.p", "regex": path_regex_pattern}}
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            "in": {
-                                                "$cond": {
-                                                    "if": {"$ne": ["$$target_element", None]},
-                                                    "then": f"$$target_element.{data_path}",
-                                                    "else": None  # Return null if no matching element found
-                                                }
-                                            }
-                                        }
-                                    }
-                            except Exception as e:
-                                logger.warning(f"Could not resolve path {aql_path}: {e}")
-                                projection[alias] = f"${alias}"
+                            # Route field to appropriate data source
+                            projection[alias] = await self._build_hybrid_field_projection(aql_path, alias)
                     else:
-                        # Handle other variable types
-                        try:
-                            path_regex_pattern, data_path = await self.format_resolver.translate_aql_path(aql_path)
-                            
-                            if path_regex_pattern is None:
-                                projection[alias] = f"${data_path}" if data_path else f"${alias}"
-                            else:
-                                # Use sn array filtering logic
-                                projection[alias] = {
-                                    "$let": {
-                                        "vars": {
-                                            "target_element": {
-                                                "$first": {
-                                                    "$filter": {
-                                                        "input": "$sn",
-                                                        "as": "item",
-                                                        "cond": {"$regexMatch": {"input": "$$item.p", "regex": path_regex_pattern}}
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "in": {
-                                            "$cond": {
-                                                "if": {"$ne": ["$$target_element", None]},
-                                                "then": f"$$target_element.{data_path}",
-                                                "else": None
-                                            }
-                                        }
-                                    }
-                                }
-                        except Exception as e:
-                            logger.warning(f"Could not resolve path {aql_path}: {e}")
-                            projection[alias] = f"${alias}"
+                        # Handle other variable types with hybrid projection
+                        projection[alias] = await self._build_hybrid_field_projection(aql_path, alias)
                 else:
                     # Fallback to alias if path cannot be extracted
                     projection[alias] = f"${alias}"
