@@ -5,6 +5,7 @@ from .ast_validator import ASTValidator
 from .context_mapper import ContextMapper
 from .format_resolver import FormatResolver
 from .pipeline_builder import PipelineBuilder
+from .search_pipeline_builder import SearchPipelineBuilder
 from .archetype_resolver import ArchetypeResolver
 
 
@@ -24,10 +25,11 @@ class AQLtoMQLTransformer:
     - PipelineBuilder: Constructs MongoDB aggregation stages
     """
 
-    def __init__(self, ast: Dict[str, Any], ehr_id: Optional[str] = None, schema_config: Optional[Dict[str, str]] = None, db: Optional[AsyncIOMotorDatabase] = None):
+    def __init__(self, ast: Dict[str, Any], ehr_id: Optional[str] = None, schema_config: Optional[Dict[str, str]] = None, db: Optional[AsyncIOMotorDatabase] = None, search_index_name: str = "search_compositions_index"):
         self.ast = ast
         self.ehr_id = ehr_id
         self.db = db
+        self.search_index_name = search_index_name
         
         # Schema field configuration (Point 3 preparation)
         self.schema_config = schema_config or {
@@ -71,7 +73,7 @@ class AQLtoMQLTransformer:
             self.archetype_resolver
         )
         
-        # 7. Initialize pipeline builder
+        # 7. Initialize pipeline builders (both standard and search)
         self.pipeline_builder = PipelineBuilder(
             self.ehr_alias,
             self.composition_alias,
@@ -79,6 +81,17 @@ class AQLtoMQLTransformer:
             self.path_resolver,
             self.context_map,
             self.let_variables
+        )
+        
+        # 8. Initialize search pipeline builder
+        self.search_pipeline_builder = SearchPipelineBuilder(
+            self.ehr_alias,
+            self.composition_alias,
+            self.schema_config,
+            self.path_resolver,
+            self.context_map,
+            self.let_variables,
+            self.search_index_name
         )
 
     def _process_let_variables(self):
@@ -104,6 +117,7 @@ class AQLtoMQLTransformer:
     async def build_pipeline(self) -> List[Dict[str, Any]]:
         """
         Constructs the full MongoDB aggregation pipeline from the AST.
+        Uses standard pipeline builder (for flatten_compositions collection).
         """
         pipeline = []
 
@@ -133,6 +147,32 @@ class AQLtoMQLTransformer:
             pipeline.append(limit_stage)
         
         return pipeline
+
+    async def build_search_pipeline(self) -> List[Dict[str, Any]]:
+        """
+        Constructs the full MongoDB aggregation pipeline starting with $search.
+        Uses search pipeline builder (for search collection).
+        """
+        return await self.search_pipeline_builder.build_search_pipeline(self.ast)
+
+    def should_use_search_strategy(self, ehr_id: Optional[str] = None, force_search: bool = False) -> bool:
+        """
+        Determines whether to use search strategy based on query characteristics.
+        
+        Args:
+            ehr_id: EHR ID if provided in request
+            force_search: Force search strategy for testing
+            
+        Returns:
+            True if search strategy should be used, False for standard match strategy
+        """
+        # Force search strategy if requested (for testing)
+        if force_search:
+            return True
+            
+        # Use search strategy when no specific EHR ID is provided
+        # This enables cross-EHR queries using Atlas Search
+        return ehr_id is None
 
     # --- Public utility methods for backward compatibility ---
     

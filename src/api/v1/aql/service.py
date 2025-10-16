@@ -5,6 +5,9 @@ from fastapi import HTTPException, status
 from fastapi.responses import JSONResponse
 from pymongo.errors import PyMongoError
 from typing import List, Dict, Any
+import logging
+
+logger = logging.getLogger(__name__)
 
 from src.api.v1.aql.repository import (
     save_stored_query,
@@ -14,6 +17,7 @@ from src.api.v1.aql.repository import (
     execute_aql_query,
     detect_collection_format
 )
+from src.app.core.config import settings
 
 from src.api.v1.aql.models import StoredQuery, StoredQuerySummary, QueryResponse, MetaData
 from src.api.v1.aql.transformers import AQLtoMQLTransformer
@@ -36,8 +40,19 @@ async def build_aql_pipeline(ast_query: Dict[str, Any], db: AsyncIOMotorDatabase
         'format': collection_format
     }
     
-    transformer = AQLtoMQLTransformer(ast_query, ehr_id=ehr_id, schema_config=schema_config, db=db)
-    pipeline = await transformer.build_pipeline()
+    transformer = AQLtoMQLTransformer(
+        ast_query, 
+        ehr_id=ehr_id, 
+        schema_config=schema_config, 
+        db=db,
+        search_index_name=settings.search_config.search_index_name
+    )
+    
+    # Determine which pipeline to build based on strategy
+    if settings.search_config.enable_dual_strategy and transformer.should_use_search_strategy(ehr_id, settings.search_config.force_search_strategy):
+        pipeline = await transformer.build_search_pipeline()
+    else:
+        pipeline = await transformer.build_pipeline()
     
     return pipeline
 
@@ -62,11 +77,36 @@ async def process_aql_ast_query(ast_query: Dict[str, Any], request_url: str, db:
             'format': collection_format
         }
         
-        transformer = AQLtoMQLTransformer(ast_query, ehr_id=ehr_id, schema_config=schema_config, db=db)
-        pipeline = await transformer.build_pipeline()
+        transformer = AQLtoMQLTransformer(
+            ast_query, 
+            ehr_id=ehr_id, 
+            schema_config=schema_config, 
+            db=db,
+            search_index_name=settings.search_config.search_index_name
+        )
+        
+        # Determine which strategy to use
+        use_search_strategy = (settings.search_config.enable_dual_strategy and 
+                             transformer.should_use_search_strategy(ehr_id, settings.search_config.force_search_strategy))
+        
+        logger.info(f"Query strategy decision: {'SEARCH' if use_search_strategy else 'MATCH'} "
+                   f"(ehr_id={'provided' if ehr_id else 'none'}, dual_strategy={settings.search_config.enable_dual_strategy}, "
+                   f"force_search={settings.search_config.force_search_strategy})")
+        
+        if use_search_strategy:
+            pipeline = await transformer.build_search_pipeline()
+            logger.info(f"Built search pipeline with {len(pipeline)} stages, targeting collection: {settings.search_config.search_collection}")
+        else:
+            pipeline = await transformer.build_pipeline()
+            logger.info(f"Built standard pipeline with {len(pipeline)} stages, targeting collection: {settings.search_config.flatten_collection}")
 
         # Execute the query via the repository
-        results = await execute_aql_query(pipeline=pipeline, db=db, collection_format=collection_format)
+        results = await execute_aql_query(
+            pipeline=pipeline, 
+            db=db, 
+            collection_format=collection_format,
+            use_search_collection=use_search_strategy
+        )
 
 
         # Extract column names and paths from the project stage for the response model
@@ -140,11 +180,36 @@ async def process_aql_query(aql_query: str, request_url: str, db: AsyncIOMotorDa
         }
         
         # Step 3: Transform AST into MQL Aggregation Pipeline
-        transformer = AQLtoMQLTransformer(ast, ehr_id=ehr_id, schema_config=schema_config, db=db)
-        pipeline = await transformer.build_pipeline()
+        transformer = AQLtoMQLTransformer(
+            ast, 
+            ehr_id=ehr_id, 
+            schema_config=schema_config, 
+            db=db,
+            search_index_name=settings.search_config.search_index_name
+        )
+        
+        # Determine which strategy to use
+        use_search_strategy = (settings.search_config.enable_dual_strategy and 
+                             transformer.should_use_search_strategy(ehr_id, settings.search_config.force_search_strategy))
+        
+        logger.info(f"AST Query strategy decision: {'SEARCH' if use_search_strategy else 'MATCH'} "
+                   f"(ehr_id={'provided' if ehr_id else 'none'}, dual_strategy={settings.search_config.enable_dual_strategy}, "
+                   f"force_search={settings.search_config.force_search_strategy})")
+        
+        if use_search_strategy:
+            pipeline = await transformer.build_search_pipeline()
+            logger.info(f"Built search pipeline with {len(pipeline)} stages, targeting collection: {settings.search_config.search_collection}")
+        else:
+            pipeline = await transformer.build_pipeline()
+            logger.info(f"Built standard pipeline with {len(pipeline)} stages, targeting collection: {settings.search_config.flatten_collection}")
 
-        # Step 4: Execute the query via the repository
-        results = await execute_aql_query(pipeline=pipeline, db=db, collection_format=collection_format)
+        # Execute the query via the repository
+        results = await execute_aql_query(
+            pipeline=pipeline, 
+            db=db, 
+            collection_format=collection_format,
+            use_search_collection=use_search_strategy
+        )
 
         # Debug: Log the results structure
         print(f"DEBUG - Results type: {type(results)}")
