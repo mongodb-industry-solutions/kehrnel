@@ -5,6 +5,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from .condition_processor import ConditionProcessor
 from .value_formatter import ValueFormatter
 from .format_resolver import FormatResolver
+from src.app.core.config import settings
 import logging
 
 logger = logging.getLogger(__name__)
@@ -18,14 +19,17 @@ class SearchPipelineBuilder:
 
     def __init__(self, ehr_alias: str, composition_alias: str, schema_config: Dict[str, str], 
                  format_resolver: FormatResolver, context_map: Dict[str, Dict], 
-                 let_variables: Dict[str, Any] = None, search_index_name: str = "search_compositions_index"):
+                 let_variables: Dict[str, Any] = None):
         self.ehr_alias = ehr_alias
         self.composition_alias = composition_alias
         self.schema_config = schema_config
         self.format_resolver = format_resolver
         self.context_map = context_map
         self.let_variables = let_variables or {}
-        self.search_index_name = search_index_name
+        
+        # Use centralized configuration like repository.py does
+        self.search_index_name = settings.search_config.search_index_name
+        self.full_compositions_collection = settings.search_config.flatten_collection
         
         # For search collection, we use 'sn' instead of 'cn'
         self.search_config = {
@@ -359,10 +363,10 @@ class SearchPipelineBuilder:
         """
         # Check if we need full composition data based on SELECT clause
         if self._needs_full_composition_data(ast):
-            logger.info("Adding $lookup stage to get complete composition data from flatten_compositions")
+            logger.info(f"Adding $lookup stage to get complete composition data from {self.full_compositions_collection}")
             return {
                 "$lookup": {
-                    "from": "flatten_compositions",
+                    "from": self.full_compositions_collection,
                     "localField": "_id",
                     "foreignField": "_id",
                     "as": "full_composition"
