@@ -90,8 +90,7 @@ class AQLtoMQLTransformer:
             self.schema_config,
             self.path_resolver,
             self.context_map,
-            self.let_variables,
-            self.search_index_name
+            self.let_variables
         )
 
     def _process_let_variables(self):
