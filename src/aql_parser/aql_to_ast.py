@@ -401,8 +401,9 @@ class AQLToASTParser:
         """Parse a Resource Model type expression (e.g., "EHR e[ehr_id/value='123']")"""
         text = text.strip()
         
-        # Match format like "EHR e[condition]" or just "EHR" or "EHR e"
-        regex = r'^([A-Z]+)\s*([a-zA-Z0-9_]*)(?:\[(.*?)\])?'
+        # Improved regex pattern to handle alias and bracket content correctly
+        # Makes alias optional and handles spacing better
+        regex = r'^([A-Z]+)(?:\s+([a-zA-Z0-9_]+))?\s*(?:\[(.*?)\])?'
         match = re.match(regex, text)
         
         if not match:
@@ -411,7 +412,7 @@ class AQLToASTParser:
         
         rm_type = match.group(1)
         alias = match.group(2) or ""
-        bracket_content = match.group(3).strip() if match.group(3) else None
+        bracket_content = match.group(3) if match.group(3) else None
         
         predicate = None
         if bracket_content:

@@ -12,7 +12,6 @@ STORED_QUERY_COLL_NAME = "stored_queries"
 EHR_COLL_NAME = "ehr"
 COMPOSITION_COLL_NAME = "compositions"
 FLATTEN_COMPOSITION_COLL_NAME = "flatten_compositions"
-SHORTEN_COMPOSITION_COLL_NAME = "flatten_compositions"
 CODES_COLL_NAME = "_codes"
 
 
@@ -23,10 +22,10 @@ async def detect_collection_format(db: AsyncIOMotorDatabase) -> str:
     """
     try:
         # Check FLATTEN_COMPOSITION_COLL_NAME collection first since it's the preferred collection
-        shorten_count = await db[SHORTEN_COMPOSITION_COLL_NAME].count_documents({})
+        shorten_count = await db[FLATTEN_COMPOSITION_COLL_NAME].count_documents({})
         if shorten_count > 0:
             # Sample a document to determine the format within FLATTEN_COMPOSITION_COLL_NAME
-            sample = await db[SHORTEN_COMPOSITION_COLL_NAME].find_one({})
+            sample = await db[FLATTEN_COMPOSITION_COLL_NAME].find_one({})
             if sample and 'cn' in sample:
                 # Check if this is shortened format (short p paths like '7') or full format (long archetype paths)
                 first_cn_element = sample['cn'][0] if sample['cn'] else {}
@@ -35,14 +34,14 @@ async def detect_collection_format(db: AsyncIOMotorDatabase) -> str:
                 # If p value is short (like '7', '-4.7', etc.) it's shortened format
                 # If p value is long (like 'at0021/at0017/openEHR-EHR-ACTION...') it's full format
                 if len(p_value) < 20 and not p_value.startswith('at'):  # Short path = shortened format
-                    logger.info(f"Using shortened format from collection: {SHORTEN_COMPOSITION_COLL_NAME}")
+                    logger.info(f"Using shortened format from collection: {FLATTEN_COMPOSITION_COLL_NAME}")
                     return 'shortened'
                 else:  # Long archetype path = full format
-                    logger.info(f"Using full format from collection: {SHORTEN_COMPOSITION_COLL_NAME}")
+                    logger.info(f"Using full format from collection: {FLATTEN_COMPOSITION_COLL_NAME}")
                     return 'full'
             elif sample and 'data' in sample and 'cn' not in sample:
                 # Direct nested structure without cn array = shortened format
-                logger.info(f"Using shortened format from collection: {SHORTEN_COMPOSITION_COLL_NAME}")
+                logger.info(f"Using shortened format from collection: {FLATTEN_COMPOSITION_COLL_NAME}")
                 return 'shortened'
         
         # Fallback to check compositionsFullPath collection
@@ -62,25 +61,38 @@ async def detect_collection_format(db: AsyncIOMotorDatabase) -> str:
         return 'full'  # Default fallback
 
 
-async def execute_aql_query(pipeline: List[Dict[str, Any]], db: AsyncIOMotorDatabase, collection_format: str = None) -> List[Dict[str, Any]]:
+async def execute_aql_query(pipeline: List[Dict[str, Any]], db: AsyncIOMotorDatabase, collection_format: str = None, use_search_collection: bool = False) -> List[Dict[str, Any]]:
     """
     Executes a MongoDB aggregation pipeline against the appropriate compositions collection.
+    
+    Args:
+        pipeline: MongoDB aggregation pipeline
+        db: Database connection
+        collection_format: Format detection result (for backward compatibility)
+        use_search_collection: If True, use search collection; if False, use standard collection
     """
     try:
-        # Auto-detect format if not specified
-        if collection_format is None:
-            collection_format = await detect_collection_format(db)
-        
-        # Determine which collection to use based on what's available
-        # Check FLATTEN_COMPOSITION_COLL_NAME first since it's the preferred collection
-        shorten_count = await db[SHORTEN_COMPOSITION_COLL_NAME].count_documents({})
-        if shorten_count > 0:
-            collection_name = SHORTEN_COMPOSITION_COLL_NAME
-            logger.info(f"Executing query against collection: {collection_name}")
+        if use_search_collection:
+            # Use search collection for Atlas Search queries
+            from src.app.core.config import settings
+            collection_name = settings.search_config.search_collection
+            logger.info(f"Executing search query against collection: {collection_name}")
         else:
-            # Fallback to compositionsFullPath
-            collection_name = FLATTEN_COMPOSITION_COLL_NAME
-            logger.info(f"Executing query against collection: {collection_name}")
+            # Use standard collection selection logic
+            # Auto-detect format if not specified
+            if collection_format is None:
+                collection_format = await detect_collection_format(db)
+            
+            # Determine which collection to use based on what's available
+            # Check FLATTEN_COMPOSITION_COLL_NAME first since it's the preferred collection
+            shorten_count = await db[FLATTEN_COMPOSITION_COLL_NAME].count_documents({})
+            if shorten_count > 0:
+                collection_name = FLATTEN_COMPOSITION_COLL_NAME
+                logger.info(f"Executing standard query against collection: {collection_name}")
+            else:
+                # Fallback to compositionsFullPath
+                collection_name = FLATTEN_COMPOSITION_COLL_NAME
+                logger.info(f"Executing standard query against collection: {collection_name}")
         
         cursor = db[collection_name].aggregate(pipeline)
         doc_result = await cursor.to_list(length=None)

@@ -26,21 +26,37 @@ router = APIRouter(
 @router.post(
     "/aql",
     summary="Execute AQL Query",
-    description="Executes an AQL query provided in the request body and returns the results.",
+    description="Executes an AQL query provided in the request body and returns the results. Uses dual-query strategy: $match for EHR-specific queries, $search for cross-EHR queries.",
     response_model=QueryResponse
 )
 async def execute_query(
     request: Request,
     aql: str = Body(..., media_type="text/plain", description="The AQL query string."),
-    ehr_id: str = None,
+    ehr_id: str = Query(None, description="Optional EHR ID. If provided, uses $match strategy on flatten_compositions. If not provided, uses $search strategy on search collection."),
+    force_search: bool = Query(False, description="Force the use of search strategy for testing purposes."),
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
 ):
     """
     Accepts an AQL query as plain text, executes it, and returns the result set.
-    Optional ehr_id parameter can be provided to filter results for a specific EHR.
+    
+    Query Strategy:
+    - With ehr_id: Uses $match on flatten_compositions (targeted, efficient)
+    - Without ehr_id: Uses $search on search collection (cross-EHR, indexed)
+    - force_search=true: Forces $search strategy regardless of ehr_id
     """
-    response = await process_aql_query(aql_query=aql, request_url=request.url, db=db, ehr_id=ehr_id)
-    return response
+    from src.app.core.config import settings
+    
+    # Temporarily override force_search_strategy if requested
+    original_force_search = settings.search_config.force_search_strategy
+    if force_search:
+        settings.search_config.force_search_strategy = True
+    
+    try:
+        response = await process_aql_query(aql_query=aql, request_url=request.url, db=db, ehr_id=ehr_id)
+        return response
+    finally:
+        # Restore original setting
+        settings.search_config.force_search_strategy = original_force_search
 
 
 @router.post(
@@ -296,4 +312,71 @@ async def delete_stored_query(
     """
     await remove_stored_query(name=name, db=db)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.get(
+    "/strategy/info",
+    summary="Get Query Strategy Information",
+    description="Returns information about the dual-query strategy configuration and decision logic."
+)
+async def get_strategy_info(
+    ehr_id: str = Query(None, description="Test EHR ID to see which strategy would be used"),
+    force_search: bool = Query(False, description="Test force search parameter"),
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Returns detailed information about the dual-query strategy and configuration.
+    """
+    from src.app.core.config import settings
+    from src.api.v1.aql.transformers.aql_transformer import AQLtoMQLTransformer
+    
+    # Create a minimal AST for testing strategy decision
+    test_ast = {
+        "select": {"columns": {}},
+        "contains": {"rmType": "COMPOSITION", "alias": "c"}
+    }
+    
+    transformer = AQLtoMQLTransformer(
+        test_ast, 
+        ehr_id=ehr_id,
+        search_index_name=settings.search_config.search_index_name
+    )
+    
+    would_use_search = transformer.should_use_search_strategy(ehr_id, force_search)
+    
+    # Get collection counts for diagnostics
+    try:
+        flatten_count = await db[settings.search_config.flatten_collection].estimated_document_count()
+        search_count = await db[settings.search_config.search_collection].estimated_document_count()
+    except Exception as e:
+        flatten_count = f"Error: {e}"
+        search_count = f"Error: {e}"
+    
+    return {
+        "strategy_config": {
+            "dual_strategy_enabled": settings.search_config.enable_dual_strategy,
+            "search_collection": settings.search_config.search_collection,
+            "flatten_collection": settings.search_config.flatten_collection,
+            "search_index_name": settings.search_config.search_index_name,
+            "search_compositions_merge": settings.search_config.search_compositions_merge,
+            "force_search_strategy": settings.search_config.force_search_strategy
+        },
+        "decision_logic": {
+            "test_ehr_id": ehr_id,
+            "test_force_search": force_search,
+            "would_use_search_strategy": would_use_search,
+            "strategy_reasoning": (
+                "Search strategy (Atlas Search on search collection)" if would_use_search 
+                else "Match strategy (Standard aggregation on flatten collection)"
+            )
+        },
+        "collection_diagnostics": {
+            "flatten_collection_count": flatten_count,
+            "search_collection_count": search_count
+        },
+        "strategy_benefits": {
+            "match_strategy": "Highly efficient for single EHR queries, uses indexed $match operations",
+            "search_strategy": "Optimized for cross-EHR queries, leverages Atlas Search full-text indexing"
+        }
+    }
 
