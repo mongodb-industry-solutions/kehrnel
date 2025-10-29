@@ -7,6 +7,7 @@ from .value_formatter import ValueFormatter
 from .format_resolver import FormatResolver
 from src.app.core.config import settings
 import logging
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -112,13 +113,32 @@ class SearchPipelineBuilder:
                     **search_query
                 }
             }
-        
-        return None
+        else:
+            # Fallback to basic search if WHERE clause couldn't be converted
+            logger.warning(f"Could not convert WHERE clause to search query, using basic exists search: {where_clause}")
+            return {
+                "$search": {
+                    "index": self.search_index_name,
+                    "exists": {
+                        "path": "sn"
+                    }
+                }
+            }
 
     async def _convert_where_to_search(self, where_clause: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """
         Converts an AQL WHERE clause to Atlas Search query syntax.
+        Handles both the new AQL parser format and legacy formats.
         """
+        # Handle the actual AQL parser format (flat structure)
+        if "path" in where_clause and "operator" in where_clause:
+            return await self._handle_direct_condition_search(where_clause)
+        
+        # Handle logical conditions with multiple sub-conditions
+        if "operator" in where_clause and "conditions" in where_clause:
+            return await self._handle_logical_conditions_search(where_clause)
+        
+        # Legacy format handling (for backward compatibility)
         condition_type = where_clause.get("type")
         
         if condition_type == "comparison":
@@ -133,6 +153,194 @@ class SearchPipelineBuilder:
         elif condition_type == "matches":
             return await self._handle_matches_search(where_clause)
         
+        return None
+
+    async def _handle_direct_condition_search(self, condition: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Handles direct condition format from AQL parser: {"path": "...", "operator": "...", "value": "..."}
+        """
+        aql_path = condition.get("path")
+        operator = condition.get("operator")
+        value = condition.get("value")
+        
+        if not aql_path or not operator:
+            logger.warning(f"Invalid direct condition format: {condition}")
+            return None
+        
+        # Translate AQL path to search collection path
+        try:
+            path_regex_pattern, data_path = await self.format_resolver.translate_aql_path(aql_path)
+            # For search operations, we use the data path directly in the sn.data structure
+            search_path = f"sn.{data_path}" if data_path else "sn.data"
+        except Exception as e:
+            logger.warning(f"Could not resolve path {aql_path}: {e}")
+            return None
+        
+        # Handle special operators
+        if operator == "EXISTS":
+            # Use embedded document exists query for sn paths
+            if search_path.startswith("sn."):
+                return self._build_embedded_document_exists_query(search_path)
+            else:
+                return {
+                    "exists": {
+                        "path": search_path
+                    }
+                }
+        
+        if operator == "NOT EXISTS":
+            # Use embedded document exists query wrapped in mustNot for sn paths
+            if search_path.startswith("sn."):
+                exists_query = self._build_embedded_document_exists_query(search_path)
+                return {
+                    "compound": {
+                        "mustNot": [exists_query]
+                    }
+                }
+            else:
+                return {
+                    "compound": {
+                        "mustNot": [{
+                            "exists": {
+                                "path": search_path
+                            }
+                        }]
+                    }
+                }
+        
+        if operator == "MATCHES":
+            # Handle MATCHES with array values
+            if isinstance(value, dict):
+                # Convert object with numeric keys back to array
+                value_array = [value.get(str(i)) for i in range(len(value))]
+                # Use regex with alternation for multiple values
+                regex_pattern = "|".join(f"({re.escape(str(v))})" for v in value_array if v is not None)
+                return {
+                    "regex": {
+                        "path": search_path,
+                        "query": regex_pattern
+                    }
+                }
+            else:
+                return {
+                    "regex": {
+                        "path": search_path,
+                        "query": str(value)
+                    }
+                }
+        
+        if operator == "LIKE":
+            # Convert SQL LIKE to regex
+            regex_pattern = str(value).replace('%', '.*').replace('_', '.')
+            return {
+                "regex": {
+                    "path": search_path,
+                    "query": regex_pattern
+                }
+            }
+        
+        # Handle comparison operators
+        if operator == "=":
+            if search_path.startswith("sn."):
+                return self._build_embedded_document_equals_query(search_path, value)
+            else:
+                if isinstance(value, str):
+                    return {
+                        "text": {
+                            "query": value,
+                            "path": search_path
+                        }
+                    }
+                else:
+                    return {
+                        "equals": {
+                            "path": search_path,
+                            "value": value
+                        }
+                    }
+
+        elif operator in [">=", ">", "<=", "<"]:
+            # For date/time values, ensure proper formatting and use embedded document queries
+            formatted_value = self._format_date_value_for_search(value)
+            
+            # Check if this is an embedded document query (sn array)
+            if search_path.startswith("sn."):
+                return self._build_embedded_document_range_query(search_path, operator, formatted_value)
+            else:
+                # Non-embedded document range query (fallback)
+                range_condition = {}
+                if operator == ">=":
+                    range_condition["gte"] = formatted_value
+                elif operator == ">":
+                    range_condition["gt"] = formatted_value
+                elif operator == "<=":
+                    range_condition["lte"] = formatted_value
+                elif operator == "<":
+                    range_condition["lt"] = formatted_value
+                    
+                return {
+                    "range": {
+                        "path": search_path,
+                        **range_condition
+                    }
+                }
+
+        elif operator in ["!=", "<>"]:
+            return {
+                "compound": {
+                    "mustNot": [{
+                        "equals": {
+                            "path": search_path,
+                            "value": value
+                        }
+                    }]
+                }
+            }
+        
+        logger.warning(f"Unsupported operator in search condition: {operator}")
+        return None
+
+    async def _handle_logical_conditions_search(self, condition: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Handles logical conditions with multiple sub-conditions from AQL parser.
+        Format: {"operator": "AND/OR", "conditions": {"0": {...}, "1": {...}}}
+        """
+        operator = condition.get("operator")
+        conditions = condition.get("conditions", {})
+        
+        if not operator or not conditions:
+            logger.warning(f"Invalid logical condition format: {condition}")
+            return None
+        
+        # Recursively convert child conditions
+        search_conditions = []
+        for key, child_condition in conditions.items():
+            if isinstance(child_condition, dict):
+                child_search = await self._convert_where_to_search(child_condition)
+                if child_search:
+                    search_conditions.append(child_search)
+        
+        if not search_conditions:
+            logger.warning(f"No valid search conditions found in logical condition")
+            return None
+            
+        if len(search_conditions) == 1:
+            return search_conditions[0]
+            
+        if operator == "AND":
+            return {
+                "compound": {
+                    "must": search_conditions
+                }
+            }
+        elif operator == "OR":
+            return {
+                "compound": {
+                    "should": search_conditions
+                }
+            }
+        
+        logger.warning(f"Unsupported logical operator: {operator}")
         return None
 
     async def _handle_comparison_search(self, condition: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -745,3 +953,235 @@ class SearchPipelineBuilder:
         
         # Default: return as is
         return expression
+
+    def _format_date_value_for_search(self, value: Any) -> Any:
+        """
+        Formats date values for Atlas Search compatibility.
+        For embedded document queries, Atlas Search expects actual datetime objects, not string representations.
+        """
+        if isinstance(value, str):
+            # Check if it's already a date string
+            if 'T' in value and ('Z' in value or '+' in value or value.endswith('00:00:00')):
+                try:
+                    from datetime import datetime
+                    # Parse and return as actual datetime object for MongoDB
+                    parsed_date = datetime.fromisoformat(value.replace('Z', '+00:00'))
+                    # Return the datetime object directly - MongoDB will handle ISODate conversion
+                    return parsed_date
+                except:
+                    # If parsing fails, return original value
+                    return value
+            else:
+                # Try to ensure it's a valid date string
+                try:
+                    from datetime import datetime
+                    # Parse and return as actual datetime object
+                    parsed_date = datetime.fromisoformat(value.replace('Z', '+00:00'))
+                    return parsed_date
+                except:
+                    # If parsing fails, return original value
+                    return value
+        else:
+            # For non-string values (numbers, etc.), return as-is
+            return value
+
+    def _build_embedded_document_range_query(self, search_path: str, operator: str, value: Any) -> Dict[str, Any]:
+        """
+        Builds an embedded document range query for Atlas Search.
+        Converts paths like 'sn.data.time.value' into proper embeddedDocument queries.
+        
+        For Atlas Search embedded documents, we need:
+        - embeddedDocument.path: The context path to the embedded document level
+        - operator.range.path: The full absolute path from document root
+        
+        Generic logic for determining embedded document context:
+        - For paths ending in .value: Use parent path as embedded context
+        - For direct data fields: Use sn.data as embedded context
+        - Handle arbitrary nesting levels (sn.data.a.b.c.value -> sn.data.a.b.c)
+        
+        Args:
+            search_path: The full path like 'sn.data.time.value'
+            operator: The comparison operator (>, <, >=, <=)
+            value: The value to compare against
+            
+        Returns:
+            Atlas Search embeddedDocument query structure
+        """
+        if not search_path.startswith("sn."):
+            logger.warning(f"Expected sn. prefix in search path: {search_path}")
+            return None
+        
+        # Build the range condition
+        range_condition = {}
+        if operator == ">=":
+            range_condition["gte"] = value
+        elif operator == ">":
+            range_condition["gt"] = value
+        elif operator == "<=":
+            range_condition["lte"] = value
+        elif operator == "<":
+            range_condition["lt"] = value
+        
+        # Determine the embedded document context intelligently
+        # The key insight: the embedded document path should be the parent of the final field
+        
+        path_parts = search_path.split('.')
+        
+        if len(path_parts) >= 3 and path_parts[0] == "sn" and path_parts[1] == "data":
+            if search_path.endswith('.value') and len(path_parts) >= 4:
+                # For paths ending in .value (like sn.data.time.value or sn.data.ism_transition.current_state.value)
+                # The embedded document context is everything except the final .value
+                embedded_context_parts = path_parts[:-1]  # Remove the final .value part
+                embedded_document_path = ".".join(embedded_context_parts)
+            elif len(path_parts) == 3:
+                # Direct field in data (like sn.data.archetype_node_id)
+                embedded_document_path = "sn.data"
+            else:
+                # For other nested structures, use the parent path
+                # This handles cases like sn.data.a.b.c.d where we want sn.data.a.b.c
+                embedded_context_parts = path_parts[:-1]  # Remove the final field
+                embedded_document_path = ".".join(embedded_context_parts)
+            
+            return {
+                "embeddedDocument": {
+                    "path": embedded_document_path,
+                    "operator": {
+                        "range": {
+                            "path": search_path,  # Full absolute path
+                            **range_condition
+                        }
+                    }
+                }
+            }
+        else:
+            # Fallback for any other sn.* pattern
+            return {
+                "embeddedDocument": {
+                    "path": "sn",
+                    "operator": {
+                        "range": {
+                            "path": search_path,  # Full absolute path
+                            **range_condition
+                        }
+                    }
+                }
+            }
+
+    def _build_embedded_document_exists_query(self, search_path: str) -> Dict[str, Any]:
+        """
+        Builds an embedded document exists query for Atlas Search.
+        Uses the same intelligent path resolution logic as range queries.
+        """
+        if not search_path.startswith("sn."):
+            return {
+                "exists": {
+                    "path": search_path
+                }
+            }
+        
+        # Use the same logic as range queries for determining embedded document context
+        path_parts = search_path.split('.')
+        
+        if len(path_parts) >= 3 and path_parts[0] == "sn" and path_parts[1] == "data":
+            if search_path.endswith('.value') and len(path_parts) >= 4:
+                # For paths ending in .value - embedded context is parent path
+                embedded_context_parts = path_parts[:-1]
+                embedded_document_path = ".".join(embedded_context_parts)
+            elif len(path_parts) == 3:
+                # Direct field in data
+                embedded_document_path = "sn.data"
+            else:
+                # For other nested structures, use parent path
+                embedded_context_parts = path_parts[:-1]
+                embedded_document_path = ".".join(embedded_context_parts)
+            
+            return {
+                "embeddedDocument": {
+                    "path": embedded_document_path,
+                    "operator": {
+                        "exists": {
+                            "path": search_path  # Full absolute path
+                        }
+                    }
+                }
+            }
+        else:
+            # Fallback for any other sn.* pattern
+            return {
+                "embeddedDocument": {
+                    "path": "sn",
+                    "operator": {
+                        "exists": {
+                            "path": search_path  # Full absolute path
+                        }
+                    }
+                }
+            }
+
+    def _build_embedded_document_equals_query(self, search_path: str, value: Any) -> Dict[str, Any]:
+        """
+        Builds an embedded document equals query for Atlas Search.
+        Uses the same intelligent path resolution logic as range queries.
+        """
+        if not search_path.startswith("sn."):
+            if isinstance(value, str):
+                return {
+                    "text": {
+                        "query": value,
+                        "path": search_path
+                    }
+                }
+            else:
+                return {
+                    "equals": {
+                        "path": search_path,
+                        "value": value
+                    }
+                }
+        
+        # Use the same logic as range queries for determining embedded document context
+        path_parts = search_path.split('.')
+        
+        # Determine the operator query based on value type
+        if isinstance(value, str):
+            operator_query = {
+                "text": {
+                    "query": value,
+                    "path": search_path  # Full absolute path
+                }
+            }
+        else:
+            operator_query = {
+                "equals": {
+                    "path": search_path,  # Full absolute path
+                    "value": value
+                }
+            }
+        
+        if len(path_parts) >= 3 and path_parts[0] == "sn" and path_parts[1] == "data":
+            if search_path.endswith('.value') and len(path_parts) >= 4:
+                # For paths ending in .value - embedded context is parent path
+                embedded_context_parts = path_parts[:-1]
+                embedded_document_path = ".".join(embedded_context_parts)
+            elif len(path_parts) == 3:
+                # Direct field in data
+                embedded_document_path = "sn.data"
+            else:
+                # For other nested structures, use parent path
+                embedded_context_parts = path_parts[:-1]
+                embedded_document_path = ".".join(embedded_context_parts)
+            
+            return {
+                "embeddedDocument": {
+                    "path": embedded_document_path,
+                    "operator": operator_query
+                }
+            }
+        else:
+            # Fallback for any other sn.* pattern
+            return {
+                "embeddedDocument": {
+                    "path": "sn",
+                    "operator": operator_query
+                }
+            }
