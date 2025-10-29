@@ -15,6 +15,9 @@ class SearchConfig(BaseSettings):
     search_index_name: str = "search_compositions_index"
     search_compositions_merge: bool = False
     
+    # Atlas Search compatibility settings
+    use_string_date_queries: bool = False  # Fallback for date query issues
+    
     # Query strategy thresholds
     enable_dual_strategy: bool = True
     force_search_strategy: bool = False  # For testing
