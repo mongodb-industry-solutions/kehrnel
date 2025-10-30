@@ -597,7 +597,7 @@ class SearchPipelineBuilder:
             path = col_data.get("path") or col_data.get("value", {})
             if path.get("type") == "dataMatchPath":
                 aql_path = self._extract_aql_path_from_path_object(path)
-                if aql_path and self._is_composition_metadata_path(aql_path):
+                if aql_path and (self._is_composition_metadata_path(aql_path) or self._is_archetype_specific_path(aql_path)):
                     return True
         return False
 
@@ -642,6 +642,59 @@ class SearchPipelineBuilder:
         
         return False
 
+    def _is_archetype_specific_path(self, aql_path: str) -> bool:
+        """
+        Determines if an AQL path contains archetype-specific elements (AT codes)
+        that might not be indexed in the search collection.
+        
+        This handles cases like:
+        - med_ac/description[at0017]/items[at0020]/value/defining_code/code_string
+        - action_var/activities[at0001]/description[at0002]/items[at0003]/value
+        
+        Returns True if the path contains AT codes, indicating it's archetype-specific
+        and might need full composition data for resolution.
+        """
+        if not aql_path:
+            return False
+        
+        # Check if path contains AT code references in square brackets
+        # AT codes follow pattern: at followed by digits (e.g., at0001, at0017, at0020)
+        import re
+        at_code_pattern = r'\[at\d+\]'
+        
+        if re.search(at_code_pattern, aql_path):
+            logger.debug(f"Detected archetype-specific path with AT codes: {aql_path}")
+            return True
+        
+        # Additionally check for paths that go through archetype elements
+        # These are typically deeper than simple composition metadata
+        variable = aql_path.split('/')[0] 
+        
+        # Skip composition alias paths (already handled by metadata check)
+        if variable == self.composition_alias:
+            return False
+            
+        # Check if this is a deep path through archetype structures
+        # Archetype paths typically have more segments and contain structural elements
+        path_parts = aql_path.split('/')
+        if len(path_parts) > 3:  # Deep paths are more likely to be archetype-specific
+            # Look for common archetype structural elements
+            archetype_elements = [
+                'description', 'items', 'activities', 'activity', 'data', 'state', 
+                'protocol', 'events', 'event', 'value', 'values', 'items_single',
+                'items_multiple', 'other_context'
+            ]
+            
+            # If the path contains archetype structural elements, it's likely archetype-specific
+            for part in path_parts[1:]:  # Skip variable name
+                # Remove any bracket notation to get the element name
+                element_name = re.sub(r'\[.*?\]', '', part)
+                if element_name in archetype_elements:
+                    logger.debug(f"Detected deep archetype path with structural elements: {aql_path}")
+                    return True
+        
+        return False
+
     async def _build_hybrid_field_projection(self, aql_path: str, alias: str) -> Dict[str, Any]:
         """
         Builds projection logic that intelligently routes field access between 
@@ -650,13 +703,17 @@ class SearchPipelineBuilder:
         try:
             path_regex_pattern, data_path = await self.format_resolver.translate_aql_path(aql_path)
             
-            # Determine if this is likely composition metadata
+            # Determine if this is likely composition metadata or archetype-specific
             is_metadata = self._is_composition_metadata_path(aql_path)
+            is_archetype_specific = self._is_archetype_specific_path(aql_path)
             
-            if is_metadata:
-                logger.debug(f"Using metadata-priority projection for {aql_path} (prefers full_composition)")
+            # Prefer full composition data for metadata or archetype-specific paths
+            prefer_full_composition = is_metadata or is_archetype_specific
+            
+            if prefer_full_composition:
+                logger.debug(f"Using full-composition-priority projection for {aql_path} (metadata: {is_metadata}, archetype: {is_archetype_specific})")
             else:
-                logger.debug(f"Using performance-priority projection for {aql_path} (prefers search collection)")
+                logger.debug(f"Using search-collection-priority projection for {aql_path}")
             
             if path_regex_pattern is None:
                 # Direct field access
@@ -666,8 +723,8 @@ class SearchPipelineBuilder:
                     return f"${data_path}"
             else:
                 # Complex path - use hybrid logic
-                if is_metadata:
-                    # For metadata fields, prefer full composition data
+                if prefer_full_composition:
+                    # For metadata or archetype-specific fields, prefer full composition data
                     return {
                         "$let": {
                             "vars": {
