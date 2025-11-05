@@ -101,7 +101,7 @@ class CompositionFlattener:
             pc_set = {".".join(parts[:i]) for i in range(1, len(parts) + 1)}
             dblock = node["data"]
 
-            for rule in rules:
+            for rule_idx, rule in enumerate(rules):
                 if self._rule_matches(rule, pc_set, parts, dblock):
                     slim = self._apply_rule(rule, node, dblock)
                     if slim:
@@ -368,8 +368,7 @@ class CompositionFlattener:
             return self.active_rules[template]
         
         # Debug: log the template lookup
-        print(f"DEBUG: Looking for template '{original_num}' in mappings")
-        print(f"DEBUG: Available templates: {list(self.raw_rules.keys())}")
+        print(f"Looking for template '{original_num}' in mappings")
         
         raw_block = self.raw_rules.get(original_num, {})
         if not raw_block:
@@ -377,7 +376,7 @@ class CompositionFlattener:
             base_name = original_num.rsplit('.v', 1)[0] if '.v' in original_num else original_num
             for rule_key in self.raw_rules.keys():
                 if rule_key.startswith(base_name + '.v'):
-                    print(f"DEBUG: Found version-flexible match: {rule_key}")
+                    print(f"Found version-flexible match: {rule_key}")
                     raw_block = self.raw_rules[rule_key]
                     break
         
@@ -397,7 +396,7 @@ class CompositionFlattener:
             except (ValueError, UnknownCodeError) as e:
                 print(f"Warning: Skipping rule due to code error: {e}")
 
-        print(f"DEBUG: Compiled {len(compiled)} rules for template")
+        print(f"Compiled {len(compiled)} rules for template")
         self.active_rules[template] = compiled
         return compiled
         
@@ -453,7 +452,8 @@ class CompositionFlattener:
             if expr.startswith("data."):
                 sub = expr[5:]
                 val = self._dpath_get(dblock, sub)
-                if val is None: continue
+                if val is None: 
+                    continue
                 cur = slim.setdefault("data", {})
                 path_parts = sub.split(".")
                 for part in path_parts[:-1]:
