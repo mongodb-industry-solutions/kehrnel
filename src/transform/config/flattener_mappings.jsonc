@@ -60,6 +60,25 @@
               "data.other_participations.performer.identifiers.id",
               "p"
             ]
+          },
+          /* ── (3) MCC immunization code - specific path ─────────────────── */
+          {
+            "when": {
+              "pathChain": [
+                "at0020",
+                "at0017", 
+                "openEHR-EHR-ACTION.medication.v1"
+              ],
+              "contains": [
+                "openEHR-EHR-SECTION.immunisation_list.v0",
+                "openEHR-EHR-COMPOSITION.vaccination_list.v0"
+              ]
+            },
+            "copy": [
+              "data.archetype_node_id",
+              "data.value.defining_code.code_string",
+              "p"
+            ]
           }
         ]
       },
