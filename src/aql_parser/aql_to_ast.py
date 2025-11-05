@@ -547,16 +547,26 @@ class AQLToASTParser:
         if comparison_match:
             path = comparison_match.group(1).strip()
             operator = comparison_match.group(2)
-            value = comparison_match.group(3).strip().strip('\'"')
+            raw_value = comparison_match.group(3).strip()
             
-            # Try to convert to number if possible
-            try:
-                if '.' in value:
-                    value = float(value)
-                else:
-                    value = int(value)
-            except ValueError:
-                pass  # Keep as string
+            # Check if the original value was quoted
+            is_quoted = (raw_value.startswith("'") and raw_value.endswith("'")) or \
+                       (raw_value.startswith('"') and raw_value.endswith('"'))
+            
+            # Remove quotes if present
+            value = raw_value.strip('\'"')
+            
+            # Only attempt numeric conversion for unquoted values
+            # Quoted values should always be preserved as strings to maintain
+            # leading zeros and other string semantics (e.g., '01817273', '007')
+            if not is_quoted:
+                try:
+                    if '.' in value:
+                        value = float(value)
+                    else:
+                        value = int(value)
+                except ValueError:
+                    pass  # Keep as string
             
             return {
                 "path": path,
