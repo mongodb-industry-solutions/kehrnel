@@ -90,7 +90,7 @@ class SyntheticDataGenerator:
                         if section_item.get("_type") == "ACTION":
                             # Randomize action time
                             if "time" in section_item:
-                                section_item["time"]["value"] = self._generate_random_date(1825, 365)  # 1-5 years ago
+                                section_item["time"]["value"] = self._generate_random_date(1825, 365)  # between 1 and 5 years ago
         
         return composition
     
