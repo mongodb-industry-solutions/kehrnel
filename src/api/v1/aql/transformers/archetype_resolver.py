@@ -3,7 +3,9 @@
 from typing import Dict, Optional, Tuple, List
 from motor.motor_asyncio import AsyncIOMotorDatabase
 import re
+import logging
 
+logger = logging.getLogger(__name__)
 
 class ArchetypeResolver:
     """
@@ -44,7 +46,7 @@ class ArchetypeResolver:
             self._at_code_to_int_cache[at_code] = code_value
         
         self._codes_loaded = True
-        print(f"Loaded {len(self._archetype_to_code_cache)} archetype codes and {len(self._at_code_to_int_cache)} AT codes")
+        logger.info(f"Loaded {len(self._archetype_to_code_cache)} archetype codes and {len(self._at_code_to_int_cache)} AT codes")
     
     async def get_archetype_code(self, archetype_id: str) -> Optional[int]:
         """
@@ -106,15 +108,16 @@ class ArchetypeResolver:
     async def resolve_nested_path_to_p_pattern(self, variable_alias: str, aql_path_parts: List[str], context_map: Dict[str, Dict]) -> Optional[str]:
         """
         Resolves nested archetype paths to their specific p-value patterns using a truly
-        data-driven approach that analyzes query structure and archetype relationships.
+        data-driven approach that analyzes actual document patterns in the database.
         
-        This method builds the complete hierarchical p-value pattern by:
-        1. Extracting AT codes from the AQL path itself
-        2. Building the containment hierarchy from child to parent
-        3. Using a pattern discovery mechanism to find intermediate structural elements
+        This method:
+        1. Extracts AT codes from the AQL path and converts them to numeric codes using the _codes collection.
+        2. Queries the database to discover actual p-value patterns for the given archetype and path.
+        3. Dynamically generates a regex pattern that matches the discovered patterns.
+        4. Applies fallback logic to return a default regex if no patterns are found.
         
         Args:
-            variable_alias: The variable alias (e.g., 'loc' for CLUSTER)
+            variable_alias: The variable alias (e.g., 'admin_salut' for CLUSTER)
             aql_path_parts: The path parts after the variable alias
             context_map: The context map containing archetype IDs and parent relationships
         
@@ -133,80 +136,96 @@ class ArchetypeResolver:
         if base_archetype_code is None:
             return None
         
-        # Extract AT codes from the AQL path itself
-        path_at_codes = []
+        # Extract AT codes from the AQL path itself - these represent the hierarchical structure
+        at_code_sequence = []
         for part in aql_path_parts:
-            # Look for archetype node references in path segments
+            # Look for archetype node references in path segments like items[at0007], items[at0014]
             archetype_match = re.match(r"(?:items|description|value|name|protocol|data|state|activities|activity|events|event|items_single|items_multiple|context|other_context)\[(.+)\]", part)
             if archetype_match:
                 reference = archetype_match.group(1)
                 
-                # Handle AT codes (like at0002, at0004)
+                # Handle AT codes (like at0002, at0004, at0007, at0014)
                 if reference.startswith('at'):
                     at_code_value = await self.get_at_code(reference)
                     if at_code_value is not None:
-                        path_at_codes.append(str(at_code_value))
+                        at_code_sequence.append(str(at_code_value))
                     else:
+                        logger.warning(f"Warning: Could not resolve AT code {reference}")
                         return None
                         
-                # Handle nested archetype IDs
+                # Handle nested archetype IDs (less common but possible)
                 elif reference.startswith('openEHR-'):
                     archetype_code = await self.get_archetype_code(reference)
                     if archetype_code is not None:
-                        path_at_codes.append(str(archetype_code))
+                        at_code_sequence.append(str(archetype_code))
                     else:
+                        logger.warning(f"Warning: Could not resolve archetype {reference}")
                         return None
-            elif part in ["value", "defining_code", "code_string", "magnitude", "units", "normal_range", "time", "name"]:
-                # Leaf properties don't contribute to p-value hierarchy
-                continue
         
-        # Build hierarchical parts starting from the deepest level
-        hierarchical_parts = []
+        # If no AT codes found in path, fall back to base archetype pattern
+        if not at_code_sequence:
+            return str(base_archetype_code)
         
-        # Add AT codes from the path (deepest first)
-        hierarchical_parts.extend(reversed(path_at_codes))
-        
-        # Add the current archetype code
-        hierarchical_parts.append(str(base_archetype_code))
-        
-        # Build the containment hierarchy by walking up parent relationships
-        containment_chain = await self._build_containment_chain(variable_alias, context_map)
-        
-        # Process each level in the containment chain
-        for level_info in containment_chain:
-            parent_archetype_code = level_info['archetype_code']
-            archetype_type = level_info['archetype_type']
+        # Now query actual documents to find patterns that match our AT code sequence
+        try:
+            # Use the search collection for pattern discovery
+            search_col = self.db["sm_search3"]
             
-            # Skip composition - handle separately
-            if archetype_type == 'COMPOSITION':
-                continue
+            # Build the expected pattern structure
+            # For admin_salut/items[at0007]/items[at0014], we expect:
+            # at0014 (deepest) -> at0007 -> admin_salut archetype -> ... -> composition
+            expected_start = f"{at_code_sequence[-1]}.{'.'.join(reversed(at_code_sequence[:-1]))}.{base_archetype_code}" if len(at_code_sequence) > 1 else f"{at_code_sequence[0]}.{base_archetype_code}"
             
-            # Add intermediate structural elements based on openEHR patterns
-            # This uses a discovery mechanism rather than hardcoding
-            structural_elements = await self._discover_structural_elements(
-                child_archetype_code=hierarchical_parts[-1] if hierarchical_parts else str(base_archetype_code),
-                parent_archetype_code=str(parent_archetype_code),
-                parent_archetype_type=archetype_type
-            )
+            # Query documents that have sn elements with p-values starting with our expected pattern
+            regex_pattern = f"^{expected_start.replace('.', '\\.')}\\."
             
-            # Add discovered structural elements
-            hierarchical_parts.extend(structural_elements)
+            # Find documents with matching patterns
+            matching_docs = await search_col.find({
+                "sn.p": {"$regex": regex_pattern}
+            }).limit(10).to_list(length=10)
             
-            # Add the parent archetype code
-            hierarchical_parts.append(str(parent_archetype_code))
+            if matching_docs:
+                # Extract all matching p-values to understand the full pattern
+                all_patterns = []
+                for doc in matching_docs:
+                    for sn_item in doc.get('sn', []):
+                        p_value = sn_item.get('p', '')
+                        if p_value.startswith(expected_start):
+                            all_patterns.append(p_value)
+                
+                if all_patterns:
+                    # Find the most common pattern structure
+                    # For our case, we expect patterns like: "-14.-7.9.-4.7"
+                    # We want to create a regex that matches this structure
+                    
+                    # Get the longest common pattern to understand the structure
+                    sample_pattern = all_patterns[0]
+                    pattern_parts = sample_pattern.split('.')
+                    
+                    # Build a flexible regex that matches the discovered structure
+                    # This allows for variations in the composition/parent structure
+                    if len(pattern_parts) >= len(expected_start.split('.')):
+                        # Create a pattern that matches the AT code sequence exactly
+                        # but is flexible about what comes after
+                        escaped_start = expected_start.replace('.', '\\.')
+                        return f"^{escaped_start}(?:\\.[-\\d]+)*$"
+                    else:
+                        # Fallback to exact match if pattern is shorter than expected
+                        escaped_pattern = sample_pattern.replace('.', '\\.')
+                        return f"^{escaped_pattern}$"
+                else:
+                    logger.warning(f"Warning: Found documents but no matching p-values for pattern {expected_start}")
+            else:
+                logger.warning(f"Warning: No documents found with pattern starting with {expected_start}")
+                
+        except Exception as e:
+            logger.warning(f"Error during data-driven pattern discovery: {e}")
         
-        # Add composition at the end if present
-        composition_info = next((info for info in containment_chain if info['archetype_type'] == 'COMPOSITION'), None)
-        if composition_info:
-            hierarchical_parts.append(str(composition_info['archetype_code']))
-        
-        # Build the final pattern
-        if len(hierarchical_parts) > 1:
-            composite_p = ".".join(hierarchical_parts)
-            escaped_pattern = composite_p.replace(".", "\\.")
-            return f"^{escaped_pattern}(?:\\.\\d+)*$"
-        else:
-            return f"^{base_archetype_code}(?:\\.\\d+)*$"
+        # Fallback: if no data-driven pattern found, create a basic pattern
+        # This should match the AT code sequence + base archetype
+        fallback_pattern = f"{at_code_sequence[-1]}.{'.'.join(reversed(at_code_sequence[:-1]))}.{base_archetype_code}" if len(at_code_sequence) > 1 else f"{at_code_sequence[0]}.{base_archetype_code}"
+        escaped_fallback = fallback_pattern.replace('.', '\\.')
+        return f"^{escaped_fallback}(?:\\.[-\\d]+)*$"
     
     async def _build_containment_chain(self, variable_alias: str, context_map: Dict[str, Dict]) -> List[Dict]:
         """
@@ -283,7 +302,7 @@ class ArchetypeResolver:
             if discovered_elements:
                 return discovered_elements
         except Exception as e:
-            print(f"Data-driven discovery failed, falling back to pattern-based: {e}")
+            logger.warning(f"Data-driven discovery failed, falling back to pattern-based: {e}")
         
         # Fallback to pattern-based discovery using openEHR structural knowledge
         structural_elements = []
@@ -376,7 +395,7 @@ class ArchetypeResolver:
             return result
             
         except Exception as e:
-            print(f"Pattern discovery failed for {cache_key}: {e}")
+            logger.warning(f"Pattern discovery failed for {cache_key}: {e}")
             return []
     
     def _analyze_p_value_patterns(self, cn_array: List[Dict], child_code: str, parent_code: str) -> List[List[str]]:
