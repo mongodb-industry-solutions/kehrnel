@@ -3,7 +3,9 @@
 from typing import Dict, Optional, Tuple, List
 from motor.motor_asyncio import AsyncIOMotorDatabase
 import re
+import logging
 
+logger = logging.getLogger(__name__)
 
 class ArchetypeResolver:
     """
@@ -44,7 +46,7 @@ class ArchetypeResolver:
             self._at_code_to_int_cache[at_code] = code_value
         
         self._codes_loaded = True
-        print(f"Loaded {len(self._archetype_to_code_cache)} archetype codes and {len(self._at_code_to_int_cache)} AT codes")
+        logger.info(f"Loaded {len(self._archetype_to_code_cache)} archetype codes and {len(self._at_code_to_int_cache)} AT codes")
     
     async def get_archetype_code(self, archetype_id: str) -> Optional[int]:
         """
@@ -148,7 +150,7 @@ class ArchetypeResolver:
                     if at_code_value is not None:
                         at_code_sequence.append(str(at_code_value))
                     else:
-                        print(f"Warning: Could not resolve AT code {reference}")
+                        logger.warning(f"Warning: Could not resolve AT code {reference}")
                         return None
                         
                 # Handle nested archetype IDs (less common but possible)
@@ -157,7 +159,7 @@ class ArchetypeResolver:
                     if archetype_code is not None:
                         at_code_sequence.append(str(archetype_code))
                     else:
-                        print(f"Warning: Could not resolve archetype {reference}")
+                        logger.warning(f"Warning: Could not resolve archetype {reference}")
                         return None
         
         # If no AT codes found in path, fall back to base archetype pattern
@@ -212,12 +214,12 @@ class ArchetypeResolver:
                         escaped_pattern = sample_pattern.replace('.', '\\.')
                         return f"^{escaped_pattern}$"
                 else:
-                    print(f"Warning: Found documents but no matching p-values for pattern {expected_start}")
+                    logger.warning(f"Warning: Found documents but no matching p-values for pattern {expected_start}")
             else:
-                print(f"Warning: No documents found with pattern starting with {expected_start}")
+                logger.warning(f"Warning: No documents found with pattern starting with {expected_start}")
                 
         except Exception as e:
-            print(f"Error during data-driven pattern discovery: {e}")
+            logger.warning(f"Error during data-driven pattern discovery: {e}")
         
         # Fallback: if no data-driven pattern found, create a basic pattern
         # This should match the AT code sequence + base archetype
@@ -300,7 +302,7 @@ class ArchetypeResolver:
             if discovered_elements:
                 return discovered_elements
         except Exception as e:
-            print(f"Data-driven discovery failed, falling back to pattern-based: {e}")
+            logger.warning(f"Data-driven discovery failed, falling back to pattern-based: {e}")
         
         # Fallback to pattern-based discovery using openEHR structural knowledge
         structural_elements = []
@@ -393,7 +395,7 @@ class ArchetypeResolver:
             return result
             
         except Exception as e:
-            print(f"Pattern discovery failed for {cache_key}: {e}")
+            logger.warning(f"Pattern discovery failed for {cache_key}: {e}")
             return []
     
     def _analyze_p_value_patterns(self, cn_array: List[Dict], child_code: str, parent_code: str) -> List[List[str]]:
