@@ -111,10 +111,10 @@ class ArchetypeResolver:
         data-driven approach that analyzes actual document patterns in the database.
         
         This method:
-        1. Extracts AT codes from the AQL path
-        2. Converts them to numeric codes using the _codes collection
-        3. Queries actual documents to find matching p-value patterns
-        4. Returns a regex that matches the discovered patterns
+        1. Extracts AT codes from the AQL path and converts them to numeric codes using the _codes collection.
+        2. Queries the database to discover actual p-value patterns for the given archetype and path.
+        3. Dynamically generates a regex pattern that matches the discovered patterns.
+        4. Applies fallback logic to return a default regex if no patterns are found.
         
         Args:
             variable_alias: The variable alias (e.g., 'admin_salut' for CLUSTER)
