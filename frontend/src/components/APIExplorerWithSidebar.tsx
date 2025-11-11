@@ -1,7 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDownIcon, ChevronRightIcon, ExclamationTriangleIcon, BeakerIcon, ClockIcon } from '@heroicons/react/24/outline'
+import { 
+  ChevronDownIcon, 
+  ChevronRightIcon, 
+  ExclamationTriangleIcon, 
+  BeakerIcon, 
+  ClockIcon, 
+  ServerIcon, 
+  DocumentTextIcon 
+} from '@heroicons/react/24/outline'
 import CodeBlock from './CodeBlock'
 import RequestBuilder from './RequestBuilder'
 import ResponseViewer from './ResponseViewer'
@@ -15,6 +23,63 @@ import { APIResource, APIOperation, Parameter, RequestBody, Response, Example } 
 const APIExplorerWithSidebar = () => {
   const { resources, loading, error, retry } = useAPIResources()
   const { testState, history, executeRequest, loadFromHistory, clearHistory, resetTest } = useAPITesting()
+
+  // Categorize resources for better UX in sidebar
+  const categorizeResources = (resources: APIResource[]) => {
+    const categories = {
+      'Core OpenEHR': ['EHR', 'EHR_STATUS', 'AQL', 'Template', 'Definition - Template', 'Contributions', 'Compositions', 'Directory'],
+      'Other': ['Ingestion', 'Synthetic Data']
+    }
+
+    const categorized: { [key: string]: APIResource[] } = {}
+    const uncategorized: APIResource[] = []
+
+    // Initialize categories
+    Object.keys(categories).forEach(cat => {
+      categorized[cat] = []
+    })
+
+    // Categorize resources
+    resources.forEach(resource => {
+      let placed = false
+      Object.entries(categories).forEach(([category, items]) => {
+        if (items.includes(resource.name)) {
+          categorized[category].push(resource)
+          placed = true
+        }
+      })
+      if (!placed) {
+        uncategorized.push(resource)
+      }
+    })
+
+    // Add uncategorized items to "Other" if any exist
+    if (uncategorized.length > 0) {
+      if (categorized['Other']) {
+        categorized['Other'] = [...categorized['Other'], ...uncategorized]
+      } else {
+        categorized['Other'] = uncategorized
+      }
+    }
+
+    // Remove empty categories
+    Object.keys(categorized).forEach(key => {
+      if (categorized[key].length === 0) {
+        delete categorized[key]
+      }
+    })
+
+    return categorized
+  }
+
+  // Get icon for resource category
+  const getCategoryIcon = (category: string) => {
+    const icons: { [key: string]: any } = {
+      'Core OpenEHR': ServerIcon,
+      'Other': DocumentTextIcon
+    }
+    return icons[category] || ServerIcon
+  }
   
   const [selectedResource, setSelectedResource] = useState<string>('')
   const [expandedOperations, setExpandedOperations] = useState<{ [key: string]: boolean }>({})
@@ -137,35 +202,64 @@ const APIExplorerWithSidebar = () => {
           <p className="text-sm text-gray-500 mt-1">Select a resource to explore its operations</p>
         </div>
 
-        {/* Resource List */}
+        {/* Resource List - Categorized */}
         <div className="flex-1 overflow-y-auto">
           <nav className="p-4">
-            <ul className="space-y-1">
-              {resources.map((resource) => (
-                <li key={resource.name}>
-                  <button
-                    onClick={() => handleResourceSelect(resource.name)}
-                    className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                      selectedResource === resource.name
-                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                        : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-semibold">{resource.name}</span>
-                      <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-                        {resource.operations.length}
-                      </span>
-                    </div>
-                    {resource.description && (
-                      <div className="text-xs text-gray-500 mt-1 truncate">
-                        {resource.description}
-                      </div>
-                    )}
-                  </button>
-                </li>
+            <div className="space-y-6">
+              {Object.entries(categorizeResources(resources)).map(([category, categoryResources]) => (
+                <div key={category}>
+                  {/* Category Header */}
+                  <div className="flex items-center gap-2 mb-3 px-2">
+                    {(() => {
+                      const IconComponent = getCategoryIcon(category)
+                      return <IconComponent className="h-4 w-4 text-gray-500" />
+                    })()}
+                    <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                      {category}
+                    </h3>
+                    <div className="flex-1 h-px bg-gray-200"></div>
+                  </div>
+                  
+                  {/* Category Resources */}
+                  <ul className="space-y-1">
+                    {categoryResources.map((resource) => (
+                      <li key={resource.name}>
+                        <button
+                          onClick={() => handleResourceSelect(resource.name)}
+                          className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                            selectedResource === resource.name
+                              ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                              : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              {(() => {
+                                const IconComponent = getCategoryIcon(category)
+                                return (
+                                  <div className="flex items-center justify-center w-6 h-6 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-md">
+                                    <IconComponent className="h-3 w-3 text-blue-600" />
+                                  </div>
+                                )
+                              })()}
+                              <span className="font-semibold">{resource.name}</span>
+                            </div>
+                            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+                              {resource.operations.length}
+                            </span>
+                          </div>
+                          {resource.description && (
+                            <div className="text-xs text-gray-500 mt-1 truncate ml-9">
+                              {resource.description}
+                            </div>
+                          )}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
-            </ul>
+            </div>
           </nav>
         </div>
 
