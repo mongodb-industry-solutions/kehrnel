@@ -116,7 +116,7 @@ const Navigation = () => {
   }
 
   return (
-    <nav className="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 shadow-2xl border-b border-blue-800/30 backdrop-blur-sm">
+    <nav className="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 shadow-2xl border-b border-blue-800/30 backdrop-blur-sm relative z-[9998]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20">
           <div className="flex items-center space-x-8">
@@ -153,7 +153,7 @@ const Navigation = () => {
                 </button>
                 
                 {isDocsOpen && (
-                  <div className="absolute top-full left-0 mt-2 w-80 bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 z-50 overflow-hidden animate-in slide-in-from-top-2 duration-200">
+                  <div className="absolute top-full left-0 mt-2 w-80 bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 z-[9999] overflow-hidden animate-in slide-in-from-top-2 duration-200">
                     <div className="p-2">
                       <div className="mb-3 px-3 py-2">
                         <h3 className="text-sm font-semibold text-gray-800 mb-1">API Resources</h3>
@@ -240,13 +240,16 @@ const Navigation = () => {
             </div>
           </div>
 
-          {/* Right Side - Optional Status Indicator */}
+          {/* Right Side - AQL Playground Link */}
           <div className="flex items-center space-x-4">
-            {/* API Status Indicator */}
-            <div className="hidden lg:flex items-center space-x-2 px-3 py-1.5 bg-green-500/20 border border-green-400/30 rounded-full">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-xs font-medium text-green-100">API Online</span>
-            </div>
+            {/* AQL Playground Link */}
+            <Link
+              href="/aql-playground"
+              className="hidden lg:flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-400/30 rounded-full hover:from-purple-500/30 hover:to-pink-500/30 hover:border-purple-400/50 transition-all duration-300 group"
+            >
+              <BeakerIcon className="w-4 h-4 text-purple-300 group-hover:text-purple-200 transition-colors duration-300" />
+              <span className="text-sm font-medium text-purple-100 group-hover:text-white">AQL Playground</span>
+            </Link>
           </div>
         </div>
       </div>
