@@ -27,7 +27,7 @@ export class APIClient {
       const url = this.buildURL(request.path, request.pathParams, request.queryParams)
       
       // Prepare headers
-      const headers = this.buildHeaders(request.headers, request.auth)
+      const headers = this.buildHeaders(request.headers, request.auth, request.contentType)
       
       // Prepare request options
       const requestOptions: RequestInit = {
@@ -37,8 +37,16 @@ export class APIClient {
       }
 
       // Add body for non-GET requests
-      if (request.body && request.method !== 'GET') {
-        requestOptions.body = JSON.stringify(request.body)
+      if (request.body !== undefined && request.body !== null && request.method !== 'GET') {
+        const contentType = request.contentType || 'application/json'
+        
+        if (contentType.includes('application/json')) {
+          // JSON content - stringify if not already a string
+          requestOptions.body = typeof request.body === 'string' ? request.body : JSON.stringify(request.body)
+        } else {
+          // Plain text or other content types - send as-is
+          requestOptions.body = typeof request.body === 'string' ? request.body : String(request.body)
+        }
       }
 
       // Make the request
@@ -136,13 +144,19 @@ export class APIClient {
   /**
    * Build request headers
    */
-  private buildHeaders(customHeaders?: Record<string, string>, auth?: { type: string; value: string }): Record<string, string> {
+  private buildHeaders(customHeaders?: Record<string, string>, auth?: { type: string; value: string }, contentType?: string): Record<string, string> {
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
       'Accept': 'application/json',
     }
 
-    // Add custom headers
+    // Set Content-Type based on the provided contentType or default to JSON
+    if (contentType) {
+      headers['Content-Type'] = contentType
+    } else {
+      headers['Content-Type'] = 'application/json'
+    }
+
+    // Add custom headers (these can override the default Content-Type if needed)
     if (customHeaders) {
       Object.entries(customHeaders).forEach(([key, value]) => {
         if (value.trim()) {
