@@ -7,6 +7,7 @@ export interface APIRequest {
   queryParams?: Record<string, string>
   headers?: Record<string, string>
   body?: any
+  contentType?: string // Add content type for proper request handling
   auth?: {
     type: 'bearer' | 'apikey' | 'basic'
     value: string
