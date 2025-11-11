@@ -15,7 +15,7 @@ from src.api.v1.aql.service import (
     process_aql_ast_query
 )
 from src.api.v1.aql.models import StoredQuerySummary, QueryResponse, AQLtoMQLDebugResponse, AQLtoMQLDebugErrorResponse
-from src.api.v1.aql.api_responses import stored_query_responses, aql_to_mql_debug_responses
+from src.api.v1.aql.api_responses import stored_query_responses, aql_to_mql_debug_responses, aql_query_responses, list_stored_queries_responses, delete_stored_query_responses, aql_validation_responses
 from src.aql_parser.validator import validate_aql_syntax
 
 router = APIRouter(
@@ -27,7 +27,8 @@ router = APIRouter(
     "/aql",
     summary="Execute AQL Query",
     description="Executes an AQL query provided in the request body and returns the results. Uses dual-query strategy: $match for EHR-specific queries, $search for cross-EHR queries.",
-    response_model=QueryResponse
+    response_model=QueryResponse,
+    responses=aql_query_responses
 )
 async def execute_query(
     request: Request,
@@ -62,7 +63,8 @@ async def execute_query(
 @router.post(
     "/aql/validate",
     summary="Validate AQL Query",
-    description="Validates an AQL query syntax without executing it."
+    description="Validates an AQL query syntax without executing it.",
+    responses=aql_validation_responses
 )
 async def validate_aql_query(
     aql: str = Body(..., media_type="text/plain", description="The AQL query string to validate.")
@@ -249,7 +251,8 @@ async def debug_ast_query(
     summary="List Stored Queries",
     description="Lists all available stored queries.",
     response_model=List[StoredQuerySummary],
-    response_model_by_alias=True
+    response_model_by_alias=True,
+    responses=list_stored_queries_responses
 )
 async def get_all_stored_queries(db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)):
     """
@@ -301,7 +304,8 @@ async def get_stored_query(
     "/{name:path}",
     summary="Delete Stored Query",
     description="Deletes a stored query by its `name`.",
-    status_code=status.HTTP_204_NO_CONTENT
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses=delete_stored_query_responses
 )
 async def delete_stored_query(
     name: str,
