@@ -94,15 +94,21 @@ function convertResponses(responses: OpenAPIOperation['responses']): Response[] 
   const convertedResponses: Response[] = []
 
   for (const [statusCode, response] of Object.entries(responses)) {
-    let example = {}
+    let example = null
     
     if (response.content) {
-      // Get example from the first available content type
+      // Get example from the first available content type (usually application/json)
       const firstContentType = Object.keys(response.content)[0]
       if (firstContentType && response.content[firstContentType]) {
-        example = response.content[firstContentType].example || 
-                  response.content[firstContentType].schema?.example || 
-                  {}
+        const contentTypeObj = response.content[firstContentType]
+        
+        // Try to get example from multiple possible locations
+        if (contentTypeObj.example && typeof contentTypeObj.example === 'object' && Object.keys(contentTypeObj.example).length > 0) {
+          example = contentTypeObj.example
+        } else if (contentTypeObj.schema?.example && typeof contentTypeObj.schema.example === 'object' && Object.keys(contentTypeObj.schema.example).length > 0) {
+          example = contentTypeObj.schema.example
+        }
+        // If no examples found, leave as null - examples should be provided by the backend OpenAPI spec
       }
     }
 
