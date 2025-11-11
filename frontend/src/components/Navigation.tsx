@@ -1,13 +1,41 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/24/outline'
 import { useResourceNames } from '@/hooks/useResourceNames'
 
 const Navigation = () => {
   const [isDocsOpen, setIsDocsOpen] = useState(false)
   const { resourceNames, loading: resourcesLoading } = useResourceNames()
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  // Close dropdown when clicking outside or pressing Escape
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDocsOpen(false)
+      }
+    }
+
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsDocsOpen(false)
+      }
+    }
+
+    // Only add event listeners when dropdown is open
+    if (isDocsOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener('keydown', handleEscapeKey)
+    }
+
+    // Cleanup event listeners
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleEscapeKey)
+    }
+  }, [isDocsOpen])
 
   // Helper function to format resource name for URL
   const formatResourceForUrl = (resourceName: string) => {
@@ -48,13 +76,19 @@ const Navigation = () => {
             {/* Navigation Links */}
             <div className="hidden md:flex items-center space-x-6">
               {/* Docs Dropdown */}
-              <div className="relative">
+              <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setIsDocsOpen(!isDocsOpen)}
-                  className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+                  className={`flex items-center space-x-1 px-3 py-2 text-sm font-medium transition-colors ${
+                    isDocsOpen 
+                      ? 'text-blue-600' 
+                      : 'text-gray-700 hover:text-blue-600'
+                  }`}
                 >
                   <span>Docs</span>
-                  <ChevronDownIcon className="h-4 w-4" />
+                  <ChevronDownIcon className={`h-4 w-4 transition-transform ${
+                    isDocsOpen ? 'rotate-180' : ''
+                  }`} />
                 </button>
                 
                 {isDocsOpen && (
