@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
-import { ChevronDownIcon } from '@heroicons/react/24/outline'
+import { ChevronDownIcon, BeakerIcon, DocumentTextIcon, ServerIcon } from '@heroicons/react/24/outline'
 import { useResourceNames } from '@/hooks/useResourceNames'
 
 const Navigation = () => {
@@ -59,62 +59,81 @@ const Navigation = () => {
   }
 
   return (
-    <nav className="bg-white shadow-lg border-b border-gray-200">
+    <nav className="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 shadow-2xl border-b border-blue-800/30 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+        <div className="flex justify-between h-20">
           <div className="flex items-center space-x-8">
-            {/* Title/Logo */}
+            {/* Enhanced Logo */}
             <Link 
               href="https://github.com/Paco-Mateu/kehrnel" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="flex items-center space-x-2 text-xl font-bold text-blue-600 hover:text-blue-800 transition-colors"
+              className="group flex items-center space-x-3 text-2xl font-bold text-white hover:text-blue-300 transition-all duration-300 transform hover:scale-105"
             >
-              <span>KEHRNEL</span>
+              <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-xl shadow-lg group-hover:shadow-xl group-hover:from-blue-300 group-hover:to-indigo-400 transition-all duration-300">
+                <ServerIcon className="h-6 w-6 text-white" />
+              </div>
+              <span className="bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">KEHRNEL</span>
             </Link>
 
             {/* Navigation Links */}
-            <div className="hidden md:flex items-center space-x-6">
-              {/* Docs Dropdown */}
+            <div className="hidden md:flex items-center space-x-2">
+              {/* Enhanced Docs Dropdown */}
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setIsDocsOpen(!isDocsOpen)}
-                  className={`flex items-center space-x-1 px-3 py-2 text-sm font-medium transition-colors ${
+                  className={`group flex items-center space-x-2 px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-300 ${
                     isDocsOpen 
-                      ? 'text-blue-600' 
-                      : 'text-gray-700 hover:text-blue-600'
+                      ? 'bg-white/10 text-white shadow-lg backdrop-blur-sm' 
+                      : 'text-blue-100 hover:text-white hover:bg-white/10 hover:shadow-lg hover:backdrop-blur-sm'
                   }`}
                 >
-                  <span>Docs</span>
-                  <ChevronDownIcon className={`h-4 w-4 transition-transform ${
-                    isDocsOpen ? 'rotate-180' : ''
+                  <DocumentTextIcon className="h-4 w-4" />
+                  <span>Documentation</span>
+                  <ChevronDownIcon className={`h-4 w-4 transition-all duration-300 ${
+                    isDocsOpen ? 'rotate-180 text-blue-300' : 'group-hover:text-blue-300'
                   }`} />
                 </button>
                 
                 {isDocsOpen && (
-                  <div className="absolute top-full left-0 mt-1 w-64 bg-white rounded-md shadow-lg border border-gray-200 z-50">
-                    <div className="py-1">
+                  <div className="absolute top-full left-0 mt-2 w-72 bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 z-50 overflow-hidden animate-in slide-in-from-top-2 duration-200">
+                    <div className="p-2">
+                      <div className="mb-3 px-3 py-2">
+                        <h3 className="text-sm font-semibold text-gray-800 mb-1">API Resources</h3>
+                        <p className="text-xs text-gray-600">Explore OpenEHR API documentation</p>
+                      </div>
                       {resourcesLoading ? (
-                        <div className="px-4 py-2 text-sm text-gray-500">
+                        <div className="px-3 py-3 text-sm text-gray-500">
                           <div className="flex items-center">
-                            <div className="animate-spin rounded-full h-3 w-3 border-b border-gray-400 mr-2"></div>
-                            Loading resources...
+                            <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-500 border-t-transparent mr-3"></div>
+                            <span>Loading resources...</span>
                           </div>
                         </div>
                       ) : resourceNames.length > 0 ? (
-                        resourceNames.map((resourceName) => (
-                          <Link
-                            key={resourceName}
-                            href={`/docs/${formatResourceForUrl(resourceName)}`}
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => setIsDocsOpen(false)}
-                          >
-                            {formatResourceForDisplay(resourceName)}
-                          </Link>
-                        ))
+                        <div className="space-y-1">
+                          {resourceNames.map((resourceName) => (
+                            <Link
+                              key={resourceName}
+                              href={`/docs/${formatResourceForUrl(resourceName)}`}
+                              className="group flex items-center px-3 py-2.5 text-sm text-gray-700 hover:text-blue-600 hover:bg-blue-50/80 rounded-xl transition-all duration-200"
+                              onClick={() => setIsDocsOpen(false)}
+                            >
+                              <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-blue-100 to-indigo-100 group-hover:from-blue-200 group-hover:to-indigo-200 rounded-lg mr-3 transition-all duration-200">
+                                <ServerIcon className="h-4 w-4 text-blue-600" />
+                              </div>
+                              <div>
+                                <div className="font-medium">{resourceName}</div>
+                                <div className="text-xs text-gray-500 group-hover:text-blue-500">
+                                  {formatResourceForDisplay(resourceName)}
+                                </div>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
                       ) : (
-                        <div className="px-4 py-2 text-sm text-gray-500">
-                          No resources available
+                        <div className="px-3 py-3 text-sm text-gray-500 text-center">
+                          <ServerIcon className="h-8 w-8 text-gray-300 mx-auto mb-2" />
+                          <div>No resources available</div>
                         </div>
                       )}
                     </div>
@@ -122,27 +141,41 @@ const Navigation = () => {
                 )}
               </div>
 
-              {/* OpenEHR API */}
+              {/* Enhanced OpenEHR API Link */}
               <Link
                 href="/api"
-                className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+                className="group flex items-center space-x-2 px-4 py-2.5 text-sm font-medium rounded-xl text-blue-100 hover:text-white hover:bg-white/10 hover:shadow-lg hover:backdrop-blur-sm transition-all duration-300"
               >
-                OpenEHR API
+                <BeakerIcon className="h-4 w-4 group-hover:text-blue-300 transition-colors duration-300" />
+                <span>API Explorer</span>
               </Link>
 
-              {/* Data Lab */}
+              {/* Enhanced Data Lab Link */}
               <Link
                 href="#"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+                className="group flex items-center space-x-2 px-4 py-2.5 text-sm font-medium rounded-xl text-blue-100 hover:text-white hover:bg-white/10 hover:shadow-lg hover:backdrop-blur-sm transition-all duration-300"
               >
-                Data Lab
+                <DocumentTextIcon className="h-4 w-4 group-hover:text-blue-300 transition-colors duration-300" />
+                <span>Data Lab</span>
               </Link>
+            </div>
+          </div>
+
+          {/* Right Side - Optional Status Indicator */}
+          <div className="flex items-center space-x-4">
+            {/* API Status Indicator */}
+            <div className="hidden lg:flex items-center space-x-2 px-3 py-1.5 bg-green-500/20 border border-green-400/30 rounded-full">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-xs font-medium text-green-100">API Online</span>
             </div>
           </div>
         </div>
       </div>
+      
+      {/* Subtle bottom border with gradient */}
+      <div className="h-px bg-gradient-to-r from-transparent via-blue-400/30 to-transparent"></div>
     </nav>
   )
 }
