@@ -186,3 +186,5 @@ cython_debug/
 config.json
 *next_steps.py
 *next_steps.txt
+frontend/.github
+.DS_Store

@@ -10,7 +10,7 @@ This file contains examples of how to use the synthetic data generation API.
 curl -X POST "http://localhost:9000/v1/synthetic/generate" \
   -H "Content-Type: application/json" \
   -d '{
-    "count": 5
+    "count": 90
   }'
 ```
 
