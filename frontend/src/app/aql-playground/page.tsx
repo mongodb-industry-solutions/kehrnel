@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import AQLPlaygroundComponent from '@/components/AQLPlayground'
+import AQLPlayground from '../../components/AQLPlayground'
 
 export const metadata: Metadata = {
   title: 'AQL Playground - Learn OpenEHR Query Language - KEHRNEL',
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function AQLPlaygroundPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <AQLPlaygroundComponent />
+      <AQLPlayground />
     </div>
   )
 }
