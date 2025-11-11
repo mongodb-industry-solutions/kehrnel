@@ -425,15 +425,25 @@ const OperationOverview: React.FC<OperationOverviewProps> = ({ operation }) => {
           <h4 className="text-sm font-medium text-gray-900 mb-3">Request Body</h4>
           <div className="border border-gray-200 rounded-lg p-4">
             <p className="text-sm text-gray-600 mb-3">{operation.requestBody.description}</p>
-            {operation.requestBody.content?.['application/json']?.example && (
-              <div>
-                <span className="text-xs text-gray-500 mb-2 block">Example:</span>
-                <CodeBlock
-                  code={JSON.stringify(operation.requestBody.content['application/json'].example, null, 2)}
-                  language="json"
-                />
-              </div>
-            )}
+            {(() => {
+              // Check all available content types for examples
+              const contentTypes = Object.keys(operation.requestBody.content || {})
+              for (const contentType of contentTypes) {
+                const example = operation.requestBody.content[contentType]?.example
+                if (example && (typeof example !== 'object' || Object.keys(example).length > 0)) {
+                  return (
+                    <div>
+                      <span className="text-xs text-gray-500 mb-2 block">Example ({contentType}):</span>
+                      <CodeBlock
+                        code={typeof example === 'string' ? example : JSON.stringify(example, null, 2)}
+                        language={contentType.includes('json') ? 'json' : 'text'}
+                      />
+                    </div>
+                  )
+                }
+              }
+              return null
+            })()}
           </div>
         </div>
       )}
