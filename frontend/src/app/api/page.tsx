@@ -1,17 +1,17 @@
 import { Metadata } from 'next'
-import APIExplorer from '@/components/APIExplorer'
+import APIExplorerWithSidebar from '@/components/APIExplorerWithSidebar'
 import ErrorBoundary, { APIErrorFallback } from '@/components/ErrorBoundary'
 
 export const metadata: Metadata = {
-  title: 'OpenEHR API Explorer - KEHRNEL',
-  description: 'Interactive API documentation and testing interface for the OpenEHR API endpoints.',
+  title: 'OpenEHR API Explorer & Testing - KEHRNEL',
+  description: 'Interactive API documentation and live testing interface for the OpenEHR API endpoints.',
 }
 
 export default function APIPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="h-screen bg-gray-50">
       <ErrorBoundary fallback={APIErrorFallback}>
-        <APIExplorer />
+        <APIExplorerWithSidebar />
       </ErrorBoundary>
     </div>
   )
