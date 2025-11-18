@@ -37,3 +37,26 @@ create_directory_responses = {
         "model": ErrorResponse,
     },
 }
+
+update_directory_responses = {
+    status.HTTP_200_OK: {
+        "description": "Directory updated successfully. Body is returned if 'Prefer: return=representation' header is set.",
+        "model": Folder,
+        "content": create_directory_responses[status.HTTP_201_CREATED]["content"], # Reuse the same example
+    },
+    status.HTTP_204_NO_CONTENT: {
+        "description": "Directory updated successfully. Body is empty if 'Prefer: return=minimal' header is set.",
+    },
+    status.HTTP_400_BAD_REQUEST: {
+        "description": "The request body or If-Match header is invalid.",
+        "model": ErrorResponse,
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "The EHR with the specified `ehr_id` was not found, or it does not have a directory.",
+        "model": ErrorResponse,
+    },
+    status.HTTP_412_PRECONDITION_FAILED: {
+        "description": "The `If-Match` header does not match the current version of the directory.",
+        "model": ErrorResponse,
+    }
+}
