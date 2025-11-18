@@ -19,3 +19,7 @@ class Contribution(BaseModel):
 
     class Config:
         populate_by_name = True
+
+class DvText(BaseModel):
+    value: str
+    _type: str = Field("DV_TEXT", frozen=True)
