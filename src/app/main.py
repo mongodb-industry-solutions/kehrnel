@@ -17,6 +17,7 @@ from src.api.v1.contribution.routes import router as contribution_router
 from src.api.v1.ehr_status.routes import router as ehr_status_router
 from src.api.v1.ingest.routes import router as ingest_router
 from src.api.v1.synthetic.routes import router as synthetic_router
+from src.api.v1.directory.routes import router as directory_router
 
 from src.transform.flattener_g import CompositionFlattener
 from src.transform.core import Transformer, load_default_cfg
@@ -108,3 +109,4 @@ app.include_router(contribution_router, prefix="/v1", tags=["Contributions"])
 app.include_router(ehr_status_router, prefix="/v1", tags=["EHR_STATUS"])
 app.include_router(ingest_router, prefix="/v1/ingestions", tags=["Ingestion"])
 app.include_router(synthetic_router, prefix="/v1", tags=["Synthetic Data"])
+app.include_router(directory_router, prefix="/v1", tags=["Directory"])
