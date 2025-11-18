@@ -77,7 +77,30 @@ async def create_directory(
 
     # 5. Create ObjectRefs to be stored in the EHR document
     directory_ref = ObjectRef(
+        id=HierObjectID(value=version_uid),
+        namespace="local",
+        type="FOLDER"
+    )
+    
+    contribution_ref = ObjectRef(
         id=HierObjectID(value=contribution_id),
         namespace="local",
         type="CONTRIBUTION"
     )
+
+    # 6. Call repository to perform the atomic update
+    try:
+        await update_ehr_and_insert_contribution_for_directory(
+            ehr_id=ehr_id,
+            directory_ref=directory_ref.model_dump(by_alias=True),
+            contribution_doc=contribution.model_dump(by_alias=True),
+            contribution_ref=contribution_ref.model_dump(by_alias=True),
+            db=db
+        )
+    except PyMongoError as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Could not create directory due to a database error: {e}",
+        )
+
+    return created_directory
