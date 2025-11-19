@@ -18,6 +18,54 @@ from src.api.v1.ehr.repository import find_ehr_by_id
 from src.api.v1.common.models import ObjectRef, HierObjectID, ObjectVersionID
 from src.app.core.models import Contribution, AuditDetails
 
+
+async def retrieve_directory_by_version_id(
+    ehr_id: str,
+    version_uid: str,
+    path: Optional[str],
+    db: AsyncIOMotorDatabase
+) -> Folder:
+    """
+    Retrieves a specific version of a directory for an EHR, optionally at a sub-path.
+
+    Args:
+        ehr_id: The ID of the EHR.
+        version_uid: The specific version UID of the directory to retrieve.
+        path: Slash-separated path to a sub-folder.
+        db: The database session.
+
+    Returns:
+        The requested Folder object.
+
+    Raises:
+        HTTPException: For various not-found scenarios.
+    """
+    
+    # 1. Validate that the EHR exists.
+    ehr_document = await find_ehr_by_id(ehr_id, db)
+    if not ehr_document:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"EHR with id '{ehr_id}' not found",
+        )
+
+    # 2. Find the specific folder version within that EHR.
+    folder_dict = await find_folder_in_contribution_by_uid(ehr_id, version_uid, db)
+
+    if not folder_dict:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Directory with version_uid '{version_uid}' not found for EHR '{ehr_id}'.",
+        )
+
+    root_folder = Folder.model_validate(folder_dict)
+
+    # 3. If a path is provided, traverse to the sub-folder (reuses existing helper).
+    if path:
+        return _find_subfolder_by_path(root_folder, path)
+
+    return root_folder
+
 async def create_directory(
     ehr_id: str,
     directory_payload: FolderCreate,
