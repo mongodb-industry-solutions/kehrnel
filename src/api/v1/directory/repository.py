@@ -64,19 +64,22 @@ async def update_ehr_and_insert_contribution_for_directory(
                 raise
 
 
-async def find_folder_in_contribution_by_uid(version_uid: str, db: AsyncIOMotorDatabase) -> Optional[Dict[str, Any]]:
+async def find_folder_in_contribution_by_uid(ehr_id: str, version_uid: str, db: AsyncIOMotorDatabase) -> Optional[Dict[str, Any]]:
     """
-    Finds the contribution containing a specific FOLDER version and returns the FOLDER.
+    Finds the contribution containing a specific FOLDER version for a given EHR
+    and returns the FOLDER.
 
-    Args: 
-        version_uid: The full version UID of the FOLDER
-        db: The database session
+    Args:
+        ehr_id: The ID of the EHR to search within.
+        version_uid: The full version UID of the FOLDER.
+        db: The database session.
 
     Returns:
-        The dictionary of the FOLDER object if found, otherwise None
+        The dictionary of the FOLDER object if found, otherwise None.
     """
+    
     contribution = await db[EHR_CONTRIBUTIONS_COLL].find_one(
-        {"versions.uid.value": version_uid}
+        {"ehr_id": ehr_id, "versions.uid.value": version_uid}
     )
 
     if not contribution:
@@ -86,7 +89,7 @@ async def find_folder_in_contribution_by_uid(version_uid: str, db: AsyncIOMotorD
     for version in contribution.get("versions", []):
         if version.get("_type") == "FOLDER" and version.get("uid", {}).get("value") == version_uid:
             return version
-        
+            
     return None
 
 
