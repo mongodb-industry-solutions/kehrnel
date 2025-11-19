@@ -1,0 +1,391 @@
+# samples/mappings/whoqol.yaml
+meta:
+  target_webtemplate: whoqol_v0
+  default_source: csv1
+  translation:
+    enabled: false
+
+sources:
+  csv1:
+    type: csv
+    columns: [paciente, centro, servicio, consulta, etapa, prom, fecha, pregunta, respuesta]
+    date_format: "%d/%m/%Y"
+    encoding: "utf-8"
+
+input:
+  from: csv1
+  where:
+    - 'servicio == "VIH eVIHa"'
+    - 'prom ~= "(?i)whoqol"'
+    - 'respuesta != "N/A"'
+    - 'respuesta !~= "^\\s*$"'
+  group_by: [paciente, servicio, consulta]
+
+output:
+  prune_empty: true
+  filename: "whoqol_{{ first.paciente }}_{{ first.consulta }}_{{ index|int }}.json"
+  composition_key: canonicalJSON
+
+  envelope:
+    ehr_id:            { get: { from: paciente }, transform: [strip] }
+    composition_date:  { expr: "{{ comp.context.start_time.value }}", transform: [wrap_date] }
+    archetype_node_id: { expr: "{{ comp.archetype_details.archetype_id.value }}" }
+    last_processed:    { expr: "{{ now_utc_iso() }}", transform: [wrap_date] }
+
+mappings:
+
+  # ───────── COMPOSITION header ─────────
+  "/language/code_string":               { set: "en" }
+  "/territory/code_string":              { set: "ES" }
+  "/category/defining_code/code_string": { set: "433" }
+
+  "/context/start_time/value":
+    get: { from: csv1, column: fecha }
+    transform: [date_iso]
+
+  # Optional setting context
+  "/context/setting/defining_code/terminology_id/value": { set: "openehr" }
+  "/context/setting/defining_code/code_string":          { set: "225" }
+  "/context/setting/value":                              { set: "home" }
+
+  # ───────── OBSERVATION scaffolding / timing ─────────
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/language/code_string": { set: "en" }
+
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/name/value":
+    set: "Any event"
+
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/time/value":
+    get: { from: csv1, column: fecha }
+    transform: [date_iso]
+    overwrite: last
+
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/origin/value":
+    get: { from: csv1, column: fecha }
+    transform: [date_iso]
+    overwrite: last
+
+  # Helper: trimmed answer used everywhere
+  _answer: &trimmed_answer
+    get: { from: csv1, column: respuesta }
+    transform: [strip]
+
+  # ───────── Q1–Q31 EXACT MATCHES (Spanish) ─────────
+  # Q1  (Very poor … Very good)
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0004]/value":
+    when: 'pregunta == "¿Cómo calificarías tu calidad de vida?"'
+    <<: *trimmed_answer
+    map:
+      "Muy mala":               at0005
+      "Regular":                at0006
+      "Normal":                 at0007
+      "Bastante buena":         at0008
+      "Muy buena":              at0009
+
+  # Q2  (Never … Always) — CSV uses satisfaction wording; we map given the OPT’s 1..5 order.
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0010]/value":
+    when: 'pregunta == "¿Cómo de satisfecho/a estás con tu salud?"'
+    <<: *trimmed_answer
+    map:
+      "Nada":       at0263   # Never
+      "Poco":       at0264   # Seldom
+      "Algo":       at0265   # Quite often
+      "Bastante":   at0266   # Very often
+      "Mucho":      at0267   # Always
+
+  # Q3  (Not at all … An extreme amount)
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0016]/value":
+    when: 'pregunta == "¿Hasta qué punto piensas que el dolor (físico) te impide hacer lo que necesitas?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0017, "Poco": at0018, "Algo": at0019, "Bastante": at0020, "Mucho": at0021 }
+
+  # Q4
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0022]/value":
+    when: 'pregunta == "¿En qué grado te molestan los problemas físicos relacionados con tu infección por VIH?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0023, "Poco": at0024, "Algo": at0025, "Bastante": at0026, "Mucho": at0027 }
+
+  # Q5
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0028]/value":
+    when: 'pregunta == "¿En qué grado necesitas de un tratamiento médico para funcionar en tu vida diaria?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0029, "Poco": at0030, "Algo": at0031, "Bastante": at0032, "Mucho": at0033 }
+
+  # Q6
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0034]/value":
+    when: 'pregunta == "¿Cuánto disfrutas de la vida?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0035, "Poco": at0036, "Algo": at0037, "Bastante": at0038, "Mucho": at0039 }
+
+  # Q7
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0040]/value":
+    when: 'pregunta == "¿Hasta qué punto sientes que tu vida tiene sentido?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0041, "Poco": at0042, "Algo": at0043, "Bastante": at0044, "Mucho": at0045 }
+
+  # Q8
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0046]/value":
+    when: 'pregunta == "¿Hasta qué punto te molesta que otras personas te culpen por tu estado VIH?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0047, "Poco": at0048, "Algo": at0049, "Bastante": at0050, "Mucho": at0051 }
+
+  # Q9
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0052]/value":
+    when: 'pregunta == "¿Cuánto temes al futuro?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0053, "Poco": at0054, "Algo": at0055, "Bastante": at0056, "Mucho": at0057 }
+
+  # Q10
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0058]/value":
+    when: 'pregunta == "¿Cuánto te preocupas por la muerte?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0059, "Poco": at0060, "Algo": at0061, "Bastante": at0062, "Mucho": at0063 }
+
+  # Q11 (…Extremely)
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0077]/value":
+    when: 'pregunta == "¿Cuál es tu capacidad de concentración?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0078, "Poco": at0079, "Algo": at0080, "Bastante": at0081, "Mucho": at0082 }
+
+  # Q12 (…Extremely)
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0083]/value":
+    when: 'pregunta == "¿Cuánta seguridad sientes en tu vida diaria?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0084, "Poco": at0085, "Algo": at0086, "Bastante": at0087, "Mucho": at0088 }
+
+  # Q13 (…Extremely)
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0143]/value":
+    when: 'pregunta == "¿Cómo de saludable es el ambiente físico a tu alrededor?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0144, "Poco": at0145, "Algo": at0146, "Bastante": at0147, "Mucho": at0148 }
+
+  # Q14 (…Completely)
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0149]/value":
+    when: 'pregunta == "¿Tienes energía suficiente para la vida diaria?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0150, "Poco": at0151, "Algo": at0152, "Bastante": at0153, "Mucho": at0154 }
+
+  # Q15 (…Completely)
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0161]/value":
+    when: 'pregunta == "¿Eres capaz de aceptar tu apariencia física?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0162, "Poco": at0163, "Algo": at0164, "Bastante": at0165, "Mucho": at0166 }
+
+  # Q16 (…Completely)
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0167]/value":
+    when: 'pregunta == "¿Tienes suficiente dinero para cubrir tus necesidades?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0168, "Poco": at0169, "Algo": at0170, "Bastante": at0171, "Mucho": at0172 }
+
+  # Q17 (…Completely)
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0173]/value":
+    when: 'pregunta == "¿Hasta qué punto te sientes aceptado/a por las personas que conoces?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0174, "Poco": at0175, "Algo": at0176, "Bastante": at0177, "Mucho": at0178 }
+
+  # Q18 (…Completely)
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0179]/value":
+    when: 'pregunta == "¿Dispones de la información que necesitas para tu vida diaria?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0180, "Poco": at0181, "Algo": at0182, "Bastante": at0183, "Mucho": at0184 }
+
+  # Q19 (…Completely)
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0185]/value":
+    when: 'pregunta == "¿Hasta qué punto tienes oportunidad de realizar actividades de ocio?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0186, "Poco": at0187, "Algo": at0188, "Bastante": at0189, "Mucho": at0190 }
+
+  # Q20 (Very poor … Very good) — CSV answers are “Nada…Mucho”; map deterministically per legacy.
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0191]/value":
+    when: 'pregunta == "¿Eres capaz de desplazarte de un lugar a otro?"'
+    <<: *trimmed_answer
+    map:
+      "Nada":      at0192   # Very poor
+      "Poco":      at0193   # Poor
+      "Algo":      at0194   # Neither poor nor good
+      "Bastante":  at0195   # Good
+      "Mucho":     at0196   # Very good
+
+  # Q21 (Very dissatisfied … Very satisfied)
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0197]/value":
+    when: 'pregunta == "¿Cómo de satisfecho/a estás con tu sueño?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0198, "Poco": at0199, "Algo": at0200, "Bastante": at0201, "Mucho": at0202 }
+
+  # Q22
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0203]/value":
+    when: 'pregunta == "¿Cómo de satisfecho/a estás con tu habilidad para realizar tus actividades de la vida diaria?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0204, "Poco": at0205, "Algo": at0206, "Bastante": at0207, "Mucho": at0208 }
+
+  # Q23
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0209]/value":
+    when: 'pregunta == "¿Cómo de satisfecho/a estás con tu capacidad de trabajo?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0210, "Poco": at0211, "Algo": at0212, "Bastante": at0213, "Mucho": at0214 }
+
+  # Q24
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0215]/value":
+    when: 'pregunta == "¿Cómo de satisfecho/a estás de ti mismo/a?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0216, "Poco": at0217, "Algo": at0218, "Bastante": at0219, "Mucho": at0220 }
+
+  # Q25
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0221]/value":
+    when: 'pregunta == "¿Cómo de satisfecho/a estás con tus relaciones personales?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0222, "Poco": at0223, "Algo": at0224, "Bastante": at0225, "Mucho": at0226 }
+
+  # Q26
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0227]/value":
+    when: 'pregunta == "¿Cómo de satisfecho/a estás con tu vida sexual?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0228, "Poco": at0229, "Algo": at0230, "Bastante": at0231, "Mucho": at0232 }
+
+  # Q27
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0233]/value":
+    when: 'pregunta == "¿Cómo de satisfecho/a estás con el apoyo que obtienes de tus amigos/as?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0234, "Poco": at0235, "Algo": at0236, "Bastante": at0237, "Mucho": at0238 }
+
+  # Q28
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0239]/value":
+    when: 'pregunta == "¿Cómo de satisfecho/a estás de las condiciones del lugar donde vives?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0240, "Poco": at0241, "Algo": at0242, "Bastante": at0243, "Mucho": at0244 }
+
+  # Q29
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0245]/value":
+    when: 'pregunta == "¿Cómo de satisfecho/a estás con el acceso que tienes a los servicios sanitarios?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0246, "Poco": at0247, "Algo": at0248, "Bastante": at0249, "Mucho": at0250 }
+
+  # Q30
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0251]/value":
+    when: 'pregunta == "¿Cómo de satisfecho/a estás con los servicios de transporte?"'
+    <<: *trimmed_answer
+    map: { "Nada": at0252, "Poco": at0253, "Algo": at0254, "Bastante": at0255, "Mucho": at0256 }
+
+  # Q31 (Never … Always) — exact CSV phrases
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0257]/value":
+    when: 'pregunta == "¿Con qué frecuencia tienes sentimientos negativos, tales como tristeza, desesperanza, ansiedad, o depresión?"'
+    <<: *trimmed_answer
+    map:
+      "Nunca":            at0258
+      "Pocas veces":      at0259
+      "Algunas veces":    at0260
+      "Bastantes veces":  at0261
+      "Siempre":          at0262
+
+  # ───────── Observaciones (free text) ─────────
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0268]/value/value":
+    when: 'pregunta == "Observaciones"'
+    get: { from: csv1, column: respuesta }
+    transform: [strip]
+    null_if_empty: true
+
+  # ───────── Domain scores (DV_COUNT) ─────────
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0269]/value/magnitude":
+    when: 'pregunta == "Dominio Físico"'
+    get: { from: csv1, column: respuesta }
+    transform: [strip, float]
+
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0273]/value/magnitude":
+    when: 'pregunta == "Dominio Psicológico"'
+    get: { from: csv1, column: respuesta }
+    transform: [strip, float]
+
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0274]/value/magnitude":
+    when: 'pregunta == "Dominio Nivel de independencia"'
+    get: { from: csv1, column: respuesta }
+    transform: [strip, float]
+
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0275]/value/magnitude":
+    when: 'pregunta == "Dominio Relaciones Sociales"'
+    get: { from: csv1, column: respuesta }
+    transform: [strip, float]
+
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0276]/value/magnitude":
+    when: 'pregunta == "Dominio Entorno"'
+    get: { from: csv1, column: respuesta }
+    transform: [strip, float]
+
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0277]/value/magnitude":
+    when: 'pregunta == "Dominio de espiritualidad/religión/creencias personales"'
+    get: { from: csv1, column: respuesta }
+    transform: [strip, float]
+
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0278]/value/magnitude":
+    when: 'pregunta == "Calidad de vida general/Salud general"'
+    get: { from: csv1, column: respuesta }
+    transform: [strip, float]
+
+  # ───────── Optional deterministic interpretations from domain scores ─────────
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/protocol[at0064]/items[openEHR-EHR-CLUSTER.whoqol_physical_domain_interpretation.v0]/items[at0001]/value":
+    when: 'pregunta == "Dominio Físico"'
+    get: { from: csv1, column: respuesta }
+    transform: [strip, float]
+    map_ranges:
+      "4..9.5"   : at0002
+      "9.6..15"  : at0003
+      "16..20"   : at0004
+    overwrite: last
+
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/protocol[at0064]/items[openEHR-EHR-CLUSTER.whoqol_psycological_domain_interpretation.v0]/items[at0001]/value":
+    when: 'pregunta == "Dominio Psicológico"'
+    get: { from: csv1, column: respuesta }
+    transform: [strip, float]
+    map_ranges:
+      "4..9.5"   : at0002
+      "9.6..15"  : at0003
+      "16..20"   : at0004
+    overwrite: last
+
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/protocol[at0064]/items[openEHR-EHR-CLUSTER.whoqol_independence_domain_interpretation.v0]/items[at0001]/value":
+    when: 'pregunta == "Dominio Nivel de independencia"'
+    get: { from: csv1, column: respuesta }
+    transform: [strip, float]
+    map_ranges:
+      "4..9.5"   : at0002
+      "9.6..15"  : at0003
+      "16..20"   : at0004
+    overwrite: last
+
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/protocol[at0064]/items[openEHR-EHR-CLUSTER.whoqol_relationships_domain_interpretation.v0]/items[at0001]/value":
+    when: 'pregunta == "Dominio Relaciones Sociales"'
+    get: { from: csv1, column: respuesta }
+    transform: [strip, float]
+    map_ranges:
+      "4..9.5"   : at0002
+      "9.6..15"  : at0003
+      "16..20"   : at0004
+    overwrite: last
+
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/protocol[at0064]/items[openEHR-EHR-CLUSTER.whoqol_environment_domain_interpretation.v0]/items[at0001]/value":
+    when: 'pregunta == "Dominio Entorno"'
+    get: { from: csv1, column: respuesta }
+    transform: [strip, float]
+    map_ranges:
+      "4..9.5"   : at0002
+      "9.6..15"  : at0003
+      "16..20"   : at0004
+    overwrite: last
+
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/protocol[at0064]/items[openEHR-EHR-CLUSTER.whoqol_beliefs_domain_interpretation.v0]/items[at0001]/value":
+    when: 'pregunta == "Dominio de espiritualidad/religión/creencias personales"'
+    get: { from: csv1, column: respuesta }
+    transform: [strip, float]
+    map_ranges:
+      "4..9.5"   : at0002
+      "9.6..15"  : at0003
+      "16..20"   : at0004
+    overwrite: last
+
+  "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/protocol[at0064]/items[openEHR-EHR-CLUSTER.whoqol_overall_domain_interpretation.v0]/items[at0001]/value":
+    when: 'pregunta == "Calidad de vida general/Salud general"'
+    get: { from: csv1, column: respuesta }
+    transform: [strip, float]
+    map_ranges:
+      "4..9.5"   : at0002
+      "9.6..15"  : at0003
+      "16..20"   : at0004
+    overwrite: last

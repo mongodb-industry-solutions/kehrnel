@@ -22,6 +22,7 @@ from src.app.core.config import settings
 from src.api.v1.aql.models import StoredQuery, StoredQuerySummary, QueryResponse, MetaData
 from src.api.v1.aql.transformers import AQLtoMQLTransformer
 from src.aql_parser.parser import AQLParser
+from src.persistence import get_default_strategy
 
 
 async def build_aql_pipeline(ast_query: Dict[str, Any], db: AsyncIOMotorDatabase, ehr_id: str = None) -> List[Dict[str, Any]]:
@@ -45,7 +46,8 @@ async def build_aql_pipeline(ast_query: Dict[str, Any], db: AsyncIOMotorDatabase
         ehr_id=ehr_id, 
         schema_config=schema_config, 
         db=db,
-        search_index_name=settings.search_config.search_index_name
+        search_index_name=settings.search_config.search_index_name,
+        strategy=get_default_strategy(),
     )
     
     # Determine which pipeline to build based on strategy
@@ -82,7 +84,8 @@ async def process_aql_ast_query(ast_query: Dict[str, Any], request_url: str, db:
             ehr_id=ehr_id, 
             schema_config=schema_config, 
             db=db,
-            search_index_name=settings.search_config.search_index_name
+            search_index_name=settings.search_config.search_index_name,
+            strategy=get_default_strategy(),
         )
         
         # Determine which strategy to use
@@ -185,7 +188,8 @@ async def process_aql_query(aql_query: str, request_url: str, db: AsyncIOMotorDa
             ehr_id=ehr_id, 
             schema_config=schema_config, 
             db=db,
-            search_index_name=settings.search_config.search_index_name
+            search_index_name=settings.search_config.search_index_name,
+            strategy=get_default_strategy(),
         )
         
         # Determine which strategy to use

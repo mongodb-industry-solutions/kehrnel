@@ -1,0 +1,2996 @@
+{
+  "templateId" : "whoqol_v0",
+  "semVer" : "1.0.0",
+  "version" : "2.3",
+  "defaultLanguage" : "en",
+  "languages" : [ "en" ],
+  "tree" : {
+    "id" : "whoqol_v0",
+    "name" : "whoqol_v0",
+    "localizedName" : "whoqol_v0",
+    "rmType" : "COMPOSITION",
+    "nodeId" : "openEHR-EHR-COMPOSITION.self_reported_data.v1",
+    "min" : 1,
+    "max" : 1,
+    "localizedNames" : {
+      "en" : "whoqol_v0"
+    },
+    "localizedDescriptions" : {
+      "en" : "Generic container for information provided by an individual."
+    },
+    "aqlPath" : "",
+    "children" : [ {
+      "id" : "context",
+      "rmType" : "EVENT_CONTEXT",
+      "nodeId" : "",
+      "min" : 1,
+      "max" : 1,
+      "aqlPath" : "/context",
+      "children" : [ {
+        "id" : "start_time",
+        "name" : "Start_time",
+        "rmType" : "DV_DATE_TIME",
+        "min" : 1,
+        "max" : 1,
+        "aqlPath" : "/context/start_time",
+        "inputs" : [ {
+          "type" : "DATETIME"
+        } ],
+        "inContext" : true
+      }, {
+        "id" : "setting",
+        "name" : "Setting",
+        "rmType" : "DV_CODED_TEXT",
+        "min" : 1,
+        "max" : 1,
+        "aqlPath" : "/context/setting",
+        "inputs" : [ {
+          "suffix" : "code",
+          "type" : "TEXT"
+        }, {
+          "suffix" : "value",
+          "type" : "TEXT"
+        } ],
+        "inContext" : true
+      } ]
+    }, {
+      "id" : "whoqol_hiv_world_health_organization_quality_of_live_-_hiv",
+      "name" : "WHOQoL HIV (World Health Organization Quality of Live - HIV )",
+      "localizedName" : "WHOQoL HIV (World Health Organization Quality of Live - HIV )",
+      "rmType" : "OBSERVATION",
+      "nodeId" : "openEHR-EHR-OBSERVATION.whoqol.v0",
+      "min" : 0,
+      "max" : 1,
+      "localizedNames" : {
+        "en" : "WHOQoL HIV (World Health Organization Quality of Live - HIV )"
+      },
+      "localizedDescriptions" : {
+        "en" : "whoqol"
+      },
+      "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]",
+      "children" : [ {
+        "id" : "any_event",
+        "name" : "Any event",
+        "localizedName" : "Any event",
+        "rmType" : "EVENT",
+        "nodeId" : "at0002",
+        "min" : 0,
+        "max" : -1,
+        "localizedNames" : {
+          "en" : "Any event"
+        },
+        "localizedDescriptions" : {
+          "en" : "@ internal @"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]",
+        "children" : [ {
+          "id" : "a1._how_would_you_rate_your_quality_of_life",
+          "name" : "1. How would you rate your quality of life?",
+          "localizedName" : "1. How would you rate your quality of life?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0004",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "1. How would you rate your quality of life?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0004]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0005",
+              "label" : "Very poor",
+              "localizedLabels" : {
+                "en" : "Very poor"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0006",
+              "label" : "Poor",
+              "localizedLabels" : {
+                "en" : "Poor"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0007",
+              "label" : "Neither poor nor good",
+              "localizedLabels" : {
+                "en" : "Neither poor nor good"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0008",
+              "label" : "Good",
+              "localizedLabels" : {
+                "en" : "Good"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0009",
+              "label" : "Very good",
+              "localizedLabels" : {
+                "en" : "Very good"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a2._how_satisfied_are_you_with_your_health",
+          "name" : "2. How satisfied are you with your health?",
+          "localizedName" : "2. How satisfied are you with your health?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0010",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "2. How satisfied are you with your health?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0010]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0263",
+              "label" : "Never",
+              "localizedLabels" : {
+                "en" : "Never"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0264",
+              "label" : "Seldom",
+              "localizedLabels" : {
+                "en" : "Seldom"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0265",
+              "label" : "Quite often",
+              "localizedLabels" : {
+                "en" : "Quite often"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0266",
+              "label" : "Very often",
+              "localizedLabels" : {
+                "en" : "Very often"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0267",
+              "label" : "Always",
+              "localizedLabels" : {
+                "en" : "Always"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a3._to_what_extent_do_you_feel_that_physical_pain_prevents_you_from_doing_what_you_need_to_do",
+          "name" : "3. To what extent do you feel that physical pain prevents you from doing what you need to do?",
+          "localizedName" : "3. To what extent do you feel that physical pain prevents you from doing what you need to do?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0016",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "3. To what extent do you feel that physical pain prevents you from doing what you need to do?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0016]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0017",
+              "label" : "Not at all",
+              "localizedLabels" : {
+                "en" : "Not at all"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0018",
+              "label" : "A little",
+              "localizedLabels" : {
+                "en" : "A little"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0019",
+              "label" : "A moderate amount",
+              "localizedLabels" : {
+                "en" : "A moderate amount"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0020",
+              "label" : "Very much",
+              "localizedLabels" : {
+                "en" : "Very much"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0021",
+              "label" : "An extreme amount",
+              "localizedLabels" : {
+                "en" : "An extreme amount"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a4._how_much_are_you_bothered_by_any_physical_problems_related_to_your_hiv_infection",
+          "name" : "4. How much are you bothered by any physical problems related to your HIV infection?",
+          "localizedName" : "4. How much are you bothered by any physical problems related to your HIV infection?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0022",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "4. How much are you bothered by any physical problems related to your HIV infection?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0022]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0023",
+              "label" : "Not at all",
+              "localizedLabels" : {
+                "en" : "Not at all"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0024",
+              "label" : "A little",
+              "localizedLabels" : {
+                "en" : "A little"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0025",
+              "label" : "A moderate amount",
+              "localizedLabels" : {
+                "en" : "A moderate amount"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0026",
+              "label" : "Very much",
+              "localizedLabels" : {
+                "en" : "Very much"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0027",
+              "label" : "An extreme amount",
+              "localizedLabels" : {
+                "en" : "An extreme amount"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a5._how_much_do_you_need_any_medical_treatment_to_function_in_your_daily_life",
+          "name" : "5. How much do you need any medical treatment to function in your daily life?",
+          "localizedName" : "5. How much do you need any medical treatment to function in your daily life?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0028",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "5. How much do you need any medical treatment to function in your daily life?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0028]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0029",
+              "label" : "Not at all",
+              "localizedLabels" : {
+                "en" : "Not at all"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0030",
+              "label" : "A little",
+              "localizedLabels" : {
+                "en" : "A little"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0031",
+              "label" : "A moderate amount",
+              "localizedLabels" : {
+                "en" : "A moderate amount"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0032",
+              "label" : "Very much",
+              "localizedLabels" : {
+                "en" : "Very much"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0033",
+              "label" : "An extreme amount",
+              "localizedLabels" : {
+                "en" : "An extreme amount"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a6._how_much_do_you_enjoy_life",
+          "name" : "6. How much do you enjoy life?",
+          "localizedName" : "6. How much do you enjoy life?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0034",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "6. How much do you enjoy life?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0034]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0035",
+              "label" : "Not at all",
+              "localizedLabels" : {
+                "en" : "Not at all"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0036",
+              "label" : "A little",
+              "localizedLabels" : {
+                "en" : "A little"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0037",
+              "label" : "A moderate amount",
+              "localizedLabels" : {
+                "en" : "A moderate amount"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0038",
+              "label" : "Very much",
+              "localizedLabels" : {
+                "en" : "Very much"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0039",
+              "label" : "An extreme amount",
+              "localizedLabels" : {
+                "en" : "An extreme amount"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a7._to_what_extent_do_you_feel_your_life_to_be_meaningful",
+          "name" : "7. To what extent do you feel your life to be meaningful?",
+          "localizedName" : "7. To what extent do you feel your life to be meaningful?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0040",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "7. To what extent do you feel your life to be meaningful?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0040]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0041",
+              "label" : "Not at all",
+              "localizedLabels" : {
+                "en" : "Not at all"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0042",
+              "label" : "A little",
+              "localizedLabels" : {
+                "en" : "A little"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0043",
+              "label" : "A moderate amount",
+              "localizedLabels" : {
+                "en" : "A moderate amount"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0044",
+              "label" : "Very much",
+              "localizedLabels" : {
+                "en" : "Very much"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0045",
+              "label" : "An extreme amount",
+              "localizedLabels" : {
+                "en" : "An extreme amount"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a8._to_what_extent_are_you_bothered_by_people_blaming_you_for_your_hiv_status",
+          "name" : "8. To what extent are you bothered by people blaming you for your HIV status?",
+          "localizedName" : "8. To what extent are you bothered by people blaming you for your HIV status?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0046",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "8. To what extent are you bothered by people blaming you for your HIV status?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0046]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0047",
+              "label" : "Not at all",
+              "localizedLabels" : {
+                "en" : "Not at all"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0048",
+              "label" : "A little",
+              "localizedLabels" : {
+                "en" : "A little"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0049",
+              "label" : "A moderate amount",
+              "localizedLabels" : {
+                "en" : "A moderate amount"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0050",
+              "label" : "Very much",
+              "localizedLabels" : {
+                "en" : "Very much"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0051",
+              "label" : "An extreme amount",
+              "localizedLabels" : {
+                "en" : "An extreme amount"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a9._how_much_do_you_fear_the_future",
+          "name" : "9. How much do you fear the future?",
+          "localizedName" : "9. How much do you fear the future?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0052",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "9. How much do you fear the future?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0052]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0053",
+              "label" : "Not at all",
+              "localizedLabels" : {
+                "en" : "Not at all"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0054",
+              "label" : "A little",
+              "localizedLabels" : {
+                "en" : "A little"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0055",
+              "label" : "A moderate amount",
+              "localizedLabels" : {
+                "en" : "A moderate amount"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0056",
+              "label" : "Very much",
+              "localizedLabels" : {
+                "en" : "Very much"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0057",
+              "label" : "An extreme amount",
+              "localizedLabels" : {
+                "en" : "An extreme amount"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a10._how_much_do_you_worry_about_death",
+          "name" : "10. How much do you worry about death?",
+          "localizedName" : "10. How much do you worry about death?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0058",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "10. How much do you worry about death?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0058]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0059",
+              "label" : "Not at all",
+              "localizedLabels" : {
+                "en" : "Not at all"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0060",
+              "label" : "A little",
+              "localizedLabels" : {
+                "en" : "A little"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0061",
+              "label" : "A moderate amount",
+              "localizedLabels" : {
+                "en" : "A moderate amount"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0062",
+              "label" : "Very much",
+              "localizedLabels" : {
+                "en" : "Very much"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0063",
+              "label" : "An extreme amount",
+              "localizedLabels" : {
+                "en" : "An extreme amount"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a11._how_well_are_you_able_to_concentrate",
+          "name" : "11. How well are you able to concentrate?",
+          "localizedName" : "11. How well are you able to concentrate?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0077",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "11. How well are you able to concentrate?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0077]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0078",
+              "label" : "Not at all",
+              "localizedLabels" : {
+                "en" : "Not at all"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0079",
+              "label" : "A little",
+              "localizedLabels" : {
+                "en" : "A little"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0080",
+              "label" : "A moderate amount",
+              "localizedLabels" : {
+                "en" : "A moderate amount"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0081",
+              "label" : "Very much",
+              "localizedLabels" : {
+                "en" : "Very much"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0082",
+              "label" : "Extremely",
+              "localizedLabels" : {
+                "en" : "Extremely"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a12._how_safe_do_you_feel_in_your_daily_life",
+          "name" : "12. How safe do you feel in your daily life?",
+          "localizedName" : "12. How safe do you feel in your daily life?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0083",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "12. How safe do you feel in your daily life?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0083]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0084",
+              "label" : "Not at all",
+              "localizedLabels" : {
+                "en" : "Not at all"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0085",
+              "label" : "A little",
+              "localizedLabels" : {
+                "en" : "A little"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0086",
+              "label" : "A moderate amount",
+              "localizedLabels" : {
+                "en" : "A moderate amount"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0087",
+              "label" : "Very much",
+              "localizedLabels" : {
+                "en" : "Very much"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0088",
+              "label" : "Extremely",
+              "localizedLabels" : {
+                "en" : "Extremely"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a13._how_healthy_is_your_physical_environment",
+          "name" : "13. How healthy is your physical environment?",
+          "localizedName" : "13. How healthy is your physical environment?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0143",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "13. How healthy is your physical environment?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0143]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0144",
+              "label" : "Not at all",
+              "localizedLabels" : {
+                "en" : "Not at all"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0145",
+              "label" : "A little",
+              "localizedLabels" : {
+                "en" : "A little"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0146",
+              "label" : "A moderate amount",
+              "localizedLabels" : {
+                "en" : "A moderate amount"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0147",
+              "label" : "Very much",
+              "localizedLabels" : {
+                "en" : "Very much"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0148",
+              "label" : "Extremely",
+              "localizedLabels" : {
+                "en" : "Extremely"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a14._do_you_have_enough_energy_for_everyday_life",
+          "name" : "14. Do you have enough energy for everyday life?",
+          "localizedName" : "14. Do you have enough energy for everyday life?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0149",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "14. Do you have enough energy for everyday life?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0149]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0150",
+              "label" : "Not at all",
+              "localizedLabels" : {
+                "en" : "Not at all"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0151",
+              "label" : "A little",
+              "localizedLabels" : {
+                "en" : "A little"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0152",
+              "label" : "Moderately",
+              "localizedLabels" : {
+                "en" : "Moderately"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0153",
+              "label" : "Mostly",
+              "localizedLabels" : {
+                "en" : "Mostly"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0154",
+              "label" : "Completely",
+              "localizedLabels" : {
+                "en" : "Completely"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a15._are_you_able_to_accept_your_bodily_appearance",
+          "name" : "15. Are you able to accept your bodily appearance?",
+          "localizedName" : "15. Are you able to accept your bodily appearance?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0161",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "15. Are you able to accept your bodily appearance?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0161]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0162",
+              "label" : "Not at all",
+              "localizedLabels" : {
+                "en" : "Not at all"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0163",
+              "label" : "A little",
+              "localizedLabels" : {
+                "en" : "A little"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0164",
+              "label" : "Moderately",
+              "localizedLabels" : {
+                "en" : "Moderately"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0165",
+              "label" : "Mostly",
+              "localizedLabels" : {
+                "en" : "Mostly"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0166",
+              "label" : "Completely",
+              "localizedLabels" : {
+                "en" : "Completely"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a16._have_you_enough_money_to_meet_your_needs",
+          "name" : "16. Have you enough money to meet your needs?",
+          "localizedName" : "16. Have you enough money to meet your needs?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0167",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "16. Have you enough money to meet your needs?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0167]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0168",
+              "label" : "Not at all",
+              "localizedLabels" : {
+                "en" : "Not at all"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0169",
+              "label" : "A little",
+              "localizedLabels" : {
+                "en" : "A little"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0170",
+              "label" : "Moderately",
+              "localizedLabels" : {
+                "en" : "Moderately"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0171",
+              "label" : "Mostly",
+              "localizedLabels" : {
+                "en" : "Mostly"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0172",
+              "label" : "Completely",
+              "localizedLabels" : {
+                "en" : "Completely"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a17._to_what_extent_do_you_feel_accepted_by_people_you_know",
+          "name" : "17. To what extent do you feel accepted by people you know?",
+          "localizedName" : "17. To what extent do you feel accepted by people you know?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0173",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "17. To what extent do you feel accepted by people you know?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0173]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0174",
+              "label" : "Not at all",
+              "localizedLabels" : {
+                "en" : "Not at all"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0175",
+              "label" : "A little",
+              "localizedLabels" : {
+                "en" : "A little"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0176",
+              "label" : "Moderately",
+              "localizedLabels" : {
+                "en" : "Moderately"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0177",
+              "label" : "Mostly",
+              "localizedLabels" : {
+                "en" : "Mostly"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0178",
+              "label" : "Completely",
+              "localizedLabels" : {
+                "en" : "Completely"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a18._how_available_to_you_is_the_information_that_you_need_in_your_day-to-day_life",
+          "name" : "18. How available to you is the information that you need in your day-to-day life?",
+          "localizedName" : "18. How available to you is the information that you need in your day-to-day life?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0179",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "18. How available to you is the information that you need in your day-to-day life?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0179]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0180",
+              "label" : "Not at all",
+              "localizedLabels" : {
+                "en" : "Not at all"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0181",
+              "label" : "A little",
+              "localizedLabels" : {
+                "en" : "A little"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0182",
+              "label" : "Moderately",
+              "localizedLabels" : {
+                "en" : "Moderately"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0183",
+              "label" : "Mostly",
+              "localizedLabels" : {
+                "en" : "Mostly"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0184",
+              "label" : "Completely",
+              "localizedLabels" : {
+                "en" : "Completely"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a19._to_what_extent_do_you_have_the_opportunity_for_leisure_activities",
+          "name" : "19. To what extent do you have the opportunity for leisure activities?",
+          "localizedName" : "19. To what extent do you have the opportunity for leisure activities?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0185",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "19. To what extent do you have the opportunity for leisure activities?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0185]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0186",
+              "label" : "Not at all",
+              "localizedLabels" : {
+                "en" : "Not at all"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0187",
+              "label" : "A little",
+              "localizedLabels" : {
+                "en" : "A little"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0188",
+              "label" : "Moderately",
+              "localizedLabels" : {
+                "en" : "Moderately"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0189",
+              "label" : "Mostly",
+              "localizedLabels" : {
+                "en" : "Mostly"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0190",
+              "label" : "Completely",
+              "localizedLabels" : {
+                "en" : "Completely"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a20._how_well_are_you_able_to_get_around",
+          "name" : "20. How well are you able to get around?",
+          "localizedName" : "20. How well are you able to get around?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0191",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "20. How well are you able to get around?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0191]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0192",
+              "label" : "Very poor",
+              "localizedLabels" : {
+                "en" : "Very poor"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0193",
+              "label" : "Poor",
+              "localizedLabels" : {
+                "en" : "Poor"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0194",
+              "label" : "Neither poor nor good",
+              "localizedLabels" : {
+                "en" : "Neither poor nor good"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0195",
+              "label" : "Good",
+              "localizedLabels" : {
+                "en" : "Good"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0196",
+              "label" : "Very good",
+              "localizedLabels" : {
+                "en" : "Very good"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a21._how_satisfied_are_you_with_your_sleep",
+          "name" : "21. How satisfied are you with your sleep?",
+          "localizedName" : "21. How satisfied are you with your sleep?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0197",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "21. How satisfied are you with your sleep?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0197]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0198",
+              "label" : "Very dissatisfied",
+              "localizedLabels" : {
+                "en" : "Very dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0199",
+              "label" : "Dissatisfied",
+              "localizedLabels" : {
+                "en" : "Dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0200",
+              "label" : "Neither satisfied nor dissatisfied",
+              "localizedLabels" : {
+                "en" : "Neither satisfied nor dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0201",
+              "label" : "Satisfied",
+              "localizedLabels" : {
+                "en" : "Satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0202",
+              "label" : "Very satisfied",
+              "localizedLabels" : {
+                "en" : "Very satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a22._how_satisfied_are_you_with_your_ability_to_perform_your_daily_living_activities",
+          "name" : "22. How satisfied are you with your ability to perform your daily living activities??",
+          "localizedName" : "22. How satisfied are you with your ability to perform your daily living activities??",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0203",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "22. How satisfied are you with your ability to perform your daily living activities??"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0203]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0204",
+              "label" : "Very dissatisfied",
+              "localizedLabels" : {
+                "en" : "Very dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0205",
+              "label" : "Dissatisfied",
+              "localizedLabels" : {
+                "en" : "Dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0206",
+              "label" : "Neither satisfied nor dissatisfied",
+              "localizedLabels" : {
+                "en" : "Neither satisfied nor dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0207",
+              "label" : "Satisfied",
+              "localizedLabels" : {
+                "en" : "Satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0208",
+              "label" : "Very satisfied",
+              "localizedLabels" : {
+                "en" : "Very satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a23._how_satisfied_are_you_with_your_capacity_for_work",
+          "name" : "23. How satisfied are you with your capacity for work?",
+          "localizedName" : "23. How satisfied are you with your capacity for work?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0209",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "23. How satisfied are you with your capacity for work?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0209]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0210",
+              "label" : "Very dissatisfied",
+              "localizedLabels" : {
+                "en" : "Very dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0211",
+              "label" : "Dissatisfied",
+              "localizedLabels" : {
+                "en" : "Dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0212",
+              "label" : "Neither satisfied nor dissatisfied",
+              "localizedLabels" : {
+                "en" : "Neither satisfied nor dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0213",
+              "label" : "Satisfied",
+              "localizedLabels" : {
+                "en" : "Satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0214",
+              "label" : "Very satisfied",
+              "localizedLabels" : {
+                "en" : "Very satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a24._how_satisfied_are_you_with_yourself",
+          "name" : "24. How satisfied are you with yourself?",
+          "localizedName" : "24. How satisfied are you with yourself?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0215",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "24. How satisfied are you with yourself?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0215]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0216",
+              "label" : "Very dissatisfied",
+              "localizedLabels" : {
+                "en" : "Very dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0217",
+              "label" : "Dissatisfied",
+              "localizedLabels" : {
+                "en" : "Dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0218",
+              "label" : "Neither satisfied nor dissatisfied",
+              "localizedLabels" : {
+                "en" : "Neither satisfied nor dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0219",
+              "label" : "Satisfied",
+              "localizedLabels" : {
+                "en" : "Satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0220",
+              "label" : "Very satisfied",
+              "localizedLabels" : {
+                "en" : "Very satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a25._how_satisfied_are_you_with_your_personal_relationships",
+          "name" : "25. How satisfied are you with your personal relationships?",
+          "localizedName" : "25. How satisfied are you with your personal relationships?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0221",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "25. How satisfied are you with your personal relationships?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0221]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0222",
+              "label" : "Very dissatisfied",
+              "localizedLabels" : {
+                "en" : "Very dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0223",
+              "label" : "Dissatisfied",
+              "localizedLabels" : {
+                "en" : "Dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0224",
+              "label" : "Neither satisfied nor dissatisfied",
+              "localizedLabels" : {
+                "en" : "Neither satisfied nor dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0225",
+              "label" : "Satisfied",
+              "localizedLabels" : {
+                "en" : "Satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0226",
+              "label" : "Very satisfied",
+              "localizedLabels" : {
+                "en" : "Very satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a26._how_satisfied_are_you_with_your_sex_life",
+          "name" : "26. How satisfied are you with your sex life?",
+          "localizedName" : "26. How satisfied are you with your sex life?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0227",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "26. How satisfied are you with your sex life?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0227]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0228",
+              "label" : "Very dissatisfied",
+              "localizedLabels" : {
+                "en" : "Very dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0229",
+              "label" : "Dissatisfied",
+              "localizedLabels" : {
+                "en" : "Dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0230",
+              "label" : "Neither satisfied nor dissatisfied",
+              "localizedLabels" : {
+                "en" : "Neither satisfied nor dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0231",
+              "label" : "Satisfied",
+              "localizedLabels" : {
+                "en" : "Satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0232",
+              "label" : "Very satisfied",
+              "localizedLabels" : {
+                "en" : "Very satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a27._how_satisfied_are_you_with_the_support_you_get_from_your_friends",
+          "name" : "27. How satisfied are you with the support you get from your friends?",
+          "localizedName" : "27. How satisfied are you with the support you get from your friends?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0233",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "27. How satisfied are you with the support you get from your friends?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0233]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0234",
+              "label" : "Very dissatisfied",
+              "localizedLabels" : {
+                "en" : "Very dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0235",
+              "label" : "Dissatisfied",
+              "localizedLabels" : {
+                "en" : "Dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0236",
+              "label" : "Neither satisfied nor dissatisfied",
+              "localizedLabels" : {
+                "en" : "Neither satisfied nor dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0237",
+              "label" : "Satisfied",
+              "localizedLabels" : {
+                "en" : "Satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0238",
+              "label" : "Very satisfied",
+              "localizedLabels" : {
+                "en" : "Very satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a28._how_satisfied_are_you_with_the_conditions_of_your_living_place",
+          "name" : "28. How satisfied are you with the conditions of your living place?",
+          "localizedName" : "28. How satisfied are you with the conditions of your living place?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0239",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "28. How satisfied are you with the conditions of your living place?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0239]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0240",
+              "label" : "Very dissatisfied",
+              "localizedLabels" : {
+                "en" : "Very dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0241",
+              "label" : "Dissatisfied",
+              "localizedLabels" : {
+                "en" : "Dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0242",
+              "label" : "Neither satisfied nor dissatisfied",
+              "localizedLabels" : {
+                "en" : "Neither satisfied nor dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0243",
+              "label" : "Satisfied",
+              "localizedLabels" : {
+                "en" : "Satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0244",
+              "label" : "Very satisfied",
+              "localizedLabels" : {
+                "en" : "Very satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a29._how_satisfied_are_you_with_your_access_to_health_services",
+          "name" : "29. How satisfied are you with your access to health services?",
+          "localizedName" : "29. How satisfied are you with your access to health services?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0245",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "29. How satisfied are you with your access to health services?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0245]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0246",
+              "label" : "Very dissatisfied",
+              "localizedLabels" : {
+                "en" : "Very dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0247",
+              "label" : "Dissatisfied",
+              "localizedLabels" : {
+                "en" : "Dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0248",
+              "label" : "Neither satisfied nor dissatisfied",
+              "localizedLabels" : {
+                "en" : "Neither satisfied nor dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0249",
+              "label" : "Satisfied",
+              "localizedLabels" : {
+                "en" : "Satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0250",
+              "label" : "Very satisfied",
+              "localizedLabels" : {
+                "en" : "Very satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a30._how_satisfied_are_you_with_your_transport",
+          "name" : "30. How satisfied are you with your transport?",
+          "localizedName" : "30. How satisfied are you with your transport?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0251",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "30. How satisfied are you with your transport?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0251]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0252",
+              "label" : "Very dissatisfied",
+              "localizedLabels" : {
+                "en" : "Very dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0253",
+              "label" : "Dissatisfied",
+              "localizedLabels" : {
+                "en" : "Dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0254",
+              "label" : "Neither satisfied nor dissatisfied",
+              "localizedLabels" : {
+                "en" : "Neither satisfied nor dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0255",
+              "label" : "Satisfied",
+              "localizedLabels" : {
+                "en" : "Satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0256",
+              "label" : "Very satisfied",
+              "localizedLabels" : {
+                "en" : "Very satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "a31._how_often_do_you_have_negative_feelings_such_as_blue_mood_despair_anxiety_or_depression",
+          "name" : "31. How often do you have negative feelings such as blue mood, despair, anxiety or depression?",
+          "localizedName" : "31. How often do you have negative feelings such as blue mood, despair, anxiety or depression?",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0257",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "31. How often do you have negative feelings such as blue mood, despair, anxiety or depression?"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0257]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0258",
+              "label" : "Very dissatisfied",
+              "localizedLabels" : {
+                "en" : "Very dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0259",
+              "label" : "Dissatisfied",
+              "localizedLabels" : {
+                "en" : "Dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0260",
+              "label" : "Neither satisfied nor dissatisfied",
+              "localizedLabels" : {
+                "en" : "Neither satisfied nor dissatisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            }, {
+              "value" : "at0261",
+              "label" : "Satisfied",
+              "localizedLabels" : {
+                "en" : "Satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 4
+            }, {
+              "value" : "at0262",
+              "label" : "Very satisfied",
+              "localizedLabels" : {
+                "en" : "Very satisfied"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 5
+            } ]
+          } ]
+        }, {
+          "id" : "observations",
+          "name" : "Observations",
+          "localizedName" : "Observations",
+          "rmType" : "DV_TEXT",
+          "nodeId" : "at0268",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Observations"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0268]/value",
+          "inputs" : [ {
+            "type" : "TEXT"
+          } ]
+        }, {
+          "id" : "physical_domain",
+          "name" : "Physical Domain",
+          "localizedName" : "Physical Domain",
+          "rmType" : "DV_COUNT",
+          "nodeId" : "at0269",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Physical Domain"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0269]/value",
+          "inputs" : [ {
+            "type" : "INTEGER",
+            "validation" : {
+              "range" : {
+                "minOp" : ">=",
+                "min" : 4,
+                "maxOp" : "<=",
+                "max" : 20
+              }
+            }
+          } ]
+        }, {
+          "id" : "psycological_domain",
+          "name" : "Psycological Domain",
+          "localizedName" : "Psycological Domain",
+          "rmType" : "DV_COUNT",
+          "nodeId" : "at0273",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Psycological Domain"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0273]/value",
+          "inputs" : [ {
+            "type" : "INTEGER",
+            "validation" : {
+              "range" : {
+                "minOp" : ">=",
+                "min" : 4,
+                "maxOp" : "<=",
+                "max" : 20
+              }
+            }
+          } ]
+        }, {
+          "id" : "level_of_independence_domain",
+          "name" : "Level of Independence Domain",
+          "localizedName" : "Level of Independence Domain",
+          "rmType" : "DV_COUNT",
+          "nodeId" : "at0274",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Level of Independence Domain"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0274]/value",
+          "inputs" : [ {
+            "type" : "INTEGER",
+            "validation" : {
+              "range" : {
+                "minOp" : ">=",
+                "min" : 4,
+                "maxOp" : "<=",
+                "max" : 20
+              }
+            }
+          } ]
+        }, {
+          "id" : "social_relationship_domain",
+          "name" : "Social Relationship Domain",
+          "localizedName" : "Social Relationship Domain",
+          "rmType" : "DV_COUNT",
+          "nodeId" : "at0275",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Social Relationship Domain"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0275]/value",
+          "inputs" : [ {
+            "type" : "INTEGER",
+            "validation" : {
+              "range" : {
+                "minOp" : ">=",
+                "min" : 4,
+                "maxOp" : "<=",
+                "max" : 20
+              }
+            }
+          } ]
+        }, {
+          "id" : "environment_domain",
+          "name" : "Environment Domain",
+          "localizedName" : "Environment Domain",
+          "rmType" : "DV_COUNT",
+          "nodeId" : "at0276",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Environment Domain"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0276]/value",
+          "inputs" : [ {
+            "type" : "INTEGER",
+            "validation" : {
+              "range" : {
+                "minOp" : ">=",
+                "min" : 4,
+                "maxOp" : "<=",
+                "max" : 20
+              }
+            }
+          } ]
+        }, {
+          "id" : "spirituality_religion_personal_beliefs_domain",
+          "name" : "Spirituality\\/Religion\\/ Personal Beliefs Domain",
+          "localizedName" : "Spirituality\\/Religion\\/ Personal Beliefs Domain",
+          "rmType" : "DV_COUNT",
+          "nodeId" : "at0277",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Spirituality\\/Religion\\/ Personal Beliefs Domain"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0277]/value",
+          "inputs" : [ {
+            "type" : "INTEGER",
+            "validation" : {
+              "range" : {
+                "minOp" : ">=",
+                "min" : 4,
+                "maxOp" : "<=",
+                "max" : 20
+              }
+            }
+          } ]
+        }, {
+          "id" : "overall_qol_general_health",
+          "name" : "Overall QoL\\/General Health",
+          "localizedName" : "Overall QoL\\/General Health",
+          "rmType" : "DV_COUNT",
+          "nodeId" : "at0278",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Overall QoL\\/General Health"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0278]/value",
+          "inputs" : [ {
+            "type" : "INTEGER",
+            "validation" : {
+              "range" : {
+                "minOp" : ">=",
+                "min" : 4,
+                "maxOp" : "<=",
+                "max" : 20
+              }
+            }
+          } ]
+        }, {
+          "id" : "time",
+          "name" : "Time",
+          "rmType" : "DV_DATE_TIME",
+          "min" : 1,
+          "max" : 1,
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/data[at0001]/events[at0002]/time",
+          "inputs" : [ {
+            "type" : "DATETIME"
+          } ],
+          "inContext" : true
+        } ]
+      }, {
+        "id" : "whoqol_physical_domain_interpretation",
+        "name" : "WHOQoL Physical Domain Interpretation",
+        "localizedName" : "WHOQoL Physical Domain Interpretation",
+        "rmType" : "CLUSTER",
+        "nodeId" : "openEHR-EHR-CLUSTER.whoqol_physical_domain_interpretation.v0",
+        "min" : 0,
+        "max" : 1,
+        "dependsOn" : [ "any_event" ],
+        "localizedNames" : {
+          "en" : "WHOQoL Physical Domain Interpretation"
+        },
+        "localizedDescriptions" : {
+          "en" : "whoqol_physical_score_interpretation"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/protocol[at0064]/items[openEHR-EHR-CLUSTER.whoqol_physical_domain_interpretation.v0]",
+        "children" : [ {
+          "id" : "interpretation_physical",
+          "name" : "Interpretation (Physical)",
+          "localizedName" : "Interpretation (Physical)",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0001",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Interpretation (Physical)"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/protocol[at0064]/items[openEHR-EHR-CLUSTER.whoqol_physical_domain_interpretation.v0]/items[at0001]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0002",
+              "label" : "Low quality of life (4 - 9.5)",
+              "localizedLabels" : {
+                "en" : "Low quality of life (4 - 9.5)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0003",
+              "label" : "Average quality of life (9.6 - 15)",
+              "localizedLabels" : {
+                "en" : "Average quality of life (9.6 - 15)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0004",
+              "label" : "High quality of life (16 - 20)",
+              "localizedLabels" : {
+                "en" : "High quality of life (16 - 20)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            } ]
+          } ]
+        } ]
+      }, {
+        "id" : "whoqol_psycological_domain_interpretation",
+        "name" : "WHOQoL Psycological Domain Interpretation",
+        "localizedName" : "WHOQoL Psycological Domain Interpretation",
+        "rmType" : "CLUSTER",
+        "nodeId" : "openEHR-EHR-CLUSTER.whoqol_psycological_domain_interpretation.v0",
+        "min" : 0,
+        "max" : 1,
+        "dependsOn" : [ "any_event" ],
+        "localizedNames" : {
+          "en" : "WHOQoL Psycological Domain Interpretation"
+        },
+        "localizedDescriptions" : {
+          "en" : "whoqol_physical_score_interpretation"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/protocol[at0064]/items[openEHR-EHR-CLUSTER.whoqol_psycological_domain_interpretation.v0]",
+        "children" : [ {
+          "id" : "interpretation_psycological",
+          "name" : "Interpretation (Psycological)",
+          "localizedName" : "Interpretation (Psycological)",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0001",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Interpretation (Psycological)"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/protocol[at0064]/items[openEHR-EHR-CLUSTER.whoqol_psycological_domain_interpretation.v0]/items[at0001]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0002",
+              "label" : "Low quality of life (4 - 9.5)",
+              "localizedLabels" : {
+                "en" : "Low quality of life (4 - 9.5)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0003",
+              "label" : "Average quality of life (9.6 - 15)",
+              "localizedLabels" : {
+                "en" : "Average quality of life (9.6 - 15)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0004",
+              "label" : "High quality of life (16 - 20)",
+              "localizedLabels" : {
+                "en" : "High quality of life (16 - 20)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            } ]
+          } ]
+        } ]
+      }, {
+        "id" : "whoqol_level_of_independence_domain_interpretation",
+        "name" : "WHOQoL Level of Independence Domain Interpretation",
+        "localizedName" : "WHOQoL Level of Independence Domain Interpretation",
+        "rmType" : "CLUSTER",
+        "nodeId" : "openEHR-EHR-CLUSTER.whoqol_independence_domain_interpretation.v0",
+        "min" : 0,
+        "max" : 1,
+        "dependsOn" : [ "any_event" ],
+        "localizedNames" : {
+          "en" : "WHOQoL Level of Independence Domain Interpretation"
+        },
+        "localizedDescriptions" : {
+          "en" : "whoqol_physical_score_interpretation"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/protocol[at0064]/items[openEHR-EHR-CLUSTER.whoqol_independence_domain_interpretation.v0]",
+        "children" : [ {
+          "id" : "interpretation_level_of_independence",
+          "name" : "Interpretation (Level of Independence)",
+          "localizedName" : "Interpretation (Level of Independence)",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0001",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Interpretation (Level of Independence)"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/protocol[at0064]/items[openEHR-EHR-CLUSTER.whoqol_independence_domain_interpretation.v0]/items[at0001]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0002",
+              "label" : "Low quality of life (4 - 9.5)",
+              "localizedLabels" : {
+                "en" : "Low quality of life (4 - 9.5)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0003",
+              "label" : "Average quality of life (9.6 - 15)",
+              "localizedLabels" : {
+                "en" : "Average quality of life (9.6 - 15)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0004",
+              "label" : "High quality of life (16 - 20)",
+              "localizedLabels" : {
+                "en" : "High quality of life (16 - 20)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            } ]
+          } ]
+        } ]
+      }, {
+        "id" : "whoqol_social_relationships_domain_interpretation",
+        "name" : "WHOQoL Social Relationships Domain Interpretation",
+        "localizedName" : "WHOQoL Social Relationships Domain Interpretation",
+        "rmType" : "CLUSTER",
+        "nodeId" : "openEHR-EHR-CLUSTER.whoqol_relationships_domain_interpretation.v0",
+        "min" : 0,
+        "max" : 1,
+        "dependsOn" : [ "any_event" ],
+        "localizedNames" : {
+          "en" : "WHOQoL Social Relationships Domain Interpretation"
+        },
+        "localizedDescriptions" : {
+          "en" : "whoqol_physical_score_interpretation"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/protocol[at0064]/items[openEHR-EHR-CLUSTER.whoqol_relationships_domain_interpretation.v0]",
+        "children" : [ {
+          "id" : "interpretation_social_relationships",
+          "name" : "Interpretation (Social Relationships)",
+          "localizedName" : "Interpretation (Social Relationships)",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0001",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Interpretation (Social Relationships)"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/protocol[at0064]/items[openEHR-EHR-CLUSTER.whoqol_relationships_domain_interpretation.v0]/items[at0001]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0002",
+              "label" : "Low quality of life (4 - 9.5)",
+              "localizedLabels" : {
+                "en" : "Low quality of life (4 - 9.5)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0003",
+              "label" : "Average quality of life (9.6 - 15)",
+              "localizedLabels" : {
+                "en" : "Average quality of life (9.6 - 15)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0004",
+              "label" : "High quality of life (16 - 20)",
+              "localizedLabels" : {
+                "en" : "High quality of life (16 - 20)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            } ]
+          } ]
+        } ]
+      }, {
+        "id" : "whoqol_environment_domain_interpretation",
+        "name" : "WHOQoL Environment Domain Interpretation",
+        "localizedName" : "WHOQoL Environment Domain Interpretation",
+        "rmType" : "CLUSTER",
+        "nodeId" : "openEHR-EHR-CLUSTER.whoqol_environment_domain_interpretation.v0",
+        "min" : 0,
+        "max" : 1,
+        "dependsOn" : [ "any_event" ],
+        "localizedNames" : {
+          "en" : "WHOQoL Environment Domain Interpretation"
+        },
+        "localizedDescriptions" : {
+          "en" : "whoqol_physical_score_interpretation"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/protocol[at0064]/items[openEHR-EHR-CLUSTER.whoqol_environment_domain_interpretation.v0]",
+        "children" : [ {
+          "id" : "interpretation_environment",
+          "name" : "Interpretation (Environment)",
+          "localizedName" : "Interpretation (Environment)",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0001",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Interpretation (Environment)"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/protocol[at0064]/items[openEHR-EHR-CLUSTER.whoqol_environment_domain_interpretation.v0]/items[at0001]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0002",
+              "label" : "Low quality of life (4 - 9.5)",
+              "localizedLabels" : {
+                "en" : "Low quality of life (4 - 9.5)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0003",
+              "label" : "Average quality of life (9.6 - 15)",
+              "localizedLabels" : {
+                "en" : "Average quality of life (9.6 - 15)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0004",
+              "label" : "High quality of life (16 - 20)",
+              "localizedLabels" : {
+                "en" : "High quality of life (16 - 20)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            } ]
+          } ]
+        } ]
+      }, {
+        "id" : "whoqol_spirituality_religion_personal_beliefs_domain_interpretation",
+        "name" : "WHOQoL Spirituality\\/Religion\\/ Personal Beliefs Domain Interpretation",
+        "localizedName" : "WHOQoL Spirituality\\/Religion\\/ Personal Beliefs Domain Interpretation",
+        "rmType" : "CLUSTER",
+        "nodeId" : "openEHR-EHR-CLUSTER.whoqol_beliefs_domain_interpretation.v0",
+        "min" : 0,
+        "max" : 1,
+        "dependsOn" : [ "any_event" ],
+        "localizedNames" : {
+          "en" : "WHOQoL Spirituality\\/Religion\\/ Personal Beliefs Domain Interpretation"
+        },
+        "localizedDescriptions" : {
+          "en" : "whoqol_physical_score_interpretation"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/protocol[at0064]/items[openEHR-EHR-CLUSTER.whoqol_beliefs_domain_interpretation.v0]",
+        "children" : [ {
+          "id" : "interpretation_spirituality_religion_personal_beliefs",
+          "name" : "Interpretation (Spirituality\\/Religion\\/ Personal Beliefs)",
+          "localizedName" : "Interpretation (Spirituality\\/Religion\\/ Personal Beliefs)",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0001",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Interpretation (Spirituality\\/Religion\\/ Personal Beliefs)"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/protocol[at0064]/items[openEHR-EHR-CLUSTER.whoqol_beliefs_domain_interpretation.v0]/items[at0001]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0002",
+              "label" : "Low quality of life (4 - 9.5)",
+              "localizedLabels" : {
+                "en" : "Low quality of life (4 - 9.5)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0003",
+              "label" : "Average quality of life (9.6 - 15)",
+              "localizedLabels" : {
+                "en" : "Average quality of life (9.6 - 15)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0004",
+              "label" : "High quality of life (16 - 20)",
+              "localizedLabels" : {
+                "en" : "High quality of life (16 - 20)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            } ]
+          } ]
+        } ]
+      }, {
+        "id" : "whoqol_overall_qol_interpretation",
+        "name" : "WHOQoL Overall QoL Interpretation",
+        "localizedName" : "WHOQoL Overall QoL Interpretation",
+        "rmType" : "CLUSTER",
+        "nodeId" : "openEHR-EHR-CLUSTER.whoqol_overall_domain_interpretation.v0",
+        "min" : 0,
+        "max" : 1,
+        "dependsOn" : [ "any_event" ],
+        "localizedNames" : {
+          "en" : "WHOQoL Overall QoL Interpretation"
+        },
+        "localizedDescriptions" : {
+          "en" : "whoqol_physical_score_interpretation"
+        },
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/protocol[at0064]/items[openEHR-EHR-CLUSTER.whoqol_overall_domain_interpretation.v0]",
+        "children" : [ {
+          "id" : "interpretation_overall_qol",
+          "name" : "Interpretation (Overall QoL)",
+          "localizedName" : "Interpretation (Overall QoL)",
+          "rmType" : "DV_ORDINAL",
+          "nodeId" : "at0001",
+          "min" : 0,
+          "max" : 1,
+          "localizedNames" : {
+            "en" : "Interpretation (Overall QoL)"
+          },
+          "localizedDescriptions" : {
+            "en" : ""
+          },
+          "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/protocol[at0064]/items[openEHR-EHR-CLUSTER.whoqol_overall_domain_interpretation.v0]/items[at0001]/value",
+          "inputs" : [ {
+            "type" : "CODED_TEXT",
+            "list" : [ {
+              "value" : "at0002",
+              "label" : "Low quality of life (4 - 9.5)",
+              "localizedLabels" : {
+                "en" : "Low quality of life (4 - 9.5)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 1
+            }, {
+              "value" : "at0003",
+              "label" : "Average quality of life (9.6 - 15)",
+              "localizedLabels" : {
+                "en" : "Average quality of life (9.6 - 15)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 2
+            }, {
+              "value" : "at0004",
+              "label" : "High quality of life (16 - 20)",
+              "localizedLabels" : {
+                "en" : "High quality of life (16 - 20)"
+              },
+              "localizedDescriptions" : {
+                "en" : ""
+              },
+              "ordinal" : 3
+            } ]
+          } ]
+        } ]
+      }, {
+        "id" : "language",
+        "name" : "Language",
+        "rmType" : "CODE_PHRASE",
+        "min" : 1,
+        "max" : 1,
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/language",
+        "inContext" : true
+      }, {
+        "id" : "encoding",
+        "name" : "Encoding",
+        "rmType" : "CODE_PHRASE",
+        "min" : 1,
+        "max" : 1,
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/encoding",
+        "inContext" : true
+      }, {
+        "id" : "subject",
+        "name" : "Subject",
+        "rmType" : "PARTY_PROXY",
+        "min" : 1,
+        "max" : 1,
+        "aqlPath" : "/content[openEHR-EHR-OBSERVATION.whoqol.v0]/subject",
+        "inputs" : [ {
+          "suffix" : "id",
+          "type" : "TEXT"
+        }, {
+          "suffix" : "id_scheme",
+          "type" : "TEXT"
+        }, {
+          "suffix" : "id_namespace",
+          "type" : "TEXT"
+        }, {
+          "suffix" : "name",
+          "type" : "TEXT"
+        } ],
+        "inContext" : true
+      } ]
+    }, {
+      "id" : "category",
+      "rmType" : "DV_CODED_TEXT",
+      "nodeId" : "",
+      "min" : 1,
+      "max" : 1,
+      "aqlPath" : "/category",
+      "inputs" : [ {
+        "suffix" : "code",
+        "type" : "CODED_TEXT",
+        "list" : [ {
+          "value" : "433",
+          "label" : "event",
+          "localizedLabels" : {
+            "en" : "event"
+          }
+        } ],
+        "terminology" : "openehr"
+      } ],
+      "inContext" : true
+    }, {
+      "id" : "language",
+      "name" : "Language",
+      "rmType" : "CODE_PHRASE",
+      "min" : 1,
+      "max" : 1,
+      "aqlPath" : "/language",
+      "inContext" : true
+    }, {
+      "id" : "territory",
+      "name" : "Territory",
+      "rmType" : "CODE_PHRASE",
+      "min" : 1,
+      "max" : 1,
+      "aqlPath" : "/territory",
+      "inContext" : true
+    }, {
+      "id" : "composer",
+      "name" : "Composer",
+      "rmType" : "PARTY_PROXY",
+      "min" : 1,
+      "max" : 1,
+      "aqlPath" : "/composer",
+      "inputs" : [ {
+        "suffix" : "id",
+        "type" : "TEXT"
+      }, {
+        "suffix" : "id_scheme",
+        "type" : "TEXT"
+      }, {
+        "suffix" : "id_namespace",
+        "type" : "TEXT"
+      }, {
+        "suffix" : "name",
+        "type" : "TEXT"
+      } ],
+      "inContext" : true
+    } ]
+  }
+}

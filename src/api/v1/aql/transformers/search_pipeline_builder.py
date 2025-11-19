@@ -5,6 +5,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from .condition_processor import ConditionProcessor
 from .value_formatter import ValueFormatter
 from .format_resolver import FormatResolver
+from src.persistence import PersistenceStrategy, get_default_strategy
 from src.app.core.config import settings
 import logging
 import re
@@ -20,29 +21,44 @@ class SearchPipelineBuilder:
 
     def __init__(self, ehr_alias: str, composition_alias: str, schema_config: Dict[str, str], 
                  format_resolver: FormatResolver, context_map: Dict[str, Dict], 
-                 let_variables: Dict[str, Any] = None):
+                 let_variables: Dict[str, Any] = None,
+                 strategy: Optional[PersistenceStrategy] = None,
+                 search_index_name: Optional[str] = None):
         self.ehr_alias = ehr_alias
         self.composition_alias = composition_alias
         self.schema_config = schema_config
         self.format_resolver = format_resolver
         self.context_map = context_map
         self.let_variables = let_variables or {}
+        self.strategy = strategy or get_default_strategy()
         
         # Use centralized configuration like repository.py does
-        self.search_index_name = settings.search_config.search_index_name
+        self.search_index_name = (
+            search_index_name
+            or self._resolve_search_index_name()
+            or settings.search_config.search_index_name
+        )
         self.full_compositions_collection = settings.search_config.flatten_collection
         
         # For search collection, we use 'sn' instead of 'cn'
-        self.search_config = {
-            'composition_array': 'sn',  # Search collection uses 'sn' array
-            'path_field': 'p',          # Field containing hierarchical path
-            'data_field': 'data'        # Field containing RM object data
-        }
+        self.search_config = self._build_search_schema_config()
         
         self.condition_processor = ConditionProcessor(
             ehr_alias, composition_alias, self.search_config, format_resolver, let_variables
         )
         self.value_formatter = ValueFormatter()
+
+    def _build_search_schema_config(self):
+        search_fields = self.strategy.fields.get("search") if self.strategy else None
+        return {
+            'composition_array': search_fields.nodes if search_fields and search_fields.nodes else 'sn',
+            'path_field': search_fields.path if search_fields and search_fields.path else 'p',
+            'data_field': search_fields.data if search_fields and search_fields.data else 'data',
+        }
+
+    def _resolve_search_index_name(self):
+        search_collection = self.strategy.collections.get("search") if self.strategy else None
+        return search_collection.atlas_index_name if search_collection else None
 
     async def build_search_pipeline(self, ast: Dict[str, Any]) -> List[Dict[str, Any]]:
         """

@@ -7,6 +7,7 @@ from .format_resolver import FormatResolver
 from .pipeline_builder import PipelineBuilder
 from .search_pipeline_builder import SearchPipelineBuilder
 from .archetype_resolver import ArchetypeResolver
+from src.persistence import PersistenceStrategy, get_default_strategy
 
 
 class AQLtoMQLTransformer:
@@ -25,18 +26,23 @@ class AQLtoMQLTransformer:
     - PipelineBuilder: Constructs MongoDB aggregation stages
     """
 
-    def __init__(self, ast: Dict[str, Any], ehr_id: Optional[str] = None, schema_config: Optional[Dict[str, str]] = None, db: Optional[AsyncIOMotorDatabase] = None, search_index_name: str = "search_compositions_index"):
+    def __init__(
+        self,
+        ast: Dict[str, Any],
+        ehr_id: Optional[str] = None,
+        schema_config: Optional[Dict[str, str]] = None,
+        db: Optional[AsyncIOMotorDatabase] = None,
+        search_index_name: str = "search_compositions_index",
+        strategy: Optional[PersistenceStrategy] = None,
+    ):
         self.ast = ast
         self.ehr_id = ehr_id
         self.db = db
         self.search_index_name = search_index_name
+        self.strategy = strategy or get_default_strategy()
         
         # Schema field configuration (Point 3 preparation)
-        self.schema_config = schema_config or {
-            'composition_array': 'cn',  # Array containing composition nodes
-            'path_field': 'p',          # Field containing hierarchical path
-            'data_field': 'data'        # Field containing RM object data
-        }
+        self.schema_config = schema_config or self._build_schema_config_from_strategy(self.strategy)
         
         # LET variable storage
         self.let_variables: Dict[str, Any] = {}
@@ -90,7 +96,9 @@ class AQLtoMQLTransformer:
             self.schema_config,
             self.path_resolver,
             self.context_map,
-            self.let_variables
+            self.let_variables,
+            strategy=self.strategy,
+            search_index_name=self.search_index_name,
         )
 
     def _process_let_variables(self):
@@ -186,3 +194,11 @@ class AQLtoMQLTransformer:
     def get_let_variables(self) -> Dict[str, Any]:
         """Returns the processed LET variables."""
         return self.let_variables
+
+    def _build_schema_config_from_strategy(self, strategy: PersistenceStrategy) -> Dict[str, str]:
+        composition_fields = strategy.fields.get("composition")
+        return {
+            'composition_array': composition_fields.nodes if composition_fields and composition_fields.nodes else 'cn',
+            'path_field': composition_fields.path if composition_fields and composition_fields.path else 'p',
+            'data_field': composition_fields.data if composition_fields and composition_fields.data else 'data',
+        }
