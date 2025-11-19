@@ -4,12 +4,19 @@ from fastapi import APIRouter, Depends, status, Header, HTTPException, Response,
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import Optional
 
-from src.api.v1.directory.service import create_directory, update_directory, retrieve_directory
+from src.api.v1.directory.service import (
+    create_directory, 
+    update_directory, 
+    retrieve_directory,
+    retrieve_directory_by_version_id
+)
+
 from src.api.v1.directory.models import Folder, FolderCreate
 from src.api.v1.directory.api_responses import (
     create_directory_responses, 
     update_directory_responses,
-    get_directory_responses
+    get_directory_responses,
+    get_directory_by_version_id_responses
 )
 from src.app.core.database import get_mongodb_ehr_db
 
@@ -54,6 +61,41 @@ async def get_directory_endpoint(
 
     response.headers["ETag"] = f'"{root_version_uid}"'
     response.headers["Location"] = f"/v1/ehr/{ehr_id}/directory/{root_version_uid}"
+
+    return folder
+
+
+@router.get(
+    "/ehr/{ehr_id}/directory/{version_uid}",
+    response_model=Folder,
+    status_code=status.HTTP_200_OK,
+    summary="Get directory by version ID",
+    responses=get_directory_by_version_id_responses
+)
+async def get_directory_by_version_id_endpoint(
+    ehr_id: str,
+    version_uid: str,
+    response: Response,
+    path: Optional[str] = Query(
+        None,
+        description="Path to a sub-folder. Example: episodes/a/b/c",
+    ),
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+):
+    """
+    Retrieves a particular version of the directory FOLDER, identified by `version_uid`.
+
+    - If `path` is supplied, retrieves only the sub-FOLDER at that path. 
+    """
+    folder = await retrieve_directory_by_version_id(
+        ehr_id=ehr_id,
+        version_uid=version_uid,
+        path=path,
+        db=db
+    )
+
+    response.headers["ETag"] = f'"{version_uid}"'
+    response.headers["Location"] = f"/v1/ehr/{ehr_id}/directory/{version_uid}"
 
     return folder
 
