@@ -76,3 +76,15 @@ get_directory_responses = {
         "model": ErrorResponse,
     },
 }
+
+get_directory_by_version_id_responses = {
+    status.HTTP_200_OK: {
+        "description": "Directory version retrieved successfully.",
+        "model": Folder,
+        "content": create_directory_responses[status.HTTP_201_CREATED]["content"], # Reuse example
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "The EHR with the specified `ehr_id` was not found, or a directory with the specified `version_uid` does not exist for that EHR, or the `path` is invalid.",
+        "model": ErrorResponse,
+    },
+}
