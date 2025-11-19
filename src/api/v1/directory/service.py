@@ -378,7 +378,7 @@ async def retrieve_directory(
                 detail=f"EHR with id '{ehr_id}' does not have a directory.",
             )
         latest_version_uid = ehr_document["directory"]["id"]["value"]
-        folder_dict = await find_folder_in_contribution_by_uid(latest_version_uid, db)
+        folder_dict = await find_folder_in_contribution_by_uid(ehr_id, latest_version_uid, db)
     
     # 3. Check if a directory version was found
     if not folder_dict:
