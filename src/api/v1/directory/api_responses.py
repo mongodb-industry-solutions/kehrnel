@@ -60,3 +60,19 @@ update_directory_responses = {
         "model": ErrorResponse,
     }
 }
+
+get_directory_responses = {
+    status.HTTP_200_OK: {
+        "description": "Directory retrieved successfully.",
+        "model": Folder,
+        "content": create_directory_responses[status.HTTP_201_CREATED]["content"], # Reuse example
+    },
+    status.HTTP_400_BAD_REQUEST: {
+        "description": "The `version_at_time` parameter is not a valid ISO 8601 timestamp.",
+        "model": ErrorResponse,
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "The EHR with the specified `ehr_id` was not found, it does not have a directory, or the specified `path` or `version_at_time` does not exist.",
+        "model": ErrorResponse,
+    },
+}
