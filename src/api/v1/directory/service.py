@@ -5,10 +5,15 @@ from datetime import datetime, timezone
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from fastapi import HTTPException, status
 from pymongo.errors import PyMongoError
-from typing import Tuple
+from typing import Tuple, Optional
+from dateutil.parser import isoparse
 
 from src.api.v1.directory.models import Folder, FolderCreate
-from src.api.v1.directory.repository import update_ehr_and_insert_contribution_for_directory
+from src.api.v1.directory.repository import (
+    update_ehr_and_insert_contribution_for_directory,
+    find_folder_in_contribution_at_time,
+    find_folder_in_contribution_by_uid
+)
 from src.api.v1.ehr.repository import find_ehr_by_id
 from src.api.v1.common.models import ObjectRef, HierObjectID, ObjectVersionID
 from src.app.core.models import Contribution, AuditDetails
@@ -234,3 +239,111 @@ async def update_directory(
         )
 
     return updated_directory
+
+
+def _find_subfolder_by_path(root_folder: Folder, path: str) -> Folder:
+    """
+    Traverses a Folder object to find a sub-folder at a given path
+
+    Args:
+        root_folder: The starting Folder object
+        path: The slash-separated path string
+
+    Returns:
+        The located sub-folder
+
+    Raises:
+        HTTPException: 404 if the path is invalid or not found.
+    """
+
+    # Normalize path by removing leading/trailing slashed and filter empty parts
+    path_parts = [part for part in path.strip("/").split("/") if part]
+
+    if not path_parts:
+        return root_folder
+    
+    current_folder = root_folder
+    for i, part in enumerate(path_parts):
+        found_folder = next(
+            (f for f in current_folder.folders if f.name.value == part),
+            None
+        )
+
+        if found_folder is None:
+            # Construc the path that was found so far for a better error message
+            found_path = "/".join(path_parts[:i])
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Path path '{part}' not found in folder '{found_path}/'. Full path '{path}' is invalid."
+            )
+        current_folder = found_folder
+    
+    return current_folder
+
+
+async def retrieve_directory(
+    ehr_id: str,
+    version_at_time: Optional[str],
+    path: Optional[str],,
+    db: AsyncIOMotorDatabase,
+) -> Folder:
+    """
+    Retrieves a directory for an EHR, optionally at a specific time and sub-path.
+
+    Args:
+        ehr_id: The ID of the EHR
+        version_at_time: ISO 8601 timestamp to retrieve a historical version
+        path: Slash-separated path to a sub-folder
+        db: The database session
+
+    Returns:
+        HTTPException: For various errors like not found, bad request, etc.
+
+    Raises:
+        HTTPException: For various errors like not found, bad request, etc.
+    """
+
+    # 1. Check if EHR exists
+    ehr_document = await find_ehr_by_id(ehr_id, db)
+    if not ehr_document:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"EHR with id '{ehr_id}' not found"
+        )
+    
+    folder_dict = None
+    # 2. Decide how to fetch the directory (latest vs at_time)
+    if version_at_time:
+        try:
+            timestamp = isoparse(version_at_time)
+        except ValueError:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Invalid 'version_at_time' format: '{version_at_time}'. Please use ISO 8601 format."
+            )
+        folder_dict = await find_folder_in_contribution_at_time(ehr_id, timestamp, db)
+    # Retrieve the latest version
+    else:
+        if "directory" not in ehr_document or ehr_document["directory"] is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"EHR with id '{ehr_id}' does not have a directory.",
+            )
+        latest_version_uid = ehr_document["directory"]["id"]["value"]
+        folder_dict = await find_folder_in_contribution_by_uid(latest_version_uid, db)
+    
+    # 3. Check if a directory version was found
+    if not folder_dict:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No directory version found for EHR '{ehr_id}' at the specified time." 
+                   if version_at_time else f"Directory for EHR '{ehr_id}' could not be found."
+        )
+
+    root_folder = Folder.model_validate(folder_dict)
+
+    # 4. If a path is provided, traverse the folder structure
+    if path:
+        return _find_subfolder_by_path(root_folder, path)
+
+    return root_folder
