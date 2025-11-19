@@ -45,16 +45,15 @@ async def get_directory_endpoint(
     - Otherwise, retrieves the latest (current) directory FOLDER version.
     - If `path` is supplied, retrieves the sub-FOLDER at that path.
     """
-    folder = await retrieve_directory(
+    folder, root_version_uid = await retrieve_directory(
         ehr_id=ehr_id,
         version_at_time=version_at_time,
         path=path,
         db=db
     )
 
-    version_uid = folder.uid.value
-    response.headers["ETag"] = f'"{version_uid}"'
-    response.headers["Location"] = f"/v1/ehr/{ehr_id}/directory/{version_uid}"
+    response.headers["ETag"] = f'"{root_version_uid}"'
+    response.headers["Location"] = f"/v1/ehr/{ehr_id}/directory/{root_version_uid}"
 
     return folder
 

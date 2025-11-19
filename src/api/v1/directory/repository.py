@@ -103,37 +103,39 @@ async def find_folder_in_contribution_at_time(ehr_id: str, timestamp: datetime, 
         The dictionary of the FOLDER object if found, otherwise None
     """
     pipeline = [
-        # 1. Find relevant contributions
+        # 1. Find all contributions for the given EHR.
         {
             "$match": {
-                "ehr_id": ehr_id,
-                "audit.time_committed": {
-                    "$lte": timestamp
-                },
-                "version._type": "FOLDER"
+                "ehr_id": ehr_id
             }
         },
-        # 2. Sort by most recent
-        {
-            "$sort": {
-                "audit.time_committed": -1
-            }
-        },
-        # 3. Take only the latest one
-        {
-            "$limit": 1
-        },
-        # 4. Deconstruct the versions array
+        # 2. Deconstruct the 'versions' array to process each version individually.
         {
             "$unwind": "$versions"
         },
-        # 5. Filter to only the FOLDER object in the versions array
+        # 3. Filter to keep only the documents that are FOLDERs.
         {
             "$match": {
                 "versions._type": "FOLDER"
             }
         },
-        # 6. Make the FOLDER object the root of the returned document
+        # 4. Now, filter these FOLDER versions by the commit time.
+        {
+            "$match": {
+                "audit.time_committed": {"$lte": timestamp}
+            }
+        },
+        # 5. Sort the remaining versions by time to get the most recent one first.
+        {
+            "$sort": {
+                "audit.time_committed": -1
+            }
+        },
+        # 6. Limit to only the single latest version.
+        {
+            "$limit": 1
+        },
+        # 7. Make the 'versions' object the root of the returned document.
         {
             "$replaceRoot": {
                 "newRoot": "$versions"

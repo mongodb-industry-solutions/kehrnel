@@ -284,9 +284,9 @@ def _find_subfolder_by_path(root_folder: Folder, path: str) -> Folder:
 async def retrieve_directory(
     ehr_id: str,
     version_at_time: Optional[str],
-    path: Optional[str],,
+    path: Optional[str],
     db: AsyncIOMotorDatabase,
-) -> Folder:
+) -> Tuple[Folder, str]:
     """
     Retrieves a directory for an EHR, optionally at a specific time and sub-path.
 
@@ -341,9 +341,12 @@ async def retrieve_directory(
         )
 
     root_folder = Folder.model_validate(folder_dict)
+    
+    root_version_uid = root_folder.uid.value
 
     # 4. If a path is provided, traverse the folder structure
     if path:
-        return _find_subfolder_by_path(root_folder, path)
+        target_folder = _find_subfolder_by_path(root_folder, path)
+        return target_folder, root_version_uid
 
-    return root_folder
+    return root_folder, root_version_uid
