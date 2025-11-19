@@ -1,16 +1,63 @@
 # src/api/v1/directory/routes.py
 
-from fastapi import APIRouter, Depends, status, Header, HTTPException, Response
+from fastapi import APIRouter, Depends, status, Header, HTTPException, Response, Query
 from motor.motor_asyncio import AsyncIOMotorDatabase
+from typing import Optional
 
-from src.api.v1.directory.service import create_directory, update_directory
+from src.api.v1.directory.service import create_directory, update_directory, retrieve_directory
 from src.api.v1.directory.models import Folder, FolderCreate
-from src.api.v1.directory.api_responses import create_directory_responses, update_directory_responses
+from src.api.v1.directory.api_responses import (
+    create_directory_responses, 
+    update_directory_responses,
+    get_directory_responses
+)
 from src.app.core.database import get_mongodb_ehr_db
 
 router = APIRouter(
     tags = ["Directory"]
 )
+
+@router.get(
+    "/ehr/{ehr_id}/directory",
+    response_model=Folder,
+    status_code=status.HTTP_200_OK,
+    summary="Get directory version",
+    responses=get_directory_responses
+)
+async def get_directory_endpoint(
+    ehr_id: str,
+    response: Response,
+    version_at_time: Optional[str] = Query(
+        None,
+        description="A given time in the extended ISO 8601 format. Example: 2015-01-20T19:30:22.765+01:00",
+        alias="version_at_time"
+    ),
+    path: Optional[str] = Query(
+        None,
+        description="Path to a sub-folder. Example: episodes/a/b/c",
+    ),
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Retrieves the version of the directory FOLDER associated with the EHR.
+
+    - If `version_at_time` is supplied, retrieves the version extant at that time.
+    - Otherwise, retrieves the latest (current) directory FOLDER version.
+    - If `path` is supplied, retrieves the sub-FOLDER at that path.
+    """
+    folder = await retrieve_directory(
+        ehr_id=ehr_id,
+        version_at_time=version_at_time,
+        path=path,
+        db=db
+    )
+
+    version_uid = folder.uid.value
+    response.headers["ETag"] = f'"{version_uid}"'
+    response.headers["Location"] = f"/v1/ehr/{ehr_id}/directory/{version_uid}"
+
+    return folder
+
 
 @router.post(
     "/ehr/{ehr_id}/directory",
@@ -108,3 +155,4 @@ async def update_directory_endpoint(
     else:
         # For PUT with minimal return, 204 No Content is more appropriate than 200 OK.
         return Response(status_code=status.HTTP_204_NO_CONTENT, headers=response.headers)
+    
