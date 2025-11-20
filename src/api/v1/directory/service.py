@@ -12,7 +12,8 @@ from src.api.v1.directory.models import Folder, FolderCreate
 from src.api.v1.directory.repository import (
     update_ehr_and_insert_contribution_for_directory,
     find_folder_in_contribution_at_time,
-    find_folder_in_contribution_by_uid
+    find_folder_in_contribution_by_uid,
+    delete_directory_and_insert_contribution
 )
 from src.api.v1.ehr.repository import find_ehr_by_id
 from src.api.v1.common.models import ObjectRef, HierObjectID, ObjectVersionID
@@ -398,3 +399,89 @@ async def retrieve_directory(
         return target_folder, root_version_uid
 
     return root_folder, root_version_uid
+
+
+async def delete_directory(
+    ehr_id: str,
+    preceding_version_uid: str,
+    db: AsyncIOMotorDatabase,
+    committer_name: str = "System"
+):
+    """
+    Performs a logical deletion of an EHR's directory.
+
+    Args:
+        ehr_id: The ID of the EHR.
+        preceding_version_uid: The UID from the If-Match header for optimistic locking.
+        db: The database session.
+        committer_name: Name of the committer.
+
+    Raises:
+        HTTPException: For not found, precondition failed, or database errors.
+    """
+    # 1. Check if EHR exists
+    ehr_document = await find_ehr_by_id(ehr_id, db)
+    if not ehr_document:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"EHR with id '{ehr_id}' not found",
+        )
+
+    # 2. Check if a directory exists for this EHR
+    if "directory" not in ehr_document or ehr_document["directory"] is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"EHR with id '{ehr_id}' does not have a directory to delete.",
+        )
+
+    # 3. Optimistic Locking: Validate the If-Match header
+    current_version_uid = ehr_document["directory"]["id"]["value"]
+    if preceding_version_uid != current_version_uid:
+        headers = {
+            "Location": f"/v1/ehr/{ehr_id}/directory/{current_version_uid}",
+            "ETag": f'"{current_version_uid}"'
+        }
+        raise HTTPException(
+            status_code=status.HTTP_412_PRECONDITION_FAILED,
+            detail=f"If-Match header '{preceding_version_uid}' does not match current version '{current_version_uid}'.",
+            headers=headers
+        )
+
+    # 4. Create the "deletion" Contribution
+    time_committed = datetime.now(timezone.utc)
+    system_id = ehr_document["system_id"]["value"]
+    contribution_id = str(uuid.uuid4())
+
+    contribution = Contribution(
+        id=contribution_id,
+        ehr_id=ehr_id,
+        audit=AuditDetails(
+            system_id=system_id,
+            committer_name=committer_name,
+            time_committed=time_committed,
+            change_type="deleted",
+            description=f"Directory with uid '{current_version_uid}' logically deleted."
+        ),
+        versions=[]
+    )
+
+    # 5. Create the ObjectRef for the new contribution
+    contribution_ref = ObjectRef(
+        id=HierObjectID(value=contribution_id),
+        namespace="local",
+        type="CONTRIBUTION"
+    )
+
+    # 6. Call repository to perform the atomic update
+    try:
+        await delete_directory_and_insert_contribution(
+            ehr_id=ehr_id,
+            contribution_doc=contribution.model_dump(by_alias=True),
+            contribution_ref=contribution_ref.model_dump(by_alias=True),
+            db=db
+        )
+    except PyMongoError as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Could not delete directory due to a database error: {e}",
+        )
