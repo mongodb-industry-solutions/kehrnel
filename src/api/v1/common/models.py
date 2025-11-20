@@ -62,3 +62,10 @@ class OriginalVersionResponse(BaseModel):
 
     class Config:
         populate_by_name = True
+
+class DvText(BaseModel):
+    value: str
+    type: str = Field("DV_TEXT", alias="_type", frozen=True)
+
+    class Config:
+        populate_by_name = True
