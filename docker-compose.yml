@@ -1,8 +1,16 @@
 services:
+  frontend-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - 8080:8080
+    env_file:
+      - frontend/.env.local
   kehrnel-api:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.backend
     ports:
       - 9000:9000
     env_file:   
