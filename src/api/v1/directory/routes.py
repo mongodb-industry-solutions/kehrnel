@@ -8,7 +8,8 @@ from src.api.v1.directory.service import (
     create_directory, 
     update_directory, 
     retrieve_directory,
-    retrieve_directory_by_version_id
+    retrieve_directory_by_version_id,
+    delete_directory
 )
 
 from src.api.v1.directory.models import Folder, FolderCreate
@@ -16,7 +17,8 @@ from src.api.v1.directory.api_responses import (
     create_directory_responses, 
     update_directory_responses,
     get_directory_responses,
-    get_directory_by_version_id_responses
+    get_directory_by_version_id_responses,
+    delete_directory_responses
 )
 from src.app.core.database import get_mongodb_ehr_db
 
@@ -197,3 +199,32 @@ async def update_directory_endpoint(
         # For PUT with minimal return, 204 No Content is more appropriate than 200 OK.
         return Response(status_code=status.HTTP_204_NO_CONTENT, headers=response.headers)
     
+
+@router.delete(
+    "/ehr/{ehr_id}/directory",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete directory",
+    responses=delete_directory_responses,
+)
+async def delete_directory_endpoint(
+    ehr_id: str,
+    if_match: str = Header(..., alias="If-Match", description="The last known version_uid of the directory."),
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+):
+    """
+    Deletes the directory FOLDER associated with the EHR.
+
+    The `If-Match` header must be provided with the UID of the latest version of the
+    directory for optimistic locking.
+    """
+    # The version UID in If-Match is quoted
+    preceding_version_uid = if_match.strip('"')
+
+    await delete_directory(
+        ehr_id=ehr_id,
+        preceding_version_uid=preceding_version_uid,
+        db=db
+    )
+
+    # A 204 response should not have a body, so we return a Response object.
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
