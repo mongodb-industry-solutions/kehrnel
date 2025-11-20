@@ -88,3 +88,21 @@ get_directory_by_version_id_responses = {
         "model": ErrorResponse,
     },
 }
+
+delete_directory_responses = {
+    status.HTTP_204_NO_CONTENT: {
+        "description": "Directory logically deleted successfully.",
+    },
+    status.HTTP_400_BAD_REQUEST: {
+        "description": "The If-Match header is missing or invalid.",
+        "model": ErrorResponse,
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "The EHR with the specified `ehr_id` was not found, or it does not have a directory.",
+        "model": ErrorResponse,
+    },
+    status.HTTP_412_PRECONDITION_FAILED: {
+        "description": "The `If-Match` header does not match the current version of the directory.",
+        "model": ErrorResponse,
+    }
+}
