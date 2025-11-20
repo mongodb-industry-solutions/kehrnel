@@ -150,3 +150,45 @@ async def find_folder_in_contribution_at_time(ehr_id: str, timestamp: datetime, 
     result = await cursor.to_list(length=1)
 
     return result[0] if result else None
+
+
+async def delete_directory_and_insert_contribution(
+    ehr_id: str,
+    contribution_doc: dict,
+    contribution_ref: dict,
+    db: AsyncIOMotorDatabase
+):
+    """
+    Sets the EHR directory to null and inserts a deletion contribution in a transaction.
+
+    Args:
+        ehr_id: The ID of the EHR to update.
+        contribution_doc: The full "deletion" Contribution document.
+        contribution_ref: The ObjectRef for the new contribution.
+        db: The database session.
+    """
+    async with await db.client.start_session() as session:
+        async with session.start_transaction():
+            try:
+                # 1. Insert the new "deletion" contribution document
+                await db[EHR_CONTRIBUTIONS_COLL].insert_one(
+                    contribution_doc, session=session
+                )
+
+                # 2. Update the EHR document to remove the directory
+                result = await db[EHR_COLL_NAME].update_one(
+                    {"_id.value": ehr_id},
+                    {
+                        "$set": {"directory": None},
+                        "$push": {"contributions": contribution_ref}
+                    },
+                    session=session,
+                )
+
+                if result.matched_count == 0:
+                    await session.abort_transaction()
+                    raise PyMongoError(f"Failed to find EHR with id {ehr_id} during transaction.")
+
+            except PyMongoError as e:
+                logger.error(f"Directory deletion transaction failed: {e}")
+                raise
