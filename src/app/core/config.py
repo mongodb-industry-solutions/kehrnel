@@ -27,16 +27,39 @@ class SearchConfig(BaseSettings):
         extra = "ignore"
 
 class Settings(BaseSettings):
+    # Main CDR Database
     MONGODB_URI: str = Field(..., alias="MONGODB_URI")
     MONGODB_DB: str = Field(..., alias="MONGODB_DB")
     
-    # Search configuration 
+    # Configuration Database 
+    CONFIG_DB_URI: Optional[str] = Field(None, alias="CONFIG_DB_URI")
+    CONFIG_DB_NAME: str = Field("configuration", alias="CONFIG_DB_NAME")
+    CONFIG_COLLECTION_NAME: str = Field("node_configurations", alias="CONFIG_COLLECTION_NAME")
+    
+    # Dynamic Configuration Settings
+    USE_DYNAMIC_CONFIG: bool = Field(False, alias="USE_DYNAMIC_CONFIG")
+    DEFAULT_CONFIG_NAME: Optional[str] = Field(None, alias="DEFAULT_CONFIG_NAME")
+    CONFIG_CACHE_TTL_MINUTES: int = Field(30, alias="CONFIG_CACHE_TTL_MINUTES")
+    
+    # Legacy collection names (for fallback when dynamic config fails)
+    COMPOSITIONS_COLL_NAME: str = Field("compositions", alias="COMPOSITIONS_COLL_NAME")
+    EHR_CONTRIBUTIONS_COLL: str = Field("contributions", alias="EHR_CONTRIBUTIONS_COLL")
+    EHR_COLL_NAME: str = Field("ehr", alias="EHR_COLL_NAME")
+    FLAT_COMPOSITIONS_COLL_NAME: str = Field("flatten_compositions", alias="FLAT_COMPOSITIONS_COLL_NAME")
+    SEARCH_COMPOSITIONS_COLL_NAME: str = Field("sm_search3", alias="SEARCH_COMPOSITIONS_COLL_NAME")
+    
+    # Search configuration (legacy - will be replaced by dynamic config)
     search_config: SearchConfig = SearchConfig()
 
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
         extra = "ignore"
+    
+    @property
+    def config_db_uri(self) -> str:
+        """Get the configuration database URI, fallback to main URI if not specified"""
+        return self.CONFIG_DB_URI or self.MONGODB_URI
     
     def load_from_config_file(self, config_path: str = "config.json") -> None:
         """Load search configuration from config.json if it exists"""
