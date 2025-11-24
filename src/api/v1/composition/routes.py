@@ -7,6 +7,8 @@ import logging
 from uuid import UUID
 from src.transform.flattener_g import CompositionFlattener
 from src.transform.core import Transformer
+from src.api.v1.composition.dependencies import get_composition_config
+from src.app.core.config_models import CompositionCollectionNames
 
 
 from src.api.v1.composition.service import (
@@ -78,7 +80,8 @@ async def create_composition_endpoint(
         description = "The composition object to be created, structured according to a template"
     ),
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
-    flattener: CompositionFlattener = Depends(get_flattener)
+    flattener: CompositionFlattener = Depends(get_flattener),
+    config: CompositionCollectionNames = Depends(get_composition_config)
 ):
     """
     Creates a new `composition` and adds it to the specified EHR.
@@ -91,15 +94,13 @@ async def create_composition_endpoint(
     Upon successfull creation, the new `composition` object is returned, and the `Location`, `ETag`, and `Last-Modified` headers are set.
     """
 
-    target_search = request.app.state.config.get("target",{})
-    merge_search = target_search.get("search_compositions_merge", False)
-    
     new_composition = await add_composition(
         ehr_id = ehr_id,
         composition_create = composition_create,
         db = db,
+        config = config,
         flattener = flattener,
-        merge_search_docs=merge_search
+        merge_search_docs=config.merge_search_docs
     )
 
     # Response Headers
@@ -121,7 +122,8 @@ async def get_composition_by_id(
     ehr_id: str,
     uid_based_id: str,
     response: Response,
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config)
 ):
     """
     Retrieves a version of a `COMPOSITION` from a given EHR.
@@ -137,7 +139,8 @@ async def get_composition_by_id(
     composition = await retrieve_composition(
         ehr_id = ehr_id,
         uid_based_id = uid_based_id,
-        db = db
+        db = db,
+        config = config
     )
 
     # Return explicit JSONResponse with headers and status code

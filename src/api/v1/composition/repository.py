@@ -3,32 +3,28 @@ from pymongo.errors import PyMongoError
 import logging
 from typing import Dict, Optional
 
-COMPOSITIONS_COLL_NAME = "compositions"
-EHR_CONTRIBUTIONS_COLL = "contributions"
-EHR_COLL_NAME = "ehr"
-FLAT_COMPOSITIONS_COLL_NAME = "flatten_compositions"
-SEARCH_COMPOSITIONS_COLL_NAME = "sm_search3"
+from src.app.core.config_models import CompositionCollectionNames
 
 logger = logging.getLogger(__name__)
 
-async def find_composition_by_uid(uid: str, db: AsyncIOMotorDatabase):
+async def find_composition_by_uid(uid: str, db: AsyncIOMotorDatabase, config: CompositionCollectionNames):
     """
     Retrieves a single COMPOSITION document from the database by its versioned UID
     The `_id` in the database is the composition's versioned UID
     """
-    result = await db[COMPOSITIONS_COLL_NAME].find_one({"_id": uid})
+    result = await db[config.compositions].find_one({"_id": uid})
     return result
 
 
-async def find_flattened_composition_by_uid(uid: str, db: AsyncIOMotorDatabase):
+async def find_flattened_composition_by_uid(uid: str, db: AsyncIOMotorDatabase, config: CompositionCollectionNames):
     """
-    Retrieves a single flattened COMPOSITION document from the FLATTEN_COMPOSITION_COLL_NAME
+    Retrieves a single flattened COMPOSITION document from the flatten compositions
     collection by its versioned UID.
     """
-    return await db[FLAT_COMPOSITIONS_COLL_NAME].find_one({"_id": uid})
+    return await db[config.flatten_compositions].find_one({"_id": uid})
 
 
-async def find_latest_composition_by_object_id(object_id: str, db: AsyncIOMotorDatabase):
+async def find_latest_composition_by_object_id(object_id: str, db: AsyncIOMotorDatabase, config: CompositionCollectionNames):
     """
     Finds the latest version of a composition by its base object ID.
 
@@ -37,6 +33,7 @@ async def find_latest_composition_by_object_id(object_id: str, db: AsyncIOMotorD
     Args:
         object_id: The base ID of the composition (without the ::version part).
         db: The database session.
+        config: Configuration containing collection names.
 
     Returns:
         The latest composition document, or None if not found.
@@ -50,7 +47,7 @@ async def find_latest_composition_by_object_id(object_id: str, db: AsyncIOMotorD
     }
 
     # Find all matching documents, sort by time_created descending and get the first one
-    cursor = db[COMPOSITIONS_COLL_NAME].find(filter_criteria).sort("time_created", -1).limit(1)
+    cursor = db[config.compositions].find(filter_criteria).sort("time_created", -1).limit(1)
     documents = await cursor.to_list(length=1)
 
     if documents:
@@ -58,7 +55,7 @@ async def find_latest_composition_by_object_id(object_id: str, db: AsyncIOMotorD
     return None
 
 
-async def find_first_composition_by_object_id(object_id: str, db: AsyncIOMotorDatabase):
+async def find_first_composition_by_object_id(object_id: str, db: AsyncIOMotorDatabase, config: CompositionCollectionNames):
     """
     Finds the first version of a composition by its base object ID
 
@@ -68,6 +65,7 @@ async def find_first_composition_by_object_id(object_id: str, db: AsyncIOMotorDa
     Args:
         object_id: The base ID of the composition (without the ::version part).
         db: The database session
+        config: Configuration containing collection names.
 
     Returns:
         The first composition document, or None if not found
@@ -81,7 +79,7 @@ async def find_first_composition_by_object_id(object_id: str, db: AsyncIOMotorDa
     }
 
     # Find all matching documents, sort by time_created ascending (1), and get the first one
-    cursor = db[COMPOSITIONS_COLL_NAME].find(filter_criteria).sort("time_created", 1).limit(1)
+    cursor = db[config.compositions].find(filter_criteria).sort("time_created", 1).limit(1)
     documents = await cursor.to_list(length=1)
 
     if documents:
@@ -94,6 +92,7 @@ async def insert_composition_contribution_and_update_ehr(
     composition_doc: dict,
     contribution_doc: dict,
     db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames,
     flattened_base_doc: Optional[Dict] = None,
     flattened_search_doc: Optional[Dict] = None,
     merge_search_docs: bool = False
@@ -110,28 +109,39 @@ async def insert_composition_contribution_and_update_ehr(
                 composition_uid = composition_doc["_id"]
 
                 # Insert the new Contribution document
-                await db[EHR_CONTRIBUTIONS_COLL].insert_one(contribution_doc, session = session)
+                await db[config.contributions].insert_one(contribution_doc, session = session)
 
                 # Insert the new Composition document
-                await db[COMPOSITIONS_COLL_NAME].insert_one(composition_doc, session = session)
+                await db[config.compositions].insert_one(composition_doc, session = session)
 
                 # Insert the flattened versions if they exist
                 if flattened_base_doc and flattened_search_doc:
                     # Use the canonical version UID as the _id for flattened docs for consistency
                     flattened_base_doc["_id"] = composition_uid
-                    await db[FLAT_COMPOSITIONS_COLL_NAME].insert_one(flattened_base_doc, session=session)
+                    result_flatten_composition = await db[config.flatten_compositions].insert_one(flattened_base_doc, session=session)
 
-                    has_search_data = flattened_search_doc and flattened_search_doc.get("sn")
+                    print("Inserted Flatten", result_flatten_composition)
+
+                    # Use dynamic field name for search nodes
+                    search_field = config.search_fields.nodes
+                    has_search_data = flattened_search_doc and flattened_search_doc.get(search_field)
+                    
+                    # Debug logging
+                    logger.info(f"Search field name: {search_field}")
+                    logger.info(f"Search doc keys: {list(flattened_search_doc.keys()) if flattened_search_doc else 'None'}")
+                    logger.info(f"Has search data: {has_search_data}")
 
                     if has_search_data:
                         if not merge_search_docs:
                             flattened_search_doc["_id"] = composition_uid
-                            await db[SEARCH_COMPOSITIONS_COLL_NAME].insert_one(flattened_search_doc, session=session)
+                            print("Inserting search document")
+                            inserted_search_document = await db[config.search_compositions].insert_one(flattened_search_doc, session=session)
+                            print("Inserted search document", inserted_search_document)
                         else:
                             search_sub_doc = {
                                 "comp_id": composition_uid,
-                                "tid": flattened_search_doc.get("tid"),
-                                "sn": flattened_search_doc.get("sn", [])
+                                "tid": flattened_search_doc.get(config.search_fields.template_id),
+                                config.search_fields.nodes: flattened_search_doc.get(search_field, [])
                             }
                             
                             filter_query = {"_id": ehr_id}
@@ -140,7 +150,7 @@ async def insert_composition_contribution_and_update_ehr(
                                 "$setOnInsert": {"ehr_id": ehr_id}
                             }
 
-                            await db[SEARCH_COMPOSITIONS_COLL_NAME].update_one(
+                            await db[config.search_compositions].update_one(
                                 filter_query,
                                 update_operation,
                                 upsert=True,
@@ -163,7 +173,7 @@ async def insert_composition_contribution_and_update_ehr(
                     }
                 }
 
-                update_result = await db[EHR_COLL_NAME].update_one(
+                update_result = await db[config.ehr].update_one(
                     {"_id.value": ehr_id},
                     update_criteria,
                     session = session
@@ -183,7 +193,8 @@ async def insert_composition_contribution_and_update_ehr(
 async def add_deletion_contribution_and_update_ehr(
     ehr_id: str,
     contribution_doc: dict,
-    db: AsyncIOMotorDatabase
+    db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames
 ):
     """
     Atomically adds a 'deleted' contribution and updates the parent EHR to link it
@@ -192,8 +203,8 @@ async def add_deletion_contribution_and_update_ehr(
     async with await db.client.start_session() as session:
         async with session.start_transaction():
             try:
-                # Inser the new contribution document marking the deletion
-                await db[EHR_CONTRIBUTIONS_COLL].insert_one(contribution_doc, session = session)
+                # Insert the new contribution document marking the deletion
+                await db[config.contributions].insert_one(contribution_doc, session = session)
 
                 update_set_criteria = {
                     "$push": {
@@ -205,8 +216,8 @@ async def add_deletion_contribution_and_update_ehr(
                     }
                 }
 
-                # Update the parent EHR document by pushin the new contribution ID
-                update_result = await db[EHR_COLL_NAME].update_one(
+                # Update the parent EHR document by pushing the new contribution ID
+                update_result = await db[config.ehr].update_one(
                     {"_id.value": ehr_id}, 
                     update_set_criteria,
                     session = session

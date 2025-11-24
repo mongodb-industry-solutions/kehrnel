@@ -9,6 +9,7 @@ from pymongo.errors import PyMongoError
 from src.transform.flattener_g import CompositionFlattener
 from src.transform.core import Transformer
 from src.transform.exceptions_g import FlattenerError
+from src.app.core.config_models import CompositionCollectionNames
 
 from src.api.v1.composition.repository import (
     find_composition_by_uid,
@@ -46,6 +47,7 @@ async def add_composition(
     ehr_id: str,
     composition_create: CompositionCreate,
     db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames,
     flattener: CompositionFlattener,
     merge_search_docs: bool = False,
     committer_name: str = "System"
@@ -144,10 +146,11 @@ async def add_composition(
             ehr_id = ehr_id,
             composition_doc = new_composition_for_db.model_dump(by_alias = True),
             contribution_doc = contribution.model_dump(by_alias = True),
+            db = db,
+            config = config,
             flattened_base_doc = flattened_base_doc,
             flattened_search_doc = flattened_search_doc,
-            merge_search_docs=merge_search_docs,
-            db = db
+            merge_search_docs=merge_search_docs
         )
     except PyMongoError as e:
         # The repository re-raises the error, we catch it here to give a user-friendly response
@@ -163,7 +166,8 @@ async def add_composition(
 async def retrieve_composition(
     ehr_id: str,
     uid_based_id: str,
-    db: AsyncIOMotorDatabase
+    db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames
 ) -> Composition:
     """
     Retrieves a version of a Composition based on a UID.
@@ -197,10 +201,10 @@ async def retrieve_composition(
     composition_doc = None
     # Case 1: A specific version is requested (contains '::')
     if "::" in uid_based_id:
-        composition_doc = await find_composition_by_uid(uid_based_id, db)
+        composition_doc = await find_composition_by_uid(uid_based_id, db, config)
     else:
         # Latest version of a base object is requested
-        composition_doc = await find_latest_composition_by_object_id(uid_based_id, db)
+        composition_doc = await find_latest_composition_by_object_id(uid_based_id, db, config)
 
     if not composition_doc:
         raise HTTPException(
@@ -238,6 +242,7 @@ async def retrieve_and_unflatten_composition(
     ehr_id: str,
     uid_based_id: str,
     db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames,
     transformer: Transformer
 ) -> Composition:
     """
@@ -267,10 +272,10 @@ async def retrieve_and_unflatten_composition(
     canonical_doc = None
     if "::" in uid_based_id:
         # A specific version is requested, we need to fetch its metadata
-        canonical_doc = await find_composition_by_uid(uid_based_id, db)
+        canonical_doc = await find_composition_by_uid(uid_based_id, db, config)
     else:
         # The latest version is requested, find it from the canonical collection
-        canonical_doc = await find_latest_composition_by_object_id(uid_based_id, db)
+        canonical_doc = await find_latest_composition_by_object_id(uid_based_id, db, config)
 
     if not canonical_doc:
         raise HTTPException(
@@ -296,7 +301,7 @@ async def retrieve_and_unflatten_composition(
         )
     
     # 4. Fetch the flattened document using the determined version UID
-    flattened_doc = await find_flattened_composition_by_uid(composition_version_uid, db)
+    flattened_doc = await find_flattened_composition_by_uid(composition_version_uid, db, config)
 
     if not flattened_doc:
         # This case indicates data inconsistency, which should be rare with transactions
@@ -341,6 +346,7 @@ async def update_composition(
     if_match: str,
     new_composition_data: CompositionCreate,
     db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames,
     committer_name: str = "System"
 ) -> Composition:
     """
@@ -370,7 +376,8 @@ async def update_composition(
     existing_composition = await retrieve_composition(
         ehr_id = ehr_id,
         uid_based_id = preceding_version_uid,
-        db = db
+        db = db,
+        config = config
     )
 
     if not existing_composition:
@@ -419,7 +426,8 @@ async def update_composition(
             ehr_id = ehr_id,
             composition_doc = new_composition_for_db.model_dump(by_alias = True),
             contribution_doc = contribution.model_dump(by_alias = True),
-            db = db
+            db = db,
+            config = config
         )
     except PyMongoError as e:
         raise HTTPException(
@@ -435,6 +443,7 @@ async def delete_composition_by_preceding_uid(
     preceding_version_uid: str,
     if_match: str,
     db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames,
     committer_name: str = "System"
 ) -> Dict[str, Any]:
     """
@@ -516,7 +525,8 @@ async def delete_composition_by_preceding_uid(
         await add_deletion_contribution_and_update_ehr(
             ehr_id = ehr_id,
             contribution_doc = contribution.model_dump(by_alias = True),
-            db = db
+            db = db,
+            config = config
         )
     except PyMongoError as e:
         raise HTTPException(
@@ -535,7 +545,8 @@ async def delete_composition_by_preceding_uid(
 async def retrieve_revision_history(
     ehr_id: str,
     versioned_object_uid: str,
-    db: AsyncIOMotorDatabase
+    db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames
 ) -> RevisionHistory:
     """
     Retrieves the revision history for a versioned composition.
@@ -588,7 +599,8 @@ async def retrieve_revision_history(
 async def retrieve_versioned_composition(
     ehr_id: str, 
     versioned_object_uid: str,
-    db: AsyncIOMotorDatabase
+    db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames
 ) -> VersionedComposition:
     """
     Retrieves metadata about a VERSIONED_COMPOSITION
@@ -612,10 +624,10 @@ async def retrieve_versioned_composition(
     # Reuse the retrieve_composition, which already performs the check
     # If the check fails, it will raise a 404, which is the correct behavior
 
-    await retrieve_composition(ehr_id=ehr_id, uid_based_id=versioned_object_uid, db=db)
+    await retrieve_composition(ehr_id=ehr_id, uid_based_id=versioned_object_uid, db=db, config=config)
 
     # Fetch the first version of the composition to get its creation time
-    first_composition_doc = await find_first_composition_by_object_id(versioned_object_uid, db)
+    first_composition_doc = await find_first_composition_by_object_id(versioned_object_uid, db, config)
 
     if not first_composition_doc:
         raise HTTPException(
@@ -640,6 +652,7 @@ async def retrieve_composition_version(
     ehr_id: str,
     versioned_object_uid: str,
     db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames,
     version_at_time: Optional[str] = None
 ) -> OriginalVersionResponse:
     """
@@ -711,7 +724,7 @@ async def retrieve_composition_version(
     preceding_uid_val = version_info.get("preceding_version_uid")
 
     # Fetch the actual composition data document.
-    composition_doc = await find_composition_by_uid(composition_version_uid, db)
+    composition_doc = await find_composition_by_uid(composition_version_uid, db, config)
     if not composition_doc:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
