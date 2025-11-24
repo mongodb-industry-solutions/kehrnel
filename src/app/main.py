@@ -2,12 +2,12 @@
 
 import os
 import json
-import json5
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.app.core.database import connect_to_mongo, close_mongo_connection, get_mongodb_ehr_db
+from src.api.v1.composition.dependencies import get_composition_config
 
 from src.api.v1.ehr.routes import router as ehr_router
 from src.api.v1.template.routes import router as template_router
@@ -24,33 +24,41 @@ from src.transform.core import Transformer, load_default_cfg
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # --- Startup Logic ---
     print("Application startup...")
     
-    # 1. Connect to MongoDB using the existing function
+    # 1. Connect to MongoDB
     await connect_to_mongo()
-    
-    # 2. Get a database instance for the flattener
-    #    Use the existing get_mongodb_ehr_db() function for consistency
     db = await get_mongodb_ehr_db()
 
-    # 3. Load configuration for the flattener
-    #    (Assumes a config.json is in your project root)
-    #    TODO: It's better to manage this via a centralized settings module in core/config.py
-    with open("config.json") as f:
-        config = json.load(f)
+    # 2. Get DYNAMIC Configuration
+    app_config_obj = await get_composition_config()
 
-    # 4. Initialize the Flattener and store it in app.state
-    #    app.state is the recommended place to store objects for the app's lifespan
+    # 3. Prepare Configuration Dictionary for Flattener
+    # NOTE: We use .composition_fields to match your Pydantic model
+    flattener_config = {
+        "role": "primary", 
+        "target": {
+            "database": app_config_obj.database,
+            "compositions_collection": app_config_obj.compositions,
+            "codes_collection": app_config_obj.dictionaries,
+            "shortcuts_collection": app_config_obj.dictionaries
+        },
+        # Pass the Field Mapping Configs
+        "search_fields": app_config_obj.search_fields.model_dump(),
+        "composition_fields": app_config_obj.composition_fields.model_dump() 
+    }
+
+    # 4. Initialize the Flattener
     mappings_path = os.path.join(
         os.path.dirname(__file__), '..', 'transform', 'config', 'flattener_mappings.jsonc'
     )
     
     app.state.db = db
-    app.state.config = config
+    app.state.config = app_config_obj
+
     app.state.flattener = await CompositionFlattener.create(
         db=db,
-        config=config,
+        config=flattener_config,
         mappings_path=mappings_path
     )
     
@@ -68,13 +76,13 @@ async def lifespan(app: FastAPI):
     app.state.transformer = Transformer(cfg=transformer_config, role="primary")
     print("Transformer initialized.")
 
-    yield  # --- Application is now running ---
+    yield 
     
     # --- Shutdown Logic ---
     print("Application shutdown...")
     
     # 1. Flush codes to the database if in primary mode
-    if app.state.flattener and app.state.flattener.role == 'primary':
+    if hasattr(app.state, 'flattener') and app.state.flattener and app.state.flattener.role == 'primary':
         print("Flushing codes to database...")
         await app.state.flattener.flush_codes_to_db()
     
@@ -90,12 +98,11 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Your existing CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
+    allow_origins=["*"], 
+    allow_credentials=True, 
+    allow_methods=["*"], 
     allow_headers=["*"],
     expose_headers=["location", "etag", "date", "server", "content-length", "content-type"],
 )
