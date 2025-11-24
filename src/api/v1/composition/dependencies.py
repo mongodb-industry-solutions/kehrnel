@@ -1,3 +1,5 @@
+# src/api/v1/composition/dependencies.py
+
 from src.app.core.config import settings
 from src.app.core.config_models import CompositionCollectionNames
 from src.app.core.config_manager import get_config_manager
