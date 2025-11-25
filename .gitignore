@@ -1,3 +1,14 @@
+# dependencies
+frontend/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
