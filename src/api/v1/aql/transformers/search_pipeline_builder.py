@@ -563,18 +563,26 @@ class SearchPipelineBuilder:
             conditions = {}
             
             # Handle archetype_id predicate
-            if predicate.get("type") == "archetype_id":
-                archetype_id = predicate.get("value")
-                if archetype_id and self.format_resolver.archetype_resolver:
+            # The AQL parser creates predicates with path="archetype_node_id" for archetype constraints
+            # e.g., [openEHR-EHR-COMPOSITION.vaccination_list.v0] becomes:
+            # {"path": "archetype_node_id", "operator": "=", "value": "openEHR-EHR-COMPOSITION..."}
+            predicate_path = predicate.get("path")
+            archetype_id = predicate.get("value")
+            
+            if predicate_path == "archetype_node_id" and archetype_id:
+                if self.format_resolver.archetype_resolver:
                     # Resolve archetype ID to numeric code
                     try:
-                        numeric_code = await self.format_resolver.archetype_resolver.resolve_archetype_to_code(archetype_id)
+                        numeric_code = await self.format_resolver.archetype_resolver.get_archetype_code(archetype_id)
                         if numeric_code is not None:
                             conditions["tid"] = numeric_code
+                            logger.info(f"Resolved archetype {archetype_id} to tid={numeric_code}")
+                        else:
+                            logger.warning(f"Archetype {archetype_id} not found in codes collection")
                     except Exception as e:
                         logger.warning(f"Could not resolve archetype {archetype_id}: {e}")
-                        # Fallback: no filtering by archetype
-                        pass
+                else:
+                    logger.warning(f"Archetype resolver not available, cannot filter by archetype {archetype_id}")
             
             return conditions
             

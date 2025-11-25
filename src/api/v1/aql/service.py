@@ -6,8 +6,16 @@ from fastapi.responses import JSONResponse
 from pymongo.errors import PyMongoError
 from typing import List, Dict, Any
 import logging
+import json
 
 logger = logging.getLogger(__name__)
+
+def _format_pipeline_for_logging(pipeline: List[Dict[str, Any]]) -> str:
+    """Format the MQL pipeline for readable logging output."""
+    try:
+        return json.dumps(pipeline, indent=2, default=str)
+    except Exception:
+        return str(pipeline)
 
 from src.api.v1.aql.repository import (
     save_stored_query,
@@ -102,6 +110,19 @@ async def process_aql_ast_query(ast_query: Dict[str, Any], request_url: str, db:
         else:
             pipeline = await transformer.build_pipeline()
             logger.info(f"Built standard pipeline with {len(pipeline)} stages, targeting collection: {settings.search_config.flatten_collection}")
+
+        # Log the generated MQL pipeline for debugging
+        print("\n" + "="*80)
+        print("GENERATED MQL PIPELINE (from AST)")
+        print("="*80)
+        print(f"AST Query:\n{json.dumps(ast_query, indent=2, default=str)}")
+        print("-"*80)
+        print(f"Strategy: {'SEARCH' if use_search_strategy else 'MATCH'}")
+        print(f"Collection: {settings.search_config.search_collection if use_search_strategy else settings.search_config.flatten_collection}")
+        print("-"*80)
+        print("MQL Pipeline:")
+        print(_format_pipeline_for_logging(pipeline))
+        print("="*80 + "\n")
 
         # Execute the query via the repository
         results = await execute_aql_query(
@@ -206,6 +227,19 @@ async def process_aql_query(aql_query: str, request_url: str, db: AsyncIOMotorDa
         else:
             pipeline = await transformer.build_pipeline()
             logger.info(f"Built standard pipeline with {len(pipeline)} stages, targeting collection: {settings.search_config.flatten_collection}")
+
+        # Log the generated MQL pipeline for debugging
+        print("\n" + "="*80)
+        print("GENERATED MQL PIPELINE")
+        print("="*80)
+        print(f"Original AQL Query:\n{aql_query}")
+        print("-"*80)
+        print(f"Strategy: {'SEARCH' if use_search_strategy else 'MATCH'}")
+        print(f"Collection: {settings.search_config.search_collection if use_search_strategy else settings.search_config.flatten_collection}")
+        print("-"*80)
+        print("MQL Pipeline:")
+        print(_format_pipeline_for_logging(pipeline))
+        print("="*80 + "\n")
 
         # Execute the query via the repository
         results = await execute_aql_query(
