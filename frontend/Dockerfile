@@ -1,0 +1,27 @@
+FROM node:20
+
+WORKDIR /app
+
+COPY app/package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy source code
+COPY app/ .
+
+# Build React app
+RUN npm run build
+
+# Install serve globally and supervisor for process management
+RUN npm install -g serve supervisor
+
+# Copy the production proxy server
+COPY app/production-proxy.js ./
+
+# Expose port 8080 for Kanopy
+EXPOSE 8080
+ENV PORT=8080
+
+# Use the production proxy server that handles both static files and API proxying
+CMD ["npm", "run", "prod"]
