@@ -58,6 +58,7 @@
               "data.archetype_node_id",
               "data.time.value",
               "data.other_participations.performer.identifiers.id",
+              "data.ism_transition.current_state.defining_code.code_string",
               "p"
             ]
           },
