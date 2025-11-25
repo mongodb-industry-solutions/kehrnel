@@ -2,37 +2,14 @@
 
 import json
 import re
-import copy
 from datetime import timezone
 from typing import Any, Dict, List, Tuple, Optional
 
 from dateutil import parser
 from motor.motor_asyncio import AsyncIOMotorDatabase
-
-# Constants from original ingestionOptimized.py
-LOCATABLE = {
-    "COMPOSITION","SECTION","ADMIN_ENTRY","OBSERVATION","EVALUATION",
-    "INSTRUCTION","ACTION","CLUSTER","ITEM_TREE","ITEM_LIST","ITEM_SINGLE",
-    "ITEM_TABLE","ELEMENT","HISTORY","EVENT","POINT_EVENT","INTERVAL_EVENT",
-    "ACTIVITY","ISM_TRANSITION","INSTRUCTION_DETAILS","CARE_ENTRY",
-    "PARTY_PROXY","EVENT_CONTEXT"
-}
-
-NON_ARCHETYPED_RM = {
-    "HISTORY","ISM_TRANSITION", "EVENT_CONTEXT"
-}
-
-LOC_HINT = {"archetype_node_id", "archetype_details"}
-SKIP_ATTRS = {}
-
-_START_DOTTED = -10_000
-_AT_ROOT = re.compile(r"^at0*([1-9][0-9]*)$", re.I)
-_AT_DOTTED = re.compile(r"^at[0-9]+(?:\.[0-9]{1,4})+$", re.I)
-
-# Use a relative import for your new exceptions file
 from .exceptions_g import UnknownCodeError
 
-# Constants can remain at the module level
+# Constants from original ingestionOptimized.py
 LOCATABLE = {
     "COMPOSITION", "SECTION", "ADMIN_ENTRY", "OBSERVATION", "EVALUATION",
     "INSTRUCTION", "ACTION", "CLUSTER", "ITEM_TREE", "ITEM_LIST", "ITEM_SINGLE",
@@ -40,6 +17,7 @@ LOCATABLE = {
     "ACTIVITY", "ISM_TRANSITION", "INSTRUCTION_DETAILS", "CARE_ENTRY",
     "PARTY_PROXY", "EVENT_CONTEXT"
 }
+
 NON_ARCHETYPED_RM = {"HISTORY", "ISM_TRANSITION", "EVENT_CONTEXT"}
 LOC_HINT = {"archetype_node_id", "archetype_details"}
 SKIP_ATTRS = {}
@@ -56,6 +34,32 @@ class CompositionFlattener:
         self.config = config
         self.role = config.get("role", "primary").lower()
         self.apply_shortcuts = config.get("apply_shortcuts", True)
+
+        # 1. Composition Fields (Source / Intermediate)
+        # UPDATED: Matches the key used in main.py ("composition_fields")
+        c_fields = config.get("composition_fields", {})
+
+        self.cf_nodes = c_fields.get("nodes", "cn")
+        self.cf_data  = c_fields.get("data", "data")
+        self.cf_path  = c_fields.get("path", "p")
+        self.cf_ap    = c_fields.get("archetype_path", "ap")
+        self.cf_anc   = c_fields.get("ancestors", "anc")
+        self.cf_ehr   = c_fields.get("ehr_id", "ehr_id")
+        self.cf_tmpl  = c_fields.get("template_id", "tid")
+        self.cf_ver   = c_fields.get("version", "v")
+        self.cf_cid   = c_fields.get("comp_id", "comp_id")
+
+        # 2. Search Fields (Target)
+        s_fields = config.get("search_fields", {})
+
+        self.sf_nodes = s_fields.get("nodes", "sn")
+        self.sf_data  = s_fields.get("data", "data")
+        self.sf_path  = s_fields.get("path", "p")
+        self.sf_ap    = s_fields.get("archetype_path", "ap")
+        self.sf_anc   = s_fields.get("ancestors", "anc")
+        self.sf_ehr   = s_fields.get("ehr_id", "ehr_id")
+        self.sf_tmpl  = s_fields.get("template_id", "tid")
+        self.sf_score = s_fields.get("score", "score")
 
         # Encapsulate state previously stored in globals
         self.code_book: Dict[str, Dict[str, int]] = {"ar_code": {}, "at": {}}
@@ -81,7 +85,7 @@ class CompositionFlattener:
     def transform_composition(self, raw_doc: dict) -> tuple[dict, dict]:
         """
         Takes a raw composition document from the source collection and returns
-        the flattened base document and the search document.
+        the flattened base document and the search document using dynamic keys.
         """
         comp = raw_doc["canonicalJSON"]
         root_aid = self._archetype_id(comp) or "unknown"
@@ -94,14 +98,19 @@ class CompositionFlattener:
         # STEP 2: Apply mapping rules only for search document generation
         rules = self._get_rules_for(template_id, root_aid)
         sn: List[dict] = []
+        
         for node in cn:
-            if "p" not in node:  # Skip nodes without path
-                continue
-            parts = node["p"].split(".")
+            # Read using CONFIGURABLE composition path key
+            node_path = node.get(self.cf_path)
+            if not node_path: continue
+                
+            parts = node_path.split(".")
             pc_set = {".".join(parts[:i]) for i in range(1, len(parts) + 1)}
-            dblock = node["data"]
+            
+            # Read using CONFIGURABLE composition data key
+            dblock = node.get(self.cf_data)
 
-            for rule_idx, rule in enumerate(rules):
+            for rule in rules:
                 if self._rule_matches(rule, pc_set, parts, dblock):
                     slim = self._apply_rule(rule, node, dblock)
                     if slim:
@@ -113,17 +122,18 @@ class CompositionFlattener:
 
         # STEP 4: Build final documents
         base_doc = {
-            "ehr_id": raw_doc["ehr_id"],
-            "comp_id": raw_doc["_id"],
-            "v": raw_doc.get("composition_version"),
-            "tid": template_id,
-            "cn": cn,
+            self.cf_ehr: raw_doc["ehr_id"],
+            self.cf_cid: raw_doc["_id"],
+            self.cf_ver: raw_doc.get("composition_version"),
+            self.cf_tmpl: template_id,
+            self.cf_nodes: cn,
         }
+
         search_doc = {
             "_id": raw_doc["_id"],
-            "ehr_id": raw_doc["ehr_id"],
-            "tid": template_id,
-            "sn": sn,
+            self.sf_ehr: raw_doc["ehr_id"],
+            self.sf_tmpl: template_id,
+            self.sf_nodes: sn,
         }
 
         # STEP 5: Apply shortcuts if enabled
@@ -133,7 +143,7 @@ class CompositionFlattener:
 
         return base_doc, search_doc
 
-    # --- Internal Helper Methods (Refactored from original script) ---
+
     async def _load_codes_from_db(self):
         codes_col = self.db[self.config["target"]["codes_collection"]]
         doc = await codes_col.find_one({"_id": "ar_code"}) or {}
@@ -186,8 +196,7 @@ class CompositionFlattener:
         self.shortcut_vals.update(sc_doc.get("values", {}))
 
     def _load_mappings(self, path: str):
-        with open(path, encoding="utf-8") as f:
-            txt = f.read()
+        with open(path, encoding="utf-8") as f: txt = f.read()
         txt = re.sub(r"//.*?$|/\*.*?\*/", "", txt, flags=re.M | re.S)
         self.raw_rules = json.loads(txt).get("templates", {})
 
@@ -238,13 +247,11 @@ class CompositionFlattener:
             code = self._at_code_to_int(aid) if aid.lower().startswith("at") \
                    else self._alloc_code("ar_code", aid)
         else:
-            code = 0                    # non-archetyped RM object (HISTORY, EC …)
+            code = 0
 
         is_root = not ancestors
-        emit    = (list_index is not None or is_root or self._split_me_as_a_new_node(node)) \
-                  and code is not None
+        emit = (list_index is not None or is_root or self._split_me_as_a_new_node(node)) and code is not None
 
-        # ── 1.  collect scalar members  ─────────────────────────────────
         scalars: Dict[str, Any] = {}
         for k, v in node.items():
 
@@ -257,14 +264,12 @@ class CompositionFlattener:
                 continue
 
             # 1c – EVENT_CONTEXT, HISTORY … keep only **their** scalars
-            if isinstance(v, dict) and self._is_locatable(v) \
-               and v.get("_type") in NON_ARCHETYPED_RM:
+            if isinstance(v, dict) and self._is_locatable(v) and v.get("_type") in NON_ARCHETYPED_RM:
                 scalars[k] = self._strip_locatables(v)
                 continue
 
             # 1d – list that contains any splittable locatable → skip whole list
-            if isinstance(v, list) and any(self._is_locatable(x) and
-                                           self._split_me_as_a_new_node(x) for x in v):
+            if isinstance(v, list) and any(self._is_locatable(x) and self._split_me_as_a_new_node(x) for x in v):
                 continue
 
             # 1e – ordinary scalar
@@ -272,7 +277,7 @@ class CompositionFlattener:
 
         # ── 2.  date coercion + archetype_node_id ──────────────────────────────
         scalars = self._to_bson_dates(scalars)   
-        scalars["archetype_node_id"] = code     
+        scalars["archetype_node_id"] = code    
         
         # ── 2b. shrink archetype_details.archetype_id / ai -----------------
         ad = scalars.get("archetype_details") or scalars.get("ad")
@@ -283,48 +288,49 @@ class CompositionFlattener:
                 # full form: {"value": "..."}      | short form: {"v": "..."}
                 sid = ai_obj.get("value") or ai_obj.get("v")
                 if isinstance(sid, str):
-                    num = self._alloc_code("ar_code", sid)      # look-up / allocate
+                    num = self._alloc_code("ar_code", sid)
                     if num is not None:
                         # always store the int under the canonical long key;
                         # later apply_sc will rename 'archetype_id' → 'ai'
                         ad["archetype_id"] = num
 
-        payload = scalars                            
+        payload = scalars                  
 
         # ── 3.  emit the node (if required) ────────────────────────────
         if emit:
             leaf_path = ".".join([str(code)] + [str(a) for a in reversed(ancestors)])
 
             cn_node: Dict[str, Any] = {
-                "data": payload,
-                "p": leaf_path,
-                "_anc": ancestors,           # kept only until reverse stage
+                self.cf_data: payload,  
+                self.cf_path: leaf_path, 
+                "_anc": ancestors,      
             }
-            if kp_chain:                     # store only when non-empty
+
+            if self.cf_ap and aid:
+                cn_node[self.cf_ap] = aid
+
+            if kp_chain:
                 cn_node["kp"] = kp_chain[:]
-            if list_index is not None:       # add li only when parent is a list
+            if list_index is not None:
                 cn_node["li"] = list_index
 
             cn.append(cn_node)
 
         # ── 4.  recurse into children  ─────────────────────────────────
         new_anc = ancestors + ((code,) if emit else ())
-        base_kp = [] if emit else kp_chain          # <== key trick
+        base_kp = [] if emit else kp_chain 
 
         for k, v in node.items():
-            k_long = self._sc_key(k)  # Use shortcut keys if available
+            # Use shortcut keys if available
+            k_long = self._sc_key(k)
 
             if isinstance(v, dict) and self._is_locatable(v):
-                self._walk(v, new_anc, cn,
-                     kp_chain=base_kp + [k_long],
-                     list_index=None)
+                self._walk(v, new_anc, cn, kp_chain=base_kp + [k_long], list_index=None)
 
             elif isinstance(v, list):
                 for idx, itm in enumerate(v):
                     if self._is_locatable(itm):
-                        self._walk(itm, new_anc, cn,
-                             kp_chain=base_kp + [k_long],
-                             list_index=idx)
+                        self._walk(itm, new_anc, cn, kp_chain=base_kp + [k_long], list_index=idx)
 
     # --- Utility functions converted to private methods ---
     
@@ -437,25 +443,46 @@ class CompositionFlattener:
                     j += 1
                     if j == len(rule["_cont"]): break
             if j != len(rule["_cont"]): return False
+        
+        # Wrap dblock to match "data.value" expectation in rules
         if any(self._dpath_get({"data": dblock}, path) != val_req for path, val_req in rule["_extra"]):
             return False
         return True
 
     def _apply_rule(self, rule, node, dblock) -> dict:
+        """
+        Creates a 'slim' search node.
+        Reads from 'node' using Composition Keys (cf_*).
+        Writes to 'slim' using Search Keys (sf_*).
+        """
         slim: dict = {}
+        
+        # 1. Path
+        if self.sf_path and "p" in rule["copy"]: 
+             slim[self.sf_path] = node.get(self.cf_path)
+
+        # 2. Archetype Path
+        if self.sf_ap and self.cf_ap and self.cf_ap in node:
+            slim[self.sf_ap] = node[self.cf_ap]
+
+        # 3. Ancestors
+        if self.sf_anc and "_anc" in node:
+             slim[self.sf_anc] = node["_anc"]
+
+        # 4. Data
         for expr in rule["copy"]:
             if expr.startswith("data."):
-                sub = expr[5:]
+                sub = expr[5:] # Remove "data."
                 val = self._dpath_get(dblock, sub)
-                if val is None: 
-                    continue
-                cur = slim.setdefault("data", {})
+                
+                if val is None: continue
+                
+                cur = slim.setdefault(self.sf_data, {})
                 path_parts = sub.split(".")
                 for part in path_parts[:-1]:
                     cur = cur.setdefault(part, {})
                 cur[path_parts[-1]] = val
-            elif expr == "p":
-                slim["p"] = node["p"]
+                
         return slim
         
     def _to_bson_dates(self, obj):
