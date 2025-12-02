@@ -89,7 +89,8 @@ FROM
   CONTAINS COMPOSITION c
   CONTAINS ACTION med_ac [openEHR-EHR-ACTION.medication.v1]
 WHERE
-  med_ac/description[at0017]/items[at0020]/value/defining_code/code_string = 'MCC'
+  (med_ac/description[at0017]/items[at0020]/value/defining_code/code_string = 'MCC'
+  AND med_ac/other_participations/performer/identifiers/id = '01817273')
   AND med_ac/other_participations/performer/identifiers/id = '01817273'
 
 8. Select Nested Medication Details and Order by Time
@@ -134,7 +135,7 @@ SELECT
   c/uid/value AS composition_uid,
   admin_salut/items[at0001]/value/value AS authorization_date,
   med_ac/time/value AS administration_time,
-  med_ac/description[at0017]/items[at0020]/value/value AS vaccine_name
+  med_ac/description[at0017]/items[at0020]/value/value AS vaccine_name,
 FROM
   EHR e
   CONTAINS COMPOSITION c [openEHR-EHR-COMPOSITION.vaccination_list.v0]
@@ -147,5 +148,3 @@ WHERE
   admin_salut/items[at0007]/items[at0014]/value/defining_code/code_string = 'E08665478'
   AND med_ac/time/value > '2005-01-01T00:00:00Z'
   AND med_ac/description[at0017]/items[at0020]/value/defining_code/code_string = 'MCC'
-ORDER BY
-  med_ac/time/value ASC
