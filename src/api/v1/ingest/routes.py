@@ -21,7 +21,9 @@ from src.api.v1.ingest.api_responses import (
     ingest_from_body_example
 )
 
-router = APIRouter()
+router = APIRouter(
+    tags=["Ingestion"]
+)
 
 
 def get_ingestion_service(request: Request) -> IngestionService:
