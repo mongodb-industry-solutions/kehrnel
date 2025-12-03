@@ -653,9 +653,9 @@ async def generate_synthetic_data_endpoint(
     if not base_composition:
         base_composition = get_default_vaccination_composition()
     
-    # Get merge_search_docs configuration
-    target_search = request.app.state.config.get("target", {})
-    merge_search = target_search.get("search_compositions_merge", False)
+    # Get merge_search_docs configuration from the Pydantic model
+    merge_search = request.app.state.config.merge_search_docs
+    config = request.app.state.config
     
     try:
         # Generate the synthetic data
@@ -663,6 +663,7 @@ async def generate_synthetic_data_endpoint(
             db=db,
             base_composition=base_composition,
             count=synthetic_request.count,
+            config=config,
             flattener=flattener,
             merge_search_docs=merge_search
         )
