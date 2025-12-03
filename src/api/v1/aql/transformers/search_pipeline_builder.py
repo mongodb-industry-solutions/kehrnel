@@ -91,12 +91,20 @@ class SearchPipelineBuilder:
         if project_stage:
             pipeline.append(project_stage)
 
-        # 6. Build the $sort stage from ORDER BY clause
+        # 6. Build DISTINCT stages ($group + $replaceRoot) if SELECT DISTINCT is used
+        # This must come after $project so we can group by the projected field names
+        projected_fields = self.get_projected_field_names(ast)
+        distinct_stages = self.build_distinct_stages(ast, projected_fields)
+        if distinct_stages:
+            pipeline.extend(distinct_stages)
+            logger.info(f"Added DISTINCT stages for fields: {projected_fields}")
+
+        # 7. Build the $sort stage from ORDER BY clause
         sort_stage = self.build_sort_stage(ast)
         if sort_stage:
             pipeline.append(sort_stage)
         
-        # 7. Build the $limit stage from LIMIT clause
+        # 8. Build the $limit stage from LIMIT clause
         limit_stage = self.build_limit_stage(ast)
         if limit_stage:
             pipeline.append(limit_stage)
@@ -984,6 +992,89 @@ class SearchPipelineBuilder:
             pass
             
         return None
+
+    def build_distinct_stages(self, ast: Dict[str, Any], projected_fields: List[str]) -> List[Dict[str, Any]]:
+        """
+        Constructs the $group and $replaceRoot stages for DISTINCT queries.
+        
+        DISTINCT in AQL removes duplicate rows from the result set. In MongoDB,
+        this is implemented using:
+        1. $group stage: Groups documents by all projected fields (compound _id)
+        2. $replaceRoot stage: Flattens the grouped _id back to a normal document
+        
+        Args:
+            ast: The parsed AQL AST
+            projected_fields: List of field names that are being projected (output columns)
+            
+        Returns:
+            List[Dict[str, Any]]: List containing $group and $replaceRoot stages,
+                                  or empty list if DISTINCT is not requested
+        """
+        select_clause = ast.get("select", {})
+        is_distinct = select_clause.get("distinct", False)
+        
+        if not is_distinct:
+            return []
+        
+        if not projected_fields:
+            return []
+        
+        # Build the compound _id for $group using all projected fields
+        # This ensures we group by all columns to find unique combinations
+        group_id = {}
+        for field in projected_fields:
+            if field != "_id":  # Skip _id as it's handled separately
+                # Use the field name as key and reference the projected field value
+                group_id[field] = f"${field}"
+        
+        if not group_id:
+            return []
+        
+        # Build the $group stage
+        group_stage = {
+            "$group": {
+                "_id": group_id
+            }
+        }
+        
+        # Build the $replaceRoot stage to flatten the _id back to document fields
+        # This converts {_id: {field1: val1, field2: val2}} to {field1: val1, field2: val2}
+        replace_root_stage = {
+            "$replaceRoot": {
+                "newRoot": "$_id"
+            }
+        }
+        
+        return [group_stage, replace_root_stage]
+
+    def get_projected_field_names(self, ast: Dict[str, Any]) -> List[str]:
+        """
+        Extracts the list of field names that will be in the projection output.
+        Used for building DISTINCT stages.
+        
+        Args:
+            ast: The parsed AQL AST
+            
+        Returns:
+            List[str]: List of projected field names (aliases or generated names)
+        """
+        columns = ast.get("select", {}).get("columns", {})
+        field_names = []
+        
+        for col_data in columns.values():
+            alias = col_data.get("alias")
+            path = col_data.get("path") or col_data.get("value", {})
+            
+            if alias:
+                field_names.append(alias)
+            elif isinstance(path, dict) and path.get("type") == "dataMatchPath":
+                # Path-based column - generate name from path
+                aql_path = path.get("path", "")
+                if aql_path:
+                    # Generate alias from path: c/uid/value -> c_uid_value
+                    field_names.append(aql_path.replace("/", "_"))
+        
+        return field_names
 
     def _extract_aql_path_from_path_object(self, path_obj: Dict[str, Any]) -> Optional[str]:
         """
