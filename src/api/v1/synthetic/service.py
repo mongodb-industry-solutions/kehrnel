@@ -208,6 +208,7 @@ async def generate_synthetic_data(
     db: AsyncIOMotorDatabase,
     base_composition: Dict[str, Any],
     count: int,
+    config,
     flattener: CompositionFlattener,
     merge_search_docs: bool = False
 ) -> List[Dict[str, Any]]:
@@ -218,6 +219,7 @@ async def generate_synthetic_data(
         db: Database connection
         base_composition: Base composition template to use for generation
         count: Number of synthetic records to generate
+        config: CompositionCollectionNames configuration
         flattener: Composition flattener instance
         merge_search_docs: Whether to merge search documents
     
@@ -270,6 +272,7 @@ async def generate_synthetic_data(
                 ehr_id=ehr_response.ehr_id.value,
                 composition_create=composition_create,
                 db=db,
+                config=config,
                 flattener=flattener,
                 merge_search_docs=merge_search_docs,
                 committer_name="SyntheticDataGenerator"
