@@ -1,0 +1,23 @@
+env:
+  NODE_ENV: staging
+  USE_DYNAMIC_CONFIG: kerhnel-backend-secrets
+  DEFAULT_CONFIG_NAME: "Hybrid Nodes"
+  CONFIG_DB_NAME: "openehr_core"
+  CONFIG_COLLECTION_NAME: "persistence_strategies"
+  CONFIG_CACHE_TTL_MINUTES: 30
+  COMPOSITIONS_COLL_NAME: "compositions"
+  EHR_CONTRIBUTIONS_COLL: "contributions"
+  EHR_COLL_NAME: "ehr"
+  FLAT_COMPOSITIONS_COLL_NAME: "flatten_compositions" 
+  SEARCH_COMPOSITIONS_COLL_NAME: "sm_search3"
+  
+envSecrets:
+  MONGODB_URI: kerhnel-backend-secrets
+  MONGODB_DB: kerhnel-backend-secrets
+  TEST_DB_NAME: kerhnel-backend-secrets
+
+serviceAccount:
+  enabled: true
+  irsa:
+    accountId: "275662791714"
+    roleName: "kanopy-staging-cicd-irsa"
