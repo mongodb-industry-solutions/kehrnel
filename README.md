@@ -490,7 +490,7 @@ kehrnel powers the Mapping Studio feature in the MongoDB OpenEHR Playground:
 
 ```bash
 # MongoDB connection
-MONGODB_URL=mongodb+srv://usr:pwd@cluster.mongodb.net/database
+MONGODB_URI=mongodb+srv://usr:pwd@cluster.mongodb.net/database
 
 # API configuration
 API_HOST=0.0.0.0
