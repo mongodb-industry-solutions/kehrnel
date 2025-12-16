@@ -1,0 +1,10 @@
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.24.3
+    hooks:
+      - id: gitleaks
+        name: Detect secrets with Gitleaks
+        description: Gitleaks has detected secrets in your changes
+        entry: gitleaks protect --verbose --redact --staged
+        language: golang
+        pass_filenames: false
