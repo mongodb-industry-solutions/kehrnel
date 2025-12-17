@@ -8,8 +8,8 @@ env:
   SEARCH_COMPOSITIONS_COLL_NAME: "sm_search3"
   
 envSecrets:
-  MONGODB_URI: kehrnel-backend-secrets
-  MONGODB_DB: kehrnel-backend-secrets
+  MONGODB_URI: kerhnel-backend-secrets
+  MONGODB_DB: kerhnel-backend-secrets
   TEST_DB_NAME: kerhnel-backend-secrets
 
 serviceAccount:
