@@ -21,12 +21,13 @@ async def get_mongodb_database(database_name: str) -> AsyncIOMotorDatabase:
     """Get a specific database by name"""
     return db.client[database_name]
 
-async def connect_to_mongo():
+async def connect_to_mongo(tls_allow_invalid_certificates: bool = False):
     logger.info("Connecting to MongoDB")
     try:
         db.client = AsyncIOMotorClient(
             settings.MONGODB_URI,
-            serverSelectionTimeoutMS = 5000
+            serverSelectionTimeoutMS = 5000,
+            tlsAllowInvalidCertificates=tls_allow_invalid_certificates
         )
 
         # It sends an ismaster command which let us know if the connections was established correctly

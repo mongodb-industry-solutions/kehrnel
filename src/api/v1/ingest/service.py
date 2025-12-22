@@ -29,7 +29,11 @@ class IngestionService:
             raise e
         
         # Use the repository to store the flatten documents 
-        new_comp_id = await self.repository.insert_flattened_composition_in_transaction(base_doc, search_doc)
+        new_comp_id = await self.repository.insert_flattened_composition_in_transaction(
+            base_doc,
+            search_doc,
+            raw_canonical_doc=raw_composition_doc,
+        )
 
         return new_comp_id
     

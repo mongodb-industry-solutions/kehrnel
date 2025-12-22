@@ -1,0 +1,67 @@
+{
+  "manifests": {
+    "x": {
+      "id": "x",
+      "name": "X",
+      "version": "1",
+      "summary": null,
+      "description": null,
+      "protocols": [],
+      "capabilities": [],
+      "entrypoint": null,
+      "config_schema": {},
+      "default_config": {},
+      "adapters": {
+        "storage": [],
+        "search": [],
+        "vector": [],
+        "queue": []
+      },
+      "ui": {
+        "tags": [],
+        "protocol_badge": null,
+        "icon": null,
+        "accent_color": null,
+        "works_with": [],
+        "links": {}
+      },
+      "compatibility": {},
+      "maturity": null,
+      "license": null,
+      "keywords": [],
+      "ops": []
+    },
+    "test": {
+      "id": "test",
+      "name": "Test",
+      "version": "1",
+      "summary": null,
+      "description": null,
+      "protocols": [],
+      "capabilities": [],
+      "entrypoint": "strategies.fhir.simulated:FHIRSimulatedStrategy",
+      "config_schema": {},
+      "default_config": {},
+      "adapters": {
+        "storage": [],
+        "search": [],
+        "vector": [],
+        "queue": []
+      },
+      "ui": {
+        "tags": [],
+        "protocol_badge": null,
+        "icon": null,
+        "accent_color": null,
+        "works_with": [],
+        "links": {}
+      },
+      "compatibility": {},
+      "maturity": null,
+      "license": null,
+      "keywords": [],
+      "ops": []
+    }
+  },
+  "activations": {}
+}

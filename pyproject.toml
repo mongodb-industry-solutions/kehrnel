@@ -15,7 +15,8 @@ dependencies = [
     "PyYAML>=6",
     "tabulate>=0.9",
     "lxml>=4.9",
-    "Jinja2>=3.1"
+    "Jinja2>=3.1",
+    "pydantic>=2.5"
 ]
 
 [project.optional-dependencies]

@@ -25,7 +25,8 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-*.DS_Store
+
+
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -181,10 +182,10 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 
-
-# Gio's exceptions
 config.json
 *next_steps.py
 *next_steps.txt
 frontend/.github
 .DS_Store
+/src/app/.kerhnel
+.kehrnel_registry.json

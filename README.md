@@ -4,6 +4,8 @@
 
 `kehrnel` provides a modular set of Python libraries, command-line interfaces (CLIs), and a companion REST API. Together, these tools help model, generate, map, validate, transform, and ingest openEHR compositions — following a document-centric approach. They are designed for rapid prototyping, teaching, and building proof-of-concepts.
 
+> Looking for the new strategy runtime? See `README-dev.md` (uvicorn kehrnel.api.app:app). The legacy FastAPI entrypoints under `src/api` are deprecated and kept only for historical reference.
+
 It also powers the **MongoDB Healthcare Playground**, a demo stack with MongoDB Atlas Local, FastAPI, AQL dashboards, and semantic search layers:
 
 ```

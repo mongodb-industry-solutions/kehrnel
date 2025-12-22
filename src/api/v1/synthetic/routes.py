@@ -656,6 +656,9 @@ async def generate_synthetic_data_endpoint(
     # Get merge_search_docs configuration
     target_search = request.app.state.config.get("target", {})
     merge_search = target_search.get("search_compositions_merge", False)
+
+    # Use runtime target DB if available
+    db = getattr(request.app.state, "target_db", db)
     
     try:
         # Generate the synthetic data

@@ -1,0 +1,1 @@
+"""Strategies namespace scaffold."""

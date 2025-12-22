@@ -1,0 +1,39 @@
+{
+  "type": "object",
+  "properties": {
+    "database": { "type": "string" },
+    "collections": {
+      "type": "object",
+      "properties": {
+        "compositions": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "store_canonical": { "type": "boolean" },
+            "nodes_field": { "type": "string" },
+            "reverse_paths": { "type": "boolean" },
+            "store_nodes": { "type": "boolean" }
+          },
+          "required": ["name"]
+        },
+        "search": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "enabled": { "type": "boolean" },
+            "nodes_field": { "type": "string" },
+            "atlas_index_name": { "type": "string" },
+            "slim_projection": { "type": "object" }
+          }
+        }
+      },
+      "required": ["compositions"]
+    },
+    "coding": { "type": "object" },
+    "fields": { "type": "object" },
+    "node_representation": { "type": "object" },
+    "query_engine": { "type": "object" }
+  },
+  "required": ["database", "collections", "fields"],
+  "additionalProperties": true
+}
