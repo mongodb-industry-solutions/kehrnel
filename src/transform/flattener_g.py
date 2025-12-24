@@ -3,7 +3,7 @@
 import json
 import re
 from datetime import timezone
-from typing import Any, Dict, List, Tuple, Optional
+from typing import Any, Dict, List, Tuple, Optional, Union
 
 from dateutil import parser
 from motor.motor_asyncio import AsyncIOMotorDatabase
@@ -29,11 +29,26 @@ class CompositionFlattener:
     """
     Encapsulates the logic for transforming and flattening OpenEHR compositions.
     """
-    def __init__(self, db: AsyncIOMotorDatabase, config: dict, mappings_path: str):
+    def __init__(
+        self,
+        db: AsyncIOMotorDatabase,
+        config: dict,
+        mappings_path: str,
+        mappings_content: Optional[Union[str, Dict[str, Any]]] = None,
+        field_map: Optional[Dict[str, Dict[str, str]]] = None,
+        coding_opts: Optional[Dict[str, Any]] = None,
+    ):
         self.db = db
         self.config = config
         self.role = config.get("role", "primary").lower()
         self.apply_shortcuts = config.get("apply_shortcuts", True)
+        self.field_map = field_map or self._default_field_map()
+        self.coding_opts = coding_opts or {}
+        self.codes_document_id = (
+            self.coding_opts.get("dictionary")
+            or self.config.get("coding_dictionary")
+            or "ar_code"
+        )
 
         # 1. Composition Fields (Source / Intermediate)
         # UPDATED: Matches the key used in main.py ("composition_fields")
@@ -68,14 +83,30 @@ class CompositionFlattener:
         self.raw_rules: Dict[str, Any] = {}
         self.shortcut_keys: Dict[str, str] = {}
         self.shortcut_vals: Dict[str, str] = {}
+        self.simple_fields: Dict[str, List[dict]] = {}
 
-        # Load mappings synchronously from file
-        self._load_mappings(mappings_path)
+        # Load mappings synchronously from file or inline content
+        self._load_mappings(mappings_path, mappings_content)
     
     @classmethod
-    async def create(cls, db: AsyncIOMotorDatabase, config: dict, mappings_path: str):
+    async def create(
+        cls,
+        db: AsyncIOMotorDatabase,
+        config: dict,
+        mappings_path: str,
+        mappings_content: Optional[Union[str, Dict[str, Any]]] = None,
+        field_map: Optional[Dict[str, Dict[str, str]]] = None,
+        coding_opts: Optional[Dict[str, Any]] = None,
+    ):
         """Asynchronous factory to create and initialize an instance."""
-        instance = cls(db, config, mappings_path)
+        instance = cls(
+            db,
+            config,
+            mappings_path,
+            mappings_content,
+            field_map=field_map,
+            coding_opts=coding_opts,
+        )
         await instance._load_codes_from_db()
         if instance.apply_shortcuts:
             await instance._load_shortcuts_from_db()
@@ -96,25 +127,25 @@ class CompositionFlattener:
         self._walk(comp, ancestors=(), cn=cn, kp_chain=[], list_index=None)
 
         # STEP 2: Apply mapping rules only for search document generation
-        rules = self._get_rules_for(template_id, root_aid)
         sn: List[dict] = []
-        
-        for node in cn:
-            # Read using CONFIGURABLE composition path key
-            node_path = node.get(self.cf_path)
-            if not node_path: continue
-                
-            parts = node_path.split(".")
-            pc_set = {".".join(parts[:i]) for i in range(1, len(parts) + 1)}
-            
-            # Read using CONFIGURABLE composition data key
-            dblock = node.get(self.cf_data)
+        # Prefer simple field-based rules if provided for this template
+        simple_fields = self._get_simple_fields_for(root_aid)
+        if simple_fields:
+            sn = self._apply_simple_field_rules(comp, simple_fields)
+        else:
+            rules = self._get_rules_for(template_id, root_aid)
+            for node in cn:
+                if "p" not in node:  # Skip nodes without path
+                    continue
+                parts = node["p"].split(".")
+                pc_set = {".".join(parts[:i]) for i in range(1, len(parts) + 1)}
+                dblock = node["data"]
 
-            for rule in rules:
-                if self._rule_matches(rule, pc_set, parts, dblock):
-                    slim = self._apply_rule(rule, node, dblock)
-                    if slim:
-                        sn.append(slim)
+                for rule_idx, rule in enumerate(rules):
+                    if self._rule_matches(rule, pc_set, parts, dblock):
+                        slim = self._apply_rule(rule, node, dblock)
+                        if slim:
+                            sn.append(slim)
 
         # STEP 3: Clean up ancestry markers (used only during processing)
         for node in cn:
@@ -141,12 +172,30 @@ class CompositionFlattener:
             base_doc = self._apply_sc_deep(base_doc)
             search_doc = self._apply_sc_deep(search_doc)
 
+        # STEP 6: Apply field renaming map for output
+        base_doc = self._apply_field_map_to_doc(
+            base_doc,
+            root_map=self.field_map.get("compositions", {}),
+            node_map=self.field_map.get("composition_nodes", {}),
+        )
+        search_doc = self._apply_field_map_to_doc(
+            search_doc,
+            root_map=self.field_map.get("search", {}),
+            node_map=self.field_map.get("search_nodes", {}),
+        )
+
         return base_doc, search_doc
 
 
     async def _load_codes_from_db(self):
-        codes_col = self.db[self.config["target"]["codes_collection"]]
-        doc = await codes_col.find_one({"_id": "ar_code"}) or {}
+        # Get codes collection name with fallback
+        codes_collection = (
+            self.config.get("target", {}).get("codes_collection")
+            or self.config.get("codes_collection")
+            or "dictionaries"
+        )
+        codes_col = self.db[codes_collection]
+        doc = await codes_col.find_one({"_id": self.codes_document_id}) or {}
 
         ar_book: dict[str, int] = {}
         for rm, subtree in doc.items():
@@ -167,7 +216,12 @@ class CompositionFlattener:
 
     async def flush_codes_to_db(self):
         """Persists the current in-memory codebook back to the database."""
-        codes_col = self.db[self.config["target"]["codes_collection"]]
+        codes_collection = (
+            self.config.get("target", {}).get("codes_collection")
+            or self.config.get("codes_collection")
+            or "dictionaries"
+        )
+        codes_col = self.db[codes_collection]
         nested: Dict[str, Any] = {
             "at": self.code_book.get("at", {}),
             "_min": self.seq.get("at", -1),
@@ -183,8 +237,8 @@ class CompositionFlattener:
         nested["_max"] = max(max_code, self.seq.get("ar_code", 0))
         
         await codes_col.replace_one(
-            {"_id": "ar_code"},
-            {"_id": "ar_code", **nested},
+            {"_id": self.codes_document_id},
+            {"_id": self.codes_document_id, **nested},
             upsert=True,
         )
         print("Flushed codes to DB.")
@@ -195,10 +249,114 @@ class CompositionFlattener:
         self.shortcut_keys.update(sc_doc.get("keys", {}))
         self.shortcut_vals.update(sc_doc.get("values", {}))
 
-    def _load_mappings(self, path: str):
-        with open(path, encoding="utf-8") as f: txt = f.read()
-        txt = re.sub(r"//.*?$|/\*.*?\*/", "", txt, flags=re.M | re.S)
-        self.raw_rules = json.loads(txt).get("templates", {})
+    def _load_mappings(
+        self,
+        path: str,
+        content: Optional[Union[str, Dict[str, Any]]] = None,
+    ):
+        """
+        Load mapping rules either from inline content (preferred) or from a file path.
+        Supports both legacy "templates" structure and simplified {templateId, fields[]} blocks.
+        """
+        if content is not None:
+            data = content if isinstance(content, dict) else json.loads(content)
+        else:
+            with open(path, encoding="utf-8") as f:
+                txt = f.read()
+            txt = re.sub(r"//.*?$|/\*.*?\*/", "", txt, flags=re.M | re.S)
+            data = json.loads(txt)
+
+        # Legacy format
+        if isinstance(data, dict) and "templates" in data:
+            self.raw_rules = data.get("templates", {})
+            return
+
+        # Simplified format: single object or list of objects with templateId/fields
+        def is_simple(obj: Any) -> bool:
+            return isinstance(obj, dict) and "templateId" in obj and "fields" in obj
+
+        if is_simple(data):
+            blocks = [data]
+        elif isinstance(data, list) and all(is_simple(x) for x in data):
+            blocks = data
+        else:
+            # Unknown shape; default to empty
+            self.raw_rules = {}
+            self.simple_fields = {}
+            return
+
+        for blk in blocks:
+            tid = blk.get("templateId")
+            fields = blk.get("fields", [])
+            if tid and isinstance(fields, list):
+                self.simple_fields[tid] = fields
+
+    def _default_field_map(self) -> Dict[str, Dict[str, str]]:
+        return {
+            "compositions": {
+                "ehr_id": "ehr_id",
+                "composition_id": "comp_id",
+                "template_id": "tid",
+                "version": "v",
+                "composition_nodes": "cn",
+            },
+            "composition_nodes": {
+                "path": "p",
+                "keyPath": "kp",
+                "lineIndex": "li",
+                "data": "data",
+            },
+            "search": {
+                "ehr_id": "ehr_id",
+                "composition_id": "comp_id",
+                "template_id": "tid",
+                "search_nodes": "sn",
+            },
+            "search_nodes": {
+                "path": "p",
+                "data": "data",
+            },
+        }
+
+    def _apply_field_map_to_doc(
+        self,
+        doc: Dict[str, Any],
+        root_map: Dict[str, str],
+        node_map: Dict[str, str],
+    ) -> Dict[str, Any]:
+        """Return a shallow copy of the document with keys renamed per map."""
+        if not doc:
+            return doc
+
+        renamed = {}
+        for key, val in doc.items():
+            new_key = root_map.get(key, key)
+            renamed[new_key] = val
+
+        # Harmonise node array names
+        if "cn" in doc and "composition_nodes" in root_map:
+            new_nodes_key = root_map["composition_nodes"]
+            if new_nodes_key != "cn":
+                renamed[new_nodes_key] = renamed.pop("cn")
+        if "sn" in doc and "search_nodes" in root_map:
+            new_nodes_key = root_map["search_nodes"]
+            if new_nodes_key != "sn":
+                renamed[new_nodes_key] = renamed.pop("sn")
+
+        # Rename node-level keys
+        nodes_candidates = []
+        if "cn" in doc:
+            nodes_candidates.append(renamed.get(root_map.get("composition_nodes", "cn")))
+        if "sn" in doc:
+            nodes_candidates.append(renamed.get(root_map.get("search_nodes", "sn")))
+        for nodes_field in nodes_candidates:
+            if isinstance(nodes_field, list):
+                for node in nodes_field:
+                    for k in list(node.keys()):
+                        if k in node_map:
+                            node[node_map[k]] = node.pop(k)
+
+        return renamed
 
     def _at_code_to_int(self, at: str) -> int:
         s = at.lower()
@@ -207,16 +365,32 @@ class CompositionFlattener:
         if self.role != "primary":
             raise UnknownCodeError("at", s)
 
+        strategy = (self.coding_opts.get("atcodes") or {}).get("strategy", "negative_int")
+        store_orig = (self.coding_opts.get("atcodes") or {}).get("store_original", False)
+
+        if strategy == "sequential":
+            self.seq["at"] = self.seq.get("at", 0) + 1
+            code = self.seq["at"]
+            self.code_book["at"][s] = code
+            if store_orig:
+                self.code_book.setdefault("at_orig", {})[s] = s
+            return code
+
+        # default: negative_int
         m_root = _AT_ROOT.match(s)
         if m_root:
             code = -int(m_root.group(1))
             self.code_book["at"][s] = code
             self.seq["at"] = min(self.seq["at"], code)
+            if store_orig:
+                self.code_book.setdefault("at_orig", {})[s] = s
             return code
         if _AT_DOTTED.match(s):
             self.seq["at"] = self.seq["at"] - 1 if self.seq["at"] <= _START_DOTTED else _START_DOTTED
             code = self.seq["at"]
             self.code_book["at"][s] = code
+            if store_orig:
+                self.code_book.setdefault("at_orig", {})[s] = s
             return code
         raise ValueError(f"Could not parse at-code: {at}")
 
@@ -448,6 +622,118 @@ class CompositionFlattener:
         if any(self._dpath_get({"data": dblock}, path) != val_req for path, val_req in rule["_extra"]):
             return False
         return True
+
+    def _get_simple_fields_for(self, template_name: str) -> Optional[List[dict]]:
+        if template_name in self.simple_fields:
+            return self.simple_fields[template_name]
+        # fallback on versionless match
+        base = template_name.rsplit(".v", 1)[0] if ".v" in template_name else template_name
+        for tid, fields in self.simple_fields.items():
+            if tid.startswith(base + ".v"):
+                return fields
+        return None
+
+    def _apply_simple_field_rules(self, comp: dict, fields: List[dict]) -> List[dict]:
+        """Build search nodes from simple field definitions using direct path extraction."""
+        sn: List[dict] = []
+        for fld in fields:
+            path = fld.get("path")
+            if not path:
+                continue
+            value = self._extract_by_openehr_path(comp, path)
+            if value is None:
+                continue
+            p_numeric = self._compute_numeric_path(path)
+            node = {"p": p_numeric or path, "data": {"value": value}}
+            name = fld.get("name")
+            if name:
+                node["label"] = name
+            rm_type = fld.get("rmType")
+            if rm_type:
+                node["rmType"] = rm_type
+            sn.append(node)
+        return sn
+
+    def _extract_by_openehr_path(self, comp: dict, path: str) -> Any:
+        """
+        Minimal path evaluator for openEHR-like paths with selectors:
+        /content[openEHR-EHR-...,'optional name']/items[at0001]/value
+        """
+        if not path:
+            return None
+        segments = [seg for seg in path.split("/") if seg]
+        current: List[Any] = [comp]
+
+        for seg in segments:
+            next_items: List[Any] = []
+            key, selector = self._split_segment(seg)
+            for item in current:
+                if not isinstance(item, dict):
+                    continue
+                child = item.get(key)
+                if child is None:
+                    continue
+                candidates = []
+                if isinstance(child, list):
+                    candidates = child
+                elif isinstance(child, dict):
+                    candidates = [child]
+                else:
+                    candidates = [child]
+
+                if selector:
+                    selector_id = selector
+                    filtered = []
+                    for cand in candidates:
+                        if isinstance(cand, dict) and cand.get("archetype_node_id") == selector_id:
+                            filtered.append(cand)
+                    candidates = filtered
+                next_items.extend(candidates)
+            current = next_items
+            if not current:
+                return None
+
+        if not current:
+            return None
+        if len(current) == 1:
+            return current[0]
+        return current
+
+    def _split_segment(self, seg: str) -> tuple[str, Optional[str]]:
+        """
+        Parse a path segment like "content[openEHR-EHR-SECTION.diagnostic_reports.v0,'Label']"
+        into ("content", "openEHR-EHR-SECTION.diagnostic_reports.v0")
+        or "items[at0001]" -> ("items", "at0001")
+        or "value" -> ("value", None)
+        """
+        if "[" not in seg:
+            return seg, None
+        base, rest = seg.split("[", 1)
+        sel = rest.split("]", 1)[0]
+        if "," in sel:
+            sel = sel.split(",", 1)[0]
+        sel = sel.strip().strip("'\"")
+        return base, sel
+
+    def _compute_numeric_path(self, path: str) -> Optional[str]:
+        """
+        Compute a reversed, dot-joined numeric path from an openEHR path.
+        """
+        if not path:
+            return None
+        segments = [seg for seg in path.split("/") if seg]
+        codes: List[str] = []
+        for seg in segments:
+            _, selector = self._split_segment(seg)
+            if selector:
+                try:
+                    code_int = self._seg_to_int(selector)
+                    codes.append(str(code_int))
+                except Exception:
+                    continue
+        if not codes:
+            return None
+        return ".".join(reversed(codes))
 
     def _apply_rule(self, rule, node, dblock) -> dict:
         """
