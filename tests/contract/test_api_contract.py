@@ -6,7 +6,7 @@ from fastapi.testclient import TestClient
 
 from kehrnel.api.app import create_app, _load_manifests
 from kehrnel.core.runtime import StrategyRuntime
-from strategy_sdk import StrategyBindings
+from kehrnel.strategy_sdk import StrategyBindings
 from tests.helpers.fixture_storage import FixtureStorage
 
 
@@ -22,7 +22,8 @@ def _activate_with_fixture(runtime: StrategyRuntime, manifest, fixture_dir: Path
     bindings = StrategyBindings(extras={"db": {"provider": "none"}})
 
     async def _act():
-        await runtime.activate(env_id, manifest.id, manifest.version, cfg, bindings, allow_plaintext_bindings=True)
+        domain = getattr(manifest, "domain", "default")
+        await runtime.activate(env_id, manifest.id, manifest.version, cfg, bindings, allow_plaintext_bindings=True, domain=domain)
 
     asyncio.get_event_loop().run_until_complete(_act())
     runtime._env_cache[env_id] = {
@@ -50,7 +51,7 @@ def test_compile_query_contract(tmp_path: Path):
     env_id = _activate_with_fixture(runtime, manifest, Path("tests/fixtures/rps_dual"))
 
     payload = {
-        "protocol": "openehr",
+        "domain": "openEHR",
             "query": {
                 "scope": "patient",
                 "predicates": [{"path": "ehr_id", "op": "eq", "value": "p1"}],
@@ -83,7 +84,7 @@ def test_query_and_ops_contract(tmp_path: Path):
 
     # query should succeed with empty result shape
     q_payload = {
-        "protocol": "openehr",
+        "domain": "openEHR",
         "query": {
             "scope": "patient",
             "predicates": [],

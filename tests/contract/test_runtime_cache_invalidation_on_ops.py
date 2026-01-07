@@ -3,7 +3,7 @@ from pathlib import Path
 
 from kehrnel.core.runtime import StrategyRuntime
 from kehrnel.core.registry import FileActivationRegistry
-from strategy_sdk import StrategyBindings
+from kehrnel.strategy_sdk import StrategyBindings
 
 
 async def _activate(rt: StrategyRuntime, manifest, env_id: str):
@@ -15,7 +15,8 @@ def test_cache_invalidation_on_maintenance_op(tmp_path: Path):
     rt = StrategyRuntime(FileActivationRegistry(tmp_path / "reg.json"))
     from kehrnel.api.app import _load_manifests
 
-    manifest = next(m for m in _load_manifests() if "rps_dual" in m.id)
+    manifests, _ = _load_manifests()
+    manifest = next(m for m in manifests if "rps_dual" in m.id)
     rt.register_manifest(manifest)
     env_id = "env-cache"
     asyncio.get_event_loop().run_until_complete(_activate(rt, manifest, env_id))

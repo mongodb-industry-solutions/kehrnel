@@ -1,47 +1,46 @@
 import pytest
 
-from kehrnel.core.types import StrategyContext
 from kehrnel.strategies.openehr.rps_dual.strategy import RPSDualStrategy, MANIFEST, DEFAULTS_PATH, load_json
+from kehrnel.core.types import StrategyContext
 
 
-class FakeStorage:
+class DummyAdapter:
     def __init__(self):
-        self.data = {}
-
-    async def find_one(self, coll, flt, projection=None):
-        return next((doc for doc in self.data.get(coll, []) if all(doc.get(k) == v for k, v in flt.items())), None)
-
-    async def insert_one(self, coll, doc):
-        self.data.setdefault(coll, []).append(doc)
-        return {"inserted_id": len(self.data[coll])}
-
-    async def aggregate(self, coll, pipeline, allow_disk_use=True):
-        # very naive: ignore pipeline
-        return list(self.data.get(coll, []))
-
-
-class FakeIndexAdmin:
-    def __init__(self, storage: FakeStorage):
-        self.storage = storage
         self.collections = set()
+        self.inserted = {}
 
     async def ensure_collection(self, name):
         self.collections.add(name)
-        self.storage.data.setdefault(name, [])
 
-    async def ensure_indexes(self, collection, index_specs):
-        return {"warnings": []}
+    async def find_one(self, coll, flt, projection=None):
+        return self.inserted.get((coll, flt.get("_id")))
+
+    async def insert_one(self, coll, doc):
+        self.inserted[(coll, doc.get("_id"))] = doc
+
+    async def aggregate(self, coll, pipeline, allow_disk_use=True):
+        return []
 
 
 @pytest.mark.asyncio
-async def test_ensure_dictionaries_creates_collections_and_docs():
+async def test_run_op_ensure_dictionaries():
     cfg = load_json(DEFAULTS_PATH)
-    storage = FakeStorage()
-    index_admin = FakeIndexAdmin(storage)
-    ctx = StrategyContext(environment_id="env", config=cfg, adapters={"storage": storage, "index_admin": index_admin})
+    adapter = DummyAdapter()
     strat = RPSDualStrategy(MANIFEST)
+    ctx = StrategyContext(environment_id="env", config=cfg, adapters={"index_admin": adapter, "storage": adapter})
     res = await strat.run_op(ctx, "ensure_dictionaries", {})
     assert res["ok"] is True
-    assert index_admin.collections  # collections created
-    # placeholder docs should exist
-    assert storage.data
+    assert adapter.collections  # collections ensured
+    # ensure placeholder docs inserted (dictionary name comes from config)
+    dict_name = cfg.get("coding", {}).get("archetype_ids", {}).get("dictionary", "_codes")
+    assert (dict_name, "codes") in adapter.inserted
+    assert ("_shortcuts", "shortcuts") in adapter.inserted
+
+
+@pytest.mark.asyncio
+async def test_run_op_invalid():
+    cfg = load_json(DEFAULTS_PATH)
+    strat = RPSDualStrategy(MANIFEST)
+    ctx = StrategyContext(environment_id="env", config=cfg, adapters={})
+    with pytest.raises(ValueError):
+        await strat.run_op(ctx, "does_not_exist", {})

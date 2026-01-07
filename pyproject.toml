@@ -16,7 +16,8 @@ dependencies = [
     "tabulate>=0.9",
     "lxml>=4.9",
     "Jinja2>=3.1",
-    "pydantic>=2.5"
+    "pydantic>=2.5",
+    "jsonschema>=4.22"
 ]
 
 [project.optional-dependencies]
@@ -70,6 +71,11 @@ kehrnel-validate = "cli.validate:app"
 kehrnel-ingest   = "cli.ingest:app"
 kehrnel-transform= "cli.transform:app"
 kehrnel-api      = "api.internal.api_server:main"
+kehrnel-validate-pack = "cli.validate_pack:app"
+kehrnel-validate-bundle = "cli.bundles:validate_bundle_cmd"
+kehrnel-import-bundle = "cli.bundles:import_bundle_cmd"
+kehrnel-list-bundles = "cli.bundles:list_bundles_cmd"
+kehrnel-export-bundle = "cli.bundles:export_bundle_cmd"
 
 # ---------------------------------------------------------------------------
 # Use src/ layout and auto-discover ALL subpackages
@@ -86,7 +92,7 @@ include = ["*"]
 # ---------------------------------------------------------------------------
 [tool.setuptools.package-data]
 "*" = ["*.yaml", "*.yml", "*.json"]
-"mapper" = ["patterns.yaml"]
+"kehrnel.common.mapping" = ["patterns.yaml"]
 
 # ---------------------------------------------------------------------------
 # Optional: uvicorn dev settings

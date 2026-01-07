@@ -13,11 +13,19 @@ class AdapterRequirements(BaseModel):
 
 class StrategyUI(BaseModel):
     tags: List[str] = Field(default_factory=list)
-    protocol_badge: Optional[str] = None
+    domain_badge: Optional[str] = None
     icon: Optional[str] = None
     accent_color: Optional[str] = None
     works_with: List[str] = Field(default_factory=list)
     links: Dict[str, str] = Field(default_factory=dict)
+    benefits: List[Any] = Field(default_factory=list)
+    constraints: List[Any] = Field(default_factory=list)
+    pick_when: List[Any] = Field(default_factory=list)
+    avoid_when: List[Any] = Field(default_factory=list)
+    scorecard: Dict[str, Any] = Field(default_factory=dict)
+    tabs: Dict[str, Any] = Field(default_factory=dict)
+
+    model_config = {"extra": "allow"}
 
 
 class StrategyOp(BaseModel):
@@ -34,7 +42,7 @@ class StrategyManifest(BaseModel):
     version: str
     summary: Optional[str] = None
     description: Optional[str] = None
-    protocols: List[str] = Field(default_factory=list)
+    domain: str
     capabilities: List[str] = Field(default_factory=list)
     entrypoint: Optional[str] = None
     config_schema: Dict[str, Any] = Field(default_factory=dict)
@@ -47,4 +55,4 @@ class StrategyManifest(BaseModel):
     keywords: List[str] = Field(default_factory=list)
     ops: List[StrategyOp] = Field(default_factory=list)
 
-    model_config = {"extra": "ignore"}
+    model_config = {"extra": "allow"}

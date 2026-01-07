@@ -1,0 +1,10 @@
+{
+  "id": "invalid.strategy",
+  "name": "Invalid Strategy",
+  "version": "0.0.0",
+  "domain": "invalid",
+  "ops": [
+    {"name": "op1"}
+  ],
+  "entrypoint": "does.not.exist:Strategy"
+}

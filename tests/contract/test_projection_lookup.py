@@ -1,7 +1,7 @@
 import pytest
 
 from kehrnel.core.types import StrategyContext
-from kehrnel.protocols.openehr.aql.ir import AqlQueryIR
+from kehrnel.domains.openehr.aql.ir import AqlQueryIR
 from kehrnel.strategies.openehr.rps_dual.query.projection_compiler import compile_projection
 
 

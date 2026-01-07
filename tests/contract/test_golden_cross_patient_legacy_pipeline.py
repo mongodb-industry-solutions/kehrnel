@@ -1,5 +1,5 @@
 import pytest
-from kehrnel.protocols.openehr.aql.parse import parse_aql
+from kehrnel.domains.openehr.aql.parse import parse_aql
 from kehrnel.core.types import StrategyContext
 from kehrnel.strategies.openehr.rps_dual.strategy import RPSDualStrategy, MANIFEST, DEFAULTS_PATH, load_json
 from tests.helpers.fixture_storage import FixtureStorage

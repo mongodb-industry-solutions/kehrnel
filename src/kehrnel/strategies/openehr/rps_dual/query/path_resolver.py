@@ -6,6 +6,7 @@ from typing import Dict, List
 
 from kehrnel.strategies.openehr.rps_dual.services.codes_service import atcode_to_token, archetype_to_token
 from kehrnel.strategies.openehr.rps_dual.services.shortcuts_service import canonical_to_slim
+from kehrnel.strategies.openehr.rps_dual.ingest.encoding import PathCodec
 
 
 @dataclass
@@ -29,6 +30,10 @@ class PathResolver:
         self.search_nodes = search.get("nodes", "sn")
         self.token_joiner = cfg.get("node_representation", {}).get("path", {}).get("token_joiner", ".")
         self.shortcuts = shortcuts or {}
+        path_sep = (cfg.get("paths") or {}).get("separator", ".")
+        ar_codes = (cfg.get("dict_cache") or {}).get("codes") or {}
+        at_codes = (cfg.get("dict_cache") or {}).get("at") or {}
+        self.path_codec = PathCodec(ar_codes=ar_codes, at_codes=at_codes, separator=path_sep, shortcuts=self.shortcuts)
 
     def resolve(self, path: str, scope: str = "patient") -> str:
         return self._resolve_comp(path) if scope == "patient" else self._resolve_search(path)
@@ -81,16 +86,17 @@ class PathResolver:
         tokens: List[str] = []
         for p in parts:
             if p.startswith("at"):
-                tokens.append(str(atcode_to_token(p)))
+                tokens.append(str(self.path_codec._selector_to_code(p)))
             elif "-" in p and p.startswith("openehr"):
-                tokens.append(str(archetype_to_token(p)))
+                tokens.append(str(self.path_codec._selector_to_code(p)))
             else:
                 tokens.append(p)
         return tokens
 
     def _cn_regex(self, reversed_tokens: List[str]) -> str:
         # ^t1(?:\.[^.]+)*\.t2(?:\.[^.]+)*$
-        pattern_parts = [f"{t}(?:\\.[^.]+)*" for t in reversed_tokens]
+        escaped_sep = self.token_joiner.replace(".", "\\.")
+        pattern_parts = [f"{t}(?:{escaped_sep}[^${escaped_sep}]+)*" for t in reversed_tokens]
         return "^" + "\\.".join(pattern_parts) + "$"
 
     def _sn_wildcard(self, reversed_tokens: List[str]) -> str:

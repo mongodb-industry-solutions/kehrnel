@@ -1,66 +1,369 @@
 from __future__ import annotations
 
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Union, List
 from pydantic import BaseModel, Field
 
 
+# --- Collection Configuration ---
+
+class AtlasIndexCfg(BaseModel):
+    name: str = "search_nodes_index"
+    definition: Union[str, Dict[str, Any]] = Field(default_factory=dict)
+
+
+class CompositionsCollectionCfg(BaseModel):
+    name: str = "compositions_rps"
+    encodingProfile: str = "profile.codedpath"
+
+
+class SearchCollectionCfg(BaseModel):
+    name: str = "compositions_search"
+    encodingProfile: str = "profile.search_shortcuts"
+    enabled: bool = True
+    atlasIndex: Optional[AtlasIndexCfg] = None
+
+    # Legacy field aliases for backwards compat
+    @property
+    def atlas_index_name(self) -> Optional[str]:
+        return self.atlasIndex.name if self.atlasIndex else None
+
+
+class CodesCollectionCfg(BaseModel):
+    name: str = "_codes"
+    mode: str = "extend"  # "fresh" | "extend"
+    seed: Optional[Union[str, Dict[str, Any]]] = None
+
+
+class ShortcutsCollectionCfg(BaseModel):
+    name: str = "_shortcuts"
+    seed: Optional[Union[str, Dict[str, Any]]] = None
+
+
 class CollectionsCfg(BaseModel):
-    compositions: Dict[str, Any] = Field(default_factory=dict)
-    search: Dict[str, Any] = Field(default_factory=dict)
+    compositions: CompositionsCollectionCfg = Field(default_factory=CompositionsCollectionCfg)
+    search: SearchCollectionCfg = Field(default_factory=SearchCollectionCfg)
+    codes: CodesCollectionCfg = Field(default_factory=CodesCollectionCfg)
+    shortcuts: ShortcutsCollectionCfg = Field(default_factory=ShortcutsCollectionCfg)
+
+
+# --- ID Encoding ---
+
+class IdsCfg(BaseModel):
+    ehr_id: str = "string"
+    composition_id: str = "objectid"
+
+
+# --- Paths ---
+
+class PathsCfg(BaseModel):
+    separator: str = "."
+
+
+# --- Fields Configuration ---
+
+class DocumentFieldsCfg(BaseModel):
+    ehr_id: str = "ehr_id"
+    comp_id: str = "comp_id"
+    tid: str = "tid"
+    v: str = "v"
+    cn: str = "cn"
+    sn: str = "sn"
+
+
+class NodeFieldsCfg(BaseModel):
+    p: str = "p"
+    kp: str = "kp"
+    li: str = "li"
+    data: str = "data"
 
 
 class FieldsCfg(BaseModel):
-    composition: Dict[str, Any] = Field(default_factory=dict)
-    search: Dict[str, Any] = Field(default_factory=dict)
+    document: DocumentFieldsCfg = Field(default_factory=DocumentFieldsCfg)
+    node: NodeFieldsCfg = Field(default_factory=NodeFieldsCfg)
+
+    # Legacy accessors for backwards compat
+    @property
+    def composition(self) -> Dict[str, Any]:
+        return {
+            "nodes": self.document.cn,
+            "path": self.node.p,
+            "data": self.node.data,
+            "ehr_id": self.document.ehr_id,
+            "comp_id": self.document.comp_id,
+            "template_id": self.document.tid,
+            "version": self.document.v,
+        }
+
+    @property
+    def search(self) -> Dict[str, Any]:
+        return {
+            "nodes": self.document.sn,
+            "path": self.node.p,
+            "data": self.node.data,
+            "ehr_id": self.document.ehr_id,
+            "comp_id": self.document.comp_id,
+        }
+
+
+# --- Bundling ---
+
+class BundlingCfg(BaseModel):
+    mode: str = "perComposition"
+    maxCompositionsPerDoc: int = 100
+
+
+# --- Transform / Coding ---
+
+class ArcodesCfg(BaseModel):
+    strategy: str = "sequential"
+    prefix_replace: Optional[List[Dict[str, str]]] = None
+
+
+class AtcodesCfg(BaseModel):
+    strategy: str = "negative_int"
+    store_original: bool = False
 
 
 class CodingCfg(BaseModel):
-    archetype_ids: Dict[str, Any] = Field(default_factory=dict)
-    atcodes: Dict[str, Any] = Field(default_factory=dict)
+    arcodes: ArcodesCfg = Field(default_factory=ArcodesCfg)
+    atcodes: AtcodesCfg = Field(default_factory=AtcodesCfg)
 
+
+class TransformCfg(BaseModel):
+    mappings: Optional[Union[str, Dict[str, Any]]] = None
+    apply_shortcuts: bool = True
+    coding: CodingCfg = Field(default_factory=CodingCfg)
+
+
+# --- Query Engine ---
 
 class QueryEngineCfg(BaseModel):
     lookup_full_composition: bool = False
     mode: Optional[str] = None
 
 
+# --- Main Strategy Config ---
+
 class RPSDualConfig(BaseModel):
-    database: Optional[str] = None
+    """Main strategy configuration model (portal-visible)."""
     collections: CollectionsCfg = Field(default_factory=CollectionsCfg)
+    ids: IdsCfg = Field(default_factory=IdsCfg)
+    paths: PathsCfg = Field(default_factory=PathsCfg)
     fields: FieldsCfg = Field(default_factory=FieldsCfg)
-    coding: CodingCfg = Field(default_factory=CodingCfg)
-    node_representation: Dict[str, Any] = Field(default_factory=dict)
+    bundling: BundlingCfg = Field(default_factory=BundlingCfg)
+    transform: TransformCfg = Field(default_factory=TransformCfg)
     query_engine: QueryEngineCfg = Field(default_factory=QueryEngineCfg)
 
+    # Legacy accessors
+    @property
+    def database(self) -> Optional[str]:
+        return None
+
+    @property
+    def coding(self) -> CodingCfg:
+        return self.transform.coding
+
+    @property
+    def node_representation(self) -> Dict[str, Any]:
+        return {"path": {"token_joiner": self.paths.separator}}
+
+
+# --- Bulk Config (operational, not portal-visible) ---
+
+class SourceCfg(BaseModel):
+    connection_string: str = "mongodb://localhost:27017"
+    database_name: str = "source_openEHR"
+    collection_name: str = "samples"
+
+
+class TargetCfg(BaseModel):
+    connection_string: str = "mongodb://localhost:27017"
+    database_name: str = "openEHR"
+
+
+class BulkConfig(BaseModel):
+    """Bulk operation configuration (CLI/API only)."""
+    role: str = "primary"
+    source: SourceCfg = Field(default_factory=SourceCfg)
+    target: TargetCfg = Field(default_factory=TargetCfg)
+    batch_size: int = 100
+    patient_limit: Optional[int] = None
+    clean_collections: bool = False
+    reset_used_flags: bool = False
+    codes_refresh_interval: int = 60
+    replication_factor: int = 1
+    parallel_workers: int = 4
+    dry_run: bool = False
+    resume_from: Optional[str] = None
+
+
+# --- Normalization Functions ---
 
 def normalize_config(raw: Dict[str, Any]) -> RPSDualConfig:
-    return RPSDualConfig(**(raw or {}))
+    """Normalize raw config dict into RPSDualConfig model."""
+    if not raw:
+        return RPSDualConfig()
+
+    # Handle legacy flat structure
+    normalized = _migrate_legacy_config(raw)
+    return RPSDualConfig(**normalized)
+
+
+def normalize_bulk_config(raw: Dict[str, Any]) -> BulkConfig:
+    """Normalize raw bulk config dict into BulkConfig model."""
+    if not raw:
+        return BulkConfig()
+    return BulkConfig(**raw)
+
+
+def _migrate_legacy_config(raw: Dict[str, Any]) -> Dict[str, Any]:
+    """Migrate legacy config structure to new format."""
+    result = dict(raw)
+
+    # Migrate flat coding_opts to transform.coding
+    if "coding_opts" in result and "transform" not in result:
+        result["transform"] = {"coding": result.pop("coding_opts")}
+    elif "coding_opts" in result:
+        result.setdefault("transform", {})["coding"] = result.pop("coding_opts")
+
+    # Migrate flat coding to transform.coding
+    if "coding" in result and not isinstance(result.get("transform", {}).get("coding"), dict):
+        coding = result.pop("coding")
+        if isinstance(coding, dict) and "arcodes" in coding:
+            result.setdefault("transform", {})["coding"] = coding
+
+    # Migrate mapping_file to transform.mappings
+    if "mapping_file" in result.get("transform", {}):
+        mapping_file = result["transform"].pop("mapping_file")
+        if not mapping_file.startswith("file://") and not mapping_file.startswith("collection://"):
+            mapping_file = f"file://{mapping_file}"
+        result["transform"]["mappings"] = mapping_file
+
+    # Migrate legacy fields structure
+    if "composition_fields" in result or "search_fields" in result:
+        comp_fields = result.pop("composition_fields", {})
+        search_fields = result.pop("search_fields", {})
+        result["fields"] = {
+            "document": {
+                "ehr_id": comp_fields.get("ehr_id", "ehr_id"),
+                "comp_id": comp_fields.get("comp_id", "comp_id"),
+                "tid": comp_fields.get("template_id", "tid"),
+                "v": comp_fields.get("version", "v"),
+                "cn": comp_fields.get("nodes", "cn"),
+                "sn": search_fields.get("nodes", "sn"),
+            },
+            "node": {
+                "p": comp_fields.get("path", "p"),
+                "kp": comp_fields.get("keyPath", "kp"),
+                "li": comp_fields.get("lineIndex", "li"),
+                "data": comp_fields.get("data", "data"),
+            },
+        }
+
+    # Migrate legacy atlas_index_name to atlasIndex
+    if "collections" in result and "search" in result["collections"]:
+        search = result["collections"]["search"]
+        if "atlas_index_name" in search and "atlasIndex" not in search:
+            search["atlasIndex"] = {"name": search.pop("atlas_index_name")}
+        if "slim_projection" in search:
+            search.setdefault("atlasIndex", {})["definition"] = search.pop("slim_projection")
+
+    # Remove bulk-only fields that may have leaked into strategy config
+    for bulk_field in ["role", "source", "target", "batch_size", "patient_limit",
+                       "clean_collections", "reset_used_flags", "codes_refresh_interval",
+                       "replication_factor"]:
+        result.pop(bulk_field, None)
+
+    return result
 
 
 def build_schema_config(cfg: RPSDualConfig) -> Dict[str, Dict[str, Any]]:
-    comp_coll = cfg.collections.compositions if isinstance(cfg.collections.compositions, dict) else {}
-    search_coll = cfg.collections.search if isinstance(cfg.collections.search, dict) else {}
-    comp_nodes = comp_coll.get("nodes_field")
-    search_nodes = search_coll.get("nodes_field")
-    comp_fields = cfg.fields.composition if isinstance(cfg.fields, FieldsCfg) else cfg.fields.get("composition", {})
-    search_fields = cfg.fields.search if isinstance(cfg.fields, FieldsCfg) else cfg.fields.get("search", {})
+    """Build schema config for query compilation (legacy compat)."""
+    comp_coll = cfg.collections.compositions
+    search_coll = cfg.collections.search
+    fields = cfg.fields
+
     composition_schema = {
-        "composition_array": comp_nodes or comp_fields.get("nodes", "cn"),
-        "path_field": comp_fields.get("path", "p"),
-        "data_field": comp_fields.get("data", "data"),
-        "ehr_id": comp_fields.get("ehr_id", "ehr_id"),
-        "comp_id": comp_fields.get("comp_id", "cid"),
-        "collection": comp_coll.get("name", "compositions"),
+        "composition_array": fields.document.cn,
+        "path_field": fields.node.p,
+        "data_field": fields.node.data,
+        "ehr_id": fields.document.ehr_id,
+        "comp_id": fields.document.comp_id,
+        "collection": comp_coll.name,
     }
+
     search_schema = {
-        "composition_array": search_nodes or search_fields.get("nodes", "sn"),
-        "path_field": search_fields.get("path", "p"),
-        "data_field": search_fields.get("data", "data"),
-        "ehr_id": search_fields.get("ehr_id", "ehr_id"),
-        "comp_id": search_fields.get("comp_id", "cid"),
-        "index_name": search_coll.get("atlas_index_name"),
-        "lookup_from": comp_coll.get("name"),
+        "composition_array": fields.document.sn,
+        "path_field": fields.node.p,
+        "data_field": fields.node.data,
+        "ehr_id": fields.document.ehr_id,
+        "comp_id": fields.document.comp_id,
+        "index_name": search_coll.atlasIndex.name if search_coll.atlasIndex else None,
+        "lookup_from": comp_coll.name,
         "lookup_as": "full_composition",
-        "collection": search_coll.get("name", "compositions_search"),
+        "collection": search_coll.name,
     }
+
     return {"composition": composition_schema, "search": search_schema}
+
+
+def build_flattener_config(
+    strategy_cfg: RPSDualConfig,
+    bulk_cfg: Optional[BulkConfig] = None,
+) -> Dict[str, Any]:
+    """Build config dict for CompositionFlattener."""
+    bulk = bulk_cfg or BulkConfig()
+
+    return {
+        "role": bulk.role,
+        "apply_shortcuts": strategy_cfg.transform.apply_shortcuts,
+        "paths": {"separator": strategy_cfg.paths.separator},
+        "ids": {
+            "ehr_id": strategy_cfg.ids.ehr_id,
+            "composition_id": strategy_cfg.ids.composition_id,
+        },
+        "collections": {
+            "compositions": {
+                "name": strategy_cfg.collections.compositions.name,
+                "encodingProfile": strategy_cfg.collections.compositions.encodingProfile,
+            },
+            "search": {
+                "name": strategy_cfg.collections.search.name,
+                "encodingProfile": strategy_cfg.collections.search.encodingProfile,
+            },
+        },
+        "composition_fields": {
+            "nodes": strategy_cfg.fields.document.cn,
+            "path": strategy_cfg.fields.node.p,
+            "data": strategy_cfg.fields.node.data,
+            "ehr_id": strategy_cfg.fields.document.ehr_id,
+            "comp_id": strategy_cfg.fields.document.comp_id,
+            "template_id": strategy_cfg.fields.document.tid,
+            "version": strategy_cfg.fields.document.v,
+        },
+        "search_fields": {
+            "nodes": strategy_cfg.fields.document.sn,
+            "path": strategy_cfg.fields.node.p,
+            "data": strategy_cfg.fields.node.data,
+            "ehr_id": strategy_cfg.fields.document.ehr_id,
+        },
+        "target": {
+            "codes_collection": strategy_cfg.collections.codes.name,
+            "shortcuts_collection": strategy_cfg.collections.shortcuts.name,
+        },
+    }
+
+
+def build_coding_opts(cfg: RPSDualConfig) -> Dict[str, Any]:
+    """Build coding options dict for flattener."""
+    coding = cfg.transform.coding
+    return {
+        "arcodes": {
+            "strategy": coding.arcodes.strategy,
+            "prefix_replace": coding.arcodes.prefix_replace or [],
+        },
+        "atcodes": {
+            "strategy": coding.atcodes.strategy,
+            "store_original": coding.atcodes.store_original,
+        },
+    }

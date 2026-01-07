@@ -1,0 +1,58 @@
+{
+  "id": "fhir.resource_first",
+  "name": "FHIR Resource-First",
+  "version": "0.1.0",
+  "domain": "FHIR",
+  "summary": "Stores native FHIR resources with a basic search collection.",
+  "description": "Minimal FHIR strategy used for contract testing.",
+  "capabilities": [
+    "query"
+  ],
+  "entrypoint": "kehrnel.strategies.fhir.resource_first.strategy:FHIRResourceFirstStrategy",
+  "config_schema": {
+    "type": "object",
+    "properties": {
+      "database": {
+        "type": "string"
+      },
+      "collections": {
+        "type": "object",
+        "properties": {
+          "resources": {
+            "type": "string"
+          },
+          "search": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "resources"
+        ]
+      }
+    },
+    "required": [
+      "database",
+      "collections"
+    ]
+  },
+  "default_config": {
+    "database": "fhir_cdr",
+    "collections": {
+      "resources": "fhir_resources",
+      "search": "fhir_search"
+    }
+  },
+  "ops": [],
+  "adapters": {
+    "storage": [
+      "mongo"
+    ],
+    "search": [],
+    "vector": []
+  },
+  "compatibility": {
+    "protocols": [
+      "FHIR"
+    ]
+  }
+}

@@ -28,7 +28,7 @@ class StrategyPlugin:
     async def ingest(self, ctx: StrategyContext, payload: Dict[str, Any]) -> Dict[str, Any]:
         raise NotImplementedError
 
-    async def compile_query(self, ctx: StrategyContext, protocol: str, query: Dict[str, Any]) -> QueryPlan:
+    async def compile_query(self, ctx: StrategyContext, domain: str, query: Dict[str, Any]) -> QueryPlan:
         raise NotImplementedError
 
     async def execute_query(self, ctx: StrategyContext, plan: QueryPlan) -> QueryResult:

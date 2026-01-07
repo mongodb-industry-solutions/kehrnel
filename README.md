@@ -109,6 +109,16 @@ comp=$(kehrnel-generate -t template.opt --random)
 printf "%s" "$comp" | kehrnel-validate -t template.opt -
 ```
 
+### Validate a strategy pack for portability
+
+Use the validator to lint a strategy folder (manifest + defaults + schema + entrypoint) before dropping it into discovery paths:
+
+```bash
+kehrnel-validate-pack ./path/to/strategy-pack
+```
+
+Add `--json` for machine-readable diagnostics. A starter skeleton lives in `strategy-pack-template/`.
+
 ### Map a source file into an openEHR Composition
 
 Convert external source documents (e.g., CDA, HL7v2, custom XML/CSV) into a canonical openEHR composition JSON using a YAML mapping definition.

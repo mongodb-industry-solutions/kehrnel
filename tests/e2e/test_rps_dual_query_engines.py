@@ -2,12 +2,13 @@ import os
 import pytest
 import asyncio
 from pathlib import Path
+from pymongo.errors import ConfigurationError
 
 from kehrnel.core.registry import FileActivationRegistry
 from kehrnel.core.runtime import StrategyRuntime
 from kehrnel.core.manifest import StrategyManifest
 from kehrnel.strategies.openehr.rps_dual.strategy import MANIFEST as RPS_MANIFEST, RPSDualStrategy
-from strategy_sdk import StrategyBindings
+from kehrnel.strategy_sdk import StrategyBindings
 
 
 pytestmark = pytest.mark.asyncio
@@ -46,24 +47,27 @@ async def activated_env(runtime):
 
 async def test_query_engines(runtime, activated_env):
     env_id = activated_env
-    # apply plan (best-effort)
-    await runtime.dispatch(env_id, "apply", {})
-    # ingest two docs
-    doc1 = {"ehr_id": "p1", "_id": "1", "search_nodes": [{"p": "node", "text": "hello"}]}
-    doc2 = {"ehr_id": "p2", "_id": "2", "search_nodes": [{"p": "node", "text": "world"}]}
-    await runtime.dispatch(env_id, "ingest", doc1)
-    await runtime.dispatch(env_id, "ingest", doc2)
+    try:
+        # apply plan (best-effort)
+        await runtime.dispatch(env_id, "apply", {})
+        # ingest two docs
+        doc1 = {"ehr_id": "p1", "_id": "1", "search_nodes": [{"p": "node", "text": "hello"}]}
+        doc2 = {"ehr_id": "p2", "_id": "2", "search_nodes": [{"p": "node", "text": "world"}]}
+        await runtime.dispatch(env_id, "ingest", doc1)
+        await runtime.dispatch(env_id, "ingest", doc2)
 
-    # patient query
-    ir_patient = {"scope": "patient", "predicates": [{"path": "ehr_id", "op": "eq", "value": "p1"}]}
-    res_patient = await runtime.dispatch(env_id, "query", {"protocol": "openehr", "query": ir_patient})
-    assert res_patient.get("engine_used") == "mongo_pipeline"
-    assert res_patient.get("explain", {}).get("pipeline", [{}])[0].get("$match") is not None
+        # patient query
+        ir_patient = {"scope": "patient", "predicates": [{"path": "ehr_id", "op": "eq", "value": "p1"}]}
+        res_patient = await runtime.dispatch(env_id, "query", {"domain": "openehr", "query": ir_patient})
+        assert res_patient.get("engine_used") == "mongo_pipeline"
+        assert res_patient.get("explain", {}).get("pipeline", [{}])[0].get("$match") is not None
 
-    # cross-patient query (forces search)
-    ir_cross = {"scope": "cross_patient", "predicates": [{"path": "text", "op": "eq", "value": "hello"}]}
-    res_cross = await runtime.dispatch(env_id, "query", {"protocol": "openehr", "query": ir_cross})
-    assert res_cross.get("engine_used") in ("atlas_search_dual", "text_search_dual", "mongo_pipeline")
-    pipeline = res_cross.get("explain", {}).get("pipeline", [])
-    assert pipeline, "Pipeline should be present"
-    assert list(pipeline[0].keys())[0] == "$search"
+        # cross-patient query (forces search)
+        ir_cross = {"scope": "cross_patient", "predicates": [{"path": "text", "op": "eq", "value": "hello"}]}
+        res_cross = await runtime.dispatch(env_id, "query", {"domain": "openehr", "query": ir_cross})
+        assert res_cross.get("engine_used") in ("atlas_search_dual", "text_search_dual", "mongo_pipeline")
+        pipeline = res_cross.get("explain", {}).get("pipeline", [])
+        assert pipeline, "Pipeline should be present"
+        assert list(pipeline[0].keys())[0] == "$search"
+    except ConfigurationError as exc:
+        pytest.skip(f"MongoDB not reachable: {exc}")

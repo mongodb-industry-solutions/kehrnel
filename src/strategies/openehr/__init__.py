@@ -1,1 +1,0 @@
-# OpenEHR strategy namespace

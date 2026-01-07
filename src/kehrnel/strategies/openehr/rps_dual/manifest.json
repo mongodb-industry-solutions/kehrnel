@@ -1,110 +1,239 @@
 {
   "id": "openehr.rps_dual",
   "name": "Reversed Path Search - Dual Collection",
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "pack_format": "strategy-pack/v1",
+  "spec": { "path": "spec.json", "version": "1.1" },
+  "variants": ["composition.fullpath", "composition.codedpath", "search.shortcuts"],
+  "domain": "openEHR",
   "summary": "Optimizes indexing with a slim search collection alongside canonical nodes.",
   "description": "Reference OpenEHR strategy using reversed paths, dual collections, and Atlas Search dual-mode querying.",
-  "protocols": ["openEHR"],
-  "capabilities": ["transform", "ingest", "validate", "query", "plan", "apply"],
+  "config": {
+    "strategy": {
+      "schema": "schema.json",
+      "defaults": "defaults.json",
+      "description": "Data model and storage configuration (portal-visible)"
+    },
+    "bulk": {
+      "schema": "ingest/bulk_schema.json",
+      "defaults": "ingest/bulk_defaults.json",
+      "description": "Bulk operation settings (CLI/API only, not visible in portal)"
+    }
+  },
+  "capabilities": [
+    "transform",
+    "ingest",
+    "validate",
+    "query",
+    "plan",
+    "apply"
+  ],
   "entrypoint": "kehrnel.strategies.openehr.rps_dual.strategy:RPSDualStrategy",
   "ui": {
-    "tags": ["openEHR", "dual-collection", "atlas-search"],
-    "protocol_badge": "openEHR",
+    "tags": ["openEHR", "reversed-paths", "atlas-search", "dual-collection", "slim-search"],
+    "domain_badge": "openEHR",
     "works_with": ["atlas_search_dual"],
-    "links": {
-      "docs": "docs/refactor-plan.md"
+    "links": { "docs": "docs/refactor-plan.md" },
+    "benefits": [
+      "Slim search collection speeds cross-patient queries",
+      "Canonical compositions preserved for fidelity and projections",
+      "Atlas Search dual-mode supported out of the box"
+    ],
+    "constraints": [
+      "Requires MongoDB Atlas Search for population queries",
+      "Assumes reversed path indexing (cn/sn arrays)"
+    ],
+    "pick_when": [
+      "Need fast population search with slim documents",
+      "Want to keep canonical compositions alongside search docs"
+    ],
+    "avoid_when": [
+      "No Atlas Search available",
+      "Single-collection deployments with no slim search"
+    ],
+    "scorecard": {
+      "read_patient": 4,
+      "read_population": 5,
+      "writes": 2,
+      "storage": 3,
+      "index_cost": 3,
+      "migration_ease": 2
+    },
+    "references": {
+      "primary": [
+        {
+          "type": "paper",
+          "title": "A Document-First openEHR Persistence Layer for Operational Patient and Cross-Patient Workloads",
+          "authors": ["Mateu Amengual et al."],
+          "venue": "IEEE",
+          "year": 2025,
+          "status": "submitted",
+          "url": "https://arxiv.org/abs/XXXX.XXXXX"
+        }
+      ]
+    },
+    "tabs": {
+      "overview": {
+        "cards": [
+          { "title": "Querying", "body": "Dual pipelines: $match for patient scope, $search for population with slim docs." },
+          { "title": "Ingest", "body": "Stores canonical compositions and optional slim search documents." }
+        ]
+      }
     }
   },
   "ops": [
-  {
-    "name": "ensure_dictionaries",
-    "kind": "maintenance",
-    "summary": "Ensure _codes/_shortcuts dictionaries exist",
-    "input_schema": { "type": "object", "properties": {}, "additionalProperties": false },
-    "output_schema": {
-      "type": "object",
-      "properties": {
-        "codes_exists": { "type": "boolean" },
-        "shortcuts_exists": { "type": "boolean" }
-      }
-    }
-  },
-  {
-    "name": "rebuild_codes",
-    "kind": "maintenance",
-    "summary": "Rebuild atcode/archetype code tokens",
-    "input_schema": {
-      "type": "object",
-      "properties": { "dry_run": { "type": "boolean", "default": false } },
-      "additionalProperties": false
-    },
-    "output_schema": {
-      "type": "object",
-      "properties": {
-        "updated": { "type": "boolean" },
-        "min": { "type": "integer" },
-        "max": { "type": "integer" },
-        "counts": { "type": "object" }
-      }
-    }
-  },
-  {
-    "name": "rebuild_shortcuts",
-    "kind": "maintenance",
-    "summary": "Rebuild slim shortcuts map",
-    "input_schema": {
-      "type": "object",
-      "properties": { "dry_run": { "type": "boolean", "default": false } },
-      "additionalProperties": false
-    },
-    "output_schema": { "type": "object" }
-  },
-  {
-    "name": "ensure_atlas_search_index",
-    "kind": "maintenance",
-    "summary": "Ensure Atlas Search index for slim search collection",
-    "input_schema": {
-      "type": "object",
-      "properties": {
-        "index_name": { "type": "string" },
-        "recreate": { "type": "boolean", "default": false }
+    {
+      "name": "ensure_dictionaries",
+      "kind": "maintenance",
+      "summary": "Ensure _codes/_shortcuts dictionaries exist",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
       },
-      "additionalProperties": false
-    },
-    "output_schema": {
-      "type": "object",
-      "properties": {
-        "ok": { "type": "boolean" },
-        "supported": { "type": "boolean" },
-        "notes": { "type": "array", "items": { "type": "string" } }
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "codes_exists": {
+            "type": "boolean"
+          },
+          "shortcuts_exists": {
+            "type": "boolean"
+          }
+        }
       }
-    }
-  },
-  {
-    "name": "rebuild_slim_search_collection",
-    "kind": "maintenance",
-    "summary": "Recreate slim search docs from canonical compositions",
-    "input_schema": {
-      "type": "object",
-      "properties": {
-        "batch_size": { "type": "integer", "default": 2000 },
-        "dry_run": { "type": "boolean", "default": false }
+    },
+    {
+      "name": "rebuild_codes",
+      "kind": "maintenance",
+      "summary": "Rebuild atcode/archetype code tokens",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "dry_run": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "additionalProperties": false
       },
-      "additionalProperties": false
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "updated": {
+            "type": "boolean"
+          },
+          "min": {
+            "type": "integer"
+          },
+          "max": {
+            "type": "integer"
+          },
+          "counts": {
+            "type": "object"
+          }
+        }
+      }
     },
-    "output_schema": {
-      "type": "object",
-      "properties": {
-        "processed": { "type": "integer" },
-        "inserted": { "type": "integer" },
-        "updated": { "type": "integer" },
-        "warnings": { "type": "array", "items": { "type": "string" } }
+    {
+      "name": "rebuild_shortcuts",
+      "kind": "maintenance",
+      "summary": "Rebuild slim shortcuts map",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "dry_run": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "ensure_atlas_search_index",
+      "kind": "maintenance",
+      "summary": "Ensure Atlas Search index for slim search collection",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "index_name": {
+            "type": "string"
+          },
+          "recreate": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "supported": {
+            "type": "boolean"
+          },
+          "notes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "rebuild_slim_search_collection",
+      "kind": "maintenance",
+      "summary": "Recreate slim search docs from canonical compositions",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "batch_size": {
+            "type": "integer",
+            "default": 2000
+          },
+          "dry_run": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "processed": {
+            "type": "integer"
+          },
+          "inserted": {
+            "type": "integer"
+          },
+          "updated": {
+            "type": "integer"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
       }
     }
-  }
-],
+  ],
   "adapters": {
-    "storage": ["mongo"],
-    "search": ["atlas_search"]
+    "storage": [
+      "mongo"
+    ],
+    "search": [
+      "atlas_search"
+    ]
   }
 }

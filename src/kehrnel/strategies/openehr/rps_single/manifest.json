@@ -1,0 +1,42 @@
+{
+  "id": "openehr.rps_single",
+  "name": "Reversed Path Search - Single Collection",
+  "version": "0.1.0",
+  "domain": "openEHR",
+  "summary": "Single-collection reversed path search strategy for openEHR compositions.",
+  "description": "Stores compositions with reversed paths in a single collection; uses Atlas Search when available.",
+  "capabilities": ["transform", "ingest", "validate", "query", "plan", "apply"],
+  "entrypoint": "kehrnel.strategies.openehr.rps_single.strategy:RPSSingleStrategy",
+  "ui": {
+    "tags": ["openEHR", "reversed-paths", "single-collection", "atlas-search"],
+    "domain_badge": "openEHR",
+    "works_with": ["atlas_search_dual"],
+    "benefits": [
+      "Simpler deployment with a single collection",
+      "Supports reversed paths with optional Atlas Search"
+    ],
+    "constraints": ["Relies on reversed path indexing within one collection"],
+    "pick_when": ["Prefer minimal storage footprint"],
+    "avoid_when": ["Need dedicated slim search collection"],
+    "scorecard": {
+      "read_patient": 4,
+      "read_population": 4,
+      "writes": 3,
+      "storage": 2,
+      "index_cost": 2,
+      "migration_ease": 3
+    },
+    "tabs": {
+      "overview": {
+        "cards": [
+          { "title": "Querying", "body": "Uses a single collection with reversed paths; $match or $search depending on scope." }
+        ]
+      }
+    }
+  },
+  "ops": [],
+  "adapters": {
+    "storage": ["mongo"],
+    "search": ["atlas_search"]
+  }
+}

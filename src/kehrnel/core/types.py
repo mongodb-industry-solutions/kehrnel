@@ -9,6 +9,7 @@ from .manifest import StrategyManifest
 class QueryPlan:
     engine: str
     plan: Dict[str, Any] = field(default_factory=dict)
+    explain: Optional[Dict[str, Any]] = None
 
 
 @dataclass
