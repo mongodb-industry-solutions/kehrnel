@@ -6,9 +6,6 @@ from typing import Any, Dict, List, Tuple
 from kehrnel.domains.openehr.aql.ir import AqlQueryIR
 from kehrnel.strategies.openehr.rps_dual.config import RPSDualConfig, build_schema_config
 from kehrnel.strategies.openehr.rps_dual.query.ast_adapter import adapt_ir_to_ast
-from kehrnel.strategies.openehr.rps_dual.query.compat import persistence as legacy_persistence
-from kehrnel.strategies.openehr.rps_dual.query.compat import settings as legacy_settings
-from kehrnel.strategies.openehr.rps_dual.query.transformers import search_pipeline_builder as search_builder_module
 from kehrnel.strategies.openehr.rps_dual.query.transformers.aql_transformer import AQLtoMQLTransformer
 from kehrnel.strategies.openehr.rps_dual.query.transformers.ast_validator import ASTValidator
 from kehrnel.strategies.openehr.rps_dual.query.transformers.context_mapper import ContextMapper
@@ -24,8 +21,6 @@ def extract_ehr_id(ir: AqlQueryIR) -> str | None:
 
 async def build_query_pipeline(ir: AqlQueryIR, cfg_model: RPSDualConfig) -> Tuple[str, List[Dict[str, Any]], str, Dict[str, Any], Dict[str, Any], Dict[str, Any]]:
     cfg = cfg_model.model_dump()
-    legacy_settings.configure(cfg)
-    legacy_persistence.configure(cfg)
     ast_doc = adapt_ir_to_ast(ir, ehr_alias="e", composition_alias="c")
     ASTValidator.validate_ast(ast_doc)
     ehr_alias, comp_alias = ASTValidator.detect_key_aliases(ast_doc)
@@ -33,13 +28,12 @@ async def build_query_pipeline(ir: AqlQueryIR, cfg_model: RPSDualConfig) -> Tupl
     schema_cfgs = build_schema_config(cfg_model)
     # Initialize resolver to keep behavior aligned with strategy compile path.
     FormatResolver(ctx_map, ehr_alias, comp_alias, schema_cfgs["composition"])
-    search_builder_module.settings = legacy_settings.settings
     builder_reason = "scope_patient" if ir.scope == "patient" else "scope_cross_patient"
     transformer = AQLtoMQLTransformer(
-        ast=legacy_ast,
+        ast=ast_doc,
         ehr_id=extract_ehr_id(ir),
         schema_config=schema_cfgs["composition"],
-        strategy=legacy_persistence.get_default_strategy(),
+        search_schema_config=schema_cfgs["search"],
         search_index_name=schema_cfgs["search"].get("index_name"),
     )
     if ir.scope == "cross_patient" and cfg.get("collections", {}).get("search", {}).get("enabled"):

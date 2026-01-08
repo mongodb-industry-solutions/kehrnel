@@ -5,8 +5,6 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from .condition_processor import ConditionProcessor
 from .value_formatter import ValueFormatter
 from .format_resolver import FormatResolver
-from kehrnel.strategies.openehr.rps_dual.query.compat.persistence import PersistenceStrategy, get_default_strategy
-from kehrnel.strategies.openehr.rps_dual.query.compat.settings import settings
 import logging
 import re
 
@@ -16,13 +14,13 @@ logger = logging.getLogger(__name__)
 class SearchPipelineBuilder:
     """
     Builds MongoDB aggregation pipelines that start with $search stages for Atlas Search.
-    Designed specifically for the search collection (sm_search3) with 'sn' array structure.
+    Designed specifically for the search collection with 'sn' array structure.
     """
 
-    def __init__(self, ehr_alias: str, composition_alias: str, schema_config: Dict[str, str], 
-                 format_resolver: FormatResolver, context_map: Dict[str, Dict], 
+    def __init__(self, ehr_alias: str, composition_alias: str, schema_config: Dict[str, str],
+                 format_resolver: FormatResolver, context_map: Dict[str, Dict],
                  let_variables: Dict[str, Any] = None,
-                 strategy: Optional[PersistenceStrategy] = None,
+                 search_schema_config: Optional[Dict[str, Any]] = None,
                  search_index_name: Optional[str] = None):
         self.ehr_alias = ehr_alias
         self.composition_alias = composition_alias
@@ -30,35 +28,27 @@ class SearchPipelineBuilder:
         self.format_resolver = format_resolver
         self.context_map = context_map
         self.let_variables = let_variables or {}
-        self.strategy = strategy or get_default_strategy()
-        
-        # Use centralized configuration like repository.py does
-        self.search_index_name = (
-            search_index_name
-            or self._resolve_search_index_name()
-            or settings.search_config.search_index_name
-        )
-        self.full_compositions_collection = settings.search_config.flatten_collection
-        
+        self.search_schema_config = search_schema_config or {}
+
+        # Use search index name from config
+        self.search_index_name = search_index_name or self.search_schema_config.get("index_name", "search_compositions_index")
+        self.full_compositions_collection = self.search_schema_config.get("lookup_from", "compositions")
+
         # For search collection, we use 'sn' instead of 'cn'
         self.search_config = self._build_search_schema_config()
-        
+
         self.condition_processor = ConditionProcessor(
             ehr_alias, composition_alias, self.search_config, format_resolver, let_variables
         )
         self.value_formatter = ValueFormatter()
 
     def _build_search_schema_config(self):
-        search_fields = self.strategy.fields.get("search") if self.strategy else None
+        """Build schema config for search collection from search_schema_config."""
         return {
-            'composition_array': search_fields.nodes if search_fields and search_fields.nodes else 'sn',
-            'path_field': search_fields.path if search_fields and search_fields.path else 'p',
-            'data_field': search_fields.data if search_fields and search_fields.data else 'data',
+            'composition_array': self.search_schema_config.get('composition_array', 'sn'),
+            'path_field': self.search_schema_config.get('path_field', 'p'),
+            'data_field': self.search_schema_config.get('data_field', 'data'),
         }
-
-    def _resolve_search_index_name(self):
-        search_collection = self.strategy.collections.get("search") if self.strategy else None
-        return search_collection.atlas_index_name if search_collection else None
 
     async def build_search_pipeline(self, ast: Dict[str, Any]) -> List[Dict[str, Any]]:
         """

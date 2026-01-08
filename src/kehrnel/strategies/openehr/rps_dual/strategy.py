@@ -279,8 +279,7 @@ class RPSDualStrategy(StrategyPlugin):
         bundle_id = slim_cfg.get("bundle_id")
         bundle_refs = (ctx.meta or {}).get("bundle_refs") or {}
         bundle_digest = bundle_refs.get(bundle_id) if bundle_id else None
-        # configure legacy compat so vendored transformers can read config
-        # Query compiler lives under rps_dual.query (former legacy stack).
+        # Build query pipeline using the query compiler
         engine, pipeline, stage0, schema_cfgs, ast_doc, builder_info = await build_query_pipeline(ir, cfg_model)
         if ir.scope == "cross_patient":
             post_match = [stage for stage in pipeline[1:] if "$match" in stage]

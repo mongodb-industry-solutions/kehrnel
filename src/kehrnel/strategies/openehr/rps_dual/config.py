@@ -203,10 +203,7 @@ def normalize_config(raw: Dict[str, Any]) -> RPSDualConfig:
     """Normalize raw config dict into RPSDualConfig model."""
     if not raw:
         return RPSDualConfig()
-
-    # Handle legacy flat structure
-    normalized = _migrate_legacy_config(raw)
-    return RPSDualConfig(**normalized)
+    return RPSDualConfig(**raw)
 
 
 def normalize_bulk_config(raw: Dict[str, Any]) -> BulkConfig:
@@ -214,67 +211,6 @@ def normalize_bulk_config(raw: Dict[str, Any]) -> BulkConfig:
     if not raw:
         return BulkConfig()
     return BulkConfig(**raw)
-
-
-def _migrate_legacy_config(raw: Dict[str, Any]) -> Dict[str, Any]:
-    """Migrate legacy config structure to new format."""
-    result = dict(raw)
-
-    # Migrate flat coding_opts to transform.coding
-    if "coding_opts" in result and "transform" not in result:
-        result["transform"] = {"coding": result.pop("coding_opts")}
-    elif "coding_opts" in result:
-        result.setdefault("transform", {})["coding"] = result.pop("coding_opts")
-
-    # Migrate flat coding to transform.coding
-    if "coding" in result and not isinstance(result.get("transform", {}).get("coding"), dict):
-        coding = result.pop("coding")
-        if isinstance(coding, dict) and "arcodes" in coding:
-            result.setdefault("transform", {})["coding"] = coding
-
-    # Migrate mapping_file to transform.mappings
-    if "mapping_file" in result.get("transform", {}):
-        mapping_file = result["transform"].pop("mapping_file")
-        if not mapping_file.startswith("file://") and not mapping_file.startswith("collection://"):
-            mapping_file = f"file://{mapping_file}"
-        result["transform"]["mappings"] = mapping_file
-
-    # Migrate legacy fields structure
-    if "composition_fields" in result or "search_fields" in result:
-        comp_fields = result.pop("composition_fields", {})
-        search_fields = result.pop("search_fields", {})
-        result["fields"] = {
-            "document": {
-                "ehr_id": comp_fields.get("ehr_id", "ehr_id"),
-                "comp_id": comp_fields.get("comp_id", "comp_id"),
-                "tid": comp_fields.get("template_id", "tid"),
-                "v": comp_fields.get("version", "v"),
-                "cn": comp_fields.get("nodes", "cn"),
-                "sn": search_fields.get("nodes", "sn"),
-            },
-            "node": {
-                "p": comp_fields.get("path", "p"),
-                "kp": comp_fields.get("keyPath", "kp"),
-                "li": comp_fields.get("lineIndex", "li"),
-                "data": comp_fields.get("data", "data"),
-            },
-        }
-
-    # Migrate legacy atlas_index_name to atlasIndex
-    if "collections" in result and "search" in result["collections"]:
-        search = result["collections"]["search"]
-        if "atlas_index_name" in search and "atlasIndex" not in search:
-            search["atlasIndex"] = {"name": search.pop("atlas_index_name")}
-        if "slim_projection" in search:
-            search.setdefault("atlasIndex", {})["definition"] = search.pop("slim_projection")
-
-    # Remove bulk-only fields that may have leaked into strategy config
-    for bulk_field in ["role", "source", "target", "batch_size", "patient_limit",
-                       "clean_collections", "reset_used_flags", "codes_refresh_interval",
-                       "replication_factor"]:
-        result.pop(bulk_field, None)
-
-    return result
 
 
 def build_schema_config(cfg: RPSDualConfig) -> Dict[str, Dict[str, Any]]:
