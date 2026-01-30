@@ -1,8 +1,9 @@
 """
 Admin/runtime API for strategy discovery and environment operations.
 """
+from pathlib import Path
 from fastapi import APIRouter, Request, Body
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from typing import Any, Dict, List
 
 from kehrnel.core.manifest import StrategyManifest
@@ -77,6 +78,42 @@ async def health():
     return {"ok": True}
 
 
+def _validate_strategy_path(pack_path: str, request: Request) -> Path:
+    """Validate that pack_path is within allowed strategy directories."""
+    import os
+    resolved = Path(pack_path).resolve()
+    # Get allowed strategy paths from app state or environment
+    allowed_paths = getattr(request.app.state, "allowed_strategy_paths", None)
+    if not allowed_paths:
+        # Default: only allow paths under the strategies directory
+        base_strategies = Path(__file__).resolve().parents[2] / "strategies"
+        allowed_paths = [base_strategies.resolve()]
+        # Add paths from environment variable
+        extra = os.getenv("KEHRNEL_STRATEGY_PATHS")
+        if extra:
+            for sep in (":", ","):
+                if sep in extra:
+                    extra_paths = [p for p in extra.split(sep) if p]
+                    break
+            else:
+                extra_paths = [extra] if extra else []
+            for part in extra_paths:
+                if part:
+                    allowed_paths.append(Path(part).resolve())
+    # Check if resolved path is under any allowed path
+    for allowed in allowed_paths:
+        try:
+            resolved.relative_to(allowed)
+            return resolved
+        except ValueError:
+            continue
+    raise KehrnelError(
+        code="PATH_NOT_ALLOWED",
+        status=403,
+        message="Strategy path is outside allowed directories"
+    )
+
+
 @router.post("/v1/strategies/load", include_in_schema=False)
 async def load_strategy_pack(request: Request, body: Dict[str, Any] = Body(default_factory=dict)):
     try:
@@ -87,7 +124,9 @@ async def load_strategy_pack(request: Request, body: Dict[str, Any] = Body(defau
         strategy_id = body.get("strategy_id") or body.get("strategyId")
         if not pack_path:
             raise KehrnelError(code="INVALID_INPUT", status=400, message="path is required")
-        manifest = load_strategy(strategy_id, pack_path)
+        # Validate path is within allowed directories
+        validated_path = _validate_strategy_path(pack_path, request)
+        manifest = load_strategy(strategy_id, str(validated_path))
         rt.register_manifest(manifest)
         return {"ok": True, "strategy": manifest}
     except Exception as exc:
@@ -224,6 +263,31 @@ async def get_strategy(strategy_id: str, request: Request):
         if hasattr(manifest, "pack_spec") and manifest.pack_spec:
             data["pack_spec"] = manifest.pack_spec
         return data
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.get("/v1/strategies/{strategy_id}/assets/{asset_path:path}")
+async def get_strategy_asset(strategy_id: str, asset_path: str, request: Request):
+    try:
+        asset_dirs = getattr(request.app.state, "strategy_asset_dirs", None) or {}
+        base_dir = asset_dirs.get(strategy_id)
+        if not base_dir:
+            raise KehrnelError(code="STRATEGY_NOT_FOUND", status=404, message=f"Strategy {strategy_id} not found")
+        # Explicit path traversal protection
+        if ".." in asset_path or asset_path.startswith("/"):
+            raise KehrnelError(code="INVALID_PATH", status=400, message="Path traversal not allowed")
+        base_path = Path(base_dir).resolve()
+        safe_asset = asset_path.lstrip("/")
+        # Additional check for null bytes and other dangerous characters
+        if "\x00" in safe_asset or "\\" in safe_asset:
+            raise KehrnelError(code="INVALID_PATH", status=400, message="Invalid characters in path")
+        candidate = (base_path / safe_asset).resolve()
+        if base_path not in candidate.parents and candidate != base_path:
+            raise KehrnelError(code="ASSET_OUT_OF_BOUNDS", status=400, message="Invalid asset path")
+        if not candidate.exists() or not candidate.is_file():
+            raise KehrnelError(code="ASSET_NOT_FOUND", status=404, message="Asset not found")
+        return FileResponse(str(candidate))
     except Exception as exc:
         return _error_response(exc)
 

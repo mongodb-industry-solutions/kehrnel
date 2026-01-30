@@ -12,6 +12,10 @@ from .activation import EnvironmentActivation
 
 
 class ActivationRegistry:
+    def clear_manifests(self) -> None:
+        """Clear all cached manifests. Called on startup before registering fresh manifests from disk."""
+        raise NotImplementedError
+
     def register_manifest(self, manifest: StrategyManifest) -> None:
         raise NotImplementedError
 
@@ -82,6 +86,11 @@ class FileActivationRegistry(ActivationRegistry):
         tmp = self.path.with_suffix(".tmp")
         tmp.write_text(json.dumps(data, indent=2), encoding="utf-8")
         tmp.replace(self.path)
+
+    def clear_manifests(self) -> None:
+        """Clear all cached manifests to prepare for fresh registration from disk."""
+        self.manifests.clear()
+        # Note: we don't save here; caller will register fresh manifests and save
 
     def register_manifest(self, manifest: StrategyManifest) -> None:
         self.manifests[manifest.id] = manifest

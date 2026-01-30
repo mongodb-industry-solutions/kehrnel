@@ -1,0 +1,247 @@
+{
+  "$schema": "https://example.org/strategy-pack/spec.schema.json",
+  "meta": {
+    "strategyId": "x12.co_single",
+    "specVersion": "1.0",
+    "title": "X12-837 Claim Processing",
+    "summary": "837 claim-processing strategy with ephemeral stage-1 and unified cn[] output.",
+    "domain": "X12",
+    "tags": ["X12", "EDI", "837", "ContextObject", "single-collection", "cn[]"],
+    "owners": ["Francesc Mateu Amengual"],
+    "compat": {
+      "packFormat": "strategy-pack/v1",
+      "requires": ["storage.mongo"],
+      "optional": ["search.atlas"],
+      "minRuntime": "0.9.0"
+    }
+  },
+
+  "glossary": {
+    "terms": {
+      "ephemeral": "Stage-1 parse output that is not persisted by default.",
+      "cn[]": "Context nodes array - flattened path-value pairs (same shape as openEHR).",
+      "co": "ContextObject reference - template id and version.",
+      "control": "X12 envelope control identifiers (isa13, gs06, st02)."
+    }
+  },
+
+  "logicalModel": {
+    "source": {
+      "types": [
+        {
+          "id": "x12.edi.raw",
+          "title": "Raw X12 EDI",
+          "kind": "text",
+          "description": "Raw X12 EDI text (ISA/GS/ST envelope + segments)"
+        }
+      ]
+    },
+    "concepts": [
+      {
+        "id": "x12.stage1.ephemeral",
+        "title": "Ephemeral Stage-1",
+        "kind": "intermediate",
+        "meaning": "Parsed X12 with control IDs and segments. NOT persisted by default.",
+        "fields": {
+          "type": {"type": "string"},
+          "control": {"type": "object"},
+          "segments": {"type": "array"}
+        }
+      },
+      {
+        "id": "x12.cn",
+        "title": "Context Node",
+        "kind": "record",
+        "meaning": "Flattened path-value pair (same shape as openEHR cn).",
+        "fields": {
+          "p": {"type": "string", "role": "path.reversed"},
+          "kp": {"type": "array", "role": "path.keypath"},
+          "data": {"type": "any", "role": "payload"}
+        }
+      }
+    ],
+    "destinations": {
+      "types": [
+        {
+          "id": "x12.co_single.claims.v1",
+          "title": "Claims Document",
+          "kind": "collectionRecord",
+          "fields": {
+            "_id": {"type": "string", "role": "pk"},
+            "tenant_id": {"type": "string", "role": "tenant"},
+            "type": {"type": "string", "role": "classifier"},
+            "control": {"type": "object", "role": "identity"},
+            "co": {"type": "object", "role": "template_ref"},
+            "cn": {"type": "x12.cn[]", "role": "nodes"}
+          }
+        }
+      ]
+    }
+  },
+
+  "storageModel": {
+    "stores": [
+      {
+        "id": "store:claims",
+        "title": "Claims Store",
+        "engine": "mongo",
+        "destinationType": "x12.co_single.claims.v1",
+        "collectionNameFromConfig": "collections.claims.name",
+        "indexes": [
+          {"id": "idx_type", "type": "btree", "fields": ["type"]},
+          {"id": "idx_control_isa13", "type": "btree", "fields": ["control.isa13"]},
+          {"id": "idx_control_gs06", "type": "btree", "fields": ["control.gs06"]},
+          {"id": "idx_control_st02", "type": "btree", "fields": ["control.st02"]},
+          {"id": "idx_cn_path", "type": "btree", "fields": ["cn.p"]}
+        ]
+      },
+      {
+        "id": "store:stage1",
+        "title": "Stage-1 Debug Store",
+        "engine": "mongo",
+        "collectionNameFromConfig": "collections.stage1.name",
+        "enabledFromConfig": "transform.debug.persistStage1",
+        "purpose": "Optional persistence of ephemeral stage-1 for debugging"
+      }
+    ]
+  },
+
+  "transformModel": {
+    "steps": [
+      {
+        "id": "step.parse_x12",
+        "title": "Parse X12 (ephemeral)",
+        "inputs": ["x12.edi.raw"],
+        "outputs": ["x12.stage1.ephemeral"],
+        "ephemeral": true,
+        "description": "Parse X12 to ephemeral structure with control IDs (ISA13/GS06/ST02) and segments. NOT persisted by default."
+      },
+      {
+        "id": "step.map_to_co",
+        "title": "Map to ContextObject",
+        "inputs": ["x12.stage1.ephemeral"],
+        "outputs": ["x12.claim.co"],
+        "description": "Map parsed X12 to ContextObject instance using CO template and blocks."
+      },
+      {
+        "id": "step.flatten_to_cn",
+        "title": "Flatten to cn[]",
+        "inputs": ["x12.claim.co"],
+        "outputs": ["x12.cn[]"],
+        "description": "Semi-flatten CO into cn[] (same shape as openEHR's cn)."
+      },
+      {
+        "id": "step.materialize",
+        "title": "Materialize",
+        "inputs": ["x12.cn[]"],
+        "collection": "store:claims",
+        "description": "Write one document per transaction to claims collection."
+      }
+    ],
+    "invariants": [
+      {
+        "id": "inv.stable_id",
+        "assert": "_id derived from control.isa13 + control.gs06 + control.st02"
+      },
+      {
+        "id": "inv.cn_shape",
+        "assert": "cn[] shape matches openEHR {p, kp, data}"
+      }
+    ]
+  },
+
+  "queryModel": {
+    "modes": [
+      {
+        "id": "claim_scoped",
+        "title": "Claim-scoped",
+        "uses": ["store:claims"],
+        "pattern": "match",
+        "primaryFilters": ["_id", "control.isa13", "control.st02"]
+      },
+      {
+        "id": "cross_claim",
+        "title": "Cross-claim",
+        "uses": ["store:claims"],
+        "pattern": "search",
+        "searchEngine": "atlas_search"
+      }
+    ]
+  },
+
+  "visualization": {
+    "canvas": {
+      "defaultView": "overview",
+      "views": [
+        {"id": "overview", "title": "Overview", "shows": ["collectionModel", "transformGraph"], "layout": {"type": "grid", "columns": 2}},
+        {"id": "collections", "title": "Collections", "shows": ["collectionModel"], "layout": {"type": "free"}},
+        {"id": "transform", "title": "Transform", "shows": ["transformGraph"], "layout": {"type": "dag", "direction": "LR"}},
+        {"id": "indexes", "title": "Indexes", "shows": ["indexOverlay"], "layout": {"type": "free"}}
+      ]
+    },
+    "collectionModel": {
+      "entities": [
+        {
+          "id": "coll.claims",
+          "kind": "collection",
+          "store": "store:claims",
+          "label": "x12_claims",
+          "fields": ["_id", "tenant_id", "type", "control", "co", "cn"],
+          "expand": {
+            "control": ["isa13", "gs06", "st02"],
+            "co": ["id", "version"],
+            "cn": ["p", "kp", "data"]
+          },
+          "badges": ["semantic", "cn[]", "unified"],
+          "links": []
+        },
+        {
+          "id": "coll.stage1",
+          "kind": "collection",
+          "store": "store:stage1",
+          "label": "x12_stage1 (debug)",
+          "fields": ["_id", "type", "control", "segments"],
+          "badges": ["ephemeral", "debug"],
+          "links": [{"type": "derivedFrom", "target": "coll.claims", "on": "_id"}]
+        }
+      ]
+    },
+    "transformGraph": {
+      "nodes": [
+        {"id": "src.edi", "kind": "source", "label": "Raw X12 EDI", "typeRef": "x12.edi.raw"},
+        {"id": "op.parse", "kind": "transform", "label": "Parse X12 (ephemeral)", "stepRef": "step.parse_x12"},
+        {"id": "op.map", "kind": "transform", "label": "Map to CO", "stepRef": "step.map_to_co"},
+        {"id": "op.flatten", "kind": "transform", "label": "Flatten to cn[]", "stepRef": "step.flatten_to_cn"},
+        {"id": "sink.claims", "kind": "sink", "label": "Write claims", "stepRef": "step.materialize", "entityRef": "coll.claims"},
+        {"id": "sink.stage1", "kind": "sink", "label": "Write stage1 (debug)", "entityRef": "coll.stage1", "optional": true}
+      ],
+      "edges": [
+        {"from": "src.edi", "to": "op.parse"},
+        {"from": "op.parse", "to": "op.map"},
+        {"from": "op.parse", "to": "sink.stage1", "style": "dashed"},
+        {"from": "op.map", "to": "op.flatten"},
+        {"from": "op.flatten", "to": "sink.claims"}
+      ]
+    },
+    "indexOverlay": {
+      "indexGroups": [
+        {
+          "id": "idxgrp.claims",
+          "entityRef": "coll.claims",
+          "items": ["idx_type", "idx_control_isa13", "idx_control_gs06", "idx_control_st02", "idx_cn_path"]
+        }
+      ]
+    },
+    "legends": {
+      "fieldLegend": {
+        "entries": [
+          {"label": "_id", "meaning": "Stable ID from control numbers"},
+          {"label": "type", "meaning": "Transaction type (837P, 837D, 837I)"},
+          {"label": "control", "meaning": "Envelope control IDs"},
+          {"label": "co", "meaning": "ContextObject template reference"},
+          {"label": "cn", "meaning": "Context nodes (same shape as openEHR)"}
+        ]
+      }
+    }
+  }
+}
