@@ -123,7 +123,9 @@ app = FastAPI(title="Kehrnel Mapping Studio API", version="1.0.0")
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Your Next.js app
+    allow_origins=[
+        "*"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -131,7 +133,7 @@ app.add_middleware(
 )
 
 # MongoDB connection
-MONGODB_URL = os.getenv("MONGODB_URL") 
+MONGODB_URL = os.getenv("MONGODB_URI") 
 
 try:
     motor_client = motor.motor_asyncio.AsyncIOMotorClient(
