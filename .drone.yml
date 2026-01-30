@@ -43,9 +43,9 @@ steps:
         - "ingress.enabled=true"
         - "ingress.hosts[0]=kehrnel-backend.industrysolutions.staging.corp.mongodb.com"
         - "mesh.enabled=true"
-        - "resources.limits.cpu=400m"
+        - "resources.limits.cpu=250m"
         - "resources.limits.memory=256Mi"
-        - "resources.requests.cpu=400m"
+        - "resources.requests.cpu=250m"
         - "resources.requests.memory=256Mi"
       api_server: https://api.staging.corp.mongodb.com
       kubernetes_token:
@@ -90,9 +90,9 @@ steps:
         - "ingress.enabled=true"
         - "ingress.hosts[0]=kehrnel-openehr.industrysolutions.staging.corp.mongodb.com"
         - "mesh.enabled=true"
-        - "resources.limits.cpu=400m"
+        - "resources.limits.cpu=250m"
         - "resources.limits.memory=256Mi"
-        - "resources.requests.cpu=400m"
+        - "resources.requests.cpu=250m"
         - "resources.requests.memory=256Mi"
       api_server: https://api.staging.corp.mongodb.com
       kubernetes_token:
@@ -146,9 +146,9 @@ steps:
         - "ingress.enabled=true"
         - "ingress.hosts[0]=kehrnel-backend.industrysolutions.prod.corp.mongodb.com"
         - "mesh.enabled=true"
-        - "resources.limits.cpu=400m"
+        - "resources.limits.cpu=250m"
         - "resources.limits.memory=256Mi"
-        - "resources.requests.cpu=400m"
+        - "resources.requests.cpu=250m"
         - "resources.requests.memory=256Mi"
       api_server: https://api.prod.corp.mongodb.com
       kubernetes_token:
@@ -193,9 +193,9 @@ steps:
         - "ingress.enabled=true"
         - "ingress.hosts[0]=kehrnel-openehr.industrysolutions.prod.corp.mongodb.com"
         - "mesh.enabled=true"
-        - "resources.limits.cpu=400m"
+        - "resources.limits.cpu=250m"
         - "resources.limits.memory=256Mi"
-        - "resources.requests.cpu=400m"
+        - "resources.requests.cpu=250m"
         - "resources.requests.memory=256Mi"
       api_server: https://api.prod.corp.mongodb.com
       kubernetes_token:
