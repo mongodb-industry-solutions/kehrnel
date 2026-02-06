@@ -12,8 +12,8 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from core import kehrnelValidator, TemplateParser
-from core.models import Severity
+from kehrnel.domains.openehr.templates import kehrnelValidator, TemplateParser
+from kehrnel.domains.openehr.templates.models import Severity
 
 app = typer.Typer(add_completion=False, rich_markup_mode="rich")
 console = Console()

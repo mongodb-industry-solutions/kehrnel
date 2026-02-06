@@ -16,7 +16,7 @@ from pathlib import Path
 
 import typer
 
-from core import kehrnelGenerator, kehrnelValidator, TemplateParser
+from kehrnel.domains.openehr.templates import kehrnelGenerator, kehrnelValidator, TemplateParser
 
 app = typer.Typer(add_completion=False, rich_markup_mode="rich")
 

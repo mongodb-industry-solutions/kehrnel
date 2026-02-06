@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "transaction.type": {"path": "type"},
+    "control.isa13": {"path": "control.isa13"},
+    "control.gs06": {"path": "control.gs06"},
+    "patient.last_name": {
+      "segment": "NM1",
+      "qualifier_element": 1,
+      "qualifier_value": "IL",
+      "element": 3
+    },
+    "patient.first_name": {
+      "segment": "NM1",
+      "qualifier_element": 1,
+      "qualifier_value": "IL",
+      "element": 4
+    },
+    "patient.member_id": {
+      "segment": "NM1",
+      "qualifier_element": 1,
+      "qualifier_value": "IL",
+      "element": 9
+    }
+  }
+}

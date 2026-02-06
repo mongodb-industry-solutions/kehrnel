@@ -1,0 +1,1 @@
+"""openEHR API models scaffold."""

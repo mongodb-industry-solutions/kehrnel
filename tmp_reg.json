@@ -1,0 +1,340 @@
+{
+  "manifests": {
+    "genomics.variant_first": {
+      "id": "genomics.variant_first",
+      "name": "Genomics Variant-First",
+      "version": "0.1.0",
+      "summary": "Minimal genomics strategy stub for activation/routing tests.",
+      "description": null,
+      "domain": "genomics",
+      "protocols": [
+        "genomics"
+      ],
+      "capabilities": [
+        "query"
+      ],
+      "entrypoint": "kehrnel.strategies.genomics.variant_first.strategy:GenomicsVariantFirstStrategy",
+      "config_schema": {
+        "type": "object",
+        "properties": {
+          "database": {
+            "type": "string"
+          },
+          "collections": {
+            "type": "object",
+            "properties": {
+              "variants": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "variants"
+            ]
+          }
+        },
+        "required": [
+          "database",
+          "collections"
+        ]
+      },
+      "default_config": {
+        "database": "genomics_db",
+        "collections": {
+          "variants": "variants"
+        }
+      },
+      "adapters": {
+        "storage": [],
+        "search": [],
+        "vector": [],
+        "queue": []
+      },
+      "ui": {
+        "tags": [],
+        "protocol_badge": null,
+        "icon": null,
+        "accent_color": null,
+        "works_with": [],
+        "links": {}
+      },
+      "compatibility": {},
+      "maturity": null,
+      "license": null,
+      "keywords": [],
+      "ops": []
+    },
+    "openehr.rps_dual": {
+      "id": "openehr.rps_dual",
+      "name": "Reversed Path Search - Dual Collection",
+      "version": "0.1.0",
+      "summary": "Optimizes indexing with a slim search collection alongside canonical nodes.",
+      "description": "Reference OpenEHR strategy using reversed paths, dual collections, and Atlas Search dual-mode querying.",
+      "domain": "openEHR",
+      "protocols": [
+        "openEHR"
+      ],
+      "capabilities": [
+        "transform",
+        "ingest",
+        "validate",
+        "query",
+        "plan",
+        "apply"
+      ],
+      "entrypoint": "kehrnel.strategies.openehr.rps_dual.strategy:RPSDualStrategy",
+      "config_schema": {},
+      "default_config": {},
+      "adapters": {
+        "storage": [
+          "mongo"
+        ],
+        "search": [
+          "atlas_search"
+        ],
+        "vector": [],
+        "queue": []
+      },
+      "ui": {
+        "tags": [
+          "openEHR",
+          "dual-collection",
+          "atlas-search"
+        ],
+        "protocol_badge": "openEHR",
+        "icon": null,
+        "accent_color": null,
+        "works_with": [
+          "atlas_search_dual"
+        ],
+        "links": {
+          "docs": "docs/refactor-plan.md"
+        }
+      },
+      "compatibility": {},
+      "maturity": null,
+      "license": null,
+      "keywords": [],
+      "ops": [
+        {
+          "name": "ensure_dictionaries",
+          "kind": "maintenance",
+          "summary": "Ensure _codes/_shortcuts dictionaries exist",
+          "input_schema": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "output_schema": {
+            "type": "object",
+            "properties": {
+              "codes_exists": {
+                "type": "boolean"
+              },
+              "shortcuts_exists": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        {
+          "name": "rebuild_codes",
+          "kind": "maintenance",
+          "summary": "Rebuild atcode/archetype code tokens",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "dry_run": {
+                "type": "boolean",
+                "default": false
+              }
+            },
+            "additionalProperties": false
+          },
+          "output_schema": {
+            "type": "object",
+            "properties": {
+              "updated": {
+                "type": "boolean"
+              },
+              "min": {
+                "type": "integer"
+              },
+              "max": {
+                "type": "integer"
+              },
+              "counts": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        {
+          "name": "rebuild_shortcuts",
+          "kind": "maintenance",
+          "summary": "Rebuild slim shortcuts map",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "dry_run": {
+                "type": "boolean",
+                "default": false
+              }
+            },
+            "additionalProperties": false
+          },
+          "output_schema": {
+            "type": "object"
+          }
+        },
+        {
+          "name": "ensure_atlas_search_index",
+          "kind": "maintenance",
+          "summary": "Ensure Atlas Search index for slim search collection",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "index_name": {
+                "type": "string"
+              },
+              "recreate": {
+                "type": "boolean",
+                "default": false
+              }
+            },
+            "additionalProperties": false
+          },
+          "output_schema": {
+            "type": "object",
+            "properties": {
+              "ok": {
+                "type": "boolean"
+              },
+              "supported": {
+                "type": "boolean"
+              },
+              "notes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "rebuild_slim_search_collection",
+          "kind": "maintenance",
+          "summary": "Recreate slim search docs from canonical compositions",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "batch_size": {
+                "type": "integer",
+                "default": 2000
+              },
+              "dry_run": {
+                "type": "boolean",
+                "default": false
+              }
+            },
+            "additionalProperties": false
+          },
+          "output_schema": {
+            "type": "object",
+            "properties": {
+              "processed": {
+                "type": "integer"
+              },
+              "inserted": {
+                "type": "integer"
+              },
+              "updated": {
+                "type": "integer"
+              },
+              "warnings": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "fhir.resource_first": {
+      "id": "fhir.resource_first",
+      "name": "FHIR Resource-First",
+      "version": "0.1.0",
+      "summary": "Stores native FHIR resources with a basic search collection.",
+      "description": "Minimal FHIR strategy used for contract testing.",
+      "domain": "FHIR",
+      "protocols": [
+        "FHIR"
+      ],
+      "capabilities": [
+        "query"
+      ],
+      "entrypoint": "kehrnel.strategies.fhir.resource_first.strategy:FHIRResourceFirstStrategy",
+      "config_schema": {
+        "type": "object",
+        "properties": {
+          "database": {
+            "type": "string"
+          },
+          "collections": {
+            "type": "object",
+            "properties": {
+              "resources": {
+                "type": "string"
+              },
+              "search": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "resources"
+            ]
+          }
+        },
+        "required": [
+          "database",
+          "collections"
+        ]
+      },
+      "default_config": {
+        "database": "fhir_cdr",
+        "collections": {
+          "resources": "fhir_resources",
+          "search": "fhir_search"
+        }
+      },
+      "adapters": {
+        "storage": [
+          "mongo"
+        ],
+        "search": [],
+        "vector": [],
+        "queue": []
+      },
+      "ui": {
+        "tags": [],
+        "protocol_badge": null,
+        "icon": null,
+        "accent_color": null,
+        "works_with": [],
+        "links": {}
+      },
+      "compatibility": {
+        "protocols": [
+          "FHIR"
+        ]
+      },
+      "maturity": null,
+      "license": null,
+      "keywords": [],
+      "ops": []
+    }
+  },
+  "activations": {}
+}

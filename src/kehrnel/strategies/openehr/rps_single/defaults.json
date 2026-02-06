@@ -1,0 +1,62 @@
+{
+  "database": "openehr_cdr",
+  "collections": {
+    "compositions": {
+      "name": "compositions_rps",
+      "store_canonical": true,
+      "nodes_field": "cn",
+      "reverse_paths": true,
+      "store_nodes": true
+    },
+    "search": {
+      "name": "compositions_search",
+      "enabled": true,
+      "nodes_field": "sn",
+      "atlas_index_name": "search_nodes_index",
+      "slim_projection": {
+        "time": "data.time.value",
+        "code": "data.defining_code.code_string",
+        "text": "data.value.value"
+      }
+    }
+  },
+  "coding": {
+    "archetype_ids": {
+      "enabled": true,
+      "dictionary": "arcodes",
+      "sequential": true
+    },
+    "atcodes": {
+      "enabled": true,
+      "strategy": "negative_int",
+      "store_original": true
+    }
+  },
+  "fields": {
+    "composition": {
+      "nodes": "cn",
+      "path": "p",
+      "archetype_path": "ap",
+      "ehr_id": "ehr_id",
+      "comp_id": "cid"
+    },
+    "search": {
+      "nodes": "sn",
+      "path": "p",
+      "ehr_id": "ehr_id",
+      "comp_id": "cid"
+    }
+  },
+  "node_representation": {
+    "path": {
+      "mode": "reversed",
+      "token_joiner": "."
+    }
+  },
+  "query_engine": {
+    "mode": "atlas_search_dual",
+    "search_first": true,
+    "lookup_full_composition": true,
+    "supports_multi_predicate": true
+  }
+}

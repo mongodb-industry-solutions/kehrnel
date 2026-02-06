@@ -1,0 +1,46 @@
+{
+  "id": "genomics.variant_first",
+  "name": "Genomics Variant-First",
+  "version": "0.1.0",
+  "domain": "genomics",
+  "summary": "Minimal genomics strategy stub for activation/routing tests.",
+  "capabilities": [
+    "query"
+  ],
+  "entrypoint": "kehrnel.strategies.genomics.variant_first.strategy:GenomicsVariantFirstStrategy",
+  "config_schema": {
+    "type": "object",
+    "properties": {
+      "database": {
+        "type": "string"
+      },
+      "collections": {
+        "type": "object",
+        "properties": {
+          "variants": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "variants"
+        ]
+      }
+    },
+    "required": [
+      "database",
+      "collections"
+    ]
+  },
+  "default_config": {
+    "database": "genomics_db",
+    "collections": {
+      "variants": "variants"
+    }
+  },
+  "ops": [],
+  "adapters": {
+    "storage": [],
+    "search": [],
+    "vector": []
+  }
+}

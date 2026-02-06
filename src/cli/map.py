@@ -12,23 +12,90 @@ import yaml
 
 # ── core (OPT-based canonical generation + validation) ──────────────────────
 try:
-    from core import TemplateParser, kehrnelGenerator, kehrnelValidator
+    from kehrnel.domains.openehr.templates import TemplateParser, kehrnelGenerator, kehrnelValidator
 except Exception:
-    from core.parser import TemplateParser
-    from core.generator import kehrnelGenerator
-    from core.validator import kehrnelValidator
+    from kehrnel.domains.openehr.templates.parser import TemplateParser
+    from kehrnel.domains.openehr.templates.generator import kehrnelGenerator
+    from kehrnel.domains.openehr.templates.validator import kehrnelValidator
 
 # WebTemplate only to assert -t is valid (mapping is path-keyed already)
-from core.webtemplate_parser import WebTemplate
+from kehrnel.domains.openehr.templates.webtemplate_parser import WebTemplate
 
-from mapper.mapping_engine import apply_mapping
+from kehrnel.common.mapping.mapping_engine import apply_mapping
 
 # Jinja + transforms (singular)
-from mapper.utils.jinja_env import env as JINJA
-from mapper.utils.transform import REGISTRY as TRANSFORMS
-from mapper.utils.transform import attach_to_jinja
+from kehrnel.common.mapping.utils.jinja_env import env as JINJA
+from kehrnel.common.mapping.utils.transform import REGISTRY as TRANSFORMS
+from kehrnel.common.mapping.utils.transform import attach_to_jinja
 
 app = typer.Typer(add_completion=False, rich_markup_mode="rich")
+
+
+def _default_strategies_root() -> Path:
+    """Root where built-in strategy packs live (src/kehrnel/strategies)."""
+    return Path(__file__).resolve().parent.parent / "kehrnel" / "strategies"
+
+
+def _load_manifest_json(path: Path) -> Optional[Dict[str, Any]]:
+    try:
+        return json.loads(path.read_text())
+    except Exception:
+        return None
+
+
+def _find_strategy_pack(strategy_id: str, strategies_root: Path) -> Optional[Path]:
+    """Locate a strategy pack folder (containing manifest.json) by id."""
+    if not strategies_root.exists():
+        return None
+    for manifest_path in strategies_root.rglob("manifest.json"):
+        data = _load_manifest_json(manifest_path)
+        if data and data.get("id") == strategy_id:
+            return manifest_path.parent
+    return None
+
+
+def _resolve_mapping_path(
+    mapping: Optional[Path],
+    strategy: Optional[str],
+    strategies_root: Optional[Path],
+) -> Path:
+    """
+    Resolve the mapping file path.
+    - If an explicit path exists, use it.
+    - If a strategy id is provided, look inside that pack (default: ingest/config/mappings.*).
+    """
+    if mapping and mapping.exists():
+        return mapping
+
+    pack_root: Optional[Path] = None
+    if strategy:
+        base = strategies_root or _default_strategies_root()
+        pack_root = _find_strategy_pack(strategy, base)
+        if not pack_root:
+            raise typer.BadParameter(f"Strategy '{strategy}' not found under {base}")
+
+        # Relative mapping hint → resolve against pack root
+        if mapping:
+            candidate = pack_root / mapping
+            if candidate.exists():
+                return candidate
+
+        # Try common defaults inside the pack
+        for rel in (
+            "ingest/config/mappings.yaml",
+            "ingest/config/mappings.yml",
+            "ingest/config/mappings.json",
+        ):
+            candidate = pack_root / rel
+            if candidate.exists():
+                return candidate
+
+        raise typer.BadParameter(f"No mapping file found for strategy '{strategy}' (checked ingest/config/mappings.*)")
+
+    if mapping:
+        raise typer.BadParameter(f"Mapping file not found: {mapping}")
+
+    raise typer.BadParameter("Provide --mapping or --strategy to locate a mapping file")
 
 
 def _slug(s: str) -> str:
@@ -124,7 +191,9 @@ def _map_ranges(val: Any, mapping: Optional[Dict[str, Any]]) -> Any:
 
 @app.command()
 def main(
-    mapping: Path = typer.Option(..., "-m", help="Mapping YAML/JSON file"),
+    mapping: Optional[Path] = typer.Option(None, "-m", "--mapping", help="Mapping YAML/JSON file (optional when --strategy is set)"),
+    strategy: Optional[str] = typer.Option(None, "-S", "--strategy", help="Strategy id to auto-resolve mapping under strategies/<...>/ingest/config"),
+    strategies_root: Optional[Path] = typer.Option(None, "--strategies-root", help="Base directory to search strategy packs (default: src/kehrnel/strategies)"),
     source: Path = typer.Option(..., "-s", help="Source data to transform"),
     webtemplate: Path = typer.Option(..., "-t", help="WebTemplate JSON (.json)"),
     opt: Path = typer.Option(..., "-p", help="OPT template (.opt) for canonical COMPOSITION"),
@@ -134,12 +203,19 @@ def main(
     """
     Build canonical openEHR COMPOSITIONs from a source dataset using the new path-keyed grammar.
     """
+    # Locate mapping (explicit path or resolved from strategy pack)
+    try:
+        mapping_path = _resolve_mapping_path(mapping, strategy, strategies_root)
+    except typer.BadParameter as exc:
+        typer.secho(str(exc), fg="red", err=True)
+        raise typer.Exit(2)
+
     # Mapping
     try:
-        if mapping.suffix.lower() in {".yaml", ".yml"}:
-            raw = yaml.safe_load(mapping.read_text())
+        if mapping_path.suffix.lower() in {".yaml", ".yml"}:
+            raw = yaml.safe_load(mapping_path.read_text())
         else:
-            raw = json.loads(mapping.read_text())
+            raw = json.loads(mapping_path.read_text())
     except Exception as e:
         typer.secho(f"Error reading mapping file: {e}", fg="red", err=True)
         raise typer.Exit(2)
@@ -162,9 +238,9 @@ def main(
     tx_cfg = (raw.get("meta") or {}).get("translation") or {}
     if tx_cfg.get("enabled"):
         try:
-            from mapper.handlers.common import Translator  # re-export
+            from kehrnel.common.mapping.handlers.common import Translator  # re-export
         except Exception:
-            from mapper.utils.translator.translator import Translator
+            from kehrnel.common.mapping.utils.translator.translator import Translator
         gen.translator = Translator(
             source_lang = tx_cfg.get("source_lang", "es"),
             target_lang = tx_cfg.get("target_lang", "en"),
@@ -176,8 +252,8 @@ def main(
         )
 
     # Handler
-    from mapper.handlers.csv_handler import CSVHandler
-    from mapper.handlers.xml_handler import XMLHandler
+    from kehrnel.common.mapping.handlers.csv_handler import CSVHandler
+    from kehrnel.common.mapping.handlers.xml_handler import XMLHandler
     handlers = [CSVHandler(), XMLHandler()]
     handler = next((h for h in handlers if h.can_handle(source)), None)
     if not handler:

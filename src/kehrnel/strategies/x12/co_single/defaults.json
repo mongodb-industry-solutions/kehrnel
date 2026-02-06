@@ -1,0 +1,38 @@
+{
+  "database": "x12_cdr",
+  "collections": {
+    "claims": {
+      "name": "x12_claims"
+    },
+    "stage1": {
+      "name": "x12_stage1",
+      "enabled": false
+    }
+  },
+  "transform": {
+    "debug": {
+      "persistStage1": false
+    },
+    "pathConfig": {
+      "separator": "/",
+      "reversePath": true
+    }
+  },
+  "query": {
+    "defaultEngine": "match"
+  },
+  "indexes": {
+    "claims": [
+      { "name": "idx_type", "keys": [["type", 1]] },
+      { "name": "idx_control_isa13", "keys": [["control.isa13", 1]] },
+      { "name": "idx_control_gs06", "keys": [["control.gs06", 1]] },
+      { "name": "idx_control_st02", "keys": [["control.st02", 1]] },
+      { "name": "idx_tenant_type", "keys": [["tenant_id", 1], ["type", 1]] },
+      { "name": "idx_cn_path", "keys": [["cn.p", 1]] }
+    ]
+  },
+  "sharding": {
+    "enabled": false,
+    "shardKey": { "tenant_id": 1, "control.isa13": 1 }
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "$schema": "https://example.org/strategy-pack/spec.schema.json",
+  "meta": {
+    "strategyId": "x12.contextobjects.dual",
+    "specVersion": "1.0",
+    "title": "X12 ContextObjects — Dual-Stage",
+    "summary": "Lossless X12 parsing followed by semantic mapping.",
+    "domain": "X12",
+    "tags": ["X12", "EDI", "lossless", "semantic", "ContextObjects"]
+  },
+
+  "logicalModel": {
+    "source": {
+      "types": [
+        {
+          "id": "x12.transaction.raw.v1",
+          "title": "Raw X12 Transaction",
+          "kind": "document",
+          "fields": {
+            "edi":         { "type": "string", "role": "payload" },
+            "tenant_id":   { "type": "string", "role": "identity.tenant" },
+            "raw_name":    { "type": "string", "role": "identity.source" },
+            "received_at": { "type": "date",   "role": "event.time" }
+          }
+        }
+      ]
+    },
+
+    "concepts": [
+      {
+        "id": "x12.contextNode.v1",
+        "title": "Context Node",
+        "kind": "record",
+        "meaning": "Flat crumb for search & joins",
+        "fields": {
+          "p": { "type": "string", "role": "path.context", "required": true },
+          "v": { "type": "string|number|boolean|date", "role": "value", "required": true }
+        }
+      }
+    ],
+
+    "destinations": {
+      "types": [
+        {
+          "id": "x12.transaction.lossless.v1",
+          "title": "Lossless X12 Transaction",
+          "kind": "collectionRecord",
+          "fields": {
+            "_id":     { "type": "objectId|uuid|string", "role": "pk" },
+            "type":    { "type": "string", "role": "identity.transaction" },
+            "control": { "type": "json",   "role": "control" },
+            "envelope":{ "type": "json",   "role": "envelope" },
+            "segments":{ "type": "json[]", "role": "payload.lossless" }
+          }
+        },
+        {
+          "id": "x12.claim.context.v1",
+          "title": "X12 Claim ContextObject",
+          "kind": "collectionRecord",
+          "fields": {
+            "_id":          { "type": "objectId|uuid|string", "role": "pk" },
+            "type":         { "type": "string", "role": "identity.transaction" },
+            "claim":        { "type": "json",   "role": "payload.semantic" },
+            "context_nodes":{ "type": "x12.contextNode.v1[]", "role": "index.context_nodes" },
+            "semantic":     { "type": "json",   "role": "payload.semantic.extra" }
+          }
+        }
+      ]
+    }
+  },
+
+  "storageModel": {
+    "stores": [
+      { "id": "store:lossless", "engine": "mongo", "destinationType": "x12.transaction.lossless.v1", "collectionNameFromConfig": "collections.lossless.name" },
+      { "id": "store:semantic", "engine": "mongo", "destinationType": "x12.claim.context.v1",        "collectionNameFromConfig": "collections.semantic.name" }
+    ]
+  },
+
+  "transformModel": {
+    "pipeline": [
+      { "id": "step.parse.lossless",  "op": "parse_x12_to_lossless",     "title": "Parse X12 → lossless", "out": "lossless" },
+      { "id": "step.map.semantic",    "op": "map_lossless_to_context",   "title": "Map lossless → ContextObject", "in": "lossless", "out": "semantic", "params": { "mappingFromConfig": "transform.stage2.mapping" } },
+      { "id": "step.materialize.raw", "op": "materialize", "title": "Write lossless", "toStore": "store:lossless", "from": "lossless" },
+      { "id": "step.materialize.sem", "op": "materialize", "title": "Write semantic", "toStore": "store:semantic", "from": "semantic" }
+    ],
+    "invariants": [
+      { "id": "inv.keys", "title": "Stable join key", "assert": "store:lossless._id == store:semantic._id" },
+      { "id": "inv.tenancy", "title": "Tenant scope preserved", "assert": "tenant_id threaded across transforms" }
+    ]
+  },
+
+  "queryModel": {
+    "modes": [
+      { "id": "lossless", "title": "Lossless queries", "uses": ["store:lossless"], "pattern": "match", "primaryFilters": ["type", "control.isa13", "control.gs06", "control.st02"] },
+      { "id": "semantic", "title": "Semantic queries", "uses": ["store:semantic"], "pattern": "match|search", "primaryFilters": ["type", "claim.*", "context_nodes.p", "context_nodes.v"] }
+    ]
+  },
+
+  "visualization": {
+    "canvas": { "defaultView": "overview", "views": [ { "id": "overview", "title": "Overview", "shows": ["collectionModel", "transformGraph"], "layout": {"type": "grid", "columns": 2} } ] },
+    "collectionModel": {
+      "entities": [
+        { "id": "coll.lossless", "kind": "collection", "store": "store:lossless", "label": "x12_lossless", "fields": ["_id","type","control","envelope","segments"] },
+        { "id": "coll.semantic", "kind": "collection", "store": "store:semantic", "label": "x12_semantic", "fields": ["_id","type","claim","context_nodes","semantic"] }
+      ]
+    },
+    "transformGraph": {
+      "nodes": [
+        { "id": "src.raw", "kind": "source", "label": "Raw X12", "typeRef": "x12.transaction.raw.v1" },
+        { "id": "op.parse", "kind": "transform", "label": "Parse → lossless", "stepRef": "step.parse.lossless" },
+        { "id": "op.materialize.lossless", "kind": "sink", "label": "Write lossless", "stepRef": "step.materialize.raw", "entityRef": "coll.lossless" },
+        { "id": "op.map", "kind": "transform", "label": "Map → ContextObject", "stepRef": "step.map.semantic" },
+        { "id": "op.materialize.semantic", "kind": "sink", "label": "Write semantic", "stepRef": "step.materialize.sem", "entityRef": "coll.semantic" }
+      ],
+      "edges": [
+        { "from": "src.raw", "to": "op.parse" },
+        { "from": "op.parse", "to": "op.materialize.lossless" },
+        { "from": "op.parse", "to": "op.map" },
+        { "from": "op.map", "to": "op.materialize.semantic" }
+      ]
+    }
+  }
+}
