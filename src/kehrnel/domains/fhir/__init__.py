@@ -1,0 +1,1 @@
+"""FHIR domain scaffold."""

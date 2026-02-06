@@ -1,0 +1,218 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FHIR ContextObjects Vitals Window Strategy Configuration",
+  "description": "Configures ingestion and ContextObject materialization for vitals as FHIR Observation nodes.",
+  "type": "object",
+  "properties": {
+    "database": {
+      "type": "string",
+      "description": "MongoDB database name"
+    },
+    "collections": {
+      "type": "object",
+      "properties": {
+        "contextobjects": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "default": "fhir_contextobjects_vitals" }
+          },
+          "required": ["name"]
+        },
+        "raw": {
+          "type": "object",
+          "description": "Optional raw landing collection.",
+          "properties": {
+            "enabled": { "type": "boolean", "default": false },
+            "name": { "type": "string", "default": "fhir_vitals_raw" },
+            "mode": {
+              "type": "string",
+              "enum": ["append", "overwrite"],
+              "default": "append"
+            }
+          }
+        }
+      },
+      "required": ["contextobjects"]
+    },
+    "identity": {
+      "type": "object",
+      "description": "How to resolve patient/device identifiers.",
+      "properties": {
+        "patientIdMode": {
+          "type": "string",
+          "enum": ["use_external_as_id", "map_external_to_internal"],
+          "default": "use_external_as_id"
+        },
+        "defaultPatientId": {
+          "type": "string",
+          "default": "patient-unknown"
+        },
+        "defaultDeviceId": {
+          "type": "string",
+          "default": "wearable-unknown"
+        }
+      },
+      "required": ["patientIdMode"]
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string", "default": "fhir.contextobjects.vitals_window" },
+            "version": { "type": "string", "default": "1.0.0" }
+          },
+          "required": ["id", "version"]
+        }
+      },
+      "required": ["schema"]
+    },
+    "windowing": {
+      "type": "object",
+      "properties": {
+        "windowSeconds": {
+          "type": "integer",
+          "enum": [60, 300],
+          "default": 60,
+          "description": "Bucket size for one ContextObject."
+        },
+        "timezone": {
+          "type": "string",
+          "default": "UTC",
+          "description": "Timezone used to compute buckets (keep UTC for deterministic behavior)."
+        }
+      },
+      "required": ["windowSeconds"]
+    },
+    "fhir": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "enum": ["R4", "R5"],
+          "default": "R4"
+        },
+        "includePatientResource": {
+          "type": "boolean",
+          "default": false
+        },
+        "includeDeviceResource": {
+          "type": "boolean",
+          "default": false
+        },
+        "subjectRefTemplate": {
+          "type": "string",
+          "default": "Patient/{patientId}"
+        },
+        "deviceRefTemplate": {
+          "type": "string",
+          "default": "Device/{deviceId}"
+        },
+        "idStrategy": {
+          "type": "string",
+          "enum": ["deterministic", "uuid"],
+          "default": "deterministic"
+        },
+        "codeSystem": {
+          "type": "string",
+          "default": "http://loinc.org"
+        },
+        "pathTokenTemplate": {
+          "type": "string",
+          "default": "FHIR.Observation|{system}|{code}"
+        },
+        "panel": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string", "default": "85353-1" },
+            "display": { "type": "string", "default": "Vital signs panel" }
+          }
+        },
+        "codes": {
+          "type": "object",
+          "properties": {
+            "spo2": {
+              "type": "object",
+              "properties": {
+                "system": { "type": "string", "default": "http://loinc.org" },
+                "code": { "type": "string", "default": "59408-5" },
+                "display": { "type": "string", "default": "Oxygen saturation in Arterial blood by Pulse oximetry" },
+                "unit": { "type": "string", "default": "%" },
+                "ucumSystem": { "type": "string", "default": "http://unitsofmeasure.org" },
+                "ucumCode": { "type": "string", "default": "%" }
+              },
+              "required": ["system", "code"]
+            },
+            "hr": {
+              "type": "object",
+              "properties": {
+                "system": { "type": "string", "default": "http://loinc.org" },
+                "code": { "type": "string", "default": "8867-4" },
+                "display": { "type": "string", "default": "Heart rate" },
+                "unit": { "type": "string", "default": "beats/min" }
+              },
+              "required": ["system", "code"]
+            },
+            "pulse": {
+              "type": "object",
+              "properties": {
+                "system": { "type": "string", "default": "http://loinc.org" },
+                "code": { "type": "string", "default": "8889-8" },
+                "display": { "type": "string", "default": "Pulse rate" },
+                "unit": { "type": "string", "default": "beats/min" }
+              },
+              "required": ["system", "code"]
+            },
+            "resp": {
+              "type": "object",
+              "properties": {
+                "system": { "type": "string", "default": "http://loinc.org" },
+                "code": { "type": "string", "default": "9279-1" },
+                "display": { "type": "string", "default": "Respiratory rate" },
+                "unit": { "type": "string", "default": "breaths/min" }
+              },
+              "required": ["system", "code"]
+            }
+          },
+          "required": ["spo2", "hr"]
+        }
+      },
+      "required": ["version", "codes"]
+    },
+    "indexes": {
+      "type": "object",
+      "properties": {
+        "contextobjects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "keys": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": [
+                    { "type": "string" },
+                    { "type": "integer" }
+                  ]
+                }
+              },
+              "options": { "type": "object" }
+            }
+          }
+        }
+      }
+    },
+    "input": {
+      "type": "object",
+      "properties": {
+        "csv_path": { "type": "string" },
+        "start_time_iso": { "type": "string" }
+      }
+    }
+  },
+  "required": ["database", "collections", "identity", "windowing", "fhir", "context"],
+  "additionalProperties": false
+}

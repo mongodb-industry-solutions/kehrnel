@@ -10,7 +10,7 @@ from typing import Iterable, List
 
 import typer
 
-from mapper.document_identifier import DocumentIdentifier 
+from kehrnel.common.mapping.document_identifier import DocumentIdentifier 
 
 app = typer.Typer(add_completion=False, rich_markup_mode="rich")
 
@@ -60,7 +60,7 @@ def main(
     ),
     no_default: bool = typer.Option(
      False, "--no-default",
-     help="Ignore the built-in src/mapper/patterns.yaml",
+     help="Ignore the built-in src/kehrnel/common/mapping/patterns.yaml",
     ),
     debug: bool = typer.Option(
         False, "--debug",

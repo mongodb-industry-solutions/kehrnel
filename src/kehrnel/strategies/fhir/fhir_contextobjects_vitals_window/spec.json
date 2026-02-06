@@ -1,0 +1,292 @@
+{
+  "$schema": "https://example.org/strategy-pack/spec.schema.json",
+  "meta": {
+    "strategyId": "fhir.contextobjects.vitals_window",
+    "specVersion": "1.1",
+    "title": "FHIR ContextObjects - Vitals Window (HR, PULSE, RESP, SpO2)",
+    "summary": "Wearable telemetry → FHIR Observations → ContextObject per time bucket.",
+    "domain": "FHIR",
+    "tags": ["FHIR", "ContextObjects", "wearables", "SpO2", "HR", "PULSE", "RESP", "windowing"],
+    "owners": ["Francesc Mateu Amengual"],
+    "compat": {
+      "packFormat": "strategy-pack/v1",
+      "requires": ["storage.mongo"],
+      "optional": [],
+      "minRuntime": "0.9.0"
+    }
+  },
+
+  "glossary": {
+    "terms": {
+      "ContextObject": "A bounded situation record storing one or more nodes (each node may embed a native resource payload).",
+      "Node": "A unit inside a ContextObject with canonical path token + time + payload.",
+      "Windowing": "Grouping samples into fixed time buckets to form deterministic ContextObjects.",
+      "TelemetrySample": "A normalized (patient, device, time, metric, value) event derived from raw source data."
+    }
+  },
+
+  "logicalModel": {
+    "source": {
+      "types": [
+        {
+          "id": "telemetry.vitals.sample_row.v1",
+          "title": "Vitals Sample Row",
+          "kind": "record",
+          "description": "A single timepoint with optional HR, PULSE, RESP, SpO2. Derived from BIDMC-like dataset.",
+          "fields": {
+            "patient_external_id": { "type": "string", "role": "identity.patient.external", "required": true },
+            "device_id": { "type": "string", "role": "identity.device", "required": false },
+            "ts": { "type": "datetime", "role": "event.time", "required": true },
+            "pulse": { "type": "number|null", "role": "vital.pulse", "required": false },
+            "resp": { "type": "number|null", "role": "vital.resp", "required": false },
+            "spo2": { "type": "number|null", "role": "vital.spo2", "required": false },
+            "hr": { "type": "number|null", "role": "vital.hr", "required": false },
+            "source_file": { "type": "string|null", "role": "provenance.file", "required": false }
+          }
+        }
+      ]
+    },
+
+    "concepts": [
+      {
+        "id": "contextobjects.node.v1",
+        "title": "ContextObject Node",
+        "kind": "record",
+        "meaning": "A node inside a ContextObject. Holds a path token, time, and payload.",
+        "fields": {
+          "p": { "type": "string", "role": "path.canonical", "required": true },
+          "kp": { "type": "string|array|null", "role": "path.key", "required": false },
+          "li": { "type": "integer|null", "role": "sibling.index", "required": false },
+          "t": { "type": "datetime", "role": "event.time", "required": true },
+          "data": { "type": "json", "role": "payload", "required": true }
+        }
+      },
+      {
+        "id": "contextobjects.contextobject.v1",
+        "title": "ContextObject Envelope",
+        "kind": "document",
+        "meaning": "ContextObject envelope containing subjects, interval, provenance, and nodes.",
+        "fields": {
+          "_id": { "type": "string", "role": "pk" },
+          "kind": { "type": "string", "role": "type", "required": true },
+          "schema": { "type": "json", "role": "schema.ref", "required": true },
+          "subjects": { "type": "json[]", "role": "subjects", "required": true },
+          "interval": { "type": "json", "role": "time.interval", "required": true },
+          "provenance": { "type": "json", "role": "provenance", "required": true },
+          "nodes": { "type": "contextobjects.node.v1[]", "role": "nodes", "required": true }
+        }
+      }
+    ],
+
+    "destinations": {
+      "types": [
+        {
+          "id": "fhir.contextobjects.vitals_window.co.v1",
+          "title": "VitalsWindow ContextObjects",
+          "kind": "collectionRecord",
+          "fields": {
+            "_id": { "type": "string", "role": "pk" },
+            "kind": { "type": "string", "role": "type", "required": true },
+            "schema": { "type": "json", "role": "schema.ref", "required": true },
+            "subjects": { "type": "json[]", "role": "subjects", "required": true },
+            "interval": { "type": "json", "role": "time.interval", "required": true },
+            "provenance": { "type": "json", "role": "provenance", "required": true },
+            "nodes": { "type": "contextobjects.node.v1[]", "role": "nodes", "required": true }
+          }
+        }
+      ]
+    }
+  },
+
+  "physicalProfiles": {
+    "encodingProfiles": [
+      {
+        "id": "profile.window_60s",
+        "title": "60-second windows",
+        "description": "One ContextObject per patient+device+minute bucket.",
+        "windowSeconds": 60
+      },
+      {
+        "id": "profile.window_300s",
+        "title": "5-minute windows",
+        "description": "One ContextObject per patient+device+5-minute bucket.",
+        "windowSeconds": 300
+      }
+    ]
+  },
+
+  "storageModel": {
+    "stores": [
+      {
+        "id": "store:contextobjects",
+        "title": "ContextObjects store",
+        "engine": "mongo",
+        "destinationType": "fhir.contextobjects.vitals_window.co.v1",
+        "collectionNameFromConfig": "collections.contextobjects.name",
+        "indexes": []
+      },
+      {
+        "id": "store:raw",
+        "title": "Raw telemetry (optional)",
+        "engine": "mongo",
+        "collectionNameFromConfig": "collections.raw.name",
+        "modeFromConfig": "collections.raw.mode",
+        "purpose": "Optional landing store for raw rows or normalized samples."
+      }
+    ]
+  },
+
+  "transformModel": {
+    "pipeline": [
+      {
+        "id": "step.normalize",
+        "op": "normalize_vitals_rows",
+        "title": "Normalize rows → TelemetrySamples",
+        "in": "logicalModel.source.types[0]",
+        "out": "telemetry_samples",
+        "params": {
+          "deviceIdFromConfig": "identity.defaultDeviceId",
+          "patientIdModeFromConfig": "identity.patientIdMode",
+          "allowNulls": true
+        },
+        "visual": { "group": "Transform", "icon": "filter" }
+      },
+      {
+        "id": "step.window",
+        "op": "window_samples",
+        "title": "Group samples into time buckets",
+        "from": "telemetry_samples",
+        "out": "window_groups",
+        "params": {
+          "windowSecondsFromConfig": "windowing.windowSeconds",
+          "timezoneFromConfig": "windowing.timezone",
+          "groupBy": ["patient_id", "device_id", "bucket_start"]
+        },
+        "visual": { "group": "Transform", "icon": "grid" }
+      },
+      {
+        "id": "step.fhir",
+        "op": "generate_fhir_resources",
+        "title": "Generate FHIR Observation nodes (HR, PULSE, RESP, SpO2)",
+        "from": "window_groups",
+        "out": "contextobject_docs",
+        "params": {
+          "fhirVersionFromConfig": "fhir.version",
+          "includePatientFromConfig": "fhir.includePatientResource",
+          "includeDeviceFromConfig": "fhir.includeDeviceResource",
+          "codesFromConfig": "fhir.codes",
+          "subjectRefTemplateFromConfig": "fhir.subjectRefTemplate",
+          "deviceRefTemplateFromConfig": "fhir.deviceRefTemplate",
+          "idStrategyFromConfig": "fhir.idStrategy",
+          "pathTokenStrategy": "FHIR.Observation|{system}|{code}"
+        },
+        "visual": { "group": "Transform", "icon": "layers" }
+      },
+      {
+        "id": "step.materialize",
+        "op": "materialize",
+        "title": "Upsert ContextObjects",
+        "toStore": "store:contextobjects",
+        "from": "contextobject_docs",
+        "params": {
+          "idempotencyKey": "_id",
+          "mergeMode": "merge_nodes_by(p,t)",
+          "allowLateData": true
+        },
+        "visual": { "group": "Materialize", "icon": "database" }
+      }
+    ],
+
+    "invariants": [
+      {
+        "id": "inv.co_id",
+        "title": "Deterministic ContextObject _id",
+        "assert": "_id == 'co:fhir.contextobjects.vitals_window:' + patient_id + ':' + device_id + ':' + bucket_start",
+        "why": "Allows idempotent writes and safe replays."
+      },
+      {
+        "id": "inv.nodes",
+        "title": "Nodes always time-anchored",
+        "assert": "all(nodes[].t != null)",
+        "why": "Required for later query and temporal reasoning."
+      }
+    ]
+  },
+
+  "queryModel": {
+    "modes": [
+      {
+        "id": "patient_window",
+        "title": "Patient + time window retrieval",
+        "uses": ["store:contextobjects"],
+        "pattern": "match",
+        "primaryFilters": ["subjects.role=patient", "subjects.id", "interval.start"],
+        "notes": "Used for timeline reads and follow-up dashboards."
+      }
+    ]
+  },
+
+  "samples": {
+    "inputs": ["samples/raw_vitals_rows.jsonl"],
+    "outputs": {
+      "store:contextobjects": ["samples/contextobject_vitalswindow.json"]
+    }
+  },
+
+  "visualization": {
+    "canvas": {
+      "defaultView": "overview",
+      "views": [
+        {
+          "id": "overview",
+          "title": "Overview",
+          "shows": ["collectionModel", "transformGraph"],
+          "layout": { "type": "grid", "columns": 2 }
+        },
+        {
+          "id": "transform",
+          "title": "Transform",
+          "shows": ["transformGraph"],
+          "layout": { "type": "dag", "direction": "LR" }
+        }
+      ]
+    },
+
+    "collectionModel": {
+      "entities": [
+        {
+          "id": "coll.contextobjects",
+          "kind": "collection",
+          "store": "store:contextobjects",
+          "label": "contextobjects",
+          "fields": ["_id", "schema", "subjects", "interval", "provenance", "nodes"],
+          "badges": ["context-centric", "fhir-nodes"]
+        },
+        {
+          "id": "coll.raw",
+          "kind": "collection",
+          "store": "store:raw",
+          "label": "raw_vitals",
+          "fields": ["patient_external_id", "device_id", "ts", "spo2", "hr"],
+          "badges": ["optional"]
+        }
+      ]
+    },
+
+    "transformGraph": {
+      "nodes": [
+        { "id": "src.vitals", "kind": "source", "label": "Vitals Row", "typeRef": "telemetry.vitals.sample_row.v1" },
+        { "id": "op.normalize", "kind": "transform", "label": "Normalize", "stepRef": "step.normalize" },
+        { "id": "op.window", "kind": "transform", "label": "Windowing", "stepRef": "step.window" },
+        { "id": "op.fhir", "kind": "transform", "label": "Generate FHIR + CO", "stepRef": "step.fhir" },
+        { "id": "op.materialize", "kind": "sink", "label": "Upsert ContextObjects", "stepRef": "step.materialize", "entityRef": "coll.contextobjects" }
+      ],
+      "edges": [
+        { "from": "src.vitals", "to": "op.normalize" },
+        { "from": "op.normalize", "to": "op.window" },
+        { "from": "op.window", "to": "op.fhir" },
+        { "from": "op.fhir", "to": "op.materialize" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "X12-837 Claim Processing Strategy Configuration",
+  "properties": {
+    "database": {
+      "type": "string",
+      "description": "MongoDB database name"
+    },
+    "collections": {
+      "type": "object",
+      "properties": {
+        "claims": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Collection name for claim documents"
+            }
+          },
+          "required": ["name"]
+        },
+        "stage1": {
+          "type": "object",
+          "description": "Optional stage-1 persistence for debugging",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Collection name for ephemeral stage-1 docs"
+            },
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "required": ["name"]
+        }
+      },
+      "required": ["claims"]
+    },
+    "transform": {
+      "type": "object",
+      "properties": {
+        "debug": {
+          "type": "object",
+          "properties": {
+            "persistStage1": {
+              "type": "boolean",
+              "default": false,
+              "description": "If true, persist ephemeral stage-1 to stage1 collection"
+            }
+          }
+        },
+        "pathConfig": {
+          "type": "object",
+          "properties": {
+            "separator": {
+              "type": "string",
+              "default": "/",
+              "description": "Path segment separator for cn[].p"
+            },
+            "reversePath": {
+              "type": "boolean",
+              "default": true,
+              "description": "Store paths reversed (leaf->root) for prefix matching"
+            }
+          }
+        }
+      }
+    },
+    "query": {
+      "type": "object",
+      "properties": {
+        "defaultEngine": {
+          "type": "string",
+          "enum": ["match", "search"],
+          "default": "match",
+          "description": "Default query engine"
+        }
+      }
+    },
+    "indexes": {
+      "type": "object",
+      "properties": {
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "keys": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": [
+                    { "type": "string" },
+                    { "type": "integer" }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "sharding": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "shardKey": {
+          "type": "object",
+          "additionalProperties": { "type": "integer" },
+          "description": "Shard key, e.g., { tenant_id: 1, control.isa13: 1 }"
+        }
+      }
+    }
+  },
+  "required": ["database", "collections"]
+}

@@ -1,0 +1,1 @@
+"""Strategy pack template package."""

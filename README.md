@@ -4,6 +4,8 @@
 
 `kehrnel` provides a modular set of Python libraries, command-line interfaces (CLIs), and a companion REST API. Together, these tools help model, generate, map, validate, transform, and ingest openEHR compositions — following a document-centric approach. They are designed for rapid prototyping, teaching, and building proof-of-concepts.
 
+> Looking for the new strategy runtime? See `README-dev.md` (uvicorn kehrnel.api.app:app). The legacy FastAPI entrypoints under `src/api` are deprecated and kept only for historical reference.
+
 It also powers the **MongoDB Healthcare Playground**, a demo stack with MongoDB Atlas Local, FastAPI, AQL dashboards, and semantic search layers:
 
 ```
@@ -106,6 +108,16 @@ You can also pipe the composition through stdin:
 comp=$(kehrnel-generate -t template.opt --random)
 printf "%s" "$comp" | kehrnel-validate -t template.opt -
 ```
+
+### Validate a strategy pack for portability
+
+Use the validator to lint a strategy folder (manifest + defaults + schema + entrypoint) before dropping it into discovery paths:
+
+```bash
+kehrnel-validate-pack ./path/to/strategy-pack
+```
+
+Add `--json` for machine-readable diagnostics. A starter skeleton lives in `strategy-pack-template/`.
 
 ### Map a source file into an openEHR Composition
 

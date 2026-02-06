@@ -9,9 +9,18 @@
 
 # Command for the KEHRNEL SERVER
 FROM python:3.12-slim
+<<<<<<< HEAD
 WORKDIR /kerhnel
 COPY . .
 RUN pip install -e .[all]
 ENV API_PORT=8080
 CMD ["kehrnel-api"]
 EXPOSE 8080
+=======
+WORKDIR /kehrnel
+COPY . .
+# Install kehrnel with runtime dependencies
+RUN pip install --no-cache-dir -e .
+CMD ["uvicorn", "kehrnel.api.app:app", "--host", "0.0.0.0", "--port", "9000"]
+EXPOSE 9000
+>>>>>>> kehrnel/main

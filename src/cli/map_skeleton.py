@@ -5,7 +5,7 @@ import sys
 import yaml
 import typer, logging
 
-from mapper.skeleton import build_skeleton
+from kehrnel.common.mapping.skeleton import build_skeleton
 
 app = typer.Typer(add_completion=False, rich_markup_mode="rich")
 

@@ -1,0 +1,1 @@
+"""MongoDB adapter scaffold."""
