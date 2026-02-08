@@ -661,7 +661,20 @@ class RPSDualStrategy(StrategyPlugin):
             link_applied_count = 0
             last_progress = -1
 
-            await _emit_progress(progress_cb, progress=1, phase="running", stats={"patients_total": patient_count, "estimated_docs": estimated_docs})
+            await _emit_progress(
+                progress_cb,
+                progress=1,
+                phase="running",
+                stats={
+                    "patients_total": patient_count,
+                    "estimated_docs": estimated_docs,
+                    "patientCount": patient_count,
+                    "generatedPatients": 0,
+                    "generatedDocuments": 0,
+                    "modelCount": len(template_specs),
+                    "linksApplied": 0,
+                },
+            )
 
             for i in range(patient_count):
                 if _is_canceled(should_cancel):
@@ -738,6 +751,11 @@ class RPSDualStrategy(StrategyPlugin):
                             "inserted_base": inserted_base,
                             "inserted_search": inserted_search,
                             "links_applied": link_applied_count,
+                            "patientCount": patient_count,
+                            "generatedPatients": i + 1,
+                            "generatedDocuments": generated_docs,
+                            "modelCount": len(template_specs),
+                            "linksApplied": link_applied_count,
                         },
                     )
                     last_progress = progress
@@ -753,6 +771,11 @@ class RPSDualStrategy(StrategyPlugin):
                     "inserted_base": inserted_base,
                     "inserted_search": inserted_search,
                     "links_applied": link_applied_count,
+                    "patientCount": patient_count,
+                    "generatedPatients": patient_count,
+                    "generatedDocuments": generated_docs,
+                    "modelCount": len(template_specs),
+                    "linksApplied": link_applied_count,
                 },
             )
             return {
