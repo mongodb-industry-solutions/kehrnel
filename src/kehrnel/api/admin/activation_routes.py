@@ -8,7 +8,7 @@ from kehrnel.core.errors import KehrnelError
 router = APIRouter()
 
 
-@router.post("/v1/environments/{env_id}/activations", include_in_schema=False)
+@router.post("/environments/{env_id}/activations", include_in_schema=False)
 async def create_activation(env_id: str, request: Request, body: Dict[str, Any] = Body(default_factory=dict)):
     try:
         # Reuse existing activation handler

@@ -5,24 +5,29 @@ import json
 import os
 import logging
 import secrets
+from copy import deepcopy
 from pathlib import Path
 from typing import Optional
 from fastapi import FastAPI, Request, HTTPException, Security
 from fastapi.responses import JSONResponse
 from fastapi.security import APIKeyHeader
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from kehrnel.api.admin.routes import router as admin_router
 from kehrnel.api.admin.ops_by_domain import router as ops_domain_router
 from kehrnel.api.admin.activation_routes import router as activation_router
-from kehrnel.api.portal.routes import router as portal_router
+from kehrnel.api.domains.openehr.routes import router as openehr_domain_router
+from kehrnel.api.strategies.openehr.rps_dual.routes import router as openehr_rps_dual_router
 from kehrnel.core.runtime import StrategyRuntime
 from kehrnel.core.manifest import StrategyManifest
 from kehrnel.core.registry import FileActivationRegistry
 from kehrnel.core.errors import KehrnelError
 from kehrnel.core.bundle_store import BundleStore
 from kehrnel.core.pack_validator import StrategyPackValidator
+from kehrnel.core.bindings_resolver import load_bindings_resolver_from_env
+from kehrnel.core.synthetic_jobs import SyntheticJobManager
 
 
 # ============================================================================
@@ -72,14 +77,18 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
             )
             return await call_next(request)
 
-        if not api_key or not secrets.compare_digest(api_key, api_key):
-            # Check if key is valid using constant-time comparison
-            key_valid = any(secrets.compare_digest(api_key or "", k) for k in valid_keys)
-            if not key_valid:
-                return JSONResponse(
-                    status_code=401,
-                    content={"error": {"code": "UNAUTHORIZED", "message": "Invalid or missing API key"}}
-                )
+        if not api_key:
+            return JSONResponse(
+                status_code=401,
+                content={"error": {"code": "UNAUTHORIZED", "message": "Invalid or missing API key"}},
+            )
+        # Check if key is valid using constant-time comparison
+        key_valid = any(secrets.compare_digest(api_key, k) for k in valid_keys)
+        if not key_valid:
+            return JSONResponse(
+                status_code=401,
+                content={"error": {"code": "UNAUTHORIZED", "message": "Invalid or missing API key"}},
+            )
 
         return await call_next(request)
 
@@ -298,18 +307,184 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     bundle_dir = Path(bundle_path) if bundle_path else Path(".kehrnel/bundles")
     bundle_store = BundleStore(bundle_dir)
     _seed_default_bundles(bundle_store)
-    runtime = StrategyRuntime(FileActivationRegistry(Path(reg_path)), bundle_store=bundle_store)
+    bindings_resolver = load_bindings_resolver_from_env()
+    runtime = StrategyRuntime(
+        FileActivationRegistry(Path(reg_path)),
+        bundle_store=bundle_store,
+        bindings_resolver=bindings_resolver,
+    )
     manifests, diagnostics, asset_dirs = _load_manifests()
     # Clear stale manifests from registry before registering fresh ones from disk
     runtime.registry.clear_manifests()
     for manifest in manifests:
         runtime.register_manifest(manifest)
     app.state.strategy_runtime = runtime
+    app.state.synthetic_job_manager = SyntheticJobManager(runtime)
     app.state.strategy_diagnostics = diagnostics
     app.state.bundle_store = bundle_store
     app.state.strategy_asset_dirs = asset_dirs
     # Store allowed strategy paths for validation
     app.state.allowed_strategy_paths = [p.resolve() for p in _strategy_paths()]
+
+    def _strategy_openapi(domain: str, strategy: str) -> dict:
+        domain_norm = (domain or "").strip().lower()
+        strategy_norm = (strategy or "").strip().lower()
+        if not domain_norm or not strategy_norm:
+            raise HTTPException(status_code=400, detail="domain and strategy are required")
+        full_strategy_id = f"{domain_norm}.{strategy_norm}"
+        manifest = runtime.registry.get_manifest(full_strategy_id)
+        if not manifest:
+            raise HTTPException(status_code=404, detail=f"Unknown strategy: {full_strategy_id}")
+
+        prefix = f"/api/strategies/{domain_norm}/{strategy_norm}/"
+        schema = deepcopy(app.openapi())
+        paths = schema.get("paths", {}) or {}
+        strategy_paths = {path: spec for path, spec in paths.items() if path.startswith(prefix)}
+        if not strategy_paths:
+            raise HTTPException(status_code=404, detail=f"No API paths found for strategy: {full_strategy_id}")
+        schema["paths"] = strategy_paths
+        schema["info"] = {
+            **(schema.get("info") or {}),
+            "title": f"Kehrnel Strategy API - {full_strategy_id}",
+            "description": f"Strategy-specific API documentation for {full_strategy_id}.",
+        }
+        return schema
+
+    def _domain_openapi(domain: str) -> dict:
+        domain_norm = (domain or "").strip().lower()
+        if not domain_norm:
+            raise HTTPException(status_code=400, detail="domain is required")
+
+        prefix = f"/api/domains/{domain_norm}/"
+        schema = deepcopy(app.openapi())
+        paths = schema.get("paths", {}) or {}
+        domain_paths = {path: spec for path, spec in paths.items() if path.startswith(prefix)}
+        if not domain_paths:
+            raise HTTPException(status_code=404, detail=f"No API paths found for domain: {domain_norm}")
+        schema["paths"] = domain_paths
+        schema["info"] = {
+            **(schema.get("info") or {}),
+            "title": f"Kehrnel Domain API - {domain_norm}",
+            "description": f"Domain-scoped API documentation for {domain_norm}.",
+        }
+        return schema
+
+    def _core_openapi() -> dict:
+        schema = deepcopy(app.openapi())
+        paths = schema.get("paths", {}) or {}
+        core_paths = {
+            path: spec
+            for path, spec in paths.items()
+            if not path.startswith("/api/strategies/") and not path.startswith("/api/domains/")
+        }
+        schema["paths"] = core_paths
+        schema["info"] = {
+            **(schema.get("info") or {}),
+            "title": "Kehrnel Core API",
+            "description": "Core/runtime API documentation (non-domain, non-strategy).",
+        }
+        return schema
+
+    @app.get("/openapi/strategies/{domain}/{strategy}.json", include_in_schema=False)
+    async def strategy_openapi(domain: str, strategy: str):
+        return JSONResponse(content=_strategy_openapi(domain, strategy))
+
+    @app.get("/openapi/strategies/{strategy_id}.json", include_in_schema=False)
+    async def strategy_openapi_by_id(strategy_id: str):
+        strategy_id_norm = (strategy_id or "").strip().lower()
+        if "." not in strategy_id_norm:
+            raise HTTPException(
+                status_code=400,
+                detail="strategy_id must be in '<domain>.<strategy>' format",
+            )
+        domain_norm, strategy_norm = strategy_id_norm.split(".", 1)
+        return JSONResponse(content=_strategy_openapi(domain_norm, strategy_norm))
+
+    @app.get("/docs/strategies/{domain}/{strategy}", include_in_schema=False)
+    async def strategy_docs(domain: str, strategy: str):
+        domain_norm = (domain or "").strip().lower()
+        strategy_norm = (strategy or "").strip().lower()
+        _strategy_openapi(domain_norm, strategy_norm)
+        full_strategy_id = f"{domain_norm}.{strategy_norm}"
+        return get_swagger_ui_html(
+            openapi_url=f"/openapi/strategies/{domain_norm}/{strategy_norm}.json",
+            title=f"Kehrnel Docs - {full_strategy_id}",
+        )
+
+    @app.get("/openapi/domains/{domain}.json", include_in_schema=False)
+    async def domain_openapi(domain: str):
+        return JSONResponse(content=_domain_openapi(domain))
+
+    @app.get("/openapi/strategies/{domain}.json", include_in_schema=False)
+    async def domain_openapi_alias(domain: str):
+        return JSONResponse(content=_domain_openapi(domain))
+
+    @app.get("/docs/domains/{domain}", include_in_schema=False)
+    async def domain_docs(domain: str):
+        domain_norm = (domain or "").strip().lower()
+        _domain_openapi(domain_norm)
+        return get_swagger_ui_html(
+            openapi_url=f"/openapi/domains/{domain_norm}.json",
+            title=f"Kehrnel Docs - domain {domain_norm}",
+        )
+
+    @app.get("/docs/strategies/{domain}", include_in_schema=False)
+    async def domain_docs_alias(domain: str):
+        domain_norm = (domain or "").strip().lower()
+        _domain_openapi(domain_norm)
+        return get_swagger_ui_html(
+            openapi_url=f"/openapi/strategies/{domain_norm}.json",
+            title=f"Kehrnel Docs - domain {domain_norm}",
+        )
+
+    @app.get("/redoc/domains/{domain}", include_in_schema=False)
+    async def domain_redoc(domain: str):
+        domain_norm = (domain or "").strip().lower()
+        _domain_openapi(domain_norm)
+        return get_redoc_html(
+            openapi_url=f"/openapi/domains/{domain_norm}.json",
+            title=f"Kehrnel ReDoc - domain {domain_norm}",
+        )
+
+    @app.get("/redoc/strategies/{domain}", include_in_schema=False)
+    async def domain_redoc_alias(domain: str):
+        domain_norm = (domain or "").strip().lower()
+        _domain_openapi(domain_norm)
+        return get_redoc_html(
+            openapi_url=f"/openapi/strategies/{domain_norm}.json",
+            title=f"Kehrnel ReDoc - domain {domain_norm}",
+        )
+
+    @app.get("/openapi/core.json", include_in_schema=False)
+    async def core_openapi():
+        return JSONResponse(content=_core_openapi())
+
+    @app.get("/docs/core", include_in_schema=False)
+    async def core_docs():
+        _core_openapi()
+        return get_swagger_ui_html(
+            openapi_url="/openapi/core.json",
+            title="Kehrnel Docs - Core",
+        )
+
+    @app.get("/redoc/core", include_in_schema=False)
+    async def core_redoc():
+        _core_openapi()
+        return get_redoc_html(
+            openapi_url="/openapi/core.json",
+            title="Kehrnel ReDoc - Core",
+        )
+
+    @app.get("/redoc/strategies/{domain}/{strategy}", include_in_schema=False)
+    async def strategy_redoc(domain: str, strategy: str):
+        domain_norm = (domain or "").strip().lower()
+        strategy_norm = (strategy or "").strip().lower()
+        _strategy_openapi(domain_norm, strategy_norm)
+        full_strategy_id = f"{domain_norm}.{strategy_norm}"
+        return get_redoc_html(
+            openapi_url=f"/openapi/strategies/{domain_norm}/{strategy_norm}.json",
+            title=f"Kehrnel ReDoc - {full_strategy_id}",
+        )
 
     @app.exception_handler(Exception)
     async def global_exception_handler(request: Request, exc: Exception):
@@ -332,8 +507,15 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     app.include_router(admin_router)
     app.include_router(ops_domain_router)
     app.include_router(activation_router)
-    app.include_router(portal_router)
+    app.include_router(openehr_domain_router)
+    app.include_router(openehr_rps_dual_router)
     return app
 
 
 app = create_app()
+
+
+def main():
+    import uvicorn
+
+    uvicorn.run("kehrnel.api.app:app", host="0.0.0.0", port=8000, reload=True)

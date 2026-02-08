@@ -19,7 +19,7 @@ This guide explains how to add a new strategy plugin, register it, and interact 
   - `search(query, bindings, context)` if you expose search.
 - Use shared libs to avoid duplication:
   - OpenEHR: `libs/openehr` (flattener/transformer, remap, codec helpers).
-  - Storage/search adapters: bind via `StrategyBindings` (MongoStorageAdapter, OpenSearchAdapter, etc.).
+- Storage/search adapters: bind via `StrategyBindings` (MongoStorageAdapter, etc.).
 - Example: `strategies.fhir.simulated` shows a no-op/echo ingest and a simulated search response.
 
 ## 3) Register the Manifest
@@ -39,7 +39,7 @@ This guide explains how to add a new strategy plugin, register it, and interact 
   - Activations are persisted to file when `KEHRNEL_REGISTRY_PATH` is set; restored on startup.
 - Bindings are built from config:
   - Storage: from `config.target.*` (Mongo) or defaults.
-  - Search: from `config.search` (e.g., `{ "backend": "opensearch", "index": "..." }`).
+- Search: from `config.search` (project default is Atlas Search in MongoDB).
   - Extras: e.g., `{"flattener": CompositionFlattener}` for openEHR.
 
 ## 5) Use a Strategy via Ingest API
@@ -60,7 +60,7 @@ This guide explains how to add a new strategy plugin, register it, and interact 
 
 ## 7) Skeleton Strategy Template (pseudo-code)
 ```python
-from strategy_sdk import StrategyPlugin, StrategyManifest, StrategyCapability, AdapterRequirements
+from kehrnel.strategy_sdk import StrategyPlugin, StrategyManifest, StrategyCapability, AdapterRequirements
 
 MANIFEST = StrategyManifest(
     id="myproto.my_strategy",

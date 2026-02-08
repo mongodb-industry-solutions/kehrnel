@@ -6,7 +6,7 @@ from kehrnel.api.admin.routes import _error_response
 router = APIRouter()
 
 
-@router.post("/v1/environments/{env_id}/activations/{domain}/ops/{op}", include_in_schema=False)
+@router.post("/environments/{env_id}/activations/{domain}/ops/{op}", include_in_schema=False)
 async def run_op_by_domain(env_id: str, domain: str, op: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict)):
     try:
         rt = getattr(request.app.state, "strategy_runtime", None)

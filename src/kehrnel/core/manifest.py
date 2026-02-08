@@ -1,7 +1,11 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Literal, Optional
 from pydantic import BaseModel, Field
+
+
+# Strategy status for UI display
+StrategyStatus = Literal["stable", "preview", "example", "community"]
 
 
 class AdapterRequirements(BaseModel):
@@ -12,6 +16,14 @@ class AdapterRequirements(BaseModel):
 
 
 class StrategyUI(BaseModel):
+    status: Optional[StrategyStatus] = Field(
+        default="stable",
+        description="Strategy availability status: stable (production-ready), preview (coming soon), example (showcase), community (open for contribution)"
+    )
+    status_message: Optional[str] = Field(
+        default=None,
+        description="Custom message to display when user clicks on the status indicator"
+    )
     tags: List[str] = Field(default_factory=list)
     domain_badge: Optional[str] = None
     icon: Optional[str] = None

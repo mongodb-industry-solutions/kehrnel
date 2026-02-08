@@ -10,7 +10,7 @@ class AdapterRequirements(BaseModel):
     """Declare which adapter kinds a strategy expects."""
 
     storage: List[str] = Field(default_factory=list, description="Storage adapter ids (e.g., mongo, postgres)")
-    search: List[str] = Field(default_factory=list, description="Search adapter ids (e.g., atlas_search, opensearch)")
+    search: List[str] = Field(default_factory=list, description="Search adapter ids (e.g., atlas_search)")
     vector: List[str] = Field(default_factory=list, description="Vector adapter ids (e.g., atlas_vector, pgvector)")
     queue: List[str] = Field(default_factory=list, description="Queue adapter ids (e.g., kafka, nats, sqs)")
 

@@ -2,6 +2,7 @@
   "id": "fhir.contextobjects.vitals_window",
   "name": "FHIR ContextObjects - Vitals Window",
   "version": "0.1.0",
+  "maturity": "development",
   "pack_format": "strategy-pack/v1",
   "spec": { "path": "spec.json", "version": "1.1" },
   "variants": ["window.60s", "window.300s", "window.900s"],

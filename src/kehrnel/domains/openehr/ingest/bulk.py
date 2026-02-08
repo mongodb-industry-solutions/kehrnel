@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Iterator, Dict, Any
 
 from kehrnel.persistence import get_driver        # entry-point loader
-from kehrnel.strategies.openehr.rps_dual.ingest.core import Transformer, load_default_cfg
+from kehrnel.legacy.transform.core import Transformer, load_default_cfg
 
 log = logging.getLogger(__name__)
 
@@ -31,17 +31,36 @@ def run(transformer: Transformer,
 # optional helper to mimic the old “pull-from-source Mongo” pipeline
 def from_mongo(src_cfg: Path, driver_cfg: Path, limit: int | None):
     from kehrnel.persistence.mongo import MongoSource   # thin wrapper around PyMongo
+    from kehrnel.strategies.openehr.rps_dual.ingest.flattener_f import CompositionFlattener
     source = MongoSource(json.loads(src_cfg.read_text()), limit=limit)
-
-    tf = Transformer(load_default_cfg(None))
     drv = get_driver(driver_cfg)
     drv.connect()
+    flattener = CompositionFlattener(
+        db=None,
+        config={
+            "role": "primary",
+            "apply_shortcuts": False,
+            "paths": {"separator": "."},
+            "collections": {},
+        },
+        mappings_path=str(
+            Path(__file__).resolve().parents[3]
+            / "strategies"
+            / "openehr"
+            / "rps_dual"
+            / "ingest"
+            / "config"
+            / "flattener_mappings_f.jsonc"
+        ),
+        mappings_content=None,
+        coding_opts={"arcodes": {"strategy": "literal"}, "atcodes": {"strategy": "literal"}},
+    )
 
     for raw in source.iter_compositions():
         try:
-            docs = tf.flatten(raw)
-            drv.insert_one(docs["base"])
-            if "search" in docs:
-                drv.insert_one(docs["search"], search=True)
+            base, search = flattener.transform_composition(raw)
+            drv.insert_one(base)
+            if search and search.get("sn"):
+                drv.insert_one(search, search=True)
         except ValueError as e:
             log.warning("skip %s – %s", raw["_id"], e)

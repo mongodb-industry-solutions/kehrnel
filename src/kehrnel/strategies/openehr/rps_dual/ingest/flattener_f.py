@@ -1,4 +1,4 @@
-# src/transform/flattener_g.py
+# src/kehrnel/legacy/transform/flattener_g.py
 
 import json
 import re
@@ -73,6 +73,7 @@ class CompositionFlattener:
         self.cf_nodes = c_fields.get("nodes", "cn")
         self.cf_data  = c_fields.get("data", "data")
         self.cf_path  = c_fields.get("path", "p")
+        self.cf_pi    = c_fields.get("path_instance", "pi")
         self.cf_ap    = c_fields.get("archetype_path", "ap")
         self.cf_anc   = c_fields.get("ancestors", "anc")
         self.cf_ehr   = c_fields.get("ehr_id", "ehr_id")
@@ -151,7 +152,7 @@ class CompositionFlattener:
 
         # STEP 1: Complete flattening regardless of mapping rules
         cn: List[dict] = []
-        self._walk(comp, ancestors=(), cn=cn, kp_chain=[], list_index=None)
+        self._walk(comp, anc_codes=(), anc_pi=(), cn=cn, kp_chain=[], list_index=None)
 
         # STEP 2: Apply mapping rules only for search document generation
         sn: List[dict] = []
@@ -353,7 +354,7 @@ class CompositionFlattener:
             "composition_nodes": {
                 "path": "p",
                 "keyPath": "kp",
-                "lineIndex": "li",
+                "path_instance": "pi",   # <--- NEW
                 "data": "data",
             },
             "search": {
@@ -364,7 +365,7 @@ class CompositionFlattener:
             },
             "search_nodes": {
                 "path": "p",
-                "data": "data",
+                "data": "data"
             },
         }
 
@@ -517,10 +518,19 @@ class CompositionFlattener:
                 return dst + sid[len(src):]
         return sid
 
-    def _walk(self, node: dict, ancestors: Tuple[int, ...], cn: List[dict], *, kp_chain: List[str], list_index: Optional[int]):
-        """Flatten *node* into the cn[ ] array. Direct adaptation from proven ingestionOptimized.py"""
+    def _walk(
+        self,
+        node: dict,
+        anc_codes: Tuple[int, ...],
+        anc_pi: Tuple[int, ...],
+        cn: List[dict],
+        *,
+        kp_chain: List[str],
+        list_index: Optional[int],
+    ):
+        """Flatten node into cn[]. Emits path p plus path-instance chain pi (replaces li)."""
 
-        # ── 0.  numeric code of *this* node ─────────────────────────────
+        # ── 0. numeric code of this node ─────────────────────────────
         aid = self._archetype_id(node)
         if aid:
             code = self._at_code_to_int(aid) if aid.lower().startswith("at") \
@@ -528,61 +538,56 @@ class CompositionFlattener:
         else:
             code = 0
 
-        is_root = not ancestors
+        is_root = not anc_codes
         emit = (list_index is not None or is_root or self._split_me_as_a_new_node(node)) and code is not None
+
+        # current node's instance index (aligned with p segments)
+        cur_pi = list_index if list_index is not None else -1
 
         scalars: Dict[str, Any] = {}
         for k, v in node.items():
 
-            # 1a – drop attributes explicitly skipped
             if k in SKIP_ATTRS:
                 continue
 
-            # 1b – child is its own locatable node → don't duplicate here
             if isinstance(v, dict) and self._is_locatable(v) and self._split_me_as_a_new_node(v):
                 continue
 
-            # 1c – EVENT_CONTEXT, HISTORY … keep only **their** scalars
             if isinstance(v, dict) and self._is_locatable(v) and v.get("_type") in NON_ARCHETYPED_RM:
                 scalars[k] = self._strip_locatables(v)
                 continue
 
-            # 1d – list that contains any splittable locatable → skip whole list
             if isinstance(v, list) and any(self._is_locatable(x) and self._split_me_as_a_new_node(x) for x in v):
                 continue
 
-            # 1e – ordinary scalar
             scalars[k] = v
 
-        # ── 2.  date coercion + archetype_node_id ──────────────────────────────
-        scalars = self._to_bson_dates(scalars)   
-        scalars["archetype_node_id"] = code    
-        
-        # ── 2b. shrink archetype_details.archetype_id / ai -----------------
+        # ── 2. date coercion + archetype_node_id ─────────────────────
+        scalars = self._to_bson_dates(scalars)
+        scalars["archetype_node_id"] = code
+
+        # ── 2b. shrink archetype_details.archetype_id / ai ───────────
         ad = scalars.get("archetype_details") or scalars.get("ad")
         if isinstance(ad, dict):
-            # depending on whether shortcuts have already run
             ai_obj = ad.get("archetype_id") or ad.get("ai")
             if isinstance(ai_obj, dict):
-                # full form: {"value": "..."}      | short form: {"v": "..."}
                 sid = ai_obj.get("value") or ai_obj.get("v")
                 if isinstance(sid, str):
                     num = self._alloc_code("ar_code", sid)
                     if num is not None:
-                        # always store the int under the canonical long key;
-                        # later apply_sc will rename 'archetype_id' → 'ai'
                         ad["archetype_id"] = num
 
-        payload = scalars                  
+        payload = scalars
 
-        # ── 3.  emit the node (if required) ────────────────────────────
+        # ── 3. emit the node ─────────────────────────────────────────
         if emit:
-            leaf_path = self.path_separator.join([str(code)] + [str(a) for a in reversed(ancestors)])
+            # p is leaf-to-root numeric path: "<leaf>.<parent>.<root>"
+            leaf_path = self.path_separator.join([str(code)] + [str(a) for a in reversed(anc_codes)])
 
             cn_node: Dict[str, Any] = {
-                self.cf_data: payload,  
-                self.cf_path: leaf_path, 
-                "_anc": ancestors,      
+                self.cf_data: payload,
+                self.cf_path: leaf_path,
+                "_anc": anc_codes,   # keep as before (root->parent codes)
             }
 
             if self.cf_ap and aid:
@@ -590,26 +595,31 @@ class CompositionFlattener:
 
             if kp_chain:
                 cn_node["kp"] = kp_chain[:]
-            if list_index is not None:
-                cn_node["li"] = list_index
+
+            # pi aligns 1:1 with p segments (including -1 for non-list nodes)
+            pi_list = [cur_pi] + [int(x) for x in reversed(anc_pi)]
+
+            # store pi only if it actually adds information (any repetition on the chain)
+            if any(x != -1 for x in pi_list):
+                cn_node[self.cf_pi] = pi_list
 
             cn.append(cn_node)
 
-        # ── 4.  recurse into children  ─────────────────────────────────
-        new_anc = ancestors + ((code,) if emit else ())
-        base_kp = [] if emit else kp_chain 
+        # ── 4. recurse into children ──────────────────────────────────
+        new_anc_codes = anc_codes + ((code,) if emit else ())
+        new_anc_pi = anc_pi + ((cur_pi,) if emit else ())
+        base_kp = [] if emit else kp_chain
 
         for k, v in node.items():
-            # Use shortcut keys if available
             k_long = self._sc_key(k)
 
             if isinstance(v, dict) and self._is_locatable(v):
-                self._walk(v, new_anc, cn, kp_chain=base_kp + [k_long], list_index=None)
+                self._walk(v, new_anc_codes, new_anc_pi, cn, kp_chain=base_kp + [k_long], list_index=None)
 
             elif isinstance(v, list):
                 for idx, itm in enumerate(v):
                     if self._is_locatable(itm):
-                        self._walk(itm, new_anc, cn, kp_chain=base_kp + [k_long], list_index=idx)
+                        self._walk(itm, new_anc_codes, new_anc_pi, cn, kp_chain=base_kp + [k_long], list_index=idx)
 
     # --- Utility functions converted to private methods ---
     
