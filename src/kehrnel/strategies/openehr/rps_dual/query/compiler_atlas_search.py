@@ -5,7 +5,7 @@ from typing import Any, Dict, List
 
 from collections import defaultdict
 
-from kehrnel.protocols.openehr.aql.ir import AqlQueryIR
+from kehrnel.domains.openehr.aql.ir import AqlQueryIR
 from .path_resolver import PathResolver
 
 

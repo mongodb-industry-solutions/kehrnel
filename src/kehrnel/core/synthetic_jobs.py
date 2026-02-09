@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import asyncio
 import uuid
+import hashlib
 from datetime import datetime, timezone
 from typing import Any, Dict
 
@@ -47,7 +48,7 @@ class SyntheticJobManager:
             "status": "queued",
             "phase": "queued",
             "progress": 0,
-            "requested_by": requested_by,
+            "requested_by": self._redact_requester(requested_by),
             "payload": payload,
             "result": None,
             "error": None,
@@ -184,6 +185,14 @@ class SyntheticJobManager:
         data = dict(rec)
         # Backward/consumer compatibility: expose both keys.
         data["id"] = data.get("job_id")
+        # Do not expose requester metadata to API consumers.
+        data.pop("requested_by", None)
         # Do not echo full payload back for large jobs unless needed by caller.
         data["payload"] = {"keys": sorted(list((rec.get("payload") or {}).keys()))}
         return data
+
+    def _redact_requester(self, requester: str | None) -> str | None:
+        if not requester:
+            return None
+        digest = hashlib.sha256(requester.encode("utf-8")).hexdigest()[:12]
+        return f"key:{digest}"

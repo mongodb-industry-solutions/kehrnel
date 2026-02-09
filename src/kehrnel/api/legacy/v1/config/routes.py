@@ -1,6 +1,9 @@
 # src/kehrnel/api/legacy/v1/config/routes.py
 
 from typing import Any, Dict, Optional, Union, List
+import os
+from pathlib import Path
+import json
 
 from fastapi import APIRouter, HTTPException, Request, status
 from pydantic import BaseModel, Field
@@ -10,6 +13,23 @@ from kehrnel.api.legacy.app.core.config import settings
 from kehrnel.persistence import load_strategy_from_file, load_strategy_from_json, PersistenceStrategy
 
 router = APIRouter()
+
+
+def _allow_local_file_inputs() -> bool:
+    return os.getenv("KEHRNEL_ALLOW_LOCAL_FILE_INPUTS", "false").lower() in ("1", "true", "yes")
+
+
+def _safe_local_json_path(raw_path: str) -> Path:
+    p = Path(raw_path)
+    if not p.is_absolute():
+        p = (Path.cwd() / p).resolve()
+    else:
+        p = p.resolve()
+    if not p.exists() or not p.is_file():
+        raise ValueError("Provided path does not exist or is not a file")
+    if p.suffix.lower() not in (".json", ".jsonc"):
+        raise ValueError("Only .json/.jsonc files are allowed")
+    return p
 
 
 # --- Payload Schemas ---
@@ -142,7 +162,10 @@ async def set_ingestion_config(payload: IngestionConfigPayload, request: Request
         strategy: Optional[PersistenceStrategy] = None
         strategy_raw: Dict[str, Any] = {}
         if payload.strategy_path:
-            with open(payload.strategy_path, "r", encoding="utf-8") as f:
+            if not _allow_local_file_inputs():
+                raise ValueError("Local file paths are disabled. Use strategy_inline instead.")
+            safe_path = _safe_local_json_path(payload.strategy_path)
+            with safe_path.open("r", encoding="utf-8") as f:
                 strategy_raw = json.load(f)
             strategy = load_strategy_from_json(strategy_raw)
         elif payload.strategy_inline is not None:
@@ -158,7 +181,10 @@ async def set_ingestion_config(payload: IngestionConfigPayload, request: Request
         # Decide mappings source: analytics path/inline > strategy templates > provided mappings
         mappings_inline = payload.mappings.inline
         if payload.analytics_path:
-            with open(payload.analytics_path, "r", encoding="utf-8") as f:
+            if not _allow_local_file_inputs():
+                raise ValueError("Local file paths are disabled. Use analytics_inline instead.")
+            safe_path = _safe_local_json_path(payload.analytics_path)
+            with safe_path.open("r", encoding="utf-8") as f:
                 mappings_inline = json.load(f)
         elif payload.analytics_inline is not None:
             mappings_inline = payload.analytics_inline

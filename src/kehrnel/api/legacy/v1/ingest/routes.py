@@ -4,6 +4,8 @@ from fastapi import APIRouter, Body, Depends, HTTPException, Request, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 import copy
+import os
+from pathlib import Path
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from kehrnel.legacy.transform.flattener_g import CompositionFlattener
@@ -28,6 +30,23 @@ from kehrnel.api.legacy.v1.ingest.api_responses import (
 from kehrnel.legacy.libs.openehr.remap import remap_fields_for_config
 
 router = APIRouter()
+
+
+def _allow_local_file_ingest() -> bool:
+    return os.getenv("KEHRNEL_ALLOW_LOCAL_FILE_INPUTS", "false").lower() in ("1", "true", "yes")
+
+
+def _validate_local_ingest_path(file_path: str) -> str:
+    p = Path(file_path)
+    if not p.is_absolute():
+        p = (Path.cwd() / p).resolve()
+    else:
+        p = p.resolve()
+    if not p.exists() or not p.is_file():
+        raise FileNotFoundError(f"File not found: {p}")
+    if p.suffix.lower() != ".json":
+        raise ValueError("Only .json files are allowed for file ingest")
+    return str(p)
 
 
 def get_ingestion_service(request: Request) -> IngestionService | None:
@@ -349,9 +368,15 @@ async def ingest_from_file(
     transforms it, and stores the flattened version.
     """
     try:
-        new_comp_id = await service.ingest_from_local_file(request_body.file_path)
+        if not _allow_local_file_ingest():
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Local file ingest is disabled. Enable KEHRNEL_ALLOW_LOCAL_FILE_INPUTS=true to use this endpoint.",
+            )
+        safe_path = _validate_local_ingest_path(request_body.file_path)
+        new_comp_id = await service.ingest_from_local_file(safe_path)
         return IngestionSuccessResponse(
-            message=f"Composition from file '{request_body.file_path}' ingested and stored.",
+            message=f"Composition from file '{safe_path}' ingested and stored.",
             flattened_composition_id=new_comp_id,
         )
     except FileNotFoundError as e:

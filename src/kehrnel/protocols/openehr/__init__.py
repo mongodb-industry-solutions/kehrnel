@@ -1,1 +1,0 @@
-"""openEHR protocol scaffold."""

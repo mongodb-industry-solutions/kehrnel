@@ -71,11 +71,14 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
         valid_keys = _get_api_keys()
 
         if not valid_keys:
-            # No keys configured but auth enabled - log warning and allow (for dev)
+            # Fail closed: auth is enabled but no keys are configured.
             logging.getLogger("kehrnel.security").warning(
                 "API auth enabled but no keys configured (KEHRNEL_API_KEYS)"
             )
-            return await call_next(request)
+            return JSONResponse(
+                status_code=503,
+                content={"error": {"code": "AUTH_MISCONFIGURED", "message": "Authentication is enabled but not configured"}},
+            )
 
         if not api_key:
             return JSONResponse(
@@ -488,9 +491,10 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
 
     @app.exception_handler(Exception)
     async def global_exception_handler(request: Request, exc: Exception):
+        debug_enabled = os.getenv("KEHRNEL_DEBUG", "false").lower() in ("1", "true", "yes")
         code = "INTERNAL_ERROR"
         status = 500
-        message = str(exc)
+        message = str(exc) if debug_enabled else "Internal server error"
         details = {}
         if isinstance(exc, KehrnelError):
             code = exc.code

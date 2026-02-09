@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any, Dict
 
-from kehrnel.protocols.openehr.aql.ir import AqlQueryIR
+from kehrnel.domains.openehr.aql.ir import AqlQueryIR
 from kehrnel.strategies.openehr.rps_dual.query.compiler_atlas_search import compile_atlas_search
 from kehrnel.strategies.openehr.rps_dual.query.projection_compiler import compile_projection
 

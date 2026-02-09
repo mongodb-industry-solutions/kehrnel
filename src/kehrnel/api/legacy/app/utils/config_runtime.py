@@ -1,4 +1,5 @@
 import json
+import os
 import tempfile
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
@@ -22,6 +23,29 @@ DEFAULT_MAPPINGS_PATH = (
     / "config"
     / "flattener_mappings_f.jsonc"
 )
+
+
+def _allow_local_file_inputs() -> bool:
+    return os.getenv("KEHRNEL_ALLOW_LOCAL_FILE_INPUTS", "false").lower() in ("1", "true", "yes")
+
+
+def _safe_mappings_path(raw_path: str | None) -> str:
+    if not raw_path:
+        return str(DEFAULT_MAPPINGS_PATH)
+    p = Path(raw_path)
+    if not p.is_absolute():
+        p = (Path.cwd() / p).resolve()
+    else:
+        p = p.resolve()
+    if not _allow_local_file_inputs():
+        default_parent = DEFAULT_MAPPINGS_PATH.resolve().parent
+        if default_parent not in p.parents and p != DEFAULT_MAPPINGS_PATH.resolve():
+            raise ValueError("Custom mappings file path is disabled")
+    if not p.exists() or not p.is_file():
+        raise ValueError("Mappings file does not exist")
+    if p.suffix.lower() not in (".json", ".jsonc"):
+        raise ValueError("Mappings file must be .json or .jsonc")
+    return str(p)
 
 
 def _write_temp_mappings(content: Union[str, Dict[str, Any]]) -> str:
@@ -86,7 +110,7 @@ async def apply_ingestion_config(
         source_db = target_db
 
     # Resolve mapping content/path for the flattener
-    flattener_mappings_path = mappings_path or str(DEFAULT_MAPPINGS_PATH)
+    flattener_mappings_path = _safe_mappings_path(mappings_path or str(DEFAULT_MAPPINGS_PATH))
     mapping_content_for_flattener = mappings_inline
     if not use_mappings_file and mappings_inline is None:
         mapping_content_for_flattener = {"templates": {}}

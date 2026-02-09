@@ -7,12 +7,12 @@ Kehrnel is the source of truth for executable strategies. HDL (Healthcare Data L
 - **HDL**: UX/narrative (“blueprints”), per-environment selections and config, plus secure secret management per workspace environment.
 
 ## API calls HDL should use
-- List strategies (catalog): `GET /v1/strategies`
-- Strategy details: `GET /v1/strategies/{id}`
-- Activate environment: `POST /v1/environments/{env}/activate` with `{strategy_id, version, config, bindings}` or `{..., bindings_ref}`
-- Plan/apply/transform/ingest/query: `POST /v1/environments/{env}/{op}`
-- Compile-only (preview for explain): `POST /v1/environments/{env}/compile_query` (add `debug=true` to see builder/scope/reason and legacy AST)
-- Maintenance ops: `POST /v1/environments/{env}/extensions/{strategy}/{op}` (ops are declared in `manifest.json -> ops[]`)
+- List strategies (catalog): `GET /strategies`
+- Strategy details: `GET /strategies/{id}`
+- Activate environment: `POST /environments/{env}/activate` with `{strategy_id, version, config, bindings}` or `{..., bindings_ref}`
+- Plan/apply/transform/ingest/query: `POST /environments/{env}/{op}`
+- Compile-only (preview for explain): `POST /environments/{env}/compile_query` (add `debug=true` to see builder/scope/reason and legacy AST)
+- Maintenance ops: `POST /environments/{env}/extensions/{strategy}/{op}` (ops are declared in `manifest.json -> ops[]`)
 
 ## UI expectations
 - Use `manifest.ui`, `config_schema`, `default_config`, and `ops` to render catalog, config forms, and maintenance buttons.

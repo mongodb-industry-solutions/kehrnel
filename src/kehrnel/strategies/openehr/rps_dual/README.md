@@ -186,6 +186,13 @@ Security best practice:
 - If UI session auth is required, place auth in your gateway/backend and call these endpoints from that trusted backend.
 - For HDL multi-environment (DEV/PROD): use `bindings_ref` in activation and configure `KEHRNEL_BINDINGS_RESOLVER=module:function` so Kehrnel resolves encrypted secrets server-side.
 
+Production hardening (required):
+
+- `KEHRNEL_AUTH_ENABLED=true`
+- `KEHRNEL_API_KEYS` must be configured and non-empty
+- `KEHRNEL_ALLOW_LOCAL_FILE_INPUTS=false`
+- `KEHRNEL_ALLOW_ABSOLUTE_CONFIG_PATHS=false`
+
 ### HDL resolver setup (Kehrnel side)
 
 Use built-in resolver:

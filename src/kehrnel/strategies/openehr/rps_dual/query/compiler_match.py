@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List
 
-from kehrnel.protocols.openehr.aql.ir import AqlQueryIR
+from kehrnel.domains.openehr.aql.ir import AqlQueryIR
 from .path_resolver import PathResolver
 
 
