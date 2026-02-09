@@ -2,6 +2,7 @@
   "id": "openehr.rps_single",
   "name": "Reversed Path Search - Single Collection",
   "version": "0.1.0",
+  "maturity": "development",
   "domain": "openEHR",
   "summary": "Single-collection reversed path search strategy for openEHR compositions.",
   "description": "Stores compositions with reversed paths in a single collection; uses Atlas Search when available.",

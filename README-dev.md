@@ -13,7 +13,7 @@ uvicorn kehrnel.api.app:app --reload
 - Strategies discovered under `src/kehrnel/strategies` plus any paths in `KEHRNEL_STRATEGY_PATHS`.
 - `KEHRNEL_STRATEGY_PATHS` supports `:` or `,` separators (e.g., `/path/a:/path/b`).
 - Discovery fails fast on invalid JSON/duplicate IDs.
-- Legacy FastAPI entrypoints under `src/api`/`src/app` are deprecated; do not run `kehrnel-api`/`python -m api.internal.api_server` for the new runtime.
+- Use `kehrnel-api` or `uvicorn kehrnel.api.app:app`; legacy entrypoints are not used by the active runtime.
 
 ## Tests
 
@@ -25,10 +25,10 @@ pytest tests/contract
 - Any e2e tests that need Mongo/Atlas must be guarded by env vars and should skip when missing.
 
 ## API endpoints HDL should call
-- `GET /v1/strategies`, `GET /v1/strategies/{id}`
-- `POST /v1/environments/{env}/activate`
-- `POST /v1/environments/{env}/compile_query` (add `debug=true` for builder/scope/reason)
-- `POST /v1/environments/{env}/query`
-- `POST /v1/environments/{env}/extensions/{strategy}/{op}`
+- `GET /strategies`, `GET /strategies/{id}`
+- `POST /environments/{env}/activate`
+- `POST /environments/{env}/compile_query` (add `debug=true` for builder/scope/reason)
+- `POST /environments/{env}/query`
+- `POST /environments/{env}/extensions/{strategy}/{op}`
 
-See `docs/hdl-contract.md` and `docs/hdl-migration-checklist.md` for details.
+See `docs/hdl-contract.md` for details.

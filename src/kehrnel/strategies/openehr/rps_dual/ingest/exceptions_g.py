@@ -1,4 +1,4 @@
-# src/transform/exceptions.py
+# src/kehrnel/legacy/transform/exceptions.py
 
 class FlattenerError(Exception):
     """Base exception for the flattener library."""

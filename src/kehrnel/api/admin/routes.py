@@ -50,7 +50,7 @@ def _history_summary(rt, env_id: str, domain: str):
     return {"count": len(history_entries or []), "recent": [_safe_entry(e) for e in recent]}
 
 
-@router.get("/v1/strategies", response_model=Dict[str, List[StrategyManifest]])
+@router.get("/strategies", response_model=Dict[str, List[StrategyManifest]])
 async def list_strategies(request: Request):
     try:
         rt = getattr(request.app.state, "strategy_runtime", None)
@@ -76,6 +76,12 @@ async def list_strategies(request: Request):
 @router.get("/health", include_in_schema=False)
 async def health():
     return {"ok": True}
+
+
+@router.get("/agentic", include_in_schema=False)
+async def agentic_capabilities():
+    """Capability probe endpoint for clients that support agentic features."""
+    return {"ok": True, "enabled": False, "features": []}
 
 
 def _validate_strategy_path(pack_path: str, request: Request) -> Path:
@@ -114,7 +120,7 @@ def _validate_strategy_path(pack_path: str, request: Request) -> Path:
     )
 
 
-@router.post("/v1/strategies/load", include_in_schema=False)
+@router.post("/strategies/load", include_in_schema=False)
 async def load_strategy_pack(request: Request, body: Dict[str, Any] = Body(default_factory=dict)):
     try:
         rt = getattr(request.app.state, "strategy_runtime", None)
@@ -133,36 +139,52 @@ async def load_strategy_pack(request: Request, body: Dict[str, Any] = Body(defau
         return _error_response(exc)
 
 
-@router.get("/v1/endpoints", include_in_schema=False)
+@router.get("/endpoints", include_in_schema=False)
 async def endpoints_registry(request: Request):
     base = ""
     endpoints = {
         "health": f"{base}/health",
-        "strategies": f"{base}/v1/strategies",
-        "strategy_detail": f"{base}/v1/strategies/{{strategy_id}}",
-        "strategy_spec": f"{base}/v1/strategies/{{strategy_id}}/spec",
-        "bundles": f"{base}/v1/bundles",
-        "ops": f"{base}/v1/ops",
-        "activations": f"{base}/v1/environments/{{env_id}}/activate",
+        "strategies": f"{base}/strategies",
+        "strategy_detail": f"{base}/strategies/{{strategy_id}}",
+        "strategy_spec": f"{base}/strategies/{{strategy_id}}/spec",
+        "openehr_domain": f"{base}/api/domains/openehr/...",
+        "openehr_rps_dual": f"{base}/api/strategies/openehr/rps_dual/...",
+        "strategy_docs": f"{base}/docs/strategies/{{domain}}/{{strategy}}",
+        "domain_docs": f"{base}/docs/domains/{{domain}}",
+        "core_docs": f"{base}/docs/core",
+        "bundles": f"{base}/bundles",
+        "ops": f"{base}/ops",
+        "activations": f"{base}/environments/{{env_id}}/activate",
     }
     return {"endpoints": endpoints}
 
 
-@router.get("/v1/strategies/{strategy_id}/endpoints", include_in_schema=False)
+@router.get("/strategies/{strategy_id}/endpoints", include_in_schema=False)
 async def strategy_endpoints(strategy_id: str, request: Request):
     base = ""
+    if strategy_id == "openehr.rps_dual":
+        return {
+            "strategy_id": strategy_id,
+            "endpoints": {
+                "domain_api": f"{base}/api/domains/openehr",
+                "strategy_ingest": f"{base}/api/strategies/openehr/rps_dual/ingest",
+                "strategy_config": f"{base}/api/strategies/openehr/rps_dual/config",
+                "strategy_synthetic": f"{base}/api/strategies/openehr/rps_dual/synthetic",
+                "docs": f"{base}/docs/strategies/openehr/rps_dual",
+            },
+        }
     return {
         "strategy_id": strategy_id,
         "endpoints": {
-            "activate": f"{base}/v1/environments/{{env_id}}/activate",
-            "compile_query": f"{base}/v1/environments/{{env_id}}/compile_query",
-            "execute_query": f"{base}/v1/environments/{{env_id}}/execute_query",
-            "ops": f"{base}/v1/environments/{{env_id}}/activations/{{domain}}/ops/{{op}}",
+            "activate": f"{base}/environments/{{env_id}}/activate",
+            "compile_query": f"{base}/environments/{{env_id}}/compile_query",
+            "query": f"{base}/environments/{{env_id}}/query",
+            "ops": f"{base}/environments/{{env_id}}/activations/{{domain}}/ops/{{op}}",
         },
     }
 
 
-@router.get("/v1/strategies/diagnostics", include_in_schema=False)
+@router.get("/strategies/diagnostics", include_in_schema=False)
 async def get_strategy_diagnostics(request: Request):
     try:
         diagnostics = getattr(request.app.state, "strategy_diagnostics", None) or []
@@ -171,7 +193,7 @@ async def get_strategy_diagnostics(request: Request):
         return _error_response(exc)
 
 
-@router.get("/v1/ops", include_in_schema=False)
+@router.get("/ops", include_in_schema=False)
 async def list_ops(request: Request):
     try:
         rt = getattr(request.app.state, "strategy_runtime", None)
@@ -186,7 +208,7 @@ async def list_ops(request: Request):
         return _error_response(exc)
 
 
-@router.post("/v1/ops", include_in_schema=False)
+@router.post("/ops", include_in_schema=False)
 async def run_op(request: Request, body: Dict[str, Any] = Body(default_factory=dict)):
     try:
         env_id = body.get("environment") or body.get("env_id")
@@ -204,7 +226,7 @@ async def run_op(request: Request, body: Dict[str, Any] = Body(default_factory=d
         return _error_response(exc)
 
 
-@router.get("/v1/bundles", include_in_schema=False)
+@router.get("/bundles", include_in_schema=False)
 async def list_bundles(request: Request):
     try:
         store: BundleStore = getattr(request.app.state, "bundle_store", None)
@@ -214,7 +236,7 @@ async def list_bundles(request: Request):
         return _error_response(exc)
 
 
-@router.get("/v1/bundles/{bundle_id}", include_in_schema=False)
+@router.get("/bundles/{bundle_id}", include_in_schema=False)
 async def get_bundle(bundle_id: str, request: Request):
     try:
         store: BundleStore = getattr(request.app.state, "bundle_store", None)
@@ -226,7 +248,7 @@ async def get_bundle(bundle_id: str, request: Request):
         return _error_response(exc)
 
 
-@router.post("/v1/bundles", include_in_schema=False)
+@router.post("/bundles", include_in_schema=False)
 async def import_bundle(request: Request, body: Dict[str, Any] = Body(default_factory=dict), mode: str = "error"):
     try:
         store: BundleStore = getattr(request.app.state, "bundle_store", None)
@@ -238,7 +260,7 @@ async def import_bundle(request: Request, body: Dict[str, Any] = Body(default_fa
         return _error_response(exc)
 
 
-@router.delete("/v1/bundles/{bundle_id}", include_in_schema=False)
+@router.delete("/bundles/{bundle_id}", include_in_schema=False)
 async def delete_bundle(bundle_id: str, request: Request):
     try:
         store: BundleStore = getattr(request.app.state, "bundle_store", None)
@@ -250,7 +272,7 @@ async def delete_bundle(bundle_id: str, request: Request):
         return _error_response(exc)
 
 
-@router.get("/v1/strategies/{strategy_id}", response_model=StrategyManifest)
+@router.get("/strategies/{strategy_id}", response_model=StrategyManifest)
 async def get_strategy(strategy_id: str, request: Request):
     try:
         rt = getattr(request.app.state, "strategy_runtime", None)
@@ -267,7 +289,36 @@ async def get_strategy(strategy_id: str, request: Request):
         return _error_response(exc)
 
 
-@router.get("/v1/strategies/{strategy_id}/assets/{asset_path:path}")
+@router.get("/api/persistence-strategies/{strategy_id}", include_in_schema=False)
+async def get_persistence_strategy_compat(strategy_id: str, request: Request):
+    """Compatibility endpoint for HDL legacy strategy fetches."""
+    try:
+        rt = getattr(request.app.state, "strategy_runtime", None)
+        if not rt:
+            raise ValueError("Strategy runtime not initialized")
+        manifest = rt.registry.get_manifest(strategy_id)
+        if not manifest:
+            raise KehrnelError(
+                code="STRATEGY_NOT_FOUND",
+                status=404,
+                message=f"Strategy {strategy_id} not found",
+            )
+        data = manifest.model_dump()
+        return {
+            "id": data.get("id"),
+            "strategy_id": data.get("id"),
+            "name": data.get("name"),
+            "version": data.get("version"),
+            "domain": data.get("domain"),
+            "default_config": data.get("default_config") or {},
+            "config_schema": data.get("config_schema") or {},
+            "manifest": data,
+        }
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.get("/strategies/{strategy_id}/assets/{asset_path:path}")
 async def get_strategy_asset(strategy_id: str, asset_path: str, request: Request):
     try:
         asset_dirs = getattr(request.app.state, "strategy_asset_dirs", None) or {}
@@ -292,7 +343,7 @@ async def get_strategy_asset(strategy_id: str, asset_path: str, request: Request
         return _error_response(exc)
 
 
-@router.get("/v1/strategies/{strategy_id}/spec")
+@router.get("/strategies/{strategy_id}/spec")
 async def get_strategy_spec(strategy_id: str, request: Request):
     """Return the full spec.json for a strategy pack."""
     try:
@@ -314,7 +365,7 @@ async def get_strategy_spec(strategy_id: str, request: Request):
         return _error_response(exc)
 
 
-@router.post("/v1/environments/{env_id}/extensions/{strategy_id}/{op}", include_in_schema=False)
+@router.post("/environments/{env_id}/extensions/{strategy_id}/{op}", include_in_schema=False)
 async def run_extension(env_id: str, strategy_id: str, op: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict)):
     try:
         rt = getattr(request.app.state, "strategy_runtime", None)
@@ -331,7 +382,7 @@ async def run_extension(env_id: str, strategy_id: str, op: str, request: Request
         return _error_response(exc)
 
 
-@router.post("/v1/environments/{env_id}/activate", include_in_schema=False)
+@router.post("/environments/{env_id}/activate", include_in_schema=False)
 async def activate_env(env_id: str, request: Request, body: Dict[str, Any] = Body(default_factory=dict)):
     try:
         rt = getattr(request.app.state, "strategy_runtime", None)
@@ -341,6 +392,7 @@ async def activate_env(env_id: str, request: Request, body: Dict[str, Any] = Bod
         version = body.get("version") or "latest"
         config = body.get("config") or {}
         bindings = body.get("bindings") or {}
+        bindings_ref = body.get("bindings_ref") or body.get("bindingsRef")
         domain = (body.get("domain") or "").lower()
         allow_plain = body.get("allow_plaintext_bindings", False)
         force = bool(body.get("force"))
@@ -360,6 +412,7 @@ async def activate_env(env_id: str, request: Request, body: Dict[str, Any] = Bod
             domain=domain,
             force=force,
             replace_reason=replace_reason,
+            bindings_ref=bindings_ref,
         )
         return {
             "ok": True,
@@ -371,6 +424,7 @@ async def activate_env(env_id: str, request: Request, body: Dict[str, Any] = Bod
                 "domain": activation.domain,
                 "config": activation.config,
                 "bindings_meta": activation.bindings_meta,
+                "bindings_ref": activation.bindings_ref,
                 "config_hash": activation.config_hash,
                 "manifest_digest": activation.manifest_digest,
                 "activation_id": activation.activation_id,
@@ -384,7 +438,7 @@ async def activate_env(env_id: str, request: Request, body: Dict[str, Any] = Bod
         return _error_response(exc)
 
 
-@router.put("/v1/environments/strategy", include_in_schema=False)
+@router.put("/environments/strategy", include_in_schema=False)
 async def activate_strategy_compat(request: Request, body: Dict[str, Any] = Body(default_factory=dict)):
     """Compatibility activation endpoint for HDL proxy."""
     env_id = body.get("envId") or body.get("environment") or body.get("env_id")
@@ -395,7 +449,10 @@ async def activate_strategy_compat(request: Request, body: Dict[str, Any] = Body
         "version": body.get("version") or body.get("strategyVersion") or "latest",
         "config": body.get("configOverrides") or body.get("config") or {},
         "bindings": body.get("bindings") or {},
-        "allow_plaintext_bindings": True,
+        "bindings_ref": body.get("bindingsRef") or body.get("bindings_ref"),
+        "allow_plaintext_bindings": bool(
+            body.get("allowPlaintextBindings", False) or body.get("allow_plaintext_bindings", False)
+        ),
         "domain": (body.get("domain") or "").lower() or body.get("domain"),
         "force": body.get("force") or False,
         "reason": body.get("reason"),
@@ -403,7 +460,7 @@ async def activate_strategy_compat(request: Request, body: Dict[str, Any] = Body
     return await activate_env(env_id, request, mapped)
 
 
-@router.post("/v1/strategies/activate", include_in_schema=False)
+@router.post("/strategies/activate", include_in_schema=False)
 async def activate_env_v2(request: Request, body: Dict[str, Any] = Body(default_factory=dict)):
     env_id = body.get("environment")
     if not env_id:
@@ -411,7 +468,7 @@ async def activate_env_v2(request: Request, body: Dict[str, Any] = Body(default_
     return await activate_env(env_id, request, body)
 
 
-@router.get("/v1/environments/{env_id}", include_in_schema=False)
+@router.get("/environments/{env_id}", include_in_schema=False)
 async def get_env(env_id: str, request: Request):
     try:
         rt = getattr(request.app.state, "strategy_runtime", None)
@@ -432,6 +489,7 @@ async def get_env(env_id: str, request: Request):
                 "domain": getattr(manifest, "domain", proto),
                 "config": activation.config,
                 "bindings_meta": activation.bindings_meta,
+                "bindings_ref": activation.bindings_ref,
                 "activation_id": activation.activation_id,
                 "activated_at": activation.activated_at,
                 "updated_at": activation.updated_at,
@@ -443,12 +501,12 @@ async def get_env(env_id: str, request: Request):
         return _error_response(exc)
 
 
-@router.get("/v1/environments/{env_id}/activations", include_in_schema=False)
+@router.get("/environments/{env_id}/activations", include_in_schema=False)
 async def list_env_activations(env_id: str, request: Request):
     return await get_env(env_id, request)
 
 
-@router.post("/v1/environments/{env_id}/activations/{domain}/upgrade", include_in_schema=False)
+@router.post("/environments/{env_id}/activations/{domain}/upgrade", include_in_schema=False)
 async def upgrade_activation(env_id: str, domain: str, request: Request):
     try:
         rt = getattr(request.app.state, "strategy_runtime", None)
@@ -465,13 +523,14 @@ async def upgrade_activation(env_id: str, domain: str, request: Request):
                 "manifest_digest": new_act.manifest_digest,
                 "config": new_act.config,
                 "bindings_meta": new_act.bindings_meta,
+                "bindings_ref": new_act.bindings_ref,
             },
         }
     except Exception as exc:
         return _error_response(exc)
 
 
-@router.post("/v1/environments/{env_id}/activations/{domain}/rollback", include_in_schema=False)
+@router.post("/environments/{env_id}/activations/{domain}/rollback", include_in_schema=False)
 async def rollback_activation(env_id: str, domain: str, request: Request):
     try:
         rt = getattr(request.app.state, "strategy_runtime", None)
@@ -488,6 +547,7 @@ async def rollback_activation(env_id: str, domain: str, request: Request):
                 "manifest_digest": act.manifest_digest,
                 "config": act.config,
                 "bindings_meta": act.bindings_meta,
+                "bindings_ref": act.bindings_ref,
                 "config_hash": act.config_hash,
             },
         }
@@ -495,7 +555,7 @@ async def rollback_activation(env_id: str, domain: str, request: Request):
         return _error_response(exc)
 
 
-@router.delete("/v1/environments/{env_id}/activations/{domain}", include_in_schema=False)
+@router.delete("/environments/{env_id}/activations/{domain}", include_in_schema=False)
 async def delete_activation(env_id: str, domain: str, request: Request):
     try:
         rt = getattr(request.app.state, "strategy_runtime", None)
@@ -507,7 +567,7 @@ async def delete_activation(env_id: str, domain: str, request: Request):
         return _error_response(exc)
 
 
-@router.post("/v1/environments/{env_id}/plan", include_in_schema=False)
+@router.post("/environments/{env_id}/plan", include_in_schema=False)
 async def plan_env(env_id: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict)):
     try:
         rt = getattr(request.app.state, "strategy_runtime", None)
@@ -519,7 +579,7 @@ async def plan_env(env_id: str, request: Request, payload: Dict[str, Any] = Body
         return _error_response(exc)
 
 
-@router.post("/v1/environments/{env_id}/apply", include_in_schema=False)
+@router.post("/environments/{env_id}/apply", include_in_schema=False)
 async def apply_env(env_id: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict)):
     try:
         rt = getattr(request.app.state, "strategy_runtime", None)
@@ -531,7 +591,7 @@ async def apply_env(env_id: str, request: Request, payload: Dict[str, Any] = Bod
         return _error_response(exc)
 
 
-@router.post("/v1/environments/{env_id}/transform", include_in_schema=False)
+@router.post("/environments/{env_id}/transform", include_in_schema=False)
 async def transform_env(env_id: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict)):
     try:
         rt = getattr(request.app.state, "strategy_runtime", None)
@@ -543,7 +603,7 @@ async def transform_env(env_id: str, request: Request, payload: Dict[str, Any] =
         return _error_response(exc)
 
 
-@router.post("/v1/environments/{env_id}/ingest", include_in_schema=False)
+@router.post("/environments/{env_id}/ingest", include_in_schema=False)
 async def ingest_env(env_id: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict)):
     try:
         rt = getattr(request.app.state, "strategy_runtime", None)
@@ -555,7 +615,7 @@ async def ingest_env(env_id: str, request: Request, payload: Dict[str, Any] = Bo
         return _error_response(exc)
 
 
-@router.post("/v1/environments/{env_id}/query", include_in_schema=False)
+@router.post("/environments/{env_id}/query", include_in_schema=False)
 async def query_env(env_id: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict)):
     try:
         rt = getattr(request.app.state, "strategy_runtime", None)
@@ -574,7 +634,7 @@ async def query_env(env_id: str, request: Request, payload: Dict[str, Any] = Bod
         return _error_response(exc)
 
 
-@router.post("/v1/environments/{env_id}/compile_query", include_in_schema=False)
+@router.post("/environments/{env_id}/compile_query", include_in_schema=False)
 async def compile_query_env(env_id: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict), debug: bool = False):
     try:
         rt = getattr(request.app.state, "strategy_runtime", None)
@@ -592,7 +652,7 @@ async def compile_query_env(env_id: str, request: Request, payload: Dict[str, An
         return _error_response(exc)
 
 
-@router.get("/v1/environments/{env_id}/endpoints", include_in_schema=False)
+@router.get("/environments/{env_id}/endpoints", include_in_schema=False)
 async def list_env_endpoints(env_id: str, request: Request):
     try:
         base = str(request.base_url).rstrip("/")
@@ -614,25 +674,120 @@ async def list_env_endpoints(env_id: str, request: Request):
             "domains": domains,
             "endpoints": {
                 "compile_query": {
-                    "url": f"{base}/v1/environments/{env_id}/compile_query",
+                    "url": f"{base}/environments/{env_id}/compile_query",
                     "method": "POST",
                     "required_params": ["domain"],
                     "payload_example": {"domain": sample_domain, "query": {"scope": "patient", "predicates": [], "select": []}},
                 },
                 "query": {
-                    "url": f"{base}/v1/environments/{env_id}/query",
+                    "url": f"{base}/environments/{env_id}/query",
                     "method": "POST",
                     "required_params": ["domain"],
                     "payload_example": {"domain": sample_domain, "query": {"scope": "patient", "predicates": [], "select": []}},
                 },
-                "activations": {"url": f"{base}/v1/environments/{env_id}/activations", "method": "GET"},
+                "activations": {"url": f"{base}/environments/{env_id}/activations", "method": "GET"},
                 "ops": {
-                    "url": f"{base}/v1/environments/{env_id}/extensions/{{strategy_id}}/{{op}}",
+                    "url": f"{base}/environments/{env_id}/extensions/{{strategy_id}}/{{op}}",
                     "method": "POST",
                     "required_params": ["strategy_id", "op"],
                     "payload_example": {"payload": {}, "domain": sample_domain},
                 },
+                "synthetic_jobs_create": {
+                    "url": f"{base}/environments/{env_id}/synthetic/jobs",
+                    "method": "POST",
+                    "required_params": ["domain", "payload"],
+                    "payload_example": {
+                        "domain": sample_domain,
+                        "op": "synthetic_generate_batch",
+                        "payload": {
+                            "patient_count": 100,
+                            "source_collection": "samples",
+                            "model_source": {
+                                "catalog_collection": "semantic_models",
+                                "links_collection": "semantic_links"
+                            },
+                            "models": [
+                                {"model_id": "opt.tumour_summary.v1", "min_per_patient": 1, "max_per_patient": 2}
+                            ],
+                        },
+                    },
+                },
+                "synthetic_jobs_list": {"url": f"{base}/environments/{env_id}/synthetic/jobs", "method": "GET"},
+                "synthetic_job_get": {"url": f"{base}/environments/{env_id}/synthetic/jobs/{{job_id}}", "method": "GET"},
+                "synthetic_job_cancel": {
+                    "url": f"{base}/environments/{env_id}/synthetic/jobs/{{job_id}}/cancel",
+                    "method": "POST",
+                },
             },
         }
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/environments/{env_id}/synthetic/jobs")
+async def create_synthetic_job(env_id: str, request: Request, body: Dict[str, Any] = Body(default_factory=dict)):
+    try:
+        manager = getattr(request.app.state, "synthetic_job_manager", None)
+        if not manager:
+            raise KehrnelError(code="JOBS_NOT_AVAILABLE", status=503, message="Synthetic job manager not initialized")
+        domain = (body.get("domain") or "").strip().lower()
+        if not domain:
+            raise KehrnelError(code="DOMAIN_REQUIRED", status=400, message="domain is required")
+        op = body.get("op") or "synthetic_generate_batch"
+        payload = body.get("payload") or {}
+        if not isinstance(payload, dict):
+            raise KehrnelError(code="INVALID_INPUT", status=400, message="payload must be an object")
+        requested_by = request.headers.get("x-api-key")
+        job = await manager.create_job(
+            env_id=env_id,
+            domain=domain,
+            op=op,
+            payload=payload,
+            requested_by=requested_by,
+        )
+        return JSONResponse(status_code=202, content={"ok": True, "job": job})
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.get("/environments/{env_id}/synthetic/jobs")
+async def list_synthetic_jobs(env_id: str, request: Request, domain: str | None = None, status: str | None = None):
+    try:
+        manager = getattr(request.app.state, "synthetic_job_manager", None)
+        if not manager:
+            raise KehrnelError(code="JOBS_NOT_AVAILABLE", status=503, message="Synthetic job manager not initialized")
+        jobs = await manager.list_jobs(env_id=env_id, domain=domain)
+        if status:
+            jobs = [j for j in jobs if str(j.get("status") or "").lower() == str(status).lower()]
+        return {"ok": True, "jobs": jobs}
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.get("/environments/{env_id}/synthetic/jobs/{job_id}")
+async def get_synthetic_job(env_id: str, job_id: str, request: Request):
+    try:
+        manager = getattr(request.app.state, "synthetic_job_manager", None)
+        if not manager:
+            raise KehrnelError(code="JOBS_NOT_AVAILABLE", status=503, message="Synthetic job manager not initialized")
+        job = await manager.get_job(job_id)
+        if not job or job.get("env_id") != env_id:
+            raise KehrnelError(code="JOB_NOT_FOUND", status=404, message=f"Job {job_id} not found for env {env_id}")
+        return {"ok": True, "job": job}
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/environments/{env_id}/synthetic/jobs/{job_id}/cancel")
+async def cancel_synthetic_job(env_id: str, job_id: str, request: Request):
+    try:
+        manager = getattr(request.app.state, "synthetic_job_manager", None)
+        if not manager:
+            raise KehrnelError(code="JOBS_NOT_AVAILABLE", status=503, message="Synthetic job manager not initialized")
+        existing = await manager.get_job(job_id)
+        if not existing or existing.get("env_id") != env_id:
+            raise KehrnelError(code="JOB_NOT_FOUND", status=404, message=f"Job {job_id} not found for env {env_id}")
+        job = await manager.cancel_job(job_id)
+        return {"ok": True, "job": job}
     except Exception as exc:
         return _error_response(exc)

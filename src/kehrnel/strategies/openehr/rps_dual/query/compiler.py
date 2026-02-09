@@ -10,6 +10,7 @@ from kehrnel.strategies.openehr.rps_dual.query.transformers.aql_transformer impo
 from kehrnel.strategies.openehr.rps_dual.query.transformers.ast_validator import ASTValidator
 from kehrnel.strategies.openehr.rps_dual.query.transformers.context_mapper import ContextMapper
 from kehrnel.strategies.openehr.rps_dual.query.transformers.format_resolver import FormatResolver
+from kehrnel.persistence import get_default_strategy
 
 
 def extract_ehr_id(ir: AqlQueryIR) -> str | None:
@@ -33,11 +34,10 @@ async def build_query_pipeline(ir: AqlQueryIR, cfg_model: RPSDualConfig) -> Tupl
         ast=ast_doc,
         ehr_id=extract_ehr_id(ir),
         schema_config=schema_cfgs["composition"],
-        search_schema_config=schema_cfgs["search"],
         search_index_name=schema_cfgs["search"].get("index_name"),
+        strategy=get_default_strategy(),
     )
     if ir.scope == "cross_patient" and cfg.get("collections", {}).get("search", {}).get("enabled"):
-        transformer.search_pipeline_builder.schema_config = schema_cfgs["search"]
         pipeline = await transformer.build_search_pipeline()
         engine = "search_pipeline_builder"
     else:

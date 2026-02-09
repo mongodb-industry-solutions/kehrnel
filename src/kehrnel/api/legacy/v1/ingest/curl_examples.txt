@@ -1,0 +1,33 @@
+##########################################
+### Insert a Composition from a file  ####
+##########################################
+
+curl -X POST "http://127.0.0.1:9000/v1/ingestions/file" \
+-H "Content-Type: application/json" \
+-d '{
+    "file_path": "/Users/gio.rodriguez/Documents/github_repositories/kehrnel/samples/in/composition_ingestion_optimized.json"
+}'
+
+
+###############################################
+### Insert a Composition from the payload  ####
+###############################################
+
+The composition will be pased directly on the request.
+
+curl -X POST "http://127.0.0.1:9000/v1/ingestions/body" \
+-H "Content-Type: application/json" \
+-d @composition_ingestion_optimized.json
+
+########################################################
+### Insert a Composition from a MongoDB collection  ####
+########################################################
+
+
+curl -X POST 'http://localhost:9000/v1/ingestions/database' \
+-H 'Content-Type: application/json' \
+-d '{ "ehr_id": "f8c33194-6474-4220-b2f4-17f5b13fdd28" }'
+
+curl -X POST 'http://localhost:9000/v1/ingestions/database' \
+-H 'Content-Type: application/json' \
+-d '{ "ehr_id": "db48a21b-f2b6-4c61-bbff-019ff7a16493" }'

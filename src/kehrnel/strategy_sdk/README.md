@@ -19,7 +19,7 @@ This guide explains how to add a new strategy plugin, register it, and interact 
   - `search(query, bindings, context)` if you expose search.
 - Use shared libs to avoid duplication:
   - OpenEHR: `libs/openehr` (flattener/transformer, remap, codec helpers).
-  - Storage/search adapters: bind via `StrategyBindings` (MongoStorageAdapter, OpenSearchAdapter, etc.).
+- Storage/search adapters: bind via `StrategyBindings` (MongoStorageAdapter, etc.).
 - Example: `strategies.fhir.simulated` shows a no-op/echo ingest and a simulated search response.
 
 ## 3) Register the Manifest
@@ -28,8 +28,8 @@ This guide explains how to add a new strategy plugin, register it, and interact 
 
 ## 4) Activate a Strategy
 - Use the admin API:
-  - `GET /v1/strategies` — list manifests and active strategies.
-  - `POST /v1/strategies/activate` with body:
+- `GET /strategies` — list manifests and active strategies.
+- `POST /strategies/activate` with body:
     ```json
     {
       "strategy_id": "fhir.simulated_skeleton",
@@ -39,28 +39,28 @@ This guide explains how to add a new strategy plugin, register it, and interact 
   - Activations are persisted to file when `KEHRNEL_REGISTRY_PATH` is set; restored on startup.
 - Bindings are built from config:
   - Storage: from `config.target.*` (Mongo) or defaults.
-  - Search: from `config.search` (e.g., `{ "backend": "opensearch", "index": "..." }`).
+- Search: from `config.search` (project default is Atlas Search in MongoDB).
   - Extras: e.g., `{"flattener": CompositionFlattener}` for openEHR.
 
 ## 5) Use a Strategy via Ingest API
-- Call `/v1/ingestions/body` with headers/query:
-  - `strategy_id`: e.g., `openehr.rps_dual` or `fhir.resource_first`.
-  - Optional `strategy_protocol`: e.g., `openEHR` or `FHIR` (for protocol-aware routing).
-- The runtime routes to the strategy’s `ingest` (preferred) or `transform`.
-- For openEHR, the current `CompositionFlattener` is provided via bindings; strategies can remap fields via `libs/openehr/remap`.
+- Call strategy/domain routes exposed by the active runtime:
+  - strategy-scoped: `/api/strategies/{domain}/{strategy}/...`
+  - domain-scoped: `/api/domains/{domain}/...`
+  - environment-scoped core runtime: `/environments/{env_id}/...`
+- The runtime routes to the strategy’s capability implementation (`ingest`, `transform`, `query`, `compile_query`, `op`).
 
 ## 6) Portal Integration (discovery + activation)
-- The portal can call `GET /v1/strategies` to populate the catalog (manifests contain tags, protocol badges, “works_with” metadata, links).
+- The portal can call `GET /strategies` to populate the catalog (manifests contain tags, protocol badges, “works_with” metadata, links).
 - Activation flow in portal:
   1. User selects a strategy/version → portal loads its manifest (including `config_schema`).
   2. Portal renders a config form from `config_schema` (JSON Schema UI).
-  3. Portal posts to `/v1/strategies/activate` with the chosen `strategy_id` and config.
-  4. Portal polls `GET /v1/strategies` to show active strategy per environment.
+  3. Portal posts to `/strategies/activate` with the chosen `strategy_id` and config.
+  4. Portal polls `GET /strategies` to show active strategy per environment.
 - For local dev, activations are file-backed when `KEHRNEL_REGISTRY_PATH` is set.
 
 ## 7) Skeleton Strategy Template (pseudo-code)
 ```python
-from strategy_sdk import StrategyPlugin, StrategyManifest, StrategyCapability, AdapterRequirements
+from kehrnel.strategy_sdk import StrategyPlugin, StrategyManifest, StrategyCapability, AdapterRequirements
 
 MANIFEST = StrategyManifest(
     id="myproto.my_strategy",

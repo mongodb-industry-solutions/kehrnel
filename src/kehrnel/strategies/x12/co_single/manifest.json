@@ -2,6 +2,7 @@
   "id": "x12.co_single",
   "name": "X12-837 Claim Processing",
   "version": "1.0.0",
+  "maturity": "preview",
   "pack_format": "strategy-pack/v1",
   "spec": { "path": "spec.json", "version": "1.0" },
   "domain": "X12",
@@ -17,6 +18,8 @@
     }
   },
   "ui": {
+    "status": "preview",
+    "status_message": "This strategy showcases our vision for X12 EDI claim processing with unified ContextObject output. It's part of our roadmap to bridge healthcare administrative data with clinical records. Interested in contributing? Join us in building interoperable healthcare data solutions.",
     "tags": ["X12", "EDI", "837", "ContextObject", "single-collection", "cn[]"],
     "domain_badge": "X12",
     "benefits": [

@@ -1,6 +1,11 @@
 from __future__ import annotations
 
+import copy
+import inspect
 import json
+import random
+import tempfile
+import uuid
 from pathlib import Path
 from typing import Any, Dict
 
@@ -10,6 +15,9 @@ from kehrnel.core.manifest import StrategyManifest
 from kehrnel.domains.openehr.aql.ir import AqlQueryIR
 from kehrnel.core.explain import enrich_explain
 from kehrnel.core.errors import KehrnelError
+from kehrnel.core.synthetic_model_catalog import resolve_links, resolve_model_specs
+from kehrnel.domains.openehr.templates.generator import kehrnelGenerator
+from kehrnel.domains.openehr.templates.parser import TemplateParser
 from kehrnel.strategies.openehr.rps_dual.ingest.flattener_f import CompositionFlattener
 from kehrnel.strategies.openehr.rps_dual.query.executor import execute as execute_query_plan
 from kehrnel.strategies.openehr.rps_dual.services.codes_service import atcode_to_token
@@ -412,6 +420,385 @@ class RPSDualStrategy(StrategyPlugin):
                 inserted += 1
             return {"ok": True, "processed": len(docs), "inserted": inserted, "warnings": []}
 
+        if op_lower == "synthetic_generate_batch":
+            if not storage:
+                raise KehrnelError(
+                    code="STORAGE_NOT_AVAILABLE",
+                    status=503,
+                    message="storage adapter not available for synthetic generation",
+                )
+            patient_count = int(payload.get("patient_count") or payload.get("patients") or 0)
+            if patient_count <= 0:
+                raise KehrnelError(
+                    code="INVALID_INPUT",
+                    status=400,
+                    message="patient_count must be > 0",
+                )
+            source_collection = payload.get("source_collection") or "samples"
+            source_database = payload.get("source_database") or payload.get("source_db")
+            dry_run = bool(payload.get("dry_run", False))
+            plan_only = bool(payload.get("plan_only", False))
+            generation_mode = str(payload.get("generation_mode") or "auto").strip().lower()
+            store_canonical = bool(payload.get("store_canonical", False))
+            canonical_collection = str(payload.get("canonical_collection") or "compositions_canonical_synthetic")
+            comp_collection = strategy_cfg.collections.compositions.name
+            search_collection = strategy_cfg.collections.search.name
+            search_enabled = bool(strategy_cfg.collections.search.enabled and search_collection)
+
+            progress_cb = (ctx.meta or {}).get("progress_cb")
+            should_cancel = (ctx.meta or {}).get("should_cancel")
+
+            models = payload.get("models")
+            templates = payload.get("templates")
+            model_source = payload.get("model_source") or {}
+
+            model_specs: list[Dict[str, Any]] = []
+            if isinstance(models, list) and models:
+                model_specs = await resolve_model_specs(
+                    storage,
+                    model_source=model_source if isinstance(model_source, dict) else {},
+                    requested_models=models,
+                    domain=(getattr(ctx.manifest, "domain", "") or "openEHR"),
+                    strategy_id=getattr(ctx.manifest, "id", None),
+                )
+            elif isinstance(templates, list) and templates:
+                for entry in templates:
+                    if not isinstance(entry, dict):
+                        raise KehrnelError(code="INVALID_INPUT", status=400, message="each template entry must be an object")
+                    template_id = str(entry.get("template_id") or entry.get("templateId") or "").strip()
+                    if not template_id:
+                        raise KehrnelError(code="INVALID_INPUT", status=400, message="template_id is required in each template entry")
+                    min_per = int(entry.get("min_per_patient", entry.get("min", 1)))
+                    max_per = int(entry.get("max_per_patient", entry.get("max", min_per)))
+                    if min_per < 0 or max_per < min_per:
+                        raise KehrnelError(
+                            code="INVALID_INPUT",
+                            status=400,
+                            message=f"invalid range for template {template_id}: min={min_per}, max={max_per}",
+                        )
+                    sample_size = int(entry.get("sample_pool_size", 25) or 25)
+                    model_specs.append(
+                        {
+                            "model_id": template_id,
+                            "template_id": template_id,
+                            "min": min_per,
+                            "max": max_per,
+                            "weight": float(entry.get("weight", 1.0)),
+                            "sample_size": max(1, sample_size),
+                            "catalog": {},
+                        }
+                    )
+            else:
+                raise KehrnelError(
+                    code="INVALID_INPUT",
+                    status=400,
+                    message="Provide non-empty payload.models (preferred) or payload.templates (legacy).",
+                )
+
+            links = await resolve_links(
+                storage,
+                model_source=model_source if isinstance(model_source, dict) else {},
+                model_ids=[str(m.get("model_id")) for m in model_specs],
+                explicit_links=payload.get("links") if "links" in payload else None,
+            )
+
+            template_specs = []
+            samples_by_template: Dict[str, list[Dict[str, Any]]] = {}
+            template_generators: Dict[str, Any] = {}
+            estimated_docs = 0
+            for entry in model_specs:
+                catalog = entry.get("catalog") or {}
+                template_id = str(
+                    entry.get("template_id")
+                    or catalog.get("template_id")
+                    or catalog.get("templateId")
+                    or ((catalog.get("template") or {}).get("id") if isinstance(catalog.get("template"), dict) else None)
+                    or entry.get("model_id")
+                    or ""
+                ).strip()
+                if not template_id:
+                    raise KehrnelError(code="INVALID_INPUT", status=400, message=f"template_id unresolved for model_id={entry.get('model_id')}")
+                min_per = int(entry.get("min", 1))
+                max_per = int(entry.get("max", min_per))
+                sample_size = int(entry.get("sample_size", 25) or 25)
+                estimated_docs += patient_count * ((min_per + max_per) // 2)
+                template_specs.append(
+                    {
+                        "model_id": str(entry.get("model_id") or template_id),
+                        "template_id": template_id,
+                        "min": min_per,
+                        "max": max_per,
+                        "sample_size": max(1, sample_size),
+                        "catalog": catalog,
+                    }
+                )
+
+            if estimated_docs <= 0:
+                estimated_docs = patient_count
+
+            for spec in template_specs:
+                template_id = spec["template_id"]
+                sample_docs: list[Dict[str, Any]] = []
+                prefer_source = generation_mode in ("auto", "from_source", "source")
+                prefer_models = generation_mode in ("auto", "from_models", "models")
+
+                if prefer_source:
+                    sample_docs = await storage.aggregate(
+                        source_collection,
+                        [
+                            {
+                                "$match": {
+                                    "$or": [
+                                        {"template_id": template_id},
+                                        {"template_name": template_id},
+                                        {"tid": template_id},
+                                        {"canonicalJSON.archetype_details.template_id.value": template_id},
+                                        {"archetype_details.template_id.value": template_id},
+                                    ]
+                                }
+                            },
+                            {"$sample": {"size": spec["sample_size"]}},
+                        ],
+                    ) if not source_database else await _aggregate_from_database(
+                        storage=storage,
+                        database_name=str(source_database),
+                        collection_name=source_collection,
+                        pipeline=[
+                            {
+                                "$match": {
+                                    "$or": [
+                                        {"template_id": template_id},
+                                        {"template_name": template_id},
+                                        {"tid": template_id},
+                                        {"canonicalJSON.archetype_details.template_id.value": template_id},
+                                        {"archetype_details.template_id.value": template_id},
+                                    ]
+                                }
+                            },
+                            {"$sample": {"size": spec["sample_size"]}},
+                        ],
+                    )
+
+                if sample_docs:
+                    samples_by_template[template_id] = sample_docs
+                    continue
+
+                if prefer_models:
+                    model_doc = spec.get("catalog") or {}
+                    gen = _build_canonical_generator_from_model(model_doc)
+                    if gen is not None:
+                        template_generators[template_id] = gen
+                        continue
+
+                raise KehrnelError(
+                    code="SOURCE_TEMPLATE_NOT_FOUND",
+                    status=404,
+                    message=(
+                        f"No generation source for template_id={template_id}. "
+                        f"Tried source {source_database + '.' if source_database else ''}{source_collection} "
+                        f"and model definition in model_source."
+                    ),
+                )
+
+            estimated_base_bytes = 0
+            estimated_search_bytes = 0
+            estimated_canonical_bytes = 0
+            for spec in template_specs:
+                template_id = spec["template_id"]
+                canonical_probe = None
+                if template_id in samples_by_template:
+                    canonical_probe = _extract_canonical_composition(samples_by_template[template_id][0])
+                elif template_id in template_generators:
+                    canonical_probe = template_generators[template_id]()
+                if not canonical_probe:
+                    continue
+                tf_probe = await self.transform(
+                    ctx,
+                    {
+                        "_id": str(uuid.uuid4()),
+                        "ehr_id": f"synthetic-ehr-{uuid.uuid4()}",
+                        "template_id": template_id,
+                        "canonicalJSON": canonical_probe,
+                    },
+                )
+                avg_docs_for_template = max(1, patient_count * ((spec["min"] + spec["max"]) // 2))
+                if store_canonical and canonical_probe:
+                    estimated_canonical_bytes += _json_size_bytes(
+                        {
+                            "_id": str(uuid.uuid4()),
+                            "ehr_id": f"synthetic-ehr-{uuid.uuid4()}",
+                            "template_id": template_id,
+                            "canonicalJSON": canonical_probe,
+                        }
+                    ) * avg_docs_for_template
+                if tf_probe.base:
+                    estimated_base_bytes += _json_size_bytes(tf_probe.base) * avg_docs_for_template
+                if search_enabled and tf_probe.search:
+                    estimated_search_bytes += _json_size_bytes(tf_probe.search) * avg_docs_for_template
+
+            if plan_only:
+                return {
+                    "ok": True,
+                    "plan_only": True,
+                    "patients": patient_count,
+                    "estimated_docs": estimated_docs,
+                    "estimated_canonical_bytes": estimated_canonical_bytes,
+                    "estimated_base_bytes": estimated_base_bytes,
+                    "estimated_search_bytes": estimated_search_bytes,
+                    "estimated_total_bytes": estimated_canonical_bytes + estimated_base_bytes + estimated_search_bytes,
+                    "source_collection": source_collection,
+                    "source_database": source_database,
+                    "models": [{"model_id": s["model_id"], "template_id": s["template_id"], "min": s["min"], "max": s["max"]} for s in template_specs],
+                    "links": links,
+                }
+
+            inserted_canonical = 0
+            inserted_base = 0
+            inserted_search = 0
+            generated_docs = 0
+            by_template: Dict[str, int] = {}
+            by_model: Dict[str, int] = {}
+            link_applied_count = 0
+            last_progress = -1
+
+            await _emit_progress(
+                progress_cb,
+                progress=1,
+                phase="running",
+                stats={
+                    "patients_total": patient_count,
+                    "estimated_docs": estimated_docs,
+                    "patientCount": patient_count,
+                    "generatedPatients": 0,
+                    "generatedDocuments": 0,
+                    "modelCount": len(template_specs),
+                    "linksApplied": 0,
+                },
+            )
+
+            for i in range(patient_count):
+                if _is_canceled(should_cancel):
+                    raise KehrnelError(code="JOB_CANCELED", status=499, message="Synthetic batch canceled by user")
+
+                ehr_id = f"synthetic-ehr-{uuid.uuid4()}"
+                repeats: Dict[str, int] = {}
+                model_to_template: Dict[str, str] = {}
+                for spec in template_specs:
+                    model_id = spec["model_id"]
+                    template_id = spec["template_id"]
+                    repeats[model_id] = random.randint(spec["min"], spec["max"])
+                    model_to_template[model_id] = template_id
+
+                for link in links:
+                    from_id = str(link.get("from") or link.get("from_model_id") or "").strip()
+                    to_id = str(link.get("to") or link.get("to_model_id") or "").strip()
+                    if not from_id or not to_id:
+                        continue
+                    if repeats.get(from_id, 0) <= 0:
+                        continue
+                    probability = float(link.get("probability", 1.0))
+                    if random.random() > max(0.0, min(1.0, probability)):
+                        continue
+                    min_to = int(link.get("min_to_per_patient", 1))
+                    repeats[to_id] = max(repeats.get(to_id, 0), min_to)
+                    link_applied_count += 1
+
+                for model_id, repeat in repeats.items():
+                    template_id = model_to_template.get(model_id)
+                    if not template_id:
+                        continue
+                    for _ in range(repeat):
+                        if template_id in samples_by_template:
+                            src_doc = random.choice(samples_by_template[template_id])
+                            canonical = _extract_canonical_composition(src_doc)
+                        else:
+                            canonical = template_generators[template_id]()
+                        if not canonical:
+                            continue
+                        raw_doc = {
+                            "_id": str(uuid.uuid4()),
+                            "ehr_id": ehr_id,
+                            "template_id": template_id,
+                            "canonicalJSON": canonical,
+                        }
+                        if not dry_run and store_canonical and canonical_collection:
+                            await storage.insert_one(canonical_collection, raw_doc)
+                            inserted_canonical += 1
+                        transformed = await self.transform(
+                            ctx,
+                            raw_doc,
+                        )
+                        if not dry_run and comp_collection and transformed.base:
+                            await storage.insert_one(comp_collection, transformed.base)
+                            inserted_base += 1
+                        if not dry_run and search_enabled and transformed.search:
+                            await storage.insert_one(search_collection, transformed.search)
+                            inserted_search += 1
+                        generated_docs += 1
+                        by_template[template_id] = by_template.get(template_id, 0) + 1
+                        by_model[model_id] = by_model.get(model_id, 0) + 1
+
+                progress = min(99, int((generated_docs / max(1, estimated_docs)) * 100))
+                if progress != last_progress:
+                    await _emit_progress(
+                        progress_cb,
+                        progress=progress,
+                        phase=f"patient {i + 1}/{patient_count}",
+                        stats={
+                            "patients_completed": i + 1,
+                            "generated_docs": generated_docs,
+                            "inserted_canonical": inserted_canonical,
+                            "inserted_base": inserted_base,
+                            "inserted_search": inserted_search,
+                            "links_applied": link_applied_count,
+                            "patientCount": patient_count,
+                            "generatedPatients": i + 1,
+                            "generatedDocuments": generated_docs,
+                            "modelCount": len(template_specs),
+                            "linksApplied": link_applied_count,
+                        },
+                    )
+                    last_progress = progress
+
+            await _emit_progress(
+                progress_cb,
+                progress=100,
+                phase="completed",
+                stats={
+                    "patients_completed": patient_count,
+                    "generated_docs": generated_docs,
+                    "inserted_canonical": inserted_canonical,
+                    "inserted_base": inserted_base,
+                    "inserted_search": inserted_search,
+                    "links_applied": link_applied_count,
+                    "patientCount": patient_count,
+                    "generatedPatients": patient_count,
+                    "generatedDocuments": generated_docs,
+                    "modelCount": len(template_specs),
+                    "linksApplied": link_applied_count,
+                },
+            )
+            return {
+                "ok": True,
+                "dry_run": dry_run,
+                "plan_only": False,
+                "source_collection": source_collection,
+                "source_database": source_database,
+                "target": {
+                    "canonical": canonical_collection if store_canonical else None,
+                    "compositions": comp_collection,
+                    "search": search_collection if search_enabled else None,
+                },
+                "patients": patient_count,
+                "generated_docs": generated_docs,
+                "inserted_canonical": inserted_canonical,
+                "inserted_base": inserted_base,
+                "inserted_search": inserted_search,
+                "links_applied": link_applied_count,
+                "by_template": by_template,
+                "by_model": by_model,
+            }
+
         raise ValueError(f"Strategy op '{op}' not supported")
 
     def _apply_bundle_to_composition(self, bundle: Dict[str, Any], comp: Dict[str, Any], cfg: RPSDualConfig) -> Dict[str, Any]:
@@ -482,3 +869,82 @@ def _pluck(data: Dict[str, Any], path: str) -> Any:
         else:
             return None
     return cur
+
+
+async def _aggregate_from_database(
+    *,
+    storage: Any,
+    database_name: str,
+    collection_name: str,
+    pipeline: list[Dict[str, Any]],
+) -> list[Dict[str, Any]]:
+    db = getattr(storage, "db", None)
+    client = getattr(db, "client", None) if db is not None else None
+    if client is None:
+        raise KehrnelError(code="STORAGE_NOT_AVAILABLE", status=503, message="Mongo client not available")
+    cursor = client[str(database_name)][collection_name].aggregate(pipeline)
+    return [doc async for doc in cursor]
+
+
+def _extract_canonical_composition(doc: Dict[str, Any]) -> Dict[str, Any] | None:
+    if not isinstance(doc, dict):
+        return None
+    if isinstance(doc.get("canonicalJSON"), dict):
+        return copy.deepcopy(doc["canonicalJSON"])
+    if isinstance(doc.get("composition"), dict):
+        return copy.deepcopy(doc["composition"])
+    if doc.get("_type") == "COMPOSITION":
+        return copy.deepcopy(doc)
+    return None
+
+
+def _build_canonical_generator_from_model(model_doc: Dict[str, Any]):
+    if not isinstance(model_doc, dict):
+        return None
+    xml_payload = (
+        (((model_doc.get("domainData") or {}).get("source") or {}).get("xml") if isinstance(model_doc.get("domainData"), dict) else None)
+        or model_doc.get("opt")
+        or model_doc.get("template")
+    )
+    if not isinstance(xml_payload, str) or "<" not in xml_payload:
+        return None
+
+    with tempfile.NamedTemporaryFile(suffix=".opt", delete=False, mode="w", encoding="utf-8") as tmp:
+        tmp.write(xml_payload)
+        tmp_path = Path(tmp.name)
+
+    parser = TemplateParser(tmp_path)
+    try:
+        tmp_path.unlink(missing_ok=True)
+    except Exception:
+        pass
+    gen = kehrnelGenerator(parser)
+
+    def _create():
+        return gen.generate_random()
+
+    return _create
+
+
+def _json_size_bytes(obj: Dict[str, Any]) -> int:
+    try:
+        return len(json.dumps(obj, ensure_ascii=False).encode("utf-8"))
+    except Exception:
+        return 0
+
+
+async def _emit_progress(cb: Any, *, progress: int | None = None, phase: str | None = None, stats: Dict[str, Any] | None = None) -> None:
+    if not cb:
+        return
+    result = cb(progress=progress, phase=phase, stats=stats)
+    if inspect.isawaitable(result):
+        await result
+
+
+def _is_canceled(cb: Any) -> bool:
+    if not cb:
+        return False
+    try:
+        return bool(cb())
+    except Exception:
+        return False

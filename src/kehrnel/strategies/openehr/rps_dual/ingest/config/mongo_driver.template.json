@@ -1,0 +1,7 @@
+{
+  "driver": "mongo",
+  "connection_string": "__MONGODB_URI__",
+  "database_name": "hdl_user_test",
+  "compositions_collection": "compositions_rps",
+  "search_collection": "compositions_search"
+}

@@ -18,6 +18,7 @@ from kehrnel.core.bundle_store import BundleStore
 from kehrnel.core.bundles import compute_bundle_digest
 from kehrnel.strategy_sdk import StrategyHandle, StrategyBindings
 from .types import QueryPlan, QueryResult, ApplyResult, TransformResult, StrategyContext
+from .bindings_resolver import resolve_bindings as _resolve_bindings_ref
 from kehrnel.persistence.mongodb.connection import get_database as _mongo_get_db
 from kehrnel.persistence.mongodb.storage import MongoStorageAdapter
 from kehrnel.persistence.mongodb.index_admin import MongoIndexAdminAdapter
@@ -26,9 +27,10 @@ from pathlib import Path
 
 
 class StrategyRuntime:
-    def __init__(self, registry: ActivationRegistry, bundle_store=None):
+    def __init__(self, registry: ActivationRegistry, bundle_store=None, bindings_resolver=None):
         self.registry = registry
         self.bundle_store = bundle_store
+        self.bindings_resolver = bindings_resolver
         self.env_manifests: Dict[str, StrategyManifest] = {}
         # per-env cache: {"adapters": {...}, "dict_cache": {...}}
         self._env_cache: Dict[str, Dict[str, Any]] = {}
@@ -57,6 +59,7 @@ class StrategyRuntime:
         manifest_digest_override: str | None = None,
         force: bool = False,
         replace_reason: str | None = None,
+        bindings_ref: str | None = None,
     ):
         manifest = self.registry.get_manifest(strategy_id)
         if not manifest:
@@ -123,6 +126,7 @@ class StrategyRuntime:
             activated_at=now,
             updated_at=now,
             bindings=bdict if allow_plaintext_bindings else None,
+            bindings_ref=bindings_ref,
             replaced=bool(existing),
             previous_activation_id=getattr(existing, "activation_id", None) if existing else None,
             replaced_from={"activation_id": existing.activation_id, "strategy_id": existing.strategy_id, "version": existing.version} if existing else None,
@@ -139,20 +143,26 @@ class StrategyRuntime:
         activation = self.registry.get_activation(env_id, domain)
         if not activation:
             raise KehrnelError(code="ACTIVATION_NOT_FOUND", status=404, message=f"No activation for env {env_id} (domain={domain})")
-        if not activation.bindings:
-            raise KehrnelError(code="BINDINGS_NOT_STORED", status=400, message="Bindings not stored; re-activate with allow_plaintext_bindings=true.")
+        if not activation.bindings and not activation.bindings_ref:
+            raise KehrnelError(
+                code="BINDINGS_NOT_STORED",
+                status=400,
+                message="Bindings not stored; provide bindings_ref or re-activate with allow_plaintext_bindings=true.",
+            )
         from kehrnel.strategy_sdk import StrategyBindings
+        rebind = StrategyBindings(**(activation.bindings or {}))
         return await self.activate(
             env_id,
             activation.strategy_id,
             activation.version,
             activation.config,
-            StrategyBindings(**activation.bindings),
-            allow_plaintext_bindings=True,
+            rebind,
+            allow_plaintext_bindings=bool(activation.bindings),
             domain=activation.domain or domain,
             reason="upgrade",
             force=True,
             replace_reason="upgrade",
+            bindings_ref=activation.bindings_ref,
         )
 
     async def rollback_activation(self, env_id: str, domain: str) -> EnvironmentActivation:
@@ -161,21 +171,23 @@ class StrategyRuntime:
             raise KehrnelError(code="ROLLBACK_NOT_AVAILABLE", status=409, message="No rollback history for activation")
         snapshot = history_entry.get("activation") or {}
         prev_activation = EnvironmentActivation(**snapshot)
-        if not prev_activation.bindings:
+        if not prev_activation.bindings and not prev_activation.bindings_ref:
             raise KehrnelError(code="BINDINGS_NOT_STORED", status=400, message="Bindings not stored; cannot rollback.")
         from kehrnel.strategy_sdk import StrategyBindings
+        rebind = StrategyBindings(**(prev_activation.bindings or {}))
         return await self.activate(
             env_id,
             prev_activation.strategy_id,
             prev_activation.version,
             prev_activation.config,
-            StrategyBindings(**prev_activation.bindings),
-            allow_plaintext_bindings=True,
+            rebind,
+            allow_plaintext_bindings=bool(prev_activation.bindings),
             domain=prev_activation.domain or domain,
             reason="rollback",
             manifest_digest_override=prev_activation.manifest_digest,
             force=True,
             replace_reason="rollback",
+            bindings_ref=prev_activation.bindings_ref,
         )
 
     def delete_activation(self, env_id: str, domain: str) -> EnvironmentActivation:
@@ -222,8 +234,28 @@ class StrategyRuntime:
 
         bindings_payload = (payload or {}).get("bindings") if isinstance(payload, dict) else None
         effective_bindings = activation.bindings or bindings_payload
+        if not effective_bindings and activation.bindings_ref:
+            try:
+                effective_bindings = await _resolve_bindings_ref(
+                    self.bindings_resolver,
+                    bindings_ref=activation.bindings_ref,
+                    env_id=env_id,
+                    domain=activation.domain,
+                    strategy_id=activation.strategy_id,
+                    op=op,
+                    context={"payload": payload or {}, "activation_config": activation.config or {}},
+                )
+            except Exception as exc:
+                raise KehrnelError(
+                    code="BINDINGS_REF_RESOLUTION_FAILED",
+                    status=502,
+                    message=str(exc),
+                    details={"bindings_ref": activation.bindings_ref, "env_id": env_id, "domain": activation.domain},
+                )
         if not effective_bindings:
-            raise ValueError("Bindings not stored; re-activate with allow_plaintext_bindings=true or provide bindings in request.")
+            raise ValueError(
+                "Bindings not available; provide bindings in request, activate with allow_plaintext_bindings=true, or configure bindings_ref resolver."
+            )
 
         cache = self._env_cache.setdefault(env_id, {}).setdefault("dict_cache", {})
         config_hash = activation.config_hash or self._config_hash(activation.config)
@@ -237,6 +269,11 @@ class StrategyRuntime:
             "bundle_store": self.bundle_store,
             "store_profiles": activation.store_profiles or {},
         }
+        if isinstance(payload, dict):
+            if payload.get("__progress_cb"):
+                meta["progress_cb"] = payload.get("__progress_cb")
+            if payload.get("__should_cancel"):
+                meta["should_cancel"] = payload.get("__should_cancel")
         ctx = StrategyContext(
             environment_id=env_id,
             config=activation.config,
