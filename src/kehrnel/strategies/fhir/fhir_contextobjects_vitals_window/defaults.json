@@ -1,0 +1,78 @@
+{
+  "database": "fhir_cdr",
+  "collections": {
+    "contextobjects": {
+      "name": "fhir_contextobjects_vitals"
+    },
+    "raw": {
+      "enabled": false,
+      "name": "fhir_vitals_raw",
+      "mode": "append"
+    }
+  },
+  "identity": {
+    "patientIdMode": "use_external_as_id",
+    "defaultPatientId": "patient-unknown",
+    "defaultDeviceId": "wearable-unknown"
+  },
+  "context": {
+    "schema": {
+      "id": "fhir.contextobjects.vitals_window",
+      "version": "1.0.0"
+    }
+  },
+  "windowing": {
+    "windowSeconds": 60,
+    "timezone": "UTC"
+  },
+  "fhir": {
+    "version": "R4",
+    "includePatientResource": false,
+    "includeDeviceResource": false,
+    "subjectRefTemplate": "Patient/{patientId}",
+    "deviceRefTemplate": "Device/{deviceId}",
+    "idStrategy": "deterministic",
+    "codeSystem": "http://loinc.org",
+    "pathTokenTemplate": "FHIR.Observation|{system}|{code}",
+    "panel": {
+      "code": "85353-1",
+      "display": "Vital signs panel"
+    },
+    "codes": {
+      "spo2": {
+        "system": "http://loinc.org",
+        "code": "59408-5",
+        "display": "Oxygen saturation in Arterial blood by Pulse oximetry",
+        "unit": "%",
+        "ucumSystem": "http://unitsofmeasure.org",
+        "ucumCode": "%"
+      },
+      "hr": {
+        "system": "http://loinc.org",
+        "code": "8867-4",
+        "display": "Heart rate",
+        "unit": "beats/min"
+      },
+      "pulse": {
+        "system": "http://loinc.org",
+        "code": "8889-8",
+        "display": "Pulse rate",
+        "unit": "beats/min"
+      },
+      "resp": {
+        "system": "http://loinc.org",
+        "code": "9279-1",
+        "display": "Respiratory rate",
+        "unit": "breaths/min"
+      }
+    }
+  },
+  "indexes": {
+    "contextobjects": [
+      { "name": "idx_subjects_kind_id", "keys": [["subjects.kind", 1], ["subjects.id", 1]] },
+      { "name": "idx_interval", "keys": [["interval.start", 1], ["interval.end", 1]] },
+      { "name": "idx_nodes_path", "keys": [["nodes.p", 1]] },
+      { "name": "idx_nodes_time", "keys": [["nodes.t", 1]] }
+    ]
+  }
+}
