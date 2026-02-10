@@ -44,7 +44,9 @@ api = [
     "motor>=3.3",
     "certifi>=2024.0.0",
     "python-multipart>=0.0.6",
-    "pydantic>=2.5"
+    "pydantic>=2.5",
+    "pydantic-settings>=2.2",
+    "python-dateutil>=2.8"
 ]
 
 # Kitchen-sink install
@@ -60,7 +62,9 @@ all = [
     "motor>=3.3",
     "certifi>=2024.0.0",
     "python-multipart>=0.0.6",
-    "pydantic>=2.5"
+    "pydantic>=2.5",
+    "pydantic-settings>=2.2",
+    "python-dateutil>=2.8"
 ]
 
 [project.scripts]

@@ -1,17 +1,9 @@
 services:
-  frontend-service:
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend
-    ports:
-      - 8080:8080
-    env_file:
-      - frontend/.env.local
   kehrnel-api:
     build:
       context: .
-      dockerfile: Dockerfile.backend
+      dockerfile: Dockerfile.openehr
     ports:
-      - 9000:9000
+      - 8000:8080
     env_file:   
       - .env  
