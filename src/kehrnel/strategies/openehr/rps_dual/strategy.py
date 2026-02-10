@@ -176,7 +176,7 @@ class RPSDualStrategy(StrategyPlugin):
                         )
         return artifacts
 
-    async def transform(self, ctx: StrategyContext, payload: Dict[str, Any]) -> TransformResult:
+    async def _build_flattener_for_context(self, ctx: StrategyContext) -> CompositionFlattener:
         cfg = ctx.config or {}
         adapters = ctx.adapters or {}
         storage = adapters.get("storage")
@@ -202,6 +202,18 @@ class RPSDualStrategy(StrategyPlugin):
         # Try to reuse raw motor database from the storage adapter if available
         db = getattr(storage, "db", None)
 
+        return await CompositionFlattener.create(
+            db=db,
+            config=flattener_config,
+            mappings_path=mappings_path,
+            mappings_content=mappings_content,
+            field_map=None,
+            coding_opts=coding_cfg,
+        )
+
+    async def transform(self, ctx: StrategyContext, payload: Dict[str, Any]) -> TransformResult:
+        flattener = await self._build_flattener_for_context(ctx)
+
         # Normalise payload into the shape expected by the flattener
         comp_obj = payload.get("canonicalJSON") if isinstance(payload, dict) else None
         if comp_obj is None and isinstance(payload, dict):
@@ -212,15 +224,6 @@ class RPSDualStrategy(StrategyPlugin):
             "composition_version": payload.get("composition_version") if isinstance(payload, dict) else None,
             "canonicalJSON": comp_obj or payload,
         }
-
-        flattener = await CompositionFlattener.create(
-            db=db,
-            config=flattener_config,
-            mappings_path=mappings_path,
-            mappings_content=mappings_content,
-            field_map=None,
-            coding_opts=coding_cfg,
-        )
         base_doc, search_doc = flattener.transform_composition(raw_doc)
 
         return TransformResult(base=base_doc, search=search_doc, meta={})
@@ -441,9 +444,11 @@ class RPSDualStrategy(StrategyPlugin):
             generation_mode = str(payload.get("generation_mode") or "auto").strip().lower()
             store_canonical = bool(payload.get("store_canonical", False))
             canonical_collection = str(payload.get("canonical_collection") or "compositions_canonical_synthetic")
+            write_batch_size = max(10, int(payload.get("write_batch_size", 250) or 250))
             comp_collection = strategy_cfg.collections.compositions.name
             search_collection = strategy_cfg.collections.search.name
             search_enabled = bool(strategy_cfg.collections.search.enabled and search_collection)
+            flattener = await self._build_flattener_for_context(ctx)
 
             progress_cb = (ctx.meta or {}).get("progress_cb")
             should_cancel = (ctx.meta or {}).get("should_cancel")
@@ -612,29 +617,20 @@ class RPSDualStrategy(StrategyPlugin):
                     canonical_probe = template_generators[template_id]()
                 if not canonical_probe:
                     continue
-                tf_probe = await self.transform(
-                    ctx,
-                    {
-                        "_id": str(uuid.uuid4()),
-                        "ehr_id": f"synthetic-ehr-{uuid.uuid4()}",
-                        "template_id": template_id,
-                        "canonicalJSON": canonical_probe,
-                    },
-                )
+                probe_doc = {
+                    "_id": str(uuid.uuid4()),
+                    "ehr_id": f"synthetic-ehr-{uuid.uuid4()}",
+                    "template_id": template_id,
+                    "canonicalJSON": canonical_probe,
+                }
+                probe_base, probe_search = flattener.transform_composition(probe_doc)
                 avg_docs_for_template = max(1, patient_count * ((spec["min"] + spec["max"]) // 2))
                 if store_canonical and canonical_probe:
-                    estimated_canonical_bytes += _json_size_bytes(
-                        {
-                            "_id": str(uuid.uuid4()),
-                            "ehr_id": f"synthetic-ehr-{uuid.uuid4()}",
-                            "template_id": template_id,
-                            "canonicalJSON": canonical_probe,
-                        }
-                    ) * avg_docs_for_template
-                if tf_probe.base:
-                    estimated_base_bytes += _json_size_bytes(tf_probe.base) * avg_docs_for_template
-                if search_enabled and tf_probe.search:
-                    estimated_search_bytes += _json_size_bytes(tf_probe.search) * avg_docs_for_template
+                    estimated_canonical_bytes += _json_size_bytes(probe_doc) * avg_docs_for_template
+                if probe_base:
+                    estimated_base_bytes += _json_size_bytes(probe_base) * avg_docs_for_template
+                if search_enabled and probe_search:
+                    estimated_search_bytes += _json_size_bytes(probe_search) * avg_docs_for_template
 
             if plan_only:
                 return {
@@ -660,6 +656,26 @@ class RPSDualStrategy(StrategyPlugin):
             by_model: Dict[str, int] = {}
             link_applied_count = 0
             last_progress = -1
+            canonical_batch: list[Dict[str, Any]] = []
+            base_batch: list[Dict[str, Any]] = []
+            search_batch: list[Dict[str, Any]] = []
+
+            async def _flush_batches(force: bool = False) -> None:
+                nonlocal inserted_canonical, inserted_base, inserted_search
+                if dry_run:
+                    return
+                if store_canonical and canonical_collection and canonical_batch and (force or len(canonical_batch) >= write_batch_size):
+                    await storage.insert_many(canonical_collection, canonical_batch)
+                    inserted_canonical += len(canonical_batch)
+                    canonical_batch.clear()
+                if comp_collection and base_batch and (force or len(base_batch) >= write_batch_size):
+                    await storage.insert_many(comp_collection, base_batch)
+                    inserted_base += len(base_batch)
+                    base_batch.clear()
+                if search_enabled and search_collection and search_batch and (force or len(search_batch) >= write_batch_size):
+                    await storage.insert_many(search_collection, search_batch)
+                    inserted_search += len(search_batch)
+                    search_batch.clear()
 
             await _emit_progress(
                 progress_cb,
@@ -722,18 +738,13 @@ class RPSDualStrategy(StrategyPlugin):
                             "canonicalJSON": canonical,
                         }
                         if not dry_run and store_canonical and canonical_collection:
-                            await storage.insert_one(canonical_collection, raw_doc)
-                            inserted_canonical += 1
-                        transformed = await self.transform(
-                            ctx,
-                            raw_doc,
-                        )
-                        if not dry_run and comp_collection and transformed.base:
-                            await storage.insert_one(comp_collection, transformed.base)
-                            inserted_base += 1
-                        if not dry_run and search_enabled and transformed.search:
-                            await storage.insert_one(search_collection, transformed.search)
-                            inserted_search += 1
+                            canonical_batch.append(raw_doc)
+                        transformed_base, transformed_search = flattener.transform_composition(raw_doc)
+                        if not dry_run and comp_collection and transformed_base:
+                            base_batch.append(transformed_base)
+                        if not dry_run and search_enabled and transformed_search:
+                            search_batch.append(transformed_search)
+                        await _flush_batches()
                         generated_docs += 1
                         by_template[template_id] = by_template.get(template_id, 0) + 1
                         by_model[model_id] = by_model.get(model_id, 0) + 1
@@ -760,6 +771,7 @@ class RPSDualStrategy(StrategyPlugin):
                     )
                     last_progress = progress
 
+            await _flush_batches(force=True)
             await _emit_progress(
                 progress_cb,
                 progress=100,

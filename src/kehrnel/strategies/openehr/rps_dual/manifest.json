@@ -256,6 +256,11 @@
             "type": "boolean",
             "default": false
           },
+          "write_batch_size": {
+            "type": "integer",
+            "minimum": 10,
+            "default": 250
+          },
           "model_source": {
             "type": "object",
             "properties": {
