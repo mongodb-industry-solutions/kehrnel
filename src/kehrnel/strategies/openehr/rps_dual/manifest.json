@@ -244,6 +244,29 @@
           "source_database": {
             "type": "string"
           },
+          "source_templates": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "source_sample_size": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 200
+          },
+          "source_min_per_patient": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 1
+          },
+          "source_max_per_patient": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 1
+          },
+          "source_filter": {
+            "type": "object",
+            "additionalProperties": true
+          },
           "generation_mode": {
             "type": "string",
             "enum": ["auto", "from_source", "from_models", "source", "models"]

@@ -456,6 +456,11 @@ class RPSDualStrategy(StrategyPlugin):
             models = payload.get("models")
             templates = payload.get("templates")
             model_source = payload.get("model_source") or {}
+            source_templates = payload.get("source_templates")
+            source_sample_size = int(payload.get("source_sample_size", 200) or 200)
+            source_min_per_patient = int(payload.get("source_min_per_patient", 1) or 1)
+            source_max_per_patient = int(payload.get("source_max_per_patient", source_min_per_patient) or source_min_per_patient)
+            source_filter = payload.get("source_filter")
 
             model_specs: list[Dict[str, Any]] = []
             if isinstance(models, list) and models:
@@ -493,11 +498,86 @@ class RPSDualStrategy(StrategyPlugin):
                             "catalog": {},
                         }
                     )
+            elif str(generation_mode or "").lower() in ("from_source", "source", "auto"):
+                # Source-instance mode: derive templates from existing source collection.
+                discovered_template_ids: list[str] = []
+                if isinstance(source_templates, list) and source_templates:
+                    discovered_template_ids = [str(t).strip() for t in source_templates if str(t).strip()]
+                else:
+                    match_stage: Dict[str, Any] = {}
+                    if isinstance(source_filter, dict) and source_filter:
+                        match_stage = source_filter
+                    pipeline = (
+                        [{"$match": match_stage}] if match_stage else []
+                    ) + [
+                        {
+                            "$project": {
+                                "template_id": {
+                                    "$ifNull": [
+                                        "$template_id",
+                                        {
+                                            "$ifNull": [
+                                                "$template_name",
+                                                {
+                                                    "$ifNull": [
+                                                        "$tid",
+                                                        {
+                                                            "$ifNull": [
+                                                                "$canonicalJSON.archetype_details.template_id.value",
+                                                                "$archetype_details.template_id.value",
+                                                            ]
+                                                        },
+                                                    ]
+                                                },
+                                            ]
+                                        },
+                                    ]
+                                }
+                            }
+                        },
+                        {"$match": {"template_id": {"$type": "string", "$ne": ""}}},
+                        {"$group": {"_id": "$template_id"}},
+                        {"$limit": max(1, source_sample_size)},
+                    ]
+                    rows = await storage.aggregate(source_collection, pipeline) if not source_database else await _aggregate_from_database(
+                        storage=storage,
+                        database_name=str(source_database),
+                        collection_name=source_collection,
+                        pipeline=pipeline,
+                    )
+                    discovered_template_ids = [str(r.get("_id")).strip() for r in rows if str(r.get("_id") or "").strip()]
+
+                if not discovered_template_ids:
+                    raise KehrnelError(
+                        code="SOURCE_TEMPLATE_NOT_FOUND",
+                        status=404,
+                        message=f"No templates discovered in source {source_database + '.' if source_database else ''}{source_collection}",
+                    )
+
+                if source_min_per_patient < 0 or source_max_per_patient < source_min_per_patient:
+                    raise KehrnelError(
+                        code="INVALID_INPUT",
+                        status=400,
+                        message=f"invalid source range: min={source_min_per_patient}, max={source_max_per_patient}",
+                    )
+
+                for template_id in discovered_template_ids:
+                    model_specs.append(
+                        {
+                            "model_id": template_id,
+                            "template_id": template_id,
+                            "min": source_min_per_patient,
+                            "max": source_max_per_patient,
+                            "weight": 1.0,
+                            "sample_size": max(1, source_sample_size),
+                            "catalog": {},
+                        }
+                    )
             else:
                 raise KehrnelError(
                     code="INVALID_INPUT",
                     status=400,
-                    message="Provide non-empty payload.models (preferred) or payload.templates (legacy).",
+                    message="Provide payload.models, payload.templates, or source-based mode (generation_mode=from_source).",
                 )
 
             links = await resolve_links(
@@ -548,20 +628,21 @@ class RPSDualStrategy(StrategyPlugin):
                 prefer_models = generation_mode in ("auto", "from_models", "models")
 
                 if prefer_source:
+                    match_conditions = [
+                        {"template_id": template_id},
+                        {"template_name": template_id},
+                        {"tid": template_id},
+                        {"canonicalJSON.archetype_details.template_id.value": template_id},
+                        {"archetype_details.template_id.value": template_id},
+                    ]
+                    if isinstance(source_filter, dict) and source_filter:
+                        source_match: Dict[str, Any] = {"$and": [source_filter, {"$or": match_conditions}]}
+                    else:
+                        source_match = {"$or": match_conditions}
                     sample_docs = await storage.aggregate(
                         source_collection,
                         [
-                            {
-                                "$match": {
-                                    "$or": [
-                                        {"template_id": template_id},
-                                        {"template_name": template_id},
-                                        {"tid": template_id},
-                                        {"canonicalJSON.archetype_details.template_id.value": template_id},
-                                        {"archetype_details.template_id.value": template_id},
-                                    ]
-                                }
-                            },
+                            {"$match": source_match},
                             {"$sample": {"size": spec["sample_size"]}},
                         ],
                     ) if not source_database else await _aggregate_from_database(
@@ -569,17 +650,7 @@ class RPSDualStrategy(StrategyPlugin):
                         database_name=str(source_database),
                         collection_name=source_collection,
                         pipeline=[
-                            {
-                                "$match": {
-                                    "$or": [
-                                        {"template_id": template_id},
-                                        {"template_name": template_id},
-                                        {"tid": template_id},
-                                        {"canonicalJSON.archetype_details.template_id.value": template_id},
-                                        {"archetype_details.template_id.value": template_id},
-                                    ]
-                                }
-                            },
+                            {"$match": source_match},
                             {"$sample": {"size": spec["sample_size"]}},
                         ],
                     )

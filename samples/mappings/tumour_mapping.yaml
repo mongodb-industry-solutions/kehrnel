@@ -129,21 +129,17 @@ content/0/items/0/data/items/5/value/value:
 content/0/items/0/data/items/6/value/value:
   xpath: "concat(//cda:ficheTumeur/cda:dateDiagnostic/text(),'T00:00:00')"
 
-# Severity element stays verbatim 
-_"/content/0/items/0/data/items/{append}":
+# Severity (fixed element at index 7 in this template)
+content/0/items/0/data/items/7/value/value:
+  xpath: //cda:ficheTumeur/cda:severity/text()
+  map : { at0047: Mild, at0048: Moderate, at0049: Unknown }
   when: "normalize-space(//cda:ficheTumeur/cda:severity/text()) != ''"
-  template:
-    _type            : ELEMENT
-    name/value       : Severity
-    archetype_node_id: at0005
-    value/_type      : DV_CODED_TEXT
-    value/value:
-      xpath: //cda:ficheTumeur/cda:severity/text()
-      map : { at0047: Mild, at0048: Moderate, at0049: Unknown }
-    value/defining_code:
-      terminology_id/value: local
-      code_string:
-        xpath: //cda:ficheTumeur/cda:severity/text()
+
+content/0/items/0/data/items/7/value/defining_code/terminology_id/value: "constant: local"
+
+content/0/items/0/data/items/7/value/defining_code/code_string:
+  xpath: //cda:ficheTumeur/cda:severity/text()
+  when: "normalize-space(//cda:ficheTumeur/cda:severity/text()) != ''"
 
 # TNM / Dates / Problem-qualifier clusters 
 

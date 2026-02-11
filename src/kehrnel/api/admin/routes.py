@@ -1,15 +1,27 @@
 """
 Admin/runtime API for strategy discovery and environment operations.
 """
+import json
+import os
+import tempfile
 from pathlib import Path
 from fastapi import APIRouter, Request, Body
 from fastapi.responses import JSONResponse, FileResponse
 from typing import Any, Dict, List
+import yaml
+from lxml import etree
 
 from kehrnel.core.manifest import StrategyManifest
 from kehrnel.core.errors import KehrnelError
 from kehrnel.core.bundle_store import BundleStore
 from kehrnel.core.pack_loader import load_strategy
+from kehrnel.common.mapping.mapping_engine import apply_mapping
+from kehrnel.common.mapping.handlers.csv_handler import CSVHandler
+from kehrnel.common.mapping.handlers.xml_handler import XMLHandler
+from kehrnel.common.mapping.utils.expr import evaluate as eval_expr
+from kehrnel.domains.openehr.templates.parser import TemplateParser
+from kehrnel.domains.openehr.templates.generator import kehrnelGenerator
+from kehrnel.domains.openehr.templates.validator import kehrnelValidator
 
 router = APIRouter()
 
@@ -50,6 +62,192 @@ def _history_summary(rt, env_id: str, domain: str):
     return {"count": len(history_entries or []), "recent": [_safe_entry(e) for e in recent]}
 
 
+def _load_mapping_payload(mapping_raw: str) -> Dict[str, Any]:
+    """Parse mapping payload from YAML first, then JSON fallback."""
+    if not mapping_raw or not str(mapping_raw).strip():
+        raise KehrnelError(code="INVALID_INPUT", status=400, message="mapping payload is required")
+    try:
+        parsed = yaml.safe_load(mapping_raw)
+        if isinstance(parsed, dict):
+            return parsed
+    except Exception:
+        pass
+    try:
+        parsed_json = json.loads(mapping_raw)
+        if isinstance(parsed_json, dict):
+            return parsed_json
+    except Exception as exc:
+        raise KehrnelError(code="INVALID_INPUT", status=400, message=f"Invalid mapping payload: {exc}") from exc
+    raise KehrnelError(code="INVALID_INPUT", status=400, message="mapping payload must decode to an object")
+
+
+def _pick_source_handler(source_path: Path):
+    handlers = [CSVHandler(), XMLHandler()]
+    for handler in handlers:
+        if handler.can_handle(source_path):
+            return handler
+    raise KehrnelError(
+        code="UNSUPPORTED_MEDIA_TYPE",
+        status=415,
+        message=f"Unsupported source format for '{source_path.name}'",
+    )
+
+
+def _legacy_flat_map_from_path_mapping(mapping: Dict[str, Any], source_tree: etree._Element) -> Dict[str, Dict[str, Any]]:
+    """
+    Fallback converter for legacy path-keyed YAML mappings.
+    Supports direct path rules like:
+      /a/b/c: "constant: foo"
+      /a/b/c:
+        xpath: //...
+        map: {a: b}
+        default: x
+        when: "..."
+      /a/b/c:
+        template: "{{ xpath('//...') }}"
+    Ignores dynamic/template append rules and meta sections.
+    """
+    if not isinstance(mapping, dict):
+        return {}
+
+    ns = ((mapping.get("_metadata") or {}).get("namespaces") or {}) if isinstance(mapping.get("_metadata"), dict) else {}
+    if not isinstance(ns, dict) or not ns:
+        ns = XMLHandler.NS_DEFAULT
+
+    def _xpath(expr: str):
+        try:
+            res = source_tree.xpath(expr, namespaces=ns)
+        except Exception:
+            return None
+        if not res:
+            return None
+        if len(res) == 1:
+            item = res[0]
+            return item.text if isinstance(item, etree._Element) else item
+        vals = []
+        for item in res:
+            vals.append(item.text if isinstance(item, etree._Element) else item)
+        return vals
+
+    out: Dict[str, Dict[str, Any]] = {}
+    reserved_prefixes = ("_metadata", "_options", "_preprocessing", "_inputs", "_hints", "_gui")
+
+    for raw_path, rule in mapping.items():
+        if not isinstance(raw_path, str):
+            continue
+        if raw_path.startswith(reserved_prefixes):
+            continue
+        # dynamic append/template keys are not directly representable in flat_map
+        if raw_path.startswith('_"') or "{append}" in raw_path or "{i}" in raw_path:
+            continue
+
+        path = raw_path.lstrip("/")
+        literal = None
+
+        if isinstance(rule, str):
+            if rule.startswith("constant:"):
+                literal = rule.split("constant:", 1)[1].strip()
+            else:
+                literal = rule
+        elif isinstance(rule, (int, float, bool)):
+            literal = rule
+        elif isinstance(rule, dict):
+            when = rule.get("when")
+            if when and not eval_expr(str(when), row={"_xml": True}, vars={"xpath": _xpath}):
+                continue
+
+            if "template" in rule:
+                try:
+                    from kehrnel.common.mapping.utils.jinja_env import env as JINJA
+                    rendered = JINJA.from_string(str(rule.get("template") or "")).render({"xpath": _xpath})
+                    literal = rendered
+                except Exception:
+                    literal = None
+            elif "xpath" in rule:
+                literal = _xpath(str(rule.get("xpath") or ""))
+                if isinstance(literal, list):
+                    literal = literal[0] if literal else None
+            m = rule.get("map")
+            if isinstance(m, dict) and literal is not None:
+                literal = m.get(str(literal), literal)
+
+            if (literal is None or str(literal).strip() == "") and "default" in rule:
+                literal = rule.get("default")
+
+        if literal is None:
+            continue
+        out[path] = {"literal": literal}
+
+    return out
+
+
+def _apply_flat_map_safe(gen: kehrnelGenerator, composition: Dict[str, Any], flat_map: Dict[str, Dict[str, Any]]) -> Dict[str, int]:
+    """Best-effort application for legacy maps; skips malformed/non-leaf paths."""
+    set_fn = getattr(gen, "set_at_path", None) or getattr(gen, "_set_value_at_path", None)
+    if set_fn is None:
+        raise KehrnelError(code="INTERNAL_ERROR", status=500, message="Generator has no path setter")
+
+    applied = 0
+    skipped = 0
+    for path, spec in (flat_map or {}).items():
+        if not isinstance(spec, dict) or "literal" not in spec:
+            continue
+        try:
+            set_fn(composition, path, spec["literal"])
+            applied += 1
+        except Exception:
+            skipped += 1
+            continue
+    return {"applied": applied, "skipped": skipped}
+
+
+def _transform_document_with_mapping(source_path: Path, mapping: Dict[str, Any], opt_path: Path) -> Dict[str, Any]:
+    """
+    Build canonical composition from source document using mapping + OPT.
+    Uses the same generator/mapping pipeline as kehrnel-map CLI.
+    """
+    tpl = TemplateParser(opt_path)
+    gen = kehrnelGenerator(tpl)
+    handler = _pick_source_handler(source_path)
+    source_tree = handler.load_source(source_path)
+    groups = handler.preprocess_mapping_new(mapping, source_tree)
+    if not groups:
+        raise KehrnelError(code="INVALID_INPUT", status=400, message="Mapping produced no groups")
+
+    first_group = groups[0]
+    flat_map = first_group.get("map") or {}
+    used_legacy_fallback = False
+    if not isinstance(flat_map, dict) or not flat_map:
+        # Compatibility fallback for legacy path-keyed mappings used in HDL.
+        flat_map = _legacy_flat_map_from_path_mapping(mapping, source_tree)
+        used_legacy_fallback = True
+    if not isinstance(flat_map, dict) or not flat_map:
+        raise KehrnelError(
+            code="INVALID_INPUT",
+            status=400,
+            message="Mapping produced no path rules",
+            details={"hint": "Provide mappings.* grammar or legacy path-keyed rules with xpath/template/constant entries."},
+        )
+
+    composition = gen.generate_minimal()
+    if used_legacy_fallback:
+        stats = _apply_flat_map_safe(gen, composition, flat_map)
+        if stats.get("applied", 0) <= 0:
+            raise KehrnelError(
+                code="INVALID_INPUT",
+                status=400,
+                message="Mapping rules could not be applied to target template paths",
+                details=stats,
+            )
+    else:
+        composition = apply_mapping(gen, flat_map, composition)
+    composition = gen._normalize_for_rm(composition)
+    composition = gen._prune_incomplete_datavalues(composition)
+    if bool(first_group.get("prune_empty")):
+        gen._prune_empty(composition)
+    return composition
+
+
 @router.get("/strategies", response_model=Dict[str, List[StrategyManifest]])
 async def list_strategies(request: Request):
     try:
@@ -76,6 +274,135 @@ async def list_strategies(request: Request):
 @router.get("/health", include_in_schema=False)
 async def health():
     return {"ok": True}
+
+
+@router.post("/api/transform", include_in_schema=False)
+async def api_transform(request: Request):
+    """
+    Compatibility endpoint for HDL Mapping Studio.
+
+    Expects multipart/form-data:
+    - document: uploaded source file (.xml/.csv)
+    - mapping_yaml (or mapping): mapping definition (YAML/JSON string)
+    - opt_content (or opt): OPT XML content
+    - template_id/templateId (optional, informational)
+    """
+    temp_files: list[Path] = []
+    try:
+        form = await request.form()
+        upload = form.get("document")
+        mapping_raw = form.get("mapping_yaml") or form.get("mapping")
+        opt_content = form.get("opt_content") or form.get("opt")
+        template_id = form.get("template_id") or form.get("templateId")
+
+        if upload is None or not hasattr(upload, "read"):
+            raise KehrnelError(code="INVALID_INPUT", status=400, message="document file is required")
+        if not opt_content or not str(opt_content).strip():
+            raise KehrnelError(code="INVALID_INPUT", status=400, message="opt_content is required")
+
+        mapping = _load_mapping_payload(str(mapping_raw or ""))
+
+        filename = getattr(upload, "filename", None) or "document.xml"
+        suffix = Path(filename).suffix or ".xml"
+        with tempfile.NamedTemporaryFile("wb", suffix=suffix, delete=False) as src_tmp:
+            content_bytes = await upload.read()
+            src_tmp.write(content_bytes)
+            src_path = Path(src_tmp.name)
+            temp_files.append(src_path)
+
+        with tempfile.NamedTemporaryFile("w", suffix=".opt", encoding="utf-8", delete=False) as opt_tmp:
+            opt_tmp.write(str(opt_content))
+            opt_path = Path(opt_tmp.name)
+            temp_files.append(opt_path)
+
+        composition = _transform_document_with_mapping(src_path, mapping, opt_path)
+        if template_id:
+            try:
+                ad = composition.setdefault("archetype_details", {})
+                if isinstance(ad, dict):
+                    ad.setdefault("template_id", {"value": str(template_id)})
+            except Exception:
+                pass
+        return JSONResponse(content=composition)
+    except Exception as exc:
+        return _error_response(exc)
+    finally:
+        for p in temp_files:
+            try:
+                p.unlink(missing_ok=True)
+            except Exception:
+                pass
+
+
+@router.post("/api/validate-composition", include_in_schema=False)
+async def api_validate_composition(request: Request):
+    """
+    Compatibility endpoint for HDL Mapping Studio composition validation.
+
+    Expects JSON body:
+    - composition: canonical composition object
+    - opt_content (or opt): OPT XML content
+    - template_id/templateId (optional, informational)
+    """
+    temp_files: list[Path] = []
+    try:
+        payload = await request.json()
+        composition = payload.get("composition")
+        opt_content = payload.get("opt_content") or payload.get("opt")
+
+        if not isinstance(composition, dict):
+            raise KehrnelError(code="INVALID_INPUT", status=400, message="composition object is required")
+        if not opt_content or not str(opt_content).strip():
+            raise KehrnelError(code="INVALID_INPUT", status=400, message="opt_content is required")
+
+        with tempfile.NamedTemporaryFile("w", suffix=".opt", encoding="utf-8", delete=False) as opt_tmp:
+            opt_tmp.write(str(opt_content))
+            opt_path = Path(opt_tmp.name)
+            temp_files.append(opt_path)
+
+        tpl = TemplateParser(opt_path)
+        validator = kehrnelValidator(tpl)
+        issues = validator.validate(composition)
+
+        errors = []
+        warnings = []
+        infos = []
+        for issue in issues:
+            issue_obj = {
+                "path": issue.path,
+                "message": issue.message,
+                "code": issue.code,
+                "expected": issue.expected,
+                "found": issue.found,
+            }
+            severity = (str(issue.severity.value) if hasattr(issue.severity, "value") else str(issue.severity)).lower()
+            if severity == "warning":
+                warnings.append(issue_obj)
+            elif severity == "info":
+                infos.append(issue_obj)
+            else:
+                errors.append(issue_obj)
+
+        return {
+            "valid": len(errors) == 0,
+            "errors": errors,
+            "warnings": warnings,
+            "info": infos,
+            "summary": {
+                "errors": len(errors),
+                "warnings": len(warnings),
+                "info": len(infos),
+                "issues": len(issues),
+            },
+        }
+    except Exception as exc:
+        return _error_response(exc)
+    finally:
+        for p in temp_files:
+            try:
+                p.unlink(missing_ok=True)
+            except Exception:
+                pass
 
 
 @router.get("/agentic", include_in_schema=False)
@@ -730,13 +1057,87 @@ async def create_synthetic_job(env_id: str, request: Request, body: Dict[str, An
         manager = getattr(request.app.state, "synthetic_job_manager", None)
         if not manager:
             raise KehrnelError(code="JOBS_NOT_AVAILABLE", status=503, message="Synthetic job manager not initialized")
-        domain = (body.get("domain") or "").strip().lower()
+        rt = getattr(request.app.state, "strategy_runtime", None)
+        if not rt:
+            raise KehrnelError(code="RUNTIME_NOT_INITIALIZED", status=503, message="Strategy runtime not initialized")
+        domain = (body.get("domain") or request.query_params.get("domain") or "").strip().lower()
         if not domain:
             raise KehrnelError(code="DOMAIN_REQUIRED", status=400, message="domain is required")
         op = body.get("op") or "synthetic_generate_batch"
         payload = body.get("payload") or {}
         if not isinstance(payload, dict):
             raise KehrnelError(code="INVALID_INPUT", status=400, message="payload must be an object")
+
+        # Compatibility bootstrap: when an environment exists but has no usable bindings,
+        # auto-activate using provided bindings/bindings_ref or local env defaults.
+        activation = rt.registry.get_activation(env_id, domain)
+        needs_bindings_bootstrap = not activation or (not activation.bindings and not activation.bindings_ref)
+        if needs_bindings_bootstrap:
+            from kehrnel.strategy_sdk import StrategyBindings
+
+            strategy_id = (
+                body.get("strategy_id")
+                or body.get("strategyId")
+                or request.query_params.get("strategy_id")
+                or request.query_params.get("strategyId")
+                or (activation.strategy_id if activation else None)
+            )
+            if not strategy_id:
+                raise KehrnelError(
+                    code="STRATEGY_REQUIRED",
+                    status=400,
+                    message="strategy_id is required when environment activation is missing or has no bindings",
+                )
+
+            version = body.get("version") or (activation.version if activation else "latest")
+            config = body.get("config") if isinstance(body.get("config"), dict) else (activation.config if activation else {})
+            bindings_ref = body.get("bindings_ref") or body.get("bindingsRef")
+            raw_bindings = body.get("bindings")
+            if raw_bindings is not None and not isinstance(raw_bindings, dict):
+                raise KehrnelError(code="INVALID_INPUT", status=400, message="bindings must be an object")
+
+            db_hint = (
+                body.get("targetDatabase")
+                or body.get("target_database")
+                or body.get("database_name")
+                or request.query_params.get("targetDatabase")
+                or request.query_params.get("target_database")
+                or request.query_params.get("database_name")
+                or payload.get("targetDatabase")
+                or payload.get("target_database")
+                or payload.get("database_name")
+                or payload.get("source_database")
+                or os.getenv("MONGODB_DB")
+                or os.getenv("TEST_DB_NAME")
+            )
+
+            bindings_payload = raw_bindings
+            if bindings_payload is None and not bindings_ref:
+                mongo_uri = os.getenv("MONGODB_URI")
+                if not mongo_uri or not db_hint:
+                    raise KehrnelError(
+                        code="BINDINGS_REQUIRED",
+                        status=400,
+                        message=(
+                            "No bindings available for environment. Provide bindings/bindings_ref, "
+                            "or set MONGODB_URI and MONGODB_DB (or TEST_DB_NAME)."
+                        ),
+                    )
+                bindings_payload = {"db": {"provider": "mongodb", "uri": mongo_uri, "database": str(db_hint)}}
+
+            await rt.activate(
+                env_id=env_id,
+                strategy_id=strategy_id,
+                version=version,
+                config=config or {},
+                bindings=StrategyBindings(**(bindings_payload or {})),
+                allow_plaintext_bindings=bool(bindings_payload),
+                domain=domain,
+                force=bool(activation),
+                replace_reason="synthetic-job-bootstrap",
+                bindings_ref=bindings_ref,
+            )
+
         requested_by = request.headers.get("x-api-key")
         job = await manager.create_job(
             env_id=env_id,

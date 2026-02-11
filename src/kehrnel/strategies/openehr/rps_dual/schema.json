@@ -25,6 +25,18 @@
     }
   },
   "properties": {
+    "database_name": {
+      "type": "string",
+      "description": "Legacy compatibility alias. Deprecated; keep DB selection in bindings or op payload."
+    },
+    "targetDatabase": {
+      "type": "string",
+      "description": "Legacy compatibility alias. Deprecated; keep DB selection in bindings or op payload."
+    },
+    "target_database": {
+      "type": "string",
+      "description": "Legacy compatibility alias. Deprecated; keep DB selection in bindings or op payload."
+    },
     "collections": {
       "type": "object",
       "description": "MongoDB collection configuration",

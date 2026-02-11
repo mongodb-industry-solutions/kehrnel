@@ -5,6 +5,7 @@ import importlib
 import importlib.util
 import json
 import hashlib
+import os
 from datetime import datetime
 from typing import Dict, Optional, Any
 from dataclasses import is_dataclass, asdict
@@ -70,6 +71,17 @@ class StrategyRuntime:
             raise ValueError("Domain required for activation")
         chosen_domain = str(chosen_domain).strip().lower()
         existing = self.registry.get_activation(env_id, chosen_domain)
+        incoming_bindings = getattr(bindings, "__dict__", {}) or {}
+        # Backward-compatible safety: if caller re-activates without bindings fields,
+        # preserve previously stored bindings/bindings_ref instead of wiping them.
+        if not incoming_bindings and not bindings_ref and existing:
+            if existing.bindings:
+                incoming_bindings = dict(existing.bindings)
+                allow_plaintext_bindings = True
+            elif existing.bindings_ref:
+                bindings_ref = existing.bindings_ref
+        if incoming_bindings:
+            bindings = StrategyBindings(**incoming_bindings)
         existing_hash = existing.config_hash if existing else None
         # idempotent: if same strategy and config hash matches, return existing
         merged_config: dict = {}
@@ -222,7 +234,16 @@ class StrategyRuntime:
         if not manifest:
             raise ValueError(f"Strategy {activation.strategy_id} not registered")
         current_digest = self._manifest_digest(manifest)
-        if (activation.manifest_digest and activation.manifest_digest != current_digest) or (activation.version and activation.version != manifest.version):
+        activation_version = (activation.version or "").strip()
+        is_latest_alias = activation_version.lower() in ("latest", "current")
+        digest_mismatch = bool(activation.manifest_digest and activation.manifest_digest != current_digest)
+        # If digest matches, treat activation as compatible even if version label is "latest".
+        version_mismatch = bool(
+            activation_version
+            and not is_latest_alias
+            and activation_version != manifest.version
+        )
+        if digest_mismatch or version_mismatch:
             details = {
                 "expected_version": activation.version,
                 "actual_version": manifest.version,
@@ -235,6 +256,31 @@ class StrategyRuntime:
         bindings_payload = (payload or {}).get("bindings") if isinstance(payload, dict) else None
         effective_bindings = activation.bindings or bindings_payload
         if not effective_bindings and activation.bindings_ref:
+            fallback_bindings = self._fallback_bindings_from_activation(activation)
+            if fallback_bindings:
+                effective_bindings = fallback_bindings
+            if not effective_bindings and self.bindings_resolver is None:
+                raise KehrnelError(
+                    code="BINDINGS_RESOLVER_NOT_CONFIGURED",
+                    status=500,
+                    message=(
+                        "Activation uses bindings_ref but no bindings resolver is configured. "
+                        "Set KEHRNEL_BINDINGS_RESOLVER or configure HDL resolver env vars."
+                    ),
+                    details={
+                        "env_id": env_id,
+                        "domain": activation.domain,
+                        "strategy_id": activation.strategy_id,
+                        "activation_id": activation.activation_id,
+                        "bindings_ref": activation.bindings_ref,
+                        "required_env": [
+                            "KEHRNEL_BINDINGS_RESOLVER",
+                            "ENV_SECRETS_KEY",
+                            "CORE_MONGODB_URL|MONGODB_URI",
+                            "CORE_DATABASE_NAME",
+                        ],
+                    },
+                )
             try:
                 effective_bindings = await _resolve_bindings_ref(
                     self.bindings_resolver,
@@ -253,8 +299,22 @@ class StrategyRuntime:
                     details={"bindings_ref": activation.bindings_ref, "env_id": env_id, "domain": activation.domain},
                 )
         if not effective_bindings:
-            raise ValueError(
-                "Bindings not available; provide bindings in request, activate with allow_plaintext_bindings=true, or configure bindings_ref resolver."
+            raise KehrnelError(
+                code="BINDINGS_UNAVAILABLE",
+                status=500,
+                message=(
+                    "Bindings not available; provide bindings in request, activate with "
+                    "allow_plaintext_bindings=true, or configure bindings_ref resolver."
+                ),
+                details={
+                    "env_id": env_id,
+                    "domain": activation.domain,
+                    "strategy_id": activation.strategy_id,
+                    "activation_id": activation.activation_id,
+                    "has_plaintext_bindings": bool(activation.bindings),
+                    "bindings_ref": activation.bindings_ref,
+                    "bindings_in_payload": bool(bindings_payload),
+                },
             )
 
         cache = self._env_cache.setdefault(env_id, {}).setdefault("dict_cache", {})
@@ -358,6 +418,31 @@ class StrategyRuntime:
         except Exception as exc:
             raise
         raise ValueError(f"Operation {op} not supported")
+
+    def _fallback_bindings_from_activation(self, activation: EnvironmentActivation) -> Dict[str, Any] | None:
+        """
+        Local/dev fallback for ref-based activations when resolver is unavailable.
+        Uses runtime env vars plus activation config target DB hint.
+        """
+        uri = (os.getenv("MONGODB_URI") or os.getenv("CORE_MONGODB_URL") or "").strip()
+        if not uri:
+            return None
+        cfg = activation.config or {}
+        db_name = (
+            cfg.get("database_name")
+            or cfg.get("target_database")
+            or cfg.get("targetDatabase")
+            or ((cfg.get("db") or {}).get("database") if isinstance(cfg.get("db"), dict) else None)
+        )
+        if not db_name:
+            return None
+        return {
+            "db": {
+                "provider": "mongodb",
+                "uri": uri,
+                "database": str(db_name),
+            }
+        }
 
     def _config_hash(self, config: Dict[str, Any]) -> str:
         try:

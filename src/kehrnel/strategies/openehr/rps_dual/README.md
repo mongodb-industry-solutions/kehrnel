@@ -169,6 +169,24 @@ Legacy payload still supported:
 }
 ```
 
+Source-instance payload (no model catalog; derive templates from existing data):
+
+```json
+{
+  "patient_count": 1000,
+  "generation_mode": "from_source",
+  "source_collection": "samples",
+  "source_database": "hdl-team-openehr",
+  "source_sample_size": 200,
+  "source_min_per_patient": 1,
+  "source_max_per_patient": 2,
+  "source_filter": { "domain": "openehr" }
+}
+```
+
+Optional:
+- `source_templates`: explicit template IDs to use instead of auto-discovery.
+
 Optional flags:
 
 - `dry_run=true`: run generation logic but skip inserts.
