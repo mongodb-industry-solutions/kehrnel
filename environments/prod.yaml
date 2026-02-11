@@ -1,6 +1,6 @@
 env:
   NODE_ENV: prod
-  USE_DYNAMIC_CONFIG: kerhnel-backend-secrets
+  USE_DYNAMIC_CONFIG: "False"
   DEFAULT_CONFIG_NAME: "Hybrid Nodes"
   CONFIG_DB_NAME: "openehr_core"
   CONFIG_COLLECTION_NAME: "persistence_strategies"
