@@ -1,0 +1,16 @@
+{
+  "_id": "shortcuts",
+  "items": {
+    "value": "v",
+    "defining_code": "df",
+    "code_string": "cs",
+    "value.value": "vv",
+    "defining_code.code_string": "df.cs",
+    "time": "time",
+    "time.value": "time.v",
+    "value.defining_code.code_string": "v.df.cs",
+    "other_participations.performer.identifiers.id": "op.pid"
+  },
+  "keys": {},
+  "values": {}
+}

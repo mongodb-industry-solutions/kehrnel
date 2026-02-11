@@ -1,0 +1,70 @@
+{
+  "id": "fhir.resource_first",
+  "name": "FHIR Resource-First",
+  "version": "0.1.0",
+  "maturity": "preview",
+  "domain": "FHIR",
+  "summary": "Stores native FHIR resources with a basic search collection.",
+  "description": "Minimal FHIR strategy used for contract testing.",
+  "capabilities": [
+    "query"
+  ],
+  "entrypoint": "kehrnel.strategies.fhir.resource_first.strategy:FHIRResourceFirstStrategy",
+  "config_schema": {
+    "type": "object",
+    "properties": {
+      "database": {
+        "type": "string"
+      },
+      "collections": {
+        "type": "object",
+        "properties": {
+          "resources": {
+            "type": "string"
+          },
+          "search": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "resources"
+        ]
+      }
+    },
+    "required": [
+      "database",
+      "collections"
+    ]
+  },
+  "default_config": {
+    "database": "fhir_cdr",
+    "collections": {
+      "resources": "fhir_resources",
+      "search": "fhir_search"
+    }
+  },
+  "ops": [],
+  "adapters": {
+    "storage": [
+      "mongo"
+    ],
+    "search": [],
+    "vector": []
+  },
+  "compatibility": {
+    "protocols": [
+      "FHIR"
+    ]
+  },
+  "ui": {
+    "status": "preview",
+    "status_message": "This strategy represents our vision for native FHIR resource storage and search. It's designed to complement openEHR strategies for organizations working across both standards. Want to help shape FHIR interoperability? Join our community and contribute.",
+    "tags": ["FHIR", "HL7", "Resources", "Interoperability"],
+    "domain_badge": "FHIR",
+    "benefits": [
+      "Native FHIR resource storage",
+      "Basic search capabilities",
+      "Complement to openEHR clinical data"
+    ]
+  }
+}

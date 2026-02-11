@@ -20,4 +20,4 @@ serviceAccount:
   enabled: true
   irsa:
     accountId: "275662791714"
-    roleName: "kanopy-staging-cicd-irsa"
+    roleName: "kanopy-prod-cicd-irsa"

@@ -1,0 +1,58 @@
+{
+  "id": "genomics.variant_first",
+  "name": "Genomics Variant-First",
+  "version": "0.1.0",
+  "maturity": "preview",
+  "domain": "genomics",
+  "summary": "Minimal genomics strategy stub for activation/routing tests.",
+  "capabilities": [
+    "query"
+  ],
+  "entrypoint": "kehrnel.strategies.genomics.variant_first.strategy:GenomicsVariantFirstStrategy",
+  "config_schema": {
+    "type": "object",
+    "properties": {
+      "database": {
+        "type": "string"
+      },
+      "collections": {
+        "type": "object",
+        "properties": {
+          "variants": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "variants"
+        ]
+      }
+    },
+    "required": [
+      "database",
+      "collections"
+    ]
+  },
+  "default_config": {
+    "database": "genomics_db",
+    "collections": {
+      "variants": "variants"
+    }
+  },
+  "ops": [],
+  "adapters": {
+    "storage": [],
+    "search": [],
+    "vector": []
+  },
+  "ui": {
+    "status": "preview",
+    "status_message": "This strategy represents our vision for genomics data management. It's here to showcase the journey ahead. Want to help build it? Join our community and contribute to making genomics interoperability a reality.",
+    "tags": ["Genomics", "VCF", "Variants", "Precision Medicine"],
+    "domain_badge": "Genomics",
+    "benefits": [
+      "Variant-centric data model for precision medicine",
+      "Integration with clinical openEHR data",
+      "Unified querying across genomic and clinical domains"
+    ]
+  }
+}

@@ -1,8 +1,12 @@
-# kehrnel — openEHR **Document‑Model** utilities
+# kehrnel — openEHR® **Document‑Model** utilities
 
-> **Disclaimer** `kehrnel` and its companion projects are **learning tools**: they showcase best‑practice modelling and querying of clinical data in an **openEHR Document Model**. They are **not** production‑ready libraries or applications.
+> **⚠️ Disclaimer**
+>
+> This project is an experimental, non-production environment for demonstration purposes only. It is not an official MongoDB product and is not formally supported by MongoDB. MongoDB makes no representation or warranty as to the accuracy, adequacy, completeness, and fitness for a particular purpose in respect of any materials made available through the Healthcare Data Lab.
 
 `kehrnel` provides a modular set of Python libraries, command-line interfaces (CLIs), and a companion REST API. Together, these tools help model, generate, map, validate, transform, and ingest openEHR compositions — following a document-centric approach. They are designed for rapid prototyping, teaching, and building proof-of-concepts.
+
+> Looking for the active runtime? See `README-dev.md` (`uvicorn kehrnel.api.app:app`).
 
 It also powers the **MongoDB Healthcare Playground**, a demo stack with MongoDB Atlas Local, FastAPI, AQL dashboards, and semantic search layers:
 
@@ -55,7 +59,7 @@ This will install all required dependencies including Typer (for CLI), PyMongo (
 kehrnel-api
 
 # Or using Python module
-python -m api.internal.api_server
+python -m kehrnel.api.app
 
 # The API will be available at:
 # - http://localhost:8000 (endpoints)
@@ -106,6 +110,16 @@ You can also pipe the composition through stdin:
 comp=$(kehrnel-generate -t template.opt --random)
 printf "%s" "$comp" | kehrnel-validate -t template.opt -
 ```
+
+### Validate a strategy pack for portability
+
+Use the validator to lint a strategy folder (manifest + defaults + schema + entrypoint) before dropping it into discovery paths:
+
+```bash
+kehrnel-validate-pack ./path/to/strategy-pack
+```
+
+Add `--json` for machine-readable diagnostics. A starter skeleton lives in `strategy-pack-template/`.
 
 ### Map a source file into an openEHR Composition
 
@@ -437,7 +451,6 @@ The document identifier supports pattern-based recognition of various healthcare
 kehrnel/
 ├── pyproject.toml            # Project configuration and dependencies
 ├── README.md                 # This file
-├── LICENSE                   # License information
 ├── src/                      # Source code
 │   ├── cli/                  # Command-line interfaces
 │   │   ├── generate.py       # kehrnel-generate command
@@ -596,10 +609,17 @@ pytest --cov=src --cov-report=html
 
 ## License
 
-This project is licensed under the terms specified in the LICENSE file.
+The data strategies, templates, schemas, and design artifacts in `src/kehrnel/strategies/` are licensed under the [Creative Commons Attribution 4.0 International License (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/). You may use, share, adapt, and build upon these materials, provided you give appropriate attribution. See the [LICENSE](src/kehrnel/strategies/LICENSE) file for details.
 
 ---
 
-## 🤝 Acknowledgements
+## Trademark Notices
 
-Built with ❤️ by openEHR and MongoDB practitioners, this project explores semantic modelling, flexible persistence, and future-proof architectures for healthcare.
+- **FHIR®** is the registered trademark of Health Level Seven International and its use does not constitute endorsement by HL7.
+- **openEHR®** is the registered trademark of the openEHR Foundation and use of the mark does not constitute endorsement by openEHR International or openEHR Foundation.
+
+---
+
+## Acknowledgements
+
+Built with care by openEHR® and MongoDB practitioners, this project explores semantic modelling, flexible persistence, and future-proof architectures for healthcare.

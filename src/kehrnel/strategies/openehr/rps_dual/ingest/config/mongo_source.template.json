@@ -1,0 +1,5 @@
+{
+  "connection_string": "__MONGODB_URI__",
+  "database_name": "hdl_user_test",
+  "source_collection": "compositions"
+}

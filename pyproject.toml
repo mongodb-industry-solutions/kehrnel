@@ -15,7 +15,9 @@ dependencies = [
     "PyYAML>=6",
     "tabulate>=0.9",
     "lxml>=4.9",
-    "Jinja2>=3.1"
+    "Jinja2>=3.1",
+    "pydantic>=2.5",
+    "jsonschema>=4.22"
 ]
 
 [project.optional-dependencies]
@@ -40,8 +42,11 @@ api = [
     "fastapi>=0.104",
     "uvicorn[standard]>=0.24",
     "motor>=3.3",
+    "certifi>=2024.0.0",
     "python-multipart>=0.0.6",
-    "pydantic>=2.5"
+    "pydantic>=2.5",
+    "pydantic-settings>=2.2",
+    "python-dateutil>=2.8"
 ]
 
 # Kitchen-sink install
@@ -55,20 +60,28 @@ all = [
     "fastapi>=0.104",
     "uvicorn[standard]>=0.24",
     "motor>=3.3",
+    "certifi>=2024.0.0",
     "python-multipart>=0.0.6",
-    "pydantic>=2.5"
+    "pydantic>=2.5",
+    "pydantic-settings>=2.2",
+    "python-dateutil>=2.8"
 ]
 
 [project.scripts]
-kehrnel-generate = "cli.generate:app"
-kehrnel-identify = "cli.identify:app"
-kehrnel-skeleton = "cli.skeleton:app"
-kehrnel-map      = "cli.map:app"
-kehrnel-map-skeleton = "cli.map_skeleton:main"
-kehrnel-validate = "cli.validate:app"
-kehrnel-ingest   = "cli.ingest:app"
-kehrnel-transform= "cli.transform:app"
-kehrnel-api      = "api.internal.api_server:main"
+kehrnel-generate = "kehrnel.legacy.cli.generate:app"
+kehrnel-identify = "kehrnel.legacy.cli.identify:app"
+kehrnel-skeleton = "kehrnel.legacy.cli.map_skeleton:app"
+kehrnel-map      = "kehrnel.legacy.cli.map:app"
+kehrnel-map-skeleton = "kehrnel.legacy.cli.map_skeleton:main"
+kehrnel-validate = "kehrnel.legacy.cli.validate:app"
+kehrnel-ingest   = "kehrnel.legacy.cli.ingest:app"
+kehrnel-transform= "kehrnel.legacy.cli.transform:app"
+kehrnel-api      = "kehrnel.api.app:main"
+kehrnel-validate-pack = "kehrnel.legacy.cli.validate_pack:app"
+kehrnel-validate-bundle = "kehrnel.legacy.cli.bundles:validate_bundle_cmd"
+kehrnel-import-bundle = "kehrnel.legacy.cli.bundles:import_bundle_cmd"
+kehrnel-list-bundles = "kehrnel.legacy.cli.bundles:list_bundles_cmd"
+kehrnel-export-bundle = "kehrnel.legacy.cli.bundles:export_bundle_cmd"
 
 # ---------------------------------------------------------------------------
 # Use src/ layout and auto-discover ALL subpackages
@@ -78,14 +91,14 @@ package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["*"]
+include = ["kehrnel*"]
 
 # ---------------------------------------------------------------------------
 # Package data
 # ---------------------------------------------------------------------------
 [tool.setuptools.package-data]
 "*" = ["*.yaml", "*.yml", "*.json"]
-"mapper" = ["patterns.yaml"]
+"kehrnel.common.mapping" = ["patterns.yaml"]
 
 # ---------------------------------------------------------------------------
 # Optional: uvicorn dev settings
