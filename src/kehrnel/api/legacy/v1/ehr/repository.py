@@ -5,14 +5,17 @@ from pymongo.errors import PyMongoError
 import logging
 from typing import Optional
 from datetime import datetime
+from kehrnel.api.legacy.app.core.config import settings
 
 # Create a logger instance
 logger = logging.getLogger(__name__)
 
-# TODO: Remove the COLL variables from the ehr/repository and take them to the .env or whatever the best approach is
-EHR_COLL_NAME = "ehr"
-EHR_CONTRIBUTIONS_COLL = "contributions"
-COMPOSITIONS_COLL_NAME = "compositions"
+def _ehr_coll() -> str:
+    return settings.EHR_COLL_NAME
+
+
+def _contrib_coll() -> str:
+    return settings.EHR_CONTRIBUTIONS_COLL
 
 
 async def find_ehr_by_subject(subject_id: str, subject_namespace: str, db: AsyncIOMotorDatabase):
@@ -20,7 +23,7 @@ async def find_ehr_by_subject(subject_id: str, subject_namespace: str, db: Async
     Finds an EHR by its subject's external reference ID and namespace.
     The query path is updated to match the new nested structure.
     """
-    return await db[EHR_COLL_NAME].find_one(
+    return await db[_ehr_coll()].find_one(
         {
             "ehr_status.subject.external_ref.id.value": subject_id, 
             "ehr_status.subject.external_ref.namespace": subject_namespace
@@ -35,8 +38,8 @@ async def insert_ehr_and_contribution_in_transaction(ehr_doc: dict, contribution
     async with await db.client.start_session() as session:
         async with session.start_transaction():
             try:
-                await db[EHR_COLL_NAME].insert_one(ehr_doc, session=session)
-                await db[EHR_CONTRIBUTIONS_COLL].insert_one(contribution_doc, session=session)
+                await db[_ehr_coll()].insert_one(ehr_doc, session=session)
+                await db[_contrib_coll()].insert_one(contribution_doc, session=session)
             except PyMongoError as e:
                 logger.error(f"Database transaction failed: {e}")
                 # The transaction will be automatically aborted by the context manager
@@ -48,7 +51,7 @@ async def find_ehr_by_id(ehr_id: str, db: AsyncIOMotorDatabase):
     """
     Retrieves a single EHR document from the database by its ehr_id.
     """
-    find_ehr_result = await db[EHR_COLL_NAME].find_one({"_id.value": ehr_id})
+    find_ehr_result = await db[_ehr_coll()].find_one({"_id.value": ehr_id})
     return find_ehr_result
 
 
@@ -60,7 +63,7 @@ async def find_newest_ehrs(db: AsyncIOMotorDatabase, limit: int = 50):
     # The query finds all documents ({}), sorts them by time_created in
     # descending order (-1), and limits the result set.
 
-    cursor_ehr_result = db[EHR_COLL_NAME].find().sort("time_created.value", -1).limit(limit)
+    cursor_ehr_result = db[_ehr_coll()].find().sort("time_created.value", -1).limit(limit)
     if cursor_ehr_result is None:
         logger.warning("No EHRs found in the database.")
         return []

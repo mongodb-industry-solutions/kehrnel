@@ -29,17 +29,7 @@ def load_bindings_resolver_from_env() -> Optional[BindingsResolver]:
     """
     spec = (os.getenv("KEHRNEL_BINDINGS_RESOLVER") or "").strip()
     if not spec:
-        # Convenience auto-detect for HDL integration in local/dev setups.
-        # If core secret env vars exist, default to the built-in HDL resolver.
-        has_hdl_env = bool(
-            (os.getenv("ENV_SECRETS_KEY") or "").strip()
-            and (os.getenv("CORE_DATABASE_NAME") or "").strip()
-            and ((os.getenv("CORE_MONGODB_URL") or "").strip() or (os.getenv("MONGODB_URI") or "").strip())
-        )
-        if has_hdl_env:
-            spec = "kehrnel.integrations.hdl.bindings_resolver:resolve_hdl_bindings"
-        else:
-            return None
+        return None
     if ":" not in spec:
         raise ValueError("KEHRNEL_BINDINGS_RESOLVER must be 'module:function'")
     mod_name, fn_name = spec.split(":", 1)

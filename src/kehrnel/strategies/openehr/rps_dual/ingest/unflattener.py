@@ -1,10 +1,10 @@
-"""Reverse transformer for CompositionFlattener outputs (pi-only, matches flattener_g)."""
+"""Reverse transformer for CompositionFlattener outputs (pi-only)."""
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
 from .encoding import PathCodec
-from .flattener_g import CompositionFlattener
+from .flattener import CompositionFlattener
 
 
 class CompositionUnflattener:
@@ -48,7 +48,7 @@ class CompositionUnflattener:
         *,
         db,
         config: dict,
-        mappings_path: str,
+        mappings_path: Optional[str] = None,
         mappings_content=None,
         coding_opts: Optional[Dict[str, Any]] = None,
     ):

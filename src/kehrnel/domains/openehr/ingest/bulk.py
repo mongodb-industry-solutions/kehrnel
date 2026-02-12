@@ -31,7 +31,7 @@ def run(transformer: Transformer,
 # optional helper to mimic the old “pull-from-source Mongo” pipeline
 def from_mongo(src_cfg: Path, driver_cfg: Path, limit: int | None):
     from kehrnel.persistence.mongo import MongoSource   # thin wrapper around PyMongo
-    from kehrnel.strategies.openehr.rps_dual.ingest.flattener_f import CompositionFlattener
+    from kehrnel.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
     source = MongoSource(json.loads(src_cfg.read_text()), limit=limit)
     drv = get_driver(driver_cfg)
     drv.connect()

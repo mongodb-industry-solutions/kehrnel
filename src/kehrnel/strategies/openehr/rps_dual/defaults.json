@@ -1,4 +1,5 @@
 {
+  "database": "openehr_db",
   "collections": {
     "compositions": {
       "name": "compositions_rps",
@@ -21,6 +22,12 @@
     "shortcuts": {
       "name": "_shortcuts",
       "seed": "file://bundles/shortcuts/shortcuts.json"
+    },
+    "ehr": {
+      "name": "ehr"
+    },
+    "contributions": {
+      "name": "contributions"
     }
   },
   "ids": {
@@ -41,8 +48,10 @@
     },
     "node": {
       "p": "p",
+      "ap": "ap",
       "kp": "kp",
-      "li": "li",
+      "pi": "pi",
+      "bk": "bk",
       "data": "data"
     }
   },

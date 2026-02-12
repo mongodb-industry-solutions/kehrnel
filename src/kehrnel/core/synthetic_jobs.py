@@ -21,8 +21,9 @@ class SyntheticJobManager:
     The manager is generic and delegates generation logic to strategy ops.
     """
 
-    def __init__(self, runtime: StrategyRuntime):
+    def __init__(self, runtime: StrategyRuntime, store: Any | None = None):
         self.runtime = runtime
+        self.store = store
         self._jobs: Dict[str, Dict[str, Any]] = {}
         self._tasks: Dict[str, asyncio.Task] = {}
         self._cancel_events: Dict[str, asyncio.Event] = {}
@@ -35,6 +36,7 @@ class SyntheticJobManager:
         domain: str,
         op: str,
         payload: Dict[str, Any],
+        metadata: Dict[str, Any] | None = None,
         requested_by: str | None = None,
     ) -> Dict[str, Any]:
         job_id = str(uuid.uuid4())
@@ -53,6 +55,15 @@ class SyntheticJobManager:
             "result": None,
             "error": None,
             "stats": {},
+            "source_database": (
+                payload.get("source_database")
+                or payload.get("source_db")
+                or payload.get("sourceDatabase")
+            ),
+            "source_collection": payload.get("source_collection") or payload.get("sourceCollection"),
+            "target_database": (metadata or {}).get("target_database"),
+            "target_collections": (metadata or {}).get("target_collections"),
+            "model_source": (metadata or {}).get("model_source"),
             "created_at": now,
             "updated_at": now,
             "started_at": None,
@@ -65,6 +76,7 @@ class SyntheticJobManager:
             self._tasks[job_id] = asyncio.create_task(
                 self._run_job(job_id=job_id, env_id=env_id, domain=domain, op=op, payload=payload)
             )
+        await self._persist_upsert(rec)
         return self._public(rec)
 
     async def _run_job(self, *, job_id: str, env_id: str, domain: str, op: str, payload: Dict[str, Any]) -> None:
@@ -116,6 +128,15 @@ class SyntheticJobManager:
                 completed_at=_now_iso(),
                 updated_at=_now_iso(),
                 result=result,
+                source_database=(result or {}).get("source_database") if isinstance(result, dict) else None,
+                source_collection=(result or {}).get("source_collection") if isinstance(result, dict) else None,
+                target_database=(result or {}).get("target_database") if isinstance(result, dict) else None,
+                target_collections=(
+                    ((result or {}).get("target_collections") or (result or {}).get("target"))
+                    if isinstance(result, dict)
+                    else None
+                ),
+                model_source=(result or {}).get("model_source") if isinstance(result, dict) else None,
             )
         except KehrnelError as exc:
             status = "canceled" if exc.code in ("JOB_CANCELED", "CANCELED") or cancel_event.is_set() else "failed"
@@ -146,15 +167,40 @@ class SyntheticJobManager:
             rec.update(patch)
             rec["updated_at"] = patch.get("updated_at") or _now_iso()
             self._jobs[job_id] = rec
+        await self._persist_patch(job_id, rec)
 
     async def get_job(self, job_id: str) -> Dict[str, Any] | None:
         async with self._lock:
             rec = self._jobs.get(job_id)
-            return self._public(rec) if rec else None
+        if rec:
+            return self._public(rec)
+        if self.store:
+            try:
+                persisted = await asyncio.to_thread(self.store.get, job_id)
+                if persisted:
+                    async with self._lock:
+                        self._jobs[job_id] = persisted
+                    return self._public(persisted)
+            except Exception:
+                return None
+        return None
 
     async def list_jobs(self, env_id: str | None = None, domain: str | None = None) -> list[Dict[str, Any]]:
+        items: list[Dict[str, Any]]
+        if self.store:
+            try:
+                items = await asyncio.to_thread(self.store.list, env_id=env_id, domain=domain)
+            except Exception:
+                async with self._lock:
+                    items = list(self._jobs.values())
+        else:
+            async with self._lock:
+                items = list(self._jobs.values())
+        # Overlay in-memory records (active updates can be fresher than persisted state).
         async with self._lock:
-            items = list(self._jobs.values())
+            for jid, mem in self._jobs.items():
+                items = [j for j in items if j.get("job_id") != jid]
+                items.append(mem)
         if env_id:
             items = [j for j in items if j.get("env_id") == env_id]
         if domain:
@@ -177,7 +223,24 @@ class SyntheticJobManager:
             rec["phase"] = "canceling"
             rec["updated_at"] = _now_iso()
             self._jobs[job_id] = rec
-            return self._public(rec)
+        await self._persist_upsert(rec)
+        return self._public(rec)
+
+    async def _persist_upsert(self, rec: Dict[str, Any]) -> None:
+        if not self.store:
+            return
+        try:
+            await asyncio.to_thread(self.store.upsert, rec)
+        except Exception:
+            return
+
+    async def _persist_patch(self, job_id: str, rec: Dict[str, Any]) -> None:
+        if not self.store:
+            return
+        try:
+            await asyncio.to_thread(self.store.patch, job_id, rec)
+        except Exception:
+            return
 
     def _public(self, rec: Dict[str, Any] | None) -> Dict[str, Any] | None:
         if rec is None:
@@ -189,6 +252,30 @@ class SyntheticJobManager:
         data.pop("requested_by", None)
         # Do not echo full payload back for large jobs unless needed by caller.
         data["payload"] = {"keys": sorted(list((rec.get("payload") or {}).keys()))}
+        result = rec.get("result") if isinstance(rec.get("result"), dict) else {}
+        target = result.get("target") if isinstance(result.get("target"), dict) else {}
+        source = result.get("source") if isinstance(result.get("source"), dict) else {}
+        data["target_database"] = data.get("target_database") or result.get("target_database")
+        data["target_collections"] = (
+            data.get("target_collections")
+            if isinstance(data.get("target_collections"), dict)
+            else (
+                result.get("target_collections")
+                if isinstance(result.get("target_collections"), dict)
+                else target
+            )
+        )
+        data["source_database"] = (
+            data.get("source_database") or result.get("source_database") or source.get("database")
+        )
+        data["source_collection"] = (
+            data.get("source_collection") or result.get("source_collection") or source.get("collection")
+        )
+        # Backward compatibility for HDL/proxy field names.
+        data["targetDatabase"] = data.get("target_database")
+        data["targetCollections"] = data.get("target_collections")
+        data["sourceDatabase"] = data.get("source_database")
+        data["sourceCollection"] = data.get("source_collection")
         return data
 
     def _redact_requester(self, requester: str | None) -> str | None:

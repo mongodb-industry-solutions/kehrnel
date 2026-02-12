@@ -39,11 +39,21 @@ class ShortcutsCollectionCfg(BaseModel):
     seed: Optional[Union[str, Dict[str, Any]]] = None
 
 
+class EhrCollectionCfg(BaseModel):
+    name: str = "ehr"
+
+
+class ContributionsCollectionCfg(BaseModel):
+    name: str = "contributions"
+
+
 class CollectionsCfg(BaseModel):
     compositions: CompositionsCollectionCfg = Field(default_factory=CompositionsCollectionCfg)
     search: SearchCollectionCfg = Field(default_factory=SearchCollectionCfg)
     codes: CodesCollectionCfg = Field(default_factory=CodesCollectionCfg)
     shortcuts: ShortcutsCollectionCfg = Field(default_factory=ShortcutsCollectionCfg)
+    ehr: EhrCollectionCfg = Field(default_factory=EhrCollectionCfg)
+    contributions: ContributionsCollectionCfg = Field(default_factory=ContributionsCollectionCfg)
 
 
 # --- ID Encoding ---
@@ -72,8 +82,10 @@ class DocumentFieldsCfg(BaseModel):
 
 class NodeFieldsCfg(BaseModel):
     p: str = "p"
+    ap: str = "ap"
     kp: str = "kp"
-    li: str = "li"
+    pi: str = "pi"
+    bk: str = "bk"
     data: str = "data"
 
 
@@ -146,6 +158,7 @@ class QueryEngineCfg(BaseModel):
 
 class RPSDualConfig(BaseModel):
     """Main strategy configuration model (portal-visible)."""
+    database: Optional[str] = None
     collections: CollectionsCfg = Field(default_factory=CollectionsCfg)
     ids: IdsCfg = Field(default_factory=IdsCfg)
     paths: PathsCfg = Field(default_factory=PathsCfg)

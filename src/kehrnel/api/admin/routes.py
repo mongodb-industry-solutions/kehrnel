@@ -22,6 +22,7 @@ from kehrnel.common.mapping.utils.expr import evaluate as eval_expr
 from kehrnel.domains.openehr.templates.parser import TemplateParser
 from kehrnel.domains.openehr.templates.generator import kehrnelGenerator
 from kehrnel.domains.openehr.templates.validator import kehrnelValidator
+from kehrnel.api.legacy.app.core.config import settings as legacy_settings
 
 router = APIRouter()
 
@@ -60,6 +61,57 @@ def _history_summary(rt, env_id: str, domain: str):
         }
 
     return {"count": len(history_entries or []), "recent": [_safe_entry(e) for e in recent]}
+
+
+def _sync_legacy_openehr_settings_from_activation(rt, activation) -> None:
+    """
+    Keep legacy domain-scoped openEHR API routes aligned with strategy-pack config.
+    This is global process state (legacy API is not env-scoped), so the latest activation wins.
+    """
+    try:
+        cfg = activation.config or {}
+        collections = cfg.get("collections") or {}
+
+        comp_name = ((collections.get("compositions") or {}).get("name") or "").strip()
+        search_name = ((collections.get("search") or {}).get("name") or "").strip()
+        ehr_name = ((collections.get("ehr") or {}).get("name") or "").strip()
+        contrib_name = ((collections.get("contributions") or {}).get("name") or "").strip()
+        if comp_name:
+            legacy_settings.COMPOSITIONS_COLL_NAME = comp_name
+            legacy_settings.FLAT_COMPOSITIONS_COLL_NAME = comp_name
+        if search_name:
+            legacy_settings.SEARCH_COMPOSITIONS_COLL_NAME = search_name
+            legacy_settings.search_config.search_collection = search_name
+        if ehr_name:
+            legacy_settings.EHR_COLL_NAME = ehr_name
+        if contrib_name:
+            legacy_settings.EHR_CONTRIBUTIONS_COLL = contrib_name
+
+        # DB selection priority: bindings(db.name) > strategy config database > unchanged
+        db_name = None
+        db_bindings = (getattr(activation, "bindings", None) or {}).get("db") or {}
+        if isinstance(db_bindings, dict):
+            db_name = db_bindings.get("name")
+        if not db_name and getattr(activation, "bindings_ref", None) and getattr(rt, "resolver", None):
+            try:
+                resolved = rt.resolver.resolve(
+                    bindings_ref=activation.bindings_ref,
+                    env_id=activation.env_id,
+                    domain=activation.domain,
+                    strategy_id=activation.strategy_id,
+                    operation="activate",
+                    context={"activation_config": cfg},
+                )
+                db_name = ((resolved or {}).get("db") or {}).get("name")
+            except Exception:
+                db_name = None
+        if not db_name:
+            db_name = cfg.get("database")
+        if db_name:
+            legacy_settings.MONGODB_DB = db_name
+    except Exception:
+        # Never break activation because legacy sync failed.
+        return
 
 
 def _load_mapping_payload(mapping_raw: str) -> Dict[str, Any]:
@@ -728,6 +780,20 @@ async def activate_env(env_id: str, request: Request, body: Dict[str, Any] = Bod
             raise KehrnelError(code="INVALID_INPUT", status=400, message="strategy_id is required")
         if not domain:
             raise KehrnelError(code="DOMAIN_REQUIRED", status=400, message="domain is required")
+        if bindings and not bindings_ref:
+            raise KehrnelError(
+                code="PLAINTEXT_BINDINGS_FORBIDDEN",
+                status=400,
+                message="bindings payload is not allowed. Use bindings_ref.",
+            )
+        if allow_plain and not bindings_ref:
+            raise KehrnelError(
+                code="PLAINTEXT_BINDINGS_FORBIDDEN",
+                status=400,
+                message="allow_plaintext_bindings is not supported. Use bindings_ref.",
+            )
+        if not bindings_ref:
+            raise KehrnelError(code="BINDINGS_REF_REQUIRED", status=400, message="bindings_ref is required")
         from kehrnel.strategy_sdk import StrategyBindings
         activation = await rt.activate(
             env_id,
@@ -741,6 +807,20 @@ async def activate_env(env_id: str, request: Request, body: Dict[str, Any] = Bod
             replace_reason=replace_reason,
             bindings_ref=bindings_ref,
         )
+        _sync_legacy_openehr_settings_from_activation(rt, activation)
+        init_result = None
+        try:
+            apply_shortcuts = bool(
+                ((activation.config or {}).get("transform") or {}).get("apply_shortcuts", True)
+            )
+            if apply_shortcuts:
+                init_result = await rt.dispatch(
+                    env_id,
+                    "op",
+                    {"domain": domain, "op": "ensure_dictionaries", "payload": {}},
+                )
+        except Exception:
+            init_result = {"ok": False, "warning": "dictionary bootstrap failed"}
         return {
             "ok": True,
             "activation": {
@@ -760,6 +840,7 @@ async def activate_env(env_id: str, request: Request, body: Dict[str, Any] = Bod
                 "replaced_from": activation.replaced_from,
                 "already_active": activation.already_active,
             },
+            "initialization": init_result,
         }
     except Exception as exc:
         return _error_response(exc)
@@ -1068,82 +1149,67 @@ async def create_synthetic_job(env_id: str, request: Request, body: Dict[str, An
         if not isinstance(payload, dict):
             raise KehrnelError(code="INVALID_INPUT", status=400, message="payload must be an object")
 
-        # Compatibility bootstrap: when an environment exists but has no usable bindings,
-        # auto-activate using provided bindings/bindings_ref or local env defaults.
         activation = rt.registry.get_activation(env_id, domain)
-        needs_bindings_bootstrap = not activation or (not activation.bindings and not activation.bindings_ref)
-        if needs_bindings_bootstrap:
-            from kehrnel.strategy_sdk import StrategyBindings
-
-            strategy_id = (
-                body.get("strategy_id")
-                or body.get("strategyId")
-                or request.query_params.get("strategy_id")
-                or request.query_params.get("strategyId")
-                or (activation.strategy_id if activation else None)
+        if not activation:
+            raise KehrnelError(
+                code="ACTIVATION_NOT_FOUND",
+                status=404,
+                message=f"No activation for env {env_id} (domain={domain})",
             )
-            if not strategy_id:
-                raise KehrnelError(
-                    code="STRATEGY_REQUIRED",
-                    status=400,
-                    message="strategy_id is required when environment activation is missing or has no bindings",
-                )
-
-            version = body.get("version") or (activation.version if activation else "latest")
-            config = body.get("config") if isinstance(body.get("config"), dict) else (activation.config if activation else {})
-            bindings_ref = body.get("bindings_ref") or body.get("bindingsRef")
-            raw_bindings = body.get("bindings")
-            if raw_bindings is not None and not isinstance(raw_bindings, dict):
-                raise KehrnelError(code="INVALID_INPUT", status=400, message="bindings must be an object")
-
-            db_hint = (
-                body.get("targetDatabase")
-                or body.get("target_database")
-                or body.get("database_name")
-                or request.query_params.get("targetDatabase")
-                or request.query_params.get("target_database")
-                or request.query_params.get("database_name")
-                or payload.get("targetDatabase")
-                or payload.get("target_database")
-                or payload.get("database_name")
-                or payload.get("source_database")
-                or os.getenv("MONGODB_DB")
-                or os.getenv("TEST_DB_NAME")
-            )
-
-            bindings_payload = raw_bindings
-            if bindings_payload is None and not bindings_ref:
-                mongo_uri = os.getenv("MONGODB_URI")
-                if not mongo_uri or not db_hint:
-                    raise KehrnelError(
-                        code="BINDINGS_REQUIRED",
-                        status=400,
-                        message=(
-                            "No bindings available for environment. Provide bindings/bindings_ref, "
-                            "or set MONGODB_URI and MONGODB_DB (or TEST_DB_NAME)."
-                        ),
-                    )
-                bindings_payload = {"db": {"provider": "mongodb", "uri": mongo_uri, "database": str(db_hint)}}
-
-            await rt.activate(
-                env_id=env_id,
-                strategy_id=strategy_id,
-                version=version,
-                config=config or {},
-                bindings=StrategyBindings(**(bindings_payload or {})),
-                allow_plaintext_bindings=bool(bindings_payload),
-                domain=domain,
-                force=bool(activation),
-                replace_reason="synthetic-job-bootstrap",
-                bindings_ref=bindings_ref,
+        if not activation.bindings_ref and not activation.bindings:
+            raise KehrnelError(
+                code="BINDINGS_REF_REQUIRED",
+                status=400,
+                message="Activation must include bindings_ref.",
             )
 
         requested_by = request.headers.get("x-api-key")
+        activation_now = rt.registry.get_activation(env_id, domain)
+        cfg_now = activation_now.config if activation_now else {}
+        collections_cfg = cfg_now.get("collections") if isinstance(cfg_now, dict) else {}
+        target_collections = {
+            "canonical": payload.get("canonical_collection") if payload.get("store_canonical") else None,
+            "compositions": ((collections_cfg or {}).get("compositions") or {}).get("name"),
+            "search": (
+                ((collections_cfg or {}).get("search") or {}).get("name")
+                if ((collections_cfg or {}).get("search") or {}).get("enabled", True)
+                else None
+            ),
+        }
+        target_database = None
+        if activation_now and getattr(activation_now, "bindings", None):
+            db_bindings = getattr(activation_now.bindings, "db", None)
+            target_database = getattr(db_bindings, "database", None)
+        if not target_database and activation_now and activation_now.bindings_ref:
+            try:
+                from kehrnel.core.bindings_resolver import resolve_bindings as _resolve_bindings_ref
+                resolved = await _resolve_bindings_ref(
+                    rt.bindings_resolver,
+                    bindings_ref=activation_now.bindings_ref,
+                    env_id=env_id,
+                    domain=activation_now.domain,
+                    strategy_id=activation_now.strategy_id,
+                    op=op,
+                    context={"payload": payload or {}, "activation_config": activation_now.config or {}},
+                ) or {}
+                target_database = ((resolved.get("db") or {}).get("database") if isinstance(resolved, dict) else None)
+            except Exception:
+                target_database = None
+        model_source = payload.get("model_source") if isinstance(payload.get("model_source"), dict) else {}
         job = await manager.create_job(
             env_id=env_id,
             domain=domain,
             op=op,
             payload=payload,
+            metadata={
+                "target_database": target_database,
+                "target_collections": target_collections,
+                "model_source": {
+                    "database_name": model_source.get("database_name") or target_database,
+                    "catalog_collection": model_source.get("catalog_collection"),
+                    "links_collection": model_source.get("links_collection"),
+                },
+            },
             requested_by=requested_by,
         )
         return JSONResponse(status_code=202, content={"ok": True, "job": job})

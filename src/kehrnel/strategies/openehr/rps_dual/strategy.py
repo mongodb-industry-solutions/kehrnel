@@ -18,7 +18,7 @@ from kehrnel.core.errors import KehrnelError
 from kehrnel.core.synthetic_model_catalog import resolve_links, resolve_model_specs
 from kehrnel.domains.openehr.templates.generator import kehrnelGenerator
 from kehrnel.domains.openehr.templates.parser import TemplateParser
-from kehrnel.strategies.openehr.rps_dual.ingest.flattener_f import CompositionFlattener
+from kehrnel.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
 from kehrnel.strategies.openehr.rps_dual.query.executor import execute as execute_query_plan
 from kehrnel.strategies.openehr.rps_dual.services.codes_service import atcode_to_token
 from kehrnel.strategies.openehr.rps_dual.services.codes_service import get_codes
@@ -181,27 +181,19 @@ class RPSDualStrategy(StrategyPlugin):
         adapters = ctx.adapters or {}
         storage = adapters.get("storage")
 
-        # Normalize configs using new structure
         strategy_cfg = normalize_config(cfg)
         bulk_cfg = normalize_bulk_config((ctx.meta or {}).get("bulk_config", {}))
-
-        # Build flattener config from normalized models
         flattener_config = build_flattener_config(strategy_cfg, bulk_cfg)
         coding_cfg = build_coding_opts(strategy_cfg)
 
-        # Resolve mappings URI
         mappings_ref = strategy_cfg.transform.mappings
         mappings_content = (ctx.meta or {}).get("mappings") if ctx and ctx.meta else None
-
         if mappings_content is None and mappings_ref:
             db = getattr(storage, "db", None)
             mappings_content = await resolve_uri_async(mappings_ref, db, Path(__file__).parent)
 
         mappings_path = str(Path(__file__).parent / "ingest" / "config" / "flattener_mappings_f.jsonc")
-
-        # Try to reuse raw motor database from the storage adapter if available
         db = getattr(storage, "db", None)
-
         return await CompositionFlattener.create(
             db=db,
             config=flattener_config,
@@ -211,9 +203,30 @@ class RPSDualStrategy(StrategyPlugin):
             coding_opts=coding_cfg,
         )
 
+    async def _ensure_shortcuts_collection_initialized(
+        self,
+        *,
+        strategy_cfg: RPSDualConfig,
+        storage: Any,
+        index_admin: Any,
+    ) -> Dict[str, Any]:
+        """Ensure shortcuts collection and placeholder document exist when enabled."""
+        if not strategy_cfg.transform.apply_shortcuts:
+            return {"enabled": False, "collection": None, "created": False}
+        shortcuts_name = strategy_cfg.collections.shortcuts.name
+        if not shortcuts_name:
+            return {"enabled": True, "collection": None, "created": False, "warning": "shortcuts collection not configured"}
+        if index_admin:
+            await index_admin.ensure_collection(shortcuts_name)
+        created = False
+        existing = await storage.find_one(shortcuts_name, {"_id": "shortcuts"})
+        if not existing:
+            await storage.insert_one(shortcuts_name, {"_id": "shortcuts", "items": {}, "initialized": True})
+            created = True
+        return {"enabled": True, "collection": shortcuts_name, "created": created}
+
     async def transform(self, ctx: StrategyContext, payload: Dict[str, Any]) -> TransformResult:
         flattener = await self._build_flattener_for_context(ctx)
-
         # Normalise payload into the shape expected by the flattener
         comp_obj = payload.get("canonicalJSON") if isinstance(payload, dict) else None
         if comp_obj is None and isinstance(payload, dict):
@@ -229,9 +242,19 @@ class RPSDualStrategy(StrategyPlugin):
         return TransformResult(base=base_doc, search=search_doc, meta={})
 
     async def ingest(self, ctx: StrategyContext, payload: Dict[str, Any]) -> Dict[str, Any]:
-        tf = await self.transform(ctx, payload)
-        storage = (ctx.adapters or {}).get("storage")
         cfg = ctx.config or {}
+        strategy_cfg = normalize_config(cfg)
+        storage = (ctx.adapters or {}).get("storage")
+        index_admin = (ctx.adapters or {}).get("index_admin")
+        shortcuts_init = None
+        if storage:
+            shortcuts_init = await self._ensure_shortcuts_collection_initialized(
+                strategy_cfg=strategy_cfg,
+                storage=storage,
+                index_admin=index_admin,
+            )
+
+        tf = await self.transform(ctx, payload)
         comp_name = cfg.get("collections", {}).get("compositions", {}).get("name")
         search_cfg = cfg.get("collections", {}).get("search", {}) or {}
         search_enabled = search_cfg.get("enabled", True)
@@ -244,13 +267,13 @@ class RPSDualStrategy(StrategyPlugin):
         if storage and search_enabled and search_name and tf.search:
             await storage.insert_one(search_name, tf.search)
             inserted["search"] = search_name
-        return {"inserted": inserted, "base": tf.base, "search": tf.search}
+        return {"inserted": inserted, "base": tf.base, "search": tf.search, "shortcuts_init": shortcuts_init}
 
     async def reverse_transform(self, ctx: StrategyContext, payload: Dict[str, Any]) -> Dict[str, Any]:
         """
         Reverse a flattened base document back to a nested composition (best effort).
         """
-        from kehrnel.strategies.openehr.rps_dual.ingest.unflattener_f import CompositionUnflattener
+        from kehrnel.strategies.openehr.rps_dual.ingest.unflattener import CompositionUnflattener
 
         cfg = ctx.config or {}
 
@@ -432,11 +455,7 @@ class RPSDualStrategy(StrategyPlugin):
                 )
             patient_count = int(payload.get("patient_count") or payload.get("patients") or 0)
             if patient_count <= 0:
-                raise KehrnelError(
-                    code="INVALID_INPUT",
-                    status=400,
-                    message="patient_count must be > 0",
-                )
+                raise KehrnelError(code="INVALID_INPUT", status=400, message="patient_count must be > 0")
             source_collection = payload.get("source_collection") or "samples"
             source_database = payload.get("source_database") or payload.get("source_db")
             dry_run = bool(payload.get("dry_run", False))
@@ -449,6 +468,14 @@ class RPSDualStrategy(StrategyPlugin):
             search_collection = strategy_cfg.collections.search.name
             search_enabled = bool(strategy_cfg.collections.search.enabled and search_collection)
             flattener = await self._build_flattener_for_context(ctx)
+            shortcuts_init = None
+            if not dry_run and not plan_only:
+                shortcuts_init = await self._ensure_shortcuts_collection_initialized(
+                    strategy_cfg=strategy_cfg,
+                    storage=storage,
+                    index_admin=index_admin,
+                )
+            target_database = getattr(getattr(storage, "db", None), "name", None)
 
             progress_cb = (ctx.meta or {}).get("progress_cb")
             should_cancel = (ctx.meta or {}).get("should_cancel")
@@ -456,6 +483,21 @@ class RPSDualStrategy(StrategyPlugin):
             models = payload.get("models")
             templates = payload.get("templates")
             model_source = payload.get("model_source") or {}
+            model_source_database = (
+                model_source.get("database_name")
+                if isinstance(model_source, dict)
+                else None
+            )
+            model_source_catalog_collection = (
+                model_source.get("catalog_collection")
+                if isinstance(model_source, dict)
+                else None
+            )
+            model_source_links_collection = (
+                model_source.get("links_collection")
+                if isinstance(model_source, dict)
+                else None
+            )
             source_templates = payload.get("source_templates")
             source_sample_size = int(payload.get("source_sample_size", 200) or 200)
             source_min_per_patient = int(payload.get("source_min_per_patient", 1) or 1)
@@ -498,8 +540,7 @@ class RPSDualStrategy(StrategyPlugin):
                             "catalog": {},
                         }
                     )
-            elif str(generation_mode or "").lower() in ("from_source", "source", "auto"):
-                # Source-instance mode: derive templates from existing source collection.
+            elif generation_mode in ("from_source", "source", "auto"):
                 discovered_template_ids: list[str] = []
                 if isinstance(source_templates, list) and source_templates:
                     discovered_template_ids = [str(t).strip() for t in source_templates if str(t).strip()]
@@ -507,9 +548,7 @@ class RPSDualStrategy(StrategyPlugin):
                     match_stage: Dict[str, Any] = {}
                     if isinstance(source_filter, dict) and source_filter:
                         match_stage = source_filter
-                    pipeline = (
-                        [{"$match": match_stage}] if match_stage else []
-                    ) + [
+                    pipeline = ([{"$match": match_stage}] if match_stage else []) + [
                         {
                             "$project": {
                                 "template_id": {
@@ -635,24 +674,19 @@ class RPSDualStrategy(StrategyPlugin):
                         {"canonicalJSON.archetype_details.template_id.value": template_id},
                         {"archetype_details.template_id.value": template_id},
                     ]
+                    source_match: Dict[str, Any]
                     if isinstance(source_filter, dict) and source_filter:
-                        source_match: Dict[str, Any] = {"$and": [source_filter, {"$or": match_conditions}]}
+                        source_match = {"$and": [source_filter, {"$or": match_conditions}]}
                     else:
                         source_match = {"$or": match_conditions}
                     sample_docs = await storage.aggregate(
                         source_collection,
-                        [
-                            {"$match": source_match},
-                            {"$sample": {"size": spec["sample_size"]}},
-                        ],
+                        [{"$match": source_match}, {"$sample": {"size": spec["sample_size"]}}],
                     ) if not source_database else await _aggregate_from_database(
                         storage=storage,
                         database_name=str(source_database),
                         collection_name=source_collection,
-                        pipeline=[
-                            {"$match": source_match},
-                            {"$sample": {"size": spec["sample_size"]}},
-                        ],
+                        pipeline=[{"$match": source_match}, {"$sample": {"size": spec["sample_size"]}}],
                     )
 
                 if sample_docs:
@@ -715,6 +749,17 @@ class RPSDualStrategy(StrategyPlugin):
                     "estimated_total_bytes": estimated_canonical_bytes + estimated_base_bytes + estimated_search_bytes,
                     "source_collection": source_collection,
                     "source_database": source_database,
+                    "target_database": target_database,
+                    "target_collections": {
+                        "canonical": canonical_collection if store_canonical else None,
+                        "compositions": comp_collection,
+                        "search": search_collection if search_enabled else None,
+                    },
+                    "model_source": {
+                        "database_name": model_source_database or target_database,
+                        "catalog_collection": model_source_catalog_collection,
+                        "links_collection": model_source_links_collection,
+                    },
                     "models": [{"model_id": s["model_id"], "template_id": s["template_id"], "min": s["min"], "max": s["max"]} for s in template_specs],
                     "links": links,
                 }
@@ -755,6 +800,21 @@ class RPSDualStrategy(StrategyPlugin):
                 stats={
                     "patients_total": patient_count,
                     "estimated_docs": estimated_docs,
+                    "target_database": target_database,
+                    "target_collections": {
+                        "canonical": canonical_collection if store_canonical else None,
+                        "compositions": comp_collection,
+                        "search": search_collection if search_enabled else None,
+                    },
+                    "source": {
+                        "database": source_database or target_database,
+                        "collection": source_collection,
+                    },
+                    "model_source": {
+                        "database_name": model_source_database or target_database,
+                        "catalog_collection": model_source_catalog_collection,
+                        "links_collection": model_source_links_collection,
+                    },
                     "patientCount": patient_count,
                     "generatedPatients": 0,
                     "generatedDocuments": 0,
@@ -867,11 +927,18 @@ class RPSDualStrategy(StrategyPlugin):
                 "plan_only": False,
                 "source_collection": source_collection,
                 "source_database": source_database,
+                "target_database": target_database,
                 "target": {
                     "canonical": canonical_collection if store_canonical else None,
                     "compositions": comp_collection,
                     "search": search_collection if search_enabled else None,
                 },
+                "model_source": {
+                    "database_name": model_source_database or target_database,
+                    "catalog_collection": model_source_catalog_collection,
+                    "links_collection": model_source_links_collection,
+                },
+                "shortcuts_init": shortcuts_init,
                 "patients": patient_count,
                 "generated_docs": generated_docs,
                 "inserted_canonical": inserted_canonical,

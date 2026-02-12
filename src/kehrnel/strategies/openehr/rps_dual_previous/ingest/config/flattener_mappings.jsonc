@@ -1,0 +1,351 @@
+{
+  "templates": 
+  {
+      /* FROM
+      EHR e
+      CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.vaccination_list.v0]
+          CONTAINS ( CLUSTER admin_salut[openEHR-EHR-CLUSTER.admin_salut.v0] AND 
+            SECTION[openEHR-EHR-SECTION.immunisation_list.v0]
+              CONTAINS ACTION med_ac[openEHR-EHR-ACTION.medication.v1] )
+      WHERE
+        med_ac/time >= '2023-01-01T00:00:00+00:00'
+        AND med_ac/time < '2023-02-01T00:00:00+00:00'
+        AND med_ac/other_participations/performer/identifiers/id = '30847487'
+        AND admin_salut/items[at0007]/items[at0014]/value/defining_code/code_string = 'E08025213'
+      ORDER BY
+        med_ac/time DESC 
+
+        2 nodes affected: 
+          1) chain: "at0014"&"at0007"&"openEHR-EHR-CLUSTER.admin_salut.v0"  + contains: ["openEHR-EHR-SECTION.immunisation_list.v0"]
+          2) archetype_node_id: "openEHR-EHR-ACTION.medication.v1" + contains: ["openEHR-EHR-COMPOSITION.vaccination_list.v0"&"openEHR-EHR-SECTION.immunisation_list.v0"]
+      */
+      "openEHR-EHR-COMPOSITION.vaccination_list.v0": {
+        "rules": [
+          /* ── (1) admin_salut/items[at0007]/items[at0014]/code_string ─────
+                 guaranteed leaf-first chain  (3 segments)
+                 loose prefix must at least contain the SECTION
+          */
+          {
+            "when": {
+              "pathChain": [
+                "at0014",
+                "at0007",
+                "openEHR-EHR-CLUSTER.admin_salut.v0"
+              ],
+              "contains": [
+                "openEHR-EHR-COMPOSITION.vaccination_list.v0"
+              ]
+            },
+            "copy": [
+              "data.archetype_node_id",
+              "data.value.defining_code.code_string",
+              "p"
+            ]
+          },
+  
+          /* ── (2) ACTION.medication node (time + performer id) ─────────── */
+          {
+            "when": {
+              "pathChain": [
+                "openEHR-EHR-ACTION.medication.v1"
+              ],
+              "contains": [
+                  "openEHR-EHR-SECTION.immunisation_list.v0",
+                  "openEHR-EHR-COMPOSITION.vaccination_list.v0"
+              ]
+            },
+            "copy": [
+              "data.archetype_node_id",
+              "data.time.value",
+              "data.other_participations.performer.identifiers.id",
+              "data.ism_transition.current_state.defining_code.code_string",
+              "p"
+            ]
+          },
+          /* ── (3) MCC immunization code - specific path ─────────────────── */
+          {
+            "when": {
+              "pathChain": [
+                "at0020",
+                "at0017", 
+                "openEHR-EHR-ACTION.medication.v1"
+              ],
+              "contains": [
+                "openEHR-EHR-SECTION.immunisation_list.v0",
+                "openEHR-EHR-COMPOSITION.vaccination_list.v0"
+              ]
+            },
+            "copy": [
+              "data.archetype_node_id",
+              "data.value.defining_code.code_string",
+              "p"
+            ]
+          }
+        ]
+      },
+    // ─────────────────────────────────────────────────────────────
+    //  Laboratory-result composition (report-result template)
+    // ─────────────────────────────────────────────────────────────
+    /*FROM
+        EHR e
+        CONTAINS COMPOSITION 
+            CONTAINS OBSERVATION o_971[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]
+        WHERE
+        o_971/data[at0001]/events[at0002]/data[at0003]/items[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]/items[at0024]/value/defining_code/code_string matches{"33695-8","16676-9",
+        "10851-4","82731-1"}
+        AND c/OBSERVATION o_971[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]/items[at0001]/value/value = 'POSITIVE'
+        AND c/context/other_context[at0001]/items[openEHR-EHR-CLUSTER.admin_salut.v0]/items[at0001]/value <= "2025-04-14T19:04:47+11:00"
+        AND c/context/other_context[at0001]/items[openEHR-EHR-CLUSTER.admin_salut.v0]/items[at0005]/items[at0011]/value/defining_code/code_string = 'E08025213'
+        AND c/context/start_time > "2025-04-14T19:04:47+11:00"
+      
+    5 nodes affected: 
+        1) chain: "" 
+        2) chain: "at0001"&"openEHR-EHR-CLUSTER.admin_salut.v0" --> note we defined other_context[at0001] as non archetyped
+        3) chain: "at0011"&"at0005"&"openEHR-EHR-CLUSTER.admin_salut.v0" --> note we defined other_context[at0001] as non archetyped
+        4) chain: "at0024"&"openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"&"at0003"&"at0002"&"at0001"&"openEHR-EHR-OBSERVATION.laboratory_test_result.v1"    
+        5) chain: "at0001"&"openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"&"at0003"&"at0002"&"at0001"&"openEHR-EHR-OBSERVATION.laboratory_test_result.v1"   
+
+    */
+    "openEHR-EHR-COMPOSITION.report-result.v1": {
+      "rules": [
+        /* 0️⃣ composition  ----------------------------- */
+        {
+          "when": {
+            "pathChain": [
+              "openEHR-EHR-COMPOSITION.report-result.v1"
+            ]
+          },
+          "copy": [               
+            "data.archetype_node_id",
+            "data.context.st.value",
+            "p"
+          ]
+        },
+
+        /* 1️⃣ admin_salut / at0001 --------------------------------- */
+        {
+          "when": {
+            "pathChain": [
+              "at0001",
+              "openEHR-EHR-CLUSTER.admin_salut.v0"
+            ]
+          },
+          "copy": [
+            "data.archetype_node_id",
+            "data.value.value",
+            "p"
+          ]
+        },
+
+        /* 2️⃣ admin_salut / at0005 / at0011 ------------------------- */
+        {
+          "when": {
+            "pathChain": [
+              "at0011",
+              "at0005",
+              "openEHR-EHR-CLUSTER.admin_salut.v0"
+            ]
+          },
+          "copy": [
+            "data.archetype_node_id",
+            "data.v.df.cs",
+            "p"
+          ]
+        },
+
+        /* 3️⃣ analyte / at0024 / code_string ------------------------ */
+        {
+          "when": {
+            "pathChain": [
+              "at0024",
+              "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1",
+              "at0003",
+              "at0002",
+              "at0001",
+              "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+            ]
+          },
+          "copy": [
+            "data.archetype_node_id",
+            "data.value.defining_code.code_string",
+            "p"
+          ]
+        },
+
+        /* 4️⃣ analyte / at0001 / value ------------------------------ */
+        {
+          "when": {
+            "pathChain": [
+              "at0001",
+              "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1",
+              "at0003",
+              "at0002",
+              "at0001",
+              "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+            ]
+          },
+          "copy": [
+            "data.archetype_node_id",
+            "data.value.value",
+            "p"
+          ]
+        }
+      ]
+    },
+    
+    /* SELECT
+            e/ehr_id/value as ehr_id,
+            o/data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/magnitude as height,
+            o/data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/units as units,
+            o/data[at0001]/events[at0002]/time/value as time
+        FROM
+            EHR e
+            CONTAINS OBSERVATION o[openEHR-EHR-OBSERVATION.height.v2]
+        WHERE
+            o/data[at0001]/events[at0002]/time/value >= $start_date AND
+            o/data[at0001]/events[at0002]/time/value <= $end_date
+        ORDER BY
+            time DESC
+  
+         2 nodes affected: 
+           1) chain: "at0004"&"at0003"&"at0002"+"at0001"+"openEHR-EHR-OBSERVATION.height.v2"          
+           2) chain: "at0002"+"at0001"+"openEHR-EHR-OBSERVATION.height.v2"
+    */
+    "openEHR-EHR-COMPOSITION.encounter.v1": {
+         "rules": [
+           {
+             "when": {
+               "pathChain": [
+                 "at0004",
+                 "at0003",
+                 "at0002",
+                 "at0001",
+                 "openEHR-EHR-OBSERVATION.height.v2"
+               ]
+             },
+             "copy": [
+              "data.archetype_node_id",
+               "data.value.magnitude",
+               "data.value.units",
+               "p"
+             ]
+           },
+           {
+            "when": {
+              "pathChain": [
+                "at0002",
+                "at0001",
+                "openEHR-EHR-OBSERVATION.height.v2"
+              ]
+            },
+            "copy": [
+              "data.time.value",
+              "p"
+            ]
+          }
+        ]
+      },
+      "openEHR-EHR-COMPOSITION.report.v1": {
+        "rules": [
+          {
+            "when": {
+              "pathChain": [
+                "openEHR-EHR-COMPOSITION.report.v1"
+              ]
+            },
+            "copy": [               
+              "data.archetype_node_id",
+              "data.context.start_time.v",
+              "data.archetype_node_id",
+              "p"
+            ]
+          }
+        ]
+      },
+      "openEHR-EHR-COMPOSITION.self_reported_data.v1": {
+        "rules": [
+          {
+            "when": {
+              "pathChain": [
+                "openEHR-EHR-COMPOSITION.self_reported_data.v1"
+              ]
+            },
+            "copy": [               
+              "data.archetype_node_id",
+              "data.context.start-time.value",
+              "data.context.participations.performer.identifiers.id",
+              "p"
+            ]
+          },
+          { "when": { "pathChain": ["at0115","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.hads.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] },
+          { "when": { "pathChain": ["at0120","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.hads.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] },
+          { "when": { "pathChain": ["at0125","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.hads.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] },
+          { "when": { "pathChain": ["at0130","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.hads.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] },
+          { "when": { "pathChain": ["at0135","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.hads.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] },
+          { "when": { "pathChain": ["at0140","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.hads.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] },
+          { "when": { "pathChain": ["at0145","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.hads.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] },
+          { "when": { "pathChain": ["at0160","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.hads.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] },
+          { "when": { "pathChain": ["at0165","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.hads.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] },
+          { "when": { "pathChain": ["at0170","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.hads.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] },
+          { "when": { "pathChain": ["at0175","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.hads.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] },
+          { "when": { "pathChain": ["at0180","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.hads.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] },
+          { "when": { "pathChain": ["at0185","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.hads.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] },
+          { "when": { "pathChain": ["at0190","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.hads.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] },
+  
+          // ───────────── Neuro-QoL Stigma (openEHR-EHR-OBSERVATION.neuroqol.v0) ─────────────
+          { "when": { "pathChain": ["at1000","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.neuroqol.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] },
+          { "when": { "pathChain": ["at1010","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.neuroqol.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] },
+          { "when": { "pathChain": ["at1020","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.neuroqol.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] },
+          { "when": { "pathChain": ["at1030","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.neuroqol.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] },
+          { "when": { "pathChain": ["at1040","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.neuroqol.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] },
+          { "when": { "pathChain": ["at1050","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.neuroqol.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] },
+          { "when": { "pathChain": ["at1060","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.neuroqol.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] },
+          { "when": { "pathChain": ["at1070","at0003","at0002","at0001","openEHR-EHR-OBSERVATION.neuroqol.v0"],
+                      "contains": ["openEHR-EHR-COMPOSITION.self_reported_data.v1"] },
+            "copy": ["data.archetype_node_id","data.name.value","data.value.value","data.value.symbol.defining_code.code_string","p"] }
+        ]
+      }
+  } 
+}

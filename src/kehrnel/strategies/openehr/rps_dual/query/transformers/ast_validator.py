@@ -1,4 +1,4 @@
-# src/kehrnel/api/legacy/v1/aql/transformers/ast_validator.py
+# src/api/v1/aql/transformers/ast_validator.py
 from typing import Dict, Any
 
 

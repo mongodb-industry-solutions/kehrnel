@@ -5,7 +5,6 @@ import importlib
 import importlib.util
 import json
 import hashlib
-import os
 from datetime import datetime
 from typing import Dict, Optional, Any
 from dataclasses import is_dataclass, asdict
@@ -72,16 +71,18 @@ class StrategyRuntime:
         chosen_domain = str(chosen_domain).strip().lower()
         existing = self.registry.get_activation(env_id, chosen_domain)
         incoming_bindings = getattr(bindings, "__dict__", {}) or {}
-        # Backward-compatible safety: if caller re-activates without bindings fields,
-        # preserve previously stored bindings/bindings_ref instead of wiping them.
-        if not incoming_bindings and not bindings_ref and existing:
-            if existing.bindings:
-                incoming_bindings = dict(existing.bindings)
-                allow_plaintext_bindings = True
-            elif existing.bindings_ref:
-                bindings_ref = existing.bindings_ref
-        if incoming_bindings:
-            bindings = StrategyBindings(**incoming_bindings)
+        if incoming_bindings or allow_plaintext_bindings:
+            raise KehrnelError(
+                code="PLAINTEXT_BINDINGS_FORBIDDEN",
+                status=400,
+                message="Plaintext bindings are not allowed. Use bindings_ref with a configured resolver.",
+            )
+        if not bindings_ref:
+            raise KehrnelError(
+                code="BINDINGS_REF_REQUIRED",
+                status=400,
+                message="bindings_ref is required for activation.",
+            )
         existing_hash = existing.config_hash if existing else None
         # idempotent: if same strategy and config hash matches, return existing
         merged_config: dict = {}
@@ -116,7 +117,7 @@ class StrategyRuntime:
                 "uri": redacted_uri,
             }
         }
-        ctx = StrategyContext(environment_id=env_id, config=merged_config, bindings=bdict if allow_plaintext_bindings else None, adapters=None, manifest=manifest)
+        ctx = StrategyContext(environment_id=env_id, config=merged_config, bindings=None, adapters=None, manifest=manifest)
         # load plugin
         mod_path, cls_name = manifest.entrypoint.split(":")
         mod = importlib.import_module(mod_path)
@@ -137,7 +138,7 @@ class StrategyRuntime:
             config_hash=new_config_hash,
             activated_at=now,
             updated_at=now,
-            bindings=bdict if allow_plaintext_bindings else None,
+            bindings=None,
             bindings_ref=bindings_ref,
             replaced=bool(existing),
             previous_activation_id=getattr(existing, "activation_id", None) if existing else None,
@@ -169,7 +170,7 @@ class StrategyRuntime:
             activation.version,
             activation.config,
             rebind,
-            allow_plaintext_bindings=bool(activation.bindings),
+            allow_plaintext_bindings=False,
             domain=activation.domain or domain,
             reason="upgrade",
             force=True,
@@ -193,7 +194,7 @@ class StrategyRuntime:
             prev_activation.version,
             prev_activation.config,
             rebind,
-            allow_plaintext_bindings=bool(prev_activation.bindings),
+            allow_plaintext_bindings=False,
             domain=prev_activation.domain or domain,
             reason="rollback",
             manifest_digest_override=prev_activation.manifest_digest,
@@ -254,11 +255,14 @@ class StrategyRuntime:
                 raise KehrnelError(code="ACTIVATION_STRATEGY_MISMATCH", status=409, message="Active strategy differs from current manifest", details=details)
 
         bindings_payload = (payload or {}).get("bindings") if isinstance(payload, dict) else None
-        effective_bindings = activation.bindings or bindings_payload
+        if bindings_payload:
+            raise KehrnelError(
+                code="PLAINTEXT_BINDINGS_FORBIDDEN",
+                status=400,
+                message="Per-request plaintext bindings are not allowed. Use bindings_ref activation.",
+            )
+        effective_bindings = activation.bindings
         if not effective_bindings and activation.bindings_ref:
-            fallback_bindings = self._fallback_bindings_from_activation(activation)
-            if fallback_bindings:
-                effective_bindings = fallback_bindings
             if not effective_bindings and self.bindings_resolver is None:
                 raise KehrnelError(
                     code="BINDINGS_RESOLVER_NOT_CONFIGURED",
@@ -276,7 +280,7 @@ class StrategyRuntime:
                         "required_env": [
                             "KEHRNEL_BINDINGS_RESOLVER",
                             "ENV_SECRETS_KEY",
-                            "CORE_MONGODB_URL|MONGODB_URI",
+                            "CORE_MONGODB_URL",
                             "CORE_DATABASE_NAME",
                         ],
                     },
@@ -303,8 +307,7 @@ class StrategyRuntime:
                 code="BINDINGS_UNAVAILABLE",
                 status=500,
                 message=(
-                    "Bindings not available; provide bindings in request, activate with "
-                    "allow_plaintext_bindings=true, or configure bindings_ref resolver."
+                    "Bindings not available; activate with bindings_ref and configure a bindings resolver."
                 ),
                 details={
                     "env_id": env_id,
@@ -313,7 +316,7 @@ class StrategyRuntime:
                     "activation_id": activation.activation_id,
                     "has_plaintext_bindings": bool(activation.bindings),
                     "bindings_ref": activation.bindings_ref,
-                    "bindings_in_payload": bool(bindings_payload),
+                    "bindings_in_payload": False,
                 },
             )
 
@@ -418,31 +421,6 @@ class StrategyRuntime:
         except Exception as exc:
             raise
         raise ValueError(f"Operation {op} not supported")
-
-    def _fallback_bindings_from_activation(self, activation: EnvironmentActivation) -> Dict[str, Any] | None:
-        """
-        Local/dev fallback for ref-based activations when resolver is unavailable.
-        Uses runtime env vars plus activation config target DB hint.
-        """
-        uri = (os.getenv("MONGODB_URI") or os.getenv("CORE_MONGODB_URL") or "").strip()
-        if not uri:
-            return None
-        cfg = activation.config or {}
-        db_name = (
-            cfg.get("database_name")
-            or cfg.get("target_database")
-            or cfg.get("targetDatabase")
-            or ((cfg.get("db") or {}).get("database") if isinstance(cfg.get("db"), dict) else None)
-        )
-        if not db_name:
-            return None
-        return {
-            "db": {
-                "provider": "mongodb",
-                "uri": uri,
-                "database": str(db_name),
-            }
-        }
 
     def _config_hash(self, config: Dict[str, Any]) -> str:
         try:

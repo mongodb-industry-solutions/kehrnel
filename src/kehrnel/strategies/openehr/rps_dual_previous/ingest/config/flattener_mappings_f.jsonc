@@ -1,0 +1,49 @@
+{
+  "templates": [
+    {
+      "templateId": "HC3 Immunization List v0.5",
+      "fields": [
+        {
+          "name": "Publishing centre (Code)",
+          "path": "/context/other_context[at0004]/items[openEHR-EHR-CLUSTER.admin_salut.v0]/items[at0007]/items[at0014]/value/defining_code/code_string",
+          "rmType": "DV_CODED_TEXT"
+        },
+        {
+          "name": "Time (Value)",
+          "path": "/content[openEHR-EHR-SECTION.immunisation_list.v0,'Immunization list']/items[openEHR-EHR-ACTION.medication.v1,'Immunization management']/time/value",
+          "rmType": "DV_DATE_TIME"
+        }
+      ]
+    },
+    {
+      "templateId": "hc3_laboratory_v0.4",
+      "fields": [
+        {
+          "name": "Start_time (Value)",
+          "path": "/context/start_time/value",
+          "rmType": "DV_DATE_TIME"
+        },
+        {
+          "name": "Performing centre (Code)",
+          "path": "/context/other_context[at0001]/items[openEHR-EHR-CLUSTER.admin_salut.v0]/items[at0005]/items[at0011]/value/defining_code/code_string",
+          "rmType": "DV_CODED_TEXT"
+        },
+        {
+          "name": "Document authorisation date (Value)",
+          "path": "/context/other_context[at0001]/items[openEHR-EHR-CLUSTER.admin_salut.v0]/items[at0001]/value",
+          "rmType": "DV_DATE_TIME"
+        },
+        {
+          "name": "Analyte name (Code)",
+          "path": "/content[openEHR-EHR-SECTION.diagnostic_reports.v0,'Laboratory test results list']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]/items[at0024]/value/defining_code/code_string",
+          "rmType": "DV_CODED_TEXT"
+        },
+        {
+          "name": "Test result (Magnitude)",
+          "path": "/content[openEHR-EHR-SECTION.diagnostic_reports.v0,'Laboratory test results list']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]/items[at0001]/value/magnitude",
+          "rmType": "DV_QUANTITY"
+        }
+      ]
+    }
+  ]
+}

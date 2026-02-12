@@ -1,4 +1,4 @@
-# src/kehrnel/api/legacy/v1/aql/transformers/pipeline_builder.py
+# src/api/v1/aql/transformers/pipeline_builder.py
 
 from typing import Dict, Any, List, Optional
 from .condition_processor import ConditionProcessor
@@ -493,95 +493,6 @@ class PipelineBuilder:
             return {"$limit": limit_int}
         except (ValueError, TypeError) as e:
             raise ValueError(f"Invalid LIMIT value: {limit_value}. Must be a positive integer.")
-
-    def build_distinct_stages(self, ast: Dict[str, Any], projected_fields: List[str]) -> List[Dict[str, Any]]:
-        """
-        Constructs the $group and $replaceRoot stages for DISTINCT queries.
-        
-        DISTINCT in AQL removes duplicate rows from the result set. In MongoDB,
-        this is implemented using:
-        1. $group stage: Groups documents by all projected fields (compound _id)
-        2. $replaceRoot stage: Flattens the grouped _id back to a normal document
-        
-        Args:
-            ast: The parsed AQL AST
-            projected_fields: List of field names that are being projected (output columns)
-            
-        Returns:
-            List[Dict[str, Any]]: List containing $group and $replaceRoot stages,
-                                  or empty list if DISTINCT is not requested
-        """
-        select_clause = ast.get("select", {})
-        is_distinct = select_clause.get("distinct", False)
-        
-        if not is_distinct:
-            return []
-        
-        if not projected_fields:
-            return []
-        
-        # Build the compound _id for $group using all projected fields
-        # This ensures we group by all columns to find unique combinations
-        group_id = {}
-        for field in projected_fields:
-            if field != "_id":  # Skip _id as it's handled separately
-                # Use the field name as key and reference the projected field value
-                group_id[field] = f"${field}"
-        
-        if not group_id:
-            return []
-        
-        # Build the $group stage
-        group_stage = {
-            "$group": {
-                "_id": group_id
-            }
-        }
-        
-        # Build the $replaceRoot stage to flatten the _id back to document fields
-        # This converts {_id: {field1: val1, field2: val2}} to {field1: val1, field2: val2}
-        replace_root_stage = {
-            "$replaceRoot": {
-                "newRoot": "$_id"
-            }
-        }
-        
-        return [group_stage, replace_root_stage]
-
-    def get_projected_field_names(self, ast: Dict[str, Any]) -> List[str]:
-        """
-        Extracts the list of field names that will be in the projection output.
-        Used for building DISTINCT stages.
-        
-        Args:
-            ast: The parsed AQL AST
-            
-        Returns:
-            List[str]: List of projected field names (aliases or generated names)
-        """
-        columns = ast.get("select", {}).get("columns", {})
-        field_names = []
-        
-        for col_data in columns.values():
-            alias = col_data.get("alias")
-            value_spec = col_data.get("value", {})
-            
-            if alias:
-                field_names.append(alias)
-            elif value_spec.get("type") == "variable":
-                # Variable reference - use variable name as field name
-                var_name = value_spec.get("name", "")
-                field_names.append(var_name.lstrip('$'))
-            elif value_spec.get("path"):
-                # Path-based column - generate name from path
-                aql_path = value_spec.get("path")
-                path_parts = aql_path.split('/')
-                if len(path_parts) >= 2:
-                    field_names.append(f"{path_parts[0]}_{path_parts[1]}")
-                else:
-                    field_names.append(path_parts[-1])
-        
-        return field_names
 
     def _resolve_expression(self, expression: Dict[str, Any], context: str = "select") -> Any:
         """

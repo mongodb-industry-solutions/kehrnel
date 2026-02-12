@@ -2,7 +2,7 @@
 from __future__ import annotations
 import json, sys, typer
 from pathlib import Path
-from kehrnel.strategies.openehr.rps_dual.ingest.flattener_f import CompositionFlattener
+from kehrnel.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
 
 app = typer.Typer(help="Canonical ↔ flattened transformer")
 

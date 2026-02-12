@@ -8,6 +8,7 @@ import secrets
 from copy import deepcopy
 from pathlib import Path
 from typing import Optional
+from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI, Request, HTTPException, Security
 from fastapi.responses import JSONResponse
 from fastapi.security import APIKeyHeader
@@ -28,6 +29,7 @@ from kehrnel.core.bundle_store import BundleStore
 from kehrnel.core.pack_validator import StrategyPackValidator
 from kehrnel.core.bindings_resolver import load_bindings_resolver_from_env
 from kehrnel.core.synthetic_jobs import SyntheticJobManager
+from kehrnel.core.synthetic_jobs_store import MongoSyntheticJobStore
 
 
 # ============================================================================
@@ -276,6 +278,9 @@ def _load_manifests() -> tuple[list[StrategyManifest], list[dict[str, object]], 
 
 
 def create_app(registry_path: str | None = None, bundle_path: str | None = None) -> FastAPI:
+    # Local/dev convenience: load .env if present (without overriding already exported vars).
+    load_dotenv(find_dotenv(usecwd=True), override=False)
+
     app = FastAPI(title="Kehrnel Runtime", version="0.0.0")
 
     # ========================================================================
@@ -322,7 +327,20 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     for manifest in manifests:
         runtime.register_manifest(manifest)
     app.state.strategy_runtime = runtime
-    app.state.synthetic_job_manager = SyntheticJobManager(runtime)
+    jobs_store = None
+    try:
+        jobs_uri = (os.getenv("CORE_MONGODB_URL") or "").strip()
+        jobs_db = (os.getenv("CORE_DATABASE_NAME") or "hdl_core").strip()
+        jobs_collection = (os.getenv("KEHRNEL_JOBS_COLLECTION") or "synthetic_data_jobs").strip()
+        if jobs_uri and jobs_db and jobs_collection:
+            jobs_store = MongoSyntheticJobStore(
+                uri=jobs_uri,
+                database=jobs_db,
+                collection=jobs_collection,
+            )
+    except Exception:
+        jobs_store = None
+    app.state.synthetic_job_manager = SyntheticJobManager(runtime, store=jobs_store)
     app.state.strategy_diagnostics = diagnostics
     app.state.bundle_store = bundle_store
     app.state.strategy_asset_dirs = asset_dirs

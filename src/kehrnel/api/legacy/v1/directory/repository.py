@@ -5,11 +5,16 @@ from pymongo.errors import PyMongoError
 import logging
 from datetime import datetime
 from typing import Optional, Dict, Any
+from kehrnel.api.legacy.app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
-EHR_COLL_NAME = "ehr"
-EHR_CONTRIBUTIONS_COLL = "contributions"
+def _ehr_coll() -> str:
+    return settings.EHR_COLL_NAME
+
+
+def _contrib_coll() -> str:
+    return settings.EHR_CONTRIBUTIONS_COLL
 
 async def update_ehr_and_insert_contribution_for_directory(
     ehr_id: str,
@@ -34,12 +39,12 @@ async def update_ehr_and_insert_contribution_for_directory(
         async with session.start_transaction():
             try:
                 # 1. Insert the new contribution document
-                await db[EHR_CONTRIBUTIONS_COLL].insert_one(
+                await db[_contrib_coll()].insert_one(
                     contribution_doc, session=session
                 )
 
                 # 2. Update the EHR document
-                result = await db[EHR_COLL_NAME].update_one(
+                result = await db[_ehr_coll()].update_one(
                     {
                         "_id.value": ehr_id
                     },
@@ -78,7 +83,7 @@ async def find_folder_in_contribution_by_uid(ehr_id: str, version_uid: str, db: 
         The dictionary of the FOLDER object if found, otherwise None.
     """
     
-    contribution = await db[EHR_CONTRIBUTIONS_COLL].find_one(
+    contribution = await db[_contrib_coll()].find_one(
         {"ehr_id": ehr_id, "versions.uid.value": version_uid}
     )
 
@@ -146,7 +151,7 @@ async def find_folder_in_contribution_at_time(ehr_id: str, timestamp: datetime, 
         }
     ]
 
-    cursor = db[EHR_CONTRIBUTIONS_COLL].aggregate(pipeline)
+    cursor = db[_contrib_coll()].aggregate(pipeline)
     result = await cursor.to_list(length=1)
 
     return result[0] if result else None
@@ -171,12 +176,12 @@ async def delete_directory_and_insert_contribution(
         async with session.start_transaction():
             try:
                 # 1. Insert the new "deletion" contribution document
-                await db[EHR_CONTRIBUTIONS_COLL].insert_one(
+                await db[_contrib_coll()].insert_one(
                     contribution_doc, session=session
                 )
 
                 # 2. Update the EHR document to remove the directory
-                result = await db[EHR_COLL_NAME].update_one(
+                result = await db[_ehr_coll()].update_one(
                     {"_id.value": ehr_id},
                     {
                         "$set": {"directory": None},

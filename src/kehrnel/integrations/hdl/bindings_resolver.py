@@ -5,7 +5,7 @@ Set:
 
 Required env vars:
   ENV_SECRETS_KEY           base64-encoded 32-byte key (AES-256-GCM)
-  CORE_MONGODB_URL          HDL core DB URI (fallback: MONGODB_URI)
+  CORE_MONGODB_URL          HDL core DB URI
   CORE_DATABASE_NAME        HDL core DB name
 """
 from __future__ import annotations
@@ -55,9 +55,9 @@ def _core_store() -> _CoreStore:
     global _STORE
     if _STORE is not None:
         return _STORE
-    uri = (os.getenv("CORE_MONGODB_URL") or os.getenv("MONGODB_URI") or "").strip()
+    uri = (os.getenv("CORE_MONGODB_URL") or "").strip()
     if not uri:
-        raise ValueError("CORE_MONGODB_URL (or MONGODB_URI) is required for HDL bindings resolver")
+        raise ValueError("CORE_MONGODB_URL is required for HDL bindings resolver")
     db_name = (os.getenv("CORE_DATABASE_NAME") or "").strip()
     if not db_name:
         raise ValueError("CORE_DATABASE_NAME is required for HDL bindings resolver")
@@ -206,4 +206,3 @@ def resolve_hdl_bindings(
             "database": db_name,
         }
     }
-

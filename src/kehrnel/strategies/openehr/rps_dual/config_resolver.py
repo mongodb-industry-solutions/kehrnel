@@ -11,7 +11,6 @@ Supports:
 from __future__ import annotations
 
 import json
-import os
 import re
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
@@ -99,23 +98,14 @@ def _resolve_file_path(path_str: str, base_path: Path) -> Optional[Dict[str, Any
 
     if not path.is_absolute():
         path = base_path / path
-    else:
-        allow_abs = os.getenv("KEHRNEL_ALLOW_ABSOLUTE_CONFIG_PATHS", "false").lower() in ("1", "true", "yes")
-        if not allow_abs:
-            raise ValueError("Absolute file paths are not allowed for strategy config resolution")
 
-    resolved_base = base_path.resolve()
-    resolved_path = path.resolve()
-    if resolved_base not in resolved_path.parents and resolved_path != resolved_base:
-        raise ValueError("Config file path escapes strategy base directory")
-
-    if not resolved_path.exists():
+    if not path.exists():
         return None
 
-    content = resolved_path.read_text(encoding="utf-8")
+    content = path.read_text(encoding="utf-8")
 
     # Strip comments for JSONC files
-    if resolved_path.suffix.lower() in (".jsonc", ".json"):
+    if path.suffix.lower() in (".jsonc", ".json"):
         content = _strip_json_comments(content)
 
     return json.loads(content)

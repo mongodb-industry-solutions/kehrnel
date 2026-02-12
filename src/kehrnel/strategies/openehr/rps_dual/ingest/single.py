@@ -1,10 +1,10 @@
-# src/kehrnel/legacy/transform/single.py
+# src/transform/single.py
 from __future__ import annotations
 import json
 from pathlib import Path
 import typer
 
-from .flattener_f import CompositionFlattener
+from .flattener import CompositionFlattener
 
 # ----------------------------------------------------------------------
 # Public helpers (importable from Python or tests)
@@ -38,8 +38,8 @@ def expand_one(path: str | Path, config_path: Path | None = None):
     cfg = {}
     if config_path and Path(config_path).exists():
         cfg = json.loads(Path(config_path).read_text(encoding="utf-8"))
-    from .unflattener_f import CompositionUnflattener
-    from .flattener_f import CompositionFlattener
+    from .unflattener import CompositionUnflattener
+    from .flattener import CompositionFlattener
     # build flattener to hydrate dictionaries/shortcuts
     fl_cfg = {
         "role": cfg.get("role", "secondary"),

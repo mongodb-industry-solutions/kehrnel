@@ -6,25 +6,39 @@
     "title": "Reversed Path Search - Dual Collection",
     "summary": "Logical openEHR dual-store model with configurable physical encodings.",
     "domain": "openEHR",
-    "tags": ["openEHR", "reversed-path", "dual-collection", "atlas-search", "semi-flatten"],
-    "owners": ["Francesc Mateu Amengual"],
+    "tags": [
+      "openEHR",
+      "reversed-path",
+      "dual-collection",
+      "atlas-search",
+      "semi-flatten"
+    ],
+    "owners": [
+      "Francesc Mateu Amengual"
+    ],
     "compat": {
       "packFormat": "strategy-pack/v1",
-      "requires": ["storage.mongo"],
-      "optional": ["search.atlas", "search.lucene"],
+      "requires": [
+        "storage.mongo"
+      ],
+      "optional": [
+        "search.atlas",
+        "search.lucene"
+      ],
       "minRuntime": "0.9.0"
     }
   },
-
   "glossary": {
     "terms": {
       "canonical": "Lossless representation of the source clinical document.",
       "node": "A semi-flattened locatable subtree with lineage + payload.",
       "reversedPath": "A path encoded leaf-to-root to allow prefix matching for unknown depth CONTAINS chains.",
       "projection": "A derived record containing only the attributes required for a specific workload (e.g., cross-patient filters)."
-    }
+    },
+    "ap": "Archetype node identifier for a node.",
+    "pi": "Position indexes within array levels along the key path (kp).",
+    "bk": "Branch key for same-branch matching across multiple predicates."
   },
-
   "logicalModel": {
     "source": {
       "types": [
@@ -34,17 +48,35 @@
           "kind": "document",
           "description": "Headers plus a composition payload.",
           "fields": {
-            "ehr_id": {"type": "string|uuid", "role": "identity.patient"},
-            "composition_uid": {"type": "string|uuid", "role": "identity.document"},
-            "template_id": {"type": "string", "role": "identity.template"},
-            "version": {"type": "string|number", "role": "version"},
-            "ingest_time": {"type": "date", "role": "event.time"},
-            "payload": {"type": "json", "path": "$.composition", "role": "payload"}
+            "ehr_id": {
+              "type": "string|uuid",
+              "role": "identity.patient"
+            },
+            "composition_uid": {
+              "type": "string|uuid",
+              "role": "identity.document"
+            },
+            "template_id": {
+              "type": "string",
+              "role": "identity.template"
+            },
+            "version": {
+              "type": "string|number",
+              "role": "version"
+            },
+            "ingest_time": {
+              "type": "date",
+              "role": "event.time"
+            },
+            "payload": {
+              "type": "json",
+              "path": "$.composition",
+              "role": "payload"
+            }
           }
         }
       ]
     },
-
     "concepts": [
       {
         "id": "openehr.node.v1",
@@ -52,14 +84,39 @@
         "kind": "record",
         "meaning": "Flattened locatable subtree with lineage + payload.",
         "fields": {
-          "p": {"type": "string", "role": "path.reversed", "required": true},
-          "kp": {"type": "string[]", "role": "path.keypath", "required": false},
-          "li": {"type": "number", "role": "lineage.listIndex", "required": false},
-          "data": {"type": "json", "role": "payload.fragment", "required": true}
+          "p": {
+            "type": "string",
+            "title": "p",
+            "description": "Reversed canonical path (leaf \u2192 root) using archetype dictionary tokens."
+          },
+          "ap": {
+            "type": "string",
+            "title": "ap",
+            "description": "Archetype node identifier for this node (e.g., openEHR-EHR-CLUSTER... or atNNNN)."
+          },
+          "kp": {
+            "type": "string[]",
+            "title": "kp",
+            "description": "Key path within the parent JSON object to reach this subtree."
+          },
+          "pi": {
+            "type": "number[]",
+            "title": "pi",
+            "description": "Position indexes per array level along kp. Use -1 for non-array levels."
+          },
+          "bk": {
+            "type": "string",
+            "title": "bk",
+            "description": "Branch key representing the full instance branch inside arrays (for same-branch predicates)."
+          },
+          "data": {
+            "type": "object",
+            "title": "data",
+            "description": "Node payload fragment (subtree rooted at this node)."
+          }
         }
       }
     ],
-
     "destinations": {
       "types": [
         {
@@ -67,12 +124,32 @@
           "title": "Semi-flattened compositions",
           "kind": "collectionRecord",
           "fields": {
-            "_id": {"type": "objectId|uuid|string", "role": "pk"},
-            "ehr_id": {"type": "string|uuid", "role": "fk.patient", "required": true},
-            "comp_id": {"type": "string|uuid", "role": "identity.document"},
-            "tid": {"type": "string|number", "role": "identity.template"},
-            "v": {"type": "string|number|null", "role": "version"},
-            "cn": {"type": "openehr.node.v1[]", "role": "nodes.canonical", "required": true}
+            "_id": {
+              "type": "objectId|uuid|string",
+              "role": "pk"
+            },
+            "ehr_id": {
+              "type": "string|uuid",
+              "role": "fk.patient",
+              "required": true
+            },
+            "comp_id": {
+              "type": "string|uuid",
+              "role": "identity.document"
+            },
+            "tid": {
+              "type": "string|number",
+              "role": "identity.template"
+            },
+            "v": {
+              "type": "string|number|null",
+              "role": "version"
+            },
+            "cn": {
+              "type": "openehr.node.v1[]",
+              "role": "nodes.canonical",
+              "required": true
+            }
           }
         },
         {
@@ -80,58 +157,115 @@
           "title": "Slim projection for cross-patient search",
           "kind": "collectionRecord",
           "fields": {
-            "_id": {"type": "objectId|uuid|string", "role": "pk"},
-            "ehr_id": {"type": "string|uuid", "role": "fk.patient", "required": true},
-            "tid": {"type": "string|number", "role": "identity.template"},
-            "sort_time": {"type": "date", "role": "sort.primary", "required": false},
-            "sn": {"type": "openehr.node.v1[]", "role": "nodes.search", "required": true}
+            "_id": {
+              "type": "objectId|uuid|string",
+              "role": "pk"
+            },
+            "ehr_id": {
+              "type": "string|uuid",
+              "role": "fk.patient",
+              "required": true
+            },
+            "tid": {
+              "type": "string|number",
+              "role": "identity.template"
+            },
+            "sort_time": {
+              "type": "date",
+              "role": "sort.primary",
+              "required": false
+            },
+            "sn": {
+              "type": "openehr.node.v1[]",
+              "role": "nodes.search",
+              "required": true
+            }
           }
         }
       ]
     }
   },
-
   "physicalProfiles": {
     "encodingProfiles": [
       {
         "id": "profile.fullpath",
         "title": "Full paths",
         "description": "Human readable paths (at-codes/archetype ids as strings).",
-        "paths": {"mode": "full", "separator": "/", "order": "leaf_to_root"},
-        "keys": {"mode": "verbatim"},
-        "payload": {"mode": "full"},
-        "dictionaries": {"at_codes": "optional", "archetype_ids": "optional"},
-        "ids": {"ehr_id": "string", "composition_id": "string"}
+        "paths": {
+          "mode": "full",
+          "separator": "/",
+          "order": "leaf_to_root"
+        },
+        "keys": {
+          "mode": "verbatim"
+        },
+        "payload": {
+          "mode": "full"
+        },
+        "dictionaries": {
+          "at_codes": "optional",
+          "archetype_ids": "optional"
+        },
+        "ids": {
+          "ehr_id": "string",
+          "composition_id": "string"
+        }
       },
       {
         "id": "profile.codedpath",
         "title": "Coded paths",
         "description": "Numeric coded path segments using dictionary.",
-        "paths": {"mode": "coded", "separator": ".", "order": "leaf_to_root", "dictRef": "bundles.dictionaries"},
-        "keys": {"mode": "verbatim"},
-        "payload": {"mode": "full"},
-        "dictionaries": {"at_codes": "required", "archetype_ids": "optional"},
-        "ids": {"ehr_id": "string|uuidBin", "composition_id": "string|uuidBin"}
+        "paths": {
+          "mode": "coded",
+          "separator": ".",
+          "order": "leaf_to_root",
+          "dictRef": "bundles.dictionaries"
+        },
+        "keys": {
+          "mode": "verbatim"
+        },
+        "payload": {
+          "mode": "full"
+        },
+        "dictionaries": {
+          "at_codes": "required",
+          "archetype_ids": "optional"
+        },
+        "ids": {
+          "ehr_id": "string|uuidBin",
+          "composition_id": "string|uuidBin"
+        }
       },
       {
         "id": "profile.search_shortcuts",
         "title": "Search shortcuts",
         "description": "Coded paths + key/value shortcuts + minimized payload.",
-        "paths": {"mode": "coded", "separator": ".", "order": "leaf_to_root", "dictRef": "bundles.dictionaries"},
-        "keys": {"mode": "shortcuts", "dictRef": "bundles.shortcuts"},
-        "payload": {"mode": "minimized"},
-        "ids": {"ehr_id": "string|uuidBin", "composition_id": "objectId|uuidBin|string"}
+        "paths": {
+          "mode": "coded",
+          "separator": ".",
+          "order": "leaf_to_root",
+          "dictRef": "bundles.dictionaries"
+        },
+        "keys": {
+          "mode": "shortcuts",
+          "dictRef": "bundles.shortcuts"
+        },
+        "payload": {
+          "mode": "minimized"
+        },
+        "ids": {
+          "ehr_id": "string|uuidBin",
+          "composition_id": "objectId|uuidBin|string"
+        }
       }
     ]
   },
-
   "seeds": {
     "description": "Seed data for collections, referenced via file:// URIs in config",
     "codes": "file://bundles/dictionaries/_codes.json",
     "shortcuts": "file://bundles/shortcuts/shortcuts.json",
     "atlasSearchIndex": "file://bundles/searchIndex/searchIndex.json"
   },
-
   "storageModel": {
     "stores": [
       {
@@ -145,14 +279,32 @@
           {
             "id": "idx_patient_version",
             "type": "btree",
-            "fields": ["ehr_id", "v"],
-            "purpose": "Patient-scoped retrieval + versioning"
+            "fields": [
+              "ehr_id",
+              "v"
+            ],
+            "purpose": "Patient-scoped retrieval + versioning",
+            "mongoKeys": {
+              "ehr_id": 1,
+              "comp_id": 1,
+              "v": -1
+            },
+            "notes": "Supports latest-version lookup and patient-scoped composition paging."
           },
           {
             "id": "idx_patient_path",
             "type": "btree",
-            "fields": ["ehr_id", "cn.p"],
-            "purpose": "Fast patient-scoped path resolution (optional if too large)"
+            "fields": [
+              "ehr_id",
+              "cn.p"
+            ],
+            "purpose": "Fast patient-scoped path resolution (optional if too large)",
+            "mongoKeys": {
+              "ehr_id": 1,
+              "cn.p": 1,
+              "cn.bk": 1
+            },
+            "notes": "Optimizes $elemMatch queries that constrain cn.p and cn.bk for same-branch predicates."
           }
         ]
       },
@@ -167,8 +319,17 @@
           {
             "id": "idx_patient_sort",
             "type": "btree",
-            "fields": ["ehr_id", "sort_time"],
-            "purpose": "Patient+time ordering, quick paging"
+            "fields": [
+              "ehr_id",
+              "sort_time"
+            ],
+            "purpose": "Patient+time ordering, quick paging",
+            "mongoKeys": {
+              "ehr_id": 1,
+              "sort_time": -1,
+              "_id": 1
+            },
+            "notes": "Efficient patient feed paging and deterministic tie-break."
           }
         ],
         "search": {
@@ -185,7 +346,10 @@
         "collectionNameFromConfig": "collections.codes.name",
         "seedFromConfig": "collections.codes.seed",
         "modeFromConfig": "collections.codes.mode",
-        "contains": ["at_codes", "archetype_ids"],
+        "contains": [
+          "at_codes",
+          "archetype_ids"
+        ],
         "purpose": "Coded path compaction (at-codes, archetype IDs)"
       },
       {
@@ -198,7 +362,6 @@
       }
     ]
   },
-
   "transformModel": {
     "pipeline": [
       {
@@ -210,7 +373,14 @@
         "params": {
           "nodeConcept": "openehr.node.v1",
           "pathMode": "fromEncodingProfile.paths",
-          "emit": ["p", "kp", "li", "data"],
+          "emit": [
+            "p",
+            "ap",
+            "kp",
+            "pi",
+            "bk",
+            "data"
+          ],
           "includeRootNode": true
         },
         "visual": {
@@ -227,10 +397,22 @@
         "nodeArrayField": "cn",
         "from": "nodes_full",
         "extraFields": [
-          {"field": "ehr_id", "from": "$.headers.ehr_id"},
-          {"field": "comp_id", "from": "$.headers.composition_uid"},
-          {"field": "tid", "from": "$.headers.template_id"},
-          {"field": "v", "from": "$.headers.version"}
+          {
+            "field": "ehr_id",
+            "from": "$.headers.ehr_id"
+          },
+          {
+            "field": "comp_id",
+            "from": "$.headers.composition_uid"
+          },
+          {
+            "field": "tid",
+            "from": "$.headers.template_id"
+          },
+          {
+            "field": "v",
+            "from": "$.headers.version"
+          }
         ],
         "visual": {
           "group": "Materialize",
@@ -264,9 +446,19 @@
         "nodeArrayField": "sn",
         "from": "nodes_search",
         "extraFields": [
-          {"field": "ehr_id", "from": "$.headers.ehr_id"},
-          {"field": "tid", "from": "$.headers.template_id"},
-          {"field": "sort_time", "from": "projection.sortTime", "optional": true}
+          {
+            "field": "ehr_id",
+            "from": "$.headers.ehr_id"
+          },
+          {
+            "field": "tid",
+            "from": "$.headers.template_id"
+          },
+          {
+            "field": "sort_time",
+            "from": "projection.sortTime",
+            "optional": true
+          }
         ],
         "visual": {
           "group": "Materialize",
@@ -275,7 +467,6 @@
         }
       }
     ],
-
     "invariants": [
       {
         "id": "inv.keys",
@@ -291,32 +482,44 @@
       }
     ]
   },
-
   "queryModel": {
     "modes": [
       {
         "id": "patient_scoped",
         "title": "Patient-scoped",
-        "uses": ["store:compositions"],
+        "uses": [
+          "store:compositions"
+        ],
         "pattern": "match",
-        "primaryFilters": ["ehr_id"],
-        "pathPredicate": {"field": "cn.p", "operator": "regex|prefix|equals"},
+        "primaryFilters": [
+          "ehr_id"
+        ],
+        "pathPredicate": {
+          "field": "cn.p",
+          "operator": "regex|prefix|equals"
+        },
         "notes": "Prefer B-tree / shard-local filtering when patient context is known."
       },
       {
         "id": "cross_patient",
         "title": "Cross-patient",
-        "uses": ["store:search"],
+        "uses": [
+          "store:search"
+        ],
         "pattern": "search",
         "searchEngine": "atlas_search",
-        "pathPredicate": {"field": "sn.p", "operator": "wildcard|equals"},
+        "pathPredicate": {
+          "field": "sn.p",
+          "operator": "wildcard|equals"
+        },
         "notes": "Use slim search docs for range/equality filters + sorting + limit."
       }
     ]
   },
-
   "samples": {
-    "inputs": ["samples/composition.envelope.json"],
+    "inputs": [
+      "samples/composition.envelope.json"
+    ],
     "outputs": {
       "store:compositions": [
         "samples/compositions.fullpath.json",
@@ -331,11 +534,14 @@
         "id": "scenario.vaccination",
         "title": "Vaccination list",
         "inputRef": "samples/composition.envelope.json",
-        "show": ["transformGraph", "collectionModel", "pathLegend"]
+        "show": [
+          "transformGraph",
+          "collectionModel",
+          "pathLegend"
+        ]
       }
     ]
   },
-
   "visualization": {
     "canvas": {
       "defaultView": "overview",
@@ -343,30 +549,48 @@
         {
           "id": "overview",
           "title": "Overview",
-          "shows": ["collectionModel", "transformGraph"],
-          "layout": {"type": "grid", "columns": 2}
+          "shows": [
+            "collectionModel",
+            "transformGraph"
+          ],
+          "layout": {
+            "type": "grid",
+            "columns": 2
+          }
         },
         {
           "id": "collections",
           "title": "Collections",
-          "shows": ["collectionModel"],
-          "layout": {"type": "free"}
+          "shows": [
+            "collectionModel"
+          ],
+          "layout": {
+            "type": "free"
+          }
         },
         {
           "id": "transform",
           "title": "Transform",
-          "shows": ["transformGraph"],
-          "layout": {"type": "dag", "direction": "LR"}
+          "shows": [
+            "transformGraph"
+          ],
+          "layout": {
+            "type": "dag",
+            "direction": "LR"
+          }
         },
         {
           "id": "indexes",
           "title": "Indexes & Search",
-          "shows": ["indexOverlay"],
-          "layout": {"type": "free"}
+          "shows": [
+            "indexOverlay"
+          ],
+          "layout": {
+            "type": "free"
+          }
         }
       ]
     },
-
     "collectionModel": {
       "entities": [
         {
@@ -374,13 +598,35 @@
           "kind": "collection",
           "store": "store:compositions",
           "label": "compositions",
-          "fields": ["_id", "ehr_id", "comp_id", "tid", "v", "cn"],
+          "fields": [
+            "_id",
+            "ehr_id",
+            "comp_id",
+            "tid",
+            "v",
+            "cn"
+          ],
           "expand": {
-            "cn": ["p", "kp", "li", "data"]
+            "cn": [
+              "p",
+              "ap",
+              "kp",
+              "pi",
+              "bk",
+              "data"
+            ]
           },
-          "badges": ["canonical", "patient", "hydration"],
+          "badges": [
+            "canonical",
+            "patient",
+            "hydration"
+          ],
           "links": [
-            {"type": "joinsTo", "target": "coll.search", "on": "_id"}
+            {
+              "type": "joinsTo",
+              "target": "coll.search",
+              "on": "_id"
+            }
           ]
         },
         {
@@ -388,13 +634,34 @@
           "kind": "collection",
           "store": "store:search",
           "label": "search",
-          "fields": ["_id", "ehr_id", "tid", "sort_time", "sn"],
+          "fields": [
+            "_id",
+            "ehr_id",
+            "tid",
+            "sort_time",
+            "sn"
+          ],
           "expand": {
-            "sn": ["p", "data"]
+            "sn": [
+              "p",
+              "ap",
+              "kp",
+              "pi",
+              "bk",
+              "data"
+            ]
           },
-          "badges": ["slim", "cross-patient", "search-indexed"],
+          "badges": [
+            "slim",
+            "cross-patient",
+            "search-indexed"
+          ],
           "links": [
-            {"type": "joinsTo", "target": "coll.compositions", "on": "_id"}
+            {
+              "type": "joinsTo",
+              "target": "coll.compositions",
+              "on": "_id"
+            }
           ]
         },
         {
@@ -402,20 +669,35 @@
           "kind": "collection",
           "store": "store:codes",
           "label": "_codes",
-          "fields": ["_id", "_min", "_max", "at", "ar_code"],
-          "badges": ["dictionary", "seed:file://"]
+          "fields": [
+            "_id",
+            "_min",
+            "_max",
+            "at",
+            "ar_code"
+          ],
+          "badges": [
+            "dictionary",
+            "seed:file://"
+          ]
         },
         {
           "id": "coll.shortcuts",
           "kind": "collection",
           "store": "store:shortcuts",
           "label": "_shortcuts",
-          "fields": ["_id", "keys", "values"],
-          "badges": ["dictionary", "seed:file://"]
+          "fields": [
+            "_id",
+            "keys",
+            "values"
+          ],
+          "badges": [
+            "dictionary",
+            "seed:file://"
+          ]
         }
       ]
     },
-
     "transformGraph": {
       "nodes": [
         {
@@ -427,7 +709,7 @@
         {
           "id": "op.flatten",
           "kind": "transform",
-          "label": "Flatten → nodes_full",
+          "label": "Flatten \u2192 nodes_full",
           "stepRef": "step.flatten"
         },
         {
@@ -440,7 +722,7 @@
         {
           "id": "op.project.search",
           "kind": "transform",
-          "label": "Project → nodes_search",
+          "label": "Project \u2192 nodes_search",
           "stepRef": "step.project.search"
         },
         {
@@ -452,49 +734,141 @@
         }
       ],
       "edges": [
-        {"from": "src.envelope", "to": "op.flatten"},
-        {"from": "op.flatten", "to": "op.materialize.cn"},
-        {"from": "op.flatten", "to": "op.project.search"},
-        {"from": "op.project.search", "to": "op.materialize.sn"}
+        {
+          "from": "src.envelope",
+          "to": "op.flatten"
+        },
+        {
+          "from": "op.flatten",
+          "to": "op.materialize.cn"
+        },
+        {
+          "from": "op.flatten",
+          "to": "op.project.search"
+        },
+        {
+          "from": "op.project.search",
+          "to": "op.materialize.sn"
+        }
       ]
     },
-
     "indexOverlay": {
       "indexGroups": [
         {
           "id": "idxgrp.compositions",
           "entityRef": "coll.compositions",
-          "items": ["idx_patient_version", "idx_patient_path"]
+          "items": [
+            "idx_patient_version",
+            "idx_patient_path"
+          ]
         },
         {
           "id": "idxgrp.search",
           "entityRef": "coll.search",
-          "items": ["idx_patient_sort"],
-          "search": {"kind": "atlas_search", "ref": "bundles.atlas_search"}
+          "items": [
+            "idx_patient_sort"
+          ],
+          "search": {
+            "kind": "atlas_search",
+            "ref": "bundles.atlas_search"
+          }
         }
       ]
     },
-
     "legends": {
       "pathLegend": {
         "entries": [
-          {"label": "p", "meaning": "reversed path (leaf → root)", "example": "at0014/at0007/.../COMPOSITION", "configPath": "fields.node.p"},
-          {"label": "kp", "meaning": "key-path in JSON (for reconstruction/projection)", "example": "[\"context\",\"other_context\"]", "configPath": "fields.node.kp"},
-          {"label": "li", "meaning": "list index within sibling array", "example": 0, "configPath": "fields.node.li"},
-          {"label": "data", "meaning": "node payload fragment", "example": "{\"value\": {...}}", "configPath": "fields.node.data"},
-          {"label": "cn", "meaning": "canonical node array", "example": "composition nodes", "configPath": "fields.document.cn"},
-          {"label": "sn", "meaning": "search node array", "example": "projection nodes", "configPath": "fields.document.sn"},
-          {"label": "ehr_id", "meaning": "patient/EHR identifier", "example": "ehr-123", "configPath": "fields.document.ehr_id"},
-          {"label": "comp_id", "meaning": "composition identifier", "example": "comp-456", "configPath": "fields.document.comp_id"},
-          {"label": "tid", "meaning": "template identifier (numeric code)", "example": 42, "configPath": "fields.document.tid"},
-          {"label": "v", "meaning": "composition version", "example": "1", "configPath": "fields.document.v"}
+          {
+            "label": "p",
+            "meaning": "reversed path (leaf \u2192 root)",
+            "example": "at0014/at0007/.../COMPOSITION",
+            "configPath": "fields.node.p"
+          },
+          {
+            "label": "ap",
+            "meaning": "archetype node id",
+            "example": "openEHR-EHR-CLUSTER...v0",
+            "configPath": "fields.node.ap"
+          },
+          {
+            "label": "kp",
+            "meaning": "key-path in JSON (for reconstruction/projection)",
+            "example": "[\"context\",\"other_context\"]",
+            "configPath": "fields.node.kp"
+          },
+          {
+            "label": "pi",
+            "meaning": "position indexes per array level",
+            "example": "[0,-1,2,-1]",
+            "configPath": "fields.node.pi"
+          },
+          {
+            "label": "bk",
+            "meaning": "branch key (same-branch matching)",
+            "example": "content[0]/items[2]/...",
+            "configPath": "fields.node.bk"
+          },
+          {
+            "label": "data",
+            "meaning": "node payload fragment",
+            "example": "{\"value\": {...}}",
+            "configPath": "fields.node.data"
+          },
+          {
+            "label": "cn",
+            "meaning": "canonical node array",
+            "example": "composition nodes",
+            "configPath": "fields.document.cn"
+          },
+          {
+            "label": "sn",
+            "meaning": "search node array",
+            "example": "projection nodes",
+            "configPath": "fields.document.sn"
+          },
+          {
+            "label": "ehr_id",
+            "meaning": "patient/EHR identifier",
+            "example": "ehr-123",
+            "configPath": "fields.document.ehr_id"
+          },
+          {
+            "label": "comp_id",
+            "meaning": "composition identifier",
+            "example": "comp-456",
+            "configPath": "fields.document.comp_id"
+          },
+          {
+            "label": "tid",
+            "meaning": "template identifier (numeric code)",
+            "example": 42,
+            "configPath": "fields.document.tid"
+          },
+          {
+            "label": "v",
+            "meaning": "composition version",
+            "example": "1",
+            "configPath": "fields.document.v"
+          }
         ]
       },
       "uriLegend": {
         "entries": [
-          {"scheme": "file://", "meaning": "Load from local file (relative to strategy root)", "example": "file://bundles/dictionaries/_codes.json"},
-          {"scheme": "collection://", "meaning": "Load from MongoDB collection", "example": "collection://mappings"},
-          {"scheme": "collection://?", "meaning": "Load with filter query", "example": "collection://mappings?template_id=vacc.v0"}
+          {
+            "scheme": "file://",
+            "meaning": "Load from local file (relative to strategy root)",
+            "example": "file://bundles/dictionaries/_codes.json"
+          },
+          {
+            "scheme": "collection://",
+            "meaning": "Load from MongoDB collection",
+            "example": "collection://mappings"
+          },
+          {
+            "scheme": "collection://?",
+            "meaning": "Load with filter query",
+            "example": "collection://mappings?template_id=vacc.v0"
+          }
         ]
       }
     }

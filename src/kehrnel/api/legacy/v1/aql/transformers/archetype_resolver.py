@@ -4,6 +4,7 @@ from typing import Dict, Optional, Tuple, List
 from motor.motor_asyncio import AsyncIOMotorDatabase
 import re
 import logging
+from kehrnel.api.legacy.app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +26,7 @@ class ArchetypeResolver:
         if self._codes_loaded:
             return
             
-        codes_col = self.db["_codes"]
+        codes_col = self.db[settings.search_config.codes_collection]
         doc = await codes_col.find_one({"_id": "ar_code"}) or {}
         
         # Load archetype mappings (positive codes)
@@ -169,7 +170,7 @@ class ArchetypeResolver:
         # Now query actual documents to find patterns that match our AT code sequence
         try:
             # Use the search collection for pattern discovery
-            search_col = self.db["sm_search3"]
+            search_col = self.db[settings.search_config.search_collection]
             
             # Build the expected pattern structure
             # For admin_salut/items[at0007]/items[at0014], we expect:
@@ -355,7 +356,7 @@ class ArchetypeResolver:
         
         try:
             # Query compositions to find patterns between these archetypes
-            compositions_col = self.db["compositions"]
+            compositions_col = self.db[settings.COMPOSITIONS_COLL_NAME]
             
             # Look for documents that contain both archetypes in their cn array
             pipeline = [

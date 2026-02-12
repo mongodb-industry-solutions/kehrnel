@@ -5,14 +5,27 @@ from pymongo.errors import PyMongoError
 import logging
 from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
+from kehrnel.api.legacy.app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
 STORED_QUERY_COLL_NAME = "stored_queries"
-EHR_COLL_NAME = "ehr"
-COMPOSITION_COLL_NAME = "compositions"
-FLATTEN_COMPOSITION_COLL_NAME = "flatten_compositions"
-CODES_COLL_NAME = "_codes"
+
+
+def _ehr_coll() -> str:
+    return settings.EHR_COLL_NAME
+
+
+def _composition_coll() -> str:
+    return settings.COMPOSITIONS_COLL_NAME
+
+
+def _flatten_coll() -> str:
+    return settings.FLAT_COMPOSITIONS_COLL_NAME
+
+
+def _codes_coll() -> str:
+    return settings.search_config.codes_collection
 
 
 async def detect_collection_format(db: AsyncIOMotorDatabase) -> str:
@@ -21,11 +34,12 @@ async def detect_collection_format(db: AsyncIOMotorDatabase) -> str:
     Returns either 'shortened' or 'full' based on the format found.
     """
     try:
-        # Check FLATTEN_COMPOSITION_COLL_NAME collection first since it's the preferred collection
-        shorten_count = await db[FLATTEN_COMPOSITION_COLL_NAME].count_documents({})
+        # Check flatten collection first since it's the preferred collection
+        flatten_coll = _flatten_coll()
+        shorten_count = await db[flatten_coll].count_documents({})
         if shorten_count > 0:
-            # Sample a document to determine the format within FLATTEN_COMPOSITION_COLL_NAME
-            sample = await db[FLATTEN_COMPOSITION_COLL_NAME].find_one({})
+            # Sample a document to determine the format within flatten collection
+            sample = await db[flatten_coll].find_one({})
             if sample and 'cn' in sample:
                 # Check if this is shortened format (short p paths like '7') or full format (long archetype paths)
                 first_cn_element = sample['cn'][0] if sample['cn'] else {}
@@ -34,22 +48,22 @@ async def detect_collection_format(db: AsyncIOMotorDatabase) -> str:
                 # If p value is short (like '7', '-4.7', etc.) it's shortened format
                 # If p value is long (like 'at0021/at0017/openEHR-EHR-ACTION...') it's full format
                 if len(p_value) < 20 and not p_value.startswith('at'):  # Short path = shortened format
-                    logger.info(f"Using shortened format from collection: {FLATTEN_COMPOSITION_COLL_NAME}")
+                    logger.info(f"Using shortened format from collection: {flatten_coll}")
                     return 'shortened'
                 else:  # Long archetype path = full format
-                    logger.info(f"Using full format from collection: {FLATTEN_COMPOSITION_COLL_NAME}")
+                    logger.info(f"Using full format from collection: {flatten_coll}")
                     return 'full'
             elif sample and 'data' in sample and 'cn' not in sample:
                 # Direct nested structure without cn array = shortened format
-                logger.info(f"Using shortened format from collection: {FLATTEN_COMPOSITION_COLL_NAME}")
+                logger.info(f"Using shortened format from collection: {flatten_coll}")
                 return 'shortened'
         
         # Fallback to check compositionsFullPath collection
-        full_count = await db[FLATTEN_COMPOSITION_COLL_NAME].count_documents({})
+        full_count = await db[flatten_coll].count_documents({})
         if full_count > 0:
-            sample = await db[FLATTEN_COMPOSITION_COLL_NAME].find_one({})
+            sample = await db[flatten_coll].find_one({})
             if sample and 'cn' in sample:
-                logger.info(f"Using full format from collection: {FLATTEN_COMPOSITION_COLL_NAME}")
+                logger.info(f"Using full format from collection: {flatten_coll}")
                 return 'full'
         
         # Default to full format if unclear
@@ -85,13 +99,14 @@ async def execute_aql_query(pipeline: List[Dict[str, Any]], db: AsyncIOMotorData
             
             # Determine which collection to use based on what's available
             # Check FLATTEN_COMPOSITION_COLL_NAME first since it's the preferred collection
-            shorten_count = await db[FLATTEN_COMPOSITION_COLL_NAME].count_documents({})
+            flatten_coll = _flatten_coll()
+            shorten_count = await db[flatten_coll].count_documents({})
             if shorten_count > 0:
-                collection_name = FLATTEN_COMPOSITION_COLL_NAME
+                collection_name = flatten_coll
                 logger.info(f"Executing standard query against collection: {collection_name}")
             else:
                 # Fallback to compositionsFullPath
-                collection_name = FLATTEN_COMPOSITION_COLL_NAME
+                collection_name = flatten_coll
                 logger.info(f"Executing standard query against collection: {collection_name}")
         
         cursor = db[collection_name].aggregate(pipeline)
