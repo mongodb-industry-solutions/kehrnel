@@ -16,8 +16,8 @@ __all__ = ["Transformer", "load_default_cfg"]
 
 DEFAULT_CFG = Path(__file__).parent / "config" / "default_config.jsonc"
 FALLBACK_CFG = (
-    Path(__file__).resolve().parents[1]
-    / "kehrnel"
+    Path(__file__).resolve().parents[2]
+    / "engine"
     / "strategies"
     / "openehr"
     / "rps_dual"

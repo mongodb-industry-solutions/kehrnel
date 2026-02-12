@@ -16,9 +16,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from kehrnel.api.admin.routes import router as admin_router
-from kehrnel.api.admin.ops_by_domain import router as ops_domain_router
-from kehrnel.api.admin.activation_routes import router as activation_router
+# Load environment before importing modules that instantiate settings at import time.
+load_dotenv(find_dotenv(".env.local", usecwd=True), override=False)
+
+from kehrnel.api.core.admin.routes import router as admin_router
+from kehrnel.api.core.admin.ops_by_domain import router as ops_domain_router
+from kehrnel.api.core.admin.activation_routes import router as activation_router
+from kehrnel.api.domains.fhir.routes import router as fhir_domain_router
 from kehrnel.api.domains.openehr.routes import router as openehr_domain_router
 from kehrnel.api.strategies.openehr.rps_dual.routes import router as openehr_rps_dual_router
 from kehrnel.core.runtime import StrategyRuntime
@@ -163,7 +167,7 @@ def _get_rate_limit() -> int:
 # ============================================================================
 
 def _strategy_paths() -> list[Path]:
-    paths = [Path(__file__).resolve().parents[1] / "strategies"]
+    paths = [Path(__file__).resolve().parents[1] / "engine" / "strategies"]
     extra = os.getenv("KEHRNEL_STRATEGY_PATHS")
     if extra:
         for sep in (":", ","):
@@ -185,7 +189,7 @@ def validate_strategy_pack(manifest_data: dict, base_path: Path) -> list[str]:
 
 def _seed_default_bundles(store: BundleStore):
     try:
-        bundles_dir = Path(__file__).resolve().parents[1] / "strategies" / "openehr" / "rps_dual" / "bundles"
+        bundles_dir = Path(__file__).resolve().parents[1] / "engine" / "strategies" / "openehr" / "rps_dual" / "bundles"
         if bundles_dir.exists():
             for path in bundles_dir.glob("*.json"):
                 try:
@@ -278,8 +282,7 @@ def _load_manifests() -> tuple[list[StrategyManifest], list[dict[str, object]], 
 
 
 def create_app(registry_path: str | None = None, bundle_path: str | None = None) -> FastAPI:
-    # Local/dev convenience: load .env if present (without overriding already exported vars).
-    load_dotenv(find_dotenv(usecwd=True), override=False)
+    load_dotenv(find_dotenv(".env.local", usecwd=True), override=False)
 
     app = FastAPI(title="Kehrnel Runtime", version="0.0.0")
 
@@ -371,11 +374,26 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         }
         return schema
 
+    def _core_openapi() -> dict:
+        schema = deepcopy(app.openapi())
+        paths = schema.get("paths", {}) or {}
+        core_paths = {
+            path: spec
+            for path, spec in paths.items()
+            if not path.startswith("/api/strategies/")
+        }
+        schema["paths"] = core_paths
+        schema["info"] = {
+            **(schema.get("info") or {}),
+            "title": "Kehrnel Core API",
+            "description": "Core/runtime API documentation (non-domain, non-strategy).",
+        }
+        return schema
+
     def _domain_openapi(domain: str) -> dict:
         domain_norm = (domain or "").strip().lower()
         if not domain_norm:
             raise HTTPException(status_code=400, detail="domain is required")
-
         prefix = f"/api/domains/{domain_norm}/"
         schema = deepcopy(app.openapi())
         paths = schema.get("paths", {}) or {}
@@ -386,23 +404,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         schema["info"] = {
             **(schema.get("info") or {}),
             "title": f"Kehrnel Domain API - {domain_norm}",
-            "description": f"Domain-scoped API documentation for {domain_norm}.",
-        }
-        return schema
-
-    def _core_openapi() -> dict:
-        schema = deepcopy(app.openapi())
-        paths = schema.get("paths", {}) or {}
-        core_paths = {
-            path: spec
-            for path, spec in paths.items()
-            if not path.startswith("/api/strategies/") and not path.startswith("/api/domains/")
-        }
-        schema["paths"] = core_paths
-        schema["info"] = {
-            **(schema.get("info") or {}),
-            "title": "Kehrnel Core API",
-            "description": "Core/runtime API documentation (non-domain, non-strategy).",
+            "description": f"Domain API documentation for {domain_norm}.",
         }
         return schema
 
@@ -432,53 +434,13 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
             title=f"Kehrnel Docs - {full_strategy_id}",
         )
 
-    @app.get("/openapi/domains/{domain}.json", include_in_schema=False)
-    async def domain_openapi(domain: str):
-        return JSONResponse(content=_domain_openapi(domain))
-
-    @app.get("/openapi/strategies/{domain}.json", include_in_schema=False)
-    async def domain_openapi_alias(domain: str):
-        return JSONResponse(content=_domain_openapi(domain))
-
-    @app.get("/docs/domains/{domain}", include_in_schema=False)
-    async def domain_docs(domain: str):
-        domain_norm = (domain or "").strip().lower()
-        _domain_openapi(domain_norm)
-        return get_swagger_ui_html(
-            openapi_url=f"/openapi/domains/{domain_norm}.json",
-            title=f"Kehrnel Docs - domain {domain_norm}",
-        )
-
-    @app.get("/docs/strategies/{domain}", include_in_schema=False)
-    async def domain_docs_alias(domain: str):
-        domain_norm = (domain or "").strip().lower()
-        _domain_openapi(domain_norm)
-        return get_swagger_ui_html(
-            openapi_url=f"/openapi/strategies/{domain_norm}.json",
-            title=f"Kehrnel Docs - domain {domain_norm}",
-        )
-
-    @app.get("/redoc/domains/{domain}", include_in_schema=False)
-    async def domain_redoc(domain: str):
-        domain_norm = (domain or "").strip().lower()
-        _domain_openapi(domain_norm)
-        return get_redoc_html(
-            openapi_url=f"/openapi/domains/{domain_norm}.json",
-            title=f"Kehrnel ReDoc - domain {domain_norm}",
-        )
-
-    @app.get("/redoc/strategies/{domain}", include_in_schema=False)
-    async def domain_redoc_alias(domain: str):
-        domain_norm = (domain or "").strip().lower()
-        _domain_openapi(domain_norm)
-        return get_redoc_html(
-            openapi_url=f"/openapi/strategies/{domain_norm}.json",
-            title=f"Kehrnel ReDoc - domain {domain_norm}",
-        )
-
     @app.get("/openapi/core.json", include_in_schema=False)
     async def core_openapi():
         return JSONResponse(content=_core_openapi())
+
+    @app.get("/openapi/domains/{domain}.json", include_in_schema=False)
+    async def domain_openapi(domain: str):
+        return JSONResponse(content=_domain_openapi(domain))
 
     @app.get("/docs/core", include_in_schema=False)
     async def core_docs():
@@ -507,6 +469,15 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
             title=f"Kehrnel ReDoc - {full_strategy_id}",
         )
 
+    @app.get("/redoc/domains/{domain}", include_in_schema=False)
+    async def domain_redoc(domain: str):
+        domain_norm = (domain or "").strip().lower()
+        _domain_openapi(domain_norm)
+        return get_redoc_html(
+            openapi_url=f"/openapi/domains/{domain_norm}.json",
+            title=f"Kehrnel ReDoc - domain {domain_norm}",
+        )
+
     @app.exception_handler(Exception)
     async def global_exception_handler(request: Request, exc: Exception):
         debug_enabled = os.getenv("KEHRNEL_DEBUG", "false").lower() in ("1", "true", "yes")
@@ -529,6 +500,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     app.include_router(admin_router)
     app.include_router(ops_domain_router)
     app.include_router(activation_router)
+    app.include_router(fhir_domain_router)
     app.include_router(openehr_domain_router)
     app.include_router(openehr_rps_dual_router)
     return app
@@ -540,4 +512,7 @@ app = create_app()
 def main():
     import uvicorn
 
-    uvicorn.run("kehrnel.api.app:app", host="0.0.0.0", port=8000, reload=True)
+    host = os.getenv("KEHRNEL_API_HOST", "0.0.0.0")
+    port = int(os.getenv("KEHRNEL_API_PORT", os.getenv("API_PORT", "8000")))
+    reload_enabled = os.getenv("KEHRNEL_API_RELOAD", "false").lower() in ("1", "true", "yes")
+    uvicorn.run("kehrnel.api.app:app", host=host, port=port, reload=reload_enabled)

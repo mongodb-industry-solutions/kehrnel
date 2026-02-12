@@ -23,7 +23,7 @@ This guide explains how to add a new strategy plugin, register it, and interact 
 - Example: `strategies.fhir.simulated` shows a no-op/echo ingest and a simulated search response.
 
 ## 3) Register the Manifest
-- Register manifests via the new runtime (either placed under `src/kehrnel/strategies/**` for discovery or registered programmatically through the API).
+- Register manifests via the new runtime (either placed under `src/kehrnel/engine/strategies/**` for discovery or registered programmatically through the API).
 - Built-in registration currently includes: openEHR RPS dual, FHIR resource-first, FHIR simulated skeleton.
 
 ## 4) Activate a Strategy

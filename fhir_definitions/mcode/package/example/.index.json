@@ -1,0 +1,498 @@
+{
+  "index-version": 1,
+  "files": [
+    {
+      "filename": "Bundle-mcode-patient-bundle-jenny-m.json",
+      "resourceType": "Bundle",
+      "id": "mcode-patient-bundle-jenny-m",
+      "type": "collection"
+    },
+    {
+      "filename": "Observation-tnm-clinical-distant-metastases-category-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "tnm-clinical-distant-metastases-category-jenny-m"
+    },
+    {
+      "filename": "DiagnosticReport-us-core-diagnosticreport-lab-jenny-m.json",
+      "resourceType": "DiagnosticReport",
+      "id": "us-core-diagnosticreport-lab-jenny-m"
+    },
+    {
+      "filename": "Practitioner-us-core-practitioner-kyle-anydoc.json",
+      "resourceType": "Practitioner",
+      "id": "us-core-practitioner-kyle-anydoc"
+    },
+    {
+      "filename": "Condition-primary-cancer-condition-cll.json",
+      "resourceType": "Condition",
+      "id": "primary-cancer-condition-cll"
+    },
+    {
+      "filename": "MedicationRequest-cancer-related-medication-request-gefitinib.json",
+      "resourceType": "MedicationRequest",
+      "id": "cancer-related-medication-request-gefitinib"
+    },
+    {
+      "filename": "Observation-cancer-disease-status-improved.json",
+      "resourceType": "Observation",
+      "id": "cancer-disease-status-improved"
+    },
+    {
+      "filename": "Organization-us-core-organization-physician-services-inc.json",
+      "resourceType": "Organization",
+      "id": "us-core-organization-physician-services-inc"
+    },
+    {
+      "filename": "Practitioner-us-core-practitioner-mary-obgyn.json",
+      "resourceType": "Practitioner",
+      "id": "us-core-practitioner-mary-obgyn"
+    },
+    {
+      "filename": "Observation-cancer-related-mcode-comorbidities-elixhauser-john-anyperson.json",
+      "resourceType": "Observation",
+      "id": "cancer-related-mcode-comorbidities-elixhauser-john-anyperson"
+    },
+    {
+      "filename": "Observation-tnm-clinical-stage-group-3c.json",
+      "resourceType": "Observation",
+      "id": "tnm-clinical-stage-group-3c"
+    },
+    {
+      "filename": "Observation-genomic-variant-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "genomic-variant-jenny-m"
+    },
+    {
+      "filename": "Group-group-mcode-patients.json",
+      "resourceType": "Group",
+      "id": "group-mcode-patients",
+      "type": "person"
+    },
+    {
+      "filename": "Observation-tnm-clinical-primary-tumor-category-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "tnm-clinical-primary-tumor-category-jenny-m"
+    },
+    {
+      "filename": "Condition-primary-cancer-condition-breast.json",
+      "resourceType": "Condition",
+      "id": "primary-cancer-condition-breast"
+    },
+    {
+      "filename": "Observation-tnm-clinical-regional-nodes-category-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "tnm-clinical-regional-nodes-category-jenny-m"
+    },
+    {
+      "filename": "Observation-us-core-observation-lab-tumor-invasion-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "us-core-observation-lab-tumor-invasion-jenny-m"
+    },
+    {
+      "filename": "Observation-cancer-related-mcode-comorbidities-elixhauser-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "cancer-related-mcode-comorbidities-elixhauser-jenny-m"
+    },
+    {
+      "filename": "Specimen-genomic-specimen-left-breast-jenny-m.json",
+      "resourceType": "Specimen",
+      "id": "genomic-specimen-left-breast-jenny-m"
+    },
+    {
+      "filename": "BodyStructure-tumor-lobular-carcinoma-left-breast.json",
+      "resourceType": "BodyStructure",
+      "id": "tumor-lobular-carcinoma-left-breast"
+    },
+    {
+      "filename": "Specimen-tumor-specimen-left-breast-jenny-m.json",
+      "resourceType": "Specimen",
+      "id": "tumor-specimen-left-breast-jenny-m"
+    },
+    {
+      "filename": "Observation-tnm-pathologic-stage-group-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "tnm-pathologic-stage-group-jenny-m"
+    },
+    {
+      "filename": "FamilyMemberHistory-family-member-history-aunt-jenny-m.json",
+      "resourceType": "FamilyMemberHistory",
+      "id": "family-member-history-aunt-jenny-m"
+    },
+    {
+      "filename": "Observation-genomic-variant-germline-deletion.json",
+      "resourceType": "Observation",
+      "id": "genomic-variant-germline-deletion"
+    },
+    {
+      "filename": "Observation-tnm-pathologic-regional-nodes-category-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "tnm-pathologic-regional-nodes-category-jenny-m"
+    },
+    {
+      "filename": "Observation-genomic-region-studied-stk11.json",
+      "resourceType": "Observation",
+      "id": "genomic-region-studied-stk11"
+    },
+    {
+      "filename": "Observation-us-core-observation-lab-tumor-grade-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "us-core-observation-lab-tumor-grade-jenny-m"
+    },
+    {
+      "filename": "Observation-us-core-observation-lab-tumor-margins-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "us-core-observation-lab-tumor-margins-jenny-m"
+    },
+    {
+      "filename": "Specimen-genomic-specimen-lung.json",
+      "resourceType": "Specimen",
+      "id": "genomic-specimen-lung"
+    },
+    {
+      "filename": "Specimen-tumor-specimen-lobular-carcinoma-left-breast.json",
+      "resourceType": "Specimen",
+      "id": "tumor-specimen-lobular-carcinoma-left-breast"
+    },
+    {
+      "filename": "Observation-ecog-performance-status-fully-active.json",
+      "resourceType": "Observation",
+      "id": "ecog-performance-status-fully-active"
+    },
+    {
+      "filename": "DiagnosticReport-genomics-report-jenny-m.json",
+      "resourceType": "DiagnosticReport",
+      "id": "genomics-report-jenny-m"
+    },
+    {
+      "filename": "Condition-us-core-condition-anxiety-jenny-m.json",
+      "resourceType": "Condition",
+      "id": "us-core-condition-anxiety-jenny-m"
+    },
+    {
+      "filename": "Observation-genomic-region-studied-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "genomic-region-studied-jenny-m"
+    },
+    {
+      "filename": "Condition-us-core-condition-depression-jenny-m.json",
+      "resourceType": "Condition",
+      "id": "us-core-condition-depression-jenny-m"
+    },
+    {
+      "filename": "Condition-primary-cancer-condition-jenny-m.json",
+      "resourceType": "Condition",
+      "id": "primary-cancer-condition-jenny-m"
+    },
+    {
+      "filename": "Observation-observation-smoking-pack-years-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "observation-smoking-pack-years-jenny-m"
+    },
+    {
+      "filename": "Observation-binet-stage-group-A.json",
+      "resourceType": "Observation",
+      "id": "binet-stage-group-A"
+    },
+    {
+      "filename": "Observation-ecog-performance-status-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "ecog-performance-status-jenny-m"
+    },
+    {
+      "filename": "Observation-tnm-clinical-regional-nodes-category-cN3.json",
+      "resourceType": "Observation",
+      "id": "tnm-clinical-regional-nodes-category-cN3"
+    },
+    {
+      "filename": "Patient-cancer-patient-eve-anyperson.json",
+      "resourceType": "Patient",
+      "id": "cancer-patient-eve-anyperson"
+    },
+    {
+      "filename": "Procedure-cancer-related-surgical-procedure-lobectomy.json",
+      "resourceType": "Procedure",
+      "id": "cancer-related-surgical-procedure-lobectomy"
+    },
+    {
+      "filename": "Observation-tnm-pathologic-primary-tumor-category-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "tnm-pathologic-primary-tumor-category-jenny-m"
+    },
+    {
+      "filename": "Procedure-us-core-procedure-biopsy-jenny-m.json",
+      "resourceType": "Procedure",
+      "id": "us-core-procedure-biopsy-jenny-m"
+    },
+    {
+      "filename": "Procedure-us-core-procedure-mammogram-jenny-m.json",
+      "resourceType": "Procedure",
+      "id": "us-core-procedure-mammogram-jenny-m"
+    },
+    {
+      "filename": "Observation-tumor-marker-test-egf.json",
+      "resourceType": "Observation",
+      "id": "tumor-marker-test-egf"
+    },
+    {
+      "filename": "MedicationRequest-cancer-related-medication-request-anastrozole-jenny-m.json",
+      "resourceType": "MedicationRequest",
+      "id": "cancer-related-medication-request-anastrozole-jenny-m"
+    },
+    {
+      "filename": "Observation-tumor-marker-test-pr-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "tumor-marker-test-pr-jenny-m"
+    },
+    {
+      "filename": "MedicationAdministration-cancer-related-medication-admin-doxorubicin-jenny-m.json",
+      "resourceType": "MedicationAdministration",
+      "id": "cancer-related-medication-admin-doxorubicin-jenny-m"
+    },
+    {
+      "filename": "Observation-tnm-clinical-primary-tumor-category-cT3.json",
+      "resourceType": "Observation",
+      "id": "tnm-clinical-primary-tumor-category-cT3"
+    },
+    {
+      "filename": "Procedure-cancer-related-surgical-procedure-jenny-m.json",
+      "resourceType": "Procedure",
+      "id": "cancer-related-surgical-procedure-jenny-m"
+    },
+    {
+      "filename": "Patient-cancer-patient-adam-everyman.json",
+      "resourceType": "Patient",
+      "id": "cancer-patient-adam-everyman"
+    },
+    {
+      "filename": "Observation-tumor-marker-test-oncotype-dx-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "tumor-marker-test-oncotype-dx-jenny-m"
+    },
+    {
+      "filename": "Observation-tnm-clinical-distant-metastases-category-cM0.json",
+      "resourceType": "Observation",
+      "id": "tnm-clinical-distant-metastases-category-cM0"
+    },
+    {
+      "filename": "Observation-us-core-observation-lab-sentinel-nodes-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "us-core-observation-lab-sentinel-nodes-jenny-m"
+    },
+    {
+      "filename": "Observation-bodyweight-jenny-m-2018-04-22.json",
+      "resourceType": "Observation",
+      "id": "bodyweight-jenny-m-2018-04-22"
+    },
+    {
+      "filename": "Patient-cancer-patient-john-anyperson.json",
+      "resourceType": "Patient",
+      "id": "cancer-patient-john-anyperson"
+    },
+    {
+      "filename": "Observation-us-core-observation-lab-neutrophils-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "us-core-observation-lab-neutrophils-jenny-m"
+    },
+    {
+      "filename": "Observation-bodyheight-jenny-m-2018-03-06.json",
+      "resourceType": "Observation",
+      "id": "bodyheight-jenny-m-2018-03-06"
+    },
+    {
+      "filename": "Observation-tnm-clinical-stage-group-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "tnm-clinical-stage-group-jenny-m"
+    },
+    {
+      "filename": "FamilyMemberHistory-family-member-history-sister-jenny-m.json",
+      "resourceType": "FamilyMemberHistory",
+      "id": "family-member-history-sister-jenny-m"
+    },
+    {
+      "filename": "FamilyMemberHistory-family-member-history-uncle-jenny-m.json",
+      "resourceType": "FamilyMemberHistory",
+      "id": "family-member-history-uncle-jenny-m"
+    },
+    {
+      "filename": "Observation-us-core-observation-lab-tumor-dcis-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "us-core-observation-lab-tumor-dcis-jenny-m"
+    },
+    {
+      "filename": "Observation-genomic-variant-fusion.json",
+      "resourceType": "Observation",
+      "id": "genomic-variant-fusion"
+    },
+    {
+      "filename": "MedicationAdministration-0cf13ebf-9515-4b0b-a5d1-978085b00bc6.json",
+      "resourceType": "MedicationAdministration",
+      "id": "cancer-related-medication-admin-cyclophosphamide-jenny-m"
+    },
+    {
+      "filename": "Practitioner-us-core-practitioner-nancy-oncology-nurse.json",
+      "resourceType": "Practitioner",
+      "id": "us-core-practitioner-nancy-oncology-nurse"
+    },
+    {
+      "filename": "SearchParameter-Condition-code.json",
+      "resourceType": "SearchParameter",
+      "id": "Condition-code",
+      "url": "http://hl7.org/fhir/us/mcode/SearchParameter/Condition-code",
+      "version": "2.0.0",
+      "type": "uri"
+    },
+    {
+      "filename": "Observation-tumor-size-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "tumor-size-jenny-m"
+    },
+    {
+      "filename": "Condition-us-core-condition-hypertension-jenny-m.json",
+      "resourceType": "Condition",
+      "id": "us-core-condition-hypertension-jenny-m"
+    },
+    {
+      "filename": "BodyStructure-john-anyperson-treatment-volume.json",
+      "resourceType": "BodyStructure",
+      "id": "john-anyperson-treatment-volume"
+    },
+    {
+      "filename": "Practitioner-us-core-practitioner-owen-oncologist.json",
+      "resourceType": "Practitioner",
+      "id": "us-core-practitioner-owen-oncologist"
+    },
+    {
+      "filename": "Observation-karnofsky-performance-status-normal-activity.json",
+      "resourceType": "Observation",
+      "id": "karnofsky-performance-status-normal-activity"
+    },
+    {
+      "filename": "Observation-tumor-size-pathology.json",
+      "resourceType": "Observation",
+      "id": "tumor-size-pathology"
+    },
+    {
+      "filename": "Observation-tumor-marker-test-her2-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "tumor-marker-test-her2-jenny-m"
+    },
+    {
+      "filename": "MedicationAdministration-cancer-related-medication-admin-paclitaxel-jenny-m.json",
+      "resourceType": "MedicationAdministration",
+      "id": "cancer-related-medication-admin-paclitaxel-jenny-m"
+    },
+    {
+      "filename": "Observation-genomic-variant-somatic-single-nucleotide.json",
+      "resourceType": "Observation",
+      "id": "genomic-variant-somatic-single-nucleotide"
+    },
+    {
+      "filename": "DiagnosticReport-genomics-report-john-anyperson.json",
+      "resourceType": "DiagnosticReport",
+      "id": "genomics-report-john-anyperson"
+    },
+    {
+      "filename": "MedicationRequest-cancer-related-medication-request-cisplatin.json",
+      "resourceType": "MedicationRequest",
+      "id": "cancer-related-medication-request-cisplatin"
+    },
+    {
+      "filename": "Condition-primary-cancer-condition-nsclc.json",
+      "resourceType": "Condition",
+      "id": "primary-cancer-condition-nsclc"
+    },
+    {
+      "filename": "Patient-cancer-patient-jenny-m.json",
+      "resourceType": "Patient",
+      "id": "cancer-patient-jenny-m"
+    },
+    {
+      "filename": "Observation-us-core-smokingstatus-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "us-core-smokingstatus-jenny-m"
+    },
+    {
+      "filename": "MedicationRequest-cancer-related-medication-request-doxorubicin-jenny-m.json",
+      "resourceType": "MedicationRequest",
+      "id": "cancer-related-medication-request-doxorubicin-jenny-m"
+    },
+    {
+      "filename": "Observation-lab-result-observation-hemoglobin.json",
+      "resourceType": "Observation",
+      "id": "lab-result-observation-hemoglobin"
+    },
+    {
+      "filename": "MedicationRequest-cancer-related-medication-request-cyclophosphamide-jenny-m.json",
+      "resourceType": "MedicationRequest",
+      "id": "cancer-related-medication-request-cyclophosphamide-jenny-m"
+    },
+    {
+      "filename": "Observation-bodyweight-jenny-m-2018-03-16.json",
+      "resourceType": "Observation",
+      "id": "bodyweight-jenny-m-2018-03-16"
+    },
+    {
+      "filename": "Condition-secondary-cancer-condition-brain-mets.json",
+      "resourceType": "Condition",
+      "id": "secondary-cancer-condition-brain-mets"
+    },
+    {
+      "filename": "BodyStructure-jenny-m-chest-wall-lymph-nodes-treatment-volume.json",
+      "resourceType": "BodyStructure",
+      "id": "jenny-m-chest-wall-lymph-nodes-treatment-volume"
+    },
+    {
+      "filename": "Observation-cancer-disease-status-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "cancer-disease-status-jenny-m"
+    },
+    {
+      "filename": "Observation-tnm-pathologic-distant-metastases-category-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "tnm-pathologic-distant-metastases-category-jenny-m"
+    },
+    {
+      "filename": "MedicationRequest-cancer-related-medication-request-paclitaxel-jenny-m.json",
+      "resourceType": "MedicationRequest",
+      "id": "cancer-related-medication-request-paclitaxel-jenny-m"
+    },
+    {
+      "filename": "BodyStructure-jenny-m-chest-wall-treatment-volume.json",
+      "resourceType": "BodyStructure",
+      "id": "jenny-m-chest-wall-treatment-volume"
+    },
+    {
+      "filename": "Organization-us-core-organization-bedrock-medicine.json",
+      "resourceType": "Organization",
+      "id": "us-core-organization-bedrock-medicine"
+    },
+    {
+      "filename": "SearchParameter-Patient-id.json",
+      "resourceType": "SearchParameter",
+      "id": "Patient-id",
+      "url": "http://hl7.org/fhir/us/mcode/SearchParameter/Patient-id",
+      "version": "2.0.0",
+      "type": "token"
+    },
+    {
+      "filename": "Practitioner-us-core-practitioner-jane-radiotech.json",
+      "resourceType": "Practitioner",
+      "id": "us-core-practitioner-jane-radiotech"
+    },
+    {
+      "filename": "Observation-tumor-marker-test-er-jenny-m.json",
+      "resourceType": "Observation",
+      "id": "tumor-marker-test-er-jenny-m"
+    },
+    {
+      "filename": "Practitioner-us-core-practitioner-peter-pathologist.json",
+      "resourceType": "Practitioner",
+      "id": "us-core-practitioner-peter-pathologist"
+    },
+    {
+      "filename": "Procedure-radiotherapy-treatment-summary-chest-wall-jenny-m.json",
+      "resourceType": "Procedure",
+      "id": "radiotherapy-treatment-summary-chest-wall-jenny-m"
+    }
+  ]
+}

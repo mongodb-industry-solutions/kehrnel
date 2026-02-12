@@ -2,17 +2,25 @@ import httpx
 print(f"HTTPretty version being used by pytest: {httpx.__version__}")
 print(f"HTTPretty file location: {httpx.__file__}")
 
+import pytest
 import pytest_asyncio
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 from httpx import AsyncClient
 import asyncio
 
-# Importing the app from FastAPI main file
-from src.app.main import app
-from src.app.core.database import get_mongodb_ehr_db
 from typing import AsyncGenerator
 from dotenv import load_dotenv
 import os
+
+try:
+    # Legacy v1 app (optional, can be removed in strategy-only runtime)
+    from src.app.main import app  # type: ignore
+    from src.app.core.database import get_mongodb_ehr_db  # type: ignore
+    _LEGACY_V1_AVAILABLE = True
+except Exception:
+    app = None
+    get_mongodb_ehr_db = None
+    _LEGACY_V1_AVAILABLE = False
 
 # Database Fixture
 # This fixture will create a new, clean database for each test session
@@ -72,6 +80,9 @@ async def client(test_db: AsyncIOMotorDatabase) -> AsyncGenerator[AsyncClient, N
     Provides an HTTPX AsyncClient for making the requests to the FastAPI app
     with the database dependency overriden to use the test database
     """
+    if not _LEGACY_V1_AVAILABLE:
+        pytest.skip("Legacy src.app v1 API is not present in this repo.")
+
     # Tells the FastAPI app to replace the get_mongodb_ehr_db with the test_db
     def override_get_db():
         return test_db

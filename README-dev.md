@@ -3,6 +3,7 @@
 ## Run the new runtime API
 
 ```bash
+python --version  # 3.10+ required
 python -m venv .venv && source .venv/bin/activate
 pip install -e .
 uvicorn kehrnel.api.app:app --reload
@@ -10,7 +11,7 @@ uvicorn kehrnel.api.app:app --reload
 ```
 
 ### Strategy discovery paths
-- Strategies discovered under `src/kehrnel/strategies` plus any paths in `KEHRNEL_STRATEGY_PATHS`.
+- Strategies discovered under `src/kehrnel/engine/strategies` plus any paths in `KEHRNEL_STRATEGY_PATHS`.
 - `KEHRNEL_STRATEGY_PATHS` supports `:` or `,` separators (e.g., `/path/a:/path/b`).
 - Discovery fails fast on invalid JSON/duplicate IDs.
 - Use `kehrnel-api` or `uvicorn kehrnel.api.app:app`; legacy entrypoints are not used by the active runtime.
@@ -31,4 +32,4 @@ pytest tests/contract
 - `POST /environments/{env}/query`
 - `POST /environments/{env}/extensions/{strategy}/{op}`
 
-See `docs/hdl-contract.md` for details.
+See `../HealthcareDataLab/docs/kehrnel-contracts/hdl-contract.md` for details.

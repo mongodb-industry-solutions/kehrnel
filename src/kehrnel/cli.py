@@ -14,7 +14,7 @@ from kehrnel.core.pack_validator import StrategyPackValidator
 
 
 def _strategy_paths() -> list[Path]:
-    paths = [Path(__file__).resolve().parents[1] / "strategies"]
+    paths = [Path(__file__).resolve().parents[1] / "engine" / "strategies"]
     extra = os.getenv("KEHRNEL_STRATEGY_PATHS")
     if extra:
         extra_paths = []

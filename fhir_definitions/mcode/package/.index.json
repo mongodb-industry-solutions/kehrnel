@@ -1,0 +1,1172 @@
+{
+  "index-version": 1,
+  "files": [
+    {
+      "filename": "StructureDefinition-mcode-comorbidities-parent.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-comorbidities-parent",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-comorbidities-parent",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Observation"
+    },
+    {
+      "filename": "StructureDefinition-mcode-radiotherapy-volume.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-radiotherapy-volume",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-radiotherapy-volume",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "BodyStructure"
+    },
+    {
+      "filename": "StructureDefinition-mcode-tumor-specimen.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-tumor-specimen",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-tumor-specimen",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Specimen"
+    },
+    {
+      "filename": "CapabilityStatement-mcode-receiver-patients-and-cancer-conditions.json",
+      "resourceType": "CapabilityStatement",
+      "id": "mcode-receiver-patients-and-cancer-conditions",
+      "url": "http://hl7.org/fhir/us/mcode/CapabilityStatement/mcode-receiver-patients-and-cancer-conditions",
+      "version": "2.0.0",
+      "kind": "requirements"
+    },
+    {
+      "filename": "StructureDefinition-mcode-laterality-qualifier.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-laterality-qualifier",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-laterality-qualifier",
+      "version": "2.0.0",
+      "kind": "complex-type",
+      "type": "Extension"
+    },
+    {
+      "filename": "ValueSet-mcode-primary-malignant-neoplasm-disorder-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-primary-malignant-neoplasm-disorder-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-primary-malignant-neoplasm-disorder-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-blood-loss-anemia-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-blood-loss-anemia-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-blood-loss-anemia-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-teleradiotherapy-electron-beam-technique-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-teleradiotherapy-electron-beam-technique-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-teleradiotherapy-electron-beam-technique-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-liver-disease-severe-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-liver-disease-severe-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-liver-disease-severe-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-primary-cancer-disorder-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-primary-cancer-disorder-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-primary-cancer-disorder-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-other-neurological-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-other-neurological-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-other-neurological-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "CapabilityStatement-mcode-receiver-patient-bundle.json",
+      "resourceType": "CapabilityStatement",
+      "id": "mcode-receiver-patient-bundle",
+      "url": "http://hl7.org/fhir/us/mcode/CapabilityStatement/mcode-receiver-patient-bundle",
+      "version": "2.0.0",
+      "kind": "requirements"
+    },
+    {
+      "filename": "ValueSet-mcode-cancer-related-surgical-procedure-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-cancer-related-surgical-procedure-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-cancer-related-surgical-procedure-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-valvular-disease-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-valvular-disease-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-valvular-disease-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-tnm-primary-tumor-category.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-tnm-primary-tumor-category",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-tnm-primary-tumor-category",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Observation"
+    },
+    {
+      "filename": "ValueSet-elixhauser-coagulation-deficiency-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-coagulation-deficiency-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-coagulation-deficiency-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ImplementationGuide-hl7.fhir.us.mcode.json",
+      "resourceType": "ImplementationGuide",
+      "id": "hl7.fhir.us.mcode",
+      "url": "http://hl7.org/fhir/us/mcode/ImplementationGuide/hl7.fhir.us.mcode",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-pulmonary-circulation-disorder-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-pulmonary-circulation-disorder-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-pulmonary-circulation-disorder-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-teleradiotherapy-carbon-ion-beam-technique-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-teleradiotherapy-carbon-ion-beam-technique-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-teleradiotherapy-carbon-ion-beam-technique-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "CapabilityStatement-mcode-sender-patients-with-cancer-condition.json",
+      "resourceType": "CapabilityStatement",
+      "id": "mcode-sender-patients-with-cancer-condition",
+      "url": "http://hl7.org/fhir/us/mcode/CapabilityStatement/mcode-sender-patients-with-cancer-condition",
+      "version": "2.0.0",
+      "kind": "requirements"
+    },
+    {
+      "filename": "ValueSet-mcode-tnm-regional-nodes-category-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-tnm-regional-nodes-category-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-tnm-regional-nodes-category-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-hypertension-complicated-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-hypertension-complicated-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-hypertension-complicated-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-radiotherapy-technique.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-radiotherapy-technique",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-radiotherapy-technique",
+      "version": "2.0.0",
+      "kind": "complex-type",
+      "type": "Extension"
+    },
+    {
+      "filename": "ValueSet-elixhauser-deficiency-anemia-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-deficiency-anemia-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-deficiency-anemia-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-radiotherapy-sessions.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-radiotherapy-sessions",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-radiotherapy-sessions",
+      "version": "2.0.0",
+      "kind": "complex-type",
+      "type": "Extension"
+    },
+    {
+      "filename": "ValueSet-mcode-radiotherapy-volume-type-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-radiotherapy-volume-type-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-radiotherapy-volume-type-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "OperationDefinition-mcode-patient-everything.json",
+      "resourceType": "OperationDefinition",
+      "id": "mcode-patient-everything",
+      "url": "http://hl7.org/fhir/us/mcode/OperationDefinition/mcode-patient-everything",
+      "version": "2.0.0",
+      "kind": "operation",
+      "type": "false"
+    },
+    {
+      "filename": "StructureDefinition-mcode-cancer-related-surgical-procedure.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-cancer-related-surgical-procedure",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-cancer-related-surgical-procedure",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Procedure"
+    },
+    {
+      "filename": "ValueSet-elixhauser-renal-failure-severe-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-renal-failure-severe-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-renal-failure-severe-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-cancer-stage-group.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-cancer-stage-group",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-cancer-stage-group",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Observation"
+    },
+    {
+      "filename": "ValueSet-mcode-teleradiotherapy-photon-beam-technique-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-teleradiotherapy-photon-beam-technique-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-teleradiotherapy-photon-beam-technique-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-brachytherapy-permanent-seeds-technique-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-brachytherapy-permanent-seeds-technique-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-brachytherapy-permanent-seeds-technique-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-teleradiotherapy-neutron-beam-technique-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-teleradiotherapy-neutron-beam-technique-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-teleradiotherapy-neutron-beam-technique-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-hgvs-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-hgvs-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-hgvs-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-tnm-distant-metastases-category.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-tnm-distant-metastases-category",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-tnm-distant-metastases-category",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Observation"
+    },
+    {
+      "filename": "StructureDefinition-mcode-radiotherapy-dose-delivered-to-volume.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-radiotherapy-dose-delivered-to-volume",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-radiotherapy-dose-delivered-to-volume",
+      "version": "2.0.0",
+      "kind": "complex-type",
+      "type": "Extension"
+    },
+    {
+      "filename": "ValueSet-elixhauser-weight-loss-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-weight-loss-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-weight-loss-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-brachytherapy-low-dose-rate-temporary-technique-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-brachytherapy-low-dose-rate-temporary-technique-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-brachytherapy-low-dose-rate-temporary-technique-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-cancer-body-location-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-cancer-body-location-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-cancer-body-location-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-carcinoma-in-situ-disorder-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-carcinoma-in-situ-disorder-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-carcinoma-in-situ-disorder-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "CapabilityStatement-mcode-sender-patients-and-cancer-conditions.json",
+      "resourceType": "CapabilityStatement",
+      "id": "mcode-sender-patients-and-cancer-conditions",
+      "url": "http://hl7.org/fhir/us/mcode/CapabilityStatement/mcode-sender-patients-and-cancer-conditions",
+      "version": "2.0.0",
+      "kind": "requirements"
+    },
+    {
+      "filename": "ValueSet-mcode-observation-codes-regional-nodes-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-observation-codes-regional-nodes-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-observation-codes-regional-nodes-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-radiotherapy-modality.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-radiotherapy-modality",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-radiotherapy-modality",
+      "version": "2.0.0",
+      "kind": "complex-type",
+      "type": "Extension"
+    },
+    {
+      "filename": "ValueSet-mcode-genomic-molecular-consequence-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-genomic-molecular-consequence-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-genomic-molecular-consequence-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "CodeSystem-loinc-requested-cs.json",
+      "resourceType": "CodeSystem",
+      "id": "loinc-requested-cs",
+      "url": "http://hl7.org/fhir/us/mcode/CodeSystem/loinc-requested-cs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-ulcer-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-ulcer-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-ulcer-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-genomic-specimen.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-genomic-specimen",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-genomic-specimen",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Specimen"
+    },
+    {
+      "filename": "StructureDefinition-mcode-secondary-cancer-condition.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-secondary-cancer-condition",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-secondary-cancer-condition",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Condition"
+    },
+    {
+      "filename": "StructureDefinition-mcode-body-structure-identifier.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-body-structure-identifier",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-body-structure-identifier",
+      "version": "2.0.0",
+      "kind": "complex-type",
+      "type": "Identifier"
+    },
+    {
+      "filename": "StructureDefinition-mcode-tumor.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-tumor",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-tumor",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "BodyStructure"
+    },
+    {
+      "filename": "ValueSet-elixhauser-cancer-metastatic-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-cancer-metastatic-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-cancer-metastatic-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-radiotherapy-technique-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-radiotherapy-technique-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-radiotherapy-technique-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-brachytherapy-radiopharmaceutical-technique-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-brachytherapy-radiopharmaceutical-technique-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-brachytherapy-radiopharmaceutical-technique-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-cancer-lymphoma-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-cancer-lymphoma-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-cancer-lymphoma-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-cancer-patient.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-cancer-patient",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-cancer-patient",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Patient"
+    },
+    {
+      "filename": "StructureDefinition-mcode-body-location-qualifier.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-body-location-qualifier",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-body-location-qualifier",
+      "version": "2.0.0",
+      "kind": "complex-type",
+      "type": "Extension"
+    },
+    {
+      "filename": "ValueSet-mcode-teleradiotherapy-modality-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-teleradiotherapy-modality-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-teleradiotherapy-modality-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-comorbid-condition-code.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-comorbid-condition-code",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-comorbid-condition-code",
+      "version": "2.0.0",
+      "kind": "complex-type",
+      "type": "Extension"
+    },
+    {
+      "filename": "ValueSet-mcode-teleradiotherapy-proton-beam-technique-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-teleradiotherapy-proton-beam-technique-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-teleradiotherapy-proton-beam-technique-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-genomic-region-studied.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-genomic-region-studied",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-genomic-region-studied",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Observation"
+    },
+    {
+      "filename": "CapabilityStatement-mcode-receiver-patients-with-cancer-condition.json",
+      "resourceType": "CapabilityStatement",
+      "id": "mcode-receiver-patients-with-cancer-condition",
+      "url": "http://hl7.org/fhir/us/mcode/CapabilityStatement/mcode-receiver-patients-with-cancer-condition",
+      "version": "2.0.0",
+      "kind": "requirements"
+    },
+    {
+      "filename": "CapabilityStatement-mcode-sender-cancer-conditions-then-patients.json",
+      "resourceType": "CapabilityStatement",
+      "id": "mcode-sender-cancer-conditions-then-patients",
+      "url": "http://hl7.org/fhir/us/mcode/CapabilityStatement/mcode-sender-cancer-conditions-then-patients",
+      "version": "2.0.0",
+      "kind": "requirements"
+    },
+    {
+      "filename": "StructureDefinition-mcode-procedure-intent.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-procedure-intent",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-procedure-intent",
+      "version": "2.0.0",
+      "kind": "complex-type",
+      "type": "Extension"
+    },
+    {
+      "filename": "StructureDefinition-mcode-comorbid-condition-reference.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-comorbid-condition-reference",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-comorbid-condition-reference",
+      "version": "2.0.0",
+      "kind": "complex-type",
+      "type": "Extension"
+    },
+    {
+      "filename": "ValueSet-elixhauser-peripheral-vascular-disease-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-peripheral-vascular-disease-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-peripheral-vascular-disease-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-tnm-distant-metastases-category-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-tnm-distant-metastases-category-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-tnm-distant-metastases-category-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-benign-uncertain-neoplasm-brain-cns-disorder-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-benign-uncertain-neoplasm-brain-cns-disorder-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-benign-uncertain-neoplasm-brain-cns-disorder-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-karnofsky-performance-status.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-karnofsky-performance-status",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-karnofsky-performance-status",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Observation"
+    },
+    {
+      "filename": "ValueSet-mcode-brachytherapy-modality-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-brachytherapy-modality-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-brachytherapy-modality-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "CapabilityStatement-mcode-receiver-patients-in-group.json",
+      "resourceType": "CapabilityStatement",
+      "id": "mcode-receiver-patients-in-group",
+      "url": "http://hl7.org/fhir/us/mcode/CapabilityStatement/mcode-receiver-patients-in-group",
+      "version": "2.0.0",
+      "kind": "requirements"
+    },
+    {
+      "filename": "ValueSet-elixhauser-other-thyroid-disorder-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-other-thyroid-disorder-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-other-thyroid-disorder-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-body-location-qualifier-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-body-location-qualifier-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-body-location-qualifier-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-alcohol-abuse-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-alcohol-abuse-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-alcohol-abuse-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-cancer-disease-status-evidence-type.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-cancer-disease-status-evidence-type",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-cancer-disease-status-evidence-type",
+      "version": "2.0.0",
+      "kind": "complex-type",
+      "type": "Extension"
+    },
+    {
+      "filename": "ValueSet-mcode-brachytherapy-pulsed-dose-rate-technique-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-brachytherapy-pulsed-dose-rate-technique-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-brachytherapy-pulsed-dose-rate-technique-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-cerebrovascular-disease-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-cerebrovascular-disease-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-cerebrovascular-disease-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-obesity-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-obesity-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-obesity-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-dementia-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-dementia-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-dementia-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-renal-failure-moderate-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-renal-failure-moderate-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-renal-failure-moderate-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-comorbidities-elixhauser.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-comorbidities-elixhauser",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-comorbidities-elixhauser",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Observation"
+    },
+    {
+      "filename": "StructureDefinition-mcode-genomic-variant.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-genomic-variant",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-genomic-variant",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Observation"
+    },
+    {
+      "filename": "ValueSet-mcode-cytologic-evidence-malignancy-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-cytologic-evidence-malignancy-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-cytologic-evidence-malignancy-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-cancer-solid-tumor-malignant-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-cancer-solid-tumor-malignant-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-cancer-solid-tumor-malignant-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-radiotherapy-treatment-location-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-radiotherapy-treatment-location-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-radiotherapy-treatment-location-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-depression-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-depression-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-depression-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-tnm-primary-tumor-category-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-tnm-primary-tumor-category-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-tnm-primary-tumor-category-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-rheumatoid-arthritis-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-rheumatoid-arthritis-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-rheumatoid-arthritis-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-body-location-and-laterality-qualifier-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-body-location-and-laterality-qualifier-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-body-location-and-laterality-qualifier-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-related-condition.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-related-condition",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-related-condition",
+      "version": "2.0.0",
+      "kind": "complex-type",
+      "type": "Extension"
+    },
+    {
+      "filename": "CapabilityStatement-mcode-sender-patient-bundle.json",
+      "resourceType": "CapabilityStatement",
+      "id": "mcode-sender-patient-bundle",
+      "url": "http://hl7.org/fhir/us/mcode/CapabilityStatement/mcode-sender-patient-bundle",
+      "version": "2.0.0",
+      "kind": "requirements"
+    },
+    {
+      "filename": "ig-r4.json",
+      "resourceType": "ImplementationGuide",
+      "id": "hl7.fhir.us.mcode",
+      "url": "http://hl7.org/fhir/us/mcode/ImplementationGuide/hl7.fhir.us.mcode",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-brachytherapy-high-dose-rate-technique-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-brachytherapy-high-dose-rate-technique-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-brachytherapy-high-dose-rate-technique-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-tumor-size-method-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-tumor-size-method-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-tumor-size-method-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-radiotherapy-modality-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-radiotherapy-modality-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-radiotherapy-modality-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-cancer-disease-status.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-cancer-disease-status",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-cancer-disease-status",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Observation"
+    },
+    {
+      "filename": "ValueSet-elixhauser-neurological-seizure-disorder-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-neurological-seizure-disorder-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-neurological-seizure-disorder-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-ecog-performance-status.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-ecog-performance-status",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-ecog-performance-status",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Observation"
+    },
+    {
+      "filename": "ValueSet-mcode-laterality-qualifier-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-laterality-qualifier-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-laterality-qualifier-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-primary-cancer-condition.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-primary-cancer-condition",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-primary-cancer-condition",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Condition"
+    },
+    {
+      "filename": "StructureDefinition-mcode-cancer-related-medication-administration.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-cancer-related-medication-administration",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-cancer-related-medication-administration",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "MedicationAdministration"
+    },
+    {
+      "filename": "StructureDefinition-mcode-treatment-termination-reason.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-treatment-termination-reason",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-treatment-termination-reason",
+      "version": "2.0.0",
+      "kind": "complex-type",
+      "type": "Extension"
+    },
+    {
+      "filename": "ValueSet-elixhauser-psychosis-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-psychosis-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-psychosis-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-histology-morphology-behavior.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-histology-morphology-behavior",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-histology-morphology-behavior",
+      "version": "2.0.0",
+      "kind": "complex-type",
+      "type": "Extension"
+    },
+    {
+      "filename": "ValueSet-elixhauser-drug-abuse-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-drug-abuse-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-drug-abuse-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-cancer-disease-status-evidence-type-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-cancer-disease-status-evidence-type-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-cancer-disease-status-evidence-type-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-radiotherapy-treatment-location-qualifier-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-radiotherapy-treatment-location-qualifier-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-radiotherapy-treatment-location-qualifier-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-tumor-marker-test-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-tumor-marker-test-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-tumor-marker-test-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-neurological-movement-disorder-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-neurological-movement-disorder-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-neurological-movement-disorder-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-diabetes-uncomplicated-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-diabetes-uncomplicated-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-diabetes-uncomplicated-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-hypothyroidism-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-hypothyroidism-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-hypothyroidism-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-tnm-regional-nodes-category.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-tnm-regional-nodes-category",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-tnm-regional-nodes-category",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Observation"
+    },
+    {
+      "filename": "ValueSet-mcode-condition-status-trend-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-condition-status-trend-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-condition-status-trend-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-cancer-stage-group-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-cancer-stage-group-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-cancer-stage-group-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-cancer-disorder-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-cancer-disorder-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-cancer-disorder-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-present-absent.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-present-absent",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-present-absent",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "CapabilityStatement-mcode-sender-patients-in-group.json",
+      "resourceType": "CapabilityStatement",
+      "id": "mcode-sender-patients-in-group",
+      "url": "http://hl7.org/fhir/us/mcode/CapabilityStatement/mcode-sender-patients-in-group",
+      "version": "2.0.0",
+      "kind": "requirements"
+    },
+    {
+      "filename": "ValueSet-elixhauser-cancer-solid-tumor-in-situ-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-cancer-solid-tumor-in-situ-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-cancer-solid-tumor-in-situ-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-cancer-related-medication-request.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-cancer-related-medication-request",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-cancer-related-medication-request",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "MedicationRequest"
+    },
+    {
+      "filename": "StructureDefinition-mcode-genomics-report.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-genomics-report",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-genomics-report",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "DiagnosticReport"
+    },
+    {
+      "filename": "ValueSet-mcode-observation-codes-primary-tumor-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-observation-codes-primary-tumor-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-observation-codes-primary-tumor-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-aids-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-aids-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-aids-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-treatment-termination-reason-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-treatment-termination-reason-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-treatment-termination-reason-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-tumor-size.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-tumor-size",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-tumor-size",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Observation"
+    },
+    {
+      "filename": "ValueSet-mcode-clinvar-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-clinvar-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-clinvar-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-congestive-heart-failure-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-congestive-heart-failure-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-congestive-heart-failure-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-diabetes-complicated-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-diabetes-complicated-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-diabetes-complicated-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-hgnc-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-hgnc-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-hgnc-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-chronic-pulmonary-disease-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-chronic-pulmonary-disease-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-chronic-pulmonary-disease-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-observation-codes-stage-group-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-observation-codes-stage-group-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-observation-codes-stage-group-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-paralysis-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-paralysis-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-paralysis-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-radiotherapy-modality-and-technique.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-radiotherapy-modality-and-technique",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-radiotherapy-modality-and-technique",
+      "version": "2.0.0",
+      "kind": "complex-type",
+      "type": "Extension"
+    },
+    {
+      "filename": "ValueSet-mcode-cancer-staging-system-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-cancer-staging-system-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-cancer-staging-system-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-secondary-cancer-disorder-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-secondary-cancer-disorder-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-secondary-cancer-disorder-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-cancer-leukemia-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-cancer-leukemia-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-cancer-leukemia-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-elixhauser-hypertension-uncomplicated-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-hypertension-uncomplicated-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-hypertension-uncomplicated-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-melanoma-in-situ-disorder-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-melanoma-in-situ-disorder-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-melanoma-in-situ-disorder-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "CodeSystem-snomed-requested-cs.json",
+      "resourceType": "CodeSystem",
+      "id": "snomed-requested-cs",
+      "url": "http://hl7.org/fhir/us/mcode/CodeSystem/snomed-requested-cs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-radiotherapy-course-summary.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-radiotherapy-course-summary",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-radiotherapy-course-summary",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Procedure"
+    },
+    {
+      "filename": "ValueSet-mcode-tumor-size-units-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-tumor-size-units-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-tumor-size-units-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-observation-codes-distant-metastases-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-observation-codes-distant-metastases-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-observation-codes-distant-metastases-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-procedure-intent-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-procedure-intent-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-procedure-intent-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-brachytherapy-technique-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-brachytherapy-technique-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-brachytherapy-technique-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-histology-morphology-behavior-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-histology-morphology-behavior-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-histology-morphology-behavior-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-hypereosinophilic-syndrome-disorder-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-hypereosinophilic-syndrome-disorder-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-hypereosinophilic-syndrome-disorder-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "CapabilityStatement-mcode-receiver-cancer-conditions-then-patients.json",
+      "resourceType": "CapabilityStatement",
+      "id": "mcode-receiver-cancer-conditions-then-patients",
+      "url": "http://hl7.org/fhir/us/mcode/CapabilityStatement/mcode-receiver-cancer-conditions-then-patients",
+      "version": "2.0.0",
+      "kind": "requirements"
+    },
+    {
+      "filename": "ValueSet-mcode-teleradiotherapy-technique-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-teleradiotherapy-technique-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-teleradiotherapy-technique-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-patient-bundle.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-patient-bundle",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-patient-bundle",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Bundle"
+    },
+    {
+      "filename": "ValueSet-mcode-brachytherapy-high-dose-rate-electronic-technique-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-brachytherapy-high-dose-rate-electronic-technique-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-brachytherapy-high-dose-rate-electronic-technique-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-patient-group.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-patient-group",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-patient-group",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Group"
+    },
+    {
+      "filename": "ValueSet-mcode-dna-change-type-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-dna-change-type-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-dna-change-type-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "ValueSet-mcode-genomic-specimen-type-vs.json",
+      "resourceType": "ValueSet",
+      "id": "mcode-genomic-specimen-type-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/mcode-genomic-specimen-type-vs",
+      "version": "2.0.0"
+    },
+    {
+      "filename": "StructureDefinition-mcode-tumor-marker-test.json",
+      "resourceType": "StructureDefinition",
+      "id": "mcode-tumor-marker-test",
+      "url": "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-tumor-marker-test",
+      "version": "2.0.0",
+      "kind": "resource",
+      "type": "Observation"
+    },
+    {
+      "filename": "ValueSet-elixhauser-liver-disease-mild-vs.json",
+      "resourceType": "ValueSet",
+      "id": "elixhauser-liver-disease-mild-vs",
+      "url": "http://hl7.org/fhir/us/mcode/ValueSet/elixhauser-liver-disease-mild-vs",
+      "version": "2.0.0"
+    }
+  ]
+}

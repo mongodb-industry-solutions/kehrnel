@@ -5,7 +5,7 @@ from typing import Any, Dict, Iterable, List
 
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
-from kehrnel.adapters.base import StorageAdapter
+from kehrnel.persistence.mongodb.base import StorageAdapter
 
 
 class MongoStorageAdapter(StorageAdapter):

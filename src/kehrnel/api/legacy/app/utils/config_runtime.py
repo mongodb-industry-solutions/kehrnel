@@ -14,8 +14,8 @@ from kehrnel.legacy.transform.core import Transformer, load_default_cfg
 
 # Default mappings path used when no override is provided
 DEFAULT_MAPPINGS_PATH = (
-    Path(__file__).resolve().parents[2]
-    / "kehrnel"
+    Path(__file__).resolve().parents[4]
+    / "engine"
     / "strategies"
     / "openehr"
     / "rps_dual"

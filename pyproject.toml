@@ -7,7 +7,7 @@ name = "kehrnel-core"
 version = "0.1.0"
 description = "kehrnel core, mapper and CLI"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 authors = [{ name = "Your Name", email = "you@example.com" }]
 
 # Hard runtime deps
@@ -17,7 +17,9 @@ dependencies = [
     "lxml>=4.9",
     "Jinja2>=3.1",
     "pydantic>=2.5",
-    "jsonschema>=4.22"
+    "jsonschema>=4.22",
+    "python-dateutil>=2.8.2",
+    "cryptography>=42.0.0"
 ]
 
 [project.optional-dependencies]
@@ -60,7 +62,9 @@ all = [
     "motor>=3.3",
     "certifi>=2024.0.0",
     "python-multipart>=0.0.6",
-    "pydantic>=2.5"
+    "pydantic>=2.5",
+    "python-dateutil>=2.8.2",
+    "cryptography>=42.0.0"
 ]
 
 [project.scripts]
@@ -94,7 +98,7 @@ include = ["kehrnel*"]
 # ---------------------------------------------------------------------------
 [tool.setuptools.package-data]
 "*" = ["*.yaml", "*.yml", "*.json"]
-"kehrnel.common.mapping" = ["patterns.yaml"]
+"kehrnel.engine.common.mapping" = ["patterns.yaml"]
 
 # ---------------------------------------------------------------------------
 # Optional: uvicorn dev settings

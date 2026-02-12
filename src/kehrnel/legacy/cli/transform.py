@@ -30,8 +30,8 @@ def flatten(
             "collections": {},
         },
         mappings_path=str(
-            Path(__file__).resolve().parents[1]
-            / "kehrnel"
+            Path(__file__).resolve().parents[2]
+            / "engine"
             / "strategies"
             / "openehr"
             / "rps_dual"

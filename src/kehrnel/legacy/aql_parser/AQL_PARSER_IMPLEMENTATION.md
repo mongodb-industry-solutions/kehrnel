@@ -62,7 +62,7 @@ src/aql_parser/
 ├── validator.py           # AQL validation and syntax checking
 └── __init__.py            # Module initialization
 
-src/api/v1/aql/
+src/kehrnel/api/domains/openehr/aql/
 ├── routes.py              # Updated with new validation and parsing endpoints
 ├── service.py             # Updated to use new parser
 └── ...                    # Other existing files

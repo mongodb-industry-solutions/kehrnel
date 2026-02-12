@@ -32,8 +32,8 @@ app = typer.Typer(add_completion=False, rich_markup_mode="rich")
 
 
 def _default_strategies_root() -> Path:
-    """Root where built-in strategy packs live (src/kehrnel/strategies)."""
-    return Path(__file__).resolve().parent.parent / "kehrnel" / "strategies"
+    """Root where built-in strategy packs live (src/kehrnel/engine/strategies)."""
+    return Path(__file__).resolve().parents[2] / "engine" / "strategies"
 
 
 def _load_manifest_json(path: Path) -> Optional[Dict[str, Any]]:
@@ -193,7 +193,7 @@ def _map_ranges(val: Any, mapping: Optional[Dict[str, Any]]) -> Any:
 def main(
     mapping: Optional[Path] = typer.Option(None, "-m", "--mapping", help="Mapping YAML/JSON file (optional when --strategy is set)"),
     strategy: Optional[str] = typer.Option(None, "-S", "--strategy", help="Strategy id to auto-resolve mapping under strategies/<...>/ingest/config"),
-    strategies_root: Optional[Path] = typer.Option(None, "--strategies-root", help="Base directory to search strategy packs (default: src/kehrnel/strategies)"),
+    strategies_root: Optional[Path] = typer.Option(None, "--strategies-root", help="Base directory to search strategy packs (default: src/kehrnel/engine/strategies)"),
     source: Path = typer.Option(..., "-s", help="Source data to transform"),
     webtemplate: Path = typer.Option(..., "-t", help="WebTemplate JSON (.json)"),
     opt: Path = typer.Option(..., "-p", help="OPT template (.opt) for canonical COMPOSITION"),
