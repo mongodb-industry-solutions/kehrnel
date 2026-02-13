@@ -3,6 +3,7 @@
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from pymongo.errors import PyMongoError
 import logging
+import os
 from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
 from kehrnel.api.legacy.app.core.config import settings
@@ -10,6 +11,27 @@ from kehrnel.api.legacy.app.core.config import settings
 logger = logging.getLogger(__name__)
 
 STORED_QUERY_COLL_NAME = "stored_queries"
+
+
+def _max_query_results() -> int:
+    try:
+        return max(1, int(os.getenv("KEHRNEL_MAX_QUERY_RESULTS", "1000")))
+    except Exception:
+        return 1000
+
+
+def _max_query_time_ms() -> int:
+    try:
+        return max(100, int(os.getenv("KEHRNEL_MAX_QUERY_TIME_MS", "15000")))
+    except Exception:
+        return 15000
+
+
+def _max_stored_query_list() -> int:
+    try:
+        return max(1, int(os.getenv("KEHRNEL_MAX_STORED_QUERY_LIST", "500")))
+    except Exception:
+        return 500
 
 
 def _ehr_coll() -> str:
@@ -75,7 +97,13 @@ async def detect_collection_format(db: AsyncIOMotorDatabase) -> str:
         return 'full'  # Default fallback
 
 
-async def execute_aql_query(pipeline: List[Dict[str, Any]], db: AsyncIOMotorDatabase, collection_format: str = None, use_search_collection: bool = False) -> List[Dict[str, Any]]:
+async def execute_aql_query(
+    pipeline: List[Dict[str, Any]],
+    db: AsyncIOMotorDatabase,
+    collection_format: str = None,
+    use_search_collection: bool = False,
+    max_results: int | None = None,
+) -> List[Dict[str, Any]]:
     """
     Executes a MongoDB aggregation pipeline against the appropriate compositions collection.
     
@@ -109,8 +137,9 @@ async def execute_aql_query(pipeline: List[Dict[str, Any]], db: AsyncIOMotorData
                 collection_name = flatten_coll
                 logger.info(f"Executing standard query against collection: {collection_name}")
         
-        cursor = db[collection_name].aggregate(pipeline)
-        doc_result = await cursor.to_list(length=None)
+        safe_max_results = min(max_results or _max_query_results(), _max_query_results())
+        cursor = db[collection_name].aggregate(pipeline, maxTimeMS=_max_query_time_ms())
+        doc_result = await cursor.to_list(length=safe_max_results)
         return doc_result
     except PyMongoError as e:
         logger.error(f"AQL query execution failed in repository: {e}")
@@ -132,7 +161,7 @@ async def find_stored_query_by_name(name: str, db: AsyncIOMotorDatabase) -> Opti
 
 async def find_all_stored_queries(db: AsyncIOMotorDatabase) -> List[Dict[str, Any]]:
     try:
-        return await db[STORED_QUERY_COLL_NAME].find({}).to_list(length=None)
+        return await db[STORED_QUERY_COLL_NAME].find({}).to_list(length=_max_stored_query_list())
     except PyMongoError as e:
         raise e
 

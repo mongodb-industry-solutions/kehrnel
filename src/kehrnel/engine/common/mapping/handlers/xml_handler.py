@@ -16,7 +16,15 @@ class XMLHandler:
         return path.suffix.lower() in {".xml",".cda"}
 
     def load_source(self, path: Path) -> etree._Element:
-        parser = etree.XMLParser(remove_blank_text=True, recover=True)
+        parser = etree.XMLParser(
+            remove_blank_text=True,
+            recover=False,
+            resolve_entities=False,
+            no_network=True,
+            load_dtd=False,
+            dtd_validation=False,
+            huge_tree=False,
+        )
         return etree.parse(str(path), parser).getroot()
 
     def preprocess_mapping_new(self, mapping: Dict, root: etree._Element) -> List[Dict[str, Any]]:

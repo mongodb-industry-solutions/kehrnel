@@ -1,4 +1,7 @@
 import logging
+import os
+import json
+import secrets
 from typing import Optional
 
 import certifi
@@ -32,6 +35,64 @@ def _extract_env_id(request: Request) -> Optional[str]:
     return (env_id or "").strip() or None
 
 
+def _default_env_id() -> Optional[str]:
+    return (
+        os.getenv("KEHRNEL_DEFAULT_ENV_ID")
+        or os.getenv("DEFAULT_ENV_ID")
+        or os.getenv("ENV_ID")
+        or None
+    )
+
+
+def _parse_api_key_env_scopes() -> dict[str, object]:
+    """
+    Parse KEHRNEL_API_KEY_ENV_SCOPES JSON mapping:
+      {"api-key-1": ["env-a","env-b"], "api-key-2": "*"}
+    """
+    raw = (os.getenv("KEHRNEL_API_KEY_ENV_SCOPES") or "").strip()
+    if not raw:
+        return {}
+    try:
+        parsed = json.loads(raw)
+    except Exception:
+        logger.warning("Invalid KEHRNEL_API_KEY_ENV_SCOPES JSON; ignoring")
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
+
+
+def _is_env_access_allowed(request: Request, env_id: str) -> bool:
+    scopes = _parse_api_key_env_scopes()
+    api_key = (request.headers.get("x-api-key") or "").strip()
+    if scopes:
+        if not api_key:
+            return False
+        matched_scope = None
+        for key, scope in scopes.items():
+            if secrets.compare_digest(api_key, str(key)):
+                matched_scope = scope
+                break
+        if matched_scope is None:
+            return False
+        if matched_scope == "*":
+            return True
+        if isinstance(matched_scope, list):
+            return env_id in {str(v).strip() for v in matched_scope if str(v).strip()}
+        return False
+
+    # Fallback safety: if no per-key scope configured, constrain to default env when set.
+    default_env = _default_env_id()
+    if default_env:
+        return env_id == default_env
+
+    # Last-resort compatibility for internal deployments without scope config.
+    logger.warning(
+        "Environment authz scope is not configured (KEHRNEL_API_KEY_ENV_SCOPES/KEHRNEL_DEFAULT_ENV_ID). "
+        "Allowing env_id=%s by compatibility fallback.",
+        env_id,
+    )
+    return True
+
+
 def _get_client_for_uri(uri: str) -> AsyncIOMotorClient:
     client = db.clients_by_uri.get(uri)
     if client is None:
@@ -49,6 +110,11 @@ async def _resolve_customer_db_from_activation(
         raise HTTPException(
             status_code=400,
             detail="Missing active environment. Provide x-active-env (or env_id query param).",
+        )
+    if not _is_env_access_allowed(request, env_id):
+        raise HTTPException(
+            status_code=403,
+            detail=f"Access to env_id={env_id} is not permitted for this API key.",
         )
 
     runtime = getattr(request.app.state, "strategy_runtime", None)

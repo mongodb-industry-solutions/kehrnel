@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 from pymongo.errors import PyMongoError
 from typing import List, Dict, Any
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +24,11 @@ from kehrnel.api.domains.openehr.aql.models import StoredQuery, StoredQuerySumma
 from kehrnel.api.domains.openehr.aql.transformers import AQLtoMQLTransformer
 from kehrnel.legacy.aql_parser.parser import AQLParser
 from kehrnel.persistence import get_default_strategy
+
+
+def _safe_error_message(message: str) -> str:
+    debug_enabled = os.getenv("KEHRNEL_DEBUG", "false").lower() in ("1", "true", "yes")
+    return message if debug_enabled else "Query execution failed"
 
 
 async def build_aql_pipeline(ast_query: Dict[str, Any], db: AsyncIOMotorDatabase, ehr_id: str = None) -> List[Dict[str, Any]]:
@@ -145,10 +151,11 @@ async def process_aql_ast_query(ast_query: Dict[str, Any], request_url: str, db:
             },
             status_code=200
         )
-    except PyMongoError as e:
+    except PyMongoError:
+        logger.error("AST query execution failed", exc_info=False)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail = f"Database error during query execution: {e}"
+            detail=_safe_error_message("Database error during query execution")
         )
     except (ValueError, NotImplementedError) as e:
         raise HTTPException(
@@ -215,13 +222,6 @@ async def process_aql_query(aql_query: str, request_url: str, db: AsyncIOMotorDa
             use_search_collection=use_search_strategy
         )
 
-        # Debug: Log the results structure
-        print(f"DEBUG - Results type: {type(results)}")
-        print(f"DEBUG - Results length: {len(results) if isinstance(results, list) else 'N/A'}")
-        if results:
-            print(f"DEBUG - First result type: {type(results[0])}")
-            print(f"DEBUG - First result: {results[0]}")
-
         # Step 4: Format the response
         meta = MetaData(
             href=str(request_url),
@@ -255,10 +255,11 @@ async def process_aql_query(aql_query: str, request_url: str, db: AsyncIOMotorDa
         
         return QueryResponse(meta=meta, q=aql_query, columns=columns, rows=serializable_results)
     
-    except PyMongoError as e:
+    except PyMongoError:
+        logger.error("AQL query execution failed", exc_info=False)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail = f"Database error during query execution: {e}"
+            detail=_safe_error_message("Database error during query execution")
         )
     except (ValueError, NotImplementedError) as e:
         raise HTTPException(
@@ -274,10 +275,10 @@ async def create_or_update_stored_query(name: str, aql_query: str, db: AsyncIOMo
     """
     try:
         await save_stored_query(name=name, aql_query=aql_query, db=db)
-    except PyMongoError as e:
+    except PyMongoError:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Database error while saving stored query '{name}': {e}"
+            detail=_safe_error_message(f"Database error while saving stored query '{name}'")
         )
 
 async def retrieve_stored_query(name: str, db: AsyncIOMotorDatabase) -> StoredQuery:
@@ -297,10 +298,10 @@ async def list_all_stored_queries(db: AsyncIOMotorDatabase) -> List[StoredQueryS
     try:
         query_docs = await find_all_stored_queries(db)
         return [StoredQuerySummary.model_validate(doc) for doc in query_docs]
-    except PyMongoError as e:
+    except PyMongoError:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Database error while listing stored queries: {e}"
+            detail=_safe_error_message("Database error while listing stored queries")
         )
 
 async def remove_stored_query(name: str, db: AsyncIOMotorDatabase) -> None:
@@ -314,8 +315,8 @@ async def remove_stored_query(name: str, db: AsyncIOMotorDatabase) -> None:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Stored query with name '{name}' not found for deletion."
             )
-    except PyMongoError as e:
+    except PyMongoError:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Database error while deleting stored query '{name}': {e}"
+            detail=_safe_error_message(f"Database error while deleting stored query '{name}'")
         )

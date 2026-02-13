@@ -4,6 +4,7 @@ Admin/runtime API for strategy discovery and environment operations.
 import json
 import os
 import tempfile
+import secrets
 from pathlib import Path
 from fastapi import APIRouter, Request, Body
 from fastapi.responses import JSONResponse, FileResponse
@@ -28,6 +29,7 @@ router = APIRouter()
 
 
 def _error_response(exc: Exception) -> JSONResponse:
+    debug_enabled = os.getenv("KEHRNEL_DEBUG", "false").lower() in ("1", "true", "yes")
     code = "INTERNAL_ERROR"
     status = 500
     details = {}
@@ -41,7 +43,45 @@ def _error_response(exc: Exception) -> JSONResponse:
     elif isinstance(exc, ValueError):
         status = 400
         code = "INVALID_INPUT"
-    return JSONResponse(status_code=status, content={"error": {"code": code, "message": str(exc), "details": details}})
+    if debug_enabled or status < 500:
+        message = str(exc)
+    else:
+        message = "Internal server error"
+    return JSONResponse(status_code=status, content={"error": {"code": code, "message": message, "details": details}})
+
+
+def _require_admin_access(request: Request) -> None:
+    """Require authenticated admin API key for privileged routes."""
+    auth_enabled = os.getenv("KEHRNEL_AUTH_ENABLED", "true").lower() in ("1", "true", "yes")
+    if not auth_enabled:
+        raise KehrnelError(code="AUTH_REQUIRED", status=401, message="Authentication is required for this endpoint")
+
+    api_key = (request.headers.get("x-api-key") or "").strip()
+    if not api_key:
+        raise KehrnelError(code="UNAUTHORIZED", status=401, message="Invalid or missing API key")
+
+    valid_keys = [k.strip() for k in (os.getenv("KEHRNEL_API_KEYS", "") or "").split(",") if k.strip()]
+    if not valid_keys or not any(secrets.compare_digest(api_key, k) for k in valid_keys):
+        raise KehrnelError(code="UNAUTHORIZED", status=401, message="Invalid or missing API key")
+
+    # Optional stricter admin key separation; fallback to KEHRNEL_API_KEYS when unset.
+    admin_keys = [k.strip() for k in (os.getenv("KEHRNEL_ADMIN_API_KEYS", "") or "").split(",") if k.strip()]
+    if admin_keys and not any(secrets.compare_digest(api_key, k) for k in admin_keys):
+        raise KehrnelError(code="FORBIDDEN", status=403, message="Admin privileges required")
+
+
+def _get_max_upload_bytes() -> int:
+    try:
+        return max(1024 * 1024, int(os.getenv("KEHRNEL_MAX_UPLOAD_BYTES", str(10 * 1024 * 1024))))
+    except ValueError:
+        return 10 * 1024 * 1024
+
+
+def _get_max_opt_bytes() -> int:
+    try:
+        return max(1024 * 1024, int(os.getenv("KEHRNEL_MAX_OPT_BYTES", str(5 * 1024 * 1024))))
+    except ValueError:
+        return 5 * 1024 * 1024
 
 
 def _history_summary(rt, env_id: str, domain: str):
@@ -351,14 +391,24 @@ async def api_transform(request: Request):
             raise KehrnelError(code="INVALID_INPUT", status=400, message="document file is required")
         if not opt_content or not str(opt_content).strip():
             raise KehrnelError(code="INVALID_INPUT", status=400, message="opt_content is required")
+        if len(str(opt_content).encode("utf-8")) > _get_max_opt_bytes():
+            raise KehrnelError(code="PAYLOAD_TOO_LARGE", status=413, message="opt_content exceeds upload limit")
 
         mapping = _load_mapping_payload(str(mapping_raw or ""))
 
         filename = getattr(upload, "filename", None) or "document.xml"
         suffix = Path(filename).suffix or ".xml"
+        max_upload_bytes = _get_max_upload_bytes()
         with tempfile.NamedTemporaryFile("wb", suffix=suffix, delete=False) as src_tmp:
-            content_bytes = await upload.read()
-            src_tmp.write(content_bytes)
+            total = 0
+            while True:
+                chunk = await upload.read(1024 * 1024)
+                if not chunk:
+                    break
+                total += len(chunk)
+                if total > max_upload_bytes:
+                    raise KehrnelError(code="PAYLOAD_TOO_LARGE", status=413, message="document exceeds upload limit")
+                src_tmp.write(chunk)
             src_path = Path(src_tmp.name)
             temp_files.append(src_path)
 
@@ -502,6 +552,13 @@ def _validate_strategy_path(pack_path: str, request: Request) -> Path:
 @router.post("/strategies/load", include_in_schema=False)
 async def load_strategy_pack(request: Request, body: Dict[str, Any] = Body(default_factory=dict)):
     try:
+        _require_admin_access(request)
+        if os.getenv("KEHRNEL_ENABLE_STRATEGY_LOAD", "true").lower() not in ("1", "true", "yes"):
+            raise KehrnelError(
+                code="FEATURE_DISABLED",
+                status=403,
+                message="Dynamic strategy loading is disabled",
+            )
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise KehrnelError(code="RUNTIME_NOT_INITIALIZED", status=503, message="Strategy runtime not initialized")
@@ -598,6 +655,7 @@ async def list_ops(request: Request):
 @router.post("/ops", include_in_schema=False)
 async def run_op(request: Request, body: Dict[str, Any] = Body(default_factory=dict)):
     try:
+        _require_admin_access(request)
         env_id = body.get("environment") or body.get("env_id")
         domain = body.get("domain")
         op = body.get("op")
@@ -755,6 +813,7 @@ async def get_strategy_spec(strategy_id: str, request: Request):
 @router.post("/environments/{env_id}/extensions/{strategy_id}/{op}", include_in_schema=False)
 async def run_extension(env_id: str, strategy_id: str, op: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict)):
     try:
+        _require_admin_access(request)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
@@ -772,6 +831,7 @@ async def run_extension(env_id: str, strategy_id: str, op: str, request: Request
 @router.post("/environments/{env_id}/activate", include_in_schema=False)
 async def activate_env(env_id: str, request: Request, body: Dict[str, Any] = Body(default_factory=dict)):
     try:
+        _require_admin_access(request)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
@@ -998,6 +1058,7 @@ async def plan_env(env_id: str, request: Request, payload: Dict[str, Any] = Body
 @router.post("/environments/{env_id}/apply", include_in_schema=False)
 async def apply_env(env_id: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict)):
     try:
+        _require_admin_access(request)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
@@ -1022,6 +1083,7 @@ async def transform_env(env_id: str, request: Request, payload: Dict[str, Any] =
 @router.post("/environments/{env_id}/ingest", include_in_schema=False)
 async def ingest_env(env_id: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict)):
     try:
+        _require_admin_access(request)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
@@ -1143,6 +1205,7 @@ async def list_env_endpoints(env_id: str, request: Request):
 @router.post("/environments/{env_id}/synthetic/jobs")
 async def create_synthetic_job(env_id: str, request: Request, body: Dict[str, Any] = Body(default_factory=dict)):
     try:
+        _require_admin_access(request)
         manager = getattr(request.app.state, "synthetic_job_manager", None)
         if not manager:
             raise KehrnelError(code="JOBS_NOT_AVAILABLE", status=503, message="Synthetic job manager not initialized")
@@ -1250,6 +1313,7 @@ async def create_synthetic_job(env_id: str, request: Request, body: Dict[str, An
 @router.get("/environments/{env_id}/synthetic/jobs")
 async def list_synthetic_jobs(env_id: str, request: Request, domain: str | None = None, status: str | None = None):
     try:
+        _require_admin_access(request)
         manager = getattr(request.app.state, "synthetic_job_manager", None)
         if not manager:
             raise KehrnelError(code="JOBS_NOT_AVAILABLE", status=503, message="Synthetic job manager not initialized")
@@ -1264,6 +1328,7 @@ async def list_synthetic_jobs(env_id: str, request: Request, domain: str | None 
 @router.get("/environments/{env_id}/synthetic/jobs/{job_id}")
 async def get_synthetic_job(env_id: str, job_id: str, request: Request):
     try:
+        _require_admin_access(request)
         manager = getattr(request.app.state, "synthetic_job_manager", None)
         if not manager:
             raise KehrnelError(code="JOBS_NOT_AVAILABLE", status=503, message="Synthetic job manager not initialized")
@@ -1278,6 +1343,7 @@ async def get_synthetic_job(env_id: str, job_id: str, request: Request):
 @router.post("/environments/{env_id}/synthetic/jobs/{job_id}/cancel")
 async def cancel_synthetic_job(env_id: str, job_id: str, request: Request):
     try:
+        _require_admin_access(request)
         manager = getattr(request.app.state, "synthetic_job_manager", None)
         if not manager:
             raise KehrnelError(code="JOBS_NOT_AVAILABLE", status=503, message="Synthetic job manager not initialized")

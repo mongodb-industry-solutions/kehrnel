@@ -5,6 +5,8 @@ import json
 import os
 import logging
 import secrets
+import hashlib
+import time
 from copy import deepcopy
 from pathlib import Path
 from typing import Optional
@@ -57,7 +59,7 @@ def _get_api_keys() -> set[str]:
 
 def _is_auth_enabled() -> bool:
     """Check if API key authentication is enabled."""
-    return os.getenv("KEHRNEL_AUTH_ENABLED", "false").lower() in ("true", "1", "yes")
+    return os.getenv("KEHRNEL_AUTH_ENABLED", "true").lower() in ("true", "1", "yes")
 
 
 class APIKeyAuthMiddleware(BaseHTTPMiddleware):
@@ -98,6 +100,10 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
                 status_code=401,
                 content={"error": {"code": "UNAUTHORIZED", "message": "Invalid or missing API key"}},
             )
+        # Avoid using attacker-controlled headers directly for other controls.
+        key_fingerprint = hashlib.sha256(api_key.encode("utf-8")).hexdigest()[:20]
+        request.state.authenticated_api_key = key_fingerprint
+        request.state.rate_limit_key = f"key:{key_fingerprint}"
 
         return await call_next(request)
 
@@ -105,20 +111,22 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
 class RateLimitMiddleware(BaseHTTPMiddleware):
     """Simple in-memory rate limiting middleware."""
 
-    def __init__(self, app, requests_per_minute: int = 60):
+    def __init__(self, app, requests_per_minute: int = 60, max_clients: int = 5000):
         super().__init__(app)
         self.requests_per_minute = requests_per_minute
+        self.max_clients = max_clients
         self._request_counts: dict[str, list[float]] = {}
 
     async def dispatch(self, request: Request, call_next):
-        import time
-
         # Skip rate limiting for health checks
         if request.url.path == "/health":
             return await call_next(request)
 
-        # Get client identifier (IP or API key)
-        client_id = request.headers.get("X-API-Key") or request.client.host if request.client else "unknown"
+        # Prefer authenticated identity from auth middleware; fallback to IP.
+        client_id = getattr(request.state, "rate_limit_key", None)
+        if not client_id:
+            ip = request.client.host if request.client else "unknown"
+            client_id = f"ip:{ip}"
 
         current_time = time.time()
         window_start = current_time - 60  # 1 minute window
@@ -130,6 +138,17 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         self._request_counts[client_id] = [
             t for t in self._request_counts[client_id] if t > window_start
         ]
+        # Bound memory growth from spoofed identities / high cardinality traffic.
+        if len(self._request_counts) > self.max_clients:
+            oldest_key = None
+            oldest_ts = float("inf")
+            for key, ts_list in self._request_counts.items():
+                ts = ts_list[-1] if ts_list else 0.0
+                if ts < oldest_ts:
+                    oldest_ts = ts
+                    oldest_key = key
+            if oldest_key:
+                self._request_counts.pop(oldest_key, None)
 
         if len(self._request_counts[client_id]) >= self.requests_per_minute:
             return JSONResponse(
@@ -160,6 +179,14 @@ def _get_rate_limit() -> int:
         return int(os.getenv("KEHRNEL_RATE_LIMIT", "60"))
     except ValueError:
         return 60
+
+
+def _get_rate_limit_clients() -> int:
+    """Max identities tracked by in-memory rate limiter."""
+    try:
+        return max(1000, int(os.getenv("KEHRNEL_RATE_LIMIT_MAX_CLIENTS", "5000")))
+    except ValueError:
+        return 5000
 
 
 # ============================================================================
@@ -291,21 +318,27 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     # ========================================================================
 
     # 1. Rate Limiting (applied first to incoming requests)
-    rate_limit = _get_rate_limit()
-    if rate_limit > 0:
-        app.add_middleware(RateLimitMiddleware, requests_per_minute=rate_limit)
-
-    # 2. API Key Authentication
+    # 1. API Key Authentication
     if _is_auth_enabled():
         app.add_middleware(APIKeyAuthMiddleware)
+
+    # 2. Rate Limiting
+    rate_limit = _get_rate_limit()
+    if rate_limit > 0:
+        app.add_middleware(
+            RateLimitMiddleware,
+            requests_per_minute=rate_limit,
+            max_clients=_get_rate_limit_clients(),
+        )
 
     # 3. CORS Configuration
     cors_origins = _get_cors_origins()
     if cors_origins:
+        allow_credentials = "*" not in cors_origins
         app.add_middleware(
             CORSMiddleware,
             allow_origins=cors_origins,
-            allow_credentials=True,
+            allow_credentials=allow_credentials,
             allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
             allow_headers=["*"],
         )
