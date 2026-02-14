@@ -5,7 +5,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 const config = {
   title: '{kehrnel}',
   tagline: 'Multi-strategy healthcare data runtime',
-  favicon: 'img/logo.svg',
+  favicon: 'img/favicon.png',
 
   url: 'https://mongodb-industry-solutions.github.io',
   baseUrl: '/guide/',

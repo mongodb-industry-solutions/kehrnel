@@ -617,11 +617,11 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         logging.getLogger("kehrnel.docs").info("Documentation mounted at /guide from %s", docs_build_path)
 
         # Serve favicon from docs build
-        favicon_path = docs_build_path / "img" / "logo.svg"
+        favicon_path = docs_build_path / "img" / "favicon.png"
         if favicon_path.exists():
             @app.get("/favicon.ico", include_in_schema=False)
             async def favicon():
-                return FileResponse(str(favicon_path), media_type="image/svg+xml")
+                return FileResponse(str(favicon_path), media_type="image/png")
 
     return app
 
