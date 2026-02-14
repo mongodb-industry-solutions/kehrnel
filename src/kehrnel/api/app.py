@@ -7,15 +7,17 @@ import logging
 import secrets
 import hashlib
 import time
+import re
 from copy import deepcopy
 from pathlib import Path
 from typing import Optional
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI, Request, HTTPException, Security
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.security import APIKeyHeader
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html
+from fastapi.staticfiles import StaticFiles
 from starlette.middleware.base import BaseHTTPMiddleware
 
 # Load environment before importing modules that instantiate settings at import time.
@@ -46,7 +48,12 @@ from kehrnel.core.synthetic_jobs_store import MongoSyntheticJobStore
 API_KEY_HEADER = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 # Paths that don't require authentication
-PUBLIC_PATHS = {"/health", "/docs", "/openapi.json", "/redoc"}
+PUBLIC_PATHS = {"/health", "/openapi.json", "/favicon.ico"}
+PUBLIC_PATH_PREFIXES = ("/docs", "/redoc", "/openapi/", "/guide")
+PUBLIC_PATH_PATTERNS = (
+    # Strategy static assets referenced from docs/specs.
+    re.compile(r"^/strategies/[^/]+/assets/.+"),
+)
 
 
 def _get_api_keys() -> set[str]:
@@ -66,8 +73,13 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
     """Middleware to validate API keys on requests."""
 
     async def dispatch(self, request: Request, call_next):
+        path = request.url.path or ""
         # Skip auth for public paths
-        if request.url.path in PUBLIC_PATHS:
+        if (
+            path in PUBLIC_PATHS
+            or any(path.startswith(prefix) for prefix in PUBLIC_PATH_PREFIXES)
+            or any(pattern.match(path) for pattern in PUBLIC_PATH_PATTERNS)
+        ):
             return await call_next(request)
 
         # Skip if auth is disabled
@@ -215,6 +227,7 @@ def validate_strategy_pack(manifest_data: dict, base_path: Path) -> list[str]:
 
 
 def _seed_default_bundles(store: BundleStore):
+    log = logging.getLogger("kehrnel.bundle.seed")
     try:
         bundles_dir = Path(__file__).resolve().parents[1] / "engine" / "strategies" / "openehr" / "rps_dual" / "bundles"
         if bundles_dir.exists():
@@ -222,9 +235,11 @@ def _seed_default_bundles(store: BundleStore):
                 try:
                     data = json.loads(path.read_text(encoding="utf-8"))
                     store.save_bundle(data, mode="upsert")
-                except Exception:
+                except Exception as exc:
+                    log.warning("Skipping invalid default bundle %s: %s", path, exc)
                     continue
-    except Exception:
+    except Exception as exc:
+        log.warning("Default bundle seeding failed: %s", exc)
         return
 
 
@@ -237,6 +252,9 @@ def _load_manifests() -> tuple[list[StrategyManifest], list[dict[str, object]], 
         if not base.exists():
             continue
         for manifest_path in base.glob("**/manifest.json"):
+            # Skip disabled strategy folders staged outside active discovery.
+            if any(part.startswith("_disabled") for part in manifest_path.parts):
+                continue
             try:
                 data = json.loads(manifest_path.read_text(encoding="utf-8"))
                 base_dir = manifest_path.parent
@@ -374,7 +392,11 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
                 database=jobs_db,
                 collection=jobs_collection,
             )
-    except Exception:
+    except Exception as exc:
+        logging.getLogger("kehrnel.jobs").warning(
+            "Store initialization failed; running with reduced persistence features: %s",
+            exc,
+        )
         jobs_store = None
     app.state.synthetic_job_manager = SyntheticJobManager(runtime, store=jobs_store)
     app.state.strategy_diagnostics = diagnostics
@@ -382,6 +404,48 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     app.state.strategy_asset_dirs = asset_dirs
     # Store allowed strategy paths for validation
     app.state.allowed_strategy_paths = [p.resolve() for p in _strategy_paths()]
+
+    @app.on_event("startup")
+    async def _init_default_ingestion_runtime() -> None:
+        """
+        Best-effort bootstrap for domain composition/synthetic endpoints that
+        depend on app.state.flattener / app.state.transformer.
+        """
+        if os.getenv("KEHRNEL_INIT_INGESTION_RUNTIME", "true").lower() not in ("1", "true", "yes"):
+            return
+        if getattr(app.state, "flattener", None) is not None and getattr(app.state, "transformer", None) is not None:
+            return
+        try:
+            from kehrnel.api.bridge.app.core.config import settings as bridge_settings
+            from kehrnel.api.bridge.app.utils.config_runtime import apply_ingestion_config
+
+            config_internal = {
+                "apply_shortcuts": True,
+                "source": {
+                    "canonical_compositions_collection": bridge_settings.COMPOSITIONS_COLL_NAME,
+                    "database_name": bridge_settings.MONGODB_DB,
+                },
+                "target": {
+                    "compositions_collection": bridge_settings.FLAT_COMPOSITIONS_COLL_NAME,
+                    "search_collection": bridge_settings.SEARCH_COMPOSITIONS_COLL_NAME,
+                    "codes_collection": "_codes",
+                    "shortcuts_collection": "_shortcuts",
+                    "rebuilt_collection": bridge_settings.FLAT_COMPOSITIONS_COLL_NAME,
+                    "database_name": bridge_settings.MONGODB_DB,
+                },
+            }
+            await apply_ingestion_config(
+                app=app,
+                config=config_internal,
+                mappings_inline=None,
+                use_mappings_file=True,
+                mappings_path=None,
+            )
+            logging.getLogger("kehrnel.bootstrap").info("Initialized default ingestion runtime")
+        except Exception as exc:
+            logging.getLogger("kehrnel.bootstrap").warning(
+                "Could not initialize default ingestion runtime: %s", exc
+            )
 
     def _strategy_openapi(domain: str, strategy: str) -> dict:
         domain_norm = (domain or "").strip().lower()
@@ -530,12 +594,35 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
             code = "NOT_FOUND"
             status = 404
         return JSONResponse(status_code=status, content={"error": {"code": code, "message": message, "details": details}})
-    app.include_router(admin_router)
-    app.include_router(ops_domain_router)
-    app.include_router(activation_router)
-    app.include_router(fhir_domain_router)
-    app.include_router(openehr_domain_router)
-    app.include_router(openehr_rps_dual_router)
+    runtime_routers = [
+        admin_router,
+        ops_domain_router,
+        activation_router,
+        fhir_domain_router,
+        openehr_domain_router,
+        openehr_rps_dual_router,
+    ]
+
+    # Backward/forward compatibility:
+    # - legacy clients call root paths (e.g. /environments/{env}/...)
+    # - newer clients call versioned paths (e.g. /v1/environments/{env}/...)
+    for router in runtime_routers:
+        app.include_router(router)
+        app.include_router(router, prefix="/v1")
+
+    # Mount Docusaurus documentation if build exists
+    docs_build_path = Path(__file__).resolve().parents[3] / "docs" / "website" / "build"
+    if docs_build_path.exists():
+        app.mount("/guide", StaticFiles(directory=str(docs_build_path), html=True), name="documentation")
+        logging.getLogger("kehrnel.docs").info("Documentation mounted at /guide from %s", docs_build_path)
+
+        # Serve favicon from docs build
+        favicon_path = docs_build_path / "img" / "logo.svg"
+        if favicon_path.exists():
+            @app.get("/favicon.ico", include_in_schema=False)
+            async def favicon():
+                return FileResponse(str(favicon_path), media_type="image/svg+xml")
+
     return app
 
 
@@ -543,9 +630,17 @@ app = create_app()
 
 
 def main():
+    import argparse
     import uvicorn
 
-    host = os.getenv("KEHRNEL_API_HOST", "0.0.0.0")
-    port = int(os.getenv("KEHRNEL_API_PORT", os.getenv("API_PORT", "8000")))
-    reload_enabled = os.getenv("KEHRNEL_API_RELOAD", "false").lower() in ("1", "true", "yes")
-    uvicorn.run("kehrnel.api.app:app", host=host, port=port, reload=reload_enabled)
+    default_host = os.getenv("KEHRNEL_API_HOST", "0.0.0.0")
+    default_port = int(os.getenv("KEHRNEL_API_PORT", os.getenv("API_PORT", "8000")))
+    default_reload = os.getenv("KEHRNEL_API_RELOAD", "false").lower() in ("1", "true", "yes")
+
+    parser = argparse.ArgumentParser(description="Run kehrnel API server.")
+    parser.add_argument("--host", default=default_host, help=f"Bind host (default: {default_host})")
+    parser.add_argument("--port", type=int, default=default_port, help=f"Bind port (default: {default_port})")
+    parser.add_argument("--reload", action="store_true", default=default_reload, help="Enable auto-reload")
+    args = parser.parse_args()
+
+    uvicorn.run("kehrnel.api.app:app", host=args.host, port=args.port, reload=args.reload)
