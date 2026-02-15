@@ -7,8 +7,8 @@ import hashlib
 from datetime import datetime, timezone
 from typing import Any, Dict
 
-from kehrnel.core.errors import KehrnelError
-from kehrnel.core.runtime import StrategyRuntime
+from kehrnel.engine.core.errors import KehrnelError
+from kehrnel.engine.core.runtime import StrategyRuntime
 
 
 def _now_iso() -> str:
@@ -38,6 +38,8 @@ class SyntheticJobManager:
         payload: Dict[str, Any],
         metadata: Dict[str, Any] | None = None,
         requested_by: str | None = None,
+        requester_id: str | None = None,
+        team_id: str | None = None,
     ) -> Dict[str, Any]:
         job_id = str(uuid.uuid4())
         now = _now_iso()
@@ -51,6 +53,8 @@ class SyntheticJobManager:
             "phase": "queued",
             "progress": 0,
             "requested_by": self._redact_requester(requested_by),
+            "requester_id": (requester_id or "").strip() or None,
+            "team_id": (team_id or "").strip() or None,
             "payload": payload,
             "result": None,
             "error": None,
@@ -209,20 +213,45 @@ class SyntheticJobManager:
         return [self._public(j) for j in items]
 
     async def cancel_job(self, job_id: str) -> Dict[str, Any]:
+        # NOTE: Cancellation is currently in-process (asyncio task + cancel Event).
+        # If the API process restarts, jobs loaded from the persistent store will not
+        # have an in-memory task/event. In that case, we must not leave jobs stuck in
+        # "canceling" forever; instead, finalize immediately as "canceled".
         async with self._lock:
             rec = self._jobs.get(job_id)
             if not rec:
                 raise KehrnelError(code="JOB_NOT_FOUND", status=404, message=f"Job {job_id} not found")
+
             status = rec.get("status")
             if status in ("completed", "failed", "canceled"):
                 return self._public(rec)
+
+            task = self._tasks.get(job_id)
             ev = self._cancel_events.get(job_id)
-            if ev:
-                ev.set()
-            rec["status"] = "canceling"
-            rec["phase"] = "canceling"
-            rec["updated_at"] = _now_iso()
-            self._jobs[job_id] = rec
+            if ev is None:
+                ev = asyncio.Event()
+                self._cancel_events[job_id] = ev
+            ev.set()
+
+            # If there is no in-memory task (or it has already finished), treat the job as
+            # effectively canceled. This prevents a persisted job from remaining "canceling"
+            # across restarts.
+            if task is None or task.done():
+                now = _now_iso()
+                rec["status"] = "canceled"
+                rec["phase"] = "canceled"
+                rec["progress"] = 100
+                rec["completed_at"] = rec.get("completed_at") or now
+                rec["updated_at"] = now
+                rec["error"] = rec.get("error") or "Canceled"
+                self._jobs[job_id] = rec
+                self._tasks.pop(job_id, None)
+            else:
+                rec["status"] = "canceling"
+                rec["phase"] = "canceling"
+                rec["updated_at"] = _now_iso()
+                self._jobs[job_id] = rec
+
         await self._persist_upsert(rec)
         return self._public(rec)
 
@@ -250,6 +279,8 @@ class SyntheticJobManager:
         data["id"] = data.get("job_id")
         # Do not expose requester metadata to API consumers.
         data.pop("requested_by", None)
+        data["requester_id"] = rec.get("requester_id")
+        data["team_id"] = rec.get("team_id")
         payload = (rec.get("payload") or {}) if isinstance(rec.get("payload"), dict) else {}
         # Do not echo full payload back for large jobs unless needed by caller.
         data["payload"] = {"keys": sorted(list(payload.keys()))}

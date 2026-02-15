@@ -1,4 +1,4 @@
-# src/kehrnel/api/legacy/v1/directory/routes.py
+# src/kehrnel/api/compatibility/v1/directory/routes.py
 
 from fastapi import APIRouter, Depends, status, Header, HTTPException, Response, Query
 from motor.motor_asyncio import AsyncIOMotorDatabase
@@ -20,7 +20,7 @@ from kehrnel.api.domains.openehr.directory.api_responses import (
     get_directory_by_version_id_responses,
     delete_directory_responses
 )
-from kehrnel.api.legacy.app.core.database import get_mongodb_ehr_db
+from kehrnel.api.bridge.app.core.database import get_mongodb_ehr_db
 
 router = APIRouter(
     tags = ["Directory"]

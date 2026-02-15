@@ -6,7 +6,7 @@ from kehrnel.core.types import StrategyContext
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(reason="Legacy projection field casing parity pending", strict=False)
+@pytest.mark.xfail(reason="Compatibility projection field casing parity pending", strict=False)
 async def test_vaccination_patient_projection_shape():
     cfg = load_json(DEFAULTS_PATH)
     storage = None

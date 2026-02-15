@@ -11,31 +11,17 @@
     },
     "idEncoding": {
       "type": "string",
-      "enum": [
-        "string",
-        "objectid",
-        "uuid",
-        "uuidbin"
-      ],
+      "enum": ["string", "objectid", "uuid", "uuidbin"],
       "default": "string"
     },
     "pathSeparator": {
       "type": "string",
-      "enum": [
-        ".",
-        "/",
-        "@",
-        "|"
-      ],
+      "enum": [".", "/", "@", "|"],
       "default": "."
     },
     "encodingProfile": {
       "type": "string",
-      "enum": [
-        "profile.fullpath",
-        "profile.codedpath",
-        "profile.search_shortcuts"
-      ]
+      "enum": ["profile.fullpath", "profile.codedpath", "profile.search_shortcuts"]
     }
   },
   "properties": {
@@ -47,88 +33,44 @@
           "type": "object",
           "description": "Canonical compositions store",
           "properties": {
-            "name": {
-              "type": "string",
-              "description": "Collection name",
-              "default": "compositions_rps"
-            },
-            "encodingProfile": {
-              "$ref": "#/definitions/encodingProfile",
-              "default": "profile.codedpath"
-            }
+            "name": { "type": "string", "description": "Collection name", "default": "compositions_rps" },
+            "encodingProfile": { "$ref": "#/definitions/encodingProfile", "default": "profile.codedpath" }
           },
-          "required": [
-            "name"
-          ]
+          "required": ["name"]
         },
         "search": {
           "type": "object",
           "description": "Slim search store for cross-patient queries",
           "properties": {
-            "name": {
-              "type": "string",
-              "description": "Collection name",
-              "default": "compositions_search"
-            },
-            "encodingProfile": {
-              "$ref": "#/definitions/encodingProfile",
-              "default": "profile.search_shortcuts"
-            },
-            "enabled": {
-              "type": "boolean",
-              "default": true
-            },
+            "name": { "type": "string", "description": "Collection name", "default": "compositions_search" },
+            "encodingProfile": { "$ref": "#/definitions/encodingProfile", "default": "profile.search_shortcuts" },
+            "enabled": { "type": "boolean", "default": true },
             "atlasIndex": {
               "type": "object",
               "properties": {
-                "name": {
-                  "type": "string",
-                  "description": "Atlas Search index name"
-                },
+                "name": { "type": "string", "description": "Atlas Search index name" },
                 "definition": {
                   "oneOf": [
-                    {
-                      "$ref": "#/definitions/uriRef"
-                    },
-                    {
-                      "type": "object",
-                      "description": "Inline index definition"
-                    }
+                    { "$ref": "#/definitions/uriRef" },
+                    { "type": "object", "description": "Inline index definition" },
+                    { "type": "null" }
                   ]
                 }
               }
             }
           },
-          "required": [
-            "name"
-          ]
+          "required": ["name"]
         },
         "codes": {
           "type": "object",
           "description": "Dictionary collection for path code mappings",
           "properties": {
-            "name": {
-              "type": "string",
-              "default": "_codes"
-            },
-            "mode": {
-              "type": "string",
-              "enum": [
-                "fresh",
-                "extend"
-              ],
-              "default": "extend",
-              "description": "fresh: start from scratch; extend: reuse and continue sequence"
-            },
+            "name": { "type": "string", "default": "_codes" },
             "seed": {
               "oneOf": [
-                {
-                  "$ref": "#/definitions/uriRef"
-                },
-                {
-                  "type": "object",
-                  "description": "Inline seed data"
-                }
+                { "$ref": "#/definitions/uriRef" },
+                { "type": "object", "description": "Inline seed data" },
+                { "type": "null" }
               ],
               "description": "Optional pre-populated dictionary data"
             }
@@ -138,77 +80,36 @@
           "type": "object",
           "description": "Shortcuts collection for key/value compaction",
           "properties": {
-            "name": {
-              "type": "string",
-              "default": "_shortcuts"
-            },
+            "name": { "type": "string", "default": "_shortcuts" },
             "seed": {
               "oneOf": [
-                {
-                  "$ref": "#/definitions/uriRef"
-                },
-                {
-                  "type": "object",
-                  "description": "Inline seed data"
-                }
+                { "$ref": "#/definitions/uriRef" },
+                { "type": "object", "description": "Inline seed data" },
+                { "type": "null" }
               ],
               "description": "Optional pre-populated shortcuts"
             }
           }
-        },
-        "ehr": {
-          "type": "object",
-          "description": "EHR collection used by openEHR API resources (/ehr, /ehr_status, /directory)",
-          "properties": {
-            "name": {
-              "type": "string",
-              "default": "ehr"
-            }
-          }
-        },
-        "contributions": {
-          "type": "object",
-          "description": "Contribution collection used by openEHR API version/audit resources",
-          "properties": {
-            "name": {
-              "type": "string",
-              "default": "contributions"
-            }
-          }
         }
       },
-      "required": [
-        "compositions",
-        "search"
-      ]
+      "required": ["compositions", "search"]
     },
     "ids": {
       "type": "object",
       "description": "ID field encoding strategy",
       "properties": {
-        "ehr_id": {
-          "$ref": "#/definitions/idEncoding"
-        },
-        "composition_id": {
-          "$ref": "#/definitions/idEncoding"
-        }
+        "ehr_id": { "$ref": "#/definitions/idEncoding" },
+        "composition_id": { "$ref": "#/definitions/idEncoding" }
       },
-      "default": {
-        "ehr_id": "string",
-        "composition_id": "objectid"
-      }
+      "default": { "ehr_id": "string", "composition_id": "objectid" }
     },
     "paths": {
       "type": "object",
       "description": "Path encoding settings",
       "properties": {
-        "separator": {
-          "$ref": "#/definitions/pathSeparator"
-        }
+        "separator": { "$ref": "#/definitions/pathSeparator" }
       },
-      "default": {
-        "separator": "."
-      }
+      "default": { "separator": "." }
     },
     "fields": {
       "type": "object",
@@ -218,110 +119,22 @@
           "type": "object",
           "description": "Document-level field names",
           "properties": {
-            "ehr_id": {
-              "type": "string",
-              "default": "ehr_id"
-            },
-            "comp_id": {
-              "type": "string",
-              "default": "comp_id"
-            },
-            "tid": {
-              "type": "string",
-              "default": "tid"
-            },
-            "v": {
-              "type": "string",
-              "default": "v"
-            },
-            "cn": {
-              "type": "string",
-              "default": "cn",
-              "description": "Canonical nodes array"
-            },
-            "sn": {
-              "type": "string",
-              "default": "sn",
-              "description": "Search nodes array"
-            }
+            "ehr_id": { "type": "string", "default": "ehr_id" },
+            "comp_id": { "type": "string", "default": "comp_id" },
+            "tid": { "type": "string", "default": "tid" },
+            "v": { "type": "string", "default": "v" },
+            "cn": { "type": "string", "default": "cn", "description": "Canonical nodes array" },
+            "sn": { "type": "string", "default": "sn", "description": "Search nodes array" }
           }
         },
         "node": {
           "type": "object",
           "description": "Node-level field names (inside cn/sn arrays)",
           "properties": {
-            "p": {
-              "type": "string",
-              "default": "p",
-              "description": "Reversed path"
-            },
-            "kp": {
-              "type": "string",
-              "default": "kp",
-              "description": "Key path for reconstruction"
-            },
-            "data": {
-              "type": "string",
-              "default": "data",
-              "description": "Payload fragment"
-            },
-            "ap": {
-              "type": "string",
-              "title": "ap",
-              "description": "Archetype node ID field name (cn[].ap).",
-              "default": "ap"
-            },
-            "pi": {
-              "type": "string",
-              "title": "pi",
-              "description": "Position indexes field name (cn[].pi). Stores per-level array indexes, -1 for non-array levels.",
-              "default": "pi"
-            },
-            "bk": {
-              "type": "string",
-              "title": "bk",
-              "description": "Branch key field name (cn[].bk). Encodes a stable branch identifier used to enforce same-branch semantics across multiple node predicates.",
-              "default": "bk"
-            }
-          },
-          "required": [
-            "p",
-            "ap",
-            "kp",
-            "pi",
-            "bk",
-            "data"
-          ],
-          "default": {
-            "p": "p",
-            "ap": "ap",
-            "kp": "kp",
-            "pi": "pi",
-            "bk": "bk",
-            "data": "data"
+            "p": { "type": "string", "default": "p", "description": "Reversed path" },
+            "pi": { "type": "string", "default": "pi", "description": "Path instance chain (list indexes aligned with path segments)" },
+            "data": { "type": "string", "default": "data", "description": "Payload fragment" }
           }
-        }
-      }
-    },
-    "bundling": {
-      "type": "object",
-      "description": "Physical document bundling strategy",
-      "properties": {
-        "mode": {
-          "type": "string",
-          "enum": [
-            "perComposition",
-            "perEhrBundle"
-          ],
-          "default": "perComposition",
-          "description": "perComposition: one doc per composition; perEhrBundle: multiple compositions per patient doc"
-        },
-        "maxCompositionsPerDoc": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 1000,
-          "default": 100,
-          "description": "Max compositions per document when mode=perEhrBundle"
         }
       }
     },
@@ -331,13 +144,9 @@
       "properties": {
         "mappings": {
           "oneOf": [
-            {
-              "$ref": "#/definitions/uriRef"
-            },
-            {
-              "type": "object",
-              "description": "Inline mapping definition"
-            }
+            { "$ref": "#/definitions/uriRef" },
+            { "type": "object", "description": "Inline mapping definition" },
+            { "type": "null" }
           ],
           "description": "Field mappings: file://path, collection://name, or inline object"
         },
@@ -350,11 +159,7 @@
               "properties": {
                 "strategy": {
                   "type": "string",
-                  "enum": [
-                    "sequential",
-                    "short_prefix",
-                    "literal"
-                  ],
+                  "enum": ["sequential", "short_prefix", "literal"],
                   "default": "sequential"
                 },
                 "prefix_replace": {
@@ -362,17 +167,10 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "from": {
-                        "type": "string"
-                      },
-                      "to": {
-                        "type": "string"
-                      }
+                      "from": { "type": "string" },
+                      "to": { "type": "string" }
                     },
-                    "required": [
-                      "from",
-                      "to"
-                    ]
+                    "required": ["from", "to"]
                   },
                   "description": "Prefix replacements for literal strategy"
                 }
@@ -383,12 +181,7 @@
               "properties": {
                 "strategy": {
                   "type": "string",
-                  "enum": [
-                    "negative_int",
-                    "sequential",
-                    "literal",
-                    "compact_prefix"
-                  ],
+                  "enum": ["negative_int", "sequential", "literal", "compact_prefix"],
                   "default": "negative_int"
                 },
                 "store_original": {
@@ -406,50 +199,8 @@
           "description": "Apply key/value shortcuts to payload"
         }
       }
-    },
-    "query_engine": {
-      "type": "object",
-      "description": "Query engine configuration",
-      "properties": {
-        "lookup_full_composition": {
-          "type": "boolean",
-          "default": false,
-          "description": "Include $lookup to hydrate full composition in cross-patient queries"
-        },
-        "mode": {
-          "type": "string",
-          "enum": [
-            "auto",
-            "patient",
-            "cross_patient"
-          ],
-          "description": "Query mode override (auto detects from ehr_id presence)"
-        }
-      }
-    },
-    "database_name": {
-      "type": "string",
-      "description": "Legacy compatibility alias for target DB selection. Prefer bindings/db.database.",
-      "minLength": 1
-    },
-    "target_database": {
-      "type": "string",
-      "description": "Legacy compatibility alias for target DB selection. Prefer bindings/db.database.",
-      "minLength": 1
-    },
-    "targetDatabase": {
-      "type": "string",
-      "description": "Legacy compatibility alias for target DB selection. Prefer bindings/db.database.",
-      "minLength": 1
-    },
-    "database": {
-      "type": "string",
-      "description": "Database name used by legacy openEHR API routes when not resolved from bindings_ref.",
-      "minLength": 1
     }
   },
-  "required": [
-    "collections"
-  ],
+  "required": ["collections"],
   "additionalProperties": false
 }

@@ -6,20 +6,8 @@ Canonical runtime reference for `kehrnel` CLI and HTTP API.
 
 Declared under `[project.scripts]` in `pyproject.toml`.
 
+- `kehrnel`
 - `kehrnel-api`
-- `kehrnel-export-bundle`
-- `kehrnel-generate`
-- `kehrnel-identify`
-- `kehrnel-import-bundle`
-- `kehrnel-ingest`
-- `kehrnel-list-bundles`
-- `kehrnel-map`
-- `kehrnel-map-skeleton`
-- `kehrnel-skeleton`
-- `kehrnel-transform`
-- `kehrnel-validate`
-- `kehrnel-validate-bundle`
-- `kehrnel-validate-pack`
 
 ## HTTP API Endpoints
 

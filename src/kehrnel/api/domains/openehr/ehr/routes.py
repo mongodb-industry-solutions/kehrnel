@@ -15,7 +15,7 @@ from kehrnel.api.domains.openehr.ehr.service import (
 from kehrnel.api.domains.openehr.ehr_status.models import EHRStatusCreate
 from kehrnel.api.domains.openehr.ehr.models import EHRCreationResponse, EHR
 
-from kehrnel.api.legacy.app.core.database import get_mongodb_ehr_db
+from kehrnel.api.bridge.app.core.database import get_mongodb_ehr_db
 from kehrnel.api.domains.openehr.ehr.api_responses import (
     get_ehr_by_id_responses,
     create_ehr_api_responses,

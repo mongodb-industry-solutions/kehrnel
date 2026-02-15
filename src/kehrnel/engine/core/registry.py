@@ -69,7 +69,7 @@ class FileActivationRegistry(ActivationRegistry):
                 if isinstance(env_acts, dict) and all(isinstance(v, dict) for v in env_acts.values()):
                     self.activations[env_id] = {domain: EnvironmentActivation(**act) for domain, act in env_acts.items()}
                 else:
-                    # legacy format: single activation per env
+                    # compatibility format: single activation per env
                     self.activations[env_id] = {"default": EnvironmentActivation(**env_acts)}
             history = data.get("history") or {}
             if isinstance(history, dict):

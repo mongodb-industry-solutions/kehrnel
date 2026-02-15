@@ -1,4 +1,4 @@
-# src/kehrnel/api/legacy/v1/aql/transformers/path_resolver.py
+# src/kehrnel/api/compatibility/v1/aql/transformers/path_resolver.py
 import re
 from typing import Tuple, Dict
 

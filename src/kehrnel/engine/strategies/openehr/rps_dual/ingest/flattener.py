@@ -1,4 +1,4 @@
-# src/transform/flattener_g.py
+"""Composition flattener for the rps_dual persistence strategy."""
 
 import json
 import re
@@ -74,7 +74,6 @@ class CompositionFlattener:
         self.cf_data  = c_fields.get("data", "data")
         self.cf_path  = c_fields.get("path", "p")
         self.cf_pi    = c_fields.get("path_instance", "pi")
-        self.cf_bk    = c_fields.get("branch_key", "bk")
         self.cf_ap    = c_fields.get("archetype_path", "ap")
         self.cf_anc   = c_fields.get("ancestors", "anc")
         self.cf_ehr   = c_fields.get("ehr_id", "ehr_id")
@@ -90,7 +89,6 @@ class CompositionFlattener:
         self.sf_path  = s_fields.get("path", "p")
         self.sf_ap    = s_fields.get("archetype_path", "ap")
         self.sf_anc   = s_fields.get("ancestors", "anc")
-        self.sf_bk    = s_fields.get("branch_key", "bk")
         self.sf_ehr   = s_fields.get("ehr_id", "ehr_id")
         self.sf_tmpl  = s_fields.get("template_id", "tid")
         self.sf_score = s_fields.get("score", "score")
@@ -142,7 +140,7 @@ class CompositionFlattener:
         return instance
 
     # --- Public API Method (Remains Synchronous) ---
-    def transform_composition(self, raw_doc: dict) -> tuple[dict, dict]:
+    def transform_composition(self, raw_doc: dict) -> tuple[dict, Optional[dict]]:
         """
         Takes a raw composition document from the source collection and returns
         the flattened base document and the search document using dynamic keys.
@@ -154,24 +152,28 @@ class CompositionFlattener:
 
         # STEP 1: Complete flattening regardless of mapping rules
         cn: List[dict] = []
-        self._walk(comp, anc_codes=(), anc_pi=(), cn=cn, kp_chain=[], list_index=None, jpath=[])
+        self._walk(comp, anc_codes=(), anc_pi=(), cn=cn, kp_chain=[], list_index=None)
 
-        # STEP 2: Apply mapping rules only for search document generation
-        sn: List[dict] = []
+        # STEP 2: Apply mapping rules only for search document generation.
+        # Important: if no analytics/mappings exist for this template, do not produce a search document.
+        collections_cfg = (self.config.get("collections") or {}) if isinstance(self.config, dict) else {}
+        search_enabled = bool((collections_cfg.get("search") or {}).get("enabled", True))
         rules = self._compiled_rules_for_template(template_name)
-        for node in cn:
-            path_val = node.get(self.cf_path)
-            dblock = node.get(self.cf_data, {})
-            if not path_val:
-                continue
-            parts = str(path_val).split(self.path_separator)
-            pc_set = {self.path_separator.join(parts[:i]) for i in range(1, len(parts) + 1)}
+        sn: List[dict] = []
+        if search_enabled and rules:
+            for node in cn:
+                path_val = node.get(self.cf_path)
+                dblock = node.get(self.cf_data, {})
+                if not path_val:
+                    continue
+                parts = str(path_val).split(self.path_separator)
+                pc_set = {self.path_separator.join(parts[:i]) for i in range(1, len(parts) + 1)}
 
-            for rule in rules:
-                if self._rule_matches(rule, pc_set, parts, dblock):
-                    slim = self._apply_rule(rule, node, dblock)
-                    if slim:
-                        sn.append(slim)
+                for rule in rules:
+                    if self._rule_matches(rule, pc_set, parts, dblock):
+                        slim = self._apply_rule(rule, node, dblock)
+                        if slim:
+                            sn.append(slim)
 
         # STEP 3: Clean up ancestry markers (used only during processing)
         for node in cn:
@@ -186,17 +188,20 @@ class CompositionFlattener:
             self.cf_nodes: cn,
         }
 
-        search_doc = {
-            "_id": self._encode_id(raw_doc["_id"], "composition_id"),
-            self.sf_ehr: self._encode_id(raw_doc["ehr_id"], "ehr_id"),
-            self.sf_tmpl: template_id,
-            self.sf_nodes: sn,
-        }
+        search_doc: Optional[dict] = None
+        if search_enabled and sn:
+            search_doc = {
+                "_id": self._encode_id(raw_doc["_id"], "composition_id"),
+                self.sf_ehr: self._encode_id(raw_doc["ehr_id"], "ehr_id"),
+                self.sf_tmpl: template_id,
+                self.sf_nodes: sn,
+            }
 
         # STEP 5: Apply shortcuts if enabled
         if self.apply_shortcuts:
             base_doc = self._apply_sc_deep(base_doc)
-            search_doc = self._apply_sc_deep(search_doc)
+            if search_doc is not None:
+                search_doc = self._apply_sc_deep(search_doc)
 
         # STEP 6: Apply field renaming map for output
         base_doc = self._apply_field_map_to_doc(
@@ -204,11 +209,12 @@ class CompositionFlattener:
             root_map=self.field_map.get("compositions", {}),
             node_map=self.field_map.get("composition_nodes", {}),
         )
-        search_doc = self._apply_field_map_to_doc(
-            search_doc,
-            root_map=self.field_map.get("search", {}),
-            node_map=self.field_map.get("search_nodes", {}),
-        )
+        if search_doc is not None:
+            search_doc = self._apply_field_map_to_doc(
+                search_doc,
+                root_map=self.field_map.get("search", {}),
+                node_map=self.field_map.get("search_nodes", {}),
+            )
 
         return base_doc, search_doc
 
@@ -281,10 +287,32 @@ class CompositionFlattener:
         print("Flushed codes to DB.")
 
     async def _load_shortcuts_from_db(self):
-        sc_col = self.db[self.config["target"]["shortcuts_collection"]]
+        if self.db is None:
+            return
+        target = self.config.get("target") if isinstance(self.config, dict) else {}
+        target = target if isinstance(target, dict) else {}
+        sc_collection = (
+            target.get("shortcuts_collection")
+            or target.get("shortcutsCollection")
+            or "_shortcuts"
+        )
+        if not sc_collection:
+            return
+        sc_col = self.db[sc_collection]
         sc_doc = await sc_col.find_one({"_id": "shortcuts"}) or {}
-        self.shortcut_keys.update(sc_doc.get("keys", {}))
-        self.shortcut_vals.update(sc_doc.get("values", {}))
+
+        # Support both shapes:
+        # - preferred: {"keys": {...}, "values": {...}}
+        # - legacy/alternate: {"items": {...}} (key shortcuts only)
+        items = sc_doc.get("items") or {}
+        keys = sc_doc.get("keys") or {}
+        values = sc_doc.get("values") or {}
+        if isinstance(items, dict):
+            self.shortcut_keys.update(items)
+        if isinstance(keys, dict):
+            self.shortcut_keys.update(keys)
+        if isinstance(values, dict):
+            self.shortcut_vals.update(values)
         self._refresh_codec()
 
     def _load_mappings(
@@ -529,15 +557,8 @@ class CompositionFlattener:
         *,
         kp_chain: List[str],
         list_index: Optional[int],
-        jpath: List[str],
     ):
-        """Flatten node into cn[].
-
-        Emits:
-          - p : fused/reversed numeric path
-          - pi: positional chain across repeated arrays (legacy)
-          - bk: JSON-pointer-like branch key for exact correlation
-        """
+        """Flatten node into cn[]. Emits path p plus path-instance chain pi (replaces li)."""
 
         # ── 0. numeric code of this node ─────────────────────────────
         aid = self._archetype_id(node)
@@ -612,11 +633,6 @@ class CompositionFlattener:
             if any(x != -1 for x in pi_list):
                 cn_node[self.cf_pi] = pi_list
 
-            # Exact JSON traversal path (keys + array indexes) from the composition root.
-            # This is the simplest and most deterministic 'branch id' you can use to
-            # correlate conditions that must apply to the same repeated-array instance.
-            cn_node[self.cf_bk] = "/".join(jpath) if jpath else ""
-
             cn.append(cn_node)
 
         # ── 4. recurse into children ──────────────────────────────────
@@ -628,28 +644,12 @@ class CompositionFlattener:
             k_long = self._sc_key(k)
 
             if isinstance(v, dict) and self._is_locatable(v):
-                self._walk(
-                    v,
-                    new_anc_codes,
-                    new_anc_pi,
-                    cn,
-                    kp_chain=base_kp + [k_long],
-                    list_index=None,
-                    jpath=jpath + [k_long],
-                )
+                self._walk(v, new_anc_codes, new_anc_pi, cn, kp_chain=base_kp + [k_long], list_index=None)
 
             elif isinstance(v, list):
                 for idx, itm in enumerate(v):
                     if self._is_locatable(itm):
-                        self._walk(
-                            itm,
-                            new_anc_codes,
-                            new_anc_pi,
-                            cn,
-                            kp_chain=base_kp + [k_long],
-                            list_index=idx,
-                            jpath=jpath + [k_long, str(idx)],
-                        )
+                        self._walk(itm, new_anc_codes, new_anc_pi, cn, kp_chain=base_kp + [k_long], list_index=idx)
 
     # --- Utility functions converted to private methods ---
     
@@ -945,15 +945,9 @@ class CompositionFlattener:
         Writes to 'slim' using Search Keys (sf_*).
         """
         slim: dict = {}
-
-        copy_fields = set(rule.get("copy", []) or [])
-        if self.cf_bk in node:
-            copy_fields.add(self.sf_bk)
-        if self.cf_pi in node:
-            copy_fields.add(self.cf_pi)
         
         # 1. Path
-        if self.sf_path and "p" in copy_fields: 
+        if self.sf_path and "p" in rule["copy"]: 
              slim[self.sf_path] = self._encode_path_for_profile(node.get(self.cf_path), self.search_encoding_profile)
 
         # 2. Archetype Path
@@ -964,14 +958,8 @@ class CompositionFlattener:
         if self.sf_anc and "_anc" in node:
              slim[self.sf_anc] = node["_anc"]
 
-        # 3b. Branch key / positional chain (optional)
-        if self.sf_bk and self.cf_bk in node and "bk" in copy_fields:
-            slim[self.sf_bk] = node[self.cf_bk]
-        if self.cf_pi in node and "pi" in copy_fields:
-            slim[self.cf_pi] = node[self.cf_pi]
-
         # 4. Data
-        for expr in sorted(copy_fields):
+        for expr in rule["copy"]:
             if expr.startswith("data."):
                 sub = expr[5:] # Remove "data."
                 val = self._dpath_get(dblock, sub)
@@ -1032,28 +1020,6 @@ class CompositionFlattener:
             except Exception:
                 return value
         return value
-
-    def _build_branch_key(self, kp_chain: Optional[List[str]], pi_chain: Optional[List[int]]) -> str:
-        """Return a stable branch key for correlating nodes within the same repeated-array branch.
-
-        The key is a structural path (not an AQL path) computed from the traversal key chain (kp)
-        and the instance positions (pi). For each segment, we append an index when traversing an
-        array (pi != -1).
-
-        Example: kp=["content","items","items"], pi=[0,-1,3] -> "content[0]/items/items[3]".
-        """
-        if not kp_chain:
-            return ""
-        if not pi_chain or len(pi_chain) != len(kp_chain):
-            # Fall back to key-only path.
-            return "/".join(kp_chain)
-        segs: List[str] = []
-        for k, i in zip(kp_chain, pi_chain):
-            if i is None or i == -1:
-                segs.append(k)
-            else:
-                segs.append(f"{k}[{i}]")
-        return "/".join(segs)
 
     def _refresh_codec(self):
         """Refresh path codec with current dictionaries and shortcuts."""

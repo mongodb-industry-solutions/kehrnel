@@ -1,4 +1,4 @@
-# src/kehrnel/api/legacy/v1/aql/transformers/context_mapper.py
+# src/kehrnel/api/compatibility/v1/aql/transformers/context_mapper.py
 from typing import Dict, Any, Optional
 
 

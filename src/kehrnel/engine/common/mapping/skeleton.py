@@ -4,8 +4,8 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Callable
 import contextlib, io
 
-from kehrnel.domains.openehr.templates.parser import TemplateParser
-from kehrnel.domains.openehr.templates.generator import kehrnelGenerator
+from kehrnel.engine.domains.openehr.templates.parser import TemplateParser
+from kehrnel.engine.domains.openehr.templates.generator import kehrnelGenerator
 
 ENTRY_TYPES = {"OBSERVATION", "EVALUATION", "INSTRUCTION", "ACTION", "ADMIN_ENTRY"}
 SECTION = "SECTION"

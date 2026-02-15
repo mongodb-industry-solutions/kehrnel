@@ -37,7 +37,7 @@ def load_bindings_resolver_from_env() -> Optional[BindingsResolver]:
             for name in ("ENV_SECRETS_KEY", "CORE_MONGODB_URL", "CORE_DATABASE_NAME")
         )
         if has_hdl_env:
-            spec = "kehrnel.core.integrations.hdl.bindings_resolver:resolve_hdl_bindings"
+            spec = "kehrnel.engine.core.integrations.hdl.bindings_resolver:resolve_hdl_bindings"
     if not spec:
         return None
     if ":" not in spec:

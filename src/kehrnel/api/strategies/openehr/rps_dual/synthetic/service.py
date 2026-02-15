@@ -1,8 +1,9 @@
-# src/kehrnel/api/legacy/v1/synthetic/service.py
+# src/kehrnel/api/compatibility/v1/synthetic/service.py
 
 import uuid
 import json
 import random
+import logging
 from datetime import datetime, timezone, timedelta
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import Dict, Any, List, Optional
@@ -12,7 +13,9 @@ from kehrnel.api.domains.openehr.ehr.service import create_ehr
 from kehrnel.api.domains.openehr.composition.service import add_composition
 from kehrnel.api.domains.openehr.composition.models import CompositionCreate
 from kehrnel.api.domains.openehr.ehr_status.models import EHRStatusCreate
-from kehrnel.legacy.transform.flattener_g import CompositionFlattener
+from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
+
+logger = logging.getLogger(__name__)
 
 
 class SyntheticDataGenerator:
@@ -299,6 +302,6 @@ async def generate_synthetic_data(
             created_records.append(error_record)
             
             # Log the error but continue with next record
-            print(f"Error creating synthetic record {i+1}: {e}")
+            logger.exception("Failed creating synthetic record %s", i + 1)
     
     return created_records

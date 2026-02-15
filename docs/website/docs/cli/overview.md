@@ -4,61 +4,40 @@ sidebar_position: 1
 
 # CLI Overview
 
-\{kehrnel\} provides a comprehensive set of command-line tools for managing your Clinical Data Repository. All commands follow the `kehrnel-<command>` naming convention.
+\{kehrnel\} now exposes a unified command model through:
 
-## Available Commands
+- `kehrnel`
 
-| Command | Description |
-|---------|-------------|
-| `kehrnel-api` | Start the REST API server |
-| `kehrnel-transform` | Transform compositions between canonical and flattened formats |
-| `kehrnel-ingest` | Bulk ingest flattened documents into MongoDB |
-| `kehrnel-validate` | Validate compositions against OPT templates |
-| `kehrnel-validate-pack` | Validate strategy pack structure and configuration |
-| `kehrnel-generate` | Generate composition skeletons from templates |
-| `kehrnel-map` | Transform source data to openEHR compositions using mappings |
-| `kehrnel-skeleton` | Generate mapping skeleton files from templates |
-| `kehrnel-map-skeleton` | Alias entrypoint for mapping skeleton generation |
-| `kehrnel-identify` | Identify document types using pattern matching |
-| `kehrnel-validate-bundle` | Validate bundle structure |
-| `kehrnel-import-bundle` | Import bundles into the store |
-| `kehrnel-list-bundles` | List all stored bundles |
-| `kehrnel-export-bundle` | Export a bundle to a file |
+## Command Layers
 
-## Quick Examples
+- `kehrnel auth`  
+Authenticate once and persist API key/runtime URL.
+- `kehrnel context`  
+Set active environment, domain, strategy, and optional runtime URL override.
+- `kehrnel core`  
+Runtime-kernel operations (health/API server entrypoint, plus environment-scoped runtime operations under `kehrnel core env`).
+- `kehrnel common`  
+Cross-domain workflows (`transform`, `ingest`, `validate`, `generate`, `map`, `identify`, `bundles`, `validate-pack`) executed under selected context.
+- `kehrnel domain`  
+Domain-scoped operations (`domain list`, `domain openehr ...`).
+- `kehrnel strategy`  
+Strategy discovery and selection.
 
-### Start the API Server
+## Typical Workflow
 
 ```bash
-kehrnel-api --host 0.0.0.0 --port 8000
-```
-
-### Transform a Composition
-
-```bash
-kehrnel-transform flatten ./composition.json -o flattened.json
-```
-
-### Validate Against a Template
-
-```bash
-kehrnel-validate -c composition.json -t template.opt
-```
-
-### Generate a Composition Skeleton
-
-```bash
-kehrnel-generate -t template.opt -o skeleton.json --random
+kehrnel auth login --runtime-url http://localhost:8000
+kehrnel strategy list --domain openehr
+kehrnel strategy use openehr.rps_dual --domain openehr
+kehrnel common transform flatten ./composition.json -o flattened.json
 ```
 
 ## Getting Help
 
-All commands support `--help` for detailed usage information:
-
 ```bash
-kehrnel-api --help
-kehrnel-transform --help
-kehrnel-validate --help
+kehrnel --help
+kehrnel auth --help
+kehrnel common --help
 ```
 
 ## Environment Variables
@@ -69,6 +48,8 @@ Most commands respect the following environment variables when applicable:
 |----------|-------------|
 | `CORE_MONGODB_URL` | MongoDB connection string |
 | `CORE_DATABASE_NAME` | Default database name |
+| `KEHRNEL_API_KEY` | Runtime API key (fallback when not stored in CLI state) |
+| `KEHRNEL_RUNTIME_URL` | Runtime base URL (fallback when not stored in CLI state) |
 | `KEHRNEL_API_HOST` | API server bind host |
 | `KEHRNEL_API_PORT` | API server bind port |
 

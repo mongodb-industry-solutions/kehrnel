@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List
 
-from kehrnel.domains.openehr.aql.ir import SelectExpr, AqlQueryIR
+from kehrnel.engine.domains.openehr.aql.ir import SelectExpr, AqlQueryIR
 from .path_resolver import PathResolver
 
 

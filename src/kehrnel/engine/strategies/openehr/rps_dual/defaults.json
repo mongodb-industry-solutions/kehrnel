@@ -1,5 +1,4 @@
 {
-  "database": "openehr_db",
   "collections": {
     "compositions": {
       "name": "compositions_rps",
@@ -16,18 +15,11 @@
     },
     "codes": {
       "name": "_codes",
-      "mode": "extend",
       "seed": "file://bundles/dictionaries/_codes.json"
     },
     "shortcuts": {
       "name": "_shortcuts",
       "seed": "file://bundles/shortcuts/shortcuts.json"
-    },
-    "ehr": {
-      "name": "ehr"
-    },
-    "contributions": {
-      "name": "contributions"
     }
   },
   "ids": {
@@ -48,18 +40,11 @@
     },
     "node": {
       "p": "p",
-      "ap": "ap",
-      "kp": "kp",
       "pi": "pi",
-      "bk": "bk",
       "data": "data"
     }
   },
-  "bundling": {
-    "mode": "perComposition"
-  },
   "transform": {
-    "mappings": "file://ingest/config/flattener_mappings_f.jsonc",
     "apply_shortcuts": true,
     "coding": {
       "arcodes": {
@@ -70,8 +55,5 @@
         "store_original": false
       }
     }
-  },
-  "query_engine": {
-    "lookup_full_composition": false
   }
 }

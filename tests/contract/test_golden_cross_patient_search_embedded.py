@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(reason="Legacy $search compound filter/lookup parity pending", strict=False)
+@pytest.mark.xfail(reason="Compatibility $search compound filter/lookup parity pending", strict=False)
 async def test_cross_patient_search_embedded_and_lookup():
     cfg = load_json(DEFAULTS_PATH)
     cfg.setdefault("query_engine", {})["lookup_full_composition"] = True

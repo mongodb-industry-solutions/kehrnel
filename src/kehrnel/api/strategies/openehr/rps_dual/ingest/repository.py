@@ -1,4 +1,4 @@
-# src/kehrnel/api/legacy/v1/ingest/repository.py
+# src/kehrnel/api/compatibility/v1/ingest/repository.py
 
 from typing import Any, Dict, Optional
 from motor.motor_asyncio import AsyncIOMotorDatabase

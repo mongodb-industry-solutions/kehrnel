@@ -1,7 +1,7 @@
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import Optional
 from datetime import datetime
-from kehrnel.api.legacy.app.core.config import settings
+from kehrnel.api.bridge.app.core.config import settings
 
 
 def _contrib_coll() -> str:

@@ -1,4 +1,4 @@
-# src/kehrnel/api/legacy/v1/directory/models.py
+# src/kehrnel/api/compatibility/v1/directory/models.py
 
 from pydantic import BaseModel, Field
 from typing import List, Optional

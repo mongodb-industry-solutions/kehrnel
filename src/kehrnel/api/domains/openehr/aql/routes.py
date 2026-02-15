@@ -1,11 +1,11 @@
-# src/kehrnel/api/legacy/v1/aql/routes.py
+# src/kehrnel/api/compatibility/v1/aql/routes.py
 
 from starlette.responses import JSONResponse
-from fastapi import APIRouter, Depends, status, Body, Response, Request, Query
+from fastapi import APIRouter, Depends, status, Body, Response, Request, Query, HTTPException
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import List, Dict, Any
 
-from kehrnel.api.legacy.app.core.database import get_mongodb_ehr_db
+from kehrnel.api.bridge.app.core.database import get_mongodb_ehr_db
 from kehrnel.api.domains.openehr.aql.service import (
     create_or_update_stored_query,
     retrieve_stored_query,
@@ -16,7 +16,7 @@ from kehrnel.api.domains.openehr.aql.service import (
 )
 from kehrnel.api.domains.openehr.aql.models import StoredQuerySummary, QueryResponse, AQLtoMQLDebugResponse, AQLtoMQLDebugErrorResponse
 from kehrnel.api.domains.openehr.aql.api_responses import stored_query_responses, aql_to_mql_debug_responses, aql_query_responses, list_stored_queries_responses, delete_stored_query_responses, aql_validation_responses
-from kehrnel.legacy.aql_parser.validator import validate_aql_syntax
+from kehrnel.engine.domains.openehr.aql.validator import validate_aql_syntax
 
 router = APIRouter(
     prefix="/query",
@@ -45,7 +45,7 @@ async def execute_query(
     - Without ehr_id: Uses $search on search collection (cross-EHR, indexed)
     - force_search=true: Forces $search strategy regardless of ehr_id
     """
-    from kehrnel.api.legacy.app.core.config import settings
+    from kehrnel.api.bridge.app.core.config import settings
     
     # Temporarily override force_search_strategy if requested
     original_force_search = settings.search_config.force_search_strategy
@@ -77,12 +77,10 @@ async def validate_aql_query(
         validation_result = validate_aql_syntax(aql)
         return validation_result
     except Exception as e:
-        return {
-            "success": False,
-            "message": "Validation process failed.",
-            "errors": [str(e)],
-            "warnings": []
-        }
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Validation process failed: {e}",
+        )
 
 
 @router.post(
@@ -98,7 +96,7 @@ async def parse_aql_to_ast_endpoint(
     This endpoint can be used to understand how queries are interpreted or for debugging.
     """
     try:
-        from kehrnel.legacy.aql_parser.parser import AQLParser
+        from kehrnel.engine.domains.openehr.aql.parser import AQLParser
         
         parser = AQLParser(aql)
         ast = parser.parse()
@@ -111,13 +109,10 @@ async def parse_aql_to_ast_endpoint(
         }
         
     except Exception as e:
-        return {
-            "success": False,
-            "message": f"Failed to parse AQL: {str(e)}",
-            "original_query": aql,
-            "ast": None,
-            "error": str(e)
-        }
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Failed to parse AQL: {e}",
+        )
 
 
 @router.post(
@@ -141,13 +136,10 @@ async def execute_ast_query(
         return response
         
     except Exception as e:
-        return {
-            "query": ast_data,
-            "columns": [],
-            "rows": [],
-            "error": str(e),
-            "errorType": type(e).__name__
-        }
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Failed to execute AST query: {e}",
+        )
 
 
 @router.post(
@@ -180,7 +172,7 @@ async def debug_aql_to_mql_query(
     - **mql_pipeline**: The final MongoDB pipeline ready for execution.
     """
     try:
-        from kehrnel.legacy.aql_parser.parser import AQLParser
+        from kehrnel.engine.domains.openehr.aql.parser import AQLParser
         from .service import build_aql_pipeline
         
         parser = AQLParser(aql)
@@ -331,7 +323,7 @@ async def get_strategy_info(
     """
     Returns detailed information about the dual-query strategy and configuration.
     """
-    from kehrnel.api.legacy.app.core.config import settings
+    from kehrnel.api.bridge.app.core.config import settings
     from kehrnel.api.domains.openehr.aql.transformers.aql_transformer import AQLtoMQLTransformer
     
     # Create a minimal AST for testing strategy decision
@@ -383,4 +375,3 @@ async def get_strategy_info(
             "search_strategy": "Optimized for cross-EHR queries, leverages Atlas Search full-text indexing"
         }
     }
-

@@ -17,8 +17,8 @@ from kehrnel.api.strategies.openehr.rps_dual.synthetic.api_responses import (
     generate_synthetic_data_responses,
     get_synthetic_stats_responses
 )
-from kehrnel.legacy.transform.flattener_g import CompositionFlattener
-from kehrnel.api.legacy.app.core.database import get_mongodb_ehr_db
+from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
+from kehrnel.api.bridge.app.core.database import get_mongodb_ehr_db
 
 
 router = APIRouter(
@@ -31,7 +31,13 @@ def get_flattener(request: Request) -> CompositionFlattener:
     """
     Dependency to retrieve the globally initialized CompositionFlattener
     """
-    return request.app.state.flattener
+    flattener = getattr(request.app.state, "flattener", None)
+    if flattener is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Ingestion runtime is not initialized. Configure strategy ingestion first.",
+        )
+    return flattener
 
 
 def get_default_vaccination_composition() -> Dict[str, Any]:
@@ -582,8 +588,10 @@ def get_default_vaccination_composition() -> Dict[str, Any]:
     response_model=SyntheticDataResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Generate Synthetic EHR Data",
-    description="Generate synthetic EHR data with compositions based on a template. Each record creates an EHR with a subject and attaches a randomized composition based on the provided template.",
-    responses=generate_synthetic_data_responses
+    description="Generate synthetic EHR data with compositions based on a template. "
+    "Each record creates an EHR with a subject and attaches a randomized composition based on the provided template.",
+    responses=generate_synthetic_data_responses,
+    operation_id="generate_rps_dual_synthetic_data",
 )
 async def generate_synthetic_data_endpoint(
     request: Request,
@@ -703,7 +711,8 @@ async def generate_synthetic_data_endpoint(
     status_code=status.HTTP_200_OK,
     summary="Get Synthetic Data Statistics",
     description="Get statistics about the synthetic data generation process from the last generation run.",
-    responses=get_synthetic_stats_responses
+    responses=get_synthetic_stats_responses,
+    operation_id="get_rps_dual_synthetic_stats",
 )
 async def get_synthetic_data_stats():
     """

@@ -4,11 +4,11 @@ import json
 from pathlib import Path
 from typing import Any, Dict
 
-from kehrnel.core.plugin import StrategyPlugin
-from kehrnel.core.types import ApplyPlan, ApplyResult, TransformResult, QueryPlan, QueryResult, StrategyContext
-from kehrnel.core.manifest import StrategyManifest
-from kehrnel.core.explain import enrich_explain
-from kehrnel.domains.openehr.aql.ir import AqlQueryIR
+from kehrnel.engine.core.plugin import StrategyPlugin
+from kehrnel.engine.core.types import ApplyPlan, ApplyResult, TransformResult, QueryPlan, QueryResult, StrategyContext
+from kehrnel.engine.core.manifest import StrategyManifest
+from kehrnel.engine.core.explain import enrich_explain
+from kehrnel.engine.domains.openehr.aql.ir import AqlQueryIR
 
 
 def load_json(path: Path) -> Dict[str, Any]:
@@ -73,11 +73,16 @@ class RPSSingleStrategy(StrategyPlugin):
         return {"inserted": {}}
 
     async def compile_query(self, ctx: StrategyContext, domain: str, query: Dict[str, Any]) -> QueryPlan:
-        ir = AqlQueryIR(**query) if not isinstance(query, AqlQueryIR) else query
+        query_payload = query
+        if isinstance(query, dict) and "debug" in query:
+            # IR dataclass does not accept "debug"; keep it out of AqlQueryIR construction.
+            query_payload = {k: v for k, v in query.items() if k != "debug"}
+
+        ir = AqlQueryIR(**query_payload) if not isinstance(query, AqlQueryIR) else query
         cfg = ctx.config
         comp_coll = cfg.get("collections", {}).get("compositions", {}).get("name")
         atlas_idx = cfg.get("collections", {}).get("search", {}).get("atlas_index_name")
-        scope = ir.scope or query.get("scope") or "patient"
+        scope = ir.scope or (query.get("scope") if isinstance(query, dict) else None) or "patient"
         pipeline = []
         if scope == "cross_patient":
             pipeline.append({"$search": {"index": atlas_idx or "search_nodes_index", "text": {"query": "*", "path": cfg.get("fields", {}).get("search", {}).get("path", "p")}}})

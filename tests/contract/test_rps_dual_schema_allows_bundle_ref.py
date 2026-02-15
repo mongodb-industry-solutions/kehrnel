@@ -11,8 +11,12 @@ def test_rps_dual_schema_includes_bundle_ref():
     assert strat, "openehr.rps_dual not found"
     schema = strat.get("config_schema") or {}
     props = schema.get("properties") or {}
-    slim = props.get("slim_search") or {}
-    slim_props = slim.get("properties") or {}
-    assert "bundle_id" in slim_props, "slim_search.bundle_id missing from schema"
+    collections = props.get("collections") or {}
+    collections_props = collections.get("properties") or {}
+    search = collections_props.get("search") or {}
+    search_props = search.get("properties") or {}
+    atlas_index = search_props.get("atlasIndex") or {}
+    atlas_index_props = atlas_index.get("properties") or {}
+    assert "definition" in atlas_index_props, "collections.search.atlasIndex.definition missing from schema"
     defaults = strat.get("default_config") or {}
-    assert defaults.get("slim_search", {}).get("bundle_id") == "openehr.analytics.example.v1"
+    assert isinstance(defaults.get("collections", {}).get("search", {}).get("atlasIndex", {}).get("definition"), str)

@@ -1,4 +1,4 @@
-# src/kehrnel/api/legacy/v1/aql/transformers/condition_processor.py
+# src/kehrnel/api/compatibility/v1/aql/transformers/condition_processor.py
 from typing import Dict, Any, List, Tuple
 from .value_formatter import ValueFormatter
 

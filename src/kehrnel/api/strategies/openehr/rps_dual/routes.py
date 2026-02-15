@@ -19,7 +19,7 @@ router.include_router(config_router, prefix="/config", tags=["Config"])
 router.include_router(synthetic_router)
 
 
-# Legacy client compatibility:
+# Compatibility client compatibility:
 # Some old UI builds incorrectly call domain APIs under the strategy prefix
 # (/api/strategies/openehr/rps_dual/*). Redirect known domain resources to
 # canonical domain-scoped routes.
@@ -31,14 +31,14 @@ _DOMAIN_FIRST_SEGMENTS = {
 
 
 @router.api_route(
-    "/{legacy_path:path}",
+    "/{path_suffix:path}",
     methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"],
     include_in_schema=False,
 )
-async def redirect_legacy_domain_calls(legacy_path: str, request: Request):
-    first = (legacy_path.split("/", 1)[0] or "").strip().lower()
+async def redirect_domain_calls(path_suffix: str, request: Request):
+    first = (path_suffix.split("/", 1)[0] or "").strip().lower()
     if first in _DOMAIN_FIRST_SEGMENTS:
-        target = f"/api/domains/openehr/{legacy_path}"
+        target = f"/api/domains/openehr/{path_suffix}"
         query = str(request.url.query or "").strip()
         if query:
             target = f"{target}?{query}"

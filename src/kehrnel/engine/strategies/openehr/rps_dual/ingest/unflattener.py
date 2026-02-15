@@ -48,7 +48,7 @@ class CompositionUnflattener:
         *,
         db,
         config: dict,
-        mappings_path: Optional[str] = None,
+        mappings_path: str,
         mappings_content=None,
         coding_opts: Optional[Dict[str, Any]] = None,
     ):
@@ -68,6 +68,19 @@ class CompositionUnflattener:
             data_field=flattener.cf_data,
             kp_field="kp",
             pi_field=flattener.cf_pi,  # typically "pi"
+        )
+
+    @classmethod
+    def from_flattener(cls, flattener: CompositionFlattener) -> "CompositionUnflattener":
+        """Build an unflattener wired to an already-initialized flattener."""
+        return cls(
+            codec=flattener.path_codec,
+            shortcuts=flattener.shortcut_keys,
+            nodes_field=flattener.cf_nodes,
+            path_field=flattener.cf_path,
+            data_field=flattener.cf_data,
+            kp_field="kp",
+            pi_field=flattener.cf_pi,
         )
 
     def _expand_key(self, key: str) -> str:

@@ -4,9 +4,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict, List
 from lxml import etree
-from kehrnel.common.mapping.utils.expr import evaluate as eval_expr
-from kehrnel.common.mapping.utils.jinja_env import env as JINJA
-from kehrnel.common.mapping.utils.transform import REGISTRY as TREG
+from kehrnel.engine.common.mapping.utils.expr import evaluate as eval_expr
+from kehrnel.engine.common.mapping.utils.jinja_env import env as JINJA
+from kehrnel.engine.common.mapping.utils.transform import REGISTRY as TREG
 import re
 
 class XMLHandler:

@@ -1,4 +1,5 @@
 import uuid
+import logging
 from datetime import datetime, timezone
 from dateutil.parser import isoparse
 from motor.motor_asyncio import AsyncIOMotorDatabase
@@ -6,10 +7,10 @@ from typing import Optional, Dict, Any
 from fastapi import HTTPException, status
 from pymongo.errors import PyMongoError
 
-from kehrnel.legacy.transform.flattener_g import CompositionFlattener
-from kehrnel.legacy.transform.core import Transformer
-from kehrnel.legacy.transform.exceptions_g import FlattenerError
-from kehrnel.api.legacy.app.core.config_models import CompositionCollectionNames
+from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
+from kehrnel.engine.strategies.openehr.rps_dual.ingest.unflattener import CompositionUnflattener
+from kehrnel.engine.strategies.openehr.rps_dual.ingest.exceptions_g import FlattenerError
+from kehrnel.api.bridge.app.core.config_models import CompositionCollectionNames
 
 from kehrnel.api.domains.openehr.composition.repository import (
     find_composition_by_uid,
@@ -40,7 +41,9 @@ from kehrnel.api.domains.openehr.contribution.repository import (
     find_contributions_for_versioned_object
 )
 
-from kehrnel.api.legacy.app.core.models import Contribution, AuditDetails
+from kehrnel.api.bridge.app.core.models import Contribution, AuditDetails
+
+logger = logging.getLogger(__name__)
 
 
 async def add_composition(
@@ -243,7 +246,7 @@ async def retrieve_and_unflatten_composition(
     uid_based_id: str,
     db: AsyncIOMotorDatabase,
     config: CompositionCollectionNames,
-    transformer: Transformer
+    unflattener: CompositionUnflattener
 ) -> Composition:
     """
     Retrieves a flattened composition, reconstructs it into canonical JSON,
@@ -254,7 +257,7 @@ async def retrieve_and_unflatten_composition(
         ehr_id: The ID of the parent EHR.
         uid_based_id: The unique ID of the composition (version-specific or latest).
         db: The database session.
-        transformer: The Transformer instance for un-flattening.
+        unflattener: The CompositionUnflattener instance for un-flattening.
 
     Returns:
         A Composition Pydantic model containing the reconstructed data.
@@ -310,25 +313,14 @@ async def retrieve_and_unflatten_composition(
             detail=f"Inconsistent data: Canonical composition '{composition_version_uid}' exists but its flattened version is missing."
         )
     
-    # 5. Load codes from database into the transformer's codec
+    # 5. Un-flatten the document to reconstruct the canonical JSON
     try:
-        await transformer.load_codes_from_db(db, {"target": {"codes_collection": "_codes"}})
-    except Exception as e:
+        reconstructed_data = unflattener.unflatten(flattened_doc)
+    except Exception:
+        logger.exception("Failed to reverse flattened composition uid=%s", composition_version_uid)
         raise HTTPException(
             status_code=500,
-            detail=f"Failed to load codes from database: {e}"
-        )
-    
-    # 6. Un-flatten the document to reconstruct the canonical JSON
-    try:
-        reconstructed_data = transformer.reverse(flattened_doc)
-    except Exception as e:
-        import traceback
-        print(f"ERROR in reverse: {e}")
-        print(f"ERROR traceback: {traceback.format_exc()}")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Failed to un-flatten composition '{composition_version_uid}': {e}"
+            detail=f"Failed to reconstruct composition '{composition_version_uid}'."
         )
     
 
@@ -566,7 +558,7 @@ async def retrieve_revision_history(
     # Validate that the EHR exists and contains the composition to prevent data leakage
     # Reuse the logic from retrieve_composition by fetching the latest version
 
-    await retrieve_composition(ehr_id=ehr_id, uid_based_id=versioned_object_uid, db=db)
+    await retrieve_composition(ehr_id=ehr_id, uid_based_id=versioned_object_uid, db=db, config=config)
 
     # Fetch all the relevant contribution from the repository
     contribution_docs = await find_contributions_for_versioned_object(versioned_object_uid, db)
@@ -675,7 +667,7 @@ async def retrieve_composition_version(
     # Validate that the EHR exists and contains this versioned composition.
     # It will raise 404 if not found, which is the correct behavior
 
-    await retrieve_composition(ehr_id=ehr_id, uid_based_id=versioned_object_uid, db=db)
+    await retrieve_composition(ehr_id=ehr_id, uid_based_id=versioned_object_uid, db=db, config=config)
 
     at_time_datetime: Optional[datetime] = None
     if version_at_time:

@@ -12,7 +12,7 @@ def strategy_with_config():
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(reason="Legacy search pipeline parity pending ($search compound filter shape)", strict=False)
+@pytest.mark.xfail(reason="Compatibility search pipeline parity pending ($search compound filter shape)", strict=False)
 async def test_cross_patient_embedded_document_pipeline():
     strat, cfg = strategy_with_config()
     ctx = StrategyContext(environment_id="env", config=cfg)
@@ -33,7 +33,7 @@ async def test_cross_patient_embedded_document_pipeline():
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(reason="Legacy lookup behavior parity pending", strict=False)
+@pytest.mark.xfail(reason="Compatibility lookup behavior parity pending", strict=False)
 async def test_lookup_appended_when_configured():
     strat, cfg = strategy_with_config()
     cfg.setdefault("query_engine", {})["lookup_full_composition"] = True
@@ -49,7 +49,7 @@ async def test_lookup_appended_when_configured():
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(reason="Legacy post-filter behavior parity pending", strict=False)
+@pytest.mark.xfail(reason="Compatibility post-filter behavior parity pending", strict=False)
 async def test_post_match_added_for_unsupported_predicate():
     strat, cfg = strategy_with_config()
     ctx = StrategyContext(environment_id="env", config=cfg)

@@ -1,4 +1,4 @@
-# src/kehrnel/api/legacy/v1/synthetic/models.py
+# src/kehrnel/api/compatibility/v1/synthetic/models.py
 
 from pydantic import BaseModel, Field, validator
 from typing import List, Optional, Dict, Any

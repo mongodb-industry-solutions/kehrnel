@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List
 
-from kehrnel.core.types import QueryResult, QueryPlan, StrategyContext
+from kehrnel.engine.core.types import QueryResult, QueryPlan, StrategyContext
 
 
 async def execute(ctx: StrategyContext, plan: QueryPlan) -> QueryResult:

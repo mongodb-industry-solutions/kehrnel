@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional, List, Literal, Any, Dict
 
-from kehrnel.api.legacy.app.core.models import AuditDetails
+from kehrnel.api.bridge.app.core.models import AuditDetails
 
 class HierObjectID(BaseModel):
     value: str

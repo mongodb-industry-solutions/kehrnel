@@ -17,10 +17,10 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
 
-from kehrnel.core.explain import enrich_explain
-from kehrnel.core.manifest import StrategyManifest
-from kehrnel.core.plugin import StrategyPlugin
-from kehrnel.core.types import ApplyPlan, ApplyResult, QueryPlan, QueryResult, StrategyContext, TransformResult
+from kehrnel.engine.core.explain import enrich_explain
+from kehrnel.engine.core.manifest import StrategyManifest
+from kehrnel.engine.core.plugin import StrategyPlugin
+from kehrnel.engine.core.types import ApplyPlan, ApplyResult, QueryPlan, QueryResult, StrategyContext, TransformResult
 
 
 def load_json(path: Path) -> Dict[str, Any]:

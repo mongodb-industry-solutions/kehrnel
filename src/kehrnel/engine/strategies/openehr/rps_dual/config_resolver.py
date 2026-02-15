@@ -1,11 +1,8 @@
-"""
-URI-based configuration resolver for RPS-Dual strategy.
+"""Resolve strategy config URIs (file://, collection://) into concrete payloads.
 
-Supports:
-- file://path/to/file.json - Load from local file (relative to strategy root)
-- collection://collection_name - Load from MongoDB collection
-- collection://collection_name?filter=value - Load with filter
-- Inline objects (passed through as-is)
+This module is intentionally small and dependency-free. It exists primarily to:
+- load pack assets referenced from config (e.g. dictionaries, shortcuts, mappings)
+- optionally load seed documents from MongoDB collections
 """
 
 from __future__ import annotations
@@ -14,183 +11,165 @@ import json
 import re
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qsl
+
+import yaml
 
 
-STRATEGY_ROOT = Path(__file__).parent
+def _strip_jsonc(text: str) -> str:
+    """Best-effort JSONC -> JSON conversion.
+
+    We remove // line comments and /* */ blocks outside of strings.
+    """
+
+    out: list[str] = []
+    i = 0
+    n = len(text)
+    in_str = False
+    esc = False
+    while i < n:
+        ch = text[i]
+        if in_str:
+            out.append(ch)
+            if esc:
+                esc = False
+            elif ch == "\\":
+                esc = True
+            elif ch == '"':
+                in_str = False
+            i += 1
+            continue
+
+        if ch == '"':
+            in_str = True
+            out.append(ch)
+            i += 1
+            continue
+
+        # line comment
+        if ch == "/" and i + 1 < n and text[i + 1] == "/":
+            i += 2
+            while i < n and text[i] not in ("\n", "\r"):
+                i += 1
+            continue
+
+        # block comment
+        if ch == "/" and i + 1 < n and text[i + 1] == "*":
+            i += 2
+            while i + 1 < n and not (text[i] == "*" and text[i + 1] == "/"):
+                i += 1
+            i += 2 if i + 1 < n else 0
+            continue
+
+        out.append(ch)
+        i += 1
+    return "".join(out)
+
+
+def _load_text_payload(path: Path) -> Any:
+    raw = path.read_text(encoding="utf-8")
+    suffix = path.suffix.lower()
+    if suffix in {".yaml", ".yml"}:
+        return yaml.safe_load(raw)
+    if suffix in {".json", ".jsonc"}:
+        try:
+            return json.loads(raw)
+        except Exception:
+            return json.loads(_strip_jsonc(raw))
+    # fallback: try yaml, then json
+    try:
+        return yaml.safe_load(raw)
+    except Exception:
+        return json.loads(raw)
+
+
+def _resolve_file_uri(uri: str, base_dir: Path) -> Any:
+    rel = uri[len("file://") :]
+    p = (base_dir / rel).resolve()
+    # prevent accidental escape
+    base = base_dir.resolve()
+    if base not in p.parents and p != base:
+        raise ValueError("file:// path escapes strategy root")
+    if not p.exists():
+        raise FileNotFoundError(str(p))
+    return _load_text_payload(p)
+
+
+def _parse_collection_uri(uri: str) -> tuple[str, Dict[str, Any]]:
+    # collection://name?key=value&k2=v2
+    rest = uri[len("collection://") :]
+    if not rest:
+        raise ValueError("collection:// URI missing collection name")
+    if "?" in rest:
+        name, query = rest.split("?", 1)
+    else:
+        name, query = rest, ""
+    name = name.strip()
+    if not name:
+        raise ValueError("collection:// URI missing collection name")
+
+    filt: Dict[str, Any] = {}
+    for k, v in parse_qsl(query, keep_blank_values=False):
+        if not k:
+            continue
+        # best-effort numeric conversion
+        if re.fullmatch(r"-?[0-9]+", v or ""):
+            filt[k] = int(v)
+        else:
+            filt[k] = v
+    return name, filt
 
 
 def resolve_uri(
-    uri_or_object: Union[str, Dict[str, Any], None],
-    db: Optional[Any] = None,
-    base_path: Optional[Path] = None,
-) -> Optional[Dict[str, Any]]:
-    """
-    Resolve a URI reference to its content.
-
-    Args:
-        uri_or_object: A URI string (file://, collection://) or inline object
-        db: Optional MongoDB database for collection:// URIs
-        base_path: Base path for file:// URIs (defaults to strategy root)
-
-    Returns:
-        Resolved content as a dictionary, or None if not found
-    """
-    if uri_or_object is None:
+    ref: Union[str, Dict[str, Any], list, None],
+    db: Any = None,
+    base_dir: Optional[Path] = None,
+) -> Any:
+    if ref is None:
         return None
+    if isinstance(ref, (dict, list)):
+        return ref
+    if not isinstance(ref, str):
+        raise TypeError("URI reference must be a string, object, list, or null")
+    if not base_dir:
+        base_dir = Path.cwd()
 
-    # Inline object - return as-is
-    if isinstance(uri_or_object, dict):
-        return uri_or_object
-
-    if not isinstance(uri_or_object, str):
-        return None
-
-    uri = uri_or_object.strip()
-
-    if uri.startswith("file://"):
-        return _resolve_file_uri(uri, base_path or STRATEGY_ROOT)
-
-    if uri.startswith("collection://"):
-        return _resolve_collection_uri(uri, db)
-
-    # Treat as file path for backwards compatibility
-    return _resolve_file_path(uri, base_path or STRATEGY_ROOT)
+    if ref.startswith("file://"):
+        return _resolve_file_uri(ref, base_dir)
+    if ref.startswith("collection://"):
+        if db is None:
+            raise ValueError("collection:// requires a MongoDB database handle")
+        coll, filt = _parse_collection_uri(ref)
+        if not filt:
+            raise ValueError("collection:// URI requires a filter (e.g. collection://name?_id=docId)")
+        return db[coll].find_one(filt)
+    raise ValueError("Unsupported reference; expected file:// or collection://")
 
 
 async def resolve_uri_async(
-    uri_or_object: Union[str, Dict[str, Any], None],
-    db: Optional[Any] = None,
-    base_path: Optional[Path] = None,
-) -> Optional[Dict[str, Any]]:
-    """
-    Async version of resolve_uri for collection:// URIs.
-    """
-    if uri_or_object is None:
+    ref: Union[str, Dict[str, Any], list, None],
+    db: Any = None,
+    base_dir: Optional[Path] = None,
+) -> Any:
+    if ref is None:
         return None
+    if isinstance(ref, (dict, list)):
+        return ref
+    if not isinstance(ref, str):
+        raise TypeError("URI reference must be a string, object, list, or null")
+    if not base_dir:
+        base_dir = Path.cwd()
 
-    if isinstance(uri_or_object, dict):
-        return uri_or_object
-
-    if not isinstance(uri_or_object, str):
-        return None
-
-    uri = uri_or_object.strip()
-
-    if uri.startswith("file://"):
-        return _resolve_file_uri(uri, base_path or STRATEGY_ROOT)
-
-    if uri.startswith("collection://"):
-        return await _resolve_collection_uri_async(uri, db)
-
-    return _resolve_file_path(uri, base_path or STRATEGY_ROOT)
-
-
-def _resolve_file_uri(uri: str, base_path: Path) -> Optional[Dict[str, Any]]:
-    """Resolve file://path/to/file.json"""
-    path_str = uri[7:]  # Remove "file://"
-    return _resolve_file_path(path_str, base_path)
+    if ref.startswith("file://"):
+        return _resolve_file_uri(ref, base_dir)
+    if ref.startswith("collection://"):
+        if db is None:
+            raise ValueError("collection:// requires a MongoDB database handle")
+        coll, filt = _parse_collection_uri(ref)
+        if not filt:
+            raise ValueError("collection:// URI requires a filter (e.g. collection://name?_id=docId)")
+        return await db[coll].find_one(filt)
+    raise ValueError("Unsupported reference; expected file:// or collection://")
 
 
-def _resolve_file_path(path_str: str, base_path: Path) -> Optional[Dict[str, Any]]:
-    """Resolve a file path (absolute or relative to base_path)"""
-    path = Path(path_str)
-
-    if not path.is_absolute():
-        path = base_path / path
-
-    if not path.exists():
-        return None
-
-    content = path.read_text(encoding="utf-8")
-
-    # Strip comments for JSONC files
-    if path.suffix.lower() in (".jsonc", ".json"):
-        content = _strip_json_comments(content)
-
-    return json.loads(content)
-
-
-def _resolve_collection_uri(uri: str, db: Optional[Any]) -> Optional[Dict[str, Any]]:
-    """Synchronous collection resolver - returns None, use async version"""
-    # For sync code, return None and let caller handle
-    return None
-
-
-async def _resolve_collection_uri_async(uri: str, db: Optional[Any]) -> Optional[Dict[str, Any]]:
-    """Resolve collection://name?filter=value"""
-    if db is None:
-        return None
-
-    parsed = urlparse(uri)
-    collection_name = parsed.netloc or parsed.path.lstrip("/")
-
-    if not collection_name:
-        return None
-
-    # Parse query string for filters
-    query_params = parse_qs(parsed.query)
-    filter_doc: Dict[str, Any] = {}
-
-    for key, values in query_params.items():
-        if values:
-            filter_doc[key] = values[0] if len(values) == 1 else values
-
-    collection = db[collection_name]
-
-    if filter_doc:
-        doc = await collection.find_one(filter_doc)
-    else:
-        # Return all documents as a list under "items" key
-        docs = await collection.find().to_list(length=1000)
-        return {"items": docs} if docs else None
-
-    return doc
-
-
-def _strip_json_comments(content: str) -> str:
-    """Strip // and /* */ comments from JSON content"""
-    # Remove single-line comments
-    content = re.sub(r"//.*?$", "", content, flags=re.MULTILINE)
-    # Remove multi-line comments
-    content = re.sub(r"/\*.*?\*/", "", content, flags=re.DOTALL)
-    return content
-
-
-def get_collection_name(cfg: Dict[str, Any], key: str, default: str = "") -> str:
-    """
-    Extract collection name from config, supporting nested structure.
-
-    Args:
-        cfg: Configuration dictionary
-        key: Key path like "collections.codes.name" or "codes"
-        default: Default value if not found
-    """
-    parts = key.split(".")
-    current = cfg
-
-    for part in parts:
-        if isinstance(current, dict) and part in current:
-            current = current[part]
-        else:
-            return default
-
-    return current if isinstance(current, str) else default
-
-
-def merge_configs(strategy_cfg: Dict[str, Any], bulk_cfg: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-    """
-    Merge strategy and bulk configs for operations that need both.
-
-    Strategy config takes precedence for overlapping keys.
-    Bulk config is added under a 'bulk' key.
-    """
-    merged = dict(strategy_cfg)
-    if bulk_cfg:
-        merged["_bulk"] = bulk_cfg
-    return merged
-
-
-def extract_bulk_config(merged: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-    """Extract bulk config from a merged configuration."""
-    return merged.get("_bulk")
+__all__ = ["resolve_uri", "resolve_uri_async"]

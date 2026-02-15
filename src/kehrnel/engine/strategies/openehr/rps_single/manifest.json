@@ -7,7 +7,7 @@
   "summary": "Single-collection reversed path search strategy for openEHR compositions.",
   "description": "Stores compositions with reversed paths in a single collection; uses Atlas Search when available.",
   "capabilities": ["transform", "ingest", "validate", "query", "plan", "apply"],
-  "entrypoint": "kehrnel.strategies.openehr.rps_single.strategy:RPSSingleStrategy",
+  "entrypoint": "kehrnel.engine.strategies.openehr.rps_single.strategy:RPSSingleStrategy",
   "ui": {
     "tags": ["openEHR", "reversed-paths", "single-collection", "atlas-search"],
     "domain_badge": "openEHR",

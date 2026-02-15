@@ -1,4 +1,4 @@
-# src/kehrnel/engine/strategies/openehr/rps_dual/query/transformers/archetype_resolver.py
+# src/kehrnel/api/compatibility/v1/aql/transformers/archetype_resolver.py
 
 from typing import Dict, Optional, Tuple, List
 from motor.motor_asyncio import AsyncIOMotorDatabase

@@ -3,7 +3,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import Optional
 from email.utils import formatdate
 
-from kehrnel.api.legacy.app.core.database import get_mongodb_ehr_db
+from kehrnel.api.bridge.app.core.database import get_mongodb_ehr_db
 from kehrnel.api.domains.openehr.ehr_status.models import EHRStatus, VersionedEHRStatus
 from kehrnel.api.common.models import RevisionHistory, OriginalVersionResponse
 

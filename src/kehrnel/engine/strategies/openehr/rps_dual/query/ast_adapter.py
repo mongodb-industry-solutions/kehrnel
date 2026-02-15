@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Dict, Any, Optional
 
-from kehrnel.domains.openehr.aql.ir import AqlQueryIR
+from kehrnel.engine.domains.openehr.aql.ir import AqlQueryIR
 
 
 def _adapt_select(ir: AqlQueryIR) -> Dict[str, Any]:
@@ -17,7 +17,7 @@ def _adapt_select(ir: AqlQueryIR) -> Dict[str, Any]:
 
 def _normalize_operator(op: str) -> str:
     """
-    Legacy search builder accepts operators like =, >, >=, <, <=, LIKE, MATCHES, EXISTS.
+    Compatibility search builder accepts operators like =, >, >=, <, <=, LIKE, MATCHES, EXISTS.
     Keep them verbatim (upper-case for non-symbols) and never emit EQ.
     """
     if not op:

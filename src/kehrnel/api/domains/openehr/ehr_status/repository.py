@@ -1,7 +1,7 @@
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from pymongo.errors import PyMongoError
 import logging
-from kehrnel.api.legacy.app.core.config import settings
+from kehrnel.api.bridge.app.core.config import settings
 
 logger = logging.getLogger(__name__)
 

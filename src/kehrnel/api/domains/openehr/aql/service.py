@@ -1,4 +1,4 @@
-# src/kehrnel/api/legacy/v1/aql/service.py
+# src/kehrnel/api/compatibility/v1/aql/service.py
 
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from fastapi import HTTPException, status
@@ -18,11 +18,11 @@ from kehrnel.api.domains.openehr.aql.repository import (
     execute_aql_query,
     detect_collection_format
 )
-from kehrnel.api.legacy.app.core.config import settings
+from kehrnel.api.bridge.app.core.config import settings
 
 from kehrnel.api.domains.openehr.aql.models import StoredQuery, StoredQuerySummary, QueryResponse, MetaData
 from kehrnel.api.domains.openehr.aql.transformers import AQLtoMQLTransformer
-from kehrnel.legacy.aql_parser.parser import AQLParser
+from kehrnel.engine.domains.openehr.aql.parser import AQLParser
 from kehrnel.persistence import get_default_strategy
 
 

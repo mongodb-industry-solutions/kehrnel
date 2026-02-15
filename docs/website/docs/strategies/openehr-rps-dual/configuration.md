@@ -84,6 +84,16 @@ Code dictionary collection.
 |-------|------|---------|-------------|
 | `name` | string | `_codes` | Collection name |
 | `mode` | string | `extend` | `extend` or `fixed` |
+| `seed` | string\|object | none | Optional seed payload (supports `file://...` URIs relative to the strategy pack) |
+
+#### shortcuts
+
+Shortcuts dictionary collection (used to compress common strings in documents).
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `name` | string | `_shortcuts` | Collection name |
+| `seed` | string\|object | none | Optional seed payload (supports `file://...` URIs relative to the strategy pack) |
 
 #### ehr
 
@@ -172,6 +182,8 @@ Required index configuration for `compositions_search`:
 }
 ```
 
+`collections.search.atlasIndex.definition` may also be provided as a `file://...` URI (relative to the strategy pack). This is a seed for index administration, not a runtime “bundle” stored in `.kehrnel/bundles`.
+
 ## Example Configurations
 
 ### Development
@@ -253,6 +265,17 @@ curl -X POST "http://localhost:8000/environments/production/activate" \
     "bindings_ref": "env://PROD_BINDINGS"
   }'
 ```
+
+## Notes On Seeds And Bundles
+
+RPS Dual uses `file://...` URIs in config for local pack assets, for example:
+
+- `file://bundles/dictionaries/_codes.json` (seed documents for `_codes`)
+- `file://bundles/shortcuts/shortcuts.json` (seed document for `_shortcuts`)
+- `file://bundles/searchIndex/searchIndex.json` (Atlas Search index definition)
+- `file://ingest/config/flattener_mappings_f.jsonc` (flattening/search projection mapping rules)
+
+These are **strategy-pack assets** resolved from disk. They are not the same as “slim search definition bundles” managed by the `kehrnel common bundles` CLI (those bundles have a different schema and are stored in `.kehrnel/bundles`).
 
 ## Related
 

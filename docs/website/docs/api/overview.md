@@ -2,58 +2,123 @@
 sidebar_position: 1
 ---
 
+import Link from '@docusaurus/Link';
+
 # API Overview
 
-\{kehrnel\} provides a comprehensive REST API for multi-strategy, multi-domain healthcare data operations. The API documentation is auto-generated from OpenAPI specifications.
+\{kehrnel\} exposes a layered REST API for multi-domain and multi-strategy healthcare workflows.
+
+Instead of navigating endpoint-by-endpoint in the sidebar, use the four API layers:
+
+- **Core**: runtime contracts, strategy registry, environment activation
+- **Common**: authentication, conventions, and shared behaviors
+- **Domain**: canonical domain operations (openEHR, FHIR preview)
+- **Strategy**: strategy-specific runtime operations
+
+Start at [API Layers](./layers), then go deeper into the layer page you need.
 
 ## Interactive Documentation
 
-Access the interactive API documentation when the server is running:
+These buttons open endpoints on the same server hosting this documentation (local default: `http://localhost:8000`).
 
-| Documentation | URL | Description |
-|--------------|-----|-------------|
-| **Swagger UI** | [http://localhost:8000/docs](http://localhost:8000/docs) | Interactive API explorer |
-| **ReDoc** | [http://localhost:8000/redoc](http://localhost:8000/redoc) | Clean API reference |
-| **OpenAPI JSON** | [http://localhost:8000/openapi.json](http://localhost:8000/openapi.json) | Raw specification |
+<div className="apiCtaGrid apiCtaGrid--2">
+  <div className="apiCtaCard">
+    <div className="apiCtaKicker">Interactive</div>
+    <div className="apiCtaTitle">Swagger UI</div>
+    <div className="apiCtaBody">Explore endpoints, try requests, and see schemas live.</div>
+    <div className="apiCtaActions">
+      <a className="button button--primary button--lg" href="/docs" target="_blank" rel="noopener noreferrer">Open Swagger UI</a>
+      <Link className="button button--outline button--primary" to="/docs/api/endpoint-catalog">Browse Catalog</Link>
+    </div>
+  </div>
+
+  <div className="apiCtaCard">
+    <div className="apiCtaKicker">Reference</div>
+    <div className="apiCtaTitle">ReDoc</div>
+    <div className="apiCtaBody">A clean, read-only OpenAPI reference for quick scanning.</div>
+    <div className="apiCtaActions">
+      <a className="button button--secondary button--lg" href="/redoc" target="_blank" rel="noopener noreferrer">Open ReDoc</a>
+      <Link className="button button--outline button--primary" to="/docs/api/layers">API Layers</Link>
+    </div>
+  </div>
+</div>
 
 ### Strategy-Specific Documentation
 
-| Strategy | Swagger | ReDoc |
-|----------|---------|-------|
-| openEHR RPS Dual | `/docs/strategies/openehr/rps_dual` | `/redoc/strategies/openehr/rps_dual` |
-| openEHR Domain | `/docs/domains/openehr` | `/redoc/domains/openehr` |
+<div className="apiCtaGrid apiCtaGrid--2">
+  <div className="apiCtaCard">
+    <div className="apiCtaKicker">Strategy</div>
+    <div className="apiCtaTitle">openEHR RPS Dual</div>
+    <div className="apiCtaBody">Strategy-specific operations (ingest, synthetic, diagnostics) for the dual-engine runtime.</div>
+    <div className="apiCtaActions">
+      <a className="button button--primary" href="/docs/strategies/openehr/rps_dual" target="_blank" rel="noopener noreferrer">Swagger</a>
+      <a className="button button--secondary" href="/redoc/strategies/openehr/rps_dual" target="_blank" rel="noopener noreferrer">ReDoc</a>
+      <Link className="button button--outline button--primary" to="/docs/strategies/openehr-rps-dual/overview">Docs</Link>
+    </div>
+  </div>
 
-## API Categories
+  <div className="apiCtaCard">
+    <div className="apiCtaKicker">Domain</div>
+    <div className="apiCtaTitle">openEHR</div>
+    <div className="apiCtaBody">Canonical openEHR domain endpoints (EHR, compositions, templates, AQL).</div>
+    <div className="apiCtaActions">
+      <a className="button button--primary" href="/docs/domains/openehr" target="_blank" rel="noopener noreferrer">Swagger</a>
+      <a className="button button--secondary" href="/redoc/domains/openehr" target="_blank" rel="noopener noreferrer">ReDoc</a>
+      <Link className="button button--outline button--primary" to="/docs/api/domain-openehr">Docs</Link>
+    </div>
+  </div>
+</div>
 
-For grouped, menu-driven endpoint navigation, use [Endpoint Catalog](/docs/api/endpoint-catalog).
+### Mapping (Where Is The API?)
 
-### openEHR Domain API
+Mapping in \{kehrnel\} exists in two places:
 
-Standard openEHR REST API endpoints following the openEHR specification:
+<div className="apiCtaGrid apiCtaGrid--2">
+  <div className="apiCtaCard">
+    <div className="apiCtaKicker">CLI</div>
+    <div className="apiCtaTitle">Mapping Workflows</div>
+    <div className="apiCtaBody">Use the CLI for mapping skeleton generation and applying mapping rules.</div>
+    <div className="apiCtaActions">
+      <Link className="button button--primary" to="/docs/cli/common">Open CLI Mapping Docs</Link>
+      <Link className="button button--outline button--primary" to="/docs/strategies/openehr-rps-dual/cli-workflows">RPS Dual Workflows</Link>
+    </div>
+  </div>
 
-- **EHR** (`/api/domains/openehr/ehr`) - Electronic Health Record management
-- **Composition** (`/api/domains/openehr/ehr/{ehr_id}/composition`) - Clinical document storage
-- **Query (AQL)** (`/api/domains/openehr/query`) - Archetype Query Language
-- **Template** (`/api/domains/openehr/definition/template`) - Operational templates
-- **EHR Status** (`/api/domains/openehr/ehr/{ehr_id}/ehr_status`) - EHR status management
-- **Contribution** (`/api/domains/openehr/ehr/{ehr_id}/contribution`) - Audit trail
-- **Directory** (`/api/domains/openehr/ehr/{ehr_id}/directory`) - Folder structure
+  <div className="apiCtaCard">
+    <div className="apiCtaKicker">API (Admin)</div>
+    <div className="apiCtaTitle">Mapping Studio Compatibility</div>
+    <div className="apiCtaBody">Privileged endpoints used by HDL Mapping Studio. They require an admin API key and are intentionally not shown in Swagger.</div>
+    <div className="apiCtaActions">
+      <a className="button button--primary" href="/redoc/core" target="_blank" rel="noopener noreferrer">Open Core ReDoc</a>
+    </div>
+  </div>
+</div>
 
-### Strategy API
+Admin mapping endpoints (HDL compatibility):
+- `POST /api/transform` (multipart upload + mapping + OPT → canonical composition)
+- `POST /api/validate-composition` (canonical composition + OPT → validation issues)
 
-Strategy-specific endpoints for the RPS Dual persistence layer:
+<details>
+  <summary>Show raw URLs</summary>
 
-- **Ingest** (`/api/strategies/openehr/rps_dual/ingest`) - Composition transformation and preview
-- **Config** (`/api/strategies/openehr/rps_dual/config`) - Strategy configuration
-- **Synthetic** (`/api/strategies/openehr/rps_dual/synthetic`) - Synthetic data generation
+  | Documentation | URL |
+  |--------------|-----|
+  | Swagger UI | `/docs` |
+  | ReDoc | `/redoc` |
+  | openEHR RPS Dual (Swagger) | `/docs/strategies/openehr/rps_dual` |
+  | openEHR RPS Dual (ReDoc) | `/redoc/strategies/openehr/rps_dual` |
+  | openEHR Domain (Swagger) | `/docs/domains/openehr` |
+  | openEHR Domain (ReDoc) | `/redoc/domains/openehr` |
+  | Mapping transform (Admin) | `/api/transform` |
+  | Mapping validate (Admin) | `/api/validate-composition` |
+</details>
 
-### Admin API
+## Layer Navigation
 
-Administrative endpoints for environment and strategy management:
-
-- **Strategies** (`/strategies`) - List and inspect strategy packs
-- **Environments** (`/environments/{env_id}`) - Environment activation and management
-- **Bundles** (`/bundles`) - Template and mapping bundles
+- [Core Layer API](./core-openapi)
+- [Common Layer API](./common-api)
+- [Domain Layer API](./domain-openehr)
+- [Strategy Layer API](./strategy-runtime)
 
 ## Canonical Inventory
 
@@ -154,6 +219,7 @@ curl -X POST "http://localhost:8000/environments/dev/activate" \
 
 ## Related
 
-- [Quick Start](/docs/getting-started/quickstart) - Getting started with the API
-- [Configuration](/docs/getting-started/configuration) - API server configuration
-- [AQL Query Guide](/docs/concepts/aql-to-mql) - Understanding AQL to MQL translation
+- [Quick Start](../getting-started/quickstart) - Getting started with the API
+- [Configuration](../getting-started/configuration) - API server configuration
+- [AQL Query Guide](../concepts/aql-to-mql) - Understanding AQL to MQL translation
+- [API Layers](./layers) - Layer model and navigation

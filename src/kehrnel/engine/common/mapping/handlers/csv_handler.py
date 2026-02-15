@@ -3,9 +3,9 @@ from __future__ import annotations
 import csv, re, datetime as dt
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-from kehrnel.common.mapping.utils.jinja_env import env as JINJA
-from kehrnel.common.mapping.utils.transform import REGISTRY as TREG
-from kehrnel.common.mapping.utils.expr import evaluate as eval_expr
+from kehrnel.engine.common.mapping.utils.jinja_env import env as JINJA
+from kehrnel.engine.common.mapping.utils.transform import REGISTRY as TREG
+from kehrnel.engine.common.mapping.utils.expr import evaluate as eval_expr
 
 class CSVHandler:
     def can_handle(self, path: Path) -> bool:
@@ -30,7 +30,7 @@ class CSVHandler:
         out     = mapping.get("output", {}) or {}
         rules   = mapping.get("mappings") or {}
 
-        # date format discovery (per default source or legacy input key)
+        # date format discovery (per default source or compatibility input key)
         default_src = meta.get("default_source","csv1")
         datefmt = (mapping.get("sources") or {}).get(default_src,{}).get("date_format") \
                   or inp.get("date_format")

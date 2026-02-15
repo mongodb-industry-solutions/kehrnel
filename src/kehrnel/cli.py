@@ -6,11 +6,11 @@ import json
 import os
 from pathlib import Path
 
-from kehrnel.core.pack_loader import load_strategy
-from kehrnel.core.registry import FileActivationRegistry
-from kehrnel.core.runtime import StrategyRuntime
-from kehrnel.core.manifest import StrategyManifest
-from kehrnel.core.pack_validator import StrategyPackValidator
+from kehrnel.engine.core.pack_loader import load_strategy
+from kehrnel.engine.core.registry import FileActivationRegistry
+from kehrnel.engine.core.runtime import StrategyRuntime
+from kehrnel.engine.core.manifest import StrategyManifest
+from kehrnel.engine.core.pack_validator import StrategyPackValidator
 
 
 def _strategy_paths() -> list[Path]:

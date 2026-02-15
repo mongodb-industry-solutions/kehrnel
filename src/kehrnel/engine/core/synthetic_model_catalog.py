@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List
 
-from kehrnel.core.errors import KehrnelError
+from kehrnel.engine.core.errors import KehrnelError
 
 
 def _as_lower(value: Any) -> str:

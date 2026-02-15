@@ -13,9 +13,9 @@ from .manifest import StrategyManifest
 from .config import validate_config
 from .activation import EnvironmentActivation
 from .registry import ActivationRegistry, FileActivationRegistry
-from kehrnel.core.errors import KehrnelError
-from kehrnel.core.bundle_store import BundleStore
-from kehrnel.core.bundles import compute_bundle_digest
+from kehrnel.engine.core.errors import KehrnelError
+from kehrnel.engine.core.bundle_store import BundleStore
+from kehrnel.engine.core.bundles import compute_bundle_digest
 from kehrnel.strategy_sdk import StrategyHandle, StrategyBindings
 from .types import QueryPlan, QueryResult, ApplyResult, TransformResult, StrategyContext
 from .bindings_resolver import resolve_bindings as _resolve_bindings_ref
@@ -90,13 +90,13 @@ class StrategyRuntime:
         chosen_domain = str(chosen_domain).strip().lower()
         existing = self.registry.get_activation(env_id, chosen_domain)
         incoming_bindings = self._has_meaningful_bindings(bindings)
-        if incoming_bindings or allow_plaintext_bindings:
+        if incoming_bindings and not allow_plaintext_bindings:
             raise KehrnelError(
                 code="PLAINTEXT_BINDINGS_FORBIDDEN",
                 status=400,
                 message="Plaintext bindings are not allowed. Use bindings_ref with a configured resolver.",
             )
-        if not bindings_ref:
+        if not bindings_ref and not allow_plaintext_bindings:
             raise KehrnelError(
                 code="BINDINGS_REF_REQUIRED",
                 status=400,
@@ -157,7 +157,7 @@ class StrategyRuntime:
             config_hash=new_config_hash,
             activated_at=now,
             updated_at=now,
-            bindings=None,
+            bindings=(bindings.__dict__ if allow_plaintext_bindings else None),
             bindings_ref=bindings_ref,
             replaced=bool(existing),
             previous_activation_id=getattr(existing, "activation_id", None) if existing else None,
@@ -189,7 +189,7 @@ class StrategyRuntime:
             activation.version,
             activation.config,
             rebind,
-            allow_plaintext_bindings=False,
+            allow_plaintext_bindings=bool(activation.bindings) and not bool(activation.bindings_ref),
             domain=activation.domain or domain,
             reason="upgrade",
             force=True,
@@ -213,7 +213,7 @@ class StrategyRuntime:
             prev_activation.version,
             prev_activation.config,
             rebind,
-            allow_plaintext_bindings=False,
+            allow_plaintext_bindings=bool(prev_activation.bindings) and not bool(prev_activation.bindings_ref),
             domain=prev_activation.domain or domain,
             reason="rollback",
             manifest_digest_override=prev_activation.manifest_digest,
@@ -257,9 +257,11 @@ class StrategyRuntime:
         activation_version = (activation.version or "").strip()
         is_latest_alias = activation_version.lower() in ("latest", "current")
         digest_mismatch = bool(activation.manifest_digest and activation.manifest_digest != current_digest)
-        # If digest matches, treat activation as compatible even if version label is "latest".
+        # Prefer manifest_digest for compatibility checks; versions are user labels and may drift.
+        # Only enforce version mismatch when no digest is available (legacy activations).
         version_mismatch = bool(
-            activation_version
+            not activation.manifest_digest
+            and activation_version
             and not is_latest_alias
             and activation_version != manifest.version
         )
@@ -394,11 +396,38 @@ class StrategyRuntime:
                 domain = payload.get("domain")
                 query = payload.get("query")
                 if query is None and isinstance(payload, dict) and isinstance(payload.get("aql"), str):
-                    query = {
-                        "aql": payload.get("aql"),
-                        "scope": payload.get("scope"),
-                        "debug": bool(payload.get("debug")),
-                    }
+                    # Accept "raw AQL" payloads at the runtime layer (API forwards them as-is).
+                    # Strategy plugins generally expect the normalized IR shape, not an "aql" key.
+                    aql_text = payload.get("aql")
+                    from kehrnel.engine.domains.openehr.aql.parser import validate_aql_syntax
+                    from kehrnel.engine.domains.openehr.aql.parse import parse_aql as parse_aql_to_ir
+
+                    # Extra guard: the current handwritten validator is permissive enough to accept
+                    # inputs like "SELECT FROM". Reject obviously malformed queries early.
+                    import re
+                    if not isinstance(aql_text, str) or not re.search(r"\bselect\b\s+\S[\s\S]*\bfrom\b", aql_text, flags=re.IGNORECASE):
+                        raise KehrnelError(
+                            code="INVALID_AQL",
+                            status=400,
+                            message="AQL syntax error: query must include SELECT <expr> FROM ...",
+                            details={"aql": aql_text},
+                        )
+
+                    validation = validate_aql_syntax(aql_text)
+                    if not (validation or {}).get("success"):
+                        raise KehrnelError(
+                            code="INVALID_AQL",
+                            status=400,
+                            message=(validation or {}).get("message") or "Invalid AQL query",
+                            details=validation or {},
+                        )
+                    ir = parse_aql_to_ir(aql_text).to_dict()
+                    # Allow callers to override scope detection if they already know it.
+                    if payload.get("scope"):
+                        ir["scope"] = payload.get("scope")
+                    if payload.get("debug"):
+                        ir["debug"] = True
+                    query = ir
                 plan = await handle.plugin.compile_query(ctx, domain=domain, query=query)
                 plan_dict = _to_dict(plan)
                 # unwrap nested plan if present
@@ -427,11 +456,34 @@ class StrategyRuntime:
                 domain = payload.get("domain")
                 query = payload.get("query")
                 if query is None and isinstance(payload, dict) and isinstance(payload.get("aql"), str):
-                    query = {
-                        "aql": payload.get("aql"),
-                        "scope": payload.get("scope"),
-                        "debug": bool(payload.get("debug")),
-                    }
+                    # Accept raw AQL payloads by parsing them into the normalized IR expected by strategies.
+                    aql_text = payload.get("aql")
+                    if not isinstance(aql_text, str) or not aql_text.strip():
+                        raise KehrnelError(code="INVALID_AQL", status=400, message="aql must be a non-empty string")
+                    if (domain or "").lower() not in ("openehr", "open_ehr"):
+                        raise KehrnelError(
+                            code="RAW_AQL_UNSUPPORTED",
+                            status=400,
+                            message="Raw AQL is only supported for the openEHR domain",
+                            details={"domain": domain},
+                        )
+                    from kehrnel.engine.domains.openehr.aql.parser import validate_aql_syntax
+                    from kehrnel.engine.domains.openehr.aql.parse import parse_aql as parse_aql_to_ir
+
+                    validation = validate_aql_syntax(aql_text)
+                    if not (validation or {}).get("success"):
+                        raise KehrnelError(
+                            code="INVALID_AQL",
+                            status=400,
+                            message=(validation or {}).get("message") or "Invalid AQL query",
+                            details=validation or {},
+                        )
+                    ir = parse_aql_to_ir(aql_text).to_dict()
+                    if payload.get("scope"):
+                        ir["scope"] = payload.get("scope")
+                    if payload.get("debug"):
+                        ir["debug"] = True
+                    query = ir
                 plan = await handle.plugin.compile_query(ctx, domain=domain, query=query)
                 res = await handle.plugin.execute_query(ctx, plan)
                 return _to_dict(res)
@@ -443,7 +495,7 @@ class StrategyRuntime:
                 # optional op input validation against manifest.ops[].input_schema
                 op_def = next((o for o in manifest.ops or [] if o.name == op_name), None)
                 if op_def and op_def.input_schema:
-                    from kehrnel.core.config import validate_config as validate_op
+                    from kehrnel.engine.core.config import validate_config as validate_op
                     validate_op(op_def.input_schema, op_payload or {})
                 res = _to_dict(await handle.plugin.run_op(ctx, op_name, op_payload))
                 if self._is_maintenance_op(manifest, op_name):

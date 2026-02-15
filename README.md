@@ -9,8 +9,9 @@
 
 This repository is intentionally focused on:
 - `src/kehrnel/api` (API surface)
+  - includes `src/kehrnel/api/compatibility` compatibility modules still used by current domain routes
 - `src/kehrnel/engine` (core/common/domains/strategies)
-- `src/kehrnel/legacy/cli` (CLI commands still in use)
+- `src/kehrnel/cli` (CLI commands)
 - `samples/` and `tests/`
 
 Removed from active scope:
@@ -34,6 +35,10 @@ API docs:
 - `http://localhost:8000/docs`
 - `http://localhost:8000/redoc`
 
+Full integration guide:
+- `examples/README.md`
+- `docs/cli-api-reference.md`
+
 ## Runtime Endpoints Used by HDL
 
 - `GET /strategies`
@@ -41,11 +46,10 @@ API docs:
 - `POST /environments/{env}/activate`
 - `POST /environments/{env}/compile_query`
 - `POST /environments/{env}/query`
-- `POST /environments/{env}/extensions/{strategy}/{op}`
+- `POST /environments/{env}/activations/{domain}/ops/{op}`
 
 Detailed contract docs:
-- `../HealthcareDataLab/docs/kehrnel-contracts/hdl-contract.md`
-- `../HealthcareDataLab/docs/kehrnel-contracts/hdl-kehrnel-synthetic-contract-v2.md`
+- this README (standalone and integration model)
 
 ## Strategy Packs
 
@@ -58,20 +62,99 @@ Additional packs can be discovered with:
 Validate a pack:
 
 ```bash
-kehrnel-validate-pack /path/to/strategy-pack
+kehrnel common validate-pack /path/to/strategy-pack
 ```
 
 ## CLI
 
-Installed commands include:
-- `kehrnel-api`
-- `kehrnel-map`
-- `kehrnel-generate`
-- `kehrnel-validate`
-- `kehrnel-ingest`
-- `kehrnel-transform`
-- `kehrnel-identify`
-- bundle/pack helpers (`kehrnel-validate-pack`, `kehrnel-list-bundles`, etc.)
+Primary CLI entrypoint:
+- `kehrnel` (`auth`, `context`, `core`, `common`, `domain`, `strategy`)
+- `kehrnel-api` (API server launcher)
+
+Complete CLI + endpoint inventory:
+- `docs/cli-api-reference.md`
+
+## Standalone Usage
+
+Kehrnel can be used independently of Healthcare Data Lab as:
+- a Python runtime library (embed in your backend),
+- a CLI toolkit (scripts/CI),
+- an HTTP API service (for external applications).
+
+## Runtime Architecture
+
+```mermaid
+flowchart LR
+  APP[External Application] -->|HTTP| API[Kehrnel API]
+  APP -->|Python SDK| RT[StrategyRuntime]
+  APP -->|CLI| CLI[Kehrnel CLI]
+
+  API --> RT
+  CLI --> RT
+
+  RT --> REG[Activation Registry]
+  RT --> DISC[Strategy Discovery]
+  DISC --> PACKS[Strategy Packs]
+  RT --> RES[Bindings Resolver]
+  RES --> SECRETS[Secret Store]
+
+  RT --> PLUG[Strategy Plugin]
+  PLUG --> OPS[Ops / Transform / Ingest / Query]
+  OPS --> MONGO[(MongoDB)]
+```
+
+Execution contract:
+1. Discover strategy manifests.
+2. Activate environment (`env_id + domain + strategy + config + bindings_ref`).
+3. Dispatch capability (`compile_query`, `query`, `ingest`, `transform`, `op`, etc.).
+4. Strategy plugin executes with resolved bindings and strategy config.
+
+## API Integration Model
+
+1. Discover strategies:
+- `GET /strategies`
+- `GET /strategies/{strategy_id}`
+
+2. Activate an environment:
+- `POST /environments/{env_id}/activate`
+
+Activation binds:
+- `strategy_id`
+- `domain`
+- strategy `config`
+- secure `bindings_ref` (recommended)
+
+3. Execute by environment:
+- `POST /environments/{env_id}/compile_query`
+- `POST /environments/{env_id}/query`
+- `POST /environments/{env_id}/ingest`
+- `POST /environments/{env_id}/transform`
+- `POST /environments/{env_id}/apply`
+- `POST /environments/{env_id}/activations/{domain}/ops/{op}`
+
+4. Strategy-specific APIs (example):
+- `/api/strategies/openehr/rps_dual/*`
+
+Clinical domain APIs:
+- `/api/domains/openehr/*`
+
+## Security Baseline
+
+For public deployment, set these before exposure:
+- `KEHRNEL_AUTH_ENABLED=true`
+- `KEHRNEL_API_KEYS=<comma-separated-keys>`
+- `KEHRNEL_CORS_ORIGINS=<explicit-origins>` (avoid `*` in production)
+- `KEHRNEL_RATE_LIMIT=<requests/minute>`
+
+For secure database binding resolution:
+- `KEHRNEL_BINDINGS_RESOLVER=<module:function>`
+- prefer `bindings_ref` over plaintext bindings
+
+## Examples
+
+- Python embedding: `examples/sdk/runtime_embed_example.py`
+- HTTP flow: `examples/api/curl_flow.sh`
+- CLI skeleton: `examples/cli/pipeline.sh`
 
 ## Tests
 
@@ -81,7 +164,7 @@ pytest tests/contract
 
 Notes:
 - Contract/golden tests target the active strategy runtime.
-- Legacy v1 tests are retained in the tree for historical coverage and may be skipped when legacy app modules are absent.
+- Some tests still exercise compatibility routes while API/domain migration is completed.
 
 ## License
 

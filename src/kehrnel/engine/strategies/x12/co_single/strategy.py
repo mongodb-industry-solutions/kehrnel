@@ -27,10 +27,10 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from kehrnel.core.plugin import StrategyPlugin
-from kehrnel.core.types import ApplyPlan, ApplyResult, TransformResult, QueryPlan, QueryResult, StrategyContext
-from kehrnel.core.manifest import StrategyManifest
-from kehrnel.core.explain import enrich_explain
+from kehrnel.engine.core.plugin import StrategyPlugin
+from kehrnel.engine.core.types import ApplyPlan, ApplyResult, TransformResult, QueryPlan, QueryResult, StrategyContext
+from kehrnel.engine.core.manifest import StrategyManifest
+from kehrnel.engine.core.explain import enrich_explain
 
 from .ingest.canonical_parser import parse_x12_to_transaction
 

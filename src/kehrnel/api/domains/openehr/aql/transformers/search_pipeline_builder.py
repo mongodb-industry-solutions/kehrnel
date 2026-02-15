@@ -1,4 +1,4 @@
-# src/kehrnel/api/legacy/v1/aql/transformers/search_pipeline_builder.py
+# src/kehrnel/api/compatibility/v1/aql/transformers/search_pipeline_builder.py
 
 from typing import Dict, Any, List, Optional
 from motor.motor_asyncio import AsyncIOMotorDatabase
@@ -6,7 +6,7 @@ from .condition_processor import ConditionProcessor
 from .value_formatter import ValueFormatter
 from .format_resolver import FormatResolver
 from kehrnel.persistence import PersistenceStrategy, get_default_strategy
-from kehrnel.api.legacy.app.core.config import settings
+from kehrnel.api.bridge.app.core.config import settings
 import logging
 import re
 
@@ -144,7 +144,7 @@ class SearchPipelineBuilder:
     async def _convert_where_to_search(self, where_clause: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """
         Converts an AQL WHERE clause to Atlas Search query syntax.
-        Handles both the new AQL parser format and legacy formats.
+        Handles both the new AQL parser format and compatibility formats.
         """
         # Handle the actual AQL parser format (flat structure)
         if "path" in where_clause and "operator" in where_clause:
@@ -154,7 +154,7 @@ class SearchPipelineBuilder:
         if "operator" in where_clause and "conditions" in where_clause:
             return await self._handle_logical_conditions_search(where_clause)
         
-        # Legacy format handling (for backward compatibility)
+        # Compatibility format handling (for backward compatibility)
         condition_type = where_clause.get("type")
         
         if condition_type == "comparison":

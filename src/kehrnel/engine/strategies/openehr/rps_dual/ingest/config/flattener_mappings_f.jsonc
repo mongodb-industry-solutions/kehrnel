@@ -1,8 +1,4 @@
 {
-  // Version of the *mapping payload format* consumed by CompositionFlattener.
-  // (Not the openEHR template version.)
-  "mappingVersion": 1,
-
   "templates": [
     {
       "templateId": "HC3 Immunization List v0.5",

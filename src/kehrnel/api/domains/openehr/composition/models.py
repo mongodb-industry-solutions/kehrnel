@@ -1,10 +1,10 @@
-# src/kehrnel/api/legacy/v1/composition/models.py
+# src/kehrnel/api/compatibility/v1/composition/models.py
 
-from pydantic import BaseModel, Field, validator, RootModel
+from pydantic import BaseModel, Field, RootModel, model_validator
 from datetime import datetime
 from typing import Optional, List, Literal, Any, Dict
 
-from kehrnel.api.legacy.app.core.models import AuditDetails
+from kehrnel.api.bridge.app.core.models import AuditDetails
 from kehrnel.api.common.models import HierObjectID, ObjectRef, DvDateTime
 
 class CompositionCreate(RootModel[Dict[str, Any]]):
@@ -12,13 +12,14 @@ class CompositionCreate(RootModel[Dict[str, Any]]):
     A model that accepts a raw dictionary as its payload, which is expected
     to be a valid openEHR canonical COMPOSITION object.
     """
-    @validator("root")
-    def check_composition_structure(cls, v):
+    @model_validator(mode="after")
+    def check_composition_structure(self):
+        v = self.root
         if "_type" not in v or v["_type"] != "COMPOSITION":
             raise ValueError("Request body must be a valid openEHR COMPOSITION with _type: 'COMPOSITION'")
         if "archetype_details" not in v or "template_id" not in v["archetype_details"]:
             raise ValueError("COMPOSITION must have archetype_details with a template_id")
-        return v
+        return self
     
     @property
     def template_id(self) -> str:

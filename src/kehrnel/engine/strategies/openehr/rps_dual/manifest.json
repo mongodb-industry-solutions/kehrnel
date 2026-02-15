@@ -2,6 +2,7 @@
   "id": "openehr.rps_dual",
   "name": "Reversed Path Search - Dual Collection",
   "version": "0.2.0",
+  "maturity": "published",
   "pack_format": "strategy-pack/v1",
   "spec": { "path": "spec.json", "version": "1.1" },
   "variants": ["composition.fullpath", "composition.codedpath", "search.shortcuts"],
@@ -28,12 +29,12 @@
     "plan",
     "apply"
   ],
-  "entrypoint": "kehrnel.strategies.openehr.rps_dual.strategy:RPSDualStrategy",
+  "entrypoint": "kehrnel.engine.strategies.openehr.rps_dual.strategy:RPSDualStrategy",
   "ui": {
     "tags": ["openEHR", "reversed-paths", "atlas-search", "dual-collection", "slim-search"],
     "domain_badge": "openEHR",
     "works_with": ["atlas_search_dual"],
-    "links": { "docs": "docs/refactor-plan.md" },
+    "links": { "docs": "/api/strategies/openehr.rps_dual/assets/rps-paper.pdf" },
     "story": "Clinical teams need to access individual patient histories quickly and completely, while research and population health teams need to search across thousands of patients efficiently. This strategy solves both needs by storing the full clinical record for patient care, alongside a compact search layer optimized for population queries.\n\nWhen a clinician opens a patient chart, they get the complete record exactly as it was documented—every observation, every medication, every note preserved with full fidelity. When a researcher searches for patients with specific conditions, the system uses an optimized search layer to return results in seconds rather than minutes, without ever compromising the integrity of the source data.\n\nThe result is a single source of truth that serves both operational and analytical workloads. Clinical teams trust it for patient care because nothing is lost or transformed. Research teams trust it for population health because queries are fast and comprehensive. IT teams appreciate it because there's no ETL pipeline to maintain, no data warehouse to synchronize, and no risk of operational and analytical systems drifting apart.",
     "how_it_works": "Your data lives in two synchronized collections that work together seamlessly. The primary collection stores complete clinical documents—each composition preserved as a single document with every field, every nested structure, exactly as the source system created it. This collection is optimized for patient-scoped queries: when you need everything about one patient, the system retrieves it instantly using efficient B-tree indexes.\n\nThe search collection maintains a streamlined projection of the same data, purpose-built for population queries. It contains just enough information to find patients matching complex criteria—diagnoses, medications, lab values, dates—without the overhead of full document storage. Atlas Search indexes this collection, enabling sub-second queries across millions of records.\n\nThe system automatically routes each query to the right collection. Ask for a specific patient's records, and it goes to the primary collection. Search for all patients with a particular condition, and it uses the search collection. You write standard AQL queries; the routing happens transparently.",
     "benefits": [
@@ -225,7 +226,7 @@
     {
       "name": "synthetic_generate_batch",
       "kind": "synthetic",
-      "summary": "Generate synthetic dataset in batch from model catalog and/or source canonical compositions",
+      "summary": "Generate synthetic dataset in batch from source canonical compositions",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -238,11 +239,50 @@
             "minimum": 1
           },
           "source_collection": {
-            "type": "string",
-            "description": "Optional. Required only for source-based generation modes."
+            "type": "string"
           },
           "source_database": {
             "type": "string"
+          },
+          "source_templates": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "source_sample_size": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 200
+          },
+          "source_min_per_patient": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 1
+          },
+          "source_max_per_patient": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 1
+          },
+          "source_filter": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "generation_mode": {
+            "type": "string",
+            "enum": ["auto", "from_source", "from_models", "source", "models"]
+          },
+          "dry_run": {
+            "type": "boolean",
+            "default": false
+          },
+          "plan_only": {
+            "type": "boolean",
+            "default": false
+          },
+          "write_batch_size": {
+            "type": "integer",
+            "minimum": 10,
+            "default": 250
           },
           "model_source": {
             "type": "object",
@@ -255,50 +295,107 @@
           },
           "models": {
             "type": "array",
-            "items": { "type": "object" }
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "model_id": { "type": "string" },
+                "template_id": { "type": "string" },
+                "min_per_patient": { "type": "integer", "minimum": 0 },
+                "max_per_patient": { "type": "integer", "minimum": 0 },
+                "weight": { "type": "number", "minimum": 0 },
+                "sample_pool_size": { "type": "integer", "minimum": 0, "default": 25 }
+              },
+              "required": ["model_id"],
+              "additionalProperties": false
+            }
           },
           "templates": {
             "type": "array",
-            "items": { "type": "object" }
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "template_id": {
+                  "type": "string"
+                },
+                "min_per_patient": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "max_per_patient": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "sample_pool_size": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "default": 25
+                }
+              },
+              "required": [
+                "template_id"
+              ],
+              "additionalProperties": false
+            }
           },
           "links": {
             "type": "array",
-            "items": { "type": "object" }
-          },
-          "generation_mode": {
-            "type": "string",
-            "enum": ["auto", "from_source", "from_models", "source", "models"]
-          },
-          "dry_run": { "type": "boolean", "default": false },
-          "plan_only": { "type": "boolean", "default": false },
-          "validate_generated_docs": {
-            "type": ["string", "boolean"],
-            "enum": ["none", "sample", "all", true, false],
-            "default": "none",
-            "description": "Synthetic validation mode. true=all, false=none."
-          },
-          "validation_sample_size": {
-            "type": "integer",
-            "minimum": 1,
-            "default": 50
-          },
-          "fail_on_validation_error": {
-            "type": "boolean",
-            "default": false
-          },
-          "skip_invalid_documents": {
-            "type": "boolean",
-            "default": true
-          },
-          "store_canonical": { "type": "boolean", "default": false },
-          "canonical_collection": { "type": "string" },
-          "write_batch_size": { "type": "integer", "minimum": 10, "default": 250 }
+            "items": {
+              "type": "object",
+              "properties": {
+                "from": { "type": "string" },
+                "to": { "type": "string" },
+                "probability": { "type": "number", "minimum": 0, "maximum": 1 },
+                "min_to_per_patient": { "type": "integer", "minimum": 0 },
+                "type": { "type": "string" }
+              },
+              "additionalProperties": true
+            }
+          }
         },
-        "required": ["patient_count"],
-        "additionalProperties": true
+        "required": [
+          "patient_count"
+        ],
+        "additionalProperties": false
       },
       "output_schema": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "patients": {
+            "type": "integer"
+          },
+          "generated_docs": {
+            "type": "integer"
+          },
+          "inserted_base": {
+            "type": "integer"
+          },
+          "inserted_search": {
+            "type": "integer"
+          },
+          "estimated_base_bytes": {
+            "type": "integer"
+          },
+          "estimated_search_bytes": {
+            "type": "integer"
+          },
+          "estimated_total_bytes": {
+            "type": "integer"
+          },
+          "links_applied": {
+            "type": "integer"
+          },
+          "by_template": {
+            "type": "object"
+          },
+          "by_model": {
+            "type": "object"
+          }
+        }
       }
     }
   ],

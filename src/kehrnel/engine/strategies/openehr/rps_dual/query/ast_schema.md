@@ -1,4 +1,4 @@
-# Legacy AST contract (derived from ASTValidator expectations)
+# Compatibility AST contract (derived from ASTValidator expectations)
 
 Top-level keys expected:
 - select: {"columns": { "0": {...}, ... }}
@@ -9,13 +9,13 @@ Top-level keys expected:
 - limit: optional int
 - offset: optional int
 
-Select column structure (legacy patterns):
+Select column structure (compatibility patterns):
 - {"alias": "<alias>", "value": {"path": "<aql_path>"}}
 
 Where clause shape (options):
 - Direct condition: {"path": "<aql_path>", "operator": "<OP>", "value": <value>}
 - Logical: {"operator": "AND"|"OR", "conditions": {"0": <cond>, "1": <cond>, ...}}
-- Legacy comparison: {"type": "comparison", "left": {"path": ...}, "operator": "=", "right": {"value": ...}}
+- Compatibility comparison: {"type": "comparison", "left": {"path": ...}, "operator": "=", "right": {"value": ...}}
 
 Contains:
 - Often absent in practice; if present, should be a dict understood by ConditionProcessor/FormatResolver.
@@ -25,4 +25,4 @@ OrderBy:
 
 Notes:
 - ASTValidator.detect_key_aliases expects aliases; we supply ehr_alias="e", composition_alias="c".
-- Builders tolerate direct condition format; prefer that over legacy "type": "comparison" when possible.
+- Builders tolerate direct condition format; prefer that over compatibility "type": "comparison" when possible.

@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import jsonschema
 
-from kehrnel.core.errors import KehrnelError
+from kehrnel.engine.core.errors import KehrnelError
 
 
 def validate_config(schema: dict, config: dict):

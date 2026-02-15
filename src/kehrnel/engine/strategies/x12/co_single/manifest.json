@@ -9,7 +9,7 @@
   "summary": "837 claim-processing strategy with ephemeral stage-1 and unified cn[] output.",
   "description": "Parse X12 837 to ephemeral structure (not persisted by default), map to Claim ContextObject, flatten to cn[] (same shape as openEHR) for unified querying.",
   "capabilities": ["transform", "ingest", "query", "validate", "plan", "apply"],
-  "entrypoint": "kehrnel.strategies.x12.co_single.strategy:X12COSingleStrategy",
+  "entrypoint": "kehrnel.engine.strategies.x12.co_single.strategy:X12COSingleStrategy",
   "config": {
     "strategy": {
       "schema": "schema.json",

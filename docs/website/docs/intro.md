@@ -1,9 +1,10 @@
 ---
 sidebar_position: 1
+sidebar_label: Introduction
 slug: /
 ---
 
-# Introduction to \{kehrnel\}
+# Introduction to kehrnel
 
 **\{kehrnel\}** is a multi-strategy, multi-domain runtime for healthcare data engineering.
 

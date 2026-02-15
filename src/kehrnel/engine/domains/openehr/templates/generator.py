@@ -18,7 +18,7 @@ import datetime as dt
 import uuid
 from abc import ABC, abstractmethod
 from collections import OrderedDict
-from kehrnel.common.mapping.mapping_engine import apply_mapping
+from kehrnel.engine.common.mapping.mapping_engine import apply_mapping
 import re
 
 
@@ -1365,5 +1365,5 @@ class kehrnelGenerator:
         return errors
 
     def trace(self, mapping: Dict[str, Any], source_path: Path) -> List[Dict[str, str]]:
-        from kehrnel.common.mapping.utils.trace_mapping import build_trace_table
+        from kehrnel.engine.common.mapping.utils.trace_mapping import build_trace_table
         return build_trace_table(mapping, source_path, self.handlers)

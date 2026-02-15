@@ -61,7 +61,7 @@ def strat_manifest_loader(strategy_id: str):
     # load manifests using the same loader as API
     from kehrnel.api.app import _load_manifests
 
-    manifests, _ = _load_manifests()
+    manifests, _, _ = _load_manifests()
     by_id = {m.id: m for m in manifests}
     if strategy_id not in by_id:
         raise AssertionError(f"strategy manifest not found: {strategy_id}")

@@ -1,8 +1,8 @@
-"""AQL→MQL compiler wrappers (vendored transformers)."""
+"""AQL→MQL compiler implementation for the rps_dual strategy."""
 from __future__ import annotations
 
-from kehrnel.domains.openehr.aql.ir import AqlQueryIR
-from .compile_patient import compile_patient
-from .compile_cross_patient import compile_cross_patient
+from kehrnel.engine.domains.openehr.aql.ir import AqlQueryIR
+from .compiler import build_query_pipeline
+from .executor import execute
 
-__all__ = ["compile_patient", "compile_cross_patient", "AqlQueryIR"]
+__all__ = ["AqlQueryIR", "build_query_pipeline", "execute"]

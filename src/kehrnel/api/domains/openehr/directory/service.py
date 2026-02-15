@@ -1,4 +1,4 @@
-# src/kehrnel/api/legacy/v1/directory/service.py
+# src/kehrnel/api/compatibility/v1/directory/service.py
 
 import uuid
 from datetime import datetime, timezone
@@ -17,7 +17,7 @@ from kehrnel.api.domains.openehr.directory.repository import (
 )
 from kehrnel.api.domains.openehr.ehr.repository import find_ehr_by_id
 from kehrnel.api.common.models import ObjectRef, HierObjectID, ObjectVersionID
-from kehrnel.api.legacy.app.core.models import Contribution, AuditDetails
+from kehrnel.api.bridge.app.core.models import Contribution, AuditDetails
 
 
 async def retrieve_directory_by_version_id(

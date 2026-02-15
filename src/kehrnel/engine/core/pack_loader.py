@@ -5,9 +5,9 @@ import json
 from pathlib import Path
 from typing import Optional
 
-from kehrnel.core.errors import KehrnelError
-from kehrnel.core.manifest import StrategyManifest
-from kehrnel.core.pack_validator import StrategyPackValidator
+from kehrnel.engine.core.errors import KehrnelError
+from kehrnel.engine.core.manifest import StrategyManifest
+from kehrnel.engine.core.pack_validator import StrategyPackValidator
 
 
 def load_strategy(strategy_id: Optional[str], pack_path: str | Path) -> StrategyManifest:

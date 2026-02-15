@@ -9,7 +9,7 @@
   "capabilities": [
     "query"
   ],
-  "entrypoint": "kehrnel.strategies.fhir.resource_first.strategy:FHIRResourceFirstStrategy",
+  "entrypoint": "kehrnel.engine.strategies.fhir.resource_first.strategy:FHIRResourceFirstStrategy",
   "config_schema": {
     "type": "object",
     "properties": {

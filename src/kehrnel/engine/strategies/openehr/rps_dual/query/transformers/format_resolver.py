@@ -1,4 +1,4 @@
-# src/kehrnel/engine/strategies/openehr/rps_dual/query/transformers/format_resolver.py
+# src/kehrnel/api/compatibility/v1/aql/transformers/format_resolver.py
 import re
 from typing import Tuple, Dict, Optional
 from .archetype_resolver import ArchetypeResolver

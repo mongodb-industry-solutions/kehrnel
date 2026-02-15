@@ -22,7 +22,7 @@
     }
   },
   "capabilities": ["transform", "ingest", "validate", "query", "plan", "apply"],
-  "entrypoint": "kehrnel.strategies.fhir.fhir_contextobjects_vitals_window.strategy:FhirVitalsWindowStrategy",
+  "entrypoint": "kehrnel.engine.strategies.fhir.fhir_contextobjects_vitals_window.strategy:FhirVitalsWindowStrategy",
   "ui": {
     "tags": ["FHIR", "wearables", "vitals", "contextobjects", "time-window", "observations", "csv-ingest"],
     "domain_badge": "FHIR",

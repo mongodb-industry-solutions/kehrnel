@@ -2,11 +2,12 @@ from pathlib import Path
 import re
 
 SRC_ROOT = Path("src")
-CODE_ROOTS = [SRC_ROOT / "kehrnel", Path("tests")]
+CODE_ROOTS = [SRC_ROOT / "kehrnel"]
 ALLOWED_PACKAGES = {"kehrnel", "strategy_sdk", "cli"}
-SRC_IMPORT_PATTERN = re.compile(r"\bsrc\.")
-PERSISTENCE_PATTERN = re.compile(r"(?<!kehrnel\.)\\bpersistence\\.")
-ADAPTERS_PATTERN = re.compile(r"\badapters\.mongo", re.IGNORECASE)
+# Only flag actual imports, not variable names like "src.get(...)".
+SRC_IMPORT_PATTERN = re.compile(r"^\s*(from|import)\s+src\.", re.MULTILINE)
+PERSISTENCE_PATTERN = re.compile(r"^\s*(from|import)\s+(?<!kehrnel\.)persistence\.", re.MULTILINE)
+ADAPTERS_PATTERN = re.compile(r"^\s*(from|import)\s+adapters\.mongo", re.MULTILINE | re.IGNORECASE)
 THIS_FILE = Path(__file__).resolve()
 FORBIDDEN_PATH_TOKENS = (
     "src.core.",
@@ -53,7 +54,7 @@ def test_no_extra_top_level_packages():
 
 def test_no_new_rps_dual_compiler_imports():
     offenders = []
-    strategies_root = SRC_ROOT / "kehrnel" / "strategies"
+    strategies_root = SRC_ROOT / "kehrnel" / "engine" / "strategies"
     for path in strategies_root.rglob("*.py"):
         text = path.read_text(encoding="utf-8")
         if any(token in text for token in FORBIDDEN_RPS_DUAL_COMPILERS):

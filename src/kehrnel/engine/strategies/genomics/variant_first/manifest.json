@@ -8,7 +8,7 @@
   "capabilities": [
     "query"
   ],
-  "entrypoint": "kehrnel.strategies.genomics.variant_first.strategy:GenomicsVariantFirstStrategy",
+  "entrypoint": "kehrnel.engine.strategies.genomics.variant_first.strategy:GenomicsVariantFirstStrategy",
   "config_schema": {
     "type": "object",
     "properties": {

@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(reason="Legacy patient regex/elemMatch parity pending", strict=False)
+@pytest.mark.xfail(reason="Compatibility patient regex/elemMatch parity pending", strict=False)
 async def test_patient_regex_and_all_elem_match():
     cfg = load_json(DEFAULTS_PATH)
     storage = FixtureStorage(Path("tests/fixtures/rps_dual"))

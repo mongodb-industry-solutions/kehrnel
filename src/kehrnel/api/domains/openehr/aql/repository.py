@@ -1,4 +1,4 @@
-# src/kehrnel/api/legacy/v1/aql/repository.py
+# src/kehrnel/api/compatibility/v1/aql/repository.py
 
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from pymongo.errors import PyMongoError
@@ -6,7 +6,7 @@ import logging
 import os
 from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
-from kehrnel.api.legacy.app.core.config import settings
+from kehrnel.api.bridge.app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -116,7 +116,7 @@ async def execute_aql_query(
     try:
         if use_search_collection:
             # Use search collection for Atlas Search queries
-            from kehrnel.api.legacy.app.core.config import settings
+            from kehrnel.api.bridge.app.core.config import settings
             collection_name = settings.search_config.search_collection
             logger.info(f"Executing search query against collection: {collection_name}")
         else:

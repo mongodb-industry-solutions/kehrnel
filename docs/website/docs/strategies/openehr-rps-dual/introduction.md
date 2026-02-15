@@ -6,9 +6,22 @@ sidebar_position: 1
 
 The **RPS Dual** (Reversed-Path Storage, Dual Collection) strategy is \{kehrnel\}'s primary persistence strategy for openEHR Clinical Data Repositories.
 
+This page is strategy-specific. It describes behavior for `openehr.rps_dual`, not cross-strategy platform guarantees.
+
 ## Overview
 
 RPS Dual solves a fundamental challenge in openEHR storage: efficiently serving both **patient-centric** and **population-wide** queries from a single system.
+
+## API Placement in the Layered Model
+
+For this strategy, API responsibilities are split as follows:
+
+- **Core layer**: strategy registry and environment activation (`/strategies`, `/environments/{env_id}/...`)
+- **Common layer**: auth, error format, and HTTP conventions
+- **Domain layer**: canonical openEHR operations (`/api/domains/openehr/...`)
+- **Strategy layer**: RPS Dual operations (`/api/strategies/openehr/rps_dual/...`)
+
+Practical implication: clients keep using domain APIs for clinical operations, while RPS Dual endpoints are used for strategy configuration, ingest support, and synthetic workflows.
 
 ### The Challenge
 
@@ -33,7 +46,7 @@ The query engine automatically routes to the optimal collection based on query s
 
 ## Performance
 
-Tested at billion-document scale:
+Internal benchmark sample at billion-document scale:
 
 | Query Type | Median | P90 |
 |------------|--------|-----|
@@ -151,6 +164,7 @@ openEHR-EHR-COMPOSITION.encounter.v1 → 15
 
 ## Next Steps
 
+- [CLI Workflows](/docs/strategies/openehr-rps-dual/cli-workflows) - Practical transform/map/ingest/validate commands
 - [Data Model](/docs/strategies/openehr-rps-dual/data-model) - Detailed document structure
 - [Query Translation](/docs/strategies/openehr-rps-dual/query-translation) - AQL to MQL compilation
 - [Configuration](/docs/strategies/openehr-rps-dual/configuration) - Full configuration reference

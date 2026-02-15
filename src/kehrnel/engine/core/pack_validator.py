@@ -99,8 +99,19 @@ class StrategyPackValidator:
             spec = importlib.util.find_spec(mod)
             if spec is None:
                 errors.append(f"entrypoint module not found: {mod}")
-            elif spec.origin and not Path(spec.origin).resolve().as_posix().startswith(self.base_path.resolve().as_posix()):
-                errors.append(f"entrypoint module outside strategy pack: {mod}")
+            else:
+                base = self.base_path.resolve().as_posix()
+                if spec.origin:
+                    if not Path(spec.origin).resolve().as_posix().startswith(base):
+                        errors.append(f"entrypoint module outside strategy pack: {mod}")
+                elif spec.submodule_search_locations:
+                    # Namespace packages have origin=None; ensure *all* search locations are within the pack.
+                    for loc in spec.submodule_search_locations:
+                        if not Path(loc).resolve().as_posix().startswith(base):
+                            errors.append(f"entrypoint module outside strategy pack: {mod}")
+                            break
+                else:
+                    errors.append(f"entrypoint module location unknown: {mod}")
         except Exception:
             errors.append(f"entrypoint module not found: {mod}")
         return errors
@@ -109,7 +120,7 @@ class StrategyPackValidator:
         errors: List[str] = []
         if not self.domain:
             return errors
-        pattern = "kehrnel.strategies."
+        pattern = "kehrnel.engine.strategies."
         for path in self.base_path.rglob("*.py"):
             text = path.read_text(encoding="utf-8")
             start = 0

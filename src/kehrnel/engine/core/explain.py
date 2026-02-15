@@ -5,8 +5,8 @@ import hashlib
 import json
 from typing import Any, Dict
 
-from kehrnel.core.types import StrategyContext
-from kehrnel.core.manifest import StrategyManifest
+from kehrnel.engine.core.types import StrategyContext
+from kehrnel.engine.core.manifest import StrategyManifest
 
 
 def _compute_config_hash(cfg: Dict[str, Any]) -> str:

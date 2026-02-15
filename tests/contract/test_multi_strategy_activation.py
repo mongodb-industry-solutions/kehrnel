@@ -62,7 +62,14 @@ def test_activation_endpoint_returns_state(app_client):
     app, client = app_client
     client.post(
         "/v1/environments/envState/activate",
-        json={"strategy_id": "openehr.rps_dual", "version": "0.1.0", "config": {}, "bindings": {}, "domain": "openEHR"},
+        json={
+            "strategy_id": "openehr.rps_dual",
+            "version": "0.1.0",
+            "config": {},
+            "bindings": {"extras": {"db": {"provider": "none"}}},
+            "allow_plaintext_bindings": True,
+            "domain": "openEHR",
+        },
     )
     res = client.get("/v1/environments/envState")
     assert res.status_code == 200

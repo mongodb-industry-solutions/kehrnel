@@ -3,7 +3,7 @@ from typing import Any, Dict
 from fastapi import APIRouter, Body, Request
 
 from kehrnel.api.core.admin.routes import _error_response
-from kehrnel.core.errors import KehrnelError
+from kehrnel.engine.core.errors import KehrnelError
 
 router = APIRouter()
 

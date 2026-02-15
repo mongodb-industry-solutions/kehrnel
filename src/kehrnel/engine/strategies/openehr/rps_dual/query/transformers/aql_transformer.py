@@ -1,4 +1,4 @@
-# src/kehrnel/engine/strategies/openehr/rps_dual/query/transformers/aql_transformer.py
+# src/kehrnel/api/compatibility/v1/aql/transformers/aql_transformer.py
 from typing import Any, Dict, List, Optional
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from .ast_validator import ASTValidator
@@ -7,21 +7,22 @@ from .format_resolver import FormatResolver
 from .pipeline_builder import PipelineBuilder
 from .search_pipeline_builder import SearchPipelineBuilder
 from .archetype_resolver import ArchetypeResolver
+from kehrnel.persistence import PersistenceStrategy, get_default_strategy
 
 
 class AQLtoMQLTransformer:
     """
     Transforms an AQL Abstract Syntax Tree (AST) into a MongoDB Aggregation Pipeline.
-
+    
     This transformer is designed for a specific "semi-flattened" openEHR schema where
     a composition document contains a 'cn' array, and each element in 'cn' has:
     - 'p': A string representing the hierarchical path of the node.
     - 'data': The actual openEHR Reference Model object for that node.
-
+    
     This class now orchestrates the transformation using specialized components:
     - ASTValidator: Validates AST structure
     - ContextMapper: Maps variable aliases to archetype IDs
-    - PathResolver: Handles AQL path translation
+    - PathResolver: Handles AQL path translation 
     - PipelineBuilder: Constructs MongoDB aggregation stages
     """
 
@@ -30,18 +31,18 @@ class AQLtoMQLTransformer:
         ast: Dict[str, Any],
         ehr_id: Optional[str] = None,
         schema_config: Optional[Dict[str, str]] = None,
-        search_schema_config: Optional[Dict[str, str]] = None,
         db: Optional[AsyncIOMotorDatabase] = None,
         search_index_name: str = "search_compositions_index",
+        strategy: Optional[PersistenceStrategy] = None,
     ):
         self.ast = ast
         self.ehr_id = ehr_id
         self.db = db
         self.search_index_name = search_index_name
-        self.search_schema_config = search_schema_config or {}
-
-        # Schema field configuration
-        self.schema_config = schema_config or self._build_default_schema_config()
+        self.strategy = strategy or get_default_strategy()
+        
+        # Schema field configuration (Point 3 preparation)
+        self.schema_config = schema_config or self._build_schema_config_from_strategy(self.strategy)
         
         # LET variable storage
         self.let_variables: Dict[str, Any] = {}
@@ -96,7 +97,7 @@ class AQLtoMQLTransformer:
             self.path_resolver,
             self.context_map,
             self.let_variables,
-            search_schema_config=self.search_schema_config,
+            strategy=self.strategy,
             search_index_name=self.search_index_name,
         )
 
@@ -132,9 +133,6 @@ class AQLtoMQLTransformer:
         if match_stage:
             pipeline.append(match_stage)
 
-        # 1b. Enforce CONTAINS branch consistency using bk (if the strategy provides it)
-        pipeline.extend(await self.pipeline_builder.build_branch_consistency_stages(self.ast))
-
         # 2. Build the $addFields stage for LET variables (before projection)
         let_stage = self.pipeline_builder.build_let_stage()
         if let_stage:
@@ -145,12 +143,19 @@ class AQLtoMQLTransformer:
         if project_stage:
             pipeline.append(project_stage)
 
-        # 4. Build the $sort stage from ORDER BY clause
+        # 4. Build DISTINCT stages ($group + $replaceRoot) if SELECT DISTINCT is used
+        # This must come after $project so we can group by the projected field names
+        projected_fields = self.pipeline_builder.get_projected_field_names(self.ast)
+        distinct_stages = self.pipeline_builder.build_distinct_stages(self.ast, projected_fields)
+        if distinct_stages:
+            pipeline.extend(distinct_stages)
+
+        # 5. Build the $sort stage from ORDER BY clause
         sort_stage = self.pipeline_builder.build_sort_stage(self.ast)
         if sort_stage:
             pipeline.append(sort_stage)
         
-        # 5. Build the $limit stage from LIMIT clause
+        # 6. Build the $limit stage from LIMIT clause
         limit_stage = self.pipeline_builder.build_limit_stage(self.ast)
         if limit_stage:
             pipeline.append(limit_stage)
@@ -197,10 +202,10 @@ class AQLtoMQLTransformer:
         """Returns the processed LET variables."""
         return self.let_variables
 
-    def _build_default_schema_config(self) -> Dict[str, str]:
-        """Build default schema config when none is provided."""
+    def _build_schema_config_from_strategy(self, strategy: PersistenceStrategy) -> Dict[str, str]:
+        composition_fields = strategy.fields.get("composition")
         return {
-            'composition_array': 'cn',
-            'path_field': 'p',
-            'data_field': 'data',
+            'composition_array': composition_fields.nodes if composition_fields and composition_fields.nodes else 'cn',
+            'path_field': composition_fields.path if composition_fields and composition_fields.path else 'p',
+            'data_field': composition_fields.data if composition_fields and composition_fields.data else 'data',
         }

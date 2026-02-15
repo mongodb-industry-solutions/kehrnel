@@ -5,12 +5,14 @@ import os
 from pathlib import Path
 import json
 
-from fastapi import APIRouter, HTTPException, Request, status
+from fastapi import APIRouter, Body, HTTPException, Request, status
 from pydantic import BaseModel, Field
 
-from kehrnel.api.legacy.app.utils.config_runtime import apply_ingestion_config, DEFAULT_MAPPINGS_PATH
-from kehrnel.api.legacy.app.core.config import settings
-from kehrnel.persistence import load_strategy_from_file, load_strategy_from_json, PersistenceStrategy
+from kehrnel.api.bridge.app.utils.config_runtime import apply_ingestion_config, DEFAULT_MAPPINGS_PATH
+from kehrnel.api.bridge.app.core.config import settings
+from kehrnel.api.common.models import ErrorResponse
+from kehrnel.persistence import load_strategy_from_json, PersistenceStrategy
+from kehrnel.engine.core.redaction import redact_secrets
 
 router = APIRouter()
 
@@ -19,12 +21,24 @@ def _allow_local_file_inputs() -> bool:
     return os.getenv("KEHRNEL_ALLOW_LOCAL_FILE_INPUTS", "false").lower() in ("1", "true", "yes")
 
 
+def _local_file_inputs_base_dir() -> Path:
+    raw = (os.getenv("KEHRNEL_LOCAL_FILE_INPUTS_BASE_DIR") or "").strip()
+    if not raw:
+        return Path.cwd().resolve()
+    return Path(raw).expanduser().resolve()
+
+
 def _safe_local_json_path(raw_path: str) -> Path:
     p = Path(raw_path)
     if not p.is_absolute():
         p = (Path.cwd() / p).resolve()
     else:
         p = p.resolve()
+    base = _local_file_inputs_base_dir()
+    try:
+        p.relative_to(base)
+    except ValueError:
+        raise ValueError("Provided path is outside the allowed inputs directory")
     if not p.exists() or not p.is_file():
         raise ValueError("Provided path does not exist or is not a file")
     if p.suffix.lower() not in (".json", ".jsonc"):
@@ -148,15 +162,85 @@ class IngestionConfigPayload(BaseModel):
     )
 
 
+class SetIngestionConfigResponse(BaseModel):
+    status: str = Field(..., description="Operation status.")
+    message: str = Field(..., description="Human-readable summary.")
+    mappings_path: Optional[str] = Field(None, description="Resolved mappings path when file mappings are used.")
+    strategy: Optional[Dict[str, Any]] = Field(None, description="Resolved strategy content when provided inline or via path.")
+
+
+set_ingestion_config_responses = {
+    status.HTTP_200_OK: {
+        "description": "Configuration applied successfully.",
+        "model": SetIngestionConfigResponse,
+        "content": {
+            "application/json": {
+                "example": {
+                    "status": "success",
+                    "message": "Ingestion configuration applied.",
+                    "mappings_path": "src/kehrnel/engine/strategies/openehr/rps_dual/ingest/config/flattener_mappings_f.jsonc",
+                    "strategy": None,
+                }
+            }
+        },
+    },
+    status.HTTP_400_BAD_REQUEST: {
+        "description": "Invalid configuration payload or invalid file/path references.",
+        "model": ErrorResponse,
+        "content": {
+            "application/json": {
+                "example": {
+                    "detail": "Failed to apply configuration: Local file paths are disabled. Use strategy_inline instead."
+                }
+            }
+        },
+    },
+}
+
+
 # --- Route ---
 @router.post(
     "",
     status_code=status.HTTP_200_OK,
+    response_model=SetIngestionConfigResponse,
     summary="Set ingestion configuration at runtime",
-    description="Initializes or reinitializes the flattener/transformer using the provided configuration. "
+    description="Initializes or reinitializes the flattener/unflattener using the provided configuration. "
     "Mappings can be inline or file-based.",
+    responses=set_ingestion_config_responses,
+    operation_id="set_rps_dual_ingestion_config",
 )
-async def set_ingestion_config(payload: IngestionConfigPayload, request: Request):
+async def set_ingestion_config(
+    request: Request,
+    payload: IngestionConfigPayload = Body(
+        ...,
+        examples={
+            "minimal": {
+                "summary": "Minimal runtime config",
+                "value": {
+                    "collections": {
+                        "compositions": {"store_canonical": False, "name": "compositions"},
+                        "semiflattened_compositions": {"name": "compositions_rps"},
+                        "search": {"name": "compositions_search", "enabled": True},
+                    }
+                },
+            },
+            "with_inline_strategy": {
+                "summary": "Inline strategy and analytics mappings",
+                "value": {
+                    "collections": {
+                        "compositions": {"store_canonical": True, "name": "canonical_source"},
+                        "semiflattened_compositions": {"name": "compositions_rps"},
+                        "search": {"name": "compositions_search", "enabled": True, "atlas_index_name": "search_nodes_index"},
+                    },
+                    "strategy_inline": {"database": "openehr_db", "templates": []},
+                    "analytics_inline": [{"templateId": "HC3 Immunization List v0.5", "fields": []}],
+                    "mappings": {"use_file": False},
+                },
+            },
+        },
+    ),
+):
+    """Initialize or refresh the ingestion runtime config used by strategy ingest endpoints."""
     try:
         # Load strategy if provided
         strategy: Optional[PersistenceStrategy] = None
@@ -277,5 +361,5 @@ async def set_ingestion_config(payload: IngestionConfigPayload, request: Request
     except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Failed to apply configuration: {exc}",
+            detail=f"Failed to apply configuration: {redact_secrets(str(exc))}",
         )

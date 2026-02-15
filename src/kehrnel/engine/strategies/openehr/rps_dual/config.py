@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from typing import Optional, Dict, Any, Union, List
 from pydantic import BaseModel, Field
 
@@ -22,15 +23,9 @@ class SearchCollectionCfg(BaseModel):
     enabled: bool = True
     atlasIndex: Optional[AtlasIndexCfg] = None
 
-    # Legacy field aliases for backwards compat
-    @property
-    def atlas_index_name(self) -> Optional[str]:
-        return self.atlasIndex.name if self.atlasIndex else None
-
 
 class CodesCollectionCfg(BaseModel):
     name: str = "_codes"
-    mode: str = "extend"  # "fresh" | "extend"
     seed: Optional[Union[str, Dict[str, Any]]] = None
 
 
@@ -72,44 +67,13 @@ class DocumentFieldsCfg(BaseModel):
 
 class NodeFieldsCfg(BaseModel):
     p: str = "p"
-    kp: str = "kp"
-    li: str = "li"
+    pi: str = "pi"
     data: str = "data"
 
 
 class FieldsCfg(BaseModel):
     document: DocumentFieldsCfg = Field(default_factory=DocumentFieldsCfg)
     node: NodeFieldsCfg = Field(default_factory=NodeFieldsCfg)
-
-    # Legacy accessors for backwards compat
-    @property
-    def composition(self) -> Dict[str, Any]:
-        return {
-            "nodes": self.document.cn,
-            "path": self.node.p,
-            "data": self.node.data,
-            "ehr_id": self.document.ehr_id,
-            "comp_id": self.document.comp_id,
-            "template_id": self.document.tid,
-            "version": self.document.v,
-        }
-
-    @property
-    def search(self) -> Dict[str, Any]:
-        return {
-            "nodes": self.document.sn,
-            "path": self.node.p,
-            "data": self.node.data,
-            "ehr_id": self.document.ehr_id,
-            "comp_id": self.document.comp_id,
-        }
-
-
-# --- Bundling ---
-
-class BundlingCfg(BaseModel):
-    mode: str = "perComposition"
-    maxCompositionsPerDoc: int = 100
 
 
 # --- Transform / Coding ---
@@ -135,13 +99,6 @@ class TransformCfg(BaseModel):
     coding: CodingCfg = Field(default_factory=CodingCfg)
 
 
-# --- Query Engine ---
-
-class QueryEngineCfg(BaseModel):
-    lookup_full_composition: bool = False
-    mode: Optional[str] = None
-
-
 # --- Main Strategy Config ---
 
 class RPSDualConfig(BaseModel):
@@ -150,22 +107,7 @@ class RPSDualConfig(BaseModel):
     ids: IdsCfg = Field(default_factory=IdsCfg)
     paths: PathsCfg = Field(default_factory=PathsCfg)
     fields: FieldsCfg = Field(default_factory=FieldsCfg)
-    bundling: BundlingCfg = Field(default_factory=BundlingCfg)
     transform: TransformCfg = Field(default_factory=TransformCfg)
-    query_engine: QueryEngineCfg = Field(default_factory=QueryEngineCfg)
-
-    # Legacy accessors
-    @property
-    def database(self) -> Optional[str]:
-        return None
-
-    @property
-    def coding(self) -> CodingCfg:
-        return self.transform.coding
-
-    @property
-    def node_representation(self) -> Dict[str, Any]:
-        return {"path": {"token_joiner": self.paths.separator}}
 
 
 # --- Bulk Config (operational, not portal-visible) ---
@@ -203,7 +145,23 @@ def normalize_config(raw: Dict[str, Any]) -> RPSDualConfig:
     """Normalize raw config dict into RPSDualConfig model."""
     if not raw:
         return RPSDualConfig()
-    return RPSDualConfig(**raw)
+    # Backward-compatible aliases:
+    # - older clients used collections.search.atlas_index_name (string)
+    # - current config uses collections.search.atlasIndex.name
+    data = deepcopy(raw)
+    collections = data.get("collections") if isinstance(data, dict) else None
+    if isinstance(collections, dict):
+        search = collections.get("search")
+        if isinstance(search, dict):
+            atlas_index_name = search.get("atlas_index_name")
+            if isinstance(atlas_index_name, str) and atlas_index_name.strip():
+                atlas_name = atlas_index_name.strip()
+                atlas_idx = search.get("atlasIndex")
+                if not isinstance(atlas_idx, dict):
+                    search["atlasIndex"] = {"name": atlas_name}
+                else:
+                    atlas_idx["name"] = atlas_name
+    return RPSDualConfig(**data)
 
 
 def normalize_bulk_config(raw: Dict[str, Any]) -> BulkConfig:
@@ -214,7 +172,7 @@ def normalize_bulk_config(raw: Dict[str, Any]) -> BulkConfig:
 
 
 def build_schema_config(cfg: RPSDualConfig) -> Dict[str, Dict[str, Any]]:
-    """Build schema config for query compilation (legacy compat)."""
+    """Build schema config for query compilation."""
     comp_coll = cfg.collections.compositions
     search_coll = cfg.collections.search
     fields = cfg.fields
@@ -223,7 +181,6 @@ def build_schema_config(cfg: RPSDualConfig) -> Dict[str, Dict[str, Any]]:
         "composition_array": fields.document.cn,
         "path_field": fields.node.p,
         "data_field": fields.node.data,
-        "branch_key_field": "bk",
         "ehr_id": fields.document.ehr_id,
         "comp_id": fields.document.comp_id,
         "collection": comp_coll.name,
@@ -233,7 +190,6 @@ def build_schema_config(cfg: RPSDualConfig) -> Dict[str, Dict[str, Any]]:
         "composition_array": fields.document.sn,
         "path_field": fields.node.p,
         "data_field": fields.node.data,
-        "branch_key_field": "bk",
         "ehr_id": fields.document.ehr_id,
         "comp_id": fields.document.comp_id,
         "index_name": search_coll.atlasIndex.name if search_coll.atlasIndex else None,
@@ -273,6 +229,7 @@ def build_flattener_config(
         "composition_fields": {
             "nodes": strategy_cfg.fields.document.cn,
             "path": strategy_cfg.fields.node.p,
+            "path_instance": strategy_cfg.fields.node.pi,
             "data": strategy_cfg.fields.node.data,
             "ehr_id": strategy_cfg.fields.document.ehr_id,
             "comp_id": strategy_cfg.fields.document.comp_id,
@@ -284,6 +241,7 @@ def build_flattener_config(
             "path": strategy_cfg.fields.node.p,
             "data": strategy_cfg.fields.node.data,
             "ehr_id": strategy_cfg.fields.document.ehr_id,
+            "template_id": strategy_cfg.fields.document.tid,
         },
         "target": {
             "codes_collection": strategy_cfg.collections.codes.name,

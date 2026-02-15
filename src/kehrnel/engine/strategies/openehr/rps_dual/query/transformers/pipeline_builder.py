@@ -1,4 +1,4 @@
-# src/kehrnel/engine/strategies/openehr/rps_dual/query/transformers/pipeline_builder.py
+# src/kehrnel/api/compatibility/v1/aql/transformers/pipeline_builder.py
 
 from typing import Dict, Any, List, Optional
 from .condition_processor import ConditionProcessor
@@ -494,6 +494,95 @@ class PipelineBuilder:
         except (ValueError, TypeError) as e:
             raise ValueError(f"Invalid LIMIT value: {limit_value}. Must be a positive integer.")
 
+    def build_distinct_stages(self, ast: Dict[str, Any], projected_fields: List[str]) -> List[Dict[str, Any]]:
+        """
+        Constructs the $group and $replaceRoot stages for DISTINCT queries.
+        
+        DISTINCT in AQL removes duplicate rows from the result set. In MongoDB,
+        this is implemented using:
+        1. $group stage: Groups documents by all projected fields (compound _id)
+        2. $replaceRoot stage: Flattens the grouped _id back to a normal document
+        
+        Args:
+            ast: The parsed AQL AST
+            projected_fields: List of field names that are being projected (output columns)
+            
+        Returns:
+            List[Dict[str, Any]]: List containing $group and $replaceRoot stages,
+                                  or empty list if DISTINCT is not requested
+        """
+        select_clause = ast.get("select", {})
+        is_distinct = select_clause.get("distinct", False)
+        
+        if not is_distinct:
+            return []
+        
+        if not projected_fields:
+            return []
+        
+        # Build the compound _id for $group using all projected fields
+        # This ensures we group by all columns to find unique combinations
+        group_id = {}
+        for field in projected_fields:
+            if field != "_id":  # Skip _id as it's handled separately
+                # Use the field name as key and reference the projected field value
+                group_id[field] = f"${field}"
+        
+        if not group_id:
+            return []
+        
+        # Build the $group stage
+        group_stage = {
+            "$group": {
+                "_id": group_id
+            }
+        }
+        
+        # Build the $replaceRoot stage to flatten the _id back to document fields
+        # This converts {_id: {field1: val1, field2: val2}} to {field1: val1, field2: val2}
+        replace_root_stage = {
+            "$replaceRoot": {
+                "newRoot": "$_id"
+            }
+        }
+        
+        return [group_stage, replace_root_stage]
+
+    def get_projected_field_names(self, ast: Dict[str, Any]) -> List[str]:
+        """
+        Extracts the list of field names that will be in the projection output.
+        Used for building DISTINCT stages.
+        
+        Args:
+            ast: The parsed AQL AST
+            
+        Returns:
+            List[str]: List of projected field names (aliases or generated names)
+        """
+        columns = ast.get("select", {}).get("columns", {})
+        field_names = []
+        
+        for col_data in columns.values():
+            alias = col_data.get("alias")
+            value_spec = col_data.get("value", {})
+            
+            if alias:
+                field_names.append(alias)
+            elif value_spec.get("type") == "variable":
+                # Variable reference - use variable name as field name
+                var_name = value_spec.get("name", "")
+                field_names.append(var_name.lstrip('$'))
+            elif value_spec.get("path"):
+                # Path-based column - generate name from path
+                aql_path = value_spec.get("path")
+                path_parts = aql_path.split('/')
+                if len(path_parts) >= 2:
+                    field_names.append(f"{path_parts[0]}_{path_parts[1]}")
+                else:
+                    field_names.append(path_parts[-1])
+        
+        return field_names
+
     def _resolve_expression(self, expression: Dict[str, Any], context: str = "select") -> Any:
         """
         Resolves an expression (from LET or elsewhere) to its MongoDB representation.
@@ -619,156 +708,3 @@ class PipelineBuilder:
                 return {mongo_op: [field, value]}
         
         return condition
-
-    async def build_branch_consistency_stages(self, ast: Dict) -> List[Dict]:
-        """Enforce that CONTAINS aliases match within the same repeating-branch.
-
-        When compositions contain repeated structures (lists/arrays), a naive
-        `$all: [$elemMatch(...), $elemMatch(...)]` can be satisfied by matches
-        coming from different instances of the same parent node. The flattener
-        emits a deterministic branch key (`bk`) per node instance; children
-        always have a `bk` that begins with their parent's `bk`.
-
-        This method adds:
-          1) `$set` to build per-alias candidate node lists (`__aql.<alias>`)
-          2) `$match` with `$expr` that enforces prefix-relationship
-          3) `$unset` cleanup
-
-        Notes:
-        - We keep this stage separate from the primary match/search stages so
-          the existing translator remains deterministic.
-        - For OR-heavy WHERE clauses we skip this enforcement to avoid false
-          negatives; the base match stage remains correct but may be less strict
-          regarding branch correlation.
-        """
-
-        nodes_array = self.schema_config.get("nodes_array_field", "cn")
-        npath_field = self.schema_config.get("path_field", "p")
-        bk_field = self.schema_config.get("branch_key_field", "bk")
-
-        # If bk is not part of the schema, do nothing.
-        if not bk_field:
-            return []
-
-        # Build per-variable element match dictionaries from WHERE.
-        where_ast = ast.get("where") or {}
-        variable_elem_matches = await self.condition_processor.build_variable_elem_matches(where_ast)
-
-        # Determine alias relationships (child -> parent) within the CONTAINS tree.
-        edges = []
-        for alias, info in (self.context_map or {}).items():
-            parent = info.get("parent")
-            # Only enforce between two node aliases (both must exist in context_map).
-            if parent and parent in (self.context_map or {}):
-                edges.append((parent, alias))
-
-        if not edges:
-            return []
-
-        # Build a filter condition for each alias involved in edges.
-        aliases_in_edges = sorted({a for pair in edges for a in pair})
-        alias_filters: Dict[str, Dict] = {}
-        for alias in aliases_in_edges:
-            # Base: the alias must resolve to a path pattern.
-            try:
-                p_pattern = self.archetype_resolver.resolve_variable_to_p_pattern(alias, self.context_map)
-            except Exception:
-                # If we can't resolve, skip enforcement altogether.
-                return []
-
-            elem_match = {f"{nodes_array}.{npath_field}": {"$regex": p_pattern}}
-            # Merge WHERE conditions for this alias, if any.
-            where_elem = variable_elem_matches.get(alias)
-            if where_elem:
-                # where_elem already contains nodes_array-prefixed keys.
-                elem_match.update(where_elem)
-
-            alias_filters[alias] = elem_match
-
-        # Convert an elem-match style dict ("cn.p": {"$regex": ...}, ...) to a $filter cond expression.
-        def _elem_match_to_filter_expr(elem: Dict, as_var: str = "n") -> Dict:
-            exprs = []
-            for full_key, cond in elem.items():
-                # Expect keys prefixed with `${nodes_array}.`
-                key = full_key
-                if key.startswith(nodes_array + "."):
-                    key = key[len(nodes_array) + 1 :]
-                field_expr = f"$${as_var}.{key}"
-
-                if isinstance(cond, dict):
-                    sub = []
-                    if "$regex" in cond:
-                        sub.append({"$regexMatch": {"input": field_expr, "regex": cond["$regex"]}})
-                    if "$gte" in cond:
-                        sub.append({"$gte": [field_expr, cond["$gte"]]})
-                    if "$gt" in cond:
-                        sub.append({"$gt": [field_expr, cond["$gt"]]})
-                    if "$lte" in cond:
-                        sub.append({"$lte": [field_expr, cond["$lte"]]})
-                    if "$lt" in cond:
-                        sub.append({"$lt": [field_expr, cond["$lt"]]})
-                    if "$in" in cond:
-                        sub.append({"$in": [field_expr, cond["$in"]]})
-                    if "$eq" in cond:
-                        sub.append({"$eq": [field_expr, cond["$eq"]]})
-
-                    if not sub:
-                        # Unknown operator; be conservative.
-                        continue
-                    exprs.append(sub[0] if len(sub) == 1 else {"$and": sub})
-                else:
-                    exprs.append({"$eq": [field_expr, cond]})
-
-            if not exprs:
-                return True
-            return exprs[0] if len(exprs) == 1 else {"$and": exprs}
-
-        # Stage 1: compute per-alias candidate arrays.
-        set_stage = {
-            "$set": {
-                "__aql": {
-                    alias: {
-                        "$filter": {
-                            "input": f"${nodes_array}",
-                            "as": "n",
-                            "cond": _elem_match_to_filter_expr(flt, as_var="n"),
-                        }
-                    }
-                    for alias, flt in alias_filters.items()
-                }
-            }
-        }
-
-        # Stage 2: enforce for each edge parent->child that there exists a pair
-        # where child.bk begins with parent.bk.
-        edge_exprs = []
-        for parent, child in edges:
-            edge_exprs.append(
-                {
-                    "$anyElementTrue": {
-                        "$map": {
-                            "input": f"$__aql.{parent}",
-                            "as": "p",
-                            "in": {
-                                "$anyElementTrue": {
-                                    "$map": {
-                                        "input": f"$__aql.{child}",
-                                        "as": "c",
-                                        "in": {
-                                            "$eq": [
-                                                {"$indexOfBytes": [f"$$c.{bk_field}", f"$$p.{bk_field}"]},
-                                                0,
-                                            ]
-                                        },
-                                    }
-                                }
-                            },
-                        }
-                    }
-                }
-            )
-
-        match_stage = {"$match": {"$expr": edge_exprs[0] if len(edge_exprs) == 1 else {"$and": edge_exprs}}}
-        unset_stage = {"$unset": "__aql"}
-
-        return [set_stage, match_stage, unset_stage]

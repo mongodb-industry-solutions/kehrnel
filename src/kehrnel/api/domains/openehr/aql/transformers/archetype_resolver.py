@@ -1,10 +1,10 @@
-# src/kehrnel/api/legacy/v1/aql/transformers/archetype_resolver.py
+# src/kehrnel/api/compatibility/v1/aql/transformers/archetype_resolver.py
 
 from typing import Dict, Optional, Tuple, List
 from motor.motor_asyncio import AsyncIOMotorDatabase
 import re
 import logging
-from kehrnel.api.legacy.app.core.config import settings
+from kehrnel.api.bridge.app.core.config import settings
 
 logger = logging.getLogger(__name__)
 

@@ -29,15 +29,16 @@ from kehrnel.api.core.admin.activation_routes import router as activation_router
 from kehrnel.api.domains.fhir.routes import router as fhir_domain_router
 from kehrnel.api.domains.openehr.routes import router as openehr_domain_router
 from kehrnel.api.strategies.openehr.rps_dual.routes import router as openehr_rps_dual_router
-from kehrnel.core.runtime import StrategyRuntime
-from kehrnel.core.manifest import StrategyManifest
-from kehrnel.core.registry import FileActivationRegistry
-from kehrnel.core.errors import KehrnelError
-from kehrnel.core.bundle_store import BundleStore
-from kehrnel.core.pack_validator import StrategyPackValidator
-from kehrnel.core.bindings_resolver import load_bindings_resolver_from_env
-from kehrnel.core.synthetic_jobs import SyntheticJobManager
-from kehrnel.core.synthetic_jobs_store import MongoSyntheticJobStore
+from kehrnel.engine.core.runtime import StrategyRuntime
+from kehrnel.engine.core.manifest import StrategyManifest
+from kehrnel.engine.core.registry import FileActivationRegistry
+from kehrnel.engine.core.errors import KehrnelError
+from kehrnel.engine.core.bundle_store import BundleStore
+from kehrnel.engine.core.pack_validator import StrategyPackValidator
+from kehrnel.engine.core.bindings_resolver import load_bindings_resolver_from_env
+from kehrnel.engine.core.synthetic_jobs import SyntheticJobManager
+from kehrnel.engine.core.synthetic_jobs_store import MongoSyntheticJobStore
+from kehrnel.engine.core.redaction import redact_secrets
 
 
 # ============================================================================
@@ -54,6 +55,14 @@ PUBLIC_PATH_PATTERNS = (
     # Strategy static assets referenced from docs/specs.
     re.compile(r"^/strategies/[^/]+/assets/.+"),
 )
+
+
+def _is_public_path(path: str) -> bool:
+    return (
+        path in PUBLIC_PATHS
+        or any(path.startswith(prefix) for prefix in PUBLIC_PATH_PREFIXES)
+        or any(pattern.match(path) for pattern in PUBLIC_PATH_PATTERNS)
+    )
 
 
 def _get_api_keys() -> set[str]:
@@ -75,11 +84,7 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         path = request.url.path or ""
         # Skip auth for public paths
-        if (
-            path in PUBLIC_PATHS
-            or any(path.startswith(prefix) for prefix in PUBLIC_PATH_PREFIXES)
-            or any(pattern.match(path) for pattern in PUBLIC_PATH_PATTERNS)
-        ):
+        if _is_public_path(path):
             return await call_next(request)
 
         # Skip if auth is disabled
@@ -130,8 +135,8 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         self._request_counts: dict[str, list[float]] = {}
 
     async def dispatch(self, request: Request, call_next):
-        # Skip rate limiting for health checks
-        if request.url.path == "/health":
+        # Skip rate limiting for public/doc/static paths.
+        if _is_public_path(request.url.path or ""):
             return await call_next(request)
 
         # Prefer authenticated identity from auth middleware; fallback to IP.
@@ -329,7 +334,15 @@ def _load_manifests() -> tuple[list[StrategyManifest], list[dict[str, object]], 
 def create_app(registry_path: str | None = None, bundle_path: str | None = None) -> FastAPI:
     load_dotenv(find_dotenv(".env.local", usecwd=True), override=False)
 
-    app = FastAPI(title="Kehrnel Runtime", version="0.0.0")
+    # Disable built-in docs handlers so we can control the HTML (favicon, titles, etc.)
+    # and keep behavior consistent for all generated docs pages.
+    app = FastAPI(
+        title="Kehrnel Runtime",
+        version="0.0.0",
+        docs_url=None,
+        redoc_url=None,
+        swagger_ui_parameters={"favicon_url": "/favicon.ico"},
+    )
 
     # ========================================================================
     # Security Middleware (order matters - first added = last executed)
@@ -381,6 +394,26 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     for manifest in manifests:
         runtime.register_manifest(manifest)
     app.state.strategy_runtime = runtime
+
+    # Environment scoping note (ENGSEC-729 class): kehrnel does not have a user session model,
+    # so multi-tenant isolation relies on API-key scoping (KEHRNEL_API_KEY_ENV_SCOPES) and/or
+    # a single shared env id (KEHRNEL_DEFAULT_ENV_ID).
+    if _is_auth_enabled():
+        keys = _get_api_keys()
+        env_scopes = (os.getenv("KEHRNEL_API_KEY_ENV_SCOPES") or "").strip()
+        default_env = (
+            os.getenv("KEHRNEL_DEFAULT_ENV_ID")
+            or os.getenv("DEFAULT_ENV_ID")
+            or os.getenv("ENV_ID")
+            or ""
+        ).strip()
+        if not env_scopes and default_env and len(keys) > 1:
+            logging.getLogger("kehrnel.security").warning(
+                "Multiple API keys configured but no KEHRNEL_API_KEY_ENV_SCOPES set; "
+                "all keys will share env_id=%s (no per-key environment isolation).",
+                default_env,
+            )
+
     jobs_store = None
     try:
         jobs_uri = (os.getenv("CORE_MONGODB_URL") or "").strip()
@@ -409,11 +442,11 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     async def _init_default_ingestion_runtime() -> None:
         """
         Best-effort bootstrap for domain composition/synthetic endpoints that
-        depend on app.state.flattener / app.state.transformer.
+        depend on app.state.flattener / app.state.unflattener.
         """
         if os.getenv("KEHRNEL_INIT_INGESTION_RUNTIME", "true").lower() not in ("1", "true", "yes"):
             return
-        if getattr(app.state, "flattener", None) is not None and getattr(app.state, "transformer", None) is not None:
+        if getattr(app.state, "flattener", None) is not None and getattr(app.state, "unflattener", None) is not None:
             return
         try:
             from kehrnel.api.bridge.app.core.config import settings as bridge_settings
@@ -487,6 +520,22 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         }
         return schema
 
+    @app.get("/docs", include_in_schema=False)
+    async def docs_root():
+        return get_swagger_ui_html(
+            openapi_url="/openapi.json",
+            title="Kehrnel Docs",
+            swagger_favicon_url="/favicon.ico",
+        )
+
+    @app.get("/redoc", include_in_schema=False)
+    async def redoc_root():
+        return get_redoc_html(
+            openapi_url="/openapi.json",
+            title="Kehrnel ReDoc",
+            redoc_favicon_url="/favicon.ico",
+        )
+
     def _domain_openapi(domain: str) -> dict:
         domain_norm = (domain or "").strip().lower()
         if not domain_norm:
@@ -529,6 +578,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         return get_swagger_ui_html(
             openapi_url=f"/openapi/strategies/{domain_norm}/{strategy_norm}.json",
             title=f"Kehrnel Docs - {full_strategy_id}",
+            swagger_favicon_url="/favicon.ico",
         )
 
     @app.get("/openapi/core.json", include_in_schema=False)
@@ -539,12 +589,23 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     async def domain_openapi(domain: str):
         return JSONResponse(content=_domain_openapi(domain))
 
+    @app.get("/docs/domains/{domain}", include_in_schema=False)
+    async def domain_docs(domain: str):
+        domain_norm = (domain or "").strip().lower()
+        _domain_openapi(domain_norm)
+        return get_swagger_ui_html(
+            openapi_url=f"/openapi/domains/{domain_norm}.json",
+            title=f"Kehrnel Docs - domain {domain_norm}",
+            swagger_favicon_url="/favicon.ico",
+        )
+
     @app.get("/docs/core", include_in_schema=False)
     async def core_docs():
         _core_openapi()
         return get_swagger_ui_html(
             openapi_url="/openapi/core.json",
             title="Kehrnel Docs - Core",
+            swagger_favicon_url="/favicon.ico",
         )
 
     @app.get("/redoc/core", include_in_schema=False)
@@ -553,6 +614,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         return get_redoc_html(
             openapi_url="/openapi/core.json",
             title="Kehrnel ReDoc - Core",
+            redoc_favicon_url="/favicon.ico",
         )
 
     @app.get("/redoc/strategies/{domain}/{strategy}", include_in_schema=False)
@@ -564,6 +626,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         return get_redoc_html(
             openapi_url=f"/openapi/strategies/{domain_norm}/{strategy_norm}.json",
             title=f"Kehrnel ReDoc - {full_strategy_id}",
+            redoc_favicon_url="/favicon.ico",
         )
 
     @app.get("/redoc/domains/{domain}", include_in_schema=False)
@@ -573,6 +636,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         return get_redoc_html(
             openapi_url=f"/openapi/domains/{domain_norm}.json",
             title=f"Kehrnel ReDoc - domain {domain_norm}",
+            redoc_favicon_url="/favicon.ico",
         )
 
     @app.exception_handler(Exception)
@@ -593,6 +657,8 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         elif isinstance(exc, KeyError):
             code = "NOT_FOUND"
             status = 404
+        # Defense-in-depth: avoid leaking credentials embedded in exception messages.
+        message = redact_secrets(message) or message
         return JSONResponse(status_code=status, content={"error": {"code": code, "message": message, "details": details}})
     runtime_routers = [
         admin_router,
@@ -616,12 +682,17 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         app.mount("/guide", StaticFiles(directory=str(docs_build_path), html=True), name="documentation")
         logging.getLogger("kehrnel.docs").info("Documentation mounted at /guide from %s", docs_build_path)
 
-        # Serve favicon from docs build
-        favicon_path = docs_build_path / "img" / "favicon.png"
-        if favicon_path.exists():
-            @app.get("/favicon.ico", include_in_schema=False)
-            async def favicon():
-                return FileResponse(str(favicon_path), media_type="image/png")
+    # Serve favicon for API docs (Swagger/ReDoc) and the mounted docs site.
+    # Prefer the built asset, fall back to the Docusaurus static asset during dev.
+    favicon_candidates = [
+        docs_build_path / "img" / "favicon.png",
+        Path(__file__).resolve().parents[3] / "docs" / "website" / "static" / "img" / "favicon.png",
+    ]
+    favicon_path = next((p for p in favicon_candidates if p.exists()), None)
+    if favicon_path:
+        @app.get("/favicon.ico", include_in_schema=False)
+        async def favicon():
+            return FileResponse(str(favicon_path), media_type="image/png")
 
     return app
 

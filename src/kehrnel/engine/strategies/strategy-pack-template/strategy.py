@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import Any, Dict
 
-from kehrnel.core.plugin import StrategyPlugin
-from kehrnel.core.types import ApplyPlan, ApplyResult, TransformResult, QueryPlan, QueryResult, StrategyContext
-from kehrnel.core.explain import enrich_explain
+from kehrnel.engine.core.plugin import StrategyPlugin
+from kehrnel.engine.core.types import ApplyPlan, ApplyResult, TransformResult, QueryPlan, QueryResult, StrategyContext
+from kehrnel.engine.core.explain import enrich_explain
 
 
 class TemplateStrategy(StrategyPlugin):

@@ -5,7 +5,7 @@ from pymongo.errors import PyMongoError
 import logging
 from typing import Optional
 from datetime import datetime
-from kehrnel.api.legacy.app.core.config import settings
+from kehrnel.api.bridge.app.core.config import settings
 
 # Create a logger instance
 logger = logging.getLogger(__name__)

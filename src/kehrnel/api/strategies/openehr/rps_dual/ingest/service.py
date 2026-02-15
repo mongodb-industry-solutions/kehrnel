@@ -1,11 +1,11 @@
-# src/kehrnel/api/legacy/v1/ingest/service.py
+# src/kehrnel/api/compatibility/v1/ingest/service.py
 
 import json
 from typing import Dict, Any
 
-from kehrnel.legacy.transform.flattener_g import CompositionFlattener
+from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
 from kehrnel.api.strategies.openehr.rps_dual.ingest.repository import IngestionRepository
-from kehrnel.legacy.transform.exceptions_g import FlattenerError
+from kehrnel.engine.strategies.openehr.rps_dual.ingest.exceptions_g import FlattenerError
 
 class IngestionService:
     def __init__(self, flattener: CompositionFlattener, repository: IngestionRepository):
@@ -53,9 +53,10 @@ class IngestionService:
             with open(file_path, 'r', encoding='utf-8') as f:
                 raw_composition_doc = json.load(f)
         except FileNotFoundError:
-            raise FileNotFoundError(f"The specified file was not found: {file_path}")
+            # Avoid leaking server filesystem layout through API error details.
+            raise FileNotFoundError("The specified file was not found")
         except json.JSONDecodeError:
-            raise ValueError(f"The file is not a valid JSON: {file_path}")
+            raise ValueError("The file is not valid JSON")
         
         return await self._process_and_store(raw_composition_doc)
     

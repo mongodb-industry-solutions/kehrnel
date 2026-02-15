@@ -6,7 +6,7 @@ from kehrnel.core.types import StrategyContext
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(reason="Legacy lookup/projection parity pending", strict=False)
+@pytest.mark.xfail(reason="Compatibility lookup/projection parity pending", strict=False)
 async def test_vaccination_cross_patient_projection_lookup():
     cfg = load_json(DEFAULTS_PATH)
     cfg.setdefault("query_engine", {})["lookup_full_composition"] = True

@@ -48,7 +48,7 @@ async def load_shortcuts_from_storage(storage, cache: Dict | None = None) -> Dic
     else:
         doc = await storage.find_one(DEFAULT_COLLECTION, {"_id": DEFAULT_DOC_ID}) or {}
         items = doc.get("items") or {}
-        # Support legacy shapes with keys/values
+        # Support compatibility shapes with keys/values
         keys = doc.get("keys") or {}
         values = doc.get("values") or {}
         merged: Dict[str, str] = {}

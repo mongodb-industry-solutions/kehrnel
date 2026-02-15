@@ -1,7 +1,7 @@
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from fastapi import HTTPException, status
 
-from kehrnel.api.legacy.app.core.models import Contribution
+from kehrnel.api.bridge.app.core.models import Contribution
 from kehrnel.api.domains.openehr.contribution.repository import find_contribution_by_id
 
 

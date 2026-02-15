@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, status, Response
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
-from kehrnel.api.legacy.app.core.database import get_mongodb_ehr_db
-from kehrnel.api.legacy.app.core.models import Contribution
+from kehrnel.api.bridge.app.core.database import get_mongodb_ehr_db
+from kehrnel.api.bridge.app.core.models import Contribution
 from kehrnel.api.domains.openehr.contribution.service import retrieve_contribution
 from kehrnel.api.domains.openehr.contribution.api_responses import get_contribution_responses
 

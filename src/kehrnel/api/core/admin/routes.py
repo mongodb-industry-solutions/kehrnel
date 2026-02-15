@@ -5,6 +5,8 @@ import json
 import os
 import tempfile
 import secrets
+import logging
+import ipaddress
 from pathlib import Path
 from fastapi import APIRouter, Request, Body
 from fastapi.responses import JSONResponse, FileResponse
@@ -12,20 +14,56 @@ from typing import Any, Dict, List
 import yaml
 from lxml import etree
 
-from kehrnel.core.manifest import StrategyManifest
-from kehrnel.core.errors import KehrnelError
-from kehrnel.core.bundle_store import BundleStore
-from kehrnel.core.pack_loader import load_strategy
-from kehrnel.common.mapping.mapping_engine import apply_mapping
-from kehrnel.common.mapping.handlers.csv_handler import CSVHandler
-from kehrnel.common.mapping.handlers.xml_handler import XMLHandler
-from kehrnel.common.mapping.utils.expr import evaluate as eval_expr
-from kehrnel.domains.openehr.templates.parser import TemplateParser
-from kehrnel.domains.openehr.templates.generator import kehrnelGenerator
-from kehrnel.domains.openehr.templates.validator import kehrnelValidator
-from kehrnel.api.legacy.app.core.config import settings as legacy_settings
+from kehrnel.engine.core.manifest import StrategyManifest
+from kehrnel.engine.core.errors import KehrnelError
+from kehrnel.engine.core.bundle_store import BundleStore
+from kehrnel.engine.core.pack_loader import load_strategy
+from kehrnel.engine.common.mapping.mapping_engine import apply_mapping
+from kehrnel.engine.common.mapping.handlers.csv_handler import CSVHandler
+from kehrnel.engine.common.mapping.handlers.xml_handler import XMLHandler
+from kehrnel.engine.common.mapping.utils.expr import evaluate as eval_expr
+from kehrnel.engine.domains.openehr.templates.parser import TemplateParser
+from kehrnel.engine.domains.openehr.templates.generator import kehrnelGenerator
+from kehrnel.engine.domains.openehr.templates.validator import kehrnelValidator
+from kehrnel.api.bridge.app.core.config import settings as bridge_settings
+from kehrnel.engine.core.redaction import redact_secrets
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
+
+
+ALLOWED_DOC_EXTENSIONS = {".xml", ".csv", ".cda", ".json", ".txt", ".hl7"}
+ALLOWED_DOC_MIME_TYPES = {
+    "application/xml",
+    "text/xml",
+    "text/csv",
+    "application/csv",
+    "application/json",
+    "text/json",
+    "text/plain",
+    "application/hl7-v2",
+    "application/octet-stream",
+}
+
+
+def _validate_upload_metadata(upload, allowed_exts: set[str], allowed_mimes: set[str]) -> str:
+    filename = (getattr(upload, "filename", None) or "").strip()
+    if not filename:
+        raise KehrnelError(code="INVALID_INPUT", status=400, message="document filename is required")
+    if filename != filename.strip():
+        raise KehrnelError(code="INVALID_INPUT", status=400, message="Invalid document filename")
+    if ".." in filename or "/" in filename or "\\" in filename or "\0" in filename:
+        raise KehrnelError(code="INVALID_INPUT", status=400, message="Invalid document filename")
+
+    ext = Path(filename).suffix.lower()
+    if ext not in allowed_exts:
+        raise KehrnelError(code="INVALID_INPUT", status=400, message="Unsupported document file type")
+
+    content_type = (getattr(upload, "content_type", None) or "").lower()
+    if content_type and content_type not in allowed_mimes:
+        raise KehrnelError(code="INVALID_INPUT", status=400, message="Unsupported document content type")
+
+    return filename
 
 
 def _error_response(exc: Exception) -> JSONResponse:
@@ -47,6 +85,7 @@ def _error_response(exc: Exception) -> JSONResponse:
         message = str(exc)
     else:
         message = "Internal server error"
+    message = redact_secrets(message) or message
     return JSONResponse(status_code=status, content={"error": {"code": code, "message": message, "details": details}})
 
 
@@ -54,7 +93,8 @@ def _require_admin_access(request: Request) -> None:
     """Require authenticated admin API key for privileged routes."""
     auth_enabled = os.getenv("KEHRNEL_AUTH_ENABLED", "true").lower() in ("1", "true", "yes")
     if not auth_enabled:
-        raise KehrnelError(code="AUTH_REQUIRED", status=401, message="Authentication is required for this endpoint")
+        # Auth is globally disabled for this runtime (dev/test mode).
+        return
 
     api_key = (request.headers.get("x-api-key") or "").strip()
     if not api_key:
@@ -68,6 +108,168 @@ def _require_admin_access(request: Request) -> None:
     admin_keys = [k.strip() for k in (os.getenv("KEHRNEL_ADMIN_API_KEYS", "") or "").split(",") if k.strip()]
     if admin_keys and not any(secrets.compare_digest(api_key, k) for k in admin_keys):
         raise KehrnelError(code="FORBIDDEN", status=403, message="Admin privileges required")
+
+
+def _parse_api_key_env_scopes() -> dict[str, object]:
+    raw = (os.getenv("KEHRNEL_API_KEY_ENV_SCOPES") or "").strip()
+    if not raw:
+        return {}
+    try:
+        parsed = json.loads(raw)
+    except Exception:
+        logger.warning("Invalid KEHRNEL_API_KEY_ENV_SCOPES JSON; ignoring")
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
+
+
+def _default_env_id() -> str | None:
+    return (
+        os.getenv("KEHRNEL_DEFAULT_ENV_ID")
+        or os.getenv("DEFAULT_ENV_ID")
+        or os.getenv("ENV_ID")
+        or None
+    )
+
+
+def _require_env_access(request: Request, env_id: str) -> None:
+    auth_enabled = os.getenv("KEHRNEL_AUTH_ENABLED", "true").lower() in ("1", "true", "yes")
+    if not auth_enabled:
+        # With auth disabled, do not apply per-key environment scoping.
+        return
+
+    scopes = _parse_api_key_env_scopes()
+    api_key = (request.headers.get("x-api-key") or "").strip()
+    allowed = False
+
+    if scopes:
+        matched_scope = None
+        if api_key:
+            for key, scope in scopes.items():
+                if secrets.compare_digest(api_key, str(key)):
+                    matched_scope = scope
+                    break
+        if matched_scope == "*":
+            allowed = True
+        elif isinstance(matched_scope, list):
+            allowed = env_id in {str(v).strip() for v in matched_scope if str(v).strip()}
+    else:
+        default_env = _default_env_id()
+        if default_env:
+            allowed = env_id == default_env
+
+    if not allowed:
+        raise KehrnelError(
+            code="FORBIDDEN",
+            status=403,
+            message=f"Access to env_id={env_id} is not permitted for this API key.",
+        )
+
+
+def _truthy_env(name: str, default: str = "false") -> bool:
+    return (os.getenv(name, default) or "").strip().lower() in ("1", "true", "yes")
+
+
+def _trusted_proxy_identity_enabled() -> bool:
+    return _truthy_env("KEHRNEL_TRUST_PROXY_IDENTITY", "false")
+
+
+def _trusted_proxy_networks() -> list[ipaddress.IPv4Network | ipaddress.IPv6Network]:
+    """
+    Parse trusted proxy CIDRs from KEHRNEL_TRUSTED_PROXY_CIDRS.
+    Empty means no proxy source is trusted for identity headers.
+    """
+    raw = (os.getenv("KEHRNEL_TRUSTED_PROXY_CIDRS") or "").strip()
+    if not raw:
+        return []
+    networks: list[ipaddress.IPv4Network | ipaddress.IPv6Network] = []
+    for item in raw.split(","):
+        value = item.strip()
+        if not value:
+            continue
+        try:
+            networks.append(ipaddress.ip_network(value, strict=False))
+        except ValueError:
+            logger.warning("Ignoring invalid trusted proxy CIDR: %s", value)
+    return networks
+
+
+def _is_trusted_proxy_source(request: Request) -> bool:
+    """
+    Only trust identity headers when request source IP is from configured proxy CIDRs.
+    """
+    client_host = ((request.client.host if request.client else "") or "").strip()
+    if not client_host:
+        return False
+    try:
+        client_ip = ipaddress.ip_address(client_host)
+    except ValueError:
+        return False
+    trusted_networks = _trusted_proxy_networks()
+    if not trusted_networks:
+        return False
+    return any(client_ip in network for network in trusted_networks)
+
+
+def _request_identity(request: Request) -> dict[str, str | None]:
+    """
+    Read user/team identity propagated by trusted upstream proxy (HDL backend).
+    Headers are ignored unless KEHRNEL_TRUST_PROXY_IDENTITY=true.
+    """
+    api_key_fingerprint = getattr(request.state, "authenticated_api_key", None)
+    user_id = None
+    team_id = None
+    user_role = None
+    if _trusted_proxy_identity_enabled() and _is_trusted_proxy_source(request):
+        user_id = (
+            request.headers.get("x-user-id")
+            or request.headers.get("x-auth-user")
+            or request.headers.get("x-forwarded-user")
+            or None
+        )
+        team_id = (
+            request.headers.get("x-team-id")
+            or request.headers.get("x-org-id")
+            or request.headers.get("x-workspace-id")
+            or None
+        )
+        user_role = request.headers.get("x-user-role") or None
+        user_id = (user_id or "").strip() or None
+        team_id = (team_id or "").strip() or None
+        user_role = ((user_role or "").strip().lower() or None)
+    elif _trusted_proxy_identity_enabled():
+        logger.warning(
+            "Ignoring forwarded identity headers from untrusted source ip=%s",
+            request.client.host if request.client else None,
+        )
+    return {
+        "api_key_fingerprint": api_key_fingerprint,
+        "user_id": user_id,
+        "team_id": team_id,
+        "user_role": user_role,
+    }
+
+
+def _enforce_synthetic_team_scope(identity: dict[str, str | None], job: dict[str, Any]) -> None:
+    """
+    Optional second-level isolation: restrict synthetic jobs to caller team.
+    Team scope is enforced only when KEHRNEL_SYNTHETIC_ENFORCE_TEAM_SCOPE=true.
+    """
+    if not _truthy_env("KEHRNEL_SYNTHETIC_ENFORCE_TEAM_SCOPE", "false"):
+        return
+    if identity.get("user_role") == "admin":
+        return
+    job_team = (str(job.get("team_id") or "").strip() or None)
+    if not job_team:
+        return
+    caller_team = (identity.get("team_id") or "").strip() or None
+    if not caller_team or not secrets.compare_digest(caller_team, job_team):
+        raise KehrnelError(
+            code="FORBIDDEN",
+            status=403,
+            message="This job belongs to a different team.",
+        )
+
+
 
 
 def _get_max_upload_bytes() -> int:
@@ -103,12 +305,24 @@ def _history_summary(rt, env_id: str, domain: str):
     return {"count": len(history_entries or []), "recent": [_safe_entry(e) for e in recent]}
 
 
-def _sync_legacy_openehr_settings_from_activation(rt, activation) -> None:
+def _sync_bridge_openehr_settings_from_activation(rt, activation) -> None:
     """
-    Keep legacy domain-scoped openEHR API routes aligned with strategy-pack config.
-    This is global process state (legacy API is not env-scoped), so the latest activation wins.
+    Keep bridge domain-scoped openEHR API routes aligned with strategy-pack config.
+    This is global process state (bridge API is not env-scoped), so the latest activation wins.
     """
     try:
+        if os.getenv("KEHRNEL_ENABLE_LEGACY_GLOBAL_SYNC", "false").lower() not in ("1", "true", "yes"):
+            return
+        # Hard safety guard: bridge global sync is allowed only for a dedicated default env.
+        default_env = _default_env_id()
+        if not default_env or (activation.env_id or "").strip() != default_env:
+            logger.warning(
+                "Skipping bridge global sync for env_id=%s (default env is %s)",
+                getattr(activation, "env_id", None),
+                default_env,
+            )
+            return
+
         cfg = activation.config or {}
         collections = cfg.get("collections") or {}
 
@@ -117,15 +331,15 @@ def _sync_legacy_openehr_settings_from_activation(rt, activation) -> None:
         ehr_name = ((collections.get("ehr") or {}).get("name") or "").strip()
         contrib_name = ((collections.get("contributions") or {}).get("name") or "").strip()
         if comp_name:
-            legacy_settings.COMPOSITIONS_COLL_NAME = comp_name
-            legacy_settings.FLAT_COMPOSITIONS_COLL_NAME = comp_name
+            bridge_settings.COMPOSITIONS_COLL_NAME = comp_name
+            bridge_settings.FLAT_COMPOSITIONS_COLL_NAME = comp_name
         if search_name:
-            legacy_settings.SEARCH_COMPOSITIONS_COLL_NAME = search_name
-            legacy_settings.search_config.search_collection = search_name
+            bridge_settings.SEARCH_COMPOSITIONS_COLL_NAME = search_name
+            bridge_settings.search_config.search_collection = search_name
         if ehr_name:
-            legacy_settings.EHR_COLL_NAME = ehr_name
+            bridge_settings.EHR_COLL_NAME = ehr_name
         if contrib_name:
-            legacy_settings.EHR_CONTRIBUTIONS_COLL = contrib_name
+            bridge_settings.EHR_CONTRIBUTIONS_COLL = contrib_name
 
         # DB selection priority: bindings(db.name) > strategy config database > unchanged
         db_name = None
@@ -148,9 +362,9 @@ def _sync_legacy_openehr_settings_from_activation(rt, activation) -> None:
         if not db_name:
             db_name = cfg.get("database")
         if db_name:
-            legacy_settings.MONGODB_DB = db_name
+            bridge_settings.MONGODB_DB = db_name
     except Exception:
-        # Never break activation because legacy sync failed.
+        # Never break activation because bridge sync failed.
         return
 
 
@@ -185,9 +399,9 @@ def _pick_source_handler(source_path: Path):
     )
 
 
-def _legacy_flat_map_from_path_mapping(mapping: Dict[str, Any], source_tree: etree._Element) -> Dict[str, Dict[str, Any]]:
+def _compat_flat_map_from_path_mapping(mapping: Dict[str, Any], source_tree: etree._Element) -> Dict[str, Dict[str, Any]]:
     """
-    Fallback converter for legacy path-keyed YAML mappings.
+    Fallback converter for path-keyed YAML mappings.
     Supports direct path rules like:
       /a/b/c: "constant: foo"
       /a/b/c:
@@ -250,7 +464,7 @@ def _legacy_flat_map_from_path_mapping(mapping: Dict[str, Any], source_tree: etr
 
             if "template" in rule:
                 try:
-                    from kehrnel.common.mapping.utils.jinja_env import env as JINJA
+                    from kehrnel.engine.common.mapping.utils.jinja_env import env as JINJA
                     rendered = JINJA.from_string(str(rule.get("template") or "")).render({"xpath": _xpath})
                     literal = rendered
                 except Exception:
@@ -274,7 +488,7 @@ def _legacy_flat_map_from_path_mapping(mapping: Dict[str, Any], source_tree: etr
 
 
 def _apply_flat_map_safe(gen: kehrnelGenerator, composition: Dict[str, Any], flat_map: Dict[str, Dict[str, Any]]) -> Dict[str, int]:
-    """Best-effort application for legacy maps; skips malformed/non-leaf paths."""
+    """Best-effort application for compatibility maps; skips malformed/non-leaf paths."""
     set_fn = getattr(gen, "set_at_path", None) or getattr(gen, "_set_value_at_path", None)
     if set_fn is None:
         raise KehrnelError(code="INTERNAL_ERROR", status=500, message="Generator has no path setter")
@@ -308,21 +522,21 @@ def _transform_document_with_mapping(source_path: Path, mapping: Dict[str, Any],
 
     first_group = groups[0]
     flat_map = first_group.get("map") or {}
-    used_legacy_fallback = False
+    used_compat_fallback = False
     if not isinstance(flat_map, dict) or not flat_map:
-        # Compatibility fallback for legacy path-keyed mappings used in HDL.
-        flat_map = _legacy_flat_map_from_path_mapping(mapping, source_tree)
-        used_legacy_fallback = True
+        # Compatibility fallback for path-keyed mappings used in HDL.
+        flat_map = _compat_flat_map_from_path_mapping(mapping, source_tree)
+        used_compat_fallback = True
     if not isinstance(flat_map, dict) or not flat_map:
         raise KehrnelError(
             code="INVALID_INPUT",
             status=400,
             message="Mapping produced no path rules",
-            details={"hint": "Provide mappings.* grammar or legacy path-keyed rules with xpath/template/constant entries."},
+            details={"hint": "Provide mappings.* grammar or path-keyed rules with xpath/template/constant entries."},
         )
 
     composition = gen.generate_minimal()
-    if used_legacy_fallback:
+    if used_compat_fallback:
         stats = _apply_flat_map_safe(gen, composition, flat_map)
         if stats.get("applied", 0) <= 0:
             raise KehrnelError(
@@ -381,6 +595,7 @@ async def api_transform(request: Request):
     """
     temp_files: list[Path] = []
     try:
+        _require_admin_access(request)
         form = await request.form()
         upload = form.get("document")
         mapping_raw = form.get("mapping_yaml") or form.get("mapping")
@@ -396,7 +611,7 @@ async def api_transform(request: Request):
 
         mapping = _load_mapping_payload(str(mapping_raw or ""))
 
-        filename = getattr(upload, "filename", None) or "document.xml"
+        filename = _validate_upload_metadata(upload, ALLOWED_DOC_EXTENSIONS, ALLOWED_DOC_MIME_TYPES)
         suffix = Path(filename).suffix or ".xml"
         max_upload_bytes = _get_max_upload_bytes()
         with tempfile.NamedTemporaryFile("wb", suffix=suffix, delete=False) as src_tmp:
@@ -448,6 +663,7 @@ async def api_validate_composition(request: Request):
     """
     temp_files: list[Path] = []
     try:
+        _require_admin_access(request)
         payload = await request.json()
         composition = payload.get("composition")
         opt_content = payload.get("opt_content") or payload.get("opt")
@@ -577,6 +793,7 @@ async def load_strategy_pack(request: Request, body: Dict[str, Any] = Body(defau
 
 @router.get("/endpoints", include_in_schema=False)
 async def endpoints_registry(request: Request):
+    _require_admin_access(request)
     base = ""
     endpoints = {
         "health": f"{base}/health",
@@ -597,6 +814,7 @@ async def endpoints_registry(request: Request):
 
 @router.get("/strategies/{strategy_id}/endpoints", include_in_schema=False)
 async def strategy_endpoints(strategy_id: str, request: Request):
+    _require_admin_access(request)
     base = ""
     if strategy_id == "openehr.rps_dual":
         return {
@@ -631,6 +849,7 @@ async def strategy_endpoints(strategy_id: str, request: Request):
 @router.get("/strategies/diagnostics", include_in_schema=False)
 async def get_strategy_diagnostics(request: Request):
     try:
+        _require_admin_access(request)
         diagnostics = getattr(request.app.state, "strategy_diagnostics", None) or []
         return {"strategies": diagnostics}
     except Exception as exc:
@@ -640,6 +859,7 @@ async def get_strategy_diagnostics(request: Request):
 @router.get("/ops", include_in_schema=False)
 async def list_ops(request: Request):
     try:
+        _require_admin_access(request)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
@@ -674,6 +894,7 @@ async def run_op(request: Request, body: Dict[str, Any] = Body(default_factory=d
 @router.get("/bundles", include_in_schema=False)
 async def list_bundles(request: Request):
     try:
+        _require_admin_access(request)
         store: BundleStore = getattr(request.app.state, "bundle_store", None)
         bundles = store.list_bundles() if store else []
         return {"bundles": bundles}
@@ -684,6 +905,7 @@ async def list_bundles(request: Request):
 @router.get("/bundles/{bundle_id}", include_in_schema=False)
 async def get_bundle(bundle_id: str, request: Request):
     try:
+        _require_admin_access(request)
         store: BundleStore = getattr(request.app.state, "bundle_store", None)
         if not store:
             raise KehrnelError(code="BUNDLE_NOT_AVAILABLE", status=503, message="Bundle store not configured")
@@ -696,6 +918,7 @@ async def get_bundle(bundle_id: str, request: Request):
 @router.post("/bundles", include_in_schema=False)
 async def import_bundle(request: Request, body: Dict[str, Any] = Body(default_factory=dict), mode: str = "error"):
     try:
+        _require_admin_access(request)
         store: BundleStore = getattr(request.app.state, "bundle_store", None)
         if not store:
             raise KehrnelError(code="BUNDLE_NOT_AVAILABLE", status=503, message="Bundle store not configured")
@@ -708,6 +931,7 @@ async def import_bundle(request: Request, body: Dict[str, Any] = Body(default_fa
 @router.delete("/bundles/{bundle_id}", include_in_schema=False)
 async def delete_bundle(bundle_id: str, request: Request):
     try:
+        _require_admin_access(request)
         store: BundleStore = getattr(request.app.state, "bundle_store", None)
         if not store:
             raise KehrnelError(code="BUNDLE_NOT_AVAILABLE", status=503, message="Bundle store not configured")
@@ -736,7 +960,7 @@ async def get_strategy(strategy_id: str, request: Request):
 
 @router.get("/api/persistence-strategies/{strategy_id}", include_in_schema=False)
 async def get_persistence_strategy_compat(strategy_id: str, request: Request):
-    """Compatibility endpoint for HDL legacy strategy fetches."""
+    """Compatibility endpoint for HDL strategy fetches."""
     try:
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
@@ -814,6 +1038,7 @@ async def get_strategy_spec(strategy_id: str, request: Request):
 async def run_extension(env_id: str, strategy_id: str, op: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict)):
     try:
         _require_admin_access(request)
+        _require_env_access(request, env_id)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
@@ -832,6 +1057,7 @@ async def run_extension(env_id: str, strategy_id: str, op: str, request: Request
 async def activate_env(env_id: str, request: Request, body: Dict[str, Any] = Body(default_factory=dict)):
     try:
         _require_admin_access(request)
+        _require_env_access(request, env_id)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
@@ -844,24 +1070,37 @@ async def activate_env(env_id: str, request: Request, body: Dict[str, Any] = Bod
         allow_plain = body.get("allow_plaintext_bindings", False)
         force = bool(body.get("force"))
         replace_reason = body.get("reason")
+        auth_enabled = os.getenv("KEHRNEL_AUTH_ENABLED", "true").lower() in ("1", "true", "yes")
         if not strategy_id:
             raise KehrnelError(code="INVALID_INPUT", status=400, message="strategy_id is required")
         if not domain:
             raise KehrnelError(code="DOMAIN_REQUIRED", status=400, message="domain is required")
-        if bindings and not bindings_ref:
-            raise KehrnelError(
-                code="PLAINTEXT_BINDINGS_FORBIDDEN",
-                status=400,
-                message="bindings payload is not allowed. Use bindings_ref.",
-            )
-        if allow_plain and not bindings_ref:
-            raise KehrnelError(
-                code="PLAINTEXT_BINDINGS_FORBIDDEN",
-                status=400,
-                message="allow_plaintext_bindings is not supported. Use bindings_ref.",
-            )
-        if not bindings_ref:
-            raise KehrnelError(code="BINDINGS_REF_REQUIRED", status=400, message="bindings_ref is required")
+
+        # Security model:
+        # - In production (auth enabled): require bindings_ref; do not accept plaintext bindings.
+        # - In dev/test (auth disabled): allow plaintext bindings when explicitly requested.
+        if auth_enabled:
+            if bindings and not bindings_ref:
+                raise KehrnelError(
+                    code="PLAINTEXT_BINDINGS_FORBIDDEN",
+                    status=400,
+                    message="bindings payload is not allowed. Use bindings_ref.",
+                )
+            if allow_plain and not bindings_ref:
+                raise KehrnelError(
+                    code="PLAINTEXT_BINDINGS_FORBIDDEN",
+                    status=400,
+                    message="allow_plaintext_bindings is not supported when auth is enabled. Use bindings_ref.",
+                )
+            if not bindings_ref:
+                raise KehrnelError(code="BINDINGS_REF_REQUIRED", status=400, message="bindings_ref is required")
+        else:
+            if bindings and not allow_plain:
+                raise KehrnelError(
+                    code="PLAINTEXT_BINDINGS_FORBIDDEN",
+                    status=400,
+                    message="bindings payload requires allow_plaintext_bindings=true in dev/test mode.",
+                )
         from kehrnel.strategy_sdk import StrategyBindings
         activation = await rt.activate(
             env_id,
@@ -875,7 +1114,7 @@ async def activate_env(env_id: str, request: Request, body: Dict[str, Any] = Bod
             replace_reason=replace_reason,
             bindings_ref=bindings_ref,
         )
-        _sync_legacy_openehr_settings_from_activation(rt, activation)
+        _sync_bridge_openehr_settings_from_activation(rt, activation)
         init_result = None
         try:
             apply_shortcuts = bool(
@@ -920,6 +1159,7 @@ async def activate_strategy_compat(request: Request, body: Dict[str, Any] = Body
     env_id = body.get("envId") or body.get("environment") or body.get("env_id")
     if not env_id:
         return _error_response(KehrnelError(code="INVALID_INPUT", status=400, message="envId is required"))
+    auth_enabled = os.getenv("KEHRNEL_AUTH_ENABLED", "true").lower() in ("1", "true", "yes")
     mapped = {
         "strategy_id": body.get("strategyId") or body.get("strategy_id"),
         "version": body.get("version") or body.get("strategyVersion") or "latest",
@@ -933,6 +1173,10 @@ async def activate_strategy_compat(request: Request, body: Dict[str, Any] = Body
         "force": body.get("force") or False,
         "reason": body.get("reason"),
     }
+    # In dev/test mode, compatibility clients often omit bindings fields entirely.
+    # If auth is disabled and no bindings_ref is provided, default to plaintext mode.
+    if not auth_enabled and not mapped.get("bindings_ref") and not mapped.get("allow_plaintext_bindings"):
+        mapped["allow_plaintext_bindings"] = True
     return await activate_env(env_id, request, mapped)
 
 
@@ -947,6 +1191,8 @@ async def activate_env_v2(request: Request, body: Dict[str, Any] = Body(default_
 @router.get("/environments/{env_id}", include_in_schema=False)
 async def get_env(env_id: str, request: Request):
     try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
@@ -985,6 +1231,8 @@ async def list_env_activations(env_id: str, request: Request):
 @router.post("/environments/{env_id}/activations/{domain}/upgrade", include_in_schema=False)
 async def upgrade_activation(env_id: str, domain: str, request: Request):
     try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
@@ -1009,6 +1257,8 @@ async def upgrade_activation(env_id: str, domain: str, request: Request):
 @router.post("/environments/{env_id}/activations/{domain}/rollback", include_in_schema=False)
 async def rollback_activation(env_id: str, domain: str, request: Request):
     try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
@@ -1034,6 +1284,8 @@ async def rollback_activation(env_id: str, domain: str, request: Request):
 @router.delete("/environments/{env_id}/activations/{domain}", include_in_schema=False)
 async def delete_activation(env_id: str, domain: str, request: Request):
     try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
@@ -1046,6 +1298,8 @@ async def delete_activation(env_id: str, domain: str, request: Request):
 @router.post("/environments/{env_id}/plan", include_in_schema=False)
 async def plan_env(env_id: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict)):
     try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
@@ -1059,6 +1313,7 @@ async def plan_env(env_id: str, request: Request, payload: Dict[str, Any] = Body
 async def apply_env(env_id: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict)):
     try:
         _require_admin_access(request)
+        _require_env_access(request, env_id)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
@@ -1071,6 +1326,8 @@ async def apply_env(env_id: str, request: Request, payload: Dict[str, Any] = Bod
 @router.post("/environments/{env_id}/transform", include_in_schema=False)
 async def transform_env(env_id: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict)):
     try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
@@ -1084,6 +1341,7 @@ async def transform_env(env_id: str, request: Request, payload: Dict[str, Any] =
 async def ingest_env(env_id: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict)):
     try:
         _require_admin_access(request)
+        _require_env_access(request, env_id)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
@@ -1096,6 +1354,8 @@ async def ingest_env(env_id: str, request: Request, payload: Dict[str, Any] = Bo
 @router.post("/environments/{env_id}/query", include_in_schema=False)
 async def query_env(env_id: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict)):
     try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
@@ -1115,6 +1375,8 @@ async def query_env(env_id: str, request: Request, payload: Dict[str, Any] = Bod
 @router.post("/environments/{env_id}/compile_query", include_in_schema=False)
 async def compile_query_env(env_id: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict), debug: bool = False):
     try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
@@ -1133,6 +1395,8 @@ async def compile_query_env(env_id: str, request: Request, payload: Dict[str, An
 @router.get("/environments/{env_id}/endpoints", include_in_schema=False)
 async def list_env_endpoints(env_id: str, request: Request):
     try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
         base = str(request.base_url).rstrip("/")
         rt = getattr(request.app.state, "strategy_runtime", None)
         activations = rt.registry.list_activations(env_id) if rt else {}
@@ -1206,6 +1470,8 @@ async def list_env_endpoints(env_id: str, request: Request):
 async def create_synthetic_job(env_id: str, request: Request, body: Dict[str, Any] = Body(default_factory=dict)):
     try:
         _require_admin_access(request)
+        _require_env_access(request, env_id)
+        identity = _request_identity(request)
         manager = getattr(request.app.state, "synthetic_job_manager", None)
         if not manager:
             raise KehrnelError(code="JOBS_NOT_AVAILABLE", status=503, message="Synthetic job manager not initialized")
@@ -1256,7 +1522,10 @@ async def create_synthetic_job(env_id: str, request: Request, body: Dict[str, An
                 },
             )
 
-        requested_by = request.headers.get("x-api-key")
+        requested_by = (
+            identity.get("api_key_fingerprint")
+            or request.headers.get("x-api-key")
+        )
         activation_now = rt.registry.get_activation(env_id, domain)
         cfg_now = activation_now.config if activation_now else {}
         collections_cfg = cfg_now.get("collections") if isinstance(cfg_now, dict) else {}
@@ -1275,7 +1544,7 @@ async def create_synthetic_job(env_id: str, request: Request, body: Dict[str, An
             target_database = getattr(db_bindings, "database", None)
         if not target_database and activation_now and activation_now.bindings_ref:
             try:
-                from kehrnel.core.bindings_resolver import resolve_bindings as _resolve_bindings_ref
+                from kehrnel.engine.core.bindings_resolver import resolve_bindings as _resolve_bindings_ref
                 resolved = await _resolve_bindings_ref(
                     rt.bindings_resolver,
                     bindings_ref=activation_now.bindings_ref,
@@ -1304,6 +1573,8 @@ async def create_synthetic_job(env_id: str, request: Request, body: Dict[str, An
                 },
             },
             requested_by=requested_by,
+            requester_id=identity.get("user_id"),
+            team_id=identity.get("team_id"),
         )
         return JSONResponse(status_code=202, content={"ok": True, "job": job})
     except Exception as exc:
@@ -1314,10 +1585,21 @@ async def create_synthetic_job(env_id: str, request: Request, body: Dict[str, An
 async def list_synthetic_jobs(env_id: str, request: Request, domain: str | None = None, status: str | None = None):
     try:
         _require_admin_access(request)
+        _require_env_access(request, env_id)
         manager = getattr(request.app.state, "synthetic_job_manager", None)
         if not manager:
             raise KehrnelError(code="JOBS_NOT_AVAILABLE", status=503, message="Synthetic job manager not initialized")
+        identity = _request_identity(request)
         jobs = await manager.list_jobs(env_id=env_id, domain=domain)
+        if _truthy_env("KEHRNEL_SYNTHETIC_ENFORCE_TEAM_SCOPE", "false"):
+            filtered_jobs: list[dict[str, Any]] = []
+            for job in jobs:
+                try:
+                    _enforce_synthetic_team_scope(identity, job)
+                    filtered_jobs.append(job)
+                except KehrnelError:
+                    continue
+            jobs = filtered_jobs
         if status:
             jobs = [j for j in jobs if str(j.get("status") or "").lower() == str(status).lower()]
         return {"ok": True, "jobs": jobs}
@@ -1329,12 +1611,15 @@ async def list_synthetic_jobs(env_id: str, request: Request, domain: str | None 
 async def get_synthetic_job(env_id: str, job_id: str, request: Request):
     try:
         _require_admin_access(request)
+        _require_env_access(request, env_id)
         manager = getattr(request.app.state, "synthetic_job_manager", None)
         if not manager:
             raise KehrnelError(code="JOBS_NOT_AVAILABLE", status=503, message="Synthetic job manager not initialized")
+        identity = _request_identity(request)
         job = await manager.get_job(job_id)
         if not job or job.get("env_id") != env_id:
             raise KehrnelError(code="JOB_NOT_FOUND", status=404, message=f"Job {job_id} not found for env {env_id}")
+        _enforce_synthetic_team_scope(identity, job)
         return {"ok": True, "job": job}
     except Exception as exc:
         return _error_response(exc)
@@ -1344,12 +1629,15 @@ async def get_synthetic_job(env_id: str, job_id: str, request: Request):
 async def cancel_synthetic_job(env_id: str, job_id: str, request: Request):
     try:
         _require_admin_access(request)
+        _require_env_access(request, env_id)
         manager = getattr(request.app.state, "synthetic_job_manager", None)
         if not manager:
             raise KehrnelError(code="JOBS_NOT_AVAILABLE", status=503, message="Synthetic job manager not initialized")
+        identity = _request_identity(request)
         existing = await manager.get_job(job_id)
         if not existing or existing.get("env_id") != env_id:
             raise KehrnelError(code="JOB_NOT_FOUND", status=404, message=f"Job {job_id} not found for env {env_id}")
+        _enforce_synthetic_team_scope(identity, existing)
         job = await manager.cancel_job(job_id)
         return {"ok": True, "job": job}
     except Exception as exc:

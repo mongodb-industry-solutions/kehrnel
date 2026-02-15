@@ -3,7 +3,7 @@ from pymongo.errors import PyMongoError
 import logging
 from typing import Dict, Optional
 
-from kehrnel.api.legacy.app.core.config_models import CompositionCollectionNames
+from kehrnel.api.bridge.app.core.config_models import CompositionCollectionNames
 
 logger = logging.getLogger(__name__)
 
@@ -119,8 +119,7 @@ async def insert_composition_contribution_and_update_ehr(
                     # Use the canonical version UID as the _id for flattened docs for consistency
                     flattened_base_doc["_id"] = composition_uid
                     result_flatten_composition = await db[config.flatten_compositions].insert_one(flattened_base_doc, session=session)
-
-                    print("Inserted Flatten", result_flatten_composition)
+                    logger.debug("Inserted flattened composition _id=%s", result_flatten_composition.inserted_id)
 
                     # Use dynamic field name for search nodes
                     search_field = config.search_fields.nodes
@@ -134,9 +133,8 @@ async def insert_composition_contribution_and_update_ehr(
                     if has_search_data:
                         if not merge_search_docs:
                             flattened_search_doc["_id"] = composition_uid
-                            print("Inserting search document")
                             inserted_search_document = await db[config.search_compositions].insert_one(flattened_search_doc, session=session)
-                            print("Inserted search document", inserted_search_document)
+                            logger.debug("Inserted flattened search document _id=%s", inserted_search_document.inserted_id)
                         else:
                             search_sub_doc = {
                                 "comp_id": composition_uid,

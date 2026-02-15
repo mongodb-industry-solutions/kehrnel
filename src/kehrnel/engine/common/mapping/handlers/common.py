@@ -2,7 +2,7 @@
 from __future__ import annotations
 import re, datetime as dt
 from typing import Any, Dict, List, Iterable, Optional, Tuple, Callable
-from kehrnel.common.mapping.utils.jinja_env import env as _JINJA
+from kehrnel.engine.common.mapping.utils.jinja_env import env as _JINJA
 
 class HandlerCommon:
     # ── coercions ───────────────────────────────────────────────────────────

@@ -1,4 +1,4 @@
-# src/kehrnel/api/legacy/v1/ingest/api_responses.py
+# src/kehrnel/api/compatibility/v1/ingest/api_responses.py
 
 from fastapi import status
 from kehrnel.api.strategies.openehr.rps_dual.ingest.models import IngestionSuccessResponse, ErrorResponse

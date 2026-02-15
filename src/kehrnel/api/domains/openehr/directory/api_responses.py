@@ -1,4 +1,4 @@
-# src/kehrnel/api/legacy/v1/directory/api_responses.py
+# src/kehrnel/api/compatibility/v1/directory/api_responses.py
 
 from fastapi import status
 from kehrnel.api.common.models import ErrorResponse

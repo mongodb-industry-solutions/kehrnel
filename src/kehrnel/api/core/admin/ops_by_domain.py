@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Body, Request
 from typing import Any, Dict
 
-from kehrnel.api.core.admin.routes import _error_response, _require_admin_access
+from kehrnel.api.core.admin.routes import _error_response, _require_admin_access, _require_env_access
 
 router = APIRouter()
 
@@ -10,6 +10,7 @@ router = APIRouter()
 async def run_op_by_domain(env_id: str, domain: str, op: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict)):
     try:
         _require_admin_access(request)
+        _require_env_access(request, env_id)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")

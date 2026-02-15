@@ -1,4 +1,4 @@
-# src/kehrnel/engine/strategies/openehr/rps_dual/query/transformers/condition_processor.py
+# src/kehrnel/api/compatibility/v1/aql/transformers/condition_processor.py
 from typing import Dict, Any, List, Tuple
 from .value_formatter import ValueFormatter
 
@@ -220,52 +220,6 @@ class ConditionProcessor:
         
         return {}
 
-    async def build_variable_elem_matches(self, comp_structure: Dict) -> Dict[str, Dict]:
-        """Build per-variable elemMatch dictionaries.
-
-        This is used by the query layer to apply additional constraints that
-        require correlating multiple nodes belonging to the same CONTAINS
-        branch (e.g., ensuring that predicates on sibling nodes match within
-        the same repeated structure).
-
-        Returns a mapping:
-          variable_alias -> elemMatch_dict
-        where elemMatch_dict is the *inner* object used inside "$elemMatch".
-
-        Note: For OR trees we currently return an empty dict; branch correlation
-        across OR requires a different evaluation strategy.
-        """
-        if not comp_structure:
-            return {}
-
-        # Single condition
-        if comp_structure.get("type") == "condition":
-            variable = comp_structure.get("path", "").split('/')[0]
-            if not variable:
-                return {}
-            elem_match = await self._create_elem_match_for_single_condition(variable, comp_structure)
-            return {variable: elem_match}
-
-        # AND tree
-        if comp_structure.get("operator") == "AND":
-            variable_conditions: Dict[str, list] = {}
-            for child in comp_structure.get("children", []):
-                self._group_conditions_by_variable(child, variable_conditions)
-
-            out: Dict[str, Dict] = {}
-            for variable, conditions in variable_conditions.items():
-                if not conditions:
-                    continue
-                if len(conditions) == 1:
-                    condition_structure = conditions[0]
-                else:
-                    condition_structure = {"operator": "AND", "children": conditions}
-                out[variable] = await self._create_elem_match_for_variable_group(variable, condition_structure)
-            return out
-
-        # OR tree (not supported for correlation stage)
-        return {}
-
     def _group_conditions_by_variable(self, node: Dict, variable_conditions: Dict):
         """
         Groups conditions by their variable alias for proper $elemMatch construction.
@@ -380,55 +334,6 @@ class ConditionProcessor:
                 or_conditions.append(condition_match)
             
             return {"$or": or_conditions} if or_conditions else {}
-
-    async def build_variable_elem_matches(self, comp_structure: Dict) -> Dict[str, Dict]:
-        """Build per-variable element-match dictionaries.
-
-        This helper is used to compute branch-consistency checks (bk/prefix) without
-        changing the semantics of the main match/search compilation.
-
-        It returns a mapping: <variable alias> -> <elemMatch body>, where the body
-        is the inner dictionary that would be placed inside $elemMatch.
-
-        Notes:
-        - For AND trees we can deterministically group conditions per variable.
-        - For OR trees, correct grouping requires branching logic; we return an
-          empty map and let callers skip branch checks.
-        """
-
-        if not comp_structure:
-            return {}
-
-        # Single condition
-        if comp_structure.get("type") == "condition":
-            condition = comp_structure.get("condition")
-            if not condition:
-                return {}
-            field_info = await self.format_resolver.translate_aql_path(condition["path"], self.context_map)
-            variable = condition["path"].split("/")[0]
-            elem = {
-                field_info["path_regex_key"]: {"$regex": field_info["path_regex"]},
-                field_info["data_path"]: self._build_operator_condition(condition["operator"], condition["value"]),
-            }
-            return {variable: elem}
-
-        # AND operator: group per variable
-        if comp_structure.get("operator") == "AND":
-            conditions = comp_structure.get("conditions", [])
-            if not conditions:
-                return {}
-
-            variable_groups = self._group_conditions_by_variable(conditions)
-            out: Dict[str, Dict] = {}
-            for variable, group in variable_groups.items():
-                inner = await self._create_elem_match_for_variable_group(variable, group)
-                # _create_elem_match_for_variable_group returns {"$elemMatch": {...}}
-                if inner and "$elemMatch" in inner:
-                    out[variable] = inner["$elemMatch"]
-            return out
-
-        # OR (and any other operators): skip for determinism
-        return {}
         
         return {}
 

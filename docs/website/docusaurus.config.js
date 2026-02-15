@@ -112,6 +112,29 @@ const config = {
         additionalLanguages: ['bash', 'json', 'python', 'sql'],
       },
     }),
+
+  // Local dev convenience:
+  // - Docusaurus runs on its own port (default here is 8001)
+  // - kehrnel API runs separately (commonly 8000)
+  // Proxy API routes so CTA links like /docs and /redoc work during `npm start`.
+  configureWebpack: (webpackConfig, isServer) => {
+    if (isServer) return {};
+    const apiTarget = process.env.KEHRNEL_API_ORIGIN || 'http://localhost:8000';
+    return {
+      devServer: {
+        proxy: {
+          '/docs': { target: apiTarget, changeOrigin: true },
+          '/redoc': { target: apiTarget, changeOrigin: true },
+          '/openapi.json': { target: apiTarget, changeOrigin: true },
+          '/openapi': { target: apiTarget, changeOrigin: true },
+          '/health': { target: apiTarget, changeOrigin: true },
+          '/api': { target: apiTarget, changeOrigin: true },
+          '/v1': { target: apiTarget, changeOrigin: true },
+          '/environments': { target: apiTarget, changeOrigin: true },
+        },
+      },
+    };
+  },
 };
 
 export default config;

@@ -1,4 +1,4 @@
-# src/kehrnel/api/legacy/v1/aql/transformers/aql_transformer.py
+# src/kehrnel/api/compatibility/v1/aql/transformers/aql_transformer.py
 from typing import Any, Dict, List, Optional
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from .ast_validator import ASTValidator

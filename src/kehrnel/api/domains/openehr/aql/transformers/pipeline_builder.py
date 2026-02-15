@@ -1,4 +1,4 @@
-# src/kehrnel/api/legacy/v1/aql/transformers/pipeline_builder.py
+# src/kehrnel/api/compatibility/v1/aql/transformers/pipeline_builder.py
 
 from typing import Dict, Any, List, Optional
 from .condition_processor import ConditionProcessor

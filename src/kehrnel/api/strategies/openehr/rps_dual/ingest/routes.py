@@ -5,15 +5,17 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 import copy
 import os
+import logging
 from pathlib import Path
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
-from kehrnel.legacy.transform.flattener_g import CompositionFlattener
-from kehrnel.legacy.transform.exceptions_g import FlattenerError
+from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
+from kehrnel.engine.strategies.openehr.rps_dual.ingest.exceptions_g import FlattenerError
 from kehrnel.api.strategies.openehr.rps_dual.ingest.service import IngestionService
 from kehrnel.api.strategies.openehr.rps_dual.ingest.repository import IngestionRepository
-from kehrnel.api.legacy.app.utils.config_runtime import DEFAULT_MAPPINGS_PATH
+from kehrnel.api.bridge.app.utils.config_runtime import DEFAULT_MAPPINGS_PATH
 from kehrnel.strategy_sdk import StrategyBindings
+from kehrnel.strategy_sdk.runtime import StrategyRuntimeError
 
 from kehrnel.api.strategies.openehr.rps_dual.ingest.models import (
     FilePathRequest,
@@ -27,13 +29,27 @@ from kehrnel.api.strategies.openehr.rps_dual.ingest.api_responses import (
     ingest_from_db_responses,
     ingest_from_body_example
 )
-from kehrnel.legacy.libs.openehr.remap import remap_fields_for_config
+from kehrnel.engine.strategies.openehr.rps_dual.ingest.remap import remap_fields_for_config
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 
 def _allow_local_file_ingest() -> bool:
     return os.getenv("KEHRNEL_ALLOW_LOCAL_FILE_INPUTS", "false").lower() in ("1", "true", "yes")
+
+
+def _local_file_inputs_base_dir() -> Path:
+    """
+    Base directory for any server-side "read local file" features.
+
+    Rationale: if KEHRNEL_ALLOW_LOCAL_FILE_INPUTS=true is enabled, we still want a
+    guardrail to prevent reading arbitrary files (e.g. /etc/passwd) via API.
+    """
+    raw = (os.getenv("KEHRNEL_LOCAL_FILE_INPUTS_BASE_DIR") or "").strip()
+    if not raw:
+        return Path.cwd().resolve()
+    return Path(raw).expanduser().resolve()
 
 
 def _validate_local_ingest_path(file_path: str) -> str:
@@ -42,8 +58,13 @@ def _validate_local_ingest_path(file_path: str) -> str:
         p = (Path.cwd() / p).resolve()
     else:
         p = p.resolve()
+    base = _local_file_inputs_base_dir()
+    try:
+        p.relative_to(base)
+    except ValueError:
+        raise ValueError("Provided path is outside the allowed inputs directory")
     if not p.exists() or not p.is_file():
-        raise FileNotFoundError(f"File not found: {p}")
+        raise FileNotFoundError("File not found")
     if p.suffix.lower() != ".json":
         raise ValueError("Only .json files are allowed for file ingest")
     return str(p)
@@ -125,23 +146,19 @@ async def ingest_from_payload(
             try:
                 flattener = await get_runtime_flattener(request, runtime_config)
             except Exception as e:
-                import traceback
-                print(f"[Preview] Failed to create flattener: {e}")
-                traceback.print_exc()
+                logger.exception("Preview flattener initialization failed")
                 raise HTTPException(
                     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    detail=f"Failed to create flattener: {str(e)}"
+                    detail="Failed to initialize preview transformation."
                 )
 
             try:
                 base_doc, search_doc = flattener.transform_composition(raw_doc)
             except Exception as e:
-                import traceback
-                print(f"[Preview] Transform failed: {e}")
-                traceback.print_exc()
+                logger.exception("Preview transformation failed")
                 raise HTTPException(
                     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    detail=f"Transform failed: {str(e)}"
+                    detail="Failed to transform payload in preview mode."
                 )
             base_doc, search_doc, path_field = remap_fields_for_config(
                 base_doc, search_doc, runtime_config
@@ -195,7 +212,9 @@ async def ingest_from_payload(
                 )
                 base_doc = ingest_result.get("base")
                 search_doc = ingest_result.get("search")
-            except Exception:
+            except StrategyRuntimeError as exc:
+                if "not implemented" not in str(exc).lower():
+                    raise
                 base_doc, search_doc = router.dispatch(
                     "transform",
                     payload=raw_doc,
@@ -230,8 +249,9 @@ async def ingest_from_payload(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except FlattenerError as e:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"Transformation Error: {e}")
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Internal Server Error: {str(e)}")
+    except Exception:
+        logger.exception("Unexpected error while ingesting payload")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error.")
 
 
 # Helper: filter search nodes by allowed paths
@@ -304,7 +324,7 @@ async def get_runtime_flattener(request: Request, runtime_config: dict | None):
     else:
         # Use default config when no flattener is initialized
         base_cfg = copy.deepcopy(DEFAULT_FLATTENER_CONFIG)
-        print("[Preview] Using default flattener config (no flattener initialized)")
+        logger.debug("Preview mode: using default flattener config (no preloaded flattener in app state)")
 
     merged = copy.deepcopy(base_cfg) if isinstance(base_cfg, dict) else copy.deepcopy(DEFAULT_FLATTENER_CONFIG)
     if runtime_config and isinstance(runtime_config, dict):
@@ -333,7 +353,7 @@ async def get_runtime_flattener(request: Request, runtime_config: dict | None):
     if db is None:
         db = getattr(request.app.state, "db", None)
 
-    print(f"[Preview] Creating flattener with config keys: {list(merged.keys())}")
+    logger.debug("Preview mode: creating flattener with config keys: %s", list(merged.keys()))
 
     return await CompositionFlattener.create(
         db=db,
@@ -361,7 +381,7 @@ def _deep_merge(target: dict, source: dict):
 )
 async def ingest_from_file(
     request_body: FilePathRequest,
-    service: IngestionService = Depends(get_ingestion_service),
+    service: IngestionService | None = Depends(get_ingestion_service),
 ):
     """
     Reads a canonical composition from a JSON file on the server's filesystem,
@@ -373,10 +393,15 @@ async def ingest_from_file(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Local file ingest is disabled. Enable KEHRNEL_ALLOW_LOCAL_FILE_INPUTS=true to use this endpoint.",
             )
+        if service is None:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Ingestion service not configured.",
+            )
         safe_path = _validate_local_ingest_path(request_body.file_path)
         new_comp_id = await service.ingest_from_local_file(safe_path)
         return IngestionSuccessResponse(
-            message=f"Composition from file '{safe_path}' ingested and stored.",
+            message=f"Composition from file '{Path(safe_path).name}' ingested and stored.",
             flattened_composition_id=new_comp_id,
         )
     except FileNotFoundError as e:
@@ -385,8 +410,9 @@ async def ingest_from_file(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except FlattenerError as e:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"Transformation Error: {e}")
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Internal Server Error: {str(e)}")
+    except Exception:
+        logger.exception("Unexpected error while ingesting from local file")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error.")
     
 
 @router.post(
@@ -398,13 +424,18 @@ async def ingest_from_file(
 )
 async def ingest_from_db(
     request_body: EhrIdRequest,
-    service: IngestionService = Depends(get_ingestion_service),
+    service: IngestionService | None = Depends(get_ingestion_service),
 ):
     """
     Finds a canonical composition in the source database collection using an `ehr_id`,
     transforms it, and stores the flattened version.
     """
     try:
+        if service is None:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Ingestion service not configured.",
+            )
         new_comp_id = await service.ingest_from_database(request_body.ehr_id)
         return IngestionSuccessResponse(
             message=f"Composition for ehr_id '{request_body.ehr_id}' ingested and stored.",
@@ -414,5 +445,6 @@ async def ingest_from_db(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     except FlattenerError as e:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"Transformation Error: {e}")
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Internal Server Error: {str(e)}")
+    except Exception:
+        logger.exception("Unexpected error while ingesting from source database")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error.")

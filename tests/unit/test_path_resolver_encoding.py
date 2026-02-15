@@ -5,13 +5,13 @@ def test_path_resolver_uses_path_codec_for_tokens():
     cfg = {
         "fields": {"composition": {"nodes": "cn"}, "search": {"nodes": "sn"}},
         "paths": {"separator": "/"},
+        "node_representation": {"path": {"token_joiner": "/"}},
     }
     shortcuts = {"data": "d"}
     resolver = PathResolver(cfg, shortcuts=shortcuts)
     rp = resolver.resolve_full("/content[openEHR-EHR-COMPOSITION.v1]/items[at0001]/value", scope="patient")
     assert rp.cn_regex.startswith("^")
-    # token joiner should respect separator
-    assert "/" in resolver.token_joiner
+    assert resolver.token_joiner == "/"
 
 
 def test_path_resolver_data_paths():

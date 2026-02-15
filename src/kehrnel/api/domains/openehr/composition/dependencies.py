@@ -1,8 +1,8 @@
-# src/kehrnel/api/legacy/v1/composition/dependencies.py
+# src/kehrnel/api/compatibility/v1/composition/dependencies.py
 
-from kehrnel.api.legacy.app.core.config import settings
-from kehrnel.api.legacy.app.core.config_models import CompositionCollectionNames
-from kehrnel.api.legacy.app.core.config_manager import get_config_manager
+from kehrnel.api.bridge.app.core.config import settings
+from kehrnel.api.bridge.app.core.config_models import CompositionCollectionNames
+from kehrnel.api.bridge.app.core.config_manager import get_config_manager
 import logging
 
 logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ async def get_composition_config() -> CompositionCollectionNames:
             import traceback
             logger.error(f"📍 Full traceback: {traceback.format_exc()}")
             logger.warning(f"Failed to load dynamic configuration, using default: {e}")
-            # Use legacy environment variables as fallback
+            # Use compatibility environment variables as fallback
             return CompositionCollectionNames(
                 database=settings.MONGODB_DB,
                 compositions=settings.COMPOSITIONS_COLL_NAME,
@@ -39,7 +39,7 @@ async def get_composition_config() -> CompositionCollectionNames:
                 merge_search_docs=False  # Keep search insertion enabled
             )
     else:
-        # Use static configuration from settings - legacy mode
+        # Use static configuration from settings - compatibility mode
         return CompositionCollectionNames(
             database=settings.MONGODB_DB,
             compositions=settings.COMPOSITIONS_COLL_NAME,

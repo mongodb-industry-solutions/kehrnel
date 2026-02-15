@@ -22,7 +22,7 @@ from kehrnel.api.domains.openehr.contribution.repository import (
     find_latest_contribution_by_vo_uid,
     find_contributions_for_versioned_object
 )
-from kehrnel.api.legacy.app.core.models import Contribution, AuditDetails
+from kehrnel.api.bridge.app.core.models import Contribution, AuditDetails
 
 
 async def retrieve_ehr_status_revision_history(

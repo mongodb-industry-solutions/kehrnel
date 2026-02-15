@@ -1,14 +1,14 @@
-from fastapi import APIRouter, Depends, status, Body, Response, Header, Query, Request
+from fastapi import APIRouter, Depends, status, Body, Response, Header, Query, Request, HTTPException
 from fastapi.responses import JSONResponse
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import Optional, Dict, Any
 from email.utils import formatdate
 import logging
 from uuid import UUID
-from kehrnel.legacy.transform.flattener_g import CompositionFlattener
-from kehrnel.legacy.transform.core import Transformer
+from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
+from kehrnel.engine.strategies.openehr.rps_dual.ingest.unflattener import CompositionUnflattener
 from kehrnel.api.domains.openehr.composition.dependencies import get_composition_config
-from kehrnel.api.legacy.app.core.config_models import CompositionCollectionNames
+from kehrnel.api.bridge.app.core.config_models import CompositionCollectionNames
 
 
 from kehrnel.api.domains.openehr.composition.service import (
@@ -26,7 +26,7 @@ from kehrnel.api.common.models import RevisionHistory, OriginalVersionResponse
 from kehrnel.api.domains.openehr.composition.models import Composition, CompositionCreate, VersionedComposition
 
 
-from kehrnel.api.legacy.app.core.database import get_mongodb_ehr_db
+from kehrnel.api.bridge.app.core.database import get_mongodb_ehr_db
 
 
 from kehrnel.api.domains.openehr.composition.api_responses import (
@@ -50,17 +50,24 @@ def get_flattener(request: Request) -> CompositionFlattener:
     """
     Dependency to retrieve the globally initialized CompositionFlattener
     """
-    return request.app.state.flattener
+    flattener = getattr(request.app.state, "flattener", None)
+    if flattener is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Ingestion runtime is not initialized. Configure strategy ingestion first.",
+        )
+    return flattener
 
 
-def get_transformer(request: Request) -> Transformer:
-    """
-    Dependency to retrieve the globally initialized Transformer.
-    NOTE: This needs to be initialized and added to app.state at startup.
-    """
-    if not hasattr(request.app.state, 'transformer'):
-        raise RuntimeError("Transformer not initialized or attached to app state.")
-    return request.app.state.transformer
+def get_unflattener(request: Request) -> CompositionUnflattener:
+    """Dependency to retrieve the globally initialized CompositionUnflattener."""
+    unflattener = getattr(request.app.state, "unflattener", None)
+    if unflattener is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Unflattener runtime is not initialized. Configure strategy ingestion first.",
+        )
+    return unflattener
 
 
 @router.post(
@@ -94,14 +101,28 @@ async def create_composition_endpoint(
     Upon successfull creation, the new `composition` object is returned, and the `Location`, `ETag`, and `Last-Modified` headers are set.
     """
 
-    new_composition = await add_composition(
-        ehr_id = ehr_id,
-        composition_create = composition_create,
-        db = db,
-        config = config,
-        flattener = flattener,
-        merge_search_docs=config.merge_search_docs
-    )
+    try:
+        payload = composition_create.root if hasattr(composition_create, "root") else {}
+        if not isinstance(payload, dict) or payload.get("_type") != "COMPOSITION":
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="Request body must be a canonical COMPOSITION object.",
+            )
+        new_composition = await add_composition(
+            ehr_id=ehr_id,
+            composition_create=composition_create,
+            db=db,
+            config=config,
+            flattener=flattener,
+            merge_search_docs=config.merge_search_docs
+        )
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Failed to create composition: {exc}",
+        ) from exc
 
     # Response Headers
     response.headers["Location"] = f"/v1/ehr/{ehr_id}/composition/{new_composition.uid}"
@@ -183,7 +204,8 @@ async def get_composition_by_id_unflattened(
     uid_based_id: str,
     response: Response,
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
-    transformer: Transformer = Depends(get_transformer)
+    config: CompositionCollectionNames = Depends(get_composition_config),
+    unflattener: CompositionUnflattener = Depends(get_unflattener)
 ):
     """
     Retrieves a version of a `COMPOSITION` by reading from the optimized,
@@ -196,12 +218,21 @@ async def get_composition_by_id_unflattened(
     The reconstructed canonical `COMPOSITION` is returned, with headers set.
     This serves as a performant alternative to the standard GET endpoint.
     """
-    composition = await retrieve_and_unflatten_composition(
-        ehr_id=ehr_id,
-        uid_based_id=uid_based_id,
-        db=db,
-        transformer=transformer
-    )
+    try:
+        composition = await retrieve_and_unflatten_composition(
+            ehr_id=ehr_id,
+            uid_based_id=uid_based_id,
+            db=db,
+            config=config,
+            unflattener=unflattener
+        )
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Failed to reconstruct composition: {exc}",
+        ) from exc
 
     last_modified_gmt = formatdate(composition.time_created.timestamp(), usegmt=True)
     
@@ -328,7 +359,8 @@ async def delete_composition_endpoint(
 async def get_versioned_composition_endpoint(
     ehr_id: str,
     versioned_object_uid: str,
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Retrieves metadata about a VERSIONED_COMPOSITION, which is the container for all versions of a single clinical document.
@@ -338,7 +370,8 @@ async def get_versioned_composition_endpoint(
     versioned_composition = await retrieve_versioned_composition(
         ehr_id=ehr_id,
         versioned_object_uid=versioned_object_uid,
-        db=db
+        db=db,
+        config=config,
     )
     return versioned_composition
 
@@ -353,7 +386,8 @@ async def get_versioned_composition_endpoint(
 async def get_revision_history_endpoint(
     ehr_id: str,
     versioned_object_uid: str,
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Retrieves the revision history of a VERSIONED_COMPOSITION, which provides
@@ -368,7 +402,8 @@ async def get_revision_history_endpoint(
     revision_history = await retrieve_revision_history(
         ehr_id=ehr_id,
         versioned_object_uid=versioned_object_uid,
-        db=db
+        db=db,
+        config=config,
     )
 
     return revision_history
@@ -388,6 +423,7 @@ async def get_composition_version_endpoint(
     response: Response,
     version_at_time: Optional[str] = Query(None, alias="version_at_time", description="A given time in the extended ISO 8601 format."),
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Retrieves a VERSION from the VERSIONED_COMPOSITION identified by `versioned_object_uid`.
@@ -404,6 +440,7 @@ async def get_composition_version_endpoint(
         versioned_object_uid=versioned_object_uid,
         version_at_time=version_at_time,
         db=db,
+        config=config,
     )
 
     version_uid = version_response.uid.value

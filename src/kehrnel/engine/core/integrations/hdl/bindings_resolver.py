@@ -1,7 +1,7 @@
 """Resolve Kehrnel bindings from Healthcare Data Lab encrypted environment secrets.
 
 Set:
-  KEHRNEL_BINDINGS_RESOLVER=kehrnel.core.integrations.hdl.bindings_resolver:resolve_hdl_bindings
+  KEHRNEL_BINDINGS_RESOLVER=kehrnel.engine.core.integrations.hdl.bindings_resolver:resolve_hdl_bindings
 
 Required env vars:
   ENV_SECRETS_KEY           base64-encoded 32-byte key (AES-256-GCM)

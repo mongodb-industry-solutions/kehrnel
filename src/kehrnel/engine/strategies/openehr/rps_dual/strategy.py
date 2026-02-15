@@ -9,22 +9,21 @@ import uuid
 from pathlib import Path
 from typing import Any, Dict
 
-from kehrnel.core.plugin import StrategyPlugin
-from kehrnel.core.types import ApplyPlan, ApplyResult, TransformResult, QueryPlan, QueryResult, StrategyContext
-from kehrnel.core.manifest import StrategyManifest
-from kehrnel.domains.openehr.aql.ir import AqlQueryIR
-from kehrnel.core.explain import enrich_explain
-from kehrnel.core.errors import KehrnelError
-from kehrnel.core.synthetic_model_catalog import resolve_links, resolve_model_specs
-from kehrnel.domains.openehr.templates.generator import kehrnelGenerator
-from kehrnel.domains.openehr.templates.parser import TemplateParser
-from kehrnel.domains.openehr.templates.validator import kehrnelValidator
-from kehrnel.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
-from kehrnel.strategies.openehr.rps_dual.query.executor import execute as execute_query_plan
-from kehrnel.strategies.openehr.rps_dual.services.codes_service import atcode_to_token
-from kehrnel.strategies.openehr.rps_dual.services.codes_service import get_codes
-from kehrnel.strategies.openehr.rps_dual.services.shortcuts_service import get_shortcuts
-from kehrnel.strategies.openehr.rps_dual.config import (
+from kehrnel.engine.core.plugin import StrategyPlugin
+from kehrnel.engine.core.types import ApplyPlan, ApplyResult, TransformResult, QueryPlan, QueryResult, StrategyContext
+from kehrnel.engine.core.manifest import StrategyManifest
+from kehrnel.engine.domains.openehr.aql.ir import AqlQueryIR
+from kehrnel.engine.core.explain import enrich_explain
+from kehrnel.engine.core.errors import KehrnelError
+from kehrnel.engine.core.synthetic_model_catalog import resolve_links, resolve_model_specs
+from kehrnel.engine.domains.openehr.templates.generator import kehrnelGenerator
+from kehrnel.engine.domains.openehr.templates.parser import TemplateParser
+from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
+from kehrnel.engine.strategies.openehr.rps_dual.query.executor import execute as execute_query_plan
+from kehrnel.engine.strategies.openehr.rps_dual.services.codes_service import atcode_to_token
+from kehrnel.engine.strategies.openehr.rps_dual.services.codes_service import get_codes
+from kehrnel.engine.strategies.openehr.rps_dual.services.shortcuts_service import get_shortcuts
+from kehrnel.engine.strategies.openehr.rps_dual.config import (
     normalize_config,
     normalize_bulk_config,
     RPSDualConfig,
@@ -32,12 +31,8 @@ from kehrnel.strategies.openehr.rps_dual.config import (
     build_flattener_config,
     build_coding_opts,
 )
-from kehrnel.strategies.openehr.rps_dual.config_resolver import resolve_uri, resolve_uri_async
-from kehrnel.strategies.openehr.rps_dual.query.compiler import (
-    build_query_pipeline,
-    build_query_pipeline_from_ast,
-    parse_aql_strict,
-)
+from kehrnel.engine.strategies.openehr.rps_dual.config_resolver import resolve_uri_async
+from kehrnel.engine.strategies.openehr.rps_dual.query.compiler import build_query_pipeline
 
 
 def load_json(path: Path) -> Dict[str, Any]:
@@ -73,24 +68,32 @@ class RPSDualStrategy(StrategyPlugin):
 
     async def plan(self, ctx: StrategyContext) -> ApplyPlan:
         cfg = ctx.config
+        strategy_cfg = normalize_config(cfg or {})
         artifacts = {"collections": [], "indexes": [], "search_indexes": []}
-        comp = cfg.get("collections", {}).get("compositions", {})
-        search = cfg.get("collections", {}).get("search", {})
-        if comp.get("name"):
-            artifacts["collections"].append(comp["name"])
-        if search.get("enabled") and search.get("name"):
-            artifacts["collections"].append(search["name"])
-            if search.get("atlas_index_name"):
-                artifacts["search_indexes"].append({"collection": search["name"], "name": search["atlas_index_name"], "definition": search.get("slim_projection") or {}})
+        comp = strategy_cfg.collections.compositions
+        search = strategy_cfg.collections.search
+        if comp.name:
+            artifacts["collections"].append(comp.name)
+        if search.enabled and search.name:
+            artifacts["collections"].append(search.name)
+            if search.atlasIndex and search.atlasIndex.name:
+                definition = {}
+                if search.atlasIndex.definition:
+                    storage = (ctx.adapters or {}).get("storage")
+                    db = getattr(storage, "db", None) if storage else None
+                    definition = await resolve_uri_async(search.atlasIndex.definition, db, Path(__file__).parent) or {}
+                artifacts["search_indexes"].append(
+                    {"collection": search.name, "name": search.atlasIndex.name, "definition": definition}
+                )
         # basic index specs
-        artifacts["indexes"].append({"collection": comp.get("name"), "keys": [("ehr_id", 1)]})
+        artifacts["indexes"].append({"collection": comp.name, "keys": [(strategy_cfg.fields.document.ehr_id, 1)]})
         # index plans from pack_spec storage indexes
         artifacts = self._augment_indexes_from_spec(ctx, artifacts)
         # indexes from mapping/index hints
         try:
             flattener = CompositionFlattener(
                 db=None,
-                config={"paths": {"separator": cfg.get("paths", {}).get("separator", ".")}},
+                config={"paths": {"separator": strategy_cfg.paths.separator}},
                 mappings_path=str(Path(__file__).parent / "ingest" / "config" / "flattener_mappings_f.jsonc"),
                 mappings_content=ctx.meta.get("mappings") if ctx.meta else None,
             )
@@ -100,8 +103,8 @@ class RPSDualStrategy(StrategyPlugin):
                     if isinstance(idx.get("index"), dict) and idx["index"].get("type") == "token":
                         artifacts["search_indexes"].append(
                             {
-                                "collection": search.get("name"),
-                                "name": search.get("atlas_index_name") or "search_nodes_index",
+                                "collection": search.name,
+                                "name": (search.atlasIndex.name if search.atlasIndex else None) or "search_nodes_index",
                                 "definition": {"mappings": idx["index"]},
                             }
                         )
@@ -186,19 +189,32 @@ class RPSDualStrategy(StrategyPlugin):
         adapters = ctx.adapters or {}
         storage = adapters.get("storage")
 
+        # Normalize configs using new structure
         strategy_cfg = normalize_config(cfg)
         bulk_cfg = normalize_bulk_config((ctx.meta or {}).get("bulk_config", {}))
+
+        # Build flattener config from normalized models
         flattener_config = build_flattener_config(strategy_cfg, bulk_cfg)
         coding_cfg = build_coding_opts(strategy_cfg)
 
+        # Resolve mappings URI
         mappings_ref = strategy_cfg.transform.mappings
         mappings_content = (ctx.meta or {}).get("mappings") if ctx and ctx.meta else None
+
         if mappings_content is None and mappings_ref:
             db = getattr(storage, "db", None)
             mappings_content = await resolve_uri_async(mappings_ref, db, Path(__file__).parent)
 
+        # If no mappings/analytics are configured for this run, do not fall back to bundled mappings.
+        # An empty mappings payload means: no slim/search projections produced.
+        if mappings_content is None:
+            mappings_content = {"templates": []}
+
         mappings_path = str(Path(__file__).parent / "ingest" / "config" / "flattener_mappings_f.jsonc")
+
+        # Try to reuse raw motor database from the storage adapter if available
         db = getattr(storage, "db", None)
+
         return await CompositionFlattener.create(
             db=db,
             config=flattener_config,
@@ -208,30 +224,9 @@ class RPSDualStrategy(StrategyPlugin):
             coding_opts=coding_cfg,
         )
 
-    async def _ensure_shortcuts_collection_initialized(
-        self,
-        *,
-        strategy_cfg: RPSDualConfig,
-        storage: Any,
-        index_admin: Any,
-    ) -> Dict[str, Any]:
-        """Ensure shortcuts collection and placeholder document exist when enabled."""
-        if not strategy_cfg.transform.apply_shortcuts:
-            return {"enabled": False, "collection": None, "created": False}
-        shortcuts_name = strategy_cfg.collections.shortcuts.name
-        if not shortcuts_name:
-            return {"enabled": True, "collection": None, "created": False, "warning": "shortcuts collection not configured"}
-        if index_admin:
-            await index_admin.ensure_collection(shortcuts_name)
-        created = False
-        existing = await storage.find_one(shortcuts_name, {"_id": "shortcuts"})
-        if not existing:
-            await storage.insert_one(shortcuts_name, {"_id": "shortcuts", "items": {}, "initialized": True})
-            created = True
-        return {"enabled": True, "collection": shortcuts_name, "created": created}
-
     async def transform(self, ctx: StrategyContext, payload: Dict[str, Any]) -> TransformResult:
         flattener = await self._build_flattener_for_context(ctx)
+
         # Normalise payload into the shape expected by the flattener
         comp_obj = payload.get("canonicalJSON") if isinstance(payload, dict) else None
         if comp_obj is None and isinstance(payload, dict):
@@ -247,19 +242,9 @@ class RPSDualStrategy(StrategyPlugin):
         return TransformResult(base=base_doc, search=search_doc, meta={})
 
     async def ingest(self, ctx: StrategyContext, payload: Dict[str, Any]) -> Dict[str, Any]:
-        cfg = ctx.config or {}
-        strategy_cfg = normalize_config(cfg)
-        storage = (ctx.adapters or {}).get("storage")
-        index_admin = (ctx.adapters or {}).get("index_admin")
-        shortcuts_init = None
-        if storage:
-            shortcuts_init = await self._ensure_shortcuts_collection_initialized(
-                strategy_cfg=strategy_cfg,
-                storage=storage,
-                index_admin=index_admin,
-            )
-
         tf = await self.transform(ctx, payload)
+        storage = (ctx.adapters or {}).get("storage")
+        cfg = ctx.config or {}
         comp_name = cfg.get("collections", {}).get("compositions", {}).get("name")
         search_cfg = cfg.get("collections", {}).get("search", {}) or {}
         search_enabled = search_cfg.get("enabled", True)
@@ -272,13 +257,13 @@ class RPSDualStrategy(StrategyPlugin):
         if storage and search_enabled and search_name and tf.search:
             await storage.insert_one(search_name, tf.search)
             inserted["search"] = search_name
-        return {"inserted": inserted, "base": tf.base, "search": tf.search, "shortcuts_init": shortcuts_init}
+        return {"inserted": inserted, "base": tf.base, "search": tf.search}
 
     async def reverse_transform(self, ctx: StrategyContext, payload: Dict[str, Any]) -> Dict[str, Any]:
         """
         Reverse a flattened base document back to a nested composition (best effort).
         """
-        from kehrnel.strategies.openehr.rps_dual.ingest.unflattener import CompositionUnflattener
+        from kehrnel.engine.strategies.openehr.rps_dual.ingest.unflattener import CompositionUnflattener
 
         cfg = ctx.config or {}
 
@@ -304,23 +289,14 @@ class RPSDualStrategy(StrategyPlugin):
         return {"composition": unflattener.unflatten(base_doc)}
 
     async def compile_query(self, ctx: StrategyContext, domain: str, query: Dict[str, Any]) -> QueryPlan:
-        query_obj = query
-        if query_obj is None:
-            raise KehrnelError(code="QUERY_REQUIRED", status=400, message="query is required")
-        debug_enabled = False
-        aql_text = None
-        scope_hint = None
+        debug = False
+        query_payload = query
+        if isinstance(query, dict):
+            debug = bool(query.get("debug"))
+            # The IR dataclass does not accept extra keys like "debug".
+            query_payload = {k: v for k, v in query.items() if k != "debug"}
 
-        if isinstance(query_obj, str):
-            aql_text = query_obj
-        elif isinstance(query_obj, dict):
-            debug_enabled = bool(query_obj.get("debug"))
-            if isinstance(query_obj.get("aql"), str):
-                aql_text = query_obj.get("aql")
-                scope_hint = query_obj.get("scope")
-        elif not isinstance(query_obj, AqlQueryIR):
-            raise KehrnelError(code="INVALID_QUERY_INPUT", status=400, message="query must be an object or AQL string")
-
+        ir = AqlQueryIR(**query_payload) if not isinstance(query, AqlQueryIR) else query
         cfg_model = normalize_config(ctx.config)
         explain_domain = (getattr(ctx.manifest, "domain", None) or domain or "").lower() or None
         shortcuts_res = await get_shortcuts(ctx)
@@ -330,25 +306,9 @@ class RPSDualStrategy(StrategyPlugin):
             warnings.append({"code": "dict_missing_shortcuts", "message": "Shortcuts dictionary missing", "details": {"source": shortcuts_res.get("source")}})
         if codes_res.get("missing"):
             warnings.append({"code": "dict_missing_codes", "message": "Codes dictionary missing", "details": {"source": codes_res.get("source")}})
-        slim_cfg = cfg_model.model_dump().get("slim_search") or {}
-        bundle_id = slim_cfg.get("bundle_id")
-        bundle_refs = (ctx.meta or {}).get("bundle_refs") or {}
-        bundle_digest = bundle_refs.get(bundle_id) if bundle_id else None
         # Build query pipeline using the query compiler
-        if aql_text is not None:
-            ast_doc = parse_aql_strict(aql_text)
-            engine, pipeline, stage0, schema_cfgs, ast_doc, builder_info, scope_value = await build_query_pipeline_from_ast(
-                ast_doc,
-                cfg_model,
-                scope_hint=scope_hint,
-            )
-        else:
-            ir = AqlQueryIR(**query_obj) if not isinstance(query_obj, AqlQueryIR) else query_obj
-            engine, pipeline, stage0, schema_cfgs, ast_doc, builder_info = await build_query_pipeline(ir, cfg_model)
-            scope_value = ir.scope
-            debug_enabled = debug_enabled or (isinstance(query_obj, dict) and bool(query_obj.get("debug")))
-
-        if scope_value == "cross_patient":
+        engine, pipeline, stage0, schema_cfgs, ast_doc, builder_info = await build_query_pipeline(ir, cfg_model)
+        if ir.scope == "cross_patient":
             post_match = [stage for stage in pipeline[1:] if "$match" in stage]
             if post_match:
                 warnings.append({"code": "partial_pushdown", "message": "Some predicates evaluated after $search", "details": {"post_match_stages": len(post_match)}})
@@ -362,25 +322,21 @@ class RPSDualStrategy(StrategyPlugin):
         }
         plan_dict.setdefault("warnings", [])
         plan_dict["warnings"].extend(warnings)
-        config_hash = (ctx.meta or {}).get("config_hash") if ctx else None
-        manifest_digest = (ctx.meta or {}).get("manifest_digest") if ctx else None
         explain = {
             "dicts": plan_dict["dicts"],
             "warnings": plan_dict["warnings"],
             "engine": "query_engine",
             "stage0": stage0,
             "schema": schema_cfgs,
-            "ast": ast_doc if debug_enabled else None,
-            "aql": aql_text if debug_enabled and aql_text is not None else None,
+            "ast": ast_doc if debug else None,
             "builder": builder_info,
-            "bundle": {"id": bundle_id, "digest": bundle_digest} if bundle_id else None,
         }
         explain = enrich_explain(
             explain,
             ctx,
             domain=explain_domain or "openehr",
             engine="query_engine",
-            scope=scope_value,
+            scope=ir.scope,
         )
         plan_dict["explain"] = explain
         return QueryPlan(engine=plan_dict["engine"], plan=plan_dict, explain=explain)
@@ -402,6 +358,8 @@ class RPSDualStrategy(StrategyPlugin):
             warnings = []
             dict_name = strategy_cfg.collections.codes.name
             shortcuts_name = strategy_cfg.collections.shortcuts.name
+            dict_seed = strategy_cfg.collections.codes.seed
+            shortcuts_seed = strategy_cfg.collections.shortcuts.seed
             if index_admin:
                 if dict_name:
                     await index_admin.ensure_collection(dict_name)
@@ -410,40 +368,109 @@ class RPSDualStrategy(StrategyPlugin):
                 created.append(shortcuts_name)
             else:
                 warnings.append("index_admin adapter not available; cannot ensure collections")
-            # ensure placeholder docs exist
-            if storage:
-                for coll, doc_id in ((dict_name, "codes"), (shortcuts_name, "shortcuts")):
-                    if not coll:
-                        continue
-                    existing = await storage.find_one(coll, {"_id": doc_id})
-                    if not existing:
-                        await storage.insert_one(coll, {"_id": doc_id, "items": {}})
-            return {"ok": True, "created": created, "warnings": warnings}
+            if not storage:
+                return {"ok": True, "created": created, "warnings": warnings + ["storage adapter not available; cannot seed dictionaries"]}
+
+            # Prefer upsert via raw Motor DB if present (seed ops should be idempotent).
+            motor_db = getattr(storage, "db", None)
+
+            async def _upsert(coll: str, doc: Dict[str, Any]) -> None:
+                if not coll or not isinstance(doc, dict) or not doc.get("_id"):
+                    return
+                if motor_db is not None:
+                    await motor_db[coll].replace_one({"_id": doc["_id"]}, doc, upsert=True)
+                    return
+                existing = await storage.find_one(coll, {"_id": doc["_id"]})
+                if not existing:
+                    await storage.insert_one(coll, doc)
+
+            async def _seed_from_uri(coll: str, seed_uri: Any) -> int:
+                if not coll or not seed_uri:
+                    return 0
+                try:
+                    payload = await resolve_uri_async(seed_uri, motor_db, Path(__file__).parent)
+                except Exception as exc:
+                    warnings.append(f"failed to resolve seed {seed_uri}: {exc}")
+                    return 0
+                if isinstance(payload, list):
+                    count = 0
+                    for doc in payload:
+                        if isinstance(doc, dict) and doc.get("_id"):
+                            await _upsert(coll, doc)
+                            count += 1
+                    return count
+                if isinstance(payload, dict) and payload.get("_id"):
+                    await _upsert(coll, payload)
+                    return 1
+                warnings.append(f"seed {seed_uri} did not resolve to a document or list of documents")
+                return 0
+
+            seeded = {
+                "codes": await _seed_from_uri(dict_name, dict_seed),
+                "shortcuts": await _seed_from_uri(shortcuts_name, shortcuts_seed),
+            }
+
+            # If seeds are missing/unresolvable, ensure minimal docs exist with expected IDs.
+            # Codes dictionary default id used by flattener is "ar_code".
+            if dict_name and seeded["codes"] == 0:
+                await _upsert(dict_name, {"_id": "ar_code", "at": {}})
+            if shortcuts_name and seeded["shortcuts"] == 0:
+                await _upsert(shortcuts_name, {"_id": "shortcuts", "keys": {}, "values": {}})
+
+            return {"ok": True, "created": created, "seeded": seeded, "warnings": warnings}
 
         if op_lower == "rebuild_codes":
             dict_name = strategy_cfg.collections.codes.name
+            dict_seed = strategy_cfg.collections.codes.seed
             if not storage or not dict_name:
                 return {"ok": False, "warnings": ["storage adapter not available or dictionary not configured"]}
-            docs = await storage.aggregate(strategy_cfg.collections.compositions.name, [{"$limit": payload.get("limit", 1000)}] if payload else [{"$limit": 1000}])
-            items = {}
-            for doc in docs:
-                for code in doc.get("codes", []):
-                    items[code] = items.get(code, atcode_to_token(code))  # type: ignore
-            await storage.insert_one(dict_name, {"_id": "codes", "items": items, "updated": True})
+            motor_db = getattr(storage, "db", None)
+            warnings = []
+            try:
+                seed_payload = await resolve_uri_async(dict_seed, motor_db, Path(__file__).parent) if dict_seed else None
+            except Exception as exc:
+                return {"ok": False, "warnings": [f"failed to resolve codes seed: {exc}"]}
+            if motor_db is None:
+                return {"ok": False, "warnings": ["raw motor db not available; cannot rebuild codes idempotently"]}
+            updated = 0
+            if isinstance(seed_payload, list):
+                for doc in seed_payload:
+                    if isinstance(doc, dict) and doc.get("_id"):
+                        await motor_db[dict_name].replace_one({"_id": doc["_id"]}, doc, upsert=True)
+                        updated += 1
+            elif isinstance(seed_payload, dict) and seed_payload.get("_id"):
+                await motor_db[dict_name].replace_one({"_id": seed_payload["_id"]}, seed_payload, upsert=True)
+                updated = 1
+            else:
+                warnings.append("codes seed did not resolve to a document or list of documents")
+
             cache = (ctx.meta or {}).get("dict_cache") if ctx else None
             if cache is not None:
                 cache.pop("codes", None)
-            return {"ok": True, "updated": len(items), "warnings": []}
+            return {"ok": True, "updated": updated, "warnings": warnings}
 
         if op_lower == "rebuild_shortcuts":
             shortcuts_name = strategy_cfg.collections.shortcuts.name
+            shortcuts_seed = strategy_cfg.collections.shortcuts.seed
             if not storage:
                 return {"ok": False, "warnings": ["storage adapter not available"]}
-            await storage.insert_one(shortcuts_name, {"_id": "shortcuts", "items": {}, "updated": True})
+            motor_db = getattr(storage, "db", None)
+            if motor_db is None:
+                return {"ok": False, "warnings": ["raw motor db not available; cannot rebuild shortcuts idempotently"]}
+            warnings = []
+            try:
+                seed_payload = await resolve_uri_async(shortcuts_seed, motor_db, Path(__file__).parent) if shortcuts_seed else None
+            except Exception as exc:
+                return {"ok": False, "warnings": [f"failed to resolve shortcuts seed: {exc}"]}
+            if isinstance(seed_payload, dict) and seed_payload.get("_id"):
+                await motor_db[shortcuts_name].replace_one({"_id": seed_payload["_id"]}, seed_payload, upsert=True)
+            else:
+                warnings.append("shortcuts seed did not resolve to a document; creating empty shortcuts doc")
+                await motor_db[shortcuts_name].replace_one({"_id": "shortcuts"}, {"_id": "shortcuts", "keys": {}, "values": {}}, upsert=True)
             cache = (ctx.meta or {}).get("dict_cache") if ctx else None
             if cache is not None:
                 cache.pop("shortcuts", None)
-            return {"ok": True, "updated": 0, "warnings": ["shortcuts rebuilt as empty; provide source data to populate"]}
+            return {"ok": True, "updated": 1, "warnings": warnings}
 
         if op_lower == "ensure_atlas_search_index":
             search_coll = strategy_cfg.collections.search
@@ -489,26 +516,16 @@ class RPSDualStrategy(StrategyPlugin):
                 )
             patient_count = int(payload.get("patient_count") or payload.get("patients") or 0)
             if patient_count <= 0:
-                raise KehrnelError(code="INVALID_INPUT", status=400, message="patient_count must be > 0")
-            source_collection = payload.get("source_collection")
+                raise KehrnelError(
+                    code="INVALID_INPUT",
+                    status=400,
+                    message="patient_count must be > 0",
+                )
+            source_collection = payload.get("source_collection") or "samples"
             source_database = payload.get("source_database") or payload.get("source_db")
             dry_run = bool(payload.get("dry_run", False))
             plan_only = bool(payload.get("plan_only", False))
             generation_mode = str(payload.get("generation_mode") or "auto").strip().lower()
-            raw_validation_mode = payload.get("validate_generated_docs", "none")
-            if isinstance(raw_validation_mode, bool):
-                validation_mode = "all" if raw_validation_mode else "none"
-            else:
-                validation_mode = str(raw_validation_mode or "none").strip().lower()
-            if validation_mode not in ("none", "sample", "all"):
-                raise KehrnelError(
-                    code="INVALID_INPUT",
-                    status=400,
-                    message="validate_generated_docs must be one of: none, sample, all",
-                )
-            validation_sample_size = max(1, int(payload.get("validation_sample_size", 50) or 50))
-            fail_on_validation_error = bool(payload.get("fail_on_validation_error", False))
-            skip_invalid_documents = bool(payload.get("skip_invalid_documents", True))
             store_canonical = bool(payload.get("store_canonical", False))
             canonical_collection = str(payload.get("canonical_collection") or "compositions_canonical_synthetic")
             write_batch_size = max(10, int(payload.get("write_batch_size", 250) or 250))
@@ -516,41 +533,13 @@ class RPSDualStrategy(StrategyPlugin):
             search_collection = strategy_cfg.collections.search.name
             search_enabled = bool(strategy_cfg.collections.search.enabled and search_collection)
             flattener = await self._build_flattener_for_context(ctx)
-            shortcuts_init = None
-            if not dry_run and not plan_only:
-                shortcuts_init = await self._ensure_shortcuts_collection_initialized(
-                    strategy_cfg=strategy_cfg,
-                    storage=storage,
-                    index_admin=index_admin,
-                )
-            target_database = getattr(getattr(storage, "db", None), "name", None)
 
             progress_cb = (ctx.meta or {}).get("progress_cb")
             should_cancel = (ctx.meta or {}).get("should_cancel")
 
             models = payload.get("models")
             templates = payload.get("templates")
-            has_explicit_models = isinstance(models, list) and len(models) > 0
-            if generation_mode == "auto" and has_explicit_models:
-                generation_mode = "from_models"
-                source_collection = None
-                source_database = None
             model_source = payload.get("model_source") or {}
-            model_source_database = (
-                model_source.get("database_name")
-                if isinstance(model_source, dict)
-                else None
-            )
-            model_source_catalog_collection = (
-                model_source.get("catalog_collection")
-                if isinstance(model_source, dict)
-                else None
-            )
-            model_source_links_collection = (
-                model_source.get("links_collection")
-                if isinstance(model_source, dict)
-                else None
-            )
             source_templates = payload.get("source_templates")
             source_sample_size = int(payload.get("source_sample_size", 200) or 200)
             source_min_per_patient = int(payload.get("source_min_per_patient", 1) or 1)
@@ -593,8 +582,8 @@ class RPSDualStrategy(StrategyPlugin):
                             "catalog": {},
                         }
                     )
-            elif generation_mode in ("from_source", "source", "auto"):
-                source_collection = source_collection or "samples"
+            elif str(generation_mode or "").lower() in ("from_source", "source", "auto"):
+                # Source-instance mode: derive templates from existing source collection.
                 discovered_template_ids: list[str] = []
                 if isinstance(source_templates, list) and source_templates:
                     discovered_template_ids = [str(t).strip() for t in source_templates if str(t).strip()]
@@ -602,7 +591,9 @@ class RPSDualStrategy(StrategyPlugin):
                     match_stage: Dict[str, Any] = {}
                     if isinstance(source_filter, dict) and source_filter:
                         match_stage = source_filter
-                    pipeline = ([{"$match": match_stage}] if match_stage else []) + [
+                    pipeline = (
+                        [{"$match": match_stage}] if match_stage else []
+                    ) + [
                         {
                             "$project": {
                                 "template_id": {
@@ -683,7 +674,6 @@ class RPSDualStrategy(StrategyPlugin):
             template_specs = []
             samples_by_template: Dict[str, list[Dict[str, Any]]] = {}
             template_generators: Dict[str, Any] = {}
-            template_validators: Dict[str, Any] = {}
             estimated_docs = 0
             for entry in model_specs:
                 catalog = entry.get("catalog") or {}
@@ -711,10 +701,6 @@ class RPSDualStrategy(StrategyPlugin):
                         "catalog": catalog,
                     }
                 )
-                if validation_mode != "none" and template_id not in template_validators:
-                    validator = _build_canonical_validator_from_model(catalog)
-                    if validator is not None:
-                        template_validators[template_id] = validator
 
             if estimated_docs <= 0:
                 estimated_docs = patient_count
@@ -725,7 +711,7 @@ class RPSDualStrategy(StrategyPlugin):
                 prefer_source = generation_mode in ("auto", "from_source", "source")
                 prefer_models = generation_mode in ("auto", "from_models", "models")
 
-                if prefer_source and source_collection:
+                if prefer_source:
                     match_conditions = [
                         {"template_id": template_id},
                         {"template_name": template_id},
@@ -733,19 +719,24 @@ class RPSDualStrategy(StrategyPlugin):
                         {"canonicalJSON.archetype_details.template_id.value": template_id},
                         {"archetype_details.template_id.value": template_id},
                     ]
-                    source_match: Dict[str, Any]
                     if isinstance(source_filter, dict) and source_filter:
-                        source_match = {"$and": [source_filter, {"$or": match_conditions}]}
+                        source_match: Dict[str, Any] = {"$and": [source_filter, {"$or": match_conditions}]}
                     else:
                         source_match = {"$or": match_conditions}
                     sample_docs = await storage.aggregate(
                         source_collection,
-                        [{"$match": source_match}, {"$sample": {"size": spec["sample_size"]}}],
+                        [
+                            {"$match": source_match},
+                            {"$sample": {"size": spec["sample_size"]}},
+                        ],
                     ) if not source_database else await _aggregate_from_database(
                         storage=storage,
                         database_name=str(source_database),
                         collection_name=source_collection,
-                        pipeline=[{"$match": source_match}, {"$sample": {"size": spec["sample_size"]}}],
+                        pipeline=[
+                            {"$match": source_match},
+                            {"$sample": {"size": spec["sample_size"]}},
+                        ],
                     )
 
                 if sample_docs:
@@ -759,13 +750,12 @@ class RPSDualStrategy(StrategyPlugin):
                         template_generators[template_id] = gen
                         continue
 
-                source_label = f"{source_database + '.' if source_database else ''}{source_collection}" if source_collection else "<not-configured>"
                 raise KehrnelError(
                     code="SOURCE_TEMPLATE_NOT_FOUND",
                     status=404,
                     message=(
                         f"No generation source for template_id={template_id}. "
-                        f"Tried source {source_label} "
+                        f"Tried source {source_database + '.' if source_database else ''}{source_collection} "
                         f"and model definition in model_source."
                     ),
                 )
@@ -773,6 +763,24 @@ class RPSDualStrategy(StrategyPlugin):
             estimated_base_bytes = 0
             estimated_search_bytes = 0
             estimated_canonical_bytes = 0
+            # Suppress empty search documents: only write/estimate search docs when
+            # the flattener produced at least one search node (i.e., analytics rules exist).
+            sn_field = getattr(getattr(cfg, "fields", None), "document", None)
+            sn_field = getattr(sn_field, "sn", None) or "sn"
+
+            def _has_search_nodes(doc: Any) -> bool:
+                if not isinstance(doc, dict):
+                    return False
+                nodes = doc.get(sn_field)
+                if isinstance(nodes, list):
+                    return len(nodes) > 0
+                # Backward/alternative field names used by some runtimes.
+                for candidate in ("sn", "nodes"):
+                    nodes = doc.get(candidate)
+                    if isinstance(nodes, list):
+                        return len(nodes) > 0
+                return False
+
             for spec in template_specs:
                 template_id = spec["template_id"]
                 canonical_probe = None
@@ -794,7 +802,7 @@ class RPSDualStrategy(StrategyPlugin):
                     estimated_canonical_bytes += _json_size_bytes(probe_doc) * avg_docs_for_template
                 if probe_base:
                     estimated_base_bytes += _json_size_bytes(probe_base) * avg_docs_for_template
-                if search_enabled and probe_search:
+                if search_enabled and probe_search and _has_search_nodes(probe_search):
                     estimated_search_bytes += _json_size_bytes(probe_search) * avg_docs_for_template
 
             if plan_only:
@@ -809,17 +817,6 @@ class RPSDualStrategy(StrategyPlugin):
                     "estimated_total_bytes": estimated_canonical_bytes + estimated_base_bytes + estimated_search_bytes,
                     "source_collection": source_collection,
                     "source_database": source_database,
-                    "target_database": target_database,
-                    "target_collections": {
-                        "canonical": canonical_collection if store_canonical else None,
-                        "compositions": comp_collection,
-                        "search": search_collection if search_enabled else None,
-                    },
-                    "model_source": {
-                        "database_name": model_source_database or target_database,
-                        "catalog_collection": model_source_catalog_collection,
-                        "links_collection": model_source_links_collection,
-                    },
                     "models": [{"model_id": s["model_id"], "template_id": s["template_id"], "min": s["min"], "max": s["max"]} for s in template_specs],
                     "links": links,
                 }
@@ -828,15 +825,6 @@ class RPSDualStrategy(StrategyPlugin):
             inserted_base = 0
             inserted_search = 0
             generated_docs = 0
-            skipped_docs = 0
-            validated_docs = 0
-            validation_failures = 0
-            validation_checked_limit = validation_sample_size if validation_mode == "sample" else None
-            validation_errors: list[Dict[str, Any]] = []
-            validation_failure_breakdown: Dict[str, int] = {"generation": 0, "validator": 0, "transform": 0}
-            validation_templates_total = max(0, len(template_specs))
-            validation_templates_with_validator = max(0, len(template_validators))
-            validation_templates_without_validator = max(0, validation_templates_total - validation_templates_with_validator)
             by_template: Dict[str, int] = {}
             by_model: Dict[str, int] = {}
             link_applied_count = 0
@@ -869,11 +857,11 @@ class RPSDualStrategy(StrategyPlugin):
                 stats={
                     "patients_total": patient_count,
                     "estimated_docs": estimated_docs,
-                    "patient_count": patient_count,
-                    "generated_patients": 0,
-                    "generated_documents": 0,
-                    "model_count": len(template_specs),
-                    "links_applied": 0,
+                    "patientCount": patient_count,
+                    "generatedPatients": 0,
+                    "generatedDocuments": 0,
+                    "modelCount": len(template_specs),
+                    "linksApplied": 0,
                 },
             )
 
@@ -922,90 +910,12 @@ class RPSDualStrategy(StrategyPlugin):
                             "template_id": template_id,
                             "canonicalJSON": canonical,
                         }
-                        should_validate = (
-                            validation_mode == "all"
-                            or (
-                                validation_mode == "sample"
-                                and validated_docs < validation_sample_size
-                            )
-                        )
-                        if should_validate:
-                            validated_docs += 1
-                            validation_issues = _validate_generated_composition(
-                                template_id=template_id,
-                                composition=canonical,
-                                validator=template_validators.get(template_id),
-                            )
-                            if validation_issues:
-                                validation_failures += 1
-                                issue_sources = { _classify_validation_issue_source(msg) for msg in validation_issues }
-                                for source in issue_sources:
-                                    validation_failure_breakdown[source] = int(validation_failure_breakdown.get(source, 0) or 0) + 1
-                                if len(validation_errors) < 50:
-                                    validation_errors.append(
-                                        {
-                                            "template_id": template_id,
-                                            "ehr_id": ehr_id,
-                                            "issues": validation_issues[:25],
-                                            "source_breakdown": sorted(issue_sources),
-                                        }
-                                    )
-                                if fail_on_validation_error:
-                                    raise KehrnelError(
-                                        code="SYNTHETIC_VALIDATION_FAILED",
-                                        status=400,
-                                        message=(
-                                            f"Validation failed for template_id={template_id} "
-                                            f"(ehr_id={ehr_id})"
-                                        ),
-                                        details={
-                                            "template_id": template_id,
-                                            "ehr_id": ehr_id,
-                                            "issues": validation_issues[:25],
-                                        },
-                                    )
-                                if skip_invalid_documents:
-                                    skipped_docs += 1
-                                    continue
                         if not dry_run and store_canonical and canonical_collection:
                             canonical_batch.append(raw_doc)
-                        if validation_mode == "none":
-                            transformed_base, transformed_search = flattener.transform_composition(raw_doc)
-                        else:
-                            try:
-                                transformed_base, transformed_search = flattener.transform_composition(raw_doc)
-                            except Exception as exc:
-                                validation_failures += 1
-                                validation_failure_breakdown["transform"] = int(validation_failure_breakdown.get("transform", 0) or 0) + 1
-                                if len(validation_errors) < 50:
-                                    validation_errors.append(
-                                        {
-                                            "template_id": template_id,
-                                            "ehr_id": ehr_id,
-                                            "issues": [f"transform_error: {str(exc)}"],
-                                        }
-                                    )
-                                if fail_on_validation_error:
-                                    raise KehrnelError(
-                                        code="SYNTHETIC_VALIDATION_FAILED",
-                                        status=400,
-                                        message=(
-                                            f"Transform validation failed for template_id={template_id} "
-                                            f"(ehr_id={ehr_id})"
-                                        ),
-                                        details={
-                                            "template_id": template_id,
-                                            "ehr_id": ehr_id,
-                                            "issues": [str(exc)],
-                                        },
-                                    ) from exc
-                                if skip_invalid_documents:
-                                    skipped_docs += 1
-                                    continue
-                                raise
+                        transformed_base, transformed_search = flattener.transform_composition(raw_doc)
                         if not dry_run and comp_collection and transformed_base:
                             base_batch.append(transformed_base)
-                        if not dry_run and search_enabled and transformed_search:
+                        if not dry_run and search_enabled and transformed_search and _has_search_nodes(transformed_search):
                             search_batch.append(transformed_search)
                         await _flush_batches()
                         generated_docs += 1
@@ -1024,20 +934,12 @@ class RPSDualStrategy(StrategyPlugin):
                             "inserted_canonical": inserted_canonical,
                             "inserted_base": inserted_base,
                             "inserted_search": inserted_search,
-                            "validation_mode": validation_mode,
-                            "validated_docs": validated_docs,
-                            "validation_failures": validation_failures,
-                            "skipped_docs": skipped_docs,
-                            "validation_checked_limit": validation_checked_limit,
-                            "validation_failure_breakdown": validation_failure_breakdown,
-                            "validation_templates_total": validation_templates_total,
-                            "validation_templates_with_validator": validation_templates_with_validator,
-                            "validation_templates_without_validator": validation_templates_without_validator,
                             "links_applied": link_applied_count,
-                            "patient_count": patient_count,
-                            "generated_patients": i + 1,
-                            "generated_documents": generated_docs,
-                            "model_count": len(template_specs),
+                            "patientCount": patient_count,
+                            "generatedPatients": i + 1,
+                            "generatedDocuments": generated_docs,
+                            "modelCount": len(template_specs),
+                            "linksApplied": link_applied_count,
                         },
                     )
                     last_progress = progress
@@ -1053,20 +955,12 @@ class RPSDualStrategy(StrategyPlugin):
                     "inserted_canonical": inserted_canonical,
                     "inserted_base": inserted_base,
                     "inserted_search": inserted_search,
-                    "validation_mode": validation_mode,
-                    "validated_docs": validated_docs,
-                    "validation_failures": validation_failures,
-                    "skipped_docs": skipped_docs,
-                    "validation_checked_limit": validation_checked_limit,
-                    "validation_failure_breakdown": validation_failure_breakdown,
-                    "validation_templates_total": validation_templates_total,
-                    "validation_templates_with_validator": validation_templates_with_validator,
-                    "validation_templates_without_validator": validation_templates_without_validator,
                     "links_applied": link_applied_count,
-                    "patient_count": patient_count,
-                    "generated_patients": patient_count,
-                    "generated_documents": generated_docs,
-                    "model_count": len(template_specs),
+                    "patientCount": patient_count,
+                    "generatedPatients": patient_count,
+                    "generatedDocuments": generated_docs,
+                    "modelCount": len(template_specs),
+                    "linksApplied": link_applied_count,
                 },
             )
             return {
@@ -1075,33 +969,16 @@ class RPSDualStrategy(StrategyPlugin):
                 "plan_only": False,
                 "source_collection": source_collection,
                 "source_database": source_database,
-                "target_database": target_database,
                 "target": {
                     "canonical": canonical_collection if store_canonical else None,
                     "compositions": comp_collection,
                     "search": search_collection if search_enabled else None,
                 },
-                "model_source": {
-                    "database_name": model_source_database or target_database,
-                    "catalog_collection": model_source_catalog_collection,
-                    "links_collection": model_source_links_collection,
-                },
-                "shortcuts_init": shortcuts_init,
                 "patients": patient_count,
                 "generated_docs": generated_docs,
                 "inserted_canonical": inserted_canonical,
                 "inserted_base": inserted_base,
                 "inserted_search": inserted_search,
-                "validation_mode": validation_mode,
-                "validated_docs": validated_docs,
-                "validation_failures": validation_failures,
-                "validation_checked_limit": validation_checked_limit,
-                "skipped_docs": skipped_docs,
-                "validation_failure_breakdown": validation_failure_breakdown,
-                "validation_templates_total": validation_templates_total,
-                "validation_templates_with_validator": validation_templates_with_validator,
-                "validation_templates_without_validator": validation_templates_without_validator,
-                "validation_errors": validation_errors,
                 "links_applied": link_applied_count,
                 "by_template": by_template,
                 "by_model": by_model,
@@ -1232,89 +1109,6 @@ def _build_canonical_generator_from_model(model_doc: Dict[str, Any]):
         return gen.generate_random()
 
     return _create
-
-
-def _extract_opt_xml_from_model(model_doc: Dict[str, Any]) -> str | None:
-    if not isinstance(model_doc, dict):
-        return None
-    domain_data = model_doc.get("domainData")
-    metadata = model_doc.get("metadata")
-    candidates = [
-        (((domain_data or {}).get("source") or {}).get("xml") if isinstance(domain_data, dict) else None),
-        ((domain_data or {}).get("opt") if isinstance(domain_data, dict) else None),
-        ((domain_data or {}).get("opt_content") if isinstance(domain_data, dict) else None),
-        ((metadata or {}).get("opt") if isinstance(metadata, dict) else None),
-        ((metadata or {}).get("opt_content") if isinstance(metadata, dict) else None),
-        ((metadata or {}).get("optContent") if isinstance(metadata, dict) else None),
-        model_doc.get("opt"),
-        model_doc.get("opt_content"),
-        model_doc.get("template"),
-    ]
-    for candidate in candidates:
-        if isinstance(candidate, str) and "<" in candidate:
-            return candidate
-    return None
-
-
-def _build_canonical_validator_from_model(model_doc: Dict[str, Any]):
-    xml_payload = _extract_opt_xml_from_model(model_doc)
-    if not xml_payload:
-        return None
-    with tempfile.NamedTemporaryFile(suffix=".opt", mode="w", encoding="utf-8", delete=False) as tmp:
-        tmp.write(xml_payload)
-        tmp_path = Path(tmp.name)
-    try:
-        parser = TemplateParser(tmp_path)
-    finally:
-        try:
-            tmp_path.unlink(missing_ok=True)
-        except Exception:
-            pass
-    validator = kehrnelValidator(parser)
-
-    def _validate(comp: Dict[str, Any]) -> list[str]:
-        issues = validator.validate(comp)
-        return [
-            f"validator:{issue.code}: {issue.message} @ {issue.path}"
-            for issue in issues
-            if str(getattr(getattr(issue, "severity", None), "value", getattr(issue, "severity", "error"))).lower() == "error"
-        ]
-
-    return _validate
-
-
-def _validate_generated_composition(*, template_id: str, composition: Dict[str, Any], validator: Any | None) -> list[str]:
-    issues: list[str] = []
-    if not isinstance(composition, dict):
-        return ["generation:composition must be an object"]
-    if composition.get("_type") != "COMPOSITION":
-        issues.append("generation:root _type must be COMPOSITION")
-    comp_template = (
-        (composition.get("archetype_details") or {})
-        .get("template_id", {})
-        .get("value")
-        if isinstance(composition.get("archetype_details"), dict)
-        else None
-    )
-    if isinstance(comp_template, str) and comp_template.strip() and template_id.strip() and comp_template.strip() != template_id.strip():
-        issues.append(
-            f"generation:template_id mismatch: expected '{template_id.strip()}', found '{comp_template.strip()}'"
-        )
-    if validator:
-        try:
-            issues.extend(validator(composition))
-        except Exception as exc:
-            issues.append(f"validator:validator_error: {str(exc)}")
-    return issues
-
-
-def _classify_validation_issue_source(issue: str) -> str:
-    text = str(issue or "").strip().lower()
-    if text.startswith("transform:") or text.startswith("transform_error:"):
-        return "transform"
-    if text.startswith("validator:") or "validator_error" in text:
-        return "validator"
-    return "generation"
 
 
 def _json_size_bytes(obj: Dict[str, Any]) -> int:

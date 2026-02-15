@@ -1,4 +1,4 @@
-# src/kehrnel/api/legacy/v1/ingest/models.py
+# src/kehrnel/api/compatibility/v1/ingest/models.py
 
 from pydantic import BaseModel, Field, RootModel, validator
 from typing import Dict, Any

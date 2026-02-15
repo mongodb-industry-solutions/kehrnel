@@ -5,7 +5,7 @@
 
 ## 🎯 Why?
 
-Most clinical integration work ends up **mapping** legacy documents (CDA, CSV, HL7v2 …) into openEHR compositions.  
+Most clinical integration work ends up **mapping** compatibility documents (CDA, CSV, HL7v2 …) into openEHR compositions.  
 `kehrnel-mapper` gives you:
 
 * **Canonical JSON output** ready for `/composition` REST calls – no extra flat-to-canonical step.

@@ -46,7 +46,15 @@ api = [
     "motor>=3.3",
     "certifi>=2024.0.0",
     "python-multipart>=0.0.6",
+    "pydantic-settings>=2.0.0",
     "pydantic>=2.5"
+]
+
+# Tests/dev tooling
+test = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23.0",
+    "httpx>=0.27.0"
 ]
 
 # Kitchen-sink install
@@ -62,26 +70,18 @@ all = [
     "motor>=3.3",
     "certifi>=2024.0.0",
     "python-multipart>=0.0.6",
+    "pydantic-settings>=2.0.0",
     "pydantic>=2.5",
     "python-dateutil>=2.8.2",
-    "cryptography>=42.0.0"
+    "cryptography>=42.0.0",
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23.0",
+    "httpx>=0.27.0"
 ]
 
 [project.scripts]
-kehrnel-generate = "kehrnel.legacy.cli.generate:app"
-kehrnel-identify = "kehrnel.legacy.cli.identify:app"
-kehrnel-skeleton = "kehrnel.legacy.cli.map_skeleton:app"
-kehrnel-map      = "kehrnel.legacy.cli.map:app"
-kehrnel-map-skeleton = "kehrnel.legacy.cli.map_skeleton:main"
-kehrnel-validate = "kehrnel.legacy.cli.validate:app"
-kehrnel-ingest   = "kehrnel.legacy.cli.ingest:app"
-kehrnel-transform= "kehrnel.legacy.cli.transform:app"
+kehrnel = "kehrnel.cli.unified:main"
 kehrnel-api      = "kehrnel.api.app:main"
-kehrnel-validate-pack = "kehrnel.legacy.cli.validate_pack:app"
-kehrnel-validate-bundle = "kehrnel.legacy.cli.bundles:validate_bundle_cmd"
-kehrnel-import-bundle = "kehrnel.legacy.cli.bundles:import_bundle_cmd"
-kehrnel-list-bundles = "kehrnel.legacy.cli.bundles:list_bundles_cmd"
-kehrnel-export-bundle = "kehrnel.legacy.cli.bundles:export_bundle_cmd"
 
 # ---------------------------------------------------------------------------
 # Use src/ layout and auto-discover ALL subpackages

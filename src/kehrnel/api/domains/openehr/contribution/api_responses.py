@@ -1,5 +1,5 @@
 from fastapi import status
-from kehrnel.api.legacy.app.core.models import Contribution
+from kehrnel.api.bridge.app.core.models import Contribution
 from kehrnel.api.domains.openehr.contribution.models import ErrorResponse
 
 get_contribution_responses = {

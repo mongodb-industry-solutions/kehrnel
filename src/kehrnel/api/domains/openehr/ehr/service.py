@@ -26,7 +26,7 @@ from kehrnel.api.common.models import(
 )
 
 from kehrnel.api.domains.openehr.ehr.models import EHRCreationResponse, EHR
-from kehrnel.api.legacy.app.core.models import Contribution, AuditDetails
+from kehrnel.api.bridge.app.core.models import Contribution, AuditDetails
 
 async def retrieve_ehr_by_subject(subject_id: str, subject_namespace: str, db: AsyncIOMotorDatabase) -> EHR:
     """

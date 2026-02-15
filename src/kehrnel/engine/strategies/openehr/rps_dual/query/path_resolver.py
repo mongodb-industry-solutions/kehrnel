@@ -1,12 +1,13 @@
 """Path resolver using strategy config (field names) with slim search support."""
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from typing import Dict, List
 
-from kehrnel.strategies.openehr.rps_dual.services.codes_service import atcode_to_token, archetype_to_token
-from kehrnel.strategies.openehr.rps_dual.services.shortcuts_service import canonical_to_slim
-from kehrnel.strategies.openehr.rps_dual.ingest.encoding import PathCodec
+from kehrnel.engine.strategies.openehr.rps_dual.services.codes_service import atcode_to_token, archetype_to_token
+from kehrnel.engine.strategies.openehr.rps_dual.services.shortcuts_service import canonical_to_slim
+from kehrnel.engine.strategies.openehr.rps_dual.ingest.encoding import PathCodec
 
 
 @dataclass
@@ -28,9 +29,9 @@ class PathResolver:
         self.search_path = search.get("nodes", "sn")
         self.comp_nodes = comp.get("nodes", "cn")
         self.search_nodes = search.get("nodes", "sn")
-        self.token_joiner = cfg.get("node_representation", {}).get("path", {}).get("token_joiner", ".")
         self.shortcuts = shortcuts or {}
         path_sep = (cfg.get("paths") or {}).get("separator", ".")
+        self.token_joiner = path_sep
         ar_codes = (cfg.get("dict_cache") or {}).get("codes") or {}
         at_codes = (cfg.get("dict_cache") or {}).get("at") or {}
         self.path_codec = PathCodec(ar_codes=ar_codes, at_codes=at_codes, separator=path_sep, shortcuts=self.shortcuts)
@@ -95,9 +96,10 @@ class PathResolver:
 
     def _cn_regex(self, reversed_tokens: List[str]) -> str:
         # ^t1(?:\.[^.]+)*\.t2(?:\.[^.]+)*$
-        escaped_sep = self.token_joiner.replace(".", "\\.")
-        pattern_parts = [f"{t}(?:{escaped_sep}[^${escaped_sep}]+)*" for t in reversed_tokens]
-        return "^" + "\\.".join(pattern_parts) + "$"
+        sep = re.escape(self.token_joiner)
+        not_sep = f"[^{re.escape(self.token_joiner)}]"
+        pattern_parts = [f"{re.escape(str(t))}(?:{sep}{not_sep}+)*" for t in reversed_tokens]
+        return "^" + sep.join(pattern_parts) + "$"
 
     def _sn_wildcard(self, reversed_tokens: List[str]) -> str:
         return "*".join(reversed_tokens)

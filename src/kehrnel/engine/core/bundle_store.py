@@ -5,8 +5,8 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List
 
-from kehrnel.core.bundles import validate_bundle, compute_bundle_digest
-from kehrnel.core.errors import KehrnelError
+from kehrnel.engine.core.bundles import validate_bundle, compute_bundle_digest
+from kehrnel.engine.core.errors import KehrnelError
 
 
 def _sanitize_bundle_id(bundle_id: str) -> str:

@@ -18,6 +18,8 @@ XSI_TYPE = "{http://www.w3.org/2001/XMLSchema-instance}type"
 __all__ = ["kehrnelValidator"]
 
 _RM_ISA: dict[str, set[str]] = {
+    # EVENT is abstract; JSON instances are concrete POINT_EVENT / INTERVAL_EVENT.
+    "EVENT": {"EVENT", "POINT_EVENT", "INTERVAL_EVENT"},
     "DV_TEXT": {"DV_TEXT", "DV_CODED_TEXT"},
     "DV_URI": {"DV_URI", "DV_EHR_URI"},
     "DV_ENCAPSULATED": {"DV_ENCAPSULATED", "DV_PARSABLE", "DV_MULTIMEDIA"},

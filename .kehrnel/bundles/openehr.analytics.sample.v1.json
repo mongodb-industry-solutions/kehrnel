@@ -1,0 +1,20 @@
+{
+  "bundle_id": "openehr.analytics.sample.v1",
+  "domain": "openEHR",
+  "kind": "slim_search_definition",
+  "version": "1.0.0",
+  "payload": {
+    "templates": [
+      {
+        "templateId": "Sample",
+        "analytics_fields": [
+          {
+            "name": "field",
+            "path": "/path",
+            "rmType": "DV_TEXT"
+          }
+        ]
+      }
+    ]
+  }
+}
