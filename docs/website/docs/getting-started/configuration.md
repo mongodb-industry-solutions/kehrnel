@@ -174,4 +174,4 @@ KEHRNEL_API_KEY_ENV_SCOPES='{"key1": ["dev", "staging"], "key2": ["production"]}
 ## Next Steps
 
 - [CLI Reference](/docs/cli/overview) - Command-line tools
-- [Strategy Configuration](/docs/strategies/openehr-rps-dual/configuration) - Deep dive into strategy settings
+- [Strategy Configuration](/docs/strategies/openehr/rps-dual/configuration) - Deep dive into strategy settings

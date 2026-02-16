@@ -12,4 +12,8 @@
 - `GET /environments/{env_id}/synthetic/jobs/{job_id}`
 - `POST /environments/{env_id}/synthetic/jobs/{job_id}/cancel`
 
+## Universal runtime execution
+
+- `POST /environments/{env_id}/run` with `operation=synthetic_generate_batch`
+
 These APIs power sampling and synthetic data generation workflows.

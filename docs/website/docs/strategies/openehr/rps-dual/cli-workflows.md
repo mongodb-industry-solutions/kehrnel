@@ -9,8 +9,30 @@ Practical command recipes for `openehr.rps_dual` using the unified `{kehrnel}` C
 ## Prerequisites
 
 ```bash
-kehrnel auth login --runtime-url http://localhost:8000
-kehrnel strategy use openehr.rps_dual --domain openehr
+kehrnel setup --runtime-url http://localhost:8000 --domain openehr --strategy openehr.rps_dual
+# or:
+# kehrnel auth login --runtime-url http://localhost:8000
+# kehrnel context set --env dev --domain openehr --strategy openehr.rps_dual
+```
+
+## Preferred Universal Workflow (resource + op + run)
+
+```bash
+# 1) Setup context
+kehrnel setup --runtime-url http://localhost:8000 --env dev --domain openehr --strategy openehr.rps_dual
+
+# 2) Define reusable source/sink profiles
+kehrnel resource add src --type mongo --uri "$MONGODB_URI" --db hc_openEHRCDR --collection samples
+kehrnel resource add dst --type mongo --uri "$MONGODB_URI" --db hdl_user_test --collection compositions_rps
+kehrnel resource use --source src --sink dst
+
+# 3) Discover capabilities and operation schemas
+kehrnel op capabilities --env dev
+kehrnel op schema synthetic_generate_batch --strategy openehr.rps_dual
+
+# 4) Run maintenance and generation operations
+kehrnel run ensure_dictionaries --env dev --domain openehr
+kehrnel run synthetic_generate_batch --env dev --domain openehr --set patient_count=100 --dry-run
 ```
 
 ## Runtime Activation (Recommended)
@@ -30,6 +52,14 @@ If you need to re-run seeding or rebuild:
 kehrnel core env op ensure_dictionaries
 kehrnel core env op rebuild_codes
 kehrnel core env op rebuild_shortcuts
+```
+
+Equivalent universal commands:
+
+```bash
+kehrnel run ensure_dictionaries --env dev --domain openehr
+kehrnel run rebuild_codes --env dev --domain openehr
+kehrnel run rebuild_shortcuts --env dev --domain openehr
 ```
 
 ## Important: Pass-through syntax
@@ -91,7 +121,7 @@ kehrnel common map -- -- \
 ## Generate a mapping skeleton
 
 ```bash
-kehrnel common map-skeleton -- -- generate ./template.opt -o mapping.skeleton.yaml
+kehrnel common map-skeleton -- -- ./template.opt -o mapping.skeleton.yaml --macros
 ```
 
 ## Ingest flattened NDJSON batch
@@ -123,6 +153,6 @@ kehrnel common validate-pack -- ./src/kehrnel/engine/strategies/openehr/rps_dual
 
 ## Next
 
-- [RPS Dual Configuration](/docs/strategies/openehr-rps-dual/configuration)
-- [RPS Dual Data Model](/docs/strategies/openehr-rps-dual/data-model)
-- [RPS Dual Query Translation](/docs/strategies/openehr-rps-dual/query-translation)
+- [RPS Dual Configuration](/docs/strategies/openehr/rps-dual/configuration)
+- [RPS Dual Data Model](/docs/strategies/openehr/rps-dual/data-model)
+- [RPS Dual Query Translation](/docs/strategies/openehr/rps-dual/query-translation)

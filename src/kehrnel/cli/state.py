@@ -19,7 +19,11 @@ def _default_state() -> Dict[str, Any]:
             "domain": None,
             "strategy": None,
             "runtime_url": None,
+            "data_mode": None,
+            "source": None,
+            "sink": None,
         },
+        "resources": {},
     }
 
 
@@ -35,11 +39,14 @@ def load_cli_state(path: Path | None = None) -> Dict[str, Any]:
     base = _default_state()
     auth = raw.get("auth") if isinstance(raw, dict) else None
     ctx = raw.get("context") if isinstance(raw, dict) else None
+    resources = raw.get("resources") if isinstance(raw, dict) else None
 
     if isinstance(auth, dict):
         base["auth"].update(auth)
     if isinstance(ctx, dict):
         base["context"].update(ctx)
+    if isinstance(resources, dict):
+        base["resources"].update(resources)
 
     return base
 
@@ -48,6 +55,11 @@ def save_cli_state(state: Dict[str, Any], path: Path | None = None) -> Path:
     config_path = path or DEFAULT_CONFIG_PATH
     config_path.parent.mkdir(parents=True, exist_ok=True)
     config_path.write_text(json.dumps(state, indent=2), encoding="utf-8")
+    # The state file may contain API keys. Prefer owner-only permissions.
+    try:
+        config_path.chmod(0o600)
+    except Exception:
+        pass
     return config_path
 
 

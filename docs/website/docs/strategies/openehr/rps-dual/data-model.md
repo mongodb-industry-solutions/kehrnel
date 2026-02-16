@@ -258,4 +258,4 @@ The flattened format typically achieves 60-70% storage reduction compared to can
 
 - [Reversed Paths](/docs/concepts/reversed-paths) - Path encoding explained
 - [Flattening](/docs/concepts/flattening) - Transformation process
-- [Query Translation](/docs/strategies/openehr-rps-dual/query-translation) - How queries use this model
+- [Query Translation](/docs/strategies/openehr/rps-dual/query-translation) - How queries use this model

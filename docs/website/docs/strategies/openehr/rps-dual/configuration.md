@@ -279,6 +279,6 @@ These are **strategy-pack assets** resolved from disk. They are not the same as 
 
 ## Related
 
-- [Introduction](/docs/strategies/openehr-rps-dual/introduction) - Strategy overview
-- [Data Model](/docs/strategies/openehr-rps-dual/data-model) - Storage structure
+- [Introduction](/docs/strategies/openehr/rps-dual/introduction) - Strategy overview
+- [Data Model](/docs/strategies/openehr/rps-dual/data-model) - Storage structure
 - [Configuration (Global)](/docs/getting-started/configuration) - Environment variables

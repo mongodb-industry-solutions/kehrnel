@@ -120,7 +120,7 @@ curl http://localhost:8000/health
 Expected response:
 
 ```json
-{"status": "healthy"}
+{"ok": true}
 ```
 
 Access the API documentation:

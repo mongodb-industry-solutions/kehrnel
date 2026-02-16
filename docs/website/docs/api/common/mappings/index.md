@@ -44,6 +44,6 @@ Public routes typically include:
 ## Related
 
 - [API Overview](/docs/api/overview)
-- [Core Layer API](/docs/api/core-openapi)
-- [Domain Layer API](/docs/api/domain-openehr)
-- [Strategy Layer API](/docs/api/strategy-runtime)
+- [Core Layer API](/docs/api/core)
+- [Domain Layer API](/docs/api/domains/openehr)
+- [Strategy Layer API](/docs/api/strategies/openehr/rps-dual)

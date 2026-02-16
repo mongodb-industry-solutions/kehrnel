@@ -10,7 +10,7 @@ This section centralizes openEHR runtime documentation.
 
 ### Domain API
 
-- [openEHR Domain API Overview](/docs/api/domain-openehr)
+- [openEHR Domain API Overview](/docs/api/domains/openehr)
 - [Templates Endpoints](/docs/api/endpoints/openehr-templates)
 - [EHR Endpoints](/docs/api/endpoints/openehr-ehr)
 - [Composition And Directory Endpoints](/docs/api/endpoints/openehr-composition-directory)
@@ -19,11 +19,11 @@ This section centralizes openEHR runtime documentation.
 
 ### Strategy
 
-- [openEHR RPS Dual Introduction](/docs/strategies/openehr-rps-dual/introduction)
-- [openEHR RPS Dual CLI Workflows](/docs/strategies/openehr-rps-dual/cli-workflows)
-- [openEHR RPS Dual Data Model](/docs/strategies/openehr-rps-dual/data-model)
-- [openEHR RPS Dual Query Translation](/docs/strategies/openehr-rps-dual/query-translation)
-- [openEHR RPS Dual Configuration](/docs/strategies/openehr-rps-dual/configuration)
+- [openEHR RPS Dual Introduction](/docs/strategies/openehr/rps-dual/introduction)
+- [openEHR RPS Dual CLI Workflows](/docs/strategies/openehr/rps-dual/cli-workflows)
+- [openEHR RPS Dual Data Model](/docs/strategies/openehr/rps-dual/data-model)
+- [openEHR RPS Dual Query Translation](/docs/strategies/openehr/rps-dual/query-translation)
+- [openEHR RPS Dual Configuration](/docs/strategies/openehr/rps-dual/configuration)
 
 ### Core CLI Entry Points
 

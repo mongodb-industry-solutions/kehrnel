@@ -1,0 +1,10 @@
+{
+  "label": "rps-dual",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "title": "openEHR rps-dual",
+    "description": "Home page for the openEHR rps-dual strategy documentation.",
+    "slug": "/strategies/openehr/rps-dual"
+  }
+}

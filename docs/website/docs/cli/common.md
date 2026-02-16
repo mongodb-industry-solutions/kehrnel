@@ -4,7 +4,13 @@ sidebar_position: 4
 
 # Common CLI Layer
 
-`common` commands are global workflows that apply across domains and strategies, but execute under the selected context.
+`common` commands are compatibility pass-through workflows that execute local runners under the selected context.
+
+For extensible multi-strategy runtime workflows, prefer:
+
+- `kehrnel resource ...`
+- `kehrnel op ...`
+- `kehrnel run ...`
 
 ## Command Pattern
 
@@ -153,4 +159,5 @@ kehrnel common validate-pack -- <strategy_pack_path> [--json]
 ## Continue Reading
 
 - [Strategy CLI Layer](/docs/cli/strategies)
-- [openEHR RPS Dual CLI Workflows](/docs/strategies/openehr-rps-dual/cli-workflows)
+- [CLI Overview](/docs/cli/overview)
+- [openEHR RPS Dual CLI Workflows](/docs/strategies/openehr/rps-dual/cli-workflows)

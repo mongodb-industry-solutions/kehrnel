@@ -30,4 +30,4 @@ This layer is where \{kehrnel\}'s multi-strategy design is operationalized.
 ## Related
 
 - [API Layers](/docs/api/layers)
-- [Core Layer API](/docs/api/core-openapi)
+- [Core Layer API](/docs/api/core)

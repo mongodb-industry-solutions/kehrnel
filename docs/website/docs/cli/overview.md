@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # CLI Overview
 
-\{kehrnel\} now exposes a unified command model through:
+`{kehrnel}` exposes a unified command model through:
 
 - `kehrnel`
 
@@ -13,11 +13,17 @@ sidebar_position: 1
 - `kehrnel auth`  
 Authenticate once and persist API key/runtime URL.
 - `kehrnel context`  
-Set active environment, domain, strategy, and optional runtime URL override.
+Set active environment, domain, strategy, data mode, and default source/sink references.
+- `kehrnel resource`  
+Manage reusable source/sink profiles (file, mongo, and future stores).
+- `kehrnel op`  
+Discover operation catalog and schemas (`list`, `schema`, `capabilities`).
+- `kehrnel run`  
+Universal operation executor for runtime and strategy operations.
 - `kehrnel core`  
 Runtime-kernel operations (health/API server entrypoint, plus environment-scoped runtime operations under `kehrnel core env`).
 - `kehrnel common`  
-Cross-domain workflows (`transform`, `ingest`, `validate`, `generate`, `map`, `identify`, `bundles`, `validate-pack`) executed under selected context.
+Compatibility pass-through workflows (`transform`, `ingest`, `validate`, `generate`, `map`, `identify`, `bundles`, `validate-pack`) executed under selected context.
 - `kehrnel domain`  
 Domain-scoped operations (`domain list`, `domain openehr ...`).
 - `kehrnel strategy`  
@@ -26,16 +32,23 @@ Strategy discovery and selection.
 ## Typical Workflow
 
 ```bash
-kehrnel auth login --runtime-url http://localhost:8000
-kehrnel strategy list --domain openehr
-kehrnel strategy use openehr.rps_dual --domain openehr
-kehrnel common transform flatten ./composition.json -o flattened.json
+kehrnel setup --runtime-url http://localhost:8000 --env dev --domain openehr --strategy openehr.rps_dual
+
+kehrnel resource add src --type mongo --uri "$MONGODB_URI" --db hc_openEHRCDR --collection samples
+kehrnel resource add dst --type mongo --uri "$MONGODB_URI" --db hdl_user_test --collection compositions_rps
+kehrnel resource use --source src --sink dst
+
+kehrnel op capabilities --env dev
+kehrnel run ensure_dictionaries --env dev --domain openehr
 ```
 
 ## Getting Help
 
 ```bash
 kehrnel --help
+kehrnel run --help
+kehrnel op --help
+kehrnel resource --help
 kehrnel auth --help
 kehrnel common --help
 ```

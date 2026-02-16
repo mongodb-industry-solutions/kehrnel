@@ -16,7 +16,7 @@ Platform-level runtime surfaces that are domain-agnostic and strategy-agnostic.
 
 Use this layer for contract generation, platform introspection, and runtime control.
 
-See: [Core Layer API](/docs/api/core-openapi)
+See: [Core Layer API](/docs/api/core)
 
 ## 2. Common Layer
 
@@ -28,7 +28,7 @@ Cross-cutting API behavior shared by all layers.
 
 Use this layer to implement consistent clients and middleware.
 
-See: [Common Layer API](/docs/api/common-api)
+See: [Common Layer API](/docs/api/common/mappings)
 
 ## 3. Domain Layer
 
@@ -39,7 +39,7 @@ Clinical domain operations that implement standard domain behavior.
 
 Use this layer for canonical healthcare data operations.
 
-See: [Domain Layer API](/docs/api/domain-openehr)
+See: [Domain Layer API](/docs/api/domains/openehr)
 
 ## 4. Strategy Layer
 
@@ -51,4 +51,4 @@ Strategy-specific behavior for a concrete persistence or execution strategy.
 
 Use this layer for strategy runtime workflows.
 
-See: [Strategy Layer API](/docs/api/strategy-runtime)
+See: [Strategy Layer API](/docs/api/strategies/openehr/rps-dual)

@@ -7,15 +7,15 @@ set -euo pipefail
 PACK_DIR="${PACK_DIR:-src/kehrnel/engine/strategies/openehr/rps_dual}"
 
 echo "== validate strategy pack =="
-kehrnel-validate-pack "$PACK_DIR"
+kehrnel common validate-pack -- "$PACK_DIR"
 
-echo "== list bundles (if configured) =="
-kehrnel-list-bundles || true
+echo "== list strategy operations =="
+kehrnel op list --domain openehr
 
 echo "== transform (example command discovery) =="
-kehrnel-transform --help >/dev/null
+kehrnel common transform -- --help >/dev/null
 
 echo "== ingest (example command discovery) =="
-kehrnel-ingest --help >/dev/null
+kehrnel common ingest -- --help >/dev/null
 
 echo "CLI skeleton complete. Plug your project-specific file paths and options."

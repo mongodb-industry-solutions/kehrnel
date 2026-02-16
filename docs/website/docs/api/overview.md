@@ -53,7 +53,7 @@ These buttons open endpoints on the same server hosting this documentation (loca
     <div className="apiCtaActions">
       <a className="button button--primary" href="/docs/strategies/openehr/rps_dual" target="_blank" rel="noopener noreferrer">Swagger</a>
       <a className="button button--secondary" href="/redoc/strategies/openehr/rps_dual" target="_blank" rel="noopener noreferrer">ReDoc</a>
-      <Link className="button button--outline button--primary" to="/docs/strategies/openehr-rps-dual/overview">Docs</Link>
+      <Link className="button button--outline button--primary" to="/docs/strategies/openehr/rps-dual/introduction">Docs</Link>
     </div>
   </div>
 
@@ -64,7 +64,7 @@ These buttons open endpoints on the same server hosting this documentation (loca
     <div className="apiCtaActions">
       <a className="button button--primary" href="/docs/domains/openehr" target="_blank" rel="noopener noreferrer">Swagger</a>
       <a className="button button--secondary" href="/redoc/domains/openehr" target="_blank" rel="noopener noreferrer">ReDoc</a>
-      <Link className="button button--outline button--primary" to="/docs/api/domain-openehr">Docs</Link>
+      <Link className="button button--outline button--primary" to="/docs/api/domains/openehr">Docs</Link>
     </div>
   </div>
 </div>
@@ -80,7 +80,7 @@ Mapping in \{kehrnel\} exists in two places:
     <div className="apiCtaBody">Use the CLI for mapping skeleton generation and applying mapping rules.</div>
     <div className="apiCtaActions">
       <Link className="button button--primary" to="/docs/cli/common">Open CLI Mapping Docs</Link>
-      <Link className="button button--outline button--primary" to="/docs/strategies/openehr-rps-dual/cli-workflows">RPS Dual Workflows</Link>
+      <Link className="button button--outline button--primary" to="/docs/strategies/openehr/rps-dual/cli-workflows">RPS Dual Workflows</Link>
     </div>
   </div>
 
@@ -115,10 +115,10 @@ Admin mapping endpoints (HDL compatibility):
 
 ## Layer Navigation
 
-- [Core Layer API](./core-openapi)
-- [Common Layer API](./common-api)
-- [Domain Layer API](./domain-openehr)
-- [Strategy Layer API](./strategy-runtime)
+- [Core Layer API](./core)
+- [Common Layer API](./common/mappings)
+- [Domain Layer API](./domains/openehr)
+- [Strategy Layer API](./strategies/openehr/rps-dual)
 
 ## Canonical Inventory
 

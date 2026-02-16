@@ -41,4 +41,4 @@ See: [FHIR Preview Endpoints](/docs/api/endpoints/fhir-preview)
 ## Related
 
 - [API Layers](/docs/api/layers)
-- [Strategy Layer API](/docs/api/strategy-runtime)
+- [Strategy Layer API](/docs/api/strategies/openehr/rps-dual)

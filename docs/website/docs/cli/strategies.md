@@ -17,14 +17,15 @@ sidebar_position: 6
 ## Recommended workflow
 
 ```bash
-kehrnel auth login --runtime-url http://localhost:8000
+kehrnel setup --runtime-url http://localhost:8000
 kehrnel strategy list --domain openehr
-kehrnel strategy use openehr.rps_dual --domain openehr
-kehrnel common transform ...
+kehrnel op list --strategy openehr.rps_dual
+kehrnel op schema synthetic_generate_batch --strategy openehr.rps_dual
+kehrnel run ensure_dictionaries --env dev --domain openehr
 ```
 
 ## Continue Reading
 
 - [Common CLI Layer](/docs/cli/common)
-- [openEHR RPS Dual CLI Workflows](/docs/strategies/openehr-rps-dual/cli-workflows)
-- [openEHR RPS Dual Configuration](/docs/strategies/openehr-rps-dual/configuration)
+- [openEHR RPS Dual CLI Workflows](/docs/strategies/openehr/rps-dual/cli-workflows)
+- [openEHR RPS Dual Configuration](/docs/strategies/openehr/rps-dual/configuration)

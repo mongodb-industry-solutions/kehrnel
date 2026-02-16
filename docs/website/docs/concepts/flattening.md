@@ -31,5 +31,5 @@ Flattening (more generally, canonical-to-operational transformation) converts ri
 This page is concept-only. Concrete field mappings and transformation parameters are strategy-specific.
 
 Current implementation examples:
-- [openEHR RPS Dual CLI Workflows](/docs/strategies/openehr-rps-dual/cli-workflows)
-- [openEHR RPS Dual Data Model](/docs/strategies/openehr-rps-dual/data-model)
+- [openEHR RPS Dual CLI Workflows](/docs/strategies/openehr/rps-dual/cli-workflows)
+- [openEHR RPS Dual Data Model](/docs/strategies/openehr/rps-dual/data-model)

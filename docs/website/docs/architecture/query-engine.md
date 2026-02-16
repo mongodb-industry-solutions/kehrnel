@@ -303,4 +303,4 @@ In-memory cache for archetype code lookups reduces database roundtrips.
 
 - [AQL to MQL](/docs/concepts/aql-to-mql) - Translation details
 - [Dual Collection](/docs/concepts/dual-collection) - Collection architecture
-- [Query Translation](/docs/strategies/openehr-rps-dual/query-translation) - Strategy specifics
+- [Query Translation](/docs/strategies/openehr/rps-dual/query-translation) - Strategy specifics

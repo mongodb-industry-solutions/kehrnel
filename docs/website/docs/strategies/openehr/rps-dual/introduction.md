@@ -164,7 +164,7 @@ openEHR-EHR-COMPOSITION.encounter.v1 → 15
 
 ## Next Steps
 
-- [CLI Workflows](/docs/strategies/openehr-rps-dual/cli-workflows) - Practical transform/map/ingest/validate commands
-- [Data Model](/docs/strategies/openehr-rps-dual/data-model) - Detailed document structure
-- [Query Translation](/docs/strategies/openehr-rps-dual/query-translation) - AQL to MQL compilation
-- [Configuration](/docs/strategies/openehr-rps-dual/configuration) - Full configuration reference
+- [CLI Workflows](/docs/strategies/openehr/rps-dual/cli-workflows) - Practical transform/map/ingest/validate commands
+- [Data Model](/docs/strategies/openehr/rps-dual/data-model) - Detailed document structure
+- [Query Translation](/docs/strategies/openehr/rps-dual/query-translation) - AQL to MQL compilation
+- [Configuration](/docs/strategies/openehr/rps-dual/configuration) - Full configuration reference

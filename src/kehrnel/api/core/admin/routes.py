@@ -811,6 +811,8 @@ async def endpoints_registry(request: Request):
         "bundles": f"{base}/bundles",
         "ops": f"{base}/ops",
         "activations": f"{base}/environments/{{env_id}}/activate",
+        "capabilities": f"{base}/environments/{{env_id}}/capabilities",
+        "run": f"{base}/environments/{{env_id}}/run",
     }
     return {"endpoints": endpoints}
 
@@ -842,6 +844,8 @@ async def strategy_endpoints(strategy_id: str, request: Request):
         "strategy_id": strategy_id,
         "endpoints": {
             "activate": f"{base}/environments/{{env_id}}/activate",
+            "capabilities": f"{base}/environments/{{env_id}}/capabilities",
+            "run": f"{base}/environments/{{env_id}}/run",
             "compile_query": f"{base}/environments/{{env_id}}/compile_query",
             "query": f"{base}/environments/{{env_id}}/query",
             "ops": f"{base}/environments/{{env_id}}/activations/{{domain}}/ops/{{op}}",
@@ -859,6 +863,69 @@ async def get_strategy_diagnostics(request: Request):
         return _error_response(exc)
 
 
+def _standard_env_operations() -> List[Dict[str, Any]]:
+    return [
+        {
+            "name": "plan",
+            "kind": "runtime",
+            "summary": "Build execution plan for the active strategy",
+            "scope": "environment",
+            "route": "POST /environments/{env_id}/plan",
+        },
+        {
+            "name": "apply",
+            "kind": "runtime",
+            "summary": "Apply previously generated plan",
+            "scope": "environment",
+            "route": "POST /environments/{env_id}/apply",
+        },
+        {
+            "name": "transform",
+            "kind": "runtime",
+            "summary": "Transform source payload into strategy output documents",
+            "scope": "environment",
+            "route": "POST /environments/{env_id}/transform",
+        },
+        {
+            "name": "ingest",
+            "kind": "runtime",
+            "summary": "Ingest payload using active strategy",
+            "scope": "environment",
+            "route": "POST /environments/{env_id}/ingest",
+        },
+        {
+            "name": "query",
+            "kind": "runtime",
+            "summary": "Execute a domain query",
+            "scope": "domain",
+            "route": "POST /environments/{env_id}/query",
+        },
+        {
+            "name": "compile_query",
+            "kind": "runtime",
+            "summary": "Compile domain query into execution plan",
+            "scope": "domain",
+            "route": "POST /environments/{env_id}/compile_query",
+        },
+    ]
+
+
+def _serialize_manifest_op(manifest: StrategyManifest, op: Any, include_schemas: bool = True) -> Dict[str, Any]:
+    row: Dict[str, Any] = {
+        "strategy_id": manifest.id,
+        "domain": manifest.domain,
+        "name": getattr(op, "name", None),
+        "kind": getattr(op, "kind", None),
+        "summary": getattr(op, "summary", None),
+        "scope": "strategy",
+        "route": "POST /environments/{env_id}/activations/{domain}/ops/{op}",
+    }
+    if include_schemas:
+        row["input_schema"] = getattr(op, "input_schema", None) or {}
+        row["output_schema"] = getattr(op, "output_schema", None) or {}
+    return row
+
+
 @router.get("/ops", include_in_schema=False)
 async def list_ops(request: Request):
     try:
@@ -869,7 +936,7 @@ async def list_ops(request: Request):
         ops = []
         for manifest in rt.list_strategies():
             for op in manifest.ops:
-                ops.append({"strategy_id": manifest.id, "domain": manifest.domain, "name": op.name, "kind": op.kind, "summary": op.summary})
+                ops.append(_serialize_manifest_op(manifest, op, include_schemas=False))
         return {"ops": ops}
     except Exception as exc:
         return _error_response(exc)
@@ -890,6 +957,118 @@ async def run_op(request: Request, body: Dict[str, Any] = Body(default_factory=d
             raise ValueError("Strategy runtime not initialized")
         result = await rt.dispatch(env_id, "op", {"op": op, "payload": payload, "domain": domain})
         return {"ok": True, "result": result}
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.get("/environments/{env_id}/capabilities", include_in_schema=False)
+async def env_capabilities(env_id: str, request: Request, include_schemas: bool = True):
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        rt = getattr(request.app.state, "strategy_runtime", None)
+        if not rt:
+            raise ValueError("Strategy runtime not initialized")
+
+        activations = rt.registry.list_activations(env_id) or {}
+        domains: List[Dict[str, Any]] = []
+        strategy_ops: List[Dict[str, Any]] = []
+
+        for domain_key, activation in activations.items():
+            manifest = rt.registry.get_manifest(activation.strategy_id)
+            if not manifest:
+                continue
+            op_rows = [_serialize_manifest_op(manifest, op, include_schemas=include_schemas) for op in (manifest.ops or [])]
+            strategy_ops.extend(op_rows)
+            domains.append(
+                {
+                    "domain": domain_key,
+                    "strategy_id": activation.strategy_id,
+                    "strategy_version": activation.version,
+                    "activation_id": activation.activation_id,
+                    "ops": [row.get("name") for row in op_rows if row.get("name")],
+                }
+            )
+
+        return {
+            "env_id": env_id,
+            "domains": domains,
+            "operations": {
+                "standard": _standard_env_operations(),
+                "strategy": strategy_ops,
+            },
+        }
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/environments/{env_id}/run", include_in_schema=False)
+async def run_env_op(env_id: str, request: Request, body: Dict[str, Any] = Body(default_factory=dict)):
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        rt = getattr(request.app.state, "strategy_runtime", None)
+        if not rt:
+            raise ValueError("Strategy runtime not initialized")
+
+        operation = str(body.get("operation") or body.get("op") or "").strip()
+        if not operation:
+            raise KehrnelError(code="INVALID_INPUT", status=400, message="operation is required")
+
+        op_key = operation.lower().replace("-", "_")
+        direct_ops = {"plan", "apply", "transform", "ingest", "query", "compile_query"}
+        payload = body.get("payload") if isinstance(body.get("payload"), dict) else {}
+        payload = dict(payload or {})
+
+        # Lift top-level universal keys into payload if not already provided.
+        for key in ("domain", "strategy_id", "strategy", "data_mode", "source", "sink", "query", "aql", "dry_run", "debug", "allow_mismatch"):
+            if key in body and key not in payload:
+                payload[key] = body.get(key)
+
+        requested_domain = str(payload.get("domain") or body.get("domain") or "").strip().lower()
+        strategy_id = str(payload.get("strategy_id") or payload.get("strategy") or body.get("strategy_id") or body.get("strategy") or "").strip()
+
+        dispatch_op = op_key
+        dispatch_payload: Dict[str, Any] = payload
+        route_scope = "runtime"
+
+        if op_key in direct_ops:
+            if op_key in {"query", "compile_query"} and not requested_domain:
+                activations = rt.registry.list_activations(env_id) or {}
+                if len(activations) == 1:
+                    requested_domain = str(next(iter(activations.keys())))
+            if op_key in {"query", "compile_query"} and not requested_domain:
+                raise KehrnelError(code="DOMAIN_REQUIRED", status=400, message="domain is required for query and compile_query operations")
+            if requested_domain and "domain" not in dispatch_payload:
+                dispatch_payload["domain"] = requested_domain
+        else:
+            if not requested_domain:
+                if strategy_id:
+                    activation = rt.registry.get_activation_by_strategy(env_id, strategy_id)
+                    if activation:
+                        requested_domain = str(activation.domain or "").strip().lower()
+                if not requested_domain:
+                    activations = rt.registry.list_activations(env_id) or {}
+                    if len(activations) == 1:
+                        requested_domain = str(next(iter(activations.keys())))
+            if not requested_domain:
+                raise KehrnelError(code="DOMAIN_REQUIRED", status=400, message="domain is required for strategy operations")
+            dispatch_op = "op"
+            dispatch_payload = {"domain": requested_domain, "op": operation, "payload": payload}
+            route_scope = "strategy"
+
+        result = await rt.dispatch(env_id, dispatch_op, dispatch_payload)
+        return {
+            "ok": True,
+            "env_id": env_id,
+            "operation": operation,
+            "dispatch": {
+                "scope": route_scope,
+                "op": dispatch_op,
+                "domain": requested_domain or None,
+            },
+            "result": result,
+        }
     except Exception as exc:
         return _error_response(exc)
 
@@ -1418,6 +1597,20 @@ async def list_env_endpoints(env_id: str, request: Request):
             "env_id": env_id,
             "domains": domains,
             "endpoints": {
+                "capabilities": {
+                    "url": f"{base}/environments/{env_id}/capabilities",
+                    "method": "GET",
+                },
+                "run": {
+                    "url": f"{base}/environments/{env_id}/run",
+                    "method": "POST",
+                    "required_params": ["operation"],
+                    "payload_example": {
+                        "operation": "synthetic_generate_batch",
+                        "domain": sample_domain,
+                        "payload": {"patient_count": 100, "dry_run": True},
+                    },
+                },
                 "compile_query": {
                     "url": f"{base}/environments/{env_id}/compile_query",
                     "method": "POST",

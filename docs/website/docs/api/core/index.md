@@ -30,6 +30,8 @@ Primary core/admin endpoints:
 - `GET /strategies/{strategy_id}`
 - `GET /strategies/{strategy_id}/spec`
 - `POST /environments/{env_id}/activate`
+- `GET /environments/{env_id}/capabilities`
+- `POST /environments/{env_id}/run`
 - `GET /environments/{env_id}/endpoints`
 - `POST /environments/{env_id}/activations/{domain}/ops/{op}`
 
@@ -40,6 +42,6 @@ Primary core/admin endpoints:
 ## Related
 
 - [API Layers](/docs/api/layers)
-- [Common Layer API](/docs/api/common-api)
+- [Common Layer API](/docs/api/common/mappings)
 - [Admin & Environment API (Detailed)](/docs/api/admin-environments)
 - [Strategy Registry Endpoints (Detailed)](/docs/api/endpoints/strategy-registry)

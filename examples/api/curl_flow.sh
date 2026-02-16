@@ -30,28 +30,47 @@ JSON
 
 echo
 
-echo "== compile query =="
-curl -sS -X POST "$BASE_URL/environments/$ENV_ID/compile_query" "${HDRS[@]}" -d @- <<JSON
+echo "== capabilities =="
+curl -sS "$BASE_URL/environments/$ENV_ID/capabilities" "${HDRS[@]}"
+
+echo
+
+echo "== run strategy op (universal endpoint) =="
+curl -sS -X POST "$BASE_URL/environments/$ENV_ID/run" "${HDRS[@]}" -d @- <<JSON
 {
   "domain": "$DOMAIN",
-  "query": "SELECT c FROM EHR e CONTAINS COMPOSITION c LIMIT 10"
+  "operation": "ensure_dictionaries",
+  "payload": {}
 }
 JSON
 
 echo
 
-echo "== execute query =="
-curl -sS -X POST "$BASE_URL/environments/$ENV_ID/query" "${HDRS[@]}" -d @- <<JSON
+echo "== compile query (universal endpoint) =="
+curl -sS -X POST "$BASE_URL/environments/$ENV_ID/run" "${HDRS[@]}" -d @- <<JSON
 {
   "domain": "$DOMAIN",
-  "query": "SELECT c FROM EHR e CONTAINS COMPOSITION c LIMIT 10"
+  "operation": "compile_query",
+  "payload": {
+    "domain": "$DOMAIN",
+    "aql": "SELECT c/uid/value AS uid FROM EHR e CONTAINS COMPOSITION c LIMIT 10"
+  }
 }
 JSON
 
 echo
 
-echo "== trigger strategy op =="
-curl -sS -X POST "$BASE_URL/environments/$ENV_ID/activations/$DOMAIN/ops/ensure_dictionaries" "${HDRS[@]}" -d '{}'
+echo "== execute query (universal endpoint) =="
+curl -sS -X POST "$BASE_URL/environments/$ENV_ID/run" "${HDRS[@]}" -d @- <<JSON
+{
+  "domain": "$DOMAIN",
+  "operation": "query",
+  "payload": {
+    "domain": "$DOMAIN",
+    "aql": "SELECT c/uid/value AS uid FROM EHR e CONTAINS COMPOSITION c LIMIT 10"
+  }
+}
+JSON
 
 echo
 

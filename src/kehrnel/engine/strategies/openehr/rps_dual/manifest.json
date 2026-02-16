@@ -26,6 +26,7 @@
     "ingest",
     "validate",
     "query",
+    "synthetic",
     "plan",
     "apply"
   ],
@@ -34,7 +35,36 @@
     "tags": ["openEHR", "reversed-paths", "atlas-search", "dual-collection", "slim-search"],
     "domain_badge": "openEHR",
     "works_with": ["atlas_search_dual"],
-    "links": { "docs": "/api/strategies/openehr.rps_dual/assets/rps-paper.pdf" },
+    "docs": "/guide/docs/strategies/openehr/rps-dual",
+    "links": {
+      "strategy_base": "/api/strategies/openehr/rps_dual",
+      "strategy_config": "/api/strategies/openehr/rps_dual/config",
+      "strategy_ingest_body": "/api/strategies/openehr/rps_dual/ingest/body",
+      "strategy_ingest_file": "/api/strategies/openehr/rps_dual/ingest/file",
+      "strategy_ingest_database": "/api/strategies/openehr/rps_dual/ingest/database",
+      "strategy_synthetic_generate": "/api/strategies/openehr/rps_dual/synthetic/generate",
+      "strategy_synthetic_stats": "/api/strategies/openehr/rps_dual/synthetic/stats",
+      "domain_base": "/api/domains/openehr",
+      "domain_aql": "/api/domains/openehr/query/aql",
+      "runtime_activate": "/environments/{env_id}/activate",
+      "runtime_capabilities": "/environments/{env_id}/capabilities",
+      "runtime_run": "/environments/{env_id}/run",
+      "runtime_plan": "/environments/{env_id}/plan",
+      "runtime_apply": "/environments/{env_id}/apply",
+      "runtime_transform": "/environments/{env_id}/transform",
+      "runtime_ingest": "/environments/{env_id}/ingest",
+      "runtime_query": "/environments/{env_id}/query",
+      "runtime_compile_query": "/environments/{env_id}/compile_query",
+      "runtime_strategy_op": "/environments/{env_id}/activations/{domain}/ops/{op}",
+      "runtime_synthetic_jobs": "/environments/{env_id}/synthetic/jobs",
+      "runtime_synthetic_job": "/environments/{env_id}/synthetic/jobs/{job_id}",
+      "runtime_synthetic_job_cancel": "/environments/{env_id}/synthetic/jobs/{job_id}/cancel",
+      "strategy_manifest": "/strategies/openehr.rps_dual",
+      "strategy_spec": "/strategies/openehr.rps_dual/spec",
+      "strategy_endpoints": "/strategies/openehr.rps_dual/endpoints",
+      "strategy_asset_paper": "/strategies/openehr.rps_dual/assets/rps-paper.pdf",
+      "catalog_ops": "/ops"
+    },
     "story": "Clinical teams need to access individual patient histories quickly and completely, while research and population health teams need to search across thousands of patients efficiently. This strategy solves both needs by storing the full clinical record for patient care, alongside a compact search layer optimized for population queries.\n\nWhen a clinician opens a patient chart, they get the complete record exactly as it was documented—every observation, every medication, every note preserved with full fidelity. When a researcher searches for patients with specific conditions, the system uses an optimized search layer to return results in seconds rather than minutes, without ever compromising the integrity of the source data.\n\nThe result is a single source of truth that serves both operational and analytical workloads. Clinical teams trust it for patient care because nothing is lost or transformed. Research teams trust it for population health because queries are fast and comprehensive. IT teams appreciate it because there's no ETL pipeline to maintain, no data warehouse to synchronize, and no risk of operational and analytical systems drifting apart.",
     "how_it_works": "Your data lives in two synchronized collections that work together seamlessly. The primary collection stores complete clinical documents—each composition preserved as a single document with every field, every nested structure, exactly as the source system created it. This collection is optimized for patient-scoped queries: when you need everything about one patient, the system retrieves it instantly using efficient B-tree indexes.\n\nThe search collection maintains a streamlined projection of the same data, purpose-built for population queries. It contains just enough information to find patients matching complex criteria—diagnoses, medications, lab values, dates—without the overhead of full document storage. Atlas Search indexes this collection, enabling sub-second queries across millions of records.\n\nThe system automatically routes each query to the right collection. Ask for a specific patient's records, and it goes to the primary collection. Search for all patients with a particular condition, and it uses the search collection. You write standard AQL queries; the routing happens transparently.",
     "benefits": [
@@ -81,7 +111,7 @@
     {
       "name": "ensure_dictionaries",
       "kind": "maintenance",
-      "summary": "Ensure _codes/_shortcuts dictionaries exist",
+      "summary": "Ensure and seed _codes/_shortcuts dictionaries",
       "input_schema": {
         "type": "object",
         "properties": {},
@@ -90,11 +120,21 @@
       "output_schema": {
         "type": "object",
         "properties": {
-          "codes_exists": {
-            "type": "boolean"
+          "ok": { "type": "boolean" },
+          "created": {
+            "type": "array",
+            "items": { "type": "string" }
           },
-          "shortcuts_exists": {
-            "type": "boolean"
+          "seeded": {
+            "type": "object",
+            "properties": {
+              "codes": { "type": "integer" },
+              "shortcuts": { "type": "integer" }
+            }
+          },
+          "warnings": {
+            "type": "array",
+            "items": { "type": "string" }
           }
         }
       }
@@ -102,7 +142,7 @@
     {
       "name": "rebuild_codes",
       "kind": "maintenance",
-      "summary": "Rebuild atcode/archetype code tokens",
+      "summary": "Rebuild code dictionary documents from configured seed payload",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -116,17 +156,11 @@
       "output_schema": {
         "type": "object",
         "properties": {
-          "updated": {
-            "type": "boolean"
-          },
-          "min": {
-            "type": "integer"
-          },
-          "max": {
-            "type": "integer"
-          },
-          "counts": {
-            "type": "object"
+          "ok": { "type": "boolean" },
+          "updated": { "type": "integer" },
+          "warnings": {
+            "type": "array",
+            "items": { "type": "string" }
           }
         }
       }
@@ -134,7 +168,7 @@
     {
       "name": "rebuild_shortcuts",
       "kind": "maintenance",
-      "summary": "Rebuild slim shortcuts map",
+      "summary": "Rebuild shortcuts dictionary document from configured seed payload",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -146,7 +180,15 @@
         "additionalProperties": false
       },
       "output_schema": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "updated": { "type": "integer" },
+          "warnings": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
       }
     },
     {
@@ -156,9 +198,7 @@
       "input_schema": {
         "type": "object",
         "properties": {
-          "index_name": {
-            "type": "string"
-          },
+          "index_name": { "type": "string" },
           "recreate": {
             "type": "boolean",
             "default": false
@@ -169,17 +209,11 @@
       "output_schema": {
         "type": "object",
         "properties": {
-          "ok": {
-            "type": "boolean"
-          },
-          "supported": {
-            "type": "boolean"
-          },
-          "notes": {
+          "ok": { "type": "boolean" },
+          "result": { "type": "object" },
+          "warnings": {
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           }
         }
       }
@@ -187,17 +221,13 @@
     {
       "name": "rebuild_slim_search_collection",
       "kind": "maintenance",
-      "summary": "Recreate slim search docs from canonical compositions",
+      "summary": "Rebuild slim search docs from canonical compositions",
       "input_schema": {
         "type": "object",
         "properties": {
           "batch_size": {
             "type": "integer",
-            "default": 2000
-          },
-          "dry_run": {
-            "type": "boolean",
-            "default": false
+            "default": 100
           }
         },
         "additionalProperties": false
@@ -205,20 +235,12 @@
       "output_schema": {
         "type": "object",
         "properties": {
-          "processed": {
-            "type": "integer"
-          },
-          "inserted": {
-            "type": "integer"
-          },
-          "updated": {
-            "type": "integer"
-          },
+          "ok": { "type": "boolean" },
+          "processed": { "type": "integer" },
+          "inserted": { "type": "integer" },
           "warnings": {
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           }
         }
       }
@@ -226,7 +248,7 @@
     {
       "name": "synthetic_generate_batch",
       "kind": "synthetic",
-      "summary": "Generate synthetic dataset in batch from source canonical compositions",
+      "summary": "Generate synthetic datasets in batch from source instances and/or model catalog",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -242,6 +264,9 @@
             "type": "string"
           },
           "source_database": {
+            "type": "string"
+          },
+          "source_db": {
             "type": "string"
           },
           "source_templates": {
@@ -278,6 +303,14 @@
           "plan_only": {
             "type": "boolean",
             "default": false
+          },
+          "store_canonical": {
+            "type": "boolean",
+            "default": false
+          },
+          "canonical_collection": {
+            "type": "string",
+            "default": "compositions_canonical_synthetic"
           },
           "write_batch_size": {
             "type": "integer",
@@ -316,15 +349,26 @@
             "items": {
               "type": "object",
               "properties": {
-                "template_id": {
-                  "type": "string"
-                },
+                "template_id": { "type": "string" },
+                "templateId": { "type": "string" },
                 "min_per_patient": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "min": {
                   "type": "integer",
                   "minimum": 0
                 },
                 "max_per_patient": {
                   "type": "integer",
+                  "minimum": 0
+                },
+                "max": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "weight": {
+                  "type": "number",
                   "minimum": 0
                 },
                 "sample_pool_size": {
@@ -333,9 +377,6 @@
                   "default": 25
                 }
               },
-              "required": [
-                "template_id"
-              ],
               "additionalProperties": false
             }
           },
@@ -345,7 +386,9 @@
               "type": "object",
               "properties": {
                 "from": { "type": "string" },
+                "from_model_id": { "type": "string" },
                 "to": { "type": "string" },
+                "to_model_id": { "type": "string" },
                 "probability": { "type": "number", "minimum": 0, "maximum": 1 },
                 "min_to_per_patient": { "type": "integer", "minimum": 0 },
                 "type": { "type": "string" }
@@ -354,47 +397,60 @@
             }
           }
         },
-        "required": [
-          "patient_count"
+        "anyOf": [
+          { "required": ["patient_count"] },
+          { "required": ["patients"] }
         ],
         "additionalProperties": false
       },
       "output_schema": {
         "type": "object",
         "properties": {
-          "ok": {
-            "type": "boolean"
+          "ok": { "type": "boolean" },
+          "dry_run": { "type": "boolean" },
+          "plan_only": { "type": "boolean" },
+          "source_collection": { "type": "string" },
+          "source_database": { "type": ["string", "null"] },
+          "target": {
+            "type": "object",
+            "properties": {
+              "canonical": { "type": ["string", "null"] },
+              "compositions": { "type": ["string", "null"] },
+              "search": { "type": ["string", "null"] }
+            }
           },
-          "patients": {
-            "type": "integer"
+          "patients": { "type": "integer" },
+          "estimated_docs": { "type": "integer" },
+          "generated_docs": { "type": "integer" },
+          "inserted_canonical": { "type": "integer" },
+          "inserted_base": { "type": "integer" },
+          "inserted_search": { "type": "integer" },
+          "estimated_canonical_bytes": { "type": "integer" },
+          "estimated_base_bytes": { "type": "integer" },
+          "estimated_search_bytes": { "type": "integer" },
+          "estimated_total_bytes": { "type": "integer" },
+          "links_applied": { "type": "integer" },
+          "models": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "model_id": { "type": "string" },
+                "template_id": { "type": "string" },
+                "min": { "type": "integer" },
+                "max": { "type": "integer" }
+              }
+            }
           },
-          "generated_docs": {
-            "type": "integer"
+          "links": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
           },
-          "inserted_base": {
-            "type": "integer"
-          },
-          "inserted_search": {
-            "type": "integer"
-          },
-          "estimated_base_bytes": {
-            "type": "integer"
-          },
-          "estimated_search_bytes": {
-            "type": "integer"
-          },
-          "estimated_total_bytes": {
-            "type": "integer"
-          },
-          "links_applied": {
-            "type": "integer"
-          },
-          "by_template": {
-            "type": "object"
-          },
-          "by_model": {
-            "type": "object"
-          }
+          "by_template": { "type": "object" },
+          "by_model": { "type": "object" }
         }
       }
     }

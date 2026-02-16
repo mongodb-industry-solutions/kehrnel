@@ -30,4 +30,4 @@ Data sampling is a cross-domain operational concept used to:
 This page defines the concept only. Exact parameters and runtime behavior are strategy-specific.
 
 Current implementation example:
-- [openEHR RPS Dual CLI Workflows](/docs/strategies/openehr-rps-dual/cli-workflows)
+- [openEHR RPS Dual CLI Workflows](/docs/strategies/openehr/rps-dual/cli-workflows)

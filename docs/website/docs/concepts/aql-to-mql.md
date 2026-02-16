@@ -30,5 +30,5 @@ Generic pipeline:
 This page is concept-only. Concrete compilers belong to strategy/domain docs.
 
 Current implementation examples:
-- [openEHR RPS Dual Query Translation](/docs/strategies/openehr-rps-dual/query-translation)
-- [openEHR Domain API](/docs/api/domain-openehr)
+- [openEHR RPS Dual Query Translation](/docs/strategies/openehr/rps-dual/query-translation)
+- [openEHR Domain API](/docs/api/domains/openehr)

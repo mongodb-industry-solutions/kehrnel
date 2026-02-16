@@ -273,4 +273,4 @@ class CodeDictionary:
 
 - [Query Engine](/docs/architecture/query-engine) - How transformed data is queried
 - [Flattening Concepts](/docs/concepts/flattening) - Conceptual overview
-- [Data Model](/docs/strategies/openehr-rps-dual/data-model) - Storage format
+- [Data Model](/docs/strategies/openehr/rps-dual/data-model) - Storage format

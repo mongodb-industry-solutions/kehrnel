@@ -16,5 +16,5 @@ Principle:
 - Then follow implementation links for your active strategy.
 
 Current implementation references:
-- [openEHR RPS Dual Strategy](/docs/strategies/openehr-rps-dual/introduction)
-- [openEHR RPS Dual CLI Workflows](/docs/strategies/openehr-rps-dual/cli-workflows)
+- [openEHR RPS Dual Strategy](/docs/strategies/openehr/rps-dual/introduction)
+- [openEHR RPS Dual CLI Workflows](/docs/strategies/openehr/rps-dual/cli-workflows)

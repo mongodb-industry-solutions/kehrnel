@@ -24,16 +24,38 @@ Removed from active scope:
 ```bash
 git clone <repo>
 cd kehrnel
-python --version  # 3.10+ required
-python -m venv .venv
+python3 --version  # 3.10+ required
+python3 -m venv .venv
 source .venv/bin/activate
 pip install -e .[all]
+# Build docs site (optional but recommended if you want /guide on port 8000)
+cd docs/website && npm install && npm run build && cd ../..
 uvicorn kehrnel.api.app:app --reload
 ```
 
 API docs:
 - `http://localhost:8000/docs`
 - `http://localhost:8000/redoc`
+- `http://localhost:8000/guide` (Docusaurus site, if built)
+
+## Documentation Serving Model
+
+Kehrnel serves all API/docs surfaces from the same API server port (default `8000`):
+
+- Swagger UI: `/docs`
+- ReDoc: `/redoc`
+- Docusaurus site: `/guide` (served from `docs/website/build`)
+
+Notes:
+- If `docs/website/build` does not exist, `/guide` will show a “documentation is not built” message.
+- During docs authoring you can also run the Docusaurus dev server separately on `8001`:
+
+```bash
+cd docs/website
+npm start
+```
+
+In dev mode, API links are proxied to `KEHRNEL_API_ORIGIN` (default `http://localhost:8000`).
 
 Full integration guide:
 - `examples/README.md`
@@ -44,6 +66,8 @@ Full integration guide:
 - `GET /strategies`
 - `GET /strategies/{id}`
 - `POST /environments/{env}/activate`
+- `GET /environments/{env}/capabilities`
+- `POST /environments/{env}/run`
 - `POST /environments/{env}/compile_query`
 - `POST /environments/{env}/query`
 - `POST /environments/{env}/activations/{domain}/ops/{op}`
@@ -68,7 +92,7 @@ kehrnel common validate-pack /path/to/strategy-pack
 ## CLI
 
 Primary CLI entrypoint:
-- `kehrnel` (`auth`, `context`, `core`, `common`, `domain`, `strategy`)
+- `kehrnel` (`auth`, `context`, `resource`, `op`, `run`, `core`, `common`, `domain`, `strategy`)
 - `kehrnel-api` (API server launcher)
 
 Complete CLI + endpoint inventory:
@@ -130,6 +154,8 @@ Activation binds:
 - `POST /environments/{env_id}/ingest`
 - `POST /environments/{env_id}/transform`
 - `POST /environments/{env_id}/apply`
+- `GET /environments/{env_id}/capabilities`
+- `POST /environments/{env_id}/run`
 - `POST /environments/{env_id}/activations/{domain}/ops/{op}`
 
 4. Strategy-specific APIs (example):
@@ -155,6 +181,7 @@ For secure database binding resolution:
 - Python embedding: `examples/sdk/runtime_embed_example.py`
 - HTTP flow: `examples/api/curl_flow.sh`
 - CLI skeleton: `examples/cli/pipeline.sh`
+- Full CLI workflow smoke: `examples/cli/full_workflow_console.sh`
 
 ## Tests
 

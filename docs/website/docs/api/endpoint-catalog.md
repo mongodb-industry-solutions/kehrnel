@@ -18,6 +18,7 @@ Use these references for endpoint-level details:
 - [openEHR Composition & Directory](/docs/api/endpoints/openehr-composition-directory)
 - [openEHR Versioning](/docs/api/endpoints/openehr-versioning)
 - [openEHR Query](/docs/api/endpoints/openehr-query)
+- [Runtime Capabilities And Run](/docs/api/endpoints/runtime-capabilities-and-run)
 - [Strategy Config & Ingest](/docs/api/endpoints/strategy-config-and-ingest)
 - [Strategy Synthetic & Jobs](/docs/api/endpoints/strategy-synthetic-and-jobs)
 - [Strategy Registry](/docs/api/endpoints/strategy-registry)

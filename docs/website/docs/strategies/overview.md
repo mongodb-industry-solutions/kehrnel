@@ -39,7 +39,7 @@ The current reference implementation for high-scale openEHR persistence.
 | **Query** | AQL compilation to MongoDB aggregation |
 | **Scale target** | Patient-centric and population analytics |
 
-[Learn more about RPS Dual →](/docs/strategies/openehr-rps-dual/introduction)
+[Learn more about RPS Dual →](/docs/strategies/openehr/rps-dual/introduction)
 
 ## Strategy Pack Structure
 

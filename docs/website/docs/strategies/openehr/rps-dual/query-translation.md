@@ -204,5 +204,5 @@ curl "http://localhost:8000/api/domains/openehr/query/strategy/info?ehr_id=patie
 ## Related
 
 - [AQL to MQL Concepts](/docs/concepts/aql-to-mql) - Detailed translation rules
-- [Data Model](/docs/strategies/openehr-rps-dual/data-model) - Storage structure
+- [Data Model](/docs/strategies/openehr/rps-dual/data-model) - Storage structure
 - [Query API](/docs/api/overview) - API reference (see ReDoc)

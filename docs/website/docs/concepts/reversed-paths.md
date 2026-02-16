@@ -30,4 +30,4 @@ Hierarchical path encoding is a concept for turning nested document paths into c
 This page is concept-only. Encoding dictionaries and exact key formats are strategy-specific.
 
 Current implementation example:
-- [openEHR RPS Dual Data Model](/docs/strategies/openehr-rps-dual/data-model)
+- [openEHR RPS Dual Data Model](/docs/strategies/openehr/rps-dual/data-model)

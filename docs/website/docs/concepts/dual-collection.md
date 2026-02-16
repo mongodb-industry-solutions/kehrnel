@@ -29,4 +29,4 @@ Dual-view persistence stores the same logical record in two synchronized shapes 
 This page is concept-only. Collection names, schemas, and index definitions are strategy-specific.
 
 Current implementation example:
-- [openEHR RPS Dual Introduction](/docs/strategies/openehr-rps-dual/introduction)
+- [openEHR RPS Dual Introduction](/docs/strategies/openehr/rps-dual/introduction)
