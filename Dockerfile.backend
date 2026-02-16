@@ -1,5 +1,7 @@
 FROM python:3.12-slim
 WORKDIR /kerhnel
+# COPY src/app/requirements.txt .
+# RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 RUN pip install -e .[all]
 ENV API_PORT=8080
