@@ -3,11 +3,34 @@
 ## Run the new runtime API
 
 ```bash
-python --version  # 3.10+ required
-python -m venv .venv && source .venv/bin/activate
+python3 --version  # 3.10+ required
+python3 -m venv .venv && source .venv/bin/activate
 pip install -e .
 uvicorn kehrnel.api.app:app --reload
-# docs at http://localhost:8000/docs
+# Swagger: http://localhost:8000/docs
+# ReDoc:   http://localhost:8000/redoc
+# Site:    http://localhost:8000/guide
+```
+
+## Run / Build Docusaurus Docs
+
+The runtime serves the **built** Docusaurus site from `docs/website/build` at `/guide`.
+
+- Live docs dev server (separate port):
+
+```bash
+cd docs/website
+npm install
+# runs on http://localhost:8001/guide/
+# API links (/docs, /redoc, /api, ...) are proxied to KEHRNEL_API_ORIGIN (default http://localhost:8000)
+npm start
+```
+
+- Rebuild the static site for the runtime:
+
+```bash
+cd docs/website
+npm run build
 ```
 
 ### Strategy discovery paths

@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Optional
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI, Request, HTTPException, Security
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi.responses import JSONResponse, FileResponse, HTMLResponse
 from fastapi.security import APIKeyHeader
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html
@@ -38,7 +38,7 @@ from kehrnel.engine.core.pack_validator import StrategyPackValidator
 from kehrnel.engine.core.bindings_resolver import load_bindings_resolver_from_env
 from kehrnel.engine.core.synthetic_jobs import SyntheticJobManager
 from kehrnel.engine.core.synthetic_jobs_store import MongoSyntheticJobStore
-from kehrnel.engine.core.redaction import redact_secrets
+from kehrnel.engine.core.redaction import redact_sensitive
 
 
 # ============================================================================
@@ -657,8 +657,8 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         elif isinstance(exc, KeyError):
             code = "NOT_FOUND"
             status = 404
-        # Defense-in-depth: avoid leaking credentials embedded in exception messages.
-        message = redact_secrets(message) or message
+        # Defense-in-depth: avoid leaking credentials / filesystem internals in exception messages.
+        message = redact_sensitive(message) or message
         return JSONResponse(status_code=status, content={"error": {"code": code, "message": message, "details": details}})
     runtime_routers = [
         admin_router,
@@ -681,6 +681,23 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     if docs_build_path.exists():
         app.mount("/guide", StaticFiles(directory=str(docs_build_path), html=True), name="documentation")
         logging.getLogger("kehrnel.docs").info("Documentation mounted at /guide from %s", docs_build_path)
+    else:
+        @app.get("/guide", include_in_schema=False)
+        @app.get("/guide/", include_in_schema=False)
+        async def guide_not_built():
+            # Keep this public and explicit: it avoids confusion when running the API without building docs.
+            return HTMLResponse(
+                status_code=200,
+                content=(
+                    "<html><head><title>kehrnel docs</title></head><body>"
+                    "<h2>Documentation is not built</h2>"
+                    "<p>The kehrnel runtime serves the static Docusaurus site from <code>docs/website/build</code>.</p>"
+                    "<p>Build it with:</p>"
+                    "<pre><code>cd docs/website\nnpm install\nnpm run build</code></pre>"
+                    "<p>Then restart the API and open <code>/guide</code> again.</p>"
+                    "</body></html>"
+                ),
+            )
 
     # Serve favicon for API docs (Swagger/ReDoc) and the mounted docs site.
     # Prefer the built asset, fall back to the Docusaurus static asset during dev.

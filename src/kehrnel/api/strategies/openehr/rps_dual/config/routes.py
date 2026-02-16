@@ -12,7 +12,7 @@ from kehrnel.api.bridge.app.utils.config_runtime import apply_ingestion_config, 
 from kehrnel.api.bridge.app.core.config import settings
 from kehrnel.api.common.models import ErrorResponse
 from kehrnel.persistence import load_strategy_from_json, PersistenceStrategy
-from kehrnel.engine.core.redaction import redact_secrets
+from kehrnel.engine.core.redaction import redact_sensitive
 
 router = APIRouter()
 
@@ -361,5 +361,5 @@ async def set_ingestion_config(
     except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Failed to apply configuration: {redact_secrets(str(exc))}",
+            detail=f"Failed to apply configuration: {redact_sensitive(str(exc))}",
         )

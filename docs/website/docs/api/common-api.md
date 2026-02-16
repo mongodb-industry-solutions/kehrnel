@@ -18,7 +18,6 @@ Public routes typically include:
 
 - `/health`
 - `/docs`, `/redoc`
-- `/openapi.json`
 
 ## Request/Response Conventions
 

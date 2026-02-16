@@ -26,7 +26,7 @@ from kehrnel.engine.domains.openehr.templates.parser import TemplateParser
 from kehrnel.engine.domains.openehr.templates.generator import kehrnelGenerator
 from kehrnel.engine.domains.openehr.templates.validator import kehrnelValidator
 from kehrnel.api.bridge.app.core.config import settings as bridge_settings
-from kehrnel.engine.core.redaction import redact_secrets
+from kehrnel.engine.core.redaction import redact_sensitive
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -85,7 +85,8 @@ def _error_response(exc: Exception) -> JSONResponse:
         message = str(exc)
     else:
         message = "Internal server error"
-    message = redact_secrets(message) or message
+    # Avoid leaking secrets or filesystem internals (absolute paths) via error strings.
+    message = redact_sensitive(message) or message
     return JSONResponse(status_code=status, content={"error": {"code": code, "message": message, "details": details}})
 
 
@@ -672,6 +673,8 @@ async def api_validate_composition(request: Request):
             raise KehrnelError(code="INVALID_INPUT", status=400, message="composition object is required")
         if not opt_content or not str(opt_content).strip():
             raise KehrnelError(code="INVALID_INPUT", status=400, message="opt_content is required")
+        if len(str(opt_content).encode("utf-8")) > _get_max_opt_bytes():
+            raise KehrnelError(code="PAYLOAD_TOO_LARGE", status=413, message="opt_content exceeds upload limit")
 
         with tempfile.NamedTemporaryFile("w", suffix=".opt", encoding="utf-8", delete=False) as opt_tmp:
             opt_tmp.write(str(opt_content))

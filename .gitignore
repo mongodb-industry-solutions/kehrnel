@@ -198,3 +198,8 @@ config.json
 *next_steps.txt
 .DS_Store
 .kehrnel_registry.json
+
+# kehrnel local runtime state / caches (should never be committed)
+.kehrnel/
+tmp_reg.json
+:memory:

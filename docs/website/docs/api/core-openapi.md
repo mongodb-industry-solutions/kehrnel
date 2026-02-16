@@ -6,16 +6,21 @@ sidebar_position: 3
 
 The core layer provides runtime-level platform APIs that are independent of a specific clinical domain or strategy implementation.
 
-## OpenAPI Contracts
+## Interactive Docs
 
-Canonical contract entry points:
+Use Swagger or ReDoc to explore the runtime contract:
 
-- `/openapi.json` (full runtime spec)
-- `/openapi/core.json` (core/admin subset)
-- `/openapi/domains/{domain}.json` (domain slice)
-- `/openapi/strategies/{domain}/{strategy}.json` (strategy slice)
+- Swagger UI: `/docs`
+- ReDoc: `/redoc`
 
-Use these endpoints as the source of truth for code generation and contract validation.
+Layer slices are also available:
+
+- Core (Swagger): `/docs/core`
+- Core (ReDoc): `/redoc/core`
+- Domain (Swagger): `/docs/domains/{domain}`
+- Domain (ReDoc): `/redoc/domains/{domain}`
+- Strategy (Swagger): `/docs/strategies/{domain}/{strategy}`
+- Strategy (ReDoc): `/redoc/strategies/{domain}/{strategy}`
 
 ## Runtime Control Surfaces
 
@@ -30,7 +35,7 @@ Primary core/admin endpoints:
 
 ## Why This Layer Matters
 
-\{kehrnel\} evolves as a multi-strategy runtime. OpenAPI slices let teams consume only the part they need while preserving a single canonical contract model.
+\{kehrnel\} evolves as a multi-strategy runtime. The core layer is where strategy discovery, activation, and diagnostics live across domains.
 
 ## Related
 

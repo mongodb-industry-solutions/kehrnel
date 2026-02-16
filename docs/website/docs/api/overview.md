@@ -139,7 +139,6 @@ curl -H "X-API-Key: your-key" http://localhost:8000/api/domains/openehr/ehr
 These endpoints don't require authentication:
 - `/health` - Health check
 - `/docs`, `/redoc` - API documentation
-- `/openapi.json` - OpenAPI specification
 - Strategy assets (documentation, specs)
 
 ## Response Format
