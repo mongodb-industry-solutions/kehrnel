@@ -2,7 +2,7 @@ services:
   kehrnel-api:
     build:
       context: .
-      dockerfile: Dockerfile.openehr
+      dockerfile: Dockerfile.backend
     ports:
       - 8000:8080
     env_file:   
