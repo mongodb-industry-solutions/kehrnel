@@ -1,0 +1,206 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "openEHR RPS-Dual Strategy Configuration",
+  "description": "Data model and storage configuration for the Reversed Path Search dual-collection strategy. Visible in portal.",
+  "type": "object",
+  "definitions": {
+    "uriRef": {
+      "type": "string",
+      "pattern": "^(file://|collection://).+",
+      "description": "URI reference: file://path or collection://name?filter=value"
+    },
+    "idEncoding": {
+      "type": "string",
+      "enum": ["string", "objectid", "uuid", "uuidbin"],
+      "default": "string"
+    },
+    "pathSeparator": {
+      "type": "string",
+      "enum": [".", "/", "@", "|"],
+      "default": "."
+    },
+    "encodingProfile": {
+      "type": "string",
+      "enum": ["profile.fullpath", "profile.codedpath", "profile.search_shortcuts"]
+    }
+  },
+  "properties": {
+    "collections": {
+      "type": "object",
+      "description": "MongoDB collection configuration",
+      "properties": {
+        "compositions": {
+          "type": "object",
+          "description": "Canonical compositions store",
+          "properties": {
+            "name": { "type": "string", "description": "Collection name", "default": "compositions_rps" },
+            "encodingProfile": { "$ref": "#/definitions/encodingProfile", "default": "profile.codedpath" }
+          },
+          "required": ["name"]
+        },
+        "search": {
+          "type": "object",
+          "description": "Slim search store for cross-patient queries",
+          "properties": {
+            "name": { "type": "string", "description": "Collection name", "default": "compositions_search" },
+            "encodingProfile": { "$ref": "#/definitions/encodingProfile", "default": "profile.search_shortcuts" },
+            "enabled": { "type": "boolean", "default": true },
+            "atlasIndex": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string", "description": "Atlas Search index name" },
+                "definition": {
+                  "oneOf": [
+                    { "$ref": "#/definitions/uriRef" },
+                    { "type": "object", "description": "Inline index definition" },
+                    { "type": "null" }
+                  ]
+                }
+              }
+            }
+          },
+          "required": ["name"]
+        },
+        "codes": {
+          "type": "object",
+          "description": "Dictionary collection for path code mappings",
+          "properties": {
+            "name": { "type": "string", "default": "_codes" },
+            "seed": {
+              "oneOf": [
+                { "$ref": "#/definitions/uriRef" },
+                { "type": "object", "description": "Inline seed data" },
+                { "type": "null" }
+              ],
+              "description": "Optional pre-populated dictionary data"
+            }
+          }
+        },
+        "shortcuts": {
+          "type": "object",
+          "description": "Shortcuts collection for key/value compaction",
+          "properties": {
+            "name": { "type": "string", "default": "_shortcuts" },
+            "seed": {
+              "oneOf": [
+                { "$ref": "#/definitions/uriRef" },
+                { "type": "object", "description": "Inline seed data" },
+                { "type": "null" }
+              ],
+              "description": "Optional pre-populated shortcuts"
+            }
+          }
+        }
+      },
+      "required": ["compositions", "search"]
+    },
+    "ids": {
+      "type": "object",
+      "description": "ID field encoding strategy",
+      "properties": {
+        "ehr_id": { "$ref": "#/definitions/idEncoding" },
+        "composition_id": { "$ref": "#/definitions/idEncoding" }
+      },
+      "default": { "ehr_id": "string", "composition_id": "objectid" }
+    },
+    "paths": {
+      "type": "object",
+      "description": "Path encoding settings",
+      "properties": {
+        "separator": { "$ref": "#/definitions/pathSeparator" }
+      },
+      "default": { "separator": "." }
+    },
+    "fields": {
+      "type": "object",
+      "description": "Field naming conventions for stored documents",
+      "properties": {
+        "document": {
+          "type": "object",
+          "description": "Document-level field names",
+          "properties": {
+            "ehr_id": { "type": "string", "default": "ehr_id" },
+            "comp_id": { "type": "string", "default": "comp_id" },
+            "tid": { "type": "string", "default": "tid" },
+            "v": { "type": "string", "default": "v" },
+            "cn": { "type": "string", "default": "cn", "description": "Canonical nodes array" },
+            "sn": { "type": "string", "default": "sn", "description": "Search nodes array" }
+          }
+        },
+        "node": {
+          "type": "object",
+          "description": "Node-level field names (inside cn/sn arrays)",
+          "properties": {
+            "p": { "type": "string", "default": "p", "description": "Reversed path" },
+            "pi": { "type": "string", "default": "pi", "description": "Path instance chain (list indexes aligned with path segments)" },
+            "data": { "type": "string", "default": "data", "description": "Payload fragment" }
+          }
+        }
+      }
+    },
+    "transform": {
+      "type": "object",
+      "description": "Transformation pipeline configuration",
+      "properties": {
+        "mappings": {
+          "oneOf": [
+            { "$ref": "#/definitions/uriRef" },
+            { "type": "object", "description": "Inline mapping definition" },
+            { "type": "null" }
+          ],
+          "description": "Field mappings: file://path, collection://name, or inline object"
+        },
+        "coding": {
+          "type": "object",
+          "description": "Code encoding strategies",
+          "properties": {
+            "arcodes": {
+              "type": "object",
+              "properties": {
+                "strategy": {
+                  "type": "string",
+                  "enum": ["sequential", "short_prefix", "literal"],
+                  "default": "sequential"
+                },
+                "prefix_replace": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "from": { "type": "string" },
+                      "to": { "type": "string" }
+                    },
+                    "required": ["from", "to"]
+                  },
+                  "description": "Prefix replacements for literal strategy"
+                }
+              }
+            },
+            "atcodes": {
+              "type": "object",
+              "properties": {
+                "strategy": {
+                  "type": "string",
+                  "enum": ["negative_int", "sequential", "literal", "compact_prefix"],
+                  "default": "negative_int"
+                },
+                "store_original": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Keep original at-code alongside numeric code"
+                }
+              }
+            }
+          }
+        },
+        "apply_shortcuts": {
+          "type": "boolean",
+          "default": true,
+          "description": "Apply key/value shortcuts to payload"
+        }
+      }
+    }
+  },
+  "required": ["collections"],
+  "additionalProperties": false
+}

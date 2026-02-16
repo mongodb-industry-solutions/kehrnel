@@ -1,0 +1,59 @@
+{
+  "collections": {
+    "compositions": {
+      "name": "compositions_rps",
+      "encodingProfile": "profile.codedpath"
+    },
+    "search": {
+      "name": "compositions_search",
+      "encodingProfile": "profile.search_shortcuts",
+      "enabled": true,
+      "atlasIndex": {
+        "name": "search_nodes_index",
+        "definition": "file://bundles/searchIndex/searchIndex.json"
+      }
+    },
+    "codes": {
+      "name": "_codes",
+      "seed": "file://bundles/dictionaries/_codes.json"
+    },
+    "shortcuts": {
+      "name": "_shortcuts",
+      "seed": "file://bundles/shortcuts/shortcuts.json"
+    }
+  },
+  "ids": {
+    "ehr_id": "string",
+    "composition_id": "objectid"
+  },
+  "paths": {
+    "separator": "."
+  },
+  "fields": {
+    "document": {
+      "ehr_id": "ehr_id",
+      "comp_id": "comp_id",
+      "tid": "tid",
+      "v": "v",
+      "cn": "cn",
+      "sn": "sn"
+    },
+    "node": {
+      "p": "p",
+      "pi": "pi",
+      "data": "data"
+    }
+  },
+  "transform": {
+    "apply_shortcuts": true,
+    "coding": {
+      "arcodes": {
+        "strategy": "sequential"
+      },
+      "atcodes": {
+        "strategy": "negative_int",
+        "store_original": false
+      }
+    }
+  }
+}

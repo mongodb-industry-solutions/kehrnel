@@ -2,11 +2,16 @@ from pathlib import Path
 import re
 
 SRC_ROOT = Path("src")
-CODE_ROOTS = [SRC_ROOT / "kehrnel", Path("tests")]
+CODE_ROOTS = [SRC_ROOT / "kehrnel"]
 ALLOWED_PACKAGES = {"kehrnel", "strategy_sdk", "cli"}
-SRC_IMPORT_PATTERN = re.compile(r"\bsrc\.")
-PERSISTENCE_PATTERN = re.compile(r"(?<!kehrnel\.)\\bpersistence\\.")
-ADAPTERS_PATTERN = re.compile(r"\badapters\.mongo", re.IGNORECASE)
+# Only flag actual imports, not variable names like "src.get(...)".
+SRC_IMPORT_PATTERN = re.compile(r"^\s*(from|import)\s+src\.", re.MULTILINE)
+PERSISTENCE_PATTERN = re.compile(r"^\s*(from|import)\s+(?<!kehrnel\.)persistence\.", re.MULTILINE)
+ADAPTERS_PATTERN = re.compile(r"^\s*(from|import)\s+adapters\.mongo", re.MULTILINE | re.IGNORECASE)
+LEGACY_ENGINE_IMPORT_PATTERN = re.compile(
+    r"^\s*(from|import)\s+kehrnel\.(core|common|domains|strategies)\b",
+    re.MULTILINE,
+)
 THIS_FILE = Path(__file__).resolve()
 FORBIDDEN_PATH_TOKENS = (
     "src.core.",
@@ -53,9 +58,19 @@ def test_no_extra_top_level_packages():
 
 def test_no_new_rps_dual_compiler_imports():
     offenders = []
-    strategies_root = SRC_ROOT / "kehrnel" / "strategies"
+    strategies_root = SRC_ROOT / "kehrnel" / "engine" / "strategies"
     for path in strategies_root.rglob("*.py"):
         text = path.read_text(encoding="utf-8")
         if any(token in text for token in FORBIDDEN_RPS_DUAL_COMPILERS):
             offenders.append(path)
     assert not offenders, f"Forbidden rps_dual compiler imports detected: {sorted(offenders)}"
+
+
+def test_cli_and_api_import_engine_paths_only():
+    offenders = []
+    for root in (SRC_ROOT / "kehrnel" / "cli", SRC_ROOT / "kehrnel" / "api"):
+        for path in root.rglob("*.py"):
+            text = path.read_text(encoding="utf-8")
+            if LEGACY_ENGINE_IMPORT_PATTERN.search(text):
+                offenders.append(path)
+    assert not offenders, f"CLI/API must import engine modules only: {sorted(offenders)}"

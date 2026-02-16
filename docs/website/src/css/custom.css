@@ -1,0 +1,341 @@
+/**
+ * Kehrnel Documentation Theme
+ * Brand colors: #4A9EBD (teal) and #EA6635 (orange)
+ */
+
+:root {
+  /* Primary: Kehrnel teal */
+  --ifm-color-primary: #4A9EBD;
+  --ifm-color-primary-dark: #3d8fb0;
+  --ifm-color-primary-darker: #3786a6;
+  --ifm-color-primary-darkest: #2d6e89;
+  --ifm-color-primary-light: #5facc7;
+  --ifm-color-primary-lighter: #6ab3cc;
+  --ifm-color-primary-lightest: #89c4d8;
+
+  /* Accent: Kehrnel orange */
+  --kehrnel-accent: #EA6635;
+  --kehrnel-accent-light: #f07d52;
+  --kehrnel-accent-dark: #d4551f;
+
+  --ifm-code-font-size: 95%;
+  --ifm-font-family-monospace: 'JetBrains Mono', 'Fira Code', monospace;
+  --docusaurus-highlighted-code-line-bg: rgba(74, 158, 189, 0.1);
+
+  /* Links */
+  --ifm-link-color: #4A9EBD;
+  --ifm-link-hover-color: #EA6635;
+
+  /* Navbar */
+  --ifm-navbar-background-color: #ffffff;
+  --ifm-navbar-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #5facc7;
+  --ifm-color-primary-dark: #4A9EBD;
+  --ifm-color-primary-darker: #3d8fb0;
+  --ifm-color-primary-darkest: #2d6e89;
+  --ifm-color-primary-light: #6ab3cc;
+  --ifm-color-primary-lighter: #89c4d8;
+  --ifm-color-primary-lightest: #a8d5e5;
+
+  --kehrnel-accent: #f07d52;
+
+  --docusaurus-highlighted-code-line-bg: rgba(74, 158, 189, 0.2);
+
+  --ifm-background-color: #1a1a2e;
+  --ifm-navbar-background-color: #16213e;
+  --ifm-footer-background-color: #0f0f23;
+}
+
+/* Navbar styling */
+.navbar {
+  border-bottom: 2px solid var(--kehrnel-accent);
+}
+
+.navbar__title {
+  display: none; /* Hide title, logo component handles it */
+}
+
+.navbar__logo {
+  height: 2rem;
+}
+
+/* Sidebar styling */
+.menu__link--active:not(.menu__link--sublist) {
+  background-color: rgba(74, 158, 189, 0.1);
+  border-left: 3px solid var(--kehrnel-accent);
+}
+
+/* Hero/landing adjustments */
+.hero {
+  background: linear-gradient(135deg, #4A9EBD 0%, #2d6e89 100%);
+}
+
+.hero__title {
+  color: white;
+}
+
+.hero__subtitle {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Code block styling */
+.prism-code {
+  font-size: 14px;
+}
+
+code {
+  border-color: rgba(74, 158, 189, 0.3);
+}
+
+/* Headings with accent */
+h1, h2 {
+  border-bottom: none;
+}
+
+.markdown h2 {
+  border-bottom: 1px solid rgba(74, 158, 189, 0.2);
+  padding-bottom: 0.5rem;
+}
+
+/* Tables */
+table {
+  display: table;
+  width: 100%;
+}
+
+th {
+  background-color: rgba(74, 158, 189, 0.1);
+}
+
+[data-theme='dark'] th {
+  background-color: rgba(74, 158, 189, 0.2);
+}
+
+/* Admonitions/callouts */
+.alert--info {
+  --ifm-alert-background-color: rgba(74, 158, 189, 0.1);
+  --ifm-alert-border-color: #4A9EBD;
+}
+
+.alert--warning {
+  --ifm-alert-background-color: rgba(234, 102, 53, 0.1);
+  --ifm-alert-border-color: #EA6635;
+}
+
+/* Method badges for API docs */
+.method-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-right: 8px;
+}
+
+.method-get {
+  background-color: rgba(74, 158, 189, 0.2);
+  color: #4A9EBD;
+}
+
+.method-post {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.method-put {
+  background-color: rgba(234, 102, 53, 0.2);
+  color: #EA6635;
+}
+
+.method-delete {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+/* Footer styling */
+.footer {
+  border-top: 2px solid var(--kehrnel-accent);
+}
+
+.footer__title {
+  color: var(--ifm-color-primary);
+}
+
+/* Buttons */
+.button--primary {
+  background-color: var(--kehrnel-accent);
+  border-color: var(--kehrnel-accent);
+  color: #ffffff;
+}
+
+.button--primary:hover {
+  background-color: var(--kehrnel-accent-dark);
+  border-color: var(--kehrnel-accent-dark);
+  color: #ffffff;
+}
+
+/* Keep Infima outline semantics: don't paint the background when outline is requested. */
+.button.button--outline.button--primary {
+  background-color: transparent;
+  border-color: var(--kehrnel-accent);
+  color: var(--kehrnel-accent);
+}
+
+.button.button--outline.button--primary:hover {
+  background-color: rgba(234, 102, 53, 0.10);
+  border-color: var(--kehrnel-accent-dark);
+  color: var(--kehrnel-accent-dark);
+}
+
+/* TOC highlighting */
+.table-of-contents__link--active {
+  color: var(--kehrnel-accent);
+}
+
+.kehrnel-home {
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 2rem 1rem 3rem;
+}
+
+.kehrnel-hero {
+  background: linear-gradient(140deg, rgba(74, 158, 189, 0.14), rgba(234, 102, 53, 0.12));
+  border: 1px solid rgba(74, 158, 189, 0.3);
+  border-radius: 14px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.kehrnel-hero-logo {
+  display: block;
+  height: 112px;
+  margin: 0 auto 0.75rem;
+}
+
+.kehrnel-hero-claim {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.kehrnel-hero-subtitle {
+  margin: 0 auto 1.25rem;
+  max-width: 900px;
+}
+
+.kehrnel-hero-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.kehrnel-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 1rem;
+}
+
+.kehrnel-card {
+  background: var(--ifm-card-background-color);
+  border: 1px solid rgba(74, 158, 189, 0.2);
+  border-radius: 12px;
+  padding: 1.1rem;
+}
+
+.kehrnel-card h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.kehrnel-card p {
+  margin-bottom: 0.75rem;
+}
+
+@media (max-width: 900px) {
+  .kehrnel-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kehrnel-hero-logo {
+    height: 92px;
+  }
+}
+
+/* API overview CTAs */
+.apiCtaGrid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 1rem 0 1.5rem;
+}
+
+.apiCtaGrid.apiCtaGrid--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.apiCtaCard {
+  background: linear-gradient(
+    140deg,
+    rgba(74, 158, 189, 0.10),
+    rgba(234, 102, 53, 0.08)
+  );
+  border: 1px solid rgba(74, 158, 189, 0.22);
+  border-radius: 14px;
+  padding: 1.1rem 1.1rem 1rem;
+  position: relative;
+  transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.apiCtaCard:hover {
+  border-color: rgba(234, 102, 53, 0.45);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.apiCtaKicker {
+  color: rgba(0, 0, 0, 0.62);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
+[data-theme='dark'] .apiCtaKicker {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.apiCtaTitle {
+  font-size: 1.25rem;
+  font-weight: 900;
+  margin: 0 0 0.35rem;
+}
+
+.apiCtaBody {
+  color: rgba(0, 0, 0, 0.72);
+  margin-bottom: 0.9rem;
+}
+
+[data-theme='dark'] .apiCtaBody {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.apiCtaActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+@media (max-width: 996px) {
+  .apiCtaGrid,
+  .apiCtaGrid.apiCtaGrid--2 {
+    grid-template-columns: 1fr;
+  }
+}

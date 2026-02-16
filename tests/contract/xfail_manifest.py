@@ -1,5 +1,5 @@
 XFAIL_TESTS = {
-    # Legacy AQL→MQL parity gaps (search compound/lookup/projections/regex)
+    # Compatibility AQL→MQL parity gaps (search compound/lookup/projections/regex)
     "tests/contract/test_atlas_search_compile.py::test_cross_patient_embedded_document_pipeline",
     "tests/contract/test_atlas_search_compile.py::test_lookup_appended_when_configured",
     "tests/contract/test_atlas_search_compile.py::test_post_match_added_for_unsupported_predicate",

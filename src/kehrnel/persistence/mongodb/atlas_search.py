@@ -5,7 +5,7 @@ from typing import Any, Dict, List
 
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
-from kehrnel.adapters.base import TextSearchAdapter
+from kehrnel.persistence.mongodb.base import TextSearchAdapter
 
 
 class MongoAtlasSearchAdapter(TextSearchAdapter):

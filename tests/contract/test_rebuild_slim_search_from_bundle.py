@@ -34,14 +34,16 @@ async def test_rebuild_slim_search_uses_bundle_rules(tmp_path):
                 {
                     "templateId": "Sample",
                     "analytics_fields": [{"name": "code", "path": "code", "rmType": "DV_TEXT"}],
-                    "rules": [{"when": {"pathChain": ["admin_salut"]}, "copy": ["p", "data.value"]}],
+                    # Strategy expects fields copied relative to node.data (not "data.*").
+                    "rules": [{"when": {"pathChain": ["admin_salut"]}, "copy": ["p", "value"]}],
                 }
             ]
         },
     }
     bundle_store.save_bundle(bundle, mode="upsert")
     cfg = load_json(DEFAULTS_PATH)
-    cfg["slim_search"]["bundle_id"] = bundle["bundle_id"]
+    # Bundle reference is currently derived from collections.search.atlasIndex.definition.
+    cfg["collections"]["search"]["atlasIndex"]["definition"] = bundle["bundle_id"]
     comp_doc = {
         "_id": "comp1",
         "ehr_id": "ehr1",
@@ -57,7 +59,7 @@ async def test_rebuild_slim_search_uses_bundle_rules(tmp_path):
     assert res["ok"] is True
     assert storage.inserted, "expected slim search docs"
     inserted_doc = storage.inserted[0][1]
-    sn_field = cfg["collections"]["search"]["nodes_field"]
+    sn_field = cfg["fields"]["document"]["sn"]
     assert sn_field in inserted_doc
     search_nodes = inserted_doc[sn_field]
     assert any(node.get("p") == "admin_salut/items[at0007]" for node in search_nodes)

@@ -5,7 +5,7 @@ from typing import Any, Dict, List
 
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
-from kehrnel.adapters.base import IndexAdminAdapter
+from kehrnel.persistence.mongodb.base import IndexAdminAdapter
 
 
 class MongoIndexAdminAdapter(IndexAdminAdapter):

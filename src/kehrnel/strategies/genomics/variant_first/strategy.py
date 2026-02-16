@@ -1,42 +1,6 @@
-from __future__ import annotations
+"""Backward-compatible wrapper for ``kehrnel.engine.strategies.genomics.variant_first.strategy``."""
 
-from typing import Any, Dict
+from kehrnel.engine.strategies.genomics.variant_first.strategy import GenomicsVariantFirstStrategy
 
-from kehrnel.core.plugin import StrategyPlugin
-from kehrnel.core.types import QueryPlan, QueryResult, StrategyContext
-from kehrnel.core.explain import enrich_explain
+__all__ = ["GenomicsVariantFirstStrategy"]
 
-
-class GenomicsVariantFirstStrategy(StrategyPlugin):
-    def __init__(self, manifest):
-        self.manifest = manifest
-
-    async def validate_config(self, ctx: StrategyContext):
-        return True
-
-    async def plan(self, ctx: StrategyContext):
-        return {}
-
-    async def apply(self, ctx: StrategyContext, plan=None):
-        return {}
-
-    async def transform(self, ctx: StrategyContext, payload: Dict[str, Any]):
-        return {}
-
-    async def reverse_transform(self, ctx: StrategyContext, payload: Dict[str, Any]):
-        return {}
-
-    async def ingest(self, ctx: StrategyContext, payload: Dict[str, Any]):
-        return {}
-
-    async def compile_query(self, ctx: StrategyContext, domain: str, query: Dict[str, Any]) -> QueryPlan:
-        pipeline = [{"$match": {"domain": "genomics"}}]
-        explain = {"builder": {"chosen": "genomics_dummy"}}
-        explain = enrich_explain(explain, ctx, domain="genomics", engine="genomics_dummy", scope=query.get("scope") or "unknown")
-        return QueryPlan(engine="genomics_dummy", plan={"pipeline": pipeline, "explain": explain}, explain=explain)
-
-    async def execute_query(self, ctx: StrategyContext, plan: QueryPlan) -> QueryResult:
-        return QueryResult(engine_used=plan.engine, rows=[], explain=plan.explain or {})
-
-    async def run_op(self, ctx: StrategyContext, op: str, payload: Dict[str, Any]):
-        raise ValueError(f"Strategy op '{op}' not supported")

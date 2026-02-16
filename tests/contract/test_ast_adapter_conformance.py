@@ -1,7 +1,6 @@
 import pytest
 
 from kehrnel.domains.openehr.aql.parse import parse_aql
-from kehrnel.domains.openehr.aql.ir import AqlQueryIR
 from kehrnel.strategies.openehr.rps_dual.query.ast_adapter import adapt_ir_to_ast
 from kehrnel.strategies.openehr.rps_dual.query.transformers.ast_validator import ASTValidator
 
@@ -12,5 +11,5 @@ from kehrnel.strategies.openehr.rps_dual.query.transformers.ast_validator import
 ])
 def test_adapter_passes_ast_validator(aql_text):
     ir = parse_aql(aql_text)
-    ast_doc = adapt_ir_to_ast(ir, ehr_alias="e", composition_alias="c")
-    ASTValidator.validate_ast(ast_doc)
+    ast = adapt_ir_to_ast(ir, ehr_alias="e", composition_alias="c")
+    ASTValidator.validate_ast(ast)

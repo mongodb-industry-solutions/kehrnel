@@ -1,11 +1,4 @@
-"""
-Canonical ⇄ Flattened transformer utilities.
+"""Backward-compatible wrapper for ``kehrnel.engine.strategies.openehr.rps_dual.ingest``."""
 
-Public helpers
---------------
-flatten_one()  → (full_doc, search_doc)
-expand_one()   → canonical JSON
-"""
-from .single import flatten_one, expand_one   # re-export for convenience
+__all__ = []
 
-__all__ = ["flatten_one", "expand_one"]

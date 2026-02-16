@@ -1,1 +1,0 @@
-"""openEHR service scaffold."""
