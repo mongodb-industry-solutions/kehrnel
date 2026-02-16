@@ -46,14 +46,8 @@ api = [
     "motor>=3.3",
     "certifi>=2024.0.0",
     "python-multipart>=0.0.6",
-<<<<<<< HEAD
     "pydantic-settings>=2.0.0",
     "pydantic>=2.5"
-=======
-    "pydantic>=2.5",
-    "pydantic-settings>=2.2",
-    "python-dateutil>=2.8"
->>>>>>> staging
 ]
 
 # Tests/dev tooling
