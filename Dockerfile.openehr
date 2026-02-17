@@ -1,9 +1,0 @@
-FROM python:3.12-slim
-WORKDIR /kerhnel
-COPY . .
-RUN pip install -e .[all]
-ENV API_PORT=8080
-ENV KEHRNEL_API_PORT=8080
-ENV KEHRNEL_API_RELOAD=false
-CMD ["kehrnel-api"]
-EXPOSE 8080

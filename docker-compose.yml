@@ -4,6 +4,6 @@ services:
       context: .
       dockerfile: Dockerfile.backend
     ports:
-      - 9000:8080
-    env_file:
-      - .env.local
+      - 8000:8080
+    env_file:   
+      - .env  
