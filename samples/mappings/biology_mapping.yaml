@@ -1,149 +1,114 @@
-# biology_mapping.yml (Version 4.2 - Final)
-_metadata:
-  version: "4.2"
-  source_format: "BIOLOGY_CSV"
-  target_template: "T-IGR-BIOLOGY"
-_preprocessing:
-  - type: "group_and_multiply"
-    group_by_column: "IdentifiantAnalyse"
+meta:
+  default_source: csv1
 
-# ═════════════════════════════════════════
-# Composition Header & Context
-# ═════════════════════════════════════════
-"/name/value": "constant:Rapport de Biologie"
-"/language/code_string": "constant:fr"
-"/territory/code_string": "constant:FR"
-"/category/defining_code/code_string": "constant:433"
-"/category/value": "constant:event"
+sources:
+  csv1:
+    type: csv
+    date_format: "%d/%m/%Y"
 
-# --- SOLUTION: Define the entire composer object ---
-# This is more robust than trying to patch a sub-attribute.
-"/composer":
-  _type: "constant:PARTY_IDENTIFIED"
-  name:
-    from_group: "first"
-    column: "Emetteur"
+input:
+  from: csv1
+  group_by: [IdentifiantAnalyse]
 
-"/context/start_time/value":
-  from_group: "first"
-  column: "DateResultat"
-  transform: "dmy_to_iso"
+output:
+  prune_empty: true
+  filename: "biology_output.json"
 
-# --- SOLUTION: Define the entire health_care_facility object ---
-"/context/health_care_facility":
-  _type: "constant:PARTY_IDENTIFIED"
-  name:
-    from_group: "first"
-    column: "Emetteur"
+mappings:
+  "/name/value":
+    set: "Rapport de Biologie"
 
-# --- FIX: Target the final leaf node for DV_TEXT values ---
-"/context/other_context/items[at0002]/value/value":
-  from_group: "key"
-"/context/other_context/items[at0005]/value/value": "constant:final"
+  "/composer/name":
+    get:
+      column: Emetteur
+    transform: [strip]
 
-# ═════════════════════════════════════════
-# Content - Laboratory Observation
-# ═════════════════════════════════════════
-"/content/0/language/code_string": "constant:fr"
-"/content/0/encoding/code_string": "constant:UTF-8"
-"/content/0/subject":
-  _type: "constant:PARTY_IDENTIFIED"
-  identifiers:
-    - _type: "constant:DV_IDENTIFIER"
-      issuer: "constant:LAB_SYSTEM"
-      assigner: "constant:LAB_SYSTEM"
-      id:
-        from_group: "first"
-        column: "IPP"
-      type: "constant:PATIENT"
+  "/context/start_time/value":
+    get:
+      column: DateResultat
+    transform: [date_iso]
 
-"/content/0/workflow_id":
-  _special_rule: "generate_workflow_id"
+  "/context/end_time/value":
+    get:
+      column: DateResultat
+    transform: [date_iso]
 
-# --- SOLUTION: Define the full path to the value ---
-# These paths will now be correctly created and populated.
-"/content/0/data/origin":
-  _type: "constant:DV_DATE_TIME"
-  value:
-    from_group: "first"
-    column: "DateResultat"
-    transform: "dmy_to_iso"
+  "/context/other_context/items[at0002]/value/value":
+    get:
+      column: IdentifiantAnalyse
+    transform: [strip]
 
-"/content/0/data/events/0/time":
-  _type: "constant:DV_DATE_TIME"
-  value:
-    from_group: "first"
-    column: "DateResultat"
-    transform: "dmy_to_iso"
+  "/context/other_context/items[at0005]/value/value":
+    set: "final"
 
-# --- FIX: Target the final leaf node ---
-"/content/0/protocol/items[at0094]/items[at0063]/value/value":
-  from_group: "key"
+  "/content[0]/data/origin/value":
+    get:
+      column: DatePrelevement
+    transform: [date_iso]
 
+  "/content[0]/data/events[0]/time/value":
+    get:
+      column: DateResultat
+    transform: [date_iso]
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-#  ▶ CRITICAL DATA MAPPING (Analyte Clusters)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-"/content/0/data/events/0/data/items":
-  - # Item 1: Overall Test Status (static per group)
-    _type: "constant:ELEMENT"
-    archetype_node_id: "constant:at0073"
-    name:
-      value: "constant:Overall test status"
-    value:
-      _type: "constant:DV_CODED_TEXT"
-      value:
-        from_group: "first"
-        column: "StatutResultats"
-        map:
-          "F": "Final"
-          "X": "Corrected"
-          "C": "Cancelled"
-      defining_code:
-        _type: "constant:CODE_PHRASE"
-        code_string:
-          from_group: "first"
-          column: "StatutResultats"
-          map:
-            "F": "at0038" # Final
-            "X": "at0115" # Corrected
-            "C": "at0074" # Cancelled
-        terminology_id:
-          value: "constant:local"
+  "/content[0]/data/events[0]/data/items[0]/value/value":
+    get:
+      column: Test
+    transform: [strip]
 
-  - # Item 2: This directive expands into one CLUSTER per CSV row in the group.
-    for_each_row:
-      _type: "constant:CLUSTER"
-      archetype_node_id: "constant:openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
-      name:
-        value: "constant:Laboratory analyte result"
-      items:
-        - # Analyte Name
-          _type: "constant:ELEMENT"
-          archetype_node_id: "constant:at0024"
-          name: { value: "constant:Analyte name" }
-          value:
-            _type: "constant:DV_TEXT"
-            value:
-              from_row: "current"
-              column: "Test"
+  "/content[0]/data/events[0]/data/items[1]/value/value":
+    get:
+      column: StatutResultats
+    map:
+      "F": "Final"
+      "X": "Corrected"
 
-        - # Analyte Result (DV_QUANTITY or DV_TEXT)
-          _type: "constant:ELEMENT"
-          archetype_node_id: "constant:at0001"
-          name: { value: "constant:Analyte result" }
-          value:
-            _special_rule: "build_analyte_value"
-            type_column: "TypeResultat"
-            result_column: "Resultat"
-            unit_column: "Unite"
+  "/content[0]/data/events[0]/data/items[1]/value/defining_code/code_string":
+    get:
+      column: StatutResultats
+    map:
+      "F": "at0038"
+      "X": "at0115"
 
-        - # ★★★ FIX: Reference Range - MOVED INSIDE for_each_row ★★★
-          _type: "constant:ELEMENT"
-          archetype_node_id: "constant:at0004"
-          name: { value: "constant:Reference range guidance" }
-          value:
-            _type: "constant:DV_TEXT"
-            value:
-              from_row: "current"
-              column: "Normales"
+  "/content[0]/data/events[0]/data/items[1]/value/defining_code/terminology_id/value":
+    set: "local"
+
+  "/content[0]/data/events[0]/data/items[5]/items[0]/value/value":
+    get:
+      column: Test
+    transform: [strip]
+
+  "/content[0]/data/events[0]/data/items[5]/items[1]/value/_type":
+    set: "DV_TEXT"
+
+  "/content[0]/data/events[0]/data/items[5]/items[1]/value/value":
+    get:
+      column: Resultat
+    transform: [strip]
+
+  "/content[0]/data/events[0]/data/items[5]/items[2]/value/value":
+    get:
+      column: Normales
+    transform: [strip]
+    null_if_empty: true
+
+  "/content[0]/data/events[0]/data/items[5]/items[4]/value/value":
+    get:
+      column: StatutResultats
+    map:
+      "F": "Final"
+      "X": "Corrected"
+
+  "/content[0]/data/events[0]/data/items[5]/items[4]/value/defining_code/code_string":
+    get:
+      column: StatutResultats
+    map:
+      "F": "at0038"
+      "X": "at0115"
+
+  "/content[0]/data/events[0]/data/items[5]/items[4]/value/defining_code/terminology_id/value":
+    set: "local"
+
+  "/content[0]/protocol/items[0]/items[0]/value/value":
+    get:
+      column: IdentifiantAnalyse

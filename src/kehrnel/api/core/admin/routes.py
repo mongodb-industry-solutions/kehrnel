@@ -7,6 +7,7 @@ import tempfile
 import secrets
 import logging
 import ipaddress
+import copy
 from pathlib import Path
 from fastapi import APIRouter, Request, Body
 from fastapi.responses import JSONResponse, FileResponse
@@ -508,7 +509,7 @@ def _apply_flat_map_safe(gen: kehrnelGenerator, composition: Dict[str, Any], fla
     return {"applied": applied, "skipped": skipped}
 
 
-def _transform_document_with_mapping(source_path: Path, mapping: Dict[str, Any], opt_path: Path) -> Dict[str, Any]:
+def _transform_document_with_mapping(source_path: Path, mapping: Dict[str, Any], opt_path: Path) -> List[Dict[str, Any]]:
     """
     Build canonical composition from source document using mapping + OPT.
     Uses the same generator/mapping pipeline as kehrnel-map CLI.
@@ -521,38 +522,53 @@ def _transform_document_with_mapping(source_path: Path, mapping: Dict[str, Any],
     if not groups:
         raise KehrnelError(code="INVALID_INPUT", status=400, message="Mapping produced no groups")
 
-    first_group = groups[0]
-    flat_map = first_group.get("map") or {}
-    used_compat_fallback = False
-    if not isinstance(flat_map, dict) or not flat_map:
-        # Compatibility fallback for path-keyed mappings used in HDL.
-        flat_map = _compat_flat_map_from_path_mapping(mapping, source_tree)
-        used_compat_fallback = True
-    if not isinstance(flat_map, dict) or not flat_map:
-        raise KehrnelError(
-            code="INVALID_INPUT",
-            status=400,
-            message="Mapping produced no path rules",
-            details={"hint": "Provide mappings.* grammar or path-keyed rules with xpath/template/constant entries."},
-        )
+    fallback_prune_empty = bool(((mapping.get("_options") or {}).get("prune_empty")) if isinstance(mapping.get("_options"), dict) else False)
+    if not fallback_prune_empty:
+        fallback_prune_empty = bool(((mapping.get("output") or {}).get("prune_empty")) if isinstance(mapping.get("output"), dict) else False)
 
-    composition = gen.generate_minimal()
-    if used_compat_fallback:
-        stats = _apply_flat_map_safe(gen, composition, flat_map)
-        if stats.get("applied", 0) <= 0:
+    compat_flat_map = None
+    base_composition = gen.generate_minimal()
+    compositions: List[Dict[str, Any]] = []
+
+    for group in groups:
+        flat_map = group.get("map") or {}
+        used_compat_fallback = False
+        if not isinstance(flat_map, dict) or not flat_map:
+            # Compatibility fallback for path-keyed mappings used in HDL.
+            if compat_flat_map is None:
+                compat_flat_map = _compat_flat_map_from_path_mapping(mapping, source_tree)
+            flat_map = compat_flat_map
+            used_compat_fallback = True
+        if not isinstance(flat_map, dict) or not flat_map:
             raise KehrnelError(
                 code="INVALID_INPUT",
                 status=400,
-                message="Mapping rules could not be applied to target template paths",
-                details=stats,
+                message="Mapping produced no path rules",
+                details={"hint": "Provide mappings.* grammar or path-keyed rules with xpath/template/constant entries."},
             )
-    else:
-        composition = apply_mapping(gen, flat_map, composition)
-    composition = gen._normalize_for_rm(composition)
-    composition = gen._prune_incomplete_datavalues(composition)
-    if bool(first_group.get("prune_empty")):
-        gen._prune_empty(composition)
-    return composition
+
+        composition = copy.deepcopy(base_composition)
+        if used_compat_fallback:
+            stats = _apply_flat_map_safe(gen, composition, flat_map)
+            if stats.get("applied", 0) <= 0:
+                raise KehrnelError(
+                    code="INVALID_INPUT",
+                    status=400,
+                    message="Mapping rules could not be applied to target template paths",
+                    details=stats,
+                )
+        else:
+            composition = apply_mapping(gen, flat_map, composition)
+
+        composition = gen._normalize_for_rm(composition)
+        composition = gen._prune_incomplete_datavalues(composition)
+        if bool(group.get("prune_empty")) or fallback_prune_empty:
+            gen._prune_empty(composition)
+        compositions.append(composition)
+
+    if not compositions:
+        raise KehrnelError(code="INVALID_INPUT", status=400, message="Mapping produced no compositions")
+    return compositions
 
 
 @router.get("/strategies", response_model=Dict[str, List[StrategyManifest]])
@@ -633,15 +649,19 @@ async def api_transform(request: Request):
             opt_path = Path(opt_tmp.name)
             temp_files.append(opt_path)
 
-        composition = _transform_document_with_mapping(src_path, mapping, opt_path)
+        compositions = _transform_document_with_mapping(src_path, mapping, opt_path)
         if template_id:
-            try:
-                ad = composition.setdefault("archetype_details", {})
-                if isinstance(ad, dict):
-                    ad.setdefault("template_id", {"value": str(template_id)})
-            except Exception:
-                pass
-        return JSONResponse(content=composition)
+            for composition in compositions:
+                try:
+                    ad = composition.setdefault("archetype_details", {})
+                    if isinstance(ad, dict):
+                        ad.setdefault("template_id", {"value": str(template_id)})
+                except Exception:
+                    pass
+
+        if len(compositions) == 1:
+            return JSONResponse(content=compositions[0])
+        return JSONResponse(content={"compositions": compositions, "count": len(compositions)})
     except Exception as exc:
         return _error_response(exc)
     finally:

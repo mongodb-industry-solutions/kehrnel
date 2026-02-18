@@ -53,7 +53,7 @@ Input: `biology.csv`
 Expected decision:
 
 - `documentType`: `biology_results_csv`
-- `mapping`: `biology_mapping_v2.yaml` (or v1 if explicitly selected)
+- `mapping`: `biology_mapping.yaml`
 - `template`: `T-IGR-BIOLOGY.opt`
 
 ## Failure handling (recommended)

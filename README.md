@@ -1,5 +1,7 @@
 # kehrnel
 
+This project is an experimental, non-production environment for demonstration purposes only.  It is not an official MongoDB product and is not formally supported by MongoDB.  MongoDB makes no representation or warranty as to the accuracy, adequacy, completeness, and fitness for a particular purpose in respect of any materials made available through the Healthcare Data Lab.”
+
 `kehrnel` is a Python runtime for strategy packs, with:
 - Strategy-pack API (`FastAPI`)
 - Runtime/activation engine
@@ -13,11 +15,6 @@ This repository is intentionally focused on:
 - `src/kehrnel/engine` (core/common/domains/strategies)
 - `src/kehrnel/cli` (CLI commands)
 - `samples/` and `tests/`
-
-Removed from active scope:
-- old standalone frontend
-- old non-package API tree (`src/api`)
-- old app entrypoint tree (`src/app`)
 
 ## Quick Start
 
@@ -60,20 +57,6 @@ In dev mode, API links are proxied to `KEHRNEL_API_ORIGIN` (default `http://loca
 Full integration guide:
 - `examples/README.md`
 - `docs/cli-api-reference.md`
-
-## Runtime Endpoints Used by HDL
-
-- `GET /strategies`
-- `GET /strategies/{id}`
-- `POST /environments/{env}/activate`
-- `GET /environments/{env}/capabilities`
-- `POST /environments/{env}/run`
-- `POST /environments/{env}/compile_query`
-- `POST /environments/{env}/query`
-- `POST /environments/{env}/activations/{domain}/ops/{op}`
-
-Detailed contract docs:
-- this README (standalone and integration model)
 
 ## Strategy Packs
 
@@ -195,6 +178,8 @@ Notes:
 
 ## License
 
-Code is Apache 2.0 (`LICENSE`).
+NOTICE: This repository is licensed under the Apache License, Version 2.0, with the exception of specific files. The data strategies, templates, schemas, and design artifacts in `src/kehrnel/engine/strategies/` are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0). You may use, share, adapt, and build upon these materials, provided you give appropriate attribution.
 
-Strategy data assets under `src/kehrnel/engine/strategies/` are CC BY 4.0 (see `src/kehrnel/engine/strategies/LICENSE`).
+See the LICENSE file in that directory for details: [`src/kehrnel/engine/strategies/LICENSE`](src/kehrnel/engine/strategies/LICENSE)  
+CC BY 4.0: https://creativecommons.org/licenses/by/4.0/  
+Apache 2.0: [`LICENSE`](LICENSE)

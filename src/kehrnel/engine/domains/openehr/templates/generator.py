@@ -16,6 +16,7 @@ from enum import Enum
 import random
 import datetime as dt
 import uuid
+import os
 from abc import ABC, abstractmethod
 from collections import OrderedDict
 from kehrnel.engine.common.mapping.mapping_engine import apply_mapping
@@ -103,6 +104,7 @@ class kehrnelGenerator:
         self.opt_path = template.opt_path
         self.tree            = template.tree
         self.handlers: List[SourceHandler] = []
+        self._debug = str(os.environ.get("KEHRNEL_GENERATOR_DEBUG", "")).strip().lower() in {"1", "true", "yes", "on"}
         
         # Build term definition maps for each archetype
         self.term_definitions = self._build_term_map()
@@ -135,15 +137,17 @@ class kehrnelGenerator:
                             break
                 
                 archetype_terms[archetype_id] = archetype_term_map
-                print(f"Found {len(archetype_term_map)} terms for archetype {archetype_id}")
+                if self._debug:
+                    print(f"Found {len(archetype_term_map)} terms for archetype {archetype_id}")
                 
                 # Debug: print the specific terms we care about
                 if "openEHR-EHR-CLUSTER.igr_pmsi_stay_segment_cluster.v0" in archetype_id:
-                    print("Cluster archetype terms:")
+                    if self._debug:
+                        print("Cluster archetype terms:")
                     for code in ["at0001", "at0002", "at0003"]:
-                        if code in archetype_term_map:
+                        if self._debug and code in archetype_term_map:
                             print(f"  {code}: {archetype_term_map[code]}")
-                        else:
+                        elif self._debug:
                             print(f"  {code}: NOT FOUND")
                 
         return archetype_terms
@@ -179,7 +183,8 @@ class kehrnelGenerator:
             raise ValueError("No definition found in OPT template")
         
         # Debug: Print some info about what we found
-        print(f"Found {len(self.term_definitions)} term definitions in template")
+        if self._debug:
+            print(f"Found {len(self.term_definitions)} term definitions in template")
         
         # Generate the composition structure
         composition = self._process_template_node(root_def, "/", 0)
@@ -206,13 +211,15 @@ class kehrnelGenerator:
         if self.current_archetype_id and self.current_archetype_id in self.archetype_terms:
             if node_id in self.archetype_terms[self.current_archetype_id]:
                 term = self.archetype_terms[self.current_archetype_id][node_id]
-                print(f"    Using archetype term: {node_id} -> {term}")
+                if self._debug:
+                    print(f"    Using archetype term: {node_id} -> {term}")
                 return term
         
         # Fall back to template terms
         if node_id in self.term_definitions:
             term = self.term_definitions[node_id]
-            print(f"    Using template term: {node_id} -> {term}")
+            if self._debug:
+                print(f"    Using template term: {node_id} -> {term}")
             return term
         
         return None
@@ -253,7 +260,7 @@ class kehrnelGenerator:
         
         # Debug output for understanding structure
         indent = "  " * depth
-        if depth < 4:
+        if self._debug and depth < 4:
             print(f"{indent}Processing: {rm_type} (node_id: {node_id}) at {path}")
         
         # Check if this is an archetype root and update context
@@ -263,7 +270,7 @@ class kehrnelGenerator:
         old_archetype_id = self.current_archetype_id
         if archetype_id:
             self.current_archetype_id = archetype_id
-            if depth < 4:
+            if self._debug and depth < 4:
                 print(f"{indent}  Entering archetype: {archetype_id}")
         
         # Create base structure with _type always first
@@ -335,9 +342,22 @@ class kehrnelGenerator:
             if attr_name == "name":
                 coerced = self._process_single_attribute(attr, f"{path}/{attr_name}", depth, rm_type)
                 if coerced:
+                    existing_txt = result.get("name", {}).get("value")
+
+                    # Keep stable term-derived names unless a concrete constrained
+                    # value is provided by the template.
+                    if existing_txt and isinstance(coerced, dict):
+                        ctype = coerced.get("_type")
+                        cval = coerced.get("value")
+                        is_placeholder = (
+                            cval in (None, "", "Lorem ipsum")
+                            or (isinstance(cval, str) and cval.startswith("text_matching_"))
+                        )
+                        if ctype in {"DV_TEXT", "DV_CODED_TEXT"} and is_placeholder:
+                            continue
+
                     # Keep human-readable text if we already set it from terms
                     if coerced.get("_type") == "DV_CODED_TEXT":
-                        existing_txt = result.get("name", {}).get("value")
                         if existing_txt and "value" not in coerced:
                             coerced["value"] = existing_txt
                     result["name"] = coerced
@@ -441,17 +461,38 @@ class kehrnelGenerator:
     
     def _process_single_attribute(self, attr: ET.Element, path: str, depth: int, parent_rm_type: str) -> Any:
         """Process a single attribute"""
-        child = attr.find("opt:children", self.NS)
+        attr_name = attr.findtext("opt:rm_attribute_name", "", self.NS)
+        children = attr.findall("opt:children", self.NS)
+        child = children[0] if children else None
         if child is None:
             return None
+
+        # ELEMENT.value can expose multiple DV_* alternatives. Prefer stable textual
+        # defaults so generated minimal payloads validate without extra mapping.
+        if attr_name == "value" and parent_rm_type == "ELEMENT" and len(children) > 1:
+            preferred_order = [
+                "DV_CODED_TEXT",
+                "DV_TEXT",
+                "DV_DATE_TIME",
+                "DV_COUNT",
+                "DV_BOOLEAN",
+                "DV_QUANTITY",
+            ]
+            by_type = {
+                c.findtext("opt:rm_type_name", "", self.NS): c
+                for c in children
+                if c.findtext("opt:rm_type_name", "", self.NS)
+            }
+            for rm in preferred_order:
+                if rm in by_type:
+                    child = by_type[rm]
+                    break
         
         # Check if this is a complex object or primitive constraint
         child_rm_type = child.findtext("opt:rm_type_name", "", self.NS)
         
         if child_rm_type:
             # Complex object
-            attr_name = attr.findtext("opt:rm_attribute_name", "", self.NS)
-            
             # Special handling for different attribute types
             if attr_name == "value" and parent_rm_type == "ELEMENT":
                 return self._process_data_value(child, path)

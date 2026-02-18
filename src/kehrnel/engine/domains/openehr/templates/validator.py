@@ -345,12 +345,45 @@ class kehrnelValidator:
             
             # Handle single attributes
             elif attr.get(XSI_TYPE) == "C_SINGLE_ATTRIBUTE":
-                for child_constraint in attr.findall("opt:children", self.tpl.NS):
-                    # Special handling for primitive constraints
+                child_constraints = attr.findall("opt:children", self.tpl.NS)
+                if not child_constraints:
+                    continue
+
+                # A C_SINGLE_ATTRIBUTE can contain alternative constraints.
+                # Validation semantics are OR: data is valid if any child constraint matches.
+                if len(child_constraints) == 1:
+                    child_constraint = child_constraints[0]
                     if child_constraint.get(XSI_TYPE) == "C_PRIMITIVE_OBJECT":
                         issues.extend(self._validate_primitive(attr_data, child_constraint, attr_path))
                     else:
                         issues.extend(self._validate_node(attr_data, child_constraint, attr_path))
+                else:
+                    selected_issues: List[ValidationIssue] | None = None
+                    matched = False
+
+                    for child_constraint in child_constraints:
+                        if child_constraint.get(XSI_TYPE) == "C_PRIMITIVE_OBJECT":
+                            candidate_issues = self._validate_primitive(attr_data, child_constraint, attr_path)
+                        else:
+                            candidate_issues = self._validate_node(attr_data, child_constraint, attr_path)
+
+                        has_error = any(
+                            (
+                                (iss.severity.value if hasattr(iss.severity, "value") else str(iss.severity)).lower()
+                                == "error"
+                            )
+                            for iss in candidate_issues
+                        )
+                        if not has_error:
+                            matched = True
+                            selected_issues = candidate_issues
+                            break
+
+                        if selected_issues is None or len(candidate_issues) < len(selected_issues):
+                            selected_issues = candidate_issues
+
+                    if selected_issues:
+                        issues.extend(selected_issues)
         
         # Check archetype node ID if present
         if isinstance(data, dict) and "archetype_node_id" in data:

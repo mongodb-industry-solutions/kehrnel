@@ -1,183 +1,143 @@
-# tumour_mapping.yaml ─────────────────────────────────────────────────────────
-#  FICHE TUMEUR  →  TEMPLATE “T-IGR-TUMOUR-SUMMARY”
-#  Version 1.1 – macro/Jinja edition – strict-mode clean
-# ─────────────────────────────────────────────────────────────────────────────
+meta:
+  default_source: cda1
 
-##############################################################################
-# 0) Meta-data  (ignored by mapper, useful for humans and tooling)
-##############################################################################
-_metadata:
-  version        : "1.1"
-  source_format  : "FicheTumeur_CDA"
-  target_template: "T-IGR-TUMOUR-SUMMARY"
-  namespaces: { cda: "urn:hl7-org:v3" }
+sources:
+  cda1:
+    type: xml
+    namespaces:
+      cda: "urn:hl7-org:v3"
 
-##############################################################################
-# 1) Global options
-##############################################################################
-_options:
+input:
+  from: cda1
+
+output:
   prune_empty: true
+  filename: "tumour_output.json"
+  envelope:
+    record_id:
+      get:
+        selector: "normalize-space(//cda:ficheTumeur/@id)"
 
-##############################################################################
-# 2) COMPOSITION context  (macros replace dozens of /value/... leaves)
-##############################################################################
-language:
-  code  : en
-  system: ISO_639-1
+mappings:
+  "/territory/code_string":
+    set: "FR"
 
-territory:
-  code  : FR
-  system: ISO_3166-1
+  "/composer/name":
+    get:
+      selector: "//cda:representedCustodianOrganization/cda:name/text()"
 
-category:
-  code   : 433
-  term   : event
-  system : openehr
+  "/context/health_care_facility/name":
+    get:
+      selector: "//cda:representedCustodianOrganization/cda:name/text()"
 
-context/setting:
-  code   : 225
-  term   : home
-  system : openehr
+  "/context/start_time/value":
+    get:
+      selector: "concat(//cda:ficheTumeur/cda:dateCreation/text(),'T00:00:00')"
 
-# Facility / author names ----------------------------------------------------
-composer/name:
-  xpath: //cda:representedCustodianOrganization/cda:name/text()
+  "/context/end_time/value":
+    get:
+      selector: "concat(//cda:ficheTumeur/cda:dateCreation/text(),'T00:00:00')"
 
-context/health_care_facility/name:
-  xpath: //cda:representedCustodianOrganization/cda:name/text()
+  "/content[0]/items[0]/data/items[0]/value/value":
+    get:
+      selector: "//cda:ficheTumeur/cda:codeLesionnel/text()"
+    null_if_empty: true
 
-# Document time (null-flavour when missing) ----------------------------------
-context/start_time:
-  template: "{{ xpath('//cda:ficheTumeur/cda:dateCreation/text()') ~ 'T00:00:00' }}"
-  null_flavour: unknown
+  "/content[0]/items[0]/data/items[1]/value/value":
+    get:
+      selector: "//cda:ficheTumeur/cda:categorie/text()"
+    transform: [strip]
+    null_if_empty: true
 
-context/end_time:
-  template: "{{ xpath('//cda:ficheTumeur/cda:dateCreation/text()') ~ 'T00:00:00' }}"
+  "/content[0]/items[0]/data/items[2]/value/value":
+    get:
+      selector: "//cda:ficheTumeur/cda:codeGdeLocalisation/text()"
+    null_if_empty: true
 
-##############################################################################
-# 3) EVALUATION.problem_diagnosis  (basic facts)
-##############################################################################
-# — ICD lesion code / category / topography ———————————
-content/0/items/0/data/items/0/value/value:
-  xpath: //cda:ficheTumeur/cda:codeLesionnel/text()
+  "/content[0]/items[0]/data/items[3]/items[0]/value/value":
+    get:
+      selector: "//cda:ficheTumeur/cda:codeSiege/text()"
+    null_if_empty: true
 
-content/0/items/0/data/items/1/value/value:
-  xpath: //cda:ficheTumeur/cda:categorie[normalize-space()]/text()
+  "/content[0]/items[0]/data/items[3]/items[1]/value/value":
+    set: "Not specified"
 
-content/0/items/0/data/items/2/value/value:
-  xpath: //cda:ficheTumeur/cda:codeGdeLocalisation/text()
+  "/content[0]/items[0]/data/items[3]/items[2]/value/value":
+    get:
+      selector: "normalize-space(//cda:ficheTumeur/cda:cote/text())"
+    map:
+      "droit": "Right"
+      "gauche": "Left"
+    null_if_empty: true
 
-# — Anatomical-location cluster —————————————————————————
-content/0/items/0/data/items/3/items/0/value/value:
-  xpath: //cda:ficheTumeur/cda:codeSiege/text()
+  "/content[0]/items[0]/data/items[3]/items[2]/value/defining_code/code_string":
+    get:
+      selector: "normalize-space(//cda:ficheTumeur/cda:cote/text())"
+    map:
+      "droit": "at0004"
+      "gauche": "at0003"
+    null_if_empty: true
 
-# specific site – default “Not specified” when empty
-content/0/items/0/data/items/3/items/1:
-  term:
-    xpath: normalize-space(//cda:ficheTumeur/cda:codeSiege/text())
-  default: Not specified
+  "/content[0]/items[0]/data/items[3]/items[2]/value/defining_code/terminology_id/value":
+    set: "local"
 
-# Laterality – coded-text macro (adds three leaves)
-content/0/items/0/data/items/3/items/Laterality:
-  code:
-    xpath: //cda:ficheTumeur/cda:cote/text()
-    map: { droit: at0004, gauche: at0003 }
-  term:
-    xpath: //cda:ficheTumeur/cda:cote/text()
-    map: { droit: Right, gauche: Left }
-  system: local
-  when: "normalize-space(//cda:ficheTumeur/cda:cote/text()) != ''"
+  "/content[0]/items[0]/data/items[5]/value/value":
+    get:
+      selector: "concat(//cda:ficheTumeur/cda:dateDiagnostic/text(),'T00:00:00')"
+    null_if_empty: true
 
-##############################################################################
-# 4) Pre-processing 
-##############################################################################
-_preprocessing:
-  - type: delete
-    xpath: "/content//CLUSTER[@archetype_node_id='openEHR-EHR-CLUSTER.anatomical_location.v1']\
-            /items/ELEMENT[@archetype_node_id='at0002']"
+  "/content[0]/items[0]/data/items[6]/value/value":
+    get:
+      selector: "concat(//cda:ficheTumeur/cda:dateDiagnostic/text(),'T00:00:00')"
+    null_if_empty: true
 
-##############################################################################
-# 5) Dynamic inserts – Laterality stub deletion + append blocks
-##############################################################################
-_"/content/0/items/0/data/items/3/items/{append}":
-  when : "normalize-space(//cda:ficheTumeur/cda:cote/text()) != ''"
-  template:
-    _type       : ELEMENT
-    name/value  : Laterality
-    archetype_node_id: at0002
-    value/_type : DV_CODED_TEXT
-    value/value:
-      xpath: //cda:ficheTumeur/cda:cote/text()
-      map : { droit: Right, gauche: Left }
-    value/defining_code:
-      terminology_id/value: local
-      code_string:
-        xpath: //cda:ficheTumeur/cda:cote/text()
-        map : { droit: at0004, gauche: at0003 }
+  "/content[0]/items[0]/data/items[7]/value/value":
+    get:
+      selector: "normalize-space(//cda:ficheTumeur/cda:severity/text())"
+    map:
+      "at0047": "Mild"
+      "at0048": "Moderate"
+      "at0049": "Unknown"
+    null_if_empty: true
 
-##############################################################################
-# 6) Fixed constants and simple XPath 
-##############################################################################
-content/0/items/0/data/items/4/value/value: "constant: Not specified"
+  "/content[0]/items[0]/data/items[7]/value/defining_code/code_string":
+    get:
+      selector: "normalize-space(//cda:ficheTumeur/cda:severity/text())"
+    null_if_empty: true
 
-content/0/items/0/protocol/items/0/value/value:
-  xpath: "concat(//cda:ficheTumeur/cda:dateCreation/text(),'T00:00:00')"
+  "/content[0]/items[0]/data/items[7]/value/defining_code/terminology_id/value":
+    set: "local"
 
-content/0/items/0/data/items/5/value/value:
-  xpath: "concat(//cda:ficheTumeur/cda:dateDiagnostic/text(),'T00:00:00')"
+  "/content[0]/items[0]/data/items[8]/items[0]/value/value":
+    get:
+      selector: "normalize-space(//cda:ficheTumeur/cda:TNMs/cda:TNM[cda:type='c']/cda:T/text())"
+    null_if_empty: true
 
-content/0/items/0/data/items/6/value/value:
-  xpath: "concat(//cda:ficheTumeur/cda:dateDiagnostic/text(),'T00:00:00')"
+  "/content[0]/items[0]/data/items[8]/items[1]/value/value":
+    get:
+      selector: "normalize-space(//cda:ficheTumeur/cda:TNMs/cda:TNM[cda:type='c']/cda:N/text())"
+    null_if_empty: true
 
-# Severity (fixed element at index 7 in this template)
-content/0/items/0/data/items/7/value/value:
-  xpath: //cda:ficheTumeur/cda:severity/text()
-  map : { at0047: Mild, at0048: Moderate, at0049: Unknown }
-  when: "normalize-space(//cda:ficheTumeur/cda:severity/text()) != ''"
+  "/content[0]/items[0]/data/items[8]/items[2]/value/value":
+    get:
+      selector: "normalize-space(//cda:ficheTumeur/cda:TNMs/cda:TNM[cda:type='c']/cda:M/text())"
+    null_if_empty: true
 
-content/0/items/0/data/items/7/value/defining_code/terminology_id/value: "constant: local"
+  "/content[0]/items[0]/data/items[9]/items[0]/value/value":
+    get:
+      selector: "normalize-space(//cda:ficheTumeur/cda:TNMs/cda:TNM[cda:type='p']/cda:T/text())"
+    null_if_empty: true
 
-content/0/items/0/data/items/7/value/defining_code/code_string:
-  xpath: //cda:ficheTumeur/cda:severity/text()
-  when: "normalize-space(//cda:ficheTumeur/cda:severity/text()) != ''"
+  "/content[0]/items[0]/data/items[9]/items[1]/value/value":
+    get:
+      selector: "normalize-space(//cda:ficheTumeur/cda:TNMs/cda:TNM[cda:type='p']/cda:N/text())"
+    null_if_empty: true
 
-# TNM / Dates / Problem-qualifier clusters 
+  "/content[0]/items[0]/data/items[9]/items[2]/value/value":
+    get:
+      selector: "normalize-space(//cda:ficheTumeur/cda:TNMs/cda:TNM[cda:type='p']/cda:M/text())"
+    null_if_empty: true
 
-##############################################################################
-# 7) Mandatory RM header fields inside the EVALUATION 
-##############################################################################
-"/content/0/items/0/language/terminology_id/value": "constant: ISO_639-1"
-"/content/0/items/0/language/code_string":           "constant: en"
-
-"/content/0/items/0/encoding/terminology_id/value":  "constant: IANA_character-sets"
-"/content/0/items/0/encoding/code_string":           "constant: UTF-8"
-
-"/content/0/items/0/workflow_id/namespace":          "constant: unknown"
-"/content/0/items/0/workflow_id/type":               "constant: ANY"
-"/content/0/items/0/workflow_id/id/value":           "constant: auto"
-"/content/0/items/0/workflow_id/id/scheme":          "constant: scheme"
-
-"/content/0/items/0/guideline_id/namespace":         "constant: unknown"
-"/content/0/items/0/guideline_id/type":              "constant: ANY"
-"/content/0/items/0/guideline_id/id/value":          "constant: auto"
-"/content/0/items/0/guideline_id/id/scheme":         "constant: scheme"
-
-_"/content/0/items/0/data/items/{append}":
-  when: "count(//cda:ficheTumeur/cda:lesionAnterieure | //cda:ficheTumeur/cda:lesionSimultanee) > 0"
-  template:
-    _type            : CLUSTER
-    archetype_node_id: openEHR-EHR-CLUSTER.problem_qualifier.v2
-    name/value       : Temporal relation
-    items:
-      - _type : ELEMENT
-        archetype_node_id: at0001
-        name/value : Anterior lesion
-        value/_type : DV_BOOLEAN
-        value/value:
-          xpath: boolean(//cda:lesionAnterieure[normalize-space(.)!=''])
-      - _type : ELEMENT
-        archetype_node_id: at0002
-        name/value : Simultaneous lesion
-        value/_type : DV_BOOLEAN
-        value/value:
-          xpath: boolean(//cda:lesionSimultanee[normalize-space(.)!=''])
+  "/content[0]/items[0]/protocol/items[0]/value/value":
+    get:
+      selector: "concat(//cda:ficheTumeur/cda:dateCreation/text(),'T00:00:00')"

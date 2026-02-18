@@ -11,18 +11,41 @@ class CSVHandler:
     def can_handle(self, path: Path) -> bool:
         return path.suffix.lower() == ".csv"
 
+    def _detect_delimiter(self, sample: str) -> str:
+        if not sample:
+            return ","
+        try:
+            dialect = csv.Sniffer().sniff(sample, delimiters=",;\t|")
+            if dialect and getattr(dialect, "delimiter", None):
+                return str(dialect.delimiter)
+        except Exception:
+            pass
+        # Pragmatic fallback for common clinical exports.
+        if sample.count(";") > sample.count(","):
+            return ";"
+        if sample.count("\t") > sample.count(","):
+            return "\t"
+        return ","
+
     def load_source(self, path: Path) -> List[Dict[str, Any]]:
-        for enc in ("utf-8-sig","utf-8","cp1252"):
+        for enc in ("utf-8-sig", "utf-8", "cp1252"):
             try:
                 with path.open("r", encoding=enc, newline="") as f:
-                    rdr = csv.DictReader(f)
+                    sample = f.read(4096)
+                    f.seek(0)
+                    delimiter = self._detect_delimiter(sample)
+                    rdr = csv.DictReader(f, delimiter=delimiter)
                     rows = [dict(r) for r in rdr]
                 if rows:
                     return rows
             except Exception:
                 pass
+
         with path.open("r", encoding="utf-8", errors="replace", newline="") as f:
-            return [dict(r) for r in csv.DictReader(f)]
+            sample = f.read(4096)
+            f.seek(0)
+            delimiter = self._detect_delimiter(sample)
+            return [dict(r) for r in csv.DictReader(f, delimiter=delimiter)]
 
     def preprocess_mapping_new(self, mapping: Dict, src_rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         meta    = mapping.get("meta") or {}
