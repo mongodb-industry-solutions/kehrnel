@@ -1,3 +1,15 @@
+NOTICE: This repository is licensed under the Apache License, Version 2.0,
+with the exception of specific files. The data strategies, templates, schemas,
+and design artifacts in `src/kehrnel/strategies/` are licensed under the
+Creative Commons Attribution 4.0 International License (CC BY 4.0). You may
+use, share, adapt, and build upon these materials, provided you give
+appropriate attribution.
+
+See the LICENSE file in that directory for details:
+https://creativecommons.org/licenses/by/4.0/
+
+-------------------------------------------------------------------------------
+
 Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -199,13 +211,3 @@ Apache License
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-
--------------------------------------------------------------------------------
-
-NOTICE: The data strategies, templates, schemas, and design artifacts in
-`src/kehrnel/strategies/` are licensed under the Creative Commons Attribution
-4.0 International License (CC BY 4.0). You may use, share, adapt, and build
-upon these materials, provided you give appropriate attribution.
-
-See the LICENSE file in that directory for details:
-https://creativecommons.org/licenses/by/4.0/
