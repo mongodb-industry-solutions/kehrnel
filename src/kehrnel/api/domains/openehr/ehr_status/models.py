@@ -1,5 +1,6 @@
-from pydantic import BaseModel, Field
-from typing import Literal, Union, Dict
+from typing import Dict, Literal, Union
+
+from pydantic import BaseModel, ConfigDict, Field
 from kehrnel.api.common.models import (
     ObjectVersionID,
     PartySelf,
@@ -18,9 +19,7 @@ class EHRStatus(BaseModel):
     subject: Union[PartySelf, SubjectModel]
     is_modifiable: bool = True
     is_queryable: bool = True
-
-    class Config:
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class EHRStatusCreate(BaseModel):
@@ -28,9 +27,7 @@ class EHRStatusCreate(BaseModel):
     subject: PartySelf
     is_modifiable: bool = True
     is_queryable: bool = True
-    
-    class Config:
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class VersionedEHRStatus(BaseModel):
@@ -38,6 +35,4 @@ class VersionedEHRStatus(BaseModel):
     owner_id: ObjectRef = Field(..., alias="ownerId")
     time_created: DvDateTime = Field(..., alias="timeCreated")
     type: Literal["VERSIONED_EHR_STATUS"] = Field("VERSIONED_EHR_STATUS", alias="_type")
-
-    class Config:
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)

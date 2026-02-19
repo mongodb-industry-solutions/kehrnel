@@ -5,7 +5,7 @@
 # This is an upsert operation, it means that if the query already exists, it will update the query sentence in case it's different
 # It won't say that the query already exists
 
-curl -XPUT http://localhost:9000/v1/query/com.kehrnel_test::ehr_summary/v1 \
+curl -XPUT http://localhost:9000/query/com.kehrnel_test::ehr_summary/v1 \
 -H "Content-Type: text/plain" \
 --data-raw 'SELECT e/ehr_id/value, e/time_created/value FROM EHR e'
 
@@ -15,7 +15,7 @@ Expected Response: An empty body with a 201 Created status code,
 ###### GET a Stored Query #######
 #################################
 
-curl -X GET http://localhost:9000/v1/query/com.kehrnel::ehr_summary/v1
+curl -X GET http://localhost:9000/query/com.kehrnel::ehr_summary/v1
 
 Expected Response: The raw AQL string in the body with a 200 OK status code.
 
@@ -23,7 +23,7 @@ Expected Response: The raw AQL string in the body with a 200 OK status code.
 ## List all stored queries ##
 #############################
 
-curl -X GET http://localhost:9000/v1/query
+curl -X GET http://localhost:9000/query
 
 # Expected Response: A JSON array with a 200 OK status code.
 
@@ -32,11 +32,11 @@ curl -X GET http://localhost:9000/v1/query
 ### Delete a stored query ####
 ##############################
 
-curl -X DELETE -v http://Localhost:9000/v1/query/com.kehrnel::ehr_summary/v1
+curl -X DELETE -v http://Localhost:9000/query/com.kehrnel::ehr_summary/v1
 
 # Expected Response: You should see < HTTP/1.1 204 No Content in the output, with no response body.
 
-curl -X POST "http://localhost:9000/v1/query/aql" \
+curl -X POST "http://localhost:9000/query/aql" \
   -H "Content-Type: text/plain" \
   -d "SELECT e/ehr_id/value, c/name/value FROM EHR e CONTAINS COMPOSITION c WHERE c/name/value = 'HC3 Reports'"
 
@@ -47,72 +47,72 @@ curl -X POST "http://localhost:9000/v1/query/aql" \
 
 
 # Get compositions for a specific patient only
-curl -X POST "http://localhost:9000/v1/query/aql?ehr_id=2626b5ad-d2f6-46db-a392-ba7077009c73" \
+curl -X POST "http://localhost:9000/query/aql?ehr_id=2626b5ad-d2f6-46db-a392-ba7077009c73" \
   -H "Content-Type: text/plain" \
   -d "SELECT e/ehr_id/value, c/name/value FROM EHR e CONTAINS COMPOSITION c"
 
 
 # Get HC3 Reports for a specific patient only
-curl -X POST "http://localhost:9000/v1/query/aql?ehr_id=2626b5ad-d2f6-46db-a392-ba7077009c73" \
+curl -X POST "http://localhost:9000/query/aql?ehr_id=2626b5ad-d2f6-46db-a392-ba7077009c73" \
   -H "Content-Type: text/plain" \
   -d "SELECT e/ehr_id/value, c/name/value FROM EHR e CONTAINS COMPOSITION c WHERE c/name/value = 'HC3 Reports'"
 
 
-curl -X POST "http://localhost:9000/v1/query/aql" \
+curl -X POST "http://localhost:9000/query/aql" \
   -H "Content-Type: text/plain" \
   -d "SELECT e/ehr_id/value, c/name/value FROM EHR e CONTAINS COMPOSITION c WHERE c/name/value = 'HC3 Reports'"
 
 
-curl -X POST "http://localhost:9000/v1/query/aql?ehr_id=2626b5ad-d2f6-46db-a392-ba7077009c73" \
+curl -X POST "http://localhost:9000/query/aql?ehr_id=2626b5ad-d2f6-46db-a392-ba7077009c73" \
   -H "Content-Type: text/plain" \
   -d "SELECT e/ehr_id/value, c/name/value FROM EHR e CONTAINS COMPOSITION c WHERE c/name/value = 'HC3 Reports'"
 
 
-curl -X POST "http://localhost:9000/v1/query/aql" \
+curl -X POST "http://localhost:9000/query/aql" \
   -H "Content-Type: text/plain" \
   -d "SELECT e/ehr_id/value FROM EHR e CONTAINS COMPOSITION c"
 
 
-curl -X POST "http://localhost:9000/v1/query/aql" \
+curl -X POST "http://localhost:9000/query/aql" \
   -H "Content-Type: text/plain" \
   -d "SELECT c/name/value FROM EHR e CONTAINS COMPOSITION c WHERE c/name/value = 'HC3 Reports'"
 
 
-curl -X POST "http://localhost:9000/v1/query/aql" \
+curl -X POST "http://localhost:9000/query/aql" \
   -H "Content-Type: text/plain" \
   -d "SELECT e/ehr_id/value, c/name/value FROM EHR e CONTAINS COMPOSITION c"
 
 
-curl -X POST "http://localhost:9000/v1/query/aql" \
+curl -X POST "http://localhost:9000/query/aql" \
   -H "Content-Type: text/plain" \
   -d "SELECT e/ehr_id/value, c/name/value FROM EHR e CONTAINS COMPOSITION c WHERE c/name/value = 'HC3 Reports'"
 
 
-curl -X POST "http://localhost:9000/v1/query/aql" \
+curl -X POST "http://localhost:9000/query/aql" \
   -H "Content-Type: text/plain" \
   -d "SELECT c/name/value, c/archetype_details/template_id/value, c/context/start_time/value FROM EHR e CONTAINS COMPOSITION c WHERE c/name/value = 'Patient Summary'"
 
 
-curl -X POST "http://localhost:9000/v1/query/aql" \
+curl -X POST "http://localhost:9000/query/aql" \
   -H "Content-Type: text/plain" \
   -d "SELECT e/ehr_id/value, c/name/value, c/archetype_details/template_id/value FROM EHR e CONTAINS COMPOSITION c WHERE c/archetype_details/template_id/value = 'patient_summary_v1'"
 
 
-curl -X POST "http://localhost:9000/v1/query/aql" \
+curl -X POST "http://localhost:9000/query/aql" \
   -H "Content-Type: text/plain" \
   -d "SELECT e/ehr_id/value, c/name/value, c/context/start_time/value FROM EHR e CONTAINS COMPOSITION c WHERE c/context/start_time/value = '2024-01-15T10:30:00Z'"
 
 
-curl -X POST "http://localhost:9000/v1/query/aql?ehr_id=2626b5ad-d2f6-46db-a392-ba7077009c73" \
+curl -X POST "http://localhost:9000/query/aql?ehr_id=2626b5ad-d2f6-46db-a392-ba7077009c73" \
   -H "Content-Type: text/plain" \
   -d "SELECT e/ehr_id/value, c/name/value FROM EHR e CONTAINS COMPOSITION c WHERE c/context/health_care_facility/external_ref/id/value = '12345'"
 
 
-curl -X POST "http://localhost:9000/v1/query/aql" \
+curl -X POST "http://localhost:9000/query/aql" \
   -H "Content-Type: text/plain" \
   -d "SELECT e/ehr_id/value, c/archetype_details/archetype_id/value, c/context/health_care_facility/name/value FROM EHR e CONTAINS COMPOSITION c WHERE c/context/health_care_facility/name/value = 'General Hospital'"
 
 
-curl -X POST "http://localhost:9000/v1/query/aql" \
+curl -X POST "http://localhost:9000/query/aql" \
   -H "Content-Type: text/plain" \
   -d "SELECT e/ehr_id/value, c/name/value, c/archetype_details/template_id/value, c/context/start_time/value, c/context/health_care_facility/name/value FROM EHR e CONTAINS COMPOSITION c WHERE c/archetype_details/template_id/value = 'clinical_summary_v2'"

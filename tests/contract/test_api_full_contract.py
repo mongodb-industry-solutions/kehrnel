@@ -14,14 +14,14 @@ def test_env(tmp_path):
 
 def test_strategies_endpoints(test_env):
     app, client, runtime, manifest, env_id = test_env
-    res = client.get("/v1/strategies")
+    res = client.get("/strategies")
     assert res.status_code == 200
     data = res.json()
     assert data["strategies"], "strategies should not be empty"
     entry = data["strategies"][0]
     assert {"id", "version", "entrypoint", "ops", "capabilities"} <= set(entry.keys())
 
-    res_one = client.get(f"/v1/strategies/{manifest.id}")
+    res_one = client.get(f"/strategies/{manifest.id}")
     assert res_one.status_code == 200
     one = res_one.json()
     assert one["id"] == manifest.id
@@ -39,7 +39,7 @@ def test_activate_endpoint(test_env, tmp_path):
         "allow_plaintext_bindings": True,
         "domain": getattr(manifest, "domain", "openEHR"),
     }
-    res = client.post(f"/v1/environments/{env2}/activate", json=payload)
+    res = client.post(f"/environments/{env2}/activate", json=payload)
     assert res.status_code == 200
     body = res.json()
     assert body["ok"] is True
@@ -60,7 +60,7 @@ def test_compile_query_patient_and_cross(test_env):
             "offset": None,
         },
     }
-    res = client.post(f"/v1/environments/{env_id}/compile_query", json=patient_payload, params={"debug": "true"})
+    res = client.post(f"/environments/{env_id}/compile_query", json=patient_payload, params={"debug": "true"})
     assert res.status_code == 200
     plan = res.json()["result"]["plan"]
     assert plan["pipeline"]
@@ -81,7 +81,7 @@ def test_compile_query_patient_and_cross(test_env):
             "offset": None,
         },
     }
-    res2 = client.post(f"/v1/environments/{env_id}/compile_query", json={"domain": "openEHR", **cross_payload}, params={"debug": "true"})
+    res2 = client.post(f"/environments/{env_id}/compile_query", json={"domain": "openEHR", **cross_payload}, params={"debug": "true"})
     assert res2.status_code == 200
     plan2 = res2.json()["result"]["plan"]
     stage0 = list(plan2["pipeline"][0].keys())[0]
@@ -108,16 +108,16 @@ def test_query_and_ops(test_env):
             "offset": None,
         },
     }
-    res_q = client.post(f"/v1/environments/{env_id}/query", json=q_payload)
+    res_q = client.post(f"/environments/{env_id}/query", json=q_payload)
     assert res_q.status_code == 200
     assert res_q.json().get("ok") is True
 
     # valid op
     op_name = manifest.ops[0].name
-    res_op = client.post(f"/v1/environments/{env_id}/extensions/{manifest.id}/{op_name}", json={})
+    res_op = client.post(f"/environments/{env_id}/extensions/{manifest.id}/{op_name}", json={})
     assert res_op.status_code == 200
     # invalid op
-    res_bad = client.post(f"/v1/environments/{env_id}/extensions/{manifest.id}/does_not_exist", json={})
+    res_bad = client.post(f"/environments/{env_id}/extensions/{manifest.id}/does_not_exist", json={})
     assert res_bad.status_code >= 400
     body_bad = res_bad.json()
     assert "error" in body_bad and "code" in body_bad["error"]

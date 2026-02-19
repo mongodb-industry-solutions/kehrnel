@@ -1,4 +1,4 @@
-from kehrnel.core.bundles import validate_bundle
+from kehrnel.engine.core.bundles import validate_bundle
 
 
 def test_bundle_validator_catches_missing_fields():

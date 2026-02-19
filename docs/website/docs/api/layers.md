@@ -6,6 +6,14 @@ sidebar_position: 2
 
 The API is organized in four layers. Start here to decide where an operation belongs, then use the layer page for details.
 
+## OpenAPI Docs
+
+- Swagger UI: `/docs`
+- ReDoc: `/redoc`
+- Core: `/docs/core`, `/redoc/core`
+- Domains: `/docs/domains/{domain}`, `/redoc/domains/{domain}`
+- Strategies: `/docs/strategies/{domain}/{strategy}`, `/redoc/strategies/{domain}/{strategy}`
+
 ## 1. Core Layer
 
 Platform-level runtime surfaces that are domain-agnostic and strategy-agnostic.
@@ -28,7 +36,7 @@ Cross-cutting API behavior shared by all layers.
 
 Use this layer to implement consistent clients and middleware.
 
-See: [Common Layer API](/docs/api/common/mappings)
+See: [Common Layer API](/docs/api/common)
 
 ## 3. Domain Layer
 
@@ -39,7 +47,7 @@ Clinical domain operations that implement standard domain behavior.
 
 Use this layer for canonical healthcare data operations.
 
-See: [Domain Layer API](/docs/api/domains/openehr)
+See: [Domain Layer API](/docs/api/domains)
 
 ## 4. Strategy Layer
 
@@ -51,4 +59,4 @@ Strategy-specific behavior for a concrete persistence or execution strategy.
 
 Use this layer for strategy runtime workflows.
 
-See: [Strategy Layer API](/docs/api/strategies/openehr/rps-dual)
+See: [Strategy Layer API](/docs/api/strategies)

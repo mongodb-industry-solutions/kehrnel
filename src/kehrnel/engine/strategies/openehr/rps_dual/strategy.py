@@ -6,6 +6,7 @@ import json
 import random
 import tempfile
 import uuid
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict
 
@@ -54,14 +55,52 @@ class RPSDualStrategy(StrategyPlugin):
         self.manifest = manifest
         self.schema = load_json(SCHEMA_PATH)
         self.defaults = load_json(DEFAULTS_PATH)
+        self.pack_spec = self._load_pack_spec()
         # Load bulk config schemas
         self.bulk_schema = load_json(BULK_SCHEMA_PATH) if BULK_SCHEMA_PATH.exists() else {}
         self.bulk_defaults = load_json(BULK_DEFAULTS_PATH) if BULK_DEFAULTS_PATH.exists() else {}
         # hydrate manifest schemas/defaults
         self.manifest.config_schema = self.schema
         self.manifest.default_config = self.defaults
+        if isinstance(self.pack_spec, dict):
+            self.manifest.pack_spec = self.pack_spec
         self.normalized_config: RPSDualConfig | None = None
         self.normalized_bulk_config: BulkConfig | None = None
+
+    def _load_pack_spec(self) -> Dict[str, Any]:
+        spec = getattr(self.manifest, "pack_spec", None)
+        if isinstance(spec, dict):
+            return spec
+        spec_ref = getattr(self.manifest, "spec", None)
+        spec_path: Path | None = None
+        if isinstance(spec_ref, dict):
+            ref_path = spec_ref.get("path")
+            if isinstance(ref_path, str) and ref_path.strip():
+                spec_path = Path(__file__).parent / ref_path.strip()
+        if spec_path is None:
+            fallback = Path(__file__).parent / "spec.json"
+            if fallback.exists():
+                spec_path = fallback
+        if spec_path is None or not spec_path.exists():
+            return {}
+        try:
+            return load_json(spec_path)
+        except Exception:
+            return {}
+
+    @staticmethod
+    def _spec_stores(spec: Dict[str, Any] | None) -> list[Dict[str, Any]]:
+        if not isinstance(spec, dict):
+            return []
+        storage_model = spec.get("storageModel")
+        if isinstance(storage_model, dict) and isinstance(storage_model.get("stores"), list):
+            return [store for store in storage_model.get("stores") if isinstance(store, dict)]
+        legacy_storage = spec.get("storage")
+        if isinstance(legacy_storage, dict) and isinstance(legacy_storage.get("stores"), list):
+            return [store for store in legacy_storage.get("stores") if isinstance(store, dict)]
+        if isinstance(legacy_storage, list):
+            return [store for store in legacy_storage if isinstance(store, dict)]
+        return []
 
     async def validate_config(self, ctx: StrategyContext) -> None:
         return None
@@ -115,7 +154,7 @@ class RPSDualStrategy(StrategyPlugin):
     async def apply(self, ctx: StrategyContext, plan: ApplyPlan) -> ApplyResult:
         storage = (ctx.adapters or {}).get("storage")
         index_admin = (ctx.adapters or {}).get("index_admin")
-        atlas_search = (ctx.adapters or {}).get("atlas_search") or (ctx.adapters or {}).get("text_search")
+        atlas_search = (ctx.adapters or {}).get("atlas_search")
         created = []
         warnings = []
         skipped = []
@@ -139,12 +178,18 @@ class RPSDualStrategy(StrategyPlugin):
 
     def _augment_indexes_from_spec(self, ctx: StrategyContext, artifacts: Dict[str, Any]) -> Dict[str, Any]:
         """Merge indexes defined in pack_spec storage indexes into the plan."""
-        spec = getattr(self.manifest, "pack_spec", None) or {}
-        stores = (spec.get("storage") or {}).get("stores") or []
+        spec = self.pack_spec or {}
+        stores = self._spec_stores(spec)
         store_profiles = (ctx.meta or {}).get("store_profiles") or {}
         collections_cfg = ctx.config.get("collections", {}) if isinstance(ctx.config, dict) else {}
+        cfg_dict = normalize_config(ctx.config or {}).model_dump()
 
         def resolve_collection(store: Dict[str, Any]) -> str | None:
+            coll_path = store.get("collectionNameFromConfig")
+            if isinstance(coll_path, str) and coll_path.strip():
+                collection = self._cfg_get_path(cfg_dict, coll_path.strip())
+                if collection:
+                    return str(collection)
             role = store.get("role")
             if role and role in store_profiles:
                 return store_profiles[role].get("collection")
@@ -183,6 +228,172 @@ class RPSDualStrategy(StrategyPlugin):
                             }
                         )
         return artifacts
+
+    @staticmethod
+    def _cfg_get_path(cfg: Dict[str, Any], dotted_path: str) -> Any:
+        cur: Any = cfg
+        for part in (dotted_path or "").split("."):
+            if not part:
+                continue
+            if isinstance(cur, dict) and part in cur:
+                cur = cur[part]
+            else:
+                return None
+        return cur
+
+    def _build_btree_plan_from_spec(self, strategy_cfg: RPSDualConfig) -> list[Dict[str, Any]]:
+        spec = self.pack_spec or {}
+        stores = self._spec_stores(spec)
+        cfg_dict = strategy_cfg.model_dump()
+        out: list[Dict[str, Any]] = []
+        seen: set[tuple] = set()
+        for store in stores:
+            if not isinstance(store, dict):
+                continue
+            coll_path = store.get("collectionNameFromConfig") or ""
+            collection = self._cfg_get_path(cfg_dict, coll_path) if coll_path else None
+            if not collection:
+                continue
+            for idx in store.get("indexes") or []:
+                if not isinstance(idx, dict):
+                    continue
+                idx_type = str(idx.get("type") or "").lower()
+                keys: list[tuple[str, int]] = []
+                if idx_type == "btree":
+                    for field_name in idx.get("fields") or []:
+                        if isinstance(field_name, str) and field_name.strip():
+                            keys.append((field_name.strip(), 1))
+                elif idx_type == "wildcard":
+                    wildcard_field = str(idx.get("field") or "data").strip()
+                    if wildcard_field:
+                        keys.append((f"{wildcard_field}.$**", 1))
+                if not keys:
+                    continue
+                sig = (collection, tuple(keys), json.dumps(idx.get("options") or {}, sort_keys=True))
+                if sig in seen:
+                    continue
+                seen.add(sig)
+                out.append(
+                    {
+                        "id": idx.get("id"),
+                        "collection": collection,
+                        "keys": keys,
+                        "options": idx.get("options") or {},
+                        "purpose": idx.get("purpose"),
+                    }
+                )
+        return out
+
+    @staticmethod
+    def _atlas_leaf_type(rm_type: str, extract_parts: list[str]) -> str | None:
+        rm = (rm_type or "").upper()
+        tail = (extract_parts[-1] if extract_parts else "").lower()
+        if rm in {"DV_DATE", "DV_DATE_TIME"} or tail in {"date", "datetime"}:
+            return "date"
+        if rm in {"DV_COUNT", "DV_QUANTITY", "DV_ORDINAL", "DV_PROPORTION"} or tail in {
+            "magnitude",
+            "ordinal",
+            "numerator",
+            "denominator",
+        }:
+            return "number"
+        if rm in {"DV_BOOLEAN"}:
+            return "boolean"
+        if rm in {"DV_CODED_TEXT", "DV_TEXT", "DV_IDENTIFIER", "DV_URI", "DV_EHR_URI"}:
+            return "token"
+        if tail in {"code_string", "id", "value", "uid"}:
+            return "token"
+        return None
+
+    @staticmethod
+    def _atlas_insert_field(fields_root: Dict[str, Any], path_parts: list[str], field_type: str) -> None:
+        if not path_parts:
+            return
+        node = fields_root
+        for seg in path_parts[:-1]:
+            existing = node.get(seg)
+            if not isinstance(existing, dict) or existing.get("type") != "document":
+                node[seg] = {"type": "document", "fields": {}}
+            node = node[seg].setdefault("fields", {})
+        leaf = path_parts[-1]
+        existing_leaf = node.get(leaf)
+        candidate = {"type": field_type}
+        if existing_leaf is None:
+            node[leaf] = candidate
+            return
+        if isinstance(existing_leaf, dict):
+            existing_type = existing_leaf.get("type")
+            if existing_type == field_type:
+                return
+            if isinstance(existing_type, str):
+                node[leaf] = [{"type": existing_type}, candidate]
+                return
+            node[leaf] = candidate
+            return
+        if isinstance(existing_leaf, list):
+            existing_types = {
+                item.get("type")
+                for item in existing_leaf
+                if isinstance(item, dict) and isinstance(item.get("type"), str)
+            }
+            if field_type not in existing_types:
+                existing_leaf.append(candidate)
+
+    def _build_generated_atlas_definition(
+        self,
+        *,
+        strategy_cfg: RPSDualConfig,
+        flattener: CompositionFlattener | None,
+        include_stored_source: bool,
+        num_partitions: int,
+    ) -> Dict[str, Any]:
+        sn_field = strategy_cfg.fields.document.sn
+        path_field = strategy_cfg.fields.node.p
+        data_field = strategy_cfg.fields.node.data
+        embedded_fields: Dict[str, Any] = {}
+        # Always index path for scoped filtering.
+        self._atlas_insert_field(embedded_fields, [path_field], "token")
+
+        shortcut_keys = getattr(flattener, "shortcut_keys", {}) if flattener else {}
+        template_fields = getattr(flattener, "template_fields", {}) if flattener else {}
+        for _, fields in (template_fields or {}).items():
+            for field in fields or []:
+                if not isinstance(field, dict):
+                    continue
+                extract = field.get("extract") or field.get("valuePath") or ""
+                if not extract:
+                    field_path = field.get("path")
+                    if isinstance(field_path, str) and field_path:
+                        try:
+                            extract = flattener._infer_extract_from_path(field_path) if flattener else ""
+                        except Exception:
+                            extract = ""
+                if not extract:
+                    continue
+                extract_parts = [p for p in str(extract).split(".") if p]
+                if not extract_parts:
+                    continue
+                mapped_parts = [shortcut_keys.get(p, p) for p in extract_parts]
+                field_type = self._atlas_leaf_type(str(field.get("rmType") or ""), extract_parts)
+                if not field_type:
+                    continue
+                self._atlas_insert_field(embedded_fields, [data_field, *mapped_parts], field_type)
+
+        definition: Dict[str, Any] = {
+            "mappings": {
+                "dynamic": False,
+                "fields": {
+                    sn_field: {
+                        "type": "embeddedDocuments",
+                        "fields": embedded_fields,
+                    }
+                },
+            },
+            "numPartitions": max(1, int(num_partitions)),
+        }
+        if include_stored_source:
+            definition["storedSource"] = {"include": [f"{sn_field}.{path_field}"]}
+        return definition
 
     async def _build_flattener_for_context(self, ctx: StrategyContext) -> CompositionFlattener:
         cfg = ctx.config or {}
@@ -351,7 +562,165 @@ class RPSDualStrategy(StrategyPlugin):
         adapters = ctx.adapters or {}
         index_admin = adapters.get("index_admin")
         storage = adapters.get("storage")
-        atlas = adapters.get("atlas_search") or adapters.get("text_search")
+        atlas = adapters.get("atlas_search")
+
+        if op_lower == "build_indexes":
+            include_spec = bool(payload.get("include_spec", True))
+            include_mappings = bool(payload.get("include_mappings", True))
+            include_stored_source = bool(payload.get("include_stored_source", True))
+            num_partitions = int(payload.get("num_partitions", 2) or 2)
+            apply_indexes = bool(payload.get("apply", False))
+            search_coll = strategy_cfg.collections.search
+            atlas_name = str(
+                payload.get("index_name")
+                or (search_coll.atlasIndex.name if search_coll.atlasIndex else "")
+                or "search_nodes_index"
+            ).strip()
+
+            btree_plan = self._build_btree_plan_from_spec(strategy_cfg) if include_spec else []
+            flattener = await self._build_flattener_for_context(ctx) if include_mappings else None
+            atlas_definition = self._build_generated_atlas_definition(
+                strategy_cfg=strategy_cfg,
+                flattener=flattener,
+                include_stored_source=include_stored_source,
+                num_partitions=num_partitions,
+            )
+            plan = {
+                "btree": [
+                    {
+                        "id": row.get("id"),
+                        "collection": row.get("collection"),
+                        "keys": [{"field": k, "order": int(v)} for k, v in (row.get("keys") or [])],
+                        "options": row.get("options") or {},
+                        "purpose": row.get("purpose"),
+                    }
+                    for row in btree_plan
+                ],
+                "atlas": {
+                    "collection": search_coll.name,
+                    "name": atlas_name,
+                    "definition": atlas_definition,
+                },
+            }
+            if not apply_indexes:
+                return {"ok": True, "applied": False, "plan": plan}
+
+            warnings: list[str] = []
+            applied: Dict[str, Any] = {"btree": {"created": [], "warnings": []}, "atlas": {"created": [], "warnings": []}}
+            if index_admin:
+                for row in btree_plan:
+                    res = await index_admin.ensure_indexes(
+                        row.get("collection"),
+                        [{"keys": row.get("keys") or [], "options": row.get("options") or {}}],
+                    )
+                    applied["btree"]["created"].extend(res.get("created") or [])
+                    applied["btree"]["warnings"].extend(res.get("warnings") or [])
+            elif btree_plan:
+                warnings.append("index_admin adapter not available; btree indexes not applied")
+
+            if search_coll.enabled and search_coll.name:
+                if atlas:
+                    res = await atlas.ensure_search_index(search_coll.name, atlas_name, atlas_definition)
+                    applied["atlas"]["created"].extend(res.get("created") or [])
+                    applied["atlas"]["warnings"].extend(res.get("warnings") or [])
+                else:
+                    warnings.append("atlas_search adapter not available; search index not applied")
+            return {"ok": True, "applied": True, "plan": plan, "result": applied, "warnings": warnings}
+
+        if op_lower == "migrate_schema":
+            to_version = str(payload.get("to_version") or payload.get("version") or "").strip()
+            if not to_version:
+                raise KehrnelError(code="INVALID_INPUT", status=400, message="to_version is required")
+            from_version = payload.get("from_version")
+            include_missing = bool(payload.get("include_missing", True))
+            dry_run = bool(payload.get("dry_run", True))
+            batch_size = max(1, int(payload.get("batch_size", 500) or 500))
+            stamp_field = str(payload.get("stamp_field") or "_schema_version")
+            updated_at_field = str(payload.get("updated_at_field") or "_schema_updated_at")
+            extra_filter = payload.get("filter") if isinstance(payload.get("filter"), dict) else {}
+            apply_to_compositions = bool(payload.get("apply_to_compositions", True))
+            apply_to_search = bool(payload.get("apply_to_search", True))
+            ensure_indexes = bool(payload.get("ensure_indexes", False))
+
+            if not storage:
+                return {"ok": False, "warnings": ["storage adapter not available"]}
+            db = getattr(storage, "db", None)
+            if db is None:
+                return {"ok": False, "warnings": ["raw motor db not available"]}
+
+            collections: list[str] = []
+            if apply_to_compositions and strategy_cfg.collections.compositions.name:
+                collections.append(strategy_cfg.collections.compositions.name)
+            if apply_to_search and strategy_cfg.collections.search.name:
+                collections.append(strategy_cfg.collections.search.name)
+
+            if not collections:
+                return {"ok": False, "warnings": ["no collections selected for migration"]}
+
+            now_iso = datetime.now(timezone.utc).isoformat()
+            summary: Dict[str, Any] = {
+                "ok": True,
+                "dry_run": dry_run,
+                "from_version": from_version,
+                "to_version": to_version,
+                "stamp_field": stamp_field,
+                "updated_at_field": updated_at_field,
+                "collections": {},
+                "total": {"matched": 0, "updated": 0},
+            }
+
+            for coll in collections:
+                base_match: Dict[str, Any] = {}
+                if from_version is not None and str(from_version).strip() != "":
+                    if include_missing:
+                        base_match = {"$or": [{stamp_field: str(from_version)}, {stamp_field: {"$exists": False}}]}
+                    else:
+                        base_match = {stamp_field: str(from_version)}
+                else:
+                    if include_missing:
+                        base_match = {"$or": [{stamp_field: {"$exists": False}}, {stamp_field: {"$ne": to_version}}]}
+                    else:
+                        base_match = {stamp_field: {"$ne": to_version}}
+
+                if extra_filter:
+                    match_filter = {"$and": [extra_filter, base_match]}
+                else:
+                    match_filter = base_match
+
+                matched = int(await db[coll].count_documents(match_filter))
+                summary["total"]["matched"] += matched
+                coll_result: Dict[str, Any] = {"matched": matched, "updated": 0}
+
+                if dry_run:
+                    sample_cursor = db[coll].find(match_filter, {"_id": 1}).limit(min(batch_size, 20))
+                    sample_ids = [str(doc.get("_id")) async for doc in sample_cursor]
+                    coll_result["sample_ids"] = sample_ids
+                    summary["collections"][coll] = coll_result
+                    continue
+
+                updated = 0
+                while True:
+                    batch_cursor = db[coll].find(match_filter, {"_id": 1}).limit(batch_size)
+                    batch_ids = [doc.get("_id") async for doc in batch_cursor]
+                    if not batch_ids:
+                        break
+                    res = await db[coll].update_many(
+                        {"_id": {"$in": batch_ids}},
+                        {"$set": {stamp_field: to_version, updated_at_field: now_iso}},
+                    )
+                    updated += int(res.modified_count or 0)
+                    if len(batch_ids) < batch_size:
+                        break
+
+                coll_result["updated"] = updated
+                summary["total"]["updated"] += updated
+                summary["collections"][coll] = coll_result
+
+            if ensure_indexes and not dry_run:
+                reindex_payload = payload.get("reindex_payload") if isinstance(payload.get("reindex_payload"), dict) else {}
+                reindex_result = await self.run_op(ctx, "build_indexes", {"apply": True, **reindex_payload})
+                summary["reindex"] = reindex_result
+            return summary
 
         if op_lower == "ensure_dictionaries":
             created = []

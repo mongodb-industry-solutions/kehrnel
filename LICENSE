@@ -1,6 +1,6 @@
 NOTICE: This repository is licensed under the Apache License, Version 2.0,
 with the exception of specific files. The data strategies, templates, schemas,
-and design artifacts in `src/kehrnel/strategies/` are licensed under the
+and design artifacts in `src/kehrnel/engine/strategies/` are licensed under the
 Creative Commons Attribution 4.0 International License (CC BY 4.0). You may
 use, share, adapt, and build upon these materials, provided you give
 appropriate attribution.

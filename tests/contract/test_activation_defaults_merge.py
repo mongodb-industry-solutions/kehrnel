@@ -7,7 +7,7 @@ def test_activation_merges_defaults_and_overrides_and_updates_hash(tmp_path):
     client = TestClient(create_app(str(tmp_path / "reg.json")))
     # initial activation with defaults
     res = client.post(
-        "/v1/environments/env-merge/activate",
+        "/environments/env-merge/activate",
         json={
             "strategy_id": "openehr.rps_dual",
             "version": "0.1.0",
@@ -25,7 +25,7 @@ def test_activation_merges_defaults_and_overrides_and_updates_hash(tmp_path):
 
     # re-activate with override and force replace
     res = client.post(
-        "/v1/environments/env-merge/activate",
+        "/environments/env-merge/activate",
         json={
             "strategy_id": "openehr.rps_dual",
             "version": "0.1.0",
@@ -46,7 +46,7 @@ def test_activation_merges_defaults_and_overrides_and_updates_hash(tmp_path):
 
     # compile uses activation config (custom index)
     res = client.post(
-        "/v1/environments/env-merge/compile_query",
+        "/environments/env-merge/compile_query",
         json={
             "domain": "openEHR",
             "query": {
@@ -64,7 +64,7 @@ def test_activation_merges_defaults_and_overrides_and_updates_hash(tmp_path):
 
     # activation for rps_single also merges defaults
     res = client.post(
-        "/v1/environments/env-single/activate",
+        "/environments/env-single/activate",
         json={
             "strategy_id": "openehr.rps_single",
             "version": "0.1.0",

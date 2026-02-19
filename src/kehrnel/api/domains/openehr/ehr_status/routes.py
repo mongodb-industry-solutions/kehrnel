@@ -122,7 +122,7 @@ async def get_ehr_status_version_endpoint(
     # Set headers on the injected Response object
     response.headers["ETag"] = f'"{version_uid}"'
     # The canonical location for a specific version of an EHR_STATUS is this endpoint
-    response.headers["Location"] = f"/v1/ehr/{ehr_id}/ehr_status/{version_uid}"
+    response.headers["Location"] = f"/ehr/{ehr_id}/ehr_status/{version_uid}"
 
     return version_response
 
@@ -183,7 +183,7 @@ async def get_ehr_status_by_version_id_endpoint(
 
     # Set the response headers 
     response.headers["ETag"] = f'"{version_uid}"'
-    response.headers["Location"] = f"/v1/ehr/{ehr_id}/ehr_status/{version_uid}"
+    response.headers["Location"] = f"/ehr/{ehr_id}/ehr_status/{version_uid}"
 
     last_modified_gmt = formatdate(time_committed.timestamp(), usegmt=True)
     response.headers["Last-Modified"] = last_modified_gmt
@@ -224,7 +224,7 @@ async def get_ehr_status_endpoint(
 
     # Set the response headers
     response.headers["ETag"] = f'"{version_uid}"'
-    response.headers["Location"] = f"/v1/ehr/{ehr_id}/ehr_status/{version_uid}"
+    response.headers["Location"] = f"/ehr/{ehr_id}/ehr_status/{version_uid}"
 
     last_modified_gmt = formatdate(time_committed.timestamp(), usegmt = True)
     response.headers["Last-Modified"] = last_modified_gmt
@@ -270,7 +270,7 @@ async def update_ehr_status_endpoint(
     response.headers["ETag"] = f'"{new_version_uid}"'
 
     # The Location header now points to the specific version of the EHR_STATUS resource
-    response.headers["Location"] = f"/v1/ehr/{ehr_id}/ehr_status/{new_version_uid}"
+    response.headers["Location"] = f"/ehr/{ehr_id}/ehr_status/{new_version_uid}"
 
     # Use the actual commit time for the Last-Modified header for accuracy
     last_modified_gmt = formatdate(time_committed.timestamp(), usegmt = True)

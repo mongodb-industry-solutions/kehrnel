@@ -53,7 +53,7 @@ class kehrnelValidator:
         'DV_TEXT'
         """
         return rm_type.split("<", 1)[0] if rm_type else rm_type
-    
+
     def _types_match(self, expected: str, actual: str, jpath: str) -> bool:
         """
         Return True iff runtime type *actual* is allowed where template
@@ -90,16 +90,16 @@ class kehrnelValidator:
         if isinstance(data, dict) and 'value' in data:
             return data['value']
         return data
-        
+
     def __init__(self, template: TemplateParser) -> None:
         self.tpl: TemplateParser = template
         self._root_tag: str = self.tpl.tree.getroot().tag
-        
+
         # Build parent map
         self._parent: Dict[ET.Element, ET.Element] = {
             child: parent for parent in self.tpl.tree.iter() for child in parent
         }
-        
+
         # Pre-compute constraints
         self._mandatory_paths = self._extract_mandatory_paths()
         self._card_rules = self._extract_cardinality_rules()
@@ -123,27 +123,27 @@ class kehrnelValidator:
     def validate(self, composition: dict) -> List[ValidationIssue]:
         """Return a list of ValidationIssue objects; empty list → valid."""
         issues: List[ValidationIssue] = []
-        
+
         # 0. Basic sanity checks
         if not isinstance(composition, dict):
             return [ValidationIssue("/", "Composition must be a JSON object", Severity.ERROR, "VAL_STRUCT")]
-            
+
         if composition.get("_type") != "COMPOSITION":
             issues.append(
                 ValidationIssue(
-                    "/_type", 
+                    "/_type",
                     f'Root element must be COMPOSITION, got "{composition.get("_type")}"',
                     Severity.ERROR,
                     "VAL_ROOT"
                 )
             )
-        
+
         # 1. Template ID validation
         tpl_id = self.tpl.template_id
         comp_tpl_id = (composition.get("archetype_details", {})
                       .get("template_id", {})
                       .get("value"))
-        
+
         # Strip whitespace for comparison as templates sometimes have extra spaces
         if tpl_id and comp_tpl_id and tpl_id.strip() != comp_tpl_id.strip():
             issues.append(
@@ -156,7 +156,7 @@ class kehrnelValidator:
                     found=comp_tpl_id
                 )
             )
-        
+
         # 2. Validate mandatory category
         category_code = composition.get("category", {}).get("defining_code", {}).get("code_string")
         if category_code != "433":
@@ -170,7 +170,7 @@ class kehrnelValidator:
                     found=category_code
                 )
             )
-        
+
         # 3. Validate structure recursively
         root_def = self.tpl.tree.find(".//opt:definition", self.tpl.NS)
         if root_def is not None:
@@ -184,16 +184,16 @@ class kehrnelValidator:
                     "VAL_TEMPLATE_DEF"
                 )
             )
-        
+
         return issues
 
     def _validate_node(self, data: Any, constraint: ET.Element, path: str) -> List[ValidationIssue]:
         """Recursively validate a data node against its constraint."""
         issues = []
-        
+
         if constraint is None:
             return issues
-        
+
         # Handle missing data for mandatory elements
         if data is None:
             occurrences = constraint.find("opt:occurrences", self.tpl.NS)
@@ -213,10 +213,10 @@ class kehrnelValidator:
                         )
                     )
             return issues
-            
+
         # Get the RM type from constraint
         rm_type = constraint.findtext("opt:rm_type_name", "", self.tpl.NS)
-        
+
         # Check data type matches
         if isinstance(data, dict):
             data_type = data.get("_type", "")
@@ -231,7 +231,7 @@ class kehrnelValidator:
                         found=data_type
                     )
                 )
-        
+
         # Check occurrences for this node
         node_id = constraint.findtext("opt:node_id", "", self.tpl.NS)
         occurrences = constraint.find("opt:occurrences", self.tpl.NS)
@@ -249,16 +249,16 @@ class kehrnelValidator:
                         found="0"
                     )
                 )
-        
+
         # Validate attributes
         for attr in constraint.findall("opt:attributes", self.tpl.NS):
             attr_name = attr.findtext("opt:rm_attribute_name", "", self.tpl.NS)
             if not attr_name:
                 continue
-                
+
             attr_path = f"{path}/{attr_name}" if path else f"/{attr_name}"
             attr_data = data.get(attr_name) if isinstance(data, dict) else None
-            
+
             # Check existence constraints
             existence = attr.find("opt:existence", self.tpl.NS)
             if existence is not None:
@@ -272,11 +272,11 @@ class kehrnelValidator:
                             "VAL_REQ"
                         )
                     )
-            
+
             # Skip validation if attribute is missing and not mandatory
             if attr_data is None:
                 continue
-            
+
             # Handle multiple attributes (lists)
             if attr.get(XSI_TYPE) == "C_MULTIPLE_ATTRIBUTE":
                 if not isinstance(attr_data, list):
@@ -296,7 +296,7 @@ class kehrnelValidator:
                         if child.tag.endswith("children") or "children" in child.tag
                     ]
                     card = attr.find("opt:cardinality", self.tpl.NS)
-                    if card is not None and not all_children:          
+                    if card is not None and not all_children:
                         lower = int(card.findtext("opt:interval/opt:lower", "0", self.tpl.NS))
                         upper_txt = card.findtext("opt:interval/opt:upper", "", self.tpl.NS)
                         upper = None if not upper_txt else int(upper_txt)
@@ -323,7 +323,7 @@ class kehrnelValidator:
                                     found=str(len(attr_data)),
                                 )
                             )
-                    
+
                     if all_children:
                         issues.extend(self._validate_multiple_attribute_items(
                             attr_data, attr, attr_path
@@ -342,7 +342,7 @@ class kehrnelValidator:
                                         "VAL_TYPE"
                                     )
                                 )
-            
+
             # Handle single attributes
             elif attr.get(XSI_TYPE) == "C_SINGLE_ATTRIBUTE":
                 child_constraints = attr.findall("opt:children", self.tpl.NS)
@@ -384,15 +384,15 @@ class kehrnelValidator:
 
                     if selected_issues:
                         issues.extend(selected_issues)
-        
+
         # Check archetype node ID if present
         if isinstance(data, dict) and "archetype_node_id" in data:
             expected_node_id = constraint.findtext("opt:node_id", "", self.tpl.NS)
             actual_node_id = data["archetype_node_id"]
-            
+
             # Also check archetype_id for archetype roots
             archetype_id = constraint.findtext("opt:archetype_id/opt:value", "", self.tpl.NS)
-            
+
             if expected_node_id and actual_node_id != expected_node_id:
                 # Special case: archetype roots can use either node_id or archetype_id
                 if not (archetype_id and actual_node_id == archetype_id):
@@ -406,7 +406,7 @@ class kehrnelValidator:
                             found=actual_node_id
                         )
                     )
-        
+
         # Validate name constraints
         if isinstance(data, dict) and "name" in data and constraint in self._name_constraints:
             expected_name = self._name_constraints[constraint]
@@ -422,7 +422,7 @@ class kehrnelValidator:
                         found=actual_name
                     )
                 )
-        
+
         return issues
 
     def _extract_value_type_rules(self) -> Dict[str, set[str]]:
@@ -468,7 +468,7 @@ class kehrnelValidator:
             no_index_path = re.sub(r'\[\d+\]', '', path)
             rules[no_index_path] = {t for t in types if t} or {"DV_TEXT"}
         return rules
- 
+
     def _validate_multiple_attribute_items(
         self,
         items: List[Any],
@@ -567,25 +567,25 @@ class kehrnelValidator:
         """Check if an item could potentially match a constraint."""
         if not isinstance(item, dict):
             return False
-        
+
         # Skip meta-elements that aren't actual constraints
         if constraint.tag.endswith("rm_attribute_name"):
             return False
-        
+
         # Get constraint details
         node_id = constraint.findtext("opt:node_id", "", self.tpl.NS)
         rm_type = constraint.findtext("opt:rm_type_name", "", self.tpl.NS)
         archetype_id = constraint.findtext("opt:archetype_id/opt:value", "", self.tpl.NS)
-        
+
         # Get item details
         item_node_id = item.get("archetype_node_id")
         item_type = item.get("_type")
         item_archetype_id = item.get("archetype_details", {}).get("archetype_id", {}).get("value", "")
-        
+
         # Priority 1: If both have node_id and they match exactly
         if node_id and item_node_id and node_id == item_node_id:
             return True
-        
+
         # Priority 2: Check archetype_id matches
         if archetype_id:
             # Case 2a: Item has archetype_details.archetype_id.value
@@ -594,12 +594,12 @@ class kehrnelValidator:
             # Case 2b: Item uses archetype_node_id to store archetype_id (common pattern)
             if item_node_id == archetype_id:
                 return True
-        
+
         # Priority 3: For items with archetype_node_id that looks like an archetype ID
         # (e.g., "openEHR-EHR-SECTION.adhoc.v1"), try to match with archetype constraints
         if item_node_id and "openEHR-EHR-" in item_node_id and archetype_id == item_node_id:
             return True
-        
+
         # Priority 4: Type matching when neither has specific identifiers
         if rm_type and item_type == rm_type:
             # Only match by type if there's no conflicting node_id or archetype_id
@@ -607,7 +607,7 @@ class kehrnelValidator:
                 if not (archetype_id and item_archetype_id and archetype_id != item_archetype_id):
                     if not (archetype_id and item_node_id and archetype_id != item_node_id):
                         return True
-        
+
         return False
 
     def _validate_primitive(self, data, constraint, path):
@@ -725,7 +725,7 @@ class kehrnelValidator:
                     expected=str(hi), found=str(value))
             )
         return issues
-        
+
     @staticmethod
     def _parse_iso_date(txt: str) -> Optional[_dt.date]:
         try:
@@ -781,7 +781,7 @@ class kehrnelValidator:
 
         lower_txt = item.findtext("opt:lower", "", self.tpl.NS)
         upper_txt = item.findtext("opt:upper", "", self.tpl.NS)
-        low, high = _compare_bounds(self, date_val, lower_txt, upper_txt)
+        low, high = self._compare_bounds(date_val, lower_txt, upper_txt)
         if low:
             issues.append(
                 ValidationIssue(
@@ -820,7 +820,7 @@ class kehrnelValidator:
 
         lower_txt = item.findtext("opt:lower", "", self.tpl.NS)
         upper_txt = item.findtext("opt:upper", "", self.tpl.NS)
-        low, high = _compare_bounds(self, dt_val, lower_txt, upper_txt)
+        low, high = self._compare_bounds(dt_val, lower_txt, upper_txt)
         if low:
             issues.append(
                 ValidationIssue(
@@ -834,18 +834,18 @@ class kehrnelValidator:
                     Severity.ERROR, "VAL_MAX", expected=upper_txt, found=value)
             )
         return issues
-        
+
     def _validate_slot(self, data: Any, slot: ET.Element, path: str) -> List[ValidationIssue]:
         """Validate archetype slot constraints."""
         issues = []
-        
+
         if not isinstance(data, dict):
             return issues
-        
+
         archetype_id = data.get("archetype_details", {}).get("archetype_id", {}).get("value", "")
         if not archetype_id:
             archetype_id = data.get("archetype_node_id", "")
-        
+
         # Get includes pattern
         includes = slot.find("opt:includes/opt:string_expression", self.tpl.NS)
         if includes is not None and includes.text:
@@ -864,7 +864,7 @@ class kehrnelValidator:
                             found=archetype_id
                         )
                     )
-        
+
         return issues
 
     def _get_element_name(self, constraint: ET.Element) -> str:
@@ -872,7 +872,7 @@ class kehrnelValidator:
         node_id = constraint.findtext("opt:node_id", "", self.tpl.NS)
         if node_id and node_id in self.tpl.term_definitions:
             return self.tpl.term_definitions[node_id]
-        
+
         # Fallback to RM type name
         rm_type = constraint.findtext("opt:rm_type_name", "", self.tpl.NS)
         return rm_type or "element"
@@ -880,34 +880,34 @@ class kehrnelValidator:
     def _extract_name_constraints(self) -> Dict[ET.Element, str]:
         """Extract expected names for elements with specific node IDs."""
         constraints = {}
-        
+
         # Find all elements that might have name constraints
         # We need to iterate through all elements and check their attributes manually
         for elem in self.tpl.tree.iter():
             node_id = elem.findtext("opt:node_id", "", self.tpl.NS)
             if not node_id:
                 continue
-            
+
             # Only capture the *first* name/value constraint inside this element
             # and tie it to the *full* XML-path so it can't bleed onto siblings
             for attr in elem.findall("opt:attributes", self.tpl.NS):
                 if attr.findtext("opt:rm_attribute_name", "", self.tpl.NS) == "name":
                     # Found a name attribute, look for constraints
                     for child in attr.iter():
-                        if (child.tag.endswith("item") and 
+                        if (child.tag.endswith("item") and
                             child.get(XSI_TYPE) == "C_STRING"):
                             # Found C_STRING constraint
                             list_elem = child.find("opt:list", self.tpl.NS)
                             if list_elem is not None and list_elem.text:
                                 constraints[elem] = list_elem.text
                                 break
-        
+
         return constraints
 
     def _extract_mandatory_paths(self) -> Set[str]:
         """Extract all mandatory paths from the template."""
         mandatory = set()
-        
+
         # Find all elements with min occurrence >= 1
         for elem in self.tpl.tree.findall(".//*[opt:occurrences]", self.tpl.NS):
             occurrences = elem.find("opt:occurrences", self.tpl.NS)
@@ -917,7 +917,7 @@ class kehrnelValidator:
                     path = self._build_path_to_element(elem)
                     if path:
                         mandatory.add(path)
-        
+
         # Find all attributes with existence min >= 1
         for attr in self.tpl.tree.findall(".//opt:attributes[opt:existence]", self.tpl.NS):
             existence = attr.find("opt:existence", self.tpl.NS)
@@ -927,51 +927,51 @@ class kehrnelValidator:
                     path = self._build_json_path_for_attribute(attr)
                     if path:
                         mandatory.add(path)
-        
+
         return mandatory
 
     def _extract_occurrence_rules(self) -> Dict[str, Tuple[int, Optional[int]]]:
         """Extract occurrence constraints by node_id."""
         rules = {}
-        
+
         for elem in self.tpl.tree.findall(".//*[opt:node_id]", self.tpl.NS):
             node_id = elem.findtext("opt:node_id", "", self.tpl.NS)
             if not node_id:
                 continue
-                
+
             occurrences = elem.find("opt:occurrences", self.tpl.NS)
             if occurrences is not None:
                 lower = int(occurrences.findtext("opt:lower", "0", self.tpl.NS))
                 upper_txt = occurrences.findtext("opt:upper", "", self.tpl.NS)
                 upper = None if not upper_txt else int(upper_txt)
                 rules[node_id] = (lower, upper)
-        
+
         return rules
 
     def _extract_datatype_rules(self) -> Dict[str, str]:
         """Extract expected data types for paths."""
         rules = {}
-        
+
         for elem in self.tpl.tree.findall(".//*[@xsi:type='C_COMPLEX_OBJECT']", self.tpl.NS):
             rm_type = elem.findtext("opt:rm_type_name", "", self.tpl.NS)
             if rm_type:
                 path = self._build_path_to_element(elem)
                 if path:
                     rules[path] = rm_type
-        
+
         return rules
 
     def _extract_terminology_rules(self) -> Dict[str, Set[str]]:
         """Extract terminology constraints (allowed code values)."""
         rules = {}
-        
+
         for code_phrase in self.tpl.tree.findall(".//opt:children[@xsi:type='C_CODE_PHRASE']", self.tpl.NS):
             # Get allowed codes
             codes = set()
             for code_elem in code_phrase.findall("opt:code_list", self.tpl.NS):
                 if code_elem.text:
                     codes.add(code_elem.text)
-            
+
             if codes:
                 # Find the attribute this constraint belongs to
                 attr = self._find_parent_attribute(code_phrase)
@@ -979,13 +979,13 @@ class kehrnelValidator:
                     path = self._build_json_path_for_attribute(attr)
                     if path:
                         rules[path] = codes
-        
+
         return rules
 
     def _extract_archetype_rules(self) -> Dict[str, str]:
         """Extract archetype ID constraints for slots."""
         rules = {}
-        
+
         for slot in self.tpl.tree.findall(".//ARCHETYPE_SLOT", self.tpl.NS):
             node_id = slot.findtext("opt:node_id", "", self.tpl.NS)
             if node_id:
@@ -996,24 +996,24 @@ class kehrnelValidator:
                     match = re.search(r'archetype_id/value matches \{/(.*)/\}', includes.text)
                     if match:
                         rules[node_id] = match.group(1)
-        
+
         return rules
 
     def _extract_cardinality_rules(self) -> Dict[str, Tuple[int, Optional[int]]]:
         """Extract cardinality constraints for lists."""
         rules = {}
-        
+
         for attr in self.tpl.tree.findall(".//opt:attributes[@xsi:type='C_MULTIPLE_ATTRIBUTE']", self.tpl.NS):
             card = attr.find("opt:cardinality", self.tpl.NS)
             if card is not None:
                 lower = int(card.findtext("opt:interval/opt:lower", "0", self.tpl.NS))
                 upper_txt = card.findtext("opt:interval/opt:upper", "", self.tpl.NS)
                 upper = None if not upper_txt else int(upper_txt)
-                
+
                 path = self._build_json_path_for_attribute(attr)
                 if path:
                     rules[path] = (lower, upper)
-        
+
         return rules
 
     def _find_parent_attribute(self, elem: ET.Element) -> Optional[ET.Element]:
@@ -1029,19 +1029,19 @@ class kehrnelValidator:
         """Build JSON path for an attribute element."""
         parts = []
         current = attr_el
-        
+
         while current is not None and current.tag != self._root_tag:
             if current.tag.endswith("attributes"):
                 name = current.findtext("opt:rm_attribute_name", "", self.tpl.NS)
                 parts.append(name)
                 if current.attrib.get(XSI_TYPE, "").startswith("C_MULTIPLE_ATTRIBUTE"):
-                    parts.append("0")    
+                    parts.append("0")
 
             current = self._parent.get(current)
-        
+
         if not parts:
             return None
-            
+
         parts.reverse()
         return "/" + "/".join(parts)
 
@@ -1049,7 +1049,7 @@ class kehrnelValidator:
         """Build path to any element in the template."""
         parts = []
         current = elem
-        
+
         while current is not None and current.tag != self._root_tag:
             # Add attribute names to path
             parent_attr = self._find_parent_attribute(current)
@@ -1058,9 +1058,9 @@ class kehrnelValidator:
                 if attr_name and attr_name not in parts:
                     parts.append(attr_name)
             current = self._parent.get(current)
-        
+
         if not parts:
             return None
-            
+
         parts.reverse()
         return "/" + "/".join(parts)

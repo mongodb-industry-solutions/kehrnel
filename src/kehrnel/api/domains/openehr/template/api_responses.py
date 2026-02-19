@@ -34,7 +34,7 @@ create_template_responses = {
                 "schema": {
                     "type": "string"
                 },
-                "example": "/v1/template/T-IGR-PMSI-EXTRACT"
+                "example": "/template/T-IGR-PMSI-EXTRACT"
             },
             "Etag": {
                 "description": "The Etag of the created template, which is a hash of its content",

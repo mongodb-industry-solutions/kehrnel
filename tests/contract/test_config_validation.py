@@ -12,7 +12,7 @@ def client(tmp_path):
 
 def test_invalid_config_missing_required(client):
     res = client.post(
-        "/v1/environments/env-config/activate",
+        "/environments/env-config/activate",
         json={"strategy_id": "fhir.resource_first", "version": "0.1.0", "config": {"database": 123}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"},
     )
     assert res.status_code == 400
@@ -23,11 +23,11 @@ def test_invalid_config_missing_required(client):
 
 def test_activation_returns_effective_config(client):
     res = client.post(
-        "/v1/environments/env-config/activate",
+        "/environments/env-config/activate",
         json={"strategy_id": "openehr.rps_dual", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "openEHR"},
     )
     assert res.status_code == 200
-    res_get = client.get("/v1/environments/env-config")
+    res_get = client.get("/environments/env-config")
     assert res_get.status_code == 200
     data = res_get.json()
     activations = data.get("activations", {})

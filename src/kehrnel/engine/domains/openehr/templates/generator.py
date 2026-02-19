@@ -2,7 +2,7 @@
 #!/usr/bin/env python3
 
 """
-kehrnelGenerator Core Module 
+kehrnelGenerator Core Module
 Handles OPT parsing, constraint validation, and composition generation for ANY OPT template
 """
 from __future__ import annotations
@@ -19,8 +19,11 @@ import uuid
 import os
 from abc import ABC, abstractmethod
 from collections import OrderedDict
-from kehrnel.engine.common.mapping.mapping_engine import apply_mapping
+import logging
+from kehrnel.engine.common.mappings.mapping_engine import apply_mapping
 import re
+
+logger = logging.getLogger(__name__)
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -43,7 +46,7 @@ class Occurrence:
 class CodeConstraint:
     terminology: str
     codes: List[str]
-    
+
 @dataclass
 class StringConstraint:
     pattern: Optional[str] = None
@@ -66,22 +69,22 @@ class ConstraintType(Enum):
 
 class SourceHandler(ABC):
     """Abstract base class for source format handlers"""
-    
+
     @abstractmethod
     def can_handle(self, source_path: Path) -> bool:
         """Check if this handler can process the source file"""
         pass
-    
+
     @abstractmethod
     def extract_value(self, source_data: Any, extraction_rule: Any) -> Any:
         """Extract a value from the source using the extraction rule"""
         pass
-    
+
     @abstractmethod
     def load_source(self, source_path: Path) -> Any:
         """Load the source file"""
         pass
-    
+
     @abstractmethod
     def count_elements(self, source_data: Any, xpath_or_path: str) -> int:
         """Count elements matching the path"""
@@ -93,40 +96,40 @@ class SourceHandler(ABC):
 
 class kehrnelGenerator:
     """Main generator class that coordinates constraint-aware generation"""
-    
+
     NS = {
         "opt": "http://schemas.openehr.org/v1",
         "xsi": "http://www.w3.org/2001/XMLSchema-instance",
     }
-    
+
     def __init__(self, template: TemplateParser):
         self.tpl             = template
         self.opt_path = template.opt_path
         self.tree            = template.tree
         self.handlers: List[SourceHandler] = []
         self._debug = str(os.environ.get("KEHRNEL_GENERATOR_DEBUG", "")).strip().lower() in {"1", "true", "yes", "on"}
-        
+
         # Build term definition maps for each archetype
         self.term_definitions = self._build_term_map()
         self.archetype_terms = self._build_archetype_term_maps()
-        
+
         # Extract template metadata
-        self.template_id = self.tree.findtext(".//opt:template_id/opt:value", "", self.NS).strip() 
+        self.template_id = self.tree.findtext(".//opt:template_id/opt:value", "", self.NS).strip()
 
         # Current archetype context during processing
         self.current_archetype_id = None
         self._ordinal_by_code = self._build_ordinal_lookup()
-        
+
     def _build_archetype_term_maps(self) -> Dict[str, Dict[str, str]]:
         """Build separate term maps for each archetype"""
         archetype_terms = {}
-        
+
         # Find all archetype roots
         for archetype_root in self.tree.findall(".//opt:children[@xsi:type='C_ARCHETYPE_ROOT']", self.NS):
             archetype_id_elem = archetype_root.find("opt:archetype_id/opt:value", self.NS)
             if archetype_id_elem is not None:
                 archetype_id = archetype_id_elem.text
-                
+
                 # Build term map for this archetype
                 archetype_term_map = {}
                 for term_def in archetype_root.findall(".//opt:term_definitions", self.NS):
@@ -135,27 +138,27 @@ class kehrnelGenerator:
                         if item.get("id") == "text" and item.text:
                             archetype_term_map[code] = item.text.strip()
                             break
-                
+
                 archetype_terms[archetype_id] = archetype_term_map
                 if self._debug:
-                    print(f"Found {len(archetype_term_map)} terms for archetype {archetype_id}")
-                
+                    logger.debug("Found %d terms for archetype %s", len(archetype_term_map), archetype_id)
+
                 # Debug: print the specific terms we care about
                 if "openEHR-EHR-CLUSTER.igr_pmsi_stay_segment_cluster.v0" in archetype_id:
                     if self._debug:
-                        print("Cluster archetype terms:")
+                        logger.debug("Cluster archetype terms:")
                     for code in ["at0001", "at0002", "at0003"]:
                         if self._debug and code in archetype_term_map:
-                            print(f"  {code}: {archetype_term_map[code]}")
+                            logger.debug("  %s: %s", code, archetype_term_map[code])
                         elif self._debug:
-                            print(f"  {code}: NOT FOUND")
-                
+                            logger.debug("  %s: NOT FOUND", code)
+
         return archetype_terms
-        
+
     def _build_term_map(self) -> Dict[str, str]:
         """Build a map of term codes to their definitions from template level"""
         term_map = {}
-        
+
         # Find template-level term definitions only
         template_def = self.tree.find(".//opt:definition", self.NS)
         if template_def is not None:
@@ -165,65 +168,65 @@ class kehrnelGenerator:
                     if item.get("id") == "text" and item.text:
                         term_map[code] = item.text.strip()
                         break
-        
+
         return term_map
-        
+
     def register_handler(self, handler: SourceHandler):
         """Register a source format handler"""
         self.handlers.append(handler)
 
     def set_at_path(self, obj: dict, path: str, value):
         self._set_value_at_path(obj, path, value)
-        
+
     def generate_random(self) -> Dict:
         """Generate a random composition respecting all constraints"""
         # Parse the OPT template definition
         root_def = self.tree.find(".//opt:definition", self.NS)
         if root_def is None:
             raise ValueError("No definition found in OPT template")
-        
+
         # Debug: Print some info about what we found
         if self._debug:
-            print(f"Found {len(self.term_definitions)} term definitions in template")
-        
+            logger.debug("Found %d term definitions in template", len(self.term_definitions))
+
         # Generate the composition structure
         composition = self._process_template_node(root_def, "/", 0)
-        
+
         # Add template metadata to composition
         if composition and composition.get("_type") == "COMPOSITION":
             # Set template name
             if self.template_id and "name" not in composition:
                 composition["name"] = {"_type": "DV_TEXT", "value": self.template_id}
-            
+
             # Ensure archetype_details includes template_id
             if "archetype_details" in composition:
                 if self.template_id and "template_id" not in composition["archetype_details"]:
                     composition["archetype_details"]["template_id"] = {"value": self.template_id}
-            
+
         return composition
-    
+
     def _get_term_for_node(self, node_id: str, rm_type: str) -> Optional[str]:
         """Get the appropriate term for a node based on current archetype context"""
         if not node_id or not self._rm_type_has_name(rm_type):
             return None
-            
+
         # First check current archetype terms
         if self.current_archetype_id and self.current_archetype_id in self.archetype_terms:
             if node_id in self.archetype_terms[self.current_archetype_id]:
                 term = self.archetype_terms[self.current_archetype_id][node_id]
                 if self._debug:
-                    print(f"    Using archetype term: {node_id} -> {term}")
+                    logger.debug("Using archetype term: %s -> %s", node_id, term)
                 return term
-        
+
         # Fall back to template terms
         if node_id in self.term_definitions:
             term = self.term_definitions[node_id]
             if self._debug:
-                print(f"    Using template term: {node_id} -> {term}")
+                logger.debug("Using template term: %s -> %s", node_id, term)
             return term
-        
+
         return None
-    
+
     def _process_template_node(self, node: ET.Element, path: str, depth: int = 0) -> Optional[Dict]:
         """Process a template node and generate its structure"""
 
@@ -232,7 +235,7 @@ class kehrnelGenerator:
         if not rm_type:
             return None
 
-        # decide EVENT subtype 
+        # decide EVENT subtype
         if rm_type == "EVENT":
             xsi_t = node.get(f"{{{self.NS['xsi']}}}type", "")
             if xsi_t == "C_POINT_EVENT":
@@ -247,7 +250,7 @@ class kehrnelGenerator:
                 rm_type = "INTERVAL_EVENT" if has_width else "POINT_EVENT"
 
         result = OrderedDict([("_type", rm_type)])
-        
+
         # ---- skip archetype-slots -----------------------------------------
         xsi_type = node.get(f"{{{self.NS['xsi']}}}type")
         if xsi_type in ("ARCHETYPE_SLOT", "C_ARCHETYPE_SLOT"):
@@ -255,24 +258,24 @@ class kehrnelGenerator:
             # inserted later via a mapping or explicit input
             return None
         # -------------------------------------------------------------------
-    
+
         node_id = node.findtext("opt:node_id", "", self.NS).strip()
-        
+
         # Debug output for understanding structure
         indent = "  " * depth
         if self._debug and depth < 4:
-            print(f"{indent}Processing: {rm_type} (node_id: {node_id}) at {path}")
-        
+            logger.debug("%sProcessing: %s (node_id: %s) at %s", indent, rm_type, node_id, path)
+
         # Check if this is an archetype root and update context
         archetype_id = node.findtext("opt:archetype_id/opt:value", "", self.NS)
         is_archetype_root = node.get(f"{{{self.NS['xsi']}}}type") == "C_ARCHETYPE_ROOT"
-        
+
         old_archetype_id = self.current_archetype_id
         if archetype_id:
             self.current_archetype_id = archetype_id
             if self._debug and depth < 4:
-                print(f"{indent}  Entering archetype: {archetype_id}")
-        
+                logger.debug("%s  Entering archetype: %s", indent, archetype_id)
+
         # Create base structure with _type always first
         result = OrderedDict([("_type", rm_type)])
         term = self._get_term_for_node(node_id, rm_type)
@@ -327,18 +330,18 @@ class kehrnelGenerator:
 
         # -------------------------------------------------------------
         #  ▶  Non-COMPOSITION root: mandatory RM fields
-        #      (inserted BEFORE template attributes 
+        #      (inserted BEFORE template attributes
         # -------------------------------------------------------------
         if rm_type != "COMPOSITION":
             self._add_required_rm_fields(result, rm_type)
 
         attributes_to_add = {}
-        
+
         for attr in node.findall("opt:attributes", self.NS):
             attr_name = attr.findtext("opt:rm_attribute_name", "", self.NS)
             if not attr_name:
                 continue
-            
+
             if attr_name == "name":
                 coerced = self._process_single_attribute(attr, f"{path}/{attr_name}", depth, rm_type)
                 if coerced:
@@ -362,7 +365,7 @@ class kehrnelGenerator:
                             coerced["value"] = existing_txt
                     result["name"] = coerced
                     continue
-                
+
             # Special handling for category attribute in COMPOSITION
             if attr_name == "category" and rm_type == "COMPOSITION":
                 value = self._process_single_attribute(attr, f"{path}/{attr_name}", depth, rm_type)
@@ -376,10 +379,10 @@ class kehrnelGenerator:
                 if value is not None:
                     attributes_to_add[attr_name] = value
                 continue
-            
+
             # Check if it's a multiple attribute
             is_multiple = attr.get(f"{{{self.NS['xsi']}}}type") == "C_MULTIPLE_ATTRIBUTE"
-            
+
             if is_multiple:
                 items = self._process_multiple_attribute(attr, f"{path}/{attr_name}", depth)
                 if items:
@@ -389,7 +392,7 @@ class kehrnelGenerator:
                 value = self._process_single_attribute(attr, f"{path}/{attr_name}", depth, rm_type)
                 if value is not None:
                     attributes_to_add[attr_name] = value
-        
+
         # Add attributes in the correct order for COMPOSITION
         if rm_type == "COMPOSITION":
             # Category is already added above, so skip it here
@@ -397,7 +400,7 @@ class kehrnelGenerator:
             for key in ["context", "content"]:
                 if key in attributes_to_add:
                     result[key] = attributes_to_add.pop(key)
-            
+
             # Add any remaining attributes
             for key, value in attributes_to_add.items():
                 if key != "category":  # Skip category since it's already added
@@ -406,27 +409,27 @@ class kehrnelGenerator:
             # For non-COMPOSITION elements, add all attributes normally
             for key, value in attributes_to_add.items():
                 result[key] = value
-    
+
         # Add archetype_node_id as the LAST element
         if archetype_id:
             result["archetype_node_id"] = archetype_id
         elif node_id:
             result["archetype_node_id"] = node_id
-        
+
         # Restore archetype context
         self.current_archetype_id = old_archetype_id
-        
+
         return result
-    
+
     def _process_multiple_attribute(self, attr: ET.Element, path: str, depth: int) -> List[Dict]:
         """Process a multiple attribute (array)"""
         items = []
-        
+
         # Get cardinality constraints
         card_elem = attr.find("opt:cardinality", self.NS)
         min_items = 1
         max_items = 20
-        
+
         if card_elem is not None:
             interval = card_elem.find("opt:interval", self.NS)
             if interval is not None:
@@ -436,7 +439,7 @@ class kehrnelGenerator:
                     max_items = int(max_upper)
                 else:
                     max_items = 20
-        
+
         # Process children
         children = attr.findall("opt:children", self.NS)
         if children:
@@ -445,20 +448,20 @@ class kehrnelGenerator:
                 child_min = 1
                 if child_occ is not None:
                     child_min = max(1, int(child_occ.findtext("opt:lower", "1", self.NS)))
-                
+
                 for _ in range(child_min):
                     if len(items) >= max_items:
                         break
-                    
+
                     child_result = self._process_template_node(child, path, depth + 1)
                     if child_result:
                         items.append(child_result)
-                
+
                 if len(items) >= max_items:
                     break
-        
+
         return items
-    
+
     def _process_single_attribute(self, attr: ET.Element, path: str, depth: int, parent_rm_type: str) -> Any:
         """Process a single attribute"""
         attr_name = attr.findtext("opt:rm_attribute_name", "", self.NS)
@@ -487,10 +490,10 @@ class kehrnelGenerator:
                 if rm in by_type:
                     child = by_type[rm]
                     break
-        
+
         # Check if this is a complex object or primitive constraint
         child_rm_type = child.findtext("opt:rm_type_name", "", self.NS)
-        
+
         if child_rm_type:
             # Complex object
             # Special handling for different attribute types
@@ -503,7 +506,7 @@ class kehrnelGenerator:
         else:
             # Primitive constraint
             child_type = child.get(f"{{{self.NS['xsi']}}}type", "")
-            
+
             if child_type == "C_CODE_PHRASE":
                 return self._process_code_phrase_constraint(child)
             elif child_type == "C_PRIMITIVE_OBJECT":
@@ -513,9 +516,9 @@ class kehrnelGenerator:
                         return self._process_primitive_constraint(item, item_type)
             elif child_type:
                 return self._process_primitive_constraint(child, child_type)
-        
+
         return None
-    
+
     def _process_data_value(self, node: ET.Element, path: str) -> Optional[Dict]:
         """
         Build a DV_* object from the constraint subtree stored in *node*.
@@ -658,21 +661,21 @@ class kehrnelGenerator:
 
         # fallback – nothing recognised
         return None
-    
+
     def _process_code_phrase_constraint(self, constraint_node: ET.Element) -> Dict:
         """Process C_CODE_PHRASE constraint"""
         terminology = constraint_node.findtext("opt:terminology_id/opt:value", "local", self.NS)
         codes = []
-        
+
         # Check for reference_set_uri for external terminologies
         ref_uri = constraint_node.findtext("opt:referenceSetUri", "", self.NS)
         if ref_uri:
             terminology = ref_uri
-        
+
         for code_elem in constraint_node.findall("opt:code_list", self.NS):
             if code_elem.text:
                 codes.append(code_elem.text.strip())
-        
+
         if codes:
             code = random.choice(codes)
             return {
@@ -680,7 +683,7 @@ class kehrnelGenerator:
                 "terminology_id": {"_type": "TERMINOLOGY_ID", "value": terminology},
                 "code_string": code
             }
-        
+
         # Check if this is a C_CODE_REFERENCE (external terminology)
         if constraint_node.get(f"{{{self.NS['xsi']}}}type") == "C_CODE_REFERENCE":
             ref_uri = constraint_node.findtext("opt:referenceSetUri", "", self.NS)
@@ -691,14 +694,14 @@ class kehrnelGenerator:
                 "terminology_id": {"_type": "TERMINOLOGY_ID", "value": terminology},
                 "code_string": "42"
             }
-        
+
         # Default if no codes found
         return {
             "_type": "CODE_PHRASE",
             "terminology_id": {"_type": "TERMINOLOGY_ID", "value": terminology},
             "code_string": "at0000"
         }
-    
+
     def _process_primitive_constraint(self, constraint_node: ET.Element, constraint_type: str) -> Any:
         """Process primitive type constraints"""
         if constraint_type == "C_STRING":
@@ -706,15 +709,15 @@ class kehrnelGenerator:
             pattern = constraint_node.get("pattern")
             if pattern:
                 return f"text_matching_{pattern}"
-            
+
             # Check for list of allowed values
             values = []
             for item in constraint_node.findall("opt:list", self.NS):
                 if item.text:
                     values.append(item.text)
-            
+
             return random.choice(values) if values else "Lorem ipsum"
-            
+
         elif constraint_type == "C_INTEGER":
             range_elem = constraint_node.find("opt:range", self.NS)
             if range_elem is not None:
@@ -722,7 +725,7 @@ class kehrnelGenerator:
                 upper = int(range_elem.findtext("opt:upper", "100", self.NS))
                 return random.randint(lower, upper)
             return 50
-            
+
         elif constraint_type == "C_REAL":
             range_elem = constraint_node.find("opt:range", self.NS)
             if range_elem is not None:
@@ -730,23 +733,23 @@ class kehrnelGenerator:
                 upper = float(range_elem.findtext("opt:upper", "100.0", self.NS))
                 return round(random.uniform(lower, upper), 2)
             return 1.0
-            
+
         elif constraint_type == "C_BOOLEAN":
             true_valid = constraint_node.findtext("opt:true_valid", "true", self.NS).lower() == "true"
             false_valid = constraint_node.findtext("opt:false_valid", "true", self.NS).lower() == "true"
-            
+
             if true_valid and not false_valid:
                 return True
             elif false_valid and not true_valid:
                 return False
             else:
                 return random.choice([True, False])
-                
+
         elif constraint_type == "C_DATE_TIME":
             return "2022-02-03T04:05:06"
-        
+
         return None
-    
+
     def _rm_type_has_name(self, rm_type: str) -> bool:
         """Check if this RM type should have a name attribute"""
         return rm_type in [
@@ -755,7 +758,7 @@ class kehrnelGenerator:
             "ITEM_LIST", "ITEM_TABLE", "ITEM_SINGLE", "EVENT", "POINT_EVENT",
             "INTERVAL_EVENT", "HISTORY", "ACTIVITY"
         ]
-    
+
     def _add_required_rm_fields(self, result: Dict, rm_type: str):
         """Inject mandatory RM attributes that compositions expect.
 
@@ -856,7 +859,7 @@ class kehrnelGenerator:
                         except Exception:
                             pass
         return out
-    
+
     # -----------------------------------------------------------------
     # recurse through dict / list and set primitives to None
     # -----------------------------------------------------------------
@@ -906,7 +909,7 @@ class kehrnelGenerator:
                     return True
 
         return False
-    
+
     def _prune_incomplete_datavalues(self, node):
         if isinstance(node, dict):
             t = node.get("_type")
@@ -987,7 +990,7 @@ class kehrnelGenerator:
                 self._prune_empty(item)
             # drop {} / [] placeholders created above
             node[:] = [i for i in node if i not in ({}, [])]
-        
+
     def _normalize_for_rm(self, node, parent_key=None):
         # Dict node ---------------------------------------------------------------
         if isinstance(node, dict):
@@ -1083,7 +1086,7 @@ class kehrnelGenerator:
 
         # Primitive (str, int, None, etc.) ---------------------------------------
         return node
-    
+
     def _apply_postprocessing(self, steps: list[dict], comp: dict) -> None:
         """
         Execute YAML  _postprocessing  rules of type 'delete'.
@@ -1131,7 +1134,7 @@ class kehrnelGenerator:
 
         # run once – covers all three YAML delete rules
         _prune_empty_elements(comp)
-        
+
     # ──────────────────────────────────────────────────────────────
     # helper to create a bare-bones composition (all leaves = None)
     # ──────────────────────────────────────────────────────────────
@@ -1153,7 +1156,7 @@ class kehrnelGenerator:
         #    can see which paths still need values
         self._nullify_leaves(structure)
         return structure
-    
+
     def generate_minimal(self) -> Dict:
         """Template-conformant composition with all leaves set to None"""
         return self._build_structure_from_template()
@@ -1163,8 +1166,8 @@ class kehrnelGenerator:
         handler     = self._find_handler(source)
         source_tree = handler.load_source(source)
         composition = apply_mapping(self, mapping, handler, source_tree, composition)
-        composition = self._normalize_for_rm(composition) 
-        composition = self._prune_incomplete_datavalues(composition)  
+        composition = self._normalize_for_rm(composition)
+        composition = self._prune_incomplete_datavalues(composition)
 
         opts = mapping.get("_options", {})
         if opts.get("prune_empty") or opts.get("prune_empty_elements"):
@@ -1180,7 +1183,7 @@ class kehrnelGenerator:
                 }
 
         return composition
-    
+
     def _find_handler(self, source_path: Path) -> SourceHandler:
         """
         Look through self.handlers (populated via .register_handler())
@@ -1191,7 +1194,7 @@ class kehrnelGenerator:
             if h.can_handle(source_path):
                 return h
         raise ValueError(f"No handler registered for '{source_path.suffix}'")
-    
+
     # ──────────────────────────────────────────────────────────────
     # utility: depth-first walk yielding (json_path, value) pairs
     # ──────────────────────────────────────────────────────────────
@@ -1224,13 +1227,13 @@ class kehrnelGenerator:
             if a.get("value") == code:
                 return it
         return None
-    
+
     def _term_for_code(self, code: str, archetype_id: str | None = None) -> str | None:
         if archetype_id and archetype_id in self.archetype_terms:
             m = self.archetype_terms[archetype_id]
             if code in m:
                 return m[code]
-        return None  
+        return None
 
     def _nearest_archetype_id(self, ancestors) -> Optional[str]:
         for node in reversed(ancestors):
@@ -1245,7 +1248,7 @@ class kehrnelGenerator:
             v = self._ordinal_by_code_per_arch.get(archetype_id, {}).get(code)
             if v is not None: return v
         return (getattr(self, "_ordinal_by_code", {}) or {}).get(code)
-    
+
     def _nearest_archetype_id(self, nodes, default=None):
         # Walk up the ancestor chain to find the closest archetype_details.archetype_id.value
         for n in reversed(nodes or []):
@@ -1392,8 +1395,8 @@ class kehrnelGenerator:
 
         cur[last] = value
 
-    
-    
+
+
     def validate_composition(self, composition: Dict) -> List[str]:
         """Validate a composition against template constraints"""
         errors = []
@@ -1402,9 +1405,9 @@ class kehrnelGenerator:
             errors.append("Composition must be a dictionary")
         elif composition.get("_type") != "COMPOSITION":
             errors.append("Root element must be a COMPOSITION")
-        
+
         return errors
 
     def trace(self, mapping: Dict[str, Any], source_path: Path) -> List[Dict[str, str]]:
-        from kehrnel.engine.common.mapping.utils.trace_mapping import build_trace_table
+        from kehrnel.engine.common.mappings.utils.trace_mapping import build_trace_table
         return build_trace_table(mapping, source_path, self.handlers)

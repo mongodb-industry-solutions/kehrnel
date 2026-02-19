@@ -1,8 +1,9 @@
-# src/kehrnel/api/compatibility/v1/aql/models.py
+# src/kehrnel/api/aql/models.py
 
-from pydantic import BaseModel, Field
-from typing import List, Dict, Any, Optional
 from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
+from pydantic import BaseModel, ConfigDict, Field
 
 class StoredQuery(BaseModel):
     """
@@ -12,15 +13,16 @@ class StoredQuery(BaseModel):
     query: str = Field(..., description="The AQL query string.")
     created_timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), description="Timestamp of when the query was stored.")
 
-    class Config:
-        populate_by_name = True
-        json_schema_extra = {
+    model_config = ConfigDict(
+        populate_by_name=True,
+        json_schema_extra={
             "example": {
                 "_id": "com.example.org::my_query/v1",
                 "query": "SELECT o/data[at0002]/events[at0003]/data[at0001]/items[at0004]/value/magnitude AS Systolic FROM EHR e CONTAINS COMPOSITION c CONTAINS OBSERVATION o[openEHR-EHR-OBSERVATION.blood_pressure.v2]",
                 "created_timestamp": "2023-11-20T10:00:00Z"
             }
-        }
+        },
+    )
 
 class QueryResultColumn(BaseModel):
     """
@@ -52,8 +54,7 @@ class StoredQuerySummary(BaseModel):
     name: str = Field(..., alias="_id")
     created_timestamp: datetime
 
-    class Config:
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 class QueryResponse(BaseModel):
     """
@@ -74,8 +75,8 @@ class AQLtoMQLDebugResponse(BaseModel):
     ast: Dict[str, Any] = Field(..., description="The Abstract Syntax Tree (AST) generated from the AQL query")
     mql_pipeline: List[Dict[str, Any]] = Field(..., description="The final MongoDB Aggregation Pipeline generated from the AST")
 
-    class Config:
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "success": True,
                 "aql_query": "SELECT c/uid/value as uid FROM EHR e CONTAINS COMPOSITION c",
@@ -100,7 +101,8 @@ class AQLtoMQLDebugResponse(BaseModel):
                     }
                 ]
             }
-        }
+        },
+    )
 
 
 class AQLtoMQLDebugErrorResponse(BaseModel):
@@ -112,12 +114,13 @@ class AQLtoMQLDebugErrorResponse(BaseModel):
     original_query: str = Field(..., description="The AQL query that caused the error")
     error: str = Field(..., description="The detailed error message from the exception")
 
-    class Config:
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "success": False,
                 "message": "Failed to parse AQL: Unexpected token at line 1 column 8.",
                 "original_query": "SELECT FROM COMPOSITION c",
                 "error": "Unexpected token 'FROM' at line 1, column 8. Expected an identifier."
             }
-        }
+        },
+    )

@@ -1,5 +1,12 @@
 # Strategy Registry Endpoints
 
+## OpenAPI Docs
+
+- Swagger (core): `/docs/core`
+- ReDoc (core): `/redoc/core`
+
+## Endpoints
+
 - `GET /strategies`
 - `GET /strategies/{strategy_id}`
 - `GET /strategies/{strategy_id}/spec`

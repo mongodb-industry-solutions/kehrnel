@@ -1,0 +1,8 @@
+{
+  "label": "Common",
+  "position": 2,
+  "link": {
+    "type": "doc",
+    "id": "api/common/index"
+  }
+}

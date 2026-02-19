@@ -4,13 +4,35 @@ sidebar_position: 2
 
 # Endpoint Catalog
 
-This page indexes detailed endpoint-group references used by the layer pages.
+This page is a navigation map to live OpenAPI documentation.
 
-Source of truth:
+## Core APIs
 
-- Generated canonical inventory: [`docs/cli-api-reference.md`](https://github.com/mongodb-industry-solutions/kehrnel/blob/main/docs/cli-api-reference.md)
+- Swagger: `/docs/core`
+- ReDoc: `/redoc/core`
+- Details: [Core Layer API](/docs/api/core)
 
-Use these references for endpoint-level details:
+## Common APIs
+
+- Swagger: `/docs/core`
+- ReDoc: `/redoc/core`
+- Details: [Common Layer API](/docs/api/common)
+
+## Domain APIs
+
+- openEHR Swagger: `/docs/domains/openehr`
+- openEHR ReDoc: `/redoc/domains/openehr`
+- FHIR Swagger: `/docs/domains/fhir`
+- FHIR ReDoc: `/redoc/domains/fhir`
+- Details: [Domain Layer API](/docs/api/domains)
+
+## Strategy APIs
+
+- openEHR RPS Dual Swagger: `/docs/strategies/openehr/rps_dual`
+- openEHR RPS Dual ReDoc: `/redoc/strategies/openehr/rps_dual`
+- Details: [Strategy Layer API](/docs/api/strategies)
+
+## Endpoint Group Pages
 
 - [FHIR Preview Endpoints](/docs/api/endpoints/fhir-preview)
 - [openEHR Templates](/docs/api/endpoints/openehr-templates)

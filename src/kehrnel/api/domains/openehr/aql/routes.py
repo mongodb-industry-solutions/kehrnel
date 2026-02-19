@@ -1,4 +1,4 @@
-# src/kehrnel/api/compatibility/v1/aql/routes.py
+# src/kehrnel/api/aql/routes.py
 
 from starlette.responses import JSONResponse
 from fastapi import APIRouter, Depends, status, Body, Response, Request, Query, HTTPException
@@ -39,19 +39,19 @@ async def execute_query(
 ):
     """
     Accepts an AQL query as plain text, executes it, and returns the result set.
-    
+
     Query Strategy:
     - With ehr_id: Uses $match on flatten_compositions (targeted, efficient)
     - Without ehr_id: Uses $search on search collection (cross-EHR, indexed)
     - force_search=true: Forces $search strategy regardless of ehr_id
     """
     from kehrnel.api.bridge.app.core.config import settings
-    
+
     # Temporarily override force_search_strategy if requested
     original_force_search = settings.search_config.force_search_strategy
     if force_search:
         settings.search_config.force_search_strategy = True
-    
+
     try:
         response = await process_aql_query(aql_query=aql, request_url=request.url, db=db, ehr_id=ehr_id)
         return response
@@ -97,17 +97,17 @@ async def parse_aql_to_ast_endpoint(
     """
     try:
         from kehrnel.engine.domains.openehr.aql.parser import AQLParser
-        
+
         parser = AQLParser(aql)
         ast = parser.parse()
-        
+
         return {
             "success": True,
             "message": "AQL parsed successfully",
             "original_query": aql,
             "ast": ast
         }
-        
+
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -131,10 +131,10 @@ async def execute_ast_query(
     This endpoint is primarily for testing
     """
     try:
-        
+
         response = await process_aql_ast_query(ast_query= ast_data, request_url=request.url, db=db, ehr_id=ehr_id)
         return response
-        
+
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -155,11 +155,21 @@ async def execute_ast_query(
 )
 async def debug_aql_to_mql_query(
     request: Request,
-    aql: str = Body(..., media_type="text/plain", description="The AQL query string to translate.", example="SELECT c/uid/value as uid FROM EHR e CONTAINS COMPOSITION c"),
+    aql: str = Body(
+        ...,
+        media_type="text/plain",
+        description="The AQL query string to translate.",
+        examples={
+            "sample": {
+                "summary": "Simple composition UID query",
+                "value": "SELECT c/uid/value as uid FROM EHR e CONTAINS COMPOSITION c",
+            }
+        },
+    ),
     ehr_id: str = Query(
         None,
         description="Optional EHR ID to scope the query. This will add a `$match` stage for the `ehr_id` in the generated pipeline",
-        example="a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6"
+        examples={"sample": {"value": "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6"}},
     ),
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
 ):
@@ -174,23 +184,23 @@ async def debug_aql_to_mql_query(
     try:
         from kehrnel.engine.domains.openehr.aql.parser import AQLParser
         from .service import build_aql_pipeline
-        
+
         parser = AQLParser(aql)
         ast_data = parser.parse()
 
         # aql = Original query
         # ast_data = Parsed query
         # mql_pipeline = MongoDB Aggregation Pipeline
-        
+
         mql_pipeline = await build_aql_pipeline(ast_data, db, ehr_id)
-    
+
         return AQLtoMQLDebugResponse(
             success=True,
             aql_query=aql,
             ast=ast_data,
             mql_pipeline=mql_pipeline
         )
-        
+
     except Exception as e:
         error_response_body = AQLtoMQLDebugErrorResponse(
             message=f"Failed to process AQL: {str(e)}",
@@ -220,15 +230,15 @@ async def debug_ast_query(
     try:
         # Import here to avoid circular imports
         from .service import build_aql_pipeline
-        
+
         pipeline = await build_aql_pipeline(ast_data, db, ehr_id)
-        
+
         return {
             "query": ast_data,
             "pipeline": pipeline,
             "pipeline_count": len(pipeline)
         }
-        
+
     except Exception as e:
         return {
             "query": ast_data,
@@ -325,21 +335,21 @@ async def get_strategy_info(
     """
     from kehrnel.api.bridge.app.core.config import settings
     from kehrnel.api.domains.openehr.aql.transformers.aql_transformer import AQLtoMQLTransformer
-    
+
     # Create a minimal AST for testing strategy decision
     test_ast = {
         "select": {"columns": {}},
         "contains": {"rmType": "COMPOSITION", "alias": "c"}
     }
-    
+
     transformer = AQLtoMQLTransformer(
-        test_ast, 
+        test_ast,
         ehr_id=ehr_id,
         search_index_name=settings.search_config.search_index_name
     )
-    
+
     would_use_search = transformer.should_use_search_strategy(ehr_id, force_search)
-    
+
     # Get collection counts for diagnostics
     try:
         flatten_count = await db[settings.search_config.flatten_collection].estimated_document_count()
@@ -347,7 +357,7 @@ async def get_strategy_info(
     except Exception as e:
         flatten_count = f"Error: {e}"
         search_count = f"Error: {e}"
-    
+
     return {
         "strategy_config": {
             "dual_strategy_enabled": settings.search_config.enable_dual_strategy,
@@ -362,7 +372,7 @@ async def get_strategy_info(
             "test_force_search": force_search,
             "would_use_search_strategy": would_use_search,
             "strategy_reasoning": (
-                "Search strategy (Atlas Search on search collection)" if would_use_search 
+                "Search strategy (Atlas Search on search collection)" if would_use_search
                 else "Match strategy (Standard aggregation on flatten collection)"
             )
         },

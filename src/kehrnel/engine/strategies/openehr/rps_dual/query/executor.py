@@ -14,7 +14,7 @@ async def execute(ctx: StrategyContext, plan: QueryPlan) -> QueryResult:
         if plan.engine == "mongo_pipeline":
             if storage and plan.plan.get("collection"):
                 rows = await storage.aggregate(plan.plan["collection"], plan.plan.get("pipeline", []))
-        elif plan.engine.startswith("atlas_search") or plan.engine == "text_search_dual":
+        elif plan.engine.startswith("atlas_search"):
             # same aggregate; pipeline starts with $search
             if storage and plan.plan.get("collection"):
                 rows = await storage.aggregate(plan.plan["collection"], plan.plan.get("pipeline", []))

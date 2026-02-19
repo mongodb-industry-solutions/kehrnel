@@ -1,4 +1,4 @@
-from kehrnel.strategies.openehr.rps_dual.ingest.encoding import PathCodec
+from kehrnel.engine.common.ingest.encoding import PathCodec
 
 
 def test_pathcodec_encode_fullpath_and_coded():

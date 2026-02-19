@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field
 from kehrnel.api.bridge.app.utils.config_runtime import apply_ingestion_config, DEFAULT_MAPPINGS_PATH
 from kehrnel.api.bridge.app.core.config import settings
 from kehrnel.api.common.models import ErrorResponse
-from kehrnel.persistence import load_strategy_from_json, PersistenceStrategy
+from kehrnel.persistence import load_layout_from_json, PersistenceLayout
 from kehrnel.engine.core.redaction import redact_sensitive
 
 router = APIRouter()
@@ -243,7 +243,7 @@ async def set_ingestion_config(
     """Initialize or refresh the ingestion runtime config used by strategy ingest endpoints."""
     try:
         # Load strategy if provided
-        strategy: Optional[PersistenceStrategy] = None
+        strategy: Optional[PersistenceLayout] = None
         strategy_raw: Dict[str, Any] = {}
         if payload.strategy_path:
             if not _allow_local_file_inputs():
@@ -251,10 +251,10 @@ async def set_ingestion_config(
             safe_path = _safe_local_json_path(payload.strategy_path)
             with safe_path.open("r", encoding="utf-8") as f:
                 strategy_raw = json.load(f)
-            strategy = load_strategy_from_json(strategy_raw)
+            strategy = load_layout_from_json(strategy_raw)
         elif payload.strategy_inline is not None:
             strategy_raw = payload.strategy_inline if isinstance(payload.strategy_inline, dict) else json.loads(payload.strategy_inline)
-            strategy = load_strategy_from_json(strategy_raw)
+            strategy = load_layout_from_json(strategy_raw)
 
         # Derive DB names from strategy if present
         source_db_name = target_db_name = None

@@ -10,12 +10,12 @@ from pathlib import Path
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
-from kehrnel.engine.strategies.openehr.rps_dual.ingest.exceptions_g import FlattenerError
+from kehrnel.engine.common.ingest.exceptions import FlattenerError
 from kehrnel.api.strategies.openehr.rps_dual.ingest.service import IngestionService
 from kehrnel.api.strategies.openehr.rps_dual.ingest.repository import IngestionRepository
 from kehrnel.api.bridge.app.utils.config_runtime import DEFAULT_MAPPINGS_PATH
-from kehrnel.strategy_sdk import StrategyBindings
-from kehrnel.strategy_sdk.runtime import StrategyRuntimeError
+from kehrnel.engine.core.strategy_sdk import StrategyBindings
+from kehrnel.engine.core.strategy_sdk.runtime import StrategyRuntimeError
 
 from kehrnel.api.strategies.openehr.rps_dual.ingest.models import (
     FilePathRequest,
@@ -29,7 +29,7 @@ from kehrnel.api.strategies.openehr.rps_dual.ingest.api_responses import (
     ingest_from_db_responses,
     ingest_from_body_example
 )
-from kehrnel.engine.strategies.openehr.rps_dual.ingest.remap import remap_fields_for_config
+from kehrnel.engine.common.ingest.remap import remap_fields_for_config
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -248,7 +248,7 @@ async def ingest_from_payload(
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except FlattenerError as e:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"Transformation Error: {e}")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=f"Transformation Error: {e}")
     except Exception:
         logger.exception("Unexpected error while ingesting payload")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error.")
@@ -409,7 +409,7 @@ async def ingest_from_file(
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except FlattenerError as e:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"Transformation Error: {e}")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=f"Transformation Error: {e}")
     except Exception:
         logger.exception("Unexpected error while ingesting from local file")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error.")
@@ -444,7 +444,7 @@ async def ingest_from_db(
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     except FlattenerError as e:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"Transformation Error: {e}")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=f"Transformation Error: {e}")
     except Exception:
         logger.exception("Unexpected error while ingesting from source database")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error.")

@@ -12,7 +12,7 @@ create_composition_responses = {
             "Location": {
                 "description": "The path to the newly created composition resource",
                 "schema": {"type": "string"},
-                "example": "/v1/ehr/{ehr_id}/composition/{composition_uid}"
+                "example": "/ehr/{ehr_id}/composition/{composition_uid}"
             },
             "ETag": {
                 "description": "The ETag of the new composition version (its UID)",
@@ -31,7 +31,7 @@ create_composition_responses = {
             }
         }
     },
-    status.HTTP_422_UNPROCESSABLE_ENTITY: {
+    status.HTTP_422_UNPROCESSABLE_CONTENT: {
         "description": "The request body is invalid (e.g. missing a required field like 'template_id')",
         "model": ErrorResponse
     }
@@ -118,7 +118,7 @@ update_composition_responses = {
         "description": "The specified EHR or the Composition to be updated was not found",
         "model": ErrorResponse
     },
-    status.HTTP_422_UNPROCESSABLE_ENTITY: {
+    status.HTTP_422_UNPROCESSABLE_CONTENT: {
         "description": "The request body is not a valid COMPOSITION object",
         "model": ErrorResponse
     }

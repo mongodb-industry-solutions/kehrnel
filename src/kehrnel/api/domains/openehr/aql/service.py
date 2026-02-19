@@ -1,4 +1,4 @@
-# src/kehrnel/api/compatibility/v1/aql/service.py
+# src/kehrnel/api/aql/service.py
 
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from fastapi import HTTPException, status
@@ -23,7 +23,7 @@ from kehrnel.api.bridge.app.core.config import settings
 from kehrnel.api.domains.openehr.aql.models import StoredQuery, StoredQuerySummary, QueryResponse, MetaData
 from kehrnel.api.domains.openehr.aql.transformers import AQLtoMQLTransformer
 from kehrnel.engine.domains.openehr.aql.parser import AQLParser
-from kehrnel.persistence import get_default_strategy
+from kehrnel.persistence import get_default_layout
 
 
 def _safe_error_message(message: str) -> str:
@@ -53,7 +53,7 @@ async def build_aql_pipeline(ast_query: Dict[str, Any], db: AsyncIOMotorDatabase
         schema_config=schema_config, 
         db=db,
         search_index_name=settings.search_config.search_index_name,
-        strategy=get_default_strategy(),
+        strategy=get_default_layout(),
     )
     
     # Determine which pipeline to build based on strategy
@@ -91,7 +91,7 @@ async def process_aql_ast_query(ast_query: Dict[str, Any], request_url: str, db:
             schema_config=schema_config, 
             db=db,
             search_index_name=settings.search_config.search_index_name,
-            strategy=get_default_strategy(),
+            strategy=get_default_layout(),
         )
         
         # Determine which strategy to use
@@ -196,7 +196,7 @@ async def process_aql_query(aql_query: str, request_url: str, db: AsyncIOMotorDa
             schema_config=schema_config, 
             db=db,
             search_index_name=settings.search_config.search_index_name,
-            strategy=get_default_strategy(),
+            strategy=get_default_layout(),
         )
         
         # Determine which strategy to use

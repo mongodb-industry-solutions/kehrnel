@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from kehrnel.strategies.openehr.rps_dual.ingest.flattener_g import CompositionFlattener
+from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
 
 
 def make_flattener(mapping_obj, *, config_overrides=None):

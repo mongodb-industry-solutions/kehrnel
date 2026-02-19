@@ -5,7 +5,7 @@ from kehrnel.api.app import create_app
 
 def test_rps_dual_schema_includes_bundle_ref():
     client = TestClient(create_app())
-    res = client.get("/v1/strategies")
+    res = client.get("/strategies")
     assert res.status_code == 200
     strat = next((s for s in res.json().get("strategies") or [] if s.get("id") == "openehr.rps_dual"), None)
     assert strat, "openehr.rps_dual not found"

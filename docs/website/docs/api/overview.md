@@ -116,15 +116,17 @@ Admin mapping endpoints (HDL compatibility):
 ## Layer Navigation
 
 - [Core Layer API](./core)
-- [Common Layer API](./common/mappings)
-- [Domain Layer API](./domains/openehr)
-- [Strategy Layer API](./strategies/openehr/rps-dual)
+- [Common Layer API](./common)
+- [Domain Layer API](./domains)
+- [Strategy Layer API](./strategies)
 
-## Canonical Inventory
+## API Source Of Truth
 
-For exhaustive CLI and endpoint inventory generated from `pyproject.toml` and OpenAPI:
+API reference is served live from OpenAPI:
 
-- [`docs/cli-api-reference.md`](https://github.com/mongodb-industry-solutions/kehrnel/blob/main/docs/cli-api-reference.md)
+- Swagger: `/docs`
+- ReDoc: `/redoc`
+- Layer/slice views: `/docs/core`, `/docs/domains/{domain}`, `/docs/strategies/{domain}/{strategy}`
 
 ## Authentication
 

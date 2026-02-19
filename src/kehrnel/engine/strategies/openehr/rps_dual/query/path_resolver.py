@@ -7,7 +7,7 @@ from typing import Dict, List
 
 from kehrnel.engine.strategies.openehr.rps_dual.services.codes_service import atcode_to_token, archetype_to_token
 from kehrnel.engine.strategies.openehr.rps_dual.services.shortcuts_service import canonical_to_slim
-from kehrnel.engine.strategies.openehr.rps_dual.ingest.encoding import PathCodec
+from kehrnel.engine.common.ingest.encoding import PathCodec
 
 
 @dataclass

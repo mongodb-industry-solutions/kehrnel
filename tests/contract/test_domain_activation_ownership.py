@@ -22,7 +22,7 @@ def _activate(client: TestClient, env: str, domain: str = "openEHR", force: bool
     }
     if reason:
         body["reason"] = reason
-    return client.post(f"/v1/environments/{env}/activate", json=body)
+    return client.post(f"/environments/{env}/activate", json=body)
 
 
 def test_activate_domain_twice_without_force_returns_409(client):
@@ -49,7 +49,7 @@ def test_activate_domain_twice_with_force_replaces_and_records_history(client):
     assert second_act["previous_activation_id"] == first_act["activation_id"]
 
     # history should have grown
-    res_hist = cl.get("/v1/environments/env-force-ok/activations")
+    res_hist = cl.get("/environments/env-force-ok/activations")
     assert res_hist.status_code == 200
     hist = res_hist.json()["history"]["openehr"]
     assert hist["count"] >= 1

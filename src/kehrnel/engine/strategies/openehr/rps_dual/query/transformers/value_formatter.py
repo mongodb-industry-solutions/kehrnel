@@ -1,4 +1,4 @@
-# src/kehrnel/api/compatibility/v1/aql/transformers/value_formatter.py
+# src/kehrnel/api/aql/transformers/value_formatter.py
 import re
 import uuid
 from datetime import datetime

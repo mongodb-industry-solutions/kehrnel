@@ -18,6 +18,7 @@ sidebar_position: 6
 
 ```bash
 kehrnel setup --runtime-url http://localhost:8000
+kehrnel doctor
 kehrnel strategy list --domain openehr
 kehrnel op list --strategy openehr.rps_dual
 kehrnel op schema synthetic_generate_batch --strategy openehr.rps_dual

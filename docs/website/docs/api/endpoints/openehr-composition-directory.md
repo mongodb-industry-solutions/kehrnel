@@ -1,5 +1,10 @@
 # openEHR Composition, Contribution And Directory
 
+## OpenAPI Docs
+
+- Swagger: `/docs/domains/openehr`
+- ReDoc: `/redoc/domains/openehr`
+
 ## Composition
 
 - `POST /api/domains/openehr/ehr/{ehr_id}/composition`

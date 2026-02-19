@@ -1,7 +1,8 @@
-# src/kehrnel/api/compatibility/v1/directory/models.py
+# src/kehrnel/api/directory/models.py
 
-from pydantic import BaseModel, Field
 from typing import List, Optional
+
+from pydantic import BaseModel, ConfigDict, Field
 
 from kehrnel.api.common.models import (
     ObjectVersionID,
@@ -16,9 +17,7 @@ class Folder(BaseModel):
     uid: Optional[ObjectVersionID] = None
     items: List[ObjectRef] = []
     folders: List['Folder'] = []
-    
-    class Config:
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 Folder.model_rebuild()
 
@@ -28,9 +27,7 @@ class FolderCreate(BaseModel):
     name: DvText = Field(default_factory=lambda: DvText(value="Directory"))
     items: List[ObjectRef] = []
     folders: List['FolderCreate'] = []
-
-    class Config:
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 
 Folder.model_rebuild()

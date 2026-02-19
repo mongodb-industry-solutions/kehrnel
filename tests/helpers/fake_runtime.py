@@ -5,8 +5,8 @@ from typing import Dict, Any
 from fastapi.testclient import TestClient
 
 from kehrnel.api.app import create_app
-from kehrnel.core.runtime import StrategyRuntime
-from kehrnel.strategy_sdk import StrategyBindings
+from kehrnel.engine.core.runtime import StrategyRuntime
+from kehrnel.engine.core.strategy_sdk import StrategyBindings
 from tests.helpers.fixture_storage import FixtureStorage
 
 

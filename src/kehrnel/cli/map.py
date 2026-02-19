@@ -20,12 +20,12 @@ except Exception:
 # WebTemplate only to assert -t is valid (mapping is path-keyed already)
 from kehrnel.engine.domains.openehr.templates.webtemplate_parser import WebTemplate
 
-from kehrnel.engine.common.mapping.mapping_engine import apply_mapping
+from kehrnel.engine.common.mappings.mapping_engine import apply_mapping
 
 # Jinja + transforms (singular)
-from kehrnel.engine.common.mapping.utils.jinja_env import env as JINJA
-from kehrnel.engine.common.mapping.utils.transform import REGISTRY as TRANSFORMS
-from kehrnel.engine.common.mapping.utils.transform import attach_to_jinja
+from kehrnel.engine.common.mappings.utils.jinja_env import env as JINJA
+from kehrnel.engine.common.mappings.utils.transform import REGISTRY as TRANSFORMS
+from kehrnel.engine.common.mappings.utils.transform import attach_to_jinja
 
 app = typer.Typer(add_completion=False, rich_markup_mode="rich")
 
@@ -237,9 +237,9 @@ def main(
     tx_cfg = (raw.get("meta") or {}).get("translation") or {}
     if tx_cfg.get("enabled"):
         try:
-            from kehrnel.engine.common.mapping.handlers.common import Translator  # re-export
+            from kehrnel.engine.common.mappings.handlers.common import Translator  # re-export
         except Exception:
-            from kehrnel.engine.common.mapping.utils.translator.translator import Translator
+            from kehrnel.engine.common.mappings.utils.translator.translator import Translator
         gen.translator = Translator(
             source_lang = tx_cfg.get("source_lang", "es"),
             target_lang = tx_cfg.get("target_lang", "en"),
@@ -251,8 +251,8 @@ def main(
         )
 
     # Handler
-    from kehrnel.engine.common.mapping.handlers.csv_handler import CSVHandler
-    from kehrnel.engine.common.mapping.handlers.xml_handler import XMLHandler
+    from kehrnel.engine.common.mappings.handlers.csv_handler import CSVHandler
+    from kehrnel.engine.common.mappings.handlers.xml_handler import XMLHandler
     handlers = [CSVHandler(), XMLHandler()]
     handler = next((h for h in handlers if h.can_handle(source)), None)
     if not handler:

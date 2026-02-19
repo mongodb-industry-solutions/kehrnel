@@ -1,0 +1,8 @@
+{
+  "label": "openEHR",
+  "position": 1,
+  "link": {
+    "type": "doc",
+    "id": "engine/domains/openehr/index"
+  }
+}

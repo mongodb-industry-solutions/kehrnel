@@ -1,11 +1,11 @@
-# src/kehrnel/api/compatibility/v1/aql/transformers/search_pipeline_builder.py
+# src/kehrnel/api/aql/transformers/search_pipeline_builder.py
 
 from typing import Dict, Any, List, Optional
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from .condition_processor import ConditionProcessor
 from .value_formatter import ValueFormatter
 from .format_resolver import FormatResolver
-from kehrnel.persistence import PersistenceStrategy, get_default_strategy
+from kehrnel.persistence import PersistenceLayout, get_default_layout
 from kehrnel.api.bridge.app.core.config import settings
 import logging
 import re
@@ -22,7 +22,7 @@ class SearchPipelineBuilder:
     def __init__(self, ehr_alias: str, composition_alias: str, schema_config: Dict[str, str], 
                  format_resolver: FormatResolver, context_map: Dict[str, Dict], 
                  let_variables: Dict[str, Any] = None,
-                 strategy: Optional[PersistenceStrategy] = None,
+                 strategy: Optional[PersistenceLayout] = None,
                  search_index_name: Optional[str] = None):
         self.ehr_alias = ehr_alias
         self.composition_alias = composition_alias
@@ -30,7 +30,7 @@ class SearchPipelineBuilder:
         self.format_resolver = format_resolver
         self.context_map = context_map
         self.let_variables = let_variables or {}
-        self.strategy = strategy or get_default_strategy()
+        self.strategy = strategy or get_default_layout()
         
         # Use centralized configuration like repository.py does
         self.search_index_name = (

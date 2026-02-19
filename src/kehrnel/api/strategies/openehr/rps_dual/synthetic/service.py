@@ -1,4 +1,4 @@
-# src/kehrnel/api/compatibility/v1/synthetic/service.py
+# src/kehrnel/api/synthetic/service.py
 
 import uuid
 import json

@@ -1,4 +1,4 @@
-# src/kehrnel/api/compatibility/v1/ingest/api_responses.py
+# src/kehrnel/api/ingest/api_responses.py
 
 from fastapi import status
 from kehrnel.api.strategies.openehr.rps_dual.ingest.models import IngestionSuccessResponse, ErrorResponse
@@ -40,7 +40,7 @@ ingest_from_body_example = {
 
 # Shared error responses to avoid duplication
 shared_ingestion_error_responses = {
-    status.HTTP_422_UNPROCESSABLE_ENTITY: {
+    status.HTTP_422_UNPROCESSABLE_CONTENT: {
         "description": "Transformation Error: The composition could not be processed by the flattener.",
         "model": ErrorResponse,
         "content": {

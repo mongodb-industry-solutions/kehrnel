@@ -61,8 +61,10 @@ const config = {
                 '/openapi': {target: apiTarget, changeOrigin: true},
                 '/health': {target: apiTarget, changeOrigin: true},
                 '/api': {target: apiTarget, changeOrigin: true},
-                '/v1': {target: apiTarget, changeOrigin: true},
                 '/environments': {target: apiTarget, changeOrigin: true},
+                '/strategies': {target: apiTarget, changeOrigin: true},
+                '/ops': {target: apiTarget, changeOrigin: true},
+                '/bundles': {target: apiTarget, changeOrigin: true},
               },
             },
           };

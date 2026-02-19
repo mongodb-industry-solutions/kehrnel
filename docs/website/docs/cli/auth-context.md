@@ -23,6 +23,7 @@ kehrnel setup --runtime-url http://localhost:8000
 # or, if you prefer the explicit primitives:
 # kehrnel auth login --runtime-url http://localhost:8000
 kehrnel auth whoami
+kehrnel doctor
 ```
 
 ## Set working context
@@ -74,4 +75,7 @@ kehrnel setup \
   --env dev \
   --domain openehr \
   --strategy openehr.rps_dual
+
+# Verify resulting state
+kehrnel doctor
 ```

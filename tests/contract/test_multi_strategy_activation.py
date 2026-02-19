@@ -13,7 +13,7 @@ def app_client(tmp_path):
 
 def test_strategies_list_domains(app_client):
     app, client = app_client
-    res = client.get("/v1/strategies")
+    res = client.get("/strategies")
     assert res.status_code == 200
     ids = {s["id"] for s in res.json().get("strategies", [])}
     assert "openehr.rps_dual" in ids
@@ -24,20 +24,20 @@ def test_activation_is_env_scoped(app_client):
     app, client = app_client
     # activate openehr in envA
     res_a = client.post(
-        "/v1/environments/envA/activate",
+        "/environments/envA/activate",
         json={"strategy_id": "openehr.rps_dual", "version": "0.1.0", "config": {}, "bindings": {"extras": {"db": {"provider": "none"}}}, "allow_plaintext_bindings": True, "domain": "openEHR"},
     )
     assert res_a.status_code == 200
     # activate fhir in envB
     res_b = client.post(
-        "/v1/environments/envB/activate",
+        "/environments/envB/activate",
         json={"strategy_id": "fhir.resource_first", "version": "0.1.0", "config": {}, "bindings": {"extras": {"db": {"provider": "none"}}}, "allow_plaintext_bindings": True, "domain": "fhir"},
     )
     assert res_b.status_code == 200
 
     # compile in envA uses openehr -> stage0 $match
     res_compile_a = client.post(
-        "/v1/environments/envA/compile_query",
+        "/environments/envA/compile_query",
         json={"domain": "openEHR", "query": {"scope": "patient", "predicates": [], "select": [{"path": "ehr_id", "alias": "ehr_id"}]}},
         params={"debug": "true"},
     )
@@ -49,7 +49,7 @@ def test_activation_is_env_scoped(app_client):
 
     # compile in envB uses fhir -> dummy pipeline $match but explain shows fhir strategy
     res_compile_b = client.post(
-        "/v1/environments/envB/compile_query",
+        "/environments/envB/compile_query",
         json={"domain": "fhir", "query": {"scope": "patient", "predicates": [], "select": [{"path": "id", "alias": "id"}]}},
         params={"debug": "true"},
     )
@@ -61,7 +61,7 @@ def test_activation_is_env_scoped(app_client):
 def test_activation_endpoint_returns_state(app_client):
     app, client = app_client
     client.post(
-        "/v1/environments/envState/activate",
+        "/environments/envState/activate",
         json={
             "strategy_id": "openehr.rps_dual",
             "version": "0.1.0",
@@ -71,7 +71,7 @@ def test_activation_endpoint_returns_state(app_client):
             "domain": "openEHR",
         },
     )
-    res = client.get("/v1/environments/envState")
+    res = client.get("/environments/envState")
     assert res.status_code == 200
     data = res.json()
     activations = data.get("activations", {})

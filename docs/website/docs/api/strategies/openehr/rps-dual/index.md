@@ -1,33 +1,32 @@
 ---
-sidebar_position: 6
+sidebar_position: 1
 ---
 
-# Strategy Layer API
+# Strategy API: openEHR RPS Dual
 
-The strategy layer exposes strategy-scoped runtime behavior.
+This page covers strategy-specific API behavior for `openehr.rps_dual`.
 
-## Strategy Prefixes
+## OpenAPI Docs
 
-Primary examples:
+- Swagger: `/docs/strategies/openehr/rps_dual`
+- ReDoc: `/redoc/strategies/openehr/rps_dual`
+
+Base prefix:
 
 - `/api/strategies/openehr/rps_dual/...`
-- `/environments/{env_id}/...` activation and synthetic job endpoints
 
-Typical usage:
+Related runtime strategy endpoints are also available under:
 
-- activate strategy in environment
-- configure strategy
-- run strategy operations
-- submit/query/cancel synthetic jobs
+- `/environments/{env_id}/...` (activation, capabilities, run, jobs)
 
-This layer is where \{kehrnel\}'s multi-strategy design is operationalized.
+## Main Capability Groups
 
-## Detailed Endpoint Groups
+- strategy runtime configuration
+- ingestion support endpoints
+- synthetic generation and job tracking
+
+## Endpoint Groups
 
 - [Strategy Config & Ingest](/docs/api/endpoints/strategy-config-and-ingest)
 - [Strategy Synthetic & Jobs](/docs/api/endpoints/strategy-synthetic-and-jobs)
-
-## Related
-
-- [API Layers](/docs/api/layers)
-- [Core Layer API](/docs/api/core)
+- [Runtime Capabilities And Run](/docs/api/endpoints/runtime-capabilities-and-run)

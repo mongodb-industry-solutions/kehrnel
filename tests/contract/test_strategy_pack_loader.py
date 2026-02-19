@@ -1,11 +1,11 @@
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from kehrnel.core.pack_loader import load_strategy
-from kehrnel.core.runtime import StrategyRuntime
-from kehrnel.core.registry import FileActivationRegistry
-from kehrnel.core.errors import KehrnelError
-from kehrnel.core.pack_validator import StrategyPackValidator
+from kehrnel.engine.core.pack_loader import load_strategy
+from kehrnel.engine.core.runtime import StrategyRuntime
+from kehrnel.engine.core.registry import FileActivationRegistry
+from kehrnel.engine.core.errors import KehrnelError
+from kehrnel.engine.core.pack_validator import StrategyPackValidator
 
 
 def test_rps_dual_pack_loads_with_spec_and_defaults():

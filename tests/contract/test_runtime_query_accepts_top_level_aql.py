@@ -12,7 +12,7 @@ def client(tmp_path):
 
 def test_compile_query_accepts_top_level_aql_payload(client):
     client.post(
-        "/v1/environments/envAql/activate",
+        "/environments/envAql/activate",
         json={
             "strategy_id": "openehr.rps_dual",
             "version": "0.1.0",
@@ -23,7 +23,7 @@ def test_compile_query_accepts_top_level_aql_payload(client):
         },
     )
     res = client.post(
-        "/v1/environments/envAql/compile_query",
+        "/environments/envAql/compile_query",
         json={
             "domain": "openEHR",
             "aql": "SELECT c/uid/value AS uid FROM EHR e CONTAINS COMPOSITION c WHERE e/ehr_id/value = 'p1'",

@@ -20,6 +20,7 @@ kehrnel setup --runtime-url http://localhost:8000 --domain openehr --strategy op
 ```bash
 # 1) Setup context
 kehrnel setup --runtime-url http://localhost:8000 --env dev --domain openehr --strategy openehr.rps_dual
+kehrnel doctor
 
 # 2) Define reusable source/sink profiles
 kehrnel resource add src --type mongo --uri "$MONGODB_URI" --db hc_openEHRCDR --collection samples
@@ -60,6 +61,62 @@ Equivalent universal commands:
 kehrnel run ensure_dictionaries --env dev --domain openehr
 kehrnel run rebuild_codes --env dev --domain openehr
 kehrnel run rebuild_shortcuts --env dev --domain openehr
+```
+
+## Generate Index Plans (Spec + Mappings)
+
+Build a dynamic index plan from `spec.json` plus current mapping templates:
+
+```bash
+kehrnel run build_indexes --env dev --domain openehr --strategy openehr.rps_dual
+```
+
+Apply generated B-tree + Atlas Search indexes:
+
+```bash
+kehrnel run build_indexes --env dev --domain openehr --strategy openehr.rps_dual \
+  --set apply=true \
+  --set include_spec=true \
+  --set include_mappings=true \
+  --set num_partitions=2
+```
+
+Use a custom Atlas index name:
+
+```bash
+kehrnel run build_indexes --env dev --domain openehr --strategy openehr.rps_dual \
+  --set apply=true \
+  --set index_name=search_nodes_index_v2
+```
+
+## Schema Version Migration
+
+Preview which documents would be migrated:
+
+```bash
+kehrnel run migrate_schema --env dev --domain openehr --strategy openehr.rps_dual \
+  --set to_version=2.0.0 \
+  --set dry_run=true \
+  --set batch_size=500
+```
+
+Apply migration to compositions + search collections:
+
+```bash
+kehrnel run migrate_schema --env dev --domain openehr --strategy openehr.rps_dual \
+  --set to_version=2.0.0 \
+  --set dry_run=false \
+  --set batch_size=500
+```
+
+Migrate and immediately rebuild indexes:
+
+```bash
+kehrnel run migrate_schema --env dev --domain openehr --strategy openehr.rps_dual \
+  --set to_version=2.0.0 \
+  --set dry_run=false \
+  --set ensure_indexes=true \
+  --set reindex_payload='{"include_mappings": true, "num_partitions": 2}'
 ```
 
 ## Important: Pass-through syntax
@@ -127,7 +184,13 @@ kehrnel common map-skeleton -- -- ./template.opt -o mapping.skeleton.yaml --macr
 ## Ingest flattened NDJSON batch
 
 ```bash
-kehrnel common ingest -- -- file ./batch.ndjson -d ./driver.yaml --workers 4
+# one-time sink setup (MongoDB or filesystem)
+kehrnel common ingest -- -- drivers
+kehrnel common ingest -- -- init-driver --driver mongodb --db openehr_db --out .kehrnel/driver.mongodb.yaml
+# or:
+# kehrnel common ingest -- -- init-driver --driver filesystem --base-path .kehrnel/persistence
+
+kehrnel common ingest -- -- file ./batch.ndjson -d ./.kehrnel/driver.mongodb.yaml --workers 4
 ```
 
 ## Identify incoming document type

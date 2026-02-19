@@ -1,8 +1,8 @@
 import pytest
 
-from kehrnel.domains.openehr.aql.parse import parse_aql
-from kehrnel.strategies.openehr.rps_dual.strategy import RPSDualStrategy, MANIFEST, DEFAULTS_PATH, load_json
-from kehrnel.core.types import StrategyContext
+from kehrnel.engine.domains.openehr.aql.parse import parse_aql
+from kehrnel.engine.strategies.openehr.rps_dual.strategy import RPSDualStrategy, MANIFEST, DEFAULTS_PATH, load_json
+from kehrnel.engine.core.types import StrategyContext
 
 
 @pytest.mark.asyncio

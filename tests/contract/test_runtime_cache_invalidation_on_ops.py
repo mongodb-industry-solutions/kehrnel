@@ -1,9 +1,9 @@
 import asyncio
 from pathlib import Path
 
-from kehrnel.core.runtime import StrategyRuntime
-from kehrnel.core.registry import FileActivationRegistry
-from kehrnel.strategy_sdk import StrategyBindings
+from kehrnel.engine.core.runtime import StrategyRuntime
+from kehrnel.engine.core.registry import FileActivationRegistry
+from kehrnel.engine.core.strategy_sdk import StrategyBindings
 
 
 async def _activate(rt: StrategyRuntime, manifest, env_id: str):

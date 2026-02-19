@@ -54,13 +54,13 @@ async def create_ehr_with_id_endpoint(
         try:
             initial_status = EHRStatusCreate.model_validate(payload)
         except ValidationError as e:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=e.errors())
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=e.errors())
 
     ehr_response = await create_ehr_with_id(
         ehr_id=ehr_id, db=db, initial_status=initial_status
     )
 
-    response.headers["Location"] = f"/v1/ehr/{ehr_response.ehr_id.value}"
+    response.headers["Location"] = f"/ehr/{ehr_response.ehr_id.value}"
     response.headers["ETag"] = f'"{ehr_response.ehr_id.value}"'
 
     if prefer == "return=representation":
@@ -156,7 +156,7 @@ async def create_ehr_endpoint(
         try:
             initial_status = EHRStatusCreate.model_validate(payload)
         except ValidationError as e:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=e.errors())
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=e.errors())
 
     ehr_response = await create_ehr(
         db=db,
@@ -169,7 +169,7 @@ async def create_ehr_endpoint(
     # This points to where the client can retrieve the newly created resource.
     # Note: Ideally, this would use `request.url_for`, but that requires a named "GET" route.
     # For now, we construct it manually.
-    response.headers["Location"] = f"/v1/ehr/{ehr_response.ehr_id.value}"
+    response.headers["Location"] = f"/ehr/{ehr_response.ehr_id.value}"
 
     # 2. Set the ETag header
     # The ETag is used for caching and conditional requests (e.g., If-None-Match).

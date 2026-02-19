@@ -7,7 +7,7 @@ def test_activation_idempotent_and_switchable(tmp_path):
     client = TestClient(create_app(str(tmp_path / "reg.json")))
     # first activation
     res1 = client.put(
-        "/v1/environments/strategy",
+        "/environments/strategy",
         json={"envId": "env-switch", "strategyId": "fhir.resource_first", "domain": "FHIR", "configOverrides": {}},
     )
     assert res1.status_code == 200
@@ -15,7 +15,7 @@ def test_activation_idempotent_and_switchable(tmp_path):
     assert act1.get("already_active") is False
     # second activation same strategy/domain -> alreadyActive
     res2 = client.put(
-        "/v1/environments/strategy",
+        "/environments/strategy",
         json={"envId": "env-switch", "strategyId": "fhir.resource_first", "domain": "fhir", "configOverrides": {}},
     )
     assert res2.status_code == 200
@@ -23,7 +23,7 @@ def test_activation_idempotent_and_switchable(tmp_path):
     assert act2.get("already_active") is True
     # switch to different strategy (openEHR) should replace
     res3 = client.put(
-        "/v1/environments/strategy",
+        "/environments/strategy",
         json={"envId": "env-switch", "strategyId": "openehr.rps_dual", "domain": "openEHR", "configOverrides": {}},
     )
     assert res3.status_code == 200

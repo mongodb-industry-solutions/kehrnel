@@ -9,7 +9,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 import typer
 import yaml
@@ -35,6 +35,7 @@ Pass-through command help:
 \b
 Workflow commands:
   kehrnel resource --help
+  kehrnel doctor
   kehrnel op list
   kehrnel op schema synthetic_generate_batch
   kehrnel run synthetic_generate_batch --from resource://src --to resource://dst
@@ -314,6 +315,178 @@ def _choose_from_list(label: str, options: list[str], default: Optional[str] = N
     return chosen
 
 
+def _doctor_report(runtime_url: Optional[str] = None, api_key: Optional[str] = None) -> Dict[str, Any]:
+    state = _state()
+    checks: List[Dict[str, Any]] = []
+    next_steps: List[str] = []
+
+    def add_check(
+        check: str,
+        status: str,
+        summary: str,
+        *,
+        fix: Optional[str] = None,
+        details: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        row: Dict[str, Any] = {"check": check, "status": status, "summary": summary}
+        if fix:
+            row["fix"] = fix
+            next_steps.append(fix)
+        if details is not None:
+            row["details"] = details
+        checks.append(row)
+
+    resolved_runtime = _resolve_runtime_url(runtime_url)
+    resolved_api_key = _resolve_api_key(api_key)
+    ctx = state.get("context", {}) if isinstance(state, dict) else {}
+    resources = state.get("resources", {}) if isinstance(state, dict) else {}
+    resources = resources if isinstance(resources, dict) else {}
+
+    if resolved_runtime:
+        add_check("runtime_url", "ok", f"Runtime URL configured: {resolved_runtime}")
+        health_status, health_resp = _http_json("GET", f"{resolved_runtime.rstrip('/')}/health", resolved_api_key)
+        if health_status < 400:
+            add_check("runtime_health", "ok", "Runtime health endpoint reachable")
+        else:
+            add_check(
+                "runtime_health",
+                "fail",
+                f"Runtime health check failed (status={health_status})",
+                fix="Verify runtime URL and API availability, then run: kehrnel core health",
+                details={"status": health_status, "response": health_resp},
+            )
+
+        catalog_status, catalog_resp = _http_json("GET", f"{resolved_runtime.rstrip('/')}/strategies", resolved_api_key)
+        if catalog_status < 400:
+            add_check("strategy_catalog", "ok", "Strategy catalog reachable")
+        else:
+            add_check(
+                "strategy_catalog",
+                "warn",
+                f"Strategy catalog not reachable (status={catalog_status})",
+                fix="Check authentication and run: kehrnel strategy list",
+                details={"status": catalog_status, "response": catalog_resp},
+            )
+    else:
+        add_check(
+            "runtime_url",
+            "fail",
+            "Runtime URL not configured",
+            fix="Run: kehrnel setup --runtime-url http://localhost:8000",
+        )
+
+    if resolved_api_key:
+        add_check("api_key", "ok", "API key is configured")
+    else:
+        add_check(
+            "api_key",
+            "warn",
+            "API key is not configured",
+            fix="If auth is enabled, run: kehrnel auth login --runtime-url http://localhost:8000",
+        )
+
+    env_value = ctx.get("environment")
+    domain_value = ctx.get("domain")
+    strategy_value = ctx.get("strategy")
+
+    if env_value:
+        add_check("context_env", "ok", f"Context environment set: {env_value}")
+    else:
+        add_check("context_env", "warn", "Context environment is not set", fix="Run: kehrnel context set --env dev")
+
+    if domain_value:
+        add_check("context_domain", "ok", f"Context domain set: {domain_value}")
+    else:
+        add_check("context_domain", "warn", "Context domain is not set", fix="Run: kehrnel context set --domain openehr")
+
+    if strategy_value:
+        add_check("context_strategy", "ok", f"Context strategy set: {strategy_value}")
+    else:
+        add_check(
+            "context_strategy",
+            "warn",
+            "Context strategy is not set",
+            fix="Run: kehrnel context set --strategy openehr.rps_dual",
+        )
+
+    for ref_key in ("source", "sink"):
+        ref_value = ctx.get(ref_key)
+        label = f"context_{ref_key}"
+        if not ref_value:
+            add_check(
+                label,
+                "warn",
+                f"Default {ref_key} reference is not set",
+                fix=f"Run: kehrnel resource use --{ref_key} <profile_name>",
+            )
+            continue
+        text = str(ref_value).strip()
+        if text.startswith("resource://"):
+            profile_name = text[len("resource://"):].strip()
+            if profile_name in resources and isinstance(resources.get(profile_name), dict):
+                add_check(label, "ok", f"{ref_key} uses resource profile: {profile_name}")
+            else:
+                add_check(
+                    label,
+                    "fail",
+                    f"{ref_key} points to missing resource profile: {profile_name}",
+                    fix=f"Run: kehrnel resource add {profile_name} --type <type> ...",
+                )
+        else:
+            add_check(label, "ok", f"{ref_key} reference configured: {text}")
+
+    has_fail = any(c.get("status") == "fail" for c in checks)
+    has_warn = any(c.get("status") == "warn" for c in checks)
+    overall = "fail" if has_fail else ("warn" if has_warn else "ok")
+
+    dedup_steps: List[str] = []
+    for step in next_steps:
+        if step not in dedup_steps:
+            dedup_steps.append(step)
+
+    return {
+        "overall": overall,
+        "runtime_url": resolved_runtime,
+        "api_key_configured": bool(resolved_api_key),
+        "checks": checks,
+        "next_steps": dedup_steps,
+    }
+
+
+@app.command("doctor")
+def doctor(
+    runtime_url: Optional[str] = typer.Option(None, help="Runtime URL override"),
+    api_key: Optional[str] = typer.Option(None, help="API key override"),
+    json_output: bool = typer.Option(False, "--json", help="Output report as JSON"),
+):
+    """
+    Diagnose local CLI readiness and print actionable next steps.
+    """
+    report = _doctor_report(runtime_url=runtime_url, api_key=api_key)
+
+    if json_output:
+        typer.echo(json.dumps(report, indent=2))
+        raise typer.Exit(0 if report.get("overall") != "fail" else 1)
+
+    marks = {"ok": "OK", "warn": "WARN", "fail": "FAIL"}
+    typer.echo(f"CLI doctor overall: {str(report.get('overall', 'unknown')).upper()}")
+    for row in report.get("checks", []):
+        status = str(row.get("status") or "warn").lower()
+        mark = marks.get(status, status.upper())
+        typer.echo(f"[{mark}] {row.get('check')}: {row.get('summary')}")
+        if row.get("fix"):
+            typer.echo(f"  -> {row['fix']}")
+
+    steps = report.get("next_steps") or []
+    if steps:
+        typer.echo("")
+        typer.echo("Suggested next commands:")
+        for step in steps:
+            typer.echo(f"- {step}")
+
+    raise typer.Exit(0 if report.get("overall") != "fail" else 1)
+
+
 @app.command("setup")
 def setup(
     runtime_url: Optional[str] = typer.Option(None, help="Runtime base URL, ex: http://localhost:8000"),
@@ -573,7 +746,10 @@ def core_health(
     raise typer.Exit(0 if status < 400 else 1)
 
 
-@core_app.command("api")
+@core_app.command(
+    "api",
+    context_settings={"allow_extra_args": True, "ignore_unknown_options": True},
+)
 def core_api(ctx: typer.Context):
     """Run the API server command."""
     _run_module("kehrnel.api.app", ctx.args)
@@ -1070,16 +1246,6 @@ def run_operation(
     selected_source = source_ref or state["context"].get("source")
     selected_sink = sink_ref or state["context"].get("sink")
 
-    if selected_domain and "domain" not in payload:
-        payload["domain"] = selected_domain
-    if selected_strategy and "strategy_id" not in payload and "strategy" not in payload:
-        payload["strategy_id"] = selected_strategy
-    if selected_mode and "data_mode" not in payload:
-        payload["data_mode"] = selected_mode
-    if selected_source and "source" not in payload:
-        payload["source"] = _resolve_data_ref(selected_source)
-    if selected_sink and "sink" not in payload:
-        payload["sink"] = _resolve_data_ref(selected_sink)
     if dry_run:
         payload["dry_run"] = True
 
@@ -1108,42 +1274,8 @@ def run_operation(
         typer.echo(json.dumps({"status": status, "operation": operation, "response": data}, indent=2))
         raise typer.Exit(0)
 
-    # Fallback only when /run endpoint itself is unavailable on older runtimes.
-    detail = str((data or {}).get("detail") or "").strip().lower() if isinstance(data, dict) else ""
-    run_endpoint_missing = status in (404, 405) and detail in {"not found", "method not allowed"}
-    if not run_endpoint_missing:
-        typer.echo(json.dumps({"status": status, "operation": operation, "response": data}, indent=2))
-        raise typer.Exit(1)
-
-    # Backward-compatible fallback for runtimes that do not expose /run.
-    op_key = operation.strip().lower().replace("-", "_")
-    direct = {"transform", "ingest", "plan", "apply", "query", "compile_query"}
-    if op_key in direct:
-        if op_key in {"query", "compile_query"} and not payload.get("domain"):
-            raise typer.BadParameter("domain is required for query/compile_query. Use --domain or context.")
-        url = f"{base.rstrip('/')}/environments/{env_id}/{op_key}"
-        if op_key == "compile_query" and debug:
-            url += "?debug=true"
-        status, data = _http_json("POST", url, auth, payload)
-    else:
-        chosen_domain = str(payload.get("domain") or "").strip().lower()
-        if not chosen_domain:
-            raise typer.BadParameter("domain is required for strategy operations. Use --domain or context.")
-        url = f"{base.rstrip('/')}/environments/{env_id}/activations/{chosen_domain}/ops/{operation}"
-        status, data = _http_json("POST", url, auth, payload)
-
-    typer.echo(
-        json.dumps(
-            {
-                "status": status,
-                "operation": operation,
-                "response": data,
-                "fallback": True,
-            },
-            indent=2,
-        )
-    )
-    raise typer.Exit(0 if status < 400 else 1)
+    typer.echo(json.dumps({"status": status, "operation": operation, "response": data}, indent=2))
+    raise typer.Exit(1)
 
 
 @domain_app.command("list")
@@ -1199,9 +1331,16 @@ def common_ingest(
     strategy: Optional[str] = typer.Option(None, help="Strategy override"),
     domain: Optional[str] = typer.Option(None, help="Domain override"),
 ):
-    selected_strategy = _require_strategy(strategy)
-    selected_domain = _require_domain(domain)
-    typer.echo(f"Using strategy={selected_strategy} domain={selected_domain}", err=True)
+    # Ingest helpers (drivers/init-driver/etc.) and file ingestion can run without
+    # runtime strategy/domain context. If provided, we still display the selection.
+    state = _state()
+    selected_strategy = strategy or state["context"].get("strategy")
+    selected_domain = domain or state["context"].get("domain")
+    if selected_strategy or selected_domain:
+        typer.echo(
+            f"Using strategy={selected_strategy or '(not set)'} domain={selected_domain or '(not set)'}",
+            err=True,
+        )
     _run_module("kehrnel.cli.ingest", ctx.args)
 
 

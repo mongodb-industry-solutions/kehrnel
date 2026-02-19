@@ -1,4 +1,4 @@
-# src/kehrnel/api/compatibility/v1/synthetic/__init__.py
+# src/kehrnel/api/synthetic/__init__.py
 
 """
 Synthetic Data Generation Module

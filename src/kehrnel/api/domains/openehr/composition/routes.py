@@ -105,7 +105,7 @@ async def create_composition_endpoint(
         payload = composition_create.root if hasattr(composition_create, "root") else {}
         if not isinstance(payload, dict) or payload.get("_type") != "COMPOSITION":
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Request body must be a canonical COMPOSITION object.",
             )
         new_composition = await add_composition(
@@ -125,7 +125,7 @@ async def create_composition_endpoint(
         ) from exc
 
     # Response Headers
-    response.headers["Location"] = f"/v1/ehr/{ehr_id}/composition/{new_composition.uid}"
+    response.headers["Location"] = f"/ehr/{ehr_id}/composition/{new_composition.uid}"
     response.headers["ETag"] = f'"{new_composition.uid}"'
     last_modified_gmt = formatdate(new_composition.time_created.timestamp(), usegmt = True)
     response.headers["Last-Modified"] = last_modified_gmt
@@ -186,7 +186,7 @@ async def get_composition_by_id(
         status_code=status.HTTP_200_OK,
         headers={
             "ETag": f'"{composition.uid}"',
-            "Location": f"/v1/ehr/{ehr_id}/composition/{composition.uid}",
+            "Location": f"/ehr/{ehr_id}/composition/{composition.uid}",
             "Last-Modified": last_modified_gmt
         }
     )
@@ -254,7 +254,7 @@ async def get_composition_by_id_unflattened(
         status_code=status.HTTP_200_OK,
         headers={
             "ETag": f'"{composition.uid}"',
-            "Location": f"/v1/ehr/{ehr_id}/composition/{composition.uid}",
+            "Location": f"/ehr/{ehr_id}/composition/{composition.uid}",
             "Last-Modified": last_modified_gmt
         }
     )
@@ -299,7 +299,7 @@ async def update_composition_endpoint(
     # Set the headers on the response object
     last_modified_gmt = formatdate(new_composition.time_created.timestamp(), usegmt=True)
     response.headers["ETag"] = f'"{new_composition.uid}"'
-    response.headers["Location"] = f"/v1/ehr/{ehr_id}/composition/{new_composition.uid}"
+    response.headers["Location"] = f"/ehr/{ehr_id}/composition/{new_composition.uid}"
     response.headers["Last-Modified"] = last_modified_gmt
 
     return new_composition
@@ -342,7 +342,7 @@ async def delete_composition_endpoint(
         status_code=status.HTTP_204_NO_CONTENT,
         headers={
             "ETag": f'"{result["new_audit_uid"]}"',
-            "Location": f"/v1/ehr/{ehr_id}/composition/{result['versioned_object_locator']}",
+            "Location": f"/ehr/{ehr_id}/composition/{result['versioned_object_locator']}",
             "Last-Modified": last_modified_gmt
         }
     )
@@ -447,6 +447,6 @@ async def get_composition_version_endpoint(
     
     # Set headers on the injected Response object
     response.headers["ETag"] = f'"{version_uid}"'
-    response.headers["Location"] = f"/v1/ehr/{ehr_id}/composition/{version_uid}"
+    response.headers["Location"] = f"/ehr/{ehr_id}/composition/{version_uid}"
 
     return version_response

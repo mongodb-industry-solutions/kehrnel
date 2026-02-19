@@ -3,7 +3,7 @@
 #######################
 
 # 1. Create an EHR and get back only headers (default behavior)
-curl -i -X POST http://localhost:9000/v1/ehr \
+curl -i -X POST http://localhost:9000/ehr \
 -H "Content-Type: application/json" \
 -d '{}'
 
@@ -12,7 +12,7 @@ curl -i -X POST http://localhost:9000/v1/ehr \
 #    Generate a unique subject_id for the test
 export SUBJECT_ID="test-subject-123456"
 
-curl -i -X POST http://localhost:9000/v1/ehr \
+curl -i -X POST http://localhost:9000/ehr \
 -H "Content-Type: application/json" \
 -H "Prefer: return=representation" \
 -d '{
@@ -27,17 +27,17 @@ curl -i -X POST http://localhost:9000/v1/ehr \
     }
 }'
 
-curl -X POST 'http://127.0.0.1:8000/v1/ehr' \
+curl -X POST 'http://127.0.0.1:8000/ehr' \
 -H 'Content-Type: application/json' \
 -d '{"subject": {"id": "patient-for-get-test"}}'
 
 # Create an EHR using a specific UUID we provide
 
-curl -i -X PUT http://localhost:9000/v1/ehr/5e96bbff-11ea-4173-8243-ca18026f634f \
+curl -i -X PUT http://localhost:9000/ehr/5e96bbff-11ea-4173-8243-ca18026f634f \
 -H "Content-Type: application/json" \
 -d '{}'
 
-curl -X POST "http://localhost:9000/v1/ehr" \
+curl -X POST "http://localhost:9000/ehr" \
 -H "Content-Type: application/json" \
 -H "Prefer: return=representation" \
 -d '{
@@ -57,7 +57,7 @@ curl -X POST "http://localhost:9000/v1/ehr" \
 "value":"ae8d5700-77dc-4a02-afef-2a3a8d74b8bb"
 "value":"4922f519-ba18-4975-bc63-a12c52c17d5a::my-openehr-server::1"
 
-curl -X POST "http://localhost:9000/v1/ehr" \
+curl -X POST "http://localhost:9000/ehr" \
 -i \
 -H "Content-Type: application/json" \
 -H "Prefer: return=representation" \
@@ -80,27 +80,27 @@ date: Mon, 08 Sep 2025 22:59:44 GMT
 server: uvicorn
 content-length: 396
 content-type: application/json
-location: /v1/ehr/30b333f1-537d-4734-bde9-917a8b8053c2
+location: /ehr/30b333f1-537d-4734-bde9-917a8b8053c2
 etag: "30b333f1-537d-4734-bde9-917a8b8053c2"
 
 {"ehr_id":{"value":"30b333f1-537d-4734-bde9-917a8b8053c2"},"ehr_status":{"id":{"value":"8008fd05-e571-4140-9be3-fd1e78cbc05d::my-openehr-server::1"},"namespace":"local","type":"EHR_STATUS"},"system_id":{"value":"my-openehr-server"},"time_created":{"value":"2025-09-08T22:59:45.733439Z"},"ehr_access":{"id":{"value":"1d1d151d-3736-44c3-b82f-66a7a8168cee"},"namespace":"local","type":"EHR_ACCESS"}}
 
-curl -X GET "http://localhost:9000/v1/ehr/30b333f1-537d-4734-bde9-917a8b8053c2/ehr_status" -i
+curl -X GET "http://localhost:9000/ehr/30b333f1-537d-4734-bde9-917a8b8053c2/ehr_status" -i
 
 
-gio.rodriguez@M-F7V2F999M9 kehrnel % curl -X GET "http://localhost:9000/v1/ehr/30b333f1-537d-4734-bde9-917a8b8053c2/ehr_status" -i
+gio.rodriguez@M-F7V2F999M9 kehrnel % curl -X GET "http://localhost:9000/ehr/30b333f1-537d-4734-bde9-917a8b8053c2/ehr_status" -i
 HTTP/1.1 200 OK
 date: Mon, 08 Sep 2025 23:04:28 GMT
 server: uvicorn
 content-length: 377
 content-type: application/json
 etag: "8008fd05-e571-4140-9be3-fd1e78cbc05d::my-openehr-server::1"
-location: /v1/ehr/30b333f1-537d-4734-bde9-917a8b8053c2/ehr_status/8008fd05-e571-4140-9be3-fd1e78cbc05d::my-openehr-server::1
+location: /ehr/30b333f1-537d-4734-bde9-917a8b8053c2/ehr_status/8008fd05-e571-4140-9be3-fd1e78cbc05d::my-openehr-server::1
 last-modified: Tue, 09 Sep 2025 04:59:45 GMT
 
 {"uid":{"value":"8008fd05-e571-4140-9be3-fd1e78cbc05d::my-openehr-server::1","type":"OBJECT_VERSION_ID"},"type":"EHR_STATUS","archetype_node_id":"openEHR-EHR-EHR_STATUS.generic.v1","name":{"value":"EHR status"},"subject":{"type":"PARTY_SELF","external_ref":{"id":{"value":"patient-999"},"namespace":"my.test.patients","type":"PERSON"}},"is_modifiable":true,"is_queryable":true}%
 
-gio.rodriguez@M-F7V2F999M9 kehrnel % curl -X GET "http://localhost:9000/v1/ehr/00000000-0000-0000-0000-000000000000/ehr_status" -i
+gio.rodriguez@M-F7V2F999M9 kehrnel % curl -X GET "http://localhost:9000/ehr/00000000-0000-0000-0000-000000000000/ehr_status" -i
 HTTP/1.1 404 Not Found
 date: Mon, 08 Sep 2025 23:08:21 GMT
 server: uvicorn
@@ -113,13 +113,13 @@ content-type: application/json
 ###### GET EHR  #######
 #######################
 
-curl -X GET 'http://localhost:9000/v1/ehr/eab5f872-b3eb-4f99-86d2-e7eb5f765a78'
-curl -X GET 'http://localhost:9000/v1/ehr/5e96bbff-11ea-4173-8243-ca18026f634f'
+curl -X GET 'http://localhost:9000/ehr/eab5f872-b3eb-4f99-86d2-e7eb5f765a78'
+curl -X GET 'http://localhost:9000/ehr/5e96bbff-11ea-4173-8243-ca18026f634f'
 curl -X GET 'http://localhost:9000/vi/ehr/5e96bbff-11ea-4173-8243-ca18026f634f'
 
 # Retrieve the EHR created in the second step by its subject
 # The SUBJECT_ID variable should still be set from Test 2
-curl -X GET "http://localhost:9000/v1/ehr?subject_id=test-subject-123456&subject_namespace=test.namespace"
+curl -X GET "http://localhost:9000/ehr?subject_id=test-subject-123456&subject_namespace=test.namespace"
 
 #######################
 ## Update EHR Status ##
@@ -128,7 +128,7 @@ curl -X GET "http://localhost:9000/v1/ehr?subject_id=test-subject-123456&subject
 "value":"ae8d5700-77dc-4a02-afef-2a3a8d74b8bb"
 "value":"4922f519-ba18-4975-bc63-a12c52c17d5a::my-openehr-server::1"
 
-curl -X PUT "http://localhost:9000/v1/ehr/ae8d5700-77dc-4a02-afef-2a3a8d74b8bb/ehr_status" \
+curl -X PUT "http://localhost:9000/ehr/ae8d5700-77dc-4a02-afef-2a3a8d74b8bb/ehr_status" \
 -v \
 -H "Content-Type: application/json" \
 -H "If-Match: \"4922f519-ba18-4975-bc63-a12c52c17d5a::my-openehr-server::1\"" \
@@ -152,9 +152,9 @@ curl -X PUT "http://localhost:9000/v1/ehr/ae8d5700-77dc-4a02-afef-2a3a8d74b8bb/e
 
 
 # Find the contribution_uid
-curl -XGET -i "http://localhost:9000/v1/ehr/ae8d5700-77dc-4a02-afef-2a3a8d74b8bb"
+curl -XGET -i "http://localhost:9000/ehr/ae8d5700-77dc-4a02-afef-2a3a8d74b8bb"
 
-gio.rodriguez@M-F7V2F999M9 kehrnel % curl -XGET -i "http://localhost:9000/v1/ehr/ae8d5700-77dc-4a02-afef-2a3a8d74b8bb"
+gio.rodriguez@M-F7V2F999M9 kehrnel % curl -XGET -i "http://localhost:9000/ehr/ae8d5700-77dc-4a02-afef-2a3a8d74b8bb"
 HTTP/1.1 200 OK
 date: Tue, 09 Sep 2025 23:08:45 GMT
 server: uvicorn
@@ -165,10 +165,10 @@ content-type: application/json
 
 # Find by EHR ID and Contribution ID
 
-curl -X GET "http://localhost:9000/v1/ehr/ae8d5700-77dc-4a02-afef-2a3a8d74b8bb/contribution/0365e49d-48ec-4057-a5f5-6e1eb72fb008" -i
+curl -X GET "http://localhost:9000/ehr/ae8d5700-77dc-4a02-afef-2a3a8d74b8bb/contribution/0365e49d-48ec-4057-a5f5-6e1eb72fb008" -i
 
 # This one should fail
-curl -X PUT "http://localhost:9000/v1/ehr/ae8d5700-77dc-4a02-afef-2a3a8d74b8bb/ehr_status" \
+curl -X PUT "http://localhost:9000/ehr/ae8d5700-77dc-4a02-afef-2a3a8d74b8bb/ehr_status" \
 -v \
 -H "Content-Type: application/json" \
 -H "If-Match: \"4922f519-ba18-4975-bc63-a12c52c17d5a::my-openehr-server::1\"" \
@@ -197,7 +197,7 @@ curl -X PUT "http://localhost:9000/v1/ehr/ae8d5700-77dc-4a02-afef-2a3a8d74b8bb/e
 ##########################
 
 
-curl -X POST 'http://localhost:8000/v1/ehr/08d82721-4238-436a-9679-61901b6bc176/composition' \
+curl -X POST 'http://localhost:8000/ehr/08d82721-4238-436a-9679-61901b6bc176/composition' \
   -H "Content-Type: application/json" \
   --data @tumourRandom.json
   
@@ -205,14 +205,14 @@ curl -X POST 'http://localhost:8000/v1/ehr/08d82721-4238-436a-9679-61901b6bc176/
 ##########################
 ### GET a COMPOSITION ####
 ##########################
-curl -X GET 'http://localhost:8000/v1/ehr/616f8c00-d429-4004-a797-1c11fac35022/composition/9aafd9d2-c7a1-4f77-bda2-f9890e94f528::my-openehr-server::1'
+curl -X GET 'http://localhost:8000/ehr/616f8c00-d429-4004-a797-1c11fac35022/composition/9aafd9d2-c7a1-4f77-bda2-f9890e94f528::my-openehr-server::1'
 
 
 ############################
 ### UPDATE a COMPOSITION ###
 ############################
 
-curl -X PUT http://localhost:8000/v1/ehr/08d82721-4238-436a-9679-61901b6bc176/composition/4b8e7e3c-2552-4272-b41a-71a38e98c5fc::my-openehr-server::1 \
+curl -X PUT http://localhost:8000/ehr/08d82721-4238-436a-9679-61901b6bc176/composition/4b8e7e3c-2552-4272-b41a-71a38e98c5fc::my-openehr-server::1 \
   -H "Content-Type: application/json" \
   -H "If-Match: \"4b8e7e3c-2552-4272-b41a-71a38e98c5fc::my-openehr-server::1\"" \
   --data @pmsi.json
@@ -222,12 +222,12 @@ curl -X PUT http://localhost:8000/v1/ehr/08d82721-4238-436a-9679-61901b6bc176/co
 ### DELETE a COMPOSITION ###
 ############################
 
-curl -X DELETE http://localhost:8000/v1/ehr/08d82721-4238-436a-9679-61901b6bc176/composition/4b8e7e3c-2552-4272-b41a-71a38e98c5fc::my-openehr-server::1 \
+curl -X DELETE http://localhost:8000/ehr/08d82721-4238-436a-9679-61901b6bc176/composition/4b8e7e3c-2552-4272-b41a-71a38e98c5fc::my-openehr-server::1 \
   -H "Content-Type: application/json" \
   -H "If-Match: \"4b8e7e3c-2552-4272-b41a-71a38e98c5fc::my-openehr-server::1\""
 
 
-curl -X POST 'http://localhost:9000/v1/ehr' \
+curl -X POST 'http://localhost:9000/ehr' \
 -H 'Content-Type: application/json' \
 -H 'Prefer: return=representation' \
 -d '{}' | jq
@@ -237,7 +237,7 @@ curl -X POST 'http://localhost:9000/v1/ehr' \
 export EHR_ID="f2ddb67a-8415-46de-ab94-eaf16548c920"
 
 # Create the first version
-curl -X POST "http://localhost:9000/v1/ehr/${EHR_ID}/composition" \
+curl -X POST "http://localhost:9000/ehr/${EHR_ID}/composition" \
 -H 'Content-Type: application/json' \
 -d '{
     "_type": "COMPOSITION",
@@ -257,7 +257,7 @@ export VERSION_UID_V1="74511079-bff4-4c63-b59a-db376e4f89ae::my-openehr-server::
 export VERSIONED_OBJECT_UID=$(echo $VERSION_UID_V1 | cut -d':' -f1)
 
 # This command uses your specific IDs to update the composition
-curl -X PUT "http://localhost:9000/v1/ehr/${EHR_ID}/composition/${VERSION_UID_V1}" \
+curl -X PUT "http://localhost:9000/ehr/${EHR_ID}/composition/${VERSION_UID_V1}" \
 -H "Content-Type: application/json" \
 -H "If-Match: \"${VERSION_UID_V1}\"" \
 -d '{
@@ -275,12 +275,12 @@ curl -X PUT "http://localhost:9000/v1/ehr/${EHR_ID}/composition/${VERSION_UID_V1
 
 export VERSION_UID_LATEST="0b7fd17c-60e9-4ab9-a218-29209bcdd9b2::my-openehr-server::3"
 
-curl "http://localhost:9000/v1/ehr/${EHR_ID}/composition/${VERSION_UID_V2}" | jq
-curl "http://localhost:9000/v1/ehr/${EHR_ID}/composition/${VERSION_UID_V1}" | jq
-curl "http://localhost:9000/v1/ehr/${EHR_ID}/composition/${VERSIONED_OBJECT_UID}" | jq
+curl "http://localhost:9000/ehr/${EHR_ID}/composition/${VERSION_UID_V2}" | jq
+curl "http://localhost:9000/ehr/${EHR_ID}/composition/${VERSION_UID_V1}" | jq
+curl "http://localhost:9000/ehr/${EHR_ID}/composition/${VERSIONED_OBJECT_UID}" | jq
 
 # Testing GET Revision History
-curl "http://localhost:9000/v1/ehr/${EHR_ID}/versioned_composition/${VERSIONED_OBJECT_UID}/revision_history" | jq
+curl "http://localhost:9000/ehr/${EHR_ID}/versioned_composition/${VERSIONED_OBJECT_UID}/revision_history" | jq
 
 
 Get versioned COMPOSITION version at time
@@ -289,14 +289,14 @@ First create the EHRs
 
 export EHR_ID="a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d"
 
-curl -i -X PUT "http://localhost:9000/v1/ehr/${EHR_ID}" \
+curl -i -X PUT "http://localhost:9000/ehr/${EHR_ID}" \
 -H "Content-Type: application/json" \
 -H "Prefer: return=representation" \
 -d '{}'
 
 Create the composition
 
-curl -i -X POST "http://localhost:9000/v1/ehr/${EHR_ID}/composition" \
+curl -i -X POST "http://localhost:9000/ehr/${EHR_ID}/composition" \
 -H "Content-Type: application/json" \
 -H "Accept: application/json" \
 -d '{
@@ -314,7 +314,7 @@ curl -i -X POST "http://localhost:9000/v1/ehr/${EHR_ID}/composition" \
 export VERSION_1_UID="68e511fe-879b-42ab-bd84-aed7ced29255::my-openehr-server::1"
 export VERSIONED_OBJECT_UID="68e511fe-879b-42ab-bd84-aed7ced29255"
 
-curl -i -X PUT "http://localhost:9000/v1/ehr/${EHR_ID}/composition/${VERSION_1_UID}" \
+curl -i -X PUT "http://localhost:9000/ehr/${EHR_ID}/composition/${VERSION_1_UID}" \
 -H "Content-Type: application/json" \
 -H "Accept: application/json" \
 -H "If-Match: \"${VERSION_1_UID}\"" \
@@ -333,26 +333,26 @@ curl -i -X PUT "http://localhost:9000/v1/ehr/${EHR_ID}/composition/${VERSION_1_U
 export VERSION_2_UID="68e511fe-879b-42ab-bd84-aed7ced29255::my-openehr-server::2"
 
 Logically delete the composition
-curl -i -X DELETE "http://localhost:9000/v1/ehr/${EHR_ID}/composition/${VERSION_2_UID}" \
+curl -i -X DELETE "http://localhost:9000/ehr/${EHR_ID}/composition/${VERSION_2_UID}" \
 -H "If-Match: \"${VERSION_2_UID}\""
 
 Get the latest version No Timestamp
 
-curl -i -X GET "http://localhost:9000/v1/ehr/${EHR_ID}/versioned_composition/${VERSIONED_OBJECT_UID}/version" \
+curl -i -X GET "http://localhost:9000/ehr/${EHR_ID}/versioned_composition/${VERSIONED_OBJECT_UID}/version" \
 -H "Accept: application/json"
 
 
-curl -i -X GET "http://localhost:9000/v1/ehr/${EHR_ID}/versioned_composition/${VERSIONED_OBJECT_UID}/version?version_at_time=2024-05-28T11%3A00%3A00Z" \
+curl -i -X GET "http://localhost:9000/ehr/${EHR_ID}/versioned_composition/${VERSIONED_OBJECT_UID}/version?version_at_time=2024-05-28T11%3A00%3A00Z" \
 -H "Accept: application/json"
 
 
-curl -i -X GET "http://localhost:9000/v1/ehr/${EHR_ID}/versioned_composition/${VERSIONED_OBJECT_UID}/version?version_at_time=2025-10-28T15%3A00%3A00Z" \
+curl -i -X GET "http://localhost:9000/ehr/${EHR_ID}/versioned_composition/${VERSIONED_OBJECT_UID}/version?version_at_time=2025-10-28T15%3A00%3A00Z" \
 -H "Accept: application/json"
 
 
 Testing the GET EHR_STATUS by version
 
-RESPONSE=$(curl -s -X POST "http://localhost:9000/v1/ehr" \
+RESPONSE=$(curl -s -X POST "http://localhost:9000/ehr" \
   -H "Content-Type: application/json" \
   -H "Prefer: return=representation" \
   -d '{
@@ -372,7 +372,7 @@ RESPONSE=$(curl -s -X POST "http://localhost:9000/v1/ehr" \
 export EHR_ID=$(echo $RESPONSE | jq -r '.ehr_id.value')
 export V1_UID=$(echo $RESPONSE | jq -r '.ehr_status.id.value')
 
-V2_RESPONSE=$(curl -s -X PUT "http://localhost:9000/v1/ehr/$EHR_ID/ehr_status" \
+V2_RESPONSE=$(curl -s -X PUT "http://localhost:9000/ehr/$EHR_ID/ehr_status" \
   -H "Content-Type: application/json" \
   -H "If-Match: \"$V1_UID\"" \
   -d '{
@@ -399,4 +399,4 @@ export V2_UID=$(echo $V2_RESPONSE | jq -r '.uid.value')
 echo "EHR_STATUS updated."
 echo "EHR_STATUS Version 2 UID: $V2_UID"
 
-curl -i -X GET "http://localhost:9000/v1/ehr/$EHR_ID/ehr_status/$V2_UID"
+curl -i -X GET "http://localhost:9000/ehr/$EHR_ID/ehr_status/$V2_UID"

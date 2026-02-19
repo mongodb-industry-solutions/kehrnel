@@ -43,13 +43,13 @@ def get_template_id_from_opt(xml_content: str) -> str:
             status_code = status.HTTP_400_BAD_REQUEST,
             detail = str(e)
         )
-    
+
 
 def generate_template_etag(content: str) -> str:
     """
-    Generates an ETag for the template content using SHA1 hashing.
+    Generates an ETag for the template content using SHA-256 hashing.
     """
-    return hashlib.sha1(content.encode('utf-8')).hexdigest()
+    return hashlib.sha256(content.encode("utf-8")).hexdigest()
 
 
 async def create_template(db: AsyncIOMotorDatabase, template_content: str, template_format: TemplateFormat) -> dict:
@@ -74,7 +74,7 @@ async def create_template(db: AsyncIOMotorDatabase, template_content: str, templ
             status_code = status.HTTP_409_CONFLICT,
             detail = f"Template with ID {template_id} and format '{template_format.value}' already exists."
         )
-    
+
     # Create the template model instance
     new_template = Template(
         template_id = template_id,
@@ -93,7 +93,7 @@ async def create_template(db: AsyncIOMotorDatabase, template_content: str, templ
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail = f"Could not create template due to a database error: {e}"
         )
-    
+
     # Generate the ETag for the response header
     etag = generate_template_etag(new_template.content)
 
@@ -128,10 +128,10 @@ async def retrieve_template_by_id_and_format(db: AsyncIOMotorDatabase, template_
             status_code = status.HTTP_404_NOT_FOUND,
             detail = f"Template with ID '{template_id}' and '{template_format.value}' not found"
         )
-    
+
     # Validate the database data against the Pydantic model
     template_model = Template.model_validate(template_doc)
-    
+
     # Generate the ETag from the template's content
     etag = generate_template_etag(template_model.content)
 

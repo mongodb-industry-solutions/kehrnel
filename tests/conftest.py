@@ -1,6 +1,4 @@
 import httpx
-print(f"HTTPretty version being used by pytest: {httpx.__version__}")
-print(f"HTTPretty file location: {httpx.__file__}")
 
 import os
 # Test harness defaults: do not require auth and avoid relying on external env vars.
@@ -73,7 +71,7 @@ async def client(test_db_client: AsyncIOMotorClient) -> AsyncGenerator[AsyncClie
     # Tells the FastAPI app to replace the get_mongodb_ehr_db with the test_db
     def override_get_db():
         return db
-    
+
     app.dependency_overrides[get_mongodb_ehr_db] = override_get_db
     async with AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as c:
         yield c

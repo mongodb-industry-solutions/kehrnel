@@ -38,6 +38,7 @@ Typical flow:
 ```bash
 # 1) Recommended: interactive setup (auth + context)
 kehrnel setup --runtime-url http://localhost:8000
+kehrnel doctor
 #
 # Or, explicit primitives:
 # kehrnel auth login --runtime-url http://localhost:8000

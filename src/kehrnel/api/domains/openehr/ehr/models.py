@@ -1,7 +1,8 @@
 # ehr/models.py
 
-from pydantic import BaseModel, Field
-from typing import Optional, List
+from typing import List, Optional
+
+from pydantic import BaseModel, ConfigDict, Field
 from kehrnel.api.domains.openehr.ehr_status.models import EHRStatus
 
 from kehrnel.api.common.models import (
@@ -18,7 +19,7 @@ class EHRCreationResponse(BaseModel):
     system_id: SystemIdModel
     time_created: DvDateTime
     ehr_access: ObjectRef
-    
+
 
 class EHR(BaseModel):
     ehr_id: EhrIdModel = Field(..., alias="_id")
@@ -29,6 +30,4 @@ class EHR(BaseModel):
     contributions: List[ObjectRef] = []
     compositions: List[ObjectRef] = []
     directory: Optional[ObjectRef] = None
-
-    class Config:
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)

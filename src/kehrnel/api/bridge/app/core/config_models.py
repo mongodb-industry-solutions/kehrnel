@@ -1,7 +1,8 @@
-from pydantic import BaseModel, Field, field_validator
-from typing import Dict, Optional, List, Any
 from datetime import datetime
+from typing import Any, Dict, List, Optional
+
 from bson import ObjectId
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 class CollectionConfig(BaseModel):
     """Configuration for a MongoDB collection"""
@@ -74,21 +75,21 @@ class ConfigurationDocument(BaseModel):
     description: str
     tags: List[str] = Field(default_factory=list)
     config: DatabaseConfig
-    
+
     # Optional metadata fields
     owner_type: Optional[str] = Field(None, alias="ownerType")
-    owner_id: Optional[str] = Field(None, alias="ownerId") 
+    owner_id: Optional[str] = Field(None, alias="ownerId")
     visibility: Optional[str] = None
     created_at: Optional[datetime] = Field(None, alias="createdAt")
     updated_at: Optional[datetime] = Field(None, alias="updatedAt")
     created_by: Optional[Dict[str, Any]] = Field(None, alias="createdBy")
     updated_by: Optional[Dict[str, Any]] = Field(None, alias="updatedBy")
-    
+
     # Optional complex metadata (stored as generic dicts)
     meta: Optional[Dict[str, Any]] = None
     tabs: Optional[Dict[str, Any]] = None
     blueprint: Optional[Dict[str, Any]] = None
-    
+
     @field_validator('id', mode='before')
     @classmethod
     def convert_objectid_to_string(cls, v):
@@ -96,25 +97,26 @@ class ConfigurationDocument(BaseModel):
         if isinstance(v, ObjectId):
             return str(v)
         return v
-    
-    class Config:
-        extra = "ignore"  # Allow extra fields to be ignored
-        arbitrary_types_allowed = True  # Allow ObjectId type
+
+    model_config = ConfigDict(
+        extra="ignore",  # Allow extra fields to be ignored
+        arbitrary_types_allowed=True,  # Allow ObjectId type
+    )
 
 class CompositionCollectionNames(BaseModel):
     """Simplified model for composition-specific collection names"""
     compositions: str = "compositions"
     flatten_compositions: str = "flatten_compositions"
     search_compositions: str = "sm_search3"
-    contributions: str = "contributions" 
+    contributions: str = "contributions"
     ehr: str = "ehr"
     dictionaries: str = "dictionaries"
     database: str = "openehr_cdr"
-    
+
     # Search-specific configurations
     atlas_index_name: Optional[str] = None
     merge_search_docs: bool = False
-    
+
     # Field mappings for compositions
     composition_fields: FieldMappingConfig = Field(default_factory=FieldMappingConfig)
     search_fields: FieldMappingConfig = Field(default_factory=lambda: FieldMappingConfig(nodes="sn", score="score"))
@@ -124,37 +126,37 @@ class CompositionCollectionNames(BaseModel):
         """Create CompositionCollectionNames from a ConfigurationDocument"""
         import logging
         logger = logging.getLogger(__name__)
-        
+
         try:
             logger.info(f"🔧 PARSING configuration document: {config_doc.name}")
             config = config_doc.config
             logger.info(f"📊 Config object type: {type(config)}")
             logger.info(f"📊 Config object: {config}")
-            
+
             # Extract collection configurations with proper None checks
             logger.info(f"🔍 Extracting collections from config.collections: {config.collections}")
             compositions_coll = config.collections.get("compositions")
             flatten_compositions_coll = config.collections.get("flatten_compositions")
             search_coll = config.collections.get("search")
             dictionaries_coll = config.collections.get("dictionaries")
-            
+
             logger.info(f"📁 Collections extracted:")
             logger.info(f"  - compositions: {compositions_coll} (type: {type(compositions_coll)})")
             logger.info(f"  - flatten_compositions: {flatten_compositions_coll} (type: {type(flatten_compositions_coll)})")
             logger.info(f"  - search: {search_coll} (type: {type(search_coll)})")
             logger.info(f"  - dictionaries: {dictionaries_coll} (type: {type(dictionaries_coll)})")
-            
+
             # Extract field mapping configurations with proper None checks
             composition_fields_config = config.fields.get("composition")
             search_fields_config = config.fields.get("search")
-            
+
             # Create field mappings with defaults if None
             if composition_fields_config is not None:
                 composition_fields = composition_fields_config
             else:
                 logger.debug("No composition fields config found, using defaults")
                 composition_fields = FieldMappingConfig()
-            
+
             if search_fields_config is not None:
                 search_fields = search_fields_config
                 # Ensure score field is set for search fields
@@ -163,12 +165,12 @@ class CompositionCollectionNames(BaseModel):
             else:
                 logger.debug("No search fields config found, using defaults")
                 search_fields = FieldMappingConfig(nodes="sn", score="score")
-            
+
             # Build collection names with safe None checks
-            
+
             compositions_name = (
-                compositions_coll.name 
-                if compositions_coll is not None 
+                compositions_coll.name
+                if compositions_coll is not None
                 else "compositions"
             )
 
@@ -179,27 +181,27 @@ class CompositionCollectionNames(BaseModel):
             )
 
             search_name = (
-                search_coll.name 
-                if search_coll is not None 
+                search_coll.name
+                if search_coll is not None
                 else "sm_search3"
             )
 
             dictionaries_name = (
-                dictionaries_coll.name 
-                if dictionaries_coll is not None 
+                dictionaries_coll.name
+                if dictionaries_coll is not None
                 else "dictionaries"
             )
 
             atlas_index = (
-                search_coll.atlas_index_name 
-                if search_coll is not None 
+                search_coll.atlas_index_name
+                if search_coll is not None
                 else None
             )
-            
+
             logger.debug(f"Final collection names - database: {config.database}, "
                         f"compositions: {compositions_name}, search: {search_name}, "
                         f"dictionaries: {dictionaries_name}, atlas_index: {atlas_index}")
-            
+
             return cls(
                 database=config.database,
                 compositions=compositions_name,
@@ -211,7 +213,7 @@ class CompositionCollectionNames(BaseModel):
                 composition_fields=composition_fields,
                 search_fields=search_fields
             )
-            
+
         except AttributeError as e:
             logger.error(f"❌ Missing required configuration attribute: {e}")
             logger.error(f"📄 Configuration document structure: {config_doc.dict() if hasattr(config_doc, 'dict') else str(config_doc)}")

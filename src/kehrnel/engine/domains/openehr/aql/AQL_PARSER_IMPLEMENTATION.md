@@ -72,7 +72,7 @@ src/kehrnel/api/domains/openehr/aql/
 
 #### 1. **AQL Validation Endpoint**
 ```
-POST /v1/query/aql/validate
+POST /query/aql/validate
 Content-Type: text/plain
 ```
 
@@ -82,7 +82,7 @@ Content-Type: text/plain
 
 **Example Request**:
 ```bash
-curl -X POST "http://localhost:9000/v1/query/aql/validate" \
+curl -X POST "http://localhost:9000/query/aql/validate" \
   -H "Content-Type: text/plain" \
   -d "SELECT c/context/start_time/value FROM EHR e CONTAINS COMPOSITION c WHERE e/ehr_id/value = 'test'"
 ```
@@ -99,7 +99,7 @@ curl -X POST "http://localhost:9000/v1/query/aql/validate" \
 
 #### 2. **AQL to AST Parsing Endpoint**
 ```
-POST /v1/query/aql/parse
+POST /query/aql/parse
 Content-Type: text/plain
 ```
 
@@ -109,7 +109,7 @@ Content-Type: text/plain
 
 **Example Request**:
 ```bash
-curl -X POST "http://localhost:9000/v1/query/aql/parse" \
+curl -X POST "http://localhost:9000/query/aql/parse" \
   -H "Content-Type: text/plain" \
   -d "SELECT c/context/start_time/value AS start_time FROM EHR e CONTAINS COMPOSITION c WHERE e/ehr_id/value = 'test' LIMIT 10"
 ```
@@ -157,7 +157,7 @@ curl -X POST "http://localhost:9000/v1/query/aql/parse" \
 
 #### 3. **AQL Execution Endpoint (Updated)**
 ```
-POST /v1/query/aql
+POST /query/aql
 Content-Type: text/plain
 ```
 
@@ -167,7 +167,7 @@ Content-Type: text/plain
 
 **Example Request**:
 ```bash
-curl -X POST "http://localhost:9000/v1/query/aql" \
+curl -X POST "http://localhost:9000/query/aql" \
   -H "Content-Type: text/plain" \
   -d "SELECT c/context/start_time/value AS start_time FROM EHR e CONTAINS COMPOSITION c WHERE e/ehr_id/value = 'test' LIMIT 5"
 ```

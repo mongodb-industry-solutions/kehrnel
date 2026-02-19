@@ -1,40 +1,23 @@
 import json
 import os
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Callable, Dict
 import yaml
 
-from .strategy import (
-    PersistenceStrategy,
-    load_strategy_from_file,
-    load_strategy_from_json,
-    get_default_strategy,
+from .layout import (
+    PersistenceLayout,
+    load_layout_from_file,
+    load_layout_from_json,
+    get_default_layout,
 )
 from .mongo import MongoStore, MongoSource
+from .fs import FileStore, read_jsonl, write_jsonl
 from .mongodb.storage import MongoStorageAdapter
 from .mongodb.connection import get_database
 
-class MemoryPersister:
-    """
-    Minimal in-memory persistence adapter.
-    """
-
-    def __init__(self):
-        self.base: list[dict] = []
-        self.search: list[dict] = []
-        self.stats = type("S", (), {"inserted": 0})()
-
-    def connect(self):
-        # Keep the same interface as MongoStore; no-op for in-memory.
-        return None
-
-    def insert_one(self, doc: dict, *, search: bool = False):
-        (self.search if search else self.base).append(doc)
-        self.stats.inserted += 1
-
-    def insert_many(self, docs, workers: int = 4):
-        for d in docs:
-            self.insert_one(d, search=bool(d.get("sn") is not None))
+DriverFactory = Callable[[Dict[str, Any]], Any]
+_DRIVER_FACTORIES: Dict[str, DriverFactory] = {}
+_PRIMARY_DRIVERS: set[str] = set()
 
 
 def _load_config(cfg: Any) -> Dict[str, Any]:
@@ -59,25 +42,56 @@ def _load_config(cfg: Any) -> Dict[str, Any]:
     raise ValueError("Unsupported persistence config type")
 
 
+def register_driver(name: str, factory: DriverFactory, *aliases: str) -> None:
+    """Register a new persistence driver factory.
+
+    This keeps the architecture open for future adapters (e.g. CosmosDB)
+    while shipping only MongoDB and filesystem by default.
+    """
+    keys = [name, *aliases]
+    canonical = (name or "").strip().lower()
+    if canonical:
+        _PRIMARY_DRIVERS.add(canonical)
+    for key in keys:
+        normalized = (key or "").strip().lower()
+        if normalized:
+            _DRIVER_FACTORIES[normalized] = factory
+
+
+def list_drivers(include_aliases: bool = False) -> list[str]:
+    if include_aliases:
+        return sorted(_DRIVER_FACTORIES)
+    return sorted(_PRIMARY_DRIVERS)
+
+
 def get_driver(cfg: Any):
     data = _load_config(cfg)
-    kind = (data.get("driver") or data.get("provider") or data.get("type") or "mongo").lower()
-    if kind in ("memory", "mem", "inmemory", "in-memory"):
-        return MemoryPersister()
-    if kind in ("mongo", "mongodb"):
-        return MongoStore(data)
-    raise ValueError(f"Unsupported driver type: {kind}")
+    kind = (data.get("driver") or data.get("provider") or data.get("type") or "mongodb").lower()
+    factory = _DRIVER_FACTORIES.get(kind)
+    if not factory:
+        supported = ", ".join(sorted(_DRIVER_FACTORIES))
+        raise ValueError(f"Unsupported driver type: {kind}. Supported: {supported}")
+    return factory(data)
+
+
+# Built-ins: only MongoDB + filesystem.
+register_driver("mongodb", MongoStore, "mongo")
+register_driver("filesystem", FileStore, "fs", "file")
 
 
 __all__ = [
-    "PersistenceStrategy",
-    "load_strategy_from_file",
-    "load_strategy_from_json",
-    "get_default_strategy",
-    "MemoryPersister",
+    "PersistenceLayout",
+    "load_layout_from_file",
+    "load_layout_from_json",
+    "get_default_layout",
     "MongoStore",
     "MongoSource",
+    "FileStore",
+    "read_jsonl",
+    "write_jsonl",
     "MongoStorageAdapter",
     "get_database",
+    "register_driver",
+    "list_drivers",
     "get_driver",
 ]

@@ -1,10 +1,9 @@
-# src/kehrnel/api/compatibility/v1/composition/models.py
+# src/kehrnel/api/composition/models.py
 
-from pydantic import BaseModel, Field, RootModel, model_validator
 from datetime import datetime
-from typing import Optional, List, Literal, Any, Dict
+from typing import Any, Dict, Literal
 
-from kehrnel.api.bridge.app.core.models import AuditDetails
+from pydantic import BaseModel, ConfigDict, Field, RootModel, model_validator
 from kehrnel.api.common.models import HierObjectID, ObjectRef, DvDateTime
 
 class CompositionCreate(RootModel[Dict[str, Any]]):
@@ -20,23 +19,21 @@ class CompositionCreate(RootModel[Dict[str, Any]]):
         if "archetype_details" not in v or "template_id" not in v["archetype_details"]:
             raise ValueError("COMPOSITION must have archetype_details with a template_id")
         return self
-    
+
     @property
     def template_id(self) -> str:
         return self.root["archetype_details"]["template_id"]["value"]
-    
+
     @property
     def content(self) -> Dict[str, Any]:
         return self.root
-    
+
 
 class Composition(BaseModel):
     uid: str = Field(..., alias="_id")
     time_created: datetime
     data: Dict[str, Any]
-
-    class Config:
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class VersionedComposition(BaseModel):
@@ -44,6 +41,4 @@ class VersionedComposition(BaseModel):
     owner_id: ObjectRef = Field(..., alias="ownerId")
     time_created: DvDateTime = Field(..., alias="timeCreated")
     type: Literal["VERSIONED_COMPOSITION"] = Field("VERSIONED_COMPOSITION", alias="_type")
-
-    class Config:
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)

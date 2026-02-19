@@ -31,20 +31,20 @@ def test_bundles_crud(tmp_path):
     client = TestClient(app)
     bundle = _sample_bundle()
     # create
-    res = client.post("/v1/bundles", json=bundle)
+    res = client.post("/bundles", json=bundle)
     assert res.status_code == 200
     # list
-    res = client.get("/v1/bundles")
+    res = client.get("/bundles")
     assert res.status_code == 200
     bundles = res.json().get("bundles") or []
     assert any(b["bundle_id"] == bundle["bundle_id"] for b in bundles)
     # get
-    res = client.get(f"/v1/bundles/{bundle['bundle_id']}")
+    res = client.get(f"/bundles/{bundle['bundle_id']}")
     assert res.status_code == 200
     got = res.json()["bundle"]
     assert got["bundle_id"] == bundle["bundle_id"]
     # delete
-    res = client.delete(f"/v1/bundles/{bundle['bundle_id']}")
+    res = client.delete(f"/bundles/{bundle['bundle_id']}")
     assert res.status_code == 200
-    res = client.get(f"/v1/bundles/{bundle['bundle_id']}")
+    res = client.get(f"/bundles/{bundle['bundle_id']}")
     assert res.status_code == 404

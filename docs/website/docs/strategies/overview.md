@@ -15,6 +15,22 @@ A strategy is a self-contained package that can implement:
 - **Query compilation**: domain query language to execution plan
 - **Operations**: maintenance tasks, validation, synthetic generation
 
+## Strategy Contract Checklist
+
+For consistency across current and future strategy packs, each strategy should define:
+
+- **Model scope**: logical data model/metamodel.
+- **Storage model**: collections/stores and record representations.
+- **Transformation model**: how source data is mapped/materialized.
+- **Index and search model**: required indexes, search definitions, and rationale.
+- **Interface surface**: supported runtime operations and expected inputs/outputs.
+- **Standards conformance scope**: which interfaces of a standard are supported.
+- **Configuration surface**: required/optional config, defaults, and profile variants.
+- **Operational invariants**: identity, lineage, and consistency guarantees.
+- **Examples/references**: sample inputs/outputs and implementation references.
+
+This is the baseline needed to keep strategies machine-readable, comparable, and extensible.
+
 ## \{kehrnel\} Is Multi-Strategy by Design
 
 \{kehrnel\} is not tied to one strategy. A workspace can evolve through different strategies over time as requirements change.
@@ -53,6 +69,16 @@ strategy_pack/
 ├── query/              # query compilation logic
 └── assets/             # docs and supporting artifacts
 ```
+
+## Shared Components
+
+When a capability is reusable across strategies, it should move to `engine/common` instead of staying pack-local.
+
+Current example:
+
+- `engine/common/ingest`: shared ingest utilities (`PathCodec`, remap helpers, ingest exceptions)
+
+This keeps strategy packs focused on domain-specific logic while preserving one reusable base for future packs.
 
 ## Activation Model
 

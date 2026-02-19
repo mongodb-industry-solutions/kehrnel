@@ -11,9 +11,10 @@ This project is an experimental, non-production environment for demonstration pu
 
 This repository is intentionally focused on:
 - `src/kehrnel/api` (API surface)
-  - includes `src/kehrnel/api/compatibility` compatibility modules still used by current domain routes
 - `src/kehrnel/engine` (core/common/domains/strategies)
 - `src/kehrnel/cli` (CLI commands)
+- `src/kehrnel/persistence` (persistence drivers + adapters)
+- `docs/` (project documentation)
 - `samples/` and `tests/`
 
 ## Quick Start
@@ -56,7 +57,7 @@ In dev mode, API links are proxied to `KEHRNEL_API_ORIGIN` (default `http://loca
 
 Full integration guide:
 - `examples/README.md`
-- `docs/cli-api-reference.md`
+- Docusaurus source: `docs/website/docs/`
 
 ## Strategy Packs
 
@@ -78,8 +79,11 @@ Primary CLI entrypoint:
 - `kehrnel` (`auth`, `context`, `resource`, `op`, `run`, `core`, `common`, `domain`, `strategy`)
 - `kehrnel-api` (API server launcher)
 
-Complete CLI + endpoint inventory:
-- `docs/cli-api-reference.md`
+Complete CLI docs:
+- `docs/website/docs/cli/overview.md`
+API reference:
+- Swagger: `/docs`
+- ReDoc: `/redoc`
 
 ## Standalone Usage
 
@@ -107,8 +111,16 @@ flowchart LR
 
   RT --> PLUG[Strategy Plugin]
   PLUG --> OPS[Ops / Transform / Ingest / Query]
-  OPS --> MONGO[(MongoDB)]
+  OPS --> PERS[Persistence Driver]
+  PERS --> MONGO[(MongoDB)]
+  PERS --> FS[(Filesystem JSONL)]
 ```
+
+Current built-in persistence drivers:
+- `mongodb` (alias: `mongo`)
+- `filesystem` (aliases: `fs`, `file`)
+
+The driver layer is open for extension through `register_driver(...)` in `src/kehrnel/persistence/__init__.py`.
 
 Execution contract:
 1. Discover strategy manifests.
@@ -174,12 +186,33 @@ pytest tests/contract
 
 Notes:
 - Contract/golden tests target the active strategy runtime.
-- Some tests still exercise compatibility routes while API/domain migration is completed.
+
+## Quality and Security Checks
+
+Install developer tooling:
+
+```bash
+pip install -e .[dev]
+pre-commit install
+```
+
+Run the local quality gate:
+
+```bash
+pre-commit run --all-files
+ruff check --select F821 src tests
+bandit -c pyproject.toml -lll -r src/kehrnel
+pip-audit
+```
 
 ## License
 
-NOTICE: This repository is licensed under the Apache License, Version 2.0, with the exception of specific files. The data strategies, templates, schemas, and design artifacts in `src/kehrnel/engine/strategies/` are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0). You may use, share, adapt, and build upon these materials, provided you give appropriate attribution.
+NOTICE: This repository is licensed under the Apache License, Version 2.0,
+with the exception of specific files. The data strategies, templates, schemas,
+and design artifacts in `src/kehrnel/engine/strategies/` are licensed under the
+Creative Commons Attribution 4.0 International License (CC BY 4.0). You may
+use, share, adapt, and build upon these materials, provided you give
+appropriate attribution.
 
-See the LICENSE file in that directory for details: [`src/kehrnel/engine/strategies/LICENSE`](src/kehrnel/engine/strategies/LICENSE)  
-CC BY 4.0: https://creativecommons.org/licenses/by/4.0/  
-Apache 2.0: [`LICENSE`](LICENSE)
+See the LICENSE file in that directory for details:
+https://creativecommons.org/licenses/by/4.0/

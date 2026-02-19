@@ -1,4 +1,4 @@
-# src/kehrnel/api/compatibility/v1/directory/repository.py
+# src/kehrnel/api/directory/repository.py
 
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from pymongo.errors import PyMongoError

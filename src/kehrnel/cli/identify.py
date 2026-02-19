@@ -10,7 +10,7 @@ from typing import Iterable, List
 
 import typer
 
-from kehrnel.engine.common.mapping.document_identifier import DocumentIdentifier 
+from kehrnel.engine.common.mappings.document_identifier import DocumentIdentifier 
 
 app = typer.Typer(add_completion=False, rich_markup_mode="rich")
 

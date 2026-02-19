@@ -1,5 +1,12 @@
 # Strategy Synthetic And Job Endpoints
 
+## OpenAPI Docs
+
+- Swagger (strategy): `/docs/strategies/openehr/rps_dual`
+- ReDoc (strategy): `/redoc/strategies/openehr/rps_dual`
+- Swagger (core jobs): `/docs/core`
+- ReDoc (core jobs): `/redoc/core`
+
 ## Strategy synthetic
 
 - `POST /api/strategies/openehr/rps_dual/synthetic/generate`
@@ -11,9 +18,3 @@
 - `POST /environments/{env_id}/synthetic/jobs`
 - `GET /environments/{env_id}/synthetic/jobs/{job_id}`
 - `POST /environments/{env_id}/synthetic/jobs/{job_id}/cancel`
-
-## Universal runtime execution
-
-- `POST /environments/{env_id}/run` with `operation=synthetic_generate_batch`
-
-These APIs power sampling and synthetic data generation workflows.

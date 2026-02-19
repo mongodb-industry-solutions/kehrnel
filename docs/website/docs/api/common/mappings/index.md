@@ -1,49 +1,25 @@
 ---
-sidebar_position: 4
+sidebar_position: 1
 ---
 
-# Common Layer API
+# Common API: Mappings
 
-The common layer defines conventions shared across core, domain, and strategy endpoints.
+This page covers mapping-related APIs that are shared/common rather than domain-specific.
 
-## Authentication
+## OpenAPI Docs
 
-When `KEHRNEL_AUTH_ENABLED=true`, pass an API key:
+- Swagger (core): `/docs/core`
+- ReDoc (core): `/redoc/core`
 
-```http
-X-API-Key: <your-key>
-```
+Note: some admin mapping endpoints can be intentionally hidden from Swagger depending on runtime settings.
 
-Public routes typically include:
+## Current Mapping Endpoints
 
-- `/health`
-- `/docs`, `/redoc`
+- `POST /api/transform`
+- `POST /api/validate-composition`
 
-## Request/Response Conventions
-
-- JSON is the default payload format (`application/json`)
-- Some domain endpoints accept specialized formats (for example AQL text)
-- Standard HTTP semantics are used for create/read/update/delete and async operations
-
-## Common Status Codes
-
-| Code | Meaning |
-|------|---------|
-| `200 OK` | Request succeeded |
-| `201 Created` | Resource created |
-| `202 Accepted` | Async job started |
-| `204 No Content` | Successful deletion |
-| `400 Bad Request` | Invalid request |
-| `401 Unauthorized` | Authentication required |
-| `403 Forbidden` | Access denied |
-| `404 Not Found` | Resource not found |
-| `409 Conflict` | Resource conflict |
-| `422 Unprocessable Entity` | Validation error |
-| `503 Service Unavailable` | Runtime not initialized |
-
-## Related
+## Related Layer Docs
 
 - [API Overview](/docs/api/overview)
+- [Common Layer API](/docs/api/common)
 - [Core Layer API](/docs/api/core)
-- [Domain Layer API](/docs/api/domains/openehr)
-- [Strategy Layer API](/docs/api/strategies/openehr/rps-dual)

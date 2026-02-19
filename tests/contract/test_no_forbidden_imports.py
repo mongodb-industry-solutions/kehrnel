@@ -3,7 +3,7 @@ import re
 
 SRC_ROOT = Path("src")
 CODE_ROOTS = [SRC_ROOT / "kehrnel"]
-ALLOWED_PACKAGES = {"kehrnel", "strategy_sdk", "cli"}
+ALLOWED_PACKAGES = {"kehrnel"}
 # Only flag actual imports, not variable names like "src.get(...)".
 SRC_IMPORT_PATTERN = re.compile(r"^\s*(from|import)\s+src\.", re.MULTILINE)
 PERSISTENCE_PATTERN = re.compile(r"^\s*(from|import)\s+(?<!kehrnel\.)persistence\.", re.MULTILINE)
@@ -23,8 +23,8 @@ FORBIDDEN_PATH_TOKENS = (
     "libs.",
 )
 FORBIDDEN_RPS_DUAL_COMPILERS = (
-    "kehrnel.strategies.openehr.rps_dual.query.compiler_match",
-    "kehrnel.strategies.openehr.rps_dual.query.compiler_atlas_search",
+    "kehrnel.engine.strategies.openehr.rps_dual.query.compiler_match",
+    "kehrnel.engine.strategies.openehr.rps_dual.query.compiler_atlas_search",
 )
 
 

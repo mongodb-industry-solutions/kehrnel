@@ -11,7 +11,7 @@ def flatten(
     source: Path = typer.Argument(..., exists=True, readable=True,
                                   help="Canonical composition JSON file"),
     output: Path = typer.Option(Path("-"), "-o", help="'-' = stdout"),
-    cfg:    Path = typer.Option(None, "-c", help="override config JSON (unused in compatibility-compatible flatten mode)")
+    cfg:    Path = typer.Option(None, "-c", help="override config JSON (unused in flatten mode)")
 ):
     """Convert canonical JSON to flattened docs (base + optional search)."""
     raw = json.loads(source.read_text(encoding="utf-8"))

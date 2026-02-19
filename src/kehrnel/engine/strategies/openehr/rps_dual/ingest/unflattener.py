@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
-from .encoding import PathCodec
+from kehrnel.engine.common.ingest.encoding import PathCodec
 from .flattener import CompositionFlattener
 
 

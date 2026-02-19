@@ -246,6 +246,131 @@
       }
     },
     {
+      "name": "build_indexes",
+      "kind": "maintenance",
+      "summary": "Generate (and optionally apply) B-tree and Atlas Search index definitions from strategy spec + mappings",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "apply": {
+            "type": "boolean",
+            "default": false
+          },
+          "include_spec": {
+            "type": "boolean",
+            "default": true
+          },
+          "include_mappings": {
+            "type": "boolean",
+            "default": true
+          },
+          "include_stored_source": {
+            "type": "boolean",
+            "default": true
+          },
+          "num_partitions": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 2
+          },
+          "index_name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "applied": { "type": "boolean" },
+          "plan": {
+            "type": "object",
+            "properties": {
+              "btree": { "type": "array" },
+              "atlas": { "type": "object" }
+            }
+          },
+          "result": { "type": "object" },
+          "warnings": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    {
+      "name": "migrate_schema",
+      "kind": "maintenance",
+      "summary": "Batch-migrate collection documents to a target schema version marker",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "to_version": { "type": "string" },
+          "from_version": { "type": "string" },
+          "include_missing": {
+            "type": "boolean",
+            "default": true
+          },
+          "dry_run": {
+            "type": "boolean",
+            "default": true
+          },
+          "batch_size": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 500
+          },
+          "stamp_field": {
+            "type": "string",
+            "default": "_schema_version"
+          },
+          "updated_at_field": {
+            "type": "string",
+            "default": "_schema_updated_at"
+          },
+          "apply_to_compositions": {
+            "type": "boolean",
+            "default": true
+          },
+          "apply_to_search": {
+            "type": "boolean",
+            "default": true
+          },
+          "filter": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "ensure_indexes": {
+            "type": "boolean",
+            "default": false
+          },
+          "reindex_payload": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": ["to_version"],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "dry_run": { "type": "boolean" },
+          "from_version": { "type": ["string", "null"] },
+          "to_version": { "type": "string" },
+          "collections": { "type": "object" },
+          "total": { "type": "object" },
+          "warnings": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "reindex": { "type": "object" }
+        }
+      }
+    },
+    {
       "name": "synthetic_generate_batch",
       "kind": "synthetic",
       "summary": "Generate synthetic datasets in batch from source instances and/or model catalog",

@@ -1,4 +1,4 @@
-# src/kehrnel/api/compatibility/v1/directory/routes.py
+# src/kehrnel/api/directory/routes.py
 
 from fastapi import APIRouter, Depends, status, Header, HTTPException, Response, Query
 from motor.motor_asyncio import AsyncIOMotorDatabase
@@ -62,7 +62,7 @@ async def get_directory_endpoint(
     )
 
     response.headers["ETag"] = f'"{root_version_uid}"'
-    response.headers["Location"] = f"/v1/ehr/{ehr_id}/directory/{root_version_uid}"
+    response.headers["Location"] = f"/ehr/{ehr_id}/directory/{root_version_uid}"
 
     return folder
 
@@ -97,7 +97,7 @@ async def get_directory_by_version_id_endpoint(
     )
 
     response.headers["ETag"] = f'"{version_uid}"'
-    response.headers["Location"] = f"/v1/ehr/{ehr_id}/directory/{version_uid}"
+    response.headers["Location"] = f"/ehr/{ehr_id}/directory/{version_uid}"
 
     return folder
 
@@ -137,7 +137,7 @@ async def create_directory_endpoint(
     )
 
     version_uid = created_directory.uid.value
-    response.headers["Location"] = f"/v1/ehr/{ehr_id}/directory/{version_uid}"
+    response.headers["Location"] = f"/ehr/{ehr_id}/directory/{version_uid}"
     response.headers["ETag"] = f'"{version_uid}"'
 
     if prefer == "return=representation":
@@ -190,7 +190,7 @@ async def update_directory_endpoint(
     )
 
     new_version_uid = updated_directory.uid.value
-    response.headers["Location"] = f"/v1/ehr/{ehr_id}/directory/{new_version_uid}"
+    response.headers["Location"] = f"/ehr/{ehr_id}/directory/{new_version_uid}"
     response.headers["ETag"] = f'"{new_version_uid}"'
 
     if prefer == "return=representation":

@@ -8,11 +8,45 @@ from typing import Any, Dict, Iterator, Optional
 
 import yaml
 
-from kehrnel.persistence import get_driver, MongoSource
+from kehrnel.persistence import get_driver, list_drivers, MongoSource
 from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
 
 app = typer.Typer(help="Bulk-ingest flattened docs into a persistence driver")
 log = logging.getLogger(__name__)
+
+
+def _coerce_cli_value(value: str) -> Any:
+    text = value.strip()
+    if text == "":
+        return ""
+    try:
+        return json.loads(text)
+    except Exception:
+        return text
+
+
+def _parse_set_values(items: list[str]) -> Dict[str, Any]:
+    out: Dict[str, Any] = {}
+    for item in items:
+        if "=" not in item:
+            raise typer.BadParameter(f"Invalid --set entry '{item}'. Use KEY=VALUE.")
+        key, raw = item.split("=", 1)
+        key = key.strip()
+        if not key:
+            raise typer.BadParameter(f"Invalid --set entry '{item}'. KEY cannot be empty.")
+        out[key] = _coerce_cli_value(raw)
+    return out
+
+
+def _normalize_driver_name(driver: str) -> str:
+    raw = (driver or "").strip().lower()
+    aliases = {
+        "mongo": "mongodb",
+        "file": "filesystem",
+        "fs": "filesystem",
+    }
+    return aliases.get(raw, raw)
+
 
 @app.command("file")
 def from_file(
@@ -32,6 +66,7 @@ def from_file(
 
     drv.insert_many(producer(), workers=workers)
     log.info("done - inserted %d docs", getattr(getattr(drv, "stats", None), "inserted", 0))
+
 
 @app.command("mongo-catchup")
 def from_mongo(
@@ -81,37 +116,82 @@ def from_mongo(
     log.info("done - inserted %d docs", inserted)
 
 
+@app.command("drivers")
+def drivers(
+    include_aliases: bool = typer.Option(False, "--aliases", help="Include aliases"),
+):
+    """List registered persistence drivers."""
+    rows = list_drivers(include_aliases=include_aliases)
+    for row in rows:
+        typer.echo(row)
+
+
 @app.command("init-driver")
 def init_driver(
-    out: Path = typer.Option(Path(".kehrnel/driver.mongo.yaml"), "--out", "-o", help="Where to write the driver YAML"),
-    use_env_var: bool = typer.Option(True, "--env/--no-env", help="Use an env var placeholder for the connection string"),
+    driver: str = typer.Option("mongodb", "--driver", "-t", help="Driver type (mongodb, filesystem, or custom)"),
+    out: Optional[Path] = typer.Option(None, "--out", "-o", help="Where to write the driver YAML"),
+    use_env_var: bool = typer.Option(True, "--env/--no-env", help="Use an env var placeholder for MongoDB URI"),
     env_var_name: str = typer.Option("MONGODB_URI", "--env-var", help="Env var name to reference when --env"),
-    connection_string: Optional[str] = typer.Option(None, "--uri", prompt=False, hide_input=True, help="MongoDB connection string (only used when --no-env)"),
-    database_name: str = typer.Option(..., "--db", prompt=True, help="Database name"),
-    compositions_collection: str = typer.Option("compositions_rps", "--compositions", prompt=True, help="Base compositions collection"),
-    search_collection: str = typer.Option("compositions_search", "--search", prompt=True, help="Search collection"),
+    connection_string: Optional[str] = typer.Option(None, "--uri", prompt=False, hide_input=True, help="MongoDB URI (only used for mongodb + --no-env)"),
+    database_name: Optional[str] = typer.Option(None, "--db", help="MongoDB database name"),
+    compositions_collection: Optional[str] = typer.Option(None, "--compositions", help="MongoDB base compositions collection"),
+    search_collection: Optional[str] = typer.Option(None, "--search", help="MongoDB search collection"),
+    base_path: str = typer.Option(".kehrnel/persistence", "--base-path", help="Filesystem base path"),
+    compositions_file: str = typer.Option("compositions.jsonl", "--compositions-file", help="Filesystem base compositions file"),
+    search_file: str = typer.Option("search.jsonl", "--search-file", help="Filesystem search file"),
+    set_values: list[str] = typer.Option([], "--set", help="Extra KEY=VALUE entries (JSON values accepted)"),
 ):
     """
-    Create a persistence driver config for `kehrnel ingest`.
+    Create a persistence driver config for `kehrnel common ingest`.
 
-    By default, writes `${MONGODB_URI}` so you don't store secrets in the YAML.
+    Same CLI UX across drivers:
+    - mongodb: URI + database/collections
+    - filesystem: path + JSONL filenames
+    - custom driver: base `driver` + optional `--set`
     """
-    if use_env_var:
-        uri_value = f"${{{env_var_name}}}"
-    else:
-        uri_value = connection_string or typer.prompt("MongoDB connection string", hide_input=True)
+    driver_name = _normalize_driver_name(driver)
+    if not driver_name:
+        raise typer.BadParameter("Driver cannot be empty.")
 
-    cfg = {
-        "driver": "mongodb",
-        "connection_string": uri_value,
-        "database_name": database_name,
-        "compositions_collection": compositions_collection,
-        "search_collection": search_collection,
-    }
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(yaml.safe_dump(cfg, sort_keys=False), encoding="utf-8")
-    typer.echo(f"✓ wrote {out}")
-    if use_env_var:
+    cfg: Dict[str, Any] = {"driver": driver_name}
+    if driver_name == "mongodb":
+        db_name = (database_name or "").strip()
+        if not db_name:
+            db_name = typer.prompt("MongoDB database name")
+
+        base_col = (compositions_collection or "").strip() or "compositions_rps"
+        search_col = (search_collection or "").strip() or "compositions_search"
+        if use_env_var:
+            uri_value = f"${{{env_var_name}}}"
+        else:
+            uri_value = connection_string or typer.prompt("MongoDB connection string", hide_input=True)
+        cfg.update(
+            {
+                "connection_string": uri_value,
+                "database_name": db_name,
+                "compositions_collection": base_col,
+                "search_collection": search_col,
+            }
+        )
+    elif driver_name == "filesystem":
+        cfg.update(
+            {
+                "base_path": base_path,
+                "compositions_file": compositions_file,
+                "search_file": search_file,
+            }
+        )
+
+    extra = _parse_set_values(set_values)
+    if extra:
+        cfg.update(extra)
+
+    target = out or Path(f".kehrnel/driver.{driver_name}.yaml")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(yaml.safe_dump(cfg, sort_keys=False), encoding="utf-8")
+    typer.echo(f"✓ wrote {target}")
+    typer.echo("Use with: kehrnel common ingest -- -- file <batch.ndjson> -d <driver.yaml>")
+    if driver_name == "mongodb" and use_env_var:
         typer.echo(f"Set {env_var_name} in your environment before running ingest.")
 
 

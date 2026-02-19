@@ -5,8 +5,8 @@ import pytest
 from fastapi.testclient import TestClient
 
 from kehrnel.api.app import create_app, _load_manifests
-from kehrnel.core.runtime import StrategyRuntime
-from kehrnel.strategy_sdk import StrategyBindings
+from kehrnel.engine.core.runtime import StrategyRuntime
+from kehrnel.engine.core.strategy_sdk import StrategyBindings
 from tests.helpers.fixture_storage import FixtureStorage
 
 
@@ -36,7 +36,7 @@ def _activate_with_fixture(runtime: StrategyRuntime, manifest, fixture_dir: Path
 def test_strategies_endpoint_contract(tmp_path: Path):
     app = create_app(str(tmp_path / "reg.json"))
     client = TestClient(app)
-    res = client.get("/v1/strategies")
+    res = client.get("/strategies")
     assert res.status_code == 200
     data = res.json()
     assert "strategies" in data
@@ -62,7 +62,7 @@ def test_compile_query_contract(tmp_path: Path):
                 "offset": None,
             },
         }
-    res = client.post(f"/v1/environments/{env_id}/compile_query", json=payload, params={"debug": "true"})
+    res = client.post(f"/environments/{env_id}/compile_query", json=payload, params={"debug": "true"})
     assert res.status_code == 200
     body = res.json()
     assert body.get("ok") is True
@@ -95,6 +95,6 @@ def test_query_and_ops_contract(tmp_path: Path):
             "offset": None,
         },
     }
-    res_q = client.post(f"/v1/environments/{env_id}/query", json=q_payload)
+    res_q = client.post(f"/environments/{env_id}/query", json=q_payload)
     assert res_q.status_code == 200
     assert res_q.json().get("ok") is True

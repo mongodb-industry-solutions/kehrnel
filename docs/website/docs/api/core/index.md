@@ -42,6 +42,6 @@ Primary core/admin endpoints:
 ## Related
 
 - [API Layers](/docs/api/layers)
-- [Common Layer API](/docs/api/common/mappings)
+- [Common Layer API](/docs/api/common)
 - [Admin & Environment API (Detailed)](/docs/api/admin-environments)
 - [Strategy Registry Endpoints (Detailed)](/docs/api/endpoints/strategy-registry)

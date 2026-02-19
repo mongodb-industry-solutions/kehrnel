@@ -59,12 +59,8 @@ class SyntheticJobManager:
             "result": None,
             "error": None,
             "stats": {},
-            "source_database": (
-                payload.get("source_database")
-                or payload.get("source_db")
-                or payload.get("sourceDatabase")
-            ),
-            "source_collection": payload.get("source_collection") or payload.get("sourceCollection"),
+            "source_database": payload.get("source_database"),
+            "source_collection": payload.get("source_collection"),
             "target_database": (metadata or {}).get("target_database"),
             "target_collections": (metadata or {}).get("target_collections"),
             "model_source": (metadata or {}).get("model_source"),
@@ -275,8 +271,6 @@ class SyntheticJobManager:
         if rec is None:
             return None
         data = dict(rec)
-        # Backward/consumer compatibility: expose both keys.
-        data["id"] = data.get("job_id")
         # Do not expose requester metadata to API consumers.
         data.pop("requested_by", None)
         data["requester_id"] = rec.get("requester_id")
@@ -329,11 +323,6 @@ class SyntheticJobManager:
             or source.get("collection")
             or data.get("source_collection")
         )
-        # Backward compatibility for HDL/proxy field names.
-        data["targetDatabase"] = data.get("target_database")
-        data["targetCollections"] = data.get("target_collections")
-        data["sourceDatabase"] = data.get("source_database")
-        data["sourceCollection"] = data.get("source_collection")
         return data
 
     def _redact_requester(self, requester: str | None) -> str | None:

@@ -6,6 +6,11 @@ sidebar_position: 6
 
 Administrative APIs manage runtime strategy lifecycle and environment behavior.
 
+## OpenAPI Docs
+
+- Swagger (core): `/docs/core`
+- ReDoc (core): `/redoc/core`
+
 Examples:
 
 - `GET /strategies`
@@ -31,22 +36,3 @@ This is the preferred discovery contract for CLI and UI workflow builders.
 ## Universal Run Endpoint
 
 `POST /environments/{env_id}/run` executes one operation with a single contract.
-
-Request body (typical):
-
-```json
-{
-  "operation": "synthetic_generate_batch",
-  "domain": "openehr",
-  "strategy_id": "openehr.rps_dual",
-  "data_mode": "profile.search_shortcuts",
-  "source": {"type": "resource", "name": "src"},
-  "sink": {"type": "resource", "name": "dst"},
-  "payload": {"patient_count": 100, "dry_run": true}
-}
-```
-
-The runtime routes to either:
-
-- standard environment operation (`plan/apply/transform/ingest/query/compile_query`), or
-- strategy operation (`run_op`) when `operation` is strategy-specific.

@@ -19,10 +19,10 @@ from kehrnel.engine.core.manifest import StrategyManifest
 from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.core.bundle_store import BundleStore
 from kehrnel.engine.core.pack_loader import load_strategy
-from kehrnel.engine.common.mapping.mapping_engine import apply_mapping
-from kehrnel.engine.common.mapping.handlers.csv_handler import CSVHandler
-from kehrnel.engine.common.mapping.handlers.xml_handler import XMLHandler
-from kehrnel.engine.common.mapping.utils.expr import evaluate as eval_expr
+from kehrnel.engine.common.mappings.mapping_engine import apply_mapping
+from kehrnel.engine.common.mappings.handlers.csv_handler import CSVHandler
+from kehrnel.engine.common.mappings.handlers.xml_handler import XMLHandler
+from kehrnel.engine.common.mappings.utils.expr import evaluate as eval_expr
 from kehrnel.engine.domains.openehr.templates.parser import TemplateParser
 from kehrnel.engine.domains.openehr.templates.generator import kehrnelGenerator
 from kehrnel.engine.domains.openehr.templates.validator import kehrnelValidator
@@ -89,6 +89,14 @@ def _error_response(exc: Exception) -> JSONResponse:
     # Avoid leaking secrets or filesystem internals (absolute paths) via error strings.
     message = redact_sensitive(message) or message
     return JSONResponse(status_code=status, content={"error": {"code": code, "message": message, "details": details}})
+
+
+def _json_safe(value: Any) -> Any:
+    """Best-effort conversion to JSON-serializable structures."""
+    try:
+        return json.loads(json.dumps(value, default=str))
+    except Exception:
+        return value
 
 
 def _require_admin_access(request: Request) -> None:
@@ -466,7 +474,7 @@ def _compat_flat_map_from_path_mapping(mapping: Dict[str, Any], source_tree: etr
 
             if "template" in rule:
                 try:
-                    from kehrnel.engine.common.mapping.utils.jinja_env import env as JINJA
+                    from kehrnel.engine.common.mappings.utils.jinja_env import env as JINJA
                     rendered = JINJA.from_string(str(rule.get("template") or "")).render({"xpath": _xpath})
                     literal = rendered
                 except Exception:
@@ -976,7 +984,7 @@ async def run_op(request: Request, body: Dict[str, Any] = Body(default_factory=d
         if not rt:
             raise ValueError("Strategy runtime not initialized")
         result = await rt.dispatch(env_id, "op", {"op": op, "payload": payload, "domain": domain})
-        return {"ok": True, "result": result}
+        return {"ok": True, "result": _json_safe(result)}
     except Exception as exc:
         return _error_response(exc)
 
@@ -1040,19 +1048,24 @@ async def run_env_op(env_id: str, request: Request, body: Dict[str, Any] = Body(
         payload = body.get("payload") if isinstance(body.get("payload"), dict) else {}
         payload = dict(payload or {})
 
-        # Lift top-level universal keys into payload if not already provided.
-        for key in ("domain", "strategy_id", "strategy", "data_mode", "source", "sink", "query", "aql", "dry_run", "debug", "allow_mismatch"):
-            if key in body and key not in payload:
-                payload[key] = body.get(key)
-
-        requested_domain = str(payload.get("domain") or body.get("domain") or "").strip().lower()
-        strategy_id = str(payload.get("strategy_id") or payload.get("strategy") or body.get("strategy_id") or body.get("strategy") or "").strip()
+        requested_domain = str(body.get("domain") or payload.get("domain") or "").strip().lower()
+        strategy_id = str(
+            body.get("strategy_id")
+            or body.get("strategy")
+            or payload.get("strategy_id")
+            or payload.get("strategy")
+            or ""
+        ).strip()
 
         dispatch_op = op_key
         dispatch_payload: Dict[str, Any] = payload
         route_scope = "runtime"
 
         if op_key in direct_ops:
+            # For direct runtime ops, top-level keys are convenient and safe to merge.
+            for key in ("domain", "strategy_id", "strategy", "data_mode", "source", "sink", "query", "aql", "dry_run", "debug", "allow_mismatch"):
+                if key in body and key not in dispatch_payload:
+                    dispatch_payload[key] = body.get(key)
             if op_key in {"query", "compile_query"} and not requested_domain:
                 activations = rt.registry.list_activations(env_id) or {}
                 if len(activations) == 1:
@@ -1087,7 +1100,7 @@ async def run_env_op(env_id: str, request: Request, body: Dict[str, Any] = Body(
                 "op": dispatch_op,
                 "domain": requested_domain or None,
             },
-            "result": result,
+            "result": _json_safe(result),
         }
     except Exception as exc:
         return _error_response(exc)
@@ -1250,7 +1263,7 @@ async def run_extension(env_id: str, strategy_id: str, op: str, request: Request
         if activation.strategy_id != strategy_id:
             raise ValueError(f"Environment {env_id} active with {activation.strategy_id}, not {strategy_id}")
         result = await rt.dispatch(env_id, "op", {"op": op, "payload": payload or {}, "strategy_id": strategy_id})
-        return {"ok": True, "result": result}
+        return {"ok": True, "result": _json_safe(result)}
     except Exception as exc:
         return _error_response(exc)
 
@@ -1303,7 +1316,7 @@ async def activate_env(env_id: str, request: Request, body: Dict[str, Any] = Bod
                     status=400,
                     message="bindings payload requires allow_plaintext_bindings=true in dev/test mode.",
                 )
-        from kehrnel.strategy_sdk import StrategyBindings
+        from kehrnel.engine.core.strategy_sdk import StrategyBindings
         activation = await rt.activate(
             env_id,
             strategy_id,
@@ -1330,25 +1343,39 @@ async def activate_env(env_id: str, request: Request, body: Dict[str, Any] = Bod
                 )
         except Exception:
             init_result = {"ok": False, "warning": "dictionary bootstrap failed"}
+        activation_payload = {
+            "env_id": activation.env_id,
+            "strategy_id": activation.strategy_id,
+            "version": activation.version,
+            "strategy_version": activation.version,
+            "domain": activation.domain,
+            "config": activation.config,
+            "bindings_meta": activation.bindings_meta,
+            "bindings_ref": activation.bindings_ref,
+            "config_hash": activation.config_hash,
+            "manifest_digest": activation.manifest_digest,
+            "activation_id": activation.activation_id,
+            "replaced": activation.replaced,
+            "previous_activation_id": activation.previous_activation_id,
+            "replaced_from": activation.replaced_from,
+            "already_active": activation.already_active,
+        }
         return {
             "ok": True,
-            "activation": {
-                "env_id": activation.env_id,
-                "strategy_id": activation.strategy_id,
-                "version": activation.version,
-                "strategy_version": activation.version,
-                "domain": activation.domain,
-                "config": activation.config,
-                "bindings_meta": activation.bindings_meta,
-                "bindings_ref": activation.bindings_ref,
-                "config_hash": activation.config_hash,
-                "manifest_digest": activation.manifest_digest,
-                "activation_id": activation.activation_id,
-                "replaced": activation.replaced,
-                "previous_activation_id": activation.previous_activation_id,
-                "replaced_from": activation.replaced_from,
-                "already_active": activation.already_active,
-            },
+            # Backward-compatible top-level fields for HDL proxy/service parsing.
+            "env_id": activation.env_id,
+            "environment": activation.env_id,
+            "strategy_id": activation.strategy_id,
+            "strategy_version": activation.version,
+            "domain": activation.domain,
+            "activation_id": activation.activation_id,
+            "config_hash": activation.config_hash,
+            "manifest_digest": activation.manifest_digest,
+            "replaced": activation.replaced,
+            "previous_activation_id": activation.previous_activation_id,
+            "status": "ok",
+            # Canonical payload.
+            "activation": activation_payload,
             "initialization": init_result,
         }
     except Exception as exc:
@@ -1402,10 +1429,11 @@ async def get_env(env_id: str, request: Request):
         if not activations:
             raise KeyError("No activation for env")
         summary = {}
+        summary_list: List[Dict[str, Any]] = []
         history_summary = {}
         for proto, activation in activations.items():
             manifest = rt.registry.get_manifest(activation.strategy_id)
-            summary[proto] = {
+            row = {
                 "strategy_id": activation.strategy_id,
                 "strategy_version": activation.version,
                 "version": activation.version,
@@ -1419,8 +1447,16 @@ async def get_env(env_id: str, request: Request):
                 "updated_at": activation.updated_at,
                 "config_hash": activation.config_hash,
             }
+            summary[proto] = row
+            summary_list.append(row)
             history_summary[proto] = _history_summary(rt, env_id, proto)
-        return {"env_id": env_id, "activations": summary, "history": history_summary}
+        # Keep canonical map form and expose list form for clients that prefer arrays.
+        return {
+            "env_id": env_id,
+            "activations": summary,
+            "activations_list": summary_list,
+            "history": history_summary,
+        }
     except Exception as exc:
         return _error_response(exc)
 
@@ -1506,7 +1542,7 @@ async def plan_env(env_id: str, request: Request, payload: Dict[str, Any] = Body
         if not rt:
             raise ValueError("Strategy runtime not initialized")
         res = await rt.dispatch(env_id, "plan", payload or {})
-        return {"ok": True, "result": res}
+        return {"ok": True, "result": _json_safe(res)}
     except Exception as exc:
         return _error_response(exc)
 
@@ -1520,7 +1556,7 @@ async def apply_env(env_id: str, request: Request, payload: Dict[str, Any] = Bod
         if not rt:
             raise ValueError("Strategy runtime not initialized")
         res = await rt.dispatch(env_id, "apply", payload or {})
-        return {"ok": True, "result": res}
+        return {"ok": True, "result": _json_safe(res)}
     except Exception as exc:
         return _error_response(exc)
 
@@ -1534,7 +1570,7 @@ async def transform_env(env_id: str, request: Request, payload: Dict[str, Any] =
         if not rt:
             raise ValueError("Strategy runtime not initialized")
         res = await rt.dispatch(env_id, "transform", payload or {})
-        return {"ok": True, "result": res}
+        return {"ok": True, "result": _json_safe(res)}
     except Exception as exc:
         return _error_response(exc)
 
@@ -1548,7 +1584,7 @@ async def ingest_env(env_id: str, request: Request, payload: Dict[str, Any] = Bo
         if not rt:
             raise ValueError("Strategy runtime not initialized")
         res = await rt.dispatch(env_id, "ingest", payload or {})
-        return {"ok": True, "result": res}
+        return {"ok": True, "result": _json_safe(res)}
     except Exception as exc:
         return _error_response(exc)
 
@@ -1569,7 +1605,7 @@ async def query_env(env_id: str, request: Request, payload: Dict[str, Any] = Bod
         # when dispatch returns QueryResult dict or simple, wrap as ok/result if needed
         if isinstance(res, dict) and "ok" in res:
             return res
-        return {"ok": True, "result": res}
+        return {"ok": True, "result": _json_safe(res)}
     except Exception as exc:
         return _error_response(exc)
 
@@ -1589,13 +1625,13 @@ async def compile_query_env(env_id: str, request: Request, payload: Dict[str, An
         if debug and isinstance(payload, dict):
             payload["debug"] = True
         res = await rt.dispatch(env_id, "compile_query", payload or {})
-        return {"ok": True, "result": res}
+        return {"ok": True, "result": _json_safe(res)}
     except Exception as exc:
         return _error_response(exc)
 
 
 @router.get("/environments/{env_id}/endpoints", include_in_schema=False)
-async def list_env_endpoints(env_id: str, request: Request):
+async def list_env_endpoints(env_id: str, request: Request, domain: str | None = None):
     try:
         _require_admin_access(request)
         _require_env_access(request, env_id)
@@ -1612,7 +1648,8 @@ async def list_env_endpoints(env_id: str, request: Request):
                     "strategy_version": activation.version,
                 }
             )
-        sample_domain = domains[0]["domain"] if domains else "domain"
+        requested_domain = (domain or "").strip().lower()
+        sample_domain = requested_domain or (domains[0]["domain"] if domains else "domain")
         return {
             "env_id": env_id,
             "domains": domains,
@@ -1645,6 +1682,14 @@ async def list_env_endpoints(env_id: str, request: Request):
                 },
                 "activations": {"url": f"{base}/environments/{env_id}/activations", "method": "GET"},
                 "ops": {
+                    # HDL KehrnelService expects an ops base URL and appends /{op}.
+                    "url": f"{base}/environments/{env_id}/activations/{sample_domain}/ops",
+                    "method": "POST",
+                    "required_params": ["domain", "strategy_id", "op"],
+                    "payload_example": {"payload": {}, "domain": sample_domain},
+                },
+                # Legacy extension route descriptor kept for compatibility.
+                "ops_legacy_extension": {
                     "url": f"{base}/environments/{env_id}/extensions/{{strategy_id}}/{{op}}",
                     "method": "POST",
                     "required_params": ["strategy_id", "op"],

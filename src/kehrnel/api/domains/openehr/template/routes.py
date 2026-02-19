@@ -98,7 +98,7 @@ async def upload_template(
     new_template = result["template"]
     etag = result["etag"]
 
-    location_path = f"/v1/definition/template/{new_template.template_format.value}/{new_template.template_id}"
+    location_path = f"/definition/template/{new_template.template_format.value}/{new_template.template_id}"
 
     headers = {
         "Location": location_path,

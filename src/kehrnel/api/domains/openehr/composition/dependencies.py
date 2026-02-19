@@ -1,4 +1,4 @@
-# src/kehrnel/api/compatibility/v1/composition/dependencies.py
+# src/kehrnel/api/composition/dependencies.py
 
 from kehrnel.api.bridge.app.core.config import settings
 from kehrnel.api.bridge.app.core.config_models import CompositionCollectionNames

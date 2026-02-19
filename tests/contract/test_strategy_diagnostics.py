@@ -18,7 +18,7 @@ def client(tmp_path, monkeypatch):
 
 
 def test_diagnostics_includes_valid_and_invalid(client):
-    res = client.get("/v1/strategies/diagnostics")
+    res = client.get("/strategies/diagnostics")
     assert res.status_code == 200
     entries = res.json()["strategies"]
     assert entries

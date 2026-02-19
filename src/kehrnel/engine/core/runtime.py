@@ -16,7 +16,7 @@ from .registry import ActivationRegistry, FileActivationRegistry
 from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.core.bundle_store import BundleStore
 from kehrnel.engine.core.bundles import compute_bundle_digest
-from kehrnel.strategy_sdk import StrategyHandle, StrategyBindings
+from kehrnel.engine.core.strategy_sdk import StrategyHandle, StrategyBindings
 from .types import QueryPlan, QueryResult, ApplyResult, TransformResult, StrategyContext
 from .bindings_resolver import resolve_bindings as _resolve_bindings_ref
 from kehrnel.persistence.mongodb.connection import get_database as _mongo_get_db
@@ -181,7 +181,7 @@ class StrategyRuntime:
                 status=400,
                 message="Bindings not stored; provide bindings_ref or re-activate with allow_plaintext_bindings=true.",
             )
-        from kehrnel.strategy_sdk import StrategyBindings
+        from kehrnel.engine.core.strategy_sdk import StrategyBindings
         rebind = StrategyBindings(**(activation.bindings or {}))
         return await self.activate(
             env_id,
@@ -205,7 +205,7 @@ class StrategyRuntime:
         prev_activation = EnvironmentActivation(**snapshot)
         if not prev_activation.bindings and not prev_activation.bindings_ref:
             raise KehrnelError(code="BINDINGS_NOT_STORED", status=400, message="Bindings not stored; cannot rollback.")
-        from kehrnel.strategy_sdk import StrategyBindings
+        from kehrnel.engine.core.strategy_sdk import StrategyBindings
         rebind = StrategyBindings(**(prev_activation.bindings or {}))
         return await self.activate(
             env_id,
@@ -257,8 +257,6 @@ class StrategyRuntime:
         activation_version = (activation.version or "").strip()
         is_latest_alias = activation_version.lower() in ("latest", "current")
         digest_mismatch = bool(activation.manifest_digest and activation.manifest_digest != current_digest)
-        # Prefer manifest_digest for compatibility checks; versions are user labels and may drift.
-        # Only enforce version mismatch when no digest is available (legacy activations).
         version_mismatch = bool(
             not activation.manifest_digest
             and activation_version
@@ -572,8 +570,6 @@ class StrategyRuntime:
             adapters["storage"] = MongoStorageAdapter(db)
             adapters["index_admin"] = MongoIndexAdminAdapter(db)
             adapters["atlas_search"] = MongoAtlasSearchAdapter(db)
-            # backward-compatible alias (deprecated)
-            adapters["text_search"] = adapters["atlas_search"]
         env_cache["adapters"] = adapters
         return adapters
 

@@ -3,10 +3,10 @@ import json
 
 import pytest
 
-from kehrnel.domains.openehr.templates.parser import TemplateParser
-from kehrnel.strategies.openehr.rps_dual.ingest.core import Transformer
-from kehrnel.common.mapping.mapping_engine import apply_mapping
-from kehrnel.persistence import get_driver, MemoryPersister, MongoStore
+from kehrnel.engine.domains.openehr.templates.parser import TemplateParser
+from kehrnel.engine.strategies.openehr.rps_dual.ingest.core import Transformer
+from kehrnel.engine.common.mappings.mapping_engine import apply_mapping
+from kehrnel.persistence import FileStore, MongoStore, get_driver
 
 
 SAMPLES = Path("samples")
@@ -83,8 +83,10 @@ def test_mapping_engine_applies_rules():
 
 
 def test_persistence_driver_resolution(tmp_path):
-    mem = get_driver({"driver": "memory"})
-    assert isinstance(mem, MemoryPersister)
+    fs = get_driver({"driver": "filesystem", "base_path": str(tmp_path / "fs-store")})
+    assert isinstance(fs, FileStore)
+    with pytest.raises(ValueError):
+        get_driver({"driver": "memory"})
 
     mongo_cfg = {
         "driver": "mongo",

@@ -2,14 +2,15 @@
 
 import json
 import re
+import logging
 from pathlib import Path
 from datetime import timezone
 from typing import Any, Dict, List, Tuple, Optional, Union
 
 from dateutil import parser
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from .exceptions_g import UnknownCodeError
-from .encoding import PathCodec
+from kehrnel.engine.common.ingest.encoding import PathCodec
+from kehrnel.engine.common.ingest.exceptions import UnknownCodeError
 import jsonschema
 from bson import ObjectId
 import uuid
@@ -29,6 +30,8 @@ SKIP_ATTRS = {}
 _AT_ROOT = re.compile(r"^at0*([1-9][0-9]*)$", re.I)
 _AT_DOTTED = re.compile(r"^at[0-9]+(?:\.[0-9]{1,4})+$", re.I)
 _START_DOTTED = -10_000
+
+logger = logging.getLogger(__name__)
 
 class CompositionFlattener:
     """
@@ -112,7 +115,7 @@ class CompositionFlattener:
 
         # Load mappings synchronously from file or inline content
         self._load_mappings(mappings_path, mappings_content)
-    
+
     @classmethod
     async def create(
         cls,
@@ -239,18 +242,18 @@ class CompositionFlattener:
                     if isinstance(vers, dict):
                         for ver, code in vers.items():
                             ar_book[f"{rm}.{name}.{ver}"] = code
-        
+
         at_book = {}
         for k, v in (doc.get("at") or {}).items():
             at_book[k] = v
-        
+
         self.code_book["ar_code"] = ar_book
         self.code_book["at"] = at_book
         if isinstance(doc.get("_max"), int):
             self.seq["ar_code"] = doc.get("_max", self.seq["ar_code"])
         if isinstance(doc.get("_min"), int):
             self.seq["at"] = doc.get("_min", self.seq.get("at", -1))
-        print(f"Loaded {len(ar_book)} ar_codes and {len(at_book)} at_codes from DB.")
+        logger.info("Loaded %d ar_codes and %d at_codes from DB.", len(ar_book), len(at_book))
         self._refresh_codec()
 
     async def flush_codes_to_db(self):
@@ -275,16 +278,16 @@ class CompositionFlattener:
             parts = sid.split(".")
             rm, name, ver = parts[0], parts[1] if len(parts) > 1 else "", ".".join(parts[2:])
             nested.setdefault(rm, {}).setdefault(name, {})[ver] = code
-        
+
         if isinstance(self.seq.get("ar_code"), int):
             nested["_max"] = max(max_code, self.seq.get("ar_code", 0))
-        
+
         await codes_col.replace_one(
             {"_id": self.codes_document_id},
             {"_id": self.codes_document_id, **nested},
             upsert=True,
         )
-        print("Flushed codes to DB.")
+        logger.info("Flushed codes to DB.")
 
     async def _load_shortcuts_from_db(self):
         if self.db is None:
@@ -484,14 +487,14 @@ class CompositionFlattener:
         sid_lower = sid.lower()
         if key == "ar_code" and sid_lower.startswith("at"):
             return self._at_code_to_int(sid)
-        
+
         book = self.code_book.setdefault(key, {})
         if sid in book:
             return book[sid]
 
         if self.role != "primary":
             raise UnknownCodeError(key, sid)
-        
+
         if key == "ar_code":
             if self.ar_strategy == "short_prefix":
                 code = self._encode_ar_short(sid)
@@ -652,7 +655,7 @@ class CompositionFlattener:
                         self._walk(itm, new_anc_codes, new_anc_pi, cn, kp_chain=base_kp + [k_long], list_index=idx)
 
     # --- Utility functions converted to private methods ---
-    
+
     @staticmethod
     def _archetype_id(obj: dict) -> str | None:
         ad = obj.get("archetype_details", {})
@@ -689,7 +692,7 @@ class CompositionFlattener:
         Everything else stays embedded in its parent.
         """
         return isinstance(obj, dict) and "archetype_node_id" in obj
-        
+
     def _sc_key(self, key: str) -> str:
         """Return shortcut key if available, otherwise return original key."""
         return self.shortcut_keys.get(key, key)
@@ -703,7 +706,7 @@ class CompositionFlattener:
     def _get_rules_for(self, template: int, original_num: str) -> list[dict]:
         if template in self.active_rules:
             return self.active_rules[template]
-        
+
         raw_block = self.raw_rules.get(original_num, {})
         if not raw_block:
             # Try version-flexible matching as fallback
@@ -712,14 +715,14 @@ class CompositionFlattener:
                 if rule_key.startswith(base_name + '.v'):
                     raw_block = self.raw_rules[rule_key]
                     break
-        
+
         compiled: list[dict] = []
         for r in raw_block.get("rules", []):
             w = r["when"]
             p_raw = w.get("pathChain", [])
             c_raw = w.get("contains", [])
             extra = [(k, v) for k, v in w.items() if k not in ("pathChain", "contains")]
-            
+
             try:
                 compiled_rule = {
                     "_path": tuple(self._seg_to_int(x) for x in p_raw),
@@ -735,7 +738,7 @@ class CompositionFlattener:
                     compiled_rule["index"] = r["index"]
                 compiled.append(compiled_rule)
             except (ValueError, UnknownCodeError) as e:
-                print(f"Warning: Skipping rule due to code error: {e}")
+                logger.warning("Skipping rule due to code error: %s", e)
 
         self.active_rules[template] = compiled
         return compiled
@@ -818,7 +821,7 @@ class CompositionFlattener:
                     {"selector": selector, "is_archetype": selector.upper().startswith("OPENEHR-EHR-")}
                 )
         return selectors
-        
+
     def _seg_to_int(self, seg: str | int) -> Any:
         if isinstance(seg, int): return seg
         if isinstance(seg, str):
@@ -850,7 +853,7 @@ class CompositionFlattener:
                 return coll[0] if len(coll) == 1 else coll
             return None
         return walk(obj, 0)
-        
+
     def _rule_matches(self, rule, pc_set, parts, dblock) -> bool:
         if rule["_path"] and self.path_separator.join(str(x) for x in rule["_path"]) not in pc_set:
             return False
@@ -861,7 +864,7 @@ class CompositionFlattener:
                     j += 1
                     if j == len(rule["_cont"]): break
             if j != len(rule["_cont"]): return False
-        
+
         # Wrap dblock to match "data.value" expectation in rules
         if any(self._dpath_get({"data": dblock}, path) != val_req for path, val_req in rule["_extra"]):
             return False
@@ -945,9 +948,9 @@ class CompositionFlattener:
         Writes to 'slim' using Search Keys (sf_*).
         """
         slim: dict = {}
-        
+
         # 1. Path
-        if self.sf_path and "p" in rule["copy"]: 
+        if self.sf_path and "p" in rule["copy"]:
              slim[self.sf_path] = self._encode_path_for_profile(node.get(self.cf_path), self.search_encoding_profile)
 
         # 2. Archetype Path
@@ -963,9 +966,9 @@ class CompositionFlattener:
             if expr.startswith("data."):
                 sub = expr[5:] # Remove "data."
                 val = self._dpath_get(dblock, sub)
-                
+
                 if val is None: continue
-                
+
                 cur = slim.setdefault(self.sf_data, {})
                 path_parts = sub.split(".")
                 for part in path_parts[:-1]:
@@ -1029,7 +1032,7 @@ class CompositionFlattener:
             separator=self.path_separator,
             shortcuts=self.shortcut_keys,
         )
-        
+
     def _to_bson_dates(self, obj):
         if isinstance(obj, dict):
             t0 = obj.get("_type")

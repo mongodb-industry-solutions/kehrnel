@@ -1,44 +1,33 @@
 ---
-sidebar_position: 5
+sidebar_position: 1
 ---
 
-# Domain Layer API
+# Domain API: openEHR
 
-The domain layer exposes canonical healthcare-domain operations.
+openEHR is the most complete domain API currently available in `{kehrnel}`.
 
-## openEHR Domain (Current Primary Implementation)
+## OpenAPI Docs
 
-Primary prefix:
+- Swagger: `/docs/domains/openehr`
+- ReDoc: `/redoc/domains/openehr`
+
+Base prefix:
 
 - `/api/domains/openehr/...`
 
-Capability groups:
+## Capability Groups
 
 - EHR lifecycle
-- Composition create/read/update/delete
+- Composition CRUD and retrieval
+- Directory and contribution APIs
+- Versioned object and history APIs
 - AQL execution and translation helpers
 - Template upload/list/get
-- Versioning and contribution audit APIs
 
-This is the current most mature domain implementation in \{kehrnel\}.
-
-Detailed endpoint groups:
+## Endpoint Groups
 
 - [openEHR Templates](/docs/api/endpoints/openehr-templates)
 - [openEHR EHR](/docs/api/endpoints/openehr-ehr)
 - [openEHR Composition & Directory](/docs/api/endpoints/openehr-composition-directory)
 - [openEHR Versioning](/docs/api/endpoints/openehr-versioning)
 - [openEHR Query](/docs/api/endpoints/openehr-query)
-
-## FHIR Domain (Preview)
-
-Known preview route example:
-
-- `POST /api/domains/fhir/search`
-
-See: [FHIR Preview Endpoints](/docs/api/endpoints/fhir-preview)
-
-## Related
-
-- [API Layers](/docs/api/layers)
-- [Strategy Layer API](/docs/api/strategies/openehr/rps-dual)

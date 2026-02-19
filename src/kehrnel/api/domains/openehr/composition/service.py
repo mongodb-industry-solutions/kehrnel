@@ -9,7 +9,7 @@ from pymongo.errors import PyMongoError
 
 from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
 from kehrnel.engine.strategies.openehr.rps_dual.ingest.unflattener import CompositionUnflattener
-from kehrnel.engine.strategies.openehr.rps_dual.ingest.exceptions_g import FlattenerError
+from kehrnel.engine.common.ingest.exceptions import FlattenerError
 from kehrnel.api.bridge.app.core.config_models import CompositionCollectionNames
 
 from kehrnel.api.domains.openehr.composition.repository import (
@@ -121,7 +121,7 @@ async def add_composition(
     except FlattenerError as e:
         # If the transformation fails, return a client-side error
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=f"Composition could not be processed: {e}"
         )
     

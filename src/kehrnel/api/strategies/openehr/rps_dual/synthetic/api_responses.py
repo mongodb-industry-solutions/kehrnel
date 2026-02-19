@@ -1,4 +1,4 @@
-# src/kehrnel/api/compatibility/v1/synthetic/api_responses.py
+# src/kehrnel/api/synthetic/api_responses.py
 
 from fastapi import status
 from kehrnel.api.strategies.openehr.rps_dual.synthetic.models import SyntheticDataResponse, SyntheticDataStats
@@ -49,7 +49,7 @@ generate_synthetic_data_responses = {
             }
         }
     },
-    status.HTTP_422_UNPROCESSABLE_ENTITY: {
+    status.HTTP_422_UNPROCESSABLE_CONTENT: {
         "description": "Invalid composition template provided",
         "model": ErrorResponse,
         "content": {

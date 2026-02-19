@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, Optional
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field
 
 
 # Strategy status for UI display
@@ -42,16 +42,6 @@ class StrategyUI(BaseModel):
     tabs: Dict[str, Any] = Field(default_factory=dict)
 
     model_config = {"extra": "allow"}
-
-    @model_validator(mode="after")
-    def _backfill_docs_from_legacy_links(self):
-        # Backward compatibility with older manifests that used ui.links.docs.
-        if not self.docs:
-            docs = (self.links or {}).get("docs")
-            if isinstance(docs, str) and docs.strip():
-                self.docs = docs
-        return self
-
 
 class StrategyOp(BaseModel):
     name: str

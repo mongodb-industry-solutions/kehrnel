@@ -4,7 +4,7 @@ sidebar_position: 4
 
 # Common CLI Layer
 
-`common` commands are compatibility pass-through workflows that execute local runners under the selected context.
+`common` commands are compatibility pass-through workflows that execute local runners, optionally using selected strategy/domain context.
 
 For extensible multi-strategy runtime workflows, prefer:
 
@@ -26,7 +26,7 @@ Examples:
 
 ```bash
 kehrnel common transform --strategy openehr.rps_dual --domain openehr -- flatten input.json -o out.json
-kehrnel common ingest --strategy openehr.rps_dual --domain openehr -- file batch.ndjson -d driver.yaml
+kehrnel common ingest -- -- file batch.ndjson -d driver.yaml
 ```
 
 ## Available Operations
@@ -43,12 +43,14 @@ kehrnel common ingest --strategy openehr.rps_dual --domain openehr -- file batch
 
 ## Context behavior
 
-These commands require a selected strategy/domain, either:
+Context requirement depends on operation type:
 
-- from `kehrnel context set`, or
-- by passing `--strategy` / `--domain` overrides.
+- `transform`, `validate`, `generate`, `map` require strategy/domain context, either:
+  - from `kehrnel context set`, or
+  - by passing `--strategy` / `--domain` overrides.
+- `ingest`, `identify`, `bundles`, `validate-pack`, `map-skeleton` run without strategy/domain context.
 
-If no strategy is selected, CLI returns a clear prompt to set one.
+If a required command is missing context, CLI returns a clear prompt to set one.
 
 ## Operation Parameters
 
@@ -66,21 +68,34 @@ Core params:
 ### `ingest`
 
 ```bash
-kehrnel common ingest --strategy openehr.rps_dual --domain openehr -- file <batch.ndjson> -d <driver.yaml> [--workers 4]
+kehrnel common ingest -- -- file <batch.ndjson> -d <driver.yaml> [--workers 4]
 ```
 
 Core params:
 - `file <JSONL>`
 - `-d <PATH>` required driver config
-- `-c <PATH>` optional transform config
 - `--workers <INT>`
 
-Create a MongoDB driver config interactively (recommended: use env var placeholders instead of storing secrets):
+Driver helper subcommands:
+- `drivers` list registered persistence drivers.
+- `init-driver` scaffold driver config for `mongodb` or `filesystem`.
+- `init-source-mongo` scaffold source Mongo config for `mongo-catchup`.
+- `mongo-catchup` read canonical compositions from Mongo and write flattened docs to target driver.
+
+Create driver config for MongoDB:
 
 ```bash
-python -m kehrnel.cli.ingest init-driver --db openehr_db --out .kehrnel/driver.mongo.yaml
+kehrnel common ingest -- -- drivers
+kehrnel common ingest -- -- init-driver --driver mongodb --db openehr_db --out .kehrnel/driver.mongodb.yaml
 export MONGODB_URI='mongodb+srv://...'
-kehrnel common ingest -- -- file ./batch.ndjson -d .kehrnel/driver.mongo.yaml
+kehrnel common ingest -- -- file ./batch.ndjson -d .kehrnel/driver.mongodb.yaml
+```
+
+Create driver config for filesystem:
+
+```bash
+kehrnel common ingest -- -- init-driver --driver filesystem --base-path .kehrnel/persistence
+kehrnel common ingest -- -- file ./batch.ndjson -d .kehrnel/driver.filesystem.yaml
 ```
 
 ### `validate`

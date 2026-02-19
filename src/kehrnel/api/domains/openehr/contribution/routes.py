@@ -37,7 +37,7 @@ async def get_contribution_endpoint(
         ehr_id=ehr_id, contribution_uid=contribution_uid, db=db
     )
 
-    response.headers["Location"] = f"/v1/ehr/{ehr_id}/contribution/{contribution_uid}"
+    response.headers["Location"] = f"/ehr/{ehr_id}/contribution/{contribution_uid}"
     response.headers["ETag"] = f'"{contribution_uid}"'
 
     return contribution

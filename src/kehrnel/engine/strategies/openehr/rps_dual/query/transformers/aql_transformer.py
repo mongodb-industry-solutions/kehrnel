@@ -1,4 +1,4 @@
-# src/kehrnel/api/compatibility/v1/aql/transformers/aql_transformer.py
+# src/kehrnel/api/aql/transformers/aql_transformer.py
 from typing import Any, Dict, List, Optional
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from .ast_validator import ASTValidator
@@ -7,7 +7,7 @@ from .format_resolver import FormatResolver
 from .pipeline_builder import PipelineBuilder
 from .search_pipeline_builder import SearchPipelineBuilder
 from .archetype_resolver import ArchetypeResolver
-from kehrnel.persistence import PersistenceStrategy, get_default_strategy
+from kehrnel.persistence import PersistenceLayout, get_default_layout
 
 
 class AQLtoMQLTransformer:
@@ -33,13 +33,13 @@ class AQLtoMQLTransformer:
         schema_config: Optional[Dict[str, str]] = None,
         db: Optional[AsyncIOMotorDatabase] = None,
         search_index_name: str = "search_compositions_index",
-        strategy: Optional[PersistenceStrategy] = None,
+        strategy: Optional[PersistenceLayout] = None,
     ):
         self.ast = ast
         self.ehr_id = ehr_id
         self.db = db
         self.search_index_name = search_index_name
-        self.strategy = strategy or get_default_strategy()
+        self.strategy = strategy or get_default_layout()
         
         # Schema field configuration (Point 3 preparation)
         self.schema_config = schema_config or self._build_schema_config_from_strategy(self.strategy)
@@ -202,7 +202,7 @@ class AQLtoMQLTransformer:
         """Returns the processed LET variables."""
         return self.let_variables
 
-    def _build_schema_config_from_strategy(self, strategy: PersistenceStrategy) -> Dict[str, str]:
+    def _build_schema_config_from_strategy(self, strategy: PersistenceLayout) -> Dict[str, str]:
         composition_fields = strategy.fields.get("composition")
         return {
             'composition_array': composition_fields.nodes if composition_fields and composition_fields.nodes else 'cn',

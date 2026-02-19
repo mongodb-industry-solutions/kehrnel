@@ -1,4 +1,4 @@
-# src/kehrnel/api/compatibility/v1/directory/service.py
+# src/kehrnel/api/directory/service.py
 
 import uuid
 from datetime import datetime, timezone
@@ -225,7 +225,7 @@ async def update_directory(
     current_version_uid = ehr_document["directory"]["id"]["value"]
     if if_match_uid != current_version_uid:
         headers = {
-            "Location": f"/v1/ehr/{ehr_id}/directory/{current_version_uid}",
+            "Location": f"/ehr/{ehr_id}/directory/{current_version_uid}",
             "ETag": f'"{current_version_uid}"'
         }
         raise HTTPException(
@@ -438,7 +438,7 @@ async def delete_directory(
     current_version_uid = ehr_document["directory"]["id"]["value"]
     if preceding_version_uid != current_version_uid:
         headers = {
-            "Location": f"/v1/ehr/{ehr_id}/directory/{current_version_uid}",
+            "Location": f"/ehr/{ehr_id}/directory/{current_version_uid}",
             "ETag": f'"{current_version_uid}"'
         }
         raise HTTPException(

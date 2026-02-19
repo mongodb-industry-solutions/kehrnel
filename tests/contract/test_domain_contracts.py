@@ -12,21 +12,21 @@ def client(tmp_path):
 
 def test_domain_routing_requires_domain_param(client):
     client.post(
-        "/v1/environments/env-domains/activate",
+        "/environments/env-domains/activate",
         json={"strategy_id": "openehr.rps_dual", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "openEHR"},
     )
-    res = client.post("/v1/environments/env-domains/compile_query", json={"query": {"scope": "patient"}})
+    res = client.post("/environments/env-domains/compile_query", json={"query": {"scope": "patient"}})
     assert res.status_code == 400
     assert res.json().get("error", {}).get("code") == "DOMAIN_REQUIRED"
 
 
 def test_activate_stores_domain_keyed_activation(client):
     res = client.post(
-        "/v1/environments/envA/activate",
+        "/environments/envA/activate",
         json={"strategy_id": "openehr.rps_dual", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "openEHR"},
     )
     assert res.status_code == 200
-    acts = client.get("/v1/environments/envA/activations").json()["activations"]
+    acts = client.get("/environments/envA/activations").json()["activations"]
     assert "openehr" in acts
     act = acts["openehr"]
     for key in ("activation_id", "strategy_id", "strategy_version", "manifest_digest", "config"):
@@ -35,7 +35,7 @@ def test_activate_stores_domain_keyed_activation(client):
 
 def test_compile_query_domain_dispatch_stage0_strict(client):
     client.post(
-        "/v1/environments/envB/activate",
+        "/environments/envB/activate",
         json={"strategy_id": "openehr.rps_dual", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "openEHR"},
     )
     payload = {
@@ -46,7 +46,7 @@ def test_compile_query_domain_dispatch_stage0_strict(client):
             "select": [{"path": "ehr_id", "alias": "ehr_id"}],
         },
     }
-    res = client.post("/v1/environments/envB/compile_query", json=payload, params={"debug": "true"})
+    res = client.post("/environments/envB/compile_query", json=payload, params={"debug": "true"})
     assert res.status_code == 200
     plan = res.json()["result"]["plan"]
     stage0 = list(plan["pipeline"][0].keys())[0]
@@ -56,10 +56,10 @@ def test_compile_query_domain_dispatch_stage0_strict(client):
 
 def test_endpoints_introspection_contains_expected_urls(client):
     client.post(
-        "/v1/environments/envC/activate",
+        "/environments/envC/activate",
         json={"strategy_id": "openehr.rps_dual", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "openEHR"},
     )
-    res = client.get("/v1/environments/envC/endpoints")
+    res = client.get("/environments/envC/endpoints")
     assert res.status_code == 200
     payload = res.json()
     endpoints = payload["endpoints"]
@@ -73,7 +73,7 @@ def test_endpoints_introspection_contains_expected_urls(client):
 
 
 def test_strategy_manifest_contract_has_domain_defaults_schema_ops(client):
-    res = client.get("/v1/strategies")
+    res = client.get("/strategies")
     assert res.status_code == 200
     strategies = res.json().get("strategies", [])
     assert strategies

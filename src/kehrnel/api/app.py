@@ -8,6 +8,7 @@ import secrets
 import hashlib
 import time
 import re
+from contextlib import asynccontextmanager
 from copy import deepcopy
 from pathlib import Path
 from typing import Optional
@@ -334,6 +335,50 @@ def _load_manifests() -> tuple[list[StrategyManifest], list[dict[str, object]], 
 def create_app(registry_path: str | None = None, bundle_path: str | None = None) -> FastAPI:
     load_dotenv(find_dotenv(".env.local", usecwd=True), override=False)
 
+    @asynccontextmanager
+    async def _lifespan(app_instance: FastAPI):
+        """
+        Best-effort bootstrap for domain composition/synthetic endpoints that
+        depend on app.state.flattener / app.state.unflattener.
+        """
+        if os.getenv("KEHRNEL_INIT_INGESTION_RUNTIME", "true").lower() in ("1", "true", "yes"):
+            if (
+                getattr(app_instance.state, "flattener", None) is None
+                or getattr(app_instance.state, "unflattener", None) is None
+            ):
+                try:
+                    from kehrnel.api.bridge.app.core.config import settings as bridge_settings
+                    from kehrnel.api.bridge.app.utils.config_runtime import apply_ingestion_config
+
+                    config_internal = {
+                        "apply_shortcuts": True,
+                        "source": {
+                            "canonical_compositions_collection": bridge_settings.COMPOSITIONS_COLL_NAME,
+                            "database_name": bridge_settings.MONGODB_DB,
+                        },
+                        "target": {
+                            "compositions_collection": bridge_settings.FLAT_COMPOSITIONS_COLL_NAME,
+                            "search_collection": bridge_settings.SEARCH_COMPOSITIONS_COLL_NAME,
+                            "codes_collection": "_codes",
+                            "shortcuts_collection": "_shortcuts",
+                            "rebuilt_collection": bridge_settings.FLAT_COMPOSITIONS_COLL_NAME,
+                            "database_name": bridge_settings.MONGODB_DB,
+                        },
+                    }
+                    await apply_ingestion_config(
+                        app=app_instance,
+                        config=config_internal,
+                        mappings_inline=None,
+                        use_mappings_file=True,
+                        mappings_path=None,
+                    )
+                    logging.getLogger("kehrnel.bootstrap").info("Initialized default ingestion runtime")
+                except Exception as exc:
+                    logging.getLogger("kehrnel.bootstrap").warning(
+                        "Could not initialize default ingestion runtime: %s", exc
+                    )
+        yield
+
     # Disable built-in docs handlers so we can control the HTML (favicon, titles, etc.)
     # and keep behavior consistent for all generated docs pages.
     app = FastAPI(
@@ -341,6 +386,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         version="0.0.0",
         docs_url=None,
         redoc_url=None,
+        lifespan=_lifespan,
         swagger_ui_parameters={"favicon_url": "/favicon.ico"},
     )
 
@@ -437,48 +483,6 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     app.state.strategy_asset_dirs = asset_dirs
     # Store allowed strategy paths for validation
     app.state.allowed_strategy_paths = [p.resolve() for p in _strategy_paths()]
-
-    @app.on_event("startup")
-    async def _init_default_ingestion_runtime() -> None:
-        """
-        Best-effort bootstrap for domain composition/synthetic endpoints that
-        depend on app.state.flattener / app.state.unflattener.
-        """
-        if os.getenv("KEHRNEL_INIT_INGESTION_RUNTIME", "true").lower() not in ("1", "true", "yes"):
-            return
-        if getattr(app.state, "flattener", None) is not None and getattr(app.state, "unflattener", None) is not None:
-            return
-        try:
-            from kehrnel.api.bridge.app.core.config import settings as bridge_settings
-            from kehrnel.api.bridge.app.utils.config_runtime import apply_ingestion_config
-
-            config_internal = {
-                "apply_shortcuts": True,
-                "source": {
-                    "canonical_compositions_collection": bridge_settings.COMPOSITIONS_COLL_NAME,
-                    "database_name": bridge_settings.MONGODB_DB,
-                },
-                "target": {
-                    "compositions_collection": bridge_settings.FLAT_COMPOSITIONS_COLL_NAME,
-                    "search_collection": bridge_settings.SEARCH_COMPOSITIONS_COLL_NAME,
-                    "codes_collection": "_codes",
-                    "shortcuts_collection": "_shortcuts",
-                    "rebuilt_collection": bridge_settings.FLAT_COMPOSITIONS_COLL_NAME,
-                    "database_name": bridge_settings.MONGODB_DB,
-                },
-            }
-            await apply_ingestion_config(
-                app=app,
-                config=config_internal,
-                mappings_inline=None,
-                use_mappings_file=True,
-                mappings_path=None,
-            )
-            logging.getLogger("kehrnel.bootstrap").info("Initialized default ingestion runtime")
-        except Exception as exc:
-            logging.getLogger("kehrnel.bootstrap").warning(
-                "Could not initialize default ingestion runtime: %s", exc
-            )
 
     def _strategy_openapi(domain: str, strategy: str) -> dict:
         domain_norm = (domain or "").strip().lower()
@@ -669,12 +673,8 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         openehr_rps_dual_router,
     ]
 
-    # Backward/forward compatibility:
-    # - legacy clients call root paths (e.g. /environments/{env}/...)
-    # - newer clients call versioned paths (e.g. /v1/environments/{env}/...)
     for router in runtime_routers:
         app.include_router(router)
-        app.include_router(router, prefix="/v1")
 
     # Mount Docusaurus documentation if build exists
     docs_build_path = Path(__file__).resolve().parents[3] / "docs" / "website" / "build"
@@ -732,3 +732,7 @@ def main():
     args = parser.parse_args()
 
     uvicorn.run("kehrnel.api.app:app", host=args.host, port=args.port, reload=args.reload)
+
+
+if __name__ == "__main__":
+    main()

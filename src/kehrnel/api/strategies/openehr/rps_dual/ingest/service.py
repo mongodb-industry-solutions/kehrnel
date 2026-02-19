@@ -1,11 +1,11 @@
-# src/kehrnel/api/compatibility/v1/ingest/service.py
+# src/kehrnel/api/ingest/service.py
 
 import json
 from typing import Dict, Any
 
 from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
 from kehrnel.api.strategies.openehr.rps_dual.ingest.repository import IngestionRepository
-from kehrnel.engine.strategies.openehr.rps_dual.ingest.exceptions_g import FlattenerError
+from kehrnel.engine.common.ingest.exceptions import FlattenerError
 
 class IngestionService:
     def __init__(self, flattener: CompositionFlattener, repository: IngestionRepository):

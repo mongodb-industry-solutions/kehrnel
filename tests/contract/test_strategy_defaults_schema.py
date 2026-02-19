@@ -5,7 +5,7 @@ from kehrnel.api.app import create_app
 
 def test_strategies_include_defaults_and_schema():
     client = TestClient(create_app())
-    res = client.get("/v1/strategies")
+    res = client.get("/strategies")
     assert res.status_code == 200
     strategies = res.json().get("strategies") or []
     rps = next((s for s in strategies if s.get("id") == "openehr.rps_dual"), None)

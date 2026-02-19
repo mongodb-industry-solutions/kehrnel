@@ -1,8 +1,8 @@
 import uuid
-from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import List, Any
 
+from pydantic import BaseModel, ConfigDict, Field
 
 class AuditDetails(BaseModel):
     system_id: str
@@ -16,6 +16,4 @@ class Contribution(BaseModel):
     ehr_id: str
     versions: List[Any]
     audit: AuditDetails
-
-    class Config:
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
