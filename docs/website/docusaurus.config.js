@@ -4,7 +4,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: '{kehrnel}',
-  tagline: 'Multi-strategy healthcare data runtime',
+  tagline: 'kehrnel is a reference modeling layer, which can be used to structure healthcare modeling patterns',
   favicon: 'img/favicon.png',
 
   url: 'https://mongodb-industry-solutions.github.io',

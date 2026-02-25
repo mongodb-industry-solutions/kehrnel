@@ -49,7 +49,7 @@ generate_synthetic_data_responses = {
             }
         }
     },
-    status.HTTP_422_UNPROCESSABLE_CONTENT: {
+    status.HTTP_422_UNPROCESSABLE_ENTITY: {
         "description": "Invalid composition template provided",
         "model": ErrorResponse,
         "content": {

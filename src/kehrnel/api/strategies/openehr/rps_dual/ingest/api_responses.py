@@ -40,7 +40,7 @@ ingest_from_body_example = {
 
 # Shared error responses to avoid duplication
 shared_ingestion_error_responses = {
-    status.HTTP_422_UNPROCESSABLE_CONTENT: {
+    status.HTTP_422_UNPROCESSABLE_ENTITY: {
         "description": "Transformation Error: The composition could not be processed by the flattener.",
         "model": ErrorResponse,
         "content": {

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "kehrnel-core"
 version = "0.1.0"
-description = "kehrnel core, mapper and CLI"
+description = "kehrnel is a reference modeling layer, which can be used to structure healthcare modeling patterns"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{ name = "Your Name", email = "you@example.com" }]

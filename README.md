@@ -2,7 +2,7 @@
 
 This project is an experimental, non-production environment for demonstration purposes only.  It is not an official MongoDB product and is not formally supported by MongoDB.  MongoDB makes no representation or warranty as to the accuracy, adequacy, completeness, and fitness for a particular purpose in respect of any materials made available through the Healthcare Data Lab.”
 
-`kehrnel` is a Python runtime for strategy packs, with:
+kehrnel is a reference modeling layer, which can be used to structure healthcare modeling patterns, with:
 - Strategy-pack API (`FastAPI`)
 - Runtime/activation engine
 - CLI tooling for mapping, validation, ingest, transform, and pack validation
@@ -88,7 +88,7 @@ API reference:
 ## Standalone Usage
 
 Kehrnel can be used independently of Healthcare Data Lab as:
-- a Python runtime library (embed in your backend),
+- a reference modeling layer, which can be used to structure healthcare modeling patterns,
 - a CLI toolkit (scripts/CI),
 - an HTTP API service (for external applications).
 

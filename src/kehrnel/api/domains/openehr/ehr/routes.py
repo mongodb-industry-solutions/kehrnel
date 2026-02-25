@@ -54,7 +54,7 @@ async def create_ehr_with_id_endpoint(
         try:
             initial_status = EHRStatusCreate.model_validate(payload)
         except ValidationError as e:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=e.errors())
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=e.errors())
 
     ehr_response = await create_ehr_with_id(
         ehr_id=ehr_id, db=db, initial_status=initial_status
@@ -156,7 +156,7 @@ async def create_ehr_endpoint(
         try:
             initial_status = EHRStatusCreate.model_validate(payload)
         except ValidationError as e:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=e.errors())
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=e.errors())
 
     ehr_response = await create_ehr(
         db=db,

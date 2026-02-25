@@ -5,15 +5,15 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 export default function Home() {
   return (
-    <Layout title="{kehrnel}" description="Multi-strategy healthcare data runtime">
+    <Layout title="{kehrnel}" description="kehrnel is a reference modeling layer, which can be used to structure healthcare modeling patterns">
       <main className="kehrnel-home">
         <section className="kehrnel-hero">
           <img src={useBaseUrl('/img/logo.svg')} alt="{kehrnel} Logo" className="kehrnel-hero-logo" />
           <p className="kehrnel-hero-claim">
-            Multi-strategy, multi-domain healthcare data runtime.
+            kehrnel is a reference modeling layer, which can be used to structure healthcare modeling patterns.
           </p>
           <p className="kehrnel-hero-subtitle">
-            Build, activate, and operate persistence strategies for structured and unstructured healthcare data workflows.
+            kehrnel is a reference modeling layer, which can be used to structure healthcare modeling patterns.
           </p>
           <div className="kehrnel-hero-actions">
             <Link className="button button--primary button--lg" to={useBaseUrl('/docs')}>

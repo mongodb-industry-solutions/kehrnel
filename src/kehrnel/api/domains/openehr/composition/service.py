@@ -121,7 +121,7 @@ async def add_composition(
     except FlattenerError as e:
         # If the transformation fails, return a client-side error
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail=f"Composition could not be processed: {e}"
         )
     

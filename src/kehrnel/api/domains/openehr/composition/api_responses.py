@@ -31,7 +31,7 @@ create_composition_responses = {
             }
         }
     },
-    status.HTTP_422_UNPROCESSABLE_CONTENT: {
+    status.HTTP_422_UNPROCESSABLE_ENTITY: {
         "description": "The request body is invalid (e.g. missing a required field like 'template_id')",
         "model": ErrorResponse
     }
@@ -118,7 +118,7 @@ update_composition_responses = {
         "description": "The specified EHR or the Composition to be updated was not found",
         "model": ErrorResponse
     },
-    status.HTTP_422_UNPROCESSABLE_CONTENT: {
+    status.HTTP_422_UNPROCESSABLE_ENTITY: {
         "description": "The request body is not a valid COMPOSITION object",
         "model": ErrorResponse
     }

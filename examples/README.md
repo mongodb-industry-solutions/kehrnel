@@ -1,6 +1,6 @@
 # Examples
 
-Integration examples for using Kehrnel independently of Healthcare Data Lab.
+Integration examples for using Kehrnel as a reference modeling layer, which can be used to structure healthcare modeling patterns.
 
 ## Contents
 
