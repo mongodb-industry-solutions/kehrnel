@@ -1,0 +1,47 @@
+{
+  "id": "x12.co_single",
+  "name": "X12-837 Claim Processing",
+  "version": "1.0.0",
+  "maturity": "preview",
+  "pack_format": "strategy-pack/v1",
+  "spec": { "path": "spec.json", "version": "1.0" },
+  "domain": "X12",
+  "summary": "837 claim-processing strategy with ephemeral stage-1 and unified cn[] output.",
+  "description": "Parse X12 837 to ephemeral structure (not persisted by default), map to Claim ContextObject, flatten to cn[] (same shape as openEHR) for unified querying.",
+  "capabilities": ["transform", "ingest", "query", "validate", "plan", "apply"],
+  "entrypoint": "kehrnel.engine.strategies.x12.co_single.strategy:X12COSingleStrategy",
+  "config": {
+    "strategy": {
+      "schema": "schema.json",
+      "defaults": "defaults.json",
+      "description": "Single collection config with optional stage-1 persistence"
+    }
+  },
+  "ui": {
+    "status": "preview",
+    "status_message": "This strategy showcases our vision for X12 EDI claim processing with unified ContextObject output. It's part of our roadmap to bridge healthcare administrative data with clinical records. Interested in contributing? Join us in building interoperable healthcare data solutions.",
+    "tags": ["X12", "EDI", "837", "ContextObject", "single-collection", "cn[]"],
+    "domain_badge": "X12",
+    "benefits": [
+      "Ephemeral stage-1 reduces storage",
+      "Unified cn[] format enables cross-domain queries",
+      "Single collection simplifies deployment",
+      "Same cn[] shape as openEHR for unified queries"
+    ],
+    "constraints": [
+      "Stage-1 not persisted by default (enable via transform.debug.persistStage1)",
+      "Requires CO mapping rules per transaction type"
+    ],
+    "pick_when": [
+      "Want unified query model across X12 and openEHR",
+      "Storage efficiency over full traceability",
+      "Using ContextObjects for semantic modeling"
+    ],
+    "avoid_when": [
+      "Need lossless EDI preservation for compliance",
+      "Require segment-level replay for remittance"
+    ],
+    "scorecard": { "read_patient": 5, "read_population": 5, "writes": 4, "storage": 5, "index_cost": 4, "migration_ease": 4 }
+  },
+  "ops": []
+}

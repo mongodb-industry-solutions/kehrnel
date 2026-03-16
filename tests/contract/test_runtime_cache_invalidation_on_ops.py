@@ -15,7 +15,7 @@ def test_cache_invalidation_on_maintenance_op(tmp_path: Path):
     rt = StrategyRuntime(FileActivationRegistry(tmp_path / "reg.json"))
     from kehrnel.api.app import _load_manifests
 
-    manifests, _ = _load_manifests()
+    manifests, _, _ = _load_manifests()
     manifest = next(m for m in manifests if "rps_dual" in m.id)
     rt.register_manifest(manifest)
     env_id = "env-cache"

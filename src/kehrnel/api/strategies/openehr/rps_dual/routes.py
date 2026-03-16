@@ -1,18 +1,49 @@
 """Strategy-scoped API surface for openEHR RPS dual."""
 from __future__ import annotations
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, Request
+from fastapi.responses import RedirectResponse
 
-from kehrnel.api.legacy.v1.ingest.routes import router as legacy_ingest_router
-from kehrnel.api.legacy.v1.config.routes import router as legacy_config_router
-from kehrnel.api.legacy.v1.synthetic.routes import router as legacy_synthetic_router
+from kehrnel.api.strategies.openehr.rps_dual.ingest.routes import router as ingest_router
+from kehrnel.api.strategies.openehr.rps_dual.config.routes import router as config_router
+from kehrnel.api.strategies.openehr.rps_dual.synthetic.routes import router as synthetic_router
 
 
 router = APIRouter(
     prefix="/api/strategies/openehr/rps_dual",
 )
 
-# Keep only strategy-specific endpoints here.
-router.include_router(legacy_ingest_router, prefix="/ingest", tags=["Ingest"])
-router.include_router(legacy_config_router, prefix="/config", tags=["Config"])
-router.include_router(legacy_synthetic_router)
+# Strategy-owned endpoints.
+router.include_router(ingest_router, prefix="/ingest", tags=["Ingest"])
+router.include_router(config_router, prefix="/config", tags=["Config"])
+router.include_router(synthetic_router)
+
+
+# Compatibility client compatibility:
+# Some old UI builds incorrectly call domain APIs under the strategy prefix
+# (/api/strategies/openehr/rps_dual/*). Redirect known domain resources to
+# canonical domain-scoped routes.
+_DOMAIN_FIRST_SEGMENTS = {
+    "ehr",
+    "query",
+    "definition",
+}
+
+
+@router.api_route(
+    "/{path_suffix:path}",
+    methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"],
+    include_in_schema=False,
+)
+async def redirect_domain_calls(path_suffix: str, request: Request):
+    first = (path_suffix.split("/", 1)[0] or "").strip().lower()
+    if first in _DOMAIN_FIRST_SEGMENTS:
+        target = f"/api/domains/openehr/{path_suffix}"
+        query = str(request.url.query or "").strip()
+        if query:
+            target = f"{target}?{query}"
+        return RedirectResponse(url=target, status_code=307)
+    raise HTTPException(
+        status_code=404,
+        detail=f"Not Found. Use domain routes under /api/domains/openehr/* for clinical APIs, or strategy routes under /api/strategies/openehr/rps_dual/* for strategy operations.",
+    )

@@ -1,0 +1,118 @@
+{
+  "id": "fhir.contextobjects.vitals_window",
+  "name": "FHIR ContextObjects - Vitals Window",
+  "version": "0.1.0",
+  "maturity": "development",
+  "pack_format": "strategy-pack/v1",
+  "spec": { "path": "spec.json", "version": "1.1" },
+  "variants": ["window.60s", "window.300s", "window.900s"],
+  "domain": "FHIR",
+  "summary": "Turn high-frequency vitals streams (HR, PULSE, RESP, SpO2) into time-windowed ContextObjects where each node carries a standard FHIR Observation payload.",
+  "description": "This strategy models wearable/monitor numeric signals as one ContextObject per patient + device + time window. Inside the ContextObject, each measurement becomes a node whose data is a FHIR Observation. The result is a consistent unit of storage and retrieval that remains FHIR-aligned and is easy to query and enrich in MongoDB.",
+  "config": {
+    "strategy": {
+      "schema": "schema.json",
+      "defaults": "defaults.json",
+      "description": "Data model and transformation configuration (portal-visible)"
+    },
+    "bulk": {
+      "schema": "ingest/bulk_schema.json",
+      "defaults": "ingest/bulk_defaults.json",
+      "description": "Bulk operation settings (CLI/API only, not visible in portal)"
+    }
+  },
+  "capabilities": ["transform", "ingest", "validate", "query", "plan", "apply"],
+  "entrypoint": "kehrnel.engine.strategies.fhir.fhir_contextobjects_vitals_window.strategy:FhirVitalsWindowStrategy",
+  "ui": {
+    "tags": ["FHIR", "wearables", "vitals", "contextobjects", "time-window", "observations", "csv-ingest"],
+    "domain_badge": "FHIR",
+    "works_with": ["mongo_contextobjects"],
+    "links": { "docs": "README.md" },
+
+    "story": "Wearable and monitor data arrives as continuous numeric streams. Storing every point as an isolated record makes it hard to retrieve meaningful context.\n\nThis strategy uses a simple pattern:\n- Build one ContextObject per patient + device + time window\n- Store measurements as nodes inside that ContextObject\n- Keep each node payload as a standard FHIR Observation\n\nApplications then read one document to obtain a coherent window of vitals, ready for dashboards, alerts, summarization, and enrichment.",
+
+    "how_it_works": "Input: CSV numeric streams with time and metrics (HR, PULSE, RESP, SpO2).\n\nSteps:\n1) Normalize timestamps and bucket rows into fixed windows (e.g., 60s, 300s, 900s)\n2) For each window, emit one ContextObject with subjects and an interval (start/end)\n3) Emit nodes[] for measurements, each node containing:\n   - p: tokenized path (e.g., FHIR.Observation|<code>|SpO2)\n   - t: effective time (ISO timestamp)\n   - data: full FHIR Observation JSON\n\nOutput: ContextObjects stored in MongoDB as the unit of record.",
+
+    "benefits": [
+      "FHIR-aligned payloads: each measurement is a FHIR Observation",
+      "Predictable retrieval: one document gives you a full time window",
+      "Extensible: add derived metrics, quality flags, or embeddings later without changing the contract",
+      "Practical: simple model that works well for operational use cases"
+    ],
+
+    "ideal_for": "Best when you need operational access to vitals streams for follow-up programs (e.g., cancer monitoring), alerting, trending, cohort filters, and AI summarization, while preserving FHIR semantics.",
+
+    "consider_alternatives": "If you only need batch analytics, a lakehouse/time-series-only approach may be enough. If you need point-by-point alerting under very tight latency, use streaming evaluation plus this strategy as the durable operational record.",
+
+    "scorecard": {
+      "read_patient": 5,
+      "read_population": 3,
+      "writes": 4,
+      "storage": 3,
+      "index_cost": 2,
+      "migration_ease": 4
+    },
+
+    "references": {
+      "primary": [
+        {
+          "type": "dataset",
+          "title": "BIDMC PPG and Respiration Dataset (PhysioNet)",
+          "authors": ["Beth Israel Deaconess Medical Center"],
+          "venue": "PhysioNet",
+          "year": 2018,
+          "status": "public",
+          "note": "Used as sample numeric streams (HR, PULSE, RESP, SpO2) for windowed ContextObject generation.",
+          "url": "https://physionet.org/content/bidmc/1.0.0/"
+        }
+      ]
+    },
+
+    "tabs": {
+      "overview": {
+        "cards": [
+          { "title": "Unit of record", "body": "One ContextObject per patient + device + time window." },
+          { "title": "Node payload", "body": "Each node stores a FHIR Observation JSON payload." },
+          { "title": "Transform", "body": "CSV rows → window bucketing → Observation nodes → ContextObject envelope." }
+        ]
+      }
+    }
+  },
+
+  "ops": [
+    {
+      "name": "preview_windows",
+      "kind": "diagnostic",
+      "summary": "Preview window segmentation and node counts without writing to MongoDB",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "window_seconds": { "type": "integer", "default": 60 },
+          "max_windows": { "type": "integer", "default": 10 }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "windows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "start": { "type": "string" },
+                "end": { "type": "string" },
+                "nodeCount": { "type": "integer" }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+
+  "adapters": {
+    "storage": ["mongo"],
+    "search": []
+  }
+}

@@ -30,7 +30,15 @@ def test_strategies_endpoints(test_env):
 def test_activate_endpoint(test_env, tmp_path):
     app, client, runtime, manifest, env_id = test_env
     env2 = "env-activate"
-    payload = {"strategy_id": manifest.id, "version": manifest.version, "config": manifest.default_config, "bindings": {}, "domain": getattr(manifest, "domain", "openEHR")}
+    payload = {
+        "strategy_id": manifest.id,
+        "version": manifest.version,
+        "config": manifest.default_config,
+        # Runtime requires bindings; in test/dev we allow plaintext bindings.
+        "bindings": {"extras": {"db": {"provider": "none"}}},
+        "allow_plaintext_bindings": True,
+        "domain": getattr(manifest, "domain", "openEHR"),
+    }
     res = client.post(f"/v1/environments/{env2}/activate", json=payload)
     assert res.status_code == 200
     body = res.json()
@@ -79,7 +87,7 @@ def test_compile_query_patient_and_cross(test_env):
     stage0 = list(plan2["pipeline"][0].keys())[0]
     assert stage0 == "$search"
     explain2 = plan2["explain"]
-    assert explain2["builder"]["chosen"].startswith("legacy")
+    assert explain2["builder"]["chosen"] == "search_pipeline_builder"
     assert explain2["stage0"] == "$search"
 
 

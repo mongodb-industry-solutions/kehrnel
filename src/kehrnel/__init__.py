@@ -1,3 +1,3 @@
-"""
-kehrnel package root (new runtime structure scaffold).
-"""
+"""kehrnel package root."""
+
+from __future__ import annotations

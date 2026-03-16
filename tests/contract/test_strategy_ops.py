@@ -32,9 +32,12 @@ async def test_run_op_ensure_dictionaries():
     assert res["ok"] is True
     assert adapter.collections  # collections ensured
     # ensure placeholder docs inserted (dictionary name comes from config)
-    dict_name = cfg.get("coding", {}).get("archetype_ids", {}).get("dictionary", "_codes")
-    assert (dict_name, "codes") in adapter.inserted
-    assert ("_shortcuts", "shortcuts") in adapter.inserted
+    codes_name = (cfg.get("collections", {}) or {}).get("codes", {}).get("name", "_codes")
+    shortcuts_name = (cfg.get("collections", {}) or {}).get("shortcuts", {}).get("name", "_shortcuts")
+    # codes seed is a list of docs (defaults include _id=ar_code + sequence)
+    assert (codes_name, "ar_code") in adapter.inserted
+    assert (codes_name, "sequence") in adapter.inserted
+    assert (shortcuts_name, "shortcuts") in adapter.inserted
 
 
 @pytest.mark.asyncio

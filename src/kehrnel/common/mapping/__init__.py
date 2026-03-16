@@ -1,11 +1,6 @@
-"""
-kehrnel – mapping layer.
+"""Backward-compatible wrapper for ``kehrnel.engine.common.mapping``."""
 
-Simply provides a proper package so callers can
-    >>> from kehrnel.common.mapping import mapping_engine
-"""
+from kehrnel.engine.common.mapping.mapping_engine import apply_mapping
 
-from importlib import import_module as _imp
+__all__ = ["apply_mapping"]
 
-# expose mapping_engine at package root for convenience
-mapping_engine = _imp("kehrnel.common.mapping.mapping_engine")

@@ -1,13 +1,6 @@
-"""Error types for Kehrnel runtime."""
+"""Backward-compatible wrapper for ``kehrnel.engine.core.errors``."""
 
-from __future__ import annotations
+from kehrnel.engine.core.errors import KehrnelError
 
-from typing import Any, Dict, Optional
+__all__ = ["KehrnelError"]
 
-
-class KehrnelError(Exception):
-    def __init__(self, code: str, status: int, message: str, details: Optional[Dict[str, Any]] = None):
-        super().__init__(message)
-        self.code = code
-        self.status = status
-        self.details = details or {}

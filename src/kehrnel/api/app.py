@@ -5,29 +5,40 @@ import json
 import os
 import logging
 import secrets
+import hashlib
+import time
+import re
 from copy import deepcopy
 from pathlib import Path
 from typing import Optional
+from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI, Request, HTTPException, Security
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse, HTMLResponse
 from fastapi.security import APIKeyHeader
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html
+from fastapi.staticfiles import StaticFiles
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from kehrnel.api.admin.routes import router as admin_router
-from kehrnel.api.admin.ops_by_domain import router as ops_domain_router
-from kehrnel.api.admin.activation_routes import router as activation_router
+# Load environment before importing modules that instantiate settings at import time.
+load_dotenv(find_dotenv(".env.local", usecwd=True), override=False)
+
+from kehrnel.api.core.admin.routes import router as admin_router
+from kehrnel.api.core.admin.ops_by_domain import router as ops_domain_router
+from kehrnel.api.core.admin.activation_routes import router as activation_router
+from kehrnel.api.domains.fhir.routes import router as fhir_domain_router
 from kehrnel.api.domains.openehr.routes import router as openehr_domain_router
 from kehrnel.api.strategies.openehr.rps_dual.routes import router as openehr_rps_dual_router
-from kehrnel.core.runtime import StrategyRuntime
-from kehrnel.core.manifest import StrategyManifest
-from kehrnel.core.registry import FileActivationRegistry
-from kehrnel.core.errors import KehrnelError
-from kehrnel.core.bundle_store import BundleStore
-from kehrnel.core.pack_validator import StrategyPackValidator
-from kehrnel.core.bindings_resolver import load_bindings_resolver_from_env
-from kehrnel.core.synthetic_jobs import SyntheticJobManager
+from kehrnel.engine.core.runtime import StrategyRuntime
+from kehrnel.engine.core.manifest import StrategyManifest
+from kehrnel.engine.core.registry import FileActivationRegistry
+from kehrnel.engine.core.errors import KehrnelError
+from kehrnel.engine.core.bundle_store import BundleStore
+from kehrnel.engine.core.pack_validator import StrategyPackValidator
+from kehrnel.engine.core.bindings_resolver import load_bindings_resolver_from_env
+from kehrnel.engine.core.synthetic_jobs import SyntheticJobManager
+from kehrnel.engine.core.synthetic_jobs_store import MongoSyntheticJobStore
+from kehrnel.engine.core.redaction import redact_sensitive
 
 
 # ============================================================================
@@ -38,7 +49,20 @@ from kehrnel.core.synthetic_jobs import SyntheticJobManager
 API_KEY_HEADER = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 # Paths that don't require authentication
-PUBLIC_PATHS = {"/health", "/docs", "/openapi.json", "/redoc"}
+PUBLIC_PATHS = {"/health", "/openapi.json", "/favicon.ico"}
+PUBLIC_PATH_PREFIXES = ("/docs", "/redoc", "/openapi/", "/guide")
+PUBLIC_PATH_PATTERNS = (
+    # Strategy static assets referenced from docs/specs.
+    re.compile(r"^/strategies/[^/]+/assets/.+"),
+)
+
+
+def _is_public_path(path: str) -> bool:
+    return (
+        path in PUBLIC_PATHS
+        or any(path.startswith(prefix) for prefix in PUBLIC_PATH_PREFIXES)
+        or any(pattern.match(path) for pattern in PUBLIC_PATH_PATTERNS)
+    )
 
 
 def _get_api_keys() -> set[str]:
@@ -51,15 +75,16 @@ def _get_api_keys() -> set[str]:
 
 def _is_auth_enabled() -> bool:
     """Check if API key authentication is enabled."""
-    return os.getenv("KEHRNEL_AUTH_ENABLED", "false").lower() in ("true", "1", "yes")
+    return os.getenv("KEHRNEL_AUTH_ENABLED", "true").lower() in ("true", "1", "yes")
 
 
 class APIKeyAuthMiddleware(BaseHTTPMiddleware):
     """Middleware to validate API keys on requests."""
 
     async def dispatch(self, request: Request, call_next):
+        path = request.url.path or ""
         # Skip auth for public paths
-        if request.url.path in PUBLIC_PATHS:
+        if _is_public_path(path):
             return await call_next(request)
 
         # Skip if auth is disabled
@@ -92,6 +117,10 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
                 status_code=401,
                 content={"error": {"code": "UNAUTHORIZED", "message": "Invalid or missing API key"}},
             )
+        # Avoid using attacker-controlled headers directly for other controls.
+        key_fingerprint = hashlib.sha256(api_key.encode("utf-8")).hexdigest()[:20]
+        request.state.authenticated_api_key = key_fingerprint
+        request.state.rate_limit_key = f"key:{key_fingerprint}"
 
         return await call_next(request)
 
@@ -99,20 +128,22 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
 class RateLimitMiddleware(BaseHTTPMiddleware):
     """Simple in-memory rate limiting middleware."""
 
-    def __init__(self, app, requests_per_minute: int = 60):
+    def __init__(self, app, requests_per_minute: int = 60, max_clients: int = 5000):
         super().__init__(app)
         self.requests_per_minute = requests_per_minute
+        self.max_clients = max_clients
         self._request_counts: dict[str, list[float]] = {}
 
     async def dispatch(self, request: Request, call_next):
-        import time
-
-        # Skip rate limiting for health checks
-        if request.url.path == "/health":
+        # Skip rate limiting for public/doc/static paths.
+        if _is_public_path(request.url.path or ""):
             return await call_next(request)
 
-        # Get client identifier (IP or API key)
-        client_id = request.headers.get("X-API-Key") or request.client.host if request.client else "unknown"
+        # Prefer authenticated identity from auth middleware; fallback to IP.
+        client_id = getattr(request.state, "rate_limit_key", None)
+        if not client_id:
+            ip = request.client.host if request.client else "unknown"
+            client_id = f"ip:{ip}"
 
         current_time = time.time()
         window_start = current_time - 60  # 1 minute window
@@ -124,6 +155,17 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         self._request_counts[client_id] = [
             t for t in self._request_counts[client_id] if t > window_start
         ]
+        # Bound memory growth from spoofed identities / high cardinality traffic.
+        if len(self._request_counts) > self.max_clients:
+            oldest_key = None
+            oldest_ts = float("inf")
+            for key, ts_list in self._request_counts.items():
+                ts = ts_list[-1] if ts_list else 0.0
+                if ts < oldest_ts:
+                    oldest_ts = ts
+                    oldest_key = key
+            if oldest_key:
+                self._request_counts.pop(oldest_key, None)
 
         if len(self._request_counts[client_id]) >= self.requests_per_minute:
             return JSONResponse(
@@ -156,12 +198,20 @@ def _get_rate_limit() -> int:
         return 60
 
 
+def _get_rate_limit_clients() -> int:
+    """Max identities tracked by in-memory rate limiter."""
+    try:
+        return max(1000, int(os.getenv("KEHRNEL_RATE_LIMIT_MAX_CLIENTS", "5000")))
+    except ValueError:
+        return 5000
+
+
 # ============================================================================
 # Strategy Discovery
 # ============================================================================
 
 def _strategy_paths() -> list[Path]:
-    paths = [Path(__file__).resolve().parents[1] / "strategies"]
+    paths = [Path(__file__).resolve().parents[1] / "engine" / "strategies"]
     extra = os.getenv("KEHRNEL_STRATEGY_PATHS")
     if extra:
         for sep in (":", ","):
@@ -182,16 +232,19 @@ def validate_strategy_pack(manifest_data: dict, base_path: Path) -> list[str]:
 
 
 def _seed_default_bundles(store: BundleStore):
+    log = logging.getLogger("kehrnel.bundle.seed")
     try:
-        bundles_dir = Path(__file__).resolve().parents[1] / "strategies" / "openehr" / "rps_dual" / "bundles"
+        bundles_dir = Path(__file__).resolve().parents[1] / "engine" / "strategies" / "openehr" / "rps_dual" / "bundles"
         if bundles_dir.exists():
             for path in bundles_dir.glob("*.json"):
                 try:
                     data = json.loads(path.read_text(encoding="utf-8"))
                     store.save_bundle(data, mode="upsert")
-                except Exception:
+                except Exception as exc:
+                    log.warning("Skipping invalid default bundle %s: %s", path, exc)
                     continue
-    except Exception:
+    except Exception as exc:
+        log.warning("Default bundle seeding failed: %s", exc)
         return
 
 
@@ -204,6 +257,9 @@ def _load_manifests() -> tuple[list[StrategyManifest], list[dict[str, object]], 
         if not base.exists():
             continue
         for manifest_path in base.glob("**/manifest.json"):
+            # Skip disabled strategy folders staged outside active discovery.
+            if any(part.startswith("_disabled") for part in manifest_path.parts):
+                continue
             try:
                 data = json.loads(manifest_path.read_text(encoding="utf-8"))
                 base_dir = manifest_path.parent
@@ -276,28 +332,44 @@ def _load_manifests() -> tuple[list[StrategyManifest], list[dict[str, object]], 
 
 
 def create_app(registry_path: str | None = None, bundle_path: str | None = None) -> FastAPI:
-    app = FastAPI(title="Kehrnel Runtime", version="0.0.0")
+    load_dotenv(find_dotenv(".env.local", usecwd=True), override=False)
+
+    # Disable built-in docs handlers so we can control the HTML (favicon, titles, etc.)
+    # and keep behavior consistent for all generated docs pages.
+    app = FastAPI(
+        title="Kehrnel Runtime",
+        version="0.0.0",
+        docs_url=None,
+        redoc_url=None,
+        swagger_ui_parameters={"favicon_url": "/favicon.ico"},
+    )
 
     # ========================================================================
     # Security Middleware (order matters - first added = last executed)
     # ========================================================================
 
     # 1. Rate Limiting (applied first to incoming requests)
-    rate_limit = _get_rate_limit()
-    if rate_limit > 0:
-        app.add_middleware(RateLimitMiddleware, requests_per_minute=rate_limit)
-
-    # 2. API Key Authentication
+    # 1. API Key Authentication
     if _is_auth_enabled():
         app.add_middleware(APIKeyAuthMiddleware)
+
+    # 2. Rate Limiting
+    rate_limit = _get_rate_limit()
+    if rate_limit > 0:
+        app.add_middleware(
+            RateLimitMiddleware,
+            requests_per_minute=rate_limit,
+            max_clients=_get_rate_limit_clients(),
+        )
 
     # 3. CORS Configuration
     cors_origins = _get_cors_origins()
     if cors_origins:
+        allow_credentials = "*" not in cors_origins
         app.add_middleware(
             CORSMiddleware,
             allow_origins=cors_origins,
-            allow_credentials=True,
+            allow_credentials=allow_credentials,
             allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
             allow_headers=["*"],
         )
@@ -322,12 +394,91 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     for manifest in manifests:
         runtime.register_manifest(manifest)
     app.state.strategy_runtime = runtime
-    app.state.synthetic_job_manager = SyntheticJobManager(runtime)
+
+    # Environment scoping note (ENGSEC-729 class): kehrnel does not have a user session model,
+    # so multi-tenant isolation relies on API-key scoping (KEHRNEL_API_KEY_ENV_SCOPES) and/or
+    # a single shared env id (KEHRNEL_DEFAULT_ENV_ID).
+    if _is_auth_enabled():
+        keys = _get_api_keys()
+        env_scopes = (os.getenv("KEHRNEL_API_KEY_ENV_SCOPES") or "").strip()
+        default_env = (
+            os.getenv("KEHRNEL_DEFAULT_ENV_ID")
+            or os.getenv("DEFAULT_ENV_ID")
+            or os.getenv("ENV_ID")
+            or ""
+        ).strip()
+        if not env_scopes and default_env and len(keys) > 1:
+            logging.getLogger("kehrnel.security").warning(
+                "Multiple API keys configured but no KEHRNEL_API_KEY_ENV_SCOPES set; "
+                "all keys will share env_id=%s (no per-key environment isolation).",
+                default_env,
+            )
+
+    jobs_store = None
+    try:
+        jobs_uri = (os.getenv("CORE_MONGODB_URL") or "").strip()
+        jobs_db = (os.getenv("CORE_DATABASE_NAME") or "hdl_core").strip()
+        jobs_collection = (os.getenv("KEHRNEL_JOBS_COLLECTION") or "synthetic_data_jobs").strip()
+        if jobs_uri and jobs_db and jobs_collection:
+            jobs_store = MongoSyntheticJobStore(
+                uri=jobs_uri,
+                database=jobs_db,
+                collection=jobs_collection,
+            )
+    except Exception as exc:
+        logging.getLogger("kehrnel.jobs").warning(
+            "Store initialization failed; running with reduced persistence features: %s",
+            exc,
+        )
+        jobs_store = None
+    app.state.synthetic_job_manager = SyntheticJobManager(runtime, store=jobs_store)
     app.state.strategy_diagnostics = diagnostics
     app.state.bundle_store = bundle_store
     app.state.strategy_asset_dirs = asset_dirs
     # Store allowed strategy paths for validation
     app.state.allowed_strategy_paths = [p.resolve() for p in _strategy_paths()]
+
+    @app.on_event("startup")
+    async def _init_default_ingestion_runtime() -> None:
+        """
+        Best-effort bootstrap for domain composition/synthetic endpoints that
+        depend on app.state.flattener / app.state.unflattener.
+        """
+        if os.getenv("KEHRNEL_INIT_INGESTION_RUNTIME", "true").lower() not in ("1", "true", "yes"):
+            return
+        if getattr(app.state, "flattener", None) is not None and getattr(app.state, "unflattener", None) is not None:
+            return
+        try:
+            from kehrnel.api.bridge.app.core.config import settings as bridge_settings
+            from kehrnel.api.bridge.app.utils.config_runtime import apply_ingestion_config
+
+            config_internal = {
+                "apply_shortcuts": True,
+                "source": {
+                    "canonical_compositions_collection": bridge_settings.COMPOSITIONS_COLL_NAME,
+                    "database_name": bridge_settings.MONGODB_DB,
+                },
+                "target": {
+                    "compositions_collection": bridge_settings.FLAT_COMPOSITIONS_COLL_NAME,
+                    "search_collection": bridge_settings.SEARCH_COMPOSITIONS_COLL_NAME,
+                    "codes_collection": "_codes",
+                    "shortcuts_collection": "_shortcuts",
+                    "rebuilt_collection": bridge_settings.FLAT_COMPOSITIONS_COLL_NAME,
+                    "database_name": bridge_settings.MONGODB_DB,
+                },
+            }
+            await apply_ingestion_config(
+                app=app,
+                config=config_internal,
+                mappings_inline=None,
+                use_mappings_file=True,
+                mappings_path=None,
+            )
+            logging.getLogger("kehrnel.bootstrap").info("Initialized default ingestion runtime")
+        except Exception as exc:
+            logging.getLogger("kehrnel.bootstrap").warning(
+                "Could not initialize default ingestion runtime: %s", exc
+            )
 
     def _strategy_openapi(domain: str, strategy: str) -> dict:
         domain_norm = (domain or "").strip().lower()
@@ -353,11 +504,42 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         }
         return schema
 
+    def _core_openapi() -> dict:
+        schema = deepcopy(app.openapi())
+        paths = schema.get("paths", {}) or {}
+        core_paths = {
+            path: spec
+            for path, spec in paths.items()
+            if not path.startswith("/api/strategies/")
+        }
+        schema["paths"] = core_paths
+        schema["info"] = {
+            **(schema.get("info") or {}),
+            "title": "Kehrnel Core API",
+            "description": "Core/runtime API documentation (non-domain, non-strategy).",
+        }
+        return schema
+
+    @app.get("/docs", include_in_schema=False)
+    async def docs_root():
+        return get_swagger_ui_html(
+            openapi_url="/openapi.json",
+            title="Kehrnel Docs",
+            swagger_favicon_url="/favicon.ico",
+        )
+
+    @app.get("/redoc", include_in_schema=False)
+    async def redoc_root():
+        return get_redoc_html(
+            openapi_url="/openapi.json",
+            title="Kehrnel ReDoc",
+            redoc_favicon_url="/favicon.ico",
+        )
+
     def _domain_openapi(domain: str) -> dict:
         domain_norm = (domain or "").strip().lower()
         if not domain_norm:
             raise HTTPException(status_code=400, detail="domain is required")
-
         prefix = f"/api/domains/{domain_norm}/"
         schema = deepcopy(app.openapi())
         paths = schema.get("paths", {}) or {}
@@ -368,23 +550,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         schema["info"] = {
             **(schema.get("info") or {}),
             "title": f"Kehrnel Domain API - {domain_norm}",
-            "description": f"Domain-scoped API documentation for {domain_norm}.",
-        }
-        return schema
-
-    def _core_openapi() -> dict:
-        schema = deepcopy(app.openapi())
-        paths = schema.get("paths", {}) or {}
-        core_paths = {
-            path: spec
-            for path, spec in paths.items()
-            if not path.startswith("/api/strategies/") and not path.startswith("/api/domains/")
-        }
-        schema["paths"] = core_paths
-        schema["info"] = {
-            **(schema.get("info") or {}),
-            "title": "Kehrnel Core API",
-            "description": "Core/runtime API documentation (non-domain, non-strategy).",
+            "description": f"Domain API documentation for {domain_norm}.",
         }
         return schema
 
@@ -412,14 +578,15 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         return get_swagger_ui_html(
             openapi_url=f"/openapi/strategies/{domain_norm}/{strategy_norm}.json",
             title=f"Kehrnel Docs - {full_strategy_id}",
+            swagger_favicon_url="/favicon.ico",
         )
+
+    @app.get("/openapi/core.json", include_in_schema=False)
+    async def core_openapi():
+        return JSONResponse(content=_core_openapi())
 
     @app.get("/openapi/domains/{domain}.json", include_in_schema=False)
     async def domain_openapi(domain: str):
-        return JSONResponse(content=_domain_openapi(domain))
-
-    @app.get("/openapi/strategies/{domain}.json", include_in_schema=False)
-    async def domain_openapi_alias(domain: str):
         return JSONResponse(content=_domain_openapi(domain))
 
     @app.get("/docs/domains/{domain}", include_in_schema=False)
@@ -429,38 +596,8 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         return get_swagger_ui_html(
             openapi_url=f"/openapi/domains/{domain_norm}.json",
             title=f"Kehrnel Docs - domain {domain_norm}",
+            swagger_favicon_url="/favicon.ico",
         )
-
-    @app.get("/docs/strategies/{domain}", include_in_schema=False)
-    async def domain_docs_alias(domain: str):
-        domain_norm = (domain or "").strip().lower()
-        _domain_openapi(domain_norm)
-        return get_swagger_ui_html(
-            openapi_url=f"/openapi/strategies/{domain_norm}.json",
-            title=f"Kehrnel Docs - domain {domain_norm}",
-        )
-
-    @app.get("/redoc/domains/{domain}", include_in_schema=False)
-    async def domain_redoc(domain: str):
-        domain_norm = (domain or "").strip().lower()
-        _domain_openapi(domain_norm)
-        return get_redoc_html(
-            openapi_url=f"/openapi/domains/{domain_norm}.json",
-            title=f"Kehrnel ReDoc - domain {domain_norm}",
-        )
-
-    @app.get("/redoc/strategies/{domain}", include_in_schema=False)
-    async def domain_redoc_alias(domain: str):
-        domain_norm = (domain or "").strip().lower()
-        _domain_openapi(domain_norm)
-        return get_redoc_html(
-            openapi_url=f"/openapi/strategies/{domain_norm}.json",
-            title=f"Kehrnel ReDoc - domain {domain_norm}",
-        )
-
-    @app.get("/openapi/core.json", include_in_schema=False)
-    async def core_openapi():
-        return JSONResponse(content=_core_openapi())
 
     @app.get("/docs/core", include_in_schema=False)
     async def core_docs():
@@ -468,6 +605,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         return get_swagger_ui_html(
             openapi_url="/openapi/core.json",
             title="Kehrnel Docs - Core",
+            swagger_favicon_url="/favicon.ico",
         )
 
     @app.get("/redoc/core", include_in_schema=False)
@@ -476,6 +614,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         return get_redoc_html(
             openapi_url="/openapi/core.json",
             title="Kehrnel ReDoc - Core",
+            redoc_favicon_url="/favicon.ico",
         )
 
     @app.get("/redoc/strategies/{domain}/{strategy}", include_in_schema=False)
@@ -487,6 +626,17 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         return get_redoc_html(
             openapi_url=f"/openapi/strategies/{domain_norm}/{strategy_norm}.json",
             title=f"Kehrnel ReDoc - {full_strategy_id}",
+            redoc_favicon_url="/favicon.ico",
+        )
+
+    @app.get("/redoc/domains/{domain}", include_in_schema=False)
+    async def domain_redoc(domain: str):
+        domain_norm = (domain or "").strip().lower()
+        _domain_openapi(domain_norm)
+        return get_redoc_html(
+            openapi_url=f"/openapi/domains/{domain_norm}.json",
+            title=f"Kehrnel ReDoc - domain {domain_norm}",
+            redoc_favicon_url="/favicon.ico",
         )
 
     @app.exception_handler(Exception)
@@ -507,12 +657,60 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         elif isinstance(exc, KeyError):
             code = "NOT_FOUND"
             status = 404
+        # Defense-in-depth: avoid leaking credentials / filesystem internals in exception messages.
+        message = redact_sensitive(message) or message
         return JSONResponse(status_code=status, content={"error": {"code": code, "message": message, "details": details}})
-    app.include_router(admin_router)
-    app.include_router(ops_domain_router)
-    app.include_router(activation_router)
-    app.include_router(openehr_domain_router)
-    app.include_router(openehr_rps_dual_router)
+    runtime_routers = [
+        admin_router,
+        ops_domain_router,
+        activation_router,
+        fhir_domain_router,
+        openehr_domain_router,
+        openehr_rps_dual_router,
+    ]
+
+    # Backward/forward compatibility:
+    # - legacy clients call root paths (e.g. /environments/{env}/...)
+    # - newer clients call versioned paths (e.g. /v1/environments/{env}/...)
+    for router in runtime_routers:
+        app.include_router(router)
+        app.include_router(router, prefix="/v1")
+
+    # Mount Docusaurus documentation if build exists
+    docs_build_path = Path(__file__).resolve().parents[3] / "docs" / "website" / "build"
+    if docs_build_path.exists():
+        app.mount("/guide", StaticFiles(directory=str(docs_build_path), html=True), name="documentation")
+        logging.getLogger("kehrnel.docs").info("Documentation mounted at /guide from %s", docs_build_path)
+    else:
+        @app.get("/guide", include_in_schema=False)
+        @app.get("/guide/", include_in_schema=False)
+        async def guide_not_built():
+            # Keep this public and explicit: it avoids confusion when running the API without building docs.
+            return HTMLResponse(
+                status_code=200,
+                content=(
+                    "<html><head><title>kehrnel docs</title></head><body>"
+                    "<h2>Documentation is not built</h2>"
+                    "<p>The kehrnel runtime serves the static Docusaurus site from <code>docs/website/build</code>.</p>"
+                    "<p>Build it with:</p>"
+                    "<pre><code>cd docs/website\nnpm install\nnpm run build</code></pre>"
+                    "<p>Then restart the API and open <code>/guide</code> again.</p>"
+                    "</body></html>"
+                ),
+            )
+
+    # Serve favicon for API docs (Swagger/ReDoc) and the mounted docs site.
+    # Prefer the built asset, fall back to the Docusaurus static asset during dev.
+    favicon_candidates = [
+        docs_build_path / "img" / "favicon.png",
+        Path(__file__).resolve().parents[3] / "docs" / "website" / "static" / "img" / "favicon.png",
+    ]
+    favicon_path = next((p for p in favicon_candidates if p.exists()), None)
+    if favicon_path:
+        @app.get("/favicon.ico", include_in_schema=False)
+        async def favicon():
+            return FileResponse(str(favicon_path), media_type="image/png")
+
     return app
 
 
@@ -520,6 +718,17 @@ app = create_app()
 
 
 def main():
+    import argparse
     import uvicorn
 
-    uvicorn.run("kehrnel.api.app:app", host="0.0.0.0", port=8000, reload=True)
+    default_host = os.getenv("KEHRNEL_API_HOST", "0.0.0.0")
+    default_port = int(os.getenv("KEHRNEL_API_PORT", os.getenv("API_PORT", "8000")))
+    default_reload = os.getenv("KEHRNEL_API_RELOAD", "false").lower() in ("1", "true", "yes")
+
+    parser = argparse.ArgumentParser(description="Run kehrnel API server.")
+    parser.add_argument("--host", default=default_host, help=f"Bind host (default: {default_host})")
+    parser.add_argument("--port", type=int, default=default_port, help=f"Bind port (default: {default_port})")
+    parser.add_argument("--reload", action="store_true", default=default_reload, help="Enable auto-reload")
+    args = parser.parse_args()
+
+    uvicorn.run("kehrnel.api.app:app", host=args.host, port=args.port, reload=args.reload)

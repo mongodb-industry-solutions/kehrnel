@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional, Set
-from pydantic import BaseModel, Field, field_validator, ConfigDict
+from pydantic import BaseModel, Field, field_validator, model_validator, ConfigDict
 
 from .capabilities import StrategyCapability
 
@@ -30,12 +30,25 @@ class AdapterRequirements(BaseModel):
 class StrategyUI(BaseModel):
     """Metadata to drive catalog/portal presentation."""
 
+    docs: Optional[str] = Field(
+        default=None,
+        description="Canonical strategy documentation URL/path (preferred over links.docs).",
+    )
     tags: List[str] = Field(default_factory=list)
     domain_badge: Optional[str] = None
     icon: Optional[str] = None
     accent_color: Optional[str] = None
     works_with: List[str] = Field(default_factory=list)
-    links: Dict[str, str] = Field(default_factory=dict)  # e.g., {"docs": "...", "source": "..."}
+    links: Dict[str, str] = Field(default_factory=dict)  # Legacy metadata map; docs should use `docs`.
+
+    @model_validator(mode="after")
+    def _backfill_docs_from_legacy_links(self):
+        # Keep SDK-compatible behavior for manifests still using ui.links.docs.
+        if not self.docs:
+            docs = (self.links or {}).get("docs")
+            if isinstance(docs, str) and docs.strip():
+                self.docs = docs
+        return self
 
 
 class StrategyCompatibility(BaseModel):

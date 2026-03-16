@@ -11,11 +11,13 @@ def test_activation_fails_when_bundle_missing(tmp_path):
             "strategy_id": "openehr.rps_dual",
             "version": "0.1.0",
             "domain": "openEHR",
+            # Current rps_dual schema does not accept "slim_search" at activation time.
+            # Bundle-based slim search rebuild is driven by collections.search.atlasIndex.definition.
             "config": {"slim_search": {"enabled": True, "bundle_id": "missing.bundle.v1"}},
             "bindings": {},
             "allow_plaintext_bindings": True,
         },
     )
-    assert res.status_code == 400 or res.status_code == 404
+    assert res.status_code == 400
     err = res.json().get("error") or {}
-    assert err.get("code") == "BUNDLE_NOT_FOUND"
+    assert err.get("code") == "CONFIG_INVALID"

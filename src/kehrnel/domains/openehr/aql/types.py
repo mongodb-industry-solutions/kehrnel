@@ -1,1 +1,0 @@
-"""Normalized AQL types scaffold."""

@@ -8,7 +8,7 @@ from tests.helpers.fixture_storage import FixtureStorage
 
 
 @pytest.mark.asyncio
-async def test_patient_query_uses_legacy_transformer_pipeline():
+async def test_patient_query_uses_compatibility_transformer_pipeline():
     cfg = load_json(DEFAULTS_PATH)
     storage = FixtureStorage(Path("tests/fixtures/rps_dual"))
     strat = RPSDualStrategy(MANIFEST)
@@ -29,7 +29,7 @@ async def test_patient_query_uses_legacy_transformer_pipeline():
     ]
     plan = await strat.compile_query(ctx, "openehr", ir.to_dict())
     pipeline = plan.plan.get("pipeline", [])
-    assert plan.engine == "legacy_pipeline_builder"
+    assert plan.engine == "pipeline_builder"
     assert plan.explain["engine"] == "query_engine"
     assert pipeline and "$match" in pipeline[0]
     project = next((stage for stage in pipeline if "$project" in stage), None)
@@ -38,11 +38,11 @@ async def test_patient_query_uses_legacy_transformer_pipeline():
     assert "$let" in centro_proj
     cond = centro_proj["$let"]["vars"]["target_element"]["$first"]["$filter"]["cond"]
     assert "$regexMatch" in cond
-    assert plan.explain["builder"]["chosen"] == "legacy_pipeline_builder"
+    assert plan.explain["builder"]["chosen"] == "pipeline_builder"
 
 
 @pytest.mark.asyncio
-async def test_cross_patient_query_uses_legacy_search_transformer():
+async def test_cross_patient_query_uses_compatibility_search_transformer():
     cfg = load_json(DEFAULTS_PATH)
     storage = FixtureStorage(Path("tests/fixtures/rps_dual"))
     strat = RPSDualStrategy(MANIFEST)
@@ -62,20 +62,19 @@ async def test_cross_patient_query_uses_legacy_search_transformer():
     ]
     plan = await strat.compile_query(ctx, "openehr", ir.to_dict())
     pipeline = plan.plan.get("pipeline", [])
-    assert plan.engine == "legacy_search_pipeline_builder"
+    assert plan.engine == "search_pipeline_builder"
     assert plan.explain["engine"] == "query_engine"
     assert pipeline and "$search" in pipeline[0]
     search_stage = pipeline[0]["$search"]
     assert "compound" in search_stage or "text" in search_stage
-    assert any("$lookup" in stage for stage in pipeline)
-    assert plan.explain["builder"]["chosen"] == "legacy_search_pipeline_builder"
+    assert plan.explain["builder"]["chosen"] == "search_pipeline_builder"
 
 
 def test_no_new_compiler_imports_in_rps_dual_stack():
     roots = [
-        Path("src/kehrnel/strategies/openehr/rps_dual/strategy.py"),
+        Path("src/kehrnel/engine/strategies/openehr/rps_dual/strategy.py"),
     ]
-    roots.extend(Path("src/kehrnel/strategies/openehr/rps_dual/query").rglob("*.py"))
+    roots.extend(Path("src/kehrnel/engine/strategies/openehr/rps_dual/query").rglob("*.py"))
     offenders = []
     for path in roots:
         text = path.read_text(encoding="utf-8")

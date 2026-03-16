@@ -1,8 +1,4 @@
-"""AQL→MQL compiler wrappers (vendored transformers)."""
-from __future__ import annotations
+"""Backward-compatible wrapper for ``kehrnel.engine.strategies.openehr.rps_dual.query``."""
 
-from kehrnel.domains.openehr.aql.ir import AqlQueryIR
-from .compile_patient import compile_patient
-from .compile_cross_patient import compile_cross_patient
+__all__ = []
 
-__all__ = ["compile_patient", "compile_cross_patient", "AqlQueryIR"]

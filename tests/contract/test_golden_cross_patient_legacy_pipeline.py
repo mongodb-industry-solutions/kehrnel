@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 @pytest.mark.asyncio
-async def test_legacy_cross_patient_pipeline_shape():
+async def test_compatibility_cross_patient_pipeline_shape():
     cfg = load_json(DEFAULTS_PATH)
     storage = FixtureStorage(Path("tests/fixtures/rps_dual"))
     strat = RPSDualStrategy(MANIFEST)

@@ -6,7 +6,7 @@ from kehrnel.core.types import StrategyContext
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(reason="Legacy embeddedDocument grouping not yet restored", strict=False)
+@pytest.mark.xfail(reason="Compatibility embeddedDocument grouping not yet restored", strict=False)
 async def test_cross_patient_aql_compiles_to_search_first():
     cfg = load_json(DEFAULTS_PATH)
     strat = RPSDualStrategy(MANIFEST)
