@@ -10,7 +10,14 @@ env:
   KEHRNEL_API_PORT: "8080"
   KEHRNEL_API_RELOAD: "false"
   
-  
+# Kanopy security and ownership (requires web-app chart v4.30.0+)
+security:
+  dataClassification: "Internal"
+  dataDesignation: ["MI"]
+
+ownership:
+  driEmail: gio.rodriguez@mongodb.com
+
 envSecrets:
   CORE_MONGODB_URL: kerhnel-backend-secrets
   ENV_SECRETS_KEY: kerhnel-backend-secrets
