@@ -96,7 +96,10 @@ def _is_env_access_allowed(request: Request, env_id: str) -> bool:
 def _get_client_for_uri(uri: str) -> AsyncIOMotorClient:
     client = db.clients_by_uri.get(uri)
     if client is None:
-        client = AsyncIOMotorClient(uri, tlsCAFile=certifi.where())
+        kwargs = {}
+        if uri.startswith("mongodb+srv://") or "tls=true" in uri or "ssl=true" in uri:
+            kwargs["tlsCAFile"] = certifi.where()
+        client = AsyncIOMotorClient(uri, **kwargs)
         db.clients_by_uri[uri] = client
     return client
 
@@ -130,33 +133,43 @@ async def _resolve_customer_db_from_activation(
             status_code=404,
             detail=f"No activation found for env_id={env_id} and domain={domain}.",
         )
-    if not activation.bindings_ref:
+    if activation.bindings_ref:
+        # Resolve via bindings_ref (production path).
+        if runtime.bindings_resolver is None:
+            raise HTTPException(
+                status_code=503,
+                detail=(
+                    "Bindings resolver is not configured. Set KEHRNEL_BINDINGS_RESOLVER "
+                    "or HDL resolver environment variables."
+                ),
+            )
+
+        resolved = await resolve_bindings_ref(
+            runtime.bindings_resolver,
+            bindings_ref=activation.bindings_ref,
+            env_id=env_id,
+            domain=domain,
+            strategy_id=activation.strategy_id,
+            op=f"http:{request.method.lower()}:{request.url.path}",
+            context={"activation_config": activation.config or {}},
+        )
+        db_cfg = (resolved or {}).get("db") if isinstance(resolved, dict) else None
+    elif getattr(activation, "bindings", None):
+        # Fallback to plaintext bindings (dev/local path via --allow-plaintext-bindings).
+        logger.debug("Using plaintext bindings for env_id=%s (no bindings_ref).", env_id)
+        db_cfg = activation.bindings.get("db") if isinstance(activation.bindings, dict) else None
+    elif getattr(activation, "bindings_meta", None):
+        # Fallback to bindings_meta (dev/local path).
+        logger.debug("Using bindings_meta for env_id=%s (no bindings_ref).", env_id)
+        db_cfg = activation.bindings_meta.get("db") if isinstance(activation.bindings_meta, dict) else None
+    else:
         raise HTTPException(
             status_code=409,
             detail=(
-                "Activation has no bindings_ref. Re-activate environment with bindings_ref "
-                "to resolve customer database connection."
+                "Activation has no bindings_ref or plaintext bindings. "
+                "Re-activate environment with bindings_ref or --allow-plaintext-bindings."
             ),
         )
-    if runtime.bindings_resolver is None:
-        raise HTTPException(
-            status_code=503,
-            detail=(
-                "Bindings resolver is not configured. Set KEHRNEL_BINDINGS_RESOLVER "
-                "or HDL resolver environment variables."
-            ),
-        )
-
-    resolved = await resolve_bindings_ref(
-        runtime.bindings_resolver,
-        bindings_ref=activation.bindings_ref,
-        env_id=env_id,
-        domain=domain,
-        strategy_id=activation.strategy_id,
-        op=f"http:{request.method.lower()}:{request.url.path}",
-        context={"activation_config": activation.config or {}},
-    )
-    db_cfg = (resolved or {}).get("db") if isinstance(resolved, dict) else None
     provider = (db_cfg or {}).get("provider")
     uri = (db_cfg or {}).get("uri")
     database = (db_cfg or {}).get("database")
