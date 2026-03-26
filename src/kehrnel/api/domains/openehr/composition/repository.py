@@ -115,7 +115,7 @@ async def insert_composition_contribution_and_update_ehr(
                 await db[config.compositions].insert_one(composition_doc, session = session)
 
                 # Insert the flattened versions if they exist
-                if flattened_base_doc and flattened_search_doc:
+                if flattened_base_doc:
                     # Use the canonical version UID as the _id for flattened docs for consistency
                     flattened_base_doc["_id"] = composition_uid
                     result_flatten_composition = await db[config.flatten_compositions].insert_one(flattened_base_doc, session=session)
