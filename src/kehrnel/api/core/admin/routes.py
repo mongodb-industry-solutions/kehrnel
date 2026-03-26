@@ -1054,7 +1054,9 @@ async def run_env_op(env_id: str, request: Request, body: Dict[str, Any] = Body(
             if not requested_domain:
                 raise KehrnelError(code="DOMAIN_REQUIRED", status=400, message="domain is required for strategy operations")
             dispatch_op = "op"
-            dispatch_payload = {"domain": requested_domain, "op": operation, "payload": payload}
+            _routing_keys = {"domain", "strategy_id", "strategy", "data_mode", "source", "sink", "query", "aql", "dry_run", "debug", "allow_mismatch"}
+            op_input = {k: v for k, v in payload.items() if k not in _routing_keys}
+            dispatch_payload = {"domain": requested_domain, "op": operation, "payload": op_input}
             route_scope = "strategy"
 
         result = await rt.dispatch(env_id, dispatch_op, dispatch_payload)
