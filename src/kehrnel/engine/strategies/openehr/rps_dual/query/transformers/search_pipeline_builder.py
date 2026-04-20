@@ -40,7 +40,7 @@ class SearchPipelineBuilder:
             or self._resolve_search_index_name()
             or settings.search_config.search_index_name
         )
-        self.full_compositions_collection = settings.search_config.flatten_collection
+        self.full_compositions_collection = self.schema_config.get("collection") or settings.search_config.flatten_collection
         
         # For search collection, we use 'sn' instead of 'cn'
         self.search_config = self._build_search_schema_config()
@@ -615,15 +615,32 @@ class SearchPipelineBuilder:
         For example, EHR-level conditions or complex nested conditions.
         """
         contains_clause = ast.get("contains")
+        where_clause = ast.get("where")
         additional_conditions = {}
         
         # Process CONTAINS clause for structural filtering
-        if contains_clause:
+        skip_root_composition_match = self._where_has_template_constraint(where_clause)
+        if contains_clause and not skip_root_composition_match:
             contains_conditions = await self._process_contains_clause(contains_clause)
             if contains_conditions:
                 additional_conditions.update(contains_conditions)
         
         return {"$match": additional_conditions} if additional_conditions else None
+
+    def _where_has_template_constraint(self, where_clause: Dict[str, Any] | None) -> bool:
+        if not isinstance(where_clause, dict):
+            return False
+
+        path = where_clause.get("path")
+        if isinstance(path, str) and path.endswith("/archetype_details/template_id/value"):
+            return True
+
+        conditions = where_clause.get("conditions")
+        if isinstance(conditions, dict):
+            return any(self._where_has_template_constraint(child) for child in conditions.values() if isinstance(child, dict))
+        if isinstance(conditions, list):
+            return any(self._where_has_template_constraint(child) for child in conditions if isinstance(child, dict))
+        return False
 
     async def _process_contains_clause(self, contains_clause: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """
@@ -695,7 +712,7 @@ class SearchPipelineBuilder:
                 "$lookup": {
                     "from": self.full_compositions_collection,
                     "localField": "_id",
-                    "foreignField": "_id",
+                    "foreignField": self.schema_config.get("comp_id", "comp_id"),
                     "as": "full_composition"
                 }
             }
@@ -1194,50 +1211,17 @@ class SearchPipelineBuilder:
         elif operator == "<":
             range_condition["lt"] = value
         
-        # Determine the embedded document context intelligently
-        # The key insight: the embedded document path should be the parent of the final field
-        
-        path_parts = search_path.split('.')
-        
-        if len(path_parts) >= 3 and path_parts[0] == "sn" and path_parts[1] == "data":
-            if search_path.endswith('.value') and len(path_parts) >= 4:
-                # For paths ending in .value (like sn.data.time.value or sn.data.ism_transition.current_state.value)
-                # The embedded document context is everything except the final .value
-                embedded_context_parts = path_parts[:-1]  # Remove the final .value part
-                embedded_document_path = ".".join(embedded_context_parts)
-            elif len(path_parts) == 3:
-                # Direct field in data (like sn.data.archetype_node_id)
-                embedded_document_path = "sn.data"
-            else:
-                # For other nested structures, use the parent path
-                # This handles cases like sn.data.a.b.c.d where we want sn.data.a.b.c
-                embedded_context_parts = path_parts[:-1]  # Remove the final field
-                embedded_document_path = ".".join(embedded_context_parts)
-            
-            return {
-                "embeddedDocument": {
-                    "path": embedded_document_path,
-                    "operator": {
-                        "range": {
-                            "path": search_path,  # Full absolute path
-                            **range_condition
-                        }
+        return {
+            "embeddedDocument": {
+                "path": "sn",
+                "operator": {
+                    "range": {
+                        "path": search_path,
+                        **range_condition
                     }
                 }
             }
-        else:
-            # Fallback for any other sn.* pattern
-            return {
-                "embeddedDocument": {
-                    "path": "sn",
-                    "operator": {
-                        "range": {
-                            "path": search_path,  # Full absolute path
-                            **range_condition
-                        }
-                    }
-                }
-            }
+        }
 
     def _build_embedded_document_exists_query(self, search_path: str) -> Dict[str, Any]:
         """
@@ -1251,52 +1235,27 @@ class SearchPipelineBuilder:
                 }
             }
         
-        # Use the same logic as range queries for determining embedded document context
-        path_parts = search_path.split('.')
-        
-        if len(path_parts) >= 3 and path_parts[0] == "sn" and path_parts[1] == "data":
-            if search_path.endswith('.value') and len(path_parts) >= 4:
-                # For paths ending in .value - embedded context is parent path
-                embedded_context_parts = path_parts[:-1]
-                embedded_document_path = ".".join(embedded_context_parts)
-            elif len(path_parts) == 3:
-                # Direct field in data
-                embedded_document_path = "sn.data"
-            else:
-                # For other nested structures, use parent path
-                embedded_context_parts = path_parts[:-1]
-                embedded_document_path = ".".join(embedded_context_parts)
-            
-            return {
-                "embeddedDocument": {
-                    "path": embedded_document_path,
-                    "operator": {
-                        "exists": {
-                            "path": search_path  # Full absolute path
-                        }
+        return {
+            "embeddedDocument": {
+                "path": "sn",
+                "operator": {
+                    "exists": {
+                        "path": search_path
                     }
                 }
             }
-        else:
-            # Fallback for any other sn.* pattern
-            return {
-                "embeddedDocument": {
-                    "path": "sn",
-                    "operator": {
-                        "exists": {
-                            "path": search_path  # Full absolute path
-                        }
-                    }
-                }
-            }
+        }
 
     def _build_embedded_document_equals_query(self, search_path: str, value: Any) -> Dict[str, Any]:
         """
         Builds an embedded document equals query for Atlas Search.
         Uses the same intelligent path resolution logic as range queries.
         """
+        exact_token_suffixes = (".cs", ".id", ".units")
+        prefer_exact = isinstance(value, str) and search_path.endswith(exact_token_suffixes)
+
         if not search_path.startswith("sn."):
-            if isinstance(value, str):
+            if isinstance(value, str) and not prefer_exact:
                 return {
                     "text": {
                         "query": value,
@@ -1311,11 +1270,8 @@ class SearchPipelineBuilder:
                     }
                 }
         
-        # Use the same logic as range queries for determining embedded document context
-        path_parts = search_path.split('.')
-        
         # Determine the operator query based on value type
-        if isinstance(value, str):
+        if isinstance(value, str) and not prefer_exact:
             operator_query = {
                 "text": {
                     "query": value,
@@ -1330,30 +1286,9 @@ class SearchPipelineBuilder:
                 }
             }
         
-        if len(path_parts) >= 3 and path_parts[0] == "sn" and path_parts[1] == "data":
-            if search_path.endswith('.value') and len(path_parts) >= 4:
-                # For paths ending in .value - embedded context is parent path
-                embedded_context_parts = path_parts[:-1]
-                embedded_document_path = ".".join(embedded_context_parts)
-            elif len(path_parts) == 3:
-                # Direct field in data
-                embedded_document_path = "sn.data"
-            else:
-                # For other nested structures, use parent path
-                embedded_context_parts = path_parts[:-1]
-                embedded_document_path = ".".join(embedded_context_parts)
-            
-            return {
-                "embeddedDocument": {
-                    "path": embedded_document_path,
-                    "operator": operator_query
-                }
+        return {
+            "embeddedDocument": {
+                "path": "sn",
+                "operator": operator_query
             }
-        else:
-            # Fallback for any other sn.* pattern
-            return {
-                "embeddedDocument": {
-                    "path": "sn",
-                    "operator": operator_query
-                }
-            }
+        }

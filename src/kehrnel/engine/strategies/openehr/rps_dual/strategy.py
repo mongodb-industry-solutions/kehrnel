@@ -417,6 +417,12 @@ class RPSDualStrategy(StrategyPlugin):
         runtime_strategy = build_runtime_strategy(cfg_model)
         storage = (ctx.adapters or {}).get("storage") if ctx else None
         motor_db = getattr(storage, "db", None) if storage else None
+
+        def _execution_contract(stage_name: str, schema_cfgs: Dict[str, Any]) -> tuple[str, str | None]:
+            if stage_name == "$search":
+                return "text_search_dual", (schema_cfgs.get("search") or {}).get("collection")
+            return "mongo_pipeline", (schema_cfgs.get("composition") or {}).get("collection")
+
         if isinstance(query, dict):
             debug = bool(query.get("debug"))
             raw_aql = query.get("raw_aql")
@@ -457,10 +463,12 @@ class RPSDualStrategy(StrategyPlugin):
                     post_match = [stage for stage in pipeline[1:] if "$match" in stage]
                     if post_match:
                         warnings.append({"code": "partial_pushdown", "message": "Some predicates evaluated after $search", "details": {"post_match_stages": len(post_match)}})
+                execution_engine, collection = _execution_contract(stage0, schema_cfgs)
                 plan_dict = {
-                    "engine": engine,
+                    "engine": execution_engine,
                     "pipeline": pipeline,
                     "scope": scope,
+                    "collection": collection,
                 }
                 plan_dict["dicts"] = {
                     "codes": {"source": codes_res.get("source"), "missing": codes_res.get("missing", False)},
@@ -475,7 +483,7 @@ class RPSDualStrategy(StrategyPlugin):
                     "stage0": stage0,
                     "schema": schema_cfgs,
                     "ast": ast_doc if debug else None,
-                    "builder": builder_info,
+                    "builder": {**builder_info, "compiler_engine": engine, "execution_engine": execution_engine},
                     "rawAql": raw_aql if debug else None,
                     "parameters": params if debug else None,
                     "mode": "raw_aql_strategy",
@@ -505,9 +513,11 @@ class RPSDualStrategy(StrategyPlugin):
             post_match = [stage for stage in pipeline[1:] if "$match" in stage]
             if post_match:
                 warnings.append({"code": "partial_pushdown", "message": "Some predicates evaluated after $search", "details": {"post_match_stages": len(post_match)}})
+        execution_engine, collection = _execution_contract(stage0, schema_cfgs)
         plan_dict = {
-            "engine": engine,
+            "engine": execution_engine,
             "pipeline": pipeline,
+            "collection": collection,
         }
         plan_dict["dicts"] = {
             "codes": {"source": codes_res.get("source"), "missing": codes_res.get("missing", False)},
@@ -522,7 +532,7 @@ class RPSDualStrategy(StrategyPlugin):
             "stage0": stage0,
             "schema": schema_cfgs,
             "ast": ast_doc if debug else None,
-            "builder": builder_info,
+            "builder": {**builder_info, "compiler_engine": engine, "execution_engine": execution_engine},
         }
         explain = enrich_explain(
             explain,

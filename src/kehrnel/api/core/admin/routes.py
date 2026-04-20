@@ -9,10 +9,12 @@ import logging
 import ipaddress
 from pathlib import Path
 from fastapi import APIRouter, Request, Body
+from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse, FileResponse
 from typing import Any, Dict, List
 import yaml
 from lxml import etree
+from bson import ObjectId
 
 from kehrnel.engine.core.manifest import StrategyManifest
 from kehrnel.engine.core.errors import KehrnelError
@@ -88,6 +90,11 @@ def _error_response(exc: Exception) -> JSONResponse:
     # Avoid leaking secrets or filesystem internals (absolute paths) via error strings.
     message = redact_sensitive(message) or message
     return JSONResponse(status_code=status, content={"error": {"code": code, "message": message, "details": details}})
+
+
+def _json_safe(payload: Any) -> Any:
+    """Encode runtime payloads so BSON/ObjectId values do not break API responses."""
+    return jsonable_encoder(payload, custom_encoder={ObjectId: str})
 
 
 def _require_admin_access(request: Request) -> None:
@@ -1700,7 +1707,7 @@ async def transform_env(env_id: str, request: Request, payload: Dict[str, Any] =
         if not rt:
             raise ValueError("Strategy runtime not initialized")
         res = await rt.dispatch(env_id, "transform", payload or {})
-        return {"ok": True, "result": res}
+        return _json_safe({"ok": True, "result": res})
     except Exception as exc:
         return _error_response(exc)
 
@@ -1714,7 +1721,7 @@ async def ingest_env(env_id: str, request: Request, payload: Dict[str, Any] = Bo
         if not rt:
             raise ValueError("Strategy runtime not initialized")
         res = await rt.dispatch(env_id, "ingest", payload or {})
-        return {"ok": True, "result": res}
+        return _json_safe({"ok": True, "result": res})
     except Exception as exc:
         return _error_response(exc)
 
