@@ -1,6 +1,6 @@
 # src/kehrnel/api/compatibility/v1/aql/transformers/archetype_resolver.py
 
-from typing import Dict, Optional, Tuple, List
+from typing import Any, Dict, Optional, Tuple, List
 from motor.motor_asyncio import AsyncIOMotorDatabase
 import re
 import logging
@@ -13,8 +13,20 @@ class ArchetypeResolver:
     Replaces hardcoded p-value patterns with database-driven resolution and pattern discovery.
     """
     
-    def __init__(self, db: AsyncIOMotorDatabase):
+    def __init__(
+        self,
+        db: AsyncIOMotorDatabase,
+        *,
+        codes_collection: str | None = None,
+        codes_doc_id: str | None = None,
+        search_collection: str | None = None,
+        composition_collection: str | None = None,
+    ):
         self.db = db
+        self.codes_collection = codes_collection or "_codes"
+        self.codes_doc_id = codes_doc_id or "ar_code"
+        self.search_collection = search_collection or "sm_search3"
+        self.composition_collection = composition_collection or "compositions"
         self._archetype_to_code_cache: Dict[str, int] = {}
         self._at_code_to_int_cache: Dict[str, int] = {}
         self._structural_pattern_cache: Dict[str, List[str]] = {}
@@ -25,8 +37,18 @@ class ArchetypeResolver:
         if self._codes_loaded:
             return
             
-        codes_col = self.db["_codes"]
-        doc = await codes_col.find_one({"_id": "ar_code"}) or {}
+        codes_col = self.db[self.codes_collection]
+        doc = await codes_col.find_one({"_id": self.codes_doc_id}) or {}
+
+        explicit_items = doc.get("items") or doc.get("codes")
+        if isinstance(explicit_items, dict):
+            for selector, code in explicit_items.items():
+                if not isinstance(selector, str):
+                    continue
+                if selector.lower().startswith("at"):
+                    self._at_code_to_int_cache[selector] = code
+                else:
+                    self._archetype_to_code_cache[selector] = code
         
         # Load archetype mappings (positive codes)
         for rm_type, archetypes in doc.items():
@@ -140,7 +162,7 @@ class ArchetypeResolver:
         at_code_sequence = []
         for part in aql_path_parts:
             # Look for archetype node references in path segments like items[at0007], items[at0014]
-            archetype_match = re.match(r"(?:items|description|value|name|protocol|data|state|activities|activity|events|event|items_single|items_multiple|context|other_context)\[(.+)\]", part)
+            archetype_match = re.match(r"(?:items|description|value|name|protocol|data|state|activities|activity|events|event|items_single|items_multiple|context|other_context|content)\[(.+)\]", part)
             if archetype_match:
                 reference = archetype_match.group(1)
                 
@@ -169,7 +191,7 @@ class ArchetypeResolver:
         # Now query actual documents to find patterns that match our AT code sequence
         try:
             # Use the search collection for pattern discovery
-            search_col = self.db["sm_search3"]
+            search_col = self.db[self.search_collection]
             
             # Build the expected pattern structure
             # For admin_salut/items[at0007]/items[at0014], we expect:
@@ -355,7 +377,7 @@ class ArchetypeResolver:
         
         try:
             # Query compositions to find patterns between these archetypes
-            compositions_col = self.db["compositions"]
+            compositions_col = self.db[self.composition_collection]
             
             # Look for documents that contain both archetypes in their cn array
             pipeline = [

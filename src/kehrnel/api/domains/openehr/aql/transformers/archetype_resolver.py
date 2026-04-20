@@ -356,7 +356,7 @@ class ArchetypeResolver:
         
         try:
             # Query compositions to find patterns between these archetypes
-            compositions_col = self.db[settings.COMPOSITIONS_COLL_NAME]
+            compositions_col = self.db[settings.FLAT_COMPOSITIONS_COLL_NAME]
             
             # Look for documents that contain both archetypes in their cn array
             pipeline = [

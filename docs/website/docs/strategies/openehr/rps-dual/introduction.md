@@ -112,8 +112,11 @@ openEHR-EHR-COMPOSITION.encounter.v1 → 15
 │   ┌─────────────────┐   │  │   ┌─────────────────┐   │
 │   │ _id             │   │  │   │ _id             │   │
 │   │ ehr_id          │   │  │   │ ehr_id          │   │
+│   │ comp_id         │   │  │   │ comp_id         │   │
+│   │ v               │   │  │   │ v               │   │
+│   │ time_c          │   │  │   │ sort_time       │   │
 │   │ tid             │   │  │   │ tid             │   │
-│   │ n: { ... }      │   │  │   │ sn: [ ... ]     │   │
+│   │ cn: [ ... ]     │   │  │   │ sn: [ ... ]     │   │
 │   └─────────────────┘   │  │   └─────────────────┘   │
 │        B-tree Index     │  │      Atlas Search       │
 └─────────────────────────┘  └─────────────────────────┘
@@ -131,14 +134,36 @@ openEHR-EHR-COMPOSITION.encounter.v1 → 15
     },
     "search": {
       "name": "compositions_search",
+      "encodingProfile": "profile.search_shortcuts",
       "enabled": true,
-      "atlasIndex": { "name": "search_nodes_index" }
+      "atlasIndex": {
+        "name": "search_nodes_index",
+        "definition": "file://bundles/searchIndex/searchIndex.json"
+      }
     },
-    "codes": { "name": "_codes", "mode": "extend" },
-    "ehr": { "name": "ehr" },
-    "contributions": { "name": "contributions" }
+    "codes": {
+      "name": "_codes",
+      "seed": "file://bundles/dictionaries/_codes.json"
+    },
+    "shortcuts": {
+      "name": "_shortcuts",
+      "seed": "file://bundles/shortcuts/shortcuts.json"
+    }
+  },
+  "fields": {
+    "document": {
+      "ehr_id": "ehr_id",
+      "comp_id": "comp_id",
+      "tid": "tid",
+      "v": "v",
+      "time_committed": "time_c",
+      "sort_time": "sort_time",
+      "cn": "cn",
+      "sn": "sn"
+    }
   },
   "transform": {
+    "apply_shortcuts": true,
     "coding": {
       "arcodes": { "strategy": "sequential" },
       "atcodes": { "strategy": "negative_int" }

@@ -61,6 +61,24 @@ async def load_shortcuts_from_storage(storage, cache: Dict | None = None) -> Dic
     return data
 
 
+def _resolve_shortcuts_source(ctx) -> tuple[str, str]:
+    cfg = getattr(ctx, "config", None) if ctx else None
+    collections = cfg.get("collections") if isinstance(cfg, dict) else {}
+    collections = collections if isinstance(collections, dict) else {}
+    dictionaries = cfg.get("dictionaries") if isinstance(cfg, dict) else {}
+    dictionaries = dictionaries if isinstance(dictionaries, dict) else {}
+
+    shortcuts_collection = (
+        ((collections.get("shortcuts") or {}).get("name") if isinstance(collections.get("shortcuts"), dict) else None)
+        or DEFAULT_COLLECTION
+    )
+    shortcuts_doc_id = (
+        ((dictionaries.get("shortcuts") or {}).get("doc_id") if isinstance(dictionaries.get("shortcuts"), dict) else None)
+        or DEFAULT_DOC_ID
+    )
+    return shortcuts_collection, shortcuts_doc_id
+
+
 async def get_shortcuts(ctx) -> Dict[str, Any]:
     cache = (ctx.meta or {}).get("dict_cache") if ctx else {}
     cached = cache.get("shortcuts") if cache else None
@@ -70,7 +88,8 @@ async def get_shortcuts(ctx) -> Dict[str, Any]:
     missing = False
     items: Dict[str, str] = {}
     if storage:
-        doc = await storage.find_one(DEFAULT_COLLECTION, {"_id": DEFAULT_DOC_ID}) or {}
+        collection, doc_id = _resolve_shortcuts_source(ctx)
+        doc = await storage.find_one(collection, {"_id": doc_id}) or {}
         items = doc.get("items") or {}
         items.update(doc.get("keys") or {})
         items.update(doc.get("values") or {})

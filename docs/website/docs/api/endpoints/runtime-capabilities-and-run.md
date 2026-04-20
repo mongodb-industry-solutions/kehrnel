@@ -41,6 +41,13 @@ Routing behavior:
 - if `operation` is one of `plan`, `apply`, `transform`, `ingest`, `query`, `compile_query`, runtime dispatches that core operation.
 - otherwise runtime dispatches strategy operation (`run_op`) with the active domain activation.
 
+Typical strategy operations executed through `/run` include:
+
+- `ensure_dictionaries`
+- `synthetic_generate_batch`
+- `build_search_index_definition`
+- `ensure_atlas_search_index`
+
 ## Recommended CLI Pair
 
 ```bash

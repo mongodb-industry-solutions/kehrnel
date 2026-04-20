@@ -8,6 +8,11 @@ sidebar_position: 1
 
 - `kehrnel`
 
+Local runtime note:
+
+- if you start Kehrnel with `./startKehrnel`, use `http://localhost:8080`
+- if you start it with `kehrnel-api` or `uvicorn kehrnel.api.app:app`, use your configured API port (default `8000`)
+
 ## Command Layers
 
 - `kehrnel auth`  
@@ -27,12 +32,17 @@ Compatibility pass-through workflows (`transform`, `ingest`, `validate`, `genera
 - `kehrnel domain`  
 Domain-scoped operations (`domain list`, `domain openehr ...`).
 - `kehrnel strategy`  
-Strategy discovery and selection.
+Strategy discovery, selection, and generated Atlas Search index workflows.
 
 ## Typical Workflow
 
 ```bash
-kehrnel setup --runtime-url http://localhost:8000 --env dev --domain openehr --strategy openehr.rps_dual
+export RUNTIME_URL="${RUNTIME_URL:-http://localhost:8080}"
+
+kehrnel setup --runtime-url "$RUNTIME_URL" --env dev --domain openehr --strategy openehr.rps_dual
+
+kehrnel core env create --env dev --name "Development"
+kehrnel core env show --env dev
 
 kehrnel resource add src --type mongo --uri "$MONGODB_URI" --db hc_openEHRCDR --collection samples
 kehrnel resource add dst --type mongo --uri "$MONGODB_URI" --db hdl_user_test --collection compositions_rps
@@ -40,6 +50,7 @@ kehrnel resource use --source src --sink dst
 
 kehrnel op capabilities --env dev
 kehrnel run ensure_dictionaries --env dev --domain openehr
+kehrnel strategy build-search-index --env dev --domain openehr --strategy openehr.rps_dual --out .kehrnel/search-index.json
 ```
 
 ## Getting Help

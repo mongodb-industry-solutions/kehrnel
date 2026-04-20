@@ -1,0 +1,314 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
+HOST="${KEHRNEL_HOST:-127.0.0.1}"
+PORT="${KEHRNEL_PORT:-8080}"
+RELOAD=1
+BUILD_DOCS_MODE="auto"
+SYNC_MODE="${KEHRNEL_SYNC_MODE:-auto}"
+EXPLICIT_PORT=0
+EXTRA_ARGS=()
+
+log() {
+  printf '[startKehrnel] %s\n' "$*" >&2
+}
+
+usage() {
+  cat <<'EOF'
+Usage: ./startKehrnel [options] [-- <extra uvicorn args>]
+
+Options:
+  --host <host>       Bind host (default: 127.0.0.1)
+  --port <port>       Bind port (only 8080 is allowed)
+  --reload            Enable auto-reload (default)
+  --no-reload         Disable auto-reload
+  --build-docs        Force a docs rebuild before starting
+  --skip-docs         Skip docs build checks
+  --skip-sync         Skip Python dependency sync
+  --force-sync        Force Python dependency sync
+  -h, --help          Show this help
+
+Environment defaults applied when unset:
+  KEHRNEL_AUTH_ENABLED=false
+  KEHRNEL_INIT_INGESTION_RUNTIME=false
+EOF
+}
+
+have_cmd() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+find_user_uv() {
+  local candidate
+  for candidate in "$HOME/.local/bin/uv" "$HOME"/Library/Python/*/bin/uv; do
+    if [[ -x "$candidate" ]]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+  return 1
+}
+
+find_bootstrap_python() {
+  local candidate
+  for candidate in python3 /usr/bin/python3 /opt/homebrew/bin/python3 /usr/local/bin/python3; do
+    if have_cmd "$candidate" && "$candidate" -m pip --version >/dev/null 2>&1; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+  return 1
+}
+
+run_uv() {
+  if have_cmd uv; then
+    uv "$@"
+  elif [[ -x "$HOME/.local/bin/uv" ]]; then
+    "$HOME/.local/bin/uv" "$@"
+  elif uv_path="$(find_user_uv 2>/dev/null)"; then
+    "$uv_path" "$@"
+  else
+    python3 -m uv "$@"
+  fi
+}
+
+ensure_uv() {
+  local bootstrap_python
+
+  if have_cmd uv; then
+    return
+  fi
+  if find_user_uv >/dev/null 2>&1; then
+    return
+  fi
+  if python3 -m uv --version >/dev/null 2>&1; then
+    return
+  fi
+
+  bootstrap_python="$(find_bootstrap_python || true)"
+  if [[ -z "$bootstrap_python" ]]; then
+    log "Could not find a Python with pip to install uv"
+    exit 1
+  fi
+
+  log "Installing uv via $bootstrap_python -m pip"
+  "$bootstrap_python" -m pip install --user uv
+}
+
+ensure_python() {
+  log "Ensuring Python 3.12 is available"
+  run_uv python install 3.12
+}
+
+ensure_venv() {
+  if [[ ! -x ".venv/bin/python" ]]; then
+    log "Creating project virtual environment"
+    run_uv venv --python 3.12 .venv
+    return
+  fi
+
+  if ! .venv/bin/python - <<'PY' >/dev/null 2>&1
+import sys
+raise SystemExit(0 if sys.version_info >= (3, 10) else 1)
+PY
+  then
+    log "Recreating project virtual environment with Python 3.12"
+    rm -rf .venv
+    run_uv venv --python 3.12 .venv
+  fi
+}
+
+dependency_fingerprint() {
+  if have_cmd shasum; then
+    shasum -a 256 pyproject.toml | awk '{print $1}'
+    return
+  fi
+  if have_cmd sha256sum; then
+    sha256sum pyproject.toml | awk '{print $1}'
+    return
+  fi
+  if have_cmd openssl; then
+    openssl dgst -sha256 pyproject.toml | awk '{print $NF}'
+    return
+  fi
+  log "Could not find a checksum tool for dependency fingerprinting"
+  exit 1
+}
+
+python_deps_ready() {
+  .venv/bin/python - <<'PY' >/dev/null 2>&1
+import kehrnel  # noqa: F401
+PY
+}
+
+should_sync_python_deps() {
+  local stamp_file=".venv/.startKehrnel-pyproject.sha256"
+  local current_fingerprint
+  local previous_fingerprint=""
+
+  case "$SYNC_MODE" in
+    skip)
+      return 1
+      ;;
+    force)
+      return 0
+      ;;
+    auto)
+      ;;
+    *)
+      log "Unknown sync mode: $SYNC_MODE"
+      exit 1
+      ;;
+  esac
+
+  if ! python_deps_ready; then
+    return 0
+  fi
+
+  current_fingerprint="$(dependency_fingerprint)"
+  if [[ -f "$stamp_file" ]]; then
+    previous_fingerprint="$(<"$stamp_file")"
+  fi
+
+  [[ "$current_fingerprint" != "$previous_fingerprint" ]]
+}
+
+sync_python_deps() {
+  local stamp_file=".venv/.startKehrnel-pyproject.sha256"
+  local current_fingerprint
+
+  if ! should_sync_python_deps; then
+    log "Python dependencies already up to date"
+    return
+  fi
+
+  log "Syncing Python dependencies"
+  run_uv pip install --python .venv/bin/python -e '.[all]'
+  current_fingerprint="$(dependency_fingerprint)"
+  printf '%s\n' "$current_fingerprint" > "$stamp_file"
+}
+
+build_docs_if_needed() {
+  local docs_dir="docs/website"
+  local docs_build="$docs_dir/build"
+
+  if [[ "$BUILD_DOCS_MODE" == "skip" ]]; then
+    return
+  fi
+
+  if [[ "$BUILD_DOCS_MODE" == "force" || ! -d "$docs_build" ]]; then
+    if ! have_cmd npm; then
+      log "npm not found, skipping docs build. /guide will show the placeholder page."
+      return
+    fi
+    log "Building docs site for /guide"
+    (
+      cd "$docs_dir"
+      if [[ ! -d node_modules ]]; then
+        npm install
+      fi
+      npm run build
+    )
+  fi
+}
+
+port_in_use() {
+  lsof -nP -iTCP:"$1" -sTCP:LISTEN >/dev/null 2>&1
+}
+
+choose_port() {
+  if [[ "$PORT" != "8080" ]]; then
+    log "Only port 8080 is supported"
+    exit 1
+  fi
+
+  if port_in_use "$PORT"; then
+    log "Port 8080 is already in use"
+    exit 1
+  fi
+
+  printf '%s\n' "$PORT"
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --host)
+      HOST="$2"
+      shift 2
+      ;;
+    --port)
+      PORT="$2"
+      EXPLICIT_PORT=1
+      shift 2
+      ;;
+    --reload)
+      RELOAD=1
+      shift
+      ;;
+    --no-reload)
+      RELOAD=0
+      shift
+      ;;
+    --build-docs)
+      BUILD_DOCS_MODE="force"
+      shift
+      ;;
+    --skip-docs)
+      BUILD_DOCS_MODE="skip"
+      shift
+      ;;
+    --skip-sync)
+      SYNC_MODE="skip"
+      shift
+      ;;
+    --force-sync)
+      SYNC_MODE="force"
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    --)
+      shift
+      EXTRA_ARGS+=("$@")
+      break
+      ;;
+    *)
+      EXTRA_ARGS+=("$1")
+      shift
+      ;;
+  esac
+done
+
+if ! have_cmd python3; then
+  log "python3 is required but was not found"
+  exit 1
+fi
+
+ensure_uv
+ensure_python
+ensure_venv
+sync_python_deps
+build_docs_if_needed
+
+RUN_PORT="$(choose_port)"
+
+export KEHRNEL_AUTH_ENABLED="${KEHRNEL_AUTH_ENABLED:-false}"
+export KEHRNEL_INIT_INGESTION_RUNTIME="${KEHRNEL_INIT_INGESTION_RUNTIME:-false}"
+export KEHRNEL_API_PORT="$RUN_PORT"
+
+UVICORN_ARGS=(--host "$HOST" --port "$RUN_PORT")
+if [[ "$RELOAD" -eq 1 ]]; then
+  UVICORN_ARGS+=(--reload)
+fi
+if [[ ${#EXTRA_ARGS[@]} -gt 0 ]]; then
+  UVICORN_ARGS+=("${EXTRA_ARGS[@]}")
+fi
+
+log "Starting Kehrnel on http://$HOST:$RUN_PORT"
+log "Endpoints: /docs  /guide  /health"
+exec .venv/bin/python -m uvicorn kehrnel.api.app:app "${UVICORN_ARGS[@]}"

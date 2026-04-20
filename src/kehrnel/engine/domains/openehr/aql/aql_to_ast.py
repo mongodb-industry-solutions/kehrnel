@@ -632,13 +632,24 @@ class AQLToASTParser:
     def _find_top_level_keyword(self, text: str, keyword: str) -> int:
         """Find a top-level keyword in text, respecting parentheses depth"""
         depth = 0
+        in_single = False
+        in_double = False
         upper_text = text.upper()
         keyword_length = len(keyword)
         
         for i in range(len(text) - keyword_length + 1):
-            if text[i] == '(':
+            char = text[i]
+            if char == "'" and not in_double:
+                in_single = not in_single
+            elif char == '"' and not in_single:
+                in_double = not in_double
+
+            if in_single or in_double:
+                continue
+
+            if char == '(':
                 depth += 1
-            elif text[i] == ')':
+            elif char == ')':
                 depth -= 1
             
             if depth == 0 and upper_text[i:i + keyword_length] == keyword:
@@ -654,14 +665,21 @@ class AQLToASTParser:
         result = []
         current = ""
         depth = 0
+        in_single = False
+        in_double = False
         
         for char in text:
-            if char in '([{':
+            if char == "'" and not in_double:
+                in_single = not in_single
+            elif char == '"' and not in_single:
+                in_double = not in_double
+
+            if not in_single and not in_double and char in '([{':
                 depth += 1
-            elif char in ')]}':
+            elif not in_single and not in_double and char in ')]}':
                 depth -= 1
             
-            if char == ',' and depth == 0:
+            if char == ',' and depth == 0 and not in_single and not in_double:
                 if current.strip():
                     result.append(current.strip())
                 current = ""

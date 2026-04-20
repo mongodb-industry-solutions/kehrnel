@@ -39,6 +39,58 @@ class Composition(BaseModel):
         populate_by_name = True
 
 
+class CompositionSummary(BaseModel):
+    uid: str
+    name: str = ""
+    templateId: str = ""
+
+
+class BulkCompositionDeleteRequest(BaseModel):
+    uids: List[str] = Field(default_factory=list)
+
+
+class BulkCompositionDeleteFailure(BaseModel):
+    uid: str
+    message: str
+
+
+class BulkCompositionDeleteResult(BaseModel):
+    ehr_id: str
+    deletedCount: int
+    deletedUids: List[str] = Field(default_factory=list)
+    auditUids: List[str] = Field(default_factory=list)
+    failed: List[BulkCompositionDeleteFailure] = Field(default_factory=list)
+    committedAt: Optional[datetime] = None
+
+
+class BulkCompositionCreateItem(BaseModel):
+    composition: Dict[str, Any]
+
+
+class BulkCompositionCreateRequest(BaseModel):
+    items: List[BulkCompositionCreateItem] = Field(default_factory=list)
+
+
+class BulkCompositionCreateSuccess(BaseModel):
+    index: int
+    uid: str
+    name: str = ""
+    templateId: str = ""
+
+
+class BulkCompositionCreateFailure(BaseModel):
+    index: int
+    message: str
+
+
+class BulkCompositionCreateResult(BaseModel):
+    ehr_id: str
+    createdCount: int
+    created: List[BulkCompositionCreateSuccess] = Field(default_factory=list)
+    failed: List[BulkCompositionCreateFailure] = Field(default_factory=list)
+    committedAt: Optional[datetime] = None
+
+
 class VersionedComposition(BaseModel):
     uid: HierObjectID
     owner_id: ObjectRef = Field(..., alias="ownerId")

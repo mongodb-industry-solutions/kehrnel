@@ -9,7 +9,7 @@ Configure MongoDB Atlas for \{kehrnel\} deployment.
 ## Prerequisites
 
 - MongoDB Atlas account
-- Cluster tier M10+ (M50+ recommended for production)
+- Cluster tier M10+ 
 - Atlas Search enabled
 
 ## Cluster Setup
@@ -20,7 +20,7 @@ Configure MongoDB Atlas for \{kehrnel\} deployment.
 2. Create a new cluster:
    - **Provider**: AWS/GCP/Azure
    - **Region**: Choose closest to your users
-   - **Tier**: M50+ for production workloads
+   - **Tier**: M10+ for production workloads
 
 ### 2. Network Access
 
@@ -60,13 +60,22 @@ mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/?retryWrites=true
 Configure in \{kehrnel\}:
 
 ```bash
-export CORE_MONGODB_URL="mongodb+srv://kehrnel:password@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority"
+export CORE_MONGODB_URL="mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority"
 export CORE_DATABASE_NAME="kehrnel_db"
 ```
 
 ## Atlas Search Index
 
 Create the required search index for cross-patient queries.
+
+Recommended workflow:
+
+```bash
+export RUNTIME_URL="${RUNTIME_URL:-http://localhost:8080}"
+
+kehrnel setup --runtime-url "$RUNTIME_URL" --env dev --domain openehr --strategy openehr.rps_dual
+kehrnel strategy build-search-index --env dev --domain openehr --strategy openehr.rps_dual --out .kehrnel/search-index.json
+```
 
 ### Using Atlas UI
 
@@ -75,60 +84,16 @@ Create the required search index for cross-patient queries.
 3. Select **JSON Editor**
 4. Choose collection: `compositions_search`
 5. Index name: `search_nodes_index`
-6. Paste configuration:
-
-```json
-{
-  "mappings": {
-    "dynamic": false,
-    "fields": {
-      "ehr_id": {
-        "type": "string"
-      },
-      "tid": {
-        "type": "number"
-      },
-      "sn": {
-        "type": "embeddedDocuments",
-        "fields": {
-          "p": {
-            "type": "string",
-            "analyzer": "keyword"
-          },
-          "data": {
-            "type": "document",
-            "dynamic": true
-          }
-        }
-      }
-    }
-  }
-}
-```
+6. Paste the generated `.kehrnel/search-index.json`
 
 ### Using mongosh
 
 ```javascript
-db.compositions_search.createSearchIndex({
-  name: "search_nodes_index",
-  definition: {
-    mappings: {
-      dynamic: false,
-      fields: {
-        ehr_id: { type: "string" },
-        tid: { type: "number" },
-        sn: {
-          type: "embeddedDocuments",
-          fields: {
-            p: { type: "string", analyzer: "keyword" },
-            data: { type: "document", dynamic: true }
-          }
-        }
-      }
-    }
-  }
-})
+const definition = EJSON.parse(cat(".kehrnel/search-index.json"));
+db.compositions_search.createSearchIndex({ name: "search_nodes_index", definition });
 ```
+
+The generated definition reflects the active strategy config and mappings. In the current defaults it indexes root metadata such as `ehr_id`, `tid`, and `sort_time`, plus the mapped `sn.data.*` fields selected for analytics.
 
 ## Standard Indexes
 
@@ -136,13 +101,16 @@ Create B-tree indexes for patient-scoped queries:
 
 ```javascript
 // Primary composition lookup
-db.compositions_rps.createIndex({ "ehr_id": 1, "_id": 1 })
+db.compositions_rps.createIndex({ "ehr_id": 1, "v": 1 })
 
-// Template-scoped queries
-db.compositions_rps.createIndex({ "ehr_id": 1, "tid": 1 })
+// Patient-scoped template and time filtering
+db.compositions_rps.createIndex({ "ehr_id": 1, "tid": 1, "time_c": 1, "comp_id": 1 })
 
-// Version history
-db.compositions_rps.createIndex({ "ehr_id": 1, "cv": -1 })
+// Patient-scoped path predicates
+db.compositions_rps.createIndex({ "ehr_id": 1, "cn.p": 1 })
+
+// Search collection paging/order helper
+db.compositions_search.createIndex({ "ehr_id": 1, "sort_time": 1 })
 
 // EHR collection
 db.ehr.createIndex({ "ehr_id": 1 }, { unique: true })
@@ -175,7 +143,7 @@ Enable auto-scaling for variable workloads:
 Configure connection pooling in your connection string:
 
 ```
-mongodb+srv://user:pass@cluster.mongodb.net/?maxPoolSize=100&minPoolSize=10
+mongodb+srv://<username>:<password>@cluster.mongodb.net/?maxPoolSize=100&minPoolSize=10
 ```
 
 ## Backup and Recovery
@@ -246,7 +214,7 @@ Enable audit logs for compliance:
 ### Development
 
 ```bash
-CORE_MONGODB_URL=mongodb+srv://dev:pass@dev-cluster.mongodb.net
+CORE_MONGODB_URL=mongodb+srv://<username>:<password>@dev-cluster.mongodb.net
 CORE_DATABASE_NAME=kehrnel_dev
 KEHRNEL_AUTH_ENABLED=false
 ```
@@ -254,19 +222,19 @@ KEHRNEL_AUTH_ENABLED=false
 ### Staging
 
 ```bash
-CORE_MONGODB_URL=mongodb+srv://staging:pass@staging-cluster.mongodb.net
+CORE_MONGODB_URL=mongodb+srv://<username>:<password>@staging-cluster.mongodb.net
 CORE_DATABASE_NAME=kehrnel_staging
 KEHRNEL_AUTH_ENABLED=true
-KEHRNEL_API_KEYS=staging-key-1
+KEHRNEL_API_KEYS=<staging-api-key>
 ```
 
 ### Production
 
 ```bash
-CORE_MONGODB_URL=mongodb+srv://prod:pass@prod-cluster.mongodb.net
+CORE_MONGODB_URL=mongodb+srv://<username>:<password>@prod-cluster.mongodb.net
 CORE_DATABASE_NAME=kehrnel_prod
 KEHRNEL_AUTH_ENABLED=true
-KEHRNEL_API_KEYS=prod-key-1,prod-key-2
+KEHRNEL_API_KEYS=<prod-api-key-1>,<prod-api-key-2>
 KEHRNEL_RATE_LIMIT=120
 ```
 

@@ -1,0 +1,13 @@
+SELECT
+    e/ehr_id/value AS ehrId,
+    c/context/start_time/value AS startTime
+FROM
+    EHR e
+        CONTAINS
+            COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
+WHERE
+    c/archetype_details/template_id/value = 'sample_laboratory_v0.4'
+    AND c/context/other_context[at0001]/items[openEHR-EHR-CLUSTER.admin_salut.v0]/items[at0005]/items[at0011]/value/defining_code/code_string = 'E08033260'
+ORDER BY
+    c/context/start_time/value DESC
+LIMIT 10

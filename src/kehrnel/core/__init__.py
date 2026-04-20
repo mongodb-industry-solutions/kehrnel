@@ -11,6 +11,7 @@ from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.core.manifest import StrategyManifest
 from kehrnel.engine.core.pack_loader import load_strategy
 from kehrnel.engine.core.pack_validator import StrategyPackValidator
+from kehrnel.engine.core.environment import EnvironmentRecord
 from kehrnel.engine.core.registry import ActivationRegistry, FileActivationRegistry
 from kehrnel.engine.core.runtime import StrategyRuntime
 from kehrnel.engine.core.types import (
@@ -25,6 +26,7 @@ from kehrnel.engine.core.types import (
 __all__ = [
     "ActivationRegistry",
     "FileActivationRegistry",
+    "EnvironmentRecord",
     "StrategyRuntime",
     "StrategyManifest",
     "StrategyPackValidator",

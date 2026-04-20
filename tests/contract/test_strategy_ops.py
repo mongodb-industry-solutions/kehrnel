@@ -31,12 +31,12 @@ async def test_run_op_ensure_dictionaries():
     res = await strat.run_op(ctx, "ensure_dictionaries", {})
     assert res["ok"] is True
     assert adapter.collections  # collections ensured
-    # ensure placeholder docs inserted (dictionary name comes from config)
+    assert res["modes"] == {"codes": "ensure", "shortcuts": "seed"}
     codes_name = (cfg.get("collections", {}) or {}).get("codes", {}).get("name", "_codes")
     shortcuts_name = (cfg.get("collections", {}) or {}).get("shortcuts", {}).get("name", "_shortcuts")
-    # codes seed is a list of docs (defaults include _id=ar_code + sequence)
-    assert (codes_name, "ar_code") in adapter.inserted
-    assert (codes_name, "sequence") in adapter.inserted
+    assert codes_name in adapter.collections
+    assert shortcuts_name in adapter.collections
+    assert (codes_name, "ar_code") not in adapter.inserted
     assert (shortcuts_name, "shortcuts") in adapter.inserted
 
 
@@ -47,3 +47,20 @@ async def test_run_op_invalid():
     ctx = StrategyContext(environment_id="env", config=cfg, adapters={})
     with pytest.raises(ValueError):
         await strat.run_op(ctx, "does_not_exist", {})
+
+
+@pytest.mark.asyncio
+async def test_run_op_ensure_dictionaries_can_seed_codes_explicitly():
+    cfg = load_json(DEFAULTS_PATH)
+    adapter = DummyAdapter()
+    strat = RPSDualStrategy(MANIFEST)
+    ctx = StrategyContext(environment_id="env", config=cfg, adapters={"index_admin": adapter, "storage": adapter})
+
+    res = await strat.run_op(ctx, "ensure_dictionaries", {"codes": "seed", "shortcuts": "seed"})
+
+    codes_name = (cfg.get("collections", {}) or {}).get("codes", {}).get("name", "_codes")
+    shortcuts_name = (cfg.get("collections", {}) or {}).get("shortcuts", {}).get("name", "_shortcuts")
+    assert res["modes"] == {"codes": "seed", "shortcuts": "seed"}
+    assert (codes_name, "ar_code") in adapter.inserted
+    assert (codes_name, "sequence") in adapter.inserted
+    assert (shortcuts_name, "shortcuts") in adapter.inserted

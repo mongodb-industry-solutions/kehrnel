@@ -18,23 +18,36 @@ Complete configuration reference for the openEHR RPS Dual strategy.
     },
     "search": {
       "name": "compositions_search",
+      "encodingProfile": "profile.search_shortcuts",
       "enabled": true,
       "atlasIndex": {
-        "name": "search_nodes_index"
+        "name": "search_nodes_index",
+        "definition": "file://bundles/searchIndex/searchIndex.json"
       }
     },
     "codes": {
       "name": "_codes",
-      "mode": "extend"
+      "seed": "file://bundles/dictionaries/_codes.json"
     },
-    "ehr": {
-      "name": "ehr"
-    },
-    "contributions": {
-      "name": "contributions"
+    "shortcuts": {
+      "name": "_shortcuts",
+      "seed": "file://bundles/shortcuts/shortcuts.json"
+    }
+  },
+  "fields": {
+    "document": {
+      "ehr_id": "ehr_id",
+      "comp_id": "comp_id",
+      "tid": "tid",
+      "v": "v",
+      "time_committed": "time_c",
+      "sort_time": "sort_time",
+      "cn": "cn",
+      "sn": "sn"
     }
   },
   "transform": {
+    "apply_shortcuts": true,
     "coding": {
       "arcodes": {
         "strategy": "sequential"
@@ -83,7 +96,6 @@ Code dictionary collection.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `name` | string | `_codes` | Collection name |
-| `mode` | string | `extend` | `extend` or `fixed` |
 | `seed` | string\|object | none | Optional seed payload (supports `file://...` URIs relative to the strategy pack) |
 
 #### shortcuts
@@ -94,22 +106,6 @@ Shortcuts dictionary collection (used to compress common strings in documents).
 |-------|------|---------|-------------|
 | `name` | string | `_shortcuts` | Collection name |
 | `seed` | string\|object | none | Optional seed payload (supports `file://...` URIs relative to the strategy pack) |
-
-#### ehr
-
-EHR metadata collection.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `name` | string | `ehr` | Collection name |
-
-#### contributions
-
-Audit trail collection.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `name` | string | `contributions` | Collection name |
 
 ### Transform
 
@@ -151,38 +147,30 @@ Debug profile with human-readable paths:
 
 ## Atlas Search Index
 
-Required index configuration for `compositions_search`:
+The Atlas Search definition for `compositions_search` is generated from the active analytics mappings and strategy field configuration.
 
-```json
-{
-  "mappings": {
-    "dynamic": false,
-    "fields": {
-      "ehr_id": {
-        "type": "string"
-      },
-      "tid": {
-        "type": "number"
-      },
-      "sn": {
-        "type": "embeddedDocuments",
-        "fields": {
-          "p": {
-            "type": "string",
-            "analyzer": "keyword"
-          },
-          "data": {
-            "type": "document",
-            "dynamic": true
-          }
-        }
-      }
-    }
-  }
-}
+Recommended workflow:
+
+```bash
+export RUNTIME_URL="${RUNTIME_URL:-http://localhost:8080}"
+
+kehrnel setup --runtime-url "$RUNTIME_URL" --env dev --domain openehr --strategy openehr.rps_dual
+kehrnel strategy build-search-index --env dev --domain openehr --strategy openehr.rps_dual --out .kehrnel/search-index.json
 ```
 
-`collections.search.atlasIndex.definition` may also be provided as a `file://...` URI (relative to the strategy pack). This is a seed for index administration, not a runtime “bundle” stored in `.kehrnel/bundles`.
+The generated definition is aligned with the active mappings and currently includes:
+
+- root metadata such as `ehr_id`, `tid`, and `sort_time`
+- `sn.p` as the indexed path field
+- only the mapped `sn.data.*` fields needed for search/analytics
+
+The packaged sample dataset also includes a self-contained pair of example
+artifacts under `samples/reference/`:
+
+- `projection_mappings.json`
+- `search_index.definition.json`
+
+`collections.search.atlasIndex.definition` may still be provided as a `file://...` URI (relative to the strategy pack), but it should be treated as a seed artifact derived from the same mappings-driven workflow.
 
 ## Example Configurations
 
@@ -193,10 +181,12 @@ Required index configuration for `compositions_search`:
   "database": "dev_cdr",
   "collections": {
     "compositions": { "name": "compositions" },
-    "search": { "name": "search", "enabled": true },
-    "codes": { "name": "_codes" }
+    "search": { "name": "search", "encodingProfile": "profile.search_shortcuts", "enabled": true },
+    "codes": { "name": "_codes" },
+    "shortcuts": { "name": "_shortcuts" }
   },
   "transform": {
+    "apply_shortcuts": true,
     "coding": {
       "arcodes": { "strategy": "literal" },
       "atcodes": { "strategy": "literal" }
@@ -217,12 +207,18 @@ Required index configuration for `compositions_search`:
     },
     "search": {
       "name": "compositions_search",
+      "encodingProfile": "profile.search_shortcuts",
       "enabled": true,
-      "atlasIndex": { "name": "search_nodes_index" }
+      "atlasIndex": {
+        "name": "search_nodes_index",
+        "definition": "file://bundles/searchIndex/searchIndex.json"
+      }
     },
-    "codes": { "name": "_codes", "mode": "extend" }
+    "codes": { "name": "_codes", "seed": "file://bundles/dictionaries/_codes.json" },
+    "shortcuts": { "name": "_shortcuts", "seed": "file://bundles/shortcuts/shortcuts.json" }
   },
   "transform": {
+    "apply_shortcuts": true,
     "coding": {
       "arcodes": { "strategy": "sequential" },
       "atcodes": { "strategy": "negative_int" }
@@ -248,7 +244,9 @@ For patient-only workloads without cross-patient queries:
 ## Activation Example
 
 ```bash
-curl -X POST "http://localhost:8000/environments/production/activate" \
+RUNTIME_URL="${RUNTIME_URL:-http://localhost:8080}"
+
+curl -X POST "${RUNTIME_URL}/environments/production/activate" \
   -H "Content-Type: application/json" \
   -H "X-API-Key: admin-key" \
   -d '{

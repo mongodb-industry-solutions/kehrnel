@@ -23,9 +23,11 @@ class SearchPipelineBuilder:
                  format_resolver: FormatResolver, context_map: Dict[str, Dict], 
                  let_variables: Dict[str, Any] = None,
                  strategy: Optional[PersistenceStrategy] = None,
-                 search_index_name: Optional[str] = None):
+                 search_index_name: Optional[str] = None,
+                 version_alias: str | None = None):
         self.ehr_alias = ehr_alias
         self.composition_alias = composition_alias
+        self.version_alias = version_alias
         self.schema_config = schema_config
         self.format_resolver = format_resolver
         self.context_map = context_map
@@ -44,7 +46,12 @@ class SearchPipelineBuilder:
         self.search_config = self._build_search_schema_config()
         
         self.condition_processor = ConditionProcessor(
-            ehr_alias, composition_alias, self.search_config, format_resolver, let_variables
+            ehr_alias,
+            composition_alias,
+            self.search_config,
+            format_resolver,
+            let_variables,
+            version_alias=version_alias,
         )
         self.value_formatter = ValueFormatter()
 
@@ -54,11 +61,57 @@ class SearchPipelineBuilder:
             'composition_array': search_fields.nodes if search_fields and search_fields.nodes else 'sn',
             'path_field': search_fields.path if search_fields and search_fields.path else 'p',
             'data_field': search_fields.data if search_fields and search_fields.data else 'data',
+            'ehr_id': search_fields.ehr_id if search_fields and search_fields.ehr_id else 'ehr_id',
+            'comp_id': search_fields.comp_id if search_fields and search_fields.comp_id else 'comp_id',
+            'template_id': search_fields.template_id if search_fields and search_fields.template_id else 'tid',
+            'sort_time': search_fields.sort_time if search_fields and search_fields.sort_time else 'sort_time',
         }
 
     def _resolve_search_index_name(self):
         search_collection = self.strategy.collections.get("search") if self.strategy else None
         return search_collection.atlas_index_name if search_collection else None
+
+    def _first_matching_node_value(
+        self,
+        nodes_expr: Any,
+        *,
+        path_field: str,
+        path_regex_pattern: Any,
+        data_path: str,
+    ) -> Dict[str, Any]:
+        return {
+            "$first": {
+                "$map": {
+                    "input": {
+                        "$filter": {
+                            "input": nodes_expr,
+                            "as": "node",
+                            "cond": {
+                                "$regexMatch": {
+                                    "input": f"$$node.{path_field}",
+                                    "regex": path_regex_pattern,
+                                }
+                            },
+                        }
+                    },
+                    "as": "node",
+                    "in": f"$$node.{data_path}",
+                }
+            }
+        }
+
+    def _full_composition_nodes_expr(self) -> Dict[str, Any]:
+        return {
+            "$ifNull": [
+                {
+                    "$getField": {
+                        "field": self.schema_config["composition_array"],
+                        "input": {"$first": "$full_composition"},
+                    }
+                },
+                [],
+            ]
+        }
 
     async def build_search_pipeline(self, ast: Dict[str, Any]) -> List[Dict[str, Any]]:
         """
@@ -194,8 +247,11 @@ class SearchPipelineBuilder:
         # Translate AQL path to search collection path
         try:
             path_regex_pattern, data_path = await self.format_resolver.translate_aql_path(aql_path)
-            # For search operations, we use the data path directly in the sn.data structure
-            search_path = f"sn.{data_path}" if data_path else "sn.data"
+            # Top-level metadata fields stay at document root; node data lives under sn.
+            if path_regex_pattern is None:
+                search_path = data_path
+            else:
+                search_path = f"sn.{data_path}" if data_path else "sn.data"
         except Exception as e:
             logger.warning(f"Could not resolve path {aql_path}: {e}")
             return None
@@ -268,6 +324,19 @@ class SearchPipelineBuilder:
             if search_path.startswith("sn."):
                 return self._build_embedded_document_equals_query(search_path, value)
             else:
+                exact_metadata_fields = {
+                    self.search_config.get("ehr_id"),
+                    self.search_config.get("comp_id"),
+                    self.search_config.get("template_id"),
+                    self.search_config.get("sort_time"),
+                }
+                if search_path in exact_metadata_fields:
+                    return {
+                        "equals": {
+                            "path": search_path,
+                            "value": value
+                        }
+                    }
                 if isinstance(value, str):
                     return {
                         "text": {
@@ -565,6 +634,8 @@ class SearchPipelineBuilder:
             
         rmType = contains_clause.get("rmType")
         predicate = contains_clause.get("predicate")
+        if rmType != "COMPOSITION" and contains_clause.get("contains"):
+            return await self._process_contains_clause(contains_clause.get("contains"))
         
         # Handle COMPOSITION level filtering
         if rmType == "COMPOSITION" and predicate:
@@ -578,19 +649,35 @@ class SearchPipelineBuilder:
             archetype_id = predicate.get("value")
             
             if predicate_path == "archetype_node_id" and archetype_id:
+                numeric_code = None
                 if self.format_resolver.archetype_resolver:
                     # Resolve archetype ID to numeric code
                     try:
                         numeric_code = await self.format_resolver.archetype_resolver.get_archetype_code(archetype_id)
                         if numeric_code is not None:
-                            conditions["tid"] = numeric_code
-                            logger.info(f"Resolved archetype {archetype_id} to tid={numeric_code}")
+                            logger.info(f"Resolved archetype {archetype_id} to code={numeric_code}")
                         else:
                             logger.warning(f"Archetype {archetype_id} not found in codes collection")
                     except Exception as e:
                         logger.warning(f"Could not resolve archetype {archetype_id}: {e}")
                 else:
                     logger.warning(f"Archetype resolver not available, cannot filter by archetype {archetype_id}")
+
+                path_field = self.search_config.get("path_field", "p")
+                data_field = self.search_config.get("data_field", "data")
+                if numeric_code is not None:
+                    conditions[self.search_config["composition_array"]] = {
+                        "$elemMatch": {
+                            path_field: str(numeric_code),
+                            f"{data_field}.ani": numeric_code,
+                        }
+                    }
+                else:
+                    conditions[self.search_config["composition_array"]] = {
+                        "$elemMatch": {
+                            path_field: {"$regex": r"^[^\\.]+$"}
+                        }
+                    }
             
             return conditions
             
@@ -754,121 +841,24 @@ class SearchPipelineBuilder:
                 else:
                     return f"${data_path}"
             else:
+                search_value = self._first_matching_node_value(
+                    {"$ifNull": [f"${self.search_config['composition_array']}", []]},
+                    path_field=self.search_config["path_field"],
+                    path_regex_pattern=path_regex_pattern,
+                    data_path=data_path,
+                )
+                full_value = self._first_matching_node_value(
+                    self._full_composition_nodes_expr(),
+                    path_field=self.schema_config["path_field"],
+                    path_regex_pattern=path_regex_pattern,
+                    data_path=data_path,
+                )
+
                 # Complex path - use hybrid logic
                 if prefer_full_composition:
-                    # For metadata or archetype-specific fields, prefer full composition data
-                    return {
-                        "$let": {
-                            "vars": {
-                                "full_comp": {"$first": "$full_composition"},
-                                "search_element": {
-                                    "$first": {
-                                        "$filter": {
-                                            "input": "$sn",
-                                            "as": "item",
-                                            "cond": {"$regexMatch": {"input": "$$item.p", "regex": path_regex_pattern}}
-                                        }
-                                    }
-                                }
-                            },
-                            "in": {
-                                "$cond": {
-                                    "if": {"$ne": ["$$full_comp", None]},
-                                    "then": {
-                                        # Try to get from full composition first
-                                        "$let": {
-                                            "vars": {
-                                                "full_element": {
-                                                    "$first": {
-                                                        "$filter": {
-                                                            "input": "$$full_comp.cn",
-                                                            "as": "item",
-                                                            "cond": {"$regexMatch": {"input": "$$item.p", "regex": path_regex_pattern}}
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            "in": {
-                                                "$cond": {
-                                                    "if": {"$ne": ["$$full_element", None]},
-                                                    "then": f"$$full_element.{data_path}",
-                                                    "else": {
-                                                        # Fallback to search collection
-                                                        "$cond": {
-                                                            "if": {"$ne": ["$$search_element", None]},
-                                                            "then": f"$$search_element.{data_path}",
-                                                            "else": None
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "else": {
-                                        # No full composition, use search collection
-                                        "$cond": {
-                                            "if": {"$ne": ["$$search_element", None]},
-                                            "then": f"$$search_element.{data_path}",
-                                            "else": None
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    return {"$ifNull": [full_value, search_value]}
                 else:
-                    # For non-metadata fields, prefer search collection (performance)
-                    return {
-                        "$let": {
-                            "vars": {
-                                "search_element": {
-                                    "$first": {
-                                        "$filter": {
-                                            "input": "$sn",
-                                            "as": "item",
-                                            "cond": {"$regexMatch": {"input": "$$item.p", "regex": path_regex_pattern}}
-                                        }
-                                    }
-                                },
-                                "full_comp": {"$first": "$full_composition"}
-                            },
-                            "in": {
-                                "$cond": {
-                                    "if": {"$ne": ["$$search_element", None]},
-                                    "then": f"$$search_element.{data_path}",
-                                    "else": {
-                                        # Fallback to full composition if not in search
-                                        "$cond": {
-                                            "if": {"$ne": ["$$full_comp", None]},
-                                            "then": {
-                                                "$let": {
-                                                    "vars": {
-                                                        "full_element": {
-                                                            "$first": {
-                                                                "$filter": {
-                                                                    "input": "$$full_comp.cn",
-                                                                    "as": "item",
-                                                                    "cond": {"$regexMatch": {"input": "$$item.p", "regex": path_regex_pattern}}
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    "in": {
-                                                        "$cond": {
-                                                            "if": {"$ne": ["$$full_element", None]},
-                                                            "then": f"$$full_element.{data_path}",
-                                                            "else": None
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            "else": None
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    return {"$ifNull": [search_value, full_value]}
         except Exception as e:
             logger.warning(f"Could not resolve path {aql_path}: {e}")
             return f"${alias}"
@@ -959,19 +949,29 @@ class SearchPipelineBuilder:
         Constructs the $sort stage from the ORDER BY clause.
         """
         order_by = ast.get("orderBy", {})
-        
-        if not order_by or not order_by.get("columns"):
+        columns = order_by.get("columns") if isinstance(order_by, dict) and isinstance(order_by.get("columns"), dict) else order_by
+
+        if not isinstance(columns, dict) or not columns:
             return None
             
         sort_spec = {}
-        columns = order_by.get("columns", {})
+        projected_aliases = {
+            col.get("value", {}).get("path"): col.get("alias")
+            for col in ast.get("select", {}).get("columns", {}).values()
+            if isinstance(col, dict) and isinstance(col.get("value"), dict) and col.get("alias")
+        }
         
         for col_data in columns.values():
             alias = col_data.get("alias")
+            aql_path = col_data.get("path")
             direction = col_data.get("direction", "ASC")
             
-            if alias:
-                sort_spec[alias] = 1 if direction.upper() == "ASC" else -1
+            field_name = alias
+            if not field_name and aql_path:
+                field_name = projected_aliases.get(aql_path) or self.format_resolver.resolve_document_field(aql_path)
+            
+            if field_name:
+                sort_spec[field_name] = 1 if direction.upper() == "ASC" else -1
             
         return {"$sort": sort_spec} if sort_spec else None
 

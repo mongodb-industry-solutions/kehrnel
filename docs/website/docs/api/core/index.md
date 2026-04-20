@@ -29,7 +29,13 @@ Primary core/admin endpoints:
 - `GET /strategies`
 - `GET /strategies/{strategy_id}`
 - `GET /strategies/{strategy_id}/spec`
+- `GET /environments`
+- `POST /environments`
+- `GET /environments/{env_id}`
+- `PATCH /environments/{env_id}`
+- `DELETE /environments/{env_id}`
 - `POST /environments/{env_id}/activate`
+- `GET /environments/{env_id}/activations`
 - `GET /environments/{env_id}/capabilities`
 - `POST /environments/{env_id}/run`
 - `GET /environments/{env_id}/endpoints`

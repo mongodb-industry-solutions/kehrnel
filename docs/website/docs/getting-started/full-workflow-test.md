@@ -26,7 +26,7 @@ examples/cli/full_workflow_console.sh
 Set these before running:
 
 ```bash
-export RUNTIME_URL=http://localhost:8000
+export RUNTIME_URL=http://localhost:8080
 export ENV_ID=dev
 export DOMAIN=openehr
 export STRATEGY_ID=openehr.rps_dual

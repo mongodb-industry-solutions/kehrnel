@@ -1,0 +1,638 @@
+{
+  "_type": "COMPOSITION",
+  "name": {
+    "_type": "DV_TEXT",
+    "value": "Sample Immunization List"
+  },
+  "archetype_details": {
+    "archetype_id": {
+      "value": "openEHR-EHR-COMPOSITION.vaccination_list.v0"
+    },
+    "template_id": {
+      "value": "sample_immunization_list_v0.5"
+    },
+    "rm_version": "1.0.4"
+  },
+  "feeder_audit": {
+    "_type": "FEEDER_AUDIT",
+    "originating_system_item_ids": [
+      {
+        "_type": "DV_IDENTIFIER",
+        "id": "id-bc7863f2a79238ac",
+        "type": "cpc"
+      },
+      {
+        "_type": "DV_IDENTIFIER",
+        "id": "id-97c99dba3adbd106",
+        "type": "cpi"
+      },
+      {
+        "_type": "DV_IDENTIFIER",
+        "id": "id-6837a149fc6b8dc1",
+        "type": "center_origin"
+      }
+    ],
+    "feeder_system_item_ids": [
+      {
+        "_type": "DV_IDENTIFIER",
+        "id": "id-bc7863f2a79238ac",
+        "type": "cpc"
+      }
+    ],
+    "originating_system_audit": {
+      "_type": "FEEDER_AUDIT_DETAILS",
+      "system_id": "sample.source"
+    }
+  },
+  "language": {
+    "_type": "CODE_PHRASE",
+    "terminology_id": {
+      "_type": "TERMINOLOGY_ID",
+      "value": "ISO_639-1"
+    },
+    "code_string": "en"
+  },
+  "territory": {
+    "_type": "CODE_PHRASE",
+    "terminology_id": {
+      "_type": "TERMINOLOGY_ID",
+      "value": "ISO_3166-1"
+    },
+    "code_string": "ES"
+  },
+  "category": {
+    "_type": "DV_CODED_TEXT",
+    "value": "event",
+    "defining_code": {
+      "_type": "CODE_PHRASE",
+      "terminology_id": {
+        "_type": "TERMINOLOGY_ID",
+        "value": "openehr"
+      },
+      "code_string": "433"
+    }
+  },
+  "composer": {
+    "_type": "PARTY_IDENTIFIED",
+    "identifiers": [
+      {
+        "_type": "DV_IDENTIFIER",
+        "id": "id-2dc430cb1c291e53"
+      }
+    ]
+  },
+  "context": {
+    "_type": "EVENT_CONTEXT",
+    "start_time": {
+      "_type": "DV_DATE_TIME",
+      "value": "2023-12-05T11:48:09.95+01:00"
+    },
+    "setting": {
+      "_type": "DV_CODED_TEXT",
+      "value": "other care",
+      "defining_code": {
+        "_type": "CODE_PHRASE",
+        "terminology_id": {
+          "_type": "TERMINOLOGY_ID",
+          "value": "openehr"
+        },
+        "code_string": "238"
+      }
+    },
+    "other_context": {
+      "_type": "ITEM_TREE",
+      "name": {
+        "_type": "DV_TEXT",
+        "value": "Tree"
+      },
+      "items": [
+        {
+          "_type": "CLUSTER",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "XDS Metadata"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-CLUSTER.xds_metadata.v0"
+            },
+            "template_id": {
+              "value": "sample_immunization_list_v0.5"
+            },
+            "rm_version": "1.0.4"
+          },
+          "items": [
+            {
+              "_type": "ELEMENT",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "Document type"
+              },
+              "value": {
+                "_type": "DV_CODED_TEXT",
+                "value": "-",
+                "defining_code": {
+                  "_type": "CODE_PHRASE",
+                  "terminology_id": {
+                    "_type": "TERMINOLOGY_ID",
+                    "value": "2.16.840.1.113883.6.1"
+                  },
+                  "code_string": "VAC"
+                }
+              },
+              "archetype_node_id": "at0003"
+            },
+            {
+              "_type": "ELEMENT",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "Confidentiality code"
+              },
+              "value": {
+                "_type": "DV_CODED_TEXT",
+                "value": "-",
+                "defining_code": {
+                  "_type": "CODE_PHRASE",
+                  "terminology_id": {
+                    "_type": "TERMINOLOGY_ID",
+                    "value": "2.16.840.1.113883.5.25"
+                  },
+                  "code_string": "N"
+                }
+              },
+              "archetype_node_id": "at0004"
+            }
+          ],
+          "archetype_node_id": "openEHR-EHR-CLUSTER.xds_metadata.v0"
+        },
+        {
+          "_type": "CLUSTER",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Administrative context"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-CLUSTER.admin_salut.v0"
+            },
+            "template_id": {
+              "value": "sample_immunization_list_v0.5"
+            },
+            "rm_version": "1.0.4"
+          },
+          "items": [
+            {
+              "_type": "ELEMENT",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "Document authorisation date"
+              },
+              "value": {
+                "_type": "DV_DATE_TIME",
+                "value": "2023-11-30T00:00:00+01:00"
+              },
+              "archetype_node_id": "at0001"
+            },
+            {
+              "_type": "ELEMENT",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "Document creation date"
+              },
+              "value": {
+                "_type": "DV_DATE_TIME",
+                "value": "2023-11-30T12:28:44+01:00"
+              },
+              "archetype_node_id": "at0002"
+            },
+            {
+              "_type": "ELEMENT",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "Document publication date"
+              },
+              "value": {
+                "_type": "DV_DATE_TIME",
+                "value": "2023-11-30T12:28:45+01:00"
+              },
+              "archetype_node_id": "at0023"
+            },
+            {
+              "_type": "CLUSTER",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "Publishing institution"
+              },
+              "items": [
+                {
+                  "_type": "ELEMENT",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Publishing centre"
+                  },
+                  "value": {
+                    "_type": "DV_CODED_TEXT",
+                    "value": "-",
+                    "defining_code": {
+                      "_type": "CODE_PHRASE",
+                      "terminology_id": {
+                        "_type": "TERMINOLOGY_ID",
+                        "value": "2.16.840.1.113883.2.19.10.1"
+                      },
+                      "code_string": "H43002128"
+                    }
+                  },
+                  "archetype_node_id": "at0014"
+                },
+                {
+                  "_type": "ELEMENT",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Publishing SA"
+                  },
+                  "value": {
+                    "_type": "DV_CODED_TEXT",
+                    "value": "-",
+                    "defining_code": {
+                      "_type": "CODE_PHRASE",
+                      "terminology_id": {
+                        "_type": "TERMINOLOGY_ID",
+                        "value": "2.16.840.1.113883.2.19.10.1"
+                      },
+                      "code_string": "5S001"
+                    }
+                  },
+                  "archetype_node_id": "at0015"
+                },
+                {
+                  "_type": "ELEMENT",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Publishing UP"
+                  },
+                  "value": {
+                    "_type": "DV_CODED_TEXT",
+                    "value": "-",
+                    "defining_code": {
+                      "_type": "CODE_PHRASE",
+                      "terminology_id": {
+                        "_type": "TERMINOLOGY_ID",
+                        "value": "2.16.724.4.9.30.20.1.1.1.2"
+                      },
+                      "code_string": "00737"
+                    }
+                  },
+                  "archetype_node_id": "at0016"
+                }
+              ],
+              "archetype_node_id": "at0007"
+            },
+            {
+              "_type": "CLUSTER",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "Custodial institution"
+              },
+              "items": [
+                {
+                  "_type": "ELEMENT",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Custodial centre"
+                  },
+                  "value": {
+                    "_type": "DV_CODED_TEXT",
+                    "value": "-",
+                    "defining_code": {
+                      "_type": "CODE_PHRASE",
+                      "terminology_id": {
+                        "_type": "TERMINOLOGY_ID",
+                        "value": "2.16.840.1.113883.4.292.10.4"
+                      },
+                      "code_string": "H43002128"
+                    }
+                  },
+                  "archetype_node_id": "at0017"
+                }
+              ],
+              "archetype_node_id": "at0010"
+            }
+          ],
+          "archetype_node_id": "openEHR-EHR-CLUSTER.admin_salut.v0"
+        }
+      ],
+      "archetype_node_id": "at0004"
+    }
+  },
+  "content": [
+    {
+      "_type": "SECTION",
+      "name": {
+        "_type": "DV_TEXT",
+        "value": "Immunization list"
+      },
+      "archetype_details": {
+        "archetype_id": {
+          "value": "openEHR-EHR-SECTION.immunisation_list.v0"
+        },
+        "template_id": {
+          "value": "sample_immunization_list_v0.5"
+        },
+        "rm_version": "1.0.4"
+      },
+      "items": [
+        {
+          "_type": "ACTION",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Immunization management"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-ACTION.medication.v1"
+            },
+            "template_id": {
+              "value": "sample_immunization_list_v0.5"
+            },
+            "rm_version": "1.0.4"
+          },
+          "language": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "ISO_639-1"
+            },
+            "code_string": "en"
+          },
+          "encoding": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "IANA_character-sets"
+            },
+            "code_string": "UTF-8"
+          },
+          "subject": {
+            "_type": "PARTY_SELF"
+          },
+          "provider": {
+            "_type": "PARTY_IDENTIFIED",
+            "identifiers": [
+              {
+                "_type": "DV_IDENTIFIER",
+                "id": "id-d21314fed2f8b067",
+                "type": "BCAE0AA4-92B6-11DC-AF5F-27E855D89593"
+              }
+            ]
+          },
+          "other_participations": [
+            {
+              "_type": "PARTICIPATION",
+              "function": {
+                "_type": "DV_TEXT",
+                "value": "Performer"
+              },
+              "performer": {
+                "_type": "PARTY_IDENTIFIED",
+                "name": "party-2444d53e98f0e1f0",
+                "identifiers": [
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-cc401b411b923eb3",
+                    "type": "1.3.6.1.4.1.5734.1.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-3fedb84b73d96cbd",
+                    "type": "2.16.840.1.113883.4.292.10.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-22acf14bcdb0765d",
+                    "type": "1.3.6.1.4.1.19126.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-c65e0fc1cec8ce16",
+                    "type": "83D02C4E-92B6-11DC-9BB7-10E755D89593"
+                  }
+                ]
+              }
+            }
+          ],
+          "time": {
+            "_type": "DV_DATE_TIME",
+            "value": "2023-11-03T00:00:00+01:00"
+          },
+          "description": {
+            "_type": "ITEM_TREE",
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "Tree"
+            },
+            "items": [
+              {
+                "_type": "ELEMENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Immunization item"
+                },
+                "value": {
+                  "_type": "DV_CODED_TEXT",
+                  "value": "Anticòs monoclonal davant virus respiratori sincit",
+                  "defining_code": {
+                    "_type": "CODE_PHRASE",
+                    "terminology_id": {
+                      "_type": "TERMINOLOGY_ID",
+                      "value": "2.16.840.1.113883.6.96"
+                    },
+                    "code_string": "75891000122109"
+                  }
+                },
+                "archetype_node_id": "at0020"
+              },
+              {
+                "_type": "CLUSTER",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Immunization details"
+                },
+                "archetype_details": {
+                  "archetype_id": {
+                    "value": "openEHR-EHR-CLUSTER.medication.v2"
+                  },
+                  "template_id": {
+                    "value": "sample_immunization_list_v0.5"
+                  },
+                  "rm_version": "1.0.4"
+                },
+                "items": [
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Name"
+                    },
+                    "value": {
+                      "_type": "DV_CODED_TEXT",
+                      "value": "-",
+                      "mappings": [
+                        {
+                          "_type": "TERM_MAPPING",
+                          "match": ">",
+                          "target": {
+                            "_type": "CODE_PHRASE",
+                            "terminology_id": {
+                              "_type": "TERMINOLOGY_ID",
+                              "value": "-"
+                            },
+                            "code_string": "276011000140109",
+                            "preferred_term": "commercial_brand"
+                          }
+                        }
+                      ],
+                      "defining_code": {
+                        "_type": "CODE_PHRASE",
+                        "terminology_id": {
+                          "_type": "TERMINOLOGY_ID",
+                          "value": "2.16.840.1.113883.4.292.10.5"
+                        },
+                        "code_string": "762403"
+                      }
+                    },
+                    "archetype_node_id": "at0132"
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Batch ID"
+                    },
+                    "value": {
+                      "_type": "DV_TEXT",
+                      "value": "1998934"
+                    },
+                    "archetype_node_id": "at0150"
+                  },
+                  {
+                    "_type": "CLUSTER",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Constituent details"
+                    },
+                    "archetype_details": {
+                      "archetype_id": {
+                        "value": "openEHR-EHR-CLUSTER.medication.v2"
+                      },
+                      "template_id": {
+                        "value": "sample_immunization_list_v0.5"
+                      },
+                      "rm_version": "1.0.4"
+                    },
+                    "items": [
+                      {
+                        "_type": "ELEMENT",
+                        "name": {
+                          "_type": "DV_TEXT",
+                          "value": "Name"
+                        },
+                        "value": {
+                          "_type": "DV_CODED_TEXT",
+                          "value": "Anticòs monoclonal davant virus respiratori sincit",
+                          "defining_code": {
+                            "_type": "CODE_PHRASE",
+                            "terminology_id": {
+                              "_type": "TERMINOLOGY_ID",
+                              "value": "2.16.840.1.113883.6.96"
+                            },
+                            "code_string": "75891000122109"
+                          }
+                        },
+                        "archetype_node_id": "at0132"
+                      }
+                    ],
+                    "archetype_node_id": "openEHR-EHR-CLUSTER.medication.v2"
+                  }
+                ],
+                "archetype_node_id": "openEHR-EHR-CLUSTER.medication.v2"
+              },
+              {
+                "_type": "CLUSTER",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Administration details"
+                },
+                "items": [
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Route"
+                    },
+                    "value": {
+                      "_type": "DV_CODED_TEXT",
+                      "value": "-",
+                      "defining_code": {
+                        "_type": "CODE_PHRASE",
+                        "terminology_id": {
+                          "_type": "TERMINOLOGY_ID",
+                          "value": "2.16.724.4.9.340"
+                        },
+                        "code_string": "78421000"
+                      }
+                    },
+                    "archetype_node_id": "at0147"
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "Body site"
+                    },
+                    "value": {
+                      "_type": "DV_CODED_TEXT",
+                      "value": "-",
+                      "defining_code": {
+                        "_type": "CODE_PHRASE",
+                        "terminology_id": {
+                          "_type": "TERMINOLOGY_ID",
+                          "value": "2.16.724.4.9.341"
+                        },
+                        "code_string": "125691000135108"
+                      }
+                    },
+                    "archetype_node_id": "at0141"
+                  }
+                ],
+                "archetype_node_id": "at0140"
+              }
+            ],
+            "archetype_node_id": "at0017"
+          },
+          "ism_transition": {
+            "_type": "ISM_TRANSITION",
+            "current_state": {
+              "_type": "DV_CODED_TEXT",
+              "value": "active",
+              "defining_code": {
+                "_type": "CODE_PHRASE",
+                "terminology_id": {
+                  "_type": "TERMINOLOGY_ID",
+                  "value": "openehr"
+                },
+                "code_string": "245"
+              }
+            }
+          },
+          "archetype_node_id": "openEHR-EHR-ACTION.medication.v1"
+        }
+      ],
+      "archetype_node_id": "openEHR-EHR-SECTION.immunisation_list.v0"
+    }
+  ],
+  "archetype_node_id": "openEHR-EHR-COMPOSITION.vaccination_list.v0",
+  "uid": {
+    "_type": "OBJECT_VERSION_ID",
+    "value": "f8c17066-5ce4-5ee7-a2d7-b1fb738a4654::sample.kehrnel::1"
+  }
+}

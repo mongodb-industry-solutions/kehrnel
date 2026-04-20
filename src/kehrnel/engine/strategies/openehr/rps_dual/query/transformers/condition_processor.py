@@ -21,9 +21,10 @@ class ConditionProcessor:
     """
 
     def __init__(self, ehr_alias: str, composition_alias: str, schema_config: Dict[str, str], 
-                 format_resolver, let_variables: Dict[str, Any] = None):
+                 format_resolver, let_variables: Dict[str, Any] = None, version_alias: str | None = None):
         self.ehr_alias = ehr_alias
         self.composition_alias = composition_alias
+        self.version_alias = version_alias
         self.schema_config = schema_config
         self.format_resolver = format_resolver
         self.let_variables = let_variables or {}
@@ -71,8 +72,8 @@ class ConditionProcessor:
 
     def separate_conditions(self, processed_where: Dict) -> Tuple[Dict, Dict]:
         """
-        Separates EHR-level conditions from composition-level conditions.
-        Returns (ehr_conditions, comp_conditions_structure)
+        Separates top-level document conditions from composition-node conditions.
+        Returns (top_level_conditions, comp_conditions_structure)
         """
         ehr_conditions = {}
         comp_conditions = []
@@ -111,23 +112,15 @@ class ConditionProcessor:
                 # In a full implementation, you'd analyze the variable definition
                 comp_conditions.append(node)
             elif path:
-                variable = path.split('/')[0]
-                
-                if variable == self.ehr_alias:
-                    # EHR-level condition
-                    path_parts = path.split('/')[1:]  # Remove EHR alias
-                    if len(path_parts) >= 2 and path_parts[0] == 'ehr_id':
-                        ehr_field = 'ehr_id'
-                        mql_operator = OPERATOR_MAP.get(node["operator"], "$eq")
-                        value = self.value_formatter.format_value(node["value"])
-                        
-                        # For shortened format collections, keep EHR ID as string to match document format
-                        # Don't convert to Binary for now as documents store EHR IDs as strings
-                        
-                        if mql_operator == "$eq":
-                            ehr_conditions[ehr_field] = value
+                top_level = self._build_top_level_condition(path, node["operator"], node["value"])
+                if top_level:
+                    for field_name, condition in top_level.items():
+                        if field_name not in ehr_conditions:
+                            ehr_conditions[field_name] = condition
+                        elif isinstance(ehr_conditions[field_name], dict) and isinstance(condition, dict):
+                            ehr_conditions[field_name].update(condition)
                         else:
-                            ehr_conditions[ehr_field] = {mql_operator: value}
+                            ehr_conditions[field_name] = condition
                 else:
                     # Composition-level condition
                     comp_conditions.append(node)
@@ -169,6 +162,30 @@ class ConditionProcessor:
                     "operator": node["operator"],
                     "children": comp_children
                 })
+
+    def _build_top_level_condition(self, path: str, operator: str, value: Any) -> Dict[str, Any]:
+        field_name = None
+        if path in {"ehr_id", f"{self.ehr_alias}/ehr_id/value"}:
+            field_name = self.schema_config.get("ehr_id", "ehr_id")
+        elif path == f"{self.composition_alias}/uid/value":
+            field_name = self.schema_config.get("comp_id", "comp_id")
+        elif path == f"{self.composition_alias}/archetype_details/template_id/value":
+            field_name = self.schema_config.get("template_id", "tid")
+        elif self.version_alias and path == f"{self.version_alias}/commit_audit/time_committed/value":
+            field_name = (
+                self.schema_config.get("time_committed")
+                or self.schema_config.get("sort_time")
+                or "time_c"
+            )
+
+        if not field_name:
+            return {}
+
+        mql_operator = OPERATOR_MAP.get(operator, "$eq")
+        formatted_value = self.value_formatter.format_value(value)
+        if mql_operator == "$eq":
+            return {field_name: formatted_value}
+        return {field_name: {mql_operator: formatted_value}}
 
     async def build_composition_match(self, comp_structure: Dict) -> Dict:
         """

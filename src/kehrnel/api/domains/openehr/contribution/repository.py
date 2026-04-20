@@ -39,6 +39,22 @@ async def find_deletion_contribution_for_version(
     )
 
 
+async def find_deletion_contributions_for_versions(
+    preceding_version_uids: list[str],
+    db: AsyncIOMotorDatabase
+):
+    uids = [uid for uid in preceding_version_uids if isinstance(uid, str) and uid]
+    if not uids:
+        return []
+    cursor = db[_contrib_coll()].find(
+        {
+            "audit.change_type": "deleted",
+            "versions.preceding_version_uid": {"$in": uids}
+        }
+    )
+    return await cursor.to_list(length=len(uids))
+
+
 async def find_contributions_for_versioned_object(versioned_object_uid: str, db: AsyncIOMotorDatabase):
     """
     Finds all the contributions documents related to a specific versioned object (e.g., a COMPOSITION or EHR_STATUS).

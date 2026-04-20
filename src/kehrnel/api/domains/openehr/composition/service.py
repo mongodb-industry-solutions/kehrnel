@@ -1,9 +1,10 @@
 import uuid
 import logging
+from copy import deepcopy
 from datetime import datetime, timezone
 from dateutil.parser import isoparse
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from fastapi import HTTPException, status
 from pymongo.errors import PyMongoError
 
@@ -14,11 +15,14 @@ from kehrnel.api.bridge.app.core.config_models import CompositionCollectionNames
 
 from kehrnel.api.domains.openehr.composition.repository import (
     find_composition_by_uid,
+    find_compositions_by_uids,
     find_flattened_composition_by_uid,
     find_latest_composition_by_object_id,
     find_first_composition_by_object_id,
     insert_composition_contribution_and_update_ehr,
+    insert_compositions_contributions_and_update_ehr,
     add_deletion_contribution_and_update_ehr,
+    add_bulk_deletion_contributions_and_update_ehr,
 )
 
 from kehrnel.api.common.models import (
@@ -30,13 +34,24 @@ from kehrnel.api.common.models import (
     ObjectRef,
     DvDateTime
 )
-from kehrnel.api.domains.openehr.composition.models import Composition, CompositionCreate, VersionedComposition
+from kehrnel.api.domains.openehr.composition.models import (
+    BulkCompositionCreateFailure,
+    BulkCompositionCreateResult,
+    BulkCompositionCreateSuccess,
+    BulkCompositionDeleteFailure,
+    BulkCompositionDeleteResult,
+    Composition,
+    CompositionCreate,
+    CompositionSummary,
+    VersionedComposition,
+)
 
 from kehrnel.api.domains.openehr.ehr.service import retrieve_ehr_by_id
 from kehrnel.api.domains.openehr.ehr.repository import find_ehr_by_id
 
 from kehrnel.api.domains.openehr.contribution.repository import (
     find_deletion_contribution_for_version, 
+    find_deletion_contributions_for_versions,
     find_latest_contribution_by_vo_uid,
     find_contributions_for_versioned_object
 )
@@ -44,6 +59,97 @@ from kehrnel.api.domains.openehr.contribution.repository import (
 from kehrnel.api.bridge.app.core.models import Contribution, AuditDetails
 
 logger = logging.getLogger(__name__)
+
+
+def _materialize_versioned_composition_payload(
+    payload: Dict[str, Any],
+    version_uid: str,
+) -> Dict[str, Any]:
+    """
+    Return a canonical composition payload whose in-body uid matches the
+    server-assigned version UID used for persistence and versioning.
+    """
+    composition = deepcopy(payload or {})
+    composition["_type"] = composition.get("_type") or "COMPOSITION"
+    composition["uid"] = {
+        "_type": "OBJECT_VERSION_ID",
+        "value": version_uid,
+    }
+    return composition
+
+
+async def _maybe_flush_generated_codes(flattener: CompositionFlattener) -> None:
+    flush_codes = getattr(flattener, "flush_codes_to_db", None)
+    if not callable(flush_codes):
+        return
+    maybe_coro = flush_codes()
+    if hasattr(maybe_coro, "__await__"):
+        await maybe_coro
+
+
+def _extract_composition_name(payload: Dict[str, Any]) -> str:
+    return str((((payload or {}).get("name") or {}).get("value")) or "").strip()
+
+
+async def _prepare_new_composition_artifacts(
+    ehr_id: str,
+    composition_create: CompositionCreate,
+    flattener: CompositionFlattener,
+    composition_uid: str,
+    composition_version: str,
+    time_committed: datetime,
+    committer_name: str,
+    change_type: str = "creation",
+) -> Dict[str, Any]:
+    composition_data = _materialize_versioned_composition_payload(
+        composition_create.content,
+        composition_uid,
+    )
+
+    new_composition_for_db = Composition(
+        uid=composition_uid,
+        time_created=time_committed,
+        data=composition_data,
+    )
+
+    raw_doc_for_flattener = {
+        "_id": new_composition_for_db.uid,
+        "ehr_id": ehr_id,
+        "composition_version": composition_version,
+        "time_committed": time_committed,
+        "time_created": time_committed,
+        "canonicalJSON": new_composition_for_db.data,
+    }
+
+    try:
+        flattened_base_doc, flattened_search_doc = flattener.transform_composition(raw_doc_for_flattener)
+    except FlattenerError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Composition could not be processed: {exc}",
+        ) from exc
+
+    contribution = Contribution(
+        ehr_id=ehr_id,
+        audit=AuditDetails(
+            system_id="my-openehr-server",
+            committer_name=committer_name,
+            time_committed=time_committed,
+            change_type=change_type,
+        ),
+        versions=[{
+            "_type": "COMPOSITION",
+            "uid": {"value": composition_uid, "_type": "OBJECT_VERSION_ID"},
+            "template_id": composition_create.template_id,
+        }],
+    )
+
+    return {
+        "composition": new_composition_for_db,
+        "contribution": contribution,
+        "flattened_base_doc": flattened_base_doc,
+        "flattened_search_doc": flattened_search_doc,
+    }
 
 
 async def add_composition(
@@ -89,59 +195,22 @@ async def add_composition(
             detail = f"EHR with id '{ehr_id}' not found."
         )
     
-    # Create versioned objects
     time_created = datetime.now(timezone.utc)
-
-    # Generate a new unique ID for the composition object, and then its first version UID
     composition_object_id = str(uuid.uuid4())
     composition_uid = f"{composition_object_id}::my-openehr-server::1"
-
-    # The composition data is the full dictionary coming from the request
-    composition_data = composition_create.content
-
-    # Create the full composition object for storage
-    # The _id will be the version UID. The 'data' field holds the full object.
-    new_composition_for_db = Composition(
-        uid = composition_uid,
-        time_created = time_created,
-        data = composition_data
+    artifacts = await _prepare_new_composition_artifacts(
+        ehr_id=ehr_id,
+        composition_create=composition_create,
+        flattener=flattener,
+        composition_uid=composition_uid,
+        composition_version="1",
+        time_committed=time_created,
+        committer_name=committer_name,
     )
-
-    # Prepare the input document for the flattener, matching the structure it expects
-    raw_doc_for_flattener = {
-        "_id": new_composition_for_db.uid,
-        "ehr_id": ehr_id,
-        "composition_version": "1",
-        "canonicalJSON": new_composition_for_db.data
-    }
-
-    try:
-        # Transform the composition using the flattener instance
-        flattened_base_doc, flattened_search_doc = flattener.transform_composition(raw_doc_for_flattener)
-    except FlattenerError as e:
-        # If the transformation fails, return a client-side error
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=f"Composition could not be processed: {e}"
-        )
-    
-    # Creates the contribution object for the transaction
-    audit_version_data = {
-        "_type": "COMPOSITION",
-        "uid": {"value": composition_uid, "_type": "OBJECT_VERSION_ID"},
-        "template_id": composition_create.template_id
-    }
-    
-    contribution = Contribution(
-        ehr_id = ehr_id,
-        audit = AuditDetails(
-            system_id = "my-openehr-server",
-            committer_name = committer_name,
-            time_committed = time_created,
-            change_type = "creation"
-        ),
-        versions=[audit_version_data]
-    )
+    new_composition_for_db = artifacts["composition"]
+    contribution = artifacts["contribution"]
+    flattened_base_doc = artifacts["flattened_base_doc"]
+    flattened_search_doc = artifacts["flattened_search_doc"]
 
     # Pass the repository for atomic insertion and update
     try:
@@ -161,9 +230,115 @@ async def add_composition(
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail = f"Could not create Composition due to a database error: {e}"
         )
+
+    await _maybe_flush_generated_codes(flattener)
     
     # Return the created composition object
     return new_composition_for_db
+
+
+async def bulk_add_compositions(
+    ehr_id: str,
+    items: List[Any],
+    db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames,
+    flattener: CompositionFlattener,
+    merge_search_docs: bool = False,
+    committer_name: str = "System",
+) -> BulkCompositionCreateResult:
+    """
+    Sandbox helper that batches composition creation without changing the
+    canonical single-composition create endpoint.
+    """
+    requested_items = list(items or [])
+    if not requested_items:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="At least one composition is required.",
+        )
+
+    ehr = await find_ehr_by_id(ehr_id, db)
+    if not ehr:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"EHR with id '{ehr_id}' not found.",
+        )
+
+    time_committed = datetime.now(timezone.utc)
+    composition_docs: List[Dict[str, Any]] = []
+    contribution_docs: List[Dict[str, Any]] = []
+    flattened_base_docs: List[Dict[str, Any]] = []
+    flattened_search_docs: List[Dict[str, Any]] = []
+    created: List[BulkCompositionCreateSuccess] = []
+    failed: List[BulkCompositionCreateFailure] = []
+
+    for index, item in enumerate(requested_items):
+        raw_composition = item.composition if hasattr(item, "composition") else (item or {}).get("composition")
+        try:
+            composition_create = CompositionCreate.model_validate(raw_composition)
+            composition_object_id = str(uuid.uuid4())
+            composition_uid = f"{composition_object_id}::my-openehr-server::1"
+            artifacts = await _prepare_new_composition_artifacts(
+                ehr_id=ehr_id,
+                composition_create=composition_create,
+                flattener=flattener,
+                composition_uid=composition_uid,
+                composition_version="1",
+                time_committed=time_committed,
+                committer_name=committer_name,
+            )
+        except HTTPException as exc:
+            failed.append(BulkCompositionCreateFailure(
+                index=index,
+                message=str(exc.detail),
+            ))
+            continue
+        except Exception as exc:
+            failed.append(BulkCompositionCreateFailure(
+                index=index,
+                message=str(exc),
+            ))
+            continue
+
+        new_composition = artifacts["composition"]
+        composition_docs.append(new_composition.model_dump(by_alias=True))
+        contribution_docs.append(artifacts["contribution"].model_dump(by_alias=True))
+        flattened_base_docs.append(artifacts["flattened_base_doc"])
+        flattened_search_docs.append(artifacts["flattened_search_doc"])
+        created.append(BulkCompositionCreateSuccess(
+            index=index,
+            uid=new_composition.uid,
+            name=_extract_composition_name(new_composition.data),
+            templateId=composition_create.template_id,
+        ))
+
+    if composition_docs:
+        try:
+            await insert_compositions_contributions_and_update_ehr(
+                ehr_id=ehr_id,
+                composition_docs=composition_docs,
+                contribution_docs=contribution_docs,
+                db=db,
+                config=config,
+                flattened_base_docs=flattened_base_docs,
+                flattened_search_docs=flattened_search_docs,
+                merge_search_docs=merge_search_docs,
+            )
+        except PyMongoError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Could not create Compositions due to a database error: {exc}",
+            ) from exc
+
+        await _maybe_flush_generated_codes(flattener)
+
+    return BulkCompositionCreateResult(
+        ehr_id=ehr_id,
+        createdCount=len(created),
+        created=created,
+        failed=failed,
+        committedAt=time_committed if created else None,
+    )
 
 
 async def retrieve_composition(
@@ -239,6 +414,69 @@ async def retrieve_composition(
         )
     
     return Composition.model_validate(composition_doc)
+
+
+async def list_composition_summaries(
+    ehr_id: str,
+    db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames,
+) -> List[CompositionSummary]:
+    """
+    Return lightweight composition summaries for the current EHR view.
+
+    This intentionally avoids unflattening and avoids the generic AQL pipeline.
+    We read the EHR's current composition references and project only the
+    summary fields needed by the sandbox list.
+    """
+    ehr_doc = await find_ehr_by_id(ehr_id, db)
+    if not ehr_doc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"EHR with id '{ehr_id}' not found",
+        )
+
+    ordered_uids: List[str] = []
+    seen: set[str] = set()
+    for ref in ehr_doc.get("compositions", []) or []:
+        uid = (((ref or {}).get("id") or {}).get("value") or "").strip()
+        if not uid or uid in seen:
+            continue
+        seen.add(uid)
+        ordered_uids.append(uid)
+
+    if not ordered_uids:
+        return []
+
+    projection = {
+        "_id": 1,
+        "data.name.value": 1,
+        "data.archetype_details.template_id.value": 1,
+    }
+    docs = await db[config.compositions].find(
+        {"_id": {"$in": ordered_uids}},
+        projection,
+    ).to_list(length=len(ordered_uids))
+
+    by_uid: Dict[str, Dict[str, Any]] = {str(doc.get("_id")): doc for doc in docs if doc.get("_id")}
+    summaries: List[CompositionSummary] = []
+    for uid in ordered_uids:
+        doc = by_uid.get(uid)
+        if not doc:
+            continue
+        data = doc.get("data") or {}
+        name = ((data.get("name") or {}).get("value") or "").strip()
+        template_id = (
+            (((data.get("archetype_details") or {}).get("template_id") or {}).get("value") or "").strip()
+        )
+        summaries.append(
+            CompositionSummary(
+                uid=uid,
+                name=name,
+                templateId=template_id,
+            )
+        )
+
+    return summaries
 
 
 async def retrieve_and_unflatten_composition(
@@ -339,6 +577,8 @@ async def update_composition(
     new_composition_data: CompositionCreate,
     db: AsyncIOMotorDatabase,
     config: CompositionCollectionNames,
+    flattener: CompositionFlattener,
+    merge_search_docs: bool = False,
     committer_name: str = "System"
 ) -> Composition:
     """
@@ -390,11 +630,33 @@ async def update_composition(
     time_committed = datetime.now(timezone.utc)
 
     # Create the new Composition object for the database
+    normalized_composition_data = _materialize_versioned_composition_payload(
+        new_composition_data.content,
+        new_uid,
+    )
+
     new_composition_for_db = Composition(
         uid = new_uid,
         time_created = time_committed,
-        data = new_composition_data.content
+        data = normalized_composition_data
     )
+
+    raw_doc_for_flattener = {
+        "_id": new_composition_for_db.uid,
+        "ehr_id": ehr_id,
+        "composition_version": str(new_version),
+        "time_committed": time_committed,
+        "time_created": time_committed,
+        "canonicalJSON": new_composition_for_db.data
+    }
+
+    try:
+        flattened_base_doc, flattened_search_doc = flattener.transform_composition(raw_doc_for_flattener)
+    except FlattenerError as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Composition could not be processed: {e}"
+        )
 
     # Create the Contribution for this modification
     contribution = Contribution(
@@ -419,13 +681,18 @@ async def update_composition(
             composition_doc = new_composition_for_db.model_dump(by_alias = True),
             contribution_doc = contribution.model_dump(by_alias = True),
             db = db,
-            config = config
+            config = config,
+            flattened_base_doc = flattened_base_doc,
+            flattened_search_doc = flattened_search_doc,
+            merge_search_docs = merge_search_docs,
         )
     except PyMongoError as e:
         raise HTTPException(
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail = f"Could not update Composition due to a database error: {e}"
         )
+
+    await _maybe_flush_generated_codes(flattener)
     
     return new_composition_for_db
 
@@ -468,7 +735,8 @@ async def delete_composition_by_preceding_uid(
     composition_to_delete = await retrieve_composition(
         ehr_id = ehr_id,
         uid_based_id = preceding_version_uid,
-        db = db
+        db = db,
+        config = config
     )
 
     # Verify this version hans't already been deleted
@@ -516,6 +784,7 @@ async def delete_composition_by_preceding_uid(
     try:
         await add_deletion_contribution_and_update_ehr(
             ehr_id = ehr_id,
+            preceding_version_uid = preceding_version_uid,
             contribution_doc = contribution.model_dump(by_alias = True),
             db = db,
             config = config
@@ -532,6 +801,139 @@ async def delete_composition_by_preceding_uid(
         "time_committed": time_committed,
         "versioned_object_locator": f"{object_id}::{system_id}"
     }
+
+
+async def bulk_delete_compositions(
+    ehr_id: str,
+    preceding_version_uids: List[str],
+    db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames,
+    committer_name: str = "System"
+) -> BulkCompositionDeleteResult:
+    """
+    Sandbox helper that batches logical composition deletions without changing
+    the canonical single-composition delete endpoint.
+    """
+    requested_uids: List[str] = []
+    seen: set[str] = set()
+    for uid in preceding_version_uids or []:
+        value = str(uid or "").strip()
+        if not value or value in seen:
+            continue
+        seen.add(value)
+        requested_uids.append(value)
+
+    if not requested_uids:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="At least one composition uid is required."
+        )
+
+    ehr = await retrieve_ehr_by_id(ehr_id, db)
+    linked_uids = {
+        getattr(getattr(ref, "id", None), "value", None)
+        for ref in (ehr.compositions or [])
+        if getattr(getattr(ref, "id", None), "value", None)
+    }
+
+    failures: List[BulkCompositionDeleteFailure] = []
+    linked_requested_uids: List[str] = []
+    for uid in requested_uids:
+        if uid not in linked_uids:
+            failures.append(BulkCompositionDeleteFailure(
+                uid=uid,
+                message=f"Composition with id '{uid}' not found in EHR '{ehr_id}'"
+            ))
+            continue
+        linked_requested_uids.append(uid)
+
+    composition_docs = await find_compositions_by_uids(linked_requested_uids, db, config)
+    found_uids = {str(doc.get("_id")) for doc in composition_docs if doc.get("_id")}
+
+    existing_deletions = await find_deletion_contributions_for_versions(linked_requested_uids, db)
+    deleted_uids = {
+        version.get("preceding_version_uid")
+        for doc in existing_deletions
+        for version in (doc.get("versions") or [])
+        if version.get("preceding_version_uid")
+    }
+
+    valid_uids: List[str] = []
+    for uid in linked_requested_uids:
+        if uid not in found_uids:
+            failures.append(BulkCompositionDeleteFailure(
+                uid=uid,
+                message=f"Composition with id '{uid}' was not found in the composition store."
+            ))
+            continue
+        if uid in deleted_uids:
+            failures.append(BulkCompositionDeleteFailure(
+                uid=uid,
+                message=f"Version '{uid}' has already been deleted."
+            ))
+            continue
+        valid_uids.append(uid)
+
+    contribution_docs: List[Dict[str, Any]] = []
+    audit_uids: List[str] = []
+    executable_uids: List[str] = []
+    time_committed = datetime.now(timezone.utc)
+
+    for uid in valid_uids:
+        try:
+            object_id, system_id, version_str = uid.split("::")
+            new_version = int(version_str) + 1
+            new_audit_uid = f"{object_id}::{system_id}::{new_version}"
+        except (ValueError, IndexError):
+            failures.append(BulkCompositionDeleteFailure(
+                uid=uid,
+                message="Could not parse the existing version UID to create a deletion audit."
+            ))
+            continue
+
+        audit_version_data = {
+            "_type": "DELETED",
+            "uid": {"value": new_audit_uid, "_type": "OBJECT_VERSION_ID"},
+            "preceding_version_uid": uid
+        }
+
+        contribution = Contribution(
+            ehr_id=ehr_id,
+            audit=AuditDetails(
+                system_id="my-openehr-server",
+                committer_name=committer_name,
+                time_committed=time_committed,
+                change_type="deleted"
+            ),
+            versions=[audit_version_data]
+        )
+        contribution_docs.append(contribution.model_dump(by_alias=True))
+        audit_uids.append(new_audit_uid)
+        executable_uids.append(uid)
+
+    if executable_uids:
+        try:
+            await add_bulk_deletion_contributions_and_update_ehr(
+                ehr_id=ehr_id,
+                preceding_version_uids=executable_uids,
+                contribution_docs=contribution_docs,
+                db=db,
+                config=config,
+            )
+        except PyMongoError as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Could not delete compositions due to a database error: {e}"
+            )
+
+    return BulkCompositionDeleteResult(
+        ehr_id=ehr_id,
+        deletedCount=len(executable_uids),
+        deletedUids=executable_uids,
+        auditUids=audit_uids,
+        failed=failures,
+        committedAt=time_committed if executable_uids else None,
+    )
 
 
 async def retrieve_revision_history(

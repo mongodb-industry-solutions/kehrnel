@@ -9,7 +9,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List
 
 import typer
 import yaml
@@ -579,6 +579,111 @@ def core_api(ctx: typer.Context):
     _run_module("kehrnel.api.app", ctx.args)
 
 
+
+@env_app.command("list")
+def env_list(
+    runtime_url: Optional[str] = typer.Option(None),
+    api_key: Optional[str] = typer.Option(None),
+):
+    base = _resolve_runtime_url(runtime_url)
+    if not base:
+        raise typer.BadParameter("No runtime URL configured. Set via `kehrnel auth login` or `kehrnel context set`.")
+    status, data = _http_json("GET", f"{base.rstrip('/')}/environments", _resolve_api_key(api_key))
+    typer.echo(json.dumps({"status": status, "response": data}, indent=2))
+    raise typer.Exit(0 if status < 400 else 1)
+
+
+@env_app.command("show")
+def env_show(
+    env: Optional[str] = typer.Option(None, "--env", help="Environment key/id"),
+    runtime_url: Optional[str] = typer.Option(None),
+    api_key: Optional[str] = typer.Option(None),
+):
+    base = _resolve_runtime_url(runtime_url)
+    if not base:
+        raise typer.BadParameter("No runtime URL configured. Set via `kehrnel auth login` or `kehrnel context set`.")
+    env_id = _require_env(env)
+    status, data = _http_json("GET", f"{base.rstrip('/')}/environments/{env_id}", _resolve_api_key(api_key))
+    typer.echo(json.dumps({"status": status, "response": data}, indent=2))
+    raise typer.Exit(0 if status < 400 else 1)
+
+
+@env_app.command("create")
+def env_create(
+    env: str = typer.Option(..., "--env", help="Environment key/id"),
+    name: Optional[str] = typer.Option(None, "--name"),
+    description: Optional[str] = typer.Option(None, "--description"),
+    bindings_ref: Optional[str] = typer.Option(None, "--bindings-ref"),
+    metadata: Optional[Path] = typer.Option(None, "--metadata", help="Metadata JSON/YAML file"),
+    set_items: Optional[List[str]] = typer.Option(None, "--set", help="Metadata KEY=VALUE (repeatable)"),
+    runtime_url: Optional[str] = typer.Option(None),
+    api_key: Optional[str] = typer.Option(None),
+):
+    base = _resolve_runtime_url(runtime_url)
+    if not base:
+        raise typer.BadParameter("No runtime URL configured. Set via `kehrnel auth login` or `kehrnel context set`.")
+    metadata_payload = _load_json_or_yaml(metadata) if metadata else {}
+    metadata_payload.update(_parse_kv_pairs(set_items or []))
+    payload = {
+        "env_id": env,
+        "name": name,
+        "description": description,
+        "bindings_ref": bindings_ref,
+        "metadata": metadata_payload,
+    }
+    status, data = _http_json("POST", f"{base.rstrip('/')}/environments", _resolve_api_key(api_key), payload)
+    typer.echo(json.dumps({"status": status, "response": data}, indent=2))
+    raise typer.Exit(0 if status < 400 else 1)
+
+
+@env_app.command("update")
+def env_update(
+    env: str = typer.Option(..., "--env", help="Environment key/id"),
+    name: Optional[str] = typer.Option(None, "--name"),
+    description: Optional[str] = typer.Option(None, "--description"),
+    bindings_ref: Optional[str] = typer.Option(None, "--bindings-ref"),
+    metadata: Optional[Path] = typer.Option(None, "--metadata", help="Metadata JSON/YAML file"),
+    set_items: Optional[List[str]] = typer.Option(None, "--set", help="Metadata KEY=VALUE (repeatable)"),
+    runtime_url: Optional[str] = typer.Option(None),
+    api_key: Optional[str] = typer.Option(None),
+):
+    base = _resolve_runtime_url(runtime_url)
+    if not base:
+        raise typer.BadParameter("No runtime URL configured. Set via `kehrnel auth login` or `kehrnel context set`.")
+    payload: Dict[str, Any] = {}
+    if name is not None:
+        payload["name"] = name
+    if description is not None:
+        payload["description"] = description
+    if bindings_ref is not None:
+        payload["bindings_ref"] = bindings_ref
+    if metadata or set_items:
+        metadata_payload = _load_json_or_yaml(metadata) if metadata else {}
+        metadata_payload.update(_parse_kv_pairs(set_items or []))
+        payload["metadata"] = metadata_payload
+    status, data = _http_json("PATCH", f"{base.rstrip('/')}/environments/{env}", _resolve_api_key(api_key), payload)
+    typer.echo(json.dumps({"status": status, "response": data}, indent=2))
+    raise typer.Exit(0 if status < 400 else 1)
+
+
+@env_app.command("delete")
+def env_delete(
+    env: str = typer.Option(..., "--env", help="Environment key/id"),
+    force: bool = typer.Option(False, "--force", help="Delete active activations and history too"),
+    runtime_url: Optional[str] = typer.Option(None),
+    api_key: Optional[str] = typer.Option(None),
+):
+    base = _resolve_runtime_url(runtime_url)
+    if not base:
+        raise typer.BadParameter("No runtime URL configured. Set via `kehrnel auth login` or `kehrnel context set`.")
+    url = f"{base.rstrip('/')}/environments/{env}"
+    if force:
+        url += "?force=true"
+    status, data = _http_json("DELETE", url, _resolve_api_key(api_key))
+    typer.echo(json.dumps({"status": status, "response": data}, indent=2))
+    raise typer.Exit(0 if status < 400 else 1)
+
+
 @env_app.command("endpoints")
 def env_endpoints(
     env: Optional[str] = typer.Option(None, "--env", help="Environment key/id"),
@@ -755,6 +860,65 @@ def strategy_list(
         if domain_filter and sdomain_norm != domain_filter:
             continue
         typer.echo(f"{sid}\t{sdomain}\tv{row.get('version', '?')}")
+
+
+@strategy_app.command("build-search-index")
+def strategy_build_search_index(
+    env: Optional[str] = typer.Option(None, "--env", help="Environment key/id"),
+    runtime_url: Optional[str] = typer.Option(None, help="Runtime base URL"),
+    api_key: Optional[str] = typer.Option(None, help="API key"),
+    domain: Optional[str] = typer.Option(None, help="Domain id (defaults to current context or openehr)"),
+    strategy: Optional[str] = typer.Option(None, help="Strategy id (defaults to current context strategy)"),
+    include_stored_source: bool = typer.Option(True, "--stored-source/--no-stored-source", help="Include storedSource.include in the generated definition"),
+    out: Optional[Path] = typer.Option(None, "--out", help="Write only the generated definition JSON to a file"),
+    json_output: bool = typer.Option(False, "--json", help="Print the full operation response instead of only the definition"),
+):
+    base = _resolve_runtime_url(runtime_url)
+    if not base:
+        raise typer.BadParameter("No runtime URL configured.")
+
+    env_id = _require_env(env)
+    selected_strategy = _require_strategy(strategy)
+    selected_domain = (
+        domain
+        or _state()["context"].get("domain")
+        or "openehr"
+    )
+
+    payload = {"include_stored_source": include_stored_source}
+    run_body = {
+        "operation": "build_search_index_definition",
+        "payload": payload,
+        "domain": selected_domain,
+        "strategy_id": selected_strategy,
+    }
+
+    status, data = _http_json(
+        "POST",
+        f"{base.rstrip('/')}/environments/{env_id}/run",
+        _resolve_api_key(api_key),
+        run_body,
+    )
+    if status >= 400:
+        typer.echo(json.dumps({"status": status, "response": data}, indent=2))
+        raise typer.Exit(1)
+
+    definition = data.get("definition") if isinstance(data, dict) else None
+    if out is not None:
+        if not isinstance(definition, dict):
+            raise typer.BadParameter("Runtime did not return a definition object.")
+        out.write_text(json.dumps(definition, indent=2) + "\n", encoding="utf-8")
+        typer.echo(f"Wrote search index definition to {out}")
+
+    if json_output:
+        typer.echo(json.dumps({"status": status, "response": data}, indent=2))
+    elif isinstance(definition, dict):
+        typer.echo(json.dumps(definition, indent=2))
+        warnings = data.get("warnings") if isinstance(data, dict) else None
+        if isinstance(warnings, list) and warnings:
+            typer.echo(json.dumps({"warnings": warnings}, indent=2))
+    else:
+        typer.echo(json.dumps({"status": status, "response": data}, indent=2))
 
 
 @resource_app.command("list")

@@ -9,6 +9,7 @@ import hashlib
 import time
 import re
 from copy import deepcopy
+from functools import lru_cache
 from pathlib import Path
 from typing import Optional
 from dotenv import find_dotenv, load_dotenv
@@ -23,12 +24,6 @@ from starlette.middleware.base import BaseHTTPMiddleware
 # Load environment before importing modules that instantiate settings at import time.
 load_dotenv(find_dotenv(".env.local", usecwd=True), override=False)
 
-from kehrnel.api.core.admin.routes import router as admin_router
-from kehrnel.api.core.admin.ops_by_domain import router as ops_domain_router
-from kehrnel.api.core.admin.activation_routes import router as activation_router
-from kehrnel.api.domains.fhir.routes import router as fhir_domain_router
-from kehrnel.api.domains.openehr.routes import router as openehr_domain_router
-from kehrnel.api.strategies.openehr.rps_dual.routes import router as openehr_rps_dual_router
 from kehrnel.engine.core.runtime import StrategyRuntime
 from kehrnel.engine.core.manifest import StrategyManifest
 from kehrnel.engine.core.registry import FileActivationRegistry
@@ -333,6 +328,12 @@ def _load_manifests() -> tuple[list[StrategyManifest], list[dict[str, object]], 
 
 def create_app(registry_path: str | None = None, bundle_path: str | None = None) -> FastAPI:
     load_dotenv(find_dotenv(".env.local", usecwd=True), override=False)
+    from kehrnel.api.core.admin.activation_routes import router as activation_router
+    from kehrnel.api.core.admin.ops_by_domain import router as ops_domain_router
+    from kehrnel.api.core.admin.routes import router as admin_router
+    from kehrnel.api.domains.fhir.routes import router as fhir_domain_router
+    from kehrnel.api.domains.openehr.routes import router as openehr_domain_router
+    from kehrnel.api.strategies.openehr.rps_dual.routes import router as openehr_rps_dual_router
 
     # Disable built-in docs handlers so we can control the HTML (favicon, titles, etc.)
     # and keep behavior consistent for all generated docs pages.
@@ -714,12 +715,26 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     return app
 
 
-app = create_app()
+@lru_cache(maxsize=1)
+def _default_app() -> FastAPI:
+    return create_app()
 
 
-def main():
+class _LazyFastAPIApp:
+    """Delay app construction until the ASGI server or caller actually uses it."""
+
+    async def __call__(self, scope, receive, send):
+        await _default_app()(scope, receive, send)
+
+    def __getattr__(self, name):
+        return getattr(_default_app(), name)
+
+
+app = _LazyFastAPIApp()
+
+
+def main(argv: list[str] | None = None):
     import argparse
-    import uvicorn
 
     default_host = os.getenv("KEHRNEL_API_HOST", "0.0.0.0")
     default_port = int(os.getenv("KEHRNEL_API_PORT", os.getenv("API_PORT", "8000")))
@@ -729,6 +744,7 @@ def main():
     parser.add_argument("--host", default=default_host, help=f"Bind host (default: {default_host})")
     parser.add_argument("--port", type=int, default=default_port, help=f"Bind port (default: {default_port})")
     parser.add_argument("--reload", action="store_true", default=default_reload, help="Enable auto-reload")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
+    import uvicorn
     uvicorn.run("kehrnel.api.app:app", host=args.host, port=args.port, reload=args.reload)

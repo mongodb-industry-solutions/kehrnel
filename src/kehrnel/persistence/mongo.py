@@ -7,6 +7,21 @@ from typing import Iterable, Iterator, Optional
 
 log = logging.getLogger(__name__)
 
+
+def _search_doc_key(doc: dict) -> str | None:
+    if "sn" in doc:
+        return "sn"
+    if "search_nodes" in doc:
+        return "search_nodes"
+    return None
+
+
+def _is_non_empty_search_doc(doc: dict) -> bool:
+    key = _search_doc_key(doc)
+    if key is None:
+        return False
+    return bool(doc.get(key))
+
 class MongoStore:
     def __init__(self, cfg: dict):
         self.cfg  = cfg
@@ -40,10 +55,17 @@ class MongoStore:
         return self.col_search if search else self.col_base
 
     def _flush(self, buf):
-        if not buf: return
+        if not buf:
+            return
+        base_docs = [doc for doc in buf if _search_doc_key(doc) is None]
+        search_docs = [doc for doc in buf if _is_non_empty_search_doc(doc)]
         try:
-            self._target(buf[0].get("sn") is not None).insert_many(buf, ordered=False)
-            self.stats.inserted += len(buf)
+            if base_docs:
+                self.col_base.insert_many(base_docs, ordered=False)
+                self.stats.inserted += len(base_docs)
+            if search_docs:
+                self.col_search.insert_many(search_docs, ordered=False)
+                self.stats.inserted += len(search_docs)
         except Exception as exc:
             log.error("Bulk insert failed: %s", exc)
 

@@ -97,7 +97,17 @@ include = ["kehrnel*"]
 # Package data
 # ---------------------------------------------------------------------------
 [tool.setuptools.package-data]
-"*" = ["*.yaml", "*.yml", "*.json"]
+"*" = [
+    "*.yaml",
+    "*.yml",
+    "*.json",
+    "**/*.yaml",
+    "**/*.yml",
+    "**/*.json",
+    "**/*.jsonc",
+    "**/*.opt",
+    "**/*.ndjson",
+]
 "kehrnel.engine.common.mapping" = ["patterns.yaml"]
 
 # ---------------------------------------------------------------------------

@@ -59,7 +59,9 @@ strategy_pack/
 Strategies are activated per environment:
 
 ```bash
-curl -X POST "http://localhost:8000/environments/dev/activate" \
+RUNTIME_URL="${RUNTIME_URL:-http://localhost:8080}"
+
+curl -X POST "${RUNTIME_URL}/environments/dev/activate" \
   -H "Content-Type: application/json" \
   -d '{
     "strategy_id": "openehr.rps_dual",
@@ -68,6 +70,12 @@ curl -X POST "http://localhost:8000/environments/dev/activate" \
     "config": { ... },
     "bindings_ref": "env://DB_BINDINGS"
   }'
+```
+
+Many strategy maintenance workflows now go through the universal runtime runner. For example, RPS Dual can generate its Atlas Search definition from the active mappings with:
+
+```bash
+kehrnel strategy build-search-index --env dev --domain openehr --strategy openehr.rps_dual --out .kehrnel/search-index.json
 ```
 
 ## Related

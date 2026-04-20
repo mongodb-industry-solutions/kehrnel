@@ -233,7 +233,7 @@ async def set_ingestion_config(
                         "search": {"name": "compositions_search", "enabled": True, "atlas_index_name": "search_nodes_index"},
                     },
                     "strategy_inline": {"database": "openehr_db", "templates": []},
-                    "analytics_inline": [{"templateId": "HC3 Immunization List v0.5", "fields": []}],
+                    "analytics_inline": [{"templateId": "sample_immunization_list_v0.5", "fields": []}],
                     "mappings": {"use_file": False},
                 },
             },

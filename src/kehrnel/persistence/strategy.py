@@ -46,6 +46,8 @@ class FieldMapping(BaseModel):
     comp_id: Optional[str] = None
     template_id: Optional[str] = None
     version: Optional[str] = None
+    time_committed: Optional[str] = None
+    sort_time: Optional[str] = None
     score: Optional[str] = None
 
 
@@ -118,6 +120,7 @@ def get_default_strategy() -> PersistenceStrategy:
                 comp_id="comp_id",
                 template_id="tid",
                 version="v",
+                time_committed="time_committed",
             ),
             "search": FieldMapping(
                 nodes="sn",
@@ -127,6 +130,7 @@ def get_default_strategy() -> PersistenceStrategy:
                 ancestors="anc",
                 ehr_id="ehr_id",
                 template_id="tid",
+                sort_time="sort_time",
                 score="score",
             ),
         },

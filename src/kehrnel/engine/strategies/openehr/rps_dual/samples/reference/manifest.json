@@ -1,0 +1,53 @@
+{
+  "strategy": "openehr.rps_dual",
+  "generated_at": "2026-04-20T19:57:14Z",
+  "masking": {
+    "ehr_id": "uuid5",
+    "composition_uid": "uuid5 + sample.kehrnel system id",
+    "dv_identifier.id": "sha256 prefix",
+    "feeder_audit.system_id": "sample.source"
+  },
+  "templates": [
+    {
+      "target_template": "sample_immunization_list_v0.5",
+      "slug": "sample_immunization_list_v0_5",
+      "composition_count": 5,
+      "canonical_dir": "canonical/sample_immunization_list_v0_5",
+      "envelope_file": "envelopes/sample_immunization_list_v0_5.ndjson",
+      "opt_file": "templates/sample_immunization_list_v0_5.opt"
+    },
+    {
+      "target_template": "sample_laboratory_v0.4",
+      "slug": "sample_laboratory_v0_4",
+      "composition_count": 5,
+      "canonical_dir": "canonical/sample_laboratory_v0_4",
+      "envelope_file": "envelopes/sample_laboratory_v0_4.ndjson",
+      "opt_file": "templates/sample_laboratory_v0_4.opt"
+    }
+  ],
+  "projection_mappings_file": "projection_mappings.json",
+  "search_index_definition_file": "search_index.definition.json",
+  "search_index_metadata": {
+    "template_count": 2,
+    "template_ids": [
+      "sample_immunization_list_v0.5",
+      "sample_laboratory_v0.4"
+    ],
+    "data_field_count": 5,
+    "data_paths": [
+      "cx.st.v",
+      "time.v",
+      "v",
+      "v.df.cs",
+      "v.magnitude"
+    ],
+    "nodes_field": "sn",
+    "path_field": "p",
+    "data_field": "data",
+    "sort_field": "sort_time",
+    "sources": [
+      "analytics_fields"
+    ],
+    "apply_shortcuts": true
+  }
+}

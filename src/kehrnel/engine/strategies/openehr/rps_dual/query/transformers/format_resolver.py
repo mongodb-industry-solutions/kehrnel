@@ -2,6 +2,7 @@
 import re
 from typing import Tuple, Dict, Optional
 from .archetype_resolver import ArchetypeResolver
+from kehrnel.engine.strategies.openehr.rps_dual.services.shortcuts_service import canonical_to_slim
 
 
 class FormatResolver:
@@ -9,13 +10,52 @@ class FormatResolver:
     Handles path resolution for both full-path and shortened-path formats.
     """
 
-    def __init__(self, context_map: Dict[str, Dict], ehr_alias: str, composition_alias: str, schema_config: Dict[str, str], archetype_resolver: Optional[ArchetypeResolver] = None):
+    def __init__(
+        self,
+        context_map: Dict[str, Dict],
+        ehr_alias: str,
+        composition_alias: str,
+        schema_config: Dict[str, str],
+        archetype_resolver: Optional[ArchetypeResolver] = None,
+        shortcut_map: Optional[Dict[str, str]] = None,
+        version_alias: Optional[str] = None,
+    ):
         self.context_map = context_map
         self.ehr_alias = ehr_alias
         self.composition_alias = composition_alias
+        self.version_alias = version_alias
         self.schema_config = schema_config
         self.format = schema_config.get('format', 'full')
         self.archetype_resolver = archetype_resolver
+        self.shortcut_map = shortcut_map or {}
+
+    def _data_path(self, parts: list[str]) -> str:
+        if not parts:
+            return "data"
+        path = ".".join(parts)
+        if self.format == "shortened" and self.shortcut_map:
+            path = canonical_to_slim(path, self.shortcut_map)
+        return f"data.{path}" if path else "data"
+
+    def resolve_document_field(self, aql_path: str) -> Optional[str]:
+        """
+        Return the top-level stored field for AQL paths that map to document metadata
+        rather than locatable nodes.
+        """
+        if not isinstance(aql_path, str):
+            return None
+
+        document_paths = {
+            f"{self.composition_alias}/uid/value": self.schema_config.get("comp_id", "comp_id"),
+            f"{self.composition_alias}/archetype_details/template_id/value": self.schema_config.get("template_id", "tid"),
+        }
+        if self.version_alias:
+            document_paths[f"{self.version_alias}/commit_audit/time_committed/value"] = (
+                self.schema_config.get("time_committed")
+                or self.schema_config.get("sort_time")
+                or "time_c"
+            )
+        return document_paths.get(aql_path)
 
     async def translate_aql_path(self, aql_path: str) -> Tuple[str, str]:
         """
@@ -24,6 +64,9 @@ class FormatResolver:
         For full format: Returns (p_regex, data_path) for cn array filtering
         For shortened format: Returns (None, direct_path) for direct field access
         """
+        document_field = self.resolve_document_field(aql_path)
+        if document_field:
+            return None, document_field
         if self.format == 'shortened':
             return await self._translate_shortened_path(aql_path)
         else:
@@ -65,10 +108,7 @@ class FormatResolver:
                         if not re.search(r'\[(?:at\d+|openEHR-[^\]]+)\]', part) and part not in ['context', 'description', 'data', 'state', 'protocol', 'activities', 'events']:
                             remaining_parts.append(part)
                     
-                    if remaining_parts:
-                        data_path = f"data.{'.'.join(remaining_parts)}"
-                    else:
-                        data_path = "data"
+                    data_path = self._data_path(remaining_parts)
                     
                     return nested_pattern, data_path
                 else:
@@ -78,10 +118,7 @@ class FormatResolver:
                         if not re.match(r"items\[(.+)\]", part):
                             remaining_parts.append(part)
                     
-                    if remaining_parts:
-                        data_path = f"data.{'.'.join(remaining_parts)}"
-                    else:
-                        data_path = "data"
+                    data_path = self._data_path(remaining_parts)
                     
                     # Try to get just the base pattern for the variable
                     base_pattern = await self.archetype_resolver.resolve_variable_to_p_pattern(
@@ -96,10 +133,7 @@ class FormatResolver:
                     if not re.match(r"items\[(.+)\]", part):
                         remaining_parts.append(part)
                 
-                if remaining_parts:
-                    data_path = f"data.{'.'.join(remaining_parts)}"
-                else:
-                    data_path = "data"
+                data_path = self._data_path(remaining_parts)
                 
                 return None, data_path
 
@@ -117,10 +151,10 @@ class FormatResolver:
                     return comp_pattern, "data.name.value"  # Still in cn array at composition root
                 elif parts[0] == "archetype_node_id":
                     comp_pattern = await self._get_composition_p_pattern()
-                    return comp_pattern, "data.archetype_node_id"  # Still in cn array at composition root
+                    return comp_pattern, self._data_path(["archetype_node_id"])
                 else:
                     # For other composition-level fields WITHOUT archetype references
-                    data_path = "data." + ".".join(parts)
+                    data_path = self._data_path(parts)
                     comp_pattern = await self._get_composition_p_pattern()
                     return comp_pattern, data_path
             else:
@@ -142,11 +176,13 @@ class FormatResolver:
                         desc_path = self._handle_description_path(desc_parts)
                         data_path = f"data.description.{desc_path}"
                     else:
-                        data_path = f"data.description.{'.'.join(desc_parts)}"
+                        data_path = self._data_path(["description", *desc_parts])
                 elif parts[0] == "ism_transition":
-                    data_path = f"data.{'.'.join(parts)}"
+                    data_path = self._data_path(parts)
+                elif parts[0] == "archetype_node_id":
+                    data_path = self._data_path(parts)
                 else:
-                    data_path = f"data.{'.'.join(parts)}"
+                    data_path = self._data_path(parts)
             else:
                 data_path = "data"
         
@@ -175,6 +211,8 @@ class FormatResolver:
             pattern = await self.archetype_resolver.resolve_composition_p_pattern(
                 self.composition_alias, self.context_map
             )
+            if pattern and not any(ch in pattern for ch in "^$[]()\\?+*{}|"):
+                return f"^{re.escape(pattern)}$"
             return pattern
         else:
             # Fallback to match any composition when no specific predicate

@@ -48,47 +48,32 @@ kehrnel-validate \
   -t samples/templates/T-IGR-TUMOUR-SUMMARY.opt
 ```
 
-## 2) CLI path for DB ingestion (current supported flow)
+## 2) CLI path for local sample-pack ingestion (recommended)
 
 Current CLI supports:
 
 - ingest flattened NDJSON from file, or
 - read canonical compositions from Mongo and flatten+write to target Mongo (`mongo-catchup`).
 
-Strategy-local templates:
+The strategy now ships with a neutral sample pack under:
 
-- `src/kehrnel/engine/strategies/openehr/rps_dual/ingest/config/mongo_source.template.json`
-- `src/kehrnel/engine/strategies/openehr/rps_dual/ingest/config/mongo_driver.template.json`
+- `src/kehrnel/engine/strategies/openehr/rps_dual/samples/reference/envelopes/all.ndjson`
+- `src/kehrnel/engine/strategies/openehr/rps_dual/samples/reference/templates/sample_immunization_list_v0_5.opt`
+- `src/kehrnel/engine/strategies/openehr/rps_dual/samples/reference/templates/sample_laboratory_v0_4.opt`
+- `src/kehrnel/engine/strategies/openehr/rps_dual/samples/reference/queries/`
 
-For current data, source collection is `hc_openEHRCDR.samples` (canonical docs).
-
-Run catch-up:
+Run a local ingest against your own MongoDB target:
 
 ```bash
-URI=$(sed -n 's/^MONGODB_URI=//p' .env | head -n 1 | sed 's/^"//; s/"$//')
+SAMPLES_ROOT="src/kehrnel/engine/strategies/openehr/rps_dual/samples/reference"
 
-cat > /tmp/rps_dual.mongo_source.runtime.json <<EOF
-{
-  "connection_string": "$URI",
-  "database_name": "hc_openEHRCDR",
-  "source_collection": "samples"
-}
-EOF
+python -m kehrnel.cli.ingest init-driver --db hdl_user_test --out /tmp/rps_dual.driver.mongo.yaml
+export MONGODB_URI='mongodb+srv://...'
 
-cat > /tmp/rps_dual.mongo_driver.runtime.json <<EOF
-{
-  "driver": "mongo",
-  "connection_string": "$URI",
-  "database_name": "hdl_user_test",
-  "compositions_collection": "compositions_rps",
-  "search_collection": "compositions_search"
-}
-EOF
-
-kehrnel-ingest mongo-catchup \
-  --src-cfg /tmp/rps_dual.mongo_source.runtime.json \
-  --driver-cfg /tmp/rps_dual.mongo_driver.runtime.json \
-  --limit 10
+kehrnel common ingest --strategy openehr.rps_dual --domain openehr -- \
+  file "$SAMPLES_ROOT/envelopes/all.ndjson" \
+  -d /tmp/rps_dual.driver.mongo.yaml \
+  --workers 4
 ```
 
 Where to verify in MongoDB:
@@ -96,10 +81,7 @@ Where to verify in MongoDB:
 - Base docs: `hdl_user_test.compositions_rps`
 - Search docs: `hdl_user_test.compositions_search`
 
-Important gap:
-
-- CLI does not yet fetch template definitions directly from DB to generate new canonical compositions.
-- If needed, generate canonical first (step 1) then ingest through API (`/ingest/body`) or add a dedicated CLI command later.
+Use `mongo-catchup` only when your canonical compositions already live in MongoDB and you want Kehrnel to flatten them into a target database.
 
 ## 3) API path with strategy-scoped endpoints
 

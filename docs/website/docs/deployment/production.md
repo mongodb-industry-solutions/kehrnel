@@ -46,7 +46,7 @@ KEHRNEL_CORS_ORIGINS=https://app.example.com,https://admin.example.com
 - [ ] Configure IP whitelisting
 
 ```bash
-CORE_MONGODB_URL=mongodb+srv://user:strong-password@cluster.mongodb.net
+CORE_MONGODB_URL=mongodb+srv://<username>:<strong-password>@cluster.mongodb.net
 KEHRNEL_MONGO_TLS_ALLOW_INVALID_CERTS=false
 ```
 

@@ -132,15 +132,13 @@ def _default_env_id() -> str | None:
     )
 
 
-def _require_env_access(request: Request, env_id: str) -> None:
+def _env_access_allowed(request: Request, env_id: str) -> bool:
     auth_enabled = os.getenv("KEHRNEL_AUTH_ENABLED", "true").lower() in ("1", "true", "yes")
     if not auth_enabled:
-        # With auth disabled, do not apply per-key environment scoping.
-        return
+        return True
 
     scopes = _parse_api_key_env_scopes()
     api_key = (request.headers.get("x-api-key") or "").strip()
-    allowed = False
 
     if scopes:
         matched_scope = None
@@ -150,15 +148,19 @@ def _require_env_access(request: Request, env_id: str) -> None:
                     matched_scope = scope
                     break
         if matched_scope == "*":
-            allowed = True
-        elif isinstance(matched_scope, list):
-            allowed = env_id in {str(v).strip() for v in matched_scope if str(v).strip()}
-    else:
-        default_env = _default_env_id()
-        if default_env:
-            allowed = env_id == default_env
+            return True
+        if isinstance(matched_scope, list):
+            return env_id in {str(v).strip() for v in matched_scope if str(v).strip()}
+        return False
 
-    if not allowed:
+    default_env = _default_env_id()
+    if default_env:
+        return env_id == default_env
+    return False
+
+
+def _require_env_access(request: Request, env_id: str) -> None:
+    if not _env_access_allowed(request, env_id):
         raise KehrnelError(
             code="FORBIDDEN",
             status=403,
@@ -367,6 +369,61 @@ def _sync_bridge_openehr_settings_from_activation(rt, activation) -> None:
     except Exception:
         # Never break activation because bridge sync failed.
         return
+
+
+async def _initialize_activation_artifacts(rt, env_id: str, activation) -> Dict[str, Any]:
+    """
+    Materialize storage/search artifacts and bootstrap dictionaries after an
+    activation lifecycle change so activate/upgrade/rollback behave the same.
+    """
+    domain = (getattr(activation, "domain", None) or "").lower()
+    artifact_result = None
+    try:
+        plan_result = await rt.dispatch(
+            env_id,
+            "plan",
+            {"domain": domain},
+        )
+        artifact_result = await rt.dispatch(
+            env_id,
+            "apply",
+            {"domain": domain, "plan": plan_result},
+        )
+    except Exception as exc:
+        artifact_result = {
+            "ok": False,
+            "warning": f"storage artifact initialization failed: {redact_sensitive(str(exc))}",
+        }
+
+    dict_result = None
+    try:
+        apply_shortcuts = bool(
+            ((activation.config or {}).get("transform") or {}).get("apply_shortcuts", True)
+        )
+        bootstrap_cfg = (((activation.config or {}).get("bootstrap") or {}).get("dictionariesOnActivate") or {})
+        is_rps_dual = (getattr(activation, "strategy_id", "") or "").strip().lower() == "openehr.rps_dual"
+        bootstrap_payload = {}
+        if is_rps_dual:
+            bootstrap_payload = {
+                "codes": bootstrap_cfg.get("codes") or "ensure",
+                "shortcuts": bootstrap_cfg.get("shortcuts") or ("seed" if apply_shortcuts else "none"),
+            }
+        should_bootstrap = (
+            is_rps_dual and any(bootstrap_payload.get(key) != "none" for key in ("codes", "shortcuts"))
+        ) or (not is_rps_dual and apply_shortcuts)
+        if should_bootstrap:
+            dict_result = await rt.dispatch(
+                env_id,
+                "op",
+                {"domain": domain, "op": "ensure_dictionaries", "payload": bootstrap_payload},
+            )
+    except Exception:
+        dict_result = {"ok": False, "warning": "dictionary bootstrap failed"}
+
+    return {
+        "artifacts": artifact_result,
+        "dictionaries": dict_result,
+    }
 
 
 def _load_mapping_payload(mapping_raw: str) -> Dict[str, Any]:
@@ -1235,6 +1292,154 @@ async def run_extension(env_id: str, strategy_id: str, op: str, request: Request
         return _error_response(exc)
 
 
+
+def _coerce_request_bool(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    return str(value or "").strip().lower() in ("1", "true", "yes", "on")
+
+
+def _normalize_environment_metadata(value: Any) -> Dict[str, Any]:
+    if value is None:
+        return {}
+    if isinstance(value, dict):
+        return value
+    raise KehrnelError(code="INVALID_INPUT", status=400, message="metadata must be an object")
+
+
+def _serialize_environment(rt, env_id: str, env=None) -> Dict[str, Any] | None:
+    record = env or rt.get_environment(env_id)
+    if not record:
+        return None
+    activations = rt.registry.list_activations(env_id) or {}
+    return {
+        "env_id": record.env_id,
+        "name": record.name or record.env_id,
+        "description": record.description or "",
+        "metadata": record.metadata or {},
+        "bindings_ref": record.bindings_ref,
+        "created_at": record.created_at,
+        "updated_at": record.updated_at,
+        "activation_domains": sorted(activations.keys()),
+        "activation_count": len(activations),
+    }
+
+
+def _summarize_env_activations(rt, env_id: str) -> tuple[Dict[str, Any], Dict[str, Any]]:
+    activations = rt.registry.list_activations(env_id)
+    summary = {}
+    history_summary = {}
+    for proto, activation in activations.items():
+        manifest = rt.registry.get_manifest(activation.strategy_id)
+        summary[proto] = {
+            "strategy_id": activation.strategy_id,
+            "strategy_version": activation.version,
+            "version": activation.version,
+            "manifest_digest": activation.manifest_digest,
+            "domain": getattr(manifest, "domain", proto),
+            "config": activation.config,
+            "bindings_meta": activation.bindings_meta,
+            "bindings_ref": activation.bindings_ref,
+            "activation_id": activation.activation_id,
+            "activated_at": activation.activated_at,
+            "updated_at": activation.updated_at,
+            "config_hash": activation.config_hash,
+        }
+        history_summary[proto] = _history_summary(rt, env_id, proto)
+    return summary, history_summary
+
+
+@router.get("/environments", include_in_schema=False)
+async def list_environments(request: Request):
+    try:
+        _require_admin_access(request)
+        rt = getattr(request.app.state, "strategy_runtime", None)
+        if not rt:
+            raise ValueError("Strategy runtime not initialized")
+        environments = []
+        for env_id, env in sorted(rt.list_environments().items(), key=lambda item: item[0]):
+            if _env_access_allowed(request, env_id):
+                environments.append(_serialize_environment(rt, env_id, env))
+        return {"environments": environments}
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/environments", include_in_schema=False)
+async def create_environment(request: Request, body: Dict[str, Any] = Body(default_factory=dict)):
+    try:
+        _require_admin_access(request)
+        rt = getattr(request.app.state, "strategy_runtime", None)
+        if not rt:
+            raise ValueError("Strategy runtime not initialized")
+        env_id = body.get("env_id") or body.get("envId") or body.get("id") or body.get("environment")
+        if not env_id:
+            raise KehrnelError(code="INVALID_INPUT", status=400, message="env_id is required")
+        _require_env_access(request, env_id)
+        existing = rt.get_environment(env_id)
+        env = rt.upsert_environment(
+            env_id,
+            name=body.get("name"),
+            description=body.get("description"),
+            metadata=_normalize_environment_metadata(body.get("metadata")),
+            bindings_ref=body.get("bindings_ref") or body.get("bindingsRef"),
+        )
+        return {"ok": True, "created": existing is None, "environment": _serialize_environment(rt, env_id, env)}
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.patch("/environments/{env_id}", include_in_schema=False)
+async def update_environment(env_id: str, request: Request, body: Dict[str, Any] = Body(default_factory=dict)):
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        rt = getattr(request.app.state, "strategy_runtime", None)
+        if not rt:
+            raise ValueError("Strategy runtime not initialized")
+        existing = rt.get_environment(env_id)
+        if not existing:
+            raise KehrnelError(code="ENVIRONMENT_NOT_FOUND", status=404, message=f"Environment {env_id} not found")
+        metadata = existing.metadata
+        if "metadata" in body:
+            metadata = _normalize_environment_metadata(body.get("metadata"))
+        env = rt.upsert_environment(
+            env_id,
+            name=body["name"] if "name" in body else existing.name,
+            description=body["description"] if "description" in body else existing.description,
+            metadata=metadata,
+            bindings_ref=(body.get("bindings_ref") if "bindings_ref" in body else body.get("bindingsRef"))
+            if ("bindings_ref" in body or "bindingsRef" in body)
+            else existing.bindings_ref,
+        )
+        return {"ok": True, "environment": _serialize_environment(rt, env_id, env)}
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.delete("/environments/{env_id}", include_in_schema=False)
+async def delete_environment(env_id: str, request: Request):
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        rt = getattr(request.app.state, "strategy_runtime", None)
+        if not rt:
+            raise ValueError("Strategy runtime not initialized")
+        force = _coerce_request_bool(request.query_params.get("force") or request.query_params.get("purge_activations"))
+        removed = rt.delete_environment(env_id, remove_activations=force)
+        return {"ok": True, "force": force, "environment": {
+            "env_id": removed.env_id,
+            "name": removed.name or removed.env_id,
+            "description": removed.description or "",
+            "metadata": removed.metadata or {},
+            "bindings_ref": removed.bindings_ref,
+            "created_at": removed.created_at,
+            "updated_at": removed.updated_at,
+        }}
+    except Exception as exc:
+        return _error_response(exc)
+
+
 @router.post("/environments/{env_id}/activate", include_in_schema=False)
 async def activate_env(env_id: str, request: Request, body: Dict[str, Any] = Body(default_factory=dict)):
     try:
@@ -1297,19 +1502,7 @@ async def activate_env(env_id: str, request: Request, body: Dict[str, Any] = Bod
             bindings_ref=bindings_ref,
         )
         _sync_bridge_openehr_settings_from_activation(rt, activation)
-        init_result = None
-        try:
-            apply_shortcuts = bool(
-                ((activation.config or {}).get("transform") or {}).get("apply_shortcuts", True)
-            )
-            if apply_shortcuts:
-                init_result = await rt.dispatch(
-                    env_id,
-                    "op",
-                    {"domain": domain, "op": "ensure_dictionaries", "payload": {}},
-                )
-        except Exception:
-            init_result = {"ok": False, "warning": "dictionary bootstrap failed"}
+        initialization = await _initialize_activation_artifacts(rt, env_id, activation)
         return {
             "ok": True,
             "activation": {
@@ -1329,7 +1522,7 @@ async def activate_env(env_id: str, request: Request, body: Dict[str, Any] = Bod
                 "replaced_from": activation.replaced_from,
                 "already_active": activation.already_active,
             },
-            "initialization": init_result,
+            "initialization": initialization,
         }
     except Exception as exc:
         return _error_response(exc)
@@ -1378,29 +1571,16 @@ async def get_env(env_id: str, request: Request):
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
-        activations = rt.registry.list_activations(env_id)
-        if not activations:
-            raise KeyError("No activation for env")
-        summary = {}
-        history_summary = {}
-        for proto, activation in activations.items():
-            manifest = rt.registry.get_manifest(activation.strategy_id)
-            summary[proto] = {
-                "strategy_id": activation.strategy_id,
-                "strategy_version": activation.version,
-                "version": activation.version,
-                "manifest_digest": activation.manifest_digest,
-                "domain": getattr(manifest, "domain", proto),
-                "config": activation.config,
-                "bindings_meta": activation.bindings_meta,
-                "bindings_ref": activation.bindings_ref,
-                "activation_id": activation.activation_id,
-                "activated_at": activation.activated_at,
-                "updated_at": activation.updated_at,
-                "config_hash": activation.config_hash,
-            }
-            history_summary[proto] = _history_summary(rt, env_id, proto)
-        return {"env_id": env_id, "activations": summary, "history": history_summary}
+        env = rt.get_environment(env_id)
+        summary, history_summary = _summarize_env_activations(rt, env_id)
+        if not env and not summary:
+            raise KeyError("Environment not found")
+        return {
+            "env_id": env_id,
+            "environment": _serialize_environment(rt, env_id, env),
+            "activations": summary,
+            "history": history_summary,
+        }
     except Exception as exc:
         return _error_response(exc)
 
@@ -1419,6 +1599,8 @@ async def upgrade_activation(env_id: str, domain: str, request: Request):
         if not rt:
             raise ValueError("Strategy runtime not initialized")
         new_act = await rt.upgrade_activation(env_id, domain)
+        _sync_bridge_openehr_settings_from_activation(rt, new_act)
+        initialization = await _initialize_activation_artifacts(rt, env_id, new_act)
         return {
             "ok": True,
             "activation": {
@@ -1431,6 +1613,7 @@ async def upgrade_activation(env_id: str, domain: str, request: Request):
                 "bindings_meta": new_act.bindings_meta,
                 "bindings_ref": new_act.bindings_ref,
             },
+            "initialization": initialization,
         }
     except Exception as exc:
         return _error_response(exc)
@@ -1445,6 +1628,8 @@ async def rollback_activation(env_id: str, domain: str, request: Request):
         if not rt:
             raise ValueError("Strategy runtime not initialized")
         act = await rt.rollback_activation(env_id, domain)
+        _sync_bridge_openehr_settings_from_activation(rt, act)
+        initialization = await _initialize_activation_artifacts(rt, env_id, act)
         return {
             "ok": True,
             "activation": {
@@ -1458,6 +1643,7 @@ async def rollback_activation(env_id: str, domain: str, request: Request):
                 "bindings_ref": act.bindings_ref,
                 "config_hash": act.config_hash,
             },
+            "initialization": initialization,
         }
     except Exception as exc:
         return _error_response(exc)

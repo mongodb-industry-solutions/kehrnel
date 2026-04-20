@@ -1,6 +1,7 @@
 # src/kehrnel/api/compatibility/v1/aql/transformers/pipeline_builder.py
 
 from typing import Dict, Any, List, Optional
+import re
 from .condition_processor import ConditionProcessor
 from .value_formatter import ValueFormatter
 from .format_resolver import FormatResolver
@@ -10,7 +11,7 @@ from bson import Binary
 TEMPLATE_PATTERNS = {
     # Mapping of archetype IDs to template name patterns for fallback matching
     # Used when archetype resolver cannot find numeric codes in database
-    "openEHR-EHR-COMPOSITION.vaccination_list.v0": ["HC3 Immunization List", "vaccination", "immunization"],
+    "openEHR-EHR-COMPOSITION.vaccination_list.v0": ["Sample Immunization List", "vaccination", "immunization"],
     "openEHR-EHR-COMPOSITION.tumour.v0": ["T-IGR-TUMOUR-SUMMARY", "tumour", "tumor"],
     "openEHR-EHR-COMPOSITION.encounter.v1": ["encounter", "visit"]
 }
@@ -22,9 +23,11 @@ class PipelineBuilder:
     """
 
     def __init__(self, ehr_alias: str, composition_alias: str, schema_config: Dict[str, str], 
-                 format_resolver: FormatResolver, context_map: Dict[str, Dict], let_variables: Dict[str, Any] = None):
+                 format_resolver: FormatResolver, context_map: Dict[str, Dict], let_variables: Dict[str, Any] = None,
+                 version_alias: str | None = None):
         self.ehr_alias = ehr_alias
         self.composition_alias = composition_alias
+        self.version_alias = version_alias
         self.schema_config = schema_config
         self.format_resolver = format_resolver
         self.context_map = context_map
@@ -35,7 +38,7 @@ class PipelineBuilder:
         self.format_resolver = format_resolver
         
         self.condition_processor = ConditionProcessor(
-            ehr_alias, composition_alias, schema_config, format_resolver, let_variables
+            ehr_alias, composition_alias, schema_config, format_resolver, let_variables, version_alias=version_alias
         )
         self.value_formatter = ValueFormatter()
 
@@ -64,9 +67,10 @@ class PipelineBuilder:
             match_conditions.update(ehr_conditions)
         
         # Add external EHR ID if provided and not already in conditions
-        if ehr_id and 'ehr_id' not in match_conditions:
+        ehr_field = self.schema_config.get("ehr_id", "ehr_id")
+        if ehr_id and ehr_field not in match_conditions:
             # For shortened format collections, keep EHR ID as string to match document format
-            match_conditions['ehr_id'] = ehr_id
+            match_conditions[ehr_field] = ehr_id
         
         # Process CONTAINS clause for composition filtering
         if contains_clause:
@@ -203,6 +207,35 @@ class PipelineBuilder:
         
         return {"$addFields": add_fields}
 
+    def _first_matching_node_value(
+        self,
+        nodes_expr: Any,
+        *,
+        path_field: str,
+        path_regex_pattern: Any,
+        data_path: str,
+    ) -> Dict[str, Any]:
+        return {
+            "$first": {
+                "$map": {
+                    "input": {
+                        "$filter": {
+                            "input": nodes_expr,
+                            "as": "node",
+                            "cond": {
+                                "$regexMatch": {
+                                    "input": f"$$node.{path_field}",
+                                    "regex": path_regex_pattern,
+                                }
+                            },
+                        }
+                    },
+                    "as": "node",
+                    "in": f"$$node.{data_path}",
+                }
+            }
+        }
+
     async def build_project_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Constructs the $project stage from the SELECT clause."""
         columns = ast.get("select", {}).get("columns", {})
@@ -242,8 +275,7 @@ class PipelineBuilder:
 
             if variable == self.ehr_alias:  # Use dynamic EHR alias instead of hardcoded 'e'
                 if 'ehr_id' in aql_path:
-                    # Convert UUID binary to string representation
-                    projection[alias] = {"$toString": "$ehr_id"}
+                    projection[alias] = f"${self.schema_config.get('ehr_id', 'ehr_id')}"
                 # Don't continue here - let other columns be processed too
             else:
                 # Handle different formats - now async
@@ -261,30 +293,13 @@ class PipelineBuilder:
                     # Use cn array filtering logic with dynamic p-patterns
                     composition_array_field = self.schema_config['composition_array']
                     path_field = self.schema_config['path_field']
-                    
-                    # Use MongoDB's $regexMatch which returns boolean for $filter condition
-                    projection[alias] = {
-                        "$let": {
-                            "vars": {
-                                "target_element": {
-                                    "$first": {
-                                        "$filter": {
-                                            "input": f"${composition_array_field}",
-                                            "as": "item",
-                                            "cond": {"$regexMatch": {"input": f"$$item.{path_field}", "regex": path_regex_pattern}}
-                                        }
-                                    }
-                                }
-                            },
-                            "in": {
-                                "$cond": {
-                                    "if": {"$ne": ["$$target_element", None]},
-                                    "then": f"$$target_element.{data_path}",
-                                    "else": None  # Return null if no matching element found
-                                }
-                            }
-                        }
-                    }
+
+                    projection[alias] = self._first_matching_node_value(
+                        f"${composition_array_field}",
+                        path_field=path_field,
+                        path_regex_pattern=path_regex_pattern,
+                        data_path=data_path,
+                    )
         return {"$project": projection}
 
     def build_sort_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -295,13 +310,18 @@ class PipelineBuilder:
             Optional[Dict[str, Any]]: MongoDB $sort stage or None if no ORDER BY clause
         """
         order_by = ast.get("orderBy", {})
-        
+        columns = order_by.get("columns") if isinstance(order_by, dict) and isinstance(order_by.get("columns"), dict) else order_by
+
         # Check if orderBy exists and has columns
-        if not order_by or not order_by.get("columns"):
+        if not isinstance(columns, dict) or not columns:
             return None
             
         sort_spec = {}
-        columns = order_by.get("columns", {})
+        projected_aliases = {
+            col.get("value", {}).get("path"): col.get("alias")
+            for col in ast.get("select", {}).get("columns", {}).values()
+            if isinstance(col, dict) and isinstance(col.get("value"), dict) and col.get("alias")
+        }
         
         for col_data in columns.values():
             aql_path = col_data.get("path")
@@ -315,6 +335,15 @@ class PipelineBuilder:
                 # Use the field name created by the LET stage
                 field_name = variable.lstrip('$')
             elif aql_path:
+                projected_alias = projected_aliases.get(aql_path)
+                if projected_alias:
+                    field_name = projected_alias
+                else:
+                    direct_field = self.format_resolver.resolve_document_field(aql_path)
+                    if direct_field:
+                        field_name = direct_field
+            
+            if not field_name and aql_path:
                 # Convert AQL path to MongoDB field name using same logic as projection
                 path_parts = aql_path.split('/')
                 if len(path_parts) >= 2:
@@ -347,6 +376,8 @@ class PipelineBuilder:
             
         rmType = contains_clause.get("rmType")
         predicate = contains_clause.get("predicate")
+        if rmType != "COMPOSITION" and contains_clause.get("contains"):
+            return await self._process_contains_clause(contains_clause.get("contains"))
         
         # Handle COMPOSITION level filtering
         if rmType == "COMPOSITION" and predicate:
@@ -357,58 +388,16 @@ class PipelineBuilder:
             if path == "archetype_node_id" and operator == "=" and value:
                 # For shortened format, use archetype resolver to get numeric code
                 if self.format == 'shortened':
+                    path_field = self.schema_config.get("path_field", "p")
+                    data_field = self.schema_config.get("data_field", "data")
                     # Use archetype resolver to get the numeric code for this archetype
                     archetype_resolver = self.format_resolver.archetype_resolver
                     if archetype_resolver:
                         archetype_code = await archetype_resolver.get_archetype_code(value)
                         if archetype_code is not None:
-                            # Match elements with exact p-value for this archetype
-                            return {
-                                "$elemMatch": {
-                                    "$and": [
-                                        {"p": str(archetype_code)},  # Exact match for the archetype code
-                                        {"data._type": "COMPOSITION"}  # Ensure it's a composition
-                                    ]
-                                }
-                            }
-                        else:
-                            patterns = TEMPLATE_PATTERNS.get(value, [value])
-                            
-                            or_conditions = []
-                            for pattern in patterns:
-                                or_conditions.extend([
-                                    {"data.archetype_details.template_id.value": {"$regex": pattern, "$options": "i"}},
-                                    {"data.name.value": {"$regex": pattern, "$options": "i"}}
-                                ])
-                            
-                            return {
-                                "$elemMatch": {
-                                    "$and": [
-                                        {"p": {"$regex": "^\\d+$"}},  # Composition root element
-                                        {"data._type": "COMPOSITION"},  # Ensure it's a composition
-                                        {"$or": or_conditions}
-                                    ]
-                                }
-                            }
-                    else:
-                        patterns = TEMPLATE_PATTERNS.get(value, [value])
-                        
-                        or_conditions = []
-                        for pattern in patterns:
-                            or_conditions.extend([
-                                {"data.archetype_details.template_id.value": {"$regex": pattern, "$options": "i"}},
-                                {"data.name.value": {"$regex": pattern, "$options": "i"}}
-                            ])
-                        
-                        return {
-                            "$elemMatch": {
-                                "$and": [
-                                    {"p": {"$regex": "^\\d+$"}},  # Composition root element
-                                    {"data._type": "COMPOSITION"},  # Ensure it's a composition
-                                    {"$or": or_conditions}
-                                ]
-                            }
-                        }
+                            return {"$elemMatch": {path_field: str(archetype_code), f"{data_field}.ani": archetype_code}}
+
+                    return {"$elemMatch": {path_field: {"$regex": r"^[^\\.]+$"}}}
                 else:
                     # For full format, use p field matching
                     return {

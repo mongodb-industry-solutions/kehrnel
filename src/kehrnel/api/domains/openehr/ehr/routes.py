@@ -9,7 +9,8 @@ from kehrnel.api.domains.openehr.ehr.service import (
     create_ehr, retrieve_ehr_by_id, 
     retrieve_ehr_list,
     create_ehr_with_id,
-    retrieve_ehr_by_subject
+    retrieve_ehr_by_subject,
+    delete_ehr,
 )
 
 from kehrnel.api.domains.openehr.ehr_status.models import EHRStatusCreate
@@ -21,7 +22,8 @@ from kehrnel.api.domains.openehr.ehr.api_responses import (
     create_ehr_api_responses,
     ehr_status_example, 
     get_ehr_list_responses,
-    get_ehr_by_subject_responses
+    get_ehr_by_subject_responses,
+    delete_ehr_responses,
 )
 
 router = APIRouter(
@@ -126,6 +128,27 @@ async def get_ehr_by_id(
     """
     ehr_data = await retrieve_ehr_by_id(ehr_id=ehr_id, db=db)
     return ehr_data
+
+
+@router.delete(
+    "/{ehr_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete EHR",
+    responses=delete_ehr_responses
+)
+async def delete_ehr_endpoint(
+    ehr_id: str,
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+):
+    """
+    Deletes an EHR and its related sandbox data from the active environment.
+
+    This is a hard delete intended for local/sandbox management workflows.
+    It removes the EHR resource together with its associated contributions and
+    composition records stored in the active strategy collections.
+    """
+    await delete_ehr(ehr_id=ehr_id, db=db)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.post(

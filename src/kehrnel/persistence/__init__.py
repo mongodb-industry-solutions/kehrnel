@@ -34,7 +34,12 @@ class MemoryPersister:
 
     def insert_many(self, docs, workers: int = 4):
         for d in docs:
-            self.insert_one(d, search=bool(d.get("sn") is not None))
+            search_key = "sn" if "sn" in d else ("search_nodes" if "search_nodes" in d else None)
+            if search_key is None:
+                self.insert_one(d, search=False)
+                continue
+            if d.get(search_key):
+                self.insert_one(d, search=True)
 
 
 def _load_config(cfg: Any) -> Dict[str, Any]:

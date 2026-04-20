@@ -11,7 +11,7 @@ Key features:
 - Generate multiple EHR records with attached compositions
 - Randomize clinical data while maintaining structure
 - Support for custom composition templates
-- Built-in vaccination template based on HC3 Immunization List
+- Built-in vaccination template based on the packaged sample immunization composition
 - Statistics and reporting capabilities
 """
 

@@ -15,20 +15,37 @@ class MongoAtlasSearchAdapter(TextSearchAdapter):
     async def ensure_search_index(self, collection: str, index_name: str, definition: Dict[str, Any]) -> Dict[str, Any]:
         warnings = []
         try:
-            cmd = {
-                "createSearchIndexes": collection,
-                "indexes": [
+            existing = await self.list_search_indexes(collection)
+            existing_names = {
+                str(doc.get("name"))
+                for doc in existing
+                if isinstance(doc, dict) and doc.get("name") is not None
+            }
+            if index_name in existing_names:
+                await self.db.command(
                     {
+                        "updateSearchIndex": collection,
                         "name": index_name,
                         "definition": definition,
                     }
-                ],
-            }
-            await self.db.command(cmd)
-            return {"created": [index_name], "warnings": warnings}
+                )
+                return {"created": [], "updated": [index_name], "warnings": warnings}
+
+            await self.db.command(
+                {
+                    "createSearchIndexes": collection,
+                    "indexes": [
+                        {
+                            "name": index_name,
+                            "definition": definition,
+                        }
+                    ],
+                }
+            )
+            return {"created": [index_name], "updated": [], "warnings": warnings}
         except Exception as exc:
             warnings.append(f"Search index not ensured: {exc}")
-            return {"created": [], "warnings": warnings}
+            return {"created": [], "updated": [], "warnings": warnings}
 
     async def list_search_indexes(self, collection: str) -> List[Dict[str, Any]]:
         try:

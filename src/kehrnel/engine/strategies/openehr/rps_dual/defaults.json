@@ -35,6 +35,8 @@
       "comp_id": "comp_id",
       "tid": "tid",
       "v": "v",
+      "time_committed": "time_c",
+      "sort_time": "sort_time",
       "cn": "cn",
       "sn": "sn"
     },
@@ -54,6 +56,12 @@
         "strategy": "negative_int",
         "store_original": false
       }
+    }
+  },
+  "bootstrap": {
+    "dictionariesOnActivate": {
+      "codes": "ensure",
+      "shortcuts": "seed"
     }
   }
 }

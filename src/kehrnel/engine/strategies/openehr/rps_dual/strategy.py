@@ -6,6 +6,7 @@ import json
 import random
 import tempfile
 import uuid
+from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict
 
@@ -18,7 +19,11 @@ from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.core.synthetic_model_catalog import resolve_links, resolve_model_specs
 from kehrnel.engine.domains.openehr.templates.generator import kehrnelGenerator
 from kehrnel.engine.domains.openehr.templates.parser import TemplateParser
+from kehrnel.engine.domains.openehr.aql.aql_to_ast import AQLToASTParser
 from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
+from kehrnel.engine.strategies.openehr.rps_dual.index_definition_builder import (
+    build_search_index_definition_from_mappings,
+)
 from kehrnel.engine.strategies.openehr.rps_dual.query.executor import execute as execute_query_plan
 from kehrnel.engine.strategies.openehr.rps_dual.services.codes_service import atcode_to_token
 from kehrnel.engine.strategies.openehr.rps_dual.services.codes_service import get_codes
@@ -32,7 +37,11 @@ from kehrnel.engine.strategies.openehr.rps_dual.config import (
     build_coding_opts,
 )
 from kehrnel.engine.strategies.openehr.rps_dual.config_resolver import resolve_uri_async
-from kehrnel.engine.strategies.openehr.rps_dual.query.compiler import build_query_pipeline
+from kehrnel.engine.strategies.openehr.rps_dual.query.compiler import (
+    build_query_pipeline,
+    build_query_pipeline_from_ast,
+    build_runtime_strategy,
+)
 
 
 def load_json(path: Path) -> Dict[str, Any]:
@@ -47,6 +56,41 @@ BULK_DEFAULTS_PATH = Path(__file__).parent / "ingest" / "bulk_defaults.json"
 
 
 MANIFEST = StrategyManifest(**load_json(MANIFEST_PATH))
+
+
+def _normalize_bootstrap_mode(value: Any, *, default: str) -> str:
+    mode = str(value or "").strip().lower()
+    return mode if mode in {"none", "ensure", "seed"} else default
+
+
+def _dictionary_bootstrap_modes(strategy_cfg: RPSDualConfig, payload: Dict[str, Any] | None = None) -> Dict[str, str]:
+    payload = payload or {}
+    defaults = getattr(strategy_cfg.bootstrap, "dictionariesOnActivate", None)
+    default_codes = getattr(defaults, "codes", "ensure")
+    default_shortcuts = getattr(defaults, "shortcuts", "seed")
+    return {
+        "codes": _normalize_bootstrap_mode(payload.get("codes"), default=default_codes),
+        "shortcuts": _normalize_bootstrap_mode(payload.get("shortcuts"), default=default_shortcuts),
+    }
+
+
+def _bind_query_params(node: Any, params: Dict[str, Any], missing: set[str]) -> Any:
+    if isinstance(node, dict):
+        bound = {}
+        for key, value in node.items():
+            if key == "value" and isinstance(value, str) and value.startswith("$"):
+                name = value[1:]
+                if name in params:
+                    bound[key] = params[name]
+                else:
+                    missing.add(name)
+                    bound[key] = value
+            else:
+                bound[key] = _bind_query_params(value, params, missing)
+        return bound
+    if isinstance(node, list):
+        return [_bind_query_params(item, params, missing) for item in node]
+    return node
 
 
 class RPSDualStrategy(StrategyPlugin):
@@ -66,50 +110,108 @@ class RPSDualStrategy(StrategyPlugin):
     async def validate_config(self, ctx: StrategyContext) -> None:
         return None
 
+    async def _resolve_mappings_content(self, ctx: StrategyContext, strategy_cfg: RPSDualConfig) -> Dict[str, Any]:
+        mappings_content = (ctx.meta or {}).get("mappings") if ctx and ctx.meta else None
+        mappings_ref = strategy_cfg.transform.mappings
+        if mappings_content is None and mappings_ref is not None:
+            db = getattr((ctx.adapters or {}).get("storage"), "db", None)
+            mappings_content = await resolve_uri_async(mappings_ref, db, Path(__file__).parent)
+        if mappings_content is None:
+            return {"templates": []}
+        return mappings_content
+
+    def _default_search_index_definition(self, strategy_cfg: RPSDualConfig) -> Dict[str, Any]:
+        return {
+            "mappings": {
+                "dynamic": False,
+                "fields": {
+                    strategy_cfg.fields.document.ehr_id: {
+                        "type": "token",
+                    },
+                    strategy_cfg.fields.document.tid: {
+                        "type": "token",
+                    },
+                    strategy_cfg.fields.document.sort_time: {
+                        "type": "date",
+                    },
+                    strategy_cfg.fields.document.sn: {
+                        "type": "embeddedDocuments",
+                        "fields": {
+                            strategy_cfg.fields.node.p: {
+                                "type": "string",
+                                "analyzer": "lucene.keyword",
+                            },
+                            strategy_cfg.fields.node.data: {
+                                "type": "document",
+                                "dynamic": True,
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+    async def _resolve_search_index_definition(self, ctx: StrategyContext, strategy_cfg: RPSDualConfig) -> Dict[str, Any]:
+        search_cfg = strategy_cfg.collections.search
+        definition = None
+        db = getattr((ctx.adapters or {}).get("storage"), "db", None)
+        if search_cfg.atlasIndex and search_cfg.atlasIndex.definition:
+            try:
+                definition = await resolve_uri_async(search_cfg.atlasIndex.definition, db, Path(__file__).parent)
+            except Exception:
+                definition = None
+        if isinstance(definition, dict) and definition.get("mappings"):
+            return definition
+
+        try:
+            mappings_content = await self._resolve_mappings_content(ctx, strategy_cfg)
+            build_result = await build_search_index_definition_from_mappings(
+                strategy_cfg,
+                mappings_content,
+                db=db,
+                shortcuts=await get_shortcuts(ctx),
+            )
+            built_definition = build_result.get("definition")
+            metadata = build_result.get("metadata") or {}
+            if isinstance(built_definition, dict) and built_definition.get("mappings") and metadata.get("data_field_count", 0) > 0:
+                return built_definition
+        except Exception:
+            pass
+        return self._default_search_index_definition(strategy_cfg)
+
+    @staticmethod
+    def _normalize_artifacts(plan: ApplyPlan | Dict[str, Any] | None) -> Dict[str, Any]:
+        if isinstance(plan, dict):
+            artifacts = plan.get("artifacts")
+            return artifacts if isinstance(artifacts, dict) else {}
+        artifacts = getattr(plan, "artifacts", None)
+        return artifacts if isinstance(artifacts, dict) else {}
+
     async def plan(self, ctx: StrategyContext) -> ApplyPlan:
         cfg = ctx.config
         strategy_cfg = normalize_config(cfg or {})
         artifacts = {"collections": [], "indexes": [], "search_indexes": []}
         comp = strategy_cfg.collections.compositions
         search = strategy_cfg.collections.search
+        codes = strategy_cfg.collections.codes
+        shortcuts = strategy_cfg.collections.shortcuts
         if comp.name:
             artifacts["collections"].append(comp.name)
         if search.enabled and search.name:
             artifacts["collections"].append(search.name)
+        if codes.name:
+            artifacts["collections"].append(codes.name)
+        if shortcuts.name:
+            artifacts["collections"].append(shortcuts.name)
+        artifacts["collections"] = list(dict.fromkeys(artifacts["collections"]))
+        if search.enabled and search.name:
             if search.atlasIndex and search.atlasIndex.name:
-                definition = {}
-                if search.atlasIndex.definition:
-                    storage = (ctx.adapters or {}).get("storage")
-                    db = getattr(storage, "db", None) if storage else None
-                    definition = await resolve_uri_async(search.atlasIndex.definition, db, Path(__file__).parent) or {}
+                definition = await self._resolve_search_index_definition(ctx, strategy_cfg)
                 artifacts["search_indexes"].append(
                     {"collection": search.name, "name": search.atlasIndex.name, "definition": definition}
                 )
-        # basic index specs
-        artifacts["indexes"].append({"collection": comp.name, "keys": [(strategy_cfg.fields.document.ehr_id, 1)]})
         # index plans from pack_spec storage indexes
         artifacts = self._augment_indexes_from_spec(ctx, artifacts)
-        # indexes from mapping/index hints
-        try:
-            flattener = CompositionFlattener(
-                db=None,
-                config={"paths": {"separator": strategy_cfg.paths.separator}},
-                mappings_path=str(Path(__file__).parent / "ingest" / "config" / "flattener_mappings_f.jsonc"),
-                mappings_content=ctx.meta.get("mappings") if ctx.meta else None,
-            )
-            hints = flattener.get_index_hints()
-            for _, idx_list in hints.items():
-                for idx in idx_list:
-                    if isinstance(idx.get("index"), dict) and idx["index"].get("type") == "token":
-                        artifacts["search_indexes"].append(
-                            {
-                                "collection": search.name,
-                                "name": (search.atlasIndex.name if search.atlasIndex else None) or "search_nodes_index",
-                                "definition": {"mappings": idx["index"]},
-                            }
-                        )
-        except Exception:
-            pass
         return ApplyPlan(artifacts=artifacts)
 
     async def apply(self, ctx: StrategyContext, plan: ApplyPlan) -> ApplyResult:
@@ -119,17 +221,21 @@ class RPSDualStrategy(StrategyPlugin):
         created = []
         warnings = []
         skipped = []
-        for coll in plan.artifacts.get("collections", []):
+        artifacts = self._normalize_artifacts(plan)
+        for coll in artifacts.get("collections", []):
             if index_admin:
                 await index_admin.ensure_collection(coll)
                 created.append(coll)
-        for idx in plan.artifacts.get("indexes", []):
+        for idx in artifacts.get("indexes", []):
             if index_admin:
-                res = await index_admin.ensure_indexes(idx.get("collection"), [{"keys": idx.get("keys", []), "options": {}}])
+                res = await index_admin.ensure_indexes(
+                    idx.get("collection"),
+                    [{"keys": idx.get("keys", []), "options": idx.get("options", {}) or {}}],
+                )
                 warnings.extend(res.get("warnings", []))
             else:
                 skipped.append({"collection": idx.get("collection"), "reason": "index_admin adapter not available"})
-        for si in plan.artifacts.get("search_indexes", []):
+        for si in artifacts.get("search_indexes", []):
             if atlas_search:
                 res = await atlas_search.ensure_search_index(si["collection"], si["name"], si.get("definition", {}))
                 warnings.extend(res.get("warnings", []))
@@ -140,12 +246,12 @@ class RPSDualStrategy(StrategyPlugin):
     def _augment_indexes_from_spec(self, ctx: StrategyContext, artifacts: Dict[str, Any]) -> Dict[str, Any]:
         """Merge indexes defined in pack_spec storage indexes into the plan."""
         spec = getattr(self.manifest, "pack_spec", None) or {}
-        stores = (spec.get("storage") or {}).get("stores") or []
+        stores = (spec.get("storage") or {}).get("stores") or (spec.get("storageModel") or {}).get("stores") or []
         store_profiles = (ctx.meta or {}).get("store_profiles") or {}
         collections_cfg = ctx.config.get("collections", {}) if isinstance(ctx.config, dict) else {}
 
         def resolve_collection(store: Dict[str, Any]) -> str | None:
-            role = store.get("role")
+            role = store.get("role") or store.get("id")
             if role and role in store_profiles:
                 return store_profiles[role].get("collection")
             # fallback to config
@@ -196,19 +302,7 @@ class RPSDualStrategy(StrategyPlugin):
         # Build flattener config from normalized models
         flattener_config = build_flattener_config(strategy_cfg, bulk_cfg)
         coding_cfg = build_coding_opts(strategy_cfg)
-
-        # Resolve mappings URI
-        mappings_ref = strategy_cfg.transform.mappings
-        mappings_content = (ctx.meta or {}).get("mappings") if ctx and ctx.meta else None
-
-        if mappings_content is None and mappings_ref:
-            db = getattr(storage, "db", None)
-            mappings_content = await resolve_uri_async(mappings_ref, db, Path(__file__).parent)
-
-        # If no mappings/analytics are configured for this run, do not fall back to bundled mappings.
-        # An empty mappings payload means: no slim/search projections produced.
-        if mappings_content is None:
-            mappings_content = {"templates": []}
+        mappings_content = await self._resolve_mappings_content(ctx, strategy_cfg)
 
         mappings_path = str(Path(__file__).parent / "ingest" / "config" / "flattener_mappings_f.jsonc")
 
@@ -235,6 +329,8 @@ class RPSDualStrategy(StrategyPlugin):
             "_id": payload.get("_id") if isinstance(payload, dict) else "comp-1",
             "ehr_id": (payload.get("ehr_id") if isinstance(payload, dict) else None) or "ehr-1",
             "composition_version": payload.get("composition_version") if isinstance(payload, dict) else None,
+            "time_committed": payload.get("time_committed") if isinstance(payload, dict) else None,
+            "time_created": payload.get("time_created") if isinstance(payload, dict) else None,
             "canonicalJSON": comp_obj or payload,
         }
         base_doc, search_doc = flattener.transform_composition(raw_doc)
@@ -242,7 +338,20 @@ class RPSDualStrategy(StrategyPlugin):
         return TransformResult(base=base_doc, search=search_doc, meta={})
 
     async def ingest(self, ctx: StrategyContext, payload: Dict[str, Any]) -> Dict[str, Any]:
-        tf = await self.transform(ctx, payload)
+        flattener = await self._build_flattener_for_context(ctx)
+        comp_obj = payload.get("canonicalJSON") if isinstance(payload, dict) else None
+        if comp_obj is None and isinstance(payload, dict):
+            comp_obj = payload.get("composition") or payload.get("compositionJSON") or payload
+        raw_doc = {
+            "_id": payload.get("_id") if isinstance(payload, dict) else "comp-1",
+            "ehr_id": (payload.get("ehr_id") if isinstance(payload, dict) else None) or "ehr-1",
+            "composition_version": payload.get("composition_version") if isinstance(payload, dict) else None,
+            "time_committed": payload.get("time_committed") if isinstance(payload, dict) else None,
+            "time_created": payload.get("time_created") if isinstance(payload, dict) else None,
+            "canonicalJSON": comp_obj or payload,
+        }
+        base_doc, search_doc = flattener.transform_composition(raw_doc)
+        tf = TransformResult(base=base_doc, search=search_doc, meta={})
         storage = (ctx.adapters or {}).get("storage")
         cfg = ctx.config or {}
         comp_name = cfg.get("collections", {}).get("compositions", {}).get("name")
@@ -257,6 +366,11 @@ class RPSDualStrategy(StrategyPlugin):
         if storage and search_enabled and search_name and tf.search:
             await storage.insert_one(search_name, tf.search)
             inserted["search"] = search_name
+        flush_codes = getattr(flattener, "flush_codes_to_db", None)
+        if callable(flush_codes):
+            maybe_coro = flush_codes()
+            if inspect.isawaitable(maybe_coro):
+                await maybe_coro
         return {"inserted": inserted, "base": tf.base, "search": tf.search}
 
     async def reverse_transform(self, ctx: StrategyContext, payload: Dict[str, Any]) -> Dict[str, Any]:
@@ -291,12 +405,6 @@ class RPSDualStrategy(StrategyPlugin):
     async def compile_query(self, ctx: StrategyContext, domain: str, query: Dict[str, Any]) -> QueryPlan:
         debug = False
         query_payload = query
-        if isinstance(query, dict):
-            debug = bool(query.get("debug"))
-            # The IR dataclass does not accept extra keys like "debug".
-            query_payload = {k: v for k, v in query.items() if k != "debug"}
-
-        ir = AqlQueryIR(**query_payload) if not isinstance(query, AqlQueryIR) else query
         cfg_model = normalize_config(ctx.config)
         explain_domain = (getattr(ctx.manifest, "domain", None) or domain or "").lower() or None
         shortcuts_res = await get_shortcuts(ctx)
@@ -306,8 +414,93 @@ class RPSDualStrategy(StrategyPlugin):
             warnings.append({"code": "dict_missing_shortcuts", "message": "Shortcuts dictionary missing", "details": {"source": shortcuts_res.get("source")}})
         if codes_res.get("missing"):
             warnings.append({"code": "dict_missing_codes", "message": "Codes dictionary missing", "details": {"source": codes_res.get("source")}})
+        runtime_strategy = build_runtime_strategy(cfg_model)
+        storage = (ctx.adapters or {}).get("storage") if ctx else None
+        motor_db = getattr(storage, "db", None) if storage else None
+        if isinstance(query, dict):
+            debug = bool(query.get("debug"))
+            raw_aql = query.get("raw_aql")
+            if isinstance(raw_aql, str) and raw_aql.strip():
+                params = query.get("params") or query.get("parameters") or {}
+                try:
+                    raw_ast = AQLToASTParser(raw_aql).parse()
+                except Exception as exc:
+                    raise KehrnelError(
+                        code="INVALID_AQL",
+                        status=400,
+                        message=f"AQL parsing failed: {exc}",
+                        details={"aql": raw_aql if debug else None},
+                    ) from exc
+
+                missing_params: set[str] = set()
+                ast_doc = _bind_query_params(deepcopy(raw_ast), params, missing_params)
+                if missing_params:
+                    raise KehrnelError(
+                        code="MISSING_QUERY_PARAMETERS",
+                        status=400,
+                        message="This query requires parameter values before it can be compiled or executed.",
+                        details={
+                            "missingParameters": sorted(missing_params),
+                            "mode": "raw_aql_strategy",
+                        },
+                    )
+
+                engine, pipeline, stage0, schema_cfgs, ast_doc, builder_info = await build_query_pipeline_from_ast(
+                    ast_doc,
+                    cfg_model,
+                    db=motor_db,
+                    shortcut_map=shortcuts_res.get("items") or {},
+                    strategy=runtime_strategy,
+                )
+                scope = builder_info.get("scope") or "patient"
+                if scope == "cross_patient":
+                    post_match = [stage for stage in pipeline[1:] if "$match" in stage]
+                    if post_match:
+                        warnings.append({"code": "partial_pushdown", "message": "Some predicates evaluated after $search", "details": {"post_match_stages": len(post_match)}})
+                plan_dict = {
+                    "engine": engine,
+                    "pipeline": pipeline,
+                    "scope": scope,
+                }
+                plan_dict["dicts"] = {
+                    "codes": {"source": codes_res.get("source"), "missing": codes_res.get("missing", False)},
+                    "shortcuts": {"source": shortcuts_res.get("source"), "missing": shortcuts_res.get("missing", False)},
+                }
+                plan_dict.setdefault("warnings", [])
+                plan_dict["warnings"].extend(warnings)
+                explain = {
+                    "dicts": plan_dict["dicts"],
+                    "warnings": plan_dict["warnings"],
+                    "engine": "query_engine",
+                    "stage0": stage0,
+                    "schema": schema_cfgs,
+                    "ast": ast_doc if debug else None,
+                    "builder": builder_info,
+                    "rawAql": raw_aql if debug else None,
+                    "parameters": params if debug else None,
+                    "mode": "raw_aql_strategy",
+                }
+                explain = enrich_explain(
+                    explain,
+                    ctx,
+                    domain=explain_domain or "openehr",
+                    engine="query_engine",
+                    scope=scope,
+                )
+                plan_dict["explain"] = explain
+                return QueryPlan(engine=plan_dict["engine"], plan=plan_dict, explain=explain)
+            # The IR dataclass does not accept extra keys like "debug".
+            query_payload = {k: v for k, v in query.items() if k != "debug"}
+
+        ir = AqlQueryIR(**query_payload) if not isinstance(query, AqlQueryIR) else query
         # Build query pipeline using the query compiler
-        engine, pipeline, stage0, schema_cfgs, ast_doc, builder_info = await build_query_pipeline(ir, cfg_model)
+        engine, pipeline, stage0, schema_cfgs, ast_doc, builder_info = await build_query_pipeline(
+            ir,
+            cfg_model,
+            db=motor_db,
+            shortcut_map=shortcuts_res.get("items") or {},
+            strategy=runtime_strategy,
+        )
         if ir.scope == "cross_patient":
             post_match = [stage for stage in pipeline[1:] if "$match" in stage]
             if post_match:
@@ -360,16 +553,24 @@ class RPSDualStrategy(StrategyPlugin):
             shortcuts_name = strategy_cfg.collections.shortcuts.name
             dict_seed = strategy_cfg.collections.codes.seed
             shortcuts_seed = strategy_cfg.collections.shortcuts.seed
+            modes = _dictionary_bootstrap_modes(strategy_cfg, payload)
             if index_admin:
-                if dict_name:
+                if dict_name and modes["codes"] != "none":
                     await index_admin.ensure_collection(dict_name)
                     created.append(dict_name)
-                await index_admin.ensure_collection(shortcuts_name)
-                created.append(shortcuts_name)
+                if shortcuts_name and modes["shortcuts"] != "none":
+                    await index_admin.ensure_collection(shortcuts_name)
+                    created.append(shortcuts_name)
             else:
                 warnings.append("index_admin adapter not available; cannot ensure collections")
             if not storage:
-                return {"ok": True, "created": created, "warnings": warnings + ["storage adapter not available; cannot seed dictionaries"]}
+                return {
+                    "ok": True,
+                    "created": created,
+                    "seeded": {"codes": 0, "shortcuts": 0},
+                    "modes": modes,
+                    "warnings": warnings + ["storage adapter not available; cannot seed dictionaries"],
+                }
 
             # Prefer upsert via raw Motor DB if present (seed ops should be idempotent).
             motor_db = getattr(storage, "db", None)
@@ -406,18 +607,18 @@ class RPSDualStrategy(StrategyPlugin):
                 return 0
 
             seeded = {
-                "codes": await _seed_from_uri(dict_name, dict_seed),
-                "shortcuts": await _seed_from_uri(shortcuts_name, shortcuts_seed),
+                "codes": await _seed_from_uri(dict_name, dict_seed) if modes["codes"] == "seed" else 0,
+                "shortcuts": await _seed_from_uri(shortcuts_name, shortcuts_seed) if modes["shortcuts"] == "seed" else 0,
             }
 
             # If seeds are missing/unresolvable, ensure minimal docs exist with expected IDs.
             # Codes dictionary default id used by flattener is "ar_code".
-            if dict_name and seeded["codes"] == 0:
+            if dict_name and modes["codes"] == "seed" and seeded["codes"] == 0:
                 await _upsert(dict_name, {"_id": "ar_code", "at": {}})
-            if shortcuts_name and seeded["shortcuts"] == 0:
+            if shortcuts_name and modes["shortcuts"] == "seed" and seeded["shortcuts"] == 0:
                 await _upsert(shortcuts_name, {"_id": "shortcuts", "keys": {}, "values": {}})
 
-            return {"ok": True, "created": created, "seeded": seeded, "warnings": warnings}
+            return {"ok": True, "created": created, "seeded": seeded, "modes": modes, "warnings": warnings}
 
         if op_lower == "rebuild_codes":
             dict_name = strategy_cfg.collections.codes.name
@@ -475,15 +676,28 @@ class RPSDualStrategy(StrategyPlugin):
         if op_lower == "ensure_atlas_search_index":
             search_coll = strategy_cfg.collections.search
             atlas_idx = search_coll.atlasIndex
-            definition = {}
-            if atlas_idx and atlas_idx.definition:
-                # Resolve URI if needed
-                db = getattr(storage, "db", None)
-                definition = await resolve_uri_async(atlas_idx.definition, db, Path(__file__).parent) or {}
-            if atlas and search_coll.name and atlas_idx and atlas_idx.name:
-                res = await atlas.ensure_search_index(search_coll.name, atlas_idx.name, definition)
+            index_name = (payload.get("index_name") if isinstance(payload, dict) else None) or (atlas_idx.name if atlas_idx else None)
+            definition = await self._resolve_search_index_definition(ctx, strategy_cfg)
+            if atlas and search_coll.name and index_name:
+                res = await atlas.ensure_search_index(search_coll.name, index_name, definition)
                 return {"ok": True, "result": res}
             return {"ok": False, "warnings": ["atlas_search adapter not available or search collection/index not configured"]}
+
+        if op_lower == "build_search_index_definition":
+            mappings_content = await self._resolve_mappings_content(ctx, strategy_cfg)
+            result = await build_search_index_definition_from_mappings(
+                strategy_cfg,
+                mappings_content,
+                db=getattr(storage, "db", None) if storage else None,
+                shortcuts=await get_shortcuts(ctx),
+                include_stored_source=bool(payload.get("include_stored_source", True)),
+            )
+            return {
+                "ok": True,
+                "definition": result.get("definition"),
+                "metadata": result.get("metadata"),
+                "warnings": result.get("warnings", []),
+            }
 
         if op_lower == "rebuild_slim_search_collection":
             if not storage:
@@ -505,7 +719,13 @@ class RPSDualStrategy(StrategyPlugin):
                 search_doc = self._apply_bundle_to_composition(bundle, doc, strategy_cfg)
                 await storage.insert_one(search_coll_name, search_doc)
                 inserted += 1
-            return {"ok": True, "processed": len(docs), "inserted": inserted, "warnings": []}
+            warnings = []
+            atlas_idx = strategy_cfg.collections.search.atlasIndex
+            if atlas and atlas_idx and atlas_idx.name:
+                definition = await self._resolve_search_index_definition(ctx, strategy_cfg)
+                res = await atlas.ensure_search_index(search_coll_name, atlas_idx.name, definition)
+                warnings.extend(res.get("warnings", []))
+            return {"ok": True, "processed": len(docs), "inserted": inserted, "warnings": warnings}
 
         if op_lower == "synthetic_generate_batch":
             if not storage:
@@ -545,6 +765,7 @@ class RPSDualStrategy(StrategyPlugin):
             source_min_per_patient = int(payload.get("source_min_per_patient", 1) or 1)
             source_max_per_patient = int(payload.get("source_max_per_patient", source_min_per_patient) or source_min_per_patient)
             source_filter = payload.get("source_filter")
+            template_field = strategy_cfg.fields.document.tid
 
             model_specs: list[Dict[str, Any]] = []
             if isinstance(models, list) and models:
@@ -604,7 +825,7 @@ class RPSDualStrategy(StrategyPlugin):
                                                 "$template_name",
                                                 {
                                                     "$ifNull": [
-                                                        "$tid",
+                                                        f"${template_field}",
                                                         {
                                                             "$ifNull": [
                                                                 "$canonicalJSON.archetype_details.template_id.value",
@@ -715,7 +936,7 @@ class RPSDualStrategy(StrategyPlugin):
                     match_conditions = [
                         {"template_id": template_id},
                         {"template_name": template_id},
-                        {"tid": template_id},
+                        {template_field: template_id},
                         {"canonicalJSON.archetype_details.template_id.value": template_id},
                         {"archetype_details.template_id.value": template_id},
                     ]
@@ -992,6 +1213,7 @@ class RPSDualStrategy(StrategyPlugin):
         sn_field = cfg.fields.document.sn
         ehr_id_field = cfg.fields.document.ehr_id
         comp_id_field = cfg.fields.document.comp_id
+        template_field = cfg.fields.document.tid
 
         nodes = comp.get(cn_field, []) or comp.get("cn", [])
         search_nodes = []
@@ -1014,7 +1236,7 @@ class RPSDualStrategy(StrategyPlugin):
                 elif analytics:
                     matched = True
                 if matched:
-                    sn_entry = {"p": p, "tid": tid}
+                    sn_entry = {"p": p, template_field: tid}
                     for field in (rule.get("copy") if matched and rules else []) or []:
                         if field == "p":
                             sn_entry["p"] = p
@@ -1027,7 +1249,7 @@ class RPSDualStrategy(StrategyPlugin):
             sn_field: search_nodes,
             ehr_id_field: comp.get(ehr_id_field, comp.get("ehr_id")),
             comp_id_field: comp.get(comp_id_field, comp.get("_id")),
-            "tid": templates[0].get("templateId") if templates else comp.get("tid"),
+            template_field: templates[0].get("templateId") if templates else comp.get(template_field, comp.get("tid")),
         }
 
 

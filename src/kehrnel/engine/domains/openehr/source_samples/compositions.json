@@ -1,10 +1,10 @@
 {
-  "_id": "002675a2-37e2-43f7-a16b-0b6b5d0ff37d",
-  "ehr_id": "db48a21b-f2b6-4c61-bbff-019ff7a16493",
-  "template_id": "b64b228f-39e3-4eec-9b77-489fbfd154ff",
-  "template_name": "HC3 Immunization List v0.5",
+  "_id": "f8c17066-5ce4-5ee7-a2d7-b1fb738a4654",
+  "ehr_id": "a3191546-cbce-5027-a4de-f9b4525525c6",
+  "template_id": "sample_immunization_list_v0.5",
+  "template_name": "sample_immunization_list_v0.5",
   "composition_date": {
-    "$date": "2023-12-21T02:42:44.286Z"
+    "$date": "2023-12-05T10:48:10.049Z"
   },
   "composition_version": "1",
   "archetype_node_id": "openEHR-EHR-COMPOSITION.vaccination_list.v0",
@@ -15,14 +15,14 @@
     "_type": "COMPOSITION",
     "name": {
       "_type": "DV_TEXT",
-      "value": "HC3 Immunization List"
+      "value": "Sample Immunization List"
     },
     "archetype_details": {
       "archetype_id": {
         "value": "openEHR-EHR-COMPOSITION.vaccination_list.v0"
       },
       "template_id": {
-        "value": "HC3 Immunization List v0.5"
+        "value": "sample_immunization_list_v0.5"
       },
       "rm_version": "1.0.4"
     },
@@ -54,7 +54,7 @@
       ],
       "originating_system_audit": {
         "_type": "FEEDER_AUDIT_DETAILS",
-        "system_id": "salutms.cat"
+        "system_id": "sample.source"
       }
     },
     "language": {
@@ -90,7 +90,7 @@
       "identifiers": [
         {
           "_type": "DV_IDENTIFIER",
-          "id": "HC3"
+          "id": "id-2dc430cb1c291e53"
         }
       ]
     },
@@ -130,7 +130,7 @@
                 "value": "openEHR-EHR-CLUSTER.xds_metadata.v0"
               },
               "template_id": {
-                "value": "HC3 Immunization List v0.5"
+                "value": "sample_immunization_list_v0.5"
               },
               "rm_version": "1.0.4"
             },
@@ -189,7 +189,7 @@
                 "value": "openEHR-EHR-CLUSTER.admin_salut.v0"
               },
               "template_id": {
-                "value": "HC3 Immunization List v0.5"
+                "value": "sample_immunization_list_v0.5"
               },
               "rm_version": "1.0.4"
             },
@@ -329,7 +329,7 @@
             "value": "openEHR-EHR-SECTION.immunisation_list.v0"
           },
           "template_id": {
-            "value": "HC3 Immunization List v0.5"
+            "value": "sample_immunization_list_v0.5"
           },
           "rm_version": "1.0.4"
         },
@@ -345,7 +345,7 @@
                 "value": "openEHR-EHR-ACTION.medication.v1"
               },
               "template_id": {
-                "value": "HC3 Immunization List v0.5"
+                "value": "sample_immunization_list_v0.5"
               },
               "rm_version": "1.0.4"
             },
@@ -455,7 +455,7 @@
                       "value": "openEHR-EHR-CLUSTER.medication.v2"
                     },
                     "template_id": {
-                      "value": "HC3 Immunization List v0.5"
+                      "value": "sample_immunization_list_v0.5"
                     },
                     "rm_version": "1.0.4"
                   },
@@ -491,7 +491,7 @@
                           "value": "openEHR-EHR-CLUSTER.medication.v2"
                         },
                         "template_id": {
-                          "value": "HC3 Immunization List v0.5"
+                          "value": "sample_immunization_list_v0.5"
                         },
                         "rm_version": "1.0.4"
                       },
@@ -549,7 +549,7 @@
     "archetype_node_id": "openEHR-EHR-COMPOSITION.vaccination_list.v0",
     "uid": {
       "_type": "OBJECT_VERSION_ID",
-      "value": "002675a2-37e2-43f7-a16b-0b6b5d0ff37d::ehrbase.ehrbase.org::1"
+      "value": "f8c17066-5ce4-5ee7-a2d7-b1fb738a4654::sample.kehrnel::1"
     }
   },
   "used": true

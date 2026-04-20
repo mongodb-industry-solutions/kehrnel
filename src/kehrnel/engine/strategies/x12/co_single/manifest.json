@@ -43,5 +43,26 @@
     ],
     "scorecard": { "read_patient": 5, "read_population": 5, "writes": 4, "storage": 5, "index_cost": 4, "migration_ease": 4 }
   },
-  "ops": []
+  "ops": [
+    {
+      "name": "resolve_context_contract",
+      "kind": "extension",
+      "summary": "Resolve a natural-language-like draft against published or inline ContextObject definitions"
+    },
+    {
+      "name": "compile_con2l",
+      "kind": "extension",
+      "summary": "Compile an executable Con2L contract into a deterministic Mongo query plan"
+    },
+    {
+      "name": "summarize_object_map",
+      "kind": "extension",
+      "summary": "Summarize a Context Map against the available ContextObject definitions"
+    },
+    {
+      "name": "negotiate_con2l",
+      "kind": "extension",
+      "summary": "Resolve a Con2L draft, emit an executable contract when ready, and compile it"
+    }
+  ]
 }
