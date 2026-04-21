@@ -13,6 +13,12 @@ from typing import Any, Dict, Optional, List
 
 import typer
 import yaml
+from dotenv import find_dotenv, load_dotenv
+
+# Load .env.local (then .env as fallback) so env vars like MONGODB_URI are
+# available to CLI commands without requiring `source .env.local` in the shell.
+load_dotenv(find_dotenv(".env.local", usecwd=True), override=False)
+load_dotenv(find_dotenv(".env", usecwd=True), override=False)
 
 from kehrnel.cli.state import load_cli_state, save_cli_state, mask_api_key
 

@@ -198,10 +198,12 @@ Production hardening (required):
 Use built-in resolver:
 
 ```bash
-export KEHRNEL_BINDINGS_RESOLVER="kehrnel.integrations.hdl.bindings_resolver:resolve_hdl_bindings"
 export CORE_MONGODB_URL="mongodb+srv://..."
 export CORE_DATABASE_NAME="hdl_core"
 export ENV_SECRETS_KEY="base64_32_byte_key"
+# KEHRNEL_BINDINGS_RESOLVER is auto-detected when the three vars above are set.
+# To set it explicitly (optional):
+# export KEHRNEL_BINDINGS_RESOLVER="kehrnel.engine.core.integrations.hdl.bindings_resolver:resolve_hdl_bindings"
 ```
 
 Supported `bindings_ref` formats:
