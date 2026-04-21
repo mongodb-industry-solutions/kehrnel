@@ -48,7 +48,8 @@ def from_file(
                 yield doc
 
     drv.insert_many(producer(), workers=workers)
-    log.info("done - inserted %d docs", getattr(getattr(drv, "stats", None), "inserted", 0))
+    inserted = getattr(getattr(drv, "stats", None), "inserted", 0)
+    typer.echo(json.dumps({"status": 200, "ok": True, "inserted": inserted}))
 
 @app.command("mongo-catchup")
 def from_mongo(
@@ -95,7 +96,7 @@ def from_mongo(
         if search_doc and search_doc.get("sn"):
             drv.insert_one(search_doc, search=True)
             inserted += 1
-    log.info("done - inserted %d docs", inserted)
+    typer.echo(json.dumps({"status": 200, "ok": True, "inserted": inserted}))
 
 
 @app.command("init-driver")
