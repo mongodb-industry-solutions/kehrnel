@@ -165,10 +165,13 @@ class ConditionProcessor:
 
     def _build_top_level_condition(self, path: str, operator: str, value: Any) -> Dict[str, Any]:
         field_name = None
+        id_encoding = None
         if path in {"ehr_id", f"{self.ehr_alias}/ehr_id/value"}:
             field_name = self.schema_config.get("ehr_id", "ehr_id")
+            id_encoding = self.schema_config.get("ehr_id_encoding", "string")
         elif path == f"{self.composition_alias}/uid/value":
             field_name = self.schema_config.get("comp_id", "comp_id")
+            id_encoding = self.schema_config.get("composition_id_encoding", "string")
         elif path == f"{self.composition_alias}/archetype_details/template_id/value":
             field_name = self.schema_config.get("template_id", "tid")
         elif self.version_alias and path == f"{self.version_alias}/commit_audit/time_committed/value":
@@ -183,6 +186,8 @@ class ConditionProcessor:
 
         mql_operator = OPERATOR_MAP.get(operator, "$eq")
         formatted_value = self.value_formatter.format_value(value)
+        if id_encoding is not None:
+            formatted_value = self.value_formatter.format_id_value(formatted_value, id_encoding)
         if mql_operator == "$eq":
             return {field_name: formatted_value}
         return {field_name: {mql_operator: formatted_value}}

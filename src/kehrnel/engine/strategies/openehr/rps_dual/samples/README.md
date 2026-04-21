@@ -100,6 +100,10 @@ The projection mappings and search index definition are derived from the same
 RPS Dual mappings workflow used by ingestion, so the sample search collection
 and index seed stay aligned.
 
+For canonical sample envelopes, batch ingest is intentionally strategy-aware:
+the expected path is `kehrnel run ingest --set file_path=reference/envelopes/all.ndjson`,
+not `common ingest`.
+
 The AQL examples are maintained alongside the packaged sample dataset and are
 validated in tests by compiling them against the bundled dictionaries and the
 packaged envelopes after flattening.

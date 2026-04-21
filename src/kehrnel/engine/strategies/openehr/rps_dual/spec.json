@@ -68,8 +68,8 @@
           "kind": "collectionRecord",
           "fields": {
             "_id": {"type": "objectId|uuid|string", "role": "pk"},
-            "ehr_id": {"type": "string|uuid", "role": "fk.patient", "required": true},
-            "comp_id": {"type": "string|uuid", "role": "identity.document"},
+            "ehr_id": {"type": "objectId|uuid|string", "role": "fk.patient", "required": true},
+            "comp_id": {"type": "objectId|uuid|string", "role": "identity.document"},
             "tid": {"type": "string", "role": "identity.template"},
             "v": {"type": "string|number|null", "role": "version"},
             "time_c": {"type": "date", "role": "version.commit_time", "required": false},
@@ -82,7 +82,8 @@
           "kind": "collectionRecord",
           "fields": {
             "_id": {"type": "objectId|uuid|string", "role": "pk"},
-            "ehr_id": {"type": "string|uuid", "role": "fk.patient", "required": true},
+            "ehr_id": {"type": "objectId|uuid|string", "role": "fk.patient", "required": true},
+            "comp_id": {"type": "objectId|uuid|string", "role": "identity.document"},
             "tid": {"type": "string", "role": "identity.template"},
             "sort_time": {"type": "date", "role": "sort.primary", "required": false},
             "sn": {"type": "openehr.node.v1[]", "role": "nodes.search", "required": true}
@@ -95,16 +96,6 @@
   "physicalProfiles": {
     "encodingProfiles": [
       {
-        "id": "profile.fullpath",
-        "title": "Full paths",
-        "description": "Human readable paths (at-codes/archetype ids as strings).",
-        "paths": {"mode": "full", "separator": "/", "order": "leaf_to_root"},
-        "keys": {"mode": "verbatim"},
-        "payload": {"mode": "full"},
-        "dictionaries": {"at_codes": "optional", "archetype_ids": "optional"},
-        "ids": {"ehr_id": "string", "composition_id": "string"}
-      },
-      {
         "id": "profile.codedpath",
         "title": "Coded paths",
         "description": "Numeric coded path segments using dictionary.",
@@ -112,7 +103,7 @@
         "keys": {"mode": "verbatim"},
         "payload": {"mode": "full"},
         "dictionaries": {"at_codes": "required", "archetype_ids": "optional"},
-        "ids": {"ehr_id": "string|uuidBin", "composition_id": "string|uuidBin"}
+        "ids": {"ehr_id": "objectId|string|uuidBin", "composition_id": "objectId|string|uuidBin"}
       },
       {
         "id": "profile.search_shortcuts",
@@ -121,7 +112,7 @@
         "paths": {"mode": "coded", "separator": ".", "order": "leaf_to_root", "dictRef": "bundles.dictionaries"},
         "keys": {"mode": "shortcuts", "dictRef": "bundles.shortcuts"},
         "payload": {"mode": "minimized"},
-        "ids": {"ehr_id": "string|uuidBin", "composition_id": "objectId|uuidBin|string"}
+        "ids": {"ehr_id": "objectId|string|uuidBin", "composition_id": "objectId|string|uuidBin"}
       }
     ]
   },
@@ -158,8 +149,8 @@
           {
             "id": "idx_patient_path",
             "type": "btree",
-            "fields": ["ehr_id", "cn.p"],
-            "purpose": "Fast patient-scoped path resolution (optional if too large)"
+            "fields": ["ehr_id", "cn.p", "time_c"],
+            "purpose": "Fast patient-scoped path resolution with commit-time filtering (optional if too large)"
           }
         ]
       },
@@ -272,6 +263,7 @@
         "from": "nodes_search",
         "extraFields": [
           {"field": "ehr_id", "from": "$.headers.ehr_id"},
+          {"field": "comp_id", "from": "$.headers.composition_uid"},
           {"field": "tid", "from": "$.headers.template_id"},
           {"field": "sort_time", "from": "$.headers.time_committed", "optional": true}
         ],
@@ -395,7 +387,7 @@
           "kind": "collection",
           "store": "store:search",
           "label": "search",
-          "fields": ["_id", "ehr_id", "tid", "sort_time", "sn"],
+          "fields": ["_id", "ehr_id", "comp_id", "tid", "sort_time", "sn"],
           "expand": {
             "sn": ["p", "data"]
           },

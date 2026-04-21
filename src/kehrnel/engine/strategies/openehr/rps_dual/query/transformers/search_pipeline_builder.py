@@ -331,10 +331,23 @@ class SearchPipelineBuilder:
                     self.search_config.get("sort_time"),
                 }
                 if search_path in exact_metadata_fields:
+                    coerced_value = value
+                    if search_path == self.search_config.get("ehr_id"):
+                        coerced_value = self.value_formatter.format_id_value(
+                            self.value_formatter.format_value(value),
+                            self.schema_config.get("ehr_id_encoding", "string"),
+                        )
+                    elif search_path == self.search_config.get("comp_id"):
+                        coerced_value = self.value_formatter.format_id_value(
+                            self.value_formatter.format_value(value),
+                            self.schema_config.get("composition_id_encoding", "string"),
+                        )
+                    elif search_path == self.search_config.get("sort_time"):
+                        coerced_value = self.value_formatter.format_value(value)
                     return {
                         "equals": {
                             "path": search_path,
-                            "value": value
+                            "value": coerced_value
                         }
                     }
                 if isinstance(value, str):

@@ -86,7 +86,7 @@ kehrnel strategy build-search-index --env dev --domain openehr --strategy openeh
 5. Index name: `search_nodes_index`
 6. Paste the generated `.kehrnel/search-index.json`
 
-### Using mongosh
+### Using mongosh (optional)
 
 ```javascript
 const definition = EJSON.parse(cat(".kehrnel/search-index.json"));
@@ -107,7 +107,7 @@ db.compositions_rps.createIndex({ "ehr_id": 1, "v": 1 })
 db.compositions_rps.createIndex({ "ehr_id": 1, "tid": 1, "time_c": 1, "comp_id": 1 })
 
 // Patient-scoped path predicates
-db.compositions_rps.createIndex({ "ehr_id": 1, "cn.p": 1 })
+db.compositions_rps.createIndex({ "ehr_id": 1, "cn.p": 1, "time_c": 1 })
 
 // Search collection paging/order helper
 db.compositions_search.createIndex({ "ehr_id": 1, "sort_time": 1 })

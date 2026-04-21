@@ -5,7 +5,7 @@
   "maturity": "published",
   "pack_format": "strategy-pack/v1",
   "spec": { "path": "spec.json", "version": "1.1" },
-  "variants": ["composition.fullpath", "composition.codedpath", "search.shortcuts"],
+  "variants": ["composition.codedpath", "search.codedpath", "search.shortcuts"],
   "domain": "openEHR",
   "summary": "A balanced approach to clinical data storage that keeps your original records intact while enabling fast searches across your entire patient population.",
   "description": "This strategy preserves the complete clinical narrative in each patient record while maintaining a streamlined search layer for population health queries, research, and analytics.",

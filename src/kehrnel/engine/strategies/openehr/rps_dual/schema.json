@@ -16,12 +16,12 @@
     },
     "pathSeparator": {
       "type": "string",
-      "enum": [".", "/", "@", "|"],
+      "enum": ["."],
       "default": "."
     },
     "encodingProfile": {
       "type": "string",
-      "enum": ["profile.fullpath", "profile.codedpath", "profile.search_shortcuts"]
+      "enum": ["profile.codedpath", "profile.search_shortcuts"]
     }
   },
   "properties": {

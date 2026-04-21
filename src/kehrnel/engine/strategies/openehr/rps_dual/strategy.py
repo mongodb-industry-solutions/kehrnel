@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import inspect
 import json
+import os
 import random
 import tempfile
 import uuid
@@ -57,6 +58,24 @@ BULK_DEFAULTS_PATH = Path(__file__).parent / "ingest" / "bulk_defaults.json"
 
 MANIFEST = StrategyManifest(**load_json(MANIFEST_PATH))
 
+_SUPPORTED_QUERY_SAFE_ENCODING_PROFILES = {
+    "profile.codedpath",
+    "profile.search_shortcuts",
+}
+
+_INGEST_CONTROL_KEYS = {
+    "data_mode",
+    "debug",
+    "documents",
+    "domain",
+    "dry_run",
+    "file_path",
+    "sink",
+    "source",
+    "strategy",
+    "strategy_id",
+}
+
 
 def _normalize_bootstrap_mode(value: Any, *, default: str) -> str:
     mode = str(value or "").strip().lower()
@@ -93,6 +112,82 @@ def _bind_query_params(node: Any, params: Dict[str, Any], missing: set[str]) -> 
     return node
 
 
+def _allow_local_file_ingest() -> bool:
+    return os.getenv("KEHRNEL_ALLOW_LOCAL_FILE_INPUTS", "false").lower() in ("1", "true", "yes")
+
+
+def _local_file_inputs_base_dir() -> Path:
+    raw = (os.getenv("KEHRNEL_LOCAL_FILE_INPUTS_BASE_DIR") or "").strip()
+    if not raw:
+        return Path.cwd().resolve()
+    return Path(raw).expanduser().resolve()
+
+
+def _validate_local_ingest_path(file_path: str) -> Path:
+    path = Path(file_path)
+    if not path.is_absolute():
+        path = (Path.cwd() / path).resolve()
+    else:
+        path = path.resolve()
+    base = _local_file_inputs_base_dir()
+    try:
+        path.relative_to(base)
+    except ValueError as exc:
+        raise ValueError("Provided path is outside the allowed inputs directory") from exc
+    if not path.exists() or not path.is_file():
+        raise FileNotFoundError("File not found")
+    if path.suffix.lower() not in {".json", ".ndjson"}:
+        raise ValueError("Only .json and .ndjson files are allowed for ingest")
+    return path
+
+
+def _load_ingest_documents_from_path(file_path: str) -> list[Dict[str, Any]]:
+    if not _allow_local_file_ingest():
+        raise ValueError(
+            "Local file ingest is disabled. Enable KEHRNEL_ALLOW_LOCAL_FILE_INPUTS=true to use file_path."
+        )
+
+    path = _validate_local_ingest_path(file_path)
+    suffix = path.suffix.lower()
+
+    if suffix == ".ndjson":
+        documents: list[Dict[str, Any]] = []
+        for line_number, raw_line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+            line = raw_line.strip()
+            if not line:
+                continue
+            try:
+                parsed = json.loads(line)
+            except json.JSONDecodeError as exc:
+                raise ValueError(f"Invalid JSON on line {line_number} of {path.name}") from exc
+            if not isinstance(parsed, dict):
+                raise ValueError(f"Each NDJSON line in {path.name} must be a JSON object")
+            documents.append(parsed)
+        if not documents:
+            raise ValueError(f"No documents found in {path.name}")
+        return documents
+
+    try:
+        parsed = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"The file {path.name} is not valid JSON") from exc
+
+    if isinstance(parsed, dict) and isinstance(parsed.get("documents"), list):
+        documents = parsed["documents"]
+    elif isinstance(parsed, list):
+        documents = parsed
+    elif isinstance(parsed, dict):
+        documents = [parsed]
+    else:
+        raise ValueError(f"The file {path.name} must contain a JSON object or array of objects")
+
+    if not documents:
+        raise ValueError(f"No documents found in {path.name}")
+    if not all(isinstance(item, dict) for item in documents):
+        raise ValueError(f"Every document in {path.name} must be a JSON object")
+    return documents
+
+
 class RPSDualStrategy(StrategyPlugin):
     def __init__(self, manifest: StrategyManifest = MANIFEST):
         self.manifest = manifest
@@ -107,7 +202,39 @@ class RPSDualStrategy(StrategyPlugin):
         self.normalized_config: RPSDualConfig | None = None
         self.normalized_bulk_config: BulkConfig | None = None
 
-    async def validate_config(self, ctx: StrategyContext) -> None:
+    async def validate_config(self, ctx: StrategyContext | Dict[str, Any]) -> None:
+        raw_config = ctx.config if isinstance(ctx, StrategyContext) else ctx
+        strategy_cfg = normalize_config(raw_config or {})
+        errors: list[str] = []
+
+        if strategy_cfg.paths.separator != ".":
+            errors.append(
+                "paths.separator must remain '.' because query compilation still assumes dot-separated stored paths."
+            )
+
+        comp_profile = (strategy_cfg.collections.compositions.encodingProfile or "").strip().lower()
+        if comp_profile not in _SUPPORTED_QUERY_SAFE_ENCODING_PROFILES:
+            errors.append(
+                "collections.compositions.encodingProfile must be one of "
+                f"{sorted(_SUPPORTED_QUERY_SAFE_ENCODING_PROFILES)} for consistent ingest/query behavior."
+            )
+
+        search_profile = (strategy_cfg.collections.search.encodingProfile or "").strip().lower()
+        if search_profile not in _SUPPORTED_QUERY_SAFE_ENCODING_PROFILES:
+            errors.append(
+                "collections.search.encodingProfile must be one of "
+                f"{sorted(_SUPPORTED_QUERY_SAFE_ENCODING_PROFILES)}."
+            )
+
+        if errors:
+            raise KehrnelError(
+                code="CONFIG_INVALID",
+                status=400,
+                message="Unsupported openehr.rps_dual configuration for consistent ingest/query behavior.",
+                details={"errors": errors},
+            )
+
+        self.normalized_config = strategy_cfg
         return None
 
     async def _resolve_mappings_content(self, ctx: StrategyContext, strategy_cfg: RPSDualConfig) -> Dict[str, Any]:
@@ -153,15 +280,7 @@ class RPSDualStrategy(StrategyPlugin):
 
     async def _resolve_search_index_definition(self, ctx: StrategyContext, strategy_cfg: RPSDualConfig) -> Dict[str, Any]:
         search_cfg = strategy_cfg.collections.search
-        definition = None
         db = getattr((ctx.adapters or {}).get("storage"), "db", None)
-        if search_cfg.atlasIndex and search_cfg.atlasIndex.definition:
-            try:
-                definition = await resolve_uri_async(search_cfg.atlasIndex.definition, db, Path(__file__).parent)
-            except Exception:
-                definition = None
-        if isinstance(definition, dict) and definition.get("mappings"):
-            return definition
 
         try:
             mappings_content = await self._resolve_mappings_content(ctx, strategy_cfg)
@@ -177,6 +296,15 @@ class RPSDualStrategy(StrategyPlugin):
                 return built_definition
         except Exception:
             pass
+
+        definition = None
+        if search_cfg.atlasIndex and search_cfg.atlasIndex.definition:
+            try:
+                definition = await resolve_uri_async(search_cfg.atlasIndex.definition, db, Path(__file__).parent)
+            except Exception:
+                definition = None
+        if isinstance(definition, dict) and definition.get("mappings"):
+            return definition
         return self._default_search_index_definition(strategy_cfg)
 
     @staticmethod
@@ -318,40 +446,82 @@ class RPSDualStrategy(StrategyPlugin):
             coding_opts=coding_cfg,
         )
 
+    @staticmethod
+    def _payload_to_composition_object(payload: Dict[str, Any] | Any) -> Any:
+        if not isinstance(payload, dict):
+            return payload
+        comp_obj = payload.get("canonicalJSON")
+        if comp_obj is not None:
+            return comp_obj
+        comp_obj = payload.get("composition")
+        if comp_obj is not None:
+            return comp_obj
+        comp_obj = payload.get("compositionJSON")
+        if comp_obj is not None:
+            return comp_obj
+        stripped = {k: v for k, v in payload.items() if k not in _INGEST_CONTROL_KEYS}
+        return stripped or payload
+
+    @classmethod
+    def _build_raw_ingest_document(cls, payload: Dict[str, Any] | Any) -> Dict[str, Any]:
+        comp_obj = cls._payload_to_composition_object(payload)
+        if isinstance(payload, dict):
+            return {
+                "_id": payload.get("_id") or "comp-1",
+                "ehr_id": payload.get("ehr_id") or "ehr-1",
+                "composition_version": payload.get("composition_version"),
+                "time_committed": payload.get("time_committed"),
+                "time_created": payload.get("time_created"),
+                "canonicalJSON": comp_obj,
+            }
+        return {
+            "_id": "comp-1",
+            "ehr_id": "ehr-1",
+            "composition_version": None,
+            "time_committed": None,
+            "time_created": None,
+            "canonicalJSON": comp_obj,
+        }
+
+    @classmethod
+    def _expand_ingest_payload(cls, payload: Dict[str, Any]) -> tuple[str, str, list[Dict[str, Any]]]:
+        if not isinstance(payload, dict):
+            return "single", "payload", [cls._build_raw_ingest_document(payload)]
+
+        file_path = payload.get("file_path")
+        documents = payload.get("documents")
+        if file_path and documents is not None:
+            raise ValueError("Use either file_path or documents, not both")
+
+        if file_path:
+            loaded = _load_ingest_documents_from_path(str(file_path))
+            return "batch", "file", [cls._build_raw_ingest_document(item) for item in loaded]
+
+        if documents is not None:
+            if not isinstance(documents, list) or not documents:
+                raise ValueError("payload.documents must be a non-empty list of documents")
+            if not all(isinstance(item, dict) for item in documents):
+                raise ValueError("Every item in payload.documents must be an object")
+            return "batch", "documents", [cls._build_raw_ingest_document(item) for item in documents]
+
+        return "single", "payload", [cls._build_raw_ingest_document(payload)]
+
     async def transform(self, ctx: StrategyContext, payload: Dict[str, Any]) -> TransformResult:
         flattener = await self._build_flattener_for_context(ctx)
-
-        # Normalise payload into the shape expected by the flattener
-        comp_obj = payload.get("canonicalJSON") if isinstance(payload, dict) else None
-        if comp_obj is None and isinstance(payload, dict):
-            comp_obj = payload.get("composition") or payload.get("compositionJSON") or payload
-        raw_doc = {
-            "_id": payload.get("_id") if isinstance(payload, dict) else "comp-1",
-            "ehr_id": (payload.get("ehr_id") if isinstance(payload, dict) else None) or "ehr-1",
-            "composition_version": payload.get("composition_version") if isinstance(payload, dict) else None,
-            "time_committed": payload.get("time_committed") if isinstance(payload, dict) else None,
-            "time_created": payload.get("time_created") if isinstance(payload, dict) else None,
-            "canonicalJSON": comp_obj or payload,
-        }
+        raw_doc = self._build_raw_ingest_document(payload)
         base_doc, search_doc = flattener.transform_composition(raw_doc)
 
         return TransformResult(base=base_doc, search=search_doc, meta={})
 
     async def ingest(self, ctx: StrategyContext, payload: Dict[str, Any]) -> Dict[str, Any]:
         flattener = await self._build_flattener_for_context(ctx)
-        comp_obj = payload.get("canonicalJSON") if isinstance(payload, dict) else None
-        if comp_obj is None and isinstance(payload, dict):
-            comp_obj = payload.get("composition") or payload.get("compositionJSON") or payload
-        raw_doc = {
-            "_id": payload.get("_id") if isinstance(payload, dict) else "comp-1",
-            "ehr_id": (payload.get("ehr_id") if isinstance(payload, dict) else None) or "ehr-1",
-            "composition_version": payload.get("composition_version") if isinstance(payload, dict) else None,
-            "time_committed": payload.get("time_committed") if isinstance(payload, dict) else None,
-            "time_created": payload.get("time_created") if isinstance(payload, dict) else None,
-            "canonicalJSON": comp_obj or payload,
-        }
-        base_doc, search_doc = flattener.transform_composition(raw_doc)
-        tf = TransformResult(base=base_doc, search=search_doc, meta={})
+        mode, source, raw_docs = self._expand_ingest_payload(payload)
+
+        transformed: list[TransformResult] = []
+        for raw_doc in raw_docs:
+            base_doc, search_doc = flattener.transform_composition(raw_doc)
+            transformed.append(TransformResult(base=base_doc, search=search_doc, meta={}))
+
         storage = (ctx.adapters or {}).get("storage")
         cfg = ctx.config or {}
         comp_name = cfg.get("collections", {}).get("compositions", {}).get("name")
@@ -360,18 +530,50 @@ class RPSDualStrategy(StrategyPlugin):
         search_name = search_cfg.get("name")
 
         inserted = {}
-        if storage and comp_name and tf.base:
-            await storage.insert_one(comp_name, tf.base)
+        inserted_counts = {"base": 0, "search": 0}
+        base_docs = [item.base for item in transformed if item.base]
+        search_docs = [item.search for item in transformed if item.search]
+
+        if storage and comp_name and base_docs:
+            if len(base_docs) == 1:
+                await storage.insert_one(comp_name, base_docs[0])
+            else:
+                insert_many = getattr(storage, "insert_many", None)
+                if callable(insert_many):
+                    await insert_many(comp_name, base_docs)
+                else:
+                    for doc in base_docs:
+                        await storage.insert_one(comp_name, doc)
             inserted["base"] = comp_name
-        if storage and search_enabled and search_name and tf.search:
-            await storage.insert_one(search_name, tf.search)
+            inserted_counts["base"] = len(base_docs)
+        if storage and search_enabled and search_name and search_docs:
+            if len(search_docs) == 1:
+                await storage.insert_one(search_name, search_docs[0])
+            else:
+                insert_many = getattr(storage, "insert_many", None)
+                if callable(insert_many):
+                    await insert_many(search_name, search_docs)
+                else:
+                    for doc in search_docs:
+                        await storage.insert_one(search_name, doc)
             inserted["search"] = search_name
+            inserted_counts["search"] = len(search_docs)
         flush_codes = getattr(flattener, "flush_codes_to_db", None)
         if callable(flush_codes):
             maybe_coro = flush_codes()
             if inspect.isawaitable(maybe_coro):
                 await maybe_coro
-        return {"inserted": inserted, "base": tf.base, "search": tf.search}
+        if mode == "single":
+            tf = transformed[0]
+            return {"inserted": inserted, "base": tf.base, "search": tf.search}
+        return {
+            "mode": mode,
+            "source": source,
+            "processed": len(raw_docs),
+            "generated": {"base": len(base_docs), "search": len(search_docs)},
+            "inserted": inserted,
+            "inserted_counts": inserted_counts,
+        }
 
     async def reverse_transform(self, ctx: StrategyContext, payload: Dict[str, Any]) -> Dict[str, Any]:
         """

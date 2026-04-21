@@ -7,7 +7,7 @@ import json
 import hashlib
 from datetime import datetime
 from typing import Dict, Optional, Any
-from dataclasses import is_dataclass, asdict
+from dataclasses import is_dataclass, asdict, replace
 
 from .manifest import StrategyManifest
 from .config import validate_config
@@ -107,6 +107,7 @@ class StrategyRuntime:
                 message="bindings_ref is required for activation.",
             )
         existing_hash = existing.config_hash if existing else None
+        current_manifest_digest = manifest_digest_override or self._manifest_digest(manifest)
         # idempotent: if same strategy and config hash matches, return existing
         merged_config: dict = {}
         defaults = manifest.default_config or self._load_defaults_from_entrypoint(manifest)
@@ -121,9 +122,25 @@ class StrategyRuntime:
         bundle_refs = self._validate_bundle_refs(merged_config, manifest)
         new_config_hash = self._config_hash(merged_config)
         if existing and not force:
-            if existing.strategy_id == strategy_id and existing_hash == new_config_hash:
-                existing.already_active = True
-                return existing
+            existing_version = (existing.version or "").strip()
+            existing_is_latest_alias = existing_version.lower() in ("latest", "current")
+            digest_matches = bool(existing.manifest_digest and existing.manifest_digest == current_manifest_digest)
+            version_matches = bool(
+                not existing.manifest_digest
+                and (
+                    not existing_version
+                    or existing_is_latest_alias
+                    or existing_version == manifest.version
+                )
+            )
+            if existing.strategy_id == strategy_id and existing_hash == new_config_hash and (digest_matches or version_matches):
+                return replace(
+                    existing,
+                    already_active=True,
+                    replaced=False,
+                    previous_activation_id=None,
+                    replaced_from=None,
+                )
             # switch strategy or config changed: replace
         # invalidate cache for this env
         self.invalidate_env_cache(env_id)
@@ -148,13 +165,12 @@ class StrategyRuntime:
         handle = StrategyHandle(manifest, plugin_cls(manifest))
         await _maybe_await(handle.activate, config=merged_config, bindings=bindings, context=ctx)
         now = datetime.utcnow().isoformat()
-        manifest_digest = manifest_digest_override or self._manifest_digest(manifest)
         activation = EnvironmentActivation(
             env_id=env_id,
             domain=chosen_domain,
             strategy_id=strategy_id,
             version=version,
-            manifest_digest=manifest_digest,
+            manifest_digest=current_manifest_digest,
             config=merged_config,
             bindings_meta=bindings_meta,
             activation_id=None,

@@ -4,11 +4,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import pytest
+from bson import ObjectId
 
 from kehrnel.engine.domains.openehr.aql.ir import AqlQueryIR
 from kehrnel.engine.strategies.openehr.rps_dual.config import (
     build_coding_opts,
     build_flattener_config,
+    build_schema_config,
     normalize_bulk_config,
     normalize_config,
 )
@@ -16,6 +18,10 @@ from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import Composit
 from kehrnel.engine.strategies.openehr.rps_dual.query.compiler import (
     build_query_pipeline,
     build_query_pipeline_from_ast,
+    build_runtime_strategy,
+)
+from kehrnel.engine.strategies.openehr.rps_dual.query.transformers.search_pipeline_builder import (
+    SearchPipelineBuilder,
 )
 
 
@@ -54,8 +60,8 @@ def _minimal_composition() -> dict:
     }
 
 
-def _build_flattener() -> CompositionFlattener:
-    strategy_cfg = normalize_config({})
+def _build_flattener(raw_config: dict | None = None) -> CompositionFlattener:
+    strategy_cfg = normalize_config(raw_config or {})
     bulk_cfg = normalize_bulk_config({"role": "primary"})
     return CompositionFlattener(
         db=None,
@@ -64,6 +70,13 @@ def _build_flattener() -> CompositionFlattener:
         mappings_content={"templates": []},
         coding_opts=build_coding_opts(strategy_cfg),
     )
+
+
+class _DirectFieldResolver:
+    async def translate_aql_path(self, aql_path: str):
+        if aql_path == "c/uid/value":
+            return None, "comp_id"
+        raise AssertionError(f"Unexpected path resolution request: {aql_path}")
 
 
 def test_transform_composition_materializes_commit_time_for_base_and_search(monkeypatch):
@@ -98,8 +111,38 @@ def test_transform_composition_materializes_commit_time_for_base_and_search(monk
     assert all("ap" not in node for node in base_doc["cn"])
     assert search_doc is not None
     assert search_doc["tid"] == "test-template"
+    assert search_doc["comp_id"] == base_doc["comp_id"]
     assert search_doc["sort_time"] == committed_at
     assert all("ap" not in node for node in search_doc["sn"])
+
+
+def test_transform_composition_uses_configured_search_comp_id_field_name(monkeypatch):
+    flattener = _build_flattener({"fields": {"document": {"comp_id": "composition_uid"}}})
+
+    monkeypatch.setattr(
+        flattener,
+        "_compiled_rules_for_template",
+        lambda template_name: [{"_path": (), "_cont": (), "_extra": [], "copy": ["p"]}],
+    )
+    monkeypatch.setattr(flattener, "_rule_matches", lambda *args, **kwargs: True)
+    monkeypatch.setattr(
+        flattener,
+        "_apply_rule",
+        lambda *args, **kwargs: {"p": "1", "data": {"name": {"value": "Example composition"}}},
+    )
+
+    _, search_doc = flattener.transform_composition(
+        {
+            "_id": "64b64c2e5f6270b5c2c2c2c2",
+            "ehr_id": "ehr-1",
+            "composition_version": "1",
+            "time_committed": datetime(2026, 4, 11, 13, 42, 6, tzinfo=timezone.utc),
+            "canonicalJSON": _minimal_composition(),
+        }
+    )
+
+    assert search_doc is not None
+    assert search_doc["composition_uid"] == ObjectId("64b64c2e5f6270b5c2c2c2c2")
 
 
 @pytest.mark.asyncio
@@ -211,3 +254,69 @@ async def test_build_query_pipeline_prefers_match_for_cross_patient_template_and
     assert match_stage["cn"]["$elemMatch"] == {"p": {"$regex": r"^[^\\.]+$"}}
     assert pipeline[1]["$project"]["DataRegistre"] == "$time_c"
     assert pipeline[2]["$sort"] == {"DataRegistre": -1}
+
+
+@pytest.mark.asyncio
+async def test_build_query_pipeline_coerces_top_level_comp_id_to_objectid():
+    cfg = normalize_config({})
+    oid = "64b64c2e5f6270b5c2c2c2c2"
+    ast = {
+        "select": {
+            "distinct": False,
+            "columns": {
+                "0": {
+                    "value": {"type": "dataMatchPath", "path": "c/uid/value"},
+                    "alias": "uid",
+                }
+            },
+        },
+        "from": {"rmType": "EHR", "alias": "e", "predicate": None},
+        "contains": {"rmType": "COMPOSITION", "alias": "c", "predicate": None},
+        "where": {
+            "operator": "AND",
+            "conditions": {
+                "0": {
+                    "path": "e/ehr_id/value",
+                    "operator": "=",
+                    "value": "ehr-1",
+                },
+                "1": {
+                    "path": "c/uid/value",
+                    "operator": "=",
+                    "value": oid,
+                },
+            },
+        },
+        "orderBy": {},
+    }
+
+    engine, pipeline, *_ = await build_query_pipeline_from_ast(ast, cfg)
+
+    assert engine == "pipeline_builder"
+    assert pipeline[0]["$match"]["comp_id"] == ObjectId(oid)
+
+
+@pytest.mark.asyncio
+async def test_search_pipeline_builder_coerces_top_level_comp_id_to_objectid():
+    cfg = normalize_config({})
+    schema_cfg = build_schema_config(cfg)
+    builder = SearchPipelineBuilder(
+        "e",
+        "c",
+        schema_cfg["composition"],
+        _DirectFieldResolver(),
+        {},
+        strategy=build_runtime_strategy(cfg),
+        search_index_name="search_nodes_index",
+    )
+
+    query = await builder._handle_direct_condition_search(
+        {"path": "c/uid/value", "operator": "=", "value": "64b64c2e5f6270b5c2c2c2c2"}
+    )
+
+    assert query == {
+        "equals": {
+            "path": "comp_id",
+            "value": ObjectId("64b64c2e5f6270b5c2c2c2c2"),
+        }
+    }

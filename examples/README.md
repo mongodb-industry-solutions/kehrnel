@@ -33,7 +33,16 @@ RUNTIME_URL=http://localhost:8000 \
 ENV_ID=dev \
 DOMAIN=openehr \
 STRATEGY_ID=openehr.rps_dual \
-BINDINGS_REF=env://DB_BINDINGS \
+MONGODB_URI="mongodb+srv://..." \
+MONGODB_DB=openEHR_demo \
+examples/cli/full_workflow_console.sh
+
+# Resolver-backed variant
+RUNTIME_URL=http://localhost:8000 \
+ENV_ID=dev \
+DOMAIN=openehr \
+STRATEGY_ID=openehr.rps_dual \
+BINDINGS_REF="<resolver-specific-ref>" \
 examples/cli/full_workflow_console.sh
 ```
 

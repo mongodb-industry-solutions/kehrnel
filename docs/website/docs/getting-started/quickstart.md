@@ -6,6 +6,9 @@ sidebar_position: 2
 
 This quick start uses the unified CLI and the runtime universal workflow endpoints.
 
+The unified CLI talks to the running Kehrnel runtime over HTTP, so even local
+CLI sessions still need a runtime base URL.
+
 If you want the full openEHR `openehr.rps_dual` example with packaged sample
 data, projection mappings, generated Atlas Search definitions, and runnable AQL
 examples, follow [RPS Dual CLI Workflows](/docs/strategies/openehr/rps-dual/cli-workflows).
@@ -47,12 +50,37 @@ kehrnel core env create --env dev --name "Development"
 
 ## 2) Activate Strategy In Environment
 
+Activation needs database bindings.
+
+For local `./startKehrnel` development, the simplest path is a small plaintext
+bindings file:
+
+```bash
+mkdir -p .kehrnel/quickstart
+
+cat > .kehrnel/quickstart/bindings.mongo.yaml <<EOF
+db:
+  provider: mongodb
+  uri: ${MONGODB_URI}
+  database: openEHR_demo
+EOF
+
+kehrnel core env activate \
+  --env dev \
+  --domain openehr \
+  --strategy openehr.rps_dual \
+  --allow-plaintext-bindings \
+  --bindings .kehrnel/quickstart/bindings.mongo.yaml
+```
+
+For auth-enabled or resolver-backed deployments, use `--bindings-ref` instead:
+
 ```bash
 kehrnel core env activate \
   --env dev \
   --domain openehr \
   --strategy openehr.rps_dual \
-  --bindings-ref env://DB_BINDINGS
+  --bindings-ref "<resolver-specific-ref>"
 ```
 
 ## 3) Generate And Validate A Composition (Template Flow)

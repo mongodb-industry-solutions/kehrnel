@@ -47,6 +47,14 @@ It includes:
 
 ## 1. Configure The CLI Context
 
+Kehrnel can keep multiple environments, domains, and strategies in its CLI
+context. This walkthrough targets `dev` + `openehr` + `openehr.rps_dual`,
+which is the strategy demonstrated by the packaged openEHR sample flow today.
+
+The unified CLI is a client of the running Kehrnel runtime rather than a
+standalone offline executor. That is why `kehrnel setup` needs
+`--runtime-url`: it tells the CLI which runtime API to call.
+
 ```bash
 kehrnel setup \
   --runtime-url "$RUNTIME_URL" \
@@ -55,6 +63,7 @@ kehrnel setup \
   --strategy openehr.rps_dual
 
 kehrnel core health
+kehrnel strategy list --domain openehr
 kehrnel core env list
 ```
 
@@ -63,46 +72,116 @@ kehrnel core env list
 The environment is the unit of activation in Kehrnel. It isolates strategy
 configuration, generated artifacts, and operational state.
 
+Use `kehrnel core env show` to inspect the environment record and confirm which
+metadata or `bindings_ref` values are currently stored for that environment.
+
 ```bash
 kehrnel core env create --env dev --name "Development"
 kehrnel core env show --env dev
-kehrnel strategy list --domain openehr
 ```
 
 ## 3. Prepare Atlas Or MongoDB Target Collections
 
-Create the main semi-flattened collection first. Add the optional
-search-side collection when you want the dual-collection workflow.
+If your environment activation has working database bindings, Kehrnel creates
+the required collections and standard B-tree indexes during activation. You can
+skip manual shell setup unless you want to inspect or pre-create them yourself.
 
 Generate the Atlas Search definition from Kehrnel later instead of maintaining
 it by hand.
 
 ```bash
 export MONGODB_URI="<your-atlas-connection-string>"
+```
 
-mongosh "$MONGODB_URI" <<'MONGOSH'
+If you prefer to create them manually and `mongosh` is installed:
+
+```javascript
 use openEHR_demo
 
 db.createCollection("compositions_rps")
 db.createCollection("compositions_search")
 
-db.compositions_rps.createIndex({ ehr_id: 1, tid: 1, time_c: 1 })
-db.compositions_rps.createIndex({ "cn.p": 1 })
-MONGOSH
+db.compositions_rps.createIndex({ ehr_id: 1, v: 1 })
+db.compositions_rps.createIndex({ ehr_id: 1, tid: 1, time_c: 1, comp_id: 1 })
+db.compositions_rps.createIndex({ ehr_id: 1, "cn.p": 1, time_c: 1 })
+db.compositions_search.createIndex({ ehr_id: 1, sort_time: 1 })
 ```
+
+If `zsh` reports `command not found: mongosh`, use Atlas UI or MongoDB Compass,
+or continue directly to activation and let Kehrnel materialize the artifacts.
 
 ## 4. Activate The Strategy
 
 While multiple strategies may be available, select `openehr.rps_dual` for this
 workflow.
 
+When database adapters are available, activation is also the step that
+materializes the configured collections and B-tree indexes for the strategy.
+
+Activation needs database bindings. There are two supported patterns:
+
+- local dev/test: pass a plaintext bindings file with
+  `--allow-plaintext-bindings`
+- auth-enabled or resolver-backed deployments: pass `--bindings-ref`
+
+The strategy-owned bundle references come from
+`src/kehrnel/engine/strategies/openehr/rps_dual/defaults.json` and resolve to:
+
+- `bundles/dictionaries/_codes.json`
+- `bundles/shortcuts/shortcuts.json`
+- `bundles/searchIndex/searchIndex.json`
+
+For the full packaged dual example, keep the defaults and add one config
+overlay for the reference projection mappings. Without `transform.mappings`,
+activation still works, but the slim `compositions_search` sidecar will not be
+materialized with meaningful fields during ingest.
+
+Local development example using `MONGODB_URI` directly:
+
+```bash
+mkdir -p .kehrnel
+
+cat > .kehrnel/bindings.mongo.yaml <<EOF
+db:
+  provider: mongodb
+  uri: ${MONGODB_URI}
+  database: openEHR_demo
+EOF
+
+cat > .kehrnel/rps-dual.config.json <<EOF
+{
+  "transform": {
+    "mappings": "file://samples/reference/projection_mappings.json"
+  }
+}
+EOF
+
+kehrnel core env activate \
+  --env dev \
+  --domain openehr \
+  --strategy openehr.rps_dual \
+  --config .kehrnel/rps-dual.config.json \
+  --allow-plaintext-bindings \
+  --bindings .kehrnel/bindings.mongo.yaml
+```
+
+Resolver-backed deployment example:
+
 ```bash
 kehrnel core env activate \
   --env dev \
   --domain openehr \
   --strategy openehr.rps_dual \
-  --bindings-ref env://DB_BINDINGS
+  --bindings-ref "<resolver-specific-ref>"
+```
 
+For the built-in HDL resolver, valid examples include `env:dev`,
+`hdl:env:dev`, and `hdl:env:dev:mongo:openEHR_demo`.
+
+After activation, seed the code and shortcut dictionaries from the packaged
+strategy bundles:
+
+```bash
 kehrnel run ensure_dictionaries --env dev --domain openehr
 ```
 
@@ -121,6 +200,12 @@ Optional sanity check against the packaged sample seed:
 ```bash
 diff -u "$SAMPLES_ROOT/search_index.definition.json" .kehrnel/search-index.json || true
 ```
+
+If you edit the strategy pack after activating the environment, later
+`compile-query` or `query` calls may fail with
+`ACTIVATION_STRATEGY_MISMATCH`. That means the environment is still activated
+against an older manifest digest. Re-run activation for that environment before
+continuing.
 
 ## 5. Explore Templates, Mappings, And Packaged Samples
 
@@ -161,24 +246,41 @@ The NDJSON envelopes are ingest-ready wrappers. Each line contains the masked
 canonical composition plus `ehr_id`, `template_id`, `composition_version`, and
 `time_committed`.
 
-```bash
-python -m kehrnel.cli.ingest init-driver \
-  --db openEHR_demo \
-  --out .kehrnel/driver.mongo.yaml
+Use `kehrnel run ingest` here, not `kehrnel common ingest`. The `common ingest`
+command is a low-level loader for documents that are already in the target
+persistence shape, while this walkthrough starts from canonical openEHR
+composition envelopes and needs the strategy to produce:
 
-kehrnel common ingest --strategy openehr.rps_dual --domain openehr -- \
-  file "$SAMPLES_ROOT/envelopes/all.ndjson" \
-  -d .kehrnel/driver.mongo.yaml \
-  --workers 4
+- the semi-flattened base document in `compositions_rps`
+- the optional slim search projection in `compositions_search`
+
+The local-file flags below are only a safety guard for server-side file access.
+The CLI expands the packaged sample NDJSON from your working tree into
+`documents=[...]` before posting to the runtime, so you do not need to enable
+server-side local file access for this workflow.
+
+```bash
+kehrnel run ingest \
+  --env dev \
+  --domain openehr \
+  --strategy openehr.rps_dual \
+  --set file_path="$SAMPLES_ROOT/envelopes/all.ndjson"
 ```
 
 When mappings exist for a template, Kehrnel also creates the optional
-search-side document in `compositions_search`. If no mappings exist, it skips
-that sidecar instead of creating empty arrays.
+search-side document in `compositions_search`. If no mappings exist for a
+template, Kehrnel skips that sidecar instead of creating empty arrays.
 
 ## 7. Compile Representative AQL
 
 Compile the packaged AQL examples before you execute them.
+
+This step is inspection-only: it compiles AQL into the runtime query plan and
+returns the generated execution shape, but it does not run the query against
+MongoDB.
+
+Use `--debug` only when you want the compile response to include extra details
+such as the bound AST, raw AQL, parameters, and compiler explain metadata.
 
 Patient-scoped example:
 
@@ -186,8 +288,7 @@ Patient-scoped example:
 kehrnel core env compile-query \
   --env dev \
   --domain openehr \
-  --aql "$SAMPLES_ROOT/queries/patient_laboratory_by_ehr.aql" \
-  --debug
+  --aql "$SAMPLES_ROOT/queries/patient_laboratory_by_ehr.aql"
 ```
 
 Cross-patient example:
@@ -196,7 +297,16 @@ Cross-patient example:
 kehrnel core env compile-query \
   --env dev \
   --domain openehr \
-  --aql "$SAMPLES_ROOT/queries/cross_patient_laboratory_by_performing_centre.aql" \
+  --aql "$SAMPLES_ROOT/queries/cross_patient_laboratory_by_performing_centre.aql"
+```
+
+Optional debug compile:
+
+```bash
+kehrnel core env compile-query \
+  --env dev \
+  --domain openehr \
+  --aql "$SAMPLES_ROOT/queries/patient_laboratory_by_ehr.aql" \
   --debug
 ```
 
@@ -213,13 +323,15 @@ JSON
 kehrnel run compile_query \
   --env dev \
   --domain openehr \
-  --payload .kehrnel/query.payload.json \
-  --debug
+  --payload .kehrnel/query.payload.json
 ```
 
 ## 8. Run Patient And Cross-Patient Queries
 
-Execute both query families against the same environment.
+Use `query` when you want the runtime to both compile and execute the AQL and
+return rows.
+
+Execute both query families against the same environment:
 
 ```bash
 kehrnel core env query \
@@ -230,7 +342,7 @@ kehrnel core env query \
 kehrnel core env query \
   --env dev \
   --domain openehr \
-  --aql "$SAMPLES_ROOT/queries/cross_patient_immunization_by_publishing_centre.aql"
+  --aql "$SAMPLES_ROOT/queries/cross_patient_laboratory_by_performing_centre.aql"
 ```
 
 This is the core contract of the pattern: applications stay on AQL, while the
@@ -238,12 +350,14 @@ runtime selects the right physical execution path.
 
 ## 9. Inspect The Generated Artifacts
 
-Look directly at the resulting MongoDB documents.
+Look directly at the resulting MongoDB documents. Use `mongosh` if it is
+installed, otherwise inspect the same collections in Atlas UI or MongoDB
+Compass.
 
 ```bash
 mongosh "$MONGODB_URI/openEHR_demo" <<'MONGOSH'
 db.compositions_rps.findOne({}, { ehr_id: 1, tid: 1, time_c: 1, cn: { $slice: 3 } })
-db.compositions_search.findOne({}, { ehr_id: 1, tid: 1, sort_time: 1, sn: 1 })
+db.compositions_search.findOne({}, { ehr_id: 1, comp_id: 1, tid: 1, sort_time: 1, sn: 1 })
 MONGOSH
 ```
 

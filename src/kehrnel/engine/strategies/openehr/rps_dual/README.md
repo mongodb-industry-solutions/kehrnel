@@ -67,14 +67,18 @@ Run a local ingest against your own MongoDB target:
 ```bash
 SAMPLES_ROOT="src/kehrnel/engine/strategies/openehr/rps_dual/samples/reference"
 
-python -m kehrnel.cli.ingest init-driver --db hdl_user_test --out /tmp/rps_dual.driver.mongo.yaml
-export MONGODB_URI='mongodb+srv://...'
-
-kehrnel common ingest --strategy openehr.rps_dual --domain openehr -- \
-  file "$SAMPLES_ROOT/envelopes/all.ndjson" \
-  -d /tmp/rps_dual.driver.mongo.yaml \
-  --workers 4
+kehrnel run ingest \
+  --env dev \
+  --domain openehr \
+  --strategy openehr.rps_dual \
+  --set file_path="$SAMPLES_ROOT/envelopes/all.ndjson"
 ```
+
+This route keeps the canonical envelope as input and lets the strategy create
+the semi-flattened base document plus the optional slim search projection. Use
+the local file access environment flags only when you want the runtime itself to
+read a server-side path.
+`common ingest` only for NDJSON that is already flattened.
 
 Where to verify in MongoDB:
 

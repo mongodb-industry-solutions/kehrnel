@@ -95,6 +95,7 @@ class CompositionFlattener:
         self.sf_ap    = s_fields.get("archetype_path")
         self.sf_anc   = s_fields.get("ancestors", "anc")
         self.sf_ehr   = s_fields.get("ehr_id", "ehr_id")
+        self.sf_cid   = s_fields.get("comp_id", "comp_id")
         self.sf_tmpl  = s_fields.get("template_id", "tid")
         self.sf_sort_time = s_fields.get("sort_time", "sort_time")
         self.sf_score = s_fields.get("score", "score")
@@ -207,6 +208,7 @@ class CompositionFlattener:
             search_doc = {
                 "_id": self._encode_id(raw_doc["_id"], "composition_id"),
                 self.sf_ehr: self._encode_id(raw_doc["ehr_id"], "ehr_id"),
+                self.sf_cid: self._encode_id(raw_doc["_id"], "composition_id"),
                 self.sf_tmpl: template_id,
             }
             if commit_time is not None:

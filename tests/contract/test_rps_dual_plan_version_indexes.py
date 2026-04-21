@@ -30,6 +30,11 @@ async def test_plan_includes_version_commit_indexes_and_search_sort_mapping(tmp_
         for idx in indexes
     )
     assert any(
+        idx.get("collection") == "compositions_rps"
+        and [field for field, _ in idx.get("keys", [])] == ["ehr_id", "cn.p", "time_c"]
+        for idx in indexes
+    )
+    assert any(
         si.get("collection") == "compositions_search"
         and si.get("definition", {}).get("mappings", {}).get("fields", {}).get("sort_time", {}).get("type") == "date"
         for si in search_indexes

@@ -68,7 +68,7 @@ curl -X POST "${RUNTIME_URL}/environments/dev/activate" \
     "version": "latest",
     "domain": "openehr",
     "config": { ... },
-    "bindings_ref": "env://DB_BINDINGS"
+    "bindings_ref": "<resolver-specific-ref>"
   }'
 ```
 

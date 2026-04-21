@@ -225,7 +225,7 @@ curl -X POST "${RUNTIME_URL}/environments/dev/activate" \
     "strategy_id": "openehr.rps_dual",
     "version": "0.2.0",
     "domain": "openehr",
-    "bindings_ref": "env://DB_BINDINGS"
+    "bindings_ref": "<resolver-specific-ref>"
   }'
 ```
 

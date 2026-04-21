@@ -70,7 +70,10 @@ class PipelineBuilder:
         ehr_field = self.schema_config.get("ehr_id", "ehr_id")
         if ehr_id and ehr_field not in match_conditions:
             # For shortened format collections, keep EHR ID as string to match document format
-            match_conditions[ehr_field] = ehr_id
+            match_conditions[ehr_field] = self.value_formatter.format_id_value(
+                ehr_id,
+                self.schema_config.get("ehr_id_encoding", "string"),
+            )
         
         # Process CONTAINS clause for composition filtering
         if contains_clause:

@@ -4,6 +4,7 @@ import uuid
 from datetime import datetime
 from typing import Any
 from bson import Binary
+from bson import ObjectId
 
 
 class ValueFormatter:
@@ -62,6 +63,32 @@ class ValueFormatter:
         except (ValueError, TypeError):
             # If conversion fails, raise an error since EHR IDs should be valid UUIDs
             raise ValueError(f"Invalid EHR ID format: {ehr_id}")
+
+    @staticmethod
+    def format_id_value(value: Any, encoding: str | None) -> Any:
+        """Coerce top-level identifiers to the same representation used at ingest time."""
+        policy = str(encoding or "string").strip().lower()
+
+        if policy == "string":
+            return value if isinstance(value, str) else str(value)
+
+        if policy == "objectid":
+            if isinstance(value, ObjectId):
+                return value
+            try:
+                return ObjectId(str(value))
+            except (TypeError, ValueError):
+                return value
+
+        if policy in ("uuid", "uuidbin", "uuid_bin"):
+            if isinstance(value, (bytes, bytearray)):
+                return bytes(value)
+            try:
+                return uuid.UUID(str(value)).bytes
+            except (TypeError, ValueError, AttributeError):
+                return value
+
+        return value
 
     @staticmethod
     def _is_iso_date_string(value: str) -> bool:

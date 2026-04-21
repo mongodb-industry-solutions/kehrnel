@@ -36,6 +36,7 @@ STRATEGY_ROOT = (
 SAMPLES_ROOT = STRATEGY_ROOT / "samples" / "reference"
 PROJECTION_MAPPINGS_PATH = SAMPLES_ROOT / "projection_mappings.json"
 PACKAGED_SEARCH_INDEX_PATH = SAMPLES_ROOT / "search_index.definition.json"
+PACKAGED_ACTIVATION_CONFIG_PATH = SAMPLES_ROOT / "activation.config.json"
 BUNDLED_SEARCH_INDEX_PATH = STRATEGY_ROOT / "bundles" / "searchIndex" / "searchIndex.json"
 BUNDLED_CODES_PATH = STRATEGY_ROOT / "bundles" / "dictionaries" / "_codes.json"
 SHORTCUTS_PATH = STRATEGY_ROOT / "bundles" / "shortcuts" / "shortcuts.json"
@@ -178,6 +179,16 @@ async def test_packaged_sample_envelopes_produce_search_sidecar_docs():
             assert search_doc.get("tid") == envelope["template_id"]
 
     assert checked == 10
+
+
+@pytest.mark.asyncio
+async def test_packaged_activation_config_points_to_reference_projection_mappings():
+    activation_cfg = _load_json(PACKAGED_ACTIVATION_CONFIG_PATH)
+    assert activation_cfg == {
+        "transform": {
+            "mappings": "file://samples/reference/projection_mappings.json",
+        }
+    }
 
 
 @pytest.mark.asyncio

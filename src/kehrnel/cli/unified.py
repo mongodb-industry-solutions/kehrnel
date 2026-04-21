@@ -182,6 +182,75 @@ def _parse_kv_pairs(items: list[str]) -> Dict[str, Any]:
     return out
 
 
+def _load_local_ingest_documents(path: Path) -> List[Dict[str, Any]]:
+    suffix = path.suffix.lower()
+    if suffix == ".ndjson":
+        documents: List[Dict[str, Any]] = []
+        for line_number, raw_line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+            line = raw_line.strip()
+            if not line:
+                continue
+            try:
+                parsed = json.loads(line)
+            except json.JSONDecodeError as exc:
+                raise typer.BadParameter(f"Invalid JSON on line {line_number} of {path}") from exc
+            if not isinstance(parsed, dict):
+                raise typer.BadParameter(f"Each NDJSON line in {path} must be a JSON object.")
+            documents.append(parsed)
+        if not documents:
+            raise typer.BadParameter(f"No documents found in {path}.")
+        return documents
+
+    try:
+        parsed = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise typer.BadParameter(f"The file {path} is not valid JSON.") from exc
+
+    if isinstance(parsed, dict) and isinstance(parsed.get("documents"), list):
+        documents = parsed["documents"]
+    elif isinstance(parsed, list):
+        documents = parsed
+    elif isinstance(parsed, dict):
+        documents = [parsed]
+    else:
+        raise typer.BadParameter(f"The file {path} must contain a JSON object or array of objects.")
+
+    if not documents:
+        raise typer.BadParameter(f"No documents found in {path}.")
+    if not all(isinstance(item, dict) for item in documents):
+        raise typer.BadParameter(f"Every document in {path} must be a JSON object.")
+    return documents
+
+
+def _maybe_expand_local_ingest_file_payload(operation: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+    if operation.strip().lower() != "ingest":
+        return payload
+    if not isinstance(payload, dict) or "documents" in payload or "file_path" not in payload:
+        return payload
+
+    raw_path = payload.get("file_path")
+    if not isinstance(raw_path, str) or not raw_path.strip():
+        return payload
+
+    expanded_path = os.path.expandvars(os.path.expanduser(raw_path.strip()))
+    if "://" in expanded_path:
+        return payload
+
+    candidate = Path(expanded_path)
+    candidate = candidate.resolve() if candidate.is_absolute() else (Path.cwd() / candidate).resolve()
+    if not candidate.exists():
+        return payload
+    if not candidate.is_file():
+        raise typer.BadParameter(f"ingest file_path is not a file: {candidate}")
+    if candidate.suffix.lower() not in {".json", ".ndjson"}:
+        raise typer.BadParameter("ingest file_path must point to a .json or .ndjson file.")
+
+    expanded = dict(payload)
+    expanded.pop("file_path", None)
+    expanded["documents"] = _load_local_ingest_documents(candidate)
+    return expanded
+
+
 def _resolve_resource_profile(name: str) -> Dict[str, Any]:
     state = _state()
     resources = state.get("resources") if isinstance(state, dict) else None
@@ -459,7 +528,14 @@ def setup(
         config = _load_json_or_yaml(config_file) if config_file else {}
         resolved_bindings_ref = (bindings_ref or "").strip()
         if not resolved_bindings_ref and not non_interactive:
-            resolved_bindings_ref = (typer.prompt("bindings_ref (ex: env://DB_BINDINGS)", default="", show_default=False) or "").strip()
+            resolved_bindings_ref = (
+                typer.prompt(
+                    "bindings_ref (example for built-in HDL resolver: env:dev or hdl:env:dev)",
+                    default="",
+                    show_default=False,
+                )
+                or ""
+            ).strip()
         payload = {
             "domain": resolved_domain,
             "strategy_id": resolved_strategy,
@@ -1222,6 +1298,7 @@ def run_operation(
         raise typer.BadParameter("Payload must be a JSON/YAML object.")
     if set_values:
         payload.update(_parse_kv_pairs(set_values))
+    payload = _maybe_expand_local_ingest_file_payload(operation, payload)
 
     state = _state()
     selected_domain = (

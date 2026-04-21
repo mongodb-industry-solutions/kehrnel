@@ -333,6 +333,8 @@ class kehrnelGenerator:
                 continue
             
             if attr_name == "name":
+                if result.get("name", {}).get("value"):
+                    continue
                 coerced = self._process_single_attribute(attr, f"{path}/{attr_name}", depth, rm_type)
                 if coerced:
                     # Keep human-readable text if we already set it from terms
@@ -441,7 +443,7 @@ class kehrnelGenerator:
     
     def _process_single_attribute(self, attr: ET.Element, path: str, depth: int, parent_rm_type: str) -> Any:
         """Process a single attribute"""
-        child = attr.find("opt:children", self.NS)
+        child = self._select_single_attribute_child(attr, parent_rm_type)
         if child is None:
             return None
         
@@ -474,6 +476,29 @@ class kehrnelGenerator:
                 return self._process_primitive_constraint(child, child_type)
         
         return None
+
+    def _select_single_attribute_child(self, attr: ET.Element, parent_rm_type: str) -> Optional[ET.Element]:
+        """
+        Choose one branch for a C_SINGLE_ATTRIBUTE.
+
+        OPT single attributes may declare several alternative children. For
+        generation we still have to pick one concrete branch. When an ELEMENT
+        value can be either text or coded text, prefer the coded variant so the
+        skeleton keeps the richer typing expected by downstream workflows.
+        """
+        children = attr.findall("opt:children", self.NS)
+        if not children:
+            return None
+        if len(children) == 1:
+            return children[0]
+
+        attr_name = attr.findtext("opt:rm_attribute_name", "", self.NS)
+        if attr_name == "value" and parent_rm_type == "ELEMENT":
+            for child in children:
+                if child.findtext("opt:rm_type_name", "", self.NS) == "DV_CODED_TEXT":
+                    return child
+
+        return children[0]
     
     def _process_data_value(self, node: ET.Element, path: str) -> Optional[Dict]:
         """

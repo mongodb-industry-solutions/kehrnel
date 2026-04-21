@@ -66,8 +66,6 @@ Representative document:
   "_id": "composition-uuid::kehrnel::1",
   "ehr_id": "patient-001",
   "comp_id": "composition-uuid::kehrnel::1",
-  "v": "1",
-  "time_c": "2025-01-15T10:30:00Z",
   "sort_time": "2025-01-15T10:30:00Z",
   "tid": "PO_Obstetric_process_v0.8_FORMULARIS",
   "sn": [
@@ -84,17 +82,22 @@ Representative document:
 
 ## Root Fields
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `_id` | string | Version UID (`uuid::system::version`) |
-| `ehr_id` | string | EHR identifier |
-| `comp_id` | string | Composition identifier stored explicitly for filters and joins |
-| `v` | string | Version number extracted from the version UID |
-| `time_c` | date | Commit time for the persisted version |
-| `tid` | string | Template identifier by default |
-| `cn` | array | Full node array used for patient-scoped matching and reconstruction |
-| `sort_time` | date | Search-side sort helper field |
-| `sn` | array | Search node array for Atlas Search |
+Identifier field storage is governed by `ids.ehr_id` and
+`ids.composition_id`. The examples below use string values for readability,
+but the physical stored type may also be `ObjectId` or UUID-backed binary,
+depending on the active strategy config.
+
+| Field | Store(s) | Type | Description |
+|-------|----------|------|-------------|
+| `_id` | both | string | Version UID (`uuid::system::version`) |
+| `ehr_id` | both | string | EHR identifier |
+| `comp_id` | both | string | Composition identifier stored explicitly for filters and joins |
+| `v` | `compositions_rps` | string | Version number extracted from the version UID |
+| `time_c` | `compositions_rps` | date | Commit time for the persisted version |
+| `tid` | both | string | Template identifier by default |
+| `cn` | `compositions_rps` | array | Full node array used for patient-scoped matching and reconstruction |
+| `sort_time` | `compositions_search` | date | Search-side sort helper field |
+| `sn` | `compositions_search` | array | Search node array for Atlas Search |
 
 ## Node Arrays
 
@@ -158,7 +161,7 @@ Maintains the RM key shortcut map used in search-side projections when `transfor
 ```javascript
 db.compositions_rps.createIndex({ "ehr_id": 1, "v": 1 })
 db.compositions_rps.createIndex({ "ehr_id": 1, "tid": 1, "time_c": 1, "comp_id": 1 })
-db.compositions_rps.createIndex({ "ehr_id": 1, "cn.p": 1 })
+db.compositions_rps.createIndex({ "ehr_id": 1, "cn.p": 1, "time_c": 1 })
 ```
 
 ### `compositions_search`

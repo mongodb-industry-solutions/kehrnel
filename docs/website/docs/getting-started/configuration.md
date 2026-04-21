@@ -106,7 +106,6 @@ Each strategy has its own configuration schema. For the openEHR RPS Dual strateg
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
-    "database": { "type": "string" },
     "collections": {
       "type": "object",
       "properties": {
@@ -114,13 +113,22 @@ Each strategy has its own configuration schema. For the openEHR RPS Dual strateg
           "type": "object",
           "properties": {
             "name": { "type": "string", "default": "compositions_rps" },
-            "encodingProfile": { "type": "string", "default": "profile.codedpath" }
+            "encodingProfile": {
+              "type": "string",
+              "enum": ["profile.codedpath", "profile.search_shortcuts"],
+              "default": "profile.codedpath"
+            }
           }
         },
         "search": {
           "type": "object",
           "properties": {
             "name": { "type": "string", "default": "compositions_search" },
+            "encodingProfile": {
+              "type": "string",
+              "enum": ["profile.codedpath", "profile.search_shortcuts"],
+              "default": "profile.search_shortcuts"
+            },
             "enabled": { "type": "boolean", "default": true },
             "atlasIndex": {
               "type": "object",
@@ -131,10 +139,20 @@ Each strategy has its own configuration schema. For the openEHR RPS Dual strateg
           }
         }
       }
+    },
+    "paths": {
+      "type": "object",
+      "properties": {
+        "separator": { "type": "string", "enum": ["."], "default": "." }
+      }
     }
   }
 }
 ```
+
+The full strategy contract lives in the strategy pack itself. Use the dedicated
+[RPS Dual configuration guide](/docs/strategies/openehr/rps-dual/configuration)
+for the complete, current reference.
 
 ### Defaults (`defaults.json`)
 
