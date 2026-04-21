@@ -21,6 +21,7 @@ class EnvironmentActivation:
     activated_at: str | None = None
     updated_at: str | None = None
     config_hash: str | None = None
+    bindings_hash: str | None = None
     bindings: Optional[Dict[str, Any]] = None
     bindings_ref: Optional[str] = None
     replaced: bool = False
@@ -43,6 +44,7 @@ class EnvironmentActivation:
             "activated_at": self.activated_at,
             "updated_at": self.updated_at,
             "config_hash": self.config_hash,
+            "bindings_hash": self.bindings_hash,
             "bindings": self.bindings,
             "bindings_ref": self.bindings_ref,
             "replaced": self.replaced,

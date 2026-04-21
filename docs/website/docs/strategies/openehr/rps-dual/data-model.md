@@ -159,8 +159,6 @@ Maintains the RM key shortcut map used in search-side projections when `transfor
 ### `compositions_rps`
 
 ```javascript
-db.compositions_rps.createIndex({ "ehr_id": 1, "v": 1 })
-db.compositions_rps.createIndex({ "ehr_id": 1, "tid": 1, "time_c": 1, "comp_id": 1 })
 db.compositions_rps.createIndex({ "ehr_id": 1, "cn.p": 1, "time_c": 1 })
 ```
 

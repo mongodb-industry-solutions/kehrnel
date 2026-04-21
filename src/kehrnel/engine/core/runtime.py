@@ -66,6 +66,31 @@ class StrategyRuntime:
             return True
         return False
 
+    @staticmethod
+    def _bindings_payload(bindings: StrategyBindings | Dict[str, Any] | None) -> Dict[str, Any]:
+        if not bindings:
+            return {}
+        if is_dataclass(bindings):
+            raw = asdict(bindings)
+        elif isinstance(bindings, dict):
+            raw = dict(bindings)
+        else:
+            raw = getattr(bindings, "__dict__", {}) or {}
+        return raw if isinstance(raw, dict) else {}
+
+    def _bindings_hash(self, bindings: StrategyBindings | Dict[str, Any] | None, bindings_ref: str | None = None) -> str:
+        payload = {
+            "bindings_ref": (bindings_ref or "").strip() or None,
+            "bindings": self._bindings_payload(bindings),
+        }
+        if not payload["bindings_ref"] and not payload["bindings"]:
+            return ""
+        try:
+            blob = json.dumps(payload, sort_keys=True).encode("utf-8")
+            return hashlib.sha256(blob).hexdigest()
+        except Exception:
+            return ""
+
     async def activate(
         self,
         env_id: str,
@@ -121,6 +146,17 @@ class StrategyRuntime:
         store_profiles = self._build_store_profiles(manifest, merged_config)
         bundle_refs = self._validate_bundle_refs(merged_config, manifest)
         new_config_hash = self._config_hash(merged_config)
+        bdict = self._bindings_payload(bindings)
+        uri = (bdict.get("db") or {}).get("uri")
+        redacted_uri = self._redact_uri(uri) if uri else None
+        bindings_meta = {
+            "db": {
+                "provider": (bdict.get("db") or {}).get("provider"),
+                "database": (bdict.get("db") or {}).get("database"),
+                "uri": redacted_uri,
+            }
+        }
+        new_bindings_hash = self._bindings_hash(bindings, bindings_ref)
         if existing and not force:
             existing_version = (existing.version or "").strip()
             existing_is_latest_alias = existing_version.lower() in ("latest", "current")
@@ -133,7 +169,20 @@ class StrategyRuntime:
                     or existing_version == manifest.version
                 )
             )
-            if existing.strategy_id == strategy_id and existing_hash == new_config_hash and (digest_matches or version_matches):
+            existing_bindings_hash = (getattr(existing, "bindings_hash", None) or "").strip()
+            if existing_bindings_hash and new_bindings_hash:
+                bindings_match = existing_bindings_hash == new_bindings_hash
+            else:
+                bindings_match = (
+                    (getattr(existing, "bindings_ref", None) or None) == ((bindings_ref or "").strip() or None)
+                    and (getattr(existing, "bindings_meta", None) or {}) == bindings_meta
+                )
+            if (
+                existing.strategy_id == strategy_id
+                and existing_hash == new_config_hash
+                and (digest_matches or version_matches)
+                and bindings_match
+            ):
                 return replace(
                     existing,
                     already_active=True,
@@ -144,19 +193,6 @@ class StrategyRuntime:
             # switch strategy or config changed: replace
         # invalidate cache for this env
         self.invalidate_env_cache(env_id)
-        # redact uri
-        bdict = bindings.__dict__
-        uri = (bdict.get("db") or {}).get("uri")
-        redacted_uri = None
-        if uri:
-            redacted_uri = self._redact_uri(uri)
-        bindings_meta = {
-            "db": {
-                "provider": (bdict.get("db") or {}).get("provider"),
-                "database": (bdict.get("db") or {}).get("database"),
-                "uri": redacted_uri,
-            }
-        }
         ctx = StrategyContext(environment_id=env_id, config=merged_config, bindings=None, adapters=None, manifest=manifest)
         # load plugin
         mod_path, cls_name = manifest.entrypoint.split(":")
@@ -175,9 +211,10 @@ class StrategyRuntime:
             bindings_meta=bindings_meta,
             activation_id=None,
             config_hash=new_config_hash,
+            bindings_hash=new_bindings_hash or None,
             activated_at=now,
             updated_at=now,
-            bindings=(bindings.__dict__ if allow_plaintext_bindings else None),
+            bindings=(bdict if allow_plaintext_bindings else None),
             bindings_ref=bindings_ref,
             replaced=bool(existing),
             previous_activation_id=getattr(existing, "activation_id", None) if existing else None,

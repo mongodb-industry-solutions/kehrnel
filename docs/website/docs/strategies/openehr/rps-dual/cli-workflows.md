@@ -101,10 +101,17 @@ use openEHR_demo
 db.createCollection("compositions_rps")
 db.createCollection("compositions_search")
 
-db.compositions_rps.createIndex({ ehr_id: 1, v: 1 })
-db.compositions_rps.createIndex({ ehr_id: 1, tid: 1, time_c: 1, comp_id: 1 })
 db.compositions_rps.createIndex({ ehr_id: 1, "cn.p": 1, time_c: 1 })
 db.compositions_search.createIndex({ ehr_id: 1, sort_time: 1 })
+```
+
+Activation creates missing indexes but does not remove superseded ones. If this
+environment was initialized from an older `openehr.rps_dual` pack, drop the old
+base indexes explicitly:
+
+```javascript
+db.compositions_rps.dropIndex("ehr_id_1_v_1")
+db.compositions_rps.dropIndex("ehr_id_1_tid_1_time_c_1_comp_id_1")
 ```
 
 If `zsh` reports `command not found: mongosh`, use Atlas UI or MongoDB Compass,

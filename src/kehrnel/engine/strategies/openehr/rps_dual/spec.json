@@ -135,18 +135,6 @@
         "encodingProfileFromConfig": "collections.compositions.encodingProfile",
         "indexes": [
           {
-            "id": "idx_patient_version",
-            "type": "btree",
-            "fields": ["ehr_id", "v"],
-            "purpose": "Patient-scoped retrieval + versioning"
-          },
-          {
-            "id": "idx_patient_template_commit",
-            "type": "btree",
-            "fields": ["ehr_id", "tid", "time_c", "comp_id"],
-            "purpose": "Patient-scoped template filtering plus version-time ordering"
-          },
-          {
             "id": "idx_patient_path",
             "type": "btree",
             "fields": ["ehr_id", "cn.p", "time_c"],

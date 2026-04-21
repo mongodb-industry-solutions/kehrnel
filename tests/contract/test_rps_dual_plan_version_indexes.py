@@ -9,7 +9,7 @@ from kehrnel.strategy_sdk import StrategyBindings
 
 
 @pytest.mark.asyncio
-async def test_plan_includes_version_commit_indexes_and_search_sort_mapping(tmp_path):
+async def test_plan_includes_patient_path_index_and_search_sort_mapping(tmp_path):
     rt = StrategyRuntime(FileActivationRegistry(tmp_path / "reg.json"))
     pack_dir = Path(__file__).resolve().parents[2] / "src" / "kehrnel" / "engine" / "strategies" / "openehr" / "rps_dual"
     manifest = load_strategy("openehr.rps_dual", pack_dir)
@@ -26,12 +26,17 @@ async def test_plan_includes_version_commit_indexes_and_search_sort_mapping(tmp_
 
     assert any(
         idx.get("collection") == "compositions_rps"
-        and [field for field, _ in idx.get("keys", [])] == ["ehr_id", "tid", "time_c", "comp_id"]
+        and [field for field, _ in idx.get("keys", [])] == ["ehr_id", "cn.p", "time_c"]
         for idx in indexes
     )
-    assert any(
+    assert not any(
         idx.get("collection") == "compositions_rps"
-        and [field for field, _ in idx.get("keys", [])] == ["ehr_id", "cn.p", "time_c"]
+        and [field for field, _ in idx.get("keys", [])] == ["ehr_id", "v"]
+        for idx in indexes
+    )
+    assert not any(
+        idx.get("collection") == "compositions_rps"
+        and [field for field, _ in idx.get("keys", [])] == ["ehr_id", "tid", "time_c", "comp_id"]
         for idx in indexes
     )
     assert any(

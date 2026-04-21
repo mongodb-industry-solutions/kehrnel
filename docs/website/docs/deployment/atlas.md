@@ -100,12 +100,6 @@ The generated definition reflects the active strategy config and mappings. In th
 Create B-tree indexes for patient-scoped queries:
 
 ```javascript
-// Primary composition lookup
-db.compositions_rps.createIndex({ "ehr_id": 1, "v": 1 })
-
-// Patient-scoped template and time filtering
-db.compositions_rps.createIndex({ "ehr_id": 1, "tid": 1, "time_c": 1, "comp_id": 1 })
-
 // Patient-scoped path predicates
 db.compositions_rps.createIndex({ "ehr_id": 1, "cn.p": 1, "time_c": 1 })
 
@@ -117,6 +111,15 @@ db.ehr.createIndex({ "ehr_id": 1 }, { unique: true })
 
 // Contributions
 db.contributions.createIndex({ "ehr_id": 1, "time_committed": -1 })
+```
+
+Activation creates missing indexes but does not drop obsolete ones. If you
+previously provisioned `compositions_rps` with older Kehrnel examples, remove
+the superseded base indexes manually:
+
+```javascript
+db.compositions_rps.dropIndex("ehr_id_1_v_1")
+db.compositions_rps.dropIndex("ehr_id_1_tid_1_time_c_1_comp_id_1")
 ```
 
 ## Performance Optimization

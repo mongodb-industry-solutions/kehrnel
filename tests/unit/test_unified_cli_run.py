@@ -10,6 +10,62 @@ import kehrnel.cli.unified as unified
 runner = CliRunner()
 
 
+def test_root_command_without_args_shows_help_and_local_guide():
+    result = runner.invoke(unified.app, [])
+
+    assert result.exit_code == 0
+    assert "Unified kehrnel CLI" in result.stdout
+    assert "Local guide" in result.stdout
+    assert "http://localhost:8080/guide" in result.stdout
+    assert "Missing command" not in result.stdout
+
+
+def test_extract_database_name_prefers_activation_record():
+    data = {
+        "response": {
+            "activations": {
+                "openehr": {
+                    "strategy_id": "openehr.rps_dual",
+                    "bindings_meta": {
+                        "db": {
+                            "provider": "mongodb",
+                            "database": "openEHR_demo2",
+                        }
+                    },
+                }
+            }
+        }
+    }
+
+    assert unified._extract_database_name(data, domain="openehr", strategy_id="openehr.rps_dual") == "openEHR_demo2"
+
+
+def test_build_summary_rows_for_query_reports_engine_scope_collection_and_rows():
+    payload = {
+        "ok": True,
+        "result": {
+            "engine_used": "text_search_dual",
+            "rows": [{"ehrId": "ehr-1"}, {"ehrId": "ehr-2"}],
+            "explain": {
+                "plan": {
+                    "engine": "text_search_dual",
+                    "scope": "cross_patient",
+                    "collection": "compositions_search",
+                    "warnings": [],
+                }
+            },
+        },
+    }
+
+    summary = dict(unified._build_summary_rows("query", payload))
+
+    assert summary["engine"] == "text_search_dual"
+    assert summary["scope"] == "cross_patient"
+    assert summary["collection"] == "compositions_search"
+    assert summary["rows"] == "2"
+    assert summary["warnings"] == "0"
+
+
 def test_run_ingest_expands_local_ndjson_file_into_documents(monkeypatch, tmp_path):
     ndjson_path = tmp_path / "sample.ndjson"
     ndjson_path.write_text(
@@ -92,3 +148,103 @@ def test_run_ingest_keeps_file_path_when_not_local(monkeypatch):
     assert result.exit_code == 0
     assert captured["payload"]["payload"]["file_path"] == "/path/that/only/the/server/can/see.ndjson"
     assert "documents" not in captured["payload"]["payload"]
+
+
+def test_strategy_build_search_index_writes_nested_definition(monkeypatch, tmp_path):
+    out_path = tmp_path / "search-index.json"
+
+    def fake_http_json(method, url, api_key=None, payload=None):
+        return 200, {
+            "ok": True,
+            "operation": "build_search_index_definition",
+            "response": {
+                "ok": True,
+                "result": {
+                    "ok": True,
+                    "definition": {
+                        "mappings": {
+                            "dynamic": False,
+                            "fields": {
+                                "sn": {"type": "embeddedDocuments"},
+                            },
+                        }
+                    },
+                    "warnings": [],
+                },
+            },
+        }
+
+    monkeypatch.setattr(unified, "_http_json", fake_http_json)
+    monkeypatch.setattr(unified, "_state", lambda: {"context": {}, "auth": {}, "resources": {}})
+    monkeypatch.setattr(unified, "_save", lambda state: None)
+
+    result = runner.invoke(
+        unified.app,
+        [
+            "strategy",
+            "build-search-index",
+            "--runtime-url",
+            "http://localhost:8000",
+            "--env",
+            "dev",
+            "--domain",
+            "openehr",
+            "--strategy",
+            "openehr.rps_dual",
+            "--out",
+            str(out_path),
+        ],
+    )
+
+    assert result.exit_code == 0
+    payload = json.loads(out_path.read_text(encoding="utf-8"))
+    assert payload["mappings"]["fields"]["sn"]["type"] == "embeddedDocuments"
+
+
+def test_strategy_build_search_index_writes_run_result_definition(monkeypatch, tmp_path):
+    out_path = tmp_path / "search-index.json"
+
+    def fake_http_json(method, url, api_key=None, payload=None):
+        return 200, {
+            "ok": True,
+            "env_id": "dev",
+            "operation": "build_search_index_definition",
+            "result": {
+                "ok": True,
+                "definition": {
+                    "mappings": {
+                        "dynamic": False,
+                        "fields": {
+                            "sort_time": {"type": "date"},
+                        },
+                    }
+                },
+                "warnings": [],
+            },
+        }
+
+    monkeypatch.setattr(unified, "_http_json", fake_http_json)
+    monkeypatch.setattr(unified, "_state", lambda: {"context": {}, "auth": {}, "resources": {}})
+    monkeypatch.setattr(unified, "_save", lambda state: None)
+
+    result = runner.invoke(
+        unified.app,
+        [
+            "strategy",
+            "build-search-index",
+            "--runtime-url",
+            "http://localhost:8000",
+            "--env",
+            "dev",
+            "--domain",
+            "openehr",
+            "--strategy",
+            "openehr.rps_dual",
+            "--out",
+            str(out_path),
+        ],
+    )
+
+    assert result.exit_code == 0
+    payload = json.loads(out_path.read_text(encoding="utf-8"))
+    assert payload["mappings"]["fields"]["sort_time"]["type"] == "date"
