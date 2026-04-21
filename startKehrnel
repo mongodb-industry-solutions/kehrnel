@@ -52,9 +52,21 @@ find_user_uv() {
   return 1
 }
 
+# Returns the name of a usable Python interpreter (python3 preferred, python as fallback).
+find_python_cmd() {
+  local candidate
+  for candidate in python3 python; do
+    if have_cmd "$candidate" && "$candidate" -c "import sys; sys.exit(0 if sys.version_info >= (3,8) else 1)" 2>/dev/null; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+  return 1
+}
+
 find_bootstrap_python() {
   local candidate
-  for candidate in python3 /usr/bin/python3 /opt/homebrew/bin/python3 /usr/local/bin/python3; do
+  for candidate in python3 python /usr/bin/python3 /opt/homebrew/bin/python3 /usr/local/bin/python3; do
     if have_cmd "$candidate" && "$candidate" -m pip --version >/dev/null 2>&1; then
       printf '%s\n' "$candidate"
       return 0
@@ -71,12 +83,18 @@ run_uv() {
   elif uv_path="$(find_user_uv 2>/dev/null)"; then
     "$uv_path" "$@"
   else
-    python3 -m uv "$@"
+    local py
+    py="$(find_python_cmd || true)"
+    if [[ -z "$py" ]]; then
+      log "Could not find a Python interpreter to run uv"
+      exit 1
+    fi
+    "$py" -m uv "$@"
   fi
 }
 
 ensure_uv() {
-  local bootstrap_python
+  local bootstrap_python py
 
   if have_cmd uv; then
     return
@@ -84,7 +102,8 @@ ensure_uv() {
   if find_user_uv >/dev/null 2>&1; then
     return
   fi
-  if python3 -m uv --version >/dev/null 2>&1; then
+  py="$(find_python_cmd || true)"
+  if [[ -n "$py" ]] && "$py" -m uv --version >/dev/null 2>&1; then
     return
   fi
 
@@ -103,14 +122,24 @@ ensure_python() {
   run_uv python install 3.12
 }
 
+venv_python() {
+  if [[ -x ".venv/Scripts/python.exe" ]]; then
+    printf '.venv/Scripts/python.exe'
+  else
+    printf '.venv/bin/python'
+  fi
+}
+
 ensure_venv() {
-  if [[ ! -x ".venv/bin/python" ]]; then
+  local vpy
+  vpy="$(venv_python)"
+  if [[ ! -x "$vpy" ]]; then
     log "Creating project virtual environment"
     run_uv venv --python 3.12 .venv
     return
   fi
 
-  if ! .venv/bin/python - <<'PY' >/dev/null 2>&1
+  if ! "$vpy" - <<'PY' >/dev/null 2>&1
 import sys
 raise SystemExit(0 if sys.version_info >= (3, 10) else 1)
 PY
@@ -139,7 +168,7 @@ dependency_fingerprint() {
 }
 
 python_deps_ready() {
-  .venv/bin/python - <<'PY' >/dev/null 2>&1
+  "$(venv_python)" - <<'PY' >/dev/null 2>&1
 import kehrnel  # noqa: F401
 PY
 }
@@ -186,7 +215,7 @@ sync_python_deps() {
   fi
 
   log "Syncing Python dependencies"
-  run_uv pip install --python .venv/bin/python -e '.[all]'
+  run_uv pip install --python "$(venv_python)" -e '.[all]'
   current_fingerprint="$(dependency_fingerprint)"
   printf '%s\n' "$current_fingerprint" > "$stamp_file"
 }
@@ -216,7 +245,13 @@ build_docs_if_needed() {
 }
 
 port_in_use() {
-  lsof -nP -iTCP:"$1" -sTCP:LISTEN >/dev/null 2>&1
+  if have_cmd lsof; then
+    lsof -nP -iTCP:"$1" -sTCP:LISTEN >/dev/null 2>&1
+  elif have_cmd netstat; then
+    netstat -an 2>/dev/null | grep -qE "(^|[[:space:]])[:0.]*$1[[:space:]].*LISTEN"
+  else
+    return 1
+  fi
 }
 
 choose_port() {
@@ -284,8 +319,8 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if ! have_cmd python3; then
-  log "python3 is required but was not found"
+if ! find_python_cmd >/dev/null 2>&1; then
+  log "Python 3.8+ is required but was not found (tried: python3, python)"
   exit 1
 fi
 
@@ -311,4 +346,4 @@ fi
 
 log "Starting Kehrnel on http://$HOST:$RUN_PORT"
 log "Endpoints: /docs  /guide  /health"
-exec .venv/bin/python -m uvicorn kehrnel.api.app:app "${UVICORN_ARGS[@]}"
+exec "$(venv_python)" -m uvicorn kehrnel.api.app:app "${UVICORN_ARGS[@]}"
