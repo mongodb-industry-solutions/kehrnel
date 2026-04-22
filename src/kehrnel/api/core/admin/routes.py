@@ -1933,8 +1933,11 @@ async def create_synthetic_job(env_id: str, request: Request, body: Dict[str, An
         }
         target_database = None
         if activation_now and getattr(activation_now, "bindings", None):
-            db_bindings = getattr(activation_now.bindings, "db", None)
-            target_database = getattr(db_bindings, "database", None)
+            db_bindings = (activation_now.bindings or {}).get("db") or {}
+            target_database = db_bindings.get("database") if isinstance(db_bindings, dict) else None
+        if not target_database and activation_now:
+            db_bindings_meta = (getattr(activation_now, "bindings_meta", None) or {}).get("db") or {}
+            target_database = db_bindings_meta.get("database") if isinstance(db_bindings_meta, dict) else None
         if not target_database and activation_now and activation_now.bindings_ref:
             try:
                 from kehrnel.engine.core.bindings_resolver import resolve_bindings as _resolve_bindings_ref
