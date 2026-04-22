@@ -1361,6 +1361,9 @@ class RPSDualStrategy(StrategyPlugin):
 
                 if prefer_models:
                     model_doc = spec.get("catalog") or {}
+                    stored_opt = await storage.find_one("templates", {"_id": template_id})
+                    if stored_opt and stored_opt.get("content"):
+                        model_doc = {"opt": stored_opt["content"]}
                     gen = _build_canonical_generator_from_model(model_doc)
                     if gen is not None:
                         template_generators[template_id] = gen
