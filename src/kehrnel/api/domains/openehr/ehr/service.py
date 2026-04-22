@@ -10,7 +10,8 @@ from kehrnel.api.domains.openehr.ehr.repository import (
     insert_ehr_and_contribution_in_transaction, 
     find_ehr_by_subject, 
     find_ehr_by_id, 
-    find_newest_ehrs
+    find_newest_ehrs,
+    delete_ehr_and_related_documents,
 )
 
 from kehrnel.api.domains.openehr.ehr_status.models import EHRStatusCreate, EHRStatus
@@ -223,3 +224,40 @@ async def _create_ehr_logic(
         time_created=DvDateTime(value=time_created),
         ehr_access=ehr_doc.ehr_access
     )
+
+
+async def delete_ehr(
+    ehr_id: str,
+    db: AsyncIOMotorDatabase,
+) -> None:
+    """
+    Hard-delete an EHR and its related sandbox records.
+
+    This is intended for local/testing workflows where removing the complete
+    EHR aggregate is preferable to keeping revision history.
+    """
+    ehr = await retrieve_ehr_by_id(ehr_id=ehr_id, db=db)
+
+    composition_ids = [
+        ref.id.value
+        for ref in (ehr.compositions or [])
+        if getattr(getattr(ref, "id", None), "value", None)
+    ]
+    contribution_ids = [
+        ref.id.value
+        for ref in (ehr.contributions or [])
+        if getattr(getattr(ref, "id", None), "value", None)
+    ]
+
+    try:
+        await delete_ehr_and_related_documents(
+            ehr_id=ehr_id,
+            composition_ids=composition_ids,
+            contribution_ids=contribution_ids,
+            db=db,
+        )
+    except PyMongoError as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Could not delete EHR due to a database error: {e}",
+        )

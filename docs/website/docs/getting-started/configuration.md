@@ -77,7 +77,7 @@ Create a `.env.local` file in your project root:
 # .env.local
 
 # MongoDB
-CORE_MONGODB_URL=mongodb+srv://user:pass@cluster.mongodb.net
+CORE_MONGODB_URL=mongodb+srv://<username>:<password>@cluster.mongodb.net
 CORE_DATABASE_NAME=my_cdr
 
 # API
@@ -86,8 +86,8 @@ KEHRNEL_API_PORT=8000
 
 # Security
 KEHRNEL_AUTH_ENABLED=true
-KEHRNEL_API_KEYS=key1,key2,key3
-KEHRNEL_CORS_ORIGINS=http://localhost:3000,https://myapp.com
+KEHRNEL_API_KEYS=<comma-separated-api-keys>
+KEHRNEL_CORS_ORIGINS=http://localhost:3000,https://app.example.org
 
 # Limits
 KEHRNEL_MAX_QUERY_RESULTS=5000
@@ -106,7 +106,6 @@ Each strategy has its own configuration schema. For the openEHR RPS Dual strateg
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
-    "database": { "type": "string" },
     "collections": {
       "type": "object",
       "properties": {
@@ -114,13 +113,22 @@ Each strategy has its own configuration schema. For the openEHR RPS Dual strateg
           "type": "object",
           "properties": {
             "name": { "type": "string", "default": "compositions_rps" },
-            "encodingProfile": { "type": "string", "default": "profile.codedpath" }
+            "encodingProfile": {
+              "type": "string",
+              "enum": ["profile.codedpath", "profile.search_shortcuts"],
+              "default": "profile.codedpath"
+            }
           }
         },
         "search": {
           "type": "object",
           "properties": {
             "name": { "type": "string", "default": "compositions_search" },
+            "encodingProfile": {
+              "type": "string",
+              "enum": ["profile.codedpath", "profile.search_shortcuts"],
+              "default": "profile.search_shortcuts"
+            },
             "enabled": { "type": "boolean", "default": true },
             "atlasIndex": {
               "type": "object",
@@ -131,10 +139,20 @@ Each strategy has its own configuration schema. For the openEHR RPS Dual strateg
           }
         }
       }
+    },
+    "paths": {
+      "type": "object",
+      "properties": {
+        "separator": { "type": "string", "enum": ["."], "default": "." }
+      }
     }
   }
 }
 ```
+
+The full strategy contract lives in the strategy pack itself. Use the dedicated
+[RPS Dual configuration guide](/docs/strategies/openehr/rps-dual/configuration)
+for the complete, current reference.
 
 ### Defaults (`defaults.json`)
 
@@ -147,14 +165,30 @@ Each strategy has its own configuration schema. For the openEHR RPS Dual strateg
     },
     "search": {
       "name": "compositions_search",
+      "encodingProfile": "profile.search_shortcuts",
       "enabled": true,
-      "atlasIndex": { "name": "search_nodes_index" }
+      "atlasIndex": {
+        "name": "search_nodes_index",
+        "definition": "file://bundles/searchIndex/searchIndex.json"
+      }
     },
-    "codes": { "name": "_codes", "mode": "extend" },
-    "ehr": { "name": "ehr" },
-    "contributions": { "name": "contributions" }
+    "codes": { "name": "_codes", "seed": "file://bundles/dictionaries/_codes.json" },
+    "shortcuts": { "name": "_shortcuts", "seed": "file://bundles/shortcuts/shortcuts.json" }
+  },
+  "fields": {
+    "document": {
+      "ehr_id": "ehr_id",
+      "comp_id": "comp_id",
+      "tid": "tid",
+      "v": "v",
+      "time_committed": "time_c",
+      "sort_time": "sort_time",
+      "cn": "cn",
+      "sn": "sn"
+    }
   },
   "transform": {
+    "apply_shortcuts": true,
     "coding": {
       "arcodes": { "strategy": "sequential" },
       "atcodes": { "strategy": "negative_int" }

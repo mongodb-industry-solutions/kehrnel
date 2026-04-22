@@ -1,0 +1,14 @@
+SELECT
+    e/ehr_id/value AS ehrId,
+    c/uid/value AS compositionId,
+    c/context/start_time/value AS startTime
+FROM
+    EHR e
+        CONTAINS
+            COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
+WHERE
+    e/ehr_id/value = 'c574a328-f898-53c0-b8ae-32dfa0709656'
+    AND c/archetype_details/template_id/value = 'sample_laboratory_v0.4'
+ORDER BY
+    c/context/start_time/value DESC
+LIMIT 5

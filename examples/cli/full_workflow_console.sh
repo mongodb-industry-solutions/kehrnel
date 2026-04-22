@@ -5,12 +5,13 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 cd "${REPO_ROOT}"
 
-RUNTIME_URL="${RUNTIME_URL:-http://localhost:8000}"
+RUNTIME_URL="${RUNTIME_URL:-http://localhost:8080}"
 ENV_ID="${ENV_ID:-dev}"
 DOMAIN="${DOMAIN:-openehr}"
 STRATEGY_ID="${STRATEGY_ID:-openehr.rps_dual}"
 API_KEY="${API_KEY:-${KEHRNEL_API_KEY:-}}"
 BINDINGS_REF="${BINDINGS_REF:-}"
+MONGODB_DB="${MONGODB_DB:-openEHR_demo}"
 
 WORKDIR="${WORKDIR:-.kehrnel/workflow-smoke}"
 TEMPLATE_OPT="${TEMPLATE_OPT:-samples/templates/T-IGR-TUMOUR-SUMMARY.opt}"
@@ -80,20 +81,36 @@ run kehrnel resource use --source src --sink dst
 run kehrnel op list --domain "${DOMAIN}"
 run kehrnel op capabilities --env "${ENV_ID}" --json
 
-if [[ -z "${BINDINGS_REF}" ]]; then
-  if [[ "${REQUIRE_RUNTIME}" == "1" ]]; then
-    echo "error: BINDINGS_REF is required for runtime activation in this smoke workflow." >&2
-    echo "hint: export BINDINGS_REF=env://DB_BINDINGS (or your resolver-specific value)." >&2
-    exit 2
-  fi
-  echo
-  echo "Skipping runtime activation and runtime ops because BINDINGS_REF is not set."
-  exit 0
-fi
-
 echo
 echo "### Runtime workflow ###"
-run kehrnel core env activate --env "${ENV_ID}" --domain "${DOMAIN}" --strategy "${STRATEGY_ID}" --bindings-ref "${BINDINGS_REF}"
+if [[ -n "${BINDINGS_REF}" ]]; then
+  run kehrnel core env activate --env "${ENV_ID}" --domain "${DOMAIN}" --strategy "${STRATEGY_ID}" --bindings-ref "${BINDINGS_REF}"
+elif [[ -n "${MONGODB_URI:-}" ]]; then
+  cat > "${WORKDIR}/bindings.mongo.json" <<EOF
+{
+  "db": {
+    "provider": "mongodb",
+    "uri": "${MONGODB_URI}",
+    "database": "${MONGODB_DB}"
+  }
+}
+EOF
+  run kehrnel core env activate \
+    --env "${ENV_ID}" \
+    --domain "${DOMAIN}" \
+    --strategy "${STRATEGY_ID}" \
+    --allow-plaintext-bindings \
+    --bindings "${WORKDIR}/bindings.mongo.json"
+else
+  if [[ "${REQUIRE_RUNTIME}" == "1" ]]; then
+    echo "error: runtime activation requires either BINDINGS_REF or MONGODB_URI." >&2
+    echo "hint: export MONGODB_URI='<mongodb-uri>' and optionally MONGODB_DB='openEHR_demo' for local dev." >&2
+    echo "hint: or export BINDINGS_REF='<resolver-specific-ref>' for resolver-backed deployments." >&2
+    exit 2
+  fi
+  echo "Skipping runtime activation and runtime ops because neither BINDINGS_REF nor MONGODB_URI is set."
+  exit 0
+fi
 run kehrnel run ensure_dictionaries --env "${ENV_ID}" --domain "${DOMAIN}"
 
 cat > "${WORKDIR}/synthetic.payload.json" <<EOF

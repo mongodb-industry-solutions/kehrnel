@@ -26,7 +26,7 @@ Examples:
 
 ```bash
 kehrnel common transform --strategy openehr.rps_dual --domain openehr -- flatten input.json -o out.json
-kehrnel common ingest --strategy openehr.rps_dual --domain openehr -- file batch.ndjson -d driver.yaml
+kehrnel common ingest --strategy openehr.rps_dual --domain openehr -- file flattened.ndjson -d driver.yaml
 ```
 
 ## Available Operations
@@ -66,22 +66,46 @@ Core params:
 ### `ingest`
 
 ```bash
-kehrnel common ingest --strategy openehr.rps_dual --domain openehr -- file <batch.ndjson> -d <driver.yaml> [--workers 4]
+kehrnel common ingest --strategy openehr.rps_dual --domain openehr -- file <flattened.ndjson> -d <driver.yaml> [--workers 4]
 ```
 
 Core params:
 - `file <JSONL>`
 - `-d <PATH>` required driver config
-- `-c <PATH>` optional transform config
 - `--workers <INT>`
+
+This command expects NDJSON lines that are already in the target persistence
+shape. It does not execute the active strategy transform.
+
+For openEHR `rps_dual` canonical envelopes, use `kehrnel run ingest` instead of
+`common ingest`, so Kehrnel can build the semi-flattened base document and the
+optional search-side projection.
+
+That strategy-aware path now supports direct `.ndjson` batch ingestion, so you
+do not need a shell loop that posts one envelope at a time.
 
 Create a MongoDB driver config interactively (recommended: use env var placeholders instead of storing secrets):
 
 ```bash
 python -m kehrnel.cli.ingest init-driver --db openehr_db --out .kehrnel/driver.mongo.yaml
 export MONGODB_URI='mongodb+srv://...'
-kehrnel common ingest -- -- file ./batch.ndjson -d .kehrnel/driver.mongo.yaml
+kehrnel common ingest -- -- file ./flattened.ndjson -d .kehrnel/driver.mongo.yaml
 ```
+
+Strategy-aware ingest example for canonical envelopes:
+
+```bash
+kehrnel run ingest \
+  --env dev \
+  --domain openehr \
+  --strategy openehr.rps_dual \
+  --set file_path=src/kehrnel/engine/strategies/openehr/rps_dual/samples/reference/envelopes/all.ndjson
+```
+
+When `file_path` points to a local `.json` or `.ndjson` file, the CLI expands it
+to `documents=[...]` before sending the request to the runtime. The
+`KEHRNEL_ALLOW_LOCAL_FILE_INPUTS` flags are only needed for server-side file
+access endpoints, not for this CLI workflow.
 
 ### `validate`
 

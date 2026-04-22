@@ -35,9 +35,7 @@ async def test_patient_query_uses_compatibility_transformer_pipeline():
     project = next((stage for stage in pipeline if "$project" in stage), None)
     assert project is not None
     centro_proj = project["$project"]["Centro"]
-    assert "$let" in centro_proj
-    cond = centro_proj["$let"]["vars"]["target_element"]["$first"]["$filter"]["cond"]
-    assert "$regexMatch" in cond
+    assert centro_proj in {"$data.v.df.cs", "$data.df.cs", "$data.value.defining_code.code_string"}
     assert plan.explain["builder"]["chosen"] == "pipeline_builder"
 
 
@@ -67,6 +65,14 @@ async def test_cross_patient_query_uses_compatibility_search_transformer():
     assert pipeline and "$search" in pipeline[0]
     search_stage = pipeline[0]["$search"]
     assert "compound" in search_stage or "text" in search_stage
+    project = next((stage for stage in pipeline if "$project" in stage), None)
+    assert project is not None
+    centro_proj = project["$project"]["Centro"]
+    if isinstance(centro_proj, dict):
+        preferred = centro_proj["$ifNull"][0] if "$ifNull" in centro_proj else centro_proj
+        assert preferred["$first"]["$map"]["input"]["$filter"]["cond"]["$regexMatch"]["input"] == "$$node.p"
+    else:
+        assert isinstance(centro_proj, str)
     assert plan.explain["builder"]["chosen"] == "search_pipeline_builder"
 
 

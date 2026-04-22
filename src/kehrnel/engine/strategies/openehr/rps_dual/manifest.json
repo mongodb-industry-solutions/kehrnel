@@ -5,7 +5,7 @@
   "maturity": "published",
   "pack_format": "strategy-pack/v1",
   "spec": { "path": "spec.json", "version": "1.1" },
-  "variants": ["composition.fullpath", "composition.codedpath", "search.shortcuts"],
+  "variants": ["composition.codedpath", "search.codedpath", "search.shortcuts"],
   "domain": "openEHR",
   "summary": "A balanced approach to clinical data storage that keeps your original records intact while enabling fast searches across your entire patient population.",
   "description": "This strategy preserves the complete clinical narrative in each patient record while maintaining a streamlined search layer for population health queries, research, and analytics.",
@@ -114,7 +114,18 @@
       "summary": "Ensure and seed _codes/_shortcuts dictionaries",
       "input_schema": {
         "type": "object",
-        "properties": {},
+        "properties": {
+          "codes": {
+            "type": "string",
+            "enum": ["none", "ensure", "seed"],
+            "description": "Bootstrap mode for the codes dictionary"
+          },
+          "shortcuts": {
+            "type": "string",
+            "enum": ["none", "ensure", "seed"],
+            "description": "Bootstrap mode for the shortcuts dictionary"
+          }
+        },
         "additionalProperties": false
       },
       "output_schema": {
@@ -184,6 +195,33 @@
         "properties": {
           "ok": { "type": "boolean" },
           "updated": { "type": "integer" },
+          "warnings": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    {
+      "name": "build_search_index_definition",
+      "kind": "maintenance",
+      "summary": "Generate Atlas Search index definition from active mappings configuration",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "include_stored_source": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "definition": { "type": "object" },
+          "metadata": { "type": "object" },
           "warnings": {
             "type": "array",
             "items": { "type": "string" }

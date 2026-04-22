@@ -24,19 +24,29 @@ Removed from active scope:
 ```bash
 git clone <repo>
 cd kehrnel
-python3 --version  # 3.10+ required
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e .[all]
-# Build docs site (optional but recommended if you want /guide on port 8000)
-cd docs/website && npm install && npm run build && cd ../..
-uvicorn kehrnel.api.app:app --reload
+./startKehrnel
 ```
 
 API docs:
-- `http://localhost:8000/docs`
-- `http://localhost:8000/redoc`
-- `http://localhost:8000/guide` (Docusaurus site, if built)
+- `http://localhost:8080/docs`
+- `http://localhost:8080/redoc`
+- `http://localhost:8080/guide`
+
+`./startKehrnel` bootstraps `uv` if needed, installs Python 3.12 locally, creates `.venv`, syncs `.[all]`, builds the docs site if `docs/website/build` is missing, and starts the API with dev-friendly defaults:
+- `KEHRNEL_AUTH_ENABLED=false`
+- `KEHRNEL_INIT_INGESTION_RUNTIME=false`
+
+Local port note:
+- `./startKehrnel` serves the runtime on `http://localhost:8080`
+- `kehrnel-api` or `uvicorn kehrnel.api.app:app` use `KEHRNEL_API_PORT` and default to `8000`
+
+Useful flags:
+
+```bash
+./startKehrnel --build-docs
+./startKehrnel --port 8080
+./startKehrnel --no-reload
+```
 
 ## Documentation Serving Model
 
@@ -55,7 +65,7 @@ cd docs/website
 npm start
 ```
 
-In dev mode, API links are proxied to `KEHRNEL_API_ORIGIN` (default `http://localhost:8000`).
+In Docusaurus dev mode, API links are proxied to `KEHRNEL_API_ORIGIN` (default `http://localhost:8080` to match `./startKehrnel`).
 
 Full integration guide:
 - `examples/README.md`
@@ -65,12 +75,22 @@ Full integration guide:
 
 - `GET /strategies`
 - `GET /strategies/{id}`
+- `GET /environments`
+- `POST /environments`
+- `GET /environments/{env}`
+- `PATCH /environments/{env}`
+- `DELETE /environments/{env}`
 - `POST /environments/{env}/activate`
 - `GET /environments/{env}/capabilities`
 - `POST /environments/{env}/run`
 - `POST /environments/{env}/compile_query`
 - `POST /environments/{env}/query`
 - `POST /environments/{env}/activations/{domain}/ops/{op}`
+
+Preferred runtime pattern:
+- use `POST /environments/{env}/run` for universal workflows
+- use `POST /environments/{env}/activations/{domain}/ops/{op}` for direct strategy op execution
+- keep `POST /environments/{env}/compile_query` and `POST /environments/{env}/query` for explicit runtime query surfaces
 
 Detailed contract docs:
 - this README (standalone and integration model)
@@ -131,6 +151,7 @@ Execution contract:
 1. Discover strategy manifests.
 2. Activate environment (`env_id + domain + strategy + config + bindings_ref`).
 3. Dispatch capability (`compile_query`, `query`, `ingest`, `transform`, `op`, etc.).
+   Preferred universal dispatch is `POST /environments/{env_id}/run`.
 4. Strategy plugin executes with resolved bindings and strategy config.
 
 ## API Integration Model

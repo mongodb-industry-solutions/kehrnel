@@ -4,93 +4,123 @@ sidebar_position: 2
 
 # Data Model
 
-The RPS Dual strategy transforms canonical openEHR compositions into an optimized document structure designed for efficient querying.
+RPS Dual materializes two related MongoDB document shapes from one canonical openEHR composition:
 
-## Document Structure
+- a primary composition document in `compositions_rps`
+- an optional slim search document in `compositions_search`
 
-### Primary Store (compositions_rps)
+The exact field names are configurable in the strategy, but the examples below use the current defaults from `defaults.json`.
 
-The full flattened composition with all data:
+## Primary Store (`compositions_rps`)
 
-```json
-{
-  "_id": "composition-uuid::kehrnel::1",
-  "ehr_id": "patient-001",
-  "tid": 42,
-  "pv": 1,
-  "cv": 1,
-  "ct": "2025-01-15T10:30:00Z",
-  "n": {
-    "13.12.11.-4": {
-      "v": { "m": 120, "u": "mm[Hg]" }
-    },
-    "13.12.11.-5": {
-      "v": { "m": 80, "u": "mm[Hg]" }
-    }
-  }
-}
-```
-
-### Search Store (compositions_search)
-
-Slim projection optimized for Atlas Search:
+Representative document:
 
 ```json
 {
   "_id": "composition-uuid::kehrnel::1",
   "ehr_id": "patient-001",
-  "tid": 42,
-  "sn": [
+  "comp_id": "composition-uuid::kehrnel::1",
+  "v": "1",
+  "time_c": "2025-01-15T10:30:00Z",
+  "tid": "PO_Obstetric_process_v0.8_FORMULARIS",
+  "cn": [
     {
-      "p": "13.12.11.-4",
-      "data": { "m": 120, "u": "mm[Hg]" }
+      "p": "1",
+      "data": {
+        "T": "C",
+        "ani": 1,
+        "uid": { "T": "OVI", "v": "composition-uuid::kehrnel::1" },
+        "ad": {
+          "ai": 1,
+          "rv": "1.0.4",
+          "ti": { "v": "PO_Obstetric_process_v0.8_FORMULARIS" }
+        }
+      }
     },
     {
-      "p": "13.12.11.-5",
-      "data": { "m": 80, "u": "mm[Hg]" }
+      "p": "-4.8.-3.-2.-1.2.1",
+      "kp": ["i"],
+      "pi": [1, 0, -1, 0, -1, 0, -1],
+      "data": {
+        "T": "U",
+        "ani": -4,
+        "n": { "T": "dt", "v": "Data d'inici" },
+        "v": { "T": "ddt", "v": "2025-01-15T10:30:00Z" }
+      }
     }
   ]
 }
 ```
 
-## Field Reference
+## Search Store (`compositions_search`)
 
-### Root Fields
+The search sidecar is only written when:
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `_id` | string | Version UID (uuid::system::version) |
-| `ehr_id` | string | EHR identifier |
-| `tid` | integer | Template ID (encoded) |
-| `pv` | integer | Previous version number |
-| `cv` | integer | Current version number |
-| `ct` | datetime | Commit time |
+- `collections.search.enabled=true`, and
+- the active analytics or mapping configuration selects fields for that template
 
-### Node Structure (n)
-
-The `n` field contains encoded path keys mapping to node data:
+Representative document:
 
 ```json
 {
-  "n": {
-    "<encoded_path>": {
-      "v": { ... },      // Value data
-      "meta": { ... }    // Metadata (optional)
+  "_id": "composition-uuid::kehrnel::1",
+  "ehr_id": "patient-001",
+  "comp_id": "composition-uuid::kehrnel::1",
+  "sort_time": "2025-01-15T10:30:00Z",
+  "tid": "PO_Obstetric_process_v0.8_FORMULARIS",
+  "sn": [
+    {
+      "p": "-4.8.-3.-2.-1.2.1",
+      "data": {
+        "ani": -4,
+        "v": { "v": "2025-01-15T10:30:00Z" }
+      }
     }
-  }
+  ]
 }
 ```
 
-### Search Nodes (sn)
+## Root Fields
 
-The `sn` array contains flattened search nodes:
+Identifier field storage is governed by `ids.ehr_id` and
+`ids.composition_id`. The examples below use string values for readability,
+but the physical stored type may also be `ObjectId` or UUID-backed binary,
+depending on the active strategy config.
+
+| Field | Store(s) | Type | Description |
+|-------|----------|------|-------------|
+| `_id` | both | string | Version UID (`uuid::system::version`) |
+| `ehr_id` | both | string | EHR identifier |
+| `comp_id` | both | string | Composition identifier stored explicitly for filters and joins |
+| `v` | `compositions_rps` | string | Version number extracted from the version UID |
+| `time_c` | `compositions_rps` | date | Commit time for the persisted version |
+| `tid` | both | string | Template identifier by default |
+| `cn` | `compositions_rps` | array | Full node array used for patient-scoped matching and reconstruction |
+| `sort_time` | `compositions_search` | date | Search-side sort helper field |
+| `sn` | `compositions_search` | array | Search node array for Atlas Search |
+
+## Node Arrays
+
+### Composition Nodes (`cn`)
+
+Each `cn` entry stores:
+
+- `p`: reversed and encoded path
+- `data`: the local clinical subtree for that node
+- optional positional helpers such as `kp` and `pi`
+
+The path and `data.ani` values can be code-encoded, while the template id stays a string by default.
+
+### Search Nodes (`sn`)
+
+The `sn` array keeps only the fields required by the active analytics/search mappings:
 
 ```json
 {
   "sn": [
     {
-      "p": "<encoded_path>",  // Path string for indexing
-      "data": { ... }         // Value data for search
+      "p": "<encoded_path>",
+      "data": { "...": "mapped search payload" }
     }
   ]
 }
@@ -98,161 +128,55 @@ The `sn` array contains flattened search nodes:
 
 ## Path Encoding
 
-### Reversal
+`p` stores the reversed path. Depending on strategy config, path segments may be compacted with:
 
-Paths are reversed so leaf nodes come first:
-
-```
-Original:  content[0]/data/events[0]/data/items[at0004]
-Reversed:  items[at0004].data.events[0].data.content[0]
-```
-
-### Numeric Encoding
-
-Path segments are encoded numerically:
-
-| Segment | Encoding |
-|---------|----------|
-| `content` | 15 (archetype code) |
-| `data` | 13 |
-| `events` | 12 |
-| `items` | 11 |
-| `at0004` | -4 |
-
-Final path: `13.12.11.-4.15`
+| Component | Current default |
+|-----------|-----------------|
+| archetype IDs | sequential integer code |
+| at-codes | negative integers |
+| RM attribute keys in search docs | shortcut encoding when `apply_shortcuts=true` |
 
 ## Value Encoding
 
-### DV_QUANTITY
+Node payloads keep openEHR value structure, but shortcut keys can be applied in search projections. For example:
 
-```json
-{
-  "v": {
-    "m": 120,           // magnitude
-    "u": "mm[Hg]",      // units
-    "p": 0              // precision (optional)
-  }
-}
-```
-
-### DV_CODED_TEXT
-
-```json
-{
-  "v": {
-    "val": "Normal",    // value string
-    "dc": {
-      "tid": "local",   // terminology ID
-      "cs": "at0010"    // code string
-    }
-  }
-}
-```
-
-### DV_DATE_TIME
-
-```json
-{
-  "v": {
-    "val": "2025-01-15T10:30:00Z"
-  }
-}
-```
-
-### DV_TEXT
-
-```json
-{
-  "v": {
-    "val": "Patient reports mild headache"
-  }
-}
-```
-
-### DV_BOOLEAN
-
-```json
-{
-  "v": {
-    "val": true
-  }
-}
-```
+- `data.ad.ti.v` for `archetype_details.template_id.value`
+- `data.v.v` for simple DV values
+- `data.v.df.cs` for coded text `defining_code.code_string`
 
 ## Code Dictionaries
 
-### _codes Collection
+### `_codes`
 
-Maintains mappings between human-readable codes and integers:
+Maintains mappings between human-readable archetype and at-code identifiers and the compact codes used during ingestion and query compilation.
 
-```json
-{
-  "_id": "arcode:openEHR-EHR-OBSERVATION.blood_pressure.v2",
-  "code": 42,
-  "type": "archetype"
-}
-```
+### `_shortcuts`
 
-```json
-{
-  "_id": "template:vital_signs.v1",
-  "code": 15,
-  "type": "template"
-}
-```
-
-### Encoding Strategies
-
-| Type | Strategy | Example |
-|------|----------|---------|
-| AT codes | negative_int | at0004 → -4 |
-| Archetype IDs | sequential | 42, 43, 44... |
-| Template IDs | sequential | 15, 16, 17... |
+Maintains the RM key shortcut map used in search-side projections when `transform.apply_shortcuts=true`.
 
 ## Indexes
 
-### compositions_rps
+### `compositions_rps`
 
 ```javascript
-// Patient-scoped queries
-db.compositions_rps.createIndex({ "ehr_id": 1, "_id": 1 })
-
-// Template-filtered queries
-db.compositions_rps.createIndex({ "ehr_id": 1, "tid": 1 })
+db.compositions_rps.createIndex({ "ehr_id": 1, "cn.p": 1, "time_c": 1 })
 ```
 
-### compositions_search (Atlas Search)
+### `compositions_search`
 
-```json
-{
-  "mappings": {
-    "dynamic": false,
-    "fields": {
-      "ehr_id": { "type": "string" },
-      "tid": { "type": "number" },
-      "sn": {
-        "type": "embeddedDocuments",
-        "fields": {
-          "p": { "type": "string", "analyzer": "keyword" },
-          "data": { "type": "document", "dynamic": true }
-        }
-      }
-    }
-  }
-}
+```javascript
+db.compositions_search.createIndex({ "ehr_id": 1, "sort_time": 1 })
 ```
 
-## Collection Sizing
+Atlas Search definitions should be generated from the active mappings instead of hand-maintained static JSON:
 
-### Storage Estimates
-
-| Canonical Size | Primary (RPS) | Search |
-|----------------|---------------|--------|
-| 10KB | ~3KB | ~1KB |
-| 50KB | ~15KB | ~5KB |
-| 100KB | ~30KB | ~10KB |
-
-The flattened format typically achieves 60-70% storage reduction compared to canonical JSON.
+```bash
+kehrnel strategy build-search-index \
+  --env dev \
+  --domain openehr \
+  --strategy openehr.rps_dual \
+  --out .kehrnel/search-index.json
+```
 
 ## Related
 

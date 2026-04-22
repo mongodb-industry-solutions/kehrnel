@@ -112,18 +112,43 @@ openEHR-EHR-COMPOSITION.encounter.v1 → 15
 │   ┌─────────────────┐   │  │   ┌─────────────────┐   │
 │   │ _id             │   │  │   │ _id             │   │
 │   │ ehr_id          │   │  │   │ ehr_id          │   │
+│   │ comp_id         │   │  │   │ comp_id         │   │
+│   │ v               │   │  │   │                 │   │
+│   │ time_c          │   │  │   │ sort_time       │   │
 │   │ tid             │   │  │   │ tid             │   │
-│   │ n: { ... }      │   │  │   │ sn: [ ... ]     │   │
+│   │ cn: [ ... ]     │   │  │   │ sn: [ ... ]     │   │
 │   └─────────────────┘   │  │   └─────────────────┘   │
 │        B-tree Index     │  │      Atlas Search       │
 └─────────────────────────┘  └─────────────────────────┘
 ```
 
-## Configuration
+## How Kehrnel Loads This Strategy
+
+Kehrnel wires `openehr.rps_dual` in a few explicit steps:
+
+1. The runtime discovers `manifest.json`, which exposes the strategy id,
+   entrypoint, capabilities, maintenance ops, and UI metadata.
+2. `strategy.py` loads `schema.json` and `defaults.json` and hydrates the
+   manifest with that user-facing config contract.
+3. Activation merges defaults with any user override, validates the result, and
+   normalizes it through `config.py`.
+4. `plan` and `apply` use `spec.json` plus the active config to materialize
+   collections, B-tree indexes, and the search index definition.
+5. `ingest`, `transform`, and query compilation reuse the same normalized config
+   so collection names, field labels, path encoding, and code strategies stay
+   aligned.
+
+That shared configuration flow is the reason `defaults.json`, `schema.json`,
+`config.py`, `spec.json`, and `strategy.py` need to remain congruent.
+
+## Configuration Baseline
+
+`defaults.json` is the recommended starting point for activation. Users can
+override it, but the default structure is the baseline that the runtime
+understands:
 
 ```json
 {
-  "database": "kehrnel_db",
   "collections": {
     "compositions": {
       "name": "compositions_rps",
@@ -131,21 +156,77 @@ openEHR-EHR-COMPOSITION.encounter.v1 → 15
     },
     "search": {
       "name": "compositions_search",
+      "encodingProfile": "profile.search_shortcuts",
       "enabled": true,
-      "atlasIndex": { "name": "search_nodes_index" }
+      "atlasIndex": {
+        "name": "search_nodes_index",
+        "definition": "file://bundles/searchIndex/searchIndex.json"
+      }
     },
-    "codes": { "name": "_codes", "mode": "extend" },
-    "ehr": { "name": "ehr" },
-    "contributions": { "name": "contributions" }
+    "codes": {
+      "name": "_codes",
+      "seed": "file://bundles/dictionaries/_codes.json"
+    },
+    "shortcuts": {
+      "name": "_shortcuts",
+      "seed": "file://bundles/shortcuts/shortcuts.json"
+    }
+  },
+  "ids": {
+    "ehr_id": "string",
+    "composition_id": "objectid"
+  },
+  "paths": {
+    "separator": "."
+  },
+  "fields": {
+    "document": {
+      "ehr_id": "ehr_id",
+      "comp_id": "comp_id",
+      "tid": "tid",
+      "v": "v",
+      "time_committed": "time_c",
+      "sort_time": "sort_time",
+      "cn": "cn",
+      "sn": "sn"
+    },
+    "node": {
+      "p": "p",
+      "pi": "pi",
+      "data": "data"
+    }
   },
   "transform": {
+    "apply_shortcuts": true,
     "coding": {
       "arcodes": { "strategy": "sequential" },
-      "atcodes": { "strategy": "negative_int" }
+      "atcodes": { "strategy": "negative_int", "store_original": false }
+    }
+  },
+  "bootstrap": {
+    "dictionariesOnActivate": {
+      "codes": "ensure",
+      "shortcuts": "seed"
     }
   }
 }
 ```
+
+Current supported config surface:
+
+- path separator is fixed to `.`
+- supported encoding profiles are `profile.codedpath` and
+  `profile.search_shortcuts`
+- the search-side document carries `_id`, `ehr_id`, `comp_id`, `tid`,
+  `sort_time`, and `sn`
+
+For the full packaged dual-collection example, add a small activation overlay
+for `transform.mappings` so the search-side projection and the Atlas Search
+definition are both derived from the same mapping source. The detailed workflow
+and config reference live in:
+
+- [CLI Workflows](/docs/strategies/openehr/rps-dual/cli-workflows)
+- [Configuration](/docs/strategies/openehr/rps-dual/configuration)
 
 ## Use Cases
 

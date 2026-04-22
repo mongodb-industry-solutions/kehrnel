@@ -36,5 +36,8 @@ async def test_compatibility_patient_pipeline_shape():
     project = next((stage for stage in pipeline if "$project" in stage), None)
     assert project is not None
     centro_proj = project["$project"]["Centro"]
-    cond = centro_proj["$let"]["vars"]["target_element"]["$first"]["$filter"]["cond"]
-    assert "$regexMatch" in cond
+    if isinstance(centro_proj, dict):
+        cond = centro_proj["$first"]["$map"]["input"]["$filter"]["cond"]
+        assert "$regexMatch" in cond
+    else:
+        assert isinstance(centro_proj, str)

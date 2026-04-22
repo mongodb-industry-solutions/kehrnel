@@ -13,6 +13,7 @@ class SearchConfig(BaseSettings):
     search_collection: str = "sm_search3"
     flatten_collection: str = "flatten_compositions"
     codes_collection: str = "_codes"
+    shortcuts_collection: str = "_shortcuts"
     
     # Search index configuration
     search_index_name: str = "search_compositions_index"
@@ -78,6 +79,7 @@ class Settings(BaseSettings):
                     self.search_config.search_collection = target_config.get("search_collection", "sm_search3")
                     self.search_config.flatten_collection = target_config.get("compositions_collection", "flatten_compositions")
                     self.search_config.codes_collection = target_config.get("codes_collection", "_codes")
+                    self.search_config.shortcuts_collection = target_config.get("shortcuts_collection", "_shortcuts")
                     self.search_config.search_compositions_merge = target_config.get("search_compositions_merge", False)
                     
             except Exception as e:

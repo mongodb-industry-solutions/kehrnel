@@ -26,7 +26,7 @@ def flatten(
         config={
             "role": "primary",
             "apply_shortcuts": False,
-            "paths": {"separator": "."},
+            "paths": {"separator": ":"},
             "collections": {},
         },
         mappings_path=str(

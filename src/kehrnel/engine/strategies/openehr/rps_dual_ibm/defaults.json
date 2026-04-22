@@ -1,0 +1,83 @@
+{
+  "collections": {
+    "compositions": {
+      "name": "compositions_rps_ibm",
+      "encodingProfile": "profile.codedpath"
+    },
+    "search": {
+      "name": "compositions_search_ibm",
+      "encodingProfile": "profile.search_shortcuts",
+      "enabled": true,
+      "atlasIndex": {
+        "name": "search_nodes_index"
+      }
+    },
+    "codes": {
+      "name": "_codes",
+      "seed": "file://bundles/dictionaries/_codes.json"
+    },
+    "shortcuts": {
+      "name": "_shortcuts",
+      "seed": "file://bundles/shortcuts/shortcuts.json"
+    }
+  },
+  "ids": {
+    "ehr_id": "uuidbin",
+    "composition_id": "uuidbin"
+  },
+  "paths": {
+    "separator": "/"
+  },
+  "fields": {
+    "document": {
+      "ehr_id": "ehr_id",
+      "comp_id": "version",
+      "tid": "template",
+      "v": "version",
+      "time_committed": "creation_date",
+      "sort_time": "creation_date",
+      "cn": "cn",
+      "sn": "sn"
+    },
+    "node": {
+      "p": "p",
+      "pi": "li",
+      "data": "data"
+    }
+  },
+  "transform": {
+    "apply_shortcuts": true,
+    "envelope": {
+      "base": {
+        "_id": "_id",
+        "version": "version",
+        "template": "template",
+        "template_id": "template_id",
+        "creation_date": "creation_date",
+        "metrics": "metrics"
+      },
+      "search": {
+        "version": "version",
+        "template": "template",
+        "template_id": "template_id",
+        "creation_date": "creation_date",
+        "metrics": "metrics"
+      }
+    },
+    "coding": {
+      "arcodes": {
+        "strategy": "sequential"
+      },
+      "atcodes": {
+        "strategy": "compact_prefix",
+        "store_original": false
+      }
+    }
+  },
+  "bootstrap": {
+    "dictionariesOnActivate": {
+      "codes": "ensure",
+      "shortcuts": "ensure"
+    }
+  }
+}

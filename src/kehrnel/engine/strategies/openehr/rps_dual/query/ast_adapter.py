@@ -71,8 +71,18 @@ def _adapt_order(ir: AqlQueryIR) -> Dict[str, Any] | None:
         return None
     cols = {}
     for idx, (field, direction) in enumerate(ir.sort.items()):
-        cols[str(idx)] = {"alias": field, "direction": "DESC" if direction == -1 else "ASC"}
+        cols[str(idx)] = {"path": field, "direction": "DESC" if direction == -1 else "ASC"}
     return {"columns": cols}
+
+
+def _detect_version_alias(ir: AqlQueryIR) -> Optional[str]:
+    candidate_paths = [sel.path for sel in ir.select] + [pred.path for pred in ir.predicates]
+    if ir.sort:
+        candidate_paths.extend(ir.sort.keys())
+    for path in candidate_paths:
+        if isinstance(path, str) and path.endswith("/commit_audit/time_committed/value") and "/" in path:
+            return path.split("/", 1)[0]
+    return None
 
 
 def adapt_ir_to_ast(ir: AqlQueryIR, ehr_alias: str = "e", composition_alias: str = "c") -> Dict[str, Any]:
@@ -117,6 +127,9 @@ def adapt_ir_to_ast(ir: AqlQueryIR, ehr_alias: str = "e", composition_alias: str
     order = _adapt_order(ir)
     if order:
         ast["orderBy"] = order
+    version_alias = _detect_version_alias(ir)
+    if version_alias:
+        ast["version"] = {"alias": version_alias}
     if ir.limit is not None:
         ast["limit"] = ir.limit
     if ir.offset is not None:

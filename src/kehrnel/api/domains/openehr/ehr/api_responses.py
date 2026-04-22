@@ -121,6 +121,17 @@ create_ehr_api_responses = {
 }
 
 
+delete_ehr_responses = {
+    status.HTTP_204_NO_CONTENT: {
+        "description": "EHR and related sandbox records deleted successfully."
+    },
+    status.HTTP_404_NOT_FOUND: {
+        "description": "The EHR with the specified `ehr_id` was not found.",
+        "model": ErrorResponse,
+    }
+}
+
+
 get_ehr_list_responses = {
     status.HTTP_200_OK: {
         "description": "A list of EHRs retrieved successfully.",

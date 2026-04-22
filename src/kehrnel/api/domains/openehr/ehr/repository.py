@@ -3,7 +3,7 @@
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from pymongo.errors import PyMongoError
 import logging
-from typing import Optional
+from typing import Optional, Sequence
 from datetime import datetime
 from kehrnel.api.bridge.app.core.config import settings
 
@@ -16,6 +16,18 @@ def _ehr_coll() -> str:
 
 def _contrib_coll() -> str:
     return settings.EHR_CONTRIBUTIONS_COLL
+
+
+def _composition_coll() -> str:
+    return settings.COMPOSITIONS_COLL_NAME
+
+
+def _flatten_coll() -> str:
+    return settings.FLAT_COMPOSITIONS_COLL_NAME
+
+
+def _search_coll() -> str:
+    return settings.SEARCH_COMPOSITIONS_COLL_NAME
 
 
 async def find_ehr_by_subject(subject_id: str, subject_namespace: str, db: AsyncIOMotorDatabase):
@@ -69,3 +81,73 @@ async def find_newest_ehrs(db: AsyncIOMotorDatabase, limit: int = 50):
         return []
     
     return await cursor_ehr_result.to_list(length=limit)
+
+
+async def delete_ehr_and_related_documents(
+    ehr_id: str,
+    composition_ids: Sequence[str],
+    contribution_ids: Sequence[str],
+    db: AsyncIOMotorDatabase,
+):
+    """
+    Deletes an EHR and its related sandbox data in one transaction.
+
+    This performs a hard delete for local sandbox workflows:
+    - the EHR document
+    - canonical compositions
+    - flattened/search composition records
+    - contributions (including EHR_STATUS/directory history)
+    """
+    comp_ids = [value for value in composition_ids if isinstance(value, str) and value]
+    contrib_ids = [value for value in contribution_ids if isinstance(value, str) and value]
+
+    async with await db.client.start_session() as session:
+        async with session.start_transaction():
+            try:
+                composition_filters = [{"ehr_id": ehr_id}]
+                if comp_ids:
+                    composition_filters.append({"_id": {"$in": comp_ids}})
+
+                await db[_composition_coll()].delete_many(
+                    {"$or": composition_filters},
+                    session=session,
+                )
+                await db[_flatten_coll()].delete_many(
+                    {"$or": composition_filters},
+                    session=session,
+                )
+
+                search_filters = [{"ehr_id": ehr_id}, {"_id": ehr_id}]
+                if comp_ids:
+                    search_filters.extend(
+                        [
+                            {"_id": {"$in": comp_ids}},
+                            {"comp_id": {"$in": comp_ids}},
+                            {"comps.comp_id": {"$in": comp_ids}},
+                        ]
+                    )
+
+                await db[_search_coll()].delete_many(
+                    {"$or": search_filters},
+                    session=session,
+                )
+
+                contribution_filters = [{"ehr_id": ehr_id}]
+                if contrib_ids:
+                    contribution_filters.append({"_id": {"$in": contrib_ids}})
+
+                await db[_contrib_coll()].delete_many(
+                    {"$or": contribution_filters},
+                    session=session,
+                )
+
+                delete_result = await db[_ehr_coll()].delete_one(
+                    {"_id.value": ehr_id},
+                    session=session,
+                )
+
+                if delete_result.deleted_count == 0:
+                    raise PyMongoError(f"Failed to delete EHR with id '{ehr_id}' during transaction.")
+            except PyMongoError as e:
+                logger.error(f"EHR deletion transaction failed: {e}")
+                raise

@@ -7,11 +7,12 @@ import json
 import hashlib
 from datetime import datetime
 from typing import Dict, Optional, Any
-from dataclasses import is_dataclass, asdict
+from dataclasses import is_dataclass, asdict, replace
 
 from .manifest import StrategyManifest
 from .config import validate_config
 from .activation import EnvironmentActivation
+from .environment import EnvironmentRecord
 from .registry import ActivationRegistry, FileActivationRegistry
 from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.core.bundle_store import BundleStore
@@ -65,6 +66,31 @@ class StrategyRuntime:
             return True
         return False
 
+    @staticmethod
+    def _bindings_payload(bindings: StrategyBindings | Dict[str, Any] | None) -> Dict[str, Any]:
+        if not bindings:
+            return {}
+        if is_dataclass(bindings):
+            raw = asdict(bindings)
+        elif isinstance(bindings, dict):
+            raw = dict(bindings)
+        else:
+            raw = getattr(bindings, "__dict__", {}) or {}
+        return raw if isinstance(raw, dict) else {}
+
+    def _bindings_hash(self, bindings: StrategyBindings | Dict[str, Any] | None, bindings_ref: str | None = None) -> str:
+        payload = {
+            "bindings_ref": (bindings_ref or "").strip() or None,
+            "bindings": self._bindings_payload(bindings),
+        }
+        if not payload["bindings_ref"] and not payload["bindings"]:
+            return ""
+        try:
+            blob = json.dumps(payload, sort_keys=True).encode("utf-8")
+            return hashlib.sha256(blob).hexdigest()
+        except Exception:
+            return ""
+
     async def activate(
         self,
         env_id: str,
@@ -88,6 +114,9 @@ class StrategyRuntime:
         if not chosen_domain:
             raise ValueError("Domain required for activation")
         chosen_domain = str(chosen_domain).strip().lower()
+        env_record = self.registry.get_environment(env_id)
+        if env_record and not bindings_ref and getattr(env_record, "bindings_ref", None):
+            bindings_ref = env_record.bindings_ref
         existing = self.registry.get_activation(env_id, chosen_domain)
         incoming_bindings = self._has_meaningful_bindings(bindings)
         if incoming_bindings and not allow_plaintext_bindings:
@@ -103,6 +132,7 @@ class StrategyRuntime:
                 message="bindings_ref is required for activation.",
             )
         existing_hash = existing.config_hash if existing else None
+        current_manifest_digest = manifest_digest_override or self._manifest_digest(manifest)
         # idempotent: if same strategy and config hash matches, return existing
         merged_config: dict = {}
         defaults = manifest.default_config or self._load_defaults_from_entrypoint(manifest)
@@ -116,19 +146,9 @@ class StrategyRuntime:
         store_profiles = self._build_store_profiles(manifest, merged_config)
         bundle_refs = self._validate_bundle_refs(merged_config, manifest)
         new_config_hash = self._config_hash(merged_config)
-        if existing and not force:
-            if existing.strategy_id == strategy_id and existing_hash == new_config_hash:
-                existing.already_active = True
-                return existing
-            # switch strategy or config changed: replace
-        # invalidate cache for this env
-        self.invalidate_env_cache(env_id)
-        # redact uri
-        bdict = bindings.__dict__
+        bdict = self._bindings_payload(bindings)
         uri = (bdict.get("db") or {}).get("uri")
-        redacted_uri = None
-        if uri:
-            redacted_uri = self._redact_uri(uri)
+        redacted_uri = self._redact_uri(uri) if uri else None
         bindings_meta = {
             "db": {
                 "provider": (bdict.get("db") or {}).get("provider"),
@@ -136,6 +156,43 @@ class StrategyRuntime:
                 "uri": redacted_uri,
             }
         }
+        new_bindings_hash = self._bindings_hash(bindings, bindings_ref)
+        if existing and not force:
+            existing_version = (existing.version or "").strip()
+            existing_is_latest_alias = existing_version.lower() in ("latest", "current")
+            digest_matches = bool(existing.manifest_digest and existing.manifest_digest == current_manifest_digest)
+            version_matches = bool(
+                not existing.manifest_digest
+                and (
+                    not existing_version
+                    or existing_is_latest_alias
+                    or existing_version == manifest.version
+                )
+            )
+            existing_bindings_hash = (getattr(existing, "bindings_hash", None) or "").strip()
+            if existing_bindings_hash and new_bindings_hash:
+                bindings_match = existing_bindings_hash == new_bindings_hash
+            else:
+                bindings_match = (
+                    (getattr(existing, "bindings_ref", None) or None) == ((bindings_ref or "").strip() or None)
+                    and (getattr(existing, "bindings_meta", None) or {}) == bindings_meta
+                )
+            if (
+                existing.strategy_id == strategy_id
+                and existing_hash == new_config_hash
+                and (digest_matches or version_matches)
+                and bindings_match
+            ):
+                return replace(
+                    existing,
+                    already_active=True,
+                    replaced=False,
+                    previous_activation_id=None,
+                    replaced_from=None,
+                )
+            # switch strategy or config changed: replace
+        # invalidate cache for this env
+        self.invalidate_env_cache(env_id)
         ctx = StrategyContext(environment_id=env_id, config=merged_config, bindings=None, adapters=None, manifest=manifest)
         # load plugin
         mod_path, cls_name = manifest.entrypoint.split(":")
@@ -144,20 +201,20 @@ class StrategyRuntime:
         handle = StrategyHandle(manifest, plugin_cls(manifest))
         await _maybe_await(handle.activate, config=merged_config, bindings=bindings, context=ctx)
         now = datetime.utcnow().isoformat()
-        manifest_digest = manifest_digest_override or self._manifest_digest(manifest)
         activation = EnvironmentActivation(
             env_id=env_id,
             domain=chosen_domain,
             strategy_id=strategy_id,
             version=version,
-            manifest_digest=manifest_digest,
+            manifest_digest=current_manifest_digest,
             config=merged_config,
             bindings_meta=bindings_meta,
             activation_id=None,
             config_hash=new_config_hash,
+            bindings_hash=new_bindings_hash or None,
             activated_at=now,
             updated_at=now,
-            bindings=(bindings.__dict__ if allow_plaintext_bindings else None),
+            bindings=(bdict if allow_plaintext_bindings else None),
             bindings_ref=bindings_ref,
             replaced=bool(existing),
             previous_activation_id=getattr(existing, "activation_id", None) if existing else None,
@@ -169,6 +226,18 @@ class StrategyRuntime:
         if existing and not hist_reason:
             hist_reason = "replace"
         self.registry.activate(activation, reason=hist_reason or "activate")
+        if bindings_ref and (not env_record or getattr(env_record, "bindings_ref", None) != bindings_ref):
+            self.registry.upsert_environment(
+                EnvironmentRecord(
+                    env_id=env_id,
+                    name=getattr(env_record, "name", None) if env_record else None,
+                    description=getattr(env_record, "description", None) if env_record else None,
+                    metadata=dict(getattr(env_record, "metadata", {}) or {}) if env_record else {},
+                    bindings_ref=bindings_ref,
+                    created_at=getattr(env_record, "created_at", None) if env_record else None,
+                    updated_at=now,
+                )
+            )
         return activation
 
     async def upgrade_activation(self, env_id: str, domain: str) -> EnvironmentActivation:
@@ -226,6 +295,44 @@ class StrategyRuntime:
         removed = self.registry.deactivate(env_id, domain, reason="deactivate")
         if not removed:
             raise KehrnelError(code="ACTIVATION_NOT_FOUND", status=404, message=f"No activation for env {env_id} (domain={domain})")
+        self.invalidate_env_cache(env_id)
+        return removed
+
+    def list_environments(self) -> Dict[str, EnvironmentRecord]:
+        return self.registry.list_environments()
+
+    def get_environment(self, env_id: str) -> Optional[EnvironmentRecord]:
+        return self.registry.get_environment(env_id)
+
+    def upsert_environment(
+        self,
+        env_id: str,
+        *,
+        name: str | None = None,
+        description: str | None = None,
+        metadata: dict | None = None,
+        bindings_ref: str | None = None,
+    ) -> EnvironmentRecord:
+        existing = self.registry.get_environment(env_id)
+        return self.registry.upsert_environment(
+            EnvironmentRecord(
+                env_id=env_id,
+                name=name if name is not None else getattr(existing, "name", None),
+                description=description if description is not None else getattr(existing, "description", None),
+                metadata=dict(metadata or {}) if metadata is not None else dict(getattr(existing, "metadata", {}) or {}),
+                bindings_ref=bindings_ref if bindings_ref is not None else getattr(existing, "bindings_ref", None),
+                created_at=getattr(existing, "created_at", None),
+                updated_at=datetime.utcnow().isoformat(),
+            )
+        )
+
+    def delete_environment(self, env_id: str, remove_activations: bool = False) -> EnvironmentRecord:
+        try:
+            removed = self.registry.delete_environment(env_id, remove_activations=remove_activations)
+        except ValueError as exc:
+            raise KehrnelError(code="ENVIRONMENT_NOT_EMPTY", status=409, message=str(exc)) from exc
+        if not removed:
+            raise KehrnelError(code="ENVIRONMENT_NOT_FOUND", status=404, message=f"Environment {env_id} not found")
         self.invalidate_env_cache(env_id)
         return removed
 
@@ -396,11 +503,10 @@ class StrategyRuntime:
                 domain = payload.get("domain")
                 query = payload.get("query")
                 if query is None and isinstance(payload, dict) and isinstance(payload.get("aql"), str):
-                    # Accept "raw AQL" payloads at the runtime layer (API forwards them as-is).
-                    # Strategy plugins generally expect the normalized IR shape, not an "aql" key.
+                    # Accept raw AQL payloads at the runtime layer.
+                    # openEHR strategies may choose to compile these through a domain-specific
+                    # compatibility path rather than the normalized IR compiler.
                     aql_text = payload.get("aql")
-                    from kehrnel.engine.domains.openehr.aql.parser import validate_aql_syntax
-                    from kehrnel.engine.domains.openehr.aql.parse import parse_aql as parse_aql_to_ir
 
                     # Extra guard: the current handwritten validator is permissive enough to accept
                     # inputs like "SELECT FROM". Reject obviously malformed queries early.
@@ -412,22 +518,18 @@ class StrategyRuntime:
                             message="AQL syntax error: query must include SELECT <expr> FROM ...",
                             details={"aql": aql_text},
                         )
-
-                    validation = validate_aql_syntax(aql_text)
-                    if not (validation or {}).get("success"):
+                    if (domain or "").lower() not in ("openehr", "open_ehr"):
                         raise KehrnelError(
-                            code="INVALID_AQL",
+                            code="RAW_AQL_UNSUPPORTED",
                             status=400,
-                            message=(validation or {}).get("message") or "Invalid AQL query",
-                            details=validation or {},
+                            message="Raw AQL is only supported for the openEHR domain",
+                            details={"domain": domain},
                         )
-                    ir = parse_aql_to_ir(aql_text).to_dict()
-                    # Allow callers to override scope detection if they already know it.
-                    if payload.get("scope"):
-                        ir["scope"] = payload.get("scope")
-                    if payload.get("debug"):
-                        ir["debug"] = True
-                    query = ir
+                    query = {
+                        "raw_aql": aql_text,
+                        "params": payload.get("parameters") or payload.get("params") or {},
+                        "debug": bool(payload.get("debug")),
+                    }
                 plan = await handle.plugin.compile_query(ctx, domain=domain, query=query)
                 plan_dict = _to_dict(plan)
                 # unwrap nested plan if present
@@ -456,7 +558,7 @@ class StrategyRuntime:
                 domain = payload.get("domain")
                 query = payload.get("query")
                 if query is None and isinstance(payload, dict) and isinstance(payload.get("aql"), str):
-                    # Accept raw AQL payloads by parsing them into the normalized IR expected by strategies.
+                    # Accept raw AQL payloads and defer domain-specific compilation to the strategy.
                     aql_text = payload.get("aql")
                     if not isinstance(aql_text, str) or not aql_text.strip():
                         raise KehrnelError(code="INVALID_AQL", status=400, message="aql must be a non-empty string")
@@ -467,23 +569,11 @@ class StrategyRuntime:
                             message="Raw AQL is only supported for the openEHR domain",
                             details={"domain": domain},
                         )
-                    from kehrnel.engine.domains.openehr.aql.parser import validate_aql_syntax
-                    from kehrnel.engine.domains.openehr.aql.parse import parse_aql as parse_aql_to_ir
-
-                    validation = validate_aql_syntax(aql_text)
-                    if not (validation or {}).get("success"):
-                        raise KehrnelError(
-                            code="INVALID_AQL",
-                            status=400,
-                            message=(validation or {}).get("message") or "Invalid AQL query",
-                            details=validation or {},
-                        )
-                    ir = parse_aql_to_ir(aql_text).to_dict()
-                    if payload.get("scope"):
-                        ir["scope"] = payload.get("scope")
-                    if payload.get("debug"):
-                        ir["debug"] = True
-                    query = ir
+                    query = {
+                        "raw_aql": aql_text,
+                        "params": payload.get("parameters") or payload.get("params") or {},
+                        "debug": bool(payload.get("debug")),
+                    }
                 plan = await handle.plugin.compile_query(ctx, domain=domain, query=query)
                 res = await handle.plugin.execute_query(ctx, plan)
                 return _to_dict(res)

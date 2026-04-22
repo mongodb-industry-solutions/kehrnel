@@ -21,6 +21,12 @@ from kehrnel.engine.core.explain import enrich_explain
 from kehrnel.engine.core.manifest import StrategyManifest
 from kehrnel.engine.core.plugin import StrategyPlugin
 from kehrnel.engine.core.types import ApplyPlan, ApplyResult, QueryPlan, QueryResult, StrategyContext, TransformResult
+from kehrnel.contextobjects.strategy_support import (
+    compile_con2l_runtime,
+    negotiate_con2l_runtime,
+    resolve_context_contract_runtime,
+    summarize_context_map_runtime,
+)
 
 
 def load_json(path: Path) -> Dict[str, Any]:
@@ -563,4 +569,12 @@ class FhirVitalsWindowStrategy(StrategyPlugin):
         return QueryResult(engine_used=plan.engine, rows=rows, explain=plan.explain)
 
     async def run_op(self, ctx: StrategyContext, op: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+        if op == "resolve_context_contract":
+            return await resolve_context_contract_runtime(ctx, payload)
+        if op == "compile_con2l":
+            return await compile_con2l_runtime(ctx, payload)
+        if op == "summarize_object_map":
+            return await summarize_context_map_runtime(ctx, payload)
+        if op == "negotiate_con2l":
+            return await negotiate_con2l_runtime(ctx, payload)
         raise ValueError(f"Strategy op '{op}' not supported")

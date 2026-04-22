@@ -19,7 +19,12 @@ Start at [API Layers](./layers), then go deeper into the layer page you need.
 
 ## Interactive Documentation
 
-These buttons open endpoints on the same server hosting this documentation (local default: `http://localhost:8000`).
+These buttons open endpoints on the same server hosting this documentation.
+
+Local defaults:
+
+- `./startKehrnel` serves docs and API on `http://localhost:8080`
+- `kehrnel-api` serves the API on `http://localhost:8000` unless you override `KEHRNEL_API_PORT`
 
 <div className="apiCtaGrid apiCtaGrid--2">
   <div className="apiCtaCard">
@@ -131,7 +136,9 @@ For exhaustive CLI and endpoint inventory generated from `pyproject.toml` and Op
 When `KEHRNEL_AUTH_ENABLED=true`, include the API key in headers:
 
 ```bash
-curl -H "X-API-Key: your-key" http://localhost:8000/api/domains/openehr/ehr
+RUNTIME_URL="${RUNTIME_URL:-http://localhost:8080}"
+
+curl -H "X-API-Key: your-key" "${RUNTIME_URL}/api/domains/openehr/ehr"
 ```
 
 ### Public Endpoints
@@ -188,7 +195,9 @@ These endpoints don't require authentication:
 ### Create an EHR
 
 ```bash
-curl -X POST "http://localhost:8000/api/domains/openehr/ehr" \
+RUNTIME_URL="${RUNTIME_URL:-http://localhost:8080}"
+
+curl -X POST "${RUNTIME_URL}/api/domains/openehr/ehr" \
   -H "Content-Type: application/json" \
   -H "X-API-Key: your-key"
 ```
@@ -196,7 +205,9 @@ curl -X POST "http://localhost:8000/api/domains/openehr/ehr" \
 ### Execute AQL Query
 
 ```bash
-curl -X POST "http://localhost:8000/api/domains/openehr/query/aql" \
+RUNTIME_URL="${RUNTIME_URL:-http://localhost:8080}"
+
+curl -X POST "${RUNTIME_URL}/api/domains/openehr/query/aql" \
   -H "Content-Type: text/plain" \
   -H "X-API-Key: your-key" \
   -d "SELECT c/uid/value FROM EHR e CONTAINS COMPOSITION c"
@@ -205,15 +216,30 @@ curl -X POST "http://localhost:8000/api/domains/openehr/query/aql" \
 ### Activate Strategy
 
 ```bash
-curl -X POST "http://localhost:8000/environments/dev/activate" \
+RUNTIME_URL="${RUNTIME_URL:-http://localhost:8080}"
+
+curl -X POST "${RUNTIME_URL}/environments/dev/activate" \
   -H "Content-Type: application/json" \
   -H "X-API-Key: admin-key" \
   -d '{
     "strategy_id": "openehr.rps_dual",
     "version": "0.2.0",
     "domain": "openehr",
-    "bindings_ref": "env://DB_BINDINGS"
+    "bindings_ref": "<resolver-specific-ref>"
   }'
+```
+
+### Manage Environments
+
+```bash
+RUNTIME_URL="${RUNTIME_URL:-http://localhost:8080}"
+
+curl "${RUNTIME_URL}/environments"
+
+curl -X POST "${RUNTIME_URL}/environments" \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: admin-key" \
+  -d '{"env_id":"dev","name":"Development"}'
 ```
 
 ## Related

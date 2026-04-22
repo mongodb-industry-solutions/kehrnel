@@ -9,7 +9,7 @@ This guide covers installing \{kehrnel\} on your local machine for development a
 ## Prerequisites
 
 - **Python 3.10+**
-- **MongoDB Atlas** cluster (M50+ recommended for production) or local MongoDB 6.0+
+- **MongoDB Atlas** cluster (M10+ recommended for production) or local MongoDB 6.0+
 - **Git**
 
 ## Installation Methods
@@ -58,7 +58,7 @@ Create a `.env.local` file in the project root:
 
 ```bash
 # MongoDB Connection
-CORE_MONGODB_URL=mongodb+srv://user:password@cluster.mongodb.net
+CORE_MONGODB_URL=mongodb+srv://<username>:<password>@cluster.mongodb.net
 CORE_DATABASE_NAME=kehrnel_db
 
 # API Configuration
@@ -74,38 +74,40 @@ KEHRNEL_AUTH_ENABLED=false
 
 For production use, we recommend MongoDB Atlas:
 
-1. Create an Atlas cluster (M50+ for production workloads)
+1. Create an Atlas cluster
 2. Enable Atlas Search on the cluster
 3. Create a database user with readWrite permissions
 4. Whitelist your IP address or use VPC peering
 5. Copy the connection string to your `.env.local`
 
-### Required Atlas Search Index
+### Required Atlas Search Definition
 
-Create an Atlas Search index on the `compositions_search` collection:
+Generate the Atlas Search definition from the active strategy mappings instead of pasting a static JSON snippet:
 
-```json
-{
-  "mappings": {
-    "dynamic": false,
-    "fields": {
-      "ehr_id": { "type": "string" },
-      "tid": { "type": "number" },
-      "sn": {
-        "type": "embeddedDocuments",
-        "fields": {
-          "p": { "type": "string", "analyzer": "keyword" },
-          "data": { "type": "document", "dynamic": true }
-        }
-      }
-    }
-  }
-}
+```bash
+export RUNTIME_URL="${RUNTIME_URL:-http://localhost:8080}"
+
+kehrnel setup --runtime-url "$RUNTIME_URL" --env dev --domain openehr --strategy openehr.rps_dual
+kehrnel strategy build-search-index --env dev --domain openehr --strategy openehr.rps_dual --out .kehrnel/search-index.json
 ```
+
+Apply the generated `.kehrnel/search-index.json` to the `compositions_search` collection in Atlas Search.
 
 ## Verifying the Installation
 
-Start the API server:
+Recommended local startup:
+
+```bash
+./startKehrnel
+```
+
+That serves:
+
+- Swagger UI: http://localhost:8080/docs
+- ReDoc: http://localhost:8080/redoc
+- Docusaurus site: http://localhost:8080/guide
+
+Direct API startup:
 
 ```bash
 kehrnel-api
@@ -124,8 +126,8 @@ Expected response:
 ```
 
 Access the API documentation:
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
+- `./startKehrnel`: `http://localhost:8080/docs`, `http://localhost:8080/redoc`, `http://localhost:8080/guide`
+- `kehrnel-api`: `http://localhost:8000/docs`, `http://localhost:8000/redoc`
 
 ## Next Steps
 

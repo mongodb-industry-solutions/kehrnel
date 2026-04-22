@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from typing import Optional, Dict, Any, Union, List
+from typing import Optional, Dict, Any, Union, List, Literal
 from pydantic import BaseModel, Field
 
 
@@ -50,8 +50,10 @@ class IdsCfg(BaseModel):
 
 # --- Paths ---
 
+PathSeparator = Literal[".", "/", ":", "|", "~"]
+
 class PathsCfg(BaseModel):
-    separator: str = "."
+    separator: PathSeparator = ":"
 
 
 # --- Fields Configuration ---
@@ -61,6 +63,8 @@ class DocumentFieldsCfg(BaseModel):
     comp_id: str = "comp_id"
     tid: str = "tid"
     v: str = "v"
+    time_committed: str = "time_c"
+    sort_time: str = "sort_time"
     cn: str = "cn"
     sn: str = "sn"
 
@@ -93,10 +97,28 @@ class CodingCfg(BaseModel):
     atcodes: AtcodesCfg = Field(default_factory=AtcodesCfg)
 
 
+class EnvelopeCfg(BaseModel):
+    base: Dict[str, str] = Field(default_factory=dict)
+    search: Dict[str, str] = Field(default_factory=dict)
+
+
 class TransformCfg(BaseModel):
     mappings: Optional[Union[str, Dict[str, Any]]] = None
     apply_shortcuts: bool = True
     coding: CodingCfg = Field(default_factory=CodingCfg)
+    envelope: EnvelopeCfg = Field(default_factory=EnvelopeCfg)
+
+
+DictionaryBootstrapMode = Literal["none", "ensure", "seed"]
+
+
+class DictionaryBootstrapCfg(BaseModel):
+    codes: DictionaryBootstrapMode = "ensure"
+    shortcuts: DictionaryBootstrapMode = "seed"
+
+
+class BootstrapCfg(BaseModel):
+    dictionariesOnActivate: DictionaryBootstrapCfg = Field(default_factory=DictionaryBootstrapCfg)
 
 
 # --- Main Strategy Config ---
@@ -108,6 +130,7 @@ class RPSDualConfig(BaseModel):
     paths: PathsCfg = Field(default_factory=PathsCfg)
     fields: FieldsCfg = Field(default_factory=FieldsCfg)
     transform: TransformCfg = Field(default_factory=TransformCfg)
+    bootstrap: BootstrapCfg = Field(default_factory=BootstrapCfg)
 
 
 # --- Bulk Config (operational, not portal-visible) ---
@@ -176,26 +199,62 @@ def build_schema_config(cfg: RPSDualConfig) -> Dict[str, Dict[str, Any]]:
     comp_coll = cfg.collections.compositions
     search_coll = cfg.collections.search
     fields = cfg.fields
+    atcode_strategy = cfg.transform.coding.atcodes.strategy
+    composition_format = (
+        "shortened"
+        if (comp_coll.encodingProfile or "").strip().lower() in {"profile.codedpath", "profile.search_shortcuts"}
+        else "full"
+    )
+    search_format = (
+        "shortened"
+        if (search_coll.encodingProfile or "").strip().lower() in {"profile.codedpath", "profile.search_shortcuts"}
+        else composition_format
+    )
 
     composition_schema = {
         "composition_array": fields.document.cn,
         "path_field": fields.node.p,
         "data_field": fields.node.data,
+        "archetype_path": "ap",
         "ehr_id": fields.document.ehr_id,
+        "ehr_id_encoding": cfg.ids.ehr_id,
         "comp_id": fields.document.comp_id,
+        "composition_id_encoding": cfg.ids.composition_id,
+        "template_id": fields.document.tid,
+        "time_committed": fields.document.time_committed,
+        "separator": cfg.paths.separator,
+        "atcode_strategy": atcode_strategy,
+        "codes_collection": cfg.collections.codes.name,
+        "shortcuts_collection": cfg.collections.shortcuts.name,
+        "codes_doc_id": "ar_code",
+        "shortcuts_doc_id": "shortcuts",
         "collection": comp_coll.name,
+        "format": composition_format,
     }
 
     search_schema = {
         "composition_array": fields.document.sn,
         "path_field": fields.node.p,
         "data_field": fields.node.data,
+        "archetype_path": "ap",
         "ehr_id": fields.document.ehr_id,
+        "ehr_id_encoding": cfg.ids.ehr_id,
         "comp_id": fields.document.comp_id,
+        "composition_id_encoding": cfg.ids.composition_id,
+        "template_id": fields.document.tid,
+        "time_committed": fields.document.sort_time,
+        "sort_time": fields.document.sort_time,
+        "separator": cfg.paths.separator,
+        "atcode_strategy": atcode_strategy,
+        "codes_collection": cfg.collections.codes.name,
+        "shortcuts_collection": cfg.collections.shortcuts.name,
+        "codes_doc_id": "ar_code",
+        "shortcuts_doc_id": "shortcuts",
         "index_name": search_coll.atlasIndex.name if search_coll.atlasIndex else None,
         "lookup_from": comp_coll.name,
         "lookup_as": "full_composition",
         "collection": search_coll.name,
+        "format": search_format,
     }
 
     return {"composition": composition_schema, "search": search_schema}
@@ -235,17 +294,24 @@ def build_flattener_config(
             "comp_id": strategy_cfg.fields.document.comp_id,
             "template_id": strategy_cfg.fields.document.tid,
             "version": strategy_cfg.fields.document.v,
+            "time_committed": strategy_cfg.fields.document.time_committed,
         },
         "search_fields": {
             "nodes": strategy_cfg.fields.document.sn,
             "path": strategy_cfg.fields.node.p,
             "data": strategy_cfg.fields.node.data,
             "ehr_id": strategy_cfg.fields.document.ehr_id,
+            "comp_id": strategy_cfg.fields.document.comp_id,
             "template_id": strategy_cfg.fields.document.tid,
+            "sort_time": strategy_cfg.fields.document.sort_time,
         },
         "target": {
             "codes_collection": strategy_cfg.collections.codes.name,
             "shortcuts_collection": strategy_cfg.collections.shortcuts.name,
+        },
+        "envelope_fields": {
+            "base": dict(strategy_cfg.transform.envelope.base),
+            "search": dict(strategy_cfg.transform.envelope.search),
         },
     }
 

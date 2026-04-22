@@ -1,0 +1,278 @@
+{
+  "id": "openehr.rps_dual_ibm",
+  "name": "Reversed Path Search - IBM Exact Model",
+  "version": "0.1.0",
+  "maturity": "published",
+  "pack_format": "strategy-pack/v1",
+  "spec": { "path": "spec.json", "version": "1.1" },
+  "variants": ["composition.ibm_exact", "search.ibm_exact"],
+  "domain": "openEHR",
+  "summary": "Compatibility pack for the IBM openEHR reversed-path persistence model, preserving IBM field names, compact tokens, and envelope layout.",
+  "description": "This strategy reuses the shared openEHR RPS compiler and maintenance plumbing, but emits and reads the IBM document model exactly as stored: slash-separated reversed paths, compact atcodes, li sibling indexes, prefixed value tokens, and IBM envelope metadata.",
+  "config": {
+    "strategy": {
+      "schema": "schema.json",
+      "defaults": "defaults.json",
+      "description": "IBM exact-model storage configuration"
+    },
+    "bulk": {
+      "schema": "../rps_dual/ingest/bulk_schema.json",
+      "defaults": "../rps_dual/ingest/bulk_defaults.json",
+      "description": "Bulk operation settings"
+    }
+  },
+  "capabilities": [
+    "transform",
+    "ingest",
+    "validate",
+    "query",
+    "plan",
+    "apply"
+  ],
+  "entrypoint": "kehrnel.engine.strategies.openehr.rps_dual_ibm.strategy:RPSDualIBMStrategy",
+  "ui": {
+    "docs": "/guide/docs/strategies/openehr/rps-dual-ibm",
+    "tags": ["openEHR", "reversed-paths", "ibm", "compatibility"],
+    "domain_badge": "openEHR",
+    "works_with": ["atlas_search_dual"],
+    "links": {
+      "runtime_activate": "/environments/{env_id}/activate",
+      "runtime_capabilities": "/environments/{env_id}/capabilities",
+      "runtime_run": "/environments/{env_id}/run",
+      "runtime_plan": "/environments/{env_id}/plan",
+      "runtime_apply": "/environments/{env_id}/apply",
+      "runtime_transform": "/environments/{env_id}/transform",
+      "runtime_ingest": "/environments/{env_id}/ingest",
+      "runtime_query": "/environments/{env_id}/query",
+      "runtime_compile_query": "/environments/{env_id}/compile_query",
+      "runtime_strategy_op": "/environments/{env_id}/activations/{domain}/ops/{op}",
+      "strategy_manifest": "/strategies/openehr.rps_dual_ibm",
+      "strategy_spec": "/strategies/openehr.rps_dual_ibm/spec",
+      "strategy_endpoints": "/strategies/openehr.rps_dual_ibm/endpoints",
+      "catalog_ops": "/ops"
+    },
+    "story": "If an organization already stores openEHR data using IBM's reversed-path model, the right move is usually not to migrate that data just to adopt Kehrnel. This strategy lets Kehrnel work against the persisted IBM shape directly, so teams can keep IBM collection names, compact `$>` value tokens, `li` sibling indexes, and slash-separated reversed paths while still using Kehrnel's query and ingest tooling.\n\nIt is intentionally a compatibility pack, not the new recommended default. The goal is operational continuity first: connect Kehrnel to an existing IBM deployment safely, then decide later whether any migration to the default Kehrnel profile is worthwhile.",
+    "how_it_works": "The runtime reuses the same RPS compiler, planning, and maintenance infrastructure as the default dual-collection strategy, but swaps in IBM-specific flatten/unflatten logic and field bindings. Canonical documents remain IBM-shaped, search documents keep IBM shortcuts and path conventions, and query resolution maps openEHR concepts onto IBM envelope fields such as `version`, `template`, and `creation_date`.\n\nFor existing IBM deployments, collection names and dictionary collection names should be reviewed before first activation. The recommended flow is configuration first in the GUI, then activation in Kehrnel once the right collection bindings and policies are confirmed.",
+    "benefits": [
+      "Works directly with the IBM exact persisted model, reducing migration risk for existing deployments.",
+      "Preserves IBM field names, `$>` shortcut values, compact atcode tokens, and envelope metadata exactly as stored.",
+      "Lets teams point Kehrnel at pre-existing canonical, search, code, and shortcut collections rather than forcing a rewrite.",
+      "Reuses the shared RPS planning, query, and maintenance machinery so operational behavior stays familiar."
+    ],
+    "constraints": [
+      "This pack preserves IBM conventions exactly, even where a greenfield Kehrnel deployment would choose cleaner defaults.",
+      "Slash-separated reversed paths and IBM envelope fields are kept for compatibility, not because they are the preferred fresh design.",
+      "Dictionary bootstrap policy should be reviewed before first use when attaching to pre-existing IBM collections."
+    ],
+    "pick_when": [
+      "You already have IBM-shaped openEHR collections or exports and need Kehrnel to interoperate without rewriting them.",
+      "You want Kehrnel query and ingest support now, while keeping migration to the default Kehrnel model optional."
+    ],
+    "avoid_when": [
+      "You are starting greenfield and can use the default `openehr.rps_dual` strategy instead.",
+      "You want the cleanest Kehrnel-native path separator and field layout rather than IBM exact compatibility."
+    ],
+    "ideal_for": "This strategy is best for teams onboarding an existing IBM openEHR reversed-path deployment into Kehrnel. It is especially useful when collection names, dictionary contents, and document layout are already in production and must remain stable while new query, transform, or maintenance workflows are introduced.",
+    "consider_alternatives": "If you are building a new repository from scratch, prefer the default `openehr.rps_dual` strategy; it has cleaner defaults, richer portal guidance, and avoids compatibility constraints that exist only to match IBM. Choose this IBM pack when preserving an installed IBM layout matters more than simplification.",
+    "scorecard": {
+      "read_patient": 4,
+      "read_population": 5,
+      "writes": 2,
+      "storage": 3,
+      "index_cost": 3,
+      "migration_ease": 5
+    },
+    "tabs": {
+      "overview": {
+        "cards": [
+          { "title": "Compatibility", "body": "Targets IBM exact persistence: slash paths, compact atcodes, `$>` values, `li`, and IBM envelope fields." },
+          { "title": "Querying", "body": "Reuses the shared RPS query compiler while rebinding document paths to IBM fields such as `version`, `template`, and `creation_date`." },
+          { "title": "Compare To Default", "body": "Use this pack to preserve an installed IBM model. For greenfield deployments, the default `openehr.rps_dual` profile remains the better starting point." }
+        ]
+      },
+      "activation": {
+        "cards": [
+          { "title": "Configure First", "body": "Before first activation, review `collections.compositions.name`, `collections.search.name`, `collections.codes.name`, and `collections.shortcuts.name` so Kehrnel points at the correct IBM collections." },
+          { "title": "Safer Bootstrap", "body": "Compatibility defaults are ensure-only for dictionaries, so existing IBM dictionary documents are not replaced unless you explicitly choose seed/rebuild operations." }
+        ]
+      }
+    }
+  },
+  "ops": [
+    {
+      "name": "ensure_dictionaries",
+      "kind": "maintenance",
+      "summary": "Ensure dictionary collections and optionally seed them from the configured IBM-compatible payloads",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "codes": {
+            "type": "string",
+            "enum": ["none", "ensure", "seed"],
+            "description": "Bootstrap mode for the codes dictionary"
+          },
+          "shortcuts": {
+            "type": "string",
+            "enum": ["none", "ensure", "seed"],
+            "description": "Bootstrap mode for the shortcuts dictionary"
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "created": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "seeded": {
+            "type": "object",
+            "properties": {
+              "codes": { "type": "integer" },
+              "shortcuts": { "type": "integer" }
+            }
+          },
+          "warnings": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    {
+      "name": "rebuild_codes",
+      "kind": "maintenance",
+      "summary": "Rebuild code dictionary documents from the configured IBM-compatible seed payload",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "dry_run": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "updated": { "type": "integer" },
+          "warnings": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    {
+      "name": "rebuild_shortcuts",
+      "kind": "maintenance",
+      "summary": "Rebuild shortcuts dictionary document from the configured IBM-compatible seed payload",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "dry_run": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "updated": { "type": "integer" },
+          "warnings": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    {
+      "name": "build_search_index_definition",
+      "kind": "maintenance",
+      "summary": "Generate Atlas Search index definition from active mappings configuration",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "include_stored_source": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "definition": { "type": "object" },
+          "metadata": { "type": "object" },
+          "warnings": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    {
+      "name": "ensure_atlas_search_index",
+      "kind": "maintenance",
+      "summary": "Ensure Atlas Search index for slim search collection",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "index_name": { "type": "string" },
+          "recreate": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "result": { "type": "object" },
+          "warnings": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    {
+      "name": "rebuild_slim_search_collection",
+      "kind": "maintenance",
+      "summary": "Rebuild slim search docs from canonical IBM-compatible compositions",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "batch_size": {
+            "type": "integer",
+            "default": 100
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "processed": { "type": "integer" },
+          "inserted": { "type": "integer" },
+          "warnings": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  ]
+}

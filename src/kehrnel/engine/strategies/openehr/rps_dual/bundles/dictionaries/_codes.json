@@ -329,7 +329,7 @@
             "age": {
             "v0": 58
             },
-            "spirometry_result-CatSalut-HC3": {
+            "spirometry_result_sample": {
             "v3": 59
             },
             "anticoagulant_treatment": {
@@ -382,7 +382,7 @@
         "ESAS-r_v2": {},
         "VIG-express_v2": {},
         "CAMBRA_6_v2": {},
-        "hc3_clinical_variables_and_scales_v0": {
+        "sample_clinical_variables_and_scales_v0": {
             "4": {}
         },
         "PVS_1": {},
@@ -401,7 +401,7 @@
         "audit_c_general_v1": {},
         "PHQ-9_v2": {},
         "Roland-Morris": {},
-        "hc3_reports_v0": {
+        "sample_reports_v0": {
             "2": {}
         },
         "Fagerstrom_llarg_v3": {},
@@ -409,29 +409,29 @@
         "CAMBRA05": {},
         "Yesavage-5": {},
         "OSLO_3_v2": {},
-        "HC3 Immunization List v0": {
+        "Sample Immunization List v0": {
             "5": {}
         },
         "Roland-Morris_v2": {},
         "NPQ_v2": {},
         "informe_amb_1_arquetip_OBS_v3": {},
-        "hc3_diagnosis_list_v0": {
+        "sample_diagnosis_list_v0": {
             "3": {}
         },
         "NECPAL_V2": {},
         "SPADI_v2": {},
-        "hc3_cancer_screening_v0": {
+        "sample_cancer_screening_v0": {
             "5": {}
         },
         "GAD7": {},
         "PURE-4_v2": {},
         "audit_c_general_v2": {},
         "IPAQ_V3": {},
-        "hc3_laboratory_v0": {
+        "sample_laboratory_v0": {
             "4": {}
         },
         "SPADI": {},
-        "hc3_spirometry_test_result_v0": {
+        "sample_spirometry_test_result_v0": {
             "10": {}
         },
         "ISI_v1": {},
@@ -445,7 +445,7 @@
         "didp_v2": {},
         "Fagerstrom_llarg_v2": {},
         "ARMS": {},
-        "hc3_clinical_course_v0": {
+        "sample_clinical_course_v0": {
             "3": {}
         },
         "Edimburgo postparto": {},

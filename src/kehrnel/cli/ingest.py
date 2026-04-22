@@ -11,27 +11,45 @@ import yaml
 from kehrnel.persistence import get_driver, MongoSource
 from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
 
-app = typer.Typer(help="Bulk-ingest flattened docs into a persistence driver")
+app = typer.Typer(help="Bulk-ingest already-flattened docs into a persistence driver")
 log = logging.getLogger(__name__)
 
 @app.command("file")
 def from_file(
     jsonl: Path = typer.Argument(..., exists=True, readable=True,
-                                 help="NDJSON file with flattened docs"),
+                                 help="NDJSON file with already-flattened base/search docs"),
     driver_cfg: Path = typer.Option(..., "-d", help="YAML/JSON driver config"),
     workers:    int  = typer.Option(4, help="parallel insert workers")
 ):
-    """Read an **NDJSON** file (one flattened doc per line) and ingest it."""
+    """Read an **NDJSON** file of already-flattened docs and ingest it.
+
+    This command does not run the active strategy transform. If your input lines
+    are canonical composition envelopes (for example objects containing
+    `canonicalJSON`), use `kehrnel run ingest` instead so the strategy can build
+    the semi-flattened base document and optional search projection.
+    """
     drv = get_driver(driver_cfg)
     drv.connect()
 
     def producer() -> Iterator[Dict[str, Any]]:
         with jsonl.open("r", encoding="utf-8") as fh:
             for line in fh:
-                yield json.loads(line)
+                stripped = line.strip()
+                if not stripped:
+                    continue
+                doc = json.loads(stripped)
+                if isinstance(doc, dict) and isinstance(doc.get("canonicalJSON"), dict):
+                    raise typer.BadParameter(
+                        "Input appears to be canonical composition envelopes, not flattened documents. "
+                        "Use `kehrnel run ingest --env <env> --domain openehr --strategy openehr.rps_dual --set file_path=<path-to-.ndjson>` "
+                        "for a whole NDJSON file, or `--payload <envelope.json>` for a single envelope, so the strategy can "
+                        "apply the semi-flattening and optional search projection."
+                    )
+                yield doc
 
     drv.insert_many(producer(), workers=workers)
-    log.info("done - inserted %d docs", getattr(getattr(drv, "stats", None), "inserted", 0))
+    inserted = getattr(getattr(drv, "stats", None), "inserted", 0)
+    typer.echo(json.dumps({"status": 200, "ok": True, "inserted": inserted}))
 
 @app.command("mongo-catchup")
 def from_mongo(
@@ -53,7 +71,7 @@ def from_mongo(
         config={
             "role": "primary",
             "apply_shortcuts": False,
-            "paths": {"separator": "."},
+            "paths": {"separator": ":"},
             "collections": {},
         },
         mappings_path=str(
@@ -78,7 +96,7 @@ def from_mongo(
         if search_doc and search_doc.get("sn"):
             drv.insert_one(search_doc, search=True)
             inserted += 1
-    log.info("done - inserted %d docs", inserted)
+    typer.echo(json.dumps({"status": 200, "ok": True, "inserted": inserted}))
 
 
 @app.command("init-driver")

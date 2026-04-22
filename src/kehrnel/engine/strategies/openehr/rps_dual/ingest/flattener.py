@@ -1,6 +1,8 @@
 """Composition flattener for the rps_dual persistence strategy."""
 
+from copy import deepcopy
 import json
+import logging
 import re
 from pathlib import Path
 from datetime import timezone
@@ -29,6 +31,8 @@ SKIP_ATTRS = {}
 _AT_ROOT = re.compile(r"^at0*([1-9][0-9]*)$", re.I)
 _AT_DOTTED = re.compile(r"^at[0-9]+(?:\.[0-9]{1,4})+$", re.I)
 _START_DOTTED = -10_000
+
+logger = logging.getLogger(__name__)
 
 class CompositionFlattener:
     """
@@ -65,6 +69,7 @@ class CompositionFlattener:
             self.ar_prefix_replace = []
         self.store_original_at = (self.coding_opts.get("atcodes") or {}).get("store_original", False)
         self.use_codes_db = not (self.ar_strategy == "literal" and self.at_strategy == "literal")
+        self._codes_dirty = False
 
         # 1. Composition Fields (Source / Intermediate)
         # UPDATED: Matches the key used in main.py ("composition_fields")
@@ -74,11 +79,12 @@ class CompositionFlattener:
         self.cf_data  = c_fields.get("data", "data")
         self.cf_path  = c_fields.get("path", "p")
         self.cf_pi    = c_fields.get("path_instance", "pi")
-        self.cf_ap    = c_fields.get("archetype_path", "ap")
+        self.cf_ap    = c_fields.get("archetype_path")
         self.cf_anc   = c_fields.get("ancestors", "anc")
         self.cf_ehr   = c_fields.get("ehr_id", "ehr_id")
         self.cf_tmpl  = c_fields.get("template_id", "tid")
         self.cf_ver   = c_fields.get("version", "v")
+        self.cf_time_committed = c_fields.get("time_committed", "time_c")
         self.cf_cid   = c_fields.get("comp_id", "comp_id")
 
         # 2. Search Fields (Target)
@@ -87,10 +93,12 @@ class CompositionFlattener:
         self.sf_nodes = s_fields.get("nodes", "sn")
         self.sf_data  = s_fields.get("data", "data")
         self.sf_path  = s_fields.get("path", "p")
-        self.sf_ap    = s_fields.get("archetype_path", "ap")
+        self.sf_ap    = s_fields.get("archetype_path")
         self.sf_anc   = s_fields.get("ancestors", "anc")
         self.sf_ehr   = s_fields.get("ehr_id", "ehr_id")
+        self.sf_cid   = s_fields.get("comp_id", "comp_id")
         self.sf_tmpl  = s_fields.get("template_id", "tid")
+        self.sf_sort_time = s_fields.get("sort_time", "sort_time")
         self.sf_score = s_fields.get("score", "score")
 
         # Encapsulate state previously stored in globals
@@ -101,7 +109,7 @@ class CompositionFlattener:
         self.shortcut_keys: Dict[str, str] = {}
         self.shortcut_vals: Dict[str, str] = {}
         self.simple_fields: Dict[str, List[dict]] = {}
-        self.path_separator = (config.get("paths") or {}).get("separator", ".")
+        self.path_separator = (config.get("paths") or {}).get("separator", ":")
         collections_cfg = config.get("collections", {}) or {}
         self.search_encoding_profile = collections_cfg.get("search", {}).get("encodingProfile")
         self.composition_encoding_profile = collections_cfg.get("compositions", {}).get("encodingProfile")
@@ -109,6 +117,15 @@ class CompositionFlattener:
         self.path_codec = PathCodec(separator=self.path_separator)
         self.template_fields: Dict[str, List[dict]] = {}
         self.compiled_template_rules: Dict[str, List[dict]] = {}
+        self.catalog_mappings_spec: Optional[Dict[str, Any]] = None
+        envelope_cfg = config.get("envelope_fields", {}) if isinstance(config, dict) else {}
+        envelope_cfg = envelope_cfg if isinstance(envelope_cfg, dict) else {}
+        self.base_envelope_fields = (
+            envelope_cfg.get("base") if isinstance(envelope_cfg.get("base"), dict) else {}
+        ) or {}
+        self.search_envelope_fields = (
+            envelope_cfg.get("search") if isinstance(envelope_cfg.get("search"), dict) else {}
+        ) or {}
 
         # Load mappings synchronously from file or inline content
         self._load_mappings(mappings_path, mappings_content)
@@ -136,6 +153,8 @@ class CompositionFlattener:
             await instance._load_codes_from_db()
         if instance.apply_shortcuts:
             await instance._load_shortcuts_from_db()
+        if instance.catalog_mappings_spec:
+            await instance._load_mappings_from_catalog(instance.catalog_mappings_spec)
         instance._refresh_codec()
         return instance
 
@@ -148,7 +167,7 @@ class CompositionFlattener:
         comp = raw_doc["canonicalJSON"]
         root_aid = self._archetype_id(comp) or "unknown"
         template_name = self._template_id(comp) or root_aid
-        template_id = self._alloc_code("ar_code", root_aid)
+        template_id = template_name
 
         # STEP 1: Complete flattening regardless of mapping rules
         cn: List[dict] = []
@@ -180,22 +199,30 @@ class CompositionFlattener:
             node.pop("_anc", None)
 
         # STEP 4: Build final documents
+        commit_time = self._normalize_top_level_datetime(
+            raw_doc.get("time_committed", raw_doc.get("time_created"))
+        )
         base_doc = {
             self.cf_ehr: self._encode_id(raw_doc["ehr_id"], "ehr_id"),
             self.cf_cid: self._encode_id(raw_doc["_id"], "composition_id"),
             self.cf_ver: raw_doc.get("composition_version"),
-            self.cf_tmpl: template_id,
-            self.cf_nodes: cn,
         }
+        if commit_time is not None:
+            base_doc[self.cf_time_committed] = commit_time
+        base_doc[self.cf_tmpl] = template_id
+        base_doc[self.cf_nodes] = cn
 
         search_doc: Optional[dict] = None
         if search_enabled and sn:
             search_doc = {
                 "_id": self._encode_id(raw_doc["_id"], "composition_id"),
                 self.sf_ehr: self._encode_id(raw_doc["ehr_id"], "ehr_id"),
+                self.sf_cid: self._encode_id(raw_doc["_id"], "composition_id"),
                 self.sf_tmpl: template_id,
-                self.sf_nodes: sn,
             }
+            if commit_time is not None:
+                search_doc[self.sf_sort_time] = commit_time
+            search_doc[self.sf_nodes] = sn
 
         # STEP 5: Apply shortcuts if enabled
         if self.apply_shortcuts:
@@ -215,6 +242,13 @@ class CompositionFlattener:
                 root_map=self.field_map.get("search", {}),
                 node_map=self.field_map.get("search_nodes", {}),
             )
+
+        source_envelope = raw_doc.get("_source_envelope") if isinstance(raw_doc, dict) else None
+        if not isinstance(source_envelope, dict):
+            source_envelope = raw_doc if isinstance(raw_doc, dict) else {}
+        self._apply_envelope_fields(base_doc, source_envelope, self.base_envelope_fields)
+        if search_doc is not None:
+            self._apply_envelope_fields(search_doc, source_envelope, self.search_envelope_fields)
 
         return base_doc, search_doc
 
@@ -250,12 +284,19 @@ class CompositionFlattener:
             self.seq["ar_code"] = doc.get("_max", self.seq["ar_code"])
         if isinstance(doc.get("_min"), int):
             self.seq["at"] = doc.get("_min", self.seq.get("at", -1))
-        print(f"Loaded {len(ar_book)} ar_codes and {len(at_book)} at_codes from DB.")
+        self._codes_dirty = False
+        logger.info(
+            "Loaded %s ar_codes and %s at_codes from DB.",
+            len(ar_book),
+            len(at_book),
+        )
         self._refresh_codec()
 
     async def flush_codes_to_db(self):
         """Persists the current in-memory codebook back to the database."""
         if not self.use_codes_db:
+            return
+        if not self._codes_dirty:
             return
         codes_collection = (
             self.config.get("target", {}).get("codes_collection")
@@ -284,7 +325,8 @@ class CompositionFlattener:
             {"_id": self.codes_document_id, **nested},
             upsert=True,
         )
-        print("Flushed codes to DB.")
+        self._codes_dirty = False
+        logger.info("Flushed codes to DB.")
 
     async def _load_shortcuts_from_db(self):
         if self.db is None:
@@ -330,7 +372,7 @@ class CompositionFlattener:
         }
         """
         if content is not None:
-            data = content if isinstance(content, dict) else json.loads(content)
+            data = content if isinstance(content, (dict, list)) else json.loads(content)
         else:
             with open(path, encoding="utf-8") as f:
                 txt = f.read()
@@ -341,21 +383,132 @@ class CompositionFlattener:
         self.simple_fields = {}
         self.template_fields = {}
         self.compiled_template_rules = {}
+        self.catalog_mappings_spec = None
+
+        mapping_docs: List[Any] = []
+        if isinstance(data, list):
+            mapping_docs = list(data)
+        elif isinstance(data, dict):
+            templates = data.get("templates")
+            if isinstance(templates, list):
+                mapping_docs = list(templates)
+            else:
+                single = self._coerce_template_mapping_doc(data)
+                if single:
+                    mapping_docs = [single]
+                else:
+                    self.catalog_mappings_spec = self._extract_catalog_mappings_spec(data)
+
+        for doc in mapping_docs:
+            tmpl = self._coerce_template_mapping_doc(doc)
+            if tmpl:
+                self._register_template_fields(tmpl)
+
+    def _register_template_fields(self, template_doc: Dict[str, Any]) -> None:
+        tid = str(template_doc.get("templateId") or "").strip()
+        fields = [
+            fld for fld in (template_doc.get("fields") or [])
+            if isinstance(fld, dict) and fld.get("path")
+        ]
+        if not tid or not fields:
+            return
+        self.template_fields[tid] = fields
+        self.simple_fields[tid] = fields
+
+    def _coerce_template_mapping_doc(self, doc: Any) -> Optional[Dict[str, Any]]:
+        if not isinstance(doc, dict):
+            return None
+
+        analytics = doc.get("analyticsTemplate")
+        candidate = analytics if isinstance(analytics, dict) else doc
+        if not isinstance(candidate, dict):
+            return None
+
+        fields = candidate.get("fields")
+        if not isinstance(fields, list):
+            return None
+
+        template_id = (
+            candidate.get("templateId")
+            or candidate.get("template_id")
+            or candidate.get("id")
+            or doc.get("templateId")
+            or doc.get("template_id")
+            or doc.get("name")
+            or ((doc.get("metadata") or {}).get("templateId") if isinstance(doc.get("metadata"), dict) else None)
+        )
+        if not template_id:
+            return None
+
+        return {
+            "templateId": str(template_id).strip(),
+            "fields": fields,
+        }
+
+    def _extract_catalog_mappings_spec(self, data: Any) -> Optional[Dict[str, Any]]:
         if not isinstance(data, dict):
+            return None
+        if isinstance(data.get("templates"), list):
+            return None
+
+        candidate = data.get("catalog") if isinstance(data.get("catalog"), dict) else data
+        source = str(candidate.get("source") or "").strip().lower()
+        collection = (
+            candidate.get("catalog_collection")
+            or candidate.get("catalogCollection")
+            or candidate.get("collection")
+        )
+        if source not in {"catalog", "db", "database", "model_catalog"} and not collection:
+            return None
+
+        return {
+            "collection": str(collection or "user-data-models").strip() or "user-data-models",
+            "database_name": candidate.get("database_name") or candidate.get("database"),
+            "domain": candidate.get("domain"),
+        }
+
+    def _resolve_catalog_db(self, spec: Dict[str, Any]) -> Optional[AsyncIOMotorDatabase]:
+        if self.db is None:
+            return None
+        database_name = spec.get("database_name")
+        if database_name:
+            client = getattr(self.db, "client", None)
+            if client is None:
+                return None
+            return client[str(database_name)]
+        return self.db
+
+    async def _load_mappings_from_catalog(self, spec: Dict[str, Any]) -> None:
+        catalog_db = self._resolve_catalog_db(spec)
+        if catalog_db is None:
             return
 
-        templates = data.get("templates")
-        if not isinstance(templates, list):
-            return
+        collection_name = str(spec.get("collection") or "user-data-models").strip() or "user-data-models"
+        query: Dict[str, Any] = {"analyticsTemplate.fields.0": {"$exists": True}}
+        domain = spec.get("domain")
+        if domain:
+            query["domain"] = str(domain)
 
-        for tmpl in templates:
-            if not isinstance(tmpl, dict):
-                continue
-            tid = tmpl.get("templateId")
-            fields = [fld for fld in (tmpl.get("fields") or []) if isinstance(fld, dict) and fld.get("path")]
-            if tid and fields:
-                self.template_fields[tid] = fields
-                self.simple_fields[tid] = fields  # reuse existing simple field plumbing
+        projection = {
+            "name": 1,
+            "templateId": 1,
+            "template_id": 1,
+            "metadata.templateId": 1,
+            "analyticsTemplate": 1,
+        }
+
+        try:
+            cursor = catalog_db[collection_name].find(query, projection=projection)
+            async for doc in cursor:
+                tmpl = self._coerce_template_mapping_doc(doc)
+                if tmpl:
+                    self._register_template_fields(tmpl)
+        except Exception as exc:
+            logger.warning(
+                "Failed to preload analytics mappings from %s: %s",
+                collection_name,
+                exc,
+            )
 
     def _validate_mapping_schema(self, data: Dict[str, Any]) -> None:
         """Validate mapping v2 payload against the bundled schema (best effort)."""
@@ -379,6 +532,7 @@ class CompositionFlattener:
                 "composition_id": "comp_id",
                 "template_id": "tid",
                 "version": "v",
+                "time_committed": "time_c",
                 "composition_nodes": "cn",
             },
             "composition_nodes": {
@@ -391,6 +545,7 @@ class CompositionFlattener:
                 "ehr_id": "ehr_id",
                 "composition_id": "comp_id",
                 "template_id": "tid",
+                "sort_time": "sort_time",
                 "search_nodes": "sn",
             },
             "search_nodes": {
@@ -439,6 +594,48 @@ class CompositionFlattener:
 
         return renamed
 
+    @staticmethod
+    def _lookup_envelope_value(source: Dict[str, Any], dotted_path: str) -> tuple[bool, Any]:
+        if not isinstance(source, dict) or not isinstance(dotted_path, str) or not dotted_path:
+            return False, None
+
+        current: Any = source
+        for part in dotted_path.split("."):
+            if isinstance(current, dict) and part in current:
+                current = current[part]
+            else:
+                return False, None
+        return True, current
+
+    @staticmethod
+    def _assign_envelope_value(target: Dict[str, Any], dotted_path: str, value: Any) -> None:
+        if not isinstance(target, dict) or not isinstance(dotted_path, str) or not dotted_path:
+            return
+
+        parts = dotted_path.split(".")
+        cursor = target
+        for part in parts[:-1]:
+            next_value = cursor.get(part)
+            if not isinstance(next_value, dict):
+                next_value = {}
+                cursor[part] = next_value
+            cursor = next_value
+        cursor[parts[-1]] = deepcopy(value)
+
+    def _apply_envelope_fields(
+        self,
+        target: Dict[str, Any],
+        source_envelope: Dict[str, Any],
+        mapping: Dict[str, str],
+    ) -> None:
+        if not isinstance(target, dict) or not isinstance(source_envelope, dict) or not isinstance(mapping, dict):
+            return
+
+        for source_path, target_path in mapping.items():
+            found, value = self._lookup_envelope_value(source_envelope, source_path)
+            if found:
+                self._assign_envelope_value(target, target_path, value)
+
     def _at_code_to_int(self, at: str) -> Any:
         s = at.lower()
         if s in self.code_book["at"]:
@@ -467,6 +664,7 @@ class CompositionFlattener:
                 raise ValueError(f"Could not parse at-code: {at}")
 
         self.code_book["at"][s] = code
+        self._codes_dirty = True
         if self.store_original_at:
             self.code_book.setdefault("at_orig", {})[code] = s
         return code
@@ -507,6 +705,8 @@ class CompositionFlattener:
             code = self.seq[key]
 
         book[sid] = code
+        if key == "ar_code":
+            self._codes_dirty = True
         return code
 
     def _encode_ar_short(self, sid: str) -> str:
@@ -735,7 +935,7 @@ class CompositionFlattener:
                     compiled_rule["index"] = r["index"]
                 compiled.append(compiled_rule)
             except (ValueError, UnknownCodeError) as e:
-                print(f"Warning: Skipping rule due to code error: {e}")
+                logger.warning("Skipping rule due to code error: %s", e)
 
         self.active_rules[template] = compiled
         return compiled
@@ -763,11 +963,11 @@ class CompositionFlattener:
             return None
         extract = field.get("extract") or field.get("valuePath") or ""
         selectors = self._parse_path_selectors(path)
-        if not selectors:
-            return None
 
         if infer_extract and not extract:
             extract = self._infer_extract_from_path(path)
+        if not extract:
+            return None
 
         path_chain = [sel["selector"] for sel in reversed(selectors)]
         contains: list[str] = []
@@ -781,6 +981,7 @@ class CompositionFlattener:
                 "_cont": tuple(self._seg_to_int(x) for x in contains),
                 "_extra": [],
                 "copy": copy_fields,
+                "_root_only": not selectors,
             }
             return compiled_rule
         except (ValueError, UnknownCodeError):
@@ -795,9 +996,12 @@ class CompositionFlattener:
         for idx, seg in enumerate(segments):
             if "[" in seg and "]" in seg:
                 last_bracket_idx = idx
-        if last_bracket_idx == -1 or last_bracket_idx + 1 >= len(segments):
+        if last_bracket_idx == -1:
+            tail = segments
+        elif last_bracket_idx + 1 >= len(segments):
             return ""
-        tail = segments[last_bracket_idx + 1 :]
+        else:
+            tail = segments[last_bracket_idx + 1 :]
         pieces: List[str] = []
         for seg in tail:
             base, _ = self._split_segment(seg)
@@ -852,6 +1056,8 @@ class CompositionFlattener:
         return walk(obj, 0)
         
     def _rule_matches(self, rule, pc_set, parts, dblock) -> bool:
+        if rule.get("_root_only") and len(parts) != 1:
+            return False
         if rule["_path"] and self.path_separator.join(str(x) for x in rule["_path"]) not in pc_set:
             return False
         if rule["_cont"]:
@@ -1029,6 +1235,16 @@ class CompositionFlattener:
             separator=self.path_separator,
             shortcuts=self.shortcut_keys,
         )
+
+    def _normalize_top_level_datetime(self, value: Any) -> Any:
+        if value is None:
+            return None
+        if isinstance(value, str):
+            try:
+                return parser.isoparse(value)
+            except Exception:
+                return value
+        return value
         
     def _to_bson_dates(self, obj):
         if isinstance(obj, dict):

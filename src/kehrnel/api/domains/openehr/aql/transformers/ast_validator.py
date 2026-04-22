@@ -38,6 +38,26 @@ class ASTValidator:
             raise ValueError("SELECT clause must contain columns")
 
     @staticmethod
+    def _find_alias(node: Dict[str, Any] | None, rm_type: str) -> str | None:
+        if not isinstance(node, dict):
+            return None
+        if node.get("rmType") == rm_type and node.get("alias"):
+            return node.get("alias")
+
+        contains_node = node.get("contains")
+        found = ASTValidator._find_alias(contains_node, rm_type)
+        if found:
+            return found
+
+        children = node.get("children")
+        if isinstance(children, dict):
+            for child in children.values():
+                found = ASTValidator._find_alias(child, rm_type)
+                if found:
+                    return found
+        return None
+
+    @staticmethod
     def detect_key_aliases(ast: Dict[str, Any]) -> tuple[str, str]:
         """
         Dynamically detects EHR and COMPOSITION aliases from the AST.
@@ -52,9 +72,7 @@ class ASTValidator:
             ehr_alias = from_clause.get("alias")
         
         # Detect COMPOSITION alias from CONTAINS clause
-        contains_node = ast.get("contains")
-        if contains_node and contains_node.get("rmType") == "COMPOSITION":
-            composition_alias = contains_node.get("alias")
+        composition_alias = ASTValidator._find_alias(ast.get("contains"), "COMPOSITION")
         
         # Validate that we found the required aliases
         if not ehr_alias:

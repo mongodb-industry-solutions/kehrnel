@@ -67,6 +67,99 @@ def test_upgrade_changes_digest_when_manifest_changes(client):
     assert new_act["manifest_digest"] != before_act["manifest_digest"]
 
 
+def test_reactivate_same_config_refreshes_digest_when_manifest_changes(client):
+    app, cl = client
+    cl.post(
+        "/v1/environments/envReactivate/activate",
+        json={
+            "strategy_id": "fhir.resource_first",
+            "version": "0.1.0",
+            "config": {},
+            "bindings": {},
+            "allow_plaintext_bindings": True,
+            "domain": "fhir",
+        },
+    )
+    before = cl.get("/v1/environments/envReactivate/activations").json()
+    before_act = list(before["activations"].values())[0]
+
+    rt: StrategyRuntime = app.state.strategy_runtime
+    manifest = rt.registry.get_manifest("fhir.resource_first")
+    manifest.version = "9.9.9"
+
+    res = cl.post(
+        "/v1/environments/envReactivate/activate",
+        json={
+            "strategy_id": "fhir.resource_first",
+            "version": "latest",
+            "config": {},
+            "bindings": {},
+            "allow_plaintext_bindings": True,
+            "domain": "fhir",
+        },
+    )
+    assert res.status_code == 200
+    act = res.json()["activation"]
+    assert act["already_active"] is False
+    assert act["manifest_digest"] != before_act["manifest_digest"]
+
+    res_query = cl.post(
+        "/v1/environments/envReactivate/compile_query",
+        json={"domain": "fhir", "query": {"scope": "patient", "predicates": [], "select": [{"path": "id", "alias": "id"}]}},
+        params={"debug": "true"},
+    )
+    assert res_query.status_code == 200
+    assert res_query.json().get("ok") is True
+
+
+def test_reactivate_same_config_refreshes_when_bindings_change(client):
+    app, cl = client
+    res1 = cl.post(
+        "/v1/environments/envBindings/activate",
+        json={
+            "strategy_id": "fhir.resource_first",
+            "version": "latest",
+            "config": {},
+            "bindings": {
+                "db": {
+                    "provider": "mongodb",
+                    "uri": "mongodb://user:pass@example.test/",
+                    "database": "db_a",
+                }
+            },
+            "allow_plaintext_bindings": True,
+            "domain": "fhir",
+        },
+    )
+    assert res1.status_code == 200
+    act1 = res1.json()["activation"]
+    assert act1["already_active"] is False
+    assert act1["bindings_meta"]["db"]["database"] == "db_a"
+
+    res2 = cl.post(
+        "/v1/environments/envBindings/activate",
+        json={
+            "strategy_id": "fhir.resource_first",
+            "version": "latest",
+            "config": {},
+            "bindings": {
+                "db": {
+                    "provider": "mongodb",
+                    "uri": "mongodb://user:pass@example.test/",
+                    "database": "db_b",
+                }
+            },
+            "allow_plaintext_bindings": True,
+            "domain": "fhir",
+        },
+    )
+    assert res2.status_code == 200
+    act2 = res2.json()["activation"]
+    assert act2["already_active"] is False
+    assert act2["activation_id"] != act1["activation_id"]
+    assert act2["bindings_meta"]["db"]["database"] == "db_b"
+
+
 def test_rollback_restores_previous_digest_and_hash(client):
     app, cl = client
     cl.post("/v1/environments/envRollback/activate", json={"strategy_id": "fhir.resource_first", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})

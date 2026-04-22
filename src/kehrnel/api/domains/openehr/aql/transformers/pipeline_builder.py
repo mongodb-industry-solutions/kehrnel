@@ -10,7 +10,7 @@ from bson import Binary
 TEMPLATE_PATTERNS = {
     # Mapping of archetype IDs to template name patterns for fallback matching
     # Used when archetype resolver cannot find numeric codes in database
-    "openEHR-EHR-COMPOSITION.vaccination_list.v0": ["HC3 Immunization List", "vaccination", "immunization"],
+    "openEHR-EHR-COMPOSITION.vaccination_list.v0": ["Sample Immunization List", "vaccination", "immunization"],
     "openEHR-EHR-COMPOSITION.tumour.v0": ["T-IGR-TUMOUR-SUMMARY", "tumour", "tumor"],
     "openEHR-EHR-COMPOSITION.encounter.v1": ["encounter", "visit"]
 }

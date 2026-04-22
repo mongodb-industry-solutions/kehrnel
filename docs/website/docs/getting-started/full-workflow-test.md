@@ -26,17 +26,16 @@ examples/cli/full_workflow_console.sh
 Set these before running:
 
 ```bash
-export RUNTIME_URL=http://localhost:8000
+export RUNTIME_URL=http://localhost:8080
 export ENV_ID=dev
 export DOMAIN=openehr
 export STRATEGY_ID=openehr.rps_dual
-export API_KEY="<x-api-key-if-auth-enabled>"
-export BINDINGS_REF="env://DB_BINDINGS"
 ```
 
 Optional:
 
 ```bash
+export API_KEY="<x-api-key-if-auth-enabled>"
 export SOURCE_DB=hc_openEHRCDR
 export SOURCE_COLLECTION=samples
 export PATIENT_COUNT=50
@@ -46,6 +45,19 @@ export VALIDATION_STRICT=0
 export REQUIRE_RUNTIME=1
 ```
 
+For local runtime activation without a resolver:
+
+```bash
+export MONGODB_URI="mongodb+srv://..."
+export MONGODB_DB="openEHR_demo"
+```
+
+For resolver-backed activation instead:
+
+```bash
+export BINDINGS_REF="<resolver-specific-ref>"
+```
+
 ## What The Script Tests
 
 1. CLI setup + health check
@@ -53,7 +65,7 @@ export REQUIRE_RUNTIME=1
 3. composition generation from OPT
 4. composition validation against OPT
 5. canonical-to-flattened transform
-6. runtime activation (if `BINDINGS_REF` is provided)
+6. runtime activation (with `BINDINGS_REF`, or with `MONGODB_URI` + `MONGODB_DB` in local plaintext mode)
 7. capability discovery (`op capabilities`)
 8. universal strategy run (`run ensure_dictionaries`)
 9. synthetic batch dry-run (`run synthetic_generate_batch --dry-run`)

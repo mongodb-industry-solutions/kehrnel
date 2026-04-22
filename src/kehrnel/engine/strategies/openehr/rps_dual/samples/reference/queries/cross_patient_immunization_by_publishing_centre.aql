@@ -1,0 +1,13 @@
+SELECT
+    e/ehr_id/value AS ehrId,
+    c/context/start_time/value AS startTime
+FROM
+    EHR e
+        CONTAINS
+            COMPOSITION c[openEHR-EHR-COMPOSITION.vaccination_list.v0]
+WHERE
+    c/archetype_details/template_id/value = 'sample_immunization_list_v0.5'
+    AND c/context/other_context[at0004]/items[openEHR-EHR-CLUSTER.admin_salut.v0]/items[at0007]/items[at0014]/value/defining_code/code_string = 'H43002128'
+ORDER BY
+    c/context/start_time/value DESC
+LIMIT 10

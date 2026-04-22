@@ -27,7 +27,7 @@
     "composition_id": "objectid"
   },
   "paths": {
-    "separator": "."
+    "separator": ":"
   },
   "fields": {
     "document": {
@@ -35,6 +35,8 @@
       "comp_id": "comp_id",
       "tid": "tid",
       "v": "v",
+      "time_committed": "time_c",
+      "sort_time": "sort_time",
       "cn": "cn",
       "sn": "sn"
     },
@@ -46,6 +48,10 @@
   },
   "transform": {
     "apply_shortcuts": true,
+    "envelope": {
+      "base": {},
+      "search": {}
+    },
     "coding": {
       "arcodes": {
         "strategy": "sequential"
@@ -54,6 +60,12 @@
         "strategy": "negative_int",
         "store_original": false
       }
+    }
+  },
+  "bootstrap": {
+    "dictionariesOnActivate": {
+      "codes": "ensure",
+      "shortcuts": "seed"
     }
   }
 }

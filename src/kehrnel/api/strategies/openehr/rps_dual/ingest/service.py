@@ -35,6 +35,12 @@ class IngestionService:
             raw_canonical_doc=raw_composition_doc,
         )
 
+        flush_codes = getattr(self.flattener, "flush_codes_to_db", None)
+        if callable(flush_codes):
+            maybe_coro = flush_codes()
+            if hasattr(maybe_coro, "__await__"):
+                await maybe_coro
+
         return new_comp_id
     
     async def ingest_from_payload(self, raw_composition_doc: Dict[str, Any]) -> str:

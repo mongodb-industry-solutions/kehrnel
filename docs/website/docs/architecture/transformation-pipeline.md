@@ -170,35 +170,29 @@ def extract_value(data_value):
 Assembles final documents:
 
 ```python
-def build_documents(ehr_id, composition_id, nodes, template_code):
+def build_documents(ehr_id, composition_id, version, commit_time, template_id, nodes, slim_nodes):
     base_doc = {
         "_id": composition_id,
         "ehr_id": ehr_id,
-        "tid": template_code,
-        "cv": 1,
-        "ct": datetime.utcnow(),
-        "n": {}
+        "comp_id": composition_id,
+        "v": version,
+        "time_c": commit_time,
+        "tid": template_id,
+        "cn": list(nodes)
     }
 
-    search_doc = {
-        "_id": composition_id,
-        "ehr_id": ehr_id,
-        "tid": template_code,
-        "sn": []
-    }
-
-    for path, value in nodes:
-        encoded_path = encode_path(path)
-        extracted_value = extract_value(value)
-
-        # Base document
-        base_doc["n"][encoded_path] = {"v": extracted_value}
-
-        # Search document
-        search_doc["sn"].append({
-            "p": encoded_path,
-            "data": extracted_value
-        })
+    search_doc = None
+    if slim_nodes:
+        search_doc = {
+            "_id": composition_id,
+            "ehr_id": ehr_id,
+            "comp_id": composition_id,
+            "v": version,
+            "time_c": commit_time,
+            "sort_time": commit_time,
+            "tid": template_id,
+            "sn": list(slim_nodes)
+        }
 
     return base_doc, search_doc
 ```

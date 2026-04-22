@@ -3,51 +3,68 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
+SUPPORTED_PATH_ENCODING_PROFILES = frozenset(
+    {
+        "profile.codedpath",
+        "profile.search_shortcuts",
+    }
+)
+
 
 class PathCodec:
     """
-    Encode/decode between canonical selector chains and stored path strings according to an encoding profile.
+    Encode/decode between canonical selector chains and stored path strings.
 
-    - profile.fullpath: human-readable selectors joined by separator
-    - profile.codedpath / profile.search_shortcuts: numeric codes with configurable separator
+    Only the supported `openehr.rps_dual` encoding profiles are accepted:
+
+    - profile.codedpath
+    - profile.search_shortcuts
     """
 
-    def __init__(self, ar_codes: Dict[str, int] | None = None, at_codes: Dict[str, int] | None = None, separator: str = ".", shortcuts: Dict[str, str] | None = None):
+    def __init__(self, ar_codes: Dict[str, int] | None = None, at_codes: Dict[str, int] | None = None, separator: str = ":", shortcuts: Dict[str, str] | None = None):
         self.ar_codes = ar_codes or {}
         self.at_codes = at_codes or {}
-        self.separator = separator or "."
+        self.separator = separator or ":"
         self.shortcuts = shortcuts or {}
 
     def encode_path_from_chain(self, chain: List[str] | List[int], profile: Optional[str]) -> str:
         """
         Encode a leaf-first selector chain into a path string for the given profile.
         """
-        if profile == "profile.fullpath":
-            return self.separator.join([self._selector_from_code(seg) for seg in chain])
-        if profile in ("profile.codedpath", "profile.search_shortcuts"):
-            codes = [self._selector_to_code(seg) for seg in chain]
-            return self.separator.join([str(c) for c in codes if c is not None])
-        # default: passthrough
-        return self.separator.join([str(x) for x in chain])
+        self._require_supported_profile(profile)
+        codes = [self._selector_to_code(seg) for seg in chain]
+        return self.separator.join([str(c) for c in codes if c is not None])
 
     def encode_path_from_string(self, path: str, profile: Optional[str]) -> str:
         """Encode an existing stored path (usually numeric dotted) into profile output."""
         if not path:
             return path
-        parts = str(path).split(".")
+        raw = str(path)
+        if self.separator and self.separator in raw:
+            parts = raw.split(self.separator)
+        else:
+            parts = raw.split(".")
         return self.encode_path_from_chain(parts, profile)
 
     def decode_path(self, path: str, profile: Optional[str]) -> List[str]:
         """Decode a path string into selector tokens."""
         if not path:
             return []
+        self._require_supported_profile(profile)
         parts = str(path).split(self.separator)
-        if profile == "profile.fullpath":
-            return parts
         selectors: List[str] = []
         for seg in parts:
             selectors.append(self._selector_from_code(seg))
         return selectors
+
+    def _require_supported_profile(self, profile: Optional[str]) -> str:
+        normalized = (profile or "").strip().lower()
+        if normalized not in SUPPORTED_PATH_ENCODING_PROFILES:
+            raise ValueError(
+                "Unsupported path encoding profile "
+                f"{profile!r}. Supported profiles: {sorted(SUPPORTED_PATH_ENCODING_PROFILES)}"
+            )
+        return normalized
 
     def shorten_keys(self, obj: Any) -> Any:
         """Recursively replace keys using shortcuts."""

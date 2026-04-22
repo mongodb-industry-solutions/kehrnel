@@ -1,7 +1,9 @@
 import json
 from pathlib import Path
 
-from kehrnel.strategies.openehr.rps_dual.ingest.flattener_g import CompositionFlattener
+import pytest
+
+from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
 
 
 def make_flattener(mapping_obj, *, config_overrides=None):
@@ -92,3 +94,123 @@ def test_id_encoding_policy():
     oid = flattener._encode_id("64b64c2e5f6270b5c2c2c2c2", "composition_id")
     from bson import ObjectId
     assert isinstance(oid, ObjectId)
+
+
+def test_load_mappings_accepts_raw_analytics_template_shape():
+    flattener = make_flattener(
+        {
+            "analyticsTemplate": {
+                "templateId": "AddictionAlcoholTemplate",
+                "fields": [
+                    {
+                        "path": "/content[openEHR-EHR-OBSERVATION.alcohol_use.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0005]/items[at0015]/items[at0014]/value/magnitude",
+                        "rmType": "DV_QUANTITY",
+                    }
+                ],
+            }
+        }
+    )
+    assert "AddictionAlcoholTemplate" in flattener.simple_fields
+
+
+class _FakeAsyncCursor:
+    def __init__(self, docs):
+        self._docs = list(docs)
+        self._index = 0
+
+    def __aiter__(self):
+        return self
+
+    async def __anext__(self):
+        if self._index >= len(self._docs):
+            raise StopAsyncIteration
+        doc = self._docs[self._index]
+        self._index += 1
+        return doc
+
+
+class _FakeCollection:
+    def __init__(self, docs=None):
+        self.docs = list(docs or [])
+
+    async def find_one(self, query):
+        target_id = query.get("_id")
+        for doc in self.docs:
+            if doc.get("_id") == target_id:
+                return doc
+        return None
+
+    def find(self, query, projection=None):
+        filtered = []
+        for doc in self.docs:
+            analytics = doc.get("analyticsTemplate") or {}
+            fields = analytics.get("fields") if isinstance(analytics, dict) else None
+            if not fields:
+                continue
+            if query.get("domain") and doc.get("domain") != query.get("domain"):
+                continue
+            filtered.append(doc)
+        return _FakeAsyncCursor(filtered)
+
+
+class _FakeClient:
+    def __init__(self, dbs=None):
+        self._dbs = dict(dbs or {})
+
+    def __getitem__(self, name):
+        return self._dbs[name]
+
+
+class _FakeDb:
+    def __init__(self, collections=None, client=None):
+        self._collections = dict(collections or {})
+        self.client = client or _FakeClient()
+
+    def __getitem__(self, name):
+        return self._collections.setdefault(name, _FakeCollection())
+
+
+@pytest.mark.asyncio
+async def test_create_preloads_catalog_backed_analytics_mappings():
+    catalog_db = _FakeDb(
+        {
+            "user-data-models": _FakeCollection(
+                [
+                    {
+                        "name": "Mapped Template",
+                        "domain": "openehr",
+                        "analyticsTemplate": {
+                            "templateId": "Mapped Template",
+                            "fields": [
+                                {
+                                    "path": "/content[openEHR-EHR-OBSERVATION.alcohol_use.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0005]/items[at0015]/items[at0014]/value/magnitude",
+                                    "rmType": "DV_QUANTITY",
+                                }
+                            ],
+                        },
+                    },
+                    {
+                        "name": "Ignored Template",
+                        "domain": "openehr",
+                    },
+                ]
+            )
+        }
+    )
+    client = _FakeClient({"catalog-db": catalog_db})
+    runtime_db = _FakeDb(client=client)
+
+    flattener = await CompositionFlattener.create(
+        db=runtime_db,
+        config={"role": "primary"},
+        mappings_path="unused",
+        mappings_content={
+            "source": "catalog",
+            "database_name": "catalog-db",
+            "catalog_collection": "user-data-models",
+            "domain": "openehr",
+        },
+    )
+
+    assert "Mapped Template" in flattener.simple_fields
+    assert "Ignored Template" not in flattener.simple_fields

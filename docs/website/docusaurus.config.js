@@ -44,14 +44,14 @@ const config = {
   plugins: [
     // Local dev convenience:
     // - Docusaurus runs on its own port (default 8001)
-    // - kehrnel API runs separately (commonly 8000)
+    // - kehrnel API runs separately (commonly 8080 via ./startKehrnel)
     // Proxy API routes so CTA links like /docs and /redoc work during `npm start`.
     function kehrnelDevProxyPlugin() {
       return {
         name: 'kehrnel-dev-proxy',
         configureWebpack(_webpackConfig, isServer) {
           if (isServer) return {};
-          const apiTarget = process.env.KEHRNEL_API_ORIGIN || 'http://localhost:8000';
+          const apiTarget = process.env.KEHRNEL_API_ORIGIN || 'http://localhost:8080';
           return {
             devServer: {
               proxy: {

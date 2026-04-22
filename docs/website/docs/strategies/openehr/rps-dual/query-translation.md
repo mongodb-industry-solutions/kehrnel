@@ -171,7 +171,9 @@ Translated to:
 ### View Generated Pipeline
 
 ```bash
-curl -X POST "http://localhost:8000/api/domains/openehr/query/aql/mql" \
+RUNTIME_URL="${RUNTIME_URL:-http://localhost:8080}"
+
+curl -X POST "${RUNTIME_URL}/api/domains/openehr/query/aql/mql" \
   -H "Content-Type: text/plain" \
   -d "SELECT c/uid/value FROM EHR e CONTAINS COMPOSITION c"
 ```
@@ -184,7 +186,9 @@ Response includes:
 ### View Strategy Decision
 
 ```bash
-curl "http://localhost:8000/api/domains/openehr/query/strategy/info?ehr_id=patient-001"
+RUNTIME_URL="${RUNTIME_URL:-http://localhost:8080}"
+
+curl "${RUNTIME_URL}/api/domains/openehr/query/strategy/info?ehr_id=patient-001"
 ```
 
 ## Performance Characteristics

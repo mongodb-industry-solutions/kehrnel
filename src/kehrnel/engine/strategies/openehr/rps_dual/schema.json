@@ -16,12 +16,18 @@
     },
     "pathSeparator": {
       "type": "string",
-      "enum": [".", "/", "@", "|"],
-      "default": "."
+      "enum": [".", "/", ":", "|", "~"],
+      "default": ":"
     },
     "encodingProfile": {
       "type": "string",
-      "enum": ["profile.fullpath", "profile.codedpath", "profile.search_shortcuts"]
+      "enum": ["profile.codedpath", "profile.search_shortcuts"]
+    },
+    "envelopePathMap": {
+      "type": "object",
+      "description": "Maps source envelope paths to final output field paths using dot notation.",
+      "additionalProperties": { "type": "string" },
+      "default": {}
     }
   },
   "properties": {
@@ -109,7 +115,7 @@
       "properties": {
         "separator": { "$ref": "#/definitions/pathSeparator" }
       },
-      "default": { "separator": "." }
+      "default": { "separator": ":" }
     },
     "fields": {
       "type": "object",
@@ -123,6 +129,8 @@
             "comp_id": { "type": "string", "default": "comp_id" },
             "tid": { "type": "string", "default": "tid" },
             "v": { "type": "string", "default": "v" },
+            "time_committed": { "type": "string", "default": "time_c", "description": "Server commit time for the version represented by this document" },
+            "sort_time": { "type": "string", "default": "sort_time", "description": "Primary search-side sort field, typically version commit time" },
             "cn": { "type": "string", "default": "cn", "description": "Canonical nodes array" },
             "sn": { "type": "string", "default": "sn", "description": "Search nodes array" }
           }
@@ -197,8 +205,44 @@
           "type": "boolean",
           "default": true,
           "description": "Apply key/value shortcuts to payload"
+        },
+        "envelope": {
+          "type": "object",
+          "description": "Optional passthrough mappings from the original ingest envelope into the final base/search documents.",
+          "properties": {
+            "base": { "$ref": "#/definitions/envelopePathMap" },
+            "search": { "$ref": "#/definitions/envelopePathMap" }
+          },
+          "additionalProperties": false,
+          "default": { "base": {}, "search": {} }
         }
       }
+    },
+    "bootstrap": {
+      "type": "object",
+      "description": "Activation-time bootstrap policy for strategy support artifacts",
+      "properties": {
+        "dictionariesOnActivate": {
+          "type": "object",
+          "description": "How dictionary collections should be prepared when the strategy is enabled",
+          "properties": {
+            "codes": {
+              "type": "string",
+              "enum": ["none", "ensure", "seed"],
+              "default": "ensure",
+              "description": "Create only the codes collection, or also pre-seed it from the configured source"
+            },
+            "shortcuts": {
+              "type": "string",
+              "enum": ["none", "ensure", "seed"],
+              "default": "seed",
+              "description": "Shortcuts should typically be seeded up front so flatten/unflatten stays consistent"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
     }
   },
   "required": ["collections"],

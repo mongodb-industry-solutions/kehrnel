@@ -53,7 +53,7 @@ async def execute_query(
         settings.search_config.force_search_strategy = True
     
     try:
-        response = await process_aql_query(aql_query=aql, request_url=request.url, db=db, ehr_id=ehr_id)
+        response = await process_aql_query(aql_query=aql, request_url=request.url, db=db, ehr_id=ehr_id, request=request)
         return response
     finally:
         # Restore original setting
@@ -132,7 +132,7 @@ async def execute_ast_query(
     """
     try:
         
-        response = await process_aql_ast_query(ast_query= ast_data, request_url=request.url, db=db, ehr_id=ehr_id)
+        response = await process_aql_ast_query(ast_query= ast_data, request_url=request.url, db=db, ehr_id=ehr_id, request=request)
         return response
         
     except Exception as e:
@@ -155,11 +155,26 @@ async def execute_ast_query(
 )
 async def debug_aql_to_mql_query(
     request: Request,
-    aql: str = Body(..., media_type="text/plain", description="The AQL query string to translate.", example="SELECT c/uid/value as uid FROM EHR e CONTAINS COMPOSITION c"),
+    aql: str = Body(
+        ...,
+        media_type="text/plain",
+        description="The AQL query string to translate.",
+        examples={
+            "default": {
+                "summary": "Simple composition UID lookup",
+                "value": "SELECT c/uid/value as uid FROM EHR e CONTAINS COMPOSITION c",
+            }
+        },
+    ),
     ehr_id: str = Query(
         None,
         description="Optional EHR ID to scope the query. This will add a `$match` stage for the `ehr_id` in the generated pipeline",
-        example="a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6"
+        examples={
+            "default": {
+                "summary": "Example EHR ID",
+                "value": "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6",
+            }
+        },
     ),
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
 ):
@@ -182,7 +197,7 @@ async def debug_aql_to_mql_query(
         # ast_data = Parsed query
         # mql_pipeline = MongoDB Aggregation Pipeline
         
-        mql_pipeline = await build_aql_pipeline(ast_data, db, ehr_id)
+        mql_pipeline = await build_aql_pipeline(ast_data, db, ehr_id, request=request)
     
         return AQLtoMQLDebugResponse(
             success=True,
@@ -221,7 +236,7 @@ async def debug_ast_query(
         # Import here to avoid circular imports
         from .service import build_aql_pipeline
         
-        pipeline = await build_aql_pipeline(ast_data, db, ehr_id)
+        pipeline = await build_aql_pipeline(ast_data, db, ehr_id, request=request)
         
         return {
             "query": ast_data,

@@ -13,6 +13,7 @@ from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import Composit
 from kehrnel.engine.strategies.openehr.rps_dual.ingest.exceptions_g import FlattenerError
 from kehrnel.api.strategies.openehr.rps_dual.ingest.service import IngestionService
 from kehrnel.api.strategies.openehr.rps_dual.ingest.repository import IngestionRepository
+from kehrnel.api.bridge.app.core.database import ensure_active_openehr_dictionaries, resolve_active_openehr_context
 from kehrnel.api.bridge.app.utils.config_runtime import DEFAULT_MAPPINGS_PATH
 from kehrnel.strategy_sdk import StrategyBindings
 from kehrnel.strategy_sdk.runtime import StrategyRuntimeError
@@ -33,6 +34,15 @@ from kehrnel.engine.strategies.openehr.rps_dual.ingest.remap import remap_fields
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
+
+
+async def _maybe_flush_generated_codes(flattener: CompositionFlattener | None) -> None:
+    flush_codes = getattr(flattener, "flush_codes_to_db", None)
+    if not callable(flush_codes):
+        return
+    maybe_coro = flush_codes()
+    if hasattr(maybe_coro, "__await__"):
+        await maybe_coro
 
 
 def _allow_local_file_ingest() -> bool:
@@ -70,7 +80,7 @@ def _validate_local_ingest_path(file_path: str) -> str:
     return str(p)
 
 
-def get_ingestion_service(request: Request) -> IngestionService | None:
+async def get_ingestion_service(request: Request) -> IngestionService | None:
     """Dependency to create and provide the IngestionService.
 
     Returns None if config is not available (preview mode can still work).
@@ -85,6 +95,21 @@ def get_ingestion_service(request: Request) -> IngestionService | None:
     config = getattr(request.app.state, "config", None)
     options = getattr(request.app.state, "ingest_options", None) or {}
     flattener = getattr(request.app.state, "flattener", None)
+
+    if request is not None:
+        try:
+            context = await resolve_active_openehr_context(request, ensure_ingestion=False)
+            await ensure_active_openehr_dictionaries(request, context=context)
+            context = await resolve_active_openehr_context(request, ensure_ingestion=True)
+            target_db = getattr(request.app.state, "target_db", target_db)
+            source_db = getattr(request.app.state, "source_db", source_db) or target_db
+            config = getattr(request.app.state, "config", config)
+            options = getattr(request.app.state, "ingest_options", options) or {}
+            flattener = getattr(request.app.state, "flattener", None)
+        except HTTPException:
+            raise
+        except Exception:
+            logger.debug("No request-scoped openEHR activation available for ingestion bootstrap", exc_info=True)
 
     # If config is None, we can't create a full repository - return None
     # Preview mode will handle this gracefully
@@ -185,8 +210,6 @@ async def ingest_from_payload(
             or (runtime_config or {}).get("search", {}).get("allowed_paths")
         ) or []
 
-        flattener = await get_runtime_flattener(request, runtime_config)
-
         # Optional: dispatch through strategy runtime when requested
         strategy_id = request.query_params.get("strategy_id") if request else None
         if not strategy_id:
@@ -194,6 +217,19 @@ async def ingest_from_payload(
         strategy_protocol = request.query_params.get("strategy_protocol") if request else None
         if not strategy_protocol:
             strategy_protocol = request.headers.get("x-strategy-protocol") if request else None
+
+        # Fast path: reuse the warmed ingestion service and shared flattener when the caller
+        # is doing a standard ingest with no per-request runtime overrides.
+        if not runtime_config and not strategy_id and not strategy_protocol:
+            new_comp_id = await service.ingest_from_payload(raw_doc)
+            return IngestionSuccessResponse(
+                message="Composition from payload ingested and stored.",
+                flattened_composition_id=new_comp_id,
+            )
+
+        flattener = getattr(service, "flattener", None) if not runtime_config else None
+        if flattener is None:
+            flattener = await get_runtime_flattener(request, runtime_config)
 
         if strategy_id and getattr(request.app.state, "strategy_runtime", None):
             sr = request.app.state.strategy_runtime
@@ -240,6 +276,7 @@ async def ingest_from_payload(
             search_doc,
             raw_canonical_doc=raw_doc,
         )
+        await _maybe_flush_generated_codes(flattener)
 
         return IngestionSuccessResponse(
             message="Composition from payload ingested and stored.",
@@ -292,8 +329,8 @@ def build_meta(raw_doc, base_doc):
 # Default config structure required by CompositionFlattener
 DEFAULT_FLATTENER_CONFIG = {
     "target": {
-        "codes_collection": "dictionaries",
-        "shortcuts_collection": "dictionaries",
+        "codes_collection": "_codes",
+        "shortcuts_collection": "_shortcuts",
         "compositions_collection": "compositions_rps",
         "search_collection": "compositions_search",
     },

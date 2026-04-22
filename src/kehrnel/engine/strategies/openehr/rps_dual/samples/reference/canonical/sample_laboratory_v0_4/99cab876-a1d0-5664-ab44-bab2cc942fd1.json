@@ -1,0 +1,4939 @@
+{
+  "_type": "COMPOSITION",
+  "name": {
+    "_type": "DV_TEXT",
+    "value": "Sample Laboratory"
+  },
+  "archetype_details": {
+    "archetype_id": {
+      "value": "openEHR-EHR-COMPOSITION.report-result.v1"
+    },
+    "template_id": {
+      "value": "sample_laboratory_v0.4"
+    },
+    "rm_version": "1.0.4"
+  },
+  "feeder_audit": {
+    "_type": "FEEDER_AUDIT",
+    "originating_system_item_ids": [
+      {
+        "_type": "DV_IDENTIFIER",
+        "id": "id-e39201cb4434425d",
+        "type": "cpc"
+      },
+      {
+        "_type": "DV_IDENTIFIER",
+        "id": "id-08bb23be87564e93",
+        "type": "parent_cpc"
+      },
+      {
+        "_type": "DV_IDENTIFIER",
+        "id": "id-aac2ae9c9bced219",
+        "type": "cpi"
+      },
+      {
+        "_type": "DV_IDENTIFIER",
+        "id": "id-f904f81bec7508b8",
+        "type": "center_origin"
+      }
+    ],
+    "feeder_system_item_ids": [
+      {
+        "_type": "DV_IDENTIFIER",
+        "id": "id-e39201cb4434425d",
+        "type": "cpc"
+      }
+    ],
+    "originating_system_audit": {
+      "_type": "FEEDER_AUDIT_DETAILS",
+      "system_id": "sample.source"
+    }
+  },
+  "language": {
+    "_type": "CODE_PHRASE",
+    "terminology_id": {
+      "_type": "TERMINOLOGY_ID",
+      "value": "ISO_639-1"
+    },
+    "code_string": "en"
+  },
+  "territory": {
+    "_type": "CODE_PHRASE",
+    "terminology_id": {
+      "_type": "TERMINOLOGY_ID",
+      "value": "ISO_3166-1"
+    },
+    "code_string": "ES"
+  },
+  "category": {
+    "_type": "DV_CODED_TEXT",
+    "value": "event",
+    "defining_code": {
+      "_type": "CODE_PHRASE",
+      "terminology_id": {
+        "_type": "TERMINOLOGY_ID",
+        "value": "openehr"
+      },
+      "code_string": "433"
+    }
+  },
+  "composer": {
+    "_type": "PARTY_IDENTIFIED",
+    "identifiers": [
+      {
+        "_type": "DV_IDENTIFIER",
+        "id": "id-2dc430cb1c291e53"
+      }
+    ]
+  },
+  "context": {
+    "_type": "EVENT_CONTEXT",
+    "start_time": {
+      "_type": "DV_DATE_TIME",
+      "value": "2024-04-29T11:55:28.717+02:00"
+    },
+    "setting": {
+      "_type": "DV_CODED_TEXT",
+      "value": "other care",
+      "defining_code": {
+        "_type": "CODE_PHRASE",
+        "terminology_id": {
+          "_type": "TERMINOLOGY_ID",
+          "value": "openehr"
+        },
+        "code_string": "238"
+      }
+    },
+    "other_context": {
+      "_type": "ITEM_TREE",
+      "name": {
+        "_type": "DV_TEXT",
+        "value": "Tree"
+      },
+      "items": [
+        {
+          "_type": "CLUSTER",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "XDS Metadata"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-CLUSTER.xds_metadata.v0"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "items": [
+            {
+              "_type": "ELEMENT",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "Document type"
+              },
+              "value": {
+                "_type": "DV_CODED_TEXT",
+                "value": "LABE",
+                "defining_code": {
+                  "_type": "CODE_PHRASE",
+                  "terminology_id": {
+                    "_type": "TERMINOLOGY_ID",
+                    "value": "2.16.840.1.113883.4.292.30.13.2"
+                  },
+                  "code_string": "LABE"
+                }
+              },
+              "archetype_node_id": "at0003"
+            },
+            {
+              "_type": "ELEMENT",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "Confidentiality code"
+              },
+              "value": {
+                "_type": "DV_CODED_TEXT",
+                "value": "-",
+                "defining_code": {
+                  "_type": "CODE_PHRASE",
+                  "terminology_id": {
+                    "_type": "TERMINOLOGY_ID",
+                    "value": "2.16.840.1.113883.5.25"
+                  },
+                  "code_string": "N"
+                }
+              },
+              "archetype_node_id": "at0004"
+            },
+            {
+              "_type": "ELEMENT",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "Document_media"
+              },
+              "value": {
+                "_type": "DV_URI",
+                "value": "https://sample.docs.example.org/document/41456596881051359335767174060663898112"
+              },
+              "archetype_node_id": "at0010"
+            }
+          ],
+          "archetype_node_id": "openEHR-EHR-CLUSTER.xds_metadata.v0"
+        },
+        {
+          "_type": "CLUSTER",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Administrative context"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-CLUSTER.admin_salut.v0"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "items": [
+            {
+              "_type": "ELEMENT",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "Document authorisation date"
+              },
+              "value": {
+                "_type": "DV_DATE_TIME",
+                "value": "2024-03-05T15:57:04+01:00"
+              },
+              "archetype_node_id": "at0001"
+            },
+            {
+              "_type": "ELEMENT",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "Document creation date"
+              },
+              "value": {
+                "_type": "DV_DATE_TIME",
+                "value": "2024-03-03T00:00:00+01:00"
+              },
+              "archetype_node_id": "at0002"
+            },
+            {
+              "_type": "ELEMENT",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "Document publication date"
+              },
+              "value": {
+                "_type": "DV_DATE_TIME",
+                "value": "2024-03-05T15:57:05+01:00"
+              },
+              "archetype_node_id": "at0023"
+            },
+            {
+              "_type": "ELEMENT",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "Responsible region"
+              },
+              "value": {
+                "_type": "DV_CODED_TEXT",
+                "value": "Sample Region",
+                "defining_code": {
+                  "_type": "CODE_PHRASE",
+                  "terminology_id": {
+                    "_type": "TERMINOLOGY_ID",
+                    "value": "1.0.3166.2"
+                  },
+                  "code_string": "ES-CT"
+                }
+              },
+              "archetype_node_id": "at0004"
+            },
+            {
+              "_type": "CLUSTER",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "Performing institution"
+              },
+              "items": [
+                {
+                  "_type": "ELEMENT",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Performing centre"
+                  },
+                  "value": {
+                    "_type": "DV_CODED_TEXT",
+                    "value": "-",
+                    "defining_code": {
+                      "_type": "CODE_PHRASE",
+                      "terminology_id": {
+                        "_type": "TERMINOLOGY_ID",
+                        "value": "2.16.840.1.113883.4.292.10.12"
+                      },
+                      "code_string": "H17001438"
+                    }
+                  },
+                  "archetype_node_id": "at0011"
+                },
+                {
+                  "_type": "ELEMENT",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Performing SA"
+                  },
+                  "value": {
+                    "_type": "DV_CODED_TEXT",
+                    "value": "-",
+                    "defining_code": {
+                      "_type": "CODE_PHRASE",
+                      "terminology_id": {
+                        "_type": "TERMINOLOGY_ID",
+                        "value": "2.16.840.1.113883.4.292.10.14"
+                      },
+                      "code_string": "5S157"
+                    }
+                  },
+                  "archetype_node_id": "at0012"
+                },
+                {
+                  "_type": "ELEMENT",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Performing UP"
+                  },
+                  "value": {
+                    "_type": "DV_CODED_TEXT",
+                    "value": "-",
+                    "defining_code": {
+                      "_type": "CODE_PHRASE",
+                      "terminology_id": {
+                        "_type": "TERMINOLOGY_ID",
+                        "value": "2.16.840.1.113883.4.292.10.12.6"
+                      },
+                      "code_string": "00724"
+                    }
+                  },
+                  "archetype_node_id": "at0013"
+                }
+              ],
+              "archetype_node_id": "at0005"
+            },
+            {
+              "_type": "CLUSTER",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "Publishing institution"
+              },
+              "items": [
+                {
+                  "_type": "ELEMENT",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Publishing centre"
+                  },
+                  "value": {
+                    "_type": "DV_CODED_TEXT",
+                    "value": "-",
+                    "defining_code": {
+                      "_type": "CODE_PHRASE",
+                      "terminology_id": {
+                        "_type": "TERMINOLOGY_ID",
+                        "value": "2.16.840.1.113883.4.292.10.12"
+                      },
+                      "code_string": "H17001438"
+                    }
+                  },
+                  "archetype_node_id": "at0014"
+                },
+                {
+                  "_type": "ELEMENT",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Publishing SA"
+                  },
+                  "value": {
+                    "_type": "DV_CODED_TEXT",
+                    "value": "-",
+                    "defining_code": {
+                      "_type": "CODE_PHRASE",
+                      "terminology_id": {
+                        "_type": "TERMINOLOGY_ID",
+                        "value": "2.16.840.1.113883.4.292.10.14"
+                      },
+                      "code_string": "5S081"
+                    }
+                  },
+                  "archetype_node_id": "at0015"
+                },
+                {
+                  "_type": "ELEMENT",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Publishing UP"
+                  },
+                  "value": {
+                    "_type": "DV_CODED_TEXT",
+                    "value": "-",
+                    "defining_code": {
+                      "_type": "CODE_PHRASE",
+                      "terminology_id": {
+                        "_type": "TERMINOLOGY_ID",
+                        "value": "2.16.840.1.113883.4.292.10.12.6"
+                      },
+                      "code_string": "00724"
+                    }
+                  },
+                  "archetype_node_id": "at0016"
+                }
+              ],
+              "archetype_node_id": "at0007"
+            },
+            {
+              "_type": "CLUSTER",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "Custodial institution"
+              },
+              "items": [
+                {
+                  "_type": "ELEMENT",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Custodial centre"
+                  },
+                  "value": {
+                    "_type": "DV_CODED_TEXT",
+                    "value": "-",
+                    "defining_code": {
+                      "_type": "CODE_PHRASE",
+                      "terminology_id": {
+                        "_type": "TERMINOLOGY_ID",
+                        "value": "2.16.840.1.113883.4.292.10.12"
+                      },
+                      "code_string": "H17001438"
+                    }
+                  },
+                  "archetype_node_id": "at0017"
+                },
+                {
+                  "_type": "ELEMENT",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Custodial UP"
+                  },
+                  "value": {
+                    "_type": "DV_CODED_TEXT",
+                    "value": "-",
+                    "defining_code": {
+                      "_type": "CODE_PHRASE",
+                      "terminology_id": {
+                        "_type": "TERMINOLOGY_ID",
+                        "value": "2.16.840.1.113883.4.292.10.12.6"
+                      },
+                      "code_string": "00724"
+                    }
+                  },
+                  "archetype_node_id": "at0019"
+                }
+              ],
+              "archetype_node_id": "at0010"
+            },
+            {
+              "_type": "CLUSTER",
+              "name": {
+                "_type": "DV_TEXT",
+                "value": "Requesting institution"
+              },
+              "items": [
+                {
+                  "_type": "ELEMENT",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Requesting centre"
+                  },
+                  "value": {
+                    "_type": "DV_CODED_TEXT",
+                    "value": "-",
+                    "defining_code": {
+                      "_type": "CODE_PHRASE",
+                      "terminology_id": {
+                        "_type": "TERMINOLOGY_ID",
+                        "value": "2.16.840.1.113883.4.292.10.12"
+                      },
+                      "code_string": "H17001438"
+                    }
+                  },
+                  "archetype_node_id": "at0020"
+                },
+                {
+                  "_type": "ELEMENT",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Requesting SA"
+                  },
+                  "value": {
+                    "_type": "DV_CODED_TEXT",
+                    "value": "-",
+                    "defining_code": {
+                      "_type": "CODE_PHRASE",
+                      "terminology_id": {
+                        "_type": "TERMINOLOGY_ID",
+                        "value": "2.16.840.1.113883.4.292.10.14"
+                      },
+                      "code_string": "5S081"
+                    }
+                  },
+                  "archetype_node_id": "at0021"
+                },
+                {
+                  "_type": "ELEMENT",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Requesting UP"
+                  },
+                  "value": {
+                    "_type": "DV_CODED_TEXT",
+                    "value": "-",
+                    "defining_code": {
+                      "_type": "CODE_PHRASE",
+                      "terminology_id": {
+                        "_type": "TERMINOLOGY_ID",
+                        "value": "2.16.840.1.113883.4.292.10.12.6"
+                      },
+                      "code_string": "00724"
+                    }
+                  },
+                  "archetype_node_id": "at0022"
+                }
+              ],
+              "archetype_node_id": "at0009"
+            }
+          ],
+          "archetype_node_id": "openEHR-EHR-CLUSTER.admin_salut.v0"
+        }
+      ],
+      "archetype_node_id": "at0001"
+    }
+  },
+  "content": [
+    {
+      "_type": "SECTION",
+      "name": {
+        "_type": "DV_TEXT",
+        "value": "Laboratory test results list"
+      },
+      "archetype_details": {
+        "archetype_id": {
+          "value": "openEHR-EHR-SECTION.diagnostic_reports.v0"
+        },
+        "template_id": {
+          "value": "sample_laboratory_v0.4"
+        },
+        "rm_version": "1.0.4"
+      },
+      "items": [
+        {
+          "_type": "OBSERVATION",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Laboratory test results"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "language": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "ISO_639-1"
+            },
+            "code_string": "en"
+          },
+          "encoding": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "IANA_character-sets"
+            },
+            "code_string": "UTF-8"
+          },
+          "subject": {
+            "_type": "PARTY_SELF"
+          },
+          "other_participations": [
+            {
+              "_type": "PARTICIPATION",
+              "function": {
+                "_type": "DV_TEXT",
+                "value": "Performer"
+              },
+              "performer": {
+                "_type": "PARTY_IDENTIFIED",
+                "name": "party-08f6bd47ab3a3991",
+                "identifiers": [
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-346c00eaddaf6cba",
+                    "type": "1.3.6.1.4.1.5734.1.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a130adfd46a54b52",
+                    "type": "1.3.6.1.4.1.5734.1.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-443d2d811628ca6d",
+                    "type": "2.16.840.1.113883.4.292.10.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a082ca2bb208bd66",
+                    "type": "1.3.6.1.4.1.19126.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-bcb26bff828aba74",
+                    "type": "2.16.724.4.9.50.5"
+                  }
+                ]
+              }
+            }
+          ],
+          "data": {
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "Event Series"
+            },
+            "origin": {
+              "_type": "DV_DATE_TIME",
+              "value": "2024-03-03T21:08:16+01:00"
+            },
+            "events": [
+              {
+                "_type": "POINT_EVENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Any event"
+                },
+                "time": {
+                  "_type": "DV_DATE_TIME",
+                  "value": "2024-03-03T21:08:16+01:00"
+                },
+                "data": {
+                  "_type": "ITEM_TREE",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Tree"
+                  },
+                  "items": [
+                    {
+                      "_type": "ELEMENT",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Test name"
+                      },
+                      "value": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "LABE",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local_terms"
+                          },
+                          "code_string": "LABE"
+                        }
+                      },
+                      "archetype_node_id": "at0005"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Laboratory analyte result"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Test result"
+                          },
+                          "value": {
+                            "_type": "DV_QUANTITY",
+                            "normal_range": {
+                              "_type": "DV_INTERVAL",
+                              "lower_included": true,
+                              "upper_included": true,
+                              "lower_unbounded": false,
+                              "upper_unbounded": false,
+                              "lower": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 0
+                              },
+                              "upper": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 5
+                              }
+                            },
+                            "units": "/camp",
+                            "magnitude": 1
+                          },
+                          "archetype_node_id": "at0001"
+                        },
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Analyte name"
+                          },
+                          "value": {
+                            "_type": "DV_CODED_TEXT",
+                            "value": "leucocituria",
+                            "defining_code": {
+                              "_type": "CODE_PHRASE",
+                              "terminology_id": {
+                                "_type": "TERMINOLOGY_ID",
+                                "value": "2.16.840.1.113883.6.1"
+                              },
+                              "code_string": "5769-5"
+                            }
+                          },
+                          "archetype_node_id": "at0024"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Specimen"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.specimen.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Collection date/time"
+                          },
+                          "value": {
+                            "_type": "DV_DATE_TIME",
+                            "value": "2024-03-03T20:51:23+01:00"
+                          },
+                          "archetype_node_id": "at0015"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.specimen.v1"
+                    }
+                  ],
+                  "archetype_node_id": "at0003"
+                },
+                "archetype_node_id": "at0002"
+              }
+            ],
+            "archetype_node_id": "at0001"
+          },
+          "archetype_node_id": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+        },
+        {
+          "_type": "OBSERVATION",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Laboratory test results"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "language": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "ISO_639-1"
+            },
+            "code_string": "en"
+          },
+          "encoding": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "IANA_character-sets"
+            },
+            "code_string": "UTF-8"
+          },
+          "subject": {
+            "_type": "PARTY_SELF"
+          },
+          "other_participations": [
+            {
+              "_type": "PARTICIPATION",
+              "function": {
+                "_type": "DV_TEXT",
+                "value": "Performer"
+              },
+              "performer": {
+                "_type": "PARTY_IDENTIFIED",
+                "name": "party-08f6bd47ab3a3991",
+                "identifiers": [
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-346c00eaddaf6cba",
+                    "type": "1.3.6.1.4.1.5734.1.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a130adfd46a54b52",
+                    "type": "1.3.6.1.4.1.5734.1.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-443d2d811628ca6d",
+                    "type": "2.16.840.1.113883.4.292.10.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a082ca2bb208bd66",
+                    "type": "1.3.6.1.4.1.19126.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-bcb26bff828aba74",
+                    "type": "2.16.724.4.9.50.5"
+                  }
+                ]
+              }
+            }
+          ],
+          "data": {
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "Event Series"
+            },
+            "origin": {
+              "_type": "DV_DATE_TIME",
+              "value": "2024-03-03T21:08:16+01:00"
+            },
+            "events": [
+              {
+                "_type": "POINT_EVENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Any event"
+                },
+                "time": {
+                  "_type": "DV_DATE_TIME",
+                  "value": "2024-03-03T21:08:16+01:00"
+                },
+                "data": {
+                  "_type": "ITEM_TREE",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Tree"
+                  },
+                  "items": [
+                    {
+                      "_type": "ELEMENT",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Test name"
+                      },
+                      "value": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "LABE",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local_terms"
+                          },
+                          "code_string": "LABE"
+                        }
+                      },
+                      "archetype_node_id": "at0005"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Laboratory analyte result"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Test result"
+                          },
+                          "value": {
+                            "_type": "DV_QUANTITY",
+                            "normal_range": {
+                              "_type": "DV_INTERVAL",
+                              "lower_included": true,
+                              "upper_included": true,
+                              "lower_unbounded": false,
+                              "upper_unbounded": false,
+                              "lower": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 0
+                              },
+                              "upper": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 6
+                              }
+                            },
+                            "units": "/camp",
+                            "magnitude": 0
+                          },
+                          "archetype_node_id": "at0001"
+                        },
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Analyte name"
+                          },
+                          "value": {
+                            "_type": "DV_CODED_TEXT",
+                            "value": "Cèl.lules epitelials escamoses ( sediment d'orina)",
+                            "defining_code": {
+                              "_type": "CODE_PHRASE",
+                              "terminology_id": {
+                                "_type": "TERMINOLOGY_ID",
+                                "value": "2.16.840.1.113883.6.1"
+                              },
+                              "code_string": "11277-1"
+                            }
+                          },
+                          "archetype_node_id": "at0024"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Specimen"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.specimen.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Collection date/time"
+                          },
+                          "value": {
+                            "_type": "DV_DATE_TIME",
+                            "value": "2024-03-03T20:51:23+01:00"
+                          },
+                          "archetype_node_id": "at0015"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.specimen.v1"
+                    }
+                  ],
+                  "archetype_node_id": "at0003"
+                },
+                "archetype_node_id": "at0002"
+              }
+            ],
+            "archetype_node_id": "at0001"
+          },
+          "archetype_node_id": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+        },
+        {
+          "_type": "OBSERVATION",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Laboratory test results"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "language": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "ISO_639-1"
+            },
+            "code_string": "en"
+          },
+          "encoding": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "IANA_character-sets"
+            },
+            "code_string": "UTF-8"
+          },
+          "subject": {
+            "_type": "PARTY_SELF"
+          },
+          "other_participations": [
+            {
+              "_type": "PARTICIPATION",
+              "function": {
+                "_type": "DV_TEXT",
+                "value": "Performer"
+              },
+              "performer": {
+                "_type": "PARTY_IDENTIFIED",
+                "name": "party-08f6bd47ab3a3991",
+                "identifiers": [
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-346c00eaddaf6cba",
+                    "type": "1.3.6.1.4.1.5734.1.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a130adfd46a54b52",
+                    "type": "1.3.6.1.4.1.5734.1.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-443d2d811628ca6d",
+                    "type": "2.16.840.1.113883.4.292.10.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a082ca2bb208bd66",
+                    "type": "1.3.6.1.4.1.19126.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-bcb26bff828aba74",
+                    "type": "2.16.724.4.9.50.5"
+                  }
+                ]
+              }
+            }
+          ],
+          "data": {
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "Event Series"
+            },
+            "origin": {
+              "_type": "DV_DATE_TIME",
+              "value": "2024-03-03T20:54:06+01:00"
+            },
+            "events": [
+              {
+                "_type": "POINT_EVENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Any event"
+                },
+                "time": {
+                  "_type": "DV_DATE_TIME",
+                  "value": "2024-03-03T20:54:06+01:00"
+                },
+                "data": {
+                  "_type": "ITEM_TREE",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Tree"
+                  },
+                  "items": [
+                    {
+                      "_type": "ELEMENT",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Test name"
+                      },
+                      "value": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "LABE",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local_terms"
+                          },
+                          "code_string": "LABE"
+                        }
+                      },
+                      "archetype_node_id": "at0005"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Laboratory analyte result"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Test result"
+                          },
+                          "value": {
+                            "_type": "DV_QUANTITY",
+                            "normal_range": {
+                              "_type": "DV_INTERVAL",
+                              "lower_included": true,
+                              "upper_included": true,
+                              "lower_unbounded": false,
+                              "upper_unbounded": false,
+                              "lower": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 36
+                              },
+                              "upper": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 46
+                              }
+                            },
+                            "units": "%",
+                            "magnitude": 44.4
+                          },
+                          "archetype_node_id": "at0001"
+                        },
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Analyte name"
+                          },
+                          "value": {
+                            "_type": "DV_CODED_TEXT",
+                            "value": "Hematòcrit",
+                            "defining_code": {
+                              "_type": "CODE_PHRASE",
+                              "terminology_id": {
+                                "_type": "TERMINOLOGY_ID",
+                                "value": "2.16.840.1.113883.6.1"
+                              },
+                              "code_string": "4544-3"
+                            }
+                          },
+                          "archetype_node_id": "at0024"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Specimen"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.specimen.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Collection date/time"
+                          },
+                          "value": {
+                            "_type": "DV_DATE_TIME",
+                            "value": "2024-03-03T20:51:23+01:00"
+                          },
+                          "archetype_node_id": "at0015"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.specimen.v1"
+                    }
+                  ],
+                  "archetype_node_id": "at0003"
+                },
+                "archetype_node_id": "at0002"
+              }
+            ],
+            "archetype_node_id": "at0001"
+          },
+          "archetype_node_id": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+        },
+        {
+          "_type": "OBSERVATION",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Laboratory test results"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "language": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "ISO_639-1"
+            },
+            "code_string": "en"
+          },
+          "encoding": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "IANA_character-sets"
+            },
+            "code_string": "UTF-8"
+          },
+          "subject": {
+            "_type": "PARTY_SELF"
+          },
+          "other_participations": [
+            {
+              "_type": "PARTICIPATION",
+              "function": {
+                "_type": "DV_TEXT",
+                "value": "Performer"
+              },
+              "performer": {
+                "_type": "PARTY_IDENTIFIED",
+                "name": "party-08f6bd47ab3a3991",
+                "identifiers": [
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-346c00eaddaf6cba",
+                    "type": "1.3.6.1.4.1.5734.1.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a130adfd46a54b52",
+                    "type": "1.3.6.1.4.1.5734.1.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-443d2d811628ca6d",
+                    "type": "2.16.840.1.113883.4.292.10.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a082ca2bb208bd66",
+                    "type": "1.3.6.1.4.1.19126.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-bcb26bff828aba74",
+                    "type": "2.16.724.4.9.50.5"
+                  }
+                ]
+              }
+            }
+          ],
+          "data": {
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "Event Series"
+            },
+            "origin": {
+              "_type": "DV_DATE_TIME",
+              "value": "2024-03-03T20:54:06+01:00"
+            },
+            "events": [
+              {
+                "_type": "POINT_EVENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Any event"
+                },
+                "time": {
+                  "_type": "DV_DATE_TIME",
+                  "value": "2024-03-03T20:54:06+01:00"
+                },
+                "data": {
+                  "_type": "ITEM_TREE",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Tree"
+                  },
+                  "items": [
+                    {
+                      "_type": "ELEMENT",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Test name"
+                      },
+                      "value": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "LABE",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local_terms"
+                          },
+                          "code_string": "LABE"
+                        }
+                      },
+                      "archetype_node_id": "at0005"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Laboratory analyte result"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Test result"
+                          },
+                          "value": {
+                            "_type": "DV_QUANTITY",
+                            "normal_range": {
+                              "_type": "DV_INTERVAL",
+                              "lower_included": true,
+                              "upper_included": true,
+                              "lower_unbounded": false,
+                              "upper_unbounded": false,
+                              "lower": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 12
+                              },
+                              "upper": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 15
+                              }
+                            },
+                            "units": "g/dL",
+                            "magnitude": 15.2
+                          },
+                          "archetype_node_id": "at0001"
+                        },
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Analyte name"
+                          },
+                          "value": {
+                            "_type": "DV_CODED_TEXT",
+                            "value": "Hemoglobina",
+                            "defining_code": {
+                              "_type": "CODE_PHRASE",
+                              "terminology_id": {
+                                "_type": "TERMINOLOGY_ID",
+                                "value": "2.16.840.1.113883.6.1"
+                              },
+                              "code_string": "718-7"
+                            }
+                          },
+                          "archetype_node_id": "at0024"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Specimen"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.specimen.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Collection date/time"
+                          },
+                          "value": {
+                            "_type": "DV_DATE_TIME",
+                            "value": "2024-03-03T20:51:23+01:00"
+                          },
+                          "archetype_node_id": "at0015"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.specimen.v1"
+                    }
+                  ],
+                  "archetype_node_id": "at0003"
+                },
+                "archetype_node_id": "at0002"
+              }
+            ],
+            "archetype_node_id": "at0001"
+          },
+          "archetype_node_id": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+        },
+        {
+          "_type": "OBSERVATION",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Laboratory test results"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "language": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "ISO_639-1"
+            },
+            "code_string": "en"
+          },
+          "encoding": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "IANA_character-sets"
+            },
+            "code_string": "UTF-8"
+          },
+          "subject": {
+            "_type": "PARTY_SELF"
+          },
+          "other_participations": [
+            {
+              "_type": "PARTICIPATION",
+              "function": {
+                "_type": "DV_TEXT",
+                "value": "Performer"
+              },
+              "performer": {
+                "_type": "PARTY_IDENTIFIED",
+                "name": "party-08f6bd47ab3a3991",
+                "identifiers": [
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-346c00eaddaf6cba",
+                    "type": "1.3.6.1.4.1.5734.1.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a130adfd46a54b52",
+                    "type": "1.3.6.1.4.1.5734.1.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-443d2d811628ca6d",
+                    "type": "2.16.840.1.113883.4.292.10.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a082ca2bb208bd66",
+                    "type": "1.3.6.1.4.1.19126.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-bcb26bff828aba74",
+                    "type": "2.16.724.4.9.50.5"
+                  }
+                ]
+              }
+            }
+          ],
+          "data": {
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "Event Series"
+            },
+            "origin": {
+              "_type": "DV_DATE_TIME",
+              "value": "2024-03-03T20:54:06+01:00"
+            },
+            "events": [
+              {
+                "_type": "POINT_EVENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Any event"
+                },
+                "time": {
+                  "_type": "DV_DATE_TIME",
+                  "value": "2024-03-03T20:54:06+01:00"
+                },
+                "data": {
+                  "_type": "ITEM_TREE",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Tree"
+                  },
+                  "items": [
+                    {
+                      "_type": "ELEMENT",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Test name"
+                      },
+                      "value": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "LABE",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local_terms"
+                          },
+                          "code_string": "LABE"
+                        }
+                      },
+                      "archetype_node_id": "at0005"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Laboratory analyte result"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Test result"
+                          },
+                          "value": {
+                            "_type": "DV_QUANTITY",
+                            "normal_range": {
+                              "_type": "DV_INTERVAL",
+                              "lower_included": true,
+                              "upper_included": true,
+                              "lower_unbounded": false,
+                              "upper_unbounded": false,
+                              "lower": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 80
+                              },
+                              "upper": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 100
+                              }
+                            },
+                            "units": "fL",
+                            "magnitude": 87.9
+                          },
+                          "archetype_node_id": "at0001"
+                        },
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Analyte name"
+                          },
+                          "value": {
+                            "_type": "DV_CODED_TEXT",
+                            "value": "VCM",
+                            "defining_code": {
+                              "_type": "CODE_PHRASE",
+                              "terminology_id": {
+                                "_type": "TERMINOLOGY_ID",
+                                "value": "2.16.840.1.113883.6.1"
+                              },
+                              "code_string": "787-2"
+                            }
+                          },
+                          "archetype_node_id": "at0024"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Specimen"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.specimen.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Collection date/time"
+                          },
+                          "value": {
+                            "_type": "DV_DATE_TIME",
+                            "value": "2024-03-03T20:51:23+01:00"
+                          },
+                          "archetype_node_id": "at0015"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.specimen.v1"
+                    }
+                  ],
+                  "archetype_node_id": "at0003"
+                },
+                "archetype_node_id": "at0002"
+              }
+            ],
+            "archetype_node_id": "at0001"
+          },
+          "archetype_node_id": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+        },
+        {
+          "_type": "OBSERVATION",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Laboratory test results"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "language": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "ISO_639-1"
+            },
+            "code_string": "en"
+          },
+          "encoding": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "IANA_character-sets"
+            },
+            "code_string": "UTF-8"
+          },
+          "subject": {
+            "_type": "PARTY_SELF"
+          },
+          "other_participations": [
+            {
+              "_type": "PARTICIPATION",
+              "function": {
+                "_type": "DV_TEXT",
+                "value": "Performer"
+              },
+              "performer": {
+                "_type": "PARTY_IDENTIFIED",
+                "name": "party-08f6bd47ab3a3991",
+                "identifiers": [
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-346c00eaddaf6cba",
+                    "type": "1.3.6.1.4.1.5734.1.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a130adfd46a54b52",
+                    "type": "1.3.6.1.4.1.5734.1.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-443d2d811628ca6d",
+                    "type": "2.16.840.1.113883.4.292.10.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a082ca2bb208bd66",
+                    "type": "1.3.6.1.4.1.19126.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-bcb26bff828aba74",
+                    "type": "2.16.724.4.9.50.5"
+                  }
+                ]
+              }
+            }
+          ],
+          "data": {
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "Event Series"
+            },
+            "origin": {
+              "_type": "DV_DATE_TIME",
+              "value": "2024-03-03T20:54:06+01:00"
+            },
+            "events": [
+              {
+                "_type": "POINT_EVENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Any event"
+                },
+                "time": {
+                  "_type": "DV_DATE_TIME",
+                  "value": "2024-03-03T20:54:06+01:00"
+                },
+                "data": {
+                  "_type": "ITEM_TREE",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Tree"
+                  },
+                  "items": [
+                    {
+                      "_type": "ELEMENT",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Test name"
+                      },
+                      "value": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "LABE",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local_terms"
+                          },
+                          "code_string": "LABE"
+                        }
+                      },
+                      "archetype_node_id": "at0005"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Laboratory analyte result"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Test result"
+                          },
+                          "value": {
+                            "_type": "DV_QUANTITY",
+                            "normal_range": {
+                              "_type": "DV_INTERVAL",
+                              "lower_included": true,
+                              "upper_included": true,
+                              "lower_unbounded": false,
+                              "upper_unbounded": false,
+                              "lower": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 27
+                              },
+                              "upper": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 32
+                              }
+                            },
+                            "units": "pg",
+                            "magnitude": 30.1
+                          },
+                          "archetype_node_id": "at0001"
+                        },
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Analyte name"
+                          },
+                          "value": {
+                            "_type": "DV_CODED_TEXT",
+                            "value": "HCM",
+                            "defining_code": {
+                              "_type": "CODE_PHRASE",
+                              "terminology_id": {
+                                "_type": "TERMINOLOGY_ID",
+                                "value": "2.16.840.1.113883.6.1"
+                              },
+                              "code_string": "785-6"
+                            }
+                          },
+                          "archetype_node_id": "at0024"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Specimen"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.specimen.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Collection date/time"
+                          },
+                          "value": {
+                            "_type": "DV_DATE_TIME",
+                            "value": "2024-03-03T20:51:23+01:00"
+                          },
+                          "archetype_node_id": "at0015"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.specimen.v1"
+                    }
+                  ],
+                  "archetype_node_id": "at0003"
+                },
+                "archetype_node_id": "at0002"
+              }
+            ],
+            "archetype_node_id": "at0001"
+          },
+          "archetype_node_id": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+        },
+        {
+          "_type": "OBSERVATION",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Laboratory test results"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "language": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "ISO_639-1"
+            },
+            "code_string": "en"
+          },
+          "encoding": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "IANA_character-sets"
+            },
+            "code_string": "UTF-8"
+          },
+          "subject": {
+            "_type": "PARTY_SELF"
+          },
+          "other_participations": [
+            {
+              "_type": "PARTICIPATION",
+              "function": {
+                "_type": "DV_TEXT",
+                "value": "Performer"
+              },
+              "performer": {
+                "_type": "PARTY_IDENTIFIED",
+                "name": "party-08f6bd47ab3a3991",
+                "identifiers": [
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-346c00eaddaf6cba",
+                    "type": "1.3.6.1.4.1.5734.1.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a130adfd46a54b52",
+                    "type": "1.3.6.1.4.1.5734.1.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-443d2d811628ca6d",
+                    "type": "2.16.840.1.113883.4.292.10.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a082ca2bb208bd66",
+                    "type": "1.3.6.1.4.1.19126.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-bcb26bff828aba74",
+                    "type": "2.16.724.4.9.50.5"
+                  }
+                ]
+              }
+            }
+          ],
+          "data": {
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "Event Series"
+            },
+            "origin": {
+              "_type": "DV_DATE_TIME",
+              "value": "2024-03-03T20:54:06+01:00"
+            },
+            "events": [
+              {
+                "_type": "POINT_EVENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Any event"
+                },
+                "time": {
+                  "_type": "DV_DATE_TIME",
+                  "value": "2024-03-03T20:54:06+01:00"
+                },
+                "data": {
+                  "_type": "ITEM_TREE",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Tree"
+                  },
+                  "items": [
+                    {
+                      "_type": "ELEMENT",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Test name"
+                      },
+                      "value": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "LABE",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local_terms"
+                          },
+                          "code_string": "LABE"
+                        }
+                      },
+                      "archetype_node_id": "at0005"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Laboratory analyte result"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Test result"
+                          },
+                          "value": {
+                            "_type": "DV_QUANTITY",
+                            "normal_range": {
+                              "_type": "DV_INTERVAL",
+                              "lower_included": true,
+                              "upper_included": true,
+                              "lower_unbounded": false,
+                              "upper_unbounded": false,
+                              "lower": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 31
+                              },
+                              "upper": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 36
+                              }
+                            },
+                            "units": "g/dL",
+                            "magnitude": 34.2
+                          },
+                          "archetype_node_id": "at0001"
+                        },
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Analyte name"
+                          },
+                          "value": {
+                            "_type": "DV_CODED_TEXT",
+                            "value": "CHCM",
+                            "defining_code": {
+                              "_type": "CODE_PHRASE",
+                              "terminology_id": {
+                                "_type": "TERMINOLOGY_ID",
+                                "value": "2.16.840.1.113883.6.1"
+                              },
+                              "code_string": "786-4"
+                            }
+                          },
+                          "archetype_node_id": "at0024"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Specimen"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.specimen.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Collection date/time"
+                          },
+                          "value": {
+                            "_type": "DV_DATE_TIME",
+                            "value": "2024-03-03T20:51:23+01:00"
+                          },
+                          "archetype_node_id": "at0015"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.specimen.v1"
+                    }
+                  ],
+                  "archetype_node_id": "at0003"
+                },
+                "archetype_node_id": "at0002"
+              }
+            ],
+            "archetype_node_id": "at0001"
+          },
+          "archetype_node_id": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+        },
+        {
+          "_type": "OBSERVATION",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Laboratory test results"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "language": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "ISO_639-1"
+            },
+            "code_string": "en"
+          },
+          "encoding": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "IANA_character-sets"
+            },
+            "code_string": "UTF-8"
+          },
+          "subject": {
+            "_type": "PARTY_SELF"
+          },
+          "other_participations": [
+            {
+              "_type": "PARTICIPATION",
+              "function": {
+                "_type": "DV_TEXT",
+                "value": "Performer"
+              },
+              "performer": {
+                "_type": "PARTY_IDENTIFIED",
+                "name": "party-08f6bd47ab3a3991",
+                "identifiers": [
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-346c00eaddaf6cba",
+                    "type": "1.3.6.1.4.1.5734.1.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a130adfd46a54b52",
+                    "type": "1.3.6.1.4.1.5734.1.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-443d2d811628ca6d",
+                    "type": "2.16.840.1.113883.4.292.10.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a082ca2bb208bd66",
+                    "type": "1.3.6.1.4.1.19126.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-bcb26bff828aba74",
+                    "type": "2.16.724.4.9.50.5"
+                  }
+                ]
+              }
+            }
+          ],
+          "data": {
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "Event Series"
+            },
+            "origin": {
+              "_type": "DV_DATE_TIME",
+              "value": "2024-03-03T20:54:07+01:00"
+            },
+            "events": [
+              {
+                "_type": "POINT_EVENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Any event"
+                },
+                "time": {
+                  "_type": "DV_DATE_TIME",
+                  "value": "2024-03-03T20:54:07+01:00"
+                },
+                "data": {
+                  "_type": "ITEM_TREE",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Tree"
+                  },
+                  "items": [
+                    {
+                      "_type": "ELEMENT",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Test name"
+                      },
+                      "value": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "LABE",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local_terms"
+                          },
+                          "code_string": "LABE"
+                        }
+                      },
+                      "archetype_node_id": "at0005"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Laboratory analyte result"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Test result"
+                          },
+                          "value": {
+                            "_type": "DV_QUANTITY",
+                            "normal_range": {
+                              "_type": "DV_INTERVAL",
+                              "lower_included": true,
+                              "upper_included": true,
+                              "lower_unbounded": false,
+                              "upper_unbounded": false,
+                              "lower": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 11
+                              },
+                              "upper": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 14.6
+                              }
+                            },
+                            "units": "%",
+                            "magnitude": 13.4
+                          },
+                          "archetype_node_id": "at0001"
+                        },
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Analyte name"
+                          },
+                          "value": {
+                            "_type": "DV_CODED_TEXT",
+                            "value": "RDW",
+                            "defining_code": {
+                              "_type": "CODE_PHRASE",
+                              "terminology_id": {
+                                "_type": "TERMINOLOGY_ID",
+                                "value": "2.16.840.1.113883.6.1"
+                              },
+                              "code_string": "788-0"
+                            }
+                          },
+                          "archetype_node_id": "at0024"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Specimen"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.specimen.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Collection date/time"
+                          },
+                          "value": {
+                            "_type": "DV_DATE_TIME",
+                            "value": "2024-03-03T20:51:23+01:00"
+                          },
+                          "archetype_node_id": "at0015"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.specimen.v1"
+                    }
+                  ],
+                  "archetype_node_id": "at0003"
+                },
+                "archetype_node_id": "at0002"
+              }
+            ],
+            "archetype_node_id": "at0001"
+          },
+          "archetype_node_id": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+        },
+        {
+          "_type": "OBSERVATION",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Laboratory test results"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "language": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "ISO_639-1"
+            },
+            "code_string": "en"
+          },
+          "encoding": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "IANA_character-sets"
+            },
+            "code_string": "UTF-8"
+          },
+          "subject": {
+            "_type": "PARTY_SELF"
+          },
+          "other_participations": [
+            {
+              "_type": "PARTICIPATION",
+              "function": {
+                "_type": "DV_TEXT",
+                "value": "Performer"
+              },
+              "performer": {
+                "_type": "PARTY_IDENTIFIED",
+                "name": "party-08f6bd47ab3a3991",
+                "identifiers": [
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-346c00eaddaf6cba",
+                    "type": "1.3.6.1.4.1.5734.1.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a130adfd46a54b52",
+                    "type": "1.3.6.1.4.1.5734.1.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-443d2d811628ca6d",
+                    "type": "2.16.840.1.113883.4.292.10.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a082ca2bb208bd66",
+                    "type": "1.3.6.1.4.1.19126.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-bcb26bff828aba74",
+                    "type": "2.16.724.4.9.50.5"
+                  }
+                ]
+              }
+            }
+          ],
+          "data": {
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "Event Series"
+            },
+            "origin": {
+              "_type": "DV_DATE_TIME",
+              "value": "2024-03-03T20:54:06+01:00"
+            },
+            "events": [
+              {
+                "_type": "POINT_EVENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Any event"
+                },
+                "time": {
+                  "_type": "DV_DATE_TIME",
+                  "value": "2024-03-03T20:54:06+01:00"
+                },
+                "data": {
+                  "_type": "ITEM_TREE",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Tree"
+                  },
+                  "items": [
+                    {
+                      "_type": "ELEMENT",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Test name"
+                      },
+                      "value": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "LABE",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local_terms"
+                          },
+                          "code_string": "LABE"
+                        }
+                      },
+                      "archetype_node_id": "at0005"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Laboratory analyte result"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Test result"
+                          },
+                          "value": {
+                            "_type": "DV_QUANTITY",
+                            "normal_range": {
+                              "_type": "DV_INTERVAL",
+                              "lower_included": true,
+                              "upper_included": true,
+                              "lower_unbounded": false,
+                              "upper_unbounded": false,
+                              "lower": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 40
+                              },
+                              "upper": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 70
+                              }
+                            },
+                            "units": "%",
+                            "magnitude": 54.2
+                          },
+                          "archetype_node_id": "at0001"
+                        },
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Analyte name"
+                          },
+                          "value": {
+                            "_type": "DV_CODED_TEXT",
+                            "value": "Neutròfils",
+                            "defining_code": {
+                              "_type": "CODE_PHRASE",
+                              "terminology_id": {
+                                "_type": "TERMINOLOGY_ID",
+                                "value": "2.16.840.1.113883.6.1"
+                              },
+                              "code_string": "770-8"
+                            }
+                          },
+                          "archetype_node_id": "at0024"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Specimen"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.specimen.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Collection date/time"
+                          },
+                          "value": {
+                            "_type": "DV_DATE_TIME",
+                            "value": "2024-03-03T20:51:23+01:00"
+                          },
+                          "archetype_node_id": "at0015"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.specimen.v1"
+                    }
+                  ],
+                  "archetype_node_id": "at0003"
+                },
+                "archetype_node_id": "at0002"
+              }
+            ],
+            "archetype_node_id": "at0001"
+          },
+          "archetype_node_id": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+        },
+        {
+          "_type": "OBSERVATION",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Laboratory test results"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "language": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "ISO_639-1"
+            },
+            "code_string": "en"
+          },
+          "encoding": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "IANA_character-sets"
+            },
+            "code_string": "UTF-8"
+          },
+          "subject": {
+            "_type": "PARTY_SELF"
+          },
+          "other_participations": [
+            {
+              "_type": "PARTICIPATION",
+              "function": {
+                "_type": "DV_TEXT",
+                "value": "Performer"
+              },
+              "performer": {
+                "_type": "PARTY_IDENTIFIED",
+                "name": "party-08f6bd47ab3a3991",
+                "identifiers": [
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-346c00eaddaf6cba",
+                    "type": "1.3.6.1.4.1.5734.1.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a130adfd46a54b52",
+                    "type": "1.3.6.1.4.1.5734.1.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-443d2d811628ca6d",
+                    "type": "2.16.840.1.113883.4.292.10.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a082ca2bb208bd66",
+                    "type": "1.3.6.1.4.1.19126.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-bcb26bff828aba74",
+                    "type": "2.16.724.4.9.50.5"
+                  }
+                ]
+              }
+            }
+          ],
+          "data": {
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "Event Series"
+            },
+            "origin": {
+              "_type": "DV_DATE_TIME",
+              "value": "2024-03-03T20:54:06+01:00"
+            },
+            "events": [
+              {
+                "_type": "POINT_EVENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Any event"
+                },
+                "time": {
+                  "_type": "DV_DATE_TIME",
+                  "value": "2024-03-03T20:54:06+01:00"
+                },
+                "data": {
+                  "_type": "ITEM_TREE",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Tree"
+                  },
+                  "items": [
+                    {
+                      "_type": "ELEMENT",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Test name"
+                      },
+                      "value": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "LABE",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local_terms"
+                          },
+                          "code_string": "LABE"
+                        }
+                      },
+                      "archetype_node_id": "at0005"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Laboratory analyte result"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Test result"
+                          },
+                          "value": {
+                            "_type": "DV_QUANTITY",
+                            "normal_range": {
+                              "_type": "DV_INTERVAL",
+                              "lower_included": true,
+                              "upper_included": true,
+                              "lower_unbounded": false,
+                              "upper_unbounded": false,
+                              "lower": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 15
+                              },
+                              "upper": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 50
+                              }
+                            },
+                            "units": "%",
+                            "magnitude": 30.6
+                          },
+                          "archetype_node_id": "at0001"
+                        },
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Analyte name"
+                          },
+                          "value": {
+                            "_type": "DV_CODED_TEXT",
+                            "value": "Limfòcits",
+                            "defining_code": {
+                              "_type": "CODE_PHRASE",
+                              "terminology_id": {
+                                "_type": "TERMINOLOGY_ID",
+                                "value": "2.16.840.1.113883.6.1"
+                              },
+                              "code_string": "736-9"
+                            }
+                          },
+                          "archetype_node_id": "at0024"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Specimen"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.specimen.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Collection date/time"
+                          },
+                          "value": {
+                            "_type": "DV_DATE_TIME",
+                            "value": "2024-03-03T20:51:23+01:00"
+                          },
+                          "archetype_node_id": "at0015"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.specimen.v1"
+                    }
+                  ],
+                  "archetype_node_id": "at0003"
+                },
+                "archetype_node_id": "at0002"
+              }
+            ],
+            "archetype_node_id": "at0001"
+          },
+          "archetype_node_id": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+        },
+        {
+          "_type": "OBSERVATION",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Laboratory test results"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "language": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "ISO_639-1"
+            },
+            "code_string": "en"
+          },
+          "encoding": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "IANA_character-sets"
+            },
+            "code_string": "UTF-8"
+          },
+          "subject": {
+            "_type": "PARTY_SELF"
+          },
+          "other_participations": [
+            {
+              "_type": "PARTICIPATION",
+              "function": {
+                "_type": "DV_TEXT",
+                "value": "Performer"
+              },
+              "performer": {
+                "_type": "PARTY_IDENTIFIED",
+                "name": "party-08f6bd47ab3a3991",
+                "identifiers": [
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-346c00eaddaf6cba",
+                    "type": "1.3.6.1.4.1.5734.1.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a130adfd46a54b52",
+                    "type": "1.3.6.1.4.1.5734.1.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-443d2d811628ca6d",
+                    "type": "2.16.840.1.113883.4.292.10.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a082ca2bb208bd66",
+                    "type": "1.3.6.1.4.1.19126.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-bcb26bff828aba74",
+                    "type": "2.16.724.4.9.50.5"
+                  }
+                ]
+              }
+            }
+          ],
+          "data": {
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "Event Series"
+            },
+            "origin": {
+              "_type": "DV_DATE_TIME",
+              "value": "2024-03-03T20:54:06+01:00"
+            },
+            "events": [
+              {
+                "_type": "POINT_EVENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Any event"
+                },
+                "time": {
+                  "_type": "DV_DATE_TIME",
+                  "value": "2024-03-03T20:54:06+01:00"
+                },
+                "data": {
+                  "_type": "ITEM_TREE",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Tree"
+                  },
+                  "items": [
+                    {
+                      "_type": "ELEMENT",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Test name"
+                      },
+                      "value": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "LABE",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local_terms"
+                          },
+                          "code_string": "LABE"
+                        }
+                      },
+                      "archetype_node_id": "at0005"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Laboratory analyte result"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Test result"
+                          },
+                          "value": {
+                            "_type": "DV_QUANTITY",
+                            "normal_range": {
+                              "_type": "DV_INTERVAL",
+                              "lower_included": true,
+                              "upper_included": true,
+                              "lower_unbounded": false,
+                              "upper_unbounded": false,
+                              "lower": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 2
+                              },
+                              "upper": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 13
+                              }
+                            },
+                            "units": "%",
+                            "magnitude": 7.8
+                          },
+                          "archetype_node_id": "at0001"
+                        },
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Analyte name"
+                          },
+                          "value": {
+                            "_type": "DV_CODED_TEXT",
+                            "value": "Monòcits",
+                            "defining_code": {
+                              "_type": "CODE_PHRASE",
+                              "terminology_id": {
+                                "_type": "TERMINOLOGY_ID",
+                                "value": "2.16.840.1.113883.6.1"
+                              },
+                              "code_string": "5905-5"
+                            }
+                          },
+                          "archetype_node_id": "at0024"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Specimen"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.specimen.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Collection date/time"
+                          },
+                          "value": {
+                            "_type": "DV_DATE_TIME",
+                            "value": "2024-03-03T20:51:23+01:00"
+                          },
+                          "archetype_node_id": "at0015"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.specimen.v1"
+                    }
+                  ],
+                  "archetype_node_id": "at0003"
+                },
+                "archetype_node_id": "at0002"
+              }
+            ],
+            "archetype_node_id": "at0001"
+          },
+          "archetype_node_id": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+        },
+        {
+          "_type": "OBSERVATION",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Laboratory test results"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "language": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "ISO_639-1"
+            },
+            "code_string": "en"
+          },
+          "encoding": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "IANA_character-sets"
+            },
+            "code_string": "UTF-8"
+          },
+          "subject": {
+            "_type": "PARTY_SELF"
+          },
+          "other_participations": [
+            {
+              "_type": "PARTICIPATION",
+              "function": {
+                "_type": "DV_TEXT",
+                "value": "Performer"
+              },
+              "performer": {
+                "_type": "PARTY_IDENTIFIED",
+                "name": "party-08f6bd47ab3a3991",
+                "identifiers": [
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-346c00eaddaf6cba",
+                    "type": "1.3.6.1.4.1.5734.1.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a130adfd46a54b52",
+                    "type": "1.3.6.1.4.1.5734.1.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-443d2d811628ca6d",
+                    "type": "2.16.840.1.113883.4.292.10.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a082ca2bb208bd66",
+                    "type": "1.3.6.1.4.1.19126.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-bcb26bff828aba74",
+                    "type": "2.16.724.4.9.50.5"
+                  }
+                ]
+              }
+            }
+          ],
+          "data": {
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "Event Series"
+            },
+            "origin": {
+              "_type": "DV_DATE_TIME",
+              "value": "2024-03-03T20:54:06+01:00"
+            },
+            "events": [
+              {
+                "_type": "POINT_EVENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Any event"
+                },
+                "time": {
+                  "_type": "DV_DATE_TIME",
+                  "value": "2024-03-03T20:54:06+01:00"
+                },
+                "data": {
+                  "_type": "ITEM_TREE",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Tree"
+                  },
+                  "items": [
+                    {
+                      "_type": "ELEMENT",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Test name"
+                      },
+                      "value": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "LABE",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local_terms"
+                          },
+                          "code_string": "LABE"
+                        }
+                      },
+                      "archetype_node_id": "at0005"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Laboratory analyte result"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Test result"
+                          },
+                          "value": {
+                            "_type": "DV_QUANTITY",
+                            "normal_range": {
+                              "_type": "DV_INTERVAL",
+                              "lower_included": true,
+                              "upper_included": true,
+                              "lower_unbounded": false,
+                              "upper_unbounded": false,
+                              "lower": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 0
+                              },
+                              "upper": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 8
+                              }
+                            },
+                            "units": "%",
+                            "magnitude": 6.2
+                          },
+                          "archetype_node_id": "at0001"
+                        },
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Analyte name"
+                          },
+                          "value": {
+                            "_type": "DV_CODED_TEXT",
+                            "value": "EOSINOFILS",
+                            "defining_code": {
+                              "_type": "CODE_PHRASE",
+                              "terminology_id": {
+                                "_type": "TERMINOLOGY_ID",
+                                "value": "2.16.840.1.113883.6.1"
+                              },
+                              "code_string": "713-8"
+                            }
+                          },
+                          "archetype_node_id": "at0024"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Specimen"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.specimen.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Collection date/time"
+                          },
+                          "value": {
+                            "_type": "DV_DATE_TIME",
+                            "value": "2024-03-03T20:51:23+01:00"
+                          },
+                          "archetype_node_id": "at0015"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.specimen.v1"
+                    }
+                  ],
+                  "archetype_node_id": "at0003"
+                },
+                "archetype_node_id": "at0002"
+              }
+            ],
+            "archetype_node_id": "at0001"
+          },
+          "archetype_node_id": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+        },
+        {
+          "_type": "OBSERVATION",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Laboratory test results"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "language": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "ISO_639-1"
+            },
+            "code_string": "en"
+          },
+          "encoding": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "IANA_character-sets"
+            },
+            "code_string": "UTF-8"
+          },
+          "subject": {
+            "_type": "PARTY_SELF"
+          },
+          "other_participations": [
+            {
+              "_type": "PARTICIPATION",
+              "function": {
+                "_type": "DV_TEXT",
+                "value": "Performer"
+              },
+              "performer": {
+                "_type": "PARTY_IDENTIFIED",
+                "name": "party-08f6bd47ab3a3991",
+                "identifiers": [
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-346c00eaddaf6cba",
+                    "type": "1.3.6.1.4.1.5734.1.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a130adfd46a54b52",
+                    "type": "1.3.6.1.4.1.5734.1.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-443d2d811628ca6d",
+                    "type": "2.16.840.1.113883.4.292.10.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a082ca2bb208bd66",
+                    "type": "1.3.6.1.4.1.19126.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-bcb26bff828aba74",
+                    "type": "2.16.724.4.9.50.5"
+                  }
+                ]
+              }
+            }
+          ],
+          "data": {
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "Event Series"
+            },
+            "origin": {
+              "_type": "DV_DATE_TIME",
+              "value": "2024-03-03T20:54:06+01:00"
+            },
+            "events": [
+              {
+                "_type": "POINT_EVENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Any event"
+                },
+                "time": {
+                  "_type": "DV_DATE_TIME",
+                  "value": "2024-03-03T20:54:06+01:00"
+                },
+                "data": {
+                  "_type": "ITEM_TREE",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Tree"
+                  },
+                  "items": [
+                    {
+                      "_type": "ELEMENT",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Test name"
+                      },
+                      "value": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "LABE",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local_terms"
+                          },
+                          "code_string": "LABE"
+                        }
+                      },
+                      "archetype_node_id": "at0005"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Laboratory analyte result"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Test result"
+                          },
+                          "value": {
+                            "_type": "DV_QUANTITY",
+                            "normal_range": {
+                              "_type": "DV_INTERVAL",
+                              "lower_included": true,
+                              "upper_included": true,
+                              "lower_unbounded": false,
+                              "upper_unbounded": false,
+                              "lower": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 0
+                              },
+                              "upper": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 2
+                              }
+                            },
+                            "units": "%",
+                            "magnitude": 0.9
+                          },
+                          "archetype_node_id": "at0001"
+                        },
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Analyte name"
+                          },
+                          "value": {
+                            "_type": "DV_CODED_TEXT",
+                            "value": "BASOFILS",
+                            "defining_code": {
+                              "_type": "CODE_PHRASE",
+                              "terminology_id": {
+                                "_type": "TERMINOLOGY_ID",
+                                "value": "2.16.840.1.113883.6.1"
+                              },
+                              "code_string": "706-2"
+                            }
+                          },
+                          "archetype_node_id": "at0024"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Specimen"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.specimen.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Collection date/time"
+                          },
+                          "value": {
+                            "_type": "DV_DATE_TIME",
+                            "value": "2024-03-03T20:51:23+01:00"
+                          },
+                          "archetype_node_id": "at0015"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.specimen.v1"
+                    }
+                  ],
+                  "archetype_node_id": "at0003"
+                },
+                "archetype_node_id": "at0002"
+              }
+            ],
+            "archetype_node_id": "at0001"
+          },
+          "archetype_node_id": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+        },
+        {
+          "_type": "OBSERVATION",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Laboratory test results"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "language": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "ISO_639-1"
+            },
+            "code_string": "en"
+          },
+          "encoding": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "IANA_character-sets"
+            },
+            "code_string": "UTF-8"
+          },
+          "subject": {
+            "_type": "PARTY_SELF"
+          },
+          "other_participations": [
+            {
+              "_type": "PARTICIPATION",
+              "function": {
+                "_type": "DV_TEXT",
+                "value": "Performer"
+              },
+              "performer": {
+                "_type": "PARTY_IDENTIFIED",
+                "name": "party-08f6bd47ab3a3991",
+                "identifiers": [
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-346c00eaddaf6cba",
+                    "type": "1.3.6.1.4.1.5734.1.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a130adfd46a54b52",
+                    "type": "1.3.6.1.4.1.5734.1.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-443d2d811628ca6d",
+                    "type": "2.16.840.1.113883.4.292.10.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a082ca2bb208bd66",
+                    "type": "1.3.6.1.4.1.19126.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-bcb26bff828aba74",
+                    "type": "2.16.724.4.9.50.5"
+                  }
+                ]
+              }
+            }
+          ],
+          "data": {
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "Event Series"
+            },
+            "origin": {
+              "_type": "DV_DATE_TIME",
+              "value": "2024-03-03T21:28:45+01:00"
+            },
+            "events": [
+              {
+                "_type": "POINT_EVENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Any event"
+                },
+                "time": {
+                  "_type": "DV_DATE_TIME",
+                  "value": "2024-03-03T21:28:45+01:00"
+                },
+                "data": {
+                  "_type": "ITEM_TREE",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Tree"
+                  },
+                  "items": [
+                    {
+                      "_type": "ELEMENT",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Test name"
+                      },
+                      "value": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "LABE",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local_terms"
+                          },
+                          "code_string": "LABE"
+                        }
+                      },
+                      "archetype_node_id": "at0005"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Laboratory analyte result"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Test result"
+                          },
+                          "value": {
+                            "_type": "DV_QUANTITY",
+                            "normal_range": {
+                              "_type": "DV_INTERVAL",
+                              "lower_included": true,
+                              "upper_included": true,
+                              "lower_unbounded": false,
+                              "upper_unbounded": false,
+                              "lower": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 0.51
+                              },
+                              "upper": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 0.95
+                              }
+                            },
+                            "units": "mg/dl",
+                            "magnitude": 0.84
+                          },
+                          "archetype_node_id": "at0001"
+                        },
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Analyte name"
+                          },
+                          "value": {
+                            "_type": "DV_CODED_TEXT",
+                            "value": "CREATININA",
+                            "defining_code": {
+                              "_type": "CODE_PHRASE",
+                              "terminology_id": {
+                                "_type": "TERMINOLOGY_ID",
+                                "value": "2.16.840.1.113883.6.1"
+                              },
+                              "code_string": "2160-0"
+                            }
+                          },
+                          "archetype_node_id": "at0024"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Specimen"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.specimen.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Collection date/time"
+                          },
+                          "value": {
+                            "_type": "DV_DATE_TIME",
+                            "value": "2024-03-03T20:51:23+01:00"
+                          },
+                          "archetype_node_id": "at0015"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.specimen.v1"
+                    }
+                  ],
+                  "archetype_node_id": "at0003"
+                },
+                "archetype_node_id": "at0002"
+              }
+            ],
+            "archetype_node_id": "at0001"
+          },
+          "archetype_node_id": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+        },
+        {
+          "_type": "OBSERVATION",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Laboratory test results"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "language": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "ISO_639-1"
+            },
+            "code_string": "en"
+          },
+          "encoding": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "IANA_character-sets"
+            },
+            "code_string": "UTF-8"
+          },
+          "subject": {
+            "_type": "PARTY_SELF"
+          },
+          "other_participations": [
+            {
+              "_type": "PARTICIPATION",
+              "function": {
+                "_type": "DV_TEXT",
+                "value": "Performer"
+              },
+              "performer": {
+                "_type": "PARTY_IDENTIFIED",
+                "name": "party-08f6bd47ab3a3991",
+                "identifiers": [
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-346c00eaddaf6cba",
+                    "type": "1.3.6.1.4.1.5734.1.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a130adfd46a54b52",
+                    "type": "1.3.6.1.4.1.5734.1.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-443d2d811628ca6d",
+                    "type": "2.16.840.1.113883.4.292.10.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a082ca2bb208bd66",
+                    "type": "1.3.6.1.4.1.19126.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-bcb26bff828aba74",
+                    "type": "2.16.724.4.9.50.5"
+                  }
+                ]
+              }
+            }
+          ],
+          "data": {
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "Event Series"
+            },
+            "origin": {
+              "_type": "DV_DATE_TIME",
+              "value": "2024-03-03T21:28:45+01:00"
+            },
+            "events": [
+              {
+                "_type": "POINT_EVENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Any event"
+                },
+                "time": {
+                  "_type": "DV_DATE_TIME",
+                  "value": "2024-03-03T21:28:45+01:00"
+                },
+                "data": {
+                  "_type": "ITEM_TREE",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Tree"
+                  },
+                  "items": [
+                    {
+                      "_type": "ELEMENT",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Test name"
+                      },
+                      "value": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "LABE",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local_terms"
+                          },
+                          "code_string": "LABE"
+                        }
+                      },
+                      "archetype_node_id": "at0005"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Laboratory analyte result"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Test result"
+                          },
+                          "value": {
+                            "_type": "DV_QUANTITY",
+                            "normal_range": {
+                              "_type": "DV_INTERVAL",
+                              "lower_included": true,
+                              "upper_included": true,
+                              "lower_unbounded": false,
+                              "upper_unbounded": false,
+                              "lower": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 17
+                              },
+                              "upper": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 43
+                              }
+                            },
+                            "units": "mg/dl",
+                            "magnitude": 38.13
+                          },
+                          "archetype_node_id": "at0001"
+                        },
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Analyte name"
+                          },
+                          "value": {
+                            "_type": "DV_CODED_TEXT",
+                            "value": "UREA",
+                            "defining_code": {
+                              "_type": "CODE_PHRASE",
+                              "terminology_id": {
+                                "_type": "TERMINOLOGY_ID",
+                                "value": "2.16.840.1.113883.6.1"
+                              },
+                              "code_string": "3091-6"
+                            }
+                          },
+                          "archetype_node_id": "at0024"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Specimen"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.specimen.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Collection date/time"
+                          },
+                          "value": {
+                            "_type": "DV_DATE_TIME",
+                            "value": "2024-03-03T20:51:23+01:00"
+                          },
+                          "archetype_node_id": "at0015"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.specimen.v1"
+                    }
+                  ],
+                  "archetype_node_id": "at0003"
+                },
+                "archetype_node_id": "at0002"
+              }
+            ],
+            "archetype_node_id": "at0001"
+          },
+          "archetype_node_id": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+        },
+        {
+          "_type": "OBSERVATION",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Laboratory test results"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "language": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "ISO_639-1"
+            },
+            "code_string": "en"
+          },
+          "encoding": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "IANA_character-sets"
+            },
+            "code_string": "UTF-8"
+          },
+          "subject": {
+            "_type": "PARTY_SELF"
+          },
+          "other_participations": [
+            {
+              "_type": "PARTICIPATION",
+              "function": {
+                "_type": "DV_TEXT",
+                "value": "Performer"
+              },
+              "performer": {
+                "_type": "PARTY_IDENTIFIED",
+                "name": "party-08f6bd47ab3a3991",
+                "identifiers": [
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-346c00eaddaf6cba",
+                    "type": "1.3.6.1.4.1.5734.1.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a130adfd46a54b52",
+                    "type": "1.3.6.1.4.1.5734.1.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-443d2d811628ca6d",
+                    "type": "2.16.840.1.113883.4.292.10.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a082ca2bb208bd66",
+                    "type": "1.3.6.1.4.1.19126.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-bcb26bff828aba74",
+                    "type": "2.16.724.4.9.50.5"
+                  }
+                ]
+              }
+            }
+          ],
+          "data": {
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "Event Series"
+            },
+            "origin": {
+              "_type": "DV_DATE_TIME",
+              "value": "2024-03-03T21:28:45+01:00"
+            },
+            "events": [
+              {
+                "_type": "POINT_EVENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Any event"
+                },
+                "time": {
+                  "_type": "DV_DATE_TIME",
+                  "value": "2024-03-03T21:28:45+01:00"
+                },
+                "data": {
+                  "_type": "ITEM_TREE",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Tree"
+                  },
+                  "items": [
+                    {
+                      "_type": "ELEMENT",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Test name"
+                      },
+                      "value": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "LABE",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local_terms"
+                          },
+                          "code_string": "LABE"
+                        }
+                      },
+                      "archetype_node_id": "at0005"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Laboratory analyte result"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Test result"
+                          },
+                          "value": {
+                            "_type": "DV_QUANTITY",
+                            "normal_range": {
+                              "_type": "DV_INTERVAL",
+                              "lower_included": true,
+                              "upper_included": true,
+                              "lower_unbounded": false,
+                              "upper_unbounded": false,
+                              "lower": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 135
+                              },
+                              "upper": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 145
+                              }
+                            },
+                            "units": "mmol/l",
+                            "magnitude": 142.3
+                          },
+                          "archetype_node_id": "at0001"
+                        },
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Analyte name"
+                          },
+                          "value": {
+                            "_type": "DV_CODED_TEXT",
+                            "value": "SODI",
+                            "defining_code": {
+                              "_type": "CODE_PHRASE",
+                              "terminology_id": {
+                                "_type": "TERMINOLOGY_ID",
+                                "value": "2.16.840.1.113883.6.1"
+                              },
+                              "code_string": "2951-2"
+                            }
+                          },
+                          "archetype_node_id": "at0024"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Specimen"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.specimen.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Collection date/time"
+                          },
+                          "value": {
+                            "_type": "DV_DATE_TIME",
+                            "value": "2024-03-03T20:51:23+01:00"
+                          },
+                          "archetype_node_id": "at0015"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.specimen.v1"
+                    }
+                  ],
+                  "archetype_node_id": "at0003"
+                },
+                "archetype_node_id": "at0002"
+              }
+            ],
+            "archetype_node_id": "at0001"
+          },
+          "archetype_node_id": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+        },
+        {
+          "_type": "OBSERVATION",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Laboratory test results"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "language": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "ISO_639-1"
+            },
+            "code_string": "en"
+          },
+          "encoding": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "IANA_character-sets"
+            },
+            "code_string": "UTF-8"
+          },
+          "subject": {
+            "_type": "PARTY_SELF"
+          },
+          "other_participations": [
+            {
+              "_type": "PARTICIPATION",
+              "function": {
+                "_type": "DV_TEXT",
+                "value": "Performer"
+              },
+              "performer": {
+                "_type": "PARTY_IDENTIFIED",
+                "name": "party-08f6bd47ab3a3991",
+                "identifiers": [
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-346c00eaddaf6cba",
+                    "type": "1.3.6.1.4.1.5734.1.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a130adfd46a54b52",
+                    "type": "1.3.6.1.4.1.5734.1.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-443d2d811628ca6d",
+                    "type": "2.16.840.1.113883.4.292.10.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a082ca2bb208bd66",
+                    "type": "1.3.6.1.4.1.19126.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-bcb26bff828aba74",
+                    "type": "2.16.724.4.9.50.5"
+                  }
+                ]
+              }
+            }
+          ],
+          "data": {
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "Event Series"
+            },
+            "origin": {
+              "_type": "DV_DATE_TIME",
+              "value": "2024-03-03T21:48:40+01:00"
+            },
+            "events": [
+              {
+                "_type": "POINT_EVENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Any event"
+                },
+                "time": {
+                  "_type": "DV_DATE_TIME",
+                  "value": "2024-03-03T21:48:40+01:00"
+                },
+                "data": {
+                  "_type": "ITEM_TREE",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Tree"
+                  },
+                  "items": [
+                    {
+                      "_type": "ELEMENT",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Test name"
+                      },
+                      "value": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "LABE",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local_terms"
+                          },
+                          "code_string": "LABE"
+                        }
+                      },
+                      "archetype_node_id": "at0005"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Laboratory analyte result"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Test result"
+                          },
+                          "value": {
+                            "_type": "DV_QUANTITY",
+                            "normal_range": {
+                              "_type": "DV_INTERVAL",
+                              "lower_included": true,
+                              "upper_included": true,
+                              "lower_unbounded": false,
+                              "upper_unbounded": false,
+                              "lower": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 3.5
+                              },
+                              "upper": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 5.3
+                              }
+                            },
+                            "units": "mmol/l",
+                            "magnitude": 4.19
+                          },
+                          "archetype_node_id": "at0001"
+                        },
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Analyte name"
+                          },
+                          "value": {
+                            "_type": "DV_CODED_TEXT",
+                            "value": "POTASSI",
+                            "defining_code": {
+                              "_type": "CODE_PHRASE",
+                              "terminology_id": {
+                                "_type": "TERMINOLOGY_ID",
+                                "value": "2.16.840.1.113883.6.1"
+                              },
+                              "code_string": "2823-3"
+                            }
+                          },
+                          "archetype_node_id": "at0024"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Specimen"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.specimen.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Collection date/time"
+                          },
+                          "value": {
+                            "_type": "DV_DATE_TIME",
+                            "value": "2024-03-03T20:51:23+01:00"
+                          },
+                          "archetype_node_id": "at0015"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.specimen.v1"
+                    }
+                  ],
+                  "archetype_node_id": "at0003"
+                },
+                "archetype_node_id": "at0002"
+              }
+            ],
+            "archetype_node_id": "at0001"
+          },
+          "archetype_node_id": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+        },
+        {
+          "_type": "OBSERVATION",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Laboratory test results"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "language": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "ISO_639-1"
+            },
+            "code_string": "en"
+          },
+          "encoding": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "IANA_character-sets"
+            },
+            "code_string": "UTF-8"
+          },
+          "subject": {
+            "_type": "PARTY_SELF"
+          },
+          "other_participations": [
+            {
+              "_type": "PARTICIPATION",
+              "function": {
+                "_type": "DV_TEXT",
+                "value": "Performer"
+              },
+              "performer": {
+                "_type": "PARTY_IDENTIFIED",
+                "name": "party-08f6bd47ab3a3991",
+                "identifiers": [
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-346c00eaddaf6cba",
+                    "type": "1.3.6.1.4.1.5734.1.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a130adfd46a54b52",
+                    "type": "1.3.6.1.4.1.5734.1.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-443d2d811628ca6d",
+                    "type": "2.16.840.1.113883.4.292.10.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a082ca2bb208bd66",
+                    "type": "1.3.6.1.4.1.19126.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-bcb26bff828aba74",
+                    "type": "2.16.724.4.9.50.5"
+                  }
+                ]
+              }
+            }
+          ],
+          "data": {
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "Event Series"
+            },
+            "origin": {
+              "_type": "DV_DATE_TIME",
+              "value": "2024-03-03T21:28:45+01:00"
+            },
+            "events": [
+              {
+                "_type": "POINT_EVENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Any event"
+                },
+                "time": {
+                  "_type": "DV_DATE_TIME",
+                  "value": "2024-03-03T21:28:45+01:00"
+                },
+                "data": {
+                  "_type": "ITEM_TREE",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Tree"
+                  },
+                  "items": [
+                    {
+                      "_type": "ELEMENT",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Test name"
+                      },
+                      "value": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "LABE",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local_terms"
+                          },
+                          "code_string": "LABE"
+                        }
+                      },
+                      "archetype_node_id": "at0005"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Laboratory analyte result"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Test result"
+                          },
+                          "value": {
+                            "_type": "DV_QUANTITY",
+                            "normal_range": {
+                              "_type": "DV_INTERVAL",
+                              "lower_included": true,
+                              "upper_included": true,
+                              "lower_unbounded": false,
+                              "upper_unbounded": false,
+                              "lower": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 28
+                              },
+                              "upper": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 100
+                              }
+                            },
+                            "units": "U/l",
+                            "magnitude": 92.4
+                          },
+                          "archetype_node_id": "at0001"
+                        },
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Analyte name"
+                          },
+                          "value": {
+                            "_type": "DV_CODED_TEXT",
+                            "value": "AMILASA",
+                            "defining_code": {
+                              "_type": "CODE_PHRASE",
+                              "terminology_id": {
+                                "_type": "TERMINOLOGY_ID",
+                                "value": "2.16.840.1.113883.6.1"
+                              },
+                              "code_string": "1798-8"
+                            }
+                          },
+                          "archetype_node_id": "at0024"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Specimen"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.specimen.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Collection date/time"
+                          },
+                          "value": {
+                            "_type": "DV_DATE_TIME",
+                            "value": "2024-03-03T20:51:23+01:00"
+                          },
+                          "archetype_node_id": "at0015"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.specimen.v1"
+                    }
+                  ],
+                  "archetype_node_id": "at0003"
+                },
+                "archetype_node_id": "at0002"
+              }
+            ],
+            "archetype_node_id": "at0001"
+          },
+          "archetype_node_id": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+        },
+        {
+          "_type": "OBSERVATION",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Laboratory test results"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "language": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "ISO_639-1"
+            },
+            "code_string": "en"
+          },
+          "encoding": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "IANA_character-sets"
+            },
+            "code_string": "UTF-8"
+          },
+          "subject": {
+            "_type": "PARTY_SELF"
+          },
+          "other_participations": [
+            {
+              "_type": "PARTICIPATION",
+              "function": {
+                "_type": "DV_TEXT",
+                "value": "Performer"
+              },
+              "performer": {
+                "_type": "PARTY_IDENTIFIED",
+                "name": "party-08f6bd47ab3a3991",
+                "identifiers": [
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-346c00eaddaf6cba",
+                    "type": "1.3.6.1.4.1.5734.1.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a130adfd46a54b52",
+                    "type": "1.3.6.1.4.1.5734.1.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-443d2d811628ca6d",
+                    "type": "2.16.840.1.113883.4.292.10.2"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-a082ca2bb208bd66",
+                    "type": "1.3.6.1.4.1.19126.3"
+                  },
+                  {
+                    "_type": "DV_IDENTIFIER",
+                    "id": "id-bcb26bff828aba74",
+                    "type": "2.16.724.4.9.50.5"
+                  }
+                ]
+              }
+            }
+          ],
+          "data": {
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "Event Series"
+            },
+            "origin": {
+              "_type": "DV_DATE_TIME",
+              "value": "2024-03-03T21:28:45+01:00"
+            },
+            "events": [
+              {
+                "_type": "POINT_EVENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Any event"
+                },
+                "time": {
+                  "_type": "DV_DATE_TIME",
+                  "value": "2024-03-03T21:28:45+01:00"
+                },
+                "data": {
+                  "_type": "ITEM_TREE",
+                  "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Tree"
+                  },
+                  "items": [
+                    {
+                      "_type": "ELEMENT",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Test name"
+                      },
+                      "value": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "LABE",
+                        "defining_code": {
+                          "_type": "CODE_PHRASE",
+                          "terminology_id": {
+                            "_type": "TERMINOLOGY_ID",
+                            "value": "local_terms"
+                          },
+                          "code_string": "LABE"
+                        }
+                      },
+                      "archetype_node_id": "at0005"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Laboratory analyte result"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Test result"
+                          },
+                          "value": {
+                            "_type": "DV_QUANTITY",
+                            "normal_range": {
+                              "_type": "DV_INTERVAL",
+                              "lower_included": true,
+                              "upper_included": true,
+                              "lower_unbounded": false,
+                              "upper_unbounded": false,
+                              "lower": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 0
+                              },
+                              "upper": {
+                                "_type": "DV_QUANTITY",
+                                "units": "-",
+                                "magnitude": 38
+                              }
+                            },
+                            "units": "U/l",
+                            "magnitude": 10
+                          },
+                          "archetype_node_id": "at0001"
+                        },
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Analyte name"
+                          },
+                          "value": {
+                            "_type": "DV_CODED_TEXT",
+                            "value": "GGT",
+                            "defining_code": {
+                              "_type": "CODE_PHRASE",
+                              "terminology_id": {
+                                "_type": "TERMINOLOGY_ID",
+                                "value": "2.16.840.1.113883.6.1"
+                              },
+                              "code_string": "2324-2"
+                            }
+                          },
+                          "archetype_node_id": "at0024"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.laboratory_test_analyte.v1"
+                    },
+                    {
+                      "_type": "CLUSTER",
+                      "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Specimen"
+                      },
+                      "archetype_details": {
+                        "archetype_id": {
+                          "value": "openEHR-EHR-CLUSTER.specimen.v1"
+                        },
+                        "template_id": {
+                          "value": "sample_laboratory_v0.4"
+                        },
+                        "rm_version": "1.0.4"
+                      },
+                      "items": [
+                        {
+                          "_type": "ELEMENT",
+                          "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Collection date/time"
+                          },
+                          "value": {
+                            "_type": "DV_DATE_TIME",
+                            "value": "2024-03-03T20:51:23+01:00"
+                          },
+                          "archetype_node_id": "at0015"
+                        }
+                      ],
+                      "archetype_node_id": "openEHR-EHR-CLUSTER.specimen.v1"
+                    }
+                  ],
+                  "archetype_node_id": "at0003"
+                },
+                "archetype_node_id": "at0002"
+              }
+            ],
+            "archetype_node_id": "at0001"
+          },
+          "archetype_node_id": "openEHR-EHR-OBSERVATION.laboratory_test_result.v1"
+        }
+      ],
+      "archetype_node_id": "openEHR-EHR-SECTION.diagnostic_reports.v0"
+    }
+  ],
+  "archetype_node_id": "openEHR-EHR-COMPOSITION.report-result.v1",
+  "uid": {
+    "_type": "OBJECT_VERSION_ID",
+    "value": "99cab876-a1d0-5664-ab44-bab2cc942fd1::sample.kehrnel::1"
+  }
+}

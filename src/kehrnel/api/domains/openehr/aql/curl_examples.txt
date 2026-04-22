@@ -38,7 +38,7 @@ curl -X DELETE -v http://Localhost:9000/v1/query/com.kehrnel::ehr_summary/v1
 
 curl -X POST "http://localhost:9000/v1/query/aql" \
   -H "Content-Type: text/plain" \
-  -d "SELECT e/ehr_id/value, c/name/value FROM EHR e CONTAINS COMPOSITION c WHERE c/name/value = 'HC3 Reports'"
+  -d "SELECT e/ehr_id/value, c/name/value FROM EHR e CONTAINS COMPOSITION c WHERE c/name/value = 'Sample Reports'"
 
 
 ##########################
@@ -52,20 +52,20 @@ curl -X POST "http://localhost:9000/v1/query/aql?ehr_id=2626b5ad-d2f6-46db-a392-
   -d "SELECT e/ehr_id/value, c/name/value FROM EHR e CONTAINS COMPOSITION c"
 
 
-# Get HC3 Reports for a specific patient only
+# Get Sample Reports for a specific patient only
 curl -X POST "http://localhost:9000/v1/query/aql?ehr_id=2626b5ad-d2f6-46db-a392-ba7077009c73" \
   -H "Content-Type: text/plain" \
-  -d "SELECT e/ehr_id/value, c/name/value FROM EHR e CONTAINS COMPOSITION c WHERE c/name/value = 'HC3 Reports'"
+  -d "SELECT e/ehr_id/value, c/name/value FROM EHR e CONTAINS COMPOSITION c WHERE c/name/value = 'Sample Reports'"
 
 
 curl -X POST "http://localhost:9000/v1/query/aql" \
   -H "Content-Type: text/plain" \
-  -d "SELECT e/ehr_id/value, c/name/value FROM EHR e CONTAINS COMPOSITION c WHERE c/name/value = 'HC3 Reports'"
+  -d "SELECT e/ehr_id/value, c/name/value FROM EHR e CONTAINS COMPOSITION c WHERE c/name/value = 'Sample Reports'"
 
 
 curl -X POST "http://localhost:9000/v1/query/aql?ehr_id=2626b5ad-d2f6-46db-a392-ba7077009c73" \
   -H "Content-Type: text/plain" \
-  -d "SELECT e/ehr_id/value, c/name/value FROM EHR e CONTAINS COMPOSITION c WHERE c/name/value = 'HC3 Reports'"
+  -d "SELECT e/ehr_id/value, c/name/value FROM EHR e CONTAINS COMPOSITION c WHERE c/name/value = 'Sample Reports'"
 
 
 curl -X POST "http://localhost:9000/v1/query/aql" \
@@ -75,7 +75,7 @@ curl -X POST "http://localhost:9000/v1/query/aql" \
 
 curl -X POST "http://localhost:9000/v1/query/aql" \
   -H "Content-Type: text/plain" \
-  -d "SELECT c/name/value FROM EHR e CONTAINS COMPOSITION c WHERE c/name/value = 'HC3 Reports'"
+  -d "SELECT c/name/value FROM EHR e CONTAINS COMPOSITION c WHERE c/name/value = 'Sample Reports'"
 
 
 curl -X POST "http://localhost:9000/v1/query/aql" \
@@ -85,7 +85,7 @@ curl -X POST "http://localhost:9000/v1/query/aql" \
 
 curl -X POST "http://localhost:9000/v1/query/aql" \
   -H "Content-Type: text/plain" \
-  -d "SELECT e/ehr_id/value, c/name/value FROM EHR e CONTAINS COMPOSITION c WHERE c/name/value = 'HC3 Reports'"
+  -d "SELECT e/ehr_id/value, c/name/value FROM EHR e CONTAINS COMPOSITION c WHERE c/name/value = 'Sample Reports'"
 
 
 curl -X POST "http://localhost:9000/v1/query/aql" \

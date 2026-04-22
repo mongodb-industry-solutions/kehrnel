@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status, Body, Response, Header, Query, Request, HTTPException
 from fastapi.responses import JSONResponse
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from email.utils import formatdate
 import logging
 from uuid import UUID
@@ -13,6 +13,9 @@ from kehrnel.api.bridge.app.core.config_models import CompositionCollectionNames
 
 from kehrnel.api.domains.openehr.composition.service import (
     add_composition, 
+    bulk_add_compositions,
+    bulk_delete_compositions,
+    list_composition_summaries,
     retrieve_composition,
     retrieve_and_unflatten_composition,
     update_composition,
@@ -23,10 +26,23 @@ from kehrnel.api.domains.openehr.composition.service import (
 )
 
 from kehrnel.api.common.models import RevisionHistory, OriginalVersionResponse
-from kehrnel.api.domains.openehr.composition.models import Composition, CompositionCreate, VersionedComposition
+from kehrnel.api.domains.openehr.composition.models import (
+    BulkCompositionCreateRequest,
+    BulkCompositionCreateResult,
+    BulkCompositionDeleteRequest,
+    BulkCompositionDeleteResult,
+    Composition,
+    CompositionCreate,
+    CompositionSummary,
+    VersionedComposition,
+)
 
 
-from kehrnel.api.bridge.app.core.database import get_mongodb_ehr_db
+from kehrnel.api.bridge.app.core.database import (
+    ensure_active_openehr_dictionaries,
+    get_mongodb_ehr_db,
+    resolve_active_openehr_context,
+)
 
 
 from kehrnel.api.domains.openehr.composition.api_responses import (
@@ -46,10 +62,12 @@ router = APIRouter(
 )
 
 
-def get_flattener(request: Request) -> CompositionFlattener:
+async def get_flattener(request: Request) -> CompositionFlattener:
     """
     Dependency to retrieve the globally initialized CompositionFlattener
     """
+    context = await resolve_active_openehr_context(request, ensure_ingestion=True)
+    await ensure_active_openehr_dictionaries(request, context=context)
     flattener = getattr(request.app.state, "flattener", None)
     if flattener is None:
         raise HTTPException(
@@ -59,8 +77,9 @@ def get_flattener(request: Request) -> CompositionFlattener:
     return flattener
 
 
-def get_unflattener(request: Request) -> CompositionUnflattener:
+async def get_unflattener(request: Request) -> CompositionUnflattener:
     """Dependency to retrieve the globally initialized CompositionUnflattener."""
+    await resolve_active_openehr_context(request, ensure_ingestion=True)
     unflattener = getattr(request.app.state, "unflattener", None)
     if unflattener is None:
         raise HTTPException(
@@ -131,6 +150,84 @@ async def create_composition_endpoint(
     response.headers["Last-Modified"] = last_modified_gmt
 
     return new_composition
+
+
+@router.post(
+    "/composition/$bulk-create",
+    response_model=BulkCompositionCreateResult,
+    status_code=status.HTTP_200_OK,
+    summary="Bulk create compositions (sandbox helper)",
+)
+async def bulk_create_compositions_endpoint(
+    ehr_id: str,
+    payload: BulkCompositionCreateRequest,
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    flattener: CompositionFlattener = Depends(get_flattener),
+    config: CompositionCollectionNames = Depends(get_composition_config),
+):
+    """
+    Sandbox-only helper that batches composition creation.
+
+    The canonical single-resource POST endpoint remains unchanged.
+    """
+    return await bulk_add_compositions(
+        ehr_id=ehr_id,
+        items=payload.items,
+        db=db,
+        config=config,
+        flattener=flattener,
+        merge_search_docs=config.merge_search_docs,
+    )
+
+
+@router.get(
+    "/composition",
+    response_model=List[CompositionSummary],
+    status_code=status.HTTP_200_OK,
+    summary="List Composition summaries for an EHR",
+)
+async def list_compositions_for_ehr(
+    ehr_id: str,
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
+):
+    """
+    Returns lightweight composition summaries for sandbox browsing.
+
+    This route is intentionally optimized for list views: it uses the EHR's
+    current composition references plus projected fields from the canonical
+    collection, avoiding AQL compilation and avoiding any unflattening.
+    """
+    return await list_composition_summaries(
+        ehr_id=ehr_id,
+        db=db,
+        config=config,
+    )
+
+
+@router.post(
+    "/composition/$bulk-delete",
+    response_model=BulkCompositionDeleteResult,
+    status_code=status.HTTP_200_OK,
+    summary="Bulk delete compositions (sandbox helper)",
+)
+async def bulk_delete_compositions_endpoint(
+    ehr_id: str,
+    payload: BulkCompositionDeleteRequest,
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
+):
+    """
+    Sandbox-only helper that batches logical composition deletions.
+
+    The canonical single-resource DELETE endpoint remains unchanged.
+    """
+    return await bulk_delete_compositions(
+        ehr_id=ehr_id,
+        preceding_version_uids=payload.uids,
+        db=db,
+        config=config,
+    )
 
 
 @router.get(
@@ -274,7 +371,9 @@ async def update_composition_endpoint(
     response: Response,
     composition_data: CompositionCreate = Body(..., description="The new version of the canonical COMPOSITION object"),
     if_match: str = Header(..., alias="If-Match", description="The UID of the preceding version to be updated. Must match the UID in the URL"),
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    flattener: CompositionFlattener = Depends(get_flattener),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Updates an existing `COMPOSITION` by creating a new version.
@@ -293,7 +392,10 @@ async def update_composition_endpoint(
         preceding_version_uid=preceding_version_uid,
         if_match=if_match,
         new_composition_data=composition_data,
-        db=db
+        db=db,
+        config=config,
+        flattener=flattener,
+        merge_search_docs=config.merge_search_docs,
     )
 
     # Set the headers on the response object
@@ -316,7 +418,8 @@ async def delete_composition_endpoint(
     preceding_version_uid: str,
     response: Response,
     if_match: str = Header(..., alias = "If-Match", description = "The UID of the preceding version to be deleted. Must match the UID in the URL"),
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Logically deletes a `COMPOSITION` from the EHR.
@@ -333,7 +436,8 @@ async def delete_composition_endpoint(
         ehr_id = ehr_id,
         preceding_version_uid = preceding_version_uid,
         if_match = if_match,
-        db = db
+        db = db,
+        config = config,
     )
 
     # Return explicit Response with headers and 204 status code

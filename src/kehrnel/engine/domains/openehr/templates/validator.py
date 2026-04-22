@@ -345,12 +345,34 @@ class kehrnelValidator:
             
             # Handle single attributes
             elif attr.get(XSI_TYPE) == "C_SINGLE_ATTRIBUTE":
-                for child_constraint in attr.findall("opt:children", self.tpl.NS):
-                    # Special handling for primitive constraints
+                child_constraints = attr.findall("opt:children", self.tpl.NS)
+                branch_issues: List[List[ValidationIssue]] = []
+                for child_constraint in child_constraints:
                     if child_constraint.get(XSI_TYPE) == "C_PRIMITIVE_OBJECT":
-                        issues.extend(self._validate_primitive(attr_data, child_constraint, attr_path))
+                        branch_issues.append(
+                            self._validate_primitive(attr_data, child_constraint, attr_path)
+                        )
                     else:
-                        issues.extend(self._validate_node(attr_data, child_constraint, attr_path))
+                        branch_issues.append(
+                            self._validate_node(attr_data, child_constraint, attr_path)
+                        )
+
+                if branch_issues:
+                    # C_SINGLE_ATTRIBUTE children represent alternative valid
+                    # branches, not cumulative constraints. Keep the cleanest
+                    # branch and only surface issues when none of the
+                    # alternatives validates successfully.
+                    viable = [
+                        candidate
+                        for candidate in branch_issues
+                        if not any(issue.severity == Severity.ERROR for issue in candidate)
+                    ]
+
+                    def _score(candidate: List[ValidationIssue]) -> tuple[int, int]:
+                        errors = sum(issue.severity == Severity.ERROR for issue in candidate)
+                        return errors, len(candidate)
+
+                    issues.extend(min(viable or branch_issues, key=_score))
         
         # Check archetype node ID if present
         if isinstance(data, dict) and "archetype_node_id" in data:

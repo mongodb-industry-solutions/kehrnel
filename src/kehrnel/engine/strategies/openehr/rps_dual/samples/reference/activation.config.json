@@ -1,0 +1,5 @@
+{
+  "transform": {
+    "mappings": "file://samples/reference/projection_mappings.json"
+  }
+}

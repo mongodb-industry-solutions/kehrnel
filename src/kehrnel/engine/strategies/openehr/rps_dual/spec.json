@@ -68,10 +68,11 @@
           "kind": "collectionRecord",
           "fields": {
             "_id": {"type": "objectId|uuid|string", "role": "pk"},
-            "ehr_id": {"type": "string|uuid", "role": "fk.patient", "required": true},
-            "comp_id": {"type": "string|uuid", "role": "identity.document"},
-            "tid": {"type": "string|number", "role": "identity.template"},
+            "ehr_id": {"type": "objectId|uuid|string", "role": "fk.patient", "required": true},
+            "comp_id": {"type": "objectId|uuid|string", "role": "identity.document"},
+            "tid": {"type": "string", "role": "identity.template"},
             "v": {"type": "string|number|null", "role": "version"},
+            "time_c": {"type": "date", "role": "version.commit_time", "required": false},
             "cn": {"type": "openehr.node.v1[]", "role": "nodes.canonical", "required": true}
           }
         },
@@ -81,8 +82,9 @@
           "kind": "collectionRecord",
           "fields": {
             "_id": {"type": "objectId|uuid|string", "role": "pk"},
-            "ehr_id": {"type": "string|uuid", "role": "fk.patient", "required": true},
-            "tid": {"type": "string|number", "role": "identity.template"},
+            "ehr_id": {"type": "objectId|uuid|string", "role": "fk.patient", "required": true},
+            "comp_id": {"type": "objectId|uuid|string", "role": "identity.document"},
+            "tid": {"type": "string", "role": "identity.template"},
             "sort_time": {"type": "date", "role": "sort.primary", "required": false},
             "sn": {"type": "openehr.node.v1[]", "role": "nodes.search", "required": true}
           }
@@ -94,33 +96,23 @@
   "physicalProfiles": {
     "encodingProfiles": [
       {
-        "id": "profile.fullpath",
-        "title": "Full paths",
-        "description": "Human readable paths (at-codes/archetype ids as strings).",
-        "paths": {"mode": "full", "separator": "/", "order": "leaf_to_root"},
-        "keys": {"mode": "verbatim"},
-        "payload": {"mode": "full"},
-        "dictionaries": {"at_codes": "optional", "archetype_ids": "optional"},
-        "ids": {"ehr_id": "string", "composition_id": "string"}
-      },
-      {
         "id": "profile.codedpath",
         "title": "Coded paths",
         "description": "Numeric coded path segments using dictionary.",
-        "paths": {"mode": "coded", "separator": ".", "order": "leaf_to_root", "dictRef": "bundles.dictionaries"},
+        "paths": {"mode": "coded", "separator": ":", "order": "leaf_to_root", "dictRef": "bundles.dictionaries"},
         "keys": {"mode": "verbatim"},
         "payload": {"mode": "full"},
         "dictionaries": {"at_codes": "required", "archetype_ids": "optional"},
-        "ids": {"ehr_id": "string|uuidBin", "composition_id": "string|uuidBin"}
+        "ids": {"ehr_id": "objectId|string|uuidBin", "composition_id": "objectId|string|uuidBin"}
       },
       {
         "id": "profile.search_shortcuts",
         "title": "Search shortcuts",
         "description": "Coded paths + key/value shortcuts + minimized payload.",
-        "paths": {"mode": "coded", "separator": ".", "order": "leaf_to_root", "dictRef": "bundles.dictionaries"},
+        "paths": {"mode": "coded", "separator": ":", "order": "leaf_to_root", "dictRef": "bundles.dictionaries"},
         "keys": {"mode": "shortcuts", "dictRef": "bundles.shortcuts"},
         "payload": {"mode": "minimized"},
-        "ids": {"ehr_id": "string|uuidBin", "composition_id": "objectId|uuidBin|string"}
+        "ids": {"ehr_id": "objectId|string|uuidBin", "composition_id": "objectId|string|uuidBin"}
       }
     ]
   },
@@ -143,16 +135,10 @@
         "encodingProfileFromConfig": "collections.compositions.encodingProfile",
         "indexes": [
           {
-            "id": "idx_patient_version",
-            "type": "btree",
-            "fields": ["ehr_id", "v"],
-            "purpose": "Patient-scoped retrieval + versioning"
-          },
-          {
             "id": "idx_patient_path",
             "type": "btree",
-            "fields": ["ehr_id", "cn.p"],
-            "purpose": "Fast patient-scoped path resolution (optional if too large)"
+            "fields": ["ehr_id", "cn.p", "time_c"],
+            "purpose": "Fast patient-scoped path resolution with commit-time filtering (optional if too large)"
           }
         ]
       },
@@ -229,7 +215,8 @@
           {"field": "ehr_id", "from": "$.headers.ehr_id"},
           {"field": "comp_id", "from": "$.headers.composition_uid"},
           {"field": "tid", "from": "$.headers.template_id"},
-          {"field": "v", "from": "$.headers.version"}
+          {"field": "v", "from": "$.headers.version"},
+          {"field": "time_c", "from": "$.headers.time_committed", "optional": true}
         ],
         "visual": {
           "group": "Materialize",
@@ -264,8 +251,9 @@
         "from": "nodes_search",
         "extraFields": [
           {"field": "ehr_id", "from": "$.headers.ehr_id"},
+          {"field": "comp_id", "from": "$.headers.composition_uid"},
           {"field": "tid", "from": "$.headers.template_id"},
-          {"field": "sort_time", "from": "projection.sortTime", "optional": true}
+          {"field": "sort_time", "from": "$.headers.time_committed", "optional": true}
         ],
         "visual": {
           "group": "Materialize",
@@ -373,7 +361,7 @@
           "kind": "collection",
           "store": "store:compositions",
           "label": "compositions",
-          "fields": ["_id", "ehr_id", "comp_id", "tid", "v", "cn"],
+          "fields": ["_id", "ehr_id", "comp_id", "v", "time_c", "tid", "cn"],
           "expand": {
             "cn": ["p", "kp", "pi", "data"]
           },
@@ -387,7 +375,7 @@
           "kind": "collection",
           "store": "store:search",
           "label": "search",
-          "fields": ["_id", "ehr_id", "tid", "sort_time", "sn"],
+          "fields": ["_id", "ehr_id", "comp_id", "tid", "sort_time", "sn"],
           "expand": {
             "sn": ["p", "data"]
           },
@@ -485,8 +473,9 @@
           {"label": "sn", "meaning": "search node array", "example": "projection nodes", "configPath": "fields.document.sn"},
           {"label": "ehr_id", "meaning": "patient/EHR identifier", "example": "ehr-123", "configPath": "fields.document.ehr_id"},
           {"label": "comp_id", "meaning": "composition identifier", "example": "comp-456", "configPath": "fields.document.comp_id"},
-          {"label": "tid", "meaning": "template identifier (numeric code)", "example": 42, "configPath": "fields.document.tid"},
-          {"label": "v", "meaning": "composition version", "example": "1", "configPath": "fields.document.v"}
+          {"label": "tid", "meaning": "template identifier", "example": "PO_Obstetric_process_v0.8_FORMULARIS", "configPath": "fields.document.tid"},
+          {"label": "v", "meaning": "composition version", "example": "1", "configPath": "fields.document.v"},
+          {"label": "time_c", "meaning": "version commit time", "example": "2026-04-14T20:25:43.412Z", "configPath": "fields.document.time_committed"}
         ]
       },
       "uriLegend": {

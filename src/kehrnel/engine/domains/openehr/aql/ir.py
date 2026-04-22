@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field, asdict
 from typing import Any, Dict, List, Optional
 
-ALLOWED_OPS = {"eq", "=", "ne", "lt", "gt", "in", "contains"}
+ALLOWED_OPS = {"eq", "=", "ne", "lt", "gt", "lte", "gte", "<=", ">=", "in", "contains"}
 ALLOWED_SCOPE = {"patient", "cross_patient", "unknown"}
 
 
