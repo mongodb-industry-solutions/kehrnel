@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from copy import deepcopy
+
 import pytest
 
 from kehrnel.engine.core.types import StrategyContext
@@ -215,12 +217,12 @@ async def test_compile_query_raw_aql_resolves_content_paths_and_order_by_for_mat
                     "sample": {
                         "_id": "comp-1",
                         "sn": [
-                            {"p": "-4.8.-3.-2.-1.2.1"},
-                            {"p": "-5.8.-3.-2.-1.2.1"},
-                            {"p": "-6.8.-3.-2.-1.2.1"},
-                            {"p": "-1.12.-3.-2.-1.2.1"},
-                            {"p": "-2.12.-3.-2.-1.2.1"},
-                            {"p": "-3.12.-3.-2.-1.2.1"},
+                            {"p": "-4:8:-3:-2:-1:2:1"},
+                            {"p": "-5:8:-3:-2:-1:2:1"},
+                            {"p": "-6:8:-3:-2:-1:2:1"},
+                            {"p": "-1:12:-3:-2:-1:2:1"},
+                            {"p": "-2:12:-3:-2:-1:2:1"},
+                            {"p": "-3:12:-3:-2:-1:2:1"},
                         ],
                     }
                 }
@@ -273,9 +275,119 @@ async def test_compile_query_raw_aql_resolves_content_paths_and_order_by_for_mat
     project_stage = pipeline[1]["$project"]
     data_inici_regex = project_stage["DataInici"]["$first"]["$map"]["input"]["$filter"]["cond"]["$regexMatch"]["regex"]
     data_hora_fi_regex = project_stage["DataHoraFiProces"]["$first"]["$map"]["input"]["$filter"]["cond"]["$regexMatch"]["regex"]
-    assert ".2\\.1" in data_inici_regex
-    assert ".2\\.1" in data_hora_fi_regex
-    assert ".1\\.1" not in data_inici_regex
+    assert ":2:1" in data_inici_regex
+    assert ":2:1" in data_hora_fi_regex
+    assert ":1:1" not in data_inici_regex
 
     sort_stage = pipeline[2]["$sort"]
     assert sort_stage == {"DataRegistre": 1, "compositionId": 1}
+
+
+@pytest.mark.asyncio
+async def test_compile_query_raw_aql_supports_configured_separator_and_compact_atcodes():
+    db = _FakeDb(
+        {
+            "_codes": _FakeCollection(
+                {
+                    "ar_code": {
+                        "_id": "ar_code",
+                        "at": {
+                            "at0001": "A1",
+                            "at0002": "A2",
+                            "at0003": "A3",
+                            "at0004": "A4",
+                        },
+                        "openEHR-EHR-COMPOSITION": {
+                            "probs_base_composition": {
+                                "v0": 1
+                            }
+                        },
+                        "openEHR-EHR-OBSERVATION": {
+                            "probs_base_observation": {
+                                "v0": 2
+                            }
+                        },
+                        "openEHR-EHR-CLUSTER": {
+                            "health_thread": {
+                                "v0": 8
+                            }
+                        },
+                    }
+                }
+            ),
+            "_shortcuts": _FakeCollection(
+                {
+                    "shortcuts": {
+                        "_id": "shortcuts",
+                        "items": {
+                            "context": "cx",
+                            "start_time": "st",
+                            "value": "v",
+                            "content": "ct",
+                            "data": "data",
+                            "events": "ev",
+                            "items": "i",
+                            "archetype_details": "ad",
+                            "template_id": "ti",
+                            "uid": "uid",
+                        },
+                    }
+                }
+            ),
+            "compositions_rps": _FakeCollection(
+                {
+                    "sample": {
+                        "_id": "comp-1",
+                        "cn": [{"p": "1", "data": {"ani": 1}}],
+                    }
+                }
+            ),
+            "compositions_search": _FakeCollection(
+                {
+                    "sample": {
+                        "_id": "comp-1",
+                        "sn": [
+                            {"p": "A4:8:A3:A2:A1:2:1"},
+                        ],
+                    }
+                }
+            ),
+        }
+    )
+
+    cfg = deepcopy(MANIFEST.default_config)
+    cfg["paths"]["separator"] = ":"
+
+    ctx = StrategyContext(
+        environment_id="env-compact-prefix",
+        config=cfg,
+        adapters={"storage": _FakeStorage(db)},
+        manifest=MANIFEST.model_copy(deep=True),
+        meta={},
+    )
+    strategy = RPSDualStrategy()
+    raw_aql = """
+    SELECT
+        c/content[openEHR-EHR-OBSERVATION.probs_base_observation.v0]/data[at0001]/events[at0002]/data[at0003]/items[openEHR-EHR-CLUSTER.health_thread.v0]/items[at0004]/value/value AS DataInici
+    FROM
+        EHR e
+            CONTAINS VERSION v
+                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.probs_base_composition.v0]
+    WHERE
+        c/archetype_details/template_id/value = 'PO_Obstetric_process_v0.8_FORMULARIS'
+    """
+
+    plan = await strategy.compile_query(
+        ctx,
+        "openEHR",
+        {
+            "raw_aql": raw_aql,
+            "debug": True,
+        },
+    )
+
+    pipeline = plan.plan["pipeline"]
+    assert pipeline[0]["$match"]["cn"]["$elemMatch"] == {"p": "1", "data.ani": 1}
+    data_inici_regex = pipeline[1]["$project"]["DataInici"]["$first"]["$map"]["input"]["$filter"]["cond"]["$regexMatch"]["regex"]
+    assert "A4:8:A3:A2:A1:2:1" in data_inici_regex
+    assert ".2\\.1" not in data_inici_regex

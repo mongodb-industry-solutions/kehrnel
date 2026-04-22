@@ -21,10 +21,10 @@ class PathCodec:
     - profile.search_shortcuts
     """
 
-    def __init__(self, ar_codes: Dict[str, int] | None = None, at_codes: Dict[str, int] | None = None, separator: str = ".", shortcuts: Dict[str, str] | None = None):
+    def __init__(self, ar_codes: Dict[str, int] | None = None, at_codes: Dict[str, int] | None = None, separator: str = ":", shortcuts: Dict[str, str] | None = None):
         self.ar_codes = ar_codes or {}
         self.at_codes = at_codes or {}
-        self.separator = separator or "."
+        self.separator = separator or ":"
         self.shortcuts = shortcuts or {}
 
     def encode_path_from_chain(self, chain: List[str] | List[int], profile: Optional[str]) -> str:
@@ -39,7 +39,11 @@ class PathCodec:
         """Encode an existing stored path (usually numeric dotted) into profile output."""
         if not path:
             return path
-        parts = str(path).split(".")
+        raw = str(path)
+        if self.separator and self.separator in raw:
+            parts = raw.split(self.separator)
+        else:
+            parts = raw.split(".")
         return self.encode_path_from_chain(parts, profile)
 
     def decode_path(self, path: str, profile: Optional[str]) -> List[str]:

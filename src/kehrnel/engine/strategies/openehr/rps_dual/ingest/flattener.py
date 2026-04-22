@@ -1,5 +1,6 @@
 """Composition flattener for the rps_dual persistence strategy."""
 
+from copy import deepcopy
 import json
 import logging
 import re
@@ -108,7 +109,7 @@ class CompositionFlattener:
         self.shortcut_keys: Dict[str, str] = {}
         self.shortcut_vals: Dict[str, str] = {}
         self.simple_fields: Dict[str, List[dict]] = {}
-        self.path_separator = (config.get("paths") or {}).get("separator", ".")
+        self.path_separator = (config.get("paths") or {}).get("separator", ":")
         collections_cfg = config.get("collections", {}) or {}
         self.search_encoding_profile = collections_cfg.get("search", {}).get("encodingProfile")
         self.composition_encoding_profile = collections_cfg.get("compositions", {}).get("encodingProfile")
@@ -117,6 +118,14 @@ class CompositionFlattener:
         self.template_fields: Dict[str, List[dict]] = {}
         self.compiled_template_rules: Dict[str, List[dict]] = {}
         self.catalog_mappings_spec: Optional[Dict[str, Any]] = None
+        envelope_cfg = config.get("envelope_fields", {}) if isinstance(config, dict) else {}
+        envelope_cfg = envelope_cfg if isinstance(envelope_cfg, dict) else {}
+        self.base_envelope_fields = (
+            envelope_cfg.get("base") if isinstance(envelope_cfg.get("base"), dict) else {}
+        ) or {}
+        self.search_envelope_fields = (
+            envelope_cfg.get("search") if isinstance(envelope_cfg.get("search"), dict) else {}
+        ) or {}
 
         # Load mappings synchronously from file or inline content
         self._load_mappings(mappings_path, mappings_content)
@@ -233,6 +242,13 @@ class CompositionFlattener:
                 root_map=self.field_map.get("search", {}),
                 node_map=self.field_map.get("search_nodes", {}),
             )
+
+        source_envelope = raw_doc.get("_source_envelope") if isinstance(raw_doc, dict) else None
+        if not isinstance(source_envelope, dict):
+            source_envelope = raw_doc if isinstance(raw_doc, dict) else {}
+        self._apply_envelope_fields(base_doc, source_envelope, self.base_envelope_fields)
+        if search_doc is not None:
+            self._apply_envelope_fields(search_doc, source_envelope, self.search_envelope_fields)
 
         return base_doc, search_doc
 
@@ -577,6 +593,48 @@ class CompositionFlattener:
                             node[node_map[k]] = node.pop(k)
 
         return renamed
+
+    @staticmethod
+    def _lookup_envelope_value(source: Dict[str, Any], dotted_path: str) -> tuple[bool, Any]:
+        if not isinstance(source, dict) or not isinstance(dotted_path, str) or not dotted_path:
+            return False, None
+
+        current: Any = source
+        for part in dotted_path.split("."):
+            if isinstance(current, dict) and part in current:
+                current = current[part]
+            else:
+                return False, None
+        return True, current
+
+    @staticmethod
+    def _assign_envelope_value(target: Dict[str, Any], dotted_path: str, value: Any) -> None:
+        if not isinstance(target, dict) or not isinstance(dotted_path, str) or not dotted_path:
+            return
+
+        parts = dotted_path.split(".")
+        cursor = target
+        for part in parts[:-1]:
+            next_value = cursor.get(part)
+            if not isinstance(next_value, dict):
+                next_value = {}
+                cursor[part] = next_value
+            cursor = next_value
+        cursor[parts[-1]] = deepcopy(value)
+
+    def _apply_envelope_fields(
+        self,
+        target: Dict[str, Any],
+        source_envelope: Dict[str, Any],
+        mapping: Dict[str, str],
+    ) -> None:
+        if not isinstance(target, dict) or not isinstance(source_envelope, dict) or not isinstance(mapping, dict):
+            return
+
+        for source_path, target_path in mapping.items():
+            found, value = self._lookup_envelope_value(source_envelope, source_path)
+            if found:
+                self._assign_envelope_value(target, target_path, value)
 
     def _at_code_to_int(self, at: str) -> Any:
         s = at.lower()

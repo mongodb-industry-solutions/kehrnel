@@ -80,6 +80,8 @@ class AQLtoMQLTransformer:
                 codes_doc_id=self.schema_config.get("codes_doc_id"),
                 search_collection=self.search_schema_config.get("collection"),
                 composition_collection=self.schema_config.get("collection"),
+                separator=self.schema_config.get("separator"),
+                atcode_strategy=self.schema_config.get("atcode_strategy"),
             )
         
         # 6. Initialize format resolver with archetype resolver
@@ -236,6 +238,7 @@ class AQLtoMQLTransformer:
 
     def _build_schema_config_from_strategy(self, strategy: PersistenceStrategy) -> Dict[str, str]:
         composition_fields = strategy.fields.get("composition")
+        atcode_cfg = strategy.coding.atcodes if strategy.coding and strategy.coding.atcodes else {}
         return {
             'composition_array': composition_fields.nodes if composition_fields and composition_fields.nodes else 'cn',
             'path_field': composition_fields.path if composition_fields and composition_fields.path else 'p',
@@ -244,10 +247,12 @@ class AQLtoMQLTransformer:
             'comp_id': composition_fields.comp_id if composition_fields and composition_fields.comp_id else 'comp_id',
             'template_id': composition_fields.template_id if composition_fields and composition_fields.template_id else 'tid',
             'time_committed': composition_fields.time_committed if composition_fields and composition_fields.time_committed else 'time_c',
+            'atcode_strategy': atcode_cfg.get('strategy', 'negative_int') if isinstance(atcode_cfg, dict) else 'negative_int',
         }
 
     def _build_search_schema_config_from_strategy(self, strategy: PersistenceStrategy) -> Dict[str, str]:
         search_fields = strategy.fields.get("search")
+        atcode_cfg = strategy.coding.atcodes if strategy.coding and strategy.coding.atcodes else {}
         return {
             'composition_array': search_fields.nodes if search_fields and search_fields.nodes else 'sn',
             'path_field': search_fields.path if search_fields and search_fields.path else 'p',
@@ -257,4 +262,5 @@ class AQLtoMQLTransformer:
             'template_id': search_fields.template_id if search_fields and search_fields.template_id else 'tid',
             'time_committed': search_fields.sort_time if search_fields and search_fields.sort_time else 'sort_time',
             'sort_time': search_fields.sort_time if search_fields and search_fields.sort_time else 'sort_time',
+            'atcode_strategy': atcode_cfg.get('strategy', 'negative_int') if isinstance(atcode_cfg, dict) else 'negative_int',
         }

@@ -18,6 +18,19 @@ def test_rps_dual_pack_loads_with_spec_and_defaults():
     assert manifest.default_config.get("collections", {}).get("compositions", {}).get("name") == "compositions_rps"
 
 
+def test_rps_dual_ibm_pack_loads_with_ibm_defaults():
+    pack_dir = Path(__file__).resolve().parents[2] / "src" / "kehrnel" / "engine" / "strategies" / "openehr" / "rps_dual_ibm"
+    manifest = load_strategy("openehr.rps_dual_ibm", pack_dir)
+    assert manifest.id == "openehr.rps_dual_ibm"
+    assert manifest.default_config.get("paths", {}).get("separator") == "/"
+    assert manifest.default_config.get("fields", {}).get("document", {}).get("comp_id") == "version"
+    assert manifest.default_config.get("bootstrap", {}).get("dictionariesOnActivate") == {
+        "codes": "ensure",
+        "shortcuts": "ensure",
+    }
+    assert getattr(manifest.ui, "tabs", {}).get("activation")
+
+
 def test_pack_config_encoding_profile_validation():
     pack_dir = Path(__file__).resolve().parents[2] / "src" / "kehrnel" / "engine" / "strategies" / "openehr" / "rps_dual"
     manifest = load_strategy("openehr.rps_dual", pack_dir)

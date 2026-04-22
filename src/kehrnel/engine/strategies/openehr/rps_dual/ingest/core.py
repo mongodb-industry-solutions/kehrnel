@@ -32,7 +32,7 @@ class Transformer:
             config={
                 "role": self.role,
                 "apply_shortcuts": False,
-                "paths": {"separator": "."},
+                "paths": {"separator": ":"},
                 "collections": {},
             },
             mappings_path=str(self._default_mappings_path),

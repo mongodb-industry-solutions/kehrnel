@@ -65,7 +65,12 @@ class SearchPipelineBuilder:
             'comp_id': search_fields.comp_id if search_fields and search_fields.comp_id else 'comp_id',
             'template_id': search_fields.template_id if search_fields and search_fields.template_id else 'tid',
             'sort_time': search_fields.sort_time if search_fields and search_fields.sort_time else 'sort_time',
+            'separator': self.schema_config.get("separator", ":"),
         }
+
+    def _root_path_regex(self) -> str:
+        separator = self.search_config.get("separator", ":") or ":"
+        return rf"^[^{re.escape(separator)}]+$"
 
     def _resolve_search_index_name(self):
         search_collection = self.strategy.collections.get("search") if self.strategy else None
@@ -705,7 +710,7 @@ class SearchPipelineBuilder:
                 else:
                     conditions[self.search_config["composition_array"]] = {
                         "$elemMatch": {
-                            path_field: {"$regex": r"^[^\\.]+$"}
+                            path_field: {"$regex": self._root_path_regex()}
                         }
                     }
             

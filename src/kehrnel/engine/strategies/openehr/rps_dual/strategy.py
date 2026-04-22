@@ -191,6 +191,7 @@ def _load_ingest_documents_from_path(file_path: str) -> list[Dict[str, Any]]:
 class RPSDualStrategy(StrategyPlugin):
     def __init__(self, manifest: StrategyManifest = MANIFEST):
         self.manifest = manifest
+        self.strategy_base_dir = Path(__file__).parent
         self.schema = load_json(SCHEMA_PATH)
         self.defaults = load_json(DEFAULTS_PATH)
         # Load bulk config schemas
@@ -202,15 +203,18 @@ class RPSDualStrategy(StrategyPlugin):
         self.normalized_config: RPSDualConfig | None = None
         self.normalized_bulk_config: BulkConfig | None = None
 
+    def _strategy_root_dir(self) -> Path:
+        base_dir = getattr(self, "strategy_base_dir", None)
+        if isinstance(base_dir, Path):
+            return base_dir
+        if isinstance(base_dir, str) and base_dir.strip():
+            return Path(base_dir)
+        return Path(__file__).parent
+
     async def validate_config(self, ctx: StrategyContext | Dict[str, Any]) -> None:
         raw_config = ctx.config if isinstance(ctx, StrategyContext) else ctx
         strategy_cfg = normalize_config(raw_config or {})
         errors: list[str] = []
-
-        if strategy_cfg.paths.separator != ".":
-            errors.append(
-                "paths.separator must remain '.' because query compilation still assumes dot-separated stored paths."
-            )
 
         comp_profile = (strategy_cfg.collections.compositions.encodingProfile or "").strip().lower()
         if comp_profile not in _SUPPORTED_QUERY_SAFE_ENCODING_PROFILES:
@@ -242,7 +246,7 @@ class RPSDualStrategy(StrategyPlugin):
         mappings_ref = strategy_cfg.transform.mappings
         if mappings_content is None and mappings_ref is not None:
             db = getattr((ctx.adapters or {}).get("storage"), "db", None)
-            mappings_content = await resolve_uri_async(mappings_ref, db, Path(__file__).parent)
+            mappings_content = await resolve_uri_async(mappings_ref, db, self._strategy_root_dir())
         if mappings_content is None:
             return {"templates": []}
         return mappings_content
@@ -300,7 +304,7 @@ class RPSDualStrategy(StrategyPlugin):
         definition = None
         if search_cfg.atlasIndex and search_cfg.atlasIndex.definition:
             try:
-                definition = await resolve_uri_async(search_cfg.atlasIndex.definition, db, Path(__file__).parent)
+                definition = await resolve_uri_async(search_cfg.atlasIndex.definition, db, self._strategy_root_dir())
             except Exception:
                 definition = None
         if isinstance(definition, dict) and definition.get("mappings"):
@@ -432,7 +436,7 @@ class RPSDualStrategy(StrategyPlugin):
         coding_cfg = build_coding_opts(strategy_cfg)
         mappings_content = await self._resolve_mappings_content(ctx, strategy_cfg)
 
-        mappings_path = str(Path(__file__).parent / "ingest" / "config" / "flattener_mappings_f.jsonc")
+        mappings_path = str(self._strategy_root_dir() / "ingest" / "config" / "flattener_mappings_f.jsonc")
 
         # Try to reuse raw motor database from the storage adapter if available
         db = getattr(storage, "db", None)
@@ -466,6 +470,7 @@ class RPSDualStrategy(StrategyPlugin):
     def _build_raw_ingest_document(cls, payload: Dict[str, Any] | Any) -> Dict[str, Any]:
         comp_obj = cls._payload_to_composition_object(payload)
         if isinstance(payload, dict):
+            source_envelope = {k: v for k, v in payload.items() if k not in _INGEST_CONTROL_KEYS}
             return {
                 "_id": payload.get("_id") or "comp-1",
                 "ehr_id": payload.get("ehr_id") or "ehr-1",
@@ -473,6 +478,7 @@ class RPSDualStrategy(StrategyPlugin):
                 "time_committed": payload.get("time_committed"),
                 "time_created": payload.get("time_created"),
                 "canonicalJSON": comp_obj,
+                "_source_envelope": source_envelope,
             }
         return {
             "_id": "comp-1",
@@ -481,6 +487,7 @@ class RPSDualStrategy(StrategyPlugin):
             "time_committed": None,
             "time_created": None,
             "canonicalJSON": comp_obj,
+            "_source_envelope": None,
         }
 
     @classmethod
@@ -659,6 +666,7 @@ class RPSDualStrategy(StrategyPlugin):
                     db=motor_db,
                     shortcut_map=shortcuts_res.get("items") or {},
                     strategy=runtime_strategy,
+                    raw_cfg=ctx.config if isinstance(ctx.config, dict) else None,
                 )
                 scope = builder_info.get("scope") or "patient"
                 if scope == "cross_patient":
@@ -710,6 +718,7 @@ class RPSDualStrategy(StrategyPlugin):
             db=motor_db,
             shortcut_map=shortcuts_res.get("items") or {},
             strategy=runtime_strategy,
+            raw_cfg=ctx.config if isinstance(ctx.config, dict) else None,
         )
         if ir.scope == "cross_patient":
             post_match = [stage for stage in pipeline[1:] if "$match" in stage]
@@ -801,7 +810,7 @@ class RPSDualStrategy(StrategyPlugin):
                 if not coll or not seed_uri:
                     return 0
                 try:
-                    payload = await resolve_uri_async(seed_uri, motor_db, Path(__file__).parent)
+                    payload = await resolve_uri_async(seed_uri, motor_db, self._strategy_root_dir())
                 except Exception as exc:
                     warnings.append(f"failed to resolve seed {seed_uri}: {exc}")
                     return 0
@@ -840,7 +849,7 @@ class RPSDualStrategy(StrategyPlugin):
             motor_db = getattr(storage, "db", None)
             warnings = []
             try:
-                seed_payload = await resolve_uri_async(dict_seed, motor_db, Path(__file__).parent) if dict_seed else None
+                seed_payload = await resolve_uri_async(dict_seed, motor_db, self._strategy_root_dir()) if dict_seed else None
             except Exception as exc:
                 return {"ok": False, "warnings": [f"failed to resolve codes seed: {exc}"]}
             if motor_db is None:
@@ -872,7 +881,7 @@ class RPSDualStrategy(StrategyPlugin):
                 return {"ok": False, "warnings": ["raw motor db not available; cannot rebuild shortcuts idempotently"]}
             warnings = []
             try:
-                seed_payload = await resolve_uri_async(shortcuts_seed, motor_db, Path(__file__).parent) if shortcuts_seed else None
+                seed_payload = await resolve_uri_async(shortcuts_seed, motor_db, self._strategy_root_dir()) if shortcuts_seed else None
             except Exception as exc:
                 return {"ok": False, "warnings": [f"failed to resolve shortcuts seed: {exc}"]}
             if isinstance(seed_payload, dict) and seed_payload.get("_id"):
@@ -938,6 +947,180 @@ class RPSDualStrategy(StrategyPlugin):
                 res = await atlas.ensure_search_index(search_coll_name, atlas_idx.name, definition)
                 warnings.extend(res.get("warnings", []))
             return {"ok": True, "processed": len(docs), "inserted": inserted, "warnings": warnings}
+
+        if op_lower == "fetch_native_composition":
+            if not storage:
+                raise KehrnelError(
+                    code="STORAGE_NOT_AVAILABLE",
+                    status=503,
+                    message="storage adapter not available for native composition lookup",
+                )
+
+            comp_coll = strategy_cfg.collections.compositions.name
+            if not comp_coll:
+                raise KehrnelError(
+                    code="COLLECTION_NOT_CONFIGURED",
+                    status=400,
+                    message="compositions collection is not configured",
+                )
+
+            uid = str(payload.get("uid") or payload.get("composition_uid") or "").strip()
+            if not uid:
+                raise KehrnelError(
+                    code="INVALID_INPUT",
+                    status=400,
+                    message="uid is required",
+                )
+
+            uid_candidates = [uid]
+            base_uid = uid.split("::", 1)[0].strip()
+            if base_uid and base_uid not in uid_candidates:
+                uid_candidates.append(base_uid)
+
+            uid_match = []
+            for candidate in uid_candidates:
+                uid_match.extend([
+                    {"version": candidate},
+                    {"uid": candidate},
+                    {"_id": candidate},
+                    {"cn.data.uid.v": candidate},
+                    {"cn.data.uid.value": candidate},
+                ])
+                try:
+                    uid_match.append({"_id": uuid.UUID(candidate)})
+                except Exception:
+                    pass
+
+            query: Dict[str, Any] = {"$or": uid_match}
+
+            ehr_id = payload.get("ehr_id")
+            if ehr_id is not None and str(ehr_id).strip():
+                ehr_candidates = [ehr_id]
+                try:
+                    ehr_candidates.append(uuid.UUID(str(ehr_id)))
+                except Exception:
+                    pass
+                query = {
+                    "$and": [
+                        {"$or": uid_match},
+                        {"$or": [{"ehr_id": candidate} for candidate in ehr_candidates]},
+                    ]
+                }
+
+            doc = await storage.find_one(comp_coll, query)
+            if not isinstance(doc, dict):
+                raise KehrnelError(
+                    code="COMPOSITION_NOT_FOUND",
+                    status=404,
+                    message=f"native composition not found for uid '{uid}'",
+                )
+
+            return {
+                "ok": True,
+                "composition": json.loads(json.dumps(doc, default=str)),
+            }
+
+        if op_lower == "list_native_ehrs":
+            if not storage:
+                raise KehrnelError(
+                    code="STORAGE_NOT_AVAILABLE",
+                    status=503,
+                    message="storage adapter not available for native EHR lookup",
+                )
+
+            comp_coll = strategy_cfg.collections.compositions.name
+            if not comp_coll:
+                raise KehrnelError(
+                    code="COLLECTION_NOT_CONFIGURED",
+                    status=400,
+                    message="compositions collection is not configured",
+                )
+
+            limit = max(1, min(int(payload.get("limit", 1000) or 1000), 5000))
+            records = await storage.aggregate(
+                comp_coll,
+                [
+                    {"$match": {"ehr_id": {"$exists": True, "$ne": None}}},
+                    {
+                        "$group": {
+                            "_id": "$ehr_id",
+                            "time_created": {"$max": "$creation_date"},
+                        }
+                    },
+                    {"$sort": {"time_created": -1, "_id": 1}},
+                    {"$limit": limit},
+                    {"$project": {"_id": 0, "ehr_id": "$_id", "time_created": 1}},
+                ],
+            )
+
+            return {
+                "ok": True,
+                "records": json.loads(json.dumps(records, default=str)),
+            }
+
+        if op_lower == "list_native_compositions":
+            if not storage:
+                raise KehrnelError(
+                    code="STORAGE_NOT_AVAILABLE",
+                    status=503,
+                    message="storage adapter not available for native composition lookup",
+                )
+
+            comp_coll = strategy_cfg.collections.compositions.name
+            if not comp_coll:
+                raise KehrnelError(
+                    code="COLLECTION_NOT_CONFIGURED",
+                    status=400,
+                    message="compositions collection is not configured",
+                )
+
+            ehr_id = payload.get("ehr_id")
+            if ehr_id is None or not str(ehr_id).strip():
+                raise KehrnelError(
+                    code="INVALID_INPUT",
+                    status=400,
+                    message="ehr_id is required",
+                )
+
+            limit = max(1, min(int(payload.get("limit", 500) or 500), 2000))
+            ehr_candidates = [ehr_id]
+            try:
+                ehr_candidates.append(uuid.UUID(str(ehr_id)))
+            except Exception:
+                pass
+
+            records = await storage.aggregate(
+                comp_coll,
+                [
+                    {"$match": {"$or": [{"ehr_id": candidate} for candidate in ehr_candidates]}},
+                    {
+                        "$project": {
+                            "_id": 0,
+                            "uid": {"$ifNull": ["$version", {"$toString": "$_id"}]},
+                            "templateId": {"$ifNull": ["$template", "$template_id"]},
+                            "creation_date": "$creation_date",
+                            "name": {
+                                "$let": {
+                                    "vars": {"root": {"$first": "$cn"}},
+                                    "in": {
+                                        "$ifNull": [
+                                            "$$root.data.n.v",
+                                            {"$ifNull": ["$$root.data.n.value", "$template"]},
+                                        ]
+                                    },
+                                }
+                            },
+                        }
+                    },
+                    {"$sort": {"creation_date": -1, "uid": 1}},
+                    {"$limit": limit},
+                ],
+            )
+
+            return {
+                "ok": True,
+                "records": json.loads(json.dumps(records, default=str)),
+            }
 
         if op_lower == "synthetic_generate_batch":
             if not storage:
@@ -1471,7 +1654,7 @@ class RPSDualStrategy(StrategyPlugin):
         store = (ctx.meta or {}).get("bundle_store") if ctx else None
         if store:
             return store.get_bundle(bundle_id)
-        path = Path(__file__).parent / "bundles" / f"{bundle_id}.json"
+        path = self._strategy_root_dir() / "bundles" / f"{bundle_id}.json"
         if path.exists():
             import json as _json
             return _json.loads(path.read_text(encoding="utf-8"))

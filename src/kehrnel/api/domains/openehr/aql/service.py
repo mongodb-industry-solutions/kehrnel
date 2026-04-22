@@ -135,7 +135,8 @@ async def _resolve_transformer_inputs(
             "shortcuts_collection": settings.search_config.shortcuts_collection,
             "codes_doc_id": "ar_code",
             "shortcuts_doc_id": "shortcuts",
-            "separator": ".",
+            "separator": ":",
+            "atcode_strategy": "negative_int",
         }
         search_schema_config = {
             "composition_array": "sn",
@@ -154,7 +155,8 @@ async def _resolve_transformer_inputs(
             "shortcuts_collection": settings.search_config.shortcuts_collection,
             "codes_doc_id": "ar_code",
             "shortcuts_doc_id": "shortcuts",
-            "separator": ".",
+            "separator": ":",
+            "atcode_strategy": "negative_int",
         }
 
     collection_format = await _detect_collection_format_for(

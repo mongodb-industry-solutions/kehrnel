@@ -42,6 +42,10 @@ class PipelineBuilder:
         )
         self.value_formatter = ValueFormatter()
 
+    def _root_path_regex(self) -> str:
+        separator = self.schema_config.get("separator", ":") or ":"
+        return rf"^[^{re.escape(separator)}]+$"
+
     async def build_match_stage(self, ast: Dict[str, Any], ehr_id: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Constructs the $match stage of the aggregation pipeline."""
         where_clause = ast.get("where")
@@ -400,7 +404,7 @@ class PipelineBuilder:
                         if archetype_code is not None:
                             return {"$elemMatch": {path_field: str(archetype_code), f"{data_field}.ani": archetype_code}}
 
-                    return {"$elemMatch": {path_field: {"$regex": r"^[^\\.]+$"}}}
+                    return {"$elemMatch": {path_field: {"$regex": self._root_path_regex()}}}
                 else:
                     # For full format, use p field matching
                     return {

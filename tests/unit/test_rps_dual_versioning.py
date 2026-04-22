@@ -145,6 +145,56 @@ def test_transform_composition_uses_configured_search_comp_id_field_name(monkeyp
     assert search_doc["composition_uid"] == ObjectId("64b64c2e5f6270b5c2c2c2c2")
 
 
+def test_transform_composition_copies_configured_envelope_fields_after_shortcuts(monkeypatch):
+    flattener = _build_flattener(
+        {
+            "transform": {
+                "envelope": {
+                    "base": {
+                        "version": "version",
+                        "metrics.config_name": "ops.config_name",
+                    },
+                    "search": {
+                        "template": "source_template",
+                    },
+                }
+            }
+        }
+    )
+
+    monkeypatch.setattr(
+        flattener,
+        "_compiled_rules_for_template",
+        lambda template_name: [{"_path": (), "_cont": (), "_extra": [], "copy": ["p"]}],
+    )
+    monkeypatch.setattr(flattener, "_rule_matches", lambda *args, **kwargs: True)
+    monkeypatch.setattr(
+        flattener,
+        "_apply_rule",
+        lambda *args, **kwargs: {"p": "1", "data": {"name": {"value": "Example composition"}}},
+    )
+
+    base_doc, search_doc = flattener.transform_composition(
+        {
+            "_id": "comp-1::my-openehr-server::1",
+            "ehr_id": "ehr-1",
+            "composition_version": "1",
+            "time_committed": datetime(2026, 4, 11, 13, 42, 6, tzinfo=timezone.utc),
+            "canonicalJSON": _minimal_composition(),
+            "_source_envelope": {
+                "version": "comp-1::my-openehr-server::1",
+                "template": "test-template-human",
+                "metrics": {"config_name": "CONFIG_1"},
+            },
+        }
+    )
+
+    assert base_doc["version"] == "comp-1::my-openehr-server::1"
+    assert base_doc["ops"]["config_name"] == "CONFIG_1"
+    assert search_doc is not None
+    assert search_doc["source_template"] == "test-template-human"
+
+
 @pytest.mark.asyncio
 async def test_build_query_pipeline_maps_version_commit_time_to_top_level_match_and_projection():
     cfg = normalize_config({})
@@ -181,7 +231,7 @@ async def test_build_query_pipeline_maps_version_commit_time_to_top_level_match_
         2026, 4, 11, 0, 0, tzinfo=timezone.utc
     )
     assert match_stage["tid"] == "test-template"
-    assert match_stage["cn"]["$elemMatch"] == {"p": {"$regex": r"^[^\\.]+$"}}
+    assert match_stage["cn"]["$elemMatch"] == {"p": {"$regex": r"^[^:]+$"}}
     assert pipeline[1]["$project"]["DataRegistre"] == "$time_c"
     assert pipeline[1]["$project"]["TemplateId"] == "$tid"
     assert pipeline[2]["$sort"] == {"DataRegistre": 1}
@@ -251,9 +301,59 @@ async def test_build_query_pipeline_prefers_match_for_cross_patient_template_and
     assert match_stage["time_c"]["$gte"] == datetime(
         2026, 4, 11, 0, 0, tzinfo=timezone.utc
     )
-    assert match_stage["cn"]["$elemMatch"] == {"p": {"$regex": r"^[^\\.]+$"}}
+    assert match_stage["cn"]["$elemMatch"] == {"p": {"$regex": r"^[^:]+$"}}
     assert pipeline[1]["$project"]["DataRegistre"] == "$time_c"
     assert pipeline[2]["$sort"] == {"DataRegistre": -1}
+
+
+@pytest.mark.asyncio
+async def test_build_query_pipeline_uses_configured_separator_for_root_path_regex():
+    cfg = normalize_config({"paths": {"separator": ":"}})
+    ast = {
+        "select": {
+            "distinct": False,
+            "columns": {
+                "0": {
+                    "value": {
+                        "type": "dataMatchPath",
+                        "path": "v/commit_audit/time_committed/value",
+                    },
+                    "alias": "DataRegistre",
+                }
+            },
+        },
+        "from": {"rmType": "EHR", "alias": "e", "predicate": None},
+        "contains": {
+            "rmType": "VERSION",
+            "alias": "v",
+            "predicate": None,
+            "contains": {
+                "rmType": "COMPOSITION",
+                "alias": "c",
+                "predicate": {
+                    "path": "archetype_node_id",
+                    "operator": "=",
+                    "value": "openEHR-EHR-COMPOSITION.probs_base_composition.v0",
+                },
+            },
+        },
+        "where": {
+            "operator": "AND",
+            "conditions": {
+                "0": {
+                    "path": "c/archetype_details/template_id/value",
+                    "operator": "=",
+                    "value": "test-template",
+                }
+            },
+        },
+        "orderBy": {},
+    }
+
+    engine, pipeline, *_ = await build_query_pipeline_from_ast(ast, cfg)
+
+    assert engine == "pipeline_builder"
+    assert pipeline[0]["$match"]["cn"]["$elemMatch"] == {"p": {"$regex": r"^[^:]+$"}}
 
 
 @pytest.mark.asyncio

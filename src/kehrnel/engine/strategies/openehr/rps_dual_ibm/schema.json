@@ -17,7 +17,7 @@
     "pathSeparator": {
       "type": "string",
       "enum": [".", "/", ":", "|", "~"],
-      "default": ":"
+      "default": "/"
     },
     "encodingProfile": {
       "type": "string",
@@ -39,7 +39,7 @@
           "type": "object",
           "description": "Canonical compositions store",
           "properties": {
-            "name": { "type": "string", "description": "Collection name", "default": "compositions_rps" },
+            "name": { "type": "string", "description": "Collection name", "default": "compositions_rps_ibm" },
             "encodingProfile": { "$ref": "#/definitions/encodingProfile", "default": "profile.codedpath" }
           },
           "required": ["name"]
@@ -48,7 +48,7 @@
           "type": "object",
           "description": "Slim search store for cross-patient queries",
           "properties": {
-            "name": { "type": "string", "description": "Collection name", "default": "compositions_search" },
+            "name": { "type": "string", "description": "Collection name", "default": "compositions_search_ibm" },
             "encodingProfile": { "$ref": "#/definitions/encodingProfile", "default": "profile.search_shortcuts" },
             "enabled": { "type": "boolean", "default": true },
             "atlasIndex": {
@@ -107,7 +107,7 @@
         "ehr_id": { "$ref": "#/definitions/idEncoding" },
         "composition_id": { "$ref": "#/definitions/idEncoding" }
       },
-      "default": { "ehr_id": "string", "composition_id": "objectid" }
+      "default": { "ehr_id": "uuidbin", "composition_id": "uuidbin" }
     },
     "paths": {
       "type": "object",
@@ -115,7 +115,7 @@
       "properties": {
         "separator": { "$ref": "#/definitions/pathSeparator" }
       },
-      "default": { "separator": ":" }
+      "default": { "separator": "/" }
     },
     "fields": {
       "type": "object",
@@ -126,11 +126,11 @@
           "description": "Document-level field names",
           "properties": {
             "ehr_id": { "type": "string", "default": "ehr_id" },
-            "comp_id": { "type": "string", "default": "comp_id" },
-            "tid": { "type": "string", "default": "tid" },
-            "v": { "type": "string", "default": "v" },
-            "time_committed": { "type": "string", "default": "time_c", "description": "Server commit time for the version represented by this document" },
-            "sort_time": { "type": "string", "default": "sort_time", "description": "Primary search-side sort field, typically version commit time" },
+            "comp_id": { "type": "string", "default": "version" },
+            "tid": { "type": "string", "default": "template" },
+            "v": { "type": "string", "default": "version" },
+            "time_committed": { "type": "string", "default": "creation_date", "description": "IBM creation timestamp / commit time field" },
+            "sort_time": { "type": "string", "default": "creation_date", "description": "IBM primary sort field" },
             "cn": { "type": "string", "default": "cn", "description": "Canonical nodes array" },
             "sn": { "type": "string", "default": "sn", "description": "Search nodes array" }
           }
@@ -140,7 +140,7 @@
           "description": "Node-level field names (inside cn/sn arrays)",
           "properties": {
             "p": { "type": "string", "default": "p", "description": "Reversed path" },
-            "pi": { "type": "string", "default": "pi", "description": "Path instance chain (list indexes aligned with path segments)" },
+            "pi": { "type": "string", "default": "li", "description": "IBM sibling list index field" },
             "data": { "type": "string", "default": "data", "description": "Payload fragment" }
           }
         }
@@ -230,13 +230,13 @@
               "type": "string",
               "enum": ["none", "ensure", "seed"],
               "default": "ensure",
-              "description": "Create only the codes collection, or also pre-seed it from the configured source"
+              "description": "Create the codes collection by default; use seed only when you intentionally want to replace or initialize the configured IBM-compatible dictionary payload"
             },
             "shortcuts": {
               "type": "string",
               "enum": ["none", "ensure", "seed"],
-              "default": "seed",
-              "description": "Shortcuts should typically be seeded up front so flatten/unflatten stays consistent"
+              "default": "ensure",
+              "description": "Create the shortcuts collection by default; use seed only when you intentionally want to replace or initialize the configured IBM-compatible shortcuts payload"
             }
           },
           "additionalProperties": false
