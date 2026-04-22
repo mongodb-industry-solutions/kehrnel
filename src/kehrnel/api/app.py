@@ -334,6 +334,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     from kehrnel.api.domains.fhir.routes import router as fhir_domain_router
     from kehrnel.api.domains.openehr.routes import router as openehr_domain_router
     from kehrnel.api.strategies.openehr.rps_dual.routes import router as openehr_rps_dual_router
+    from kehrnel.api.strategies.openehr.rps_dual_ibm.routes import router as openehr_rps_dual_ibm_router
 
     # Disable built-in docs handlers so we can control the HTML (favicon, titles, etc.)
     # and keep behavior consistent for all generated docs pages.
@@ -668,6 +669,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         fhir_domain_router,
         openehr_domain_router,
         openehr_rps_dual_router,
+        openehr_rps_dual_ibm_router,
     ]
 
     # Backward/forward compatibility:

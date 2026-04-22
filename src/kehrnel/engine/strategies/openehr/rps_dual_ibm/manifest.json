@@ -26,6 +26,7 @@
     "ingest",
     "validate",
     "query",
+    "synthetic",
     "plan",
     "apply"
   ],
@@ -36,6 +37,8 @@
     "domain_badge": "openEHR",
     "works_with": ["atlas_search_dual"],
     "links": {
+      "strategy_synthetic_generate": "/api/strategies/openehr/rps_dual_ibm/synthetic/generate",
+      "strategy_synthetic_stats": "/api/strategies/openehr/rps_dual_ibm/synthetic/stats",
       "runtime_activate": "/environments/{env_id}/activate",
       "runtime_capabilities": "/environments/{env_id}/capabilities",
       "runtime_run": "/environments/{env_id}/run",
@@ -46,6 +49,9 @@
       "runtime_query": "/environments/{env_id}/query",
       "runtime_compile_query": "/environments/{env_id}/compile_query",
       "runtime_strategy_op": "/environments/{env_id}/activations/{domain}/ops/{op}",
+      "runtime_synthetic_jobs": "/environments/{env_id}/synthetic/jobs",
+      "runtime_synthetic_job": "/environments/{env_id}/synthetic/jobs/{job_id}",
+      "runtime_synthetic_job_cancel": "/environments/{env_id}/synthetic/jobs/{job_id}/cancel",
       "strategy_manifest": "/strategies/openehr.rps_dual_ibm",
       "strategy_spec": "/strategies/openehr.rps_dual_ibm/spec",
       "strategy_endpoints": "/strategies/openehr.rps_dual_ibm/endpoints",
@@ -271,6 +277,215 @@
             "type": "array",
             "items": { "type": "string" }
           }
+        }
+      }
+    },
+    {
+      "name": "synthetic_generate_batch",
+      "kind": "synthetic",
+      "summary": "Generate synthetic datasets in batch from source instances and/or model catalog",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "patient_count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "patients": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "source_collection": {
+            "type": "string"
+          },
+          "source_database": {
+            "type": "string"
+          },
+          "source_db": {
+            "type": "string"
+          },
+          "source_templates": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "source_sample_size": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 200
+          },
+          "source_min_per_patient": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 1
+          },
+          "source_max_per_patient": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 1
+          },
+          "source_filter": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "generation_mode": {
+            "type": "string",
+            "enum": ["auto", "from_source", "from_models", "source", "models"]
+          },
+          "dry_run": {
+            "type": "boolean",
+            "default": false
+          },
+          "plan_only": {
+            "type": "boolean",
+            "default": false
+          },
+          "store_canonical": {
+            "type": "boolean",
+            "default": false
+          },
+          "canonical_collection": {
+            "type": "string",
+            "default": "compositions_canonical_synthetic"
+          },
+          "write_batch_size": {
+            "type": "integer",
+            "minimum": 10,
+            "default": 250
+          },
+          "model_source": {
+            "type": "object",
+            "properties": {
+              "database_name": { "type": "string" },
+              "catalog_collection": { "type": "string" },
+              "links_collection": { "type": "string" }
+            },
+            "additionalProperties": true
+          },
+          "models": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "model_id": { "type": "string" },
+                "template_id": { "type": "string" },
+                "min_per_patient": { "type": "integer", "minimum": 0 },
+                "max_per_patient": { "type": "integer", "minimum": 0 },
+                "weight": { "type": "number", "minimum": 0 },
+                "sample_pool_size": { "type": "integer", "minimum": 0, "default": 25 }
+              },
+              "required": ["model_id"],
+              "additionalProperties": false
+            }
+          },
+          "templates": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "template_id": { "type": "string" },
+                "templateId": { "type": "string" },
+                "min_per_patient": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "min": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "max_per_patient": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "max": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "weight": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "sample_pool_size": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "default": 25
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "from": { "type": "string" },
+                "from_model_id": { "type": "string" },
+                "to": { "type": "string" },
+                "to_model_id": { "type": "string" },
+                "probability": { "type": "number", "minimum": 0, "maximum": 1 },
+                "min_to_per_patient": { "type": "integer", "minimum": 0 },
+                "type": { "type": "string" }
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "anyOf": [
+          { "required": ["patient_count"] },
+          { "required": ["patients"] }
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "dry_run": { "type": "boolean" },
+          "plan_only": { "type": "boolean" },
+          "source_collection": { "type": "string" },
+          "source_database": { "type": ["string", "null"] },
+          "target": {
+            "type": "object",
+            "properties": {
+              "canonical": { "type": ["string", "null"] },
+              "compositions": { "type": ["string", "null"] },
+              "search": { "type": ["string", "null"] }
+            }
+          },
+          "patients": { "type": "integer" },
+          "estimated_docs": { "type": "integer" },
+          "generated_docs": { "type": "integer" },
+          "inserted_canonical": { "type": "integer" },
+          "inserted_base": { "type": "integer" },
+          "inserted_search": { "type": "integer" },
+          "estimated_canonical_bytes": { "type": "integer" },
+          "estimated_base_bytes": { "type": "integer" },
+          "estimated_search_bytes": { "type": "integer" },
+          "estimated_total_bytes": { "type": "integer" },
+          "links_applied": { "type": "integer" },
+          "models": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "model_id": { "type": "string" },
+                "template_id": { "type": "string" },
+                "min": { "type": "integer" },
+                "max": { "type": "integer" }
+              }
+            }
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "by_template": { "type": "object" },
+          "by_model": { "type": "object" }
         }
       }
     }
