@@ -252,6 +252,93 @@ class CompositionFlattener:
 
         return base_doc, search_doc
 
+    def project_search_from_flattened(self, base_doc: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Rebuild a slim search document from an already flattened base document.
+
+        Stored base documents may already have shortcuted keys applied, so search
+        projection must resolve analytics extracts against the persisted shape
+        rather than the pre-shortcut in-memory representation used during live
+        ingest.
+        """
+        if not isinstance(base_doc, dict):
+            return None
+
+        collections_cfg = (self.config.get("collections") or {}) if isinstance(self.config, dict) else {}
+        search_enabled = bool((collections_cfg.get("search") or {}).get("enabled", True))
+        if not search_enabled:
+            return None
+
+        template_name = (
+            base_doc.get(self.sf_tmpl)
+            or base_doc.get(self.cf_tmpl)
+            or base_doc.get("template")
+            or base_doc.get("tid")
+        )
+        if not template_name:
+            return None
+
+        rules = self._compiled_rules_for_template(str(template_name))
+        if not rules:
+            return None
+
+        nodes = base_doc.get(self.cf_nodes)
+        if not isinstance(nodes, list):
+            nodes = base_doc.get("cn")
+        if not isinstance(nodes, list) or not nodes:
+            return None
+
+        sn: List[dict] = []
+        for node in nodes:
+            if not isinstance(node, dict):
+                continue
+
+            path_val = node.get(self.cf_path) or node.get("p")
+            dblock = node.get(self.cf_data, {})
+            if not path_val:
+                continue
+            if not isinstance(dblock, dict):
+                dblock = {}
+
+            parts = str(path_val).split(self.path_separator)
+            pc_set = {self.path_separator.join(parts[:i]) for i in range(1, len(parts) + 1)}
+
+            for rule in rules:
+                if self._rule_matches(rule, pc_set, parts, dblock):
+                    slim = self._apply_rule_to_flattened_node(rule, node, dblock)
+                    if slim:
+                        sn.append(slim)
+
+        if not sn:
+            return None
+
+        search_doc: Dict[str, Any] = {
+            self.sf_nodes: sn,
+        }
+
+        doc_id = base_doc.get("_id")
+        if doc_id is not None:
+            search_doc["_id"] = doc_id
+
+        ehr_value = base_doc.get(self.sf_ehr, base_doc.get(self.cf_ehr))
+        if ehr_value is not None:
+            search_doc[self.sf_ehr] = ehr_value
+
+        comp_value = base_doc.get(self.sf_cid, base_doc.get(self.cf_cid))
+        if comp_value is not None:
+            search_doc[self.sf_cid] = comp_value
+
+        template_value = base_doc.get(self.sf_tmpl, base_doc.get(self.cf_tmpl))
+        if template_value is not None:
+            search_doc[self.sf_tmpl] = template_value
+
+        sort_value = base_doc.get(self.sf_sort_time, base_doc.get(self.cf_time_committed))
+        if sort_value is not None:
+            search_doc[self.sf_sort_time] = sort_value
+
+        self._copy_search_envelope_fields_from_base(base_doc, search_doc)
+        return search_doc
+
 
     async def _load_codes_from_db(self):
         if not self.use_codes_db:
@@ -635,6 +722,20 @@ class CompositionFlattener:
             found, value = self._lookup_envelope_value(source_envelope, source_path)
             if found:
                 self._assign_envelope_value(target, target_path, value)
+
+    def _copy_search_envelope_fields_from_base(
+        self,
+        base_doc: Dict[str, Any],
+        search_doc: Dict[str, Any],
+    ) -> None:
+        seen: set[str] = set()
+        for target_path in (self.search_envelope_fields or {}).values():
+            if not isinstance(target_path, str) or not target_path or target_path in seen:
+                continue
+            seen.add(target_path)
+            found, value = self._lookup_envelope_value(base_doc, target_path)
+            if found:
+                self._assign_envelope_value(search_doc, target_path, deepcopy(value))
 
     def _at_code_to_int(self, at: str) -> Any:
         s = at.lower()
@@ -1054,6 +1155,21 @@ class CompositionFlattener:
                 return coll[0] if len(coll) == 1 else coll
             return None
         return walk(obj, 0)
+
+    def _shortcut_path(self, path: str) -> str:
+        if not path or not self.apply_shortcuts or not self.shortcut_keys:
+            return path
+        return ".".join(self.shortcut_keys.get(part, part) for part in path.split(".") if part)
+
+    @staticmethod
+    def _assign_nested_value(target: Dict[str, Any], dotted_path: str, value: Any) -> None:
+        cur = target
+        parts = [part for part in dotted_path.split(".") if part]
+        if not parts:
+            return
+        for part in parts[:-1]:
+            cur = cur.setdefault(part, {})
+        cur[parts[-1]] = value
         
     def _rule_matches(self, rule, pc_set, parts, dblock) -> bool:
         if rule.get("_root_only") and len(parts) != 1:
@@ -1179,6 +1295,49 @@ class CompositionFlattener:
                 cur[path_parts[-1]] = val
 
         # 5. Labels / RM type (if provided on rule)
+        if rule.get("label"):
+            slim["label"] = rule["label"]
+        if rule.get("rmType"):
+            slim["rmType"] = rule["rmType"]
+        if rule.get("index"):
+            slim["index"] = rule["index"]
+
+        return slim
+
+    def _apply_rule_to_flattened_node(self, rule, node, dblock) -> dict:
+        """
+        Creates a slim search node from a stored flattened node.
+
+        Stored flattened documents may already have shortcuted data keys, so we
+        resolve analytics extracts against the persisted shortcut shape and write
+        the shortcuted keys directly into the rebuilt search document.
+        """
+        slim: dict = {}
+
+        if self.sf_path and "p" in rule["copy"]:
+            slim[self.sf_path] = self._encode_path_for_profile(node.get(self.cf_path), self.search_encoding_profile)
+
+        if self.sf_ap and self.cf_ap and self.cf_ap in node:
+            slim[self.sf_ap] = node[self.cf_ap]
+
+        if self.sf_anc and "_anc" in node:
+            slim[self.sf_anc] = node["_anc"]
+
+        for expr in rule["copy"]:
+            if not expr.startswith("data."):
+                continue
+
+            sub = expr[5:]
+            stored_sub = self._shortcut_path(sub)
+            val = self._dpath_get(dblock, stored_sub)
+            if val is None and stored_sub != sub:
+                val = self._dpath_get(dblock, sub)
+            if val is None:
+                continue
+
+            cur = slim.setdefault(self.sf_data, {})
+            self._assign_nested_value(cur, stored_sub, val)
+
         if rule.get("label"):
             slim["label"] = rule["label"]
         if rule.get("rmType"):

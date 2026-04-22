@@ -929,7 +929,14 @@ class RPSDualStrategy(StrategyPlugin):
                 return {"ok": False, "warnings": ["collections not configured"]}
             batch_size = int(payload.get("batch_size", 100)) if payload else 100
             docs = await storage.aggregate(comp_coll, [{"$limit": batch_size}])
-            # Get bundle reference from search collection seed if available
+            warnings = []
+            flattener = None
+            try:
+                flattener = await self._build_flattener_for_context(ctx)
+            except Exception as exc:
+                warnings.append(f"analytics rebuild unavailable, falling back to bundle projection: {exc}")
+            # Get bundle reference from search collection seed if available.
+            # This remains as a legacy fallback for older bundle-only setups.
             bundle_id = None
             seed_ref = strategy_cfg.collections.search.atlasIndex
             if seed_ref and isinstance(seed_ref.definition, str):
@@ -937,10 +944,18 @@ class RPSDualStrategy(StrategyPlugin):
             bundle = await self._maybe_load_bundle(bundle_id, ctx)
             inserted = 0
             for doc in docs:
-                search_doc = self._apply_bundle_to_composition(bundle, doc, strategy_cfg)
+                search_doc = flattener.project_search_from_flattened(doc) if flattener else None
+                if search_doc is None and bundle:
+                    search_doc = self._apply_bundle_to_composition(bundle, doc, strategy_cfg)
+                if not isinstance(search_doc, dict):
+                    continue
+                nodes = search_doc.get(strategy_cfg.fields.document.sn)
+                if not isinstance(nodes, list) or not nodes:
+                    continue
+                if "_id" not in search_doc and isinstance(doc, dict) and doc.get("_id") is not None:
+                    search_doc["_id"] = doc["_id"]
                 await storage.insert_one(search_coll_name, search_doc)
                 inserted += 1
-            warnings = []
             atlas_idx = strategy_cfg.collections.search.atlasIndex
             if atlas and atlas_idx and atlas_idx.name:
                 definition = await self._resolve_search_index_definition(ctx, strategy_cfg)
