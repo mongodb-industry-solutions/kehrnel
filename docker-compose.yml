@@ -1,9 +1,13 @@
 services:
   kehrnel-api:
-    build:
-      context: .
-      dockerfile: Dockerfile.backend
+    image: 275662791714.dkr.ecr.us-east-1.amazonaws.com/industrysolutions/kehrnel:latest
     ports:
       - 8000:8080
     env_file:   
       - .env  
+    networks:
+      - healthcare_shared
+
+networks:
+  healthcare_shared:
+    external: true
