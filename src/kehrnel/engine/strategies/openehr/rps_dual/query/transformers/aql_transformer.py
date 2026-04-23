@@ -165,24 +165,29 @@ class AQLtoMQLTransformer:
         if let_stage:
             pipeline.append(let_stage)
 
-        # 3. Build the $project stage from the SELECT clause
+        # 3. Fan out rows only when the selected leaf alias is repeated.
+        fanout_stages = await self.pipeline_builder.build_row_fanout_stages(self.ast)
+        if fanout_stages:
+            pipeline.extend(fanout_stages)
+
+        # 4. Build the $project stage from the SELECT clause
         project_stage = await self.pipeline_builder.build_project_stage(self.ast)
         if project_stage:
             pipeline.append(project_stage)
 
-        # 4. Build DISTINCT stages ($group + $replaceRoot) if SELECT DISTINCT is used
+        # 5. Build DISTINCT stages ($group + $replaceRoot) if SELECT DISTINCT is used
         # This must come after $project so we can group by the projected field names
         projected_fields = self.pipeline_builder.get_projected_field_names(self.ast)
         distinct_stages = self.pipeline_builder.build_distinct_stages(self.ast, projected_fields)
         if distinct_stages:
             pipeline.extend(distinct_stages)
 
-        # 5. Build the $sort stage from ORDER BY clause
+        # 6. Build the $sort stage from ORDER BY clause
         sort_stage = self.pipeline_builder.build_sort_stage(self.ast)
         if sort_stage:
             pipeline.append(sort_stage)
         
-        # 6. Build the $limit stage from LIMIT clause
+        # 7. Build the $limit stage from LIMIT clause
         limit_stage = self.pipeline_builder.build_limit_stage(self.ast)
         if limit_stage:
             pipeline.append(limit_stage)

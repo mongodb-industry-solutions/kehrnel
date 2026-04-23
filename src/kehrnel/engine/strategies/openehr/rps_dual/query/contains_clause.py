@@ -46,6 +46,7 @@ def collect_archetype_contains_chain(contains_clause: Dict[str, Any] | None) -> 
         if isinstance(predicate, dict) and predicate.get("value"):
             chain.append(
                 {
+                    "alias": str(current.get("alias") or ""),
                     "rmType": rm_type,
                     "archetype_id": str(predicate["value"]),
                 }
@@ -70,6 +71,67 @@ def is_match_friendly_contains_clause(contains_clause: Dict[str, Any] | None) ->
 def has_nested_contains_clause(contains_clause: Dict[str, Any] | None) -> bool:
     chain = collect_archetype_contains_chain(contains_clause)
     return bool(chain and len(chain) > 1)
+
+
+def _iter_referenced_paths(ast: Dict[str, Any] | None) -> List[str]:
+    if not isinstance(ast, dict):
+        return []
+
+    paths: List[str] = []
+
+    columns = ((ast.get("select") or {}).get("columns") if isinstance(ast.get("select"), dict) else None) or {}
+    if isinstance(columns, dict):
+        for col in columns.values():
+            if not isinstance(col, dict):
+                continue
+            value = col.get("value")
+            if isinstance(value, dict):
+                path = value.get("path")
+                if isinstance(path, str) and path.strip():
+                    paths.append(path.strip())
+
+    order_columns = ((ast.get("orderBy") or {}).get("columns") if isinstance(ast.get("orderBy"), dict) else None) or {}
+    if isinstance(order_columns, dict):
+        for col in order_columns.values():
+            if not isinstance(col, dict):
+                continue
+            path = col.get("path")
+            if isinstance(path, str) and path.strip():
+                paths.append(path.strip())
+
+    return paths
+
+
+def _extract_path_alias(path: str) -> Optional[str]:
+    if not isinstance(path, str) or "/" not in path:
+        return None
+    alias = path.split("/", 1)[0].strip()
+    return alias or None
+
+
+def find_deepest_referenced_alias(
+    ast: Dict[str, Any] | None,
+    contains_clause: Dict[str, Any] | None,
+    *,
+    composition_alias: str,
+) -> Optional[str]:
+    chain = collect_archetype_contains_chain(contains_clause)
+    if not chain or len(chain) < 2:
+        return None
+
+    referenced_aliases = {
+        alias
+        for alias in (_extract_path_alias(path) for path in _iter_referenced_paths(ast))
+        if alias and alias != composition_alias
+    }
+    if not referenced_aliases:
+        return None
+
+    for entry in reversed(chain[1:]):
+        alias = entry.get("alias")
+        if alias and alias in referenced_aliases:
+            return alias
+    return None
 
 
 def build_shortened_ancestry_regex(codes: List[Any], separator: str) -> Optional[str]:
@@ -139,4 +201,58 @@ async def build_shortened_contains_condition(
             path_field: {"$regex": regex},
             f"{data_field}.ani": deepest_code,
         }
+    }
+
+
+async def build_shortened_row_fanout_spec(
+    ast: Dict[str, Any] | None,
+    contains_clause: Dict[str, Any] | None,
+    *,
+    composition_alias: str,
+    archetype_resolver: Any,
+    separator: str,
+) -> Optional[Dict[str, Any]]:
+    if archetype_resolver is None:
+        return None
+
+    chain = collect_archetype_contains_chain(contains_clause)
+    if not chain or len(chain) < 2:
+        return None
+
+    target_alias = find_deepest_referenced_alias(
+        ast,
+        contains_clause,
+        composition_alias=composition_alias,
+    )
+    if not target_alias:
+        return None
+
+    target_idx = next((idx for idx, entry in enumerate(chain) if entry.get("alias") == target_alias), -1)
+    if target_idx <= 0:
+        return None
+
+    enriched_chain: List[Dict[str, str]] = []
+    codes: List[str] = []
+    for entry in chain[: target_idx + 1]:
+        code = await archetype_resolver.get_archetype_code(entry["archetype_id"])
+        if code is None:
+            return None
+        code_str = str(code)
+        enriched_chain.append({**entry, "code": code_str})
+        codes.append(code_str)
+
+    target_regex = build_shortened_ancestry_regex(codes, separator)
+    if not target_regex:
+        return None
+
+    return {
+        "target_alias": target_alias,
+        "target_regex": target_regex,
+        "aliases": [entry["alias"] for entry in enriched_chain if entry.get("alias")],
+        "alias_codes": {
+            entry["alias"]: entry["code"]
+            for entry in enriched_chain
+            if entry.get("alias")
+        },
+        "chain": enriched_chain,
     }

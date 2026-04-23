@@ -3,7 +3,7 @@
 from typing import Dict, Any, List, Optional
 import re
 from .condition_processor import ConditionProcessor
-from ..contains_clause import build_shortened_contains_condition
+from ..contains_clause import build_shortened_contains_condition, build_shortened_row_fanout_spec
 from .value_formatter import ValueFormatter
 from .format_resolver import FormatResolver
 import uuid
@@ -244,12 +244,137 @@ class PipelineBuilder:
             }
         }
 
+    async def _get_row_fanout_spec(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        if self.format != "shortened":
+            return None
+        return await build_shortened_row_fanout_spec(
+            ast,
+            ast.get("contains"),
+            composition_alias=self.composition_alias,
+            archetype_resolver=self.format_resolver.archetype_resolver,
+            separator=self.schema_config.get("separator", ":"),
+        )
+
+    def _fanout_alias_path_expr(self, leaf_path_expr: Any, alias_code: str) -> Dict[str, Any]:
+        separator = self.schema_config.get("separator", ":") or ":"
+        return {
+            "$let": {
+                "vars": {
+                    "parts": {"$split": [leaf_path_expr, separator]},
+                },
+                "in": {
+                    "$let": {
+                        "vars": {
+                            "idx": {"$indexOfArray": ["$$parts", str(alias_code)]},
+                        },
+                        "in": {
+                            "$cond": [
+                                {"$gte": ["$$idx", 0]},
+                                {
+                                    "$reduce": {
+                                        "input": {"$slice": ["$$parts", "$$idx", {"$size": "$$parts"}]},
+                                        "initialValue": "",
+                                        "in": {
+                                            "$cond": [
+                                                {"$eq": ["$$value", ""]},
+                                                "$$this",
+                                                {"$concat": ["$$value", separator, "$$this"]},
+                                            ]
+                                        },
+                                    }
+                                },
+                                None,
+                            ]
+                        },
+                    }
+                },
+            }
+        }
+
+    def _build_fanout_paths_document(self, spec: Dict[str, Any]) -> Dict[str, Any]:
+        leaf_expr: Any = "$__fanout_nodes.p"
+        target_alias = spec["target_alias"]
+        alias_codes = spec.get("alias_codes", {})
+        paths: Dict[str, Any] = {}
+        for alias in spec.get("aliases", []):
+            if alias == target_alias:
+                paths[alias] = leaf_expr
+            else:
+                code = alias_codes.get(alias)
+                if code is not None:
+                    paths[alias] = self._fanout_alias_path_expr(leaf_expr, str(code))
+        return paths
+
+    def _build_fanout_regex_expr(self, alias_path_expr: Any, selector_codes: List[str]) -> Any:
+        separator = self.schema_config.get("separator", ":") or ":"
+        prefix = separator.join(reversed([str(code) for code in selector_codes]))
+        pieces: List[Any] = ["^"]
+        if prefix:
+            pieces.extend([prefix, separator])
+        pieces.extend([alias_path_expr, "$"])
+        return {"$concat": pieces}
+
+    async def build_row_fanout_stages(self, ast: Dict[str, Any]) -> List[Dict[str, Any]]:
+        spec = await self._get_row_fanout_spec(ast)
+        if not spec:
+            return []
+
+        composition_array_field = self.schema_config["composition_array"]
+        path_field = self.schema_config["path_field"]
+        return [
+            {
+                "$addFields": {
+                    "__fanout_nodes": {
+                        "$filter": {
+                            "input": f"${composition_array_field}",
+                            "as": "node",
+                            "cond": {
+                                "$regexMatch": {
+                                    "input": f"$$node.{path_field}",
+                                    "regex": spec["target_regex"],
+                                }
+                            },
+                        }
+                    }
+                }
+            },
+            {"$unwind": "$__fanout_nodes"},
+            {
+                "$addFields": {
+                    "__fanout_paths": self._build_fanout_paths_document(spec),
+                }
+            },
+        ]
+
+    async def _build_fanout_aware_projection(
+        self,
+        aql_path: str,
+        data_path: str,
+        spec: Dict[str, Any],
+    ) -> Optional[Any]:
+        variable = aql_path.split("/", 1)[0]
+        if variable not in set(spec.get("aliases", [])):
+            return None
+
+        selector_codes = await self.format_resolver.get_selector_codes(aql_path)
+        if variable == spec["target_alias"] and not selector_codes:
+            return f"$__fanout_nodes.{data_path}"
+
+        regex_expr = self._build_fanout_regex_expr(f"$__fanout_paths.{variable}", selector_codes)
+        return self._first_matching_node_value(
+            f"${self.schema_config['composition_array']}",
+            path_field=self.schema_config["path_field"],
+            path_regex_pattern=regex_expr,
+            data_path=data_path,
+        )
+
     async def build_project_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Constructs the $project stage from the SELECT clause."""
         columns = ast.get("select", {}).get("columns", {})
         if not columns:
             return None
 
+        fanout_spec = await self._get_row_fanout_spec(ast)
         projection = {"_id": 0}
         for col_data in columns.values():
             alias = col_data.get("alias")
@@ -302,7 +427,14 @@ class PipelineBuilder:
                     composition_array_field = self.schema_config['composition_array']
                     path_field = self.schema_config['path_field']
 
-                    projection[alias] = self._first_matching_node_value(
+                    fanout_projection = None
+                    if fanout_spec:
+                        fanout_projection = await self._build_fanout_aware_projection(
+                            aql_path,
+                            data_path,
+                            fanout_spec,
+                        )
+                    projection[alias] = fanout_projection or self._first_matching_node_value(
                         f"${composition_array_field}",
                         path_field=path_field,
                         path_regex_pattern=path_regex_pattern,
