@@ -38,11 +38,12 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
       - name: Deploy to EC2 via SSM
+        id: ssm
         run: |
-          aws ssm send-command \
+          COMMAND_ID=$(aws ssm send-command \
             --instance-ids "${{ secrets.EC2_INSTANCE_ID }}" \
             --document-name "AWS-RunShellScript" \
-            --timeout-seconds 1200 \
+            --timeout-seconds 600 \
             --parameters '{"commands":[
               "aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}",
               "cd /home/ec2-user/HealthcareDataLab/kehrnel",
@@ -52,12 +53,13 @@ jobs:
               "docker builder prune -af"
             ]}' \
             --output text \
-            --query "Command.CommandId" > /tmp/command_id.txt
-          echo "SSM Command ID: $(cat /tmp/command_id.txt)"
+            --query "Command.CommandId")
+          echo "COMMAND_ID=$COMMAND_ID" >> $GITHUB_ENV
+          echo "SSM Command ID: $COMMAND_ID"
 
       - name: Wait for SSM command to complete
         run: |
-          COMMAND_ID=$(cat /tmp/command_id.txt)
+          COMMAND_ID=${{ env.COMMAND_ID }}
           echo "Waiting 30s for SSM command to register..."
           sleep 30
           for i in {1..20}; do
