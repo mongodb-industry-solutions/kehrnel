@@ -249,6 +249,16 @@ def test_ibm_flattener_emits_exact_shortcuts_list_indexes_and_envelope_fields(mo
     assert search_doc["template_id"] == base_doc["template_id"]
 
 
+def test_ibm_compact_prefix_fallback_matches_live_slash_encoded_at_codes():
+    flattener = _build_ibm_flattener()
+
+    assert flattener._at_code_to_int("at0001") == "D1"
+    assert flattener._at_code_to_int("at0004") == "D4"
+    assert flattener._at_code_to_int("at0012") == "C12"
+    assert flattener._at_code_to_int("at0023") == "C23"
+    assert flattener._at_code_to_int("at0126") == "B126"
+
+
 def test_ibm_unflattener_reconstructs_repeated_children_using_li_and_expands_value_refs():
     shortcuts = _ibm_shortcuts()
     codec = PathCodec(

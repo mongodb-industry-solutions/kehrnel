@@ -60,8 +60,7 @@
         "version": "version",
         "template": "template",
         "template_id": "template_id",
-        "creation_date": "creation_date",
-        "metrics": "metrics"
+        "creation_date": "creation_date"
       }
     },
     "coding": {

@@ -24,3 +24,6 @@ class MongoStorageAdapter(StorageAdapter):
     async def aggregate(self, collection: str, pipeline: List[Dict[str, Any]], allow_disk_use: bool = True) -> List[Dict[str, Any]]:
         cursor = self.db[collection].aggregate(pipeline, allowDiskUse=allow_disk_use)
         return [doc async for doc in cursor]
+
+    async def delete_many(self, collection: str, flt: Dict[str, Any]) -> Any:
+        return await self.db[collection].delete_many(flt or {})

@@ -81,6 +81,19 @@ class FormatResolver:
             return str(code) if code is not None else None
         return None
 
+    async def get_selector_codes(self, aql_path: str) -> list[str]:
+        if not isinstance(aql_path, str) or "/" not in aql_path:
+            return []
+
+        parts = aql_path.split("/")[1:]
+        selector_codes: list[str] = []
+        for selector in self._selector_tokens(parts):
+            code = await self._selector_to_code(selector)
+            if code is None:
+                return []
+            selector_codes.append(code)
+        return selector_codes
+
     async def _context_selector_codes(self, variable_alias: str) -> list[str]:
         if not self.archetype_resolver:
             return []

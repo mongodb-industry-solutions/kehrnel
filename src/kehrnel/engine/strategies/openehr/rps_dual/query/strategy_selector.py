@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, Iterable, List
 
+from .contains_clause import is_match_friendly_contains_clause
 
 _MATCH_FRIENDLY_OPERATORS = {"=", "!=", ">", "<", ">=", "<="}
 
@@ -37,37 +38,6 @@ def _iter_order_paths(order_by: Dict[str, Any] | None) -> Iterable[str]:
             path = col.get("path")
             if isinstance(path, str) and path.strip():
                 yield path.strip()
-
-
-def _is_simple_composition_contains(
-    contains_clause: Dict[str, Any] | None,
-) -> bool:
-    if not isinstance(contains_clause, dict) or not contains_clause:
-        return False
-
-    rm_type = str(contains_clause.get("rmType") or "").upper()
-    if rm_type != "COMPOSITION":
-        nested = contains_clause.get("contains")
-        if nested:
-            return _is_simple_composition_contains(nested)
-        return False
-
-    if contains_clause.get("contains"):
-        return False
-
-    predicate = contains_clause.get("predicate")
-    if predicate is None:
-        return True
-
-    if not isinstance(predicate, dict):
-        return False
-
-    return (
-        predicate.get("path") == "archetype_node_id"
-        and predicate.get("operator") == "="
-        and bool(predicate.get("value"))
-    )
-
 
 def should_prefer_match_for_cross_patient_ast(
     ast: Dict[str, Any],
@@ -114,7 +84,7 @@ def should_prefer_match_for_cross_patient_ast(
             return False
 
     contains_clause = ast.get("contains")
-    if contains_clause and not _is_simple_composition_contains(contains_clause):
+    if contains_clause and not is_match_friendly_contains_clause(contains_clause):
         return False
 
-    return bool(where_conditions) or _is_simple_composition_contains(contains_clause)
+    return bool(where_conditions) or is_match_friendly_contains_clause(contains_clause)
