@@ -928,6 +928,25 @@ class RPSDualStrategy(StrategyPlugin):
             if not comp_coll or not search_coll_name:
                 return {"ok": False, "warnings": ["collections not configured"]}
             batch_size = int(payload.get("batch_size", 100)) if payload else 100
+            clear_existing = bool(payload.get("clear_existing", False)) if payload else False
+            progress_cb = (ctx.meta or {}).get("progress_cb")
+            should_cancel = (ctx.meta or {}).get("should_cancel")
+            if progress_cb:
+                await progress_cb(progress=2, phase="preparing", stats={"collection": search_coll_name})
+            if _is_canceled(should_cancel):
+                raise KehrnelError(code="JOB_CANCELED", status=499, message="Search rebuild canceled")
+            if clear_existing:
+                if progress_cb:
+                    await progress_cb(progress=5, phase="clearing", stats={"collection": search_coll_name})
+                if hasattr(storage, "delete_many"):
+                    await storage.delete_many(search_coll_name, {})
+                elif getattr(storage, "db", None) is not None:
+                    await storage.db[search_coll_name].delete_many({})
+                else:
+                    warnings = ["storage adapter cannot clear existing search documents"]
+                    return {"ok": False, "warnings": warnings}
+            if progress_cb:
+                await progress_cb(progress=10, phase="loading", stats={"batch_size": batch_size})
             docs = await storage.aggregate(comp_coll, [{"$limit": batch_size}])
             warnings = []
             flattener = None
@@ -943,25 +962,53 @@ class RPSDualStrategy(StrategyPlugin):
                 bundle_id = seed_ref.definition
             bundle = await self._maybe_load_bundle(bundle_id, ctx)
             inserted = 0
-            for doc in docs:
+            total_docs = len(docs)
+            for idx, doc in enumerate(docs, start=1):
+                if _is_canceled(should_cancel):
+                    raise KehrnelError(code="JOB_CANCELED", status=499, message="Search rebuild canceled")
                 search_doc = flattener.project_search_from_flattened(doc) if flattener else None
                 if search_doc is None and bundle:
                     search_doc = self._apply_bundle_to_composition(bundle, doc, strategy_cfg)
                 if not isinstance(search_doc, dict):
+                    if progress_cb and (idx == total_docs or idx % 250 == 0):
+                        progress = 10 + int((idx / max(total_docs, 1)) * 80)
+                        await progress_cb(
+                            progress=progress,
+                            phase="projecting",
+                            stats={"processed": idx, "inserted": inserted, "total": total_docs},
+                        )
                     continue
                 nodes = search_doc.get(strategy_cfg.fields.document.sn)
                 if not isinstance(nodes, list) or not nodes:
+                    if progress_cb and (idx == total_docs or idx % 250 == 0):
+                        progress = 10 + int((idx / max(total_docs, 1)) * 80)
+                        await progress_cb(
+                            progress=progress,
+                            phase="projecting",
+                            stats={"processed": idx, "inserted": inserted, "total": total_docs},
+                        )
                     continue
                 if "_id" not in search_doc and isinstance(doc, dict) and doc.get("_id") is not None:
                     search_doc["_id"] = doc["_id"]
                 await storage.insert_one(search_coll_name, search_doc)
                 inserted += 1
+                if progress_cb and (idx == total_docs or idx % 250 == 0):
+                    progress = 10 + int((idx / max(total_docs, 1)) * 80)
+                    await progress_cb(
+                        progress=progress,
+                        phase="projecting",
+                        stats={"processed": idx, "inserted": inserted, "total": total_docs},
+                    )
             atlas_idx = strategy_cfg.collections.search.atlasIndex
             if atlas and atlas_idx and atlas_idx.name:
+                if progress_cb:
+                    await progress_cb(progress=94, phase="indexing", stats={"processed": total_docs, "inserted": inserted})
                 definition = await self._resolve_search_index_definition(ctx, strategy_cfg)
                 res = await atlas.ensure_search_index(search_coll_name, atlas_idx.name, definition)
                 warnings.extend(res.get("warnings", []))
-            return {"ok": True, "processed": len(docs), "inserted": inserted, "warnings": warnings}
+            if progress_cb:
+                await progress_cb(progress=99, phase="finalizing", stats={"processed": total_docs, "inserted": inserted})
+            return {"ok": True, "processed": len(docs), "inserted": inserted, "cleared": clear_existing, "warnings": warnings}
 
         if op_lower == "fetch_native_composition":
             if not storage:

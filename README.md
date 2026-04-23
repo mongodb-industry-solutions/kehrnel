@@ -1,9 +1,32 @@
 # kehrnel
 
-`kehrnel` is a Python runtime for strategy packs, with:
-- Strategy-pack API (`FastAPI`)
-- Runtime/activation engine
-- CLI tooling for mapping, validation, ingest, transform, and pack validation
+`kehrnel` is a strategy runtime that turns healthcare data models into operational capabilities.
+
+It exists because defining a healthcare data model is not enough. Teams also need a repeatable way to validate data, transform it into an operational representation, ingest it, query it, maintain it, and evolve it as requirements change. Without that execution layer, models often remain documentation, storage schemas, or isolated specifications.
+
+It starts with openEHR on MongoDB because openEHR is a strong test case for semantic depth: archetypes, templates, terminology, paths, temporal context, and query semantics all need to survive the move from model to storage. The broader purpose is not to build an openEHR engine only. `kehrnel` defines a repeatable document-first way to operationalize data models through strategy packs, activate those strategies per environment, expose model-aware APIs, and provide safer execution surfaces for applications, education, and agentic AI workflows.
+
+The useful boundary is the contract between a model, the strategy that operationalizes it, and the tools that call it. Healthcare Data Lab can act as the portal and control plane; `kehrnel` acts as the execution plane.
+
+## What kehrnel Provides
+
+- Strategy-pack API (`FastAPI`) for discovering, validating, and loading strategy definitions
+- Runtime and activation engine for binding a strategy to an environment, domain, config, and secure data binding
+- CLI tooling for mapping, validation, ingest, transform, query, and pack validation
+- Runtime endpoints for query compilation, execution, strategy operations, synthetic jobs, and OpenAPI/guide access
+- Exposed workflows that each persistence strategy can customize for activation, validation, ingestion, transformation, querying, synthetic data, and maintenance
+- A foundation for semantic and agentic workflows where tools operate through explicit contracts instead of guessing against raw collections
+
+## Why It Exists
+
+Healthcare data models are often rich on paper and difficult to use operationally. `kehrnel` is the layer that asks:
+
+- How does this model become a working API?
+- How does a query language compile to a database-native plan?
+- How do mappings, dictionaries, indexes, and operational jobs stay versioned and inspectable?
+- How can AI agents use model semantics without improvising execution?
+
+The current implementation answers those questions first for openEHR. The same architecture is intended to invite new strategy families for FHIR, ContextObjects, synthetic data generation, semantic catalogs, natural language retrieval, semantic products, and other healthcare-specific tooling.
 
 ## Active Scope
 

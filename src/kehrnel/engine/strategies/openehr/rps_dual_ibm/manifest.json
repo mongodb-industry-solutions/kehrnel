@@ -263,6 +263,10 @@
           "batch_size": {
             "type": "integer",
             "default": 100
+          },
+          "clear_existing": {
+            "type": "boolean",
+            "default": false
           }
         },
         "additionalProperties": false
@@ -273,6 +277,7 @@
           "ok": { "type": "boolean" },
           "processed": { "type": "integer" },
           "inserted": { "type": "integer" },
+          "cleared": { "type": "boolean" },
           "warnings": {
             "type": "array",
             "items": { "type": "string" }

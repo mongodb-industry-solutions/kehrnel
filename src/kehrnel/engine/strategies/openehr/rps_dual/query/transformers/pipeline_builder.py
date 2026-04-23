@@ -3,6 +3,7 @@
 from typing import Dict, Any, List, Optional
 import re
 from .condition_processor import ConditionProcessor
+from ..contains_clause import build_shortened_contains_condition
 from .value_formatter import ValueFormatter
 from .format_resolver import FormatResolver
 import uuid
@@ -380,93 +381,38 @@ class PipelineBuilder:
         """
         if not contains_clause:
             return None
-            
+
+        if self.format == "shortened":
+            shortened_condition = await build_shortened_contains_condition(
+                contains_clause,
+                self.format_resolver.archetype_resolver,
+                path_field=self.schema_config.get("path_field", "p"),
+                data_field=self.schema_config.get("data_field", "data"),
+                separator=self.schema_config.get("separator", ":"),
+            )
+            if shortened_condition:
+                return shortened_condition
+
         rmType = contains_clause.get("rmType")
         predicate = contains_clause.get("predicate")
         if rmType != "COMPOSITION" and contains_clause.get("contains"):
             return await self._process_contains_clause(contains_clause.get("contains"))
-        
+
         # Handle COMPOSITION level filtering
         if rmType == "COMPOSITION" and predicate:
             path = predicate.get("path")
             operator = predicate.get("operator")
             value = predicate.get("value")
-            
-            if path == "archetype_node_id" and operator == "=" and value:
-                # For shortened format, use archetype resolver to get numeric code
-                if self.format == 'shortened':
-                    path_field = self.schema_config.get("path_field", "p")
-                    data_field = self.schema_config.get("data_field", "data")
-                    # Use archetype resolver to get the numeric code for this archetype
-                    archetype_resolver = self.format_resolver.archetype_resolver
-                    if archetype_resolver:
-                        archetype_code = await archetype_resolver.get_archetype_code(value)
-                        if archetype_code is not None:
-                            return {"$elemMatch": {path_field: str(archetype_code), f"{data_field}.ani": archetype_code}}
 
-                    return {"$elemMatch": {path_field: {"$regex": self._root_path_regex()}}}
-                else:
-                    # For full format, use p field matching
-                    return {
-                        "$elemMatch": {
-                            "p": {"$regex": f"^.*{value}.*$"}
-                        }
+            if path == "archetype_node_id" and operator == "=" and value:
+                if self.format == "shortened":
+                    return {"$elemMatch": {self.schema_config.get("path_field", "p"): {"$regex": self._root_path_regex()}}}
+                return {
+                    "$elemMatch": {
+                        "p": {"$regex": f"^.*{value}.*$"}
                     }
-        
-        # Handle nested CONTAINS (children elements)
-        contains_children = contains_clause.get("contains")
-        if contains_children:
-            # For nested archetype filtering, we need to ensure that the composition
-            # contains both the parent archetype AND the nested archetype
-            nested_rmType = contains_children.get("rmType")
-            nested_predicate = contains_children.get("predicate")
-            
-            if nested_rmType and nested_predicate:
-                nested_path = nested_predicate.get("path")
-                nested_operator = nested_predicate.get("operator")
-                nested_value = nested_predicate.get("value")
-                
-                if nested_path == "archetype_node_id" and nested_operator == "=" and nested_value:
-                    # For shortened format, add the nested archetype as an additional constraint
-                    if self.format == 'shortened':
-                        archetype_resolver = self.format_resolver.archetype_resolver
-                        if archetype_resolver:
-                            nested_archetype_code = await archetype_resolver.get_archetype_code(nested_value)
-                            if nested_archetype_code is not None:
-                                # Return a condition that requires BOTH the composition archetype AND the nested archetype
-                                # This modifies the current return to include both conditions
-                                composition_array = self.schema_config['composition_array']
-                                
-                                # Get the composition archetype code from current predicate processing
-                                if rmType == "COMPOSITION" and predicate:
-                                    comp_path = predicate.get("path")
-                                    comp_operator = predicate.get("operator") 
-                                    comp_value = predicate.get("value")
-                                    
-                                    if comp_path == "archetype_node_id" and comp_operator == "=" and comp_value:
-                                        comp_archetype_code = await archetype_resolver.get_archetype_code(comp_value)
-                                        if comp_archetype_code is not None:
-                                            # For nested archetypes, the p-value follows the hierarchy:
-                                            # - Composition: "22" 
-                                            # - Action within composition: "24.22"
-                                            # - Elements within action: "-2.-1.24.22" etc.
-                                            
-                                            # Build the hierarchical p-pattern for the nested archetype
-                                            nested_p_pattern = f"{nested_archetype_code}.{comp_archetype_code}"
-                                            
-                                            # Return condition requiring the nested archetype to exist
-                                            # The composition archetype will be matched by the parent CONTAINS processing
-                                            return {
-                                                composition_array: {
-                                                    "$elemMatch": {
-                                                        "p": {"$regex": f"^{nested_p_pattern}$"},
-                                                        "data._type": nested_rmType
-                                                    }
-                                                }
-                                            }
-            
-            # If we can't process the nested contains, continue with just the parent processing
-            
+                }
+
         return None
 
     def build_limit_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:

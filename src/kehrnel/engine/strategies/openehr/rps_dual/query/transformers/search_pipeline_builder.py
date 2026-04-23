@@ -3,6 +3,7 @@
 from typing import Dict, Any, List, Optional
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from .condition_processor import ConditionProcessor
+from ..contains_clause import build_shortened_contains_condition
 from .value_formatter import ValueFormatter
 from .format_resolver import FormatResolver
 from kehrnel.persistence import PersistenceStrategy, get_default_strategy
@@ -638,8 +639,11 @@ class SearchPipelineBuilder:
         
         # Process CONTAINS clause for structural filtering
         skip_root_composition_match = self._where_has_template_constraint(where_clause)
-        if contains_clause and not skip_root_composition_match:
-            contains_conditions = await self._process_contains_clause(contains_clause)
+        if contains_clause:
+            contains_conditions = await self._process_contains_clause(
+                contains_clause,
+                nested_only=skip_root_composition_match,
+            )
             if contains_conditions:
                 additional_conditions.update(contains_conditions)
         
@@ -660,62 +664,54 @@ class SearchPipelineBuilder:
             return any(self._where_has_template_constraint(child) for child in conditions if isinstance(child, dict))
         return False
 
-    async def _process_contains_clause(self, contains_clause: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    async def _process_contains_clause(
+        self,
+        contains_clause: Dict[str, Any],
+        *,
+        nested_only: bool = False,
+    ) -> Optional[Dict[str, Any]]:
         """
         Processes CONTAINS clause for the search collection structure.
         """
         if not contains_clause:
             return None
-            
+
+        shortened_condition = await build_shortened_contains_condition(
+            contains_clause,
+            self.format_resolver.archetype_resolver,
+            path_field=self.search_config.get("path_field", "p"),
+            data_field=self.search_config.get("data_field", "data"),
+            separator=self.search_config.get("separator", ":"),
+            nested_only=nested_only,
+        )
+        if shortened_condition:
+            return {
+                self.search_config["composition_array"]: shortened_condition
+            }
+
+        if nested_only:
+            return None
+
         rmType = contains_clause.get("rmType")
         predicate = contains_clause.get("predicate")
         if rmType != "COMPOSITION" and contains_clause.get("contains"):
             return await self._process_contains_clause(contains_clause.get("contains"))
-        
+
         # Handle COMPOSITION level filtering
         if rmType == "COMPOSITION" and predicate:
             conditions = {}
-            
-            # Handle archetype_id predicate
-            # The AQL parser creates predicates with path="archetype_node_id" for archetype constraints
-            # e.g., [openEHR-EHR-COMPOSITION.vaccination_list.v0] becomes:
-            # {"path": "archetype_node_id", "operator": "=", "value": "openEHR-EHR-COMPOSITION..."}
             predicate_path = predicate.get("path")
             archetype_id = predicate.get("value")
-            
-            if predicate_path == "archetype_node_id" and archetype_id:
-                numeric_code = None
-                if self.format_resolver.archetype_resolver:
-                    # Resolve archetype ID to numeric code
-                    try:
-                        numeric_code = await self.format_resolver.archetype_resolver.get_archetype_code(archetype_id)
-                        if numeric_code is not None:
-                            logger.info(f"Resolved archetype {archetype_id} to code={numeric_code}")
-                        else:
-                            logger.warning(f"Archetype {archetype_id} not found in codes collection")
-                    except Exception as e:
-                        logger.warning(f"Could not resolve archetype {archetype_id}: {e}")
-                else:
-                    logger.warning(f"Archetype resolver not available, cannot filter by archetype {archetype_id}")
 
-                path_field = self.search_config.get("path_field", "p")
-                data_field = self.search_config.get("data_field", "data")
-                if numeric_code is not None:
-                    conditions[self.search_config["composition_array"]] = {
-                        "$elemMatch": {
-                            path_field: str(numeric_code),
-                            f"{data_field}.ani": numeric_code,
-                        }
+            if predicate_path == "archetype_node_id" and archetype_id:
+                conditions[self.search_config["composition_array"]] = {
+                    "$elemMatch": {
+                        self.search_config.get("path_field", "p"): {"$regex": self._root_path_regex()}
                     }
-                else:
-                    conditions[self.search_config["composition_array"]] = {
-                        "$elemMatch": {
-                            path_field: {"$regex": self._root_path_regex()}
-                        }
-                    }
-            
+                }
+
             return conditions
-            
+
         return None
 
     def build_lookup_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:

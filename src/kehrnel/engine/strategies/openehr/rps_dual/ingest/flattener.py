@@ -771,6 +771,19 @@ class CompositionFlattener:
         return code
 
     def _encode_at_compact(self, s: str) -> str:
+        if self.path_separator == "/":
+            digits = s[2:] if s.startswith("at") else s
+            significant = digits.lstrip("0") or "0"
+            if len(significant) == 1:
+                prefix = "D"
+            elif len(significant) == 2:
+                prefix = "C"
+            elif len(significant) == 3:
+                prefix = "B"
+            else:
+                prefix = "A"
+            return f"{prefix}{significant}"
+
         if s.startswith("at000"):
             return "A" + s[5:]
         if s.startswith("at00"):
