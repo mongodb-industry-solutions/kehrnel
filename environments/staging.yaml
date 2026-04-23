@@ -12,11 +12,11 @@ env:
 
 # Kanopy security and ownership (requires web-app chart v4.30.0+)
 security:
-  dataClassification: "<set-classification>"
-  dataDesignation: ["<set-designation>"]
+  dataClassification: "Internal"
+  dataDesignation: ["MI"]
 
 ownership:
-  driEmail: platform-owner@example.org
+  driEmail: gio.rodriguez@mongodb.com
   
 envSecrets:
   CORE_MONGODB_URL: kerhnel-backend-secrets
@@ -29,5 +29,5 @@ envSecrets:
 serviceAccount:
   enabled: true
   irsa:
-    accountId: "<aws-account-id>"
-    roleName: "<irsa-role-name>"
+    accountId: "275662791714"
+    roleName: "kanopy-staging-cicd-irsa"
