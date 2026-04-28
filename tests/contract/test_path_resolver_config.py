@@ -1,6 +1,6 @@
 import pytest
 
-from kehrnel.strategies.openehr.rps_dual.query.path_resolver import PathResolver
+from kehrnel.engine.strategies.openehr.rps_dual.query.path_resolver import PathResolver
 
 
 def test_path_resolver_respects_custom_fields():

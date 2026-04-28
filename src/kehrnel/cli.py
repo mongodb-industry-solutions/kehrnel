@@ -13,6 +13,10 @@ from kehrnel.engine.core.manifest import StrategyManifest
 from kehrnel.engine.core.pack_validator import StrategyPackValidator
 
 
+def _is_public_strategy_id(strategy_id: object) -> bool:
+    return str(strategy_id or "").strip().lower() != "openehr.rps_dual_ibm"
+
+
 def _strategy_paths() -> list[Path]:
     paths = [Path(__file__).resolve().parents[1] / "engine" / "strategies"]
     extra = os.getenv("KEHRNEL_STRATEGY_PATHS")
@@ -37,6 +41,8 @@ def _discover_manifests() -> list[StrategyManifest]:
             continue
         for manifest_path in base.glob("**/manifest.json"):
             data = json.loads(manifest_path.read_text(encoding="utf-8"))
+            if not _is_public_strategy_id(data.get("id")):
+                continue
             base_dir = manifest_path.parent
             defaults_path = base_dir / "defaults.json"
             schema_path = base_dir / "schema.json"

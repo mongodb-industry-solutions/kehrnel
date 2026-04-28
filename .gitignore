@@ -204,3 +204,16 @@ config.json
 .kehrnel/
 tmp_reg.json
 :memory:
+
+# Internal/private docs that should stay local and not be republished
+README-dev.md
+docs/README.md
+docs/cli-api-reference.md
+docs/con2l-negotiation-and-runtime.md
+docs/contextobjects-runtime-overview.md
+docs/contextobjects-strategy-ops.md
+docs/hdl-contract.md
+docs/hdl-kehrnel-contextobjects-contract.md
+docs/hdl-kehrnel-synthetic-contract-v2.md
+docs/objectmaps-runtime.md
+docs/tenant-context-catalog-publication.md

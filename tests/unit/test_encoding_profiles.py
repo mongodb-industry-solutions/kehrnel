@@ -1,4 +1,4 @@
-from kehrnel.strategies.openehr.rps_dual.ingest.encoding import PathCodec
+from kehrnel.engine.strategies.openehr.rps_dual.ingest.encoding import PathCodec
 
 
 def test_pathcodec_encode_and_decode_codedpath_with_configured_separator():

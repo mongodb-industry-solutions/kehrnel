@@ -82,5 +82,3 @@ See [Configuration](/docs/getting-started/configuration) for the complete list.
 ## Canonical Inventory
 
 For exhaustive command and endpoint inventory generated from `pyproject.toml` and OpenAPI, see:
-
-- [Canonical CLI + API Inventory (generated)](https://github.com/mongodb-industry-solutions/kehrnel/blob/main/docs/cli-api-reference.md)

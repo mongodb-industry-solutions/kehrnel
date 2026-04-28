@@ -11,6 +11,7 @@ from kehrnel.engine.strategies.openehr.rps_dual.query.strategy_selector import (
     should_prefer_match_for_cross_patient_ast,
 )
 from kehrnel.engine.strategies.openehr.rps_dual.query.transformers.aql_transformer import AQLtoMQLTransformer
+from kehrnel.engine.strategies.openehr.rps_dual.query.transformers.archetype_resolver import ArchetypeResolver
 from kehrnel.engine.strategies.openehr.rps_dual.query.transformers.ast_validator import ASTValidator
 from kehrnel.engine.strategies.openehr.rps_dual.query.transformers.context_mapper import ContextMapper
 from kehrnel.engine.strategies.openehr.rps_dual.query.transformers.format_resolver import FormatResolver
@@ -23,6 +24,9 @@ from kehrnel.engine.strategies.openehr.rps_dual.services.shortcuts_service impor
     DEFAULT_DOC_ID as DEFAULT_SHORTCUTS_DOC_ID,
 )
 from kehrnel.persistence import get_default_strategy, load_strategy_from_json
+
+
+_SHARED_RESOLVER_CACHE_LIMIT = 8
 
 
 def extract_ehr_id(ir: AqlQueryIR) -> str | None:
@@ -154,6 +158,83 @@ def _overlay_dictionary_sources(
     return merged
 
 
+def _compile_cache_bucket(
+    compile_cache: Optional[Dict[str, Any]],
+    name: str,
+) -> Optional[Dict[str, Any]]:
+    if not isinstance(compile_cache, dict):
+        return None
+    bucket = compile_cache.get(name)
+    if isinstance(bucket, dict):
+        return bucket
+    bucket = {}
+    compile_cache[name] = bucket
+    return bucket
+
+
+def _remember_cached_value(
+    cache: Optional[Dict[str, Any]],
+    key: str,
+    value: Any,
+    *,
+    limit: int,
+) -> None:
+    if not isinstance(cache, dict):
+        return
+    if key in cache:
+        cache.pop(key, None)
+    elif len(cache) >= limit:
+        oldest_key = next(iter(cache), None)
+        if oldest_key is not None:
+            cache.pop(oldest_key, None)
+    cache[key] = value
+
+
+def _shared_resolver_cache_key(schema_cfgs: Dict[str, Dict[str, Any]]) -> str:
+    composition = schema_cfgs.get("composition") or {}
+    search = schema_cfgs.get("search") or {}
+    return "|".join(
+        str(value or "")
+        for value in (
+            composition.get("codes_collection"),
+            composition.get("codes_doc_id"),
+            composition.get("collection"),
+            search.get("collection"),
+            composition.get("separator"),
+            composition.get("atcode_strategy"),
+        )
+    )
+
+
+def _get_or_create_shared_archetype_resolver(
+    *,
+    db: Any,
+    schema_cfgs: Dict[str, Dict[str, Any]],
+    compile_cache: Optional[Dict[str, Any]] = None,
+) -> Tuple[Optional[ArchetypeResolver], str]:
+    if db is None:
+        return None, "disabled"
+
+    cache_key = _shared_resolver_cache_key(schema_cfgs)
+    bucket = _compile_cache_bucket(compile_cache, "archetype_resolver")
+    cached = bucket.get(cache_key) if isinstance(bucket, dict) else None
+    if isinstance(cached, ArchetypeResolver):
+        _remember_cached_value(bucket, cache_key, cached, limit=_SHARED_RESOLVER_CACHE_LIMIT)
+        return cached, "hit"
+
+    resolver = ArchetypeResolver(
+        db,
+        codes_collection=(schema_cfgs.get("composition") or {}).get("codes_collection"),
+        codes_doc_id=(schema_cfgs.get("composition") or {}).get("codes_doc_id"),
+        search_collection=(schema_cfgs.get("search") or {}).get("collection"),
+        composition_collection=(schema_cfgs.get("composition") or {}).get("collection"),
+        separator=(schema_cfgs.get("composition") or {}).get("separator"),
+        atcode_strategy=(schema_cfgs.get("composition") or {}).get("atcode_strategy"),
+    )
+    _remember_cached_value(bucket, cache_key, resolver, limit=_SHARED_RESOLVER_CACHE_LIMIT)
+    return resolver, "miss"
+
+
 async def build_query_pipeline_from_ast(
     ast_doc: Dict[str, Any],
     cfg_model: RPSDualConfig,
@@ -163,6 +244,7 @@ async def build_query_pipeline_from_ast(
     strategy: Any = None,
     ehr_id: Optional[str] = None,
     raw_cfg: Optional[Dict[str, Any]] = None,
+    compile_cache: Optional[Dict[str, Any]] = None,
 ) -> Tuple[str, List[Dict[str, Any]], str, Dict[str, Any], Dict[str, Any], Dict[str, Any]]:
     cfg = cfg_model.model_dump()
     ASTValidator.validate_ast(ast_doc)
@@ -171,6 +253,11 @@ async def build_query_pipeline_from_ast(
     schema_cfgs = _overlay_dictionary_sources(build_schema_config(cfg_model), raw_cfg)
     # Initialize resolver to keep behavior aligned with strategy compile path.
     FormatResolver(ctx_map, ehr_alias, comp_alias, schema_cfgs["composition"])
+    archetype_resolver, resolver_cache_status = _get_or_create_shared_archetype_resolver(
+        db=db,
+        schema_cfgs=schema_cfgs,
+        compile_cache=compile_cache,
+    )
     resolved_ehr_id = ehr_id if ehr_id is not None else extract_ehr_id_from_ast(ast_doc)
     scope = "patient" if resolved_ehr_id is not None else "cross_patient"
     prefer_match = (
@@ -198,6 +285,7 @@ async def build_query_pipeline_from_ast(
         search_index_name=schema_cfgs["search"].get("index_name"),
         strategy=runtime_strategy or get_default_strategy(),
         shortcut_map=shortcut_map or {},
+        archetype_resolver=archetype_resolver,
     )
     if scope == "cross_patient" and cfg.get("collections", {}).get("search", {}).get("enabled") and not prefer_match:
         pipeline = await transformer.build_search_pipeline()
@@ -221,6 +309,9 @@ async def build_query_pipeline_from_ast(
         "has_ehr_id_pred": resolved_ehr_id is not None,
         "prefer_match": prefer_match,
         "search_enabled": cfg.get("collections", {}).get("search", {}).get("enabled"),
+        "cache": {
+            "archetype_resolver": resolver_cache_status,
+        },
     }
     return engine, pipeline, stage0, schema_cfgs, ast_doc, builder_info
 
@@ -233,6 +324,7 @@ async def build_query_pipeline(
     shortcut_map: Optional[Dict[str, str]] = None,
     strategy: Any = None,
     raw_cfg: Optional[Dict[str, Any]] = None,
+    compile_cache: Optional[Dict[str, Any]] = None,
 ) -> Tuple[str, List[Dict[str, Any]], str, Dict[str, Any], Dict[str, Any], Dict[str, Any]]:
     ast_doc = adapt_ir_to_ast(ir, ehr_alias="e", composition_alias="c")
     return await build_query_pipeline_from_ast(
@@ -243,4 +335,5 @@ async def build_query_pipeline(
         strategy=strategy,
         ehr_id=extract_ehr_id(ir),
         raw_cfg=raw_cfg,
+        compile_cache=compile_cache,
     )

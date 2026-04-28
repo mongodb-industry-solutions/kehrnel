@@ -7,7 +7,6 @@ import os
 import random
 import tempfile
 import uuid
-from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict
 
@@ -63,6 +62,8 @@ _SUPPORTED_QUERY_SAFE_ENCODING_PROFILES = {
     "profile.search_shortcuts",
 }
 
+_RAW_AQL_AST_CACHE_LIMIT = 128
+
 _INGEST_CONTROL_KEYS = {
     "data_mode",
     "debug",
@@ -110,6 +111,64 @@ def _bind_query_params(node: Any, params: Dict[str, Any], missing: set[str]) -> 
     if isinstance(node, list):
         return [_bind_query_params(item, params, missing) for item in node]
     return node
+
+
+def _query_compile_cache(ctx: StrategyContext) -> Dict[str, Any] | None:
+    meta = ctx.meta if isinstance(ctx.meta, dict) else None
+    if not isinstance(meta, dict):
+        return None
+    cache = meta.get("query_compile_cache")
+    if isinstance(cache, dict):
+        return cache
+    cache = {}
+    meta["query_compile_cache"] = cache
+    return cache
+
+
+def _compile_cache_bucket(
+    compile_cache: Dict[str, Any] | None,
+    name: str,
+) -> Dict[str, Any] | None:
+    if not isinstance(compile_cache, dict):
+        return None
+    bucket = compile_cache.get(name)
+    if isinstance(bucket, dict):
+        return bucket
+    bucket = {}
+    compile_cache[name] = bucket
+    return bucket
+
+
+def _remember_cached_value(
+    cache: Dict[str, Any] | None,
+    key: str,
+    value: Any,
+    *,
+    limit: int,
+) -> None:
+    if not isinstance(cache, dict):
+        return
+    if key in cache:
+        cache.pop(key, None)
+    elif len(cache) >= limit:
+        oldest_key = next(iter(cache), None)
+        if oldest_key is not None:
+            cache.pop(oldest_key, None)
+    cache[key] = value
+
+
+def _get_or_parse_raw_aql_ast(raw_aql: str, ctx: StrategyContext) -> tuple[Dict[str, Any], str]:
+    compile_cache = _query_compile_cache(ctx)
+    bucket = _compile_cache_bucket(compile_cache, "raw_aql_ast")
+    cache_key = str(raw_aql or "").strip()
+    cached = bucket.get(cache_key) if isinstance(bucket, dict) else None
+    if isinstance(cached, dict):
+        _remember_cached_value(bucket, cache_key, cached, limit=_RAW_AQL_AST_CACHE_LIMIT)
+        return cached, "hit"
+
+    parsed = AQLToASTParser(cache_key).parse()
+    _remember_cached_value(bucket, cache_key, parsed, limit=_RAW_AQL_AST_CACHE_LIMIT)
+    return parsed, "miss"
 
 
 def _allow_local_file_ingest() -> bool:
@@ -626,6 +685,7 @@ class RPSDualStrategy(StrategyPlugin):
         runtime_strategy = build_runtime_strategy(cfg_model)
         storage = (ctx.adapters or {}).get("storage") if ctx else None
         motor_db = getattr(storage, "db", None) if storage else None
+        compile_cache = _query_compile_cache(ctx)
 
         def _execution_contract(stage_name: str, schema_cfgs: Dict[str, Any]) -> tuple[str, str | None]:
             if stage_name == "$search":
@@ -638,7 +698,7 @@ class RPSDualStrategy(StrategyPlugin):
             if isinstance(raw_aql, str) and raw_aql.strip():
                 params = query.get("params") or query.get("parameters") or {}
                 try:
-                    raw_ast = AQLToASTParser(raw_aql).parse()
+                    raw_ast, raw_aql_cache_status = _get_or_parse_raw_aql_ast(raw_aql, ctx)
                 except Exception as exc:
                     raise KehrnelError(
                         code="INVALID_AQL",
@@ -648,7 +708,7 @@ class RPSDualStrategy(StrategyPlugin):
                     ) from exc
 
                 missing_params: set[str] = set()
-                ast_doc = _bind_query_params(deepcopy(raw_ast), params, missing_params)
+                ast_doc = _bind_query_params(raw_ast, params, missing_params)
                 if missing_params:
                     raise KehrnelError(
                         code="MISSING_QUERY_PARAMETERS",
@@ -667,7 +727,10 @@ class RPSDualStrategy(StrategyPlugin):
                     shortcut_map=shortcuts_res.get("items") or {},
                     strategy=runtime_strategy,
                     raw_cfg=ctx.config if isinstance(ctx.config, dict) else None,
+                    compile_cache=compile_cache,
                 )
+                builder_cache = builder_info.setdefault("cache", {})
+                builder_cache["raw_aql_ast"] = raw_aql_cache_status
                 scope = builder_info.get("scope") or "patient"
                 if scope == "cross_patient":
                     post_match = [stage for stage in pipeline[1:] if "$match" in stage]
@@ -719,6 +782,7 @@ class RPSDualStrategy(StrategyPlugin):
             shortcut_map=shortcuts_res.get("items") or {},
             strategy=runtime_strategy,
             raw_cfg=ctx.config if isinstance(ctx.config, dict) else None,
+            compile_cache=compile_cache,
         )
         if ir.scope == "cross_patient":
             post_match = [stage for stage in pipeline[1:] if "$match" in stage]

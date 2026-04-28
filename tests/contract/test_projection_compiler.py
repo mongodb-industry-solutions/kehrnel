@@ -1,5 +1,5 @@
 from kehrnel.domains.openehr.aql.ir import AqlQueryIR
-from kehrnel.strategies.openehr.rps_dual.query.projection_compiler import compile_projection
+from kehrnel.engine.strategies.openehr.rps_dual.query.projection_compiler import compile_projection
 
 
 def test_projection_compiles_basic_fields():

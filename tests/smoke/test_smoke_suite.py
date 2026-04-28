@@ -4,7 +4,7 @@ import json
 import pytest
 
 from kehrnel.domains.openehr.templates.parser import TemplateParser
-from kehrnel.strategies.openehr.rps_dual.ingest.core import Transformer
+from kehrnel.engine.strategies.openehr.rps_dual.ingest.core import Transformer
 from kehrnel.common.mapping.mapping_engine import apply_mapping
 from kehrnel.persistence import get_driver, MemoryPersister, MongoStore
 

@@ -22,9 +22,10 @@ def test_diagnostics_includes_valid_and_invalid(client):
     assert res.status_code == 200
     entries = res.json()["strategies"]
     assert entries
-    # shipped strategies should be valid
-    valid_entries = [e for e in entries if e.get("id") and (e["id"].startswith("openehr") or e["id"].startswith("fhir"))]
-    assert all(e["is_valid"] for e in valid_entries)
+    expected_public = {"openehr.rps_dual", "openehr.rps_dual_ibm", "openehr.rps_single", "fhir.resource_first"}
+    public_entries = {e["id"]: e for e in entries if e.get("id") in expected_public}
+    assert public_entries.keys() == expected_public
+    assert all(e["is_valid"] for e in public_entries.values())
     # invalid fixture should be present with errors
     invalid = next((e for e in entries if e.get("id") == "invalid.strategy"), None)
     assert invalid is not None

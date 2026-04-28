@@ -2,8 +2,8 @@ import pytest
 import asyncio
 
 from kehrnel.core.types import StrategyContext
-from kehrnel.strategies.openehr.rps_dual.services.shortcuts_service import get_shortcuts
-from kehrnel.strategies.openehr.rps_dual.services.codes_service import get_codes
+from kehrnel.engine.strategies.openehr.rps_dual.services.shortcuts_service import get_shortcuts
+from kehrnel.engine.strategies.openehr.rps_dual.services.codes_service import get_codes
 
 
 class FakeStorage:
