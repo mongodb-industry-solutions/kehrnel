@@ -37,6 +37,7 @@ class AQLtoMQLTransformer:
         search_index_name: str = "search_compositions_index",
         strategy: Optional[PersistenceStrategy] = None,
         shortcut_map: Optional[Dict[str, str]] = None,
+        archetype_resolver: Optional[ArchetypeResolver] = None,
     ):
         self.ast = ast
         self.ehr_id = ehr_id
@@ -44,6 +45,7 @@ class AQLtoMQLTransformer:
         self.search_index_name = search_index_name
         self.strategy = strategy or get_default_strategy()
         self.shortcut_map = shortcut_map or {}
+        self.archetype_resolver = archetype_resolver
         
         # Schema field configuration (Point 3 preparation)
         self.schema_config = schema_config or self._build_schema_config_from_strategy(self.strategy)
@@ -72,8 +74,7 @@ class AQLtoMQLTransformer:
         self._process_let_variables()
         
         # 5. Initialize archetype resolver if database is available
-        self.archetype_resolver = None
-        if self.db is not None:
+        if self.archetype_resolver is None and self.db is not None:
             self.archetype_resolver = ArchetypeResolver(
                 self.db,
                 codes_collection=self.schema_config.get("codes_collection"),
@@ -170,24 +171,38 @@ class AQLtoMQLTransformer:
         if fanout_stages:
             pipeline.extend(fanout_stages)
 
-        # 4. Build the $project stage from the SELECT clause
-        project_stage = await self.pipeline_builder.build_project_stage(self.ast)
+        # 4. Re-apply supported WHERE logic at row level when exact fanout correlation is available.
+        row_exact_match = await self.pipeline_builder.build_row_exact_match_stage(self.ast)
+        if row_exact_match:
+            pipeline.append(row_exact_match)
+
+        # 5. Cache repeated node filters only when the expected scan savings justify it.
+        projection_cache_plan = await self.pipeline_builder.build_projection_cache_plan(self.ast)
+        projection_cache_stage = self.pipeline_builder.build_projection_cache_stage(projection_cache_plan)
+        if projection_cache_stage:
+            pipeline.append(projection_cache_stage)
+
+        # 6. Build the $project stage from the SELECT clause
+        project_stage = await self.pipeline_builder.build_project_stage(
+            self.ast,
+            projection_cache_plan=projection_cache_plan,
+        )
         if project_stage:
             pipeline.append(project_stage)
 
-        # 5. Build DISTINCT stages ($group + $replaceRoot) if SELECT DISTINCT is used
+        # 7. Build DISTINCT stages ($group + $replaceRoot) if SELECT DISTINCT is used
         # This must come after $project so we can group by the projected field names
         projected_fields = self.pipeline_builder.get_projected_field_names(self.ast)
         distinct_stages = self.pipeline_builder.build_distinct_stages(self.ast, projected_fields)
         if distinct_stages:
             pipeline.extend(distinct_stages)
 
-        # 6. Build the $sort stage from ORDER BY clause
+        # 8. Build the $sort stage from ORDER BY clause
         sort_stage = self.pipeline_builder.build_sort_stage(self.ast)
         if sort_stage:
             pipeline.append(sort_stage)
         
-        # 7. Build the $limit stage from LIMIT clause
+        # 9. Build the $limit stage from LIMIT clause
         limit_stage = self.pipeline_builder.build_limit_stage(self.ast)
         if limit_stage:
             pipeline.append(limit_stage)

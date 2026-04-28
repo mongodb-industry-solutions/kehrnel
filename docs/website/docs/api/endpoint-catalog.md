@@ -8,7 +8,6 @@ This page indexes detailed endpoint-group references used by the layer pages.
 
 Source of truth:
 
-- Generated canonical inventory: [`docs/cli-api-reference.md`](https://github.com/mongodb-industry-solutions/kehrnel/blob/main/docs/cli-api-reference.md)
 
 Use these references for endpoint-level details:
 

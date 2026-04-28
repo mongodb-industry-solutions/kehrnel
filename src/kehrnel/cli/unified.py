@@ -305,11 +305,43 @@ def _emit_rich_table(
         stdout_console.print(Panel.fit(guide_table, title="More Info", border_style="blue", box=box.ROUNDED))
 
 
+def _extract_timing_map(payload: Any) -> Dict[str, Any]:
+    candidates = [
+        _deep_get(payload, "meta", "timings"),
+        _deep_get(payload, "result", "meta", "timings"),
+        _deep_get(payload, "response", "meta", "timings"),
+        _deep_get(payload, "plan", "meta", "timings"),
+        _deep_get(payload, "result", "plan", "meta", "timings"),
+        _deep_get(payload, "response", "result", "plan", "meta", "timings"),
+        _deep_get(payload, "explain", "timings"),
+        _deep_get(payload, "result", "explain", "timings"),
+        _deep_get(payload, "response", "result", "explain", "timings"),
+        _deep_get(payload, "plan", "explain", "timings"),
+        _deep_get(payload, "result", "plan", "explain", "timings"),
+        _deep_get(payload, "response", "result", "plan", "explain", "timings"),
+    ]
+    for candidate in candidates:
+        if isinstance(candidate, dict) and candidate:
+            return candidate
+    return {}
+
+
+def _format_timing_ms(value: Any) -> str:
+    try:
+        numeric = float(value)
+    except (TypeError, ValueError):
+        return "—"
+    if numeric.is_integer():
+        return f"{int(numeric)} ms"
+    return f"{numeric:.2f} ms"
+
+
 def _build_summary_rows(kind: str, data: Any, operation: Optional[str] = None, out_path: Optional[Path] = None) -> List[tuple[str, str]]:
     rows: List[tuple[str, str]] = []
     result = _deep_get(data, "result") or _deep_get(data, "response", "result")
     initialization = _deep_get(data, "initialization") or _deep_get(data, "response", "initialization")
     activation = _extract_activation_record(data)
+    timings = _extract_timing_map(result if isinstance(result, dict) else data)
 
     if kind == "health":
         if isinstance(data, dict):
@@ -345,14 +377,23 @@ def _build_summary_rows(kind: str, data: Any, operation: Optional[str] = None, o
         return rows
 
     if kind == "query" and isinstance(result, dict):
+        explain = result.get("explain") if isinstance(result.get("explain"), dict) else {}
         plan = _deep_get(result, "explain", "plan") or {}
         rows_value = result.get("rows")
-        rows.append(("engine", str(result.get("engine_used") or result.get("engine") or plan.get("engine") or "—")))
-        rows.append(("scope", str(plan.get("scope") or _deep_get(result, "explain", "scope") or "—")))
-        rows.append(("collection", str(plan.get("collection") or "—")))
+        rows.append(("engine", str(result.get("engine_used") or result.get("engine") or explain.get("engine") or plan.get("engine") or "—")))
+        rows.append(("scope", str(explain.get("scope") or plan.get("scope") or "—")))
+        rows.append(("collection", str(explain.get("collection") or plan.get("collection") or "—")))
         rows.append(("rows", str(len(rows_value) if isinstance(rows_value, list) else 0)))
-        warnings = _deep_get(result, "explain", "warnings") or plan.get("warnings") or []
+        warnings = explain.get("warnings") or plan.get("warnings") or []
         rows.append(("warnings", str(len(warnings) if isinstance(warnings, list) else 0)))
+        for label, key in (
+            ("total", "kehrnel_total_ms"),
+            ("compile", "kehrnel_compile_ms"),
+            ("execute", "kehrnel_execute_ms"),
+            ("db", "kehrnel_db_ms"),
+        ):
+            if timings.get(key) is not None:
+                rows.append((f"{label} time", _format_timing_ms(timings.get(key))))
         return rows
 
     if kind == "compile-query" and isinstance(result, dict):
@@ -364,6 +405,8 @@ def _build_summary_rows(kind: str, data: Any, operation: Optional[str] = None, o
         rows.append(("stage0", str(explain.get("stage0") or "—")))
         warnings = plan.get("warnings") or explain.get("warnings") or []
         rows.append(("warnings", str(len(warnings) if isinstance(warnings, list) else 0)))
+        if timings.get("kehrnel_compile_ms") is not None:
+            rows.append(("compile time", _format_timing_ms(timings.get("kehrnel_compile_ms"))))
         return rows
 
     if kind == "build-search-index":

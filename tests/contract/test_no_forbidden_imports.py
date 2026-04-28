@@ -12,6 +12,7 @@ LEGACY_ENGINE_IMPORT_PATTERN = re.compile(
     r"^\s*(from|import)\s+kehrnel\.(core|common|domains|strategies)\b",
     re.MULTILINE,
 )
+LEGACY_STRATEGY_IMPORT_PATTERN = re.compile(r"^\s*(from|import)\s+kehrnel\.strategies\b", re.MULTILINE)
 THIS_FILE = Path(__file__).resolve()
 FORBIDDEN_PATH_TOKENS = (
     "src.core.",
@@ -23,8 +24,8 @@ FORBIDDEN_PATH_TOKENS = (
     "libs.",
 )
 FORBIDDEN_RPS_DUAL_COMPILERS = (
-    "kehrnel.strategies.openehr.rps_dual.query.compiler_match",
-    "kehrnel.strategies.openehr.rps_dual.query.compiler_atlas_search",
+    "kehrnel.engine.strategies.openehr.rps_dual.query.compiler_match",
+    "kehrnel.engine.strategies.openehr.rps_dual.query.compiler_atlas_search",
 )
 
 
@@ -74,3 +75,13 @@ def test_cli_and_api_import_engine_paths_only():
             if LEGACY_ENGINE_IMPORT_PATTERN.search(text):
                 offenders.append(path)
     assert not offenders, f"CLI/API must import engine modules only: {sorted(offenders)}"
+
+
+def test_no_legacy_strategy_imports_anywhere():
+    offenders = []
+    for root in (SRC_ROOT / "kehrnel", Path("tests")):
+        for path in root.rglob("*.py"):
+            text = path.read_text(encoding="utf-8")
+            if LEGACY_STRATEGY_IMPORT_PATTERN.search(text):
+                offenders.append(path)
+    assert not offenders, f"Legacy strategy imports are forbidden: {sorted(offenders)}"

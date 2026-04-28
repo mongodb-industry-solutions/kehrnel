@@ -6,6 +6,7 @@ import importlib.util
 import json
 import hashlib
 from datetime import datetime
+from time import perf_counter
 from typing import Dict, Optional, Any
 from dataclasses import is_dataclass, asdict, replace
 
@@ -33,7 +34,7 @@ class StrategyRuntime:
         self.bundle_store = bundle_store
         self.bindings_resolver = bindings_resolver
         self.env_manifests: Dict[str, StrategyManifest] = {}
-        # per-env cache: {"adapters": {...}, "dict_cache": {...}}
+        # per-env cache: {"adapters": {...}, "dict_cache": {...}, "query_compile_cache": {...}}
         self._env_cache: Dict[str, Dict[str, Any]] = {}
 
     @classmethod
@@ -448,11 +449,14 @@ class StrategyRuntime:
                 },
             )
 
-        cache = self._env_cache.setdefault(env_id, {}).setdefault("dict_cache", {})
+        env_cache = self._env_cache.setdefault(env_id, {})
+        cache = env_cache.setdefault("dict_cache", {})
+        query_compile_cache = env_cache.setdefault("query_compile_cache", {})
         config_hash = activation.config_hash or self._config_hash(activation.config)
         manifest_digest = activation.manifest_digest or self._manifest_digest(manifest)
         meta = {
             "dict_cache": cache,
+            "query_compile_cache": query_compile_cache,
             "activation_id": activation.activation_id,
             "config_hash": config_hash,
             "manifest_digest": manifest_digest,
@@ -530,7 +534,9 @@ class StrategyRuntime:
                         "params": payload.get("parameters") or payload.get("params") or {},
                         "debug": bool(payload.get("debug")),
                     }
+                compile_started = perf_counter()
                 plan = await handle.plugin.compile_query(ctx, domain=domain, query=query)
+                compile_ms = _elapsed_ms(compile_started)
                 plan_dict = _to_dict(plan)
                 # unwrap nested plan if present
                 if isinstance(plan_dict, dict) and "plan" in plan_dict and isinstance(plan_dict["plan"], dict) and "pipeline" in plan_dict["plan"]:
@@ -538,6 +544,11 @@ class StrategyRuntime:
                     inner.setdefault("engine", plan_dict.get("engine"))
                     inner.setdefault("explain", plan_dict.get("explain", inner.get("explain")))
                     plan_dict = inner
+                plan_meta = plan_dict.get("meta") if isinstance(plan_dict.get("meta"), dict) else {}
+                plan_timings = dict(plan_meta.get("timings") or {})
+                plan_timings["kehrnel_compile_ms"] = compile_ms
+                plan_meta["timings"] = plan_timings
+                plan_dict["meta"] = plan_meta
                 explain = plan_dict.get("explain") or {}
                 explain.setdefault("activation_id", activation.activation_id)
                 explain.setdefault("strategy_id", activation.strategy_id)
@@ -547,6 +558,9 @@ class StrategyRuntime:
                 explain.setdefault("manifest_digest", activation.manifest_digest or self._manifest_digest(manifest))
                 explain.setdefault("engine", plan_dict.get("engine"))
                 explain.setdefault("scope", plan_dict.get("scope") or explain.get("scope"))
+                explain_timings = dict(explain.get("timings") or {})
+                explain_timings.setdefault("kehrnel_compile_ms", compile_ms)
+                explain["timings"] = explain_timings
                 if allow_mismatch:
                     explain.setdefault("warnings", []).append("activation_manifest_mismatch_allowed")
                 plan_dict["explain"] = explain
@@ -574,9 +588,31 @@ class StrategyRuntime:
                         "params": payload.get("parameters") or payload.get("params") or {},
                         "debug": bool(payload.get("debug")),
                     }
+                query_started = perf_counter()
+                compile_started = perf_counter()
                 plan = await handle.plugin.compile_query(ctx, domain=domain, query=query)
+                compile_ms = _elapsed_ms(compile_started)
+                execute_started = perf_counter()
                 res = await handle.plugin.execute_query(ctx, plan)
-                return _to_dict(res)
+                execute_ms = _elapsed_ms(execute_started)
+                res_dict = _to_dict(res)
+                result_meta = res_dict.get("meta") if isinstance(res_dict.get("meta"), dict) else {}
+                result_timings = dict(result_meta.get("timings") or {})
+                explain_dict = res_dict.get("explain") if isinstance(res_dict.get("explain"), dict) else {}
+                explain_timings = dict(explain_dict.get("timings") or {})
+                result_timings.update(explain_timings)
+                result_timings["kehrnel_compile_ms"] = compile_ms
+                result_timings["kehrnel_execute_ms"] = execute_ms
+                result_timings["kehrnel_total_ms"] = _elapsed_ms(query_started)
+                result_meta["timings"] = result_timings
+                if isinstance(res_dict.get("rows"), list):
+                    result_meta.setdefault("row_count", len(res_dict["rows"]))
+                res_dict["meta"] = result_meta
+                if explain_dict:
+                    explain_timings.update(result_timings)
+                    explain_dict["timings"] = explain_timings
+                    res_dict["explain"] = explain_dict
+                return res_dict
             if op_lower in ("op", "extensions"):
                 op_name = payload.get("op") if payload else None
                 op_payload = payload.get("payload") if payload else {}
@@ -679,8 +715,9 @@ class StrategyRuntime:
 
     def invalidate_env_cache(self, env_id: str, dict_only: bool = False):
         if dict_only:
-            if env_id in self._env_cache and "dict_cache" in self._env_cache[env_id]:
+            if env_id in self._env_cache:
                 self._env_cache[env_id]["dict_cache"] = {}
+                self._env_cache[env_id]["query_compile_cache"] = {}
             return
         self._env_cache.pop(env_id, None)
 
@@ -807,6 +844,10 @@ def _to_dict(obj: Any) -> Any:
     if isinstance(obj, dict):
         return {k: _to_dict(v) for k, v in obj.items()}
     return obj
+
+
+def _elapsed_ms(started_at: float) -> float:
+    return round((perf_counter() - started_at) * 1000, 2)
 
 
 async def _maybe_await(fn, *args, **kwargs):

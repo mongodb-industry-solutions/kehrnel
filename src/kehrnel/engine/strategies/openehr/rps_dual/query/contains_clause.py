@@ -231,15 +231,18 @@ async def build_shortened_row_fanout_spec(
     if target_idx <= 0:
         return None
 
-    enriched_chain: List[Dict[str, str]] = []
+    full_enriched_chain: List[Dict[str, str]] = []
     codes: List[str] = []
-    for entry in chain[: target_idx + 1]:
+    for idx, entry in enumerate(chain):
         code = await archetype_resolver.get_archetype_code(entry["archetype_id"])
         if code is None:
             return None
         code_str = str(code)
-        enriched_chain.append({**entry, "code": code_str})
-        codes.append(code_str)
+        full_enriched_chain.append({**entry, "code": code_str})
+        if idx <= target_idx:
+            codes.append(code_str)
+
+    enriched_chain = full_enriched_chain[: target_idx + 1]
 
     target_regex = build_shortened_ancestry_regex(codes, separator)
     if not target_regex:
@@ -254,5 +257,18 @@ async def build_shortened_row_fanout_spec(
             for entry in enriched_chain
             if entry.get("alias")
         },
+        "full_chain": full_enriched_chain,
+        "full_aliases": [entry["alias"] for entry in full_enriched_chain if entry.get("alias")],
+        "full_alias_codes": {
+            entry["alias"]: entry["code"]
+            for entry in full_enriched_chain
+            if entry.get("alias")
+        },
+        "alias_index": {
+            entry["alias"]: idx
+            for idx, entry in enumerate(full_enriched_chain)
+            if entry.get("alias")
+        },
+        "target_index": target_idx,
         "chain": enriched_chain,
     }

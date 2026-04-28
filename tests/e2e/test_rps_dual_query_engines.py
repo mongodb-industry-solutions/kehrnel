@@ -7,7 +7,7 @@ from pymongo.errors import ConfigurationError
 from kehrnel.core.registry import FileActivationRegistry
 from kehrnel.core.runtime import StrategyRuntime
 from kehrnel.core.manifest import StrategyManifest
-from kehrnel.strategies.openehr.rps_dual.strategy import MANIFEST as RPS_MANIFEST, RPSDualStrategy
+from kehrnel.engine.strategies.openehr.rps_dual.strategy import MANIFEST as RPS_MANIFEST, RPSDualStrategy
 from kehrnel.strategy_sdk import StrategyBindings
 
 
@@ -61,6 +61,7 @@ async def test_query_engines(runtime, activated_env):
         res_patient = await runtime.dispatch(env_id, "query", {"domain": "openehr", "query": ir_patient})
         assert res_patient.get("engine_used") == "mongo_pipeline"
         assert res_patient.get("explain", {}).get("pipeline", [{}])[0].get("$match") is not None
+        assert "plan" not in (res_patient.get("explain") or {})
 
         # cross-patient query (forces search)
         ir_cross = {"scope": "cross_patient", "predicates": [{"path": "text", "op": "eq", "value": "hello"}]}
@@ -68,6 +69,7 @@ async def test_query_engines(runtime, activated_env):
         assert res_cross.get("engine_used") in ("atlas_search_dual", "text_search_dual", "mongo_pipeline")
         pipeline = res_cross.get("explain", {}).get("pipeline", [])
         assert pipeline, "Pipeline should be present"
+        assert "plan" not in (res_cross.get("explain") or {})
         assert list(pipeline[0].keys())[0] == "$search"
     except ConfigurationError as exc:
         pytest.skip(f"MongoDB not reachable: {exc}")

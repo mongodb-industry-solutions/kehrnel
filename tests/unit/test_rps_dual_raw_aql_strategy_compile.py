@@ -5,6 +5,8 @@ from copy import deepcopy
 import pytest
 
 from kehrnel.engine.core.types import StrategyContext
+from kehrnel.engine.strategies.openehr.rps_dual import strategy as strategy_module
+from kehrnel.engine.strategies.openehr.rps_dual.query.compiler import _get_or_create_shared_archetype_resolver
 from kehrnel.engine.strategies.openehr.rps_dual.strategy import MANIFEST, RPSDualStrategy
 
 
@@ -43,6 +45,112 @@ class _FakeStorage:
 
     async def find_one(self, collection, flt):
         return await self.db[collection].find_one(flt)
+
+
+@pytest.mark.asyncio
+async def test_compile_query_raw_aql_reuses_parsed_ast_across_parameter_changes(monkeypatch):
+    parse_calls = []
+
+    class _CountingParser:
+        def __init__(self, text):
+            self.text = text
+
+        def parse(self):
+            parse_calls.append(self.text)
+            return {
+                "from": {"alias": "e"},
+                "where": {"path": "e/ehr_id/value", "operator": "=", "value": "$ehrId"},
+                "select": {"distinct": False, "columns": {}},
+            }
+
+    async def _fake_get_shortcuts(_ctx):
+        return {"items": {}, "source": "cache", "missing": False}
+
+    async def _fake_get_codes(_ctx):
+        return {"items": {}, "source": "cache", "missing": False}
+
+    async def _fake_build_query_pipeline_from_ast(ast_doc, *_args, **_kwargs):
+        return (
+            "pipeline_builder",
+            [{"$match": {"ehr_id": ast_doc["where"]["value"]}}],
+            "$match",
+            {
+                "composition": {"collection": "compositions_rps"},
+                "search": {"collection": "compositions_search"},
+            },
+            ast_doc,
+            {
+                "chosen": "pipeline_builder",
+                "scope": "patient",
+                "reason": "scope_patient",
+                "has_ehr_id_pred": True,
+                "prefer_match": False,
+                "search_enabled": True,
+            },
+        )
+
+    monkeypatch.setattr(strategy_module, "AQLToASTParser", _CountingParser)
+    monkeypatch.setattr(strategy_module, "get_shortcuts", _fake_get_shortcuts)
+    monkeypatch.setattr(strategy_module, "get_codes", _fake_get_codes)
+    monkeypatch.setattr(strategy_module, "build_query_pipeline_from_ast", _fake_build_query_pipeline_from_ast)
+
+    ctx = StrategyContext(
+        environment_id="env-1",
+        config=MANIFEST.default_config,
+        adapters={},
+        manifest=MANIFEST.model_copy(deep=True),
+        meta={"query_compile_cache": {}},
+    )
+    strategy = RPSDualStrategy()
+    raw_aql = "SELECT e/ehr_id/value AS ehrId FROM EHR e WHERE e/ehr_id/value = $ehrId"
+
+    first = await strategy.compile_query(
+        ctx,
+        "openEHR",
+        {"raw_aql": raw_aql, "params": {"ehrId": "ehr-1"}},
+    )
+    second = await strategy.compile_query(
+        ctx,
+        "openEHR",
+        {"raw_aql": raw_aql, "params": {"ehrId": "ehr-2"}},
+    )
+
+    assert parse_calls == [raw_aql]
+    assert first.plan["pipeline"][0]["$match"]["ehr_id"] == "ehr-1"
+    assert second.plan["pipeline"][0]["$match"]["ehr_id"] == "ehr-2"
+    assert first.plan["explain"]["builder"]["cache"]["raw_aql_ast"] == "miss"
+    assert second.plan["explain"]["builder"]["cache"]["raw_aql_ast"] == "hit"
+
+
+def test_shared_archetype_resolver_cache_reuses_instance():
+    compile_cache = {}
+    schema_cfgs = {
+        "composition": {
+            "codes_collection": "_codes",
+            "codes_doc_id": "ar_code",
+            "collection": "compositions_rps",
+            "separator": "/",
+            "atcode_strategy": "compact_prefix",
+        },
+        "search": {
+            "collection": "compositions_search",
+        },
+    }
+
+    resolver_one, first_status = _get_or_create_shared_archetype_resolver(
+        db=object(),
+        schema_cfgs=schema_cfgs,
+        compile_cache=compile_cache,
+    )
+    resolver_two, second_status = _get_or_create_shared_archetype_resolver(
+        db=object(),
+        schema_cfgs=schema_cfgs,
+        compile_cache=compile_cache,
+    )
+
+    assert first_status == "miss"
+    assert second_status == "hit"
+    assert resolver_one is resolver_two
 
 
 @pytest.mark.asyncio

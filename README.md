@@ -92,7 +92,6 @@ In Docusaurus dev mode, API links are proxied to `KEHRNEL_API_ORIGIN` (default `
 
 Full integration guide:
 - `examples/README.md`
-- `docs/cli-api-reference.md`
 
 ## Runtime Endpoints Used by HDL
 
@@ -137,9 +136,6 @@ kehrnel common validate-pack /path/to/strategy-pack
 Primary CLI entrypoint:
 - `kehrnel` (`auth`, `context`, `resource`, `op`, `run`, `core`, `common`, `domain`, `strategy`)
 - `kehrnel-api` (API server launcher)
-
-Complete CLI + endpoint inventory:
-- `docs/cli-api-reference.md`
 
 ## Standalone Usage
 
@@ -235,7 +231,7 @@ pytest tests/contract
 
 Notes:
 - Contract/golden tests target the active strategy runtime.
-- Some tests still exercise compatibility routes while API/domain migration is completed.
+- The public API exposes both the canonical `openehr.rps_dual` strategy and the production `openehr.rps_dual_ibm` variant where installed deployments depend on IBM-compatible behavior.
 
 ## License
 

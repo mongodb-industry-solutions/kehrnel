@@ -244,6 +244,130 @@ async def test_compile_query_raw_aql_adds_row_fanout_for_deepest_selected_alias(
 
 
 @pytest.mark.asyncio
+async def test_compile_query_raw_aql_projection_cache_activates_only_for_high_reuse():
+    db = _FakeDb(
+        {
+            "_codes": _FakeCollection(
+                {
+                    "ar_code": {
+                        "_id": "ar_code",
+                        "at": {
+                            "at0001": "-1",
+                            "at0002": "-2",
+                        },
+                        "openEHR-EHR-COMPOSITION": {
+                            "encounter": {
+                                "v1": "24",
+                            }
+                        },
+                        "openEHR-EHR-SECTION": {
+                            "adverse_reaction_list": {
+                                "v0": "30",
+                            }
+                        },
+                        "openEHR-EHR-EVALUATION": {
+                            "adverse_reaction_risk": {
+                                "v2": "33",
+                            }
+                        },
+                    }
+                }
+            ),
+            "_shortcuts": _FakeCollection(
+                {
+                    "shortcuts": {
+                        "_id": "shortcuts",
+                        "items": {
+                            "uid": "uid",
+                            "value": "v",
+                            "defining_code": "df",
+                            "code_string": "cs",
+                            "terminology_id": "ti",
+                            "data": "data",
+                            "items": "i",
+                            "archetype_details": "ad",
+                            "template_id": "ti",
+                        },
+                    }
+                }
+            ),
+            "compositions_rps": _FakeCollection({}),
+            "compositions_search": _FakeCollection({}),
+        }
+    )
+
+    ctx = StrategyContext(
+        environment_id="env-cache",
+        config=MANIFEST.default_config,
+        adapters={"storage": _FakeStorage(db)},
+        manifest=MANIFEST.model_copy(deep=True),
+        meta={},
+    )
+    strategy = RPSDualStrategy()
+
+    low_reuse_aql = """
+    SELECT
+        ar/data[at0001]/items[at0002]/value/defining_code/code_string AS SubstanceCode,
+        ar/data[at0001]/items[at0002]/value/value AS SubstanceValue
+    FROM
+        EHR e
+            CONTAINS VERSION v
+                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.encounter.v1]
+                    CONTAINS SECTION s[openEHR-EHR-SECTION.adverse_reaction_list.v0]
+                        CONTAINS EVALUATION ar[openEHR-EHR-EVALUATION.adverse_reaction_risk.v2]
+    WHERE
+        c/archetype_details/template_id/value = 'air_adverse_reaction_record_v1'
+    """
+
+    low_reuse_plan = await strategy.compile_query(
+        ctx,
+        "openEHR",
+        {
+            "raw_aql": low_reuse_aql,
+            "debug": True,
+        },
+    )
+
+    assert not any("__projection_cache" in stage.get("$addFields", {}) for stage in low_reuse_plan.plan["pipeline"])
+
+    high_reuse_aql = """
+    SELECT
+        ar/data[at0001]/items[at0002]/value/defining_code/code_string AS SubstanceCode,
+        ar/data[at0001]/items[at0002]/value/value AS SubstanceValue,
+        ar/data[at0001]/items[at0002]/value/defining_code/terminology_id/value AS SubstanceTerminology
+    FROM
+        EHR e
+            CONTAINS VERSION v
+                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.encounter.v1]
+                    CONTAINS SECTION s[openEHR-EHR-SECTION.adverse_reaction_list.v0]
+                        CONTAINS EVALUATION ar[openEHR-EHR-EVALUATION.adverse_reaction_risk.v2]
+    WHERE
+        c/archetype_details/template_id/value = 'air_adverse_reaction_record_v1'
+    """
+
+    high_reuse_plan = await strategy.compile_query(
+        ctx,
+        "openEHR",
+        {
+            "raw_aql": high_reuse_aql,
+            "debug": True,
+        },
+    )
+
+    cache_stage = next(
+        stage["$addFields"]
+        for stage in high_reuse_plan.plan["pipeline"]
+        if "__projection_cache" in stage.get("$addFields", {})
+    )
+    assert cache_stage["__projection_cache"]["c0"]["$filter"]["input"] == "$cn"
+
+    project_stage = next(stage["$project"] for stage in high_reuse_plan.plan["pipeline"] if "$project" in stage)
+    assert project_stage["SubstanceCode"]["$first"]["$map"]["input"] == "$__projection_cache.c0"
+    assert project_stage["SubstanceValue"]["$first"]["$map"]["input"] == "$__projection_cache.c0"
+    assert project_stage["SubstanceTerminology"]["$first"]["$map"]["input"] == "$__projection_cache.c0"
+
+
+@pytest.mark.asyncio
 async def test_compile_query_raw_aql_search_pipeline_keeps_row_fanout_for_selected_leaf_alias():
     db = _FakeDb(
         {
@@ -339,3 +463,204 @@ async def test_compile_query_raw_aql_search_pipeline_keeps_row_fanout_for_select
     assert pipeline[3]["$addFields"]["__fanout_nodes"]["$filter"]["cond"]["$regexMatch"]["regex"] == "^31(?::[^:]+)*:33(?::[^:]+)*:30(?::[^:]+)*:24$"
     assert pipeline[4] == {"$unwind": "$__fanout_nodes"}
     assert pipeline[5]["$addFields"]["__fanout_paths"]["ev"] == "$__fanout_nodes.p"
+
+
+@pytest.mark.asyncio
+async def test_compile_query_raw_aql_adds_exact_row_match_for_descendant_where_on_match_pipeline():
+    db = _FakeDb(
+        {
+            "_codes": _FakeCollection(
+                {
+                    "ar_code": {
+                        "_id": "ar_code",
+                        "at": {
+                            "at0001": "-1",
+                            "at0002": "-2",
+                            "at0006": "-6",
+                        },
+                        "openEHR-EHR-COMPOSITION": {
+                            "encounter": {
+                                "v1": "24",
+                            }
+                        },
+                        "openEHR-EHR-SECTION": {
+                            "adverse_reaction_list": {
+                                "v0": "30",
+                            }
+                        },
+                        "openEHR-EHR-EVALUATION": {
+                            "adverse_reaction_risk": {
+                                "v2": "33",
+                            }
+                        },
+                        "openEHR-EHR-CLUSTER": {
+                            "adverse_reaction_event": {
+                                "v1": "31",
+                            }
+                        },
+                    }
+                }
+            ),
+            "_shortcuts": _FakeCollection(
+                {
+                    "shortcuts": {
+                        "_id": "shortcuts",
+                        "items": {
+                            "uid": "uid",
+                            "value": "v",
+                            "data": "data",
+                            "items": "i",
+                            "ehr_id": "ehr_id",
+                            "archetype_details": "ad",
+                            "template_id": "ti",
+                        },
+                    }
+                }
+            ),
+            "compositions_rps": _FakeCollection({}),
+            "compositions_search": _FakeCollection({}),
+        }
+    )
+
+    ctx = StrategyContext(
+        environment_id="env-1",
+        config=MANIFEST.default_config,
+        adapters={"storage": _FakeStorage(db)},
+        manifest=MANIFEST.model_copy(deep=True),
+        meta={},
+    )
+    strategy = RPSDualStrategy()
+    raw_aql = """
+    SELECT
+        c/uid/value AS compositionId,
+        ar/data[at0001]/items[at0002]/value/value AS Substance
+    FROM
+        EHR e
+            CONTAINS VERSION v
+                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.encounter.v1]
+                    CONTAINS SECTION s[openEHR-EHR-SECTION.adverse_reaction_list.v0]
+                        CONTAINS EVALUATION ar[openEHR-EHR-EVALUATION.adverse_reaction_risk.v2]
+                            CONTAINS CLUSTER ev[openEHR-EHR-CLUSTER.adverse_reaction_event.v1]
+    WHERE
+        e/ehr_id/value = 'ehr-1'
+        AND c/archetype_details/template_id/value = 'air_adverse_reaction_record_v1'
+        AND ev/items[at0006]/value/value = 'Rash'
+    """
+
+    plan = await strategy.compile_query(
+        ctx,
+        "openEHR",
+        {
+            "raw_aql": raw_aql,
+            "debug": True,
+        },
+    )
+
+    pipeline = plan.plan["pipeline"]
+    assert "__fanout_instances" in pipeline[3]["$addFields"]
+    assert "$let" in pipeline[3]["$addFields"]["__fanout_instances"]["ar"]
+
+    row_match_stage = pipeline[4]["$match"]["$expr"]["$and"][1]["$and"][1]
+    correlation_expr = row_match_stage["$gt"][0]["$size"]["$filter"]["cond"]["$and"][1]["$and"]
+    assert correlation_expr[0]["$eq"][1] == "$__fanout_paths.ar"
+    assert correlation_expr[1]["$eq"][1] == "$__fanout_instances.ar"
+
+
+@pytest.mark.asyncio
+async def test_compile_query_raw_aql_search_pipeline_adds_exact_row_match_after_lookup():
+    db = _FakeDb(
+        {
+            "_codes": _FakeCollection(
+                {
+                    "ar_code": {
+                        "_id": "ar_code",
+                        "at": {
+                            "at0001": "-1",
+                            "at0002": "-2",
+                            "at0006": "-6",
+                        },
+                        "openEHR-EHR-COMPOSITION": {
+                            "encounter": {
+                                "v1": "24",
+                            }
+                        },
+                        "openEHR-EHR-SECTION": {
+                            "adverse_reaction_list": {
+                                "v0": "30",
+                            }
+                        },
+                        "openEHR-EHR-EVALUATION": {
+                            "adverse_reaction_risk": {
+                                "v2": "33",
+                            }
+                        },
+                        "openEHR-EHR-CLUSTER": {
+                            "adverse_reaction_event": {
+                                "v1": "31",
+                            }
+                        },
+                    }
+                }
+            ),
+            "_shortcuts": _FakeCollection(
+                {
+                    "shortcuts": {
+                        "_id": "shortcuts",
+                        "items": {
+                            "uid": "uid",
+                            "value": "v",
+                            "data": "data",
+                            "items": "i",
+                            "archetype_details": "ad",
+                            "template_id": "ti",
+                        },
+                    }
+                }
+            ),
+            "compositions_rps": _FakeCollection({}),
+            "compositions_search": _FakeCollection({}),
+        }
+    )
+
+    ctx = StrategyContext(
+        environment_id="env-1",
+        config=MANIFEST.default_config,
+        adapters={"storage": _FakeStorage(db)},
+        manifest=MANIFEST.model_copy(deep=True),
+        meta={},
+    )
+    strategy = RPSDualStrategy()
+    raw_aql = """
+    SELECT
+        c/uid/value AS compositionId,
+        ar/data[at0001]/items[at0002]/value/value AS Substance
+    FROM
+        EHR e
+            CONTAINS VERSION v
+                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.encounter.v1]
+                    CONTAINS SECTION s[openEHR-EHR-SECTION.adverse_reaction_list.v0]
+                        CONTAINS EVALUATION ar[openEHR-EHR-EVALUATION.adverse_reaction_risk.v2]
+                            CONTAINS CLUSTER ev[openEHR-EHR-CLUSTER.adverse_reaction_event.v1]
+    WHERE
+        c/archetype_details/template_id/value = 'air_adverse_reaction_record_v1'
+        AND ev/items[at0006]/value/value = 'Rash'
+    """
+
+    plan = await strategy.compile_query(
+        ctx,
+        "openEHR",
+        {
+            "raw_aql": raw_aql,
+            "debug": True,
+        },
+    )
+
+    pipeline = plan.plan["pipeline"]
+    assert "$lookup" in pipeline[2]
+    assert "__fanout_instances" in pipeline[5]["$addFields"]
+    assert "$let" in pipeline[5]["$addFields"]["__fanout_instances"]["ar"]
+
+    row_match_stage = pipeline[6]["$match"]["$expr"]["$and"][1]
+    correlation_expr = row_match_stage["$gt"][0]["$size"]["$filter"]["cond"]["$and"][1]["$and"]
+    assert correlation_expr[0]["$eq"][1] == "$__fanout_paths.ar"
+    assert correlation_expr[1]["$eq"][1] == "$__fanout_instances.ar"

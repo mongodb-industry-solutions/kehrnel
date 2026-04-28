@@ -690,6 +690,96 @@ async def test_ibm_raw_aql_respects_configured_codes_doc_id_for_nested_paths():
 
 
 @pytest.mark.asyncio
+async def test_ibm_nested_contains_fanout_does_not_add_exact_row_correlation_stage():
+    shortcuts = _ibm_shortcuts()
+    db = _FakeDb(
+        {
+            "_codes": _FakeCollection(
+                {
+                    "ar_code": {
+                        "_id": "ar_code",
+                        "at": {
+                            "at0001": "D1",
+                            "at0002": "D2",
+                            "at0006": "D6",
+                        },
+                        "openEHR-EHR-COMPOSITION": {
+                            "encounter": {
+                                "v1": "24",
+                            }
+                        },
+                        "openEHR-EHR-SECTION": {
+                            "adverse_reaction_list": {
+                                "v0": "30",
+                            }
+                        },
+                        "openEHR-EHR-EVALUATION": {
+                            "adverse_reaction_risk": {
+                                "v2": "33",
+                            }
+                        },
+                        "openEHR-EHR-CLUSTER": {
+                            "adverse_reaction_event": {
+                                "v1": "31",
+                            }
+                        },
+                    }
+                }
+            ),
+            "_shortcuts": _FakeCollection(
+                {
+                    "shortcuts": {
+                        "_id": "shortcuts",
+                        **shortcuts,
+                    }
+                }
+            ),
+            "compositions_rps_ibm": _FakeCollection({}),
+            "compositions_search_ibm": _FakeCollection({}),
+        }
+    )
+
+    ctx = StrategyContext(
+        environment_id="env-ibm-fanout-no-exact",
+        config=_ibm_defaults(),
+        adapters={"storage": _FakeStorage(db)},
+        manifest=IBM_MANIFEST.model_copy(deep=True),
+        meta={},
+    )
+    strategy = RPSDualIBMStrategy()
+    raw_aql = """
+    SELECT
+        c/uid/value AS compositionId,
+        ar/data[at0001]/items[at0002]/value/value AS Substance
+    FROM
+        EHR e
+            CONTAINS VERSION v
+                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.encounter.v1]
+                    CONTAINS SECTION s[openEHR-EHR-SECTION.adverse_reaction_list.v0]
+                        CONTAINS EVALUATION ar[openEHR-EHR-EVALUATION.adverse_reaction_risk.v2]
+                            CONTAINS CLUSTER ev[openEHR-EHR-CLUSTER.adverse_reaction_event.v1]
+    WHERE
+        e/ehr_id/value = '8bffb50b-990a-45c7-8da1-b56525a536c7'
+        AND c/archetype_details/template_id/value = 'IBM_TEMPLATE'
+        AND ev/items[at0006]/value/value = 'Rash'
+    """
+
+    plan = await strategy.compile_query(
+        ctx,
+        "openEHR",
+        {
+            "raw_aql": raw_aql,
+            "debug": True,
+        },
+    )
+
+    pipeline = plan.plan["pipeline"]
+    assert "__fanout_paths" in pipeline[3]["$addFields"]
+    assert "__fanout_instances" not in pipeline[3]["$addFields"]
+    assert not any("$match" in stage and "$expr" in stage["$match"] for stage in pipeline)
+
+
+@pytest.mark.asyncio
 async def test_ibm_raw_aql_unresolved_archetyped_path_fails_instead_of_root_projection():
     shortcuts = _ibm_shortcuts()
     db = _FakeDb(

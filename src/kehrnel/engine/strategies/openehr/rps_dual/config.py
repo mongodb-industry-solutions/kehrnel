@@ -200,6 +200,8 @@ def build_schema_config(cfg: RPSDualConfig) -> Dict[str, Dict[str, Any]]:
     search_coll = cfg.collections.search
     fields = cfg.fields
     atcode_strategy = cfg.transform.coding.atcodes.strategy
+    path_instance_field = fields.node.pi
+    path_instance_mode = "scalar" if str(path_instance_field or "").strip().lower() == "li" else "chain"
     composition_format = (
         "shortened"
         if (comp_coll.encodingProfile or "").strip().lower() in {"profile.codedpath", "profile.search_shortcuts"}
@@ -222,6 +224,8 @@ def build_schema_config(cfg: RPSDualConfig) -> Dict[str, Dict[str, Any]]:
         "composition_id_encoding": cfg.ids.composition_id,
         "template_id": fields.document.tid,
         "time_committed": fields.document.time_committed,
+        "path_instance_field": path_instance_field,
+        "path_instance_mode": path_instance_mode,
         "separator": cfg.paths.separator,
         "atcode_strategy": atcode_strategy,
         "codes_collection": cfg.collections.codes.name,
@@ -244,6 +248,8 @@ def build_schema_config(cfg: RPSDualConfig) -> Dict[str, Dict[str, Any]]:
         "template_id": fields.document.tid,
         "time_committed": fields.document.sort_time,
         "sort_time": fields.document.sort_time,
+        "path_instance_field": path_instance_field,
+        "path_instance_mode": path_instance_mode,
         "separator": cfg.paths.separator,
         "atcode_strategy": atcode_strategy,
         "codes_collection": cfg.collections.codes.name,
