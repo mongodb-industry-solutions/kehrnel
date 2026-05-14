@@ -1,0 +1,11 @@
+services:
+  kehrnel-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - 8000:8080
+    env_file:
+      - .env.local
+    # networks:
+    #   - healthcare_shared
