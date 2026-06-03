@@ -2,9 +2,9 @@ from pathlib import Path
 
 import pytest
 
-from kehrnel.core.pack_loader import load_strategy
-from kehrnel.core.registry import FileActivationRegistry
-from kehrnel.core.runtime import StrategyRuntime
+from kehrnel.engine.core.pack_loader import load_strategy
+from kehrnel.engine.core.registry import FileActivationRegistry
+from kehrnel.engine.core.runtime import StrategyRuntime
 from kehrnel.strategy_sdk import StrategyBindings
 
 

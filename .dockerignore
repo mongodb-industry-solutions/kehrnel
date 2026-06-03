@@ -47,3 +47,9 @@ README.md
 /data/
 /environments/
 /scripts/
+
+# Keep vendored FHIR libs for FHIR images (docker/Dockerfile.kehrnel-fhir, Dockerfile.backend)
+# Exclude local venvs inside vendored trees
+/src/kehrnel/engine/domains/fhir/libs/**/.venv/
+/src/kehrnel/engine/domains/fhir/libs/**/venv/
+/src/kehrnel/engine/domains/fhir/libs/**/__pycache__/

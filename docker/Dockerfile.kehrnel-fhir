@@ -1,0 +1,11 @@
+# Kehrnel API with vendored fhir-gen + fhir-mql (engine/domains/fhir/libs must be in build context).
+FROM python:3.12-slim
+WORKDIR /kehrnel
+COPY pyproject.toml README.md ./
+COPY src ./src
+COPY src/kehrnel/engine/domains/fhir/libs ./src/kehrnel/engine/domains/fhir/libs
+RUN pip install --no-cache-dir -e ".[api,mongo,fhir]"
+ENV KEHRNEL_API_PORT=8080
+ENV KEHRNEL_API_RELOAD=false
+EXPOSE 8080
+CMD ["kehrnel-api"]

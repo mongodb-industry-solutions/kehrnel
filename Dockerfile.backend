@@ -1,17 +1,10 @@
+# All-in-one Kehrnel image (core + FHIR). For API-only or FHIR-only images see docker/.
 FROM python:3.12-slim
-WORKDIR /kerhnel
-
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends nodejs npm && \
-    rm -rf /var/lib/apt/lists/*
-
-COPY docs/website/package*.json docs/website/
-RUN cd docs/website && npm install
-COPY docs/website/ docs/website/
-RUN cd docs/website && npm run build
-
-COPY . .
-RUN pip install -e .[all]
+WORKDIR /kehrnel
+COPY pyproject.toml README.md ./
+COPY src ./src
+COPY src/kehrnel/engine/domains/fhir/libs ./src/kehrnel/engine/domains/fhir/libs
+RUN pip install --no-cache-dir -e ".[all]"
 ENV API_PORT=8080
 ENV KEHRNEL_API_PORT=8080
 ENV KEHRNEL_API_RELOAD=false

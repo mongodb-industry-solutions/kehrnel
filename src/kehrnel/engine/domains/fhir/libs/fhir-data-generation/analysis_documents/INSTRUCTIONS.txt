@@ -1,0 +1,19 @@
+We want to create an independent library for the FHIR resources. This library will create the FHIR resource based on the given criteria:
+1. This will have a generic code which to generate data for all FHIR resources given in the command.
+2. This library will carefully handle all FHIR datatypes given in FHIR_DATATYPES.txt and resources given in FHIR_RESOURCE_URLS.txt. For resource schema help read fhir.schema.v5.json file.
+3. Resource fields datatype will be correctly handle
+4. Inter linking of resource fields, based on the resource documemtation or reference fields will be correctly handled
+5. If a particular resource data to be generated, which require any interlinking resource, then that interlinking resource will be created first then references in resource will be mapped
+6. Resources will be created based on the given resource schema file, but if resource schema file is not provided then it will generate the resource based on the default schema which will cover all resource fields
+7. If a resource field has multiple possibilities then it will generate different documents which can cover these multiple possibilites for the resource field. But ensure data should be correct and reliable with healthcare standards.
+8. Data correctness, mapping of resources, reference between resources is very important and should compliant with industry standards.
+9. For static data it will use FHIR standard codes given in hl7_codes/healthcare_code.yaml
+10. Update and enrich the hl7_codes/healthcare_code.yaml based on the FHIR HL7 possible codes for better use
+11. All generated data will be saved in to the mongodb database
+12. We want to use this as independent library that can be installed and used in other applications. Also, we want to use this with CLI with different possible parameters
+13. Data genrated should be correct and that can be sued to search between different resources.
+14. Library should cover complete testing for various resources.
+
+Create a complete detailed PROMPTS_FHIR_DATA_GENERATION.md with all the prompts, instructions, specifications and steps to follow to complete it library
+We will use these prompts to generate code, so prompts should be such that it uses minimum LLM/AI tokens to complete the code functionality
+Also arrange the prompts in correct order which required to complete the functionality

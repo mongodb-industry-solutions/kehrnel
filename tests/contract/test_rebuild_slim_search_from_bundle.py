@@ -4,8 +4,8 @@ from pathlib import Path
 import pytest
 
 from kehrnel.engine.strategies.openehr.rps_dual.strategy import RPSDualStrategy, MANIFEST, DEFAULTS_PATH, load_json
-from kehrnel.core.types import StrategyContext
-from kehrnel.core.bundle_store import BundleStore
+from kehrnel.engine.core.types import StrategyContext
+from kehrnel.engine.core.bundle_store import BundleStore
 
 
 class RecordingStorage:

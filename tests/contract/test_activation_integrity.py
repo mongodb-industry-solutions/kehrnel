@@ -2,7 +2,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from kehrnel.api.app import create_app
-from kehrnel.core.runtime import StrategyRuntime
+from kehrnel.engine.core.runtime import StrategyRuntime
 
 
 @pytest.fixture

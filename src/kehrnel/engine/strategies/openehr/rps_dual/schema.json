@@ -16,18 +16,12 @@
     },
     "pathSeparator": {
       "type": "string",
-      "enum": [".", "/", ":", "|", "~"],
-      "default": ":"
+      "enum": ["."],
+      "default": "."
     },
     "encodingProfile": {
       "type": "string",
       "enum": ["profile.codedpath", "profile.search_shortcuts"]
-    },
-    "envelopePathMap": {
-      "type": "object",
-      "description": "Maps source envelope paths to final output field paths using dot notation.",
-      "additionalProperties": { "type": "string" },
-      "default": {}
     }
   },
   "properties": {
@@ -115,7 +109,7 @@
       "properties": {
         "separator": { "$ref": "#/definitions/pathSeparator" }
       },
-      "default": { "separator": ":" }
+      "default": { "separator": "." }
     },
     "fields": {
       "type": "object",
@@ -205,16 +199,6 @@
           "type": "boolean",
           "default": true,
           "description": "Apply key/value shortcuts to payload"
-        },
-        "envelope": {
-          "type": "object",
-          "description": "Optional passthrough mappings from the original ingest envelope into the final base/search documents.",
-          "properties": {
-            "base": { "$ref": "#/definitions/envelopePathMap" },
-            "search": { "$ref": "#/definitions/envelopePathMap" }
-          },
-          "additionalProperties": false,
-          "default": { "base": {}, "search": {} }
         }
       }
     },

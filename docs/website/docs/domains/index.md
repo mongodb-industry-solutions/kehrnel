@@ -11,9 +11,8 @@ Use this section to navigate domain-specific APIs, strategies, and workflows.
 ## Available Domains
 
 - [openEHR](/docs/domains/openehr)
-
-Planned:
-- FHIR (preview and strategy evolution)
+- [FHIR domain API](/docs/api/domains/fhir/) — search Bundle endpoint
+- [FHIR RPS Canonical strategy](/docs/strategies/fhir/rps-canonical/) — `fhir.rps_canonical` storage and workflows
 - unstructured clinical documents / extraction domains
 - cross-domain interoperability patterns
 

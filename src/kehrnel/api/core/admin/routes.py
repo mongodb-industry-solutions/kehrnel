@@ -7,8 +7,6 @@ import tempfile
 import secrets
 import logging
 import ipaddress
-import base64
-import uuid
 from pathlib import Path
 from fastapi import APIRouter, Request, Body
 from fastapi.encoders import jsonable_encoder
@@ -17,7 +15,6 @@ from typing import Any, Dict, List
 import yaml
 from lxml import etree
 from bson import ObjectId
-from bson.binary import Binary, UuidRepresentation
 
 from kehrnel.engine.core.manifest import StrategyManifest
 from kehrnel.engine.core.errors import KehrnelError
@@ -97,27 +94,7 @@ def _error_response(exc: Exception) -> JSONResponse:
 
 def _json_safe(payload: Any) -> Any:
     """Encode runtime payloads so BSON/ObjectId values do not break API responses."""
-    def _encode_bytes(value: bytes) -> str:
-        try:
-            return value.decode("utf-8")
-        except Exception:
-            return base64.b64encode(value).decode("ascii")
-
-    def _encode_binary(value: Binary) -> str:
-        try:
-            return str(value.as_uuid(UuidRepresentation.STANDARD))
-        except Exception:
-            return _encode_bytes(bytes(value))
-
-    return jsonable_encoder(
-        payload,
-        custom_encoder={
-            ObjectId: str,
-            uuid.UUID: str,
-            Binary: _encode_binary,
-            bytes: _encode_bytes,
-        },
-    )
+    return jsonable_encoder(payload, custom_encoder={ObjectId: str})
 
 
 def _require_admin_access(request: Request) -> None:
@@ -1768,8 +1745,8 @@ async def query_env(env_id: str, request: Request, payload: Dict[str, Any] = Bod
         res = await rt.dispatch(env_id, "query", payload or {})
         # when dispatch returns QueryResult dict or simple, wrap as ok/result if needed
         if isinstance(res, dict) and "ok" in res:
-            return _json_safe(res)
-        return _json_safe({"ok": True, "result": res})
+            return res
+        return {"ok": True, "result": res}
     except Exception as exc:
         return _error_response(exc)
 
@@ -1789,7 +1766,7 @@ async def compile_query_env(env_id: str, request: Request, payload: Dict[str, An
         if debug and isinstance(payload, dict):
             payload["debug"] = True
         res = await rt.dispatch(env_id, "compile_query", payload or {})
-        return _json_safe({"ok": True, "result": res})
+        return {"ok": True, "result": res}
     except Exception as exc:
         return _error_response(exc)
 
@@ -1956,11 +1933,18 @@ async def create_synthetic_job(env_id: str, request: Request, body: Dict[str, An
         }
         target_database = None
         if activation_now and getattr(activation_now, "bindings", None):
-            db_bindings = (activation_now.bindings or {}).get("db") or {}
-            target_database = db_bindings.get("database") if isinstance(db_bindings, dict) else None
-        if not target_database and activation_now:
-            db_bindings_meta = (getattr(activation_now, "bindings_meta", None) or {}).get("db") or {}
-            target_database = db_bindings_meta.get("database") if isinstance(db_bindings_meta, dict) else None
+            bindings = getattr(activation_now, "bindings", None)
+            # Handle bindings as dict or object
+            if isinstance(bindings, dict):
+                db_bindings = bindings.get("db")
+            else:
+                db_bindings = getattr(bindings, "db", None)
+            
+            if db_bindings:
+                if isinstance(db_bindings, dict):
+                    target_database = db_bindings.get("database") or db_bindings.get("name")
+                elif not isinstance(db_bindings, str):
+                    target_database = getattr(db_bindings, "database", None) or getattr(db_bindings, "name", None)
         if not target_database and activation_now and activation_now.bindings_ref:
             try:
                 from kehrnel.engine.core.bindings_resolver import resolve_bindings as _resolve_bindings_ref
@@ -1977,6 +1961,10 @@ async def create_synthetic_job(env_id: str, request: Request, body: Dict[str, An
             except Exception:
                 target_database = None
         model_source = payload.get("model_source") if isinstance(payload.get("model_source"), dict) else {}
+        # Default catalog_collection to "templates" for openEHR domain
+        catalog_coll = model_source.get("catalog_collection")
+        if not catalog_coll and domain and str(domain).lower() == "openehr":
+            catalog_coll = "templates"
         job = await manager.create_job(
             env_id=env_id,
             domain=domain,
@@ -1987,7 +1975,7 @@ async def create_synthetic_job(env_id: str, request: Request, body: Dict[str, An
                 "target_collections": target_collections,
                 "model_source": {
                     "database_name": model_source.get("database_name") or target_database,
-                    "catalog_collection": model_source.get("catalog_collection"),
+                    "catalog_collection": catalog_coll,
                     "links_collection": model_source.get("links_collection"),
                 },
             },

@@ -6,6 +6,7 @@ cd "$SCRIPT_DIR"
 
 HOST="${KEHRNEL_HOST:-127.0.0.1}"
 PORT="${KEHRNEL_PORT:-8080}"
+RUNTIME_URL="http://${HOST}:${PORT}"
 RELOAD=1
 BUILD_DOCS_MODE="auto"
 SYNC_MODE="${KEHRNEL_SYNC_MODE:-auto}"
@@ -211,13 +212,45 @@ sync_python_deps() {
 
   if ! should_sync_python_deps; then
     log "Python dependencies already up to date"
+    verify_fhir_libs_in_venv
     return
   fi
 
   log "Syncing Python dependencies"
+  # Vendored FHIR libs: explicit editable installs (uv cannot use file: in wheel metadata).
+  if [[ -d src/kehrnel/engine/domains/fhir/libs/fhir-data-generation && -d src/kehrnel/engine/domains/fhir/libs/fhir-search-to-mql ]]; then
+    run_uv pip install --python "$(venv_python)" \
+      -e './src/kehrnel/engine/domains/fhir/libs/fhir-data-generation' \
+      -e './src/kehrnel/engine/domains/fhir/libs/fhir-search-to-mql'
+  else
+    log "Warning: engine/domains/fhir/libs/fhir-* missing; FHIR strategy will not be available"
+  fi
   run_uv pip install --python "$(venv_python)" -e '.[all]'
   current_fingerprint="$(dependency_fingerprint)"
   printf '%s\n' "$current_fingerprint" > "$stamp_file"
+  verify_fhir_libs_in_venv
+}
+
+verify_fhir_libs_in_venv() {
+  # pyproject stamp can be current while vendored FHIR libs were never installed (e.g. after path moves).
+  if "$(venv_python)" -c "import fhir_gen, fhir_search_to_mql" 2>/dev/null; then
+    return 0
+  fi
+  if [[ ! -d src/kehrnel/engine/domains/fhir/libs/fhir-data-generation ]]; then
+    log "Warning: fhir_gen not installed and vendored libs missing under engine/domains/fhir/libs/"
+    return 0
+  fi
+  log "Installing vendored FHIR libraries into .venv (fhir_gen / fhir_search_to_mql)"
+  run_uv pip install --python "$(venv_python)" \
+    -e './src/kehrnel/engine/domains/fhir/libs/fhir-data-generation' \
+    -e './src/kehrnel/engine/domains/fhir/libs/fhir-search-to-mql'
+  run_uv pip install --python "$(venv_python)" -e '.[fhir]'
+  if ! "$(venv_python)" -c "import fhir_gen, fhir_search_to_mql" 2>/dev/null; then
+    log "ERROR: fhir_gen still not importable after install. Run manually:"
+    log "  pip install -e src/kehrnel/engine/domains/fhir/libs/fhir-data-generation -e src/kehrnel/engine/domains/fhir/libs/fhir-search-to-mql"
+    exit 1
+  fi
+  log "FHIR libraries OK"
 }
 
 build_docs_if_needed() {

@@ -1,0 +1,142 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fhir-search-to-mql"
+version = "1.2.0"
+description = "Convert FHIR search queries to MongoDB Query Language (MQL) with optimized denormalization"
+readme = "README.md"
+authors = [
+    {name = "FHIR-GEN Team", email = "team@example.com"}
+]
+license = {text = "Apache-2.0"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Healthcare Industry",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+]
+keywords = ["fhir", "mongodb", "healthcare", "hl7", "interoperability", "search"]
+requires-python = ">=3.9"
+dependencies = [
+    "PyYAML>=6.0",
+    "pymongo>=4.0",
+    "python-dateutil>=2.8.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-benchmark>=4.0",
+    "black>=23.0",
+    "flake8>=6.0",
+    "mypy>=1.0",
+]
+docs = [
+    "sphinx>=5.0",
+    "sphinx-rtd-theme>=1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/fhir-gen/fhir-search-to-mql"
+Documentation = "https://fhir-search-to-mql.readthedocs.io"
+Repository = "https://github.com/fhir-gen/fhir-search-to-mql"
+"Bug Tracker" = "https://github.com/fhir-gen/fhir-search-to-mql/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["fhir_search_to_mql*"]
+exclude = ["tests*"]
+
+[tool.setuptools.package-data]
+fhir_search_to_mql = [
+    "configs/*.yaml",
+    "configs/*.yml",
+    "compartments/definitions/*.json",
+]
+
+# Console-script entry points. After `pip install`, the `fhir-mql`
+# command becomes available system-wide (within the active venv).
+[project.scripts]
+fhir-mql = "fhir_search_to_mql.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "--cov=fhir_search_to_mql --cov-report=html --cov-report=term-missing"
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "performance: Performance benchmarks",
+    "mongodb: Tests that require a running MongoDB at localhost:27017",
+    "slow: Long-running tests",
+]
+
+[tool.coverage.run]
+branch = false
+source = ["fhir_search_to_mql"]
+relative_files = true
+parallel = false
+omit = [
+    "*/tests/*",
+    "*/__pycache__/*",
+]
+
+[tool.coverage.paths]
+source = [
+    "src/fhir_search_to_mql",
+    "*/site-packages/fhir_search_to_mql",
+    ".venv/Lib/site-packages/fhir_search_to_mql",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+precision = 1
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.black]
+line-length = 100
+target-version = ['py39', 'py310', 'py311', 'py312']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true

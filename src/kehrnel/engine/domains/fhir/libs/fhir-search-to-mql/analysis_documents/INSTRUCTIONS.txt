@@ -1,0 +1,15 @@
+We want to create a independent library based on FHIR resources:
+    - This library will have two major components
+    - 1. This library will handle the search fields denormalization based on the resource field mapping configuration
+    - 2. This library will also work for FHIR search query to MQL query convertor based on the hybrid recommended approach using mapping configuration
+
+As part of FHIR search query to MQL approach it will handle all the scenarios, modifiers, parameters, prefixes and suffixes possible for FHIR queries
+It will also handle the FHIR CompartmentDefinition query structures as well based on the hybrid recommended approach.
+Use Approach 5: Hybrid Mapping Configuration (RECOMMENDED) approach given in FHIR_TO_MQL_APPROACHES.md for FHIR Search Query to MQL Query
+For Compartment queries read approach from FHIR_TO_MQL_COMPARTMENT.md
+Read other .md files to understand the best recommended approach
+
+Library will be common for all FHIR resources
+For denormalization and MQL query both will work based on the mapping configuration and best hybrid approach given in other research documents (.md files)
+
+Create a complete detailed PROMPTS_FHIR_SEARCH_TO_MQL.md with all the prompts, instructions, specifications and steps to follow to complete it library

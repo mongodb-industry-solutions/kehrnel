@@ -1,4 +1,4 @@
-from kehrnel.domains.openehr.aql.ir import AqlQueryIR
+from kehrnel.engine.domains.openehr.aql.ir import AqlQueryIR
 from kehrnel.engine.strategies.openehr.rps_dual.query.projection_compiler import compile_projection
 
 

@@ -1,6 +1,6 @@
 import pytest
 
-from kehrnel.domains.openehr.aql.parse import parse_aql
+from kehrnel.engine.domains.openehr.aql.parse import parse_aql
 from kehrnel.engine.strategies.openehr.rps_dual.query.ast_adapter import adapt_ir_to_ast
 from kehrnel.engine.strategies.openehr.rps_dual.query.transformers.ast_validator import ASTValidator
 

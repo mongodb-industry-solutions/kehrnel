@@ -39,6 +39,14 @@ translate = [
 # Optional persistence
 mongo = ["pymongo>=4"]
 
+# FHIR synthetic data + search (vendored under src/kehrnel/engine/domains/fhir/libs/)
+# No file: URLs here — they break uv wheel metadata. Paths are in [tool.uv.sources].
+# Pip: install libs first, then this extra (see FHIR_TESTING.md).
+fhir = [
+    "fhir-gen",
+    "fhir-search-to-mql",
+]
+
 # Optional API stack
 api = [
     "fastapi>=0.104",
@@ -76,8 +84,14 @@ all = [
     "cryptography>=42.0.0",
     "pytest>=8.0",
     "pytest-asyncio>=0.23.0",
-    "httpx>=0.27.0"
+    "httpx>=0.27.0",
+    "fhir-gen",
+    "fhir-search-to-mql",
 ]
+
+[tool.uv.sources]
+fhir-gen = { path = "./src/kehrnel/engine/domains/fhir/libs/fhir-data-generation", editable = true }
+fhir-search-to-mql = { path = "./src/kehrnel/engine/domains/fhir/libs/fhir-search-to-mql", editable = true }
 
 [project.scripts]
 kehrnel = "kehrnel.cli.unified:main"

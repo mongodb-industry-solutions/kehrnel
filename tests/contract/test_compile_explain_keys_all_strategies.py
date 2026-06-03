@@ -2,8 +2,8 @@ from pathlib import Path
 
 import pytest
 
-from kehrnel.core.types import StrategyContext
-from kehrnel.domains.openehr.aql.parse import parse_aql
+from kehrnel.engine.core.types import StrategyContext
+from kehrnel.engine.domains.openehr.aql.parse import parse_aql
 from kehrnel.engine.strategies.openehr.rps_dual.strategy import DEFAULTS_PATH, MANIFEST as RPS_MANIFEST, RPSDualStrategy, load_json
 from kehrnel.engine.strategies.fhir.resource_first.strategy import FHIRResourceFirstStrategy
 from kehrnel.engine.strategies.genomics.variant_first.strategy import GenomicsVariantFirstStrategy

@@ -1,0 +1,614 @@
+resource: Practitioner
+fhir_version: R5
+
+# Definition: https://www.hl7.org/fhir/practitioner-definitions.html
+# Search Parameters: https://www.hl7.org/fhir/practitioner-search.html
+# FHIR R5 Practitioner search parameter table validated 2026-05.
+#
+# Total parameters: 22 (20 resource-specific per R5 + 2 common: `_id`,
+# `_lastUpdated`).
+#
+# Resource-specific search parameters (per R5 §8.4.16):
+#   active (token), address (string), address-city (string),
+#   address-country (string), address-postalcode (string),
+#   address-state (string), address-use (token),
+#   communication (token), death-date (date), deceased (token),
+#   email (token), family (string), gender (token), given (string),
+#   identifier (token), name (string), phone (token),
+#   phonetic (string→token via Soundex), qualification-period (date),
+#   telecom (token).
+#
+# Compartment: Practitioner is a compartment-defining resource — its
+# own `id` is the compartment root. The Practitioner resource is
+# always a member of its own Practitioner compartment (the FHIR R5
+# `[base]` linking-parameter token).
+
+search_parameters:
+  # Per-modifier `fields` routing — see `Patient.yaml` for the full
+  # FHIR R5 §3.1.1.5.3 / §3.1.1.5.4 contract. Default = case-insensitive
+  # starts-with against the `_lower` companion; `:exact` =
+  # case-sensitive equality against the case-preserved field.
+  name:
+    type: string
+    description: |
+      A server defined search that may match any of the string fields in the
+      HumanName, including family, given, prefix, suffix, and/or text
+      (FHIR R5 expression: `Practitioner.name`).
+    fields:
+      default:
+        - field: "_search.familyName_lower"
+          query_type: range
+        - field: "_search.givenNames_lower"
+          query_type: range
+        - field: "_search.fullName_lower"
+          query_type: range
+      exact:
+        - field: "_search.familyName"
+        - field: "_search.givenNames"
+        - field: "_search.fullName"
+        - field: "_search.nameText"
+
+  family:
+    type: string
+    description: "A portion of the family name (Practitioner.name.family)"
+    fields:
+      default:
+        - field: "_search.familyName_lower"
+          query_type: range
+      exact:
+        - field: "_search.familyName"
+
+  given:
+    type: string
+    description: "A portion of the given name (Practitioner.name.given)"
+    fields:
+      default:
+        - field: "_search.givenNames_lower"
+          query_type: range
+      exact:
+        - field: "_search.givenNames"
+
+  gender:
+    type: token
+    description: "Gender of the practitioner (Practitioner.gender)"
+    fields:
+      - field: "gender"
+        tokenType: code
+
+  active:
+    type: token
+    description: "Whether the practitioner record is active (Practitioner.active)"
+    fields:
+      - field: "active"
+        tokenType: boolean
+
+  identifier:
+    type: token
+    description: |
+      A practitioner's identifier. Per FHIR R5 the spec expression is
+      `Practitioner.identifier | Practitioner.qualification.identifier`,
+      so this parameter spans BOTH resource-level identifiers and any
+      identifiers attached to a qualification entry. The denormalization
+      rule below uses a path-union expression to merge both into the
+      same `_search.identifier_*` arrays.
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  email:
+    type: token
+    description: "A value in an email contact (Practitioner.telecom.where(system='email'))"
+    fields:
+      - field: "_search.email"
+        tokenType: code
+
+  phone:
+    type: token
+    description: "A value in a phone contact (Practitioner.telecom.where(system='phone'))"
+    fields:
+      - field: "_search.phone"
+        tokenType: code
+
+  telecom:
+    type: token
+    description: "The value in any kind of contact (Practitioner.telecom)"
+    fields:
+      - field: "_search.telecom_systemCode"
+        tokenType: systemCode
+      - field: "_search.telecom_values"
+        tokenType: code
+
+  address:
+    type: string
+    description: |
+      A server defined search that may match any of the string fields
+      in the Address — line, city, district, state, country, postalCode,
+      and/or text (FHIR R5: `Practitioner.address`).
+    fields:
+      default:
+        - field: "_search.addressFull_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressFull"
+        - field: "_search.addressText"
+
+  address-city:
+    type: string
+    description: "A city specified in an address (Practitioner.address.city)"
+    fields:
+      default:
+        - field: "_search.addressCity_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressCity"
+
+  address-state:
+    type: string
+    description: "A state specified in an address (Practitioner.address.state)"
+    fields:
+      default:
+        - field: "_search.addressState_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressState"
+
+  address-country:
+    type: string
+    description: "A country specified in an address (Practitioner.address.country)"
+    fields:
+      default:
+        - field: "_search.addressCountry_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressCountry"
+
+  address-postalcode:
+    type: string
+    description: "A postalCode specified in an address (Practitioner.address.postalCode)"
+    # Postal codes are inherently case/format-uniform — no `_lower`
+    # companion is needed; the case-preserved field doubles as both
+    # default and `:exact` target. Mirrors Patient/Organization/Location.
+    fields:
+      - field: "_search.addressPostalCode"
+        query_type: exact
+
+  address-use:
+    type: token
+    description: "A use code specified in an address (Practitioner.address.use)"
+    fields:
+      - field: "_search.addressUse"
+        tokenType: code
+
+  # Practitioner.deceased[x] is a polymorphic CHOICE element per FHIR R5
+  # — the resource carries either `deceasedBoolean` or `deceasedDateTime`,
+  # never a key literally named `deceased`. The R5 spec expression for
+  # the `deceased` token search is
+  # `Practitioner.deceased.exists() and Practitioner.deceased != false`,
+  # i.e. presence of EITHER variant (or boolean=true) implies deceased.
+  # The denormalization rule below uses DirectFieldExtractor with
+  # `transform: presence` so a `deceasedDateTime` value coerces to
+  # `_search.deceased: true` cleanly.
+  deceased:
+    type: token
+    description: "This Practitioner has been marked as deceased, or has a death date entered"
+    fields:
+      - field: "_search.deceased"
+        tokenType: boolean
+
+  # FHIR R5 expression: `Practitioner.deceased.ofType(dateTime)` — only
+  # the dateTime variant is ever queried via `death-date`; a
+  # `deceasedBoolean` resource has no date to compare against and
+  # correctly misses these queries.
+  death-date:
+    type: date
+    description: "The date of death has been provided and satisfies this search value"
+    fields:
+      - field: "_search.deathDate"
+        type: date
+
+  # `Practitioner.communication[].language` is a CodeableConcept (R5
+  # changed from a `code` array to a CodeableConcept array — see the
+  # detailed-descriptions doc, §Practitioner.communication.language).
+  # The `communication` token search parameter targets the language
+  # code(s); we denormalize all coded values into `_search.language`.
+  communication:
+    type: token
+    description: "A language to communicate with the practitioner"
+    fields:
+      - field: "_search.language"
+        tokenType: code
+
+  qualification-period:
+    type: date
+    description: |
+      The date(s) during which a qualification is valid
+      (Practitioner.qualification.period). Per FHIR R5 the expression
+      yields zero or more `Period` objects. The denormalization rule
+      below stores them as `array[object]` of `{start, end}` pairs
+      under `_search.qualificationPeriod`; the date converter walks
+      `_search.qualificationPeriod.start` (a flattened sub-field MQL
+      treats as the array elements' `start`) to evaluate range
+      filters. We deliberately do NOT add a `qualificationPeriod.start`
+      target at the resource root — Practitioner has no such top-level
+      field; the period only exists inside the `qualification[]`
+      BackboneElement, so the `_search.*` projection is the sole
+      query target (Appointment's two-target pattern works because
+      `requestedPeriod` IS a resource-root field; that doesn't
+      generalize here).
+    fields:
+      - field: "_search.qualificationPeriod"
+        type: period
+
+  phonetic:
+    type: token
+    # FHIR `phonetic` is type=string with `Processing Mode: Phonetic`.
+    # Per the spec the matching algorithm is server-defined (Soundex is
+    # the conventional choice). The denormalizer's PhoneticExtractor
+    # populates `_search.phonetic_codes` with American Soundex codes
+    # (e.g. "S530") for every family + given name token. We expose the
+    # parameter as a TOKEN (exact match against the precomputed code)
+    # because it stays index-friendly; callers Soundex-encode the
+    # search term themselves before issuing the query, e.g.
+    # `phonetic=S530`. Same rationale as Patient.phonetic.
+    description: "A portion of either family or given name using a phonetic matching algorithm (Soundex)"
+    fields:
+      - field: "_search.phonetic_codes"
+        tokenType: code
+
+  # Common Parameters (apply to every FHIR resource)
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+
+# Denormalization Configuration
+# Only fields explicitly listed here are denormalized (100% config-driven).
+denormalization:
+  name:
+    source: name
+    target: _search
+    extractor: HumanNameExtractor
+    field_mappings:
+      - source_path: name[*].family
+        target_field: familyName
+        datatype: array[string]
+        comment: "Family name(s) from every HumanName — Practitioner.name is 0..*; each HumanName.family is 0..1 string (FHIR R5)"
+      - source_path: name[*].family
+        target_field: familyName_lower
+        datatype: array[string]
+        normalize: lowercase
+        comment: "Family name(s) lowercased for case-insensitive prefix search"
+      - source_path: name[*].given
+        target_field: givenNames
+        datatype: array[string]
+        comment: "Given names - case-preserved for `:exact`"
+      - source_path: name[*].given
+        target_field: givenNames_lower
+        datatype: array[string]
+        normalize: lowercase
+        comment: "Given names lowercased for case-insensitive search"
+      - source_path: name[*]
+        target_field: fullName
+        datatype: array[string]
+        comment: "Full name constructed by extractor from prefix + given + family + suffix"
+      - source_path: name[*]
+        target_field: fullName_lower
+        datatype: array[string]
+        normalize: lowercase
+        comment: "Full name lowercased for search"
+      - source_path: name[*].text
+        target_field: nameText
+        datatype: array[string]
+        comment: "Text representation of name as provided in the resource"
+
+  phonetic:
+    source: name
+    target: _search
+    extractor: PhoneticExtractor
+    field_mappings:
+      - source_path: name[*]
+        target_field: phonetic_codes
+        datatype: array[string]
+        comment: "American Soundex codes (4-char) for every family and given name token; powers the FHIR `phonetic` search parameter"
+
+  # FHIR R5: `Practitioner.identifier | Practitioner.qualification.identifier`.
+  # Resource-rooted mode lets the path resolver walk BOTH branches in
+  # one pass and feeds the union to IdentifierExtractor, which collapses
+  # them into a single `_search.identifier_*` projection — exactly what
+  # the `identifier` search parameter expression requires.
+  identifier:
+    source: $resource
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier | qualification[*].identifier
+        target_field: identifier_values
+        datatype: array[string]
+        comment: "Identifier .value union over Practitioner-level and qualification-level identifiers"
+      - source_path: identifier | qualification[*].identifier
+        target_field: identifier_systemCode
+        datatype: array[string]
+        comment: "system|value pairs for both Practitioner and qualification identifiers"
+
+  telecom:
+    source: telecom
+    target: _search
+    extractor: ContactPointExtractor
+    field_mappings:
+      - source_path: telecom[*].value
+        target_field: email
+        datatype: array[string]
+        normalize: lowercase
+        comment: "Email addresses (system='email') — populated by ContactPointExtractor's filter"
+      - source_path: telecom[*].value
+        target_field: phone
+        datatype: array[string]
+        comment: "Phone numbers (system='phone') — populated by ContactPointExtractor's filter"
+
+  telecom_all:
+    source: telecom
+    target: _search
+    extractor: ContactPointExtractor
+    field_mappings:
+      - source_path: telecom[*].value
+        target_field: telecom_values
+        datatype: array[string]
+        comment: "All telecom values regardless of system (phone, email, fax, sms, ...)"
+      - source_path: telecom[*]
+        target_field: telecom_systemCode
+        datatype: array[string]
+        comment: "system|value pairs for the full `telecom` token search"
+
+  address:
+    source: address
+    target: _search
+    extractor: AddressExtractor
+    field_mappings:
+      - source_path: address[*]
+        target_field: addressFull
+        datatype: array[string]
+        comment: "Full address (line + city + state + postalCode + country, or .text if provided) — case-preserved for `:exact`"
+      - source_path: address[*]
+        target_field: addressFull_lower
+        datatype: array[string]
+        normalize: lowercase
+        comment: "Full address lowercased for default case-insensitive search"
+      - source_path: address[*].city
+        target_field: addressCity
+        datatype: array[string]
+        comment: "City - case-preserved for `:exact`"
+      - source_path: address[*].city
+        target_field: addressCity_lower
+        datatype: array[string]
+        normalize: lowercase
+        comment: "City lowercased for default case-insensitive search"
+      - source_path: address[*].state
+        target_field: addressState
+        datatype: array[string]
+        comment: "State/province - case-preserved for `:exact`"
+      - source_path: address[*].state
+        target_field: addressState_lower
+        datatype: array[string]
+        normalize: lowercase
+        comment: "State lowercased for default case-insensitive search"
+      - source_path: address[*].postalCode
+        target_field: addressPostalCode
+        datatype: array[string]
+        comment: "Postal/ZIP code - case-uniform, used for both default and `:exact`"
+      - source_path: address[*].country
+        target_field: addressCountry
+        datatype: array[string]
+        comment: "Country - case-preserved for `:exact`"
+      - source_path: address[*].country
+        target_field: addressCountry_lower
+        datatype: array[string]
+        normalize: lowercase
+        comment: "Country lowercased for default case-insensitive search"
+      - source_path: address[*].use
+        target_field: addressUse
+        datatype: array[string]
+        comment: "Address use codes: home, work, temp, old, billing"
+      - source_path: address[*].text
+        target_field: addressText
+        datatype: array[string]
+        comment: "Text representation of address if provided"
+
+  # `Practitioner.deceased[x]` is a polymorphic CHOICE — the resource
+  # carries either `deceasedBoolean` or `deceasedDateTime`. Per FHIR R5
+  # the `deceased` search parameter (token) is `true` whenever the
+  # CHOICE is populated and not `false`, and the `death-date` (date)
+  # parameter binds to the dateTime variant via `.ofType(dateTime)`.
+  # `transform: presence` bridges the dateTime variant into the boolean
+  # `deceased` token, exactly mirroring Patient's deceased[x] handling.
+  deceased:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: deceasedBoolean
+        target_field: deceased
+        datatype: boolean
+        comment: "Boolean indicator of deceased status (powers the `deceased` token search parameter)"
+      - source_path: deceasedDateTime
+        target_field: deceased
+        datatype: boolean
+        transform: presence
+        comment: "deceasedDateTime presence → deceased=true (FHIR R5 `Practitioner.deceased.exists() and != false`)"
+      - source_path: deceasedDateTime
+        target_field: deathDate
+        datatype: date
+        comment: "Date of death (powers the `death-date` date search parameter; FHIR `Practitioner.deceased.ofType(dateTime)`)"
+
+  # `Practitioner.communication[].language` is a CodeableConcept[] in
+  # R5 (was `code[]` in R4). Use `$resource` mode so the path resolver
+  # descends through the `communication` BackboneElement wrapper into
+  # `language.coding[*].code` correctly — pre-resolved mode would feed
+  # the wrapper objects to CodeableConceptExtractor directly and miss
+  # the `.language` indirection.
+  communication:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: communication[*].language.coding[*].code
+        target_field: language
+        datatype: array[string]
+        comment: "Language codes from communication.language (e.g. `en-US`, `es-MX`)"
+
+  # `Practitioner.qualification[*].period` is `Period` (cardinality 0..1)
+  # nested inside the qualification BackboneElement (cardinality 0..*).
+  # Resource-rooted mode + the path-resolver's `[*]` iteration projects
+  # every qualification's period into a flat `[{start, end}, ...]`
+  # array — same shape Appointment uses for `requestedPeriod`. The
+  # `qualification-period` search parameter compares against
+  # `qualificationPeriod.start` (range/prefix) per FHIR R5.
+  qualification_period:
+    source: $resource
+    target: _search
+    extractor: PeriodExtractor
+    field_mappings:
+      - source_path: qualification[*].period
+        target_field: qualificationPeriod
+        datatype: array[object]
+        comment: "Qualification validity period(s) as [{start,end}, ...]; powers `qualification-period` date range queries"
+
+  # ---------------------------------------------------------------------
+  # Compartment membership precompute (Hybrid Approach 3 from
+  # analysis_documents/FHIR_TO_MQL_COMPARTMENT.md). Practitioner is the
+  # root of its own compartment (per FHIR R5 CompartmentDefinition for
+  # Practitioner — https://www.hl7.org/fhir/compartmentdefinition-practitioner.html),
+  # so the only linking-parameter token is `[base]`: the resource is in
+  # its own compartment if its `resourceType == Practitioner`. The
+  # extractor's `include_self: true` flag handles that.
+  # ---------------------------------------------------------------------
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Practitioner
+        source_paths: []
+        reference_type: Practitioner
+        include_self: true
+        datatype: array[string]
+        comment: "Practitioner compartment IDs (own id only — Practitioner has no Practitioner-typed self-references)"
+
+# Compartment fast-path opt-in. The CompartmentResolver consults this
+# list and, for every compartment named here, emits the precomputed
+# `_compartments.<Type>: id` query instead of the dynamic `$or` over
+# linking parameters.
+compartments:
+  precomputed:
+    - Practitioner
+
+# Recommended MongoDB Indexes
+indexes:
+  # Compartment fast-path index. Single-field indexed lookup for any
+  # `Practitioner/<id>/<resource>` query routed through the resolver.
+  - fields:
+      - "_compartments.Practitioner": 1
+    options:
+      name: idx_compartment_practitioner
+      sparse: true
+
+  - fields:
+      - "_search.familyName_lower": 1
+    options:
+      name: idx_family_name_lower
+  - fields:
+      - "_search.givenNames_lower": 1
+    options:
+      name: idx_given_names_lower
+  - fields:
+      - "_search.fullName_lower": 1
+    options:
+      name: idx_full_name_lower
+      sparse: true
+  - fields:
+      - "gender": 1
+    options:
+      name: idx_gender
+  - fields:
+      - "active": 1
+    options:
+      name: idx_active
+  - fields:
+      - "_search.identifier_systemCode": 1
+    options:
+      name: idx_identifier_system_code
+  - fields:
+      - "_search.identifier_values": 1
+    options:
+      name: idx_identifier_values
+  - fields:
+      - "_search.email": 1
+    options:
+      name: idx_email
+      sparse: true
+  - fields:
+      - "_search.phone": 1
+    options:
+      name: idx_phone
+      sparse: true
+  - fields:
+      - "_search.telecom_systemCode": 1
+    options:
+      name: idx_telecom_system_code
+      sparse: true
+  - fields:
+      - "_search.addressPostalCode": 1
+    options:
+      name: idx_address_postal_code
+  - fields:
+      - "_search.addressCountry_lower": 1
+    options:
+      name: idx_address_country_lower
+  - fields:
+      - "_search.addressCity_lower": 1
+    options:
+      name: idx_address_city_lower
+  - fields:
+      - "_search.addressUse": 1
+    options:
+      name: idx_address_use
+  - fields:
+      - "_search.deceased": 1
+    options:
+      name: idx_deceased
+      sparse: true
+  - fields:
+      - "_search.deathDate": 1
+    options:
+      name: idx_death_date
+      sparse: true
+  - fields:
+      - "_search.language": 1
+    options:
+      name: idx_communication_language
+      sparse: true
+  - fields:
+      - "_search.qualificationPeriod.start": 1
+    options:
+      name: idx_qualification_period_start
+      sparse: true
+  - fields:
+      - "_search.phonetic_codes": 1
+    options:
+      name: idx_phonetic_codes
+      sparse: true
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_last_updated
