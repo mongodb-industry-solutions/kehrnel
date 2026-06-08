@@ -4,13 +4,13 @@ sidebar_position: 4
 
 # Domain API: FHIR
 
-The FHIR domain exposes HTTP operations backed by the active FHIR strategy on an environment. Production workflows should use **`fhir.rps_canonical`**.
+The FHIR domain exposes HTTP operations backed by the active FHIR strategy on an environment. Production workflows should use **`fhir.clinical_cdr`**.
 
 ## Strategy documentation
 
 Full configuration, data model, and CLI workflows:
 
-- [FHIR RPS Canonical strategy](/docs/strategies/fhir/rps-canonical/)
+- [FHIR Clinical CDR strategy](/docs/strategies/fhir/clinical-cdr/)
 
 ## Search
 
@@ -19,7 +19,7 @@ Full configuration, data model, and CLI workflows:
 Requirements:
 
 - Environment resolved from `x-active-env` (or platform default)
-- Active activation with `strategy_id: fhir.rps_canonical` and `domain: fhir`
+- Active activation with `strategy_id: fhir.clinical_cdr` and `domain: fhir`
 - Resources denormalized for the requested parameters (`fhir_denormalize`)
 
 ### Request body
@@ -45,20 +45,20 @@ curl -sS -X POST "http://localhost:8080/api/domains/fhir/search" \
   }'
 ```
 
-Configure the default strategy with `KEHRNEL_FHIR_STRATEGY_ID` (default `fhir.rps_canonical`).
+Configure the default strategy with `KEHRNEL_FHIR_STRATEGY_ID` (default `fhir.clinical_cdr`).
 
 ## Platform operations
 
-Generation, denormalization, indexes, and diagnostics use the universal runtime and synthetic jobs APIs with `domain: fhir`. See [CLI workflows](/docs/strategies/fhir/rps-canonical/cli-workflows).
+Generation, denormalization, indexes, and diagnostics use the universal runtime and synthetic jobs APIs with `domain: fhir`. See [CLI workflows](/docs/strategies/fhir/clinical-cdr/cli-workflows).
 
 | API | Purpose |
 |-----|---------|
-| `POST /environments/{env}/activate` | Bind `fhir.rps_canonical` + MongoDB |
+| `POST /environments/{env}/activate` | Bind `fhir.clinical_cdr` + MongoDB |
 | `POST /environments/{env}/synthetic/jobs` | Async `synthetic_generate_batch` |
 | `POST /environments/{env}/run` | `fhir_denormalize`, `fhir_search`, `fhir_stats`, … |
 
 ## Maturity
 
-Domain search and strategy-backed generation are **beta** (`fhir.rps_canonical` v0.1.0). Natural-language search (`negotiate_fhir_search`) and agentic endpoints are not yet production-ready.
+Domain search and strategy-backed generation are **beta** (`fhir.clinical_cdr` v0.1.0). Natural-language search (`negotiate_fhir_search`) and agentic endpoints are not yet production-ready.
 
-Legacy preview strategy `fhir.resource_first` remains for compatibility; do not use it for new integrations.
+`fhir.clinical_cdr` is the only FHIR strategy in kehrnel.

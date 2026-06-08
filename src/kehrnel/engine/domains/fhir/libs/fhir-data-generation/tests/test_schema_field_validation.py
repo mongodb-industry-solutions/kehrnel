@@ -55,6 +55,11 @@ _CORE_NESTED_VALIDATION = frozenset({
     "Condition", "Procedure", "MedicationRequest", "MedicationAdministration", "AllergyIntolerance",
     "Immunization", "DiagnosticReport", "CarePlan", "Appointment", "Claim", "Coverage",
     "DocumentReference", "ServiceRequest", "Task", "Device", "Specimen",
+    # MQL gap / extended shipped resources
+    "Composition", "AdverseEvent", "DeviceRequest", "SupplyRequest", "SupplyDelivery",
+    "ExplanationOfBenefit", "CoverageEligibilityRequest", "CoverageEligibilityResponse",
+    "MeasureReport", "MedicationStatement", "NutritionIntake", "VisionPrescription",
+    "DeviceDispense", "DeviceUsage", "PaymentNotice", "PaymentReconciliation",
 })
 _V5_CORE = sorted(_CORE_NESTED_VALIDATION & set(_V5_RESOURCES))
 _V6_CORE = sorted(_CORE_NESTED_VALIDATION & set(_V6_RESOURCES))

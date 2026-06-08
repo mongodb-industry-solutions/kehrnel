@@ -62,6 +62,61 @@ REQUIRED_SECTIONS = [
     "us_states",
 ]
 
+# Sections referenced by MQL-shipped / gap enrichers (aliases resolve to targets).
+MQL_ENRICHER_SECTIONS = [
+    "composition_status",
+    "loinc_composition_types",
+    "adverse_event_status",
+    "adverse_event_actuality",
+    "body_sites",
+    "immunization_forecast_status",
+    "vaccines",
+    "questionnaire_status",
+    "loinc_questionnaire_panels",
+    "countries",
+    "device_request_status",
+    "request_intent",
+    "request_priority",
+    "snomed_devices",
+    "supply_request_status",
+    "supply_categories",
+    "supply_delivery_status",
+    "request_orchestration_status",
+    "vision_prescription_status",
+    "eye_laterality",
+    "nutrition_intake_status",
+    "nutrition_foods",
+    "basic_resource_codes",
+    "provenance_activity",
+    "provenance_participant_type",
+    "coverage_eligibility_request_status",
+    "eligibility_purpose",
+    "explanation_of_benefit_status",
+    "claim_type",
+    "claim_use",
+    "coverage_eligibility_response_status",
+    "enrollment_status",
+    "insurance_plan_status",
+    "insurance_plan_types",
+    "charge_item_definition_status",
+    "payment_notice_status",
+    "payment_status",
+    "payment_reconciliation_status",
+    "payment_reconciliation_outcome",
+    "device_usage_status",
+    "device_dispense_status",
+    "biologically_derived_product_category",
+    "biologically_derived_product_status",
+    "biologically_derived_product_codes",
+    "endpoint_connection_type",
+    "mime_types",
+    "genomic_study_status",
+    "measure_status",
+    "measure_report_status",
+    "measure_report_type",
+    "medication_statement_status",
+]
+
 
 @pytest.fixture(autouse=True)
 def fresh_codes_cache():
@@ -79,6 +134,12 @@ def test_all_required_sections_present():
     sections = set(list_sections())
     missing = [s for s in REQUIRED_SECTIONS if s not in sections]
     assert not missing, f"Missing sections: {missing}"
+
+
+def test_mql_enricher_sections_present():
+    sections = set(list_sections())
+    missing = [s for s in MQL_ENRICHER_SECTIONS if s not in sections]
+    assert not missing, f"Missing MQL enricher sections: {missing}"
 
 
 def test_random_code_gender_reproducible():

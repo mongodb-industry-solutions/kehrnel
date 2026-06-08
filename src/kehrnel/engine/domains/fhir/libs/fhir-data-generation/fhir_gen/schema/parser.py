@@ -3,13 +3,27 @@
 from __future__ import annotations
 
 import json
-import re
 from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
 
-# CamelCase type suffix at end of polymorphic field names (valueQuantity -> Quantity)
-_TYPE_SUFFIX_RE = re.compile(r"^(.+?)([A-Z][A-Za-z0-9]*)$")
+# Complex datatype suffixes on polymorphic FHIR elements (valueQuantity, etc.)
+_COMPLEX_TYPE_SUFFIXES: tuple[str, ...] = (
+    "CodeableConcept",
+    "Coding",
+    "Quantity",
+    "SimpleQuantity",
+    "Period",
+    "Range",
+    "Ratio",
+    "SampledData",
+    "Attachment",
+    "Reference",
+    "Identifier",
+    "HumanName",
+    "Address",
+    "ContactPoint",
+)
 
 
 @dataclass
@@ -99,7 +113,10 @@ class FHIRSchemaParser:
             return None
         if "$ref" in prop:
             return self._ref_name(prop["$ref"])
-        if prop.get("type") == "array" and isinstance(prop.get("items"), dict):
+        inline_type = prop.get("type")
+        if isinstance(inline_type, str) and inline_type in self.PRIMITIVES:
+            return inline_type
+        if inline_type == "array" and isinstance(prop.get("items"), dict):
             return self._extract_ref(prop["items"])
         if "allOf" in prop:
             for item in prop["allOf"]:
@@ -108,22 +125,23 @@ class FHIRSchemaParser:
                     return ref
         return None
 
-    def _is_type_suffix(self, suffix: str) -> bool:
-        if suffix in self._defs:
-            return True
-        if suffix in self.PRIMITIVES:
-            return True
-        # Polymorphic fields use PascalCase suffixes (valueString -> String -> string)
-        if suffix.lower() in self.PRIMITIVES:
-            return True
-        camel = suffix[0].lower() + suffix[1:] if len(suffix) > 1 else suffix.lower()
-        if camel in self.PRIMITIVES:
-            return True
-        return suffix in {
-            "CodeableConcept", "Coding", "Quantity", "SimpleQuantity",
-            "Period", "Range", "Ratio", "SampledData", "Attachment",
-            "Reference", "Identifier", "HumanName", "Address", "ContactPoint",
-        }
+    def _pascal_type_suffixes(self) -> tuple[str, ...]:
+        """PascalCase suffix tokens for FHIR choice elements (longest first)."""
+        names: set[str] = set(_COMPLEX_TYPE_SUFFIXES)
+        for primitive in self.PRIMITIVES:
+            if not primitive:
+                continue
+            names.add(primitive[0].upper() + primitive[1:])
+        return tuple(sorted(names, key=len, reverse=True))
+
+    def _split_type_suffix_field(self, fname: str) -> tuple[str, str] | None:
+        """Split ``versionAlgorithmString`` -> (``versionAlgorithm``, ``String``)."""
+        for suffix in self._pascal_type_suffixes():
+            if fname.endswith(suffix) and len(fname) > len(suffix):
+                base = fname[: -len(suffix)]
+                if base and base[0].islower():
+                    return base, suffix
+        return None
 
     def _find_poly_groups(self, fields: dict[str, FieldDef]) -> dict[str, list[str]]:
         """Group polymorphic fields (e.g. valueQuantity, valueString -> value)."""
@@ -132,12 +150,10 @@ class FHIRSchemaParser:
         for fname in fields:
             if fname.startswith("_"):
                 continue
-            match = _TYPE_SUFFIX_RE.match(fname)
-            if not match:
+            split = self._split_type_suffix_field(fname)
+            if not split:
                 continue
-            prefix, suffix = match.group(1), match.group(2)
-            if not prefix or not self._is_type_suffix(suffix):
-                continue
+            prefix, _suffix = split
             buckets.setdefault(prefix, []).append(fname)
 
         return {k: sorted(v) for k, v in buckets.items() if len(v) > 1}

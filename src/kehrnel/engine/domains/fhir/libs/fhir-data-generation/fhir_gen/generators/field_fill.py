@@ -178,7 +178,9 @@ def _fill_name(
         return t.p.faker.company()
     if rtype == "Location":
         return t.p.faker.company() + " Clinic"
-    return t.p.gen_string(max_length=80)
+    return t.p.gen_string(
+        max_length=80, resource_type=rtype, field_name="name"
+    )
 
 
 @_register_field("active")
@@ -249,11 +251,18 @@ def _generate_for_ref(
     rng: random.Random,
     resource: dict[str, Any],
 ) -> Any:
+    rtype = resource.get("resourceType")
     if ref is None:
-        return t.p.gen_string(max_length=120)
+        return t.p.gen_string(
+            max_length=120, resource_type=rtype, field_name=field_name
+        )
 
     if ref in t.p.PRIMITIVE_TYPES:
-        val = t.p.generate(ref)
+        ctx = {"resource_type": rtype, "field_name": field_name}
+        if ref in ("string", "markdown", "xhtml"):
+            val = t.p.generate(ref, **ctx)
+        else:
+            val = t.p.generate(ref)
         return [val] if is_array else val
 
     if ref == "Reference":

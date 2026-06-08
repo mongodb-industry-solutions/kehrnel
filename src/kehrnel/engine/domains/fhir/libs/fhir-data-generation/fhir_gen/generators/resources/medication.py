@@ -5,6 +5,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
+from ...codes import pick_code
 from ...codes.loader import get_system, random_code
 from ...resolvers.reference import ReferenceStore
 from ..special_types import SpecialTypeGenerator
@@ -163,13 +164,15 @@ def enrich_MedicationStatement(
     store: ReferenceStore,
     rng: random.Random,
 ) -> dict[str, Any]:
-    r["status"] = rng.choice(["recorded", "entered-in-error", "draft"])
+    r["status"] = pick_code("medication_statement_status", rng, "recorded")
     med = random_code("rxnorm_medications", rng)
     _set_medication(r, t, store, rng, med)
     if store.has("Patient"):
         r["subject"] = store.get_reference("Patient", rng)
     if store.has("Encounter"):
         r["encounter"] = store.get_reference("Encounter", rng)
+    if store.has("Practitioner"):
+        r["informationSource"] = [store.get_reference("Practitioner", rng)]
     r["effectiveDateTime"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
     r["dateAsserted"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
     r["dosage"] = [t.gen_Dosage()]

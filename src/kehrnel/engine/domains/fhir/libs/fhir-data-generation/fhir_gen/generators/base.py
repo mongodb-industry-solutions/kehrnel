@@ -404,6 +404,12 @@ class ResourceGenerator:
         resource = self._ensure_required_fields(resource, resource_def, resource_type)
         resource = self._prune_empty_array_elements(resource)
 
+        from .canonical_resource import normalize_canonical_resource
+
+        resource = normalize_canonical_resource(
+            resource, self._types, self._store, self.rng
+        )
+
         if overrides:
             resource.update(overrides)
 
@@ -454,7 +460,14 @@ class ResourceGenerator:
             return None
 
         if field.is_primitive:
-            value = self._prim.generate(ref)
+            ctx = {
+                "resource_type": context_resource,
+                "field_name": field.name,
+            }
+            if ref in ("string", "markdown", "xhtml"):
+                value = self._prim.generate(ref, **ctx)
+            else:
+                value = self._prim.generate(ref)
             return self._wrap_array(field, value)
 
         if ref == "Reference":

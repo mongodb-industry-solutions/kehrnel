@@ -10,6 +10,12 @@ from datetime import date, datetime, timedelta
 
 from faker import Faker
 
+from .healthcare_text import (
+    clinical_markdown,
+    clinical_text,
+    clinical_xhtml,
+)
+
 # FHIR id: any combination of A-Z a-z 0-9 - . with length 1..64
 _ID_PATTERN = re.compile(r"^[A-Za-z0-9\-\.]{1,64}$")
 
@@ -45,8 +51,19 @@ class PrimitiveGenerator:
         assert _ID_PATTERN.match(value)
         return value
 
-    def gen_string(self, max_length: int = 100, **_) -> str:
-        return self.faker.sentence(nb_words=4).rstrip(".")[:max_length]
+    def gen_string(
+        self,
+        max_length: int = 100,
+        resource_type: str | None = None,
+        field_name: str | None = None,
+        **_,
+    ) -> str:
+        return clinical_text(
+            self.rng,
+            resource_type=resource_type,
+            field_name=field_name,
+            max_length=max_length,
+        )
 
     def gen_boolean(self, **_) -> bool:
         return self.rng.choice([True, False])
@@ -133,13 +150,26 @@ class PrimitiveGenerator:
     def gen_uuid(self, **_) -> str:
         return f"urn:uuid:{self._uuid4()}"
 
-    def gen_markdown(self, **_) -> str:
-        return f"## {self.faker.sentence()}\n\n{self.faker.paragraph()}"
+    def gen_markdown(
+        self,
+        resource_type: str | None = None,
+        field_name: str | None = "note",
+        **_,
+    ) -> str:
+        return clinical_markdown(
+            self.rng, resource_type=resource_type, field_name=field_name
+        )
 
     def gen_base64Binary(self, byte_count: int = 64, **_) -> str:
         data = bytes(self.rng.getrandbits(8) for _ in range(byte_count))
         return base64.b64encode(data).decode()
 
-    def gen_xhtml(self, **_) -> str:
-        text = self.faker.sentence()
-        return f'<div xmlns="http://www.w3.org/1999/xhtml"><p>{text}</p></div>'
+    def gen_xhtml(
+        self,
+        resource_type: str | None = None,
+        field_name: str | None = "note",
+        **_,
+    ) -> str:
+        return clinical_xhtml(
+            self.rng, resource_type=resource_type, field_name=field_name
+        )

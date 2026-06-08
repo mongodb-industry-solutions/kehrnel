@@ -126,12 +126,42 @@ class TestConvertCommand:
 
 
 class TestExpandResourceList:
-    def test_explicit_resources_validate_against_loader(self):
+    def test_explicit_resources_expand_dependencies_by_default(self):
         loader = cli.ConfigLoader()
         args = cli.build_parser().parse_args(
-            ["denormalize", "Patient", "Observation", "--dry-run"]
+            ["denormalize", "Observation", "--dry-run"]
         )
-        assert cli._expand_resource_list(args, loader) == ["Patient", "Observation"]
+        expanded = cli._expand_resource_list(args, loader)
+        assert "Observation" in expanded
+        assert expanded.index("Patient") < expanded.index("Observation")
+        assert "Encounter" in expanded
+        assert "Practitioner" in expanded
+
+    def test_no_with_deps_returns_only_requested(self):
+        loader = cli.ConfigLoader()
+        args = cli.build_parser().parse_args(
+            [
+                "denormalize",
+                "Patient",
+                "Observation",
+                "--no-with-deps",
+                "--dry-run",
+            ]
+        )
+        assert cli._expand_resource_list(args, loader) == [
+            "Patient",
+            "Observation",
+        ]
+
+    def test_measure_report_expands_anchor_types(self):
+        loader = cli.ConfigLoader()
+        args = cli.build_parser().parse_args(
+            ["denormalize", "MeasureReport", "--dry-run"]
+        )
+        expanded = cli._expand_resource_list(args, loader)
+        assert expanded[-1] == "MeasureReport"
+        for anchor in ("Measure", "Patient", "Practitioner", "Organization"):
+            assert anchor in expanded
 
     def test_all_flag_returns_every_configured(self):
         loader = cli.ConfigLoader()

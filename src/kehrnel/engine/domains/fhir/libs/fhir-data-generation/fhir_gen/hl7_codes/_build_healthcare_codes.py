@@ -612,6 +612,279 @@ NEW_SECTIONS["supply_delivery_status"] = cs("http://hl7.org/fhir/supplydelivery-
     ("abandoned", "Abandoned"), ("entered-in-error", "Entered in Error"),
 ])
 
+NEW_SECTIONS["loinc_composition_types"] = cs(
+    "http://loinc.org",
+    [
+        ("18842-5", "Discharge summary"),
+        ("11488-4", "Consultation note"),
+        ("34117-2", "History and physical note"),
+        ("88569-4", "Outpatient Note"),
+    ],
+    "EXAMPLE",
+)
+
+NEW_SECTIONS["loinc_questionnaire_panels"] = cs(
+    "http://loinc.org",
+    [
+        ("44249-1", "Health and social assessment panel"),
+        ("69737-5", "PHQ-9 quick depression assessment"),
+    ],
+    "EXAMPLE",
+)
+
+NEW_SECTIONS["publication_status"] = cs(
+    "http://hl7.org/fhir/publication-status",
+    [
+        ("draft", "Draft"),
+        ("active", "Active"),
+        ("retired", "Retired"),
+        ("unknown", "Unknown"),
+    ],
+)
+
+NEW_SECTIONS["claim_type"] = cs(
+    "http://terminology.hl7.org/CodeSystem/claim-type",
+    [
+        ("institutional", "Institutional"),
+        ("professional", "Professional"),
+        ("pharmacy", "Pharmacy"),
+        ("oral", "Oral"),
+        ("vision", "Vision"),
+    ],
+)
+
+NEW_SECTIONS["claim_use"] = cs(
+    "http://hl7.org/fhir/claim-use",
+    [
+        ("claim", "Claim"),
+        ("preauthorization", "Preauthorization"),
+        ("predetermination", "Predetermination"),
+    ],
+)
+
+NEW_SECTIONS["adverse_event_actuality"] = cs(
+    "http://hl7.org/fhir/adverse-event-actuality",
+    [("actual", "Actual"), ("potential", "Potential")],
+)
+
+NEW_SECTIONS["adverse_event_seriousness"] = cs(
+    "http://terminology.hl7.org/CodeSystem/adverse-event-seriousness",
+    [("serious", "Serious"), ("non-serious", "Non-serious")],
+    "EXTENSIBLE",
+)
+
+NEW_SECTIONS["immunization_forecast_status"] = cs(
+    "http://terminology.hl7.org/CodeSystem/immunization-recommendation-status",
+    [
+        ("due", "Due"),
+        ("overdue", "Overdue"),
+        ("eligible", "Eligible"),
+        ("not-due", "Not Due"),
+    ],
+    "EXTENSIBLE",
+)
+
+NEW_SECTIONS["device_dispense_status"] = cs("http://hl7.org/fhir/devicedispense-status", EVENT_STATUS)
+
+NEW_SECTIONS["device_usage_status"] = cs(
+    "http://hl7.org/fhir/deviceusage-status",
+    [
+        ("active", "Active"),
+        ("completed", "Completed"),
+        ("entered-in-error", "Entered in Error"),
+    ],
+)
+
+NEW_SECTIONS["biologically_derived_product_category"] = cs(
+    "http://hl7.org/fhir/biologicallyderivedproductcategory",
+    [
+        ("organ", "Organ"),
+        ("tissue", "Tissue"),
+        ("fluid", "Fluid"),
+        ("cells", "Cells"),
+    ],
+)
+
+NEW_SECTIONS["biologically_derived_product_status"] = cs(
+    "http://hl7.org/fhir/biologicallyderivedproductstatus",
+    [("available", "Available"), ("unavailable", "Unavailable")],
+)
+
+NEW_SECTIONS["measure_report_status"] = cs(
+    "http://hl7.org/fhir/measure-report-status",
+    [
+        ("complete", "Complete"),
+        ("pending", "Pending"),
+        ("error", "Error"),
+    ],
+)
+
+NEW_SECTIONS["measure_report_type"] = cs(
+    "http://hl7.org/fhir/measure-report-type",
+    [
+        ("individual", "Individual"),
+        ("subject-list", "Subject List"),
+        ("summary", "Summary"),
+        ("data-collection", "Data Collection"),
+    ],
+)
+
+NEW_SECTIONS["genomic_study_status"] = cs(
+    "http://hl7.org/fhir/genomicstudy-status",
+    [
+        ("registered", "Registered"),
+        ("available", "Available"),
+        ("cancelled", "Cancelled"),
+        ("entered-in-error", "Entered in Error"),
+    ],
+)
+
+NEW_SECTIONS["endpoint_connection_type"] = cs(
+    "http://terminology.hl7.org/CodeSystem/endpoint-connection-type",
+    [
+        ("hl7-fhir-rest", "HL7 FHIR"),
+        ("hl7-fhir-msg", "HL7 FHIR Messaging"),
+    ],
+)
+
+NEW_SECTIONS["provenance_activity"] = cs(
+    "http://terminology.hl7.org/CodeSystem/v3-DataOperation",
+    [
+        ("CREATE", "create"),
+        ("UPDATE", "revise"),
+        ("DELETE", "delete"),
+    ],
+)
+
+NEW_SECTIONS["basic_resource_codes"] = cs(
+    "http://terminology.hl7.org/CodeSystem/basic-resource-type",
+    [
+        ("referral", "Referral"),
+        ("disease", "Disease outbreak"),
+    ],
+    "EXAMPLE",
+)
+
+NEW_SECTIONS["nutrition_foods"] = cs(
+    "http://snomed.info/sct",
+    [
+        ("226211001", "Apple"),
+        ("78275001", "Orange fruit"),
+        ("228360005", "Whole milk"),
+    ],
+    "PREFERRED",
+)
+
+NEW_SECTIONS["supply_categories"] = cs(
+    "http://terminology.hl7.org/CodeSystem/supply-category",
+    [
+        ("central", "Central Supply"),
+        ("non-stock", "Non-Stock"),
+    ],
+)
+
+NEW_SECTIONS["eligibility_purpose"] = cs(
+    "http://terminology.hl7.org/CodeSystem/coverageeligibilityrequest-purpose",
+    [
+        ("auth-requirements", "Coverage auth requirements"),
+        ("benefits", "Benefits"),
+        ("discovery", "Discovery"),
+        ("validation", "Validation"),
+    ],
+)
+
+NEW_SECTIONS["payment_status"] = cs(
+    "http://terminology.hl7.org/CodeSystem/paymentstatus",
+    [("paid", "Paid"), ("cleared", "Cleared")],
+)
+
+NEW_SECTIONS["process_priority"] = cs(
+    "http://terminology.hl7.org/CodeSystem/processpriority",
+    [
+        ("stat", "Immediate"),
+        ("normal", "Normal"),
+        ("deferred", "Deferred"),
+    ],
+)
+
+NEW_SECTIONS["contract_signing_types"] = cs(
+    "http://terminology.hl7.org/CodeSystem/contract-signer-type-codes",
+    [("VERIFIED", "Verified")],
+    "EXTENSIBLE",
+)
+
+NEW_SECTIONS["contract_status"] = cs(
+    "http://hl7.org/fhir/contract-status",
+    [
+        ("executed", "Executed"),
+        ("amended", "Amended"),
+        ("terminated", "Terminated"),
+        ("entered-in-error", "Entered in Error"),
+    ],
+)
+
+NEW_SECTIONS["insurance_plan_types"] = cs(
+    "http://terminology.hl7.org/CodeSystem/insurance-plan-type",
+    [("medical", "Medical"), ("dental", "Dental"), ("vision", "Vision")],
+    "EXTENSIBLE",
+)
+
+NEW_SECTIONS["snomed_devices"] = cs(
+    "http://snomed.info/sct",
+    [
+        ("706172005", "Wheelchair"),
+        ("449345005", "Insulin pump"),
+        ("86184003", "Electrocardiograph"),
+    ],
+    "PREFERRED",
+)
+
+NEW_SECTIONS["biologically_derived_product_codes"] = cs(
+    "http://snomed.info/sct",
+    [
+        ("119297000", "Blood product"),
+        ("180270004", "Whole blood"),
+        ("33389009", "Platelet concentrate"),
+    ],
+    "PREFERRED",
+)
+
+NEW_SECTIONS["medication_statement_status"] = cs(
+    "http://hl7.org/fhir/medication-statement-status",
+    [
+        ("recorded", "Recorded"),
+        ("entered-in-error", "Entered in Error"),
+        ("draft", "Draft"),
+    ],
+)
+
+NEW_SECTIONS["payment_reconciliation_outcome"] = cs(
+    "http://hl7.org/fhir/payment-outcome",
+    [
+        ("queued", "Queued"),
+        ("complete", "Complete"),
+        ("error", "Error"),
+        ("partial", "Partial"),
+    ],
+)
+
+NEW_SECTIONS["provenance_participant_type"] = cs(
+    "http://terminology.hl7.org/CodeSystem/provenance-participant-type",
+    [
+        ("author", "Author"),
+        ("verifier", "Verifier"),
+        ("transmitter", "Transmitter"),
+    ],
+    "EXTENSIBLE",
+)
+
+NEW_SECTIONS["eye_laterality"] = cs(
+    "http://hl7.org/fhir/vision-eye-codes",
+    [("right", "Right Eye"), ("left", "Left Eye")],
+)
+
+NEW_SECTIONS["adverse_event_status"] = cs("http://hl7.org/fhir/event-status", EVENT_STATUS)
+
 NEW_SECTIONS["specimen_status"] = cs("http://hl7.org/fhir/specimen-status", [
     ("available", "Available"), ("unavailable", "Unavailable"),
     ("unsatisfactory", "Unsatisfactory"), ("entered-in-error", "Entered in Error"),
@@ -703,6 +976,21 @@ def add_aliases(data: dict) -> None:
         ("organization_types", "organization_type"),
         ("location_types", "location_type"),
         ("relatedperson_relationship", "contact_relationship"),
+        ("supply_request_status", "request_status"),
+        ("enrollment_status", "coverage_status"),
+        ("explanation_of_benefit_status", "claim_status"),
+        ("charge_item_definition_status", "publication_status"),
+        ("questionnaire_status", "publication_status"),
+        ("insurance_plan_status", "publication_status"),
+        ("measure_status", "publication_status"),
+        ("vision_prescription_status", "medication_request_status"),
+        ("nutrition_intake_status", "procedure_status"),
+        ("device_request_status", "request_status"),
+        ("request_orchestration_status", "request_status"),
+        ("coverage_eligibility_request_status", "coverage_status"),
+        ("coverage_eligibility_response_status", "coverage_status"),
+        ("payment_notice_status", "claim_status"),
+        ("payment_reconciliation_status", "claim_status"),
     ]
     for alias, target in pairs:
         if alias != target:

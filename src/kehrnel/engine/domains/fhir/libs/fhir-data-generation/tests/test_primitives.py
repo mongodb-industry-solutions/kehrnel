@@ -106,3 +106,14 @@ class TestPrimitiveTypes:
             assert type_name in prim.PRIMITIVE_TYPES
             val = prim.generate(type_name)
             assert val is not None
+
+    def test_gen_string_clinical_context(self, prim: PrimitiveGenerator):
+        text = prim.gen_string(
+            resource_type="Condition", field_name="note", max_length=120
+        )
+        assert isinstance(text, str) and len(text) > 10
+        lowered = text.lower()
+        assert any(
+            w in lowered
+            for w in ("patient", "clinical", "problem", "hypertension", "condition")
+        )

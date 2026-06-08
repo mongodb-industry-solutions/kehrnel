@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta
 
 from ..codes.loader import get_system, random_code
+from .healthcare_text import clinical_short_label, clinical_text
 from .primitives import PrimitiveGenerator
 
 
@@ -98,11 +99,11 @@ class ComplexTypeGenerator:
         text: str | None = None,
     ) -> dict:
         if system is None and code is None:
-            label = text or display or self.p.faker.sentence(nb_words=2).rstrip(".")
+            label = text or display or clinical_short_label(self.rng, field_name="text")
             return {"text": label}
         return {
             "coding": [self.gen_Coding(system=system, code=code, display=display)],
-            "text": text or display or self.p.faker.word(),
+            "text": text or display or clinical_short_label(self.rng, field_name="text"),
         }
 
     def gen_CodeableReference(
@@ -138,7 +139,7 @@ class ComplexTypeGenerator:
         result: dict = {
             "system": system or "http://snomed.info/sct",
             "code": code or self.p.gen_code(),
-            "display": display or self.p.faker.sentence(nb_words=3).rstrip("."),
+            "display": display or clinical_short_label(self.rng, field_name="display"),
         }
         if version:
             result["version"] = version
@@ -212,7 +213,7 @@ class ComplexTypeGenerator:
             "contentType": ct,
             "language": "en",
             "data": self.p.gen_base64Binary(byte_count=32),
-            "title": self.p.faker.sentence(nb_words=4).rstrip("."),
+            "title": clinical_text(self.rng, field_name="title", max_length=80),
             "creation": self.p.gen_dateTime(),
         }
 

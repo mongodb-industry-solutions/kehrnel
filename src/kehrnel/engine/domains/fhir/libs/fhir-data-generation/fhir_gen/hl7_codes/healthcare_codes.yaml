@@ -1,8 +1,6 @@
 # Healthcare Code Systems — FHIR R5 synthetic data generation
 # Sources: https://terminology.hl7.org (HL7 Terminology, FHIR R5)
 #          https://www.hl7.org/fhir/terminologies.html
-#          https://terminology.hl7.org/codesystems-fhir.html
-#          https://terminology.hl7.org/en/valuesets-fhir.html
 #          http://loinc.org | http://snomed.info/sct | RxNorm | CVX
 # Regenerate: python -m fhir_gen.hl7_codes._build_healthcare_codes
 #   or: python fhir_gen/hl7_codes/_build_healthcare_codes.py
@@ -2108,3 +2106,567 @@ participation_type:
     display: referrer
   - code: IRCP
     display: information recipient
+loinc_composition_types:
+  system: http://loinc.org
+  binding: EXAMPLE
+  codes:
+  - code: 18842-5
+    display: Discharge summary
+  - code: 11488-4
+    display: Consultation note
+  - code: 34117-2
+    display: History and physical note
+  - code: 88569-4
+    display: Outpatient Note
+loinc_questionnaire_panels:
+  system: http://loinc.org
+  binding: EXAMPLE
+  codes:
+  - code: 44249-1
+    display: Health and social assessment panel
+  - code: 69737-5
+    display: PHQ-9 quick depression assessment
+publication_status:
+  system: http://hl7.org/fhir/publication-status
+  binding: REQUIRED
+  codes:
+  - code: draft
+    display: Draft
+  - code: active
+    display: Active
+  - code: retired
+    display: Retired
+  - code: unknown
+    display: Unknown
+claim_type:
+  system: http://terminology.hl7.org/CodeSystem/claim-type
+  binding: REQUIRED
+  codes:
+  - code: institutional
+    display: Institutional
+  - code: professional
+    display: Professional
+  - code: pharmacy
+    display: Pharmacy
+  - code: oral
+    display: Oral
+  - code: vision
+    display: Vision
+claim_use:
+  system: http://hl7.org/fhir/claim-use
+  binding: REQUIRED
+  codes:
+  - code: claim
+    display: Claim
+  - code: preauthorization
+    display: Preauthorization
+  - code: predetermination
+    display: Predetermination
+adverse_event_actuality:
+  system: http://hl7.org/fhir/adverse-event-actuality
+  binding: REQUIRED
+  codes:
+  - code: actual
+    display: Actual
+  - code: potential
+    display: Potential
+adverse_event_seriousness:
+  system: http://terminology.hl7.org/CodeSystem/adverse-event-seriousness
+  binding: EXTENSIBLE
+  codes:
+  - code: serious
+    display: Serious
+  - code: non-serious
+    display: Non-serious
+immunization_forecast_status:
+  system: http://terminology.hl7.org/CodeSystem/immunization-recommendation-status
+  binding: EXTENSIBLE
+  codes:
+  - code: due
+    display: Due
+  - code: overdue
+    display: Overdue
+  - code: eligible
+    display: Eligible
+  - code: not-due
+    display: Not Due
+device_dispense_status:
+  system: http://hl7.org/fhir/devicedispense-status
+  binding: REQUIRED
+  codes:
+  - code: preparation
+    display: Preparation
+  - code: in-progress
+    display: In Progress
+  - code: not-done
+    display: Not Done
+  - code: on-hold
+    display: On Hold
+  - code: stopped
+    display: Stopped
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: unknown
+    display: Unknown
+device_usage_status:
+  system: http://hl7.org/fhir/deviceusage-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+biologically_derived_product_category:
+  system: http://hl7.org/fhir/biologicallyderivedproductcategory
+  binding: REQUIRED
+  codes:
+  - code: organ
+    display: Organ
+  - code: tissue
+    display: Tissue
+  - code: fluid
+    display: Fluid
+  - code: cells
+    display: Cells
+biologically_derived_product_status:
+  system: http://hl7.org/fhir/biologicallyderivedproductstatus
+  binding: REQUIRED
+  codes:
+  - code: available
+    display: Available
+  - code: unavailable
+    display: Unavailable
+measure_report_status:
+  system: http://hl7.org/fhir/measure-report-status
+  binding: REQUIRED
+  codes:
+  - code: complete
+    display: Complete
+  - code: pending
+    display: Pending
+  - code: error
+    display: Error
+measure_report_type:
+  system: http://hl7.org/fhir/measure-report-type
+  binding: REQUIRED
+  codes:
+  - code: individual
+    display: Individual
+  - code: subject-list
+    display: Subject List
+  - code: summary
+    display: Summary
+  - code: data-collection
+    display: Data Collection
+genomic_study_status:
+  system: http://hl7.org/fhir/genomicstudy-status
+  binding: REQUIRED
+  codes:
+  - code: registered
+    display: Registered
+  - code: available
+    display: Available
+  - code: cancelled
+    display: Cancelled
+  - code: entered-in-error
+    display: Entered in Error
+endpoint_connection_type:
+  system: http://terminology.hl7.org/CodeSystem/endpoint-connection-type
+  binding: REQUIRED
+  codes:
+  - code: hl7-fhir-rest
+    display: HL7 FHIR
+  - code: hl7-fhir-msg
+    display: HL7 FHIR Messaging
+provenance_activity:
+  system: http://terminology.hl7.org/CodeSystem/v3-DataOperation
+  binding: REQUIRED
+  codes:
+  - code: CREATE
+    display: create
+  - code: UPDATE
+    display: revise
+  - code: DELETE
+    display: delete
+basic_resource_codes:
+  system: http://terminology.hl7.org/CodeSystem/basic-resource-type
+  binding: EXAMPLE
+  codes:
+  - code: referral
+    display: Referral
+  - code: disease
+    display: Disease outbreak
+nutrition_foods:
+  system: http://snomed.info/sct
+  binding: PREFERRED
+  codes:
+  - code: '226211001'
+    display: Apple
+  - code: '78275001'
+    display: Orange fruit
+  - code: '228360005'
+    display: Whole milk
+supply_categories:
+  system: http://terminology.hl7.org/CodeSystem/supply-category
+  binding: REQUIRED
+  codes:
+  - code: central
+    display: Central Supply
+  - code: non-stock
+    display: Non-Stock
+eligibility_purpose:
+  system: http://terminology.hl7.org/CodeSystem/coverageeligibilityrequest-purpose
+  binding: REQUIRED
+  codes:
+  - code: auth-requirements
+    display: Coverage auth requirements
+  - code: benefits
+    display: Benefits
+  - code: discovery
+    display: Discovery
+  - code: validation
+    display: Validation
+payment_status:
+  system: http://terminology.hl7.org/CodeSystem/paymentstatus
+  binding: REQUIRED
+  codes:
+  - code: paid
+    display: Paid
+  - code: cleared
+    display: Cleared
+process_priority:
+  system: http://terminology.hl7.org/CodeSystem/processpriority
+  binding: REQUIRED
+  codes:
+  - code: stat
+    display: Immediate
+  - code: normal
+    display: Normal
+  - code: deferred
+    display: Deferred
+contract_signing_types:
+  system: http://terminology.hl7.org/CodeSystem/contract-signer-type-codes
+  binding: EXTENSIBLE
+  codes:
+  - code: VERIFIED
+    display: Verified
+insurance_plan_types:
+  system: http://terminology.hl7.org/CodeSystem/insurance-plan-type
+  binding: EXTENSIBLE
+  codes:
+  - code: medical
+    display: Medical
+  - code: dental
+    display: Dental
+  - code: vision
+    display: Vision
+adverse_event_status:
+  system: http://hl7.org/fhir/event-status
+  binding: REQUIRED
+  codes:
+  - code: preparation
+    display: Preparation
+  - code: in-progress
+    display: In Progress
+  - code: not-done
+    display: Not Done
+  - code: on-hold
+    display: On Hold
+  - code: stopped
+    display: Stopped
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: unknown
+    display: Unknown
+supply_request_status:
+  system: http://hl7.org/fhir/request-status
+  binding: REQUIRED
+  codes:
+  - code: draft
+    display: Draft
+  - code: active
+    display: Active
+  - code: on-hold
+    display: On Hold
+  - code: revoked
+    display: Revoked
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: unknown
+    display: Unknown
+enrollment_status:
+  system: http://hl7.org/fhir/fm-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: cancelled
+    display: Cancelled
+  - code: draft
+    display: Draft
+  - code: entered-in-error
+    display: Entered in Error
+explanation_of_benefit_status:
+  system: http://hl7.org/fhir/claim-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: cancelled
+    display: Cancelled
+  - code: draft
+    display: Draft
+  - code: entered-in-error
+    display: Entered in Error
+charge_item_definition_status:
+  system: http://hl7.org/fhir/publication-status
+  binding: REQUIRED
+  codes:
+  - code: draft
+    display: Draft
+  - code: active
+    display: Active
+  - code: retired
+    display: Retired
+  - code: unknown
+    display: Unknown
+questionnaire_status:
+  system: http://hl7.org/fhir/publication-status
+  binding: REQUIRED
+  codes:
+  - code: draft
+    display: Draft
+  - code: active
+    display: Active
+  - code: retired
+    display: Retired
+  - code: unknown
+    display: Unknown
+insurance_plan_status:
+  system: http://hl7.org/fhir/publication-status
+  binding: REQUIRED
+  codes:
+  - code: draft
+    display: Draft
+  - code: active
+    display: Active
+  - code: retired
+    display: Retired
+  - code: unknown
+    display: Unknown
+measure_status:
+  system: http://hl7.org/fhir/publication-status
+  binding: REQUIRED
+  codes:
+  - code: draft
+    display: Draft
+  - code: active
+    display: Active
+  - code: retired
+    display: Retired
+  - code: unknown
+    display: Unknown
+vision_prescription_status:
+  system: http://hl7.org/fhir/medicationrequest-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: on-hold
+    display: On Hold
+  - code: cancelled
+    display: Cancelled
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: stopped
+    display: Stopped
+  - code: draft
+    display: Draft
+  - code: unknown
+    display: Unknown
+nutrition_intake_status:
+  system: http://hl7.org/fhir/event-status
+  binding: REQUIRED
+  codes:
+  - code: preparation
+    display: Preparation
+  - code: in-progress
+    display: In Progress
+  - code: not-done
+    display: Not Done
+  - code: on-hold
+    display: On Hold
+  - code: stopped
+    display: Stopped
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: unknown
+    display: Unknown
+snomed_devices:
+  system: http://snomed.info/sct
+  binding: PREFERRED
+  codes:
+  - code: '706172005'
+    display: Wheelchair
+  - code: '449345005'
+    display: Insulin pump
+  - code: '86184003'
+    display: Electrocardiograph
+biologically_derived_product_codes:
+  system: http://snomed.info/sct
+  binding: PREFERRED
+  codes:
+  - code: '119297000'
+    display: Blood product
+  - code: '180270004'
+    display: Whole blood
+  - code: '33389009'
+    display: Platelet concentrate
+medication_statement_status:
+  system: http://hl7.org/fhir/medication-statement-status
+  binding: REQUIRED
+  codes:
+  - code: recorded
+    display: Recorded
+  - code: entered-in-error
+    display: Entered in Error
+  - code: draft
+    display: Draft
+payment_reconciliation_outcome:
+  system: http://hl7.org/fhir/payment-outcome
+  binding: REQUIRED
+  codes:
+  - code: queued
+    display: Queued
+  - code: complete
+    display: Complete
+  - code: error
+    display: Error
+  - code: partial
+    display: Partial
+provenance_participant_type:
+  system: http://terminology.hl7.org/CodeSystem/provenance-participant-type
+  binding: EXTENSIBLE
+  codes:
+  - code: author
+    display: Author
+  - code: verifier
+    display: Verifier
+  - code: transmitter
+    display: Transmitter
+eye_laterality:
+  system: http://hl7.org/fhir/vision-eye-codes
+  binding: REQUIRED
+  codes:
+  - code: right
+    display: Right Eye
+  - code: left
+    display: Left Eye
+device_request_status:
+  system: http://hl7.org/fhir/request-status
+  binding: REQUIRED
+  codes:
+  - code: draft
+    display: Draft
+  - code: active
+    display: Active
+  - code: on-hold
+    display: On Hold
+  - code: revoked
+    display: Revoked
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: unknown
+    display: Unknown
+request_orchestration_status:
+  system: http://hl7.org/fhir/request-status
+  binding: REQUIRED
+  codes:
+  - code: draft
+    display: Draft
+  - code: active
+    display: Active
+  - code: on-hold
+    display: On Hold
+  - code: revoked
+    display: Revoked
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: unknown
+    display: Unknown
+coverage_eligibility_request_status:
+  system: http://hl7.org/fhir/fm-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: cancelled
+    display: Cancelled
+  - code: draft
+    display: Draft
+  - code: entered-in-error
+    display: Entered in Error
+coverage_eligibility_response_status:
+  system: http://hl7.org/fhir/fm-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: cancelled
+    display: Cancelled
+  - code: draft
+    display: Draft
+  - code: entered-in-error
+    display: Entered in Error
+payment_notice_status:
+  system: http://hl7.org/fhir/claim-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: cancelled
+    display: Cancelled
+  - code: draft
+    display: Draft
+  - code: entered-in-error
+    display: Entered in Error
+payment_reconciliation_status:
+  system: http://hl7.org/fhir/claim-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: cancelled
+    display: Cancelled
+  - code: draft
+    display: Draft
+  - code: entered-in-error
+    display: Entered in Error
+contract_status:
+  system: http://hl7.org/fhir/contract-status
+  binding: REQUIRED
+  codes:
+  - code: executed
+    display: Executed
+  - code: amended
+    display: Amended
+  - code: terminated
+    display: Terminated
+  - code: entered-in-error
+    display: Entered in Error

@@ -1,0 +1,495 @@
+resource: DeviceRequest
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec DeviceRequest)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/
+#   patient.json, practitioner.json, relatedperson.json, device.json,
+#   encounter.json
+#
+# Total parameters: 21 (19 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `code` is required CodeableReference — `code` searches `.concept`,
+#     `device` searches `.reference`.
+#   * `performer` is CodeableReference (0..1) — `performer` /
+#     `performer-code` split reference vs concept arms.
+#   * `occurrence[x]` is polymorphic (dateTime | Period | Timing).
+#     `event-date` uses `occurrenceDateTime` and `_search.occurrencePeriod`.
+#   * `prior-request` searches `replaces[]`.
+#   * Encounter compartment uses dynamic resolver (`encounter` linking param).
+
+search_parameters:
+  based-on:
+    type: reference
+    description: "Plan/proposal/order fulfilled by this request"
+    fields:
+      - field: "_search.basedOnIds"
+        referenceType: id
+      - field: "_search.basedOnTypes"
+        referenceType: type
+      - field: "basedOn.reference"
+        referenceType: full
+
+  device:
+    type: reference
+    description: "Reference to resource that is being requested/ordered"
+    fields:
+      - field: "_search.deviceIds"
+        referenceType: id
+      - field: "_search.deviceTypes"
+        referenceType: type
+
+  encounter:
+    type: reference
+    description: "Encounter during which request was created"
+    fields:
+      - field: "_search.encounterId"
+        referenceType: id
+      - field: "encounter.reference"
+        referenceType: full
+
+  instantiates-canonical:
+    type: reference
+    description: "Instantiates FHIR protocol or definition"
+    fields:
+      - field: "_search.instantiatesCanonical_values"
+        referenceType: full
+      - field: "instantiatesCanonical"
+        referenceType: full
+
+  insurance:
+    type: reference
+    description: "Associated insurance coverage"
+    fields:
+      - field: "_search.insuranceIds"
+        referenceType: id
+      - field: "_search.insuranceTypes"
+        referenceType: type
+
+  patient:
+    type: reference
+    description: "Individual the service is ordered for"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  performer:
+    type: reference
+    description: "Desired performer for service"
+    fields:
+      - field: "_search.performerIds"
+        referenceType: id
+      - field: "_search.performerTypes"
+        referenceType: type
+      - field: "performer.reference"
+        referenceType: full
+
+  prior-request:
+    type: reference
+    description: "Request takes the place of referenced completed or terminated requests"
+    fields:
+      - field: "_search.replacesIds"
+        referenceType: id
+      - field: "_search.replacesTypes"
+        referenceType: type
+      - field: "replaces.reference"
+        referenceType: full
+
+  requester:
+    type: reference
+    description: "Who/what is requesting service"
+    fields:
+      - field: "_search.requesterId"
+        referenceType: id
+      - field: "_search.requesterType"
+        referenceType: type
+      - field: "requester.reference"
+        referenceType: full
+
+  subject:
+    type: reference
+    description: "Search by subject"
+    fields:
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "_search.subjectType"
+        referenceType: type
+      - field: "subject.reference"
+        referenceType: full
+
+  code:
+    type: token
+    description: "Code for what is being requested/ordered"
+    fields:
+      - field: "_search.codeConcept_systemCode"
+        tokenType: systemCode
+      - field: "_search.codeConcept_codes"
+        tokenType: code
+
+  group-identifier:
+    type: token
+    description: "Composite request this is part of"
+    fields:
+      - field: "_search.groupIdentifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.groupIdentifier_values"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: "Business identifier for request/order"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  intent:
+    type: token
+    description: "proposal | plan | original-order | reflex-order"
+    fields:
+      - field: "intent"
+        tokenType: code
+
+  performer-code:
+    type: token
+    description: "Desired performer for service (concept arm)"
+    fields:
+      - field: "_search.performerConcept_systemCode"
+        tokenType: systemCode
+      - field: "_search.performerConcept_codes"
+        tokenType: code
+
+  status:
+    type: token
+    description: "entered-in-error | draft | active | suspended | completed"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  authored-on:
+    type: date
+    description: "When the request transitioned to being actionable"
+    fields:
+      - field: "authoredOn"
+        type: date
+
+  event-date:
+    type: date
+    description: "When service should occur"
+    fields:
+      - field: "occurrenceDateTime"
+        type: date
+      - field: "_search.occurrencePeriod"
+        type: period
+
+  instantiates-uri:
+    type: uri
+    description: "Instantiates external protocol or definition"
+    fields:
+      - field: "_search.instantiatesUri_values"
+      - field: "instantiatesUri"
+
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  group_identifier:
+    source: groupIdentifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: groupIdentifier.value
+        target_field: groupIdentifier_values
+        datatype: array[string]
+      - source_path: groupIdentifier
+        target_field: groupIdentifier_systemCode
+        datatype: array[string]
+
+  code_concept:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code.concept.coding[*].code
+        target_field: codeConcept_codes
+        datatype: array[string]
+      - source_path: code.concept.coding[*]
+        target_field: codeConcept_systemCode
+        datatype: array[string]
+
+  code_device:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: code.reference.reference
+        target_field: deviceIds
+        datatype: array[string]
+        extractType: id
+      - source_path: code.reference.reference
+        target_field: deviceTypes
+        datatype: array[string]
+        extractType: type
+
+  performer_concept:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: performer.concept.coding[*].code
+        target_field: performerConcept_codes
+        datatype: array[string]
+      - source_path: performer.concept.coding[*]
+        target_field: performerConcept_systemCode
+        datatype: array[string]
+
+  performer_reference:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: performer.reference.reference
+        target_field: performerIds
+        datatype: array[string]
+        extractType: id
+      - source_path: performer.reference.reference
+        target_field: performerTypes
+        datatype: array[string]
+        extractType: type
+
+  subject:
+    source: subject
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: subject.reference
+        target_field: subjectId
+        datatype: string
+        extractType: id
+      - source_path: subject.reference
+        target_field: subjectType
+        datatype: string
+        extractType: type
+      - source_path: subject.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+        filterType: Patient
+
+  requester:
+    source: requester
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: requester.reference
+        target_field: requesterId
+        datatype: string
+        extractType: id
+      - source_path: requester.reference
+        target_field: requesterType
+        datatype: string
+        extractType: type
+
+  encounter:
+    source: encounter
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: encounter.reference
+        target_field: encounterId
+        datatype: string
+        extractType: id
+
+  basedOn:
+    source: basedOn
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: basedOn[*].reference
+        target_field: basedOnIds
+        datatype: array[string]
+        extractType: id
+      - source_path: basedOn[*].reference
+        target_field: basedOnTypes
+        datatype: array[string]
+        extractType: type
+
+  replaces:
+    source: replaces
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: replaces[*].reference
+        target_field: replacesIds
+        datatype: array[string]
+        extractType: id
+      - source_path: replaces[*].reference
+        target_field: replacesTypes
+        datatype: array[string]
+        extractType: type
+
+  insurance:
+    source: insurance
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: insurance[*].reference
+        target_field: insuranceIds
+        datatype: array[string]
+        extractType: id
+      - source_path: insurance[*].reference
+        target_field: insuranceTypes
+        datatype: array[string]
+        extractType: type
+
+  instantiates_canonical:
+    source: instantiatesCanonical
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: instantiatesCanonical[*]
+        target_field: instantiatesCanonical_values
+        datatype: array[string]
+
+  instantiates_uri:
+    source: instantiatesUri
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: instantiatesUri[*]
+        target_field: instantiatesUri_values
+        datatype: array[string]
+
+  occurrence_period:
+    source: occurrencePeriod
+    target: _search
+    extractor: PeriodExtractor
+    field_mappings:
+      - source_path: start
+        target_field: occurrencePeriod
+        datatype: object
+        comment: "Nested Period for `event-date` overlap queries"
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - subject
+          - patient
+          - performer
+        reference_type: Patient
+        datatype: array[string]
+      - target_field: Practitioner
+        source_paths:
+          - requester
+          - performer
+        reference_type: Practitioner
+        datatype: array[string]
+      - target_field: Device
+        source_paths:
+          - requester
+          - performer
+          - code
+          - device
+        reference_type: Device
+        datatype: array[string]
+        comment: |
+          Device compartment (device.json linking params requester,
+          performer, subject, device). Device/* on code.reference and
+          requester/performer refs.
+
+compartments:
+  precomputed:
+    - Patient
+    - Practitioner
+    - Device
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+  - fields:
+      - "_compartments.Practitioner": 1
+    options:
+      name: idx_compartment_practitioner
+      sparse: true
+  - fields:
+      - "_compartments.Device": 1
+    options:
+      name: idx_compartment_device
+      sparse: true
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+  - fields:
+      - "_search.subjectId": 1
+    options:
+      name: idx_subject_id
+      sparse: true
+  - fields:
+      - "_search.encounterId": 1
+    options:
+      name: idx_encounter_id
+      sparse: true
+  - fields:
+      - "authoredOn": 1
+    options:
+      name: idx_authored_on
+      sparse: true
+  - fields:
+      - "occurrenceDateTime": 1
+    options:
+      name: idx_occurrence_datetime
+      sparse: true
+  - fields:
+      - "_search.occurrencePeriod.start": 1
+      - "_search.occurrencePeriod.end": 1
+    options:
+      name: idx_occurrence_period
+      sparse: true
+  - fields:
+      - "_search.deviceIds": 1
+    options:
+      name: idx_device_ids
+      sparse: true
+  - fields:
+      - "meta.lastUpdated": 1
+    options:
+      name: idx_meta_last_updated
+      sparse: true

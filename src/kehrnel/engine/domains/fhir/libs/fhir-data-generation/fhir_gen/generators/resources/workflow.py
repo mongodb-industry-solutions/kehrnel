@@ -6,6 +6,12 @@ import random
 from datetime import datetime, timedelta
 from typing import Any
 
+from ...codes import (
+    codeable_from_section,
+    codeable_reference_from_section,
+    concept_from_section,
+    pick_code,
+)
 from ...codes.loader import get_system, random_code
 from ...resolvers.reference import ReferenceStore
 from ..special_types import SpecialTypeGenerator
@@ -64,7 +70,9 @@ def enrich_Appointment(
             "status": "accepted",
         })
     r["participant"] = participants
-    r["description"] = t.p.faker.sentence(nb_words=6)
+    r["description"] = t.p.gen_string(
+        resource_type="Appointment", field_name="description", max_length=120
+    )
     return r
 
 
@@ -90,7 +98,9 @@ def enrich_CarePlan(
         "Cardiac Care Plan",
         "Mental Health Care Plan",
     ])
-    r["description"] = t.p.faker.paragraph(nb_sentences=2)
+    r["description"] = t.p.gen_string(
+        resource_type="CarePlan", field_name="description", max_length=300
+    )
     r["category"] = [t.gen_CodeableConcept(
         system="http://snomed.info/sct",
         code=rng.choice(["736055001", "735321000", "734163000"]),
@@ -232,7 +242,9 @@ def enrich_Task(
         system="http://hl7.org/fhir/CodeSystem/task-code",
         code=rng.choice(["approve", "fulfill", "abort", "replace", "change", "suspend", "resume"]),
     )
-    r["description"] = t.p.faker.sentence()
+    r["description"] = t.p.gen_string(
+        resource_type=r.get("resourceType"), field_name="description"
+    )
     if store.has("Patient"):
         r["for"] = store.get_reference("Patient", rng)
     if store.has("Practitioner"):
@@ -267,7 +279,11 @@ def enrich_Communication(
         r["sender"] = store.get_reference("Practitioner", rng)
         r["recipient"] = [store.get_reference("Practitioner", rng)]
     r["sent"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
-    r["payload"] = [{"contentString": t.p.faker.paragraph(nb_sentences=2)}]
+    r["payload"] = [{
+        "contentString": t.p.gen_string(
+            resource_type="Communication", field_name="contentString", max_length=200
+        ),
+    }]
     return r
 
 
@@ -343,7 +359,9 @@ def enrich_Schedule(
         actors.append(store.get_reference("Location", rng))
     r["actor"] = actors or [t.gen_Reference(resource_type="Practitioner")]
     r["planningHorizon"] = t.gen_Period()
-    r["comment"] = t.p.faker.sentence()
+    r["comment"] = t.p.gen_string(
+        resource_type=r.get("resourceType"), field_name="comment"
+    )
     return r
 
 
@@ -428,6 +446,26 @@ def enrich_Flag(
     return r
 
 
+def enrich_Contract(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("contract_status", rng, "executed")
+    r["issued"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
+    if store.has("Patient"):
+        r["subject"] = [store.get_reference("Patient", rng)]
+    if store.has("Organization"):
+        r["authority"] = [store.get_reference("Organization", rng)]
+    if store.has("Practitioner"):
+        r["signer"] = [{
+            "type": concept_from_section("contract_signing_types", rng, t),
+            "party": store.get_reference("Practitioner", rng),
+        }]
+    return r
+
+
 def enrich_Consent(
     r: dict[str, Any],
     t: SpecialTypeGenerator,
@@ -487,6 +525,177 @@ def enrich_NutritionOrder(
     return r
 
 
+def enrich_Questionnaire(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("questionnaire_status", rng, "active")
+    r["url"] = f"http://example.org/Questionnaire/{r.get('id', 'q')}"
+    r["name"] = f"form-{rng.randint(100, 999)}"
+    r["title"] = t.p.gen_string(
+        resource_type=r.get("resourceType"), field_name="title", max_length=80
+    )
+    r["date"] = t.p.gen_date(min_year=2023, max_year=2024)
+    r["publisher"] = "Example Health System"
+    r["versionAlgorithmCoding"] = t.gen_Coding(
+        system="http://terminology.hl7.org/CodeSystem/version-algorithm",
+        code="semver",
+        display="Semantic Versioning (semver.org)",
+    )
+    r.pop("versionAlgorithmString", None)
+    r["code"] = [codeable_from_section("loinc_questionnaire_panels", rng)]
+    r["jurisdiction"] = [codeable_from_section("countries", rng)]
+    r["item"] = [{"linkId": "1", "text": "Sample question", "type": "string"}]
+    return r
+
+
+def enrich_DeviceRequest(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("device_request_status", rng, "active")
+    r["intent"] = pick_code("request_intent", rng, "order")
+    r["priority"] = pick_code("request_priority", rng, "routine")
+    r["code"] = codeable_reference_from_section("snomed_devices", rng, t)
+    if store.has("Patient"):
+        r["subject"] = store.get_reference("Patient", rng)
+    if store.has("Practitioner"):
+        r["requester"] = store.get_reference("Practitioner", rng)
+    if store.has("Encounter"):
+        r["encounter"] = store.get_reference("Encounter", rng)
+    return r
+
+
+def enrich_SupplyRequest(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("supply_request_status", rng, "active")
+    r["category"] = concept_from_section("supply_categories", rng, t)
+    if store.has("Patient"):
+        r["subject"] = store.get_reference("Patient", rng)
+    if store.has("Practitioner"):
+        r["requester"] = store.get_reference("Practitioner", rng)
+    if store.has("Organization"):
+        r["supplier"] = [store.get_reference("Organization", rng)]
+    r["occurrenceDateTime"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
+    return r
+
+
+def enrich_SupplyDelivery(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("supply_delivery_status", rng, "completed")
+    if store.has("Patient"):
+        r["patient"] = store.get_reference("Patient", rng)
+    if store.has("Organization"):
+        r["supplier"] = store.get_reference("Organization", rng)
+    if store.has("Location"):
+        r["destination"] = store.get_reference("Location", rng)
+    return r
+
+
+def enrich_RequestOrchestration(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("request_orchestration_status", rng, "active")
+    r["intent"] = pick_code("request_intent", rng, "order")
+    if store.has("Patient"):
+        r["subject"] = store.get_reference("Patient", rng)
+    if store.has("Practitioner"):
+        r["author"] = store.get_reference("Practitioner", rng)
+    r["authoredOn"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
+    if store.has("ServiceRequest"):
+        r["action"] = [{"resource": store.get_reference("ServiceRequest", rng)}]
+    return r
+
+
+def enrich_VisionPrescription(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("vision_prescription_status", rng, "active")
+    if store.has("Patient"):
+        r["patient"] = store.get_reference("Patient", rng)
+    if store.has("Practitioner"):
+        r["prescriber"] = store.get_reference("Practitioner", rng)
+    if store.has("Encounter"):
+        r["encounter"] = store.get_reference("Encounter", rng)
+    r["dateWritten"] = t.p.gen_date(min_year=2023, max_year=2024)
+    r["lensSpecification"] = [{
+        "eye": pick_code("eye_laterality", rng, "right"),
+        "sphere": rng.uniform(-6.0, 6.0),
+    }]
+    return r
+
+
+def enrich_NutritionIntake(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("nutrition_intake_status", rng, "completed")
+    if store.has("Patient"):
+        r["subject"] = store.get_reference("Patient", rng)
+    r["occurrenceDateTime"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
+    r["code"] = concept_from_section("nutrition_foods", rng, t)
+    if store.has("Practitioner"):
+        r["informationSource"] = store.get_reference("Practitioner", rng)
+    return r
+
+
+def enrich_Basic(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["code"] = concept_from_section("basic_resource_codes", rng, t)
+    r["created"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
+    if store.has("Patient"):
+        r["subject"] = store.get_reference("Patient", rng)
+    if store.has("Practitioner"):
+        r["author"] = store.get_reference("Practitioner", rng)
+    if store.has("Encounter"):
+        r["encounter"] = store.get_reference("Encounter", rng)
+    return r
+
+
+def enrich_Provenance(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["recorded"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
+    r["activity"] = concept_from_section("provenance_activity", rng, t)
+    if store.has("Patient"):
+        r["target"] = [store.get_reference("Patient", rng)]
+    if store.has("Practitioner"):
+        r["agent"] = [{
+            "type": concept_from_section("provenance_participant_type", rng, t),
+            "who": store.get_reference("Practitioner", rng),
+        }]
+    if store.has("Encounter"):
+        r["encounter"] = store.get_reference("Encounter", rng)
+    return r
+
+
 ENRICHERS: dict[str, Any] = {
     "Appointment": enrich_Appointment,
     "CarePlan": enrich_CarePlan,
@@ -500,5 +709,15 @@ ENRICHERS: dict[str, Any] = {
     "Slot": enrich_Slot,
     "Flag": enrich_Flag,
     "Consent": enrich_Consent,
+    "Contract": enrich_Contract,
     "NutritionOrder": enrich_NutritionOrder,
+    "Questionnaire": enrich_Questionnaire,
+    "DeviceRequest": enrich_DeviceRequest,
+    "SupplyRequest": enrich_SupplyRequest,
+    "SupplyDelivery": enrich_SupplyDelivery,
+    "RequestOrchestration": enrich_RequestOrchestration,
+    "VisionPrescription": enrich_VisionPrescription,
+    "NutritionIntake": enrich_NutritionIntake,
+    "Basic": enrich_Basic,
+    "Provenance": enrich_Provenance,
 }

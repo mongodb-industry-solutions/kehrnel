@@ -687,6 +687,1660 @@ class TestResourcePurity:
                 "occurrenceDateTime": "2024-07-15T09:00:00Z",
                 "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
             },
+            "Procedure": {
+                "resourceType": "Procedure",
+                "id": "proc-audit-1",
+                "status": "completed",
+                "identifier": [
+                    {"system": "http://hospital.org/proc", "value": "PROC-AUDIT"}
+                ],
+                "category": [{"coding": [{"code": "103693007"}]}],
+                "code": {
+                    "coding": [{"system": "http://snomed.info/sct", "code": "80146002"}]
+                },
+                "subject": {"reference": "Patient/p1"},
+                "encounter": {"reference": "Encounter/enc-audit-1"},
+                "performer": [
+                    {"actor": {"reference": "Practitioner/pr1"}},
+                    {"actor": {"reference": "Organization/org1"}},
+                ],
+                "reason": [
+                    {
+                        "concept": {"coding": [{"code": "109006"}]},
+                        "reference": {"reference": "Condition/cond-audit-1"},
+                    }
+                ],
+                "basedOn": [{"reference": "ServiceRequest/sr-audit-1"}],
+                "partOf": [{"reference": "Observation/obs-audit-1"}],
+                "location": {"reference": "Location/loc1"},
+                "report": [{"reference": "DiagnosticReport/dr-audit-1"}],
+                "occurrenceDateTime": "2024-07-15T09:00:00Z",
+                "instantiatesCanonical": [
+                    "http://example.org/fhir/ActivityDefinition/appendectomy"
+                ],
+                "instantiatesUri": ["http://example.org/protocols/appendectomy-v1"],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "Medication": {
+                "resourceType": "Medication",
+                "id": "med-audit-1",
+                "status": "active",
+                "identifier": [
+                    {"system": "http://hospital.org/med", "value": "MED-AUDIT"},
+                    {"type": {"coding": [{"code": "SNO"}]}, "value": "SN-AUDIT"},
+                ],
+                "code": {
+                    "coding": [{"system": "http://snomed.info/sct", "code": "319785009"}]
+                },
+                "doseForm": {
+                    "coding": [{"system": "http://snomed.info/sct", "code": "385055001"}]
+                },
+                "batch": {
+                    "lotNumber": "LOT-AUDIT",
+                    "expirationDate": "2026-12-31T00:00:00Z",
+                },
+                "ingredient": [
+                    {
+                        "item": {
+                            "concept": {"coding": [{"code": "387517004"}]},
+                            "reference": {"reference": "Substance/sub-audit"},
+                        }
+                    }
+                ],
+                "marketingAuthorizationHolder": {"reference": "Organization/org1"},
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "MedicationRequest": {
+                "resourceType": "MedicationRequest",
+                "id": "mr-audit-1",
+                "status": "active",
+                "intent": "order",
+                "priority": "routine",
+                "identifier": [{"system": "http://hospital.org/mr", "value": "MR-AUDIT"}],
+                "groupIdentifier": {"system": "http://hospital.org/grp", "value": "GRP-AUDIT"},
+                "category": [{"coding": [{"code": "outpatient"}]}],
+                "medication": {
+                    "concept": {"coding": [{"code": "319785009"}]},
+                    "reference": {"reference": "Medication/med-audit"},
+                },
+                "subject": {"reference": "Patient/p1"},
+                "encounter": {"reference": "Encounter/enc-audit-1"},
+                "authoredOn": "2024-07-01T10:00:00Z",
+                "requester": {"reference": "Practitioner/pr1"},
+                "performer": [{"reference": "Practitioner/pr2"}],
+                "performerType": {"coding": [{"code": "pharmacist"}]},
+                "dispenseRequest": {
+                    "dispenser": {"reference": "Organization/org-dispense"},
+                },
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "MedicationAdministration": {
+                "resourceType": "MedicationAdministration",
+                "id": "ma-audit-1",
+                "status": "completed",
+                "identifier": [{"system": "http://hospital.org/ma", "value": "MA-AUDIT"}],
+                "medication": {
+                    "concept": {"coding": [{"code": "319785009"}]},
+                    "reference": {"reference": "Medication/med-audit"},
+                },
+                "subject": {"reference": "Patient/p1"},
+                "encounter": {"reference": "Encounter/enc-audit-1"},
+                "request": {"reference": "MedicationRequest/mr-audit-1"},
+                "occurenceDateTime": "2024-07-15T09:00:00Z",
+                "device": [{"reference": {"reference": "Device/pump-audit"}}],
+                "performer": [
+                    {
+                        "actor": {
+                            "concept": {"coding": [{"code": "706699008"}]},
+                            "reference": {"reference": "Practitioner/pr1"},
+                        }
+                    }
+                ],
+                "reason": [
+                    {
+                        "concept": {"coding": [{"code": "386661006"}]},
+                        "reference": {"reference": "Condition/cond-audit-1"},
+                    }
+                ],
+                "statusReason": [{"coding": [{"code": "182849000"}]}],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "MedicationDispense": {
+                "resourceType": "MedicationDispense",
+                "id": "md-audit-1",
+                "status": "completed",
+                "type": {"coding": [{"code": "FF"}]},
+                "identifier": [{"system": "http://hospital.org/md", "value": "MD-AUDIT"}],
+                "medication": {
+                    "concept": {"coding": [{"code": "319785009"}]},
+                    "reference": {"reference": "Medication/med-audit"},
+                },
+                "subject": {"reference": "Patient/p1"},
+                "encounter": {"reference": "Encounter/enc-audit-1"},
+                "location": {"reference": "Location/loc1"},
+                "destination": {"reference": "Location/loc-dest"},
+                "whenPrepared": "2024-07-14T08:00:00Z",
+                "whenHandedOver": "2024-07-15T09:00:00Z",
+                "recorded": "2024-07-14T07:00:00Z",
+                "authorizingPrescription": [{"reference": "MedicationRequest/mr-audit-1"}],
+                "performer": [{"actor": {"reference": "Practitioner/pr1"}}],
+                "receiver": [{"reference": "Patient/p1"}],
+                "substitution": {
+                    "responsibleParty": {"reference": "Practitioner/pr2"},
+                },
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "MedicationStatement": {
+                "resourceType": "MedicationStatement",
+                "id": "ms-audit-1",
+                "status": "recorded",
+                "category": [{"coding": [{"code": "inpatient"}]}],
+                "medication": {
+                    "concept": {"coding": [{"code": "313782"}]},
+                    "reference": {"reference": "Medication/med-audit"},
+                },
+                "subject": {"reference": "Patient/p1"},
+                "encounter": {"reference": "Encounter/enc-audit-1"},
+                "effectiveDateTime": "2024-06-15T08:00:00Z",
+                "identifier": [{"system": "http://hospital.org/ms", "value": "MS-AUDIT"}],
+                "informationSource": [{"reference": "Practitioner/pr1"}],
+                "adherence": {"code": {"coding": [{"code": "taking"}]}},
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "AllergyIntolerance": {
+                "resourceType": "AllergyIntolerance",
+                "id": "ai-audit-1",
+                "clinicalStatus": {"coding": [{"code": "active"}]},
+                "verificationStatus": {"coding": [{"code": "confirmed"}]},
+                "type": {"coding": [{"code": "allergy"}]},
+                "category": ["food"],
+                "criticality": "high",
+                "code": {"coding": [{"code": "91935009"}]},
+                "patient": {"reference": "Patient/p1"},
+                "recordedDate": "2024-07-01T10:00:00Z",
+                "lastOccurrence": "2024-06-15T08:00:00Z",
+                "identifier": [{"system": "http://hospital.org/ai", "value": "AI-AUDIT"}],
+                "participant": [{"actor": {"reference": "Practitioner/pr1"}}],
+                "reaction": [
+                    {
+                        "substance": {"coding": [{"code": "227493005"}]},
+                        "manifestation": [
+                            {
+                                "concept": {"coding": [{"code": "39579001"}]},
+                                "reference": {"reference": "Observation/obs-audit"},
+                            }
+                        ],
+                        "severity": "severe",
+                        "exposureRoute": {"coding": [{"code": "26643006"}]},
+                    }
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "DiagnosticReport": {
+                "resourceType": "DiagnosticReport",
+                "id": "dr-audit-1",
+                "status": "final",
+                "identifier": [{"system": "http://hospital.org/dr", "value": "DR-AUDIT"}],
+                "category": [{"coding": [{"code": "LAB"}]}],
+                "code": {"coding": [{"code": "11502-2"}]},
+                "subject": {"reference": "Patient/p1"},
+                "encounter": {"reference": "Encounter/enc-audit-1"},
+                "effectiveDateTime": "2024-07-10T08:00:00Z",
+                "issued": "2024-07-10T10:00:00Z",
+                "performer": [{"reference": "Practitioner/pr1"}],
+                "resultsInterpreter": [{"reference": "Practitioner/pr2"}],
+                "basedOn": [{"reference": "ServiceRequest/sr-audit-1"}],
+                "specimen": [{"reference": "Specimen/spec-audit"}],
+                "result": [{"reference": "Observation/obs-audit"}],
+                "study": [{"reference": "ImagingStudy/img-audit"}],
+                "media": [{"link": {"reference": "DocumentReference/doc-audit"}}],
+                "conclusionCode": [{"coding": [{"code": "10828004"}]}],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "CareTeam": {
+                "resourceType": "CareTeam",
+                "id": "ct-audit-1",
+                "status": "active",
+                "name": "Audit Care Team",
+                "identifier": [{"system": "http://hospital.org/ct", "value": "CT-AUDIT"}],
+                "category": [{"coding": [{"code": "LA27976-2"}]}],
+                "subject": {"reference": "Patient/p1"},
+                "period": {
+                    "start": "2024-07-01T00:00:00Z",
+                    "end": "2024-12-31T23:59:59Z",
+                },
+                "participant": [
+                    {
+                        "member": {"reference": "Practitioner/pr1"},
+                        "coveragePeriod": {
+                            "start": "2024-07-01T00:00:00Z",
+                            "end": "2024-09-30T23:59:59Z",
+                        },
+                    }
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "Goal": {
+                "resourceType": "Goal",
+                "id": "goal-audit-1",
+                "lifecycleStatus": "active",
+                "achievementStatus": {"coding": [{"code": "in-progress"}]},
+                "identifier": [{"system": "http://hospital.org/goal", "value": "GOAL-AUDIT"}],
+                "category": [{"coding": [{"code": "dietary"}]}],
+                "description": {
+                    "coding": [{"code": "406156006"}],
+                    "text": "Reduce body weight",
+                },
+                "subject": {"reference": "Patient/p1"},
+                "startDate": "2024-07-01",
+                "addresses": [{"reference": "Condition/cond-audit-1"}],
+                "target": [
+                    {
+                        "measure": {"coding": [{"code": "29463-7"}]},
+                        "dueDate": "2024-12-31",
+                    }
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "CarePlan": {
+                "resourceType": "CarePlan",
+                "id": "cp-audit-1",
+                "status": "active",
+                "intent": "plan",
+                "identifier": [{"system": "http://hospital.org/cp", "value": "CP-AUDIT"}],
+                "category": [{"coding": [{"code": "assess-plan"}]}],
+                "subject": {"reference": "Patient/p1"},
+                "encounter": {"reference": "Encounter/enc-audit-1"},
+                "period": {
+                    "start": "2024-07-01T00:00:00Z",
+                    "end": "2024-12-31T23:59:59Z",
+                },
+                "custodian": {"reference": "Practitioner/pr-cust"},
+                "contributor": [{"reference": "Practitioner/pr1"}],
+                "careTeam": [{"reference": "CareTeam/ct-audit"}],
+                "goal": [{"reference": "Goal/goal-audit"}],
+                "addresses": [{"reference": {"reference": "Condition/cond-audit-1"}}],
+                "basedOn": [{"reference": "ServiceRequest/sr-audit-1"}],
+                "activity": [
+                    {
+                        "plannedActivityReference": {
+                            "reference": "ServiceRequest/sr-act-audit"
+                        }
+                    }
+                ],
+                "instantiatesCanonical": [
+                    "http://example.org/fhir/PlanDefinition/plan-audit"
+                ],
+                "instantiatesUri": ["http://example.org/protocols/plan-audit-v1"],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "Immunization": {
+                "resourceType": "Immunization",
+                "id": "imm-audit-1",
+                "status": "completed",
+                "vaccineCode": {
+                    "coding": [{"code": "140"}],
+                    "text": "Influenza vaccine",
+                },
+                "patient": {"reference": "Patient/p1"},
+                "encounter": {"reference": "Encounter/enc-audit-1"},
+                "occurrenceDateTime": "2024-07-15T10:00:00Z",
+                "lotNumber": "LOT-AUDIT",
+                "location": {"reference": "Location/loc-audit"},
+                "manufacturer": {"reference": "Organization/org-audit"},
+                "identifier": [{"system": "http://hospital.org/imm", "value": "IMM-AUDIT"}],
+                "performer": [{"actor": {"reference": "Practitioner/pr1"}}],
+                "reason": [
+                    {
+                        "concept": {"coding": [{"code": "429060002"}]},
+                        "reference": {"reference": "Condition/cond-audit-1"},
+                    }
+                ],
+                "statusReason": {"coding": [{"code": "immunity"}]},
+                "protocolApplied": [
+                    {
+                        "series": "Standard 2024",
+                        "targetDisease": {"coding": [{"code": "6142004"}]},
+                    }
+                ],
+                "reaction": [
+                    {
+                        "date": "2024-07-16T08:00:00Z",
+                        "manifestation": {
+                            "reference": {"reference": "Observation/obs-audit-rx"}
+                        },
+                    }
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "Coverage": {
+                "resourceType": "Coverage",
+                "id": "cov-audit-1",
+                "status": "active",
+                "beneficiary": {"reference": "Patient/p1"},
+                "insurer": {"reference": "Organization/org-audit-ins"},
+                "subscriber": {"reference": "Patient/p-sub-audit"},
+                "policyHolder": {"reference": "Patient/p-holder-audit"},
+                "dependent": "01",
+                "type": {
+                    "coding": [
+                        {
+                            "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                            "code": "EHCPOL",
+                        }
+                    ]
+                },
+                "identifier": [
+                    {"system": "http://hospital.org/cov", "value": "COV-AUDIT"}
+                ],
+                "subscriberId": [
+                    {"system": "http://payer.org/sub", "value": "SUB-AUDIT"}
+                ],
+                "class": [
+                    {
+                        "type": {"coding": [{"code": "group"}]},
+                        "value": {
+                            "system": "http://payer.org/group",
+                            "value": "GRP-AUDIT",
+                        },
+                    }
+                ],
+                "paymentBy": [{"party": {"reference": "Patient/p1"}}],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "Claim": {
+                "resourceType": "Claim",
+                "id": "claim-audit-1",
+                "status": "active",
+                "use": "claim",
+                "type": {"coding": [{"code": "professional"}]},
+                "patient": {"reference": "Patient/p1"},
+                "created": "2024-07-15",
+                "enterer": {"reference": "Practitioner/pr1"},
+                "provider": {"reference": "Practitioner/pr2"},
+                "insurer": {"reference": "Organization/org-audit-ins"},
+                "facility": {"reference": "Location/loc-audit"},
+                "priority": {"coding": [{"code": "normal"}]},
+                "identifier": [
+                    {"system": "http://hospital.org/claim", "value": "CLM-AUDIT"}
+                ],
+                "payee": {"party": {"reference": "Practitioner/pr-payee-audit"}},
+                "careTeam": [{"provider": {"reference": "Practitioner/pr-ct-audit"}}],
+                "item": [
+                    {
+                        "encounter": [{"reference": "Encounter/enc-audit-1"}],
+                        "udi": [{"reference": "Device/dev-audit-item"}],
+                        "detail": [
+                            {
+                                "udi": [{"reference": "Device/dev-audit-detail"}],
+                                "subDetail": [
+                                    {
+                                        "udi": [
+                                            {"reference": "Device/dev-audit-sub"}
+                                        ]
+                                    }
+                                ],
+                            }
+                        ],
+                    }
+                ],
+                "procedure": [{"udi": [{"reference": "Device/dev-audit-proc"}]}],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "ClaimResponse": {
+                "resourceType": "ClaimResponse",
+                "id": "cr-audit-1",
+                "status": "active",
+                "use": "claim",
+                "outcome": "complete",
+                "type": {"coding": [{"code": "professional"}]},
+                "patient": {"reference": "Patient/p1"},
+                "created": "2024-07-15",
+                "insurer": {"reference": "Organization/org-audit-ins"},
+                "requestor": {"reference": "Practitioner/pr-req-audit"},
+                "request": {"reference": "Claim/claim-audit-1"},
+                "identifier": [
+                    {
+                        "system": "http://hospital.org/claimresponse",
+                        "value": "CR-AUDIT",
+                    }
+                ],
+                "disposition": "Processed",
+                "payment": {"date": "2024-08-01"},
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "DocumentReference": {
+                "resourceType": "DocumentReference",
+                "id": "doc-audit-1",
+                "status": "current",
+                "docStatus": "final",
+                "type": {"coding": [{"code": "34117-2"}]},
+                "subject": {"reference": "Patient/p1"},
+                "date": "2024-07-15T10:00:00Z",
+                "author": [{"reference": "Practitioner/pr1"}],
+                "attester": [{"party": {"reference": "Practitioner/pr-attest-audit"}}],
+                "custodian": {"reference": "Organization/org-cust-audit"},
+                "context": [{"reference": "Encounter/enc-audit-1"}],
+                "identifier": [
+                    {"system": "http://hospital.org/docs", "value": "DOC-AUDIT"}
+                ],
+                "category": [{"coding": [{"code": "clinical-note"}]}],
+                "content": [
+                    {
+                        "attachment": {
+                            "contentType": "application/pdf",
+                            "language": "en",
+                            "url": "https://example.org/docs/doc-audit.pdf",
+                            "creation": "2024-07-14",
+                        },
+                        "profile": [
+                            {
+                                "valueCoding": {
+                                    "system": "http://terminology.hl7.org/CodeSystem/formatcodes",
+                                    "code": "urn:hl7-org:sdwg:ccda-structuredBody:1.1",
+                                }
+                            }
+                        ],
+                    }
+                ],
+                "relatesTo": [
+                    {
+                        "code": {"coding": [{"code": "replaces"}]},
+                        "target": {"reference": "DocumentReference/doc-audit-old"},
+                    }
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "Substance": {
+                "resourceType": "Substance",
+                "id": "sub-audit-1",
+                "status": "active",
+                "code": {
+                    "concept": {
+                        "coding": [
+                            {
+                                "system": "http://snomed.info/sct",
+                                "code": "387517004",
+                            }
+                        ]
+                    },
+                    "reference": {"reference": "SubstanceDefinition/sd-audit"},
+                },
+                "category": [{"coding": [{"code": "chemical"}]}],
+                "identifier": [
+                    {"system": "http://hospital.org/substance", "value": "SUB-AUDIT"}
+                ],
+                "expiry": "2025-12-31",
+                "quantity": {"value": 100, "unit": "mg", "code": "mg"},
+                "ingredient": [
+                    {
+                        "substanceCodeableConcept": {"coding": [{"code": "387207008"}]},
+                        "substanceReference": {"reference": "Substance/sub-ing-audit"},
+                    }
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "EpisodeOfCare": {
+                "resourceType": "EpisodeOfCare",
+                "id": "eoc-audit-1",
+                "status": "active",
+                "patient": {"reference": "Patient/pat-audit"},
+                "managingOrganization": {"reference": "Organization/org-audit"},
+                "careManager": {"reference": "Practitioner/prac-audit"},
+                "period": {"start": "2024-01-01", "end": "2024-12-31"},
+                "type": [{"coding": [{"code": "hacc"}]}],
+                "identifier": [
+                    {"system": "http://hospital.org/eoc", "value": "EOC-AUDIT"}
+                ],
+                "diagnosis": [
+                    {
+                        "condition": {
+                            "concept": {"coding": [{"code": "44054006"}]},
+                            "reference": {"reference": "Condition/cond-audit"},
+                        }
+                    }
+                ],
+                "referralRequest": [{"reference": "ServiceRequest/sr-audit"}],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "ResearchSubject": {
+                "resourceType": "ResearchSubject",
+                "id": "rsub-audit-1",
+                "status": "active",
+                "study": {"reference": "ResearchStudy/rs-audit"},
+                "subject": {"reference": "Patient/pat-audit"},
+                "period": {"start": "2024-01-15", "end": "2024-12-31"},
+                "identifier": [
+                    {"system": "http://hospital.org/rsub", "value": "RSUB-AUDIT"}
+                ],
+                "progress": [
+                    {
+                        "subjectState": {
+                            "coding": [{"code": "on-study"}],
+                        },
+                    }
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "Composition": {
+                "resourceType": "Composition",
+                "id": "comp-audit-1",
+                "status": "final",
+                "version": "1",
+                "url": "http://example.org/Composition/comp-audit-1",
+                "title": "Audit Note",
+                "date": "2024-07-15",
+                "type": {"coding": [{"code": "18842-5"}]},
+                "category": [{"coding": [{"code": "clinical-note"}]}],
+                "subject": [{"reference": "Patient/pat-audit"}],
+                "author": [{"reference": "Practitioner/prac-audit"}],
+                "encounter": {"reference": "Encounter/enc-audit"},
+                "identifier": [
+                    {"system": "http://hospital.org/comp", "value": "COMP-AUDIT"}
+                ],
+                "attester": [{"party": {"reference": "Practitioner/prac-audit"}}],
+                "event": [
+                    {
+                        "period": {"start": "2024-07-01", "end": "2024-07-14"},
+                        "detail": [
+                            {
+                                "concept": {"coding": [{"code": "admission"}]},
+                                "reference": {"reference": "Encounter/enc-audit"},
+                            }
+                        ],
+                    }
+                ],
+                "relatesTo": [
+                    {
+                        "resourceReference": {
+                            "reference": "Composition/comp-prior-audit"
+                        }
+                    }
+                ],
+                "section": [
+                    {
+                        "code": {"coding": [{"code": "48767-8"}]},
+                        "entry": [{"reference": "Observation/obs-audit"}],
+                    }
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "Questionnaire": {
+                "resourceType": "Questionnaire",
+                "id": "quest-audit-1",
+                "status": "active",
+                "version": "1.0",
+                "url": "http://example.org/Questionnaire/quest-audit",
+                "name": "audit-form",
+                "title": "Audit Form",
+                "publisher": "Audit Publisher",
+                "description": "Audit questionnaire",
+                "date": "2024-06-01",
+                "subjectType": ["Patient"],
+                "code": [{"code": "44249-1"}],
+                "jurisdiction": [{"coding": [{"code": "US"}]}],
+                "effectivePeriod": {"start": "2024-01-01", "end": "2025-12-31"},
+                "identifier": [
+                    {"system": "http://hospital.org/quest", "value": "Q-AUDIT"}
+                ],
+                "useContext": [
+                    {
+                        "code": {"code": "venue"},
+                        "valueCodeableConcept": {"coding": [{"code": "ambulatory"}]},
+                    }
+                ],
+                "item": [
+                    {
+                        "linkId": "1",
+                        "code": [{"code": "item-audit"}],
+                        "definition": "http://example.org/item/audit",
+                    }
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "ExplanationOfBenefit": {
+                "resourceType": "ExplanationOfBenefit",
+                "id": "eob-audit-1",
+                "status": "active",
+                "type": {"coding": [{"code": "professional"}]},
+                "patient": {"reference": "Patient/pat-audit"},
+                "created": "2024-07-15",
+                "disposition": "Processed",
+                "claim": {"reference": "Claim/clm-audit"},
+                "enterer": {"reference": "Practitioner/prac-audit"},
+                "provider": {"reference": "Practitioner/prac-audit"},
+                "facility": {"reference": "Location/loc-audit"},
+                "identifier": [
+                    {"system": "http://hospital.org/eob", "value": "EOB-AUDIT"}
+                ],
+                "insurance": [{"coverage": {"reference": "Coverage/cov-audit"}}],
+                "payee": {"party": {"reference": "Practitioner/prac-audit"}},
+                "careTeam": [{"provider": {"reference": "Practitioner/prac-audit"}}],
+                "item": [
+                    {
+                        "encounter": [{"reference": "Encounter/enc-audit"}],
+                        "udi": [{"reference": "Device/dev-audit"}],
+                        "detail": [
+                            {
+                                "udi": [{"reference": "Device/dev-detail-audit"}],
+                                "subDetail": [
+                                    {
+                                        "udi": [
+                                            {"reference": "Device/dev-sub-audit"}
+                                        ]
+                                    }
+                                ],
+                            }
+                        ],
+                    }
+                ],
+                "procedure": [{"udi": [{"reference": "Device/dev-proc-audit"}]}],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "CoverageEligibilityRequest": {
+                "resourceType": "CoverageEligibilityRequest",
+                "id": "cer-audit-1",
+                "status": "active",
+                "patient": {"reference": "Patient/pat-audit"},
+                "insurer": {"reference": "Organization/org-audit"},
+                "enterer": {"reference": "Practitioner/prac-audit"},
+                "provider": {"reference": "Practitioner/prac-audit"},
+                "facility": {"reference": "Location/loc-audit"},
+                "created": "2024-07-15",
+                "identifier": [
+                    {"system": "http://hospital.org/cer", "value": "CER-AUDIT"}
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "CoverageEligibilityResponse": {
+                "resourceType": "CoverageEligibilityResponse",
+                "id": "ceres-audit-1",
+                "status": "active",
+                "outcome": "complete",
+                "patient": {"reference": "Patient/pat-audit"},
+                "insurer": {"reference": "Organization/org-audit"},
+                "request": {"reference": "CoverageEligibilityRequest/cer-audit"},
+                "requestor": {"reference": "Practitioner/prac-audit"},
+                "created": "2024-07-15",
+                "disposition": "Eligible",
+                "identifier": [
+                    {"system": "http://hospital.org/ceres", "value": "CERES-AUDIT"}
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "ResearchStudy": {
+                "resourceType": "ResearchStudy",
+                "id": "rs-audit-1",
+                "status": "active",
+                "title": "Audit Trial",
+                "name": "RS-AUDIT",
+                "description": "Audit study description",
+                "phase": {"coding": [{"code": "phase-2"}]},
+                "period": {"start": "2024-01-01", "end": "2025-12-31"},
+                "identifier": [
+                    {"system": "http://hospital.org/rs", "value": "RS-AUDIT"}
+                ],
+                "condition": [{"coding": [{"code": "38341003"}]}],
+                "keyword": [{"coding": [{"code": "hypertension"}]}],
+                "studyDesign": [{"coding": [{"code": "interventional"}]}],
+                "focus": [
+                    {
+                        "concept": {"coding": [{"code": "med-focus"}]},
+                        "reference": {"reference": "Medication/med-audit"},
+                    }
+                ],
+                "objective": [
+                    {
+                        "description": "Primary objective audit",
+                        "type": {"coding": [{"code": "primary"}]},
+                    }
+                ],
+                "progressStatus": [
+                    {
+                        "state": {"coding": [{"code": "recruiting"}]},
+                        "actual": True,
+                        "period": {"start": "2024-06-01"},
+                    }
+                ],
+                "recruitment": {
+                    "targetNumber": 100,
+                    "actualNumber": 42,
+                    "eligibility": {"reference": "Group/grp-audit"},
+                },
+                "protocol": [{"reference": "PlanDefinition/pd-audit"}],
+                "site": [{"reference": "Location/loc-audit"}],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "Invoice": {
+                "resourceType": "Invoice",
+                "id": "inv-audit-1",
+                "status": "issued",
+                "type": {"coding": [{"code": "invoice"}]},
+                "subject": {"reference": "Patient/pat-audit"},
+                "recipient": {"reference": "RelatedPerson/rp-audit"},
+                "account": {"reference": "Account/acct-audit"},
+                "issuer": {"reference": "Organization/org-audit"},
+                "date": "2024-07-15T10:00:00Z",
+                "identifier": [
+                    {"system": "http://hospital.org/inv", "value": "INV-AUDIT"}
+                ],
+                "participant": [
+                    {
+                        "actor": {"reference": "Practitioner/prac-audit"},
+                        "role": {"coding": [{"code": "author"}]},
+                    }
+                ],
+                "totalGross": {"value": 500, "currency": "USD"},
+                "totalNet": {"value": 450, "currency": "USD"},
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "ChargeItem": {
+                "resourceType": "ChargeItem",
+                "id": "ci-audit-1",
+                "status": "billable",
+                "code": {"coding": [{"code": "99213"}]},
+                "subject": {"reference": "Patient/pat-audit"},
+                "encounter": {"reference": "Encounter/enc-audit"},
+                "enterer": {"reference": "Practitioner/prac-audit"},
+                "occurrenceDateTime": "2024-07-15T10:00:00Z",
+                "enteredDate": "2024-07-14T09:00:00Z",
+                "identifier": [
+                    {"system": "http://hospital.org/ci", "value": "CI-AUDIT"}
+                ],
+                "account": [{"reference": "Account/acct-audit"}],
+                "performingOrganization": {
+                    "reference": "Organization/org-perf-audit"
+                },
+                "requestingOrganization": {
+                    "reference": "Organization/org-req-audit"
+                },
+                "performer": [
+                    {
+                        "actor": {"reference": "Practitioner/prac-perf-audit"},
+                        "function": {"coding": [{"code": "performer"}]},
+                    }
+                ],
+                "service": [
+                    {"reference": {"reference": "Procedure/proc-audit"}}
+                ],
+                "quantity": {"value": 1},
+                "totalPriceComponent": {
+                    "factor": 1.5,
+                    "amount": {"value": 120, "currency": "USD"},
+                },
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "Account": {
+                "resourceType": "Account",
+                "id": "acct-audit-1",
+                "status": "active",
+                "name": "Audit Account",
+                "type": {"coding": [{"code": "PBILLACCT"}]},
+                "subject": [{"reference": "Patient/pat-audit"}],
+                "owner": {"reference": "Organization/org-audit"},
+                "servicePeriod": {"start": "2024-07-01", "end": "2024-12-31"},
+                "identifier": [
+                    {"system": "http://hospital.org/acct", "value": "ACCT-AUDIT"}
+                ],
+                "guarantor": [
+                    {"party": {"reference": "RelatedPerson/rp-audit"}}
+                ],
+                "relatedAccount": [
+                    {"account": {"reference": "Account/acct-parent-audit"}}
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "PaymentReconciliation": {
+                "resourceType": "PaymentReconciliation",
+                "id": "pr-audit-1",
+                "status": "active",
+                "outcome": "complete",
+                "type": {"coding": [{"code": "payment"}]},
+                "amount": {"value": 500, "currency": "USD"},
+                "created": "2024-07-15T10:00:00Z",
+                "disposition": "Payment processed audit",
+                "requestor": {"reference": "Practitioner/prac-audit"},
+                "request": {"reference": "Task/task-audit"},
+                "paymentIssuer": {"reference": "Organization/org-audit"},
+                "identifier": [
+                    {"system": "http://hospital.org/pr", "value": "PR-AUDIT"}
+                ],
+                "allocation": [
+                    {
+                        "account": {"reference": "Account/acct-audit"},
+                        "encounter": {"reference": "Encounter/enc-audit"},
+                    }
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "PaymentNotice": {
+                "resourceType": "PaymentNotice",
+                "id": "pn-audit-1",
+                "status": "active",
+                "amount": {"value": 100, "currency": "USD"},
+                "recipient": {"reference": "Organization/org-audit"},
+                "created": "2024-07-15T10:00:00Z",
+                "reporter": {"reference": "Practitioner/prac-audit"},
+                "request": {"reference": "Claim/claim-audit"},
+                "response": {"reference": "ClaimResponse/cr-audit"},
+                "identifier": [
+                    {"system": "http://hospital.org/pn", "value": "PN-AUDIT"}
+                ],
+                "paymentStatus": {"coding": [{"code": "paid"}]},
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "QuestionnaireResponse": {
+                "resourceType": "QuestionnaireResponse",
+                "id": "qr-audit-1",
+                "status": "completed",
+                "questionnaire": "Questionnaire/quest-audit",
+                "authored": "2024-07-15T10:00:00Z",
+                "subject": {"reference": "Patient/pat-audit"},
+                "author": {"reference": "Practitioner/prac-audit"},
+                "source": {"reference": "Practitioner/prac-source"},
+                "encounter": {"reference": "Encounter/enc-audit"},
+                "identifier": [
+                    {"system": "http://hospital.org/qr", "value": "QR-AUDIT"}
+                ],
+                "basedOn": [{"reference": "CarePlan/cp-audit"}],
+                "partOf": [{"reference": "Observation/obs-audit"}],
+                "item": [
+                    {
+                        "linkId": "subject-item",
+                        "extension": [
+                            {
+                                "url": "http://hl7.org/fhir/StructureDefinition/questionnaireresponse-isSubject",
+                                "valueBoolean": True,
+                            }
+                        ],
+                        "answer": [
+                            {
+                                "valueReference": {
+                                    "reference": "Patient/pat-item-audit"
+                                }
+                            }
+                        ],
+                    }
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "DetectedIssue": {
+                "resourceType": "DetectedIssue",
+                "id": "di-audit-1",
+                "status": "final",
+                "code": {"coding": [{"code": "DRG"}]},
+                "category": [{"coding": [{"code": "drug-drug"}]}],
+                "subject": {"reference": "Patient/pat-audit"},
+                "author": {"reference": "Practitioner/prac-audit"},
+                "identifiedDateTime": "2024-07-15T10:00:00Z",
+                "identifier": [
+                    {"system": "http://hospital.org/di", "value": "DI-AUDIT"}
+                ],
+                "implicated": [{"reference": "MedicationRequest/mr-audit"}],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "ClinicalImpression": {
+                "resourceType": "ClinicalImpression",
+                "id": "ci-audit-1",
+                "status": "completed",
+                "date": "2024-07-15T10:00:00Z",
+                "subject": {"reference": "Patient/pat-audit"},
+                "encounter": {"reference": "Encounter/enc-audit"},
+                "performer": {"reference": "Practitioner/prac-audit"},
+                "previous": {"reference": "ClinicalImpression/ci-prev-audit"},
+                "identifier": [
+                    {"system": "http://hospital.org/ci", "value": "CI-AUDIT"}
+                ],
+                "problem": [{"reference": "Condition/cond-audit"}],
+                "supportingInfo": [{"reference": "Observation/obs-audit"}],
+                "finding": [
+                    {
+                        "item": {
+                            "concept": {"coding": [{"code": "386661006"}]},
+                            "reference": {"reference": "Observation/obs-finding-audit"},
+                        }
+                    }
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "FamilyMemberHistory": {
+                "resourceType": "FamilyMemberHistory",
+                "id": "fmh-audit-1",
+                "status": "completed",
+                "date": "2024-07-15",
+                "patient": {"reference": "Patient/pat-audit"},
+                "relationship": {"coding": [{"code": "FTH"}]},
+                "sex": {"coding": [{"code": "male"}]},
+                "identifier": [
+                    {"system": "http://hospital.org/fmh", "value": "FMH-AUDIT"}
+                ],
+                "condition": [{"code": {"coding": [{"code": "44054006"}]}}],
+                "instantiatesCanonical": [
+                    "http://example.org/PlanDefinition/fmh-audit"
+                ],
+                "instantiatesUri": ["http://example.org/protocols/fmh-audit"],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "ImagingStudy": {
+                "resourceType": "ImagingStudy",
+                "id": "imaging-study-audit-1",
+                "status": "available",
+                "started": "2024-07-15T10:00:00Z",
+                "subject": {"reference": "Patient/pat-audit"},
+                "encounter": {"reference": "Encounter/enc-audit"},
+                "referrer": {"reference": "Practitioner/prac-audit"},
+                "identifier": [{"value": "1.2.3.audit"}],
+                "basedOn": [{"reference": "ServiceRequest/sr-audit"}],
+                "endpoint": [{"reference": "Endpoint/ep-audit"}],
+                "reason": [{"concept": {"coding": [{"code": "reason-audit"}]}}],
+                "series": [
+                    {
+                        "uid": "1.2.3.4.audit",
+                        "modality": {"coding": [{"code": "MR"}]},
+                        "bodySite": {
+                            "concept": {"coding": [{"code": "bs-audit"}]},
+                            "reference": {"reference": "BodyStructure/bs-audit"},
+                        },
+                        "performer": [{"actor": {"reference": "Device/dev-audit"}}],
+                        "instance": [
+                            {
+                                "uid": "1.2.3.4.5.audit",
+                                "sopClass": {"code": "1.2.840.10008.5.1.4.1.1.4"},
+                            }
+                        ],
+                    }
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "Specimen": {
+                "resourceType": "Specimen",
+                "id": "specimen-audit-1",
+                "status": "available",
+                "type": {"coding": [{"code": "119297000"}]},
+                "subject": {"reference": "Patient/pat-audit"},
+                "accessionIdentifier": {
+                    "system": "http://hospital.org/accession",
+                    "value": "ACC-AUDIT",
+                },
+                "identifier": [
+                    {"system": "http://hospital.org/specimen", "value": "SP-AUDIT"}
+                ],
+                "parent": [{"reference": "Specimen/spec-parent-audit"}],
+                "collection": {
+                    "collectedDateTime": "2024-07-15T08:00:00Z",
+                    "collector": {"reference": "Practitioner/prac-audit"},
+                    "procedure": {"reference": "Procedure/proc-audit"},
+                    "bodySite": {
+                        "reference": {"reference": "BodyStructure/bs-audit"},
+                    },
+                },
+                "container": [{"device": {"reference": "Device/dev-audit"}}],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "NutritionOrder": {
+                "resourceType": "NutritionOrder",
+                "id": "nutrition-order-audit-1",
+                "status": "active",
+                "dateTime": "2024-07-15T10:00:00Z",
+                "subject": {"reference": "Patient/pat-audit"},
+                "orderer": {"reference": "Practitioner/prac-audit"},
+                "encounter": {"reference": "Encounter/enc-audit"},
+                "groupIdentifier": {
+                    "system": "http://hospital.org/group",
+                    "value": "GRP-NO-AUDIT",
+                },
+                "identifier": [
+                    {"system": "http://hospital.org/nutrition", "value": "NO-AUDIT"}
+                ],
+                "oralDiet": {
+                    "type": [{"coding": [{"code": "226211001"}]}]
+                },
+                "enteralFormula": {
+                    "baseFormulaType": {
+                        "concept": {"coding": [{"code": "226783000"}]}
+                    },
+                    "additive": [
+                        {
+                            "type": {
+                                "concept": {"coding": [{"code": "226789001"}]}
+                            }
+                        }
+                    ],
+                },
+                "supplement": [
+                    {"type": {"concept": {"coding": [{"code": "226352002"}]}}}
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "Contract": {
+                "resourceType": "Contract",
+                "id": "contract-audit-1",
+                "status": "executed",
+                "issued": "2024-07-15T10:00:00Z",
+                "url": "http://example.org/contracts/contract-audit",
+                "instantiatesUri": "http://example.org/contract-templates/audit",
+                "subject": [{"reference": "Patient/pat-audit"}],
+                "signer": [{"party": {"reference": "Practitioner/prac-audit"}}],
+                "authority": [{"reference": "Organization/org-audit"}],
+                "domain": [{"reference": "Location/loc-audit"}],
+                "identifier": [
+                    {"system": "http://hospital.org/contract", "value": "CTR-AUDIT"}
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "Consent": {
+                "resourceType": "Consent",
+                "id": "consent-audit-1",
+                "status": "active",
+                "date": "2024-07-15",
+                "subject": {"reference": "Patient/pat-audit"},
+                "grantee": [{"reference": "Practitioner/prac-audit"}],
+                "controller": [{"reference": "Organization/org-audit"}],
+                "category": [{"coding": [{"code": "idscl"}]}],
+                "identifier": [
+                    {"system": "http://hospital.org/consent", "value": "CONSENT-AUDIT"}
+                ],
+                "provision": [
+                    {
+                        "period": {
+                            "start": "2024-07-01T00:00:00Z",
+                            "end": "2025-06-30T23:59:59Z",
+                        },
+                        "purpose": [{"code": "PATRQT"}],
+                        "action": [{"coding": [{"code": "access"}]}],
+                    }
+                ],
+                "verification": [
+                    {
+                        "verified": True,
+                        "verificationDate": ["2024-07-16T10:00:00Z"],
+                    }
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "AuditEvent": {
+                "resourceType": "AuditEvent",
+                "id": "ae-audit-1",
+                "action": "R",
+                "recorded": "2024-07-15T10:00:00Z",
+                "code": {"coding": [{"code": "110100"}]},
+                "category": [{"coding": [{"code": "rest"}]}],
+                "patient": {"reference": "Patient/pat-audit"},
+                "encounter": {"reference": "Encounter/enc-audit"},
+                "agent": [
+                    {
+                        "who": {"reference": "Practitioner/prac-audit"},
+                        "role": [{"coding": [{"code": "implementer"}]}],
+                        "policy": ["http://example.org/policy/audit"],
+                    }
+                ],
+                "source": {"observer": {"reference": "Device/dev-audit"}},
+                "entity": [
+                    {
+                        "what": {"reference": "Patient/pat-audit"},
+                        "role": {"coding": [{"code": "1"}]},
+                    }
+                ],
+                "outcome": {"code": {"code": "0"}},
+                "authorization": [{"coding": [{"code": "PATADMIN"}]}],
+                "basedOn": [{"reference": "ServiceRequest/sr-audit"}],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "Flag": {
+                "resourceType": "Flag",
+                "id": "flag-audit-1",
+                "status": "active",
+                "code": {"coding": [{"code": "304379003"}]},
+                "subject": {"reference": "Patient/pat-audit"},
+                "author": {"reference": "Practitioner/prac-audit"},
+                "encounter": {"reference": "Encounter/enc-audit"},
+                "period": {
+                    "start": "2024-07-01T00:00:00Z",
+                    "end": "2024-12-31T23:59:59Z",
+                },
+                "category": [{"coding": [{"code": "safety"}]}],
+                "identifier": [
+                    {"system": "http://hospital.org/flag", "value": "FLAG-AUDIT"}
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "Communication": {
+                "resourceType": "Communication",
+                "id": "comm-audit-1",
+                "status": "completed",
+                "subject": {"reference": "Patient/pat-audit"},
+                "encounter": {"reference": "Encounter/enc-audit"},
+                "sender": {"reference": "Practitioner/prac-audit"},
+                "recipient": [{"reference": "Practitioner/prac-recip"}],
+                "sent": "2024-07-15T09:00:00Z",
+                "received": "2024-07-15T09:05:00Z",
+                "category": [{"coding": [{"code": "notification"}]}],
+                "medium": [{"coding": [{"code": "WRITTEN"}]}],
+                "topic": {"coding": [{"code": "371535009"}]},
+                "identifier": [
+                    {"system": "http://hospital.org/comm", "value": "COMM-AUDIT"}
+                ],
+                "basedOn": [{"reference": "ServiceRequest/sr-audit"}],
+                "partOf": [{"reference": "Communication/parent-audit"}],
+                "instantiatesCanonical": ["http://example.org/PlanDefinition/pd-audit"],
+                "instantiatesUri": ["http://example.org/protocols/alert-audit"],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "Task": {
+                "resourceType": "Task",
+                "id": "task-audit-1",
+                "status": "in-progress",
+                "intent": "order",
+                "priority": "routine",
+                "for": {"reference": "Patient/pat-audit"},
+                "encounter": {"reference": "Encounter/enc-audit"},
+                "focus": {"reference": "ServiceRequest/sr-audit"},
+                "owner": {"reference": "Practitioner/prac-audit"},
+                "requester": {"reference": "Practitioner/prac-req"},
+                "authoredOn": "2024-07-15T09:00:00Z",
+                "lastModified": "2024-07-16T10:00:00Z",
+                "executionPeriod": {
+                    "start": "2024-07-15T09:00:00Z",
+                    "end": "2024-07-20T17:00:00Z",
+                },
+                "code": {"coding": [{"code": "103693007"}]},
+                "businessStatus": {"coding": [{"code": "in-progress"}]},
+                "identifier": [
+                    {"system": "http://hospital.org/task", "value": "TASK-AUDIT"}
+                ],
+                "groupIdentifier": {
+                    "system": "http://hospital.org/group",
+                    "value": "GRP-AUDIT",
+                },
+                "basedOn": [{"reference": "CarePlan/cp-audit"}],
+                "partOf": [{"reference": "Task/parent-audit"}],
+                "performer": [{"actor": {"reference": "Practitioner/prac-perf"}}],
+                "requestedPerformer": [
+                    {
+                        "concept": {"coding": [{"code": "performer"}]},
+                        "reference": {"reference": "Practitioner/prac-rp"},
+                    }
+                ],
+                "output": [
+                    {
+                        "type": {"text": "result"},
+                        "valueReference": {"reference": "Observation/obs-audit"},
+                    }
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "RiskAssessment": {
+                "resourceType": "RiskAssessment",
+                "id": "ra-audit-1",
+                "status": "final",
+                "subject": {"reference": "Patient/pat-audit"},
+                "encounter": {"reference": "Encounter/enc-audit"},
+                "condition": {"reference": "Condition/cond-audit"},
+                "performer": {"reference": "Practitioner/prac-audit"},
+                "occurrenceDateTime": "2024-07-15T10:00:00Z",
+                "method": {"coding": [{"code": "clinical"}]},
+                "identifier": [
+                    {"system": "http://hospital.org/ra", "value": "RA-AUDIT"}
+                ],
+                "prediction": [
+                    {
+                        "probabilityDecimal": 0.5,
+                        "qualitativeRisk": {"coding": [{"code": "moderate"}]},
+                    }
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "HealthcareService": {
+                "resourceType": "HealthcareService",
+                "id": "hs-audit-1",
+                "active": True,
+                "name": "Audit Cardiology",
+                "providedBy": {"reference": "Organization/org-audit"},
+                "category": [{"coding": [{"code": "17"}]}],
+                "type": [{"coding": [{"code": "11429006"}]}],
+                "specialty": [{"coding": [{"code": "394579002"}]}],
+                "location": [{"reference": "Location/loc-audit"}],
+                "identifier": [
+                    {"system": "http://hospital.org/hs", "value": "HS-AUDIT"}
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "RelatedPerson": {
+                "resourceType": "RelatedPerson",
+                "id": "rp-audit-1",
+                "active": True,
+                "patient": {"reference": "Patient/pat-audit"},
+                "relationship": [
+                    {
+                        "coding": [
+                            {
+                                "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+                                "code": "WIFE",
+                            }
+                        ]
+                    }
+                ],
+                "name": [{"family": "Audit", "given": ["Spouse"]}],
+                "telecom": [{"system": "phone", "value": "555-AUDIT"}],
+                "gender": "female",
+                "birthDate": "1980-01-01",
+                "identifier": [
+                    {"system": "http://hospital.org/rp", "value": "RP-AUDIT"}
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "DeviceRequest": {
+                "resourceType": "DeviceRequest",
+                "id": "dr-audit-1",
+                "status": "active",
+                "intent": "order",
+                "code": {
+                    "concept": {"coding": [{"code": "dev-req-audit"}]},
+                    "reference": {"reference": "Device/dev-audit"},
+                },
+                "subject": {"reference": "Patient/pat-audit"},
+                "requester": {"reference": "Practitioner/prac-audit"},
+                "encounter": {"reference": "Encounter/enc-audit"},
+                "authoredOn": "2024-07-15T10:00:00Z",
+                "occurrenceDateTime": "2024-07-20T10:00:00Z",
+                "identifier": [
+                    {"system": "http://hospital.org/dr", "value": "DR-AUDIT"}
+                ],
+                "groupIdentifier": {
+                    "system": "http://hospital.org/grp",
+                    "value": "GRP-AUDIT",
+                },
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "AdverseEvent": {
+                "resourceType": "AdverseEvent",
+                "id": "ae-audit-1",
+                "status": "completed",
+                "actuality": "actual",
+                "code": {"coding": [{"code": "ae-audit"}]},
+                "category": [{"coding": [{"code": "medication-mishap"}]}],
+                "subject": {"reference": "Patient/pat-audit"},
+                "recorder": {"reference": "Practitioner/prac-audit"},
+                "encounter": {"reference": "Encounter/enc-audit"},
+                "occurrenceDateTime": "2024-07-15T10:00:00Z",
+                "identifier": [
+                    {"system": "http://hospital.org/ae", "value": "AE-AUDIT"}
+                ],
+                "suspectEntity": [
+                    {
+                        "instanceReference": {
+                            "reference": "Medication/med-audit"
+                        }
+                    }
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "ImmunizationRecommendation": {
+                "resourceType": "ImmunizationRecommendation",
+                "id": "ir-audit-1",
+                "patient": {"reference": "Patient/pat-audit"},
+                "date": "2024-07-15T10:00:00Z",
+                "identifier": [
+                    {"system": "http://hospital.org/ir", "value": "IR-AUDIT"}
+                ],
+                "recommendation": [
+                    {
+                        "forecastStatus": {"coding": [{"code": "due"}]},
+                        "vaccineCode": [{"coding": [{"code": "flu-audit"}]}],
+                        "targetDisease": [{"coding": [{"code": "6142004"}]}],
+                        "supportingImmunization": [
+                            {"reference": "Immunization/imm-audit"}
+                        ],
+                    }
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "Person": {
+                "resourceType": "Person",
+                "id": "person-audit-1",
+                "gender": "male",
+                "birthDate": "1975-06-01",
+                "name": [{"family": "Audit", "given": ["Person"]}],
+                "telecom": [{"system": "email", "value": "audit@example.org"}],
+                "address": [{"city": "Boston", "state": "MA", "use": "home"}],
+                "link": [{"target": {"reference": "Patient/pat-audit"}}],
+                "managingOrganization": {"reference": "Organization/org-audit"},
+                "identifier": [
+                    {"system": "http://hospital.org/person", "value": "PERSON-AUDIT"}
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "BodyStructure": {
+                "resourceType": "BodyStructure",
+                "id": "bs-audit-1",
+                "patient": {"reference": "Patient/pat-audit"},
+                "morphology": {"coding": [{"code": "morph-audit"}]},
+                "includedStructure": [
+                    {"structure": {"coding": [{"code": "arm-audit"}]}}
+                ],
+                "excludedStructure": [
+                    {"structure": {"coding": [{"code": "finger-audit"}]}}
+                ],
+                "identifier": [
+                    {"system": "http://hospital.org/bs", "value": "BS-AUDIT"}
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "OrganizationAffiliation": {
+                "resourceType": "OrganizationAffiliation",
+                "id": "oaf-audit-1",
+                "active": True,
+                "organization": {"reference": "Organization/org-audit"},
+                "participatingOrganization": {"reference": "Organization/org-part-audit"},
+                "code": [{"coding": [{"code": "provider-audit"}]}],
+                "specialty": [{"coding": [{"code": "cardio-audit"}]}],
+                "period": {"start": "2024-01-01", "end": "2025-12-31"},
+                "identifier": [
+                    {"system": "http://hospital.org/oaf", "value": "OAF-AUDIT"}
+                ],
+                "contact": [
+                    {"telecom": [{"system": "email", "value": "oaf@audit.org"}]}
+                ],
+                "endpoint": [{"reference": "Endpoint/ep-audit"}],
+                "location": [{"reference": "Location/loc-audit"}],
+                "network": [{"reference": "Organization/net-audit"}],
+                "healthcareService": [{"reference": "HealthcareService/hs-audit"}],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "Endpoint": {
+                "resourceType": "Endpoint",
+                "id": "ep-audit-1",
+                "status": "active",
+                "name": "Audit FHIR Endpoint",
+                "connectionType": [{"coding": [{"code": "hl7-fhir-rest"}]}],
+                "managingOrganization": {"reference": "Organization/org-audit"},
+                "identifier": [{"value": "EP-AUDIT"}],
+                "payload": [{"type": [{"coding": [{"code": "application/fhir+json"}]}]}],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "Provenance": {
+                "resourceType": "Provenance",
+                "id": "prov-audit-1",
+                "target": [{"reference": "Observation/obs-audit"}],
+                "recorded": "2024-07-15T10:00:00Z",
+                "occurredDateTime": "2024-07-14T08:00:00Z",
+                "activity": {"coding": [{"code": "CREATE"}]},
+                "patient": {"reference": "Patient/pat-audit"},
+                "encounter": {"reference": "Encounter/enc-audit"},
+                "agent": [
+                    {
+                        "who": {"reference": "Practitioner/prac-audit"},
+                        "role": [{"coding": [{"code": "author"}]}],
+                        "type": {"coding": [{"code": "practitioner"}]},
+                    }
+                ],
+                "entity": [{"what": {"reference": "Device/dev-audit"}}],
+                "basedOn": [{"reference": "ServiceRequest/sr-audit"}],
+                "signature": [{"type": [{"code": "ProofOfOrigin"}]}],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "EnrollmentRequest": {
+                "resourceType": "EnrollmentRequest",
+                "id": "enr-audit-1",
+                "status": "active",
+                "candidate": {"reference": "Patient/pat-audit"},
+                "identifier": [{"value": "ENR-AUDIT"}],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "EnrollmentResponse": {
+                "resourceType": "EnrollmentResponse",
+                "id": "enres-audit-1",
+                "status": "active",
+                "request": {"reference": "EnrollmentRequest/enr-audit-1"},
+                "identifier": [{"value": "ENRES-AUDIT"}],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "InsurancePlan": {
+                "resourceType": "InsurancePlan",
+                "id": "ip-audit-1",
+                "status": "active",
+                "name": "Audit Gold Plan",
+                "alias": ["AGP-AUDIT"],
+                "type": [{"coding": [{"code": "medical-audit"}]}],
+                "ownedBy": {"reference": "Organization/org-audit"},
+                "administeredBy": {"reference": "Organization/org-admin-audit"},
+                "identifier": [{"value": "IP-AUDIT"}],
+                "contact": [
+                    {
+                        "address": {
+                            "city": "Boston",
+                            "state": "MA",
+                            "postalCode": "02101",
+                            "country": "US",
+                            "use": "work",
+                        }
+                    }
+                ],
+                "endpoint": [{"reference": "Endpoint/ep-audit"}],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "ChargeItemDefinition": {
+                "resourceType": "ChargeItemDefinition",
+                "id": "cid-audit-1",
+                "status": "active",
+                "url": "http://example.org/ChargeItemDefinition/audit-panel",
+                "version": "1.0",
+                "title": "Audit Lab Panel",
+                "publisher": "Audit Billing",
+                "description": "Audit charge definition",
+                "date": "2024-06-01",
+                "jurisdiction": [{"coding": [{"code": "US"}]}],
+                "identifier": [{"value": "CID-AUDIT"}],
+                "useContext": [
+                    {
+                        "code": {"code": "focus"},
+                        "valueCodeableConcept": {"coding": [{"code": "ambulatory-audit"}]},
+                    }
+                ],
+                "applicability": [
+                    {"effectivePeriod": {"start": "2024-01-01", "end": "2025-12-31"}}
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "Basic": {
+                "resourceType": "Basic",
+                "id": "basic-audit-1",
+                "code": {"coding": [{"code": "referral-audit"}]},
+                "subject": {"reference": "Patient/pat-audit"},
+                "author": {"reference": "Practitioner/prac-audit"},
+                "created": "2024-07-15",
+                "identifier": [{"value": "BASIC-AUDIT"}],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "BiologicallyDerivedProduct": {
+                "resourceType": "BiologicallyDerivedProduct",
+                "id": "bdp-audit-1",
+                "productCode": {"coding": [{"code": "E0398"}]},
+                "productCategory": {"code": "organ"},
+                "productStatus": {"code": "available"},
+                "biologicalSourceEvent": {
+                    "system": "http://hospital.org/bse",
+                    "value": "BSE-AUDIT",
+                },
+                "identifier": [
+                    {"system": "http://hospital.org/bdp", "value": "SN-AUDIT"}
+                ],
+                "collection": {
+                    "collector": {"reference": "Practitioner/prac-audit"},
+                },
+                "request": [{"reference": "ServiceRequest/sr-audit"}],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "DeviceDispense": {
+                "resourceType": "DeviceDispense",
+                "id": "dd-audit-1",
+                "status": "completed",
+                "subject": {"reference": "Patient/pat-audit"},
+                "device": {"concept": {"coding": [{"code": "pump-audit"}]}},
+                "identifier": [
+                    {"system": "http://hospital.org/dd", "value": "DD-AUDIT"}
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "DeviceUsage": {
+                "resourceType": "DeviceUsage",
+                "id": "du-audit-1",
+                "status": "active",
+                "patient": {"reference": "Patient/pat-audit"},
+                "device": {
+                    "concept": {"coding": [{"code": "monitor-audit"}]},
+                    "reference": {"reference": "Device/dev-audit"},
+                },
+                "identifier": [
+                    {"system": "http://hospital.org/du", "value": "DU-AUDIT"}
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "SupplyDelivery": {
+                "resourceType": "SupplyDelivery",
+                "id": "sd-audit-1",
+                "status": "completed",
+                "patient": {"reference": "Patient/pat-audit"},
+                "supplier": {"reference": "Practitioner/prac-audit"},
+                "receiver": [{"reference": "PractitionerRole/pr-audit"}],
+                "identifier": [
+                    {"system": "http://hospital.org/sd", "value": "SD-AUDIT"}
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "SupplyRequest": {
+                "resourceType": "SupplyRequest",
+                "id": "sr-audit-1",
+                "status": "active",
+                "category": {"coding": [{"code": "central-audit"}]},
+                "authoredOn": "2024-07-15T10:00:00Z",
+                "deliverFor": {"reference": "Patient/pat-audit"},
+                "deliverTo": {"reference": "Patient/pat-audit"},
+                "requester": {"reference": "Practitioner/prac-audit"},
+                "supplier": [{"reference": "Organization/org-audit"}],
+                "item": {"concept": {"coding": [{"code": "gloves-audit"}]}},
+                "quantity": {"value": 10},
+                "identifier": [
+                    {"system": "http://hospital.org/sr", "value": "SR-AUDIT"}
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "VisionPrescription": {
+                "resourceType": "VisionPrescription",
+                "id": "vp-audit-1",
+                "status": "active",
+                "dateWritten": "2024-07-15T10:00:00Z",
+                "patient": {"reference": "Patient/pat-audit"},
+                "prescriber": {"reference": "PractitionerRole/pr-audit"},
+                "encounter": {"reference": "Encounter/enc-audit"},
+                "identifier": [{"value": "VP-AUDIT"}],
+                "lensSpecification": [{"eye": "right", "sphere": -1.0}],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "NutritionIntake": {
+                "resourceType": "NutritionIntake",
+                "id": "ni-audit-1",
+                "status": "completed",
+                "subject": {"reference": "Patient/pat-audit"},
+                "encounter": {"reference": "Encounter/enc-audit"},
+                "reportedReference": {"reference": "Practitioner/prac-audit"},
+                "occurrenceDateTime": "2024-07-15T12:00:00Z",
+                "code": {"coding": [{"code": "meal-audit"}]},
+                "identifier": [{"value": "NI-AUDIT"}],
+                "consumedItem": [
+                    {
+                        "nutritionProduct": {
+                            "concept": {"coding": [{"code": "apple-audit"}]}
+                        }
+                    }
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "RequestOrchestration": {
+                "resourceType": "RequestOrchestration",
+                "id": "ro-audit-1",
+                "status": "active",
+                "intent": "order",
+                "subject": {"reference": "Patient/pat-audit"},
+                "author": {"reference": "Practitioner/prac-audit"},
+                "encounter": {"reference": "Encounter/enc-audit"},
+                "authoredOn": "2024-07-15T09:00:00Z",
+                "code": {"coding": [{"code": "protocol-audit"}]},
+                "identifier": [{"value": "RO-AUDIT"}],
+                "groupIdentifier": {"value": "GRP-RO-AUDIT"},
+                "basedOn": [{"reference": "CarePlan/cp-audit"}],
+                "action": [
+                    {
+                        "participant": [
+                            {
+                                "actorReference": {
+                                    "reference": "Practitioner/part-audit"
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "GenomicStudy": {
+                "resourceType": "GenomicStudy",
+                "id": "gs-audit-1",
+                "status": "registered",
+                "subject": {"reference": "Patient/pat-audit"},
+                "identifier": [{"value": "GS-AUDIT"}],
+                "analysis": [
+                    {"focus": [{"reference": "Condition/cond-audit"}]}
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "Measure": {
+                "resourceType": "Measure",
+                "id": "measure-audit-1",
+                "status": "active",
+                "name": "audit-measure",
+                "title": "Audit Measure",
+                "publisher": "Acme Audit",
+                "url": "http://example.org/Measure/audit",
+                "version": "1.0",
+                "date": "2024-01-01",
+                "identifier": [{"value": "MEAS-AUDIT"}],
+                "jurisdiction": [{"coding": [{"code": "US"}]}],
+                "topic": [{"coding": [{"code": "audit-topic"}]}],
+                "useContext": [
+                    {
+                        "code": {"code": "focus"},
+                        "valueCodeableConcept": {
+                            "coding": [{"code": "ambulatory-audit"}]
+                        },
+                    }
+                ],
+                "effectivePeriod": {
+                    "start": "2024-01-01",
+                    "end": "2024-12-31",
+                },
+                "library": ["http://example.org/Library/lib-audit"],
+                "relatedArtifact": [
+                    {
+                        "type": "depends-on",
+                        "resource": {"reference": "Library/lib-dep-audit"},
+                    }
+                ],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
+            "MeasureReport": {
+                "resourceType": "MeasureReport",
+                "id": "mr-audit-1",
+                "status": "complete",
+                "date": "2024-07-15T10:00:00Z",
+                "subject": {"reference": "Patient/pat-audit"},
+                "reporter": {"reference": "Practitioner/prac-audit"},
+                "location": {"reference": "Location/loc-audit"},
+                "measure": "http://example.org/Measure/audit",
+                "period": {"start": "2024-07-01", "end": "2024-07-31"},
+                "identifier": [{"value": "MR-AUDIT"}],
+                "evaluatedResource": [{"reference": "Observation/obs-audit"}],
+                "meta": {"lastUpdated": "2024-08-22T10:30:00Z"},
+            },
             "Slot": {
                 "resourceType": "Slot",
                 "id": "slot-audit-1",
@@ -730,9 +2384,38 @@ class TestResourcePurity:
     # — every shipped resource config MUST have a sample here so its
     # purity / orphan / phantom guarantees are enforced uniformly.
     ALL_AUDITED_RESOURCES = [
+        "Account",
+        "ChargeItem",
+        "Invoice",
+        "ResearchStudy",
+        "ResearchSubject",
+        "Composition",
+        "Questionnaire",
+        "ExplanationOfBenefit",
+        "CoverageEligibilityRequest",
+        "CoverageEligibilityResponse",
         "Patient", "Observation", "Appointment", "Organization", "Location",
         "Practitioner", "PractitionerRole", "Device", "Group", "Schedule",
-        "Slot", "Condition", "Encounter", "ServiceRequest",
+        "Slot", "Condition", "Encounter", "ServiceRequest", "Procedure",
+        "Medication", "MedicationRequest", "MedicationAdministration",
+        "MedicationDispense", "MedicationStatement", "AllergyIntolerance",
+        "DiagnosticReport",
+        "CareTeam", "Goal", "CarePlan", "Immunization", "Coverage", "Claim",
+        "ClaimResponse", "DocumentReference", "Substance", "RelatedPerson",
+        "EpisodeOfCare", "HealthcareService", "RiskAssessment", "Task",
+        "Communication", "Flag", "AuditEvent", "Consent", "Contract",
+        "NutritionOrder", "Specimen", "ImagingStudy", "FamilyMemberHistory",
+        "ClinicalImpression", "DetectedIssue", "QuestionnaireResponse",
+        "PaymentNotice", "PaymentReconciliation",
+        "DeviceRequest", "AdverseEvent", "ImmunizationRecommendation",
+        "Person", "BodyStructure",
+        "OrganizationAffiliation", "Endpoint", "Provenance",
+        "EnrollmentRequest", "EnrollmentResponse", "InsurancePlan",
+        "ChargeItemDefinition", "Basic",
+        "BiologicallyDerivedProduct", "DeviceDispense", "DeviceUsage",
+        "SupplyDelivery", "SupplyRequest",
+        "VisionPrescription", "NutritionIntake", "RequestOrchestration",
+        "GenomicStudy", "Measure", "MeasureReport",
     ]
 
     @pytest.mark.parametrize(
@@ -843,6 +2526,15 @@ class TestQueryCoverage:
                     f = e.get("field")
                     if isinstance(f, str) and f:
                         param_refs.add(f)
+                for comp in meta.get("components") or []:
+                    if not isinstance(comp, dict):
+                        continue
+                    for e in comp.get("fields") or []:
+                        if not isinstance(e, dict):
+                            continue
+                        f = e.get("field")
+                        if isinstance(f, str) and f:
+                            param_refs.add(f)
 
             index_refs: set = set()
             for idx in indexes:
@@ -870,9 +2562,38 @@ class TestQueryCoverage:
     # classes are otherwise independent and merging them would muddle
     # what each one is asserting.
     ALL_AUDITED_RESOURCES = [
+        "Account",
+        "ChargeItem",
+        "Invoice",
+        "ResearchStudy",
+        "ResearchSubject",
+        "Composition",
+        "Questionnaire",
+        "ExplanationOfBenefit",
+        "CoverageEligibilityRequest",
+        "CoverageEligibilityResponse",
         "Patient", "Observation", "Appointment", "Organization", "Location",
         "Practitioner", "PractitionerRole", "Device", "Group", "Schedule",
-        "Slot", "Condition", "Encounter", "ServiceRequest",
+        "Slot", "Condition", "Encounter", "ServiceRequest", "Procedure",
+        "Medication", "MedicationRequest", "MedicationAdministration",
+        "MedicationDispense", "MedicationStatement", "AllergyIntolerance",
+        "DiagnosticReport",
+        "CareTeam", "Goal", "CarePlan", "Immunization", "Coverage", "Claim",
+        "ClaimResponse", "DocumentReference", "Substance", "RelatedPerson",
+        "EpisodeOfCare", "HealthcareService", "RiskAssessment", "Task",
+        "Communication", "Flag", "AuditEvent", "Consent", "Contract",
+        "NutritionOrder", "Specimen", "ImagingStudy", "FamilyMemberHistory",
+        "ClinicalImpression", "DetectedIssue", "QuestionnaireResponse",
+        "PaymentNotice", "PaymentReconciliation",
+        "DeviceRequest", "AdverseEvent", "ImmunizationRecommendation",
+        "Person", "BodyStructure",
+        "OrganizationAffiliation", "Endpoint", "Provenance",
+        "EnrollmentRequest", "EnrollmentResponse", "InsurancePlan",
+        "ChargeItemDefinition", "Basic",
+        "BiologicallyDerivedProduct", "DeviceDispense", "DeviceUsage",
+        "SupplyDelivery", "SupplyRequest",
+        "VisionPrescription", "NutritionIntake", "RequestOrchestration",
+        "GenomicStudy", "Measure", "MeasureReport",
     ]
 
     @pytest.mark.parametrize(

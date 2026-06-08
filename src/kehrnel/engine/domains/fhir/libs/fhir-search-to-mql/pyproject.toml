@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fhir-search-to-mql"
-version = "1.2.0"
+version = "1.2.1"
 description = "Convert FHIR search queries to MongoDB Query Language (MQL) with optimized denormalization"
 readme = "README.md"
 authors = [
@@ -82,6 +82,7 @@ addopts = "--cov=fhir_search_to_mql --cov-report=html --cov-report=term-missing"
 markers = [
     "unit: Unit tests",
     "integration: Integration tests",
+    "e2e: end-to-end CLI_COMMANDS scenarios (requires MongoDB + fhir-gen)",
     "performance: Performance benchmarks",
     "mongodb: Tests that require a running MongoDB at localhost:27017",
     "slow: Long-running tests",

@@ -5,6 +5,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
+from ...codes import codeable_from_section, concept_from_section, pick_code
 from ...codes.loader import get_system, random_code
 from ...resolvers.reference import ReferenceStore
 from ..special_types import SpecialTypeGenerator
@@ -152,7 +153,9 @@ def enrich_Account(
     r["servicePeriod"] = t.gen_Period()
     if store.has("Organization"):
         r["owner"] = store.get_reference("Organization", rng)
-    r["description"] = t.p.faker.sentence()
+    r["description"] = t.p.gen_string(
+        resource_type=r.get("resourceType"), field_name="description"
+    )
     if store.has("Coverage"):
         r["coverage"] = [{
             "coverage": store.get_reference("Coverage", rng),
@@ -232,7 +235,7 @@ def enrich_CoverageEligibilityRequest(
     store: ReferenceStore,
     rng: random.Random,
 ) -> dict[str, Any]:
-    r["status"] = rng.choice(["active", "cancelled", "draft", "entered-in-error"])
+    r["status"] = pick_code("coverage_eligibility_request_status", rng, "active")
     if store.has("Patient"):
         r["patient"] = store.get_reference("Patient", rng)
     r["created"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
@@ -242,7 +245,159 @@ def enrich_CoverageEligibilityRequest(
         r["insurer"] = store.get_reference("Organization", rng)
     if store.has("Coverage"):
         r["insurance"] = [{"coverage": store.get_reference("Coverage", rng), "focal": True}]
-    r["purpose"] = [rng.choice(["auth-requirements", "benefits", "discovery", "validation"])]
+    r["purpose"] = [pick_code("eligibility_purpose", rng, "benefits")]
+    return r
+
+
+def enrich_ExplanationOfBenefit(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("explanation_of_benefit_status", rng, "active")
+    r["type"] = concept_from_section("claim_type", rng, t)
+    r["use"] = pick_code("claim_use", rng, "claim")
+    if store.has("Patient"):
+        r["patient"] = store.get_reference("Patient", rng)
+    r["created"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
+    if store.has("Practitioner"):
+        r["provider"] = store.get_reference("Practitioner", rng)
+    if store.has("Coverage"):
+        r["insurance"] = [{"coverage": store.get_reference("Coverage", rng), "focal": True}]
+    return r
+
+
+def enrich_CoverageEligibilityResponse(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("coverage_eligibility_response_status", rng, "active")
+    r["purpose"] = [pick_code("eligibility_purpose", rng, "benefits")]
+    r["created"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
+    if store.has("Patient"):
+        r["patient"] = store.get_reference("Patient", rng)
+    if store.has("Organization"):
+        r["requestor"] = store.get_reference("Organization", rng)
+    if store.has("CoverageEligibilityRequest"):
+        r["request"] = store.get_reference("CoverageEligibilityRequest", rng)
+    return r
+
+
+def enrich_EnrollmentRequest(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("enrollment_status", rng, "active")
+    if store.has("Patient"):
+        r["candidate"] = store.get_reference("Patient", rng)
+    if store.has("Organization"):
+        r["provider"] = store.get_reference("Organization", rng)
+    if store.has("Coverage"):
+        r["coverage"] = store.get_reference("Coverage", rng)
+    r["created"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
+    return r
+
+
+def enrich_EnrollmentResponse(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("enrollment_status", rng, "active")
+    if store.has("EnrollmentRequest"):
+        r["request"] = store.get_reference("EnrollmentRequest", rng)
+    if store.has("Organization"):
+        r["organization"] = store.get_reference("Organization", rng)
+    r["created"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
+    return r
+
+
+def enrich_InsurancePlan(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("insurance_plan_status", rng, "active")
+    r["type"] = [concept_from_section("insurance_plan_types", rng, t)]
+    r["name"] = rng.choice(["Gold PPO", "Silver HMO", "Bronze HDHP"])
+    if store.has("Organization"):
+        r["ownedBy"] = store.get_reference("Organization", rng)
+        r["administeredBy"] = store.get_reference("Organization", rng)
+    return r
+
+
+def enrich_ChargeItemDefinition(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("charge_item_definition_status", rng, "active")
+    r["url"] = f"http://example.org/ChargeItemDefinition/{r.get('id', 'cid')}"
+    r["title"] = "Standard lab panel"
+    r["version"] = "1.0"
+    if store.has("Organization"):
+        org = store.get_resource("Organization", rng)
+        if org:
+            name = org.get("name", "Regional Billing Authority")
+            r["publisher"] = name if isinstance(name, str) else str(name)
+        else:
+            r["publisher"] = "Regional Billing Authority"
+    else:
+        r["publisher"] = "Regional Billing Authority"
+    r["versionAlgorithmCoding"] = t.gen_Coding(
+        system="http://terminology.hl7.org/CodeSystem/version-algorithm",
+        code="semver",
+        display="Semantic Versioning (semver.org)",
+    )
+    r.pop("versionAlgorithmString", None)
+    r["effectivePeriod"] = t.gen_Period()
+    return r
+
+
+def enrich_PaymentNotice(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("payment_notice_status", rng, "active")
+    r["paymentStatus"] = concept_from_section("payment_status", rng, t)
+    r["created"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
+    if store.has("Organization"):
+        r["recipient"] = store.get_reference("Organization", rng)
+    if store.has("Practitioner"):
+        r["reporter"] = store.get_reference("Practitioner", rng)
+    if store.has("Claim"):
+        r["request"] = store.get_reference("Claim", rng)
+    return r
+
+
+def enrich_PaymentReconciliation(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("payment_reconciliation_status", rng, "active")
+    r["outcome"] = concept_from_section("payment_reconciliation_outcome", rng, t)
+    r["created"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
+    r["disposition"] = "Payment processed"
+    if store.has("Organization"):
+        r["paymentIssuer"] = store.get_reference("Organization", rng)
+    if store.has("PaymentNotice"):
+        r["request"] = store.get_reference("PaymentNotice", rng)
+    alloc: dict[str, Any] = {"amount": t.gen_Money()}
+    if store.has("Account"):
+        alloc["account"] = store.get_reference("Account", rng)
+    r["allocation"] = [alloc]
     return r
 
 
@@ -254,4 +409,12 @@ ENRICHERS: dict[str, Any] = {
     "Invoice": enrich_Invoice,
     "ChargeItem": enrich_ChargeItem,
     "CoverageEligibilityRequest": enrich_CoverageEligibilityRequest,
+    "CoverageEligibilityResponse": enrich_CoverageEligibilityResponse,
+    "ExplanationOfBenefit": enrich_ExplanationOfBenefit,
+    "EnrollmentRequest": enrich_EnrollmentRequest,
+    "EnrollmentResponse": enrich_EnrollmentResponse,
+    "InsurancePlan": enrich_InsurancePlan,
+    "ChargeItemDefinition": enrich_ChargeItemDefinition,
+    "PaymentNotice": enrich_PaymentNotice,
+    "PaymentReconciliation": enrich_PaymentReconciliation,
 }

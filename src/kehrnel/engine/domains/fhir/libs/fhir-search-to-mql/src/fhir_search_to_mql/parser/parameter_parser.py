@@ -221,9 +221,24 @@ class ParameterParser:
             "effective-date", "requested-period", "value-date",
             "expiration-date", "manufacture-date",
             "start", "date-start", "end-date",
-            "authored", "occurrence",
+            "authored", "authoredon", "authored-on", "datewritten", "event-date", "modified",
+            "datetime",
+            "collected", "started", "identified", "entered-date",
+            "sent", "received", "verified-date",
+            "occurrence",
+            "recorded", "when", "whenprepared", "whenhandedover",
+            "last-date", "issued", "created", "payment-date", "creation",
+            "effective",
+            "expiry",
+            "start-date", "target-date", "reaction-date",
         ):
             return "date"
+
+        # Number parameters recognized by name (prefix-eligible).
+        if param_name in (
+            "probability",
+        ):
+            return "number"
 
         # If has prefix and we haven't classified by name, the
         # parameter is most likely number or quantity. Date params

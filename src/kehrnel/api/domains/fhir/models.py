@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 
 
 class FhirSearchRequest(BaseModel):
-    """FHIR search parameters routed to fhir.rps_canonical compile + execute."""
+    """FHIR search parameters routed to fhir.clinical_cdr compile + execute."""
 
     resource_type: str = Field(
         default="Patient",
@@ -31,5 +31,8 @@ class FhirSearchRequest(BaseModel):
     )
     fhir_search: str | None = Field(
         default=None,
-        description="Optional FHIR search URL or ResourceType?params form.",
+        description=(
+            "FHIR REST search: ResourceType?params, full URL, or compartment path "
+            "Patient/{id}/Observation?params."
+        ),
     )

@@ -8,6 +8,7 @@ from typing import Any
 
 from faker import Faker
 
+from ...codes import codeable_from_section, pick_code, concept_from_section
 from ...codes.loader import get_system, random_code
 from ...resolvers.reference import ReferenceStore
 from ..special_types import SpecialTypeGenerator
@@ -162,7 +163,9 @@ def enrich_Location(
     loc_type = random_code("location_types", rng)
     r["status"] = rng.choice(["active", "inactive", "suspended"])
     r["mode"] = "instance"
-    r["name"] = f"{t.p.faker.word().title()} {loc_type['display'] if loc_type else 'Unit'}"
+    r["name"] = t.p.gen_string(
+        resource_type="Location", field_name="name", max_length=80
+    )
     if loc_type:
         r["type"] = [t.gen_CodeableConcept(
             system=get_system("location_types"),
@@ -438,7 +441,9 @@ def enrich_DiagnosticReport(
             store.get_reference("Observation", rng)
             for _ in range(rng.randint(1, 4))
         ]
-    r["conclusion"] = t.p.faker.sentence()
+    r["conclusion"] = t.p.gen_string(
+        resource_type="DiagnosticReport", field_name="conclusion"
+    )
     return r
 
 
@@ -525,7 +530,9 @@ def enrich_ClinicalImpression(
     rng: random.Random,
 ) -> dict[str, Any]:
     r["status"] = rng.choice(["in-progress", "completed", "entered-in-error"])
-    r["description"] = t.p.faker.sentence()
+    r["description"] = t.p.gen_string(
+        resource_type="ClinicalImpression", field_name="description"
+    )
     if store.has("Patient"):
         r["subject"] = store.get_reference("Patient", rng)
     if store.has("Encounter"):
@@ -577,6 +584,93 @@ def enrich_RiskAssessment(
     return r
 
 
+def enrich_Composition(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("composition_status", rng, "final")
+    r["type"] = concept_from_section("loinc_composition_types", rng, t)
+    r["date"] = t.p.gen_date(min_year=2023, max_year=2024)
+    r["title"] = t.p.gen_string(
+        resource_type="Composition", field_name="title", max_length=80
+    )
+    if store.has("Patient"):
+        r["subject"] = [store.get_reference("Patient", rng)]
+    if store.has("Practitioner"):
+        r["author"] = [store.get_reference("Practitioner", rng)]
+    if store.has("Encounter"):
+        r["encounter"] = store.get_reference("Encounter", rng)
+    return r
+
+
+def enrich_AdverseEvent(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("adverse_event_status", rng, "completed")
+    r["actuality"] = pick_code("adverse_event_actuality", rng, "actual")
+    r["code"] = concept_from_section("snomed_conditions", rng, t)
+    if store.has("Patient"):
+        r["subject"] = store.get_reference("Patient", rng)
+    if store.has("Encounter"):
+        r["encounter"] = store.get_reference("Encounter", rng)
+    r["recordedDate"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
+    return r
+
+
+def enrich_BodyStructure(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["active"] = True
+    site = codeable_from_section("body_sites", rng)
+    r["morphology"] = site
+    r["includedStructure"] = [{"structure": site}]
+    if store.has("Patient"):
+        r["patient"] = store.get_reference("Patient", rng)
+    return r
+
+
+def enrich_Person(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["active"] = True
+    r["name"] = [t.gen_HumanName(use="official")]
+    r["gender"] = pick_code("gender", rng, "unknown")
+    r["birthDate"] = t.p.gen_date(min_year=1950, max_year=2005)
+    if store.has("Patient"):
+        r["link"] = [{"target": store.get_reference("Patient", rng)}]
+    return r
+
+
+def enrich_ImmunizationRecommendation(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["date"] = t.p.gen_date(min_year=2023, max_year=2024)
+    if store.has("Patient"):
+        r["patient"] = store.get_reference("Patient", rng)
+    forecast = codeable_from_section("immunization_forecast_status", rng)
+    vaccine = codeable_from_section("vaccines", rng)
+    r["recommendation"] = [{
+        "forecastStatus": forecast,
+        "vaccineCode": [vaccine],
+        "dateCriterion": [{"code": forecast, "value": "2024-09-01"}],
+    }]
+    return r
+
+
 ENRICHERS: dict[str, Any] = {
     "Patient": enrich_Patient,
     "Practitioner": enrich_Practitioner,
@@ -593,4 +687,9 @@ ENRICHERS: dict[str, Any] = {
     "FamilyMemberHistory": enrich_FamilyMemberHistory,
     "ClinicalImpression": enrich_ClinicalImpression,
     "RiskAssessment": enrich_RiskAssessment,
+    "Composition": enrich_Composition,
+    "AdverseEvent": enrich_AdverseEvent,
+    "BodyStructure": enrich_BodyStructure,
+    "Person": enrich_Person,
+    "ImmunizationRecommendation": enrich_ImmunizationRecommendation,
 }

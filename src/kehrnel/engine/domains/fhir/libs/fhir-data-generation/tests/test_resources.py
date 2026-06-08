@@ -1,8 +1,12 @@
 """Prompt 18 — resource enricher integration tests across clinical, workflow, financial, and specialized modules."""
 
+import pytest
+
 from fhir_gen.generators.base import ResourceGenerator
 
 from .conftest import SEED
+
+pytestmark = pytest.mark.integration
 
 
 def make_gen() -> ResourceGenerator:

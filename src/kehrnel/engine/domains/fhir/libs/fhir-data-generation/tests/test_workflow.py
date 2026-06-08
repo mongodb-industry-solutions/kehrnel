@@ -12,9 +12,10 @@ def make_gen() -> ResourceGenerator:
 
 class TestWorkflowEnrichers:
     def test_enrichers_registered(self):
-        assert len(ENRICHERS) == 13
+        assert len(ENRICHERS) == 23
         assert "Appointment" in ENRICHERS
-        assert "Slot" in ENRICHERS
+        assert "Questionnaire" in ENRICHERS
+        assert "Provenance" in ENRICHERS
 
     def test_appointment_has_participants(self):
         gen = make_gen()
@@ -70,3 +71,39 @@ class TestWorkflowEnrichers:
         gen.generate("Practitioner", count=2)
         team = gen.generate("CareTeam")[0]
         assert team["participant"]
+
+    def test_questionnaire(self):
+        gen = make_gen()
+        q = gen.generate("Questionnaire")[0]
+        assert q["status"] in ["draft", "active", "retired", "unknown"]
+        assert q["code"][0]["coding"][0]["system"] == "http://loinc.org"
+
+    def test_device_request(self):
+        gen = make_gen()
+        dr = gen.generate("DeviceRequest")[0]
+        assert dr["code"]["concept"]["coding"][0]["system"] == "http://snomed.info/sct"
+        assert dr["subject"]["reference"].startswith("Patient/")
+
+    def test_supply_request_and_delivery(self):
+        gen = make_gen()
+        sr = gen.generate("SupplyRequest")[0]
+        assert sr["category"]["coding"]
+        sd = gen.generate("SupplyDelivery")[0]
+        assert sd["status"]
+
+    def test_request_orchestration(self):
+        gen = make_gen()
+        ro = gen.generate("RequestOrchestration")[0]
+        assert ro["action"]
+        assert ro["action"][0]["resource"]["reference"].startswith("ServiceRequest/")
+
+    def test_nutrition_intake(self):
+        gen = make_gen()
+        ni = gen.generate("NutritionIntake")[0]
+        assert ni["code"]["coding"][0]["system"] == "http://snomed.info/sct"
+
+    def test_provenance(self):
+        gen = make_gen()
+        prov = gen.generate("Provenance")[0]
+        assert prov["activity"]["coding"]
+        assert prov["agent"]

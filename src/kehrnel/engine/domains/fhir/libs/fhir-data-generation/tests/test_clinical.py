@@ -15,7 +15,15 @@ def make_gen() -> ResourceGenerator:
 class TestClinicalEnrichers:
     def test_enrichers_registered(self):
         assert "Patient" in ENRICHERS
-        assert len(ENRICHERS) == 15
+        assert len(ENRICHERS) == 20
+        for name in (
+            "Composition",
+            "AdverseEvent",
+            "BodyStructure",
+            "Person",
+            "ImmunizationRecommendation",
+        ):
+            assert name in ENRICHERS
 
     def test_patient_structure(self):
         patients = make_gen().generate("Patient", count=3)
@@ -101,3 +109,36 @@ class TestClinicalEnrichers:
         ra = gen.generate("RiskAssessment")[0]
         assert ra["prediction"]
         assert "probabilityDecimal" in ra["prediction"][0]
+
+    def test_composition_clinical_document(self):
+        gen = make_gen()
+        comp = gen.generate("Composition")[0]
+        assert comp["status"]
+        assert comp["type"]["coding"][0]["system"] == "http://loinc.org"
+        assert comp["subject"][0]["reference"].startswith("Patient/")
+
+    def test_adverse_event(self):
+        gen = make_gen()
+        ae = gen.generate("AdverseEvent")[0]
+        assert ae["status"] and ae["actuality"] and ae["code"]
+        assert ae["subject"]["reference"].startswith("Patient/")
+
+    def test_body_structure(self):
+        gen = make_gen()
+        bs = gen.generate("BodyStructure")[0]
+        assert bs["active"] is True
+        assert bs["morphology"]["coding"]
+        assert bs["patient"]["reference"].startswith("Patient/")
+
+    def test_person(self):
+        gen = make_gen()
+        person = gen.generate("Person")[0]
+        assert person["gender"] in ["male", "female", "other", "unknown"]
+        assert person["link"][0]["target"]["reference"].startswith("Patient/")
+
+    def test_immunization_recommendation(self):
+        gen = make_gen()
+        rec = gen.generate("ImmunizationRecommendation")[0]
+        assert rec["recommendation"]
+        assert rec["recommendation"][0]["vaccineCode"]
+        assert rec["patient"]["reference"].startswith("Patient/")

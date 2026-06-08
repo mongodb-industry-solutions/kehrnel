@@ -1,4 +1,10 @@
-from .codeable import codeable_from_section, coding_from_section
+from .codeable import (
+    codeable_from_section,
+    codeable_reference_from_section,
+    coding_from_section,
+    concept_from_section,
+    pick_code,
+)
 from .loader import get_codes, get_system, list_sections, load_codes, random_code, reload_codes
 from .validation import (
     CONDITION_CLINICAL_STATUS_SYSTEM,
@@ -18,7 +24,10 @@ __all__ = [
     "random_code",
     "list_sections",
     "codeable_from_section",
+    "codeable_reference_from_section",
     "coding_from_section",
+    "concept_from_section",
+    "pick_code",
     "clear_terminology_cache",
     "validate_coding",
     "validate_resource_codings",

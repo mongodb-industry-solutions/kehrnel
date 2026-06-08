@@ -5,6 +5,12 @@ from __future__ import annotations
 import random
 from typing import Any
 
+from ...codes import (
+    codeable_from_section,
+    codeable_reference_from_section,
+    concept_from_section,
+    pick_code,
+)
 from ...codes.loader import get_system, random_code
 from ...resolvers.reference import ReferenceStore
 from ..special_types import SpecialTypeGenerator
@@ -204,11 +210,21 @@ def enrich_QuestionnaireResponse(
         r["encounter"] = store.get_reference("Encounter", rng)
     if store.has("Practitioner"):
         r["author"] = store.get_reference("Practitioner", rng)
+    if store.has("Questionnaire"):
+        r["questionnaire"] = store.get_reference("Questionnaire", rng)["reference"]
     r["authored"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
     r["item"] = [{
         "linkId": f"question-{i + 1}",
-        "text": t.p.faker.sentence(nb_words=8) + "?",
-        "answer": [{"valueString": t.p.faker.sentence(nb_words=5)}],
+        "text": t.p.gen_string(
+            resource_type="QuestionnaireResponse", field_name="text", max_length=120
+        ),
+        "answer": [{
+            "valueString": t.p.gen_string(
+                resource_type="QuestionnaireResponse",
+                field_name="answer",
+                max_length=40,
+            ),
+        }],
     } for i in range(rng.randint(2, 6))]
     return r
 
@@ -354,7 +370,9 @@ def enrich_HealthcareService(
         "Cardiac Rehabilitation", "Physical Therapy",
         "Mental Health Services", "Oncology Outpatient",
     ])
-    r["comment"] = t.p.faker.sentence()
+    r["comment"] = t.p.gen_string(
+        resource_type=r.get("resourceType"), field_name="comment"
+    )
     r["telecom"] = [t.gen_ContactPoint("phone"), t.gen_ContactPoint("email")]
     return r
 
@@ -437,7 +455,9 @@ def enrich_DetectedIssue(
     if store.has("Practitioner"):
         r["author"] = store.get_reference("Practitioner", rng)
     r["identifiedDateTime"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
-    r["detail"] = t.p.faker.sentence()
+    r["detail"] = t.p.gen_string(
+        resource_type=r.get("resourceType"), field_name="detail"
+    )
     r["mitigation"] = [{
         "action": t.gen_CodeableConcept(
             system="http://terminology.hl7.org/CodeSystem/v3-ActCode",
@@ -471,7 +491,142 @@ def enrich_Substance(
         code=rng.choice(["372687004", "387207008", "7980", "1191"]),
         display=rng.choice(["Amoxicillin", "Ibuprofen", "Penicillin", "Aspirin"]),
     )
-    r["description"] = t.p.faker.sentence()
+    r["description"] = t.p.gen_string(
+        resource_type=r.get("resourceType"), field_name="description"
+    )
+    return r
+
+
+def enrich_DeviceUsage(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("device_usage_status", rng, "active")
+    if store.has("Patient"):
+        r["patient"] = store.get_reference("Patient", rng)
+    if store.has("Device"):
+        r["device"] = {
+            "reference": store.get_reference("Device", rng),
+            "concept": concept_from_section("snomed_devices", rng, t),
+        }
+    return r
+
+
+def enrich_DeviceDispense(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("device_dispense_status", rng, "completed")
+    if store.has("Patient"):
+        r["subject"] = store.get_reference("Patient", rng)
+    r["code"] = codeable_reference_from_section("snomed_devices", rng, t)
+    return r
+
+
+def enrich_BiologicallyDerivedProduct(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["productCategory"] = pick_code("biologically_derived_product_category", rng, "fluid")
+    r["productStatus"] = pick_code("biologically_derived_product_status", rng, "available")
+    r["code"] = concept_from_section("biologically_derived_product_codes", rng, t)
+    r["identifier"] = [t.gen_Identifier(value=f"BDP-{rng.randint(1000, 9999)}")]
+    if store.has("Practitioner"):
+        r["collection"] = {"collector": store.get_reference("Practitioner", rng)}
+    return r
+
+
+def enrich_OrganizationAffiliation(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["active"] = True
+    if store.has("Organization"):
+        r["organization"] = store.get_reference("Organization", rng)
+        r["participatingOrganization"] = store.get_reference("Organization", rng)
+    if store.has("Practitioner"):
+        r["practitioner"] = store.get_reference("Practitioner", rng)
+    if store.has("Location"):
+        r["location"] = [store.get_reference("Location", rng)]
+    r["period"] = t.gen_Period()
+    return r
+
+
+def enrich_Endpoint(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = "active"
+    r["connectionType"] = concept_from_section("endpoint_connection_type", rng, t)
+    r["payloadType"] = [concept_from_section("mime_types", rng, t)]
+    r["address"] = "https://fhir.example.org/r5"
+    if store.has("Organization"):
+        r["managingOrganization"] = store.get_reference("Organization", rng)
+    return r
+
+
+def enrich_GenomicStudy(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("genomic_study_status", rng, "registered")
+    if store.has("Patient"):
+        r["subject"] = [store.get_reference("Patient", rng)]
+    r["identifier"] = [t.gen_Identifier(value=f"GS-{rng.randint(1000, 9999)}")]
+    return r
+
+
+def enrich_Measure(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("measure_status", rng, "active")
+    r["title"] = rng.choice([
+        "Diabetes HbA1c Control",
+        "Hypertension Control",
+        "Breast Cancer Screening",
+    ])
+    r["url"] = f"http://example.org/Measure/{r.get('id', 'meas')}"
+    r["version"] = "1.0.0"
+    r["publisher"] = "National Quality Collaborative"
+    r["versionAlgorithmCoding"] = t.gen_Coding(
+        system="http://terminology.hl7.org/CodeSystem/version-algorithm",
+        code="semver",
+        display="Semantic Versioning (semver.org)",
+    )
+    r.pop("versionAlgorithmString", None)
+    return r
+
+
+def enrich_MeasureReport(
+    r: dict[str, Any],
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    r["status"] = pick_code("measure_report_status", rng, "complete")
+    r["type"] = pick_code("measure_report_type", rng, "individual")
+    if store.has("Measure"):
+        r["measure"] = store.get_reference("Measure", rng)
+    if store.has("Patient"):
+        r["subject"] = store.get_reference("Patient", rng)
+    r["period"] = t.gen_Period()
+    if store.has("Practitioner"):
+        r["reporter"] = store.get_reference("Practitioner", rng)
     return r
 
 
@@ -489,4 +644,12 @@ ENRICHERS: dict[str, Any] = {
     "Group": enrich_Group,
     "DetectedIssue": enrich_DetectedIssue,
     "Substance": enrich_Substance,
+    "DeviceUsage": enrich_DeviceUsage,
+    "DeviceDispense": enrich_DeviceDispense,
+    "BiologicallyDerivedProduct": enrich_BiologicallyDerivedProduct,
+    "OrganizationAffiliation": enrich_OrganizationAffiliation,
+    "Endpoint": enrich_Endpoint,
+    "GenomicStudy": enrich_GenomicStudy,
+    "Measure": enrich_Measure,
+    "MeasureReport": enrich_MeasureReport,
 }

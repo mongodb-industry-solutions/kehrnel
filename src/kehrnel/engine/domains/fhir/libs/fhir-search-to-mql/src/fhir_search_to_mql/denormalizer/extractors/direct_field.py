@@ -222,5 +222,13 @@ class DirectFieldExtractor(FieldExtractor):
 
         # Default: stringify and trim. Covers `string`, `date`,
         # `dateTime`, `time`, `code`, `url`, `uri`, `markdown`, `id`.
+        if normalized == "string" and isinstance(raw, dict):
+            display = raw.get("display")
+            if isinstance(display, str) and display.strip():
+                return display.strip()
+            reference = raw.get("reference")
+            if isinstance(reference, str) and reference.strip():
+                return reference.split("/")[-1].strip()
+            return None
         s = str(raw).strip()
         return s if s else None

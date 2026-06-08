@@ -57,7 +57,10 @@ from fhir_search_to_mql.core.exceptions import (
     ConfigurationError,
     FHIRSearchToMQLError,
     MissingConfigurationError,
+    ParsingError,
 )
+from fhir_search_to_mql.parser.search_request_parser import parse_fhir_search
+from fhir_search_to_mql.resolvers.dependency import resolve_configured_order
 
 
 # ---------------------------------------------------------------------------
@@ -195,6 +198,12 @@ def _expand_resource_list(
     Honors ``--all`` (every configured resource), an explicit
     positional list, or — failing both — fails with a helpful usage
     error so users don't accidentally rewrite half a database.
+
+    By default, expands each requested type with transitive
+    ``CORE_DEPENDENCIES`` (same graph as fhir-gen) so denormalize /
+    indexes / reset / stats also run on anchor types (Patient,
+    Organization, …). Pass ``--no-with-deps`` to target only the
+    types named on the command line.
     """
     if getattr(args, "all", False):
         return sorted(loader.list_resources())
@@ -212,7 +221,19 @@ def _expand_resource_list(
             f"No configuration found for: {', '.join(unknown)}. "
             f"Configured resources: {configured}."
         )
-    return resources
+    with_deps = not getattr(args, "no_with_deps", False)
+    configured = set(loader.list_resources())
+    expanded = resolve_configured_order(
+        resources, configured, include_dependencies=with_deps
+    )
+    if with_deps:
+        added = [r for r in expanded if r not in resources]
+        if added:
+            _eprint(
+                "Including dependency resource types: "
+                + ", ".join(added)
+            )
+    return expanded
 
 
 # ---------------------------------------------------------------------------
@@ -265,19 +286,36 @@ def cmd_resources(args: argparse.Namespace) -> int:
 # ---------------------------------------------------------------------------
 
 
-def cmd_convert(args: argparse.Namespace) -> int:
-    converter = _build_converter(args)
+def _convert_mql_from_args(converter: FHIRSearchConverter, args: argparse.Namespace) -> Dict[str, Any]:
+    if args.fhir_search:
+        return converter.convert_fhir_search(args.fhir_search)
+    if not args.resource or args.query is None:
+        raise ParsingError(
+            "Provide --fhir-search or both resource type and query string"
+        )
     if args.compartment_type and args.compartment_id:
-        mql = converter.convert_with_compartment(
+        return converter.convert_with_compartment(
             compartment_type=args.compartment_type,
             compartment_id=args.compartment_id,
             resource_type=args.resource,
             query_string=args.query,
         )
-    else:
-        mql = converter.convert(
-            resource_type=args.resource, query_string=args.query
+    return converter.convert(resource_type=args.resource, query_string=args.query)
+
+
+def _resource_type_from_args(args: argparse.Namespace) -> str:
+    if args.fhir_search:
+        return parse_fhir_search(args.fhir_search)["resource_type"]
+    if not args.resource:
+        raise ParsingError(
+            "Provide --fhir-search or a resource type"
         )
+    return args.resource
+
+
+def cmd_convert(args: argparse.Namespace) -> int:
+    converter = _build_converter(args)
+    mql = _convert_mql_from_args(converter, args)
     print(_dump_json(mql))
     return EXIT_OK
 
@@ -335,17 +373,8 @@ def _execute_search(
 
 def cmd_search(args: argparse.Namespace) -> int:
     converter = _build_converter(args)
-    if args.compartment_type and args.compartment_id:
-        mql = converter.convert_with_compartment(
-            compartment_type=args.compartment_type,
-            compartment_id=args.compartment_id,
-            resource_type=args.resource,
-            query_string=args.query,
-        )
-    else:
-        mql = converter.convert(
-            resource_type=args.resource, query_string=args.query
-        )
+    mql = _convert_mql_from_args(converter, args)
+    resource_type = _resource_type_from_args(args)
 
     if args.explain:
         print(_dump_json({"mql": mql}))
@@ -353,7 +382,7 @@ def cmd_search(args: argparse.Namespace) -> int:
 
     db, client = _open_database(args)
     try:
-        collection_name = _resolve_collection_name(args, args.resource)
+        collection_name = _resolve_collection_name(args, resource_type)
         results = _execute_search(db, collection_name, mql, args.limit)
     finally:
         client.close()
@@ -726,6 +755,14 @@ def _add_bulk_args(parser: argparse.ArgumentParser) -> None:
         action="store_true",
         help="Print what would happen without touching MongoDB.",
     )
+    parser.add_argument(
+        "--no-with-deps",
+        action="store_true",
+        help=(
+            "Process only the resource types named on the command line; "
+            "do not expand to transitive CORE_DEPENDENCIES (fhir-gen graph)."
+        ),
+    )
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -762,9 +799,18 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     _add_common_args(p)
-    p.add_argument("resource", help="FHIR resource type (e.g. Patient).")
+    p.add_argument(
+        "--fhir-search",
+        default=None,
+        help=(
+            "FHIR REST search text (e.g. 'Patient?gender=female' or "
+            "'Patient/{id}/Observation?status=final'). Alternative to resource+query."
+        ),
+    )
+    p.add_argument("resource", nargs="?", help="FHIR resource type (e.g. Patient).")
     p.add_argument(
         "query",
+        nargs="?",
         help="FHIR search query string (e.g. 'name=Smith&gender=male').",
     )
     p.add_argument("--compartment-type", default=None, help="Compartment type (e.g. Patient).")
@@ -778,9 +824,18 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _add_common_args(p)
     _add_db_args(p)
-    p.add_argument("resource", help="FHIR resource type (e.g. Patient).")
+    p.add_argument(
+        "--fhir-search",
+        default=None,
+        help=(
+            "FHIR REST search text (e.g. 'Patient?gender=female' or "
+            "'Patient/{id}/Observation?status=final'). Alternative to resource+query."
+        ),
+    )
+    p.add_argument("resource", nargs="?", help="FHIR resource type (e.g. Patient).")
     p.add_argument(
         "query",
+        nargs="?",
         help="FHIR search query string (e.g. 'name=Smith&gender=male').",
     )
     p.add_argument(

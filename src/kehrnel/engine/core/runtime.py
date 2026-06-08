@@ -10,6 +10,7 @@ from typing import Dict, Optional, Any
 from dataclasses import is_dataclass, asdict, replace
 
 from .manifest import StrategyManifest
+from .manifest_digest import activation_version_compatible, compute_manifest_digest
 from .config import validate_config
 from .activation import EnvironmentActivation
 from .environment import EnvironmentRecord
@@ -102,6 +103,7 @@ class StrategyRuntime:
         domain: str | None = None,
         reason: str = "activate",
         manifest_digest_override: str | None = None,
+        config_hash_override: str | None = None,
         force: bool = False,
         replace_reason: str | None = None,
         bindings_ref: str | None = None,
@@ -134,18 +136,22 @@ class StrategyRuntime:
         existing_hash = existing.config_hash if existing else None
         current_manifest_digest = manifest_digest_override or self._manifest_digest(manifest)
         # idempotent: if same strategy and config hash matches, return existing
-        merged_config: dict = {}
-        defaults = manifest.default_config or self._load_defaults_from_entrypoint(manifest)
-        if defaults:
-            merged_config = self._deep_merge(merged_config, defaults)
-        merged_config = self._deep_merge(merged_config, config or {})
+        restore_snapshot = replace_reason == "rollback" and bool(config)
+        if restore_snapshot:
+            merged_config = dict(config or {})
+        else:
+            merged_config = {}
+            defaults = manifest.default_config or self._load_defaults_from_entrypoint(manifest)
+            if defaults:
+                merged_config = self._deep_merge(merged_config, defaults)
+            merged_config = self._deep_merge(merged_config, config or {})
         # simple required validation from schema if present
         schema = getattr(manifest, "config_schema", None) or self._load_schema_from_entrypoint(manifest) or {}
         validate_config(schema, merged_config)
         self._validate_pack_config(manifest, merged_config)
         store_profiles = self._build_store_profiles(manifest, merged_config)
         bundle_refs = self._validate_bundle_refs(merged_config, manifest)
-        new_config_hash = self._config_hash(merged_config)
+        new_config_hash = config_hash_override or self._config_hash(merged_config)
         bdict = self._bindings_payload(bindings)
         uri = (bdict.get("db") or {}).get("uri")
         redacted_uri = self._redact_uri(uri) if uri else None
@@ -158,17 +164,6 @@ class StrategyRuntime:
         }
         new_bindings_hash = self._bindings_hash(bindings, bindings_ref)
         if existing and not force:
-            existing_version = (existing.version or "").strip()
-            existing_is_latest_alias = existing_version.lower() in ("latest", "current")
-            digest_matches = bool(existing.manifest_digest and existing.manifest_digest == current_manifest_digest)
-            version_matches = bool(
-                not existing.manifest_digest
-                and (
-                    not existing_version
-                    or existing_is_latest_alias
-                    or existing_version == manifest.version
-                )
-            )
             existing_bindings_hash = (getattr(existing, "bindings_hash", None) or "").strip()
             if existing_bindings_hash and new_bindings_hash:
                 bindings_match = existing_bindings_hash == new_bindings_hash
@@ -177,14 +172,24 @@ class StrategyRuntime:
                     (getattr(existing, "bindings_ref", None) or None) == ((bindings_ref or "").strip() or None)
                     and (getattr(existing, "bindings_meta", None) or {}) == bindings_meta
                 )
+            digest_matches = bool(existing.manifest_digest and existing.manifest_digest == current_manifest_digest)
             if (
                 existing.strategy_id == strategy_id
                 and existing_hash == new_config_hash
-                and (digest_matches or version_matches)
                 and bindings_match
+                and activation_version_compatible(existing, manifest)
             ):
+                if digest_matches:
+                    return replace(
+                        existing,
+                        already_active=True,
+                        replaced=False,
+                        previous_activation_id=None,
+                        replaced_from=None,
+                    )
+                synced = self._sync_activation_digest(existing, current_manifest_digest)
                 return replace(
-                    existing,
+                    synced,
                     already_active=True,
                     replaced=False,
                     previous_activation_id=None,
@@ -286,6 +291,7 @@ class StrategyRuntime:
             domain=prev_activation.domain or domain,
             reason="rollback",
             manifest_digest_override=prev_activation.manifest_digest,
+            config_hash_override=prev_activation.config_hash,
             force=True,
             replace_reason="rollback",
             bindings_ref=prev_activation.bindings_ref,
@@ -373,14 +379,22 @@ class StrategyRuntime:
             and activation_version != manifest.version
         )
         if digest_mismatch or version_mismatch:
-            details = {
-                "expected_version": activation.version,
-                "actual_version": manifest.version,
-                "expected_digest": activation.manifest_digest,
-                "actual_digest": current_digest,
-            }
-            if not allow_mismatch:
-                raise KehrnelError(code="ACTIVATION_STRATEGY_MISMATCH", status=409, message="Active strategy differs from current manifest", details=details)
+            if not allow_mismatch and activation_version_compatible(activation, manifest):
+                activation = self._sync_activation_digest(activation, current_digest)
+            else:
+                details = {
+                    "expected_version": activation.version,
+                    "actual_version": manifest.version,
+                    "expected_digest": activation.manifest_digest,
+                    "actual_digest": current_digest,
+                }
+                if not allow_mismatch:
+                    raise KehrnelError(
+                        code="ACTIVATION_STRATEGY_MISMATCH",
+                        status=409,
+                        message="Active strategy differs from current manifest",
+                        details=details,
+                    )
 
         bindings_payload = (payload or {}).get("bindings") if isinstance(payload, dict) else None
         if bindings_payload:
@@ -603,12 +617,17 @@ class StrategyRuntime:
             return ""
 
     def _manifest_digest(self, manifest: StrategyManifest) -> str:
-        try:
-            payload = manifest.model_dump()
-            blob = json.dumps(payload, sort_keys=True).encode("utf-8")
-            return hashlib.sha256(blob).hexdigest()
-        except Exception:
-            return ""
+        return compute_manifest_digest(manifest)
+
+    def _sync_activation_digest(self, activation: EnvironmentActivation, manifest_digest: str) -> EnvironmentActivation:
+        now = datetime.utcnow().isoformat()
+        synced = self.registry.update_activation_fields(
+            activation.env_id,
+            activation.domain,
+            manifest_digest=manifest_digest,
+            updated_at=now,
+        )
+        return synced or replace(activation, manifest_digest=manifest_digest, updated_at=now)
 
     def _deep_merge(self, base: Dict[str, Any], overlay: Dict[str, Any]) -> Dict[str, Any]:
         result = dict(base or {})

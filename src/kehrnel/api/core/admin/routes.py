@@ -1020,7 +1020,7 @@ async def run_op(request: Request, body: Dict[str, Any] = Body(default_factory=d
         if not rt:
             raise ValueError("Strategy runtime not initialized")
         result = await rt.dispatch(env_id, "op", {"op": op, "payload": payload, "domain": domain})
-        return {"ok": True, "result": result}
+        return _json_safe({"ok": True, "result": result})
     except Exception as exc:
         return _error_response(exc)
 
@@ -1126,17 +1126,19 @@ async def run_env_op(env_id: str, request: Request, body: Dict[str, Any] = Body(
             route_scope = "strategy"
 
         result = await rt.dispatch(env_id, dispatch_op, dispatch_payload)
-        return {
-            "ok": True,
-            "env_id": env_id,
-            "operation": operation,
-            "dispatch": {
-                "scope": route_scope,
-                "op": dispatch_op,
-                "domain": requested_domain or None,
-            },
-            "result": result,
-        }
+        return _json_safe(
+            {
+                "ok": True,
+                "env_id": env_id,
+                "operation": operation,
+                "dispatch": {
+                    "scope": route_scope,
+                    "op": dispatch_op,
+                    "domain": requested_domain or None,
+                },
+                "result": result,
+            }
+        )
     except Exception as exc:
         return _error_response(exc)
 
@@ -1298,7 +1300,7 @@ async def run_extension(env_id: str, strategy_id: str, op: str, request: Request
         if activation.strategy_id != strategy_id:
             raise ValueError(f"Environment {env_id} active with {activation.strategy_id}, not {strategy_id}")
         result = await rt.dispatch(env_id, "op", {"op": op, "payload": payload or {}, "strategy_id": strategy_id})
-        return {"ok": True, "result": result}
+        return _json_safe({"ok": True, "result": result})
     except Exception as exc:
         return _error_response(exc)
 

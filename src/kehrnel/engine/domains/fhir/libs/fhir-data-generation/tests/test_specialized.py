@@ -13,9 +13,10 @@ def make_gen() -> ResourceGenerator:
 
 class TestSpecializedEnrichers:
     def test_enrichers_registered(self):
-        assert len(ENRICHERS) == 13
+        assert len(ENRICHERS) == 21
         assert "ImagingStudy" in ENRICHERS
-        assert "Specimen" in ENRICHERS
+        assert "MeasureReport" in ENRICHERS
+        assert "Endpoint" in ENRICHERS
 
     def test_combined_enrichers_count(self):
         assert len(ALL_ENRICHERS) >= 50
@@ -75,7 +76,45 @@ class TestSpecializedEnrichers:
 
     def test_questionnaire_response(self):
         gen = make_gen()
-        gen.generate("Patient")
         qr = gen.generate("QuestionnaireResponse")[0]
         assert qr["item"]
         assert len(qr["item"]) >= 2
+        assert qr["questionnaire"].startswith("Questionnaire/")
+
+    def test_device_usage_and_dispense(self):
+        gen = make_gen()
+        usage = gen.generate("DeviceUsage")[0]
+        assert usage["device"]["concept"]["coding"]
+        disp = gen.generate("DeviceDispense")[0]
+        assert disp["code"]["concept"]["coding"]
+
+    def test_biologically_derived_product(self):
+        gen = make_gen()
+        bdp = gen.generate("BiologicallyDerivedProduct")[0]
+        assert bdp["productCategory"] in ["organ", "tissue", "fluid", "cells"]
+        assert bdp["code"]["coding"][0]["system"] == "http://snomed.info/sct"
+
+    def test_organization_affiliation(self):
+        gen = make_gen()
+        aff = gen.generate("OrganizationAffiliation")[0]
+        assert aff["organization"]["reference"].startswith("Organization/")
+
+    def test_endpoint(self):
+        gen = make_gen()
+        ep = gen.generate("Endpoint")[0]
+        assert ep["connectionType"]["coding"]
+        assert ep["address"].startswith("https://")
+
+    def test_genomic_study(self):
+        gen = make_gen()
+        gs = gen.generate("GenomicStudy")[0]
+        assert gs["status"]
+        assert gs["subject"][0]["reference"].startswith("Patient/")
+
+    def test_measure_and_report(self):
+        gen = make_gen()
+        report = gen.generate("MeasureReport")[0]
+        assert report["measure"]["reference"].startswith("Measure/")
+        assert report["type"] in [
+            "individual", "subject-list", "summary", "data-collection",
+        ]

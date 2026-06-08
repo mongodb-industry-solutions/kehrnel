@@ -2,14 +2,20 @@
 
 **FHIR R5 synthetic healthcare data generator** — schema-driven, interlinked, terminology-aware synthetic FHIR resources with optional MongoDB persistence and a full CLI.
 
-- **158** FHIR R5 resource types from the packaged JSON schema (`fhir_gen/schema/fhir.schema.v5.json`)
-- **54** optional clinical enrichers for realistic fields (Patient, Observation, Claim, etc.)
-- **HL7 terminology** from `fhir_gen/hl7_codes/healthcare_codes.yaml` (98 sections) with validation of `Coding.system` / `Coding.code`
-- **Lifecycle & polymorphic scenarios** — named Patient/Practitioner/Person variants plus schema `poly_`* choice coverage (~49 resource types)
-- Seeded generation, dependency ordering, schema-aware field fill, reference integrity
-- MongoDB collections per resource type (`Patient`, `Observation`, … or `{prefix}{ResourceType}` when configured)
+Designed to pair with **[fhir-search-to-mql](../fhir-search-to-mql/)** for the same **84** resource types: generate interlinked data here, then denormalize and run FHIR search queries there.
+
+| Capability | Details |
+|------------|---------|
+| **Schema coverage** | **158** FHIR R5 resource types (`fhir_gen/schema/fhir.schema.v5.json`) |
+| **MQL-aligned enrichers** | **84** shipped types with YAML terminology + realistic fields (`MQL_SHIPPED_RESOURCES`) |
+| **Terminology** | `healthcare_codes.yaml` (**146** sections); `pick_code` / `codeable_from_section` helpers |
+| **Scenarios** | Named Patient/Practitioner/Person lifecycle + schema `poly_*` choice coverage (~49 types) |
+| **Dependencies** | `CORE_DEPENDENCIES` + topological `resolve_order()` for referential integrity |
+| **Persistence** | MongoDB per resource type (`Patient`, `Observation`, …) or JSON export |
 
 **Requirements:** Python **3.11+**, MongoDB **optional** (for `--save`, `search`, `db-stats`)
+
+**Command cookbook:** [CLI_COMMANDS.md](CLI_COMMANDS.md) — all 84 resources, 21 healthcare + 11 industrial `generate-many` scenarios, fhir-mql pipeline.
 
 ---
 
@@ -91,9 +97,58 @@ gen.generate("Patient", count=1, schema_version="R6")
 
 ---
 
+## End-to-end with fhir-search-to-mql
+
+```powershell
+# 1) Generate (this repo) — full 84-type sandbox
+fhir-gen --seed 4000 --db fhir_synthetic generate-many Patient Encounter Observation Composition DeviceRequest MeasureReport `
+  Account Endpoint Provenance ExplanationOfBenefit Questionnaire `
+  --count Patient=50 --count Encounter=80 --count Observation=200 --save
+
+# See CLI_COMMANDS.md for the explicit all-84 generate-many block
+
+# 2) Index + denormalize + search (fhir-search-to-mql repo)
+fhir-mql indexes --all --db fhir_synthetic
+fhir-mql denormalize --all --db fhir_synthetic --batch-size 500
+fhir-mql search Patient "name=Smith&active=true" --db fhir_synthetic --limit 10
+fhir-mql search Composition "status=final&type=18842-5" --db fhir_synthetic --limit 10
+```
+
+Use the same `FHIR_GEN_MONGODB_DB` / `MONGODB_DB` name (default `fhir_synthetic`) so both tools share one database.
+
+### Combined E2E (both repos)
+
+**[E2E_COMBINED.md](E2E_COMBINED.md)** documents the cross-repo runner: **`scripts/run_cli_e2e.py`** loads each scenario into `fhir_e2e_gen_<id>`, then runs **fhir-mql** indexes, denormalize, and search on the **same** database.
+
+```powershell
+cd fhir-data-generation
+.\.venv\Scripts\Activate.ps1
+# Editable installs in both repos (see E2E_COMBINED.md)
+.venv\Scripts\python.exe scripts\run_cli_e2e.py
+.venv\Scripts\python.exe scripts\run_cli_e2e.py --section industrial
+.venv\Scripts\python.exe scripts\run_cli_e2e.py --gen-only
+.venv\Scripts\python.exe scripts\run_cli_e2e.py --quiet   # pass/fail only
+```
+
+| Flag | Effect |
+|------|--------|
+| `--gen-only` | Generation scenarios only |
+| `--pipeline-only` | Drop/reload data, then fhir-mql per scenario |
+| `--section healthcare` \| `industrial` | Subset of [CLI_COMMANDS.md](CLI_COMMANDS.md) scenarios |
+| `--full-counts` | Documented volumes (slow) |
+| `--quiet` | Hide phase status; only `[GEN OK]` / `[PIPELINE OK]` |
+
+By default each scenario prints **short phase status** (preparing DB, generating data, indexes, denormalize, search tests). Steps running longer than ~30s print a **still running** line with elapsed time (search progress as `n/total`).
+
+**Industrial scenario IDs** use descriptive slugs (e.g. `ind_hospital`, `ind_full84`) — databases are `fhir_e2e_gen_ind_<slug>`. Cleanup: `scripts/drop_e2e_databases.py`. Optional validation after a run: `scripts/validate_e2e_database.py`.
+
+Per-repo pytest: [E2E_COMMANDS.md](E2E_COMMANDS.md).
+
+---
+
 ## CLI
 
-**Full command cookbook:** [CLI_COMMANDS.md](CLI_COMMANDS.md) — healthcare scenarios, `generate-many` bundles, PowerShell examples, and MongoDB search.
+**Full command cookbook:** [CLI_COMMANDS.md](CLI_COMMANDS.md) — resource inventory (84), healthcare & industrial scenarios, `generate-many` bundles, PowerShell examples, MongoDB search.
 
 Global options: `--seed`, `--schema-version`, `--mongo-uri`, `--db`
 
@@ -177,27 +232,34 @@ fhir-gen db-stats
 
 ## Supported resources
 
-All **158** resources defined in `fhir_gen/schema/fhir.schema.v5.json` can be generated via the schema engine. Run:
+All **158** resources in `fhir_gen/schema/fhir.schema.v5.json` can be generated via the schema engine:
 
 ```bash
 fhir-gen list-resources
 ```
 
-### Enriched resources (clinical + administrative)
+### MQL-aligned enrichers (84 types)
 
-These **54** types get optional enrichers with terminology from `fhir_gen/hl7_codes/healthcare_codes.yaml` (see `fhir_gen/generators/resources/`):
+These match **`MQL_SHIPPED_RESOURCES`** in `fhir_gen/resolvers/dependency.py` and have enrichers + `CORE_DEPENDENCIES` entries (aligned with [fhir-search-to-mql](../fhir-search-to-mql/) YAML configs):
 
+| Module | Count | Examples |
+|--------|-------|----------|
+| **clinical** | 20 | Patient, Composition, AdverseEvent, BodyStructure, Person, ImmunizationRecommendation, Encounter, Observation, … |
+| **medication** | 6 | Medication, MedicationRequest, MedicationStatement, MedicationAdministration, … |
+| **workflow** | 23 | Appointment, Questionnaire, DeviceRequest, SupplyRequest, Provenance, RequestOrchestration, … |
+| **financial** | 15 | Coverage, Claim, ExplanationOfBenefit, CoverageEligibilityResponse, PaymentReconciliation, InsurancePlan, … |
+| **specialized** | 21 | DeviceUsage, Endpoint, Measure, MeasureReport, GenomicStudy, BiologicallyDerivedProduct, … |
 
-| Module          | Count | Resource types (examples)                                                                                                                                                                                                  |
-| --------------- | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Clinical**    | 15    | Patient, Practitioner, PractitionerRole, Organization, Location, Encounter, Observation, Condition, Procedure, AllergyIntolerance, DiagnosticReport, Immunization, FamilyMemberHistory, ClinicalImpression, RiskAssessment |
-| **Medication**  | 6     | Medication, MedicationRequest, MedicationAdministration, MedicationDispense, MedicationStatement, MedicationKnowledge                                                                                                      |
-| **Workflow**    | 13    | Appointment, CarePlan, CareTeam, Goal, ServiceRequest, Task, Communication, DocumentReference, Schedule, Slot, Flag, Consent, NutritionOrder                                                                               |
-| **Financial**   | 7     | Coverage, Claim, ClaimResponse, Account, Invoice, ChargeItem, CoverageEligibilityRequest                                                                                                                                   |
-| **Specialized** | 13    | Specimen, ImagingStudy, Device, ResearchStudy, ResearchSubject, QuestionnaireResponse, AuditEvent, EpisodeOfCare, HealthcareService, RelatedPerson, Group, DetectedIssue, Substance                                        |
+```bash
+python -c "from fhir_gen.resolvers.dependency import MQL_SHIPPED_RESOURCES; print(len(MQL_SHIPPED_RESOURCES))"
+# 84
+```
 
+**Domain inventory** (identity, clinical, RCM, devices, quality, research, …): see [CLI_COMMANDS.md — Resource inventory](CLI_COMMANDS.md#resource-inventory-84-mql-aligned-enrichers).
 
-All other resource types are still generated using the schema registry alone.
+**Also enriched (not in the 84 MQL set):** `MedicationKnowledge`.
+
+**Schema-only:** remaining types among the 158 (e.g. `Subscription`) — valid FHIR without the clinical enricher layer.
 
 ### Terminology & CodeSystems
 
@@ -239,6 +301,8 @@ flowchart LR
 6. **Enrichers** — Per-resource functions in `fhir_gen/generators/resources/` override fields with YAML-backed terminology.
 7. **Scenarios** — Named lifecycle (`scenarios.py`) and schema polymorphic catalog (`poly_catalog.py`); CLI `--scenario` / `--scenarios` / `--variants`.
 8. **Persistence** — `FHIRMongoStore` upserts to per-type collections with search indexes.
+9. **Healthcare text** — `fhir_gen/generators/healthcare_text.py` fills narrative and string fields with clinically relevant templates (resource+field → field templates → generic), instead of random Faker prose.
+10. **Canonical metadata** — `canonical_resource.py` sets publisher, version, and related administrative strings on definition-style resources (e.g. ChargeItemDefinition, Measure) with correct primitive types.
 
 ---
 
@@ -272,10 +336,17 @@ CLI flags `--mongo-uri`, `--db`, and `--schema-version` override settings for th
 | `fhir_gen/schema/fhir.schema.v5.json`           | Default FHIR R5 schema (packaged in wheel)                      |
 | `fhir_gen/schema/fhir.schema.v6.json`           | Optional FHIR R6 preview schema                                 |
 | `fhir_gen/codes/`                               | Terminology loader, validation, `codeable_from_section` helpers |
-| `fhir_gen/hl7_codes/healthcare_codes.yaml`      | HL7/FHIR terminology (98 sections)                              |
+| `fhir_gen/hl7_codes/healthcare_codes.yaml`      | HL7/FHIR terminology (146 sections)                             |
+| `analysis_documents/PROMPTS_FHIR_MQL_GAP_ALIGNMENT.md` | MQL ↔ fhir-gen alignment checklist                       |
 | `fhir_gen/hl7_codes/_build_healthcare_codes.py` | Regenerate/merge YAML                                           |
-| `tests/`                                        | Pytest suite (~1,800 tests)                                     |
-| `CLI_COMMANDS.md`                               | Full CLI cookbook (scenarios, bundles, MongoDB)                 |
+| `tests/`                                        | Pytest suite (`test_mql_shipped_resources`, integration, terminology) |
+| `tests/e2e/`                                    | E2E scenario defs (`cli_scenarios_gen.py`), runner helpers, `e2e_log.py` |
+| `scripts/run_cli_e2e.py`                        | Combined fhir-gen + fhir-mql E2E driver                           |
+| `scripts/drop_e2e_databases.py`                 | Drop all `fhir_e2e_*` MongoDB databases                           |
+| `scripts/validate_e2e_database.py`              | Post-run schema/field checks on an E2E database                    |
+| `E2E_COMBINED.md`                               | Combined E2E runner (status logging, flags, DB naming)            |
+| `E2E_COMMANDS.md`                               | Per-repo E2E pytest commands                                      |
+| `CLI_COMMANDS.md`                               | Full CLI cookbook (84 resources, healthcare & industrial scenarios) |
 | `PROMPTS_FHIR_DATA_GENERATION.md`               | Implementation prompts                                          |
 | `INSTRUCTIONS.txt`                              | Product requirements                                            |
 
@@ -294,10 +365,21 @@ ruff check fhir_gen tests
 Focused test suites:
 
 ```bash
+pytest tests/test_mql_shipped_resources.py -q --no-cov    # All 84 MQL types (generate, deps, codings)
+pytest tests/test_mql_integration.py -q --no-cov          # Batch + dependency chains
 pytest tests/test_terminology_validation.py -v --no-cov   # CodeSystem / coding validation
 pytest tests/test_scenarios.py -v --no-cov                # Named + poly scenarios
 pytest tests/test_schema_reference_integrity.py -v --no-cov
 pytest tests/test_schema_field_validation.py -v --no-cov
+pytest tests/test_clinical.py tests/test_workflow.py tests/test_financial.py tests/test_specialized.py -q --no-cov
+pytest tests/test_canonical_resource.py tests/test_schema_parser.py -q --no-cov
+```
+
+Combined E2E (requires MongoDB + sibling **fhir-search-to-mql** install):
+
+```bash
+python scripts/run_cli_e2e.py --section healthcare
+python -m pytest tests/e2e/ -m "e2e and mongodb" --no-cov -q
 ```
 
 Regenerate terminology:
@@ -314,7 +396,7 @@ python fhir_gen/hl7_codes/_build_healthcare_codes.py
 2. Follow existing patterns in `fhir_gen/` (minimal scope, schema-first).
 3. Add tests for new behavior; keep `pytest` coverage ≥ 75%.
 4. Enrich `healthcare_codes.yaml` via `_build_healthcare_codes.py` rather than full rewrites.
-5. New resource enrichers: add to the appropriate `fhir_gen/generators/resources/*.py` and register in `ENRICHERS`.
+5. New MQL-shipped enrichers: add to `fhir_gen/generators/resources/*.py`, register in `ENRICHERS`, update `MQL_SHIPPED_RESOURCES` and `CORE_DEPENDENCIES`, and add a matching YAML in fhir-search-to-mql (see [PROMPTS_FHIR_MQL_GAP_ALIGNMENT.md](analysis_documents/PROMPTS_FHIR_MQL_GAP_ALIGNMENT.md)).
 
 Implementation is guided by `PROMPTS_FHIR_DATA_GENERATION.md` and the Cursor skill `.cursor/skills/fhir-data-generation/SKILL.md`.
 
@@ -333,6 +415,17 @@ Implementation is guided by `PROMPTS_FHIR_DATA_GENERATION.md` and the Cursor ski
 | Wrong `Coding.system` on Condition | Enriched Condition uses `http://terminology.hl7.org/CodeSystem/condition-ver-status`; run terminology tests |
 | Custom schema not found            | Use `fhir_gen/schema/fhir.schema.v6.json` or set `FHIR_GEN_SCHEMA_PATH`                                     |
 
+
+---
+
+## See also
+
+- [fhir-search-to-mql README](../fhir-search-to-mql/README.md) — denormalize and search the same 84 resources
+- [fhir-search-to-mql CLI_COMMANDS.md](../fhir-search-to-mql/CLI_COMMANDS.md)
+- [E2E_COMBINED.md](E2E_COMBINED.md) — `run_cli_e2e.py` (gen → mql on one DB per scenario)
+- [E2E_COMMANDS.md](E2E_COMMANDS.md) — pytest E2E for this repo
+- [CLI_COMMANDS.md](CLI_COMMANDS.md) — generate commands and scenario catalog
+- [analysis_documents/PROMPTS_FHIR_MQL_GAP_ALIGNMENT.md](analysis_documents/PROMPTS_FHIR_MQL_GAP_ALIGNMENT.md)
 
 ---
 

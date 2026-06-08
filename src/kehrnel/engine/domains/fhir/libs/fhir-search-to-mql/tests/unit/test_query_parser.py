@@ -433,6 +433,15 @@ class TestCompartmentParser:
         assert result['compartment_id'] == "789"
         assert result['resource_type'] == "Appointment"
         assert result['parameter_count'] == 1
+
+    def test_parse_compartment_with_fhir_base_path(self):
+        """Test parsing compartment URL with a FHIR server base path prefix."""
+        result = self.parser.parse("/fhir/Patient/123/Observation?status=final")
+
+        assert result['compartment_type'] == "Patient"
+        assert result['compartment_id'] == "123"
+        assert result['resource_type'] == "Observation"
+        assert result['parameter_count'] == 1
     
     def test_parse_invalid_format_raises_error(self):
         """Test that invalid format raises ParsingError."""

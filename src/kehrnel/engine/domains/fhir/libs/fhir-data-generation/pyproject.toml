@@ -62,6 +62,8 @@ addopts = "-v --cov=fhir_gen --cov-report=term-missing --cov-fail-under=75"
 asyncio_mode = "auto"
 markers = [
     "integration: cross-module or schema-wide integration tests",
+    "e2e: end-to-end CLI_COMMANDS scenarios (requires MongoDB)",
+    "mongodb: requires MongoDB at localhost:27017",
 ]
 
 [tool.ruff]

@@ -2,8 +2,12 @@
 
 from datetime import datetime
 
+import pytest
+
 from fhir_gen.generators.base import ResourceGenerator
 from fhir_gen.resolvers.dependency import resolve_order
+
+pytestmark = pytest.mark.integration
 
 INTEGRATION_SEED = 99
 

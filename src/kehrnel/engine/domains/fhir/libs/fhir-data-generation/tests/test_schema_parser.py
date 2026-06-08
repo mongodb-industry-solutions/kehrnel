@@ -35,6 +35,15 @@ def test_observation_polymorphic_value_group(parser: FHIRSchemaParser):
     assert len(variants) >= 3
 
 
+def test_charge_item_definition_version_algorithm_poly(parser: FHIRSchemaParser):
+    cid = parser.parse_definition("ChargeItemDefinition")
+    assert "versionAlgorithm" in cid.poly_groups
+    variants = cid.poly_groups["versionAlgorithm"]
+    assert "versionAlgorithmCoding" in variants
+    assert "versionAlgorithmString" in variants
+    assert cid.fields["versionAlgorithmString"].ref == "string"
+
+
 def test_extract_ref_array(parser: FHIRSchemaParser):
     obs = parser.parse_definition("Observation")
     assert obs.fields["category"].is_array

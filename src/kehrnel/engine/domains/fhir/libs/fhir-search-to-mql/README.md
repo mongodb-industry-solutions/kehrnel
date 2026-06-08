@@ -9,14 +9,25 @@ Healthcare Interoperability Resources) search queries into MongoDB
 Query Language (MQL) and manages the matching denormalization layer
 for high-performance healthcare data search.
 
-The library ships **bundled YAML configurations** for **13 FHIR R5
-resources** validated against the FHIR R5 specification — Patient,
-Observation, Appointment, Organization, Location, Practitioner,
-PractitionerRole, Device, Group, Schedule, Slot, Condition, Encounter —
-so a fresh `pip install` is fully usable without any extra setup.
+The library ships **bundled YAML configurations for 84 FHIR R5
+resources** — clinical, administrative, financial, devices, quality
+reporting, genomics, and interoperability — validated against FHIR R5
+search parameters and compartment definitions. A fresh `pip install`
+is fully usable without extra setup.
 
-For exhaustive CLI examples and healthcare workflow commands, see
-**[CLI_COMMANDS.md](CLI_COMMANDS.md)**.
+Pair with **[fhir-data-generation](../fhir-data-generation/)** (`fhir-gen`)
+to synthesize interlinked test data for the same 84 types, then
+`fhir-mql denormalize` and `fhir-mql search` on one MongoDB database.
+
+| | fhir-data-generation | fhir-search-to-mql |
+|--|----------------------|---------------------|
+| **Role** | Generate synthetic FHIR JSON | FHIR search → MQL + `_search` / `_compartments` |
+| **CLI** | `fhir-gen` | `fhir-mql` |
+| **Shared set** | `MQL_SHIPPED_RESOURCES` (84) | `src/fhir_search_to_mql/configs/*.yaml` (84) |
+| **Default DB** | `fhir_synthetic` | `fhir_synthetic` |
+
+**Command cookbooks:** [CLI_COMMANDS.md](CLI_COMMANDS.md) (this repo) · [fhir-gen CLI_COMMANDS.md](../fhir-data-generation/CLI_COMMANDS.md)  
+**Combined E2E:** [E2E_COMBINED.md](E2E_COMBINED.md) · canonical doc in [fhir-data-generation/E2E_COMBINED.md](../fhir-data-generation/E2E_COMBINED.md)
 
 ---
 
@@ -31,23 +42,25 @@ For exhaustive CLI examples and healthcare workflow commands, see
    * [1.6 Set up MongoDB (optional but typical)](#16-set-up-mongodb-optional-but-typical)
    * [1.7 First run — denormalize and search](#17-first-run--denormalize-and-search)
    * [1.8 Run the test suite](#18-run-the-test-suite)
-2. [What's new in 1.2.0](#whats-new-in-120)
+2. [What's new — 84 shipped resources](#whats-new--84-shipped-resources)
 3. [Highlights](#highlights)
-4. [Bundled FHIR resources](#bundled-fhir-resources)
-5. [Library quick start](#library-quick-start)
-6. [Command-line interface (`fhir-mql`)](#command-line-interface-fhir-mql)
+4. [Bundled FHIR resources (84 shipped)](#bundled-fhir-resources-84-shipped)
+5. [End-to-end with fhir-gen](#end-to-end-with-fhir-gen)
+6. [Combined E2E testing](#combined-e2e-testing)
+7. [Library quick start](#library-quick-start)
+8. [Command-line interface (`fhir-mql`)](#command-line-interface-fhir-mql)
    * [CLI command reference (full scenarios)](#cli-command-reference-full-scenarios)
-7. [Denormalization and search parameters](#denormalization-and-search-parameters)
-8. [Performance](#performance)
-9. [FHIR schema tooling](#fhir-schema-tooling)
-10. [Using the library as a plugin in another project](#using-the-library-as-a-plugin-in-another-project)
-11. [Compartment search (hybrid fast-path)](#compartment-search-hybrid-fast-path)
-12. [Configuration](#configuration)
-13. [Architecture](#architecture)
-14. [Build and distribution](#build-and-distribution)
-15. [Testing](#testing)
-16. [Troubleshooting](#troubleshooting)
-17. [License](#license)
+9. [Denormalization and search parameters](#denormalization-and-search-parameters)
+10. [Performance](#performance)
+11. [FHIR schema tooling](#fhir-schema-tooling)
+12. [Using the library as a plugin in another project](#using-the-library-as-a-plugin-in-another-project)
+13. [Compartment search (hybrid fast-path)](#compartment-search-hybrid-fast-path)
+14. [Configuration](#configuration)
+15. [Architecture](#architecture)
+16. [Build and distribution](#build-and-distribution)
+17. [Testing](#testing)
+18. [Troubleshooting](#troubleshooting)
+19. [License](#license)
 
 ---
 
@@ -174,14 +187,12 @@ fhir-mql --version
 fhir-mql resources
 # Resource           FHIR   Params  Denorm  Indexes
 # --------------------------------------------------
-# (13 rows — Appointment … Slot, plus Condition, Encounter)
+# (84 rows — Patient, Observation, Composition, DeviceRequest, MeasureReport, …)
 ```
 
 ```powershell
-python -c "from fhir_search_to_mql import ConfigLoader; print(sorted(ConfigLoader().list_resources()))"
-# ['Appointment', 'Condition', 'Device', 'Encounter', 'Group', 'Location',
-#  'Observation', 'Organization', 'Patient', 'Practitioner', 'PractitionerRole',
-#  'Schedule', 'Slot']
+python -c "from fhir_search_to_mql import ConfigLoader; print(len(ConfigLoader().list_resources()))"
+# 84
 ```
 
 If either command fails, jump to [Troubleshooting](#troubleshooting).
@@ -292,53 +303,33 @@ automatically — the rest of the suite still runs to completion.
 
 ---
 
-## What's new in 1.2.0
+## What's new — 84 shipped resources
 
-### New FHIR R5 resources (6 → 11)
+The bundled config set grew from the original scheduling/clinical core
+to **84 FHIR R5 resources** covering practical healthcare and
+enterprise use cases:
 
-Six new resource configurations, each with comprehensive integration
-tests, indexes, and full audit-harness coverage:
+| Area | Examples |
+|------|----------|
+| **Clinical & docs** | Composition, AdverseEvent, BodyStructure, ClinicalImpression, DiagnosticReport, DocumentReference |
+| **Orders & workflow** | DeviceRequest, RequestOrchestration, SupplyRequest, SupplyDelivery, Task, ServiceRequest |
+| **Financial / RCM** | ExplanationOfBenefit, CoverageEligibilityRequest/Response, ChargeItemDefinition, PaymentNotice, PaymentReconciliation |
+| **Payer** | EnrollmentRequest/Response, InsurancePlan |
+| **Quality & safety** | Measure, MeasureReport, DetectedIssue, ImmunizationRecommendation |
+| **Interop** | Endpoint, OrganizationAffiliation, Provenance, Basic |
+| **Specialty** | GenomicStudy, BiologicallyDerivedProduct, VisionPrescription, NutritionIntake, Questionnaire |
 
-| Resource         | Key characteristics |
-|------------------|---------------------|
-| **Practitioner** | Name (phonetic + exact), qualifications, communication languages. Precomputed `_compartments.Practitioner`. |
-| **PractitionerRole** | Links Practitioner ↔ Organization ↔ Location ↔ HealthcareService. Precomputed `_compartments.Practitioner`. |
-| **Device**       | `CodeableReference` for `definition`; `udiCarrier.deviceIdentifier`; `expiration-date` and `manufacture-date` date params. Precomputed `_compartments.Device` (self-compartment). |
-| **Group**        | `exclude` boolean token; multi-target `member` references (Patient/Practitioner/Device/…); `managingEntity`. Precomputed `_compartments.Patient/Practitioner/Device`. |
-| **Schedule**     | `serviceType` as `CodeableReference`; `planningHorizon` Period date param; boolean `active`; multi-target `actor`. Precomputed `_compartments.Patient/Practitioner/Device`; dynamic RelatedPerson. |
-| **Slot**         | `serviceType` as `CodeableReference`; `start` instant date param (queries top-level directly); `status` code; required single `schedule` reference. **No FHIR R5 compartments.** |
+Each resource has YAML under `src/fhir_search_to_mql/configs/`, integration
+tests (`tests/integration/test_<resource>_comprehensive.py`), and coverage
+in `tests/integration/test_config_audit_regressions.py`.
 
-### Extended multi-compartment precomputation
+**Alignment with fhir-gen:** the same 84 type names are listed in
+`fhir_gen/resolvers/dependency.py` → `MQL_SHIPPED_RESOURCES` with matching
+enrichers and `CORE_DEPENDENCIES`.
 
-Resources now precompute membership for **Patient, Practitioner, and
-Device** compartments simultaneously, via
-`CompartmentMembershipExtractor` filtering `actor` / `participant` /
-`subject` references by resource type. RelatedPerson and Encounter
-compartments use the dynamic resolver (correct per the hybrid
-strategy).
+See [analysis_documents/PROMPTS_FHIR_MQL_GAP_RESOURCES.md](analysis_documents/PROMPTS_FHIR_MQL_GAP_RESOURCES.md) for the gap rollout checklist.
 
-### Sparse-output guarantee strengthened
-
-`ResourceDenormalizer._merge_extracted` now also drops **empty lists
-`[]`** in addition to `None` values. This closes a theoretical gap
-where a future extractor returning `{"field": []}` could populate
-`_search` with empty placeholder fields instead of omitting them. The
-existing extractors all already returned `{}` for missing inputs; this
-fix makes the contract explicit and enforced at every layer.
-
-### Date parameter parser — `start` added to allowlist
-
-`parameter_parser.py` now recognises `"start"` as a date parameter
-name when inferring type from the query string. This allows Slot's
-`start=ge<date>` queries to correctly strip the FHIR prefix and
-generate `{start: {$gte: ISODate(...)}}` MongoDB queries.
-
-### Test suite growth
-
-| Version | Tests passing | Skipped |
-|---------|--------------|---------|
-| 1.1.0   | 1,228        | 8       |
-| 1.2.0   | **1,949**    | 8       |
+**E2E alignment:** industrial scenario databases use descriptive IDs (`fhir_e2e_gen_ind_hospital`, `fhir_e2e_gen_ind_full84`, …) matching fhir-gen. Search plans use **`resource_search_queries.py`** so each resource type is queried with parameters it actually supports.
 
 ---
 
@@ -368,35 +359,104 @@ generate `{start: {$gte: ISODate(...)}}` MongoDB queries.
 
 ---
 
-## Bundled FHIR resources
-
-All **13** resources are validated against FHIR R5 search parameter
-tables and compartment definitions. Run `fhir-mql resources` for live
-param/denorm/index counts. The `_compartments` column shows which
-compartment types are **precomputed** (indexed fast-path).
-
-| Resource         | Precomputed compartments              | Notes |
-|------------------|---------------------------------------|-------|
-| Patient          | Patient, Practitioner                 | Self-compartment; phonetic name search. |
-| Observation      | Patient, Practitioner, Device         | Composite params (`code-value-quantity`). |
-| Appointment      | Patient, Practitioner, Device         | Multi-actor participants; CodeableReference reason/serviceType. |
-| Condition        | Patient, Practitioner, Device         | Encounter compartment dynamic; clinical/verification status tokens. |
-| Encounter        | Patient, Practitioner, Device, Encounter| Self + `partOf` parent; `actualPeriod` date overlap. |
-| Organization     | *(none)*                              | Identifier + qualification. |
-| Location         | *(none)*                              | `near`/`contains` gracefully degraded. |
-| Practitioner     | Practitioner                          | Self-compartment. |
-| PractitionerRole | Practitioner                          | Links Practitioner ↔ Org ↔ Location ↔ HealthcareService. |
-| Device           | Device                                | Self-compartment; `CodeableReference.definition`; UDI carrier. |
-| Group            | Patient, Practitioner, Device         | Multi-target `member`; boolean `exclude` param. |
-| Schedule         | Patient, Practitioner, Device         | `serviceType` CodeableReference; RelatedPerson dynamic. |
-| Slot             | *(none — no R5 compartments)*         | `start` instant queried directly. |
-
-Inspect any time with:
+## Bundled FHIR resources (84 shipped)
 
 ```powershell
-fhir-mql resources               # table view
-fhir-mql resources --format json # machine-readable
+fhir-mql resources
+fhir-mql resources --format json
+python -c "from fhir_search_to_mql import ConfigLoader; print(len(ConfigLoader().list_resources()))"
 ```
+
+### By domain
+
+| Domain | Resources |
+|--------|-----------|
+| **Identity & directory** | Patient, Person, Practitioner, PractitionerRole, RelatedPerson, Organization, OrganizationAffiliation, Location, Endpoint, HealthcareService, Group |
+| **Scheduling & access** | Appointment, Schedule, Slot, Encounter, EpisodeOfCare, Account |
+| **Clinical record** | Condition, AllergyIntolerance, Observation, DiagnosticReport, ImagingStudy, Specimen, ClinicalImpression, FamilyMemberHistory, BodyStructure, Composition, DocumentReference |
+| **Medications** | Medication, MedicationRequest, MedicationAdministration, MedicationDispense, MedicationStatement, Substance |
+| **Orders & care** | ServiceRequest, Procedure, DeviceRequest, RequestOrchestration, CarePlan, CareTeam, Goal, Task, NutritionOrder, NutritionIntake, VisionPrescription |
+| **Devices & supplies** | Device, DeviceUsage, DeviceDispense, SupplyRequest, SupplyDelivery, BiologicallyDerivedProduct |
+| **Immunizations** | Immunization, ImmunizationRecommendation |
+| **Safety & quality** | AdverseEvent, DetectedIssue, Flag, RiskAssessment, Measure, MeasureReport |
+| **Financial / RCM** | Coverage, CoverageEligibilityRequest, CoverageEligibilityResponse, Claim, ClaimResponse, ExplanationOfBenefit, Invoice, ChargeItem, ChargeItemDefinition, PaymentNotice, PaymentReconciliation |
+| **Payer & enrollment** | EnrollmentRequest, EnrollmentResponse, InsurancePlan |
+| **Research & genomics** | ResearchStudy, ResearchSubject, GenomicStudy |
+| **Forms & PROs** | Questionnaire, QuestionnaireResponse |
+| **Privacy & legal** | Consent, Contract |
+| **Interop & audit** | AuditEvent, Provenance, Communication, Basic |
+
+Alphabetical list and search-parameter counts: **[CLI_COMMANDS.md — Resource inventory](CLI_COMMANDS.md#resource-inventory-84-shipped)**.
+
+**Compartments:** many resources precompute `_compartments` for Patient / Practitioner / Device (hybrid fast-path). Resources without FHIR compartments (e.g. Slot, Organization) use direct field or dynamic resolution — see [Compartment search](#compartment-search-hybrid-fast-path).
+
+---
+
+## End-to-end with fhir-gen
+
+```powershell
+$URI = "mongodb://localhost:27017/"
+$DB  = "fhir_synthetic"
+
+# 1) Generate synthetic FHIR (fhir-data-generation repo)
+cd ..\fhir-data-generation
+fhir-gen --seed 4000 --db $DB generate-many Patient Encounter Observation Composition DeviceRequest MeasureReport `
+  Account Endpoint Provenance ExplanationOfBenefit --count Patient=50 --count Encounter=80 --save
+# Or load all 84 types — see fhir-gen CLI_COMMANDS.md scenario 20
+
+# 2) Denormalize + search (this repo)
+cd ..\fhir-search-to-mql
+fhir-mql indexes --all --uri $URI --db $DB
+fhir-mql denormalize --all --uri $URI --db $DB --batch-size 500
+fhir-mql search Patient "name=Smith&active=true" --uri $URI --db $DB --limit 10
+fhir-mql search DeviceRequest "status=active" --uri $URI --db $DB --limit 10
+fhir-mql stats --all --uri $URI --db $DB
+```
+
+**21 healthcare** and **11 industrial** workflow scenarios (search side): [CLI_COMMANDS.md](CLI_COMMANDS.md#healthcare-workflow-scenarios).  
+**Matching generate commands:** [fhir-gen CLI_COMMANDS.md](../fhir-data-generation/CLI_COMMANDS.md#healthcare-workflow-scenarios).
+
+---
+
+## Combined E2E testing
+
+The **fhir-data-generation** repo owns the cross-repo driver **`scripts/run_cli_e2e.py`**. It runs **fhir-gen** then **fhir-mql** on one MongoDB database per scenario (`fhir_e2e_gen_<id>`). Full reference: **[fhir-data-generation/E2E_COMBINED.md](../fhir-data-generation/E2E_COMBINED.md)**.
+
+```powershell
+cd ..\fhir-data-generation
+.\.venv\Scripts\Activate.ps1
+.venv\Scripts\python.exe scripts\run_cli_e2e.py
+.venv\Scripts\python.exe scripts\run_cli_e2e.py --section healthcare
+.venv\Scripts\python.exe scripts\run_cli_e2e.py --pipeline-only
+.venv\Scripts\python.exe scripts\run_cli_e2e.py --quiet
+```
+
+| Phase (per scenario) | What runs |
+|----------------------|-----------|
+| Prepare DB | Drop `fhir_e2e_gen_<id>` when generating or `--pipeline-only` |
+| Generate | `fhir-gen generate-many` (healthcare `hc01`–`hc21`, industrial `ind_*`) |
+| Index / denormalize | `fhir-mql indexes` + `fhir-mql denormalize` |
+| Search | Planned FHIR queries → MQL → `fhir-mql search`; results under `tests/e2e/results/<id>/` |
+
+**Status output (default):** one line per phase (`Generating FHIR data…`, `Running search tests (N queries)…`). Long steps emit a **still running** heartbeat every ~30s (with search progress `n/total`). Use `--quiet` for pass/fail only.
+
+### E2E package (`tests/e2e/`)
+
+| Module | Role |
+|--------|------|
+| `cli_scenarios_mql.py` | Pipeline scenarios aligned with fhir-gen `cli_scenarios_gen.py` |
+| `resource_search_queries.py` | Per-resource valid search query strings (avoids invalid params like `status=active` on types without `status`) |
+| `search_plan.py` | Builds convert + search + compartment steps; `compartment_query()` for compartment-safe queries |
+| `search_runner.py` | Executes the plan, writes `search_results.json` |
+| `e2e_runner.py` | Subprocess helpers for `fhir-mql` / `fhir-gen` CLIs |
+| `test_cli_commands_e2e.py` | Pytest E2E (`-m "e2e and mongodb"`) |
+
+```powershell
+# This repo only (after data exists in fhir_e2e_gen_*)
+python -m pytest tests/e2e/ -m "e2e and mongodb" --no-cov -q
+```
+
+**Denormalization note:** string fields that are FHIR `string` in the spec but sometimes appear as Reference-shaped JSON from generators are coerced where needed (e.g. `ChargeItemDefinition.publisher` → plain string for `_search`).
 
 ---
 
@@ -599,14 +659,23 @@ fhir-mql search Schedule "active=true&specialty=394814009"
 
 #### `denormalize` — bulk re-denormalization
 
+Bulk subcommands (`denormalize`, `indexes`, `reset`, `stats`) expand each
+named resource to transitive **dependencies** from the same graph as
+fhir-gen (`fhir_search_to_mql/resolvers/dependency.py`), processing anchors
+before dependents. Pass `--no-with-deps` to target only the types on the
+command line.
+
 ```powershell
 # Single resource
 fhir-mql denormalize Patient
 
+# Dependent + anchors (e.g. MeasureReport → Measure, Patient, …)
+fhir-mql denormalize MeasureReport
+
 # Multiple resources
 fhir-mql denormalize Patient Observation Appointment
 
-# All 13 bundled resources
+# All 84 bundled resources
 fhir-mql denormalize --all --batch-size 500
 
 # Preview without writing
@@ -670,9 +739,7 @@ Unknown resource types fail fast before any DB call:
 ```powershell
 fhir-mql denormalize Patient Bogus
 # Error: No configuration found for: Bogus.
-# Configured: Appointment, Condition, Device, Encounter, Group, Location,
-#             Observation, Organization, Patient, Practitioner, PractitionerRole,
-#             Schedule, Slot.
+# (error lists all 84 configured resource type names)
 ```
 
 ### Environment variables
@@ -689,7 +756,7 @@ CLI flags always take precedence over environment variables.
 **[CLI_COMMANDS.md](CLI_COMMANDS.md)** is the canonical command cookbook. It includes:
 
 - Every `fhir-mql` subcommand with flags
-- Convert/search examples for all **13** bundled resources
+- Convert/search examples for all **84** bundled resources
 - Compartment-scoped queries (Patient, Practitioner, Device, Encounter)
 - Healthcare workflows (scheduling, vitals, problem list, cohorts, reindex)
 - Multi-database presets (`fhir_schedule_appointment_hybrid`, `fhir_synthetic`)
@@ -897,7 +964,7 @@ JSON output → **stdout**; progress and errors → **stderr**.
 
 Ship your own YAMLs inside a package and layer them on top of the
 bundled set. Only your overriding resources are replaced; the other
-10 bundled resources remain available:
+Other bundled resources remain available when you layer configs:
 
 ```python
 from fhir_search_to_mql import ConfigLoader, FHIRSearchConverter
@@ -1092,7 +1159,7 @@ indexes:
 | Use case | How |
 |----------|-----|
 | Library defaults, plug-and-play | `ResourceDenormalizer()` / `FHIRSearchConverter()` (no args). |
-| Add resources beyond the 13 bundled | `config_dir=[bundled_dir, my_dir]` — your dir wins on conflicts. |
+| Add resources beyond the 84 bundled | `config_dir=[bundled_dir, my_dir]` — your dir wins on conflicts. |
 | Replace a bundled resource entirely | Same as above; your YAML for that resource takes precedence. |
 | Use only your own configs | `config_dir="my_dir"` (single string). |
 | Single-resource config file | `config_path="path/to/Patient.yaml"`. |
@@ -1176,10 +1243,9 @@ fhir-search-to-mql/
 ├── src/fhir_search_to_mql/
 │   ├── __init__.py
 │   ├── cli.py                               # `fhir-mql` console script
-│   ├── configs/                             # bundled FHIR R5 YAMLs (13 resources)
-│   │   ├── Appointment.yaml … Slot.yaml
-│   │   ├── Condition.yaml
-│   │   └── Encounter.yaml
+│   ├── configs/                             # bundled FHIR R5 YAMLs (84 resources)
+│   │   ├── Patient.yaml … VisionPrescription.yaml
+│   │   └── (one YAML per shipped resource type)
 │   ├── schema/                              # build_indexes, resource_spec (see schema/)
 │   ├── core/
 │   │   └── config_loader.py                # importlib.resources default
@@ -1193,6 +1259,11 @@ fhir-search-to-mql/
 │   ├── parser/                             # FHIR query parser
 │   └── fhir_search_converter.py
 ├── tests/
+│   ├── e2e/                               # Combined E2E with fhir-gen (see E2E_COMBINED.md)
+│   │   ├── cli_scenarios_mql.py
+│   │   ├── resource_search_queries.py
+│   │   ├── search_plan.py / search_runner.py
+│   │   └── results/                       # search_results.json per scenario (gitignored)
 │   ├── unit/
 │   │   ├── test_cli.py
 │   │   └── ...
@@ -1214,6 +1285,8 @@ fhir-search-to-mql/
 │       └── test_encounter_comprehensive.py
 ├── schema/                                  # FHIR JSON + generated indexes
 ├── CLI_COMMANDS.md                          # CLI & workflow command cookbook
+├── E2E_COMMANDS.md                          # Pytest E2E for this repo
+├── E2E_COMBINED.md                          # Pointer to fhir-gen combined runner
 ├── pyproject.toml                           # [project.scripts] fhir-mql
 └── README.md
 ```
@@ -1227,14 +1300,12 @@ python -m build
 # → dist/fhir_search_to_mql-1.2.0.tar.gz
 ```
 
-Verify the wheel is self-contained (all 13 YAML configs bundled):
+Verify the wheel is self-contained (all 84 YAML configs bundled):
 
 ```powershell
 pip install dist/fhir_search_to_mql-1.2.0-py3-none-any.whl
-python -c "from fhir_search_to_mql import ConfigLoader; print(sorted(ConfigLoader().list_resources()))"
-# ['Appointment', 'Condition', 'Device', 'Encounter', 'Group', 'Location',
-#  'Observation', 'Organization', 'Patient', 'Practitioner', 'PractitionerRole',
-#  'Schedule', 'Slot']
+python -c "from fhir_search_to_mql import ConfigLoader; print(len(ConfigLoader().list_resources()))"
+# 84
 
 fhir-mql --version
 # fhir-mql 1.2.0
@@ -1279,11 +1350,17 @@ python -m pytest tests/unit/test_cli.py -v
 # CLI integration tests (require MongoDB at localhost:27017)
 python -m pytest tests/integration/test_cli_integration.py -v -m mongodb
 
-# Cross-resource quality-gate audit (purity, orphan fields, phantom refs, compartment backing)
+# Cross-resource quality-gate audit (all 84 shipped resources)
 python -m pytest tests/integration/test_config_audit_regressions.py -v
 
-# Per-resource comprehensive suites
+# Combined E2E with fhir-gen (MongoDB + data in fhir_e2e_gen_*)
+python -m pytest tests/e2e/ -m "e2e and mongodb" --no-cov -q
+
+# Per-resource comprehensive suites (examples)
 python -m pytest tests/integration/test_patient_comprehensive.py -v
+python -m pytest tests/integration/test_composition_comprehensive.py -v
+python -m pytest tests/integration/test_device_request_comprehensive.py -v
+python -m pytest tests/integration/test_measure_report_comprehensive.py -v
 python -m pytest tests/integration/test_observation_comprehensive.py -v
 python -m pytest tests/integration/test_appointment_comprehensive.py -v
 python -m pytest tests/integration/test_organization_comprehensive.py -v
@@ -1315,11 +1392,13 @@ python -m pytest tests/ --benchmark-only -v
 
 | Metric | Value |
 |--------|-------|
-| Tests passing | **~2,089** |
+| Tests passing | **~3,000+** (varies by MongoDB availability) |
 | Skipped (MongoDB not running) | 8 |
 | Failing | 0 |
 | Overall coverage | 85 %+ |
-| Resources under test | 13 |
+| Shipped resource configs | **84** |
+| Per-resource comprehensive suites | `tests/integration/test_*_comprehensive.py` |
+| Cross-config audit | `tests/integration/test_config_audit_regressions.py` |
 
 MongoDB integration tests pass against a stock
 `mongodb://localhost:27017/` deployment (Docker or native).
@@ -1410,6 +1489,16 @@ in the stats dict and are appended to the `Completed:` log line when
 non-zero. A field failure means one denorm rule was skipped on a
 document (e.g. an unknown extractor name in the YAML) without
 aborting the whole document.
+
+---
+
+## Related projects
+
+| Project | Role |
+|---------|------|
+| [fhir-data-generation](../fhir-data-generation/) | `fhir-gen` — synthetic FHIR R5 data for the same 84 types |
+| [fhir-data-generation E2E_COMBINED.md](../fhir-data-generation/E2E_COMBINED.md) | `run_cli_e2e.py` — gen → mql on one DB per scenario |
+| [FHIR-GEN](../FHIR-GEN/) | Parent monorepo / related generators (if applicable in your layout) |
 
 ---
 

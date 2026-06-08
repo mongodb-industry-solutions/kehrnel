@@ -20,7 +20,7 @@ from kehrnel.engine.core.errors import KehrnelError
 router = APIRouter(prefix="/api/domains/fhir", tags=["FHIR"])
 
 FHIR_DOMAIN = "fhir"
-DEFAULT_STRATEGY_ID = os.getenv("KEHRNEL_FHIR_STRATEGY_ID", "fhir.rps_canonical")
+DEFAULT_STRATEGY_ID = os.getenv("KEHRNEL_FHIR_STRATEGY_ID", "fhir.clinical_cdr")
 
 
 def _auth_enabled() -> bool:
@@ -58,7 +58,7 @@ def _require_fhir_activation(request: Request, env_id: str):
 
 
 def to_strategy_query(payload: FhirSearchRequest) -> dict[str, Any]:
-    """Map API request to fhir.rps_canonical compile_query input."""
+    """Map API request to fhir.clinical_cdr compile_query input."""
     query: dict[str, Any] = {
         "resource_type": payload.resource_type,
         "criteria": payload.criteria,
@@ -106,7 +106,7 @@ def build_search_bundle(
 @router.post("/search")
 async def search_fhir(request: Request, payload: FhirSearchRequest = Body(...)):
     """
-    Execute FHIR search via the active environment's fhir.rps_canonical strategy.
+    Execute FHIR search via the active environment's fhir.clinical_cdr strategy.
 
     Compiles FHIR search parameters to MQL and runs against MongoDB; returns a
     searchset Bundle.

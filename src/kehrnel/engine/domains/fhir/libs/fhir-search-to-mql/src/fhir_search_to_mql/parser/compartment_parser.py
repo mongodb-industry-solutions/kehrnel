@@ -33,6 +33,26 @@ class CompartmentParser:
     def __init__(self):
         """Initialize the compartment parser."""
         self.param_parser = ParameterParser()
+
+    @staticmethod
+    def _find_compartment_triplet(
+        path_parts: list[str],
+    ) -> Optional[tuple[str, str, str]]:
+        """
+        Locate ``{CompartmentType}/{id}/{SearchType}`` anywhere in a REST path.
+
+        Supports ``Patient/p1/Observation`` and ``fhir/Patient/p1/Observation``.
+        """
+        for index, segment in enumerate(path_parts):
+            if segment not in COMPARTMENT_TYPES:
+                continue
+            if index + 2 >= len(path_parts):
+                continue
+            compartment_id = path_parts[index + 1]
+            resource_type = path_parts[index + 2]
+            if compartment_id and resource_type:
+                return segment, compartment_id, resource_type
+        return None
     
     def parse(self, url: str) -> Dict[str, Any]:
         """
@@ -62,19 +82,22 @@ class CompartmentParser:
         
         # Extract path components
         path_parts = [p for p in parsed_url.path.split('/') if p]
-        
-        # Validate path structure
-        if len(path_parts) < 3:
+        triplet = self._find_compartment_triplet(path_parts)
+        if (
+            not triplet
+            and len(path_parts) >= 3
+            and path_parts[0]
+            and path_parts[0][0].isupper()
+        ):
+            triplet = path_parts[0], path_parts[1], path_parts[2]
+        if not triplet:
             raise ParsingError(
                 f"Invalid compartment URL format: {url}. "
                 f"Expected format: /CompartmentType/id/ResourceType or "
                 f"/CompartmentType/id/ResourceType?params"
             )
-        
-        # Extract compartment components
-        compartment_type = path_parts[0]
-        compartment_id = path_parts[1]
-        resource_type = path_parts[2]
+
+        compartment_type, compartment_id, resource_type = triplet
         
         # Validate compartment type
         self._validate_compartment_type(compartment_type)
@@ -180,24 +203,11 @@ class CompartmentParser:
         try:
             parsed_url = urlparse(url)
             path_parts = [p for p in parsed_url.path.split('/') if p]
-            
-            # Must have at least 3 parts
-            if len(path_parts) < 3:
+            triplet = self._find_compartment_triplet(path_parts)
+            if not triplet:
                 return False
-            
-            # First part should be a valid compartment type
-            if path_parts[0] not in COMPARTMENT_TYPES:
-                return False
-            
-            # Second part should be an ID (non-empty)
-            if not path_parts[1]:
-                return False
-            
-            # Third part should be a resource type (starts with uppercase)
-            if not path_parts[2] or not path_parts[2][0].isupper():
-                return False
-            
-            return True
+            _, compartment_id, resource_type = triplet
+            return bool(compartment_id) and bool(resource_type) and resource_type[0].isupper()
         except Exception:
             return False
     
@@ -215,14 +225,18 @@ class CompartmentParser:
         try:
             if not self.is_compartment_url(url):
                 return None
-            
+
             parsed_url = urlparse(url)
             path_parts = [p for p in parsed_url.path.split('/') if p]
-            
+            triplet = self._find_compartment_triplet(path_parts)
+            if not triplet:
+                return None
+
+            compartment_type, compartment_id, resource_type = triplet
             return {
-                'compartment_type': path_parts[0],
-                'compartment_id': path_parts[1],
-                'resource_type': path_parts[2],
+                'compartment_type': compartment_type,
+                'compartment_id': compartment_id,
+                'resource_type': resource_type,
             }
         except Exception:
             return None

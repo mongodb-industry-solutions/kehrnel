@@ -280,6 +280,28 @@ class FHIRSearchConverter:
         raise UnsupportedParameterError(
             f"Unhandled special parameter '{param_name}' for {resource_type}"
         )
+
+    def convert_fhir_search(self, fhir_search: str) -> Dict[str, Any]:
+        """
+        Parse a FHIR REST search string and convert it to MongoDB query.
+
+        Accepts type-level (``Patient?gender=female``) and compartment
+        (``Patient/{id}/Observation?status=final``) forms.
+        """
+        from fhir_search_to_mql.parser.search_request_parser import parse_fhir_search
+
+        parsed = parse_fhir_search(fhir_search)
+        compartment = parsed.get("compartment")
+        query_string = parsed.get("query_string") or None
+        resource_type = parsed["resource_type"]
+        if compartment:
+            return self.convert_with_compartment(
+                str(compartment["type"]),
+                str(compartment["id"]),
+                resource_type,
+                query_string=query_string,
+            )
+        return self.convert(resource_type, query_string=query_string)
     
     def convert_with_compartment(
         self, 

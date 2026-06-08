@@ -259,10 +259,22 @@ class ReferenceExtractor(FieldExtractor):
         for mapping in field_mappings:
             target_field = mapping.get("target_field")
             source_path = mapping.get("source_path") or ""
-            if not target_field or not source_path:
+            related_artifact_type = mapping.get("relatedArtifactType")
+            if not target_field or (not source_path and not related_artifact_type):
                 continue
 
-            resolved = resolve_path(resource, source_path)
+            if related_artifact_type:
+                resolved = []
+                for item in resource.get("relatedArtifact") or []:
+                    if not isinstance(item, dict):
+                        continue
+                    if item.get("type") != related_artifact_type:
+                        continue
+                    resource_ref = item.get("resource")
+                    if resource_ref is not None:
+                        resolved.append(resource_ref)
+            else:
+                resolved = resolve_path(resource, source_path)
             ids: List[str] = []
             types: List[str] = []
             full_refs: List[str] = []
