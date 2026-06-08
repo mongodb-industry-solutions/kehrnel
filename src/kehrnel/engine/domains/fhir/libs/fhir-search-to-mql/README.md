@@ -327,8 +327,6 @@ in `tests/integration/test_config_audit_regressions.py`.
 `fhir_gen/resolvers/dependency.py` → `MQL_SHIPPED_RESOURCES` with matching
 enrichers and `CORE_DEPENDENCIES`.
 
-See [analysis_documents/PROMPTS_FHIR_MQL_GAP_RESOURCES.md](analysis_documents/PROMPTS_FHIR_MQL_GAP_RESOURCES.md) for the gap rollout checklist.
-
 **E2E alignment:** industrial scenario databases use descriptive IDs (`fhir_e2e_gen_ind_hospital`, `fhir_e2e_gen_ind_full84`, …) matching fhir-gen. Search plans use **`resource_search_queries.py`** so each resource type is queried with parameters it actually supports.
 
 ---

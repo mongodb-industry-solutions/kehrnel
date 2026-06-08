@@ -1309,7 +1309,5 @@ python scripts/run_cli_e2e.py --full-counts   # documented volumes (slow)
 ## See also
 
 - [README.md](README.md) — install, architecture, environment variables
-- [INSTRUCTIONS.txt](INSTRUCTIONS.txt) — product requirements
-- [analysis_documents/PROMPTS_FHIR_MQL_GAP_ALIGNMENT.md](analysis_documents/PROMPTS_FHIR_MQL_GAP_ALIGNMENT.md) — MQL ↔ fhir-gen alignment checklist
 - [fhir-search-to-mql CLI_COMMANDS.md](../fhir-search-to-mql/CLI_COMMANDS.md) — search/denormalize for the same 84 resources
 - `.env.example` — MongoDB, seed, collection prefix

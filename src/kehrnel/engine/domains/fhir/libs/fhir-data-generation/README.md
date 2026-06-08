@@ -337,7 +337,6 @@ CLI flags `--mongo-uri`, `--db`, and `--schema-version` override settings for th
 | `fhir_gen/schema/fhir.schema.v6.json`           | Optional FHIR R6 preview schema                                 |
 | `fhir_gen/codes/`                               | Terminology loader, validation, `codeable_from_section` helpers |
 | `fhir_gen/hl7_codes/healthcare_codes.yaml`      | HL7/FHIR terminology (146 sections)                             |
-| `analysis_documents/PROMPTS_FHIR_MQL_GAP_ALIGNMENT.md` | MQL ↔ fhir-gen alignment checklist                       |
 | `fhir_gen/hl7_codes/_build_healthcare_codes.py` | Regenerate/merge YAML                                           |
 | `tests/`                                        | Pytest suite (`test_mql_shipped_resources`, integration, terminology) |
 | `tests/e2e/`                                    | E2E scenario defs (`cli_scenarios_gen.py`), runner helpers, `e2e_log.py` |
@@ -347,8 +346,6 @@ CLI flags `--mongo-uri`, `--db`, and `--schema-version` override settings for th
 | `E2E_COMBINED.md`                               | Combined E2E runner (status logging, flags, DB naming)            |
 | `E2E_COMMANDS.md`                               | Per-repo E2E pytest commands                                      |
 | `CLI_COMMANDS.md`                               | Full CLI cookbook (84 resources, healthcare & industrial scenarios) |
-| `PROMPTS_FHIR_DATA_GENERATION.md`               | Implementation prompts                                          |
-| `INSTRUCTIONS.txt`                              | Product requirements                                            |
 
 
 ---
@@ -396,9 +393,9 @@ python fhir_gen/hl7_codes/_build_healthcare_codes.py
 2. Follow existing patterns in `fhir_gen/` (minimal scope, schema-first).
 3. Add tests for new behavior; keep `pytest` coverage ≥ 75%.
 4. Enrich `healthcare_codes.yaml` via `_build_healthcare_codes.py` rather than full rewrites.
-5. New MQL-shipped enrichers: add to `fhir_gen/generators/resources/*.py`, register in `ENRICHERS`, update `MQL_SHIPPED_RESOURCES` and `CORE_DEPENDENCIES`, and add a matching YAML in fhir-search-to-mql (see [PROMPTS_FHIR_MQL_GAP_ALIGNMENT.md](analysis_documents/PROMPTS_FHIR_MQL_GAP_ALIGNMENT.md)).
+5. New MQL-shipped enrichers: add to `fhir_gen/generators/resources/*.py`, register in `ENRICHERS`, update `MQL_SHIPPED_RESOURCES` and `CORE_DEPENDENCIES`, and add a matching YAML in fhir-search-to-mql.
 
-Implementation is guided by `PROMPTS_FHIR_DATA_GENERATION.md` and the Cursor skill `.cursor/skills/fhir-data-generation/SKILL.md`.
+Implementation is guided by the Cursor skill `.cursor/skills/fhir-data-generation/SKILL.md` (standalone fhir-data-generation repo for full prompt docs).
 
 ---
 
@@ -425,7 +422,6 @@ Implementation is guided by `PROMPTS_FHIR_DATA_GENERATION.md` and the Cursor ski
 - [E2E_COMBINED.md](E2E_COMBINED.md) — `run_cli_e2e.py` (gen → mql on one DB per scenario)
 - [E2E_COMMANDS.md](E2E_COMMANDS.md) — pytest E2E for this repo
 - [CLI_COMMANDS.md](CLI_COMMANDS.md) — generate commands and scenario catalog
-- [analysis_documents/PROMPTS_FHIR_MQL_GAP_ALIGNMENT.md](analysis_documents/PROMPTS_FHIR_MQL_GAP_ALIGNMENT.md)
 
 ---
 
