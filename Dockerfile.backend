@@ -5,7 +5,7 @@ RUN npm install
 COPY docs/website/ ./
 RUN npm run build
 
-FROM python:3.13-slim
+FROM python:3.13.13-slim
 WORKDIR /kerhnel
 
 COPY --from=docs-builder /docs/build docs/website/build
