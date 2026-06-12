@@ -6,6 +6,7 @@ COPY docs/website/ ./
 RUN npm run build
 
 FROM python:3.13.13-slim
+RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
 WORKDIR /kerhnel
 
 COPY --from=docs-builder /docs/build docs/website/build
