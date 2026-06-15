@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "strategyId": "fhir.clinical_cdr",
+    "specVersion": "1.0",
+    "title": "FHIR Clinical CDR",
+    "summary": "Native FHIR R5 resources per collection with fhir-gen synthesis and fhir-mql search denormalization.",
+    "domain": "FHIR",
+    "tags": ["FHIR", "synthetic", "search", "fhir-mql", "fhir-gen"],
+    "compat": {
+      "packFormat": "strategy-pack/v1",
+      "requires": ["storage.mongo"],
+      "optional": [],
+      "minRuntime": "0.1.0"
+    }
+  },
+  "logicalModel": {
+    "storage": {
+      "mode": "per_resource_type",
+      "description": "Each FHIR resource type is stored in its own MongoDB collection (e.g. Patient, Observation)."
+    },
+    "generation": {
+      "recipesFile": "recipes.json",
+      "defaultRecipe": "clinical_dev",
+      "ownedSearchResourceCount": 52,
+      "shippedSearchResourceCount": 84
+    }
+  }
+}

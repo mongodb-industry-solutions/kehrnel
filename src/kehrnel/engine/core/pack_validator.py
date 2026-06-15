@@ -15,6 +15,13 @@ class StrategyPackValidator:
         self.base_path = base_path
         self.domain = str(self.manifest.get("domain") or "").lower()
 
+    @property
+    def pack_root(self) -> Path:
+        """Directory containing runtime code (parent when manifest lives under specification/)."""
+        if self.base_path.name == "specification":
+            return self.base_path.parent
+        return self.base_path
+
     def validate(self) -> List[str]:
         errors: List[str] = []
         errors.extend(self._validate_required_fields())
@@ -100,7 +107,7 @@ class StrategyPackValidator:
             if spec is None:
                 errors.append(f"entrypoint module not found: {mod}")
             else:
-                base = self.base_path.resolve().as_posix()
+                base = self.pack_root.resolve().as_posix()
                 if spec.origin:
                     if not Path(spec.origin).resolve().as_posix().startswith(base):
                         errors.append(f"entrypoint module outside strategy pack: {mod}")
@@ -121,7 +128,7 @@ class StrategyPackValidator:
         if not self.domain:
             return errors
         pattern = "kehrnel.engine.strategies."
-        for path in self.base_path.rglob("*.py"):
+        for path in self.pack_root.rglob("*.py"):
             text = path.read_text(encoding="utf-8")
             start = 0
             while True:

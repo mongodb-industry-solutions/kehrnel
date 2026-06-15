@@ -7,6 +7,7 @@ from typing import Any, Dict
 
 from kehrnel.engine.core.types import StrategyContext
 from kehrnel.engine.core.manifest import StrategyManifest
+from kehrnel.engine.core.manifest_digest import compute_manifest_digest
 
 
 def _compute_config_hash(cfg: Dict[str, Any]) -> str:
@@ -20,12 +21,8 @@ def _compute_config_hash(cfg: Dict[str, Any]) -> str:
 def _compute_manifest_digest(manifest: StrategyManifest | None) -> str | None:
     if manifest is None:
         return None
-    try:
-        payload = manifest.model_dump()
-        blob = json.dumps(payload, sort_keys=True).encode("utf-8")
-        return hashlib.sha256(blob).hexdigest()
-    except Exception:
-        return None
+    digest = compute_manifest_digest(manifest)
+    return digest or None
 
 
 def enrich_explain(

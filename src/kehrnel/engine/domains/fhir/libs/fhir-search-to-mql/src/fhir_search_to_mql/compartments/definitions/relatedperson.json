@@ -1,0 +1,224 @@
+{
+  "resourceType": "CompartmentDefinition",
+  "id": "relatedperson",
+  "url": "http://hl7.org/fhir/CompartmentDefinition/relatedperson",
+  "version": "5.0.0",
+  "name": "RelatedPerson",
+  "status": "active",
+  "experimental": false,
+  "date": "2024-03-26T10:00:00Z",
+  "publisher": "FHIR Project Team",
+  "description": "The set of resources associated with a particular related person",
+  "code": "RelatedPerson",
+  "search": true,
+  "resource": [
+    {
+      "code": "Account",
+      "param": ["subject"]
+    },
+    {
+      "code": "AdverseEvent",
+      "param": ["recorder"]
+    },
+    {
+      "code": "AllergyIntolerance",
+      "param": ["asserter"]
+    },
+    {
+      "code": "Appointment",
+      "param": ["actor"]
+    },
+    {
+      "code": "AppointmentResponse",
+      "param": ["actor"]
+    },
+    {
+      "code": "Basic",
+      "param": ["author"]
+    },
+    {
+      "code": "CarePlan",
+      "param": ["performer"]
+    },
+    {
+      "code": "CareTeam",
+      "param": ["participant"]
+    },
+    {
+      "code": "ChargeItem",
+      "param": ["enterer", "performer-actor"]
+    },
+    {
+      "code": "Claim",
+      "param": ["payee"]
+    },
+    {
+      "code": "ClaimResponse",
+      "param": ["requestor"]
+    },
+    {
+      "code": "ClinicalImpression",
+      "param": ["performer"]
+    },
+    {
+      "code": "Communication",
+      "param": ["sender", "recipient"]
+    },
+    {
+      "code": "CommunicationRequest",
+      "param": ["sender", "recipient", "requester"]
+    },
+    {
+      "code": "Composition",
+      "param": ["subject", "author", "attester"]
+    },
+    {
+      "code": "Condition",
+      "param": ["participant"]
+    },
+    {
+      "code": "Consent",
+      "param": ["grantee"]
+    },
+    {
+      "code": "Contract",
+      "param": ["signer"]
+    },
+    {
+      "code": "Coverage",
+      "param": ["policy-holder", "subscriber", "paymentby"]
+    },
+    {
+      "code": "DetectedIssue",
+      "param": ["author"]
+    },
+    {
+      "code": "DeviceRequest",
+      "param": ["requester", "performer"]
+    },
+    {
+      "code": "DeviceUsage",
+      "param": ["patient"]
+    },
+    {
+      "code": "DiagnosticReport",
+      "param": ["performer"]
+    },
+    {
+      "code": "DocumentManifest",
+      "param": ["subject", "author", "recipient"]
+    },
+    {
+      "code": "DocumentReference",
+      "param": ["subject", "author"]
+    },
+    {
+      "code": "Encounter",
+      "param": ["participant"]
+    },
+    {
+      "code": "EnrollmentRequest",
+      "param": ["subject"]
+    },
+    {
+      "code": "ExplanationOfBenefit",
+      "param": ["payee"]
+    },
+    {
+      "code": "Flag",
+      "param": ["author"]
+    },
+    {
+      "code": "ImagingStudy",
+      "param": ["performer"]
+    },
+    {
+      "code": "Invoice",
+      "param": ["recipient", "participant"]
+    },
+    {
+      "code": "List",
+      "param": ["source"]
+    },
+    {
+      "code": "MeasureReport",
+      "param": ["reporter"]
+    },
+    {
+      "code": "Media",
+      "param": ["subject", "operator"]
+    },
+    {
+      "code": "MedicationAdministration",
+      "param": ["performer"]
+    },
+    {
+      "code": "MedicationDispense",
+      "param": ["performer", "receiver"]
+    },
+    {
+      "code": "MedicationRequest",
+      "param": ["requester"]
+    },
+    {
+      "code": "MedicationStatement",
+      "param": ["source"]
+    },
+    {
+      "code": "NutritionIntake",
+      "param": ["source"]
+    },
+    {
+      "code": "NutritionOrder",
+      "param": ["provider"]
+    },
+    {
+      "code": "Observation",
+      "param": ["performer"]
+    },
+    {
+      "code": "Patient",
+      "param": ["link"]
+    },
+    {
+      "code": "Person",
+      "param": ["relatedperson"]
+    },
+    {
+      "code": "Procedure",
+      "param": ["performer"]
+    },
+    {
+      "code": "Provenance",
+      "param": ["agent"]
+    },
+    {
+      "code": "QuestionnaireResponse",
+      "param": ["author", "source"]
+    },
+    {
+      "code": "RequestOrchestration",
+      "param": ["participant", "author"]
+    },
+    {
+      "code": "Schedule",
+      "param": ["actor"]
+    },
+    {
+      "code": "ServiceRequest",
+      "param": ["requester", "performer"]
+    },
+    {
+      "code": "SupplyDelivery",
+      "param": ["supplier", "receiver"]
+    },
+    {
+      "code": "SupplyRequest",
+      "param": ["requester"]
+    },
+    {
+      "code": "Task",
+      "param": ["owner", "requester"]
+    }
+  ]
+}

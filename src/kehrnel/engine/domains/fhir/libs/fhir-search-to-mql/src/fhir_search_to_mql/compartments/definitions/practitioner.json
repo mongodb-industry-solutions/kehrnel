@@ -1,0 +1,244 @@
+{
+  "resourceType": "CompartmentDefinition",
+  "id": "practitioner",
+  "url": "http://hl7.org/fhir/CompartmentDefinition/practitioner",
+  "version": "5.0.0",
+  "name": "Practitioner",
+  "status": "active",
+  "experimental": false,
+  "date": "2024-03-26T10:00:00Z",
+  "publisher": "FHIR Project Team",
+  "description": "The set of resources associated with a particular practitioner",
+  "code": "Practitioner",
+  "search": true,
+  "resource": [
+    {
+      "code": "Account",
+      "param": ["subject"]
+    },
+    {
+      "code": "AdverseEvent",
+      "param": ["recorder"]
+    },
+    {
+      "code": "AllergyIntolerance",
+      "param": ["recorder"]
+    },
+    {
+      "code": "Appointment",
+      "param": ["actor"]
+    },
+    {
+      "code": "AppointmentResponse",
+      "param": ["actor"]
+    },
+    {
+      "code": "Basic",
+      "param": ["author"]
+    },
+    {
+      "code": "CarePlan",
+      "param": ["performer"]
+    },
+    {
+      "code": "CareTeam",
+      "param": ["participant"]
+    },
+    {
+      "code": "ChargeItem",
+      "param": ["enterer", "performer-actor"]
+    },
+    {
+      "code": "Claim",
+      "param": ["enterer", "provider", "payee", "care-team"]
+    },
+    {
+      "code": "ClaimResponse",
+      "param": ["requestor"]
+    },
+    {
+      "code": "ClinicalImpression",
+      "param": ["performer"]
+    },
+    {
+      "code": "Communication",
+      "param": ["sender", "recipient"]
+    },
+    {
+      "code": "CommunicationRequest",
+      "param": ["sender", "recipient", "requester"]
+    },
+    {
+      "code": "Composition",
+      "param": ["subject", "author", "attester"]
+    },
+    {
+      "code": "Condition",
+      "param": ["participant"]
+    },
+    {
+      "code": "DetectedIssue",
+      "param": ["author"]
+    },
+    {
+      "code": "DeviceRequest",
+      "param": ["requester", "performer"]
+    },
+    {
+      "code": "DeviceUsage",
+      "param": ["patient"]
+    },
+    {
+      "code": "DiagnosticReport",
+      "param": ["performer"]
+    },
+    {
+      "code": "DocumentManifest",
+      "param": ["subject", "author", "recipient"]
+    },
+    {
+      "code": "DocumentReference",
+      "param": ["subject", "author", "authenticator"]
+    },
+    {
+      "code": "Encounter",
+      "param": ["practitioner", "participant"]
+    },
+    {
+      "code": "EnrollmentRequest",
+      "param": ["subject"]
+    },
+    {
+      "code": "EpisodeOfCare",
+      "param": ["care-manager"]
+    },
+    {
+      "code": "ExplanationOfBenefit",
+      "param": ["provider", "enterer", "payee", "care-team"]
+    },
+    {
+      "code": "Flag",
+      "param": ["author"]
+    },
+    {
+      "code": "Group",
+      "param": ["managing-entity"]
+    },
+    {
+      "code": "ImagingStudy",
+      "param": ["interpreter"]
+    },
+    {
+      "code": "Immunization",
+      "param": ["performer"]
+    },
+    {
+      "code": "Invoice",
+      "param": ["participant"]
+    },
+    {
+      "code": "List",
+      "param": ["source"]
+    },
+    {
+      "code": "MeasureReport",
+      "param": ["reporter"]
+    },
+    {
+      "code": "Media",
+      "param": ["subject", "operator"]
+    },
+    {
+      "code": "MedicationAdministration",
+      "param": ["performer"]
+    },
+    {
+      "code": "MedicationDispense",
+      "param": ["performer", "receiver"]
+    },
+    {
+      "code": "MedicationRequest",
+      "param": ["requester"]
+    },
+    {
+      "code": "MedicationStatement",
+      "param": ["source"]
+    },
+    {
+      "code": "NutritionIntake",
+      "param": ["source"]
+    },
+    {
+      "code": "NutritionOrder",
+      "param": ["provider"]
+    },
+    {
+      "code": "Observation",
+      "param": ["performer"]
+    },
+    {
+      "code": "Patient",
+      "param": ["general-practitioner"]
+    },
+    {
+      "code": "PaymentNotice",
+      "param": ["provider"]
+    },
+    {
+      "code": "PaymentReconciliation",
+      "param": ["requestor"]
+    },
+    {
+      "code": "Person",
+      "param": ["practitioner"]
+    },
+    {
+      "code": "PractitionerRole",
+      "param": ["practitioner"]
+    },
+    {
+      "code": "Procedure",
+      "param": ["performer"]
+    },
+    {
+      "code": "Provenance",
+      "param": ["agent"]
+    },
+    {
+      "code": "QuestionnaireResponse",
+      "param": ["author", "source"]
+    },
+    {
+      "code": "RequestOrchestration",
+      "param": ["participant", "author"]
+    },
+    {
+      "code": "ResearchStudy",
+      "param": ["principalinvestigator"]
+    },
+    {
+      "code": "Schedule",
+      "param": ["actor"]
+    },
+    {
+      "code": "ServiceRequest",
+      "param": ["requester", "performer"]
+    },
+    {
+      "code": "SupplyDelivery",
+      "param": ["supplier", "receiver"]
+    },
+    {
+      "code": "SupplyRequest",
+      "param": ["requester"]
+    },
+    {
+      "code": "Task",
+      "param": ["owner", "requester"]
+    },
+    {
+      "code": "VisionPrescription",
+      "param": ["prescriber"]
+    }
+  ]
+}

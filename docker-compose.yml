@@ -1,13 +1,43 @@
 services:
   kehrnel-api:
-    image: 275662791714.dkr.ecr.us-east-1.amazonaws.com/industrysolutions/kehrnel:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.kehrnel-api
     ports:
-      - 8000:8080
-    env_file:   
-      - .env  
-    networks:
-      - healthcare_shared
+      - "8000:8080"
+    env_file:
+      - .env
 
-networks:
-  healthcare_shared:
-    external: true
+  kehrnel-fhir-api:
+    profiles: [fhir]
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.kehrnel-fhir
+    ports:
+      - "8000:8080"
+    env_file:
+      - .env
+
+  kehrnel-all:
+    profiles: [all]
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8000:8080"
+    env_file:
+      - .env
+
+  fhir-gen:
+    profiles: [fhir]
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.fhir-gen
+    entrypoint: ["fhir-gen", "--help"]
+
+  fhir-mql:
+    profiles: [fhir]
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.fhir-mql
+    entrypoint: ["fhir-mql", "--help"]

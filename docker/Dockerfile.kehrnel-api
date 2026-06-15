@@ -1,0 +1,10 @@
+# Kehrnel API without FHIR libraries (openEHR and core domains only).
+FROM python:3.12-slim
+WORKDIR /kehrnel
+COPY pyproject.toml README.md ./
+COPY src ./src
+RUN pip install --no-cache-dir -e ".[api,mongo]"
+ENV KEHRNEL_API_PORT=8080
+ENV KEHRNEL_API_RELOAD=false
+EXPOSE 8080
+CMD ["kehrnel-api"]

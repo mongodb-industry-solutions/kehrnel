@@ -1,0 +1,426 @@
+resource: RelatedPerson
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec RelatedPerson)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/
+#   patient.json, relatedperson.json
+#
+# Total parameters: 21 (19 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `RelatedPerson.patient` is required Reference(Patient).
+#   * Demographics mirror Patient/Practitioner (name, telecom, address).
+#   * `relationship` is CodeableConcept[] — `relationship` token search.
+#   * RelatedPerson is a compartment-defining resource (`[base]`).
+#   * Patient compartment links via `patient` (patient.json).
+
+search_parameters:
+  name:
+    type: string
+    description: "A server defined search that may match any of the string fields in the HumanName"
+    fields:
+      default:
+        - field: "_search.familyName_lower"
+          query_type: range
+        - field: "_search.givenNames_lower"
+          query_type: range
+        - field: "_search.fullName_lower"
+          query_type: range
+      exact:
+        - field: "_search.familyName"
+        - field: "_search.givenNames"
+        - field: "_search.fullName"
+        - field: "_search.nameText"
+
+  family:
+    type: string
+    description: "A portion of the family name"
+    fields:
+      default:
+        - field: "_search.familyName_lower"
+          query_type: range
+      exact:
+        - field: "_search.familyName"
+
+  given:
+    type: string
+    description: "A portion of the given name"
+    fields:
+      default:
+        - field: "_search.givenNames_lower"
+          query_type: range
+      exact:
+        - field: "_search.givenNames"
+
+  address:
+    type: string
+    description: "A server defined search that may match any of the string fields in the Address"
+    fields:
+      default:
+        - field: "_search.addressFull_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressFull"
+        - field: "_search.addressText"
+
+  address-city:
+    type: string
+    description: "A city specified in an address"
+    fields:
+      default:
+        - field: "_search.addressCity_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressCity"
+
+  address-state:
+    type: string
+    description: "A state specified in an address"
+    fields:
+      default:
+        - field: "_search.addressState_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressState"
+
+  address-country:
+    type: string
+    description: "A country specified in an address"
+    fields:
+      default:
+        - field: "_search.addressCountry_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressCountry"
+
+  address-postalcode:
+    type: string
+    description: "A postal code specified in an address"
+    fields:
+      - field: "_search.addressPostalCode"
+        query_type: exact
+
+  phonetic:
+    type: token
+    description: "A portion of name using a phonetic matching algorithm (Soundex)"
+    fields:
+      - field: "_search.phonetic_codes"
+        tokenType: code
+
+  patient:
+    type: reference
+    description: "The patient this related person is about"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "patient.reference"
+        referenceType: full
+
+  gender:
+    type: token
+    description: "Gender of the related person"
+    fields:
+      - field: "gender"
+        tokenType: code
+
+  active:
+    type: token
+    description: "Whether the related person record is active"
+    fields:
+      - field: "active"
+        tokenType: boolean
+
+  identifier:
+    type: token
+    description: "A related person identifier"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  email:
+    type: token
+    description: "A value in an email contact"
+    fields:
+      - field: "_search.email"
+        tokenType: code
+
+  phone:
+    type: token
+    description: "A value in a phone contact"
+    fields:
+      - field: "_search.phone"
+        tokenType: code
+
+  telecom:
+    type: token
+    description: "The value in any kind of contact"
+    fields:
+      - field: "_search.telecom_systemCode"
+        tokenType: systemCode
+      - field: "_search.telecom_values"
+        tokenType: code
+
+  address-use:
+    type: token
+    description: "A use code specified in an address"
+    fields:
+      - field: "_search.addressUse"
+        tokenType: code
+
+  relationship:
+    type: token
+    description: "The relationship between the patient and the related person"
+    fields:
+      - field: "_search.relationship_codes"
+        tokenType: code
+      - field: "_search.relationship_systemCode"
+        tokenType: systemCode
+
+  birthdate:
+    type: date
+    description: "The Related Person's date of birth"
+    fields:
+      - field: "birthDate"
+        type: date
+
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  name:
+    source: name
+    target: _search
+    extractor: HumanNameExtractor
+    field_mappings:
+      - source_path: name[*].family
+        target_field: familyName
+        datatype: array[string]
+      - source_path: name[*].family
+        target_field: familyName_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: name[*].given
+        target_field: givenNames
+        datatype: array[string]
+      - source_path: name[*].given
+        target_field: givenNames_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: name[*]
+        target_field: fullName
+        datatype: array[string]
+      - source_path: name[*]
+        target_field: fullName_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: name[*].text
+        target_field: nameText
+        datatype: array[string]
+
+  phonetic:
+    source: name
+    target: _search
+    extractor: PhoneticExtractor
+    field_mappings:
+      - source_path: name[*]
+        target_field: phonetic_codes
+        datatype: array[string]
+
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  telecom:
+    source: telecom
+    target: _search
+    extractor: ContactPointExtractor
+    field_mappings:
+      - source_path: telecom[*].value
+        target_field: email
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: telecom[*].value
+        target_field: phone
+        datatype: array[string]
+
+  telecom_all:
+    source: telecom
+    target: _search
+    extractor: ContactPointExtractor
+    field_mappings:
+      - source_path: telecom[*].value
+        target_field: telecom_values
+        datatype: array[string]
+      - source_path: telecom[*]
+        target_field: telecom_systemCode
+        datatype: array[string]
+
+  address:
+    source: address
+    target: _search
+    extractor: AddressExtractor
+    field_mappings:
+      - source_path: address[*]
+        target_field: addressFull
+        datatype: array[string]
+      - source_path: address[*]
+        target_field: addressFull_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: address[*].city
+        target_field: addressCity
+        datatype: array[string]
+      - source_path: address[*].city
+        target_field: addressCity_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: address[*].state
+        target_field: addressState
+        datatype: array[string]
+      - source_path: address[*].state
+        target_field: addressState_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: address[*].postalCode
+        target_field: addressPostalCode
+        datatype: array[string]
+      - source_path: address[*].country
+        target_field: addressCountry
+        datatype: array[string]
+      - source_path: address[*].country
+        target_field: addressCountry_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: address[*].use
+        target_field: addressUse
+        datatype: array[string]
+      - source_path: address[*].text
+        target_field: addressText
+        datatype: array[string]
+
+  relationship:
+    source: relationship
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: relationship[*].coding[*].code
+        target_field: relationship_codes
+        datatype: array[string]
+      - source_path: relationship[*].coding[*]
+        target_field: relationship_systemCode
+        datatype: array[string]
+
+  patient:
+    source: patient
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: patient.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - patient
+        reference_type: Patient
+        datatype: array[string]
+        comment: "Patient compartment (patient.json linking param patient)"
+      - target_field: RelatedPerson
+        source_paths: []
+        reference_type: RelatedPerson
+        include_self: true
+        datatype: array[string]
+        comment: "RelatedPerson compartment root ([base])"
+
+compartments:
+  precomputed:
+    - Patient
+    - RelatedPerson
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+  - fields:
+      - "_compartments.RelatedPerson": 1
+    options:
+      name: idx_compartment_relatedperson
+      sparse: true
+  - fields:
+      - "_search.familyName_lower": 1
+    options:
+      name: idx_family_name_lower
+      sparse: true
+  - fields:
+      - "_search.givenNames_lower": 1
+    options:
+      name: idx_given_names_lower
+      sparse: true
+  - fields:
+      - "_search.patientId": 1
+    options:
+      name: idx_patient_id
+      sparse: true
+  - fields:
+      - "_search.relationship_codes": 1
+    options:
+      name: idx_relationship_codes
+      sparse: true
+  - fields:
+      - "_search.identifier_systemCode": 1
+    options:
+      name: idx_identifier_system_code
+      sparse: true
+  - fields:
+      - "birthDate": 1
+    options:
+      name: idx_birth_date
+      sparse: true
+  - fields:
+      - "gender": 1
+    options:
+      name: idx_gender
+  - fields:
+      - "active": 1
+    options:
+      name: idx_active
+  - fields:
+      - "_search.phonetic_codes": 1
+    options:
+      name: idx_phonetic_codes
+      sparse: true
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_last_updated

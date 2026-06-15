@@ -3,11 +3,6 @@
 from typing import Dict, Any, List, Optional
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from .condition_processor import ConditionProcessor
-from ..contains_clause import (
-    build_shortened_contains_condition,
-    build_shortened_row_fanout_spec,
-    find_deepest_referenced_alias,
-)
 from .value_formatter import ValueFormatter
 from .format_resolver import FormatResolver
 from kehrnel.persistence import PersistenceStrategy, get_default_strategy
@@ -70,12 +65,7 @@ class SearchPipelineBuilder:
             'comp_id': search_fields.comp_id if search_fields and search_fields.comp_id else 'comp_id',
             'template_id': search_fields.template_id if search_fields and search_fields.template_id else 'tid',
             'sort_time': search_fields.sort_time if search_fields and search_fields.sort_time else 'sort_time',
-            'separator': self.schema_config.get("separator", ":"),
         }
-
-    def _root_path_regex(self) -> str:
-        separator = self.search_config.get("separator", ":") or ":"
-        return rf"^[^{re.escape(separator)}]+$"
 
     def _resolve_search_index_name(self):
         search_collection = self.strategy.collections.get("search") if self.strategy else None
@@ -123,470 +113,6 @@ class SearchPipelineBuilder:
             ]
         }
 
-    async def _get_row_fanout_spec(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        return await build_shortened_row_fanout_spec(
-            ast,
-            ast.get("contains"),
-            composition_alias=self.composition_alias,
-            archetype_resolver=self.format_resolver.archetype_resolver,
-            separator=self.search_config.get("separator", ":"),
-        )
-
-    def _fanout_alias_path_expr(self, leaf_path_expr: Any, alias_code: str) -> Dict[str, Any]:
-        separator = self.search_config.get("separator", ":") or ":"
-        return {
-            "$let": {
-                "vars": {
-                    "parts": {"$split": [leaf_path_expr, separator]},
-                },
-                "in": {
-                    "$let": {
-                        "vars": {
-                            "idx": {"$indexOfArray": ["$$parts", str(alias_code)]},
-                        },
-                        "in": {
-                            "$cond": [
-                                {"$gte": ["$$idx", 0]},
-                                {
-                                    "$reduce": {
-                                        "input": {"$slice": ["$$parts", "$$idx", {"$size": "$$parts"}]},
-                                        "initialValue": "",
-                                        "in": {
-                                            "$cond": [
-                                                {"$eq": ["$$value", ""]},
-                                                "$$this",
-                                                {"$concat": ["$$value", separator, "$$this"]},
-                                            ]
-                                        },
-                                    }
-                                },
-                                None,
-                            ]
-                        },
-                    }
-                },
-            }
-        }
-
-    def _build_fanout_paths_document(self, spec: Dict[str, Any]) -> Dict[str, Any]:
-        leaf_expr: Any = "$__fanout_nodes.p"
-        target_alias = spec["target_alias"]
-        alias_codes = spec.get("alias_codes", {})
-        paths: Dict[str, Any] = {}
-        for alias in spec.get("aliases", []):
-            if alias == target_alias:
-                paths[alias] = leaf_expr
-            else:
-                code = alias_codes.get(alias)
-                if code is not None:
-                    paths[alias] = self._fanout_alias_path_expr(leaf_expr, str(code))
-        return paths
-
-    def _supports_exact_row_correlation(self) -> bool:
-        return str(self.schema_config.get("path_instance_mode") or "").strip().lower() == "chain"
-
-    def _normalized_instance_array_expr(self, path_expr: Any, instance_expr: Any) -> Dict[str, Any]:
-        separator = self.schema_config.get("separator", ":") or ":"
-        return {
-            "$let": {
-                "vars": {
-                    "parts": {"$split": [path_expr, separator]},
-                    "instances": instance_expr,
-                },
-                "in": {
-                    "$cond": [
-                        {"$isArray": "$$instances"},
-                        "$$instances",
-                        {
-                            "$map": {
-                                "input": {"$range": [0, {"$size": "$$parts"}]},
-                                "as": "idx",
-                                "in": -1,
-                            }
-                        },
-                    ]
-                },
-            }
-        }
-
-    def _fanout_alias_instance_expr(self, leaf_path_expr: Any, leaf_instance_expr: Any, alias_code: str) -> Dict[str, Any]:
-        separator = self.schema_config.get("separator", ":") or ":"
-        return {
-            "$let": {
-                "vars": {
-                    "parts": {"$split": [leaf_path_expr, separator]},
-                    "instances": self._normalized_instance_array_expr(leaf_path_expr, leaf_instance_expr),
-                },
-                "in": {
-                    "$let": {
-                        "vars": {
-                            "idx": {"$indexOfArray": ["$$parts", str(alias_code)]},
-                        },
-                        "in": {
-                            "$cond": [
-                                {"$gte": ["$$idx", 0]},
-                                {"$slice": ["$$instances", "$$idx", {"$size": "$$instances"}]},
-                                None,
-                            ]
-                        },
-                    }
-                },
-            }
-        }
-
-    def _build_fanout_instances_document(self, spec: Dict[str, Any]) -> Dict[str, Any]:
-        instance_field = self.schema_config.get("path_instance_field", "pi")
-        leaf_path_expr: Any = "$__fanout_nodes.p"
-        leaf_instance_expr: Any = f"$__fanout_nodes.{instance_field}"
-        target_alias = spec["target_alias"]
-        alias_codes = spec.get("alias_codes", {})
-        instances: Dict[str, Any] = {}
-        for alias in spec.get("aliases", []):
-            if alias == target_alias:
-                instances[alias] = self._normalized_instance_array_expr(leaf_path_expr, leaf_instance_expr)
-            else:
-                code = alias_codes.get(alias)
-                if code is not None:
-                    instances[alias] = self._fanout_alias_instance_expr(leaf_path_expr, leaf_instance_expr, str(code))
-        return instances
-
-    def _build_fanout_regex_expr(self, alias_path_expr: Any, selector_codes: List[str]) -> Any:
-        separator = self.search_config.get("separator", ":") or ":"
-        prefix = separator.join(reversed([str(code) for code in selector_codes]))
-        pieces: List[Any] = ["^"]
-        if prefix:
-            pieces.extend([prefix, separator])
-        pieces.extend([alias_path_expr, "$"])
-        return {"$concat": pieces}
-
-    async def build_row_fanout_stages(self, ast: Dict[str, Any]) -> List[Dict[str, Any]]:
-        spec = await self._get_row_fanout_spec(ast)
-        if not spec:
-            return []
-
-        path_field = self.schema_config["path_field"]
-        fanout_add_fields: Dict[str, Any] = {
-            "__fanout_paths": self._build_fanout_paths_document(spec),
-        }
-        if self._supports_exact_row_correlation():
-            fanout_add_fields["__fanout_instances"] = self._build_fanout_instances_document(spec)
-        return [
-            {
-                "$addFields": {
-                    "__fanout_nodes": {
-                        "$filter": {
-                            "input": self._full_composition_nodes_expr(),
-                            "as": "node",
-                            "cond": {
-                                "$regexMatch": {
-                                    "input": f"$$node.{path_field}",
-                                    "regex": spec["target_regex"],
-                                }
-                            },
-                        }
-                    }
-                }
-            },
-            {"$unwind": "$__fanout_nodes"},
-            {"$addFields": fanout_add_fields},
-        ]
-
-    def _iter_where_children(self, node: Dict[str, Any]) -> List[Dict[str, Any]]:
-        children = node.get("conditions")
-        if isinstance(children, dict):
-            return [child for child in children.values() if isinstance(child, dict)]
-        if isinstance(children, list):
-            return [child for child in children if isinstance(child, dict)]
-        return []
-
-    def _where_has_row_sensitive_alias(self, node: Dict[str, Any] | None, spec: Dict[str, Any]) -> bool:
-        if not isinstance(node, dict) or not node:
-            return False
-
-        operator = str(node.get("operator") or "").upper()
-        if operator in {"AND", "OR"}:
-            return any(self._where_has_row_sensitive_alias(child, spec) for child in self._iter_where_children(node))
-
-        path = node.get("path")
-        if not isinstance(path, str) or "/" not in path:
-            return False
-        alias = path.split("/", 1)[0].strip()
-        return bool(alias and alias != self.composition_alias and alias in set(spec.get("full_aliases", [])))
-
-    def _format_condition_value(self, path: str, value: Any) -> Any:
-        formatted_value = self.value_formatter.format_value(value)
-        if path in {"ehr_id", f"{self.ehr_alias}/ehr_id/value"}:
-            return self.value_formatter.format_id_value(
-                formatted_value,
-                self.schema_config.get("ehr_id_encoding", "string"),
-            )
-        if path == f"{self.composition_alias}/uid/value":
-            return self.value_formatter.format_id_value(
-                formatted_value,
-                self.schema_config.get("composition_id_encoding", "string"),
-            )
-        return formatted_value
-
-    def _build_regex_predicate_expr(self, field_expr: Any, pattern: str) -> Dict[str, Any]:
-        return {
-            "$regexMatch": {
-                "input": {"$toString": {"$ifNull": [field_expr, ""]}},
-                "regex": pattern,
-            }
-        }
-
-    def _build_sql_like_pattern(self, value: Any) -> str:
-        parts = ["^"]
-        for char in str(value):
-            if char == "%":
-                parts.append(".*")
-            elif char == "_":
-                parts.append(".")
-            else:
-                parts.append(re.escape(char))
-        parts.append("$")
-        return "".join(parts)
-
-    def _build_matches_pattern(self, value: Any) -> str:
-        if isinstance(value, dict):
-            values = [value.get(str(idx)) for idx in range(len(value))]
-            escaped = [re.escape(str(item)) for item in values if item is not None]
-            if escaped:
-                return rf"^(?:{'|'.join(escaped)})$"
-        if isinstance(value, list):
-            escaped = [re.escape(str(item)) for item in value if item is not None]
-            if escaped:
-                return rf"^(?:{'|'.join(escaped)})$"
-        return str(value)
-
-    def _build_value_predicate_expr(
-        self,
-        field_expr: Any,
-        operator: str,
-        value: Any,
-        *,
-        preformatted: bool = False,
-    ) -> Optional[Dict[str, Any]]:
-        op = str(operator or "").upper()
-        formatted_value = value if preformatted else self.value_formatter.format_value(value)
-
-        if op == "=":
-            return {"$eq": [field_expr, formatted_value]}
-        if op in {"!=", "<>"}:
-            return {"$ne": [field_expr, formatted_value]}
-        if op == ">":
-            return {"$gt": [field_expr, formatted_value]}
-        if op == "<":
-            return {"$lt": [field_expr, formatted_value]}
-        if op == ">=":
-            return {"$gte": [field_expr, formatted_value]}
-        if op == "<=":
-            return {"$lte": [field_expr, formatted_value]}
-        if op == "LIKE":
-            return self._build_regex_predicate_expr(field_expr, self._build_sql_like_pattern(formatted_value))
-        if op == "MATCHES":
-            return self._build_regex_predicate_expr(field_expr, self._build_matches_pattern(formatted_value))
-        return None
-
-    def _combine_exprs(self, operator: str, exprs: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
-        if not exprs:
-            return None
-        if len(exprs) == 1:
-            return exprs[0]
-        return {operator: exprs}
-
-    def _build_direct_field_condition_expr(self, path: str, field_expr: Any, operator: str, value: Any) -> Optional[Dict[str, Any]]:
-        op = str(operator or "").upper()
-        if op == "EXISTS":
-            return {"$ne": [{"$type": field_expr}, "missing"]}
-        if op == "NOT EXISTS":
-            return {"$eq": [{"$type": field_expr}, "missing"]}
-        return self._build_value_predicate_expr(
-            field_expr,
-            op,
-            self._format_condition_value(path, value),
-            preformatted=True,
-        )
-
-    def _resolve_row_match_direct_field_expr(self, path: str) -> Optional[str]:
-        if path in {"ehr_id", f"{self.ehr_alias}/ehr_id/value"}:
-            return f"${self.search_config.get('ehr_id', 'ehr_id')}"
-        document_field = self.format_resolver.resolve_document_field(path)
-        if document_field:
-            return f"${document_field}"
-        return None
-
-    def _build_candidate_correlation_expr(
-        self,
-        spec: Dict[str, Any],
-        variable_alias: str,
-        *,
-        candidate_path_expr: Any,
-        candidate_instance_expr: Any,
-    ) -> Optional[Dict[str, Any]]:
-        if not self._supports_exact_row_correlation():
-            return None
-
-        alias_index = spec.get("alias_index") or {}
-        target_alias = spec.get("target_alias")
-        target_index = alias_index.get(target_alias)
-        variable_index = alias_index.get(variable_alias)
-        if variable_index is None or target_index is None:
-            return None
-
-        anchor_alias = variable_alias if variable_index <= target_index else target_alias
-        anchor_code = (spec.get("full_alias_codes") or {}).get(anchor_alias)
-        if anchor_code is None:
-            return None
-
-        return {
-            "$and": [
-                {
-                    "$eq": [
-                        self._fanout_alias_path_expr(candidate_path_expr, str(anchor_code)),
-                        f"$__fanout_paths.{anchor_alias}",
-                    ]
-                },
-                {
-                    "$eq": [
-                        self._fanout_alias_instance_expr(candidate_path_expr, candidate_instance_expr, str(anchor_code)),
-                        f"$__fanout_instances.{anchor_alias}",
-                    ]
-                },
-            ]
-        }
-
-    async def _build_leaf_row_match_expr(
-        self,
-        condition: Dict[str, Any],
-        spec: Dict[str, Any],
-        *,
-        nodes_expr: Any,
-    ) -> Optional[Dict[str, Any]]:
-        path = condition.get("path")
-        operator = str(condition.get("operator") or "").upper()
-        if not isinstance(path, str) or not operator:
-            return None
-
-        direct_field_expr = self._resolve_row_match_direct_field_expr(path)
-        if direct_field_expr is not None:
-            return self._build_direct_field_condition_expr(path, direct_field_expr, operator, condition.get("value"))
-
-        try:
-            path_regex_pattern, data_path = await self.format_resolver.translate_aql_path(path)
-        except Exception:
-            return None
-
-        if path_regex_pattern is None:
-            return self._build_direct_field_condition_expr(path, f"${data_path}", operator, condition.get("value"))
-
-        variable_alias = path.split("/", 1)[0].strip()
-        path_field = self.schema_config["path_field"]
-        instance_field = self.schema_config.get("path_instance_field", "pi")
-        conds: List[Dict[str, Any]] = [
-            {
-                "$regexMatch": {
-                    "input": f"$$node.{path_field}",
-                    "regex": path_regex_pattern,
-                }
-            }
-        ]
-        correlation_expr = self._build_candidate_correlation_expr(
-            spec,
-            variable_alias,
-            candidate_path_expr=f"$$node.{path_field}",
-            candidate_instance_expr=f"$$node.{instance_field}",
-        )
-        if correlation_expr is not None:
-            conds.append(correlation_expr)
-
-        if operator not in {"EXISTS", "NOT EXISTS"}:
-            value_expr = self._build_value_predicate_expr(f"$$node.{data_path}", operator, condition.get("value"))
-            if value_expr is None:
-                return None
-            conds.append(value_expr)
-
-        filter_expr = self._combine_exprs("$and", conds)
-        if filter_expr is None:
-            return None
-
-        match_count_expr = {
-            "$size": {
-                "$filter": {
-                    "input": nodes_expr,
-                    "as": "node",
-                    "cond": filter_expr,
-                }
-            }
-        }
-        if operator == "NOT EXISTS":
-            return {"$eq": [match_count_expr, 0]}
-        return {"$gt": [match_count_expr, 0]}
-
-    async def _build_row_where_expr(
-        self,
-        node: Dict[str, Any] | None,
-        spec: Dict[str, Any],
-        *,
-        nodes_expr: Any,
-    ) -> Optional[Dict[str, Any]]:
-        if not isinstance(node, dict) or not node:
-            return None
-
-        operator = str(node.get("operator") or "").upper()
-        if operator in {"AND", "OR"}:
-            child_exprs: List[Dict[str, Any]] = []
-            children = self._iter_where_children(node)
-            for child in children:
-                child_expr = await self._build_row_where_expr(child, spec, nodes_expr=nodes_expr)
-                if child_expr is None:
-                    if operator == "OR":
-                        return None
-                    continue
-                child_exprs.append(child_expr)
-            return self._combine_exprs(f"${operator.lower()}", child_exprs)
-
-        return await self._build_leaf_row_match_expr(node, spec, nodes_expr=nodes_expr)
-
-    async def build_row_exact_match_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        if not self._supports_exact_row_correlation():
-            return None
-
-        spec = await self._get_row_fanout_spec(ast)
-        if not spec or not self._where_has_row_sensitive_alias(ast.get("where"), spec):
-            return None
-
-        row_expr = await self._build_row_where_expr(
-            ast.get("where"),
-            spec,
-            nodes_expr=self._full_composition_nodes_expr(),
-        )
-        if row_expr is None:
-            return None
-        return {"$match": {"$expr": row_expr}}
-
-    async def _build_fanout_aware_projection(
-        self,
-        aql_path: str,
-        spec: Dict[str, Any],
-    ) -> Optional[Any]:
-        variable = aql_path.split("/", 1)[0]
-        if variable not in set(spec.get("aliases", [])):
-            return None
-
-        _path_regex_pattern, data_path = await self.format_resolver.translate_aql_path(aql_path)
-        selector_codes = await self.format_resolver.get_selector_codes(aql_path)
-        if variable == spec["target_alias"] and not selector_codes:
-            return f"$__fanout_nodes.{data_path}"
-
-        regex_expr = self._build_fanout_regex_expr(f"$__fanout_paths.{variable}", selector_codes)
-        return self._first_matching_node_value(
-            self._full_composition_nodes_expr(),
-            path_field=self.schema_config["path_field"],
-            path_regex_pattern=regex_expr,
-            data_path=data_path,
-        )
-
     async def build_search_pipeline(self, ast: Dict[str, Any]) -> List[Dict[str, Any]]:
         """
         Constructs the full MongoDB aggregation pipeline starting with $search.
@@ -608,27 +134,17 @@ class SearchPipelineBuilder:
         if lookup_stage:
             pipeline.append(lookup_stage)
 
-        # 4. Fan out rows only when the deepest selected alias can repeat.
-        fanout_stages = await self.build_row_fanout_stages(ast)
-        if fanout_stages:
-            pipeline.extend(fanout_stages)
-
-        # 5. Re-apply supported WHERE logic at row level when exact fanout correlation is available.
-        row_exact_match = await self.build_row_exact_match_stage(ast)
-        if row_exact_match:
-            pipeline.append(row_exact_match)
-
-        # 6. Build the $addFields stage for LET variables
+        # 4. Build the $addFields stage for LET variables
         let_stage = self.build_let_stage()
         if let_stage:
             pipeline.append(let_stage)
 
-        # 7. Build the $project stage from the SELECT clause  
+        # 5. Build the $project stage from the SELECT clause  
         project_stage = await self.build_project_stage(ast)
         if project_stage:
             pipeline.append(project_stage)
 
-        # 8. Build DISTINCT stages ($group + $replaceRoot) if SELECT DISTINCT is used
+        # 6. Build DISTINCT stages ($group + $replaceRoot) if SELECT DISTINCT is used
         # This must come after $project so we can group by the projected field names
         projected_fields = self.get_projected_field_names(ast)
         distinct_stages = self.build_distinct_stages(ast, projected_fields)
@@ -636,12 +152,12 @@ class SearchPipelineBuilder:
             pipeline.extend(distinct_stages)
             logger.info(f"Added DISTINCT stages for fields: {projected_fields}")
 
-        # 9. Build the $sort stage from ORDER BY clause
+        # 7. Build the $sort stage from ORDER BY clause
         sort_stage = self.build_sort_stage(ast)
         if sort_stage:
             pipeline.append(sort_stage)
         
-        # 10. Build the $limit stage from LIMIT clause
+        # 8. Build the $limit stage from LIMIT clause
         limit_stage = self.build_limit_stage(ast)
         if limit_stage:
             pipeline.append(limit_stage)
@@ -1117,11 +633,8 @@ class SearchPipelineBuilder:
         
         # Process CONTAINS clause for structural filtering
         skip_root_composition_match = self._where_has_template_constraint(where_clause)
-        if contains_clause:
-            contains_conditions = await self._process_contains_clause(
-                contains_clause,
-                nested_only=skip_root_composition_match,
-            )
+        if contains_clause and not skip_root_composition_match:
+            contains_conditions = await self._process_contains_clause(contains_clause)
             if contains_conditions:
                 additional_conditions.update(contains_conditions)
         
@@ -1142,54 +655,62 @@ class SearchPipelineBuilder:
             return any(self._where_has_template_constraint(child) for child in conditions if isinstance(child, dict))
         return False
 
-    async def _process_contains_clause(
-        self,
-        contains_clause: Dict[str, Any],
-        *,
-        nested_only: bool = False,
-    ) -> Optional[Dict[str, Any]]:
+    async def _process_contains_clause(self, contains_clause: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """
         Processes CONTAINS clause for the search collection structure.
         """
         if not contains_clause:
             return None
-
-        shortened_condition = await build_shortened_contains_condition(
-            contains_clause,
-            self.format_resolver.archetype_resolver,
-            path_field=self.search_config.get("path_field", "p"),
-            data_field=self.search_config.get("data_field", "data"),
-            separator=self.search_config.get("separator", ":"),
-            nested_only=nested_only,
-        )
-        if shortened_condition:
-            return {
-                self.search_config["composition_array"]: shortened_condition
-            }
-
-        if nested_only:
-            return None
-
+            
         rmType = contains_clause.get("rmType")
         predicate = contains_clause.get("predicate")
         if rmType != "COMPOSITION" and contains_clause.get("contains"):
             return await self._process_contains_clause(contains_clause.get("contains"))
-
+        
         # Handle COMPOSITION level filtering
         if rmType == "COMPOSITION" and predicate:
             conditions = {}
+            
+            # Handle archetype_id predicate
+            # The AQL parser creates predicates with path="archetype_node_id" for archetype constraints
+            # e.g., [openEHR-EHR-COMPOSITION.vaccination_list.v0] becomes:
+            # {"path": "archetype_node_id", "operator": "=", "value": "openEHR-EHR-COMPOSITION..."}
             predicate_path = predicate.get("path")
             archetype_id = predicate.get("value")
-
+            
             if predicate_path == "archetype_node_id" and archetype_id:
-                conditions[self.search_config["composition_array"]] = {
-                    "$elemMatch": {
-                        self.search_config.get("path_field", "p"): {"$regex": self._root_path_regex()}
+                numeric_code = None
+                if self.format_resolver.archetype_resolver:
+                    # Resolve archetype ID to numeric code
+                    try:
+                        numeric_code = await self.format_resolver.archetype_resolver.get_archetype_code(archetype_id)
+                        if numeric_code is not None:
+                            logger.info(f"Resolved archetype {archetype_id} to code={numeric_code}")
+                        else:
+                            logger.warning(f"Archetype {archetype_id} not found in codes collection")
+                    except Exception as e:
+                        logger.warning(f"Could not resolve archetype {archetype_id}: {e}")
+                else:
+                    logger.warning(f"Archetype resolver not available, cannot filter by archetype {archetype_id}")
+
+                path_field = self.search_config.get("path_field", "p")
+                data_field = self.search_config.get("data_field", "data")
+                if numeric_code is not None:
+                    conditions[self.search_config["composition_array"]] = {
+                        "$elemMatch": {
+                            path_field: str(numeric_code),
+                            f"{data_field}.ani": numeric_code,
+                        }
                     }
-                }
-
+                else:
+                    conditions[self.search_config["composition_array"]] = {
+                        "$elemMatch": {
+                            path_field: {"$regex": r"^[^\\.]+$"}
+                        }
+                    }
+            
             return conditions
-
+            
         return None
 
     def build_lookup_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -1217,13 +738,6 @@ class SearchPipelineBuilder:
         Determines if the query needs full composition data based on SELECT clause.
         Returns True if any selected field requires data not available in search collection.
         """
-        if find_deepest_referenced_alias(
-            ast,
-            ast.get("contains"),
-            composition_alias=self.composition_alias,
-        ):
-            return True
-
         columns = ast.get("select", {}).get("columns", {})
         if not columns:
             return False
@@ -1403,7 +917,6 @@ class SearchPipelineBuilder:
         if not columns:
             return None
 
-        fanout_spec = await self._get_row_fanout_spec(ast)
         projection = {"_id": 0}
         
         for col_data in columns.values():
@@ -1446,13 +959,8 @@ class SearchPipelineBuilder:
                             # Route field to appropriate data source
                             projection[alias] = await self._build_hybrid_field_projection(aql_path, alias)
                     else:
-                        fanout_projection = None
-                        if fanout_spec:
-                            fanout_projection = await self._build_fanout_aware_projection(
-                                aql_path,
-                                fanout_spec,
-                            )
-                        projection[alias] = fanout_projection or await self._build_hybrid_field_projection(aql_path, alias)
+                        # Handle other variable types with hybrid projection
+                        projection[alias] = await self._build_hybrid_field_projection(aql_path, alias)
                 else:
                     # Fallback to alias if path cannot be extracted
                     projection[alias] = f"${alias}"
