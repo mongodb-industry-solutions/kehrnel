@@ -1,0 +1,1251 @@
+{
+  "fhir_version": "R6",
+  "resource_count": 12,
+  "resources": {
+    "Appointment": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "actor",
+        "description": "Any one of the individuals participating in the appointment",
+        "type": "reference"
+      },
+      {
+        "code": "appointment-type",
+        "description": "The style of appointment or patient that has been booked in the slot (not service type)",
+        "type": "token"
+      },
+      {
+        "code": "based-on",
+        "description": "The service request this appointment is allocated to assess",
+        "type": "reference"
+      },
+      {
+        "code": "date",
+        "description": "Appointment date/time",
+        "type": "date"
+      },
+      {
+        "code": "group",
+        "description": "One of the individuals of the appointment is this patient (when subject is a Group)",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "An Identifier of the Appointment",
+        "type": "token"
+      },
+      {
+        "code": "location",
+        "description": "This location is listed in the participants of the appointment",
+        "type": "reference"
+      },
+      {
+        "code": "part-status",
+        "description": "The Participation status of the subject, or other participant on the appointment",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "One of the individuals of the appointment is this patient",
+        "type": "reference"
+      },
+      {
+        "code": "practitioner",
+        "description": "One of the individuals of the appointment is this practitioner",
+        "type": "reference"
+      },
+      {
+        "code": "reason-code",
+        "description": "Reference to a concept (by class)",
+        "type": "token"
+      },
+      {
+        "code": "reason-reference",
+        "description": "Reference to a resource (by instance)",
+        "type": "reference"
+      },
+      {
+        "code": "requested-period",
+        "description": "During what period was the Appointment requested to take place",
+        "type": "date"
+      },
+      {
+        "code": "service-category",
+        "description": "A broad categorization of the service that is to be performed during this appointment",
+        "type": "token"
+      },
+      {
+        "code": "service-type",
+        "description": "The specific service (by coding) that is to be performed during this appointment",
+        "type": "token"
+      },
+      {
+        "code": "service-type-reference",
+        "description": "The specific service (by HealthcareService) that is to be performed during this appointment",
+        "type": "reference"
+      },
+      {
+        "code": "slot",
+        "description": "The slots that this appointment is filling",
+        "type": "reference"
+      },
+      {
+        "code": "specialty",
+        "description": "The specialty of a practitioner that would be required to perform the service requested in this appointment",
+        "type": "token"
+      },
+      {
+        "code": "status",
+        "description": "The overall status of the appointment",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "One of the individuals of the appointment is this patient",
+        "type": "reference"
+      },
+      {
+        "code": "supporting-info",
+        "description": "Additional information to support the appointment",
+        "type": "reference"
+      }
+    ],
+    "Condition": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "abatement-age",
+        "description": "Abatement as age or age range",
+        "type": "quantity"
+      },
+      {
+        "code": "abatement-date",
+        "description": "Date-related abatements (dateTime and Period variants)",
+        "type": "date"
+      },
+      {
+        "code": "abatement-string",
+        "description": "Abatement as a string (Condition.abatement.ofType(string))",
+        "type": "string"
+      },
+      {
+        "code": "body-site",
+        "description": "Anatomical location, if relevant",
+        "type": "token"
+      },
+      {
+        "code": "category",
+        "description": "The category of the condition",
+        "type": "token"
+      },
+      {
+        "code": "clinical-status",
+        "description": "The clinical status of the condition",
+        "type": "token"
+      },
+      {
+        "code": "code",
+        "description": "Code for the condition (Condition.code)",
+        "type": "token"
+      },
+      {
+        "code": "encounter",
+        "description": "The Encounter during which this Condition was created",
+        "type": "reference"
+      },
+      {
+        "code": "evidence",
+        "description": "Manifestation/symptom (Condition.evidence.concept)",
+        "type": "token"
+      },
+      {
+        "code": "evidence-detail",
+        "description": "Supporting information found elsewhere (Condition.evidence.reference)",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "A unique identifier of the condition record",
+        "type": "token"
+      },
+      {
+        "code": "onset-age",
+        "description": "Onsets as age or age range",
+        "type": "quantity"
+      },
+      {
+        "code": "onset-date",
+        "description": "Date-related onsets (dateTime and Period variants)",
+        "type": "date"
+      },
+      {
+        "code": "onset-info",
+        "description": "Onsets as a string (Condition.onset.ofType(string))",
+        "type": "string"
+      },
+      {
+        "code": "participant-actor",
+        "description": "Who or what participated in activities related to the condition",
+        "type": "reference"
+      },
+      {
+        "code": "participant-function",
+        "description": "Type of involvement of the actor in activities related to the condition",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "Who has the condition? (subject when resolved as Patient)",
+        "type": "reference"
+      },
+      {
+        "code": "recorded-date",
+        "description": "Date record was first recorded (Condition.recordedDate)",
+        "type": "date"
+      },
+      {
+        "code": "severity",
+        "description": "The severity of the condition",
+        "type": "token"
+      },
+      {
+        "code": "stage",
+        "description": "Simple summary (disease specific) \u2014 Condition.stage.summary",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "Who has the condition? (Patient or Group)",
+        "type": "reference"
+      },
+      {
+        "code": "verification-status",
+        "description": "unconfirmed | provisional | differential | confirmed | refuted | entered-in-error",
+        "type": "token"
+      }
+    ],
+    "Device": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "biological-source-event",
+        "description": "The biological source for the device (Device.biologicalSourceEvent \u2014 single Identifier)",
+        "type": "token"
+      },
+      {
+        "code": "code",
+        "description": "The definition / type of the device, by code\n(Device.definition.concept). Targets the CodeableConcept side\nof the R5 CodeableReference; the Reference side is se",
+        "type": "token"
+      },
+      {
+        "code": "definition",
+        "description": "The definition / type of the device (Device.definition.reference).\nTargets the Reference side of the R5 CodeableReference. The\n`code` parameter targets the Code",
+        "type": "reference"
+      },
+      {
+        "code": "device-name",
+        "description": "A server defined search that may match any of the string fields in\nDevice.name or Device.type. FHIR R5 expression:\n`Device.name.value | Device.type.coding.displ",
+        "type": "string"
+      },
+      {
+        "code": "expiration-date",
+        "description": "The expiration date of the device (Device.expirationDate)",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "Instance id from manufacturer, owner, and others (Device.identifier)",
+        "type": "token"
+      },
+      {
+        "code": "location",
+        "description": "A location, where the resource is found (Device.location)",
+        "type": "reference"
+      },
+      {
+        "code": "lot-number",
+        "description": "The lot number of the device (Device.lotNumber)",
+        "type": "string"
+      },
+      {
+        "code": "manufacture-date",
+        "description": "The manufacture date of the device (Device.manufactureDate)",
+        "type": "date"
+      },
+      {
+        "code": "manufacturer",
+        "description": "The manufacturer of the device (Device.manufacturer)",
+        "type": "string"
+      },
+      {
+        "code": "model",
+        "description": "The model of the device (Device.modelNumber)",
+        "type": "string"
+      },
+      {
+        "code": "organization",
+        "description": "The organization responsible for the device (Device.owner)",
+        "type": "reference"
+      },
+      {
+        "code": "parent",
+        "description": "The parent device (Device.parent) \u2014 recursive reference to another Device",
+        "type": "reference"
+      },
+      {
+        "code": "serial-number",
+        "description": "The serial number of the device. FHIR R5 expression:\n`Device.serialNumber | Device.identifier.where(type='SNO')` \u2014\na path union over the top-level scalar AND an",
+        "type": "string"
+      },
+      {
+        "code": "specification",
+        "description": "The standards, specifications, or formal guidances (Device.conformsTo.specification)",
+        "type": "token"
+      },
+      {
+        "code": "status",
+        "description": "Device status: `active | inactive | entered-in-error | unknown`\n(Device.status). Top-level scalar code \u2014 same shape as\nAppointment.status.\n",
+        "type": "token"
+      },
+      {
+        "code": "type",
+        "description": "The type of the device (Device.type \u2014 CodeableConcept[])",
+        "type": "token"
+      },
+      {
+        "code": "udi-carrier",
+        "description": "UDI Barcode (RFID or other technology) string in HRF format (Device.udiCarrier.carrierHRF)",
+        "type": "string"
+      },
+      {
+        "code": "udi-di",
+        "description": "The udi Device Identifier (DI) (Device.udiCarrier.deviceIdentifier)",
+        "type": "string"
+      },
+      {
+        "code": "url",
+        "description": "Network address to contact device (Device.url)",
+        "type": "uri"
+      },
+      {
+        "code": "version",
+        "description": "The specific version of the device (Device.version.value)",
+        "type": "string"
+      }
+    ],
+    "Group": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "characteristic",
+        "description": "Kind of characteristic (Group.characteristic.code \u2014 a\nCodeableConcept identifying the trait). Often paired with the\ncomposite `characteristic-value` parameter, ",
+        "type": "token"
+      },
+      {
+        "code": "characteristic-reference",
+        "description": "An entity referenced in a characteristic\n(Group.characteristic.value.ofType(Reference)). Targets the\nReference variant of the polymorphic `value[x]` \u2014 the\nCodea",
+        "type": "reference"
+      },
+      {
+        "code": "code",
+        "description": "The kind of resources contained (Group.code \u2014 a CodeableConcept\ndescribing what the group is *of*, e.g. a SNOMED code for\n\"diabetic patients\"). Distinct from `t",
+        "type": "token"
+      },
+      {
+        "code": "exclude",
+        "description": "Group includes or excludes (Group.characteristic.exclude \u2014 a\nboolean per characteristic entry). Searched as a token over the\nnative boolean; only the bare-value",
+        "type": "token"
+      },
+      {
+        "code": "identifier",
+        "description": "Unique id (Group.identifier)",
+        "type": "token"
+      },
+      {
+        "code": "managing-entity",
+        "description": "Entity that is the custodian of the Group's definition\n(Group.managingEntity). Targets Organization, RelatedPerson,\nPractitionerRole, or Practitioner per R5.\n",
+        "type": "reference"
+      },
+      {
+        "code": "member",
+        "description": "Reference to the group member (Group.member.entity). Targets\nANY of HealthcareService, CareTeam, Device, Organization,\nRelatedPerson, PractitionerRole, Group, P",
+        "type": "reference"
+      },
+      {
+        "code": "membership",
+        "description": "Definitional or enumerated group (Group.membership). Top-level\nscalar code with R5 fixed bindings:\n`definitional | enumerated`.\n",
+        "type": "token"
+      },
+      {
+        "code": "name",
+        "description": "A portion of the Group's name (Group.name)",
+        "type": "string"
+      },
+      {
+        "code": "type",
+        "description": "The type of resources the group contains (Group.type). Top-level\nscalar code with R5 fixed bindings: `person | animal |\npractitioner | device | careteam | healt",
+        "type": "token"
+      }
+    ],
+    "Location": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "address",
+        "description": "A (part of the) address of the location (Location.address)",
+        "type": "string"
+      },
+      {
+        "code": "address-city",
+        "description": "A city specified in an address (Location.address.city)",
+        "type": "string"
+      },
+      {
+        "code": "address-country",
+        "description": "A country specified in an address (Location.address.country)",
+        "type": "string"
+      },
+      {
+        "code": "address-postalcode",
+        "description": "A postal code specified in an address (Location.address.postalCode)",
+        "type": "string"
+      },
+      {
+        "code": "address-state",
+        "description": "A state specified in an address (Location.address.state)",
+        "type": "string"
+      },
+      {
+        "code": "address-use",
+        "description": "A use code specified in an address (Location.address.use)",
+        "type": "token"
+      },
+      {
+        "code": "characteristic",
+        "description": "One of the Location's characteristics (Location.characteristic[*].coding)",
+        "type": "token"
+      },
+      {
+        "code": "endpoint",
+        "description": "Technical endpoints providing access to services operated for the location (Location.endpoint -> Endpoint)",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "An identifier for the location (Location.identifier)",
+        "type": "token"
+      },
+      {
+        "code": "name",
+        "description": "A portion of the location's name or alias. Per FHIR R5 the spec\nexpression is `Location.name | Location.alias`, so this parameter\nranges over BOTH the canonical",
+        "type": "string"
+      },
+      {
+        "code": "operational-status",
+        "description": "Searches for locations (typically bed/room) that have an\noperational status (e.g. contaminated, housekeeping). The R5\nelement is a single Coding (NOT a Codeable",
+        "type": "token"
+      },
+      {
+        "code": "organization",
+        "description": "Searches for locations that are managed by the provided organization (Location.managingOrganization -> Organization)",
+        "type": "reference"
+      },
+      {
+        "code": "partof",
+        "description": "A location of which this location is a part (Location.partOf -> Location)",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "Searches for locations with a specific kind of status (Location.status)",
+        "type": "token"
+      },
+      {
+        "code": "type",
+        "description": "A code for the type of location (Location.type[*].coding)",
+        "type": "token"
+      }
+    ],
+    "Observation": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "based-on",
+        "description": "Reference to the service request",
+        "type": "reference"
+      },
+      {
+        "code": "category",
+        "description": "The classification of the type of observation",
+        "type": "token"
+      },
+      {
+        "code": "code",
+        "description": "The code of the observation type",
+        "type": "token"
+      },
+      {
+        "code": "code-value-concept",
+        "description": "Code and coded value parameter pair",
+        "type": "composite"
+      },
+      {
+        "code": "code-value-date",
+        "description": "Code and date/time value parameter pair",
+        "type": "composite"
+      },
+      {
+        "code": "code-value-quantity",
+        "description": "Code and quantity value parameter pair",
+        "type": "composite"
+      },
+      {
+        "code": "code-value-string",
+        "description": "Code and string value parameter pair",
+        "type": "composite"
+      },
+      {
+        "code": "combo-code",
+        "description": "The code of the observation type or component type",
+        "type": "token"
+      },
+      {
+        "code": "combo-code-value-concept",
+        "description": "Code and coded value parameter pair, including in components",
+        "type": "composite"
+      },
+      {
+        "code": "combo-code-value-quantity",
+        "description": "Code and quantity value parameter pair, including in components",
+        "type": "composite"
+      },
+      {
+        "code": "combo-data-absent-reason",
+        "description": "The reason why the expected value in Observation.value[x] or Observation.component.value[x] is missing",
+        "type": "token"
+      },
+      {
+        "code": "combo-value-concept",
+        "description": "The value or component value of the observation, if the value is a CodeableConcept",
+        "type": "token"
+      },
+      {
+        "code": "combo-value-quantity",
+        "description": "Quantity value or component quantity value of the observation",
+        "type": "quantity"
+      },
+      {
+        "code": "component-code",
+        "description": "The component code of the observation type",
+        "type": "token"
+      },
+      {
+        "code": "component-code-value-concept",
+        "description": "Component code and component coded value parameter pair",
+        "type": "composite"
+      },
+      {
+        "code": "component-code-value-quantity",
+        "description": "Component code and component quantity value parameter pair",
+        "type": "composite"
+      },
+      {
+        "code": "component-data-absent-reason",
+        "description": "The reason why the expected value in Observation.component.value[x] is missing",
+        "type": "token"
+      },
+      {
+        "code": "component-value-canonical",
+        "description": "URL contained in component.valueCanonical",
+        "type": "uri"
+      },
+      {
+        "code": "component-value-concept",
+        "description": "The value of the component observation, if the value is a CodeableConcept",
+        "type": "token"
+      },
+      {
+        "code": "component-value-quantity",
+        "description": "Quantity value of a component",
+        "type": "quantity"
+      },
+      {
+        "code": "component-value-reference",
+        "description": "Reference contained in component.valueReference",
+        "type": "reference"
+      },
+      {
+        "code": "data-absent-reason",
+        "description": "The reason why the expected value in Observation.value[x] is missing",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "Clinically relevant time/time-period for observation",
+        "type": "date"
+      },
+      {
+        "code": "derived-from",
+        "description": "Related measurements the observation is made from",
+        "type": "reference"
+      },
+      {
+        "code": "device",
+        "description": "The Device that generated the observation data",
+        "type": "reference"
+      },
+      {
+        "code": "encounter",
+        "description": "Encounter related to the observation",
+        "type": "reference"
+      },
+      {
+        "code": "focus",
+        "description": "The focus of an observation when the focus is not the patient of record",
+        "type": "reference"
+      },
+      {
+        "code": "has-member",
+        "description": "Related resource that belongs to the Observation group",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "The unique id for a particular observation",
+        "type": "token"
+      },
+      {
+        "code": "method",
+        "description": "The method used for the observation",
+        "type": "token"
+      },
+      {
+        "code": "part-of",
+        "description": "Part of referenced event",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "The subject that the observation is about (if Patient)",
+        "type": "reference"
+      },
+      {
+        "code": "performer",
+        "description": "Who performed the observation",
+        "type": "reference"
+      },
+      {
+        "code": "specimen",
+        "description": "Specimen used for this observation",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "The status of the observation",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "The subject that the observation is about",
+        "type": "reference"
+      },
+      {
+        "code": "value-canonical",
+        "description": "URL contained in valueCanonical",
+        "type": "uri"
+      },
+      {
+        "code": "value-concept",
+        "description": "The value of the observation, if the value is a CodeableConcept",
+        "type": "token"
+      },
+      {
+        "code": "value-date",
+        "description": "The value of the observation, if the value is a date or period of time",
+        "type": "date"
+      },
+      {
+        "code": "value-markdown",
+        "description": "The value of the observation when the value is a string/markdown, including CodeableConcept.text",
+        "type": "string"
+      },
+      {
+        "code": "value-quantity",
+        "description": "The value of the observation, if the value is a Quantity",
+        "type": "quantity"
+      },
+      {
+        "code": "value-reference",
+        "description": "Reference contained in valueReference",
+        "type": "reference"
+      }
+    ],
+    "Organization": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "active",
+        "description": "Whether the organization's record is active (Organization.active)",
+        "type": "token"
+      },
+      {
+        "code": "address",
+        "description": "A server defined search that matches any address field (line, city, district, state, country, postalCode, text)",
+        "type": "string"
+      },
+      {
+        "code": "address-city",
+        "description": "A city specified in an address (Organization.contact.address.city)",
+        "type": "string"
+      },
+      {
+        "code": "address-country",
+        "description": "A country specified in an address (Organization.contact.address.country)",
+        "type": "string"
+      },
+      {
+        "code": "address-postalcode",
+        "description": "A postal code specified in an address (Organization.contact.address.postalCode)",
+        "type": "string"
+      },
+      {
+        "code": "address-state",
+        "description": "A state specified in an address (Organization.contact.address.state)",
+        "type": "string"
+      },
+      {
+        "code": "address-use",
+        "description": "A use code specified in an address (Organization.contact.address.use)",
+        "type": "token"
+      },
+      {
+        "code": "endpoint",
+        "description": "Technical endpoints providing access to services operated for the organization (Organization.endpoint -> Endpoint)",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Any identifier for the organization (not the accreditation issuer's\nidentifier). Per FHIR R5 the spec expression is\n`Organization.identifier | Organization.qual",
+        "type": "token"
+      },
+      {
+        "code": "name",
+        "description": "A portion of the organization's name or alias. Per FHIR R5 the\nspec expression is `Organization.name | Organization.alias`, so\nthis parameter ranges over BOTH t",
+        "type": "string"
+      },
+      {
+        "code": "partof",
+        "description": "An organization of which this organization forms a part (Organization.partOf -> Organization)",
+        "type": "reference"
+      },
+      {
+        "code": "phonetic",
+        "description": "A portion of the organization's name encoded with the Soundex phonetic algorithm",
+        "type": "token"
+      },
+      {
+        "code": "type",
+        "description": "A code for the type of organization (Organization.type[*].coding)",
+        "type": "token"
+      }
+    ],
+    "Patient": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "active",
+        "description": "Whether the patient record is active",
+        "type": "token"
+      },
+      {
+        "code": "address",
+        "description": "A server-defined search that may match any of the string fields in the Address",
+        "type": "string"
+      },
+      {
+        "code": "address-city",
+        "description": "A city specified in an address",
+        "type": "string"
+      },
+      {
+        "code": "address-country",
+        "description": "A country specified in an address",
+        "type": "string"
+      },
+      {
+        "code": "address-postalcode",
+        "description": "A postal code specified in an address",
+        "type": "string"
+      },
+      {
+        "code": "address-state",
+        "description": "A state specified in an address",
+        "type": "string"
+      },
+      {
+        "code": "address-use",
+        "description": "A use code specified in an address",
+        "type": "token"
+      },
+      {
+        "code": "birthdate",
+        "description": "The patient's date of birth",
+        "type": "date"
+      },
+      {
+        "code": "death-date",
+        "description": "The date of death has been provided and satisfies this search value",
+        "type": "date"
+      },
+      {
+        "code": "deceased",
+        "description": "This patient has been marked as deceased, or has a death date entered",
+        "type": "token"
+      },
+      {
+        "code": "email",
+        "description": "A value in an email contact",
+        "type": "token"
+      },
+      {
+        "code": "family",
+        "description": "A portion of the family name of the patient",
+        "type": "string"
+      },
+      {
+        "code": "gender",
+        "description": "Gender of the patient",
+        "type": "token"
+      },
+      {
+        "code": "general-practitioner",
+        "description": "Patient's nominated general practitioner, not the organization that manages the record",
+        "type": "reference"
+      },
+      {
+        "code": "given",
+        "description": "A portion of the given name of the patient",
+        "type": "string"
+      },
+      {
+        "code": "identifier",
+        "description": "A patient identifier",
+        "type": "token"
+      },
+      {
+        "code": "language",
+        "description": "Language code (irrespective of use value)",
+        "type": "token"
+      },
+      {
+        "code": "link",
+        "description": "All patients/related persons linked to the given patient",
+        "type": "reference"
+      },
+      {
+        "code": "name",
+        "description": "A server-defined search that may match any of the string fields in the HumanName",
+        "type": "string"
+      },
+      {
+        "code": "organization",
+        "description": "The organization that is the custodian of the patient record",
+        "type": "reference"
+      },
+      {
+        "code": "phone",
+        "description": "A value in a phone contact",
+        "type": "token"
+      },
+      {
+        "code": "phonetic",
+        "description": "A portion of either family or given name using some kind of phonetic matching algorithm",
+        "type": "token"
+      },
+      {
+        "code": "telecom",
+        "description": "The value in any kind of telecom details of the patient",
+        "type": "token"
+      }
+    ],
+    "Practitioner": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "active",
+        "description": "Whether the practitioner record is active (Practitioner.active)",
+        "type": "token"
+      },
+      {
+        "code": "address",
+        "description": "A server defined search that may match any of the string fields\nin the Address \u2014 line, city, district, state, country, postalCode,\nand/or text (FHIR R5: `Practi",
+        "type": "string"
+      },
+      {
+        "code": "address-city",
+        "description": "A city specified in an address (Practitioner.address.city)",
+        "type": "string"
+      },
+      {
+        "code": "address-country",
+        "description": "A country specified in an address (Practitioner.address.country)",
+        "type": "string"
+      },
+      {
+        "code": "address-postalcode",
+        "description": "A postalCode specified in an address (Practitioner.address.postalCode)",
+        "type": "string"
+      },
+      {
+        "code": "address-state",
+        "description": "A state specified in an address (Practitioner.address.state)",
+        "type": "string"
+      },
+      {
+        "code": "address-use",
+        "description": "A use code specified in an address (Practitioner.address.use)",
+        "type": "token"
+      },
+      {
+        "code": "communication",
+        "description": "A language to communicate with the practitioner",
+        "type": "token"
+      },
+      {
+        "code": "death-date",
+        "description": "The date of death has been provided and satisfies this search value",
+        "type": "date"
+      },
+      {
+        "code": "deceased",
+        "description": "This Practitioner has been marked as deceased, or has a death date entered",
+        "type": "token"
+      },
+      {
+        "code": "email",
+        "description": "A value in an email contact (Practitioner.telecom.where(system='email'))",
+        "type": "token"
+      },
+      {
+        "code": "family",
+        "description": "A portion of the family name (Practitioner.name.family)",
+        "type": "string"
+      },
+      {
+        "code": "gender",
+        "description": "Gender of the practitioner (Practitioner.gender)",
+        "type": "token"
+      },
+      {
+        "code": "given",
+        "description": "A portion of the given name (Practitioner.name.given)",
+        "type": "string"
+      },
+      {
+        "code": "identifier",
+        "description": "A practitioner's identifier. Per FHIR R5 the spec expression is\n`Practitioner.identifier | Practitioner.qualification.identifier`,\nso this parameter spans BOTH ",
+        "type": "token"
+      },
+      {
+        "code": "name",
+        "description": "A server defined search that may match any of the string fields in the\nHumanName, including family, given, prefix, suffix, and/or text\n(FHIR R5 expression: `Pra",
+        "type": "string"
+      },
+      {
+        "code": "phone",
+        "description": "A value in a phone contact (Practitioner.telecom.where(system='phone'))",
+        "type": "token"
+      },
+      {
+        "code": "phonetic",
+        "description": "A portion of either family or given name using a phonetic matching algorithm (Soundex)",
+        "type": "token"
+      },
+      {
+        "code": "qualification-period",
+        "description": "The date(s) during which a qualification is valid\n(Practitioner.qualification.period). Per FHIR R5 the expression\nyields zero or more `Period` objects. The deno",
+        "type": "date"
+      },
+      {
+        "code": "telecom",
+        "description": "The value in any kind of contact (Practitioner.telecom)",
+        "type": "token"
+      }
+    ],
+    "PractitionerRole": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "active",
+        "description": "Whether this practitioner role record is in active use (PractitionerRole.active)",
+        "type": "token"
+      },
+      {
+        "code": "characteristic",
+        "description": "One of the PractitionerRole's characteristics (PractitionerRole.characteristic)",
+        "type": "token"
+      },
+      {
+        "code": "communication",
+        "description": "One of the languages that the practitioner can communicate with\n(PractitionerRole.communication). R5 stores the language as a\nCodeableConcept (was `code` in R4)",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "The period during which the practitioner is authorized to\nperform in these role(s) (PractitionerRole.period).\nPer FHIR R5 the comparators eq/ne/gt/ge/lt/le/sa/e",
+        "type": "date"
+      },
+      {
+        "code": "email",
+        "description": "A value in an email contact (PractitionerRole.contact.telecom.where(system='email'))",
+        "type": "token"
+      },
+      {
+        "code": "endpoint",
+        "description": "Technical endpoints providing access to services operated for the practitioner with this role (PractitionerRole.endpoint)",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "A practitioner's identifier (PractitionerRole.identifier)",
+        "type": "token"
+      },
+      {
+        "code": "location",
+        "description": "One of the locations at which this practitioner provides care (PractitionerRole.location)",
+        "type": "reference"
+      },
+      {
+        "code": "organization",
+        "description": "The identity of the organization the practitioner represents / acts on behalf of (PractitionerRole.organization)",
+        "type": "reference"
+      },
+      {
+        "code": "phone",
+        "description": "A value in a phone contact (PractitionerRole.contact.telecom.where(system='phone'))",
+        "type": "token"
+      },
+      {
+        "code": "practitioner",
+        "description": "Practitioner that is able to provide the defined services for the organization (PractitionerRole.practitioner)",
+        "type": "reference"
+      },
+      {
+        "code": "role",
+        "description": "The practitioner can perform this role at for the organization (PractitionerRole.code)",
+        "type": "token"
+      },
+      {
+        "code": "service",
+        "description": "The list of healthcare services that this worker provides for this role's Organization/Location(s) (PractitionerRole.healthcareService)",
+        "type": "reference"
+      },
+      {
+        "code": "specialty",
+        "description": "The practitioner has this specialty at an organization (PractitionerRole.specialty)",
+        "type": "token"
+      },
+      {
+        "code": "telecom",
+        "description": "The value in any kind of contact (PractitionerRole.contact.telecom)",
+        "type": "token"
+      }
+    ],
+    "Schedule": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "active",
+        "description": "Whether this schedule is in active use (Schedule.active)",
+        "type": "token"
+      },
+      {
+        "code": "actor",
+        "description": "The individual(HealthcareService, Practitioner, Location, \u2026) to find a Schedule for (Schedule.actor). 8 possible target types.\n",
+        "type": "reference"
+      },
+      {
+        "code": "date",
+        "description": "Search for Schedule resources that have a planningHorizon Period that contains this date (Schedule.planningHorizon).\n",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "A Schedule Identifier (Schedule.identifier)",
+        "type": "token"
+      },
+      {
+        "code": "name",
+        "description": "A portion of the Schedule name (Schedule.name)",
+        "type": "string"
+      },
+      {
+        "code": "service-category",
+        "description": "High-level category of service (Schedule.serviceCategory)",
+        "type": "token"
+      },
+      {
+        "code": "service-type",
+        "description": "The type (by coding) of appointments that can be booked into associated slot(s) \u2014 Schedule.serviceType.concept (CodeableReference's concept arm).\n",
+        "type": "token"
+      },
+      {
+        "code": "service-type-reference",
+        "description": "The type (by HealthcareService) of appointments that can be booked \u2014 Schedule.serviceType.reference (CodeableReference's reference arm).\n",
+        "type": "reference"
+      },
+      {
+        "code": "specialty",
+        "description": "Type of specialty needed (Schedule.specialty)",
+        "type": "token"
+      }
+    ],
+    "Slot": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "appointment-type",
+        "description": "The style of appointment or patient that may be booked in the slot (Slot.appointmentType \u2014 CodeableConcept[]).\n",
+        "type": "token"
+      },
+      {
+        "code": "identifier",
+        "description": "A Slot Identifier (Slot.identifier)",
+        "type": "token"
+      },
+      {
+        "code": "schedule",
+        "description": "The Schedule resource that this slot defines an interval of status information for (Slot.schedule). Single target: Schedule.\n",
+        "type": "reference"
+      },
+      {
+        "code": "service-category",
+        "description": "High-level category of the service (Slot.serviceCategory)",
+        "type": "token"
+      },
+      {
+        "code": "service-type",
+        "description": "The type (by coding) of appointments that can be booked into the slot \u2014 Slot.serviceType.concept (CodeableReference's concept arm).\n",
+        "type": "token"
+      },
+      {
+        "code": "service-type-reference",
+        "description": "The type (by HealthcareService) of appointments that can be booked \u2014 Slot.serviceType.reference (CodeableReference's reference arm).\n",
+        "type": "reference"
+      },
+      {
+        "code": "specialty",
+        "description": "The specialty required to perform this appointment (Slot.specialty)",
+        "type": "token"
+      },
+      {
+        "code": "start",
+        "description": "Appointment date/time (Slot.start \u2014 instant, queried directly)",
+        "type": "date"
+      },
+      {
+        "code": "status",
+        "description": "The free/busy status of the slot (Slot.status)",
+        "type": "token"
+      }
+    ]
+  },
+  "source": "src/fhir_search_to_mql/configs/*.yaml"
+}

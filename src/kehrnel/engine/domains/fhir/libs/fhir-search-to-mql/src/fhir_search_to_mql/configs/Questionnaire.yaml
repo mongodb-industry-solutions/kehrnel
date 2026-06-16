@@ -1,0 +1,381 @@
+resource: Questionnaire
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec Questionnaire)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: none — Questionnaire is not listed in any R5 compartment
+#   definition (see compartments/definitions/*.json).
+#
+# Total parameters: 23 (18 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`). Composite `context-type-quantity`,
+# `context-type-value`, and quantity `context-quantity` are deferred
+# (use `context`, `context-type`, and non-quantity params directly).
+#
+# R5 structural notes:
+#   * `Questionnaire.code[]` is Coding[] (not CodeableConcept).
+#   * `combo-code` unions root `code` with `item[].code`.
+#   * `useContext[]` powers `context` and `context-type` token searches.
+#   * `effectivePeriod` powers `effective` date overlap search.
+#   * `subjectType[]` is code[] at resource root.
+#   * Top-level scalar `status` and token `version` query FHIR root.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters
+  # ─────────────────────────────────────────────────────────────
+  date:
+    type: date
+    description: "The questionnaire publication date"
+    fields:
+      - field: "date"
+        type: date
+
+  effective:
+    type: date
+    description: "The time during which the questionnaire is intended to be in use"
+    fields:
+      - field: "_search.effectivePeriod"
+        type: period
+
+  # ─────────────────────────────────────────────────────────────
+  # String Parameters
+  # ─────────────────────────────────────────────────────────────
+  description:
+    type: string
+    description: "Natural language description of the questionnaire"
+    fields:
+      default:
+        - field: "_search.description_lower"
+          query_type: range
+      exact:
+        - field: "_search.description"
+
+  name:
+    type: string
+    description: "Name for this questionnaire (computer friendly)"
+    fields:
+      default:
+        - field: "_search.name_lower"
+          query_type: range
+      exact:
+        - field: "_search.name"
+
+  publisher:
+    type: string
+    description: "Name of the publisher of the questionnaire"
+    fields:
+      default:
+        - field: "_search.publisher_lower"
+          query_type: range
+      exact:
+        - field: "_search.publisher"
+
+  title:
+    type: string
+    description: "Name for this questionnaire (human friendly)"
+    fields:
+      default:
+        - field: "_search.title_lower"
+          query_type: range
+      exact:
+        - field: "_search.title"
+
+  # ─────────────────────────────────────────────────────────────
+  # URI Parameters
+  # ─────────────────────────────────────────────────────────────
+  definition:
+    type: uri
+    description: "Element definition URI for a questionnaire item"
+    fields:
+      - field: "_search.itemDefinition_values"
+
+  url:
+    type: uri
+    description: "The uri that identifies the questionnaire"
+    fields:
+      - field: "url"
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters
+  # ─────────────────────────────────────────────────────────────
+  combo-code:
+    type: token
+    description: "Code for item and its components and answers"
+    fields:
+      - field: "_search.comboCode_systemCode"
+        tokenType: systemCode
+      - field: "_search.comboCode_codes"
+        tokenType: code
+
+  context:
+    type: token
+    description: "A use context assigned to the questionnaire"
+    fields:
+      - field: "_search.context_codes"
+        tokenType: code
+
+  context-type:
+    type: token
+    description: "A type of use context assigned to the questionnaire"
+    fields:
+      - field: "_search.contextType_codes"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: "External identifiers for the questionnaire"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  item-code:
+    type: token
+    description: "Code for items in the questionnaire"
+    fields:
+      - field: "_search.itemCode_systemCode"
+        tokenType: systemCode
+      - field: "_search.itemCode_codes"
+        tokenType: code
+
+  jurisdiction:
+    type: token
+    description: "Intended jurisdiction for the questionnaire"
+    fields:
+      - field: "_search.jurisdiction_systemCode"
+        tokenType: systemCode
+      - field: "_search.jurisdiction_codes"
+        tokenType: code
+
+  questionnaire-code:
+    type: token
+    description: "Code for the questionnaire"
+    fields:
+      - field: "_search.questionnaireCode_systemCode"
+        tokenType: systemCode
+      - field: "_search.questionnaireCode_codes"
+        tokenType: code
+
+  status:
+    type: token
+    description: "The current status of the questionnaire"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  subject-type:
+    type: token
+    description: "Resource that can be subject of QuestionnaireResponse"
+    fields:
+      - field: "subjectType"
+        tokenType: code
+
+  version:
+    type: token
+    description: "The business version of the questionnaire"
+    fields:
+      - field: "version"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  questionnaire_code:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code[*]
+        target_field: questionnaireCode_codes
+        datatype: array[string]
+      - source_path: code[*]
+        target_field: questionnaireCode_systemCode
+        datatype: array[string]
+
+  combo_code:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code[*] | item[*].code[*]
+        target_field: comboCode_codes
+        datatype: array[string]
+      - source_path: code[*] | item[*].code[*]
+        target_field: comboCode_systemCode
+        datatype: array[string]
+
+  item_code:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: item[*].code[*]
+        target_field: itemCode_codes
+        datatype: array[string]
+      - source_path: item[*].code[*]
+        target_field: itemCode_systemCode
+        datatype: array[string]
+
+  jurisdiction:
+    source: jurisdiction
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: jurisdiction[*].coding[*].code
+        target_field: jurisdiction_codes
+        datatype: array[string]
+      - source_path: jurisdiction[*].coding[*]
+        target_field: jurisdiction_systemCode
+        datatype: array[string]
+
+  use_context_value:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: useContext[*].valueCodeableConcept.coding[*].code
+        target_field: context_codes
+        datatype: array[string]
+
+  use_context_type:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: useContext[*].code.code
+        target_field: contextType_codes
+        datatype: array[string]
+
+  effective_period:
+    source: effectivePeriod
+    target: _search
+    extractor: PeriodExtractor
+    field_mappings:
+      - source_path: start
+        target_field: effectivePeriod
+        datatype: object
+
+  item_definition:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: item[*].definition
+        target_field: itemDefinition_values
+        datatype: array[string]
+
+  description:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: description
+        target_field: description
+        datatype: string
+      - source_path: description
+        target_field: description_lower
+        datatype: string
+        normalize: lowercase
+
+  name:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: name
+        target_field: name
+        datatype: string
+      - source_path: name
+        target_field: name_lower
+        datatype: string
+        normalize: lowercase
+
+  publisher:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: publisher
+        target_field: publisher
+        datatype: string
+      - source_path: publisher
+        target_field: publisher_lower
+        datatype: string
+        normalize: lowercase
+
+  title:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: title
+        target_field: title
+        datatype: string
+      - source_path: title
+        target_field: title_lower
+        datatype: string
+        normalize: lowercase
+
+indexes:
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+
+  - fields:
+      - "_search.questionnaireCode_codes": 1
+    options:
+      name: idx_questionnaire_code_codes
+      sparse: true
+
+  - fields:
+      - "_search.comboCode_codes": 1
+    options:
+      name: idx_combo_code_codes
+      sparse: true
+
+  - fields:
+      - "date": 1
+    options:
+      name: idx_date
+      sparse: true
+
+  - fields:
+      - "url": 1
+    options:
+      name: idx_url
+      sparse: true
+
+  - fields:
+      - "meta.lastUpdated": 1
+    options:
+      name: idx_meta_last_updated
+      sparse: true

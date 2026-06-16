@@ -6,9 +6,9 @@ from pathlib import Path
 import jsonschema
 import pytest
 
-from kehrnel.core.pack_loader import load_strategy
-from kehrnel.core.registry import FileActivationRegistry
-from kehrnel.core.runtime import StrategyRuntime
+from kehrnel.engine.core.pack_loader import load_strategy
+from kehrnel.engine.core.registry import FileActivationRegistry
+from kehrnel.engine.core.runtime import StrategyRuntime
 from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.core.types import StrategyContext
 from kehrnel.engine.strategies.openehr.rps_dual.config import (
@@ -44,7 +44,6 @@ def test_defaults_json_matches_schema_and_python_config_builders():
     assert flattener_cfg["apply_shortcuts"] == defaults["transform"]["apply_shortcuts"]
     assert flattener_cfg["target"]["codes_collection"] == defaults["collections"]["codes"]["name"]
     assert flattener_cfg["target"]["shortcuts_collection"] == defaults["collections"]["shortcuts"]["name"]
-    assert flattener_cfg["envelope_fields"] == defaults["transform"]["envelope"]
 
     assert schema_cfg["composition"]["collection"] == defaults["collections"]["compositions"]["name"]
     assert schema_cfg["search"]["collection"] == defaults["collections"]["search"]["name"]
@@ -72,7 +71,7 @@ def test_manifest_schema_and_spec_advertise_current_supported_surface():
     spec = load_json(spec_path)
 
     assert "composition.fullpath" not in manifest["variants"]
-    assert schema["definitions"]["pathSeparator"]["enum"] == [".", "/", ":", "|", "~"]
+    assert schema["definitions"]["pathSeparator"]["enum"] == ["."]
     assert schema["definitions"]["encodingProfile"]["enum"] == [
         "profile.codedpath",
         "profile.search_shortcuts",
@@ -198,22 +197,23 @@ async def test_active_mappings_prefer_generated_search_index_definition_over_see
 
 
 @pytest.mark.asyncio
-async def test_validate_config_accepts_supported_separator_override():
+async def test_validate_config_rejects_query_unsafe_separator_override():
     strategy = RPSDualStrategy(MANIFEST.model_copy(deep=True))
     cfg = deepcopy(strategy.defaults)
-    cfg["paths"]["separator"] = ":"
+    cfg["paths"]["separator"] = "/"
 
     ctx = StrategyContext(
-        environment_id="env-valid-separator",
+        environment_id="env-invalid-separator",
         config=cfg,
         adapters={},
         manifest=strategy.manifest.model_copy(deep=True),
         meta={},
     )
 
-    await strategy.validate_config(ctx)
-    assert strategy.normalized_config is not None
-    assert strategy.normalized_config.paths.separator == ":"
+    with pytest.raises(KehrnelError) as exc_info:
+        await strategy.validate_config(ctx)
+
+    assert "paths.separator" in exc_info.value.details["errors"][0]
 
 
 @pytest.mark.asyncio

@@ -17,7 +17,7 @@ def test_strategies_list_domains(app_client):
     assert res.status_code == 200
     ids = {s["id"] for s in res.json().get("strategies", [])}
     assert "openehr.rps_dual" in ids
-    assert "fhir.resource_first" in ids
+    assert "fhir.clinical_cdr" in ids
 
 
 def test_activation_is_env_scoped(app_client):
@@ -31,31 +31,37 @@ def test_activation_is_env_scoped(app_client):
     # activate fhir in envB
     res_b = client.post(
         "/v1/environments/envB/activate",
-        json={"strategy_id": "fhir.resource_first", "version": "0.1.0", "config": {}, "bindings": {"extras": {"db": {"provider": "none"}}}, "allow_plaintext_bindings": True, "domain": "fhir"},
+        json={"strategy_id": "fhir.clinical_cdr", "version": "0.1.0", "config": {}, "bindings": {"extras": {"db": {"provider": "none"}}}, "allow_plaintext_bindings": True, "domain": "fhir"},
     )
     assert res_b.status_code == 200
 
-    # compile in envA uses openehr -> stage0 $match
+    # compile in envA uses openehr.rps_dual
     res_compile_a = client.post(
         "/v1/environments/envA/compile_query",
         json={"domain": "openEHR", "query": {"scope": "patient", "predicates": [], "select": [{"path": "ehr_id", "alias": "ehr_id"}]}},
         params={"debug": "true"},
     )
     assert res_compile_a.status_code == 200
-    pipeline_a = res_compile_a.json()["result"]["plan"]["pipeline"]
-    assert "$match" in pipeline_a[0]
-    explain_a = res_compile_a.json()["result"]["plan"]["explain"]
+    plan_a = res_compile_a.json()["result"]["plan"]
+    explain_a = plan_a["explain"]
     assert explain_a["strategy_id"] == "openehr.rps_dual"
+    assert plan_a.get("pipeline")
 
-    # compile in envB uses fhir -> dummy pipeline $match but explain shows fhir strategy
+    # compile in envB uses fhir.clinical_cdr (fhir-mql filter plan)
     res_compile_b = client.post(
         "/v1/environments/envB/compile_query",
-        json={"domain": "fhir", "query": {"scope": "patient", "predicates": [], "select": [{"path": "id", "alias": "id"}]}},
+        json={
+            "domain": "fhir",
+            "query": {"resource_type": "Patient", "criteria": {"gender": "female"}, "explain_only": True},
+        },
         params={"debug": "true"},
     )
     assert res_compile_b.status_code == 200
-    explain_b = res_compile_b.json()["result"]["plan"]["explain"]
-    assert explain_b["strategy_id"] == "fhir.resource_first"
+    plan_b = res_compile_b.json()["result"]["plan"]
+    explain_b = plan_b["explain"]
+    assert explain_b["strategy_id"] == "fhir.clinical_cdr"
+    assert plan_b["engine"] == "fhir_mql"
+    assert "filter" in plan_b.get("plan", plan_b)
 
 
 def test_activation_endpoint_returns_state(app_client):

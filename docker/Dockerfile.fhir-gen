@@ -1,0 +1,6 @@
+# Standalone fhir-gen image (build from kehrnel repo root; vendored under engine/domains/fhir/libs/).
+FROM python:3.12-slim
+WORKDIR /app
+COPY src/kehrnel/engine/domains/fhir/libs/fhir-data-generation ./fhir-data-generation
+RUN pip install --no-cache-dir -e ./fhir-data-generation
+ENTRYPOINT ["fhir-gen"]

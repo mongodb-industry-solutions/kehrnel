@@ -60,7 +60,7 @@ def main(
     ),
     no_default: bool = typer.Option(
      False, "--no-default",
-     help="Ignore the built-in src/kehrnel/common/mapping/patterns.yaml",
+     help="Ignore the built-in src/kehrnel/engine/common/mapping/patterns.yaml",
     ),
     debug: bool = typer.Option(
         False, "--debug",

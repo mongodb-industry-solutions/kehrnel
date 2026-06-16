@@ -1,0 +1,298 @@
+resource: ClaimResponse
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec ClaimResponse)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/
+#   patient.json, practitioner.json, encounter.json, relatedperson.json
+#
+# Total parameters: 13 (11 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `ClaimResponse.patient` and `ClaimResponse.type` are required.
+#   * `ClaimResponse.payment` is BackboneElement; `payment-date` searches
+#     `payment.date`.
+#   * `ClaimResponse.request` references the source Claim (not Encounter).
+#   * Top-level scalar `status`, `use`, and `outcome` query root fields.
+#   * Encounter compartment lists linking param `request` (Claim ref) —
+#     not precomputed; use dynamic resolver. RelatedPerson (`requestor`)
+#     is also dynamic.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters
+  # ─────────────────────────────────────────────────────────────
+  created:
+    type: date
+    description: "The creation date"
+    fields:
+      - field: "created"
+        type: date
+
+  payment-date:
+    type: date
+    description: "The expected payment date"
+    fields:
+      - field: "payment.date"
+        type: date
+
+  # ─────────────────────────────────────────────────────────────
+  # String Parameters
+  # ─────────────────────────────────────────────────────────────
+  disposition:
+    type: string
+    description: "The contents of the disposition message"
+    fields:
+      default:
+        - field: "_search.disposition_lower"
+          query_type: range
+      exact:
+        - field: "_search.disposition"
+
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters
+  # ─────────────────────────────────────────────────────────────
+  insurer:
+    type: reference
+    description: "The organization which generated this resource"
+    fields:
+      - field: "_search.insurerId"
+        referenceType: id
+      - field: "_search.insurerType"
+        referenceType: type
+      - field: "insurer.reference"
+        referenceType: full
+
+  patient:
+    type: reference
+    description: "The subject of care"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "patient.reference"
+        referenceType: full
+
+  request:
+    type: reference
+    description: "The claim reference"
+    fields:
+      - field: "_search.requestId"
+        referenceType: id
+      - field: "_search.requestType"
+        referenceType: type
+      - field: "request.reference"
+        referenceType: full
+
+  requestor:
+    type: reference
+    description: "The Provider of the claim"
+    fields:
+      - field: "_search.requestorId"
+        referenceType: id
+      - field: "_search.requestorType"
+        referenceType: type
+      - field: "requestor.reference"
+        referenceType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters
+  # ─────────────────────────────────────────────────────────────
+  identifier:
+    type: token
+    description: "The identity of the ClaimResponse"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  outcome:
+    type: token
+    description: "The processing outcome"
+    fields:
+      - field: "outcome"
+        tokenType: code
+
+  status:
+    type: token
+    description: "The status of the ClaimResponse"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  use:
+    type: token
+    description: "The type of claim"
+    fields:
+      - field: "use"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+# Denormalization Configuration
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  patient:
+    source: patient
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: patient.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+
+  request:
+    source: request
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: request.reference
+        target_field: requestId
+        datatype: string
+        extractType: id
+      - source_path: request.reference
+        target_field: requestType
+        datatype: string
+        extractType: type
+
+  requestor:
+    source: requestor
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: requestor.reference
+        target_field: requestorId
+        datatype: string
+        extractType: id
+      - source_path: requestor.reference
+        target_field: requestorType
+        datatype: string
+        extractType: type
+
+  insurer:
+    source: insurer
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: insurer.reference
+        target_field: insurerId
+        datatype: string
+        extractType: id
+      - source_path: insurer.reference
+        target_field: insurerType
+        datatype: string
+        extractType: type
+
+  disposition:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: disposition
+        target_field: disposition
+        datatype: string
+      - source_path: disposition
+        target_field: disposition_lower
+        datatype: string
+        normalize: lowercase
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - patient
+        reference_type: Patient
+        datatype: array[string]
+        comment: "Patient compartment (patient.json linking param patient)"
+      - target_field: Practitioner
+        source_paths:
+          - requestor
+        reference_type: Practitioner
+        datatype: array[string]
+        comment: |
+          Practitioner compartment (requestor linking param). Filtered
+          to Practitioner/*; Organization/PractitionerRole omitted.
+
+compartments:
+  precomputed:
+    - Patient
+    - Practitioner
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+
+  - fields:
+      - "_compartments.Practitioner": 1
+    options:
+      name: idx_compartment_practitioner
+      sparse: true
+
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+
+  - fields:
+      - "_search.patientId": 1
+    options:
+      name: idx_patient_id
+      sparse: true
+
+  - fields:
+      - "_search.requestId": 1
+    options:
+      name: idx_request_id
+      sparse: true
+
+  - fields:
+      - "created": 1
+    options:
+      name: idx_created
+      sparse: true
+
+  - fields:
+      - "payment.date": 1
+    options:
+      name: idx_payment_date
+      sparse: true
+
+  - fields:
+      - "meta.lastUpdated": 1
+    options:
+      name: idx_meta_last_updated
+      sparse: true

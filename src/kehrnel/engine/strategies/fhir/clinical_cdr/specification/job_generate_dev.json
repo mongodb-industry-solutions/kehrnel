@@ -1,0 +1,14 @@
+{
+  "domain": "fhir",
+  "op": "synthetic_generate_batch",
+  "payload": {
+    "recipe": "clinical_dev",
+    "seed": 42,
+    "schema_version": "R5",
+    "store_canonical": true,
+    "write_batch_size": 250,
+    "denormalize_after": true,
+    "dry_run": false,
+    "plan_only": false
+  }
+}

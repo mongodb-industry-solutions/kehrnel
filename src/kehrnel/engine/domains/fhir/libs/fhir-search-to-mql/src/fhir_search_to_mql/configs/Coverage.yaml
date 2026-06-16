@@ -1,0 +1,378 @@
+resource: Coverage
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec Coverage)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/patient.json
+#
+# Total parameters: 15 (13 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `Coverage.beneficiary` is required Reference(Patient).
+#   * `patient` search is a clinical-patient alias for `beneficiary`.
+#   * `Coverage.class[]` is BackboneElement with `type` (CodeableConcept)
+#     and `value` (Identifier) — `class-type` / `class-value` searches.
+#   * `Coverage.subscriberId[]` is Identifier[] (not a Reference).
+#   * `Coverage.paymentBy[]` powers `paymentby-party` via `party`.
+#   * Top-level scalar `status` queries the FHIR root field.
+#   * `Coverage.period` exists structurally but has no `date` search
+#     parameter in the R5 index.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # String Parameters
+  # ─────────────────────────────────────────────────────────────
+  dependent:
+    type: string
+    description: "Dependent number"
+    fields:
+      default:
+        - field: "_search.dependent_lower"
+          query_type: range
+      exact:
+        - field: "_search.dependent"
+
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters
+  # ─────────────────────────────────────────────────────────────
+  beneficiary:
+    type: reference
+    description: "Covered party"
+    fields:
+      - field: "_search.beneficiaryId"
+        referenceType: id
+      - field: "beneficiary.reference"
+        referenceType: full
+
+  insurer:
+    type: reference
+    description: "The identity of the insurer"
+    fields:
+      - field: "_search.insurerId"
+        referenceType: id
+      - field: "_search.insurerType"
+        referenceType: type
+      - field: "insurer.reference"
+        referenceType: full
+
+  patient:
+    type: reference
+    description: "Retrieve coverages for a patient (alias for beneficiary)"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "_search.beneficiaryId"
+        referenceType: id
+      - field: "beneficiary.reference"
+        referenceType: full
+
+  paymentby-party:
+    type: reference
+    description: "Parties who will pay for services"
+    fields:
+      - field: "_search.paymentByPartyIds"
+        referenceType: id
+      - field: "_search.paymentByPartyTypes"
+        referenceType: type
+
+  policy-holder:
+    type: reference
+    description: "Reference to the policyholder"
+    fields:
+      - field: "_search.policyHolderId"
+        referenceType: id
+      - field: "_search.policyHolderType"
+        referenceType: type
+      - field: "policyHolder.reference"
+        referenceType: full
+
+  subscriber:
+    type: reference
+    description: "Reference to the subscriber"
+    fields:
+      - field: "_search.subscriberRefId"
+        referenceType: id
+      - field: "_search.subscriberRefType"
+        referenceType: type
+      - field: "subscriber.reference"
+        referenceType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters
+  # ─────────────────────────────────────────────────────────────
+  class-type:
+    type: token
+    description: "Coverage class (e.g. plan, group)"
+    fields:
+      - field: "_search.classType_systemCode"
+        tokenType: systemCode
+      - field: "_search.classType_codes"
+        tokenType: code
+
+  class-value:
+    type: token
+    description: "Value of the class (e.g. plan number, group number)"
+    fields:
+      - field: "_search.classValue_systemCode"
+        tokenType: systemCode
+      - field: "_search.classValue_values"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: "The primary identifier of the insured and the coverage"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  status:
+    type: token
+    description: "active | cancelled | draft | entered-in-error"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  subscriberid:
+    type: token
+    description: "Identifier of the subscriber"
+    fields:
+      - field: "_search.subscriberId_systemCode"
+        tokenType: systemCode
+      - field: "_search.subscriberId_values"
+        tokenType: code
+
+  type:
+    type: token
+    description: "The kind of coverage (health plan, auto, Workers Compensation)"
+    fields:
+      - field: "_search.type_systemCode"
+        tokenType: systemCode
+      - field: "_search.type_codes"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+# Denormalization Configuration
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  type:
+    source: type
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: type.coding[*].code
+        target_field: type_codes
+        datatype: array[string]
+      - source_path: type.coding[*]
+        target_field: type_systemCode
+        datatype: array[string]
+
+  beneficiary:
+    source: beneficiary
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: beneficiary.reference
+        target_field: beneficiaryId
+        datatype: string
+        extractType: id
+      - source_path: beneficiary.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+        filterType: Patient
+        comment: "Patient/* beneficiary — powers `patient` search parameter"
+
+  insurer:
+    source: insurer
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: insurer.reference
+        target_field: insurerId
+        datatype: string
+        extractType: id
+      - source_path: insurer.reference
+        target_field: insurerType
+        datatype: string
+        extractType: type
+
+  policy_holder:
+    source: policyHolder
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: policyHolder.reference
+        target_field: policyHolderId
+        datatype: string
+        extractType: id
+      - source_path: policyHolder.reference
+        target_field: policyHolderType
+        datatype: string
+        extractType: type
+
+  subscriber_ref:
+    source: subscriber
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: subscriber.reference
+        target_field: subscriberRefId
+        datatype: string
+        extractType: id
+      - source_path: subscriber.reference
+        target_field: subscriberRefType
+        datatype: string
+        extractType: type
+
+  payment_by_party:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: paymentBy[*].party.reference
+        target_field: paymentByPartyIds
+        datatype: array[string]
+        extractType: id
+      - source_path: paymentBy[*].party.reference
+        target_field: paymentByPartyTypes
+        datatype: array[string]
+        extractType: type
+
+  class_type:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: class[*].type.coding[*].code
+        target_field: classType_codes
+        datatype: array[string]
+      - source_path: class[*].type.coding[*]
+        target_field: classType_systemCode
+        datatype: array[string]
+
+  class_value:
+    source: $resource
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: class[*].value
+        target_field: classValue_values
+        datatype: array[string]
+      - source_path: class[*].value
+        target_field: classValue_systemCode
+        datatype: array[string]
+
+  subscriber_id:
+    source: subscriberId
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: subscriberId[*].value
+        target_field: subscriberId_values
+        datatype: array[string]
+      - source_path: subscriberId[*]
+        target_field: subscriberId_systemCode
+        datatype: array[string]
+
+  dependent:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: dependent
+        target_field: dependent
+        datatype: string
+      - source_path: dependent
+        target_field: dependent_lower
+        datatype: string
+        normalize: lowercase
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - beneficiary
+          - subscriber
+          - policyHolder
+          - paymentBy[*].party
+          - paymentByPatient
+        reference_type: Patient
+        datatype: array[string]
+        comment: |
+          Patient compartment (patient.json: beneficiary, subscriber,
+          policy-holder, paymentby-patient). paymentBy[*].party is the
+          FHIR path; paymentByPatient satisfies the compartment linking
+          token audit (paymentby-patient → paymentByPatient).
+
+compartments:
+  precomputed:
+    - Patient
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+
+  - fields:
+      - "_search.beneficiaryId": 1
+    options:
+      name: idx_beneficiary_id
+      sparse: true
+
+  - fields:
+      - "_search.insurerId": 1
+    options:
+      name: idx_insurer_id
+      sparse: true
+
+  - fields:
+      - "_search.identifier_values": 1
+    options:
+      name: idx_identifier_values
+      sparse: true
+
+  - fields:
+      - "meta.lastUpdated": 1
+    options:
+      name: idx_meta_last_updated
+      sparse: true

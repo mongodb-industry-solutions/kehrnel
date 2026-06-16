@@ -3,8 +3,8 @@ from pathlib import Path
 
 import pytest
 
-from kehrnel.core.types import StrategyContext
-from kehrnel.domains.openehr.aql.parse import parse_aql
+from kehrnel.engine.core.types import StrategyContext
+from kehrnel.engine.domains.openehr.aql.parse import parse_aql
 from kehrnel.engine.strategies.openehr.rps_dual.strategy import DEFAULTS_PATH, MANIFEST, RPSDualStrategy, load_json
 from tests.helpers.fixture_storage import FixtureStorage
 

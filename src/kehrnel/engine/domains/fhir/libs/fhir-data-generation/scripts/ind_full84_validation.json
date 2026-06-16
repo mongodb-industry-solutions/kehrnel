@@ -1,0 +1,566 @@
+{
+  "database": "fhir_e2e_gen_ind_full84",
+  "total_docs": 84,
+  "total_errors": 12,
+  "total_warnings": 0,
+  "collections": {
+    "Account": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "AdverseEvent": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "AllergyIntolerance": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Appointment": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "AuditEvent": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Basic": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "BiologicallyDerivedProduct": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "BodyStructure": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "CarePlan": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "CareTeam": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "ChargeItem": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "ChargeItemDefinition": {
+      "documents": 1,
+      "errors": 3,
+      "warnings": 0,
+      "samples": [
+        {
+          "id": "95037640-72ab-47cd-979f-a42026f68209",
+          "errors": [
+            "publisher must be string, not Reference object",
+            "versionAlgorithmCoding is empty object",
+            "versionAlgorithmString is clinical text: 'Transition-of-care summary sent to primary care physician.'..."
+          ]
+        }
+      ]
+    },
+    "Claim": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "ClaimResponse": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "ClinicalImpression": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Communication": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Composition": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Condition": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Consent": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Contract": {
+      "documents": 1,
+      "errors": 1,
+      "warnings": 0,
+      "samples": [
+        {
+          "id": "6be81e0e-631a-4b5e-90c3-7bd92aeb69bd",
+          "errors": [
+            "schema: signer.type: Coding missing code"
+          ]
+        }
+      ]
+    },
+    "Coverage": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "CoverageEligibilityRequest": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "CoverageEligibilityResponse": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "DetectedIssue": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Device": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "DeviceDispense": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "DeviceRequest": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "DeviceUsage": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "DiagnosticReport": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "DocumentReference": {
+      "documents": 1,
+      "errors": 1,
+      "warnings": 0,
+      "samples": [
+        {
+          "id": "7cd78b3b-7e6c-4002-ac14-cee1762704ff",
+          "errors": [
+            "schema: context: Reference missing reference"
+          ]
+        }
+      ]
+    },
+    "Encounter": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Endpoint": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "EnrollmentRequest": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "EnrollmentResponse": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "EpisodeOfCare": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "ExplanationOfBenefit": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "FamilyMemberHistory": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Flag": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "GenomicStudy": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Goal": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Group": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "HealthcareService": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "ImagingStudy": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Immunization": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "ImmunizationRecommendation": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "InsurancePlan": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Invoice": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Location": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Measure": {
+      "documents": 1,
+      "errors": 3,
+      "warnings": 0,
+      "samples": [
+        {
+          "id": "2661ec5b-e4a9-4fd6-a64e-06ad6c53d537",
+          "errors": [
+            "publisher looks like clinical narrative: 'Orders placed per established clinical pathway.'...",
+            "versionAlgorithmCoding is empty object",
+            "versionAlgorithmString is clinical text: 'Patient goals of care reviewed with multidisciplinary team.'..."
+          ]
+        }
+      ]
+    },
+    "MeasureReport": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Medication": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "MedicationAdministration": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "MedicationDispense": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "MedicationRequest": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "MedicationStatement": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "NutritionIntake": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "NutritionOrder": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Observation": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Organization": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "OrganizationAffiliation": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Patient": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "PaymentNotice": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "PaymentReconciliation": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Person": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Practitioner": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "PractitionerRole": {
+      "documents": 1,
+      "errors": 1,
+      "warnings": 0,
+      "samples": [
+        {
+          "id": "fbf9b557-f12b-40d8-8f67-5cf38ee9734d",
+          "errors": [
+            "schema: contact.name: expected object, got str"
+          ]
+        }
+      ]
+    },
+    "Procedure": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Provenance": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Questionnaire": {
+      "documents": 1,
+      "errors": 2,
+      "warnings": 0,
+      "samples": [
+        {
+          "id": "dcb8a6e4-7bdd-456e-a2bc-612d6109816b",
+          "errors": [
+            "publisher looks like clinical narrative: 'Orders placed per established clinical pathway.'...",
+            "schema: code: Coding missing code"
+          ]
+        }
+      ]
+    },
+    "QuestionnaireResponse": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "RelatedPerson": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "RequestOrchestration": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "ResearchStudy": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "ResearchSubject": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "RiskAssessment": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Schedule": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "ServiceRequest": {
+      "documents": 1,
+      "errors": 1,
+      "warnings": 0,
+      "samples": [
+        {
+          "id": "8f2f1ebf-0189-4eb6-8857-88acabf9466f",
+          "errors": [
+            "schema: asNeededBoolean: expected boolean, got str"
+          ]
+        }
+      ]
+    },
+    "Slot": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Specimen": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Substance": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "SupplyDelivery": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "SupplyRequest": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "Task": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    },
+    "VisionPrescription": {
+      "documents": 1,
+      "errors": 0,
+      "warnings": 0,
+      "samples": []
+    }
+  }
+}

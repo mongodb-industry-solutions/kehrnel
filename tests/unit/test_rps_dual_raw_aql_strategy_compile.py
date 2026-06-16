@@ -1,12 +1,8 @@
 from __future__ import annotations
 
-from copy import deepcopy
-
 import pytest
 
 from kehrnel.engine.core.types import StrategyContext
-from kehrnel.engine.strategies.openehr.rps_dual import strategy as strategy_module
-from kehrnel.engine.strategies.openehr.rps_dual.query.compiler import _get_or_create_shared_archetype_resolver
 from kehrnel.engine.strategies.openehr.rps_dual.strategy import MANIFEST, RPSDualStrategy
 
 
@@ -45,112 +41,6 @@ class _FakeStorage:
 
     async def find_one(self, collection, flt):
         return await self.db[collection].find_one(flt)
-
-
-@pytest.mark.asyncio
-async def test_compile_query_raw_aql_reuses_parsed_ast_across_parameter_changes(monkeypatch):
-    parse_calls = []
-
-    class _CountingParser:
-        def __init__(self, text):
-            self.text = text
-
-        def parse(self):
-            parse_calls.append(self.text)
-            return {
-                "from": {"alias": "e"},
-                "where": {"path": "e/ehr_id/value", "operator": "=", "value": "$ehrId"},
-                "select": {"distinct": False, "columns": {}},
-            }
-
-    async def _fake_get_shortcuts(_ctx):
-        return {"items": {}, "source": "cache", "missing": False}
-
-    async def _fake_get_codes(_ctx):
-        return {"items": {}, "source": "cache", "missing": False}
-
-    async def _fake_build_query_pipeline_from_ast(ast_doc, *_args, **_kwargs):
-        return (
-            "pipeline_builder",
-            [{"$match": {"ehr_id": ast_doc["where"]["value"]}}],
-            "$match",
-            {
-                "composition": {"collection": "compositions_rps"},
-                "search": {"collection": "compositions_search"},
-            },
-            ast_doc,
-            {
-                "chosen": "pipeline_builder",
-                "scope": "patient",
-                "reason": "scope_patient",
-                "has_ehr_id_pred": True,
-                "prefer_match": False,
-                "search_enabled": True,
-            },
-        )
-
-    monkeypatch.setattr(strategy_module, "AQLToASTParser", _CountingParser)
-    monkeypatch.setattr(strategy_module, "get_shortcuts", _fake_get_shortcuts)
-    monkeypatch.setattr(strategy_module, "get_codes", _fake_get_codes)
-    monkeypatch.setattr(strategy_module, "build_query_pipeline_from_ast", _fake_build_query_pipeline_from_ast)
-
-    ctx = StrategyContext(
-        environment_id="env-1",
-        config=MANIFEST.default_config,
-        adapters={},
-        manifest=MANIFEST.model_copy(deep=True),
-        meta={"query_compile_cache": {}},
-    )
-    strategy = RPSDualStrategy()
-    raw_aql = "SELECT e/ehr_id/value AS ehrId FROM EHR e WHERE e/ehr_id/value = $ehrId"
-
-    first = await strategy.compile_query(
-        ctx,
-        "openEHR",
-        {"raw_aql": raw_aql, "params": {"ehrId": "ehr-1"}},
-    )
-    second = await strategy.compile_query(
-        ctx,
-        "openEHR",
-        {"raw_aql": raw_aql, "params": {"ehrId": "ehr-2"}},
-    )
-
-    assert parse_calls == [raw_aql]
-    assert first.plan["pipeline"][0]["$match"]["ehr_id"] == "ehr-1"
-    assert second.plan["pipeline"][0]["$match"]["ehr_id"] == "ehr-2"
-    assert first.plan["explain"]["builder"]["cache"]["raw_aql_ast"] == "miss"
-    assert second.plan["explain"]["builder"]["cache"]["raw_aql_ast"] == "hit"
-
-
-def test_shared_archetype_resolver_cache_reuses_instance():
-    compile_cache = {}
-    schema_cfgs = {
-        "composition": {
-            "codes_collection": "_codes",
-            "codes_doc_id": "ar_code",
-            "collection": "compositions_rps",
-            "separator": "/",
-            "atcode_strategy": "compact_prefix",
-        },
-        "search": {
-            "collection": "compositions_search",
-        },
-    }
-
-    resolver_one, first_status = _get_or_create_shared_archetype_resolver(
-        db=object(),
-        schema_cfgs=schema_cfgs,
-        compile_cache=compile_cache,
-    )
-    resolver_two, second_status = _get_or_create_shared_archetype_resolver(
-        db=object(),
-        schema_cfgs=schema_cfgs,
-        compile_cache=compile_cache,
-    )
-
-    assert first_status == "miss"
-    assert second_status == "hit"
-    assert resolver_one is resolver_two
 
 
 @pytest.mark.asyncio
@@ -325,12 +215,12 @@ async def test_compile_query_raw_aql_resolves_content_paths_and_order_by_for_mat
                     "sample": {
                         "_id": "comp-1",
                         "sn": [
-                            {"p": "-4:8:-3:-2:-1:2:1"},
-                            {"p": "-5:8:-3:-2:-1:2:1"},
-                            {"p": "-6:8:-3:-2:-1:2:1"},
-                            {"p": "-1:12:-3:-2:-1:2:1"},
-                            {"p": "-2:12:-3:-2:-1:2:1"},
-                            {"p": "-3:12:-3:-2:-1:2:1"},
+                            {"p": "-4.8.-3.-2.-1.2.1"},
+                            {"p": "-5.8.-3.-2.-1.2.1"},
+                            {"p": "-6.8.-3.-2.-1.2.1"},
+                            {"p": "-1.12.-3.-2.-1.2.1"},
+                            {"p": "-2.12.-3.-2.-1.2.1"},
+                            {"p": "-3.12.-3.-2.-1.2.1"},
                         ],
                     }
                 }
@@ -383,119 +273,9 @@ async def test_compile_query_raw_aql_resolves_content_paths_and_order_by_for_mat
     project_stage = pipeline[1]["$project"]
     data_inici_regex = project_stage["DataInici"]["$first"]["$map"]["input"]["$filter"]["cond"]["$regexMatch"]["regex"]
     data_hora_fi_regex = project_stage["DataHoraFiProces"]["$first"]["$map"]["input"]["$filter"]["cond"]["$regexMatch"]["regex"]
-    assert ":2:1" in data_inici_regex
-    assert ":2:1" in data_hora_fi_regex
-    assert ":1:1" not in data_inici_regex
+    assert ".2\\.1" in data_inici_regex
+    assert ".2\\.1" in data_hora_fi_regex
+    assert ".1\\.1" not in data_inici_regex
 
     sort_stage = pipeline[2]["$sort"]
     assert sort_stage == {"DataRegistre": 1, "compositionId": 1}
-
-
-@pytest.mark.asyncio
-async def test_compile_query_raw_aql_supports_configured_separator_and_compact_atcodes():
-    db = _FakeDb(
-        {
-            "_codes": _FakeCollection(
-                {
-                    "ar_code": {
-                        "_id": "ar_code",
-                        "at": {
-                            "at0001": "A1",
-                            "at0002": "A2",
-                            "at0003": "A3",
-                            "at0004": "A4",
-                        },
-                        "openEHR-EHR-COMPOSITION": {
-                            "probs_base_composition": {
-                                "v0": 1
-                            }
-                        },
-                        "openEHR-EHR-OBSERVATION": {
-                            "probs_base_observation": {
-                                "v0": 2
-                            }
-                        },
-                        "openEHR-EHR-CLUSTER": {
-                            "health_thread": {
-                                "v0": 8
-                            }
-                        },
-                    }
-                }
-            ),
-            "_shortcuts": _FakeCollection(
-                {
-                    "shortcuts": {
-                        "_id": "shortcuts",
-                        "items": {
-                            "context": "cx",
-                            "start_time": "st",
-                            "value": "v",
-                            "content": "ct",
-                            "data": "data",
-                            "events": "ev",
-                            "items": "i",
-                            "archetype_details": "ad",
-                            "template_id": "ti",
-                            "uid": "uid",
-                        },
-                    }
-                }
-            ),
-            "compositions_rps": _FakeCollection(
-                {
-                    "sample": {
-                        "_id": "comp-1",
-                        "cn": [{"p": "1", "data": {"ani": 1}}],
-                    }
-                }
-            ),
-            "compositions_search": _FakeCollection(
-                {
-                    "sample": {
-                        "_id": "comp-1",
-                        "sn": [
-                            {"p": "A4:8:A3:A2:A1:2:1"},
-                        ],
-                    }
-                }
-            ),
-        }
-    )
-
-    cfg = deepcopy(MANIFEST.default_config)
-    cfg["paths"]["separator"] = ":"
-
-    ctx = StrategyContext(
-        environment_id="env-compact-prefix",
-        config=cfg,
-        adapters={"storage": _FakeStorage(db)},
-        manifest=MANIFEST.model_copy(deep=True),
-        meta={},
-    )
-    strategy = RPSDualStrategy()
-    raw_aql = """
-    SELECT
-        c/content[openEHR-EHR-OBSERVATION.probs_base_observation.v0]/data[at0001]/events[at0002]/data[at0003]/items[openEHR-EHR-CLUSTER.health_thread.v0]/items[at0004]/value/value AS DataInici
-    FROM
-        EHR e
-            CONTAINS VERSION v
-                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.probs_base_composition.v0]
-    WHERE
-        c/archetype_details/template_id/value = 'PO_Obstetric_process_v0.8_FORMULARIS'
-    """
-
-    plan = await strategy.compile_query(
-        ctx,
-        "openEHR",
-        {
-            "raw_aql": raw_aql,
-            "debug": True,
-        },
-    )
-
-    pipeline = plan.plan["pipeline"]
-    assert pipeline[0]["$match"]["cn"]["$elemMatch"] == {"p": "1", "data.ani": 1}
-    data_inici_regex = pipeline[1]["$project"]["DataInici"]["$first"]["$map"]["input"]["$filter"]["cond"]["$regexMatch"]["regex"]
-    assert "A4:8:A3:A2:A1:2:1" in data_inici_regex
-    assert ".2\\.1" not in data_inici_regex

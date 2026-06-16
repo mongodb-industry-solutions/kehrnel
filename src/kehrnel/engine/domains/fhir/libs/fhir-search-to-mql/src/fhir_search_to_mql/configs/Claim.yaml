@@ -1,0 +1,478 @@
+resource: Claim
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec Claim)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/
+#   patient.json, practitioner.json, encounter.json, relatedperson.json
+#
+# Total parameters: 19 (17 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `Claim.patient` and `Claim.type` are required.
+#   * `Claim.careTeam[]` is BackboneElement with `provider` Reference.
+#   * `Claim.payee` is BackboneElement; `payee` search uses `party`.
+#   * `Claim.item[]` may reference `encounter[]` and `udi[]`; nested
+#     `detail[]` / `subDetail[]` carry additional `udi` references.
+#   * `Claim.procedure[]` has `udi[]` for device associations.
+#   * Top-level scalar `status` and `use` query root code fields.
+#   * `Claim.priority` is CodeableConcept (token search).
+#   * RelatedPerson compartment (`payee` only) uses dynamic resolver.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters
+  # ─────────────────────────────────────────────────────────────
+  created:
+    type: date
+    description: "The creation date for the Claim"
+    fields:
+      - field: "created"
+        type: date
+
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters
+  # ─────────────────────────────────────────────────────────────
+  care-team:
+    type: reference
+    description: "Member of the CareTeam"
+    fields:
+      - field: "_search.careTeamProviderIds"
+        referenceType: id
+      - field: "_search.careTeamProviderTypes"
+        referenceType: type
+
+  detail-udi:
+    type: reference
+    description: "UDI associated with a line item, detail product or service"
+    fields:
+      - field: "_search.detailUdiIds"
+        referenceType: id
+      - field: "_search.detailUdiTypes"
+        referenceType: type
+
+  encounter:
+    type: reference
+    description: "Encounters associated with a billed line item"
+    fields:
+      - field: "_search.itemEncounterIds"
+        referenceType: id
+      - field: "_search.itemEncounterTypes"
+        referenceType: type
+
+  enterer:
+    type: reference
+    description: "The party responsible for the entry of the Claim"
+    fields:
+      - field: "_search.entererId"
+        referenceType: id
+      - field: "_search.entererType"
+        referenceType: type
+      - field: "enterer.reference"
+        referenceType: full
+
+  facility:
+    type: reference
+    description: "Facility where the products or services have been or will be provided"
+    fields:
+      - field: "_search.facilityId"
+        referenceType: id
+      - field: "_search.facilityType"
+        referenceType: type
+      - field: "facility.reference"
+        referenceType: full
+
+  insurer:
+    type: reference
+    description: "The target payor/insurer for the Claim"
+    fields:
+      - field: "_search.insurerId"
+        referenceType: id
+      - field: "_search.insurerType"
+        referenceType: type
+      - field: "insurer.reference"
+        referenceType: full
+
+  item-udi:
+    type: reference
+    description: "UDI associated with a line item product or service"
+    fields:
+      - field: "_search.itemUdiIds"
+        referenceType: id
+      - field: "_search.itemUdiTypes"
+        referenceType: type
+
+  patient:
+    type: reference
+    description: "Patient receiving the products or services"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "patient.reference"
+        referenceType: full
+
+  payee:
+    type: reference
+    description: "The party receiving any payment for the Claim"
+    fields:
+      - field: "_search.payeePartyId"
+        referenceType: id
+      - field: "_search.payeePartyType"
+        referenceType: type
+      - field: "payee.party.reference"
+        referenceType: full
+
+  procedure-udi:
+    type: reference
+    description: "UDI associated with a procedure"
+    fields:
+      - field: "_search.procedureUdiIds"
+        referenceType: id
+      - field: "_search.procedureUdiTypes"
+        referenceType: type
+
+  provider:
+    type: reference
+    description: "Provider responsible for the Claim"
+    fields:
+      - field: "_search.providerId"
+        referenceType: id
+      - field: "_search.providerType"
+        referenceType: type
+      - field: "provider.reference"
+        referenceType: full
+
+  subdetail-udi:
+    type: reference
+    description: "UDI associated with a line item, detail, subdetail product or service"
+    fields:
+      - field: "_search.subdetailUdiIds"
+        referenceType: id
+      - field: "_search.subdetailUdiTypes"
+        referenceType: type
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters
+  # ─────────────────────────────────────────────────────────────
+  identifier:
+    type: token
+    description: "The primary identifier of the financial resource"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  priority:
+    type: token
+    description: "Processing priority requested"
+    fields:
+      - field: "_search.priority_systemCode"
+        tokenType: systemCode
+      - field: "_search.priority_codes"
+        tokenType: code
+
+  status:
+    type: token
+    description: "The status of the Claim instance"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  use:
+    type: token
+    description: "The kind of financial resource"
+    fields:
+      - field: "use"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+# Denormalization Configuration
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  priority:
+    source: priority
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: priority.coding[*].code
+        target_field: priority_codes
+        datatype: array[string]
+      - source_path: priority.coding[*]
+        target_field: priority_systemCode
+        datatype: array[string]
+
+  patient:
+    source: patient
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: patient.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+
+  enterer:
+    source: enterer
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: enterer.reference
+        target_field: entererId
+        datatype: string
+        extractType: id
+      - source_path: enterer.reference
+        target_field: entererType
+        datatype: string
+        extractType: type
+
+  provider:
+    source: provider
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: provider.reference
+        target_field: providerId
+        datatype: string
+        extractType: id
+      - source_path: provider.reference
+        target_field: providerType
+        datatype: string
+        extractType: type
+
+  insurer:
+    source: insurer
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: insurer.reference
+        target_field: insurerId
+        datatype: string
+        extractType: id
+      - source_path: insurer.reference
+        target_field: insurerType
+        datatype: string
+        extractType: type
+
+  facility:
+    source: facility
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: facility.reference
+        target_field: facilityId
+        datatype: string
+        extractType: id
+      - source_path: facility.reference
+        target_field: facilityType
+        datatype: string
+        extractType: type
+
+  payee_party:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: payee.party.reference
+        target_field: payeePartyId
+        datatype: string
+        extractType: id
+      - source_path: payee.party.reference
+        target_field: payeePartyType
+        datatype: string
+        extractType: type
+
+  care_team_provider:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: careTeam[*].provider.reference
+        target_field: careTeamProviderIds
+        datatype: array[string]
+        extractType: id
+      - source_path: careTeam[*].provider.reference
+        target_field: careTeamProviderTypes
+        datatype: array[string]
+        extractType: type
+
+  item_encounter:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: item[*].encounter[*].reference
+        target_field: itemEncounterIds
+        datatype: array[string]
+        extractType: id
+      - source_path: item[*].encounter[*].reference
+        target_field: itemEncounterTypes
+        datatype: array[string]
+        extractType: type
+
+  item_udi:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: item[*].udi[*].reference
+        target_field: itemUdiIds
+        datatype: array[string]
+        extractType: id
+      - source_path: item[*].udi[*].reference
+        target_field: itemUdiTypes
+        datatype: array[string]
+        extractType: type
+
+  detail_udi:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: item[*].detail[*].udi[*].reference
+        target_field: detailUdiIds
+        datatype: array[string]
+        extractType: id
+      - source_path: item[*].detail[*].udi[*].reference
+        target_field: detailUdiTypes
+        datatype: array[string]
+        extractType: type
+
+  subdetail_udi:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: item[*].detail[*].subDetail[*].udi[*].reference
+        target_field: subdetailUdiIds
+        datatype: array[string]
+        extractType: id
+      - source_path: item[*].detail[*].subDetail[*].udi[*].reference
+        target_field: subdetailUdiTypes
+        datatype: array[string]
+        extractType: type
+
+  procedure_udi:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: procedure[*].udi[*].reference
+        target_field: procedureUdiIds
+        datatype: array[string]
+        extractType: id
+      - source_path: procedure[*].udi[*].reference
+        target_field: procedureUdiTypes
+        datatype: array[string]
+        extractType: type
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - patient
+        reference_type: Patient
+        datatype: array[string]
+        comment: "Patient compartment (patient.json linking param patient)"
+      - target_field: Practitioner
+        source_paths:
+          - enterer
+          - provider
+          - payee.party
+          - careTeam[*].provider
+        reference_type: Practitioner
+        datatype: array[string]
+        comment: |
+          Practitioner compartment (enterer, provider, payee, care-team).
+          References filtered to Practitioner/*.
+      - target_field: Encounter
+        source_paths:
+          - item[*].encounter
+        reference_type: Encounter
+        datatype: array[string]
+        comment: "Encounter compartment (encounter linking param on item)"
+
+compartments:
+  precomputed:
+    - Patient
+    - Practitioner
+    - Encounter
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+
+  - fields:
+      - "_compartments.Practitioner": 1
+    options:
+      name: idx_compartment_practitioner
+      sparse: true
+
+  - fields:
+      - "_compartments.Encounter": 1
+    options:
+      name: idx_compartment_encounter
+      sparse: true
+
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+
+  - fields:
+      - "_search.patientId": 1
+    options:
+      name: idx_patient_id
+      sparse: true
+
+  - fields:
+      - "_search.providerId": 1
+    options:
+      name: idx_provider_id
+      sparse: true
+
+  - fields:
+      - "created": 1
+    options:
+      name: idx_created
+      sparse: true
+
+  - fields:
+      - "meta.lastUpdated": 1
+    options:
+      name: idx_meta_last_updated
+      sparse: true
