@@ -1,5 +1,6 @@
 services:
   kehrnel-api:
+    profiles: [api]
     build:
       context: .
       dockerfile: docker/Dockerfile.kehrnel-api
