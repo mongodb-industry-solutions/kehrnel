@@ -1,10 +1,31 @@
-# All-in-one Kehrnel image (core + FHIR). For API-only or FHIR-only images see docker/.
-FROM python:3.12-slim
+# All-in-one Kehrnel image (core + FHIR + docs). For API-only or FHIR-only images see docker/.
+FROM node:20-slim AS docs-builder
+WORKDIR /docs
+COPY docs/website/package*.json ./
+RUN npm install
+COPY docs/website/ ./
+RUN npm run build
+
+FROM python:3.14.6-slim
+RUN set -eux; \
+  apt-get update; \
+  pkgs="openssl libexpat1"; \
+  if apt-cache show openssl-provider-legacy >/dev/null 2>&1; then pkgs="$pkgs openssl-provider-legacy"; fi; \
+  if apt-cache show libssl3t64 >/dev/null 2>&1; then pkgs="$pkgs libssl3t64"; else pkgs="$pkgs libssl3"; fi; \
+  apt-get install -y --only-upgrade $pkgs; \
+  apt-get clean; \
+  rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 WORKDIR /kehrnel
-COPY pyproject.toml README.md ./
-COPY src ./src
-COPY src/kehrnel/engine/domains/fhir/libs ./src/kehrnel/engine/domains/fhir/libs
-RUN pip install --no-cache-dir -e ".[all]"
+
+COPY --from=docs-builder /docs/build docs/website/build
+
+COPY . .
+# Vendored FHIR libs must be installed explicitly — plain pip does not resolve
+# uv-style path sources in pyproject.toml.
+RUN pip install --no-cache-dir \
+  -e ./src/kehrnel/engine/domains/fhir/libs/fhir-data-generation \
+  -e ./src/kehrnel/engine/domains/fhir/libs/fhir-search-to-mql && \
+  pip install --no-cache-dir -e ".[all]"
 ENV API_PORT=8080
 ENV KEHRNEL_API_PORT=8080
 ENV KEHRNEL_API_RELOAD=false
