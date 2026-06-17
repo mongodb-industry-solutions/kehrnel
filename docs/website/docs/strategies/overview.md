@@ -41,6 +41,19 @@ The current reference implementation for high-scale openEHR persistence.
 
 [Learn more about RPS Dual →](/docs/strategies/openehr/rps-dual/introduction)
 
+### FHIR Clinical CDR
+
+Reference strategy for native **FHIR R5** in MongoDB (fhir-gen + fhir-mql).
+
+| Aspect | Description |
+|--------|-------------|
+| **Domain** | fhir |
+| **Storage** | Per-resource-type collections with in-place `_search` denormalization |
+| **Query** | FHIR search parameters → MongoDB aggregation (MQL) |
+| **Synthetic** | `synthetic_generate_batch` via fhir-gen |
+
+[Learn more about FHIR Clinical CDR →](/docs/strategies/fhir/clinical-cdr/)
+
 ## Strategy Pack Structure
 
 ```text

@@ -225,9 +225,13 @@ async def build_shortened_contains_condition(
 
     deepest_code = codes[-1]
     if len(codes) == 1:
-        depth = _linear_contains_depth(contains_clause)
+        # When the only coded node in the chain is the COMPOSITION itself, the node
+        # sits at the root of the stored (child-to-root) path, so the code must match
+        # the path exactly. When the coded node is a descendant of an (uncoded)
+        # composition, it may carry further descendant segments, so allow them.
+        deepest_is_composition = str(chain[-1].get("rmType") or "").upper() == "COMPOSITION"
         path_match: Any = str(deepest_code)
-        if depth > 1:
+        if not deepest_is_composition:
             escaped_sep = re.escape(separator)
             path_match = {
                 "$regex": f"^{re.escape(str(deepest_code))}(?:{escaped_sep}[^{re.escape(separator)}]+)*$"

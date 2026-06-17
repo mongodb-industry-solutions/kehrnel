@@ -1,0 +1,382 @@
+resource: Provenance
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec Provenance)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/
+#   patient.json, practitioner.json, device.json, encounter.json,
+#   relatedperson.json
+#
+# Total parameters: 15 (13 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `target[]` and `agent[]` are required.
+#   * `when` searches `occurredDateTime`; `recorded` is instant at root.
+#   * `agent` searches `agent.who`; `agent-role`/`agent-type` search backbone fields.
+#   * `entity` searches `entity.what`; `signature-type` searches `signature.type`.
+
+search_parameters:
+  activity:
+    type: token
+    description: "Activity that occurred"
+    fields:
+      - field: "_search.activity_systemCode"
+        tokenType: systemCode
+      - field: "_search.activity_codes"
+        tokenType: code
+
+  agent:
+    type: reference
+    description: "Who participated"
+    fields:
+      - field: "_search.agentIds"
+        referenceType: id
+      - field: "_search.agentTypes"
+        referenceType: type
+
+  agent-role:
+    type: token
+    description: "What the agents role was"
+    fields:
+      - field: "_search.agentRole_systemCode"
+        tokenType: systemCode
+      - field: "_search.agentRole_codes"
+        tokenType: code
+
+  agent-type:
+    type: token
+    description: "How the agent participated"
+    fields:
+      - field: "_search.agentType_systemCode"
+        tokenType: systemCode
+      - field: "_search.agentType_codes"
+        tokenType: code
+
+  based-on:
+    type: reference
+    description: "An activity that this activity was part of"
+    fields:
+      - field: "_search.basedOnIds"
+        referenceType: id
+      - field: "_search.basedOnTypes"
+        referenceType: type
+      - field: "basedOn.reference"
+        referenceType: full
+
+  encounter:
+    type: reference
+    description: "Encounter related to the activity"
+    fields:
+      - field: "_search.encounterId"
+        referenceType: id
+      - field: "encounter.reference"
+        referenceType: full
+
+  entity:
+    type: reference
+    description: "Specific instance of resource involved"
+    fields:
+      - field: "_search.entityWhatIds"
+        referenceType: id
+      - field: "_search.entityWhatTypes"
+        referenceType: type
+
+  location:
+    type: reference
+    description: "Where the activity occurred"
+    fields:
+      - field: "_search.locationId"
+        referenceType: id
+      - field: "location.reference"
+        referenceType: full
+
+  patient:
+    type: reference
+    description: "The patient for this provenance record"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "patient.reference"
+        referenceType: full
+
+  recorded:
+    type: date
+    description: "When the activity was recorded"
+    fields:
+      - field: "recorded"
+        type: date
+
+  signature-type:
+    type: token
+    description: "The type of signature"
+    fields:
+      - field: "_search.signatureType_systemCode"
+        tokenType: systemCode
+      - field: "_search.signatureType_codes"
+        tokenType: code
+
+  target:
+    type: reference
+    description: "Target reference(s) usually version specific"
+    fields:
+      - field: "_search.targetIds"
+        referenceType: id
+      - field: "_search.targetTypes"
+        referenceType: type
+      - field: "target.reference"
+        referenceType: full
+
+  when:
+    type: date
+    description: "When the activity occurred"
+    fields:
+      - field: "occurredDateTime"
+        type: date
+
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  activity:
+    source: activity
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: activity.coding[*].code
+        target_field: activity_codes
+        datatype: array[string]
+      - source_path: activity.coding[*]
+        target_field: activity_systemCode
+        datatype: array[string]
+
+  patient:
+    source: patient
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: patient.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+
+  encounter:
+    source: encounter
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: encounter.reference
+        target_field: encounterId
+        datatype: string
+        extractType: id
+
+  location:
+    source: location
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: location.reference
+        target_field: locationId
+        datatype: string
+        extractType: id
+
+  target:
+    source: target
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: target[*].reference
+        target_field: targetIds
+        datatype: array[string]
+        extractType: id
+      - source_path: target[*].reference
+        target_field: targetTypes
+        datatype: array[string]
+        extractType: type
+
+  based_on:
+    source: basedOn
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: basedOn[*].reference
+        target_field: basedOnIds
+        datatype: array[string]
+        extractType: id
+      - source_path: basedOn[*].reference
+        target_field: basedOnTypes
+        datatype: array[string]
+        extractType: type
+
+  agent_who:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: agent[*].who.reference
+        target_field: agentIds
+        datatype: array[string]
+        extractType: id
+      - source_path: agent[*].who.reference
+        target_field: agentTypes
+        datatype: array[string]
+        extractType: type
+
+  agent_role:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: agent[*].role[*].coding[*].code
+        target_field: agentRole_codes
+        datatype: array[string]
+      - source_path: agent[*].role[*].coding[*]
+        target_field: agentRole_systemCode
+        datatype: array[string]
+
+  agent_type:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: agent[*].type.coding[*].code
+        target_field: agentType_codes
+        datatype: array[string]
+      - source_path: agent[*].type.coding[*]
+        target_field: agentType_systemCode
+        datatype: array[string]
+
+  entity_what:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: entity[*].what.reference
+        target_field: entityWhatIds
+        datatype: array[string]
+        extractType: id
+      - source_path: entity[*].what.reference
+        target_field: entityWhatTypes
+        datatype: array[string]
+        extractType: type
+
+  signature_type:
+    source: $resource
+    target: _search
+    extractor: CodingExtractor
+    field_mappings:
+      - source_path: signature[*].type[*].code
+        target_field: signatureType_codes
+        datatype: array[string]
+      - source_path: signature[*].type[*]
+        target_field: signatureType_systemCode
+        datatype: array[string]
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - patient
+        reference_type: Patient
+        datatype: array[string]
+      - target_field: Practitioner
+        source_paths:
+          - agent[*].who
+          - agent
+        reference_type: Practitioner
+        datatype: array[string]
+      - target_field: Device
+        source_paths:
+          - agent[*].who
+          - agent
+        reference_type: Device
+        datatype: array[string]
+      - target_field: Encounter
+        source_paths:
+          - encounter
+        reference_type: Encounter
+        datatype: array[string]
+
+compartments:
+  precomputed:
+    - Patient
+    - Practitioner
+    - Device
+    - Encounter
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+  - fields:
+      - "_compartments.Practitioner": 1
+    options:
+      name: idx_compartment_practitioner
+      sparse: true
+  - fields:
+      - "_compartments.Device": 1
+    options:
+      name: idx_compartment_device
+      sparse: true
+  - fields:
+      - "_compartments.Encounter": 1
+    options:
+      name: idx_compartment_encounter
+      sparse: true
+
+  - fields:
+      - "_search.patientId": 1
+    options:
+      name: idx_patient_id
+      sparse: true
+
+  - fields:
+      - "_search.encounterId": 1
+    options:
+      name: idx_encounter_id
+      sparse: true
+
+  - fields:
+      - "_search.targetIds": 1
+    options:
+      name: idx_target_ids
+      sparse: true
+
+  - fields:
+      - "_search.agentIds": 1
+    options:
+      name: idx_agent_ids
+      sparse: true
+
+  - fields:
+      - "recorded": 1
+    options:
+      name: idx_recorded
+      sparse: true
+
+  - fields:
+      - "occurredDateTime": 1
+    options:
+      name: idx_occurred_date_time
+      sparse: true
+
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_meta_last_updated

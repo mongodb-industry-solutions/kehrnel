@@ -1,0 +1,292 @@
+{
+  "resourceType": "CompartmentDefinition",
+  "id": "patient",
+  "url": "http://hl7.org/fhir/CompartmentDefinition/patient",
+  "version": "5.0.0",
+  "name": "Patient",
+  "status": "active",
+  "experimental": false,
+  "date": "2024-03-26T10:00:00Z",
+  "publisher": "FHIR Project Team",
+  "description": "The set of resources associated with a particular patient",
+  "code": "Patient",
+  "search": true,
+  "resource": [
+    {
+      "code": "Account",
+      "param": ["subject"]
+    },
+    {
+      "code": "AdverseEvent",
+      "param": ["subject"]
+    },
+    {
+      "code": "AllergyIntolerance",
+      "param": ["patient"]
+    },
+    {
+      "code": "Appointment",
+      "param": ["actor"]
+    },
+    {
+      "code": "AppointmentResponse",
+      "param": ["actor"]
+    },
+    {
+      "code": "AuditEvent",
+      "param": ["patient"]
+    },
+    {
+      "code": "Basic",
+      "param": ["patient", "subject"]
+    },
+    {
+      "code": "BodyStructure",
+      "param": ["patient"]
+    },
+    {
+      "code": "CarePlan",
+      "param": ["patient", "subject"]
+    },
+    {
+      "code": "CareTeam",
+      "param": ["patient", "subject"]
+    },
+    {
+      "code": "ChargeItem",
+      "param": ["subject"]
+    },
+    {
+      "code": "Claim",
+      "param": ["patient"]
+    },
+    {
+      "code": "ClaimResponse",
+      "param": ["patient"]
+    },
+    {
+      "code": "ClinicalImpression",
+      "param": ["subject"]
+    },
+    {
+      "code": "Communication",
+      "param": ["subject", "sender", "recipient"]
+    },
+    {
+      "code": "CommunicationRequest",
+      "param": ["subject", "sender", "recipient"]
+    },
+    {
+      "code": "Composition",
+      "param": ["subject", "author"]
+    },
+    {
+      "code": "Condition",
+      "param": ["patient", "subject"]
+    },
+    {
+      "code": "Consent",
+      "param": ["subject"]
+    },
+    {
+      "code": "Contract",
+      "param": ["subject"]
+    },
+    {
+      "code": "Coverage",
+      "param": ["policy-holder", "subscriber", "beneficiary", "paymentby-patient"]
+    },
+    {
+      "code": "CoverageEligibilityRequest",
+      "param": ["patient"]
+    },
+    {
+      "code": "CoverageEligibilityResponse",
+      "param": ["patient"]
+    },
+    {
+      "code": "DetectedIssue",
+      "param": ["patient"]
+    },
+    {
+      "code": "DeviceRequest",
+      "param": ["subject", "performer"]
+    },
+    {
+      "code": "DeviceUsage",
+      "param": ["patient"]
+    },
+    {
+      "code": "DiagnosticReport",
+      "param": ["subject"]
+    },
+    {
+      "code": "DocumentManifest",
+      "param": ["subject", "author", "recipient"]
+    },
+    {
+      "code": "DocumentReference",
+      "param": ["subject", "author"]
+    },
+    {
+      "code": "Encounter",
+      "param": ["patient", "subject"]
+    },
+    {
+      "code": "EnrollmentRequest",
+      "param": ["subject"]
+    },
+    {
+      "code": "EpisodeOfCare",
+      "param": ["patient"]
+    },
+    {
+      "code": "ExplanationOfBenefit",
+      "param": ["patient"]
+    },
+    {
+      "code": "FamilyMemberHistory",
+      "param": ["patient"]
+    },
+    {
+      "code": "Flag",
+      "param": ["patient", "subject"]
+    },
+    {
+      "code": "Goal",
+      "param": ["patient", "subject"]
+    },
+    {
+      "code": "Group",
+      "param": ["member"]
+    },
+    {
+      "code": "ImagingStudy",
+      "param": ["patient", "subject"]
+    },
+    {
+      "code": "Immunization",
+      "param": ["patient"]
+    },
+    {
+      "code": "ImmunizationEvaluation",
+      "param": ["patient"]
+    },
+    {
+      "code": "ImmunizationRecommendation",
+      "param": ["patient"]
+    },
+    {
+      "code": "Invoice",
+      "param": ["subject", "patient", "recipient"]
+    },
+    {
+      "code": "List",
+      "param": ["subject", "source"]
+    },
+    {
+      "code": "MeasureReport",
+      "param": ["patient", "subject"]
+    },
+    {
+      "code": "Media",
+      "param": ["subject"]
+    },
+    {
+      "code": "MedicationAdministration",
+      "param": ["patient", "subject"]
+    },
+    {
+      "code": "MedicationDispense",
+      "param": ["patient", "subject", "receiver"]
+    },
+    {
+      "code": "MedicationRequest",
+      "param": ["subject"]
+    },
+    {
+      "code": "MedicationStatement",
+      "param": ["subject"]
+    },
+    {
+      "code": "MolecularSequence",
+      "param": ["patient", "subject"]
+    },
+    {
+      "code": "NutritionIntake",
+      "param": ["patient", "subject", "source"]
+    },
+    {
+      "code": "NutritionOrder",
+      "param": ["patient"]
+    },
+    {
+      "code": "Observation",
+      "param": ["subject", "performer"]
+    },
+    {
+      "code": "Patient",
+      "param": ["link"]
+    },
+    {
+      "code": "Person",
+      "param": ["patient"]
+    },
+    {
+      "code": "Procedure",
+      "param": ["patient", "subject", "performer"]
+    },
+    {
+      "code": "Provenance",
+      "param": ["patient"]
+    },
+    {
+      "code": "QuestionnaireResponse",
+      "param": ["subject", "author"]
+    },
+    {
+      "code": "RelatedPerson",
+      "param": ["patient"]
+    },
+    {
+      "code": "RequestOrchestration",
+      "param": ["patient", "subject"]
+    },
+    {
+      "code": "ResearchSubject",
+      "param": ["subject"]
+    },
+    {
+      "code": "RiskAssessment",
+      "param": ["patient", "subject"]
+    },
+    {
+      "code": "Schedule",
+      "param": ["actor"]
+    },
+    {
+      "code": "ServiceRequest",
+      "param": ["patient", "subject", "performer"]
+    },
+    {
+      "code": "Specimen",
+      "param": ["subject"]
+    },
+    {
+      "code": "SupplyDelivery",
+      "param": ["patient"]
+    },
+    {
+      "code": "SupplyRequest",
+      "param": ["subject"]
+    },
+    {
+      "code": "Task",
+      "param": ["patient", "focus"]
+    },
+    {
+      "code": "VisionPrescription",
+      "param": ["patient"]
+    }
+  ]
+}

@@ -205,15 +205,32 @@ config.json
 tmp_reg.json
 :memory:
 
-# Internal/private docs that should stay local and not be republished
-README-dev.md
-docs/README.md
-docs/cli-api-reference.md
-docs/con2l-negotiation-and-runtime.md
-docs/contextobjects-runtime-overview.md
-docs/contextobjects-strategy-ops.md
-docs/hdl-contract.md
-docs/hdl-kehrnel-contextobjects-contract.md
-docs/hdl-kehrnel-synthetic-contract-v2.md
-docs/objectmaps-runtime.md
-docs/tenant-context-catalog-publication.md
+# ---------------------------------------------------------------------------
+# Vendored FHIR libraries (src/kehrnel/engine/domains/fhir/libs/*)
+# Source is tracked; ignore local tooling artifacts only.
+# ---------------------------------------------------------------------------
+src/kehrnel/engine/domains/fhir/libs/**/.git/
+src/kehrnel/engine/domains/fhir/libs/**/.venv/
+src/kehrnel/engine/domains/fhir/libs/**/venv/
+src/kehrnel/engine/domains/fhir/libs/**/.env
+src/kehrnel/engine/domains/fhir/libs/**/.env.*
+src/kehrnel/engine/domains/fhir/libs/**/__pycache__/
+src/kehrnel/engine/domains/fhir/libs/**/.pytest_cache/
+src/kehrnel/engine/domains/fhir/libs/**/.mypy_cache/
+src/kehrnel/engine/domains/fhir/libs/**/.ruff_cache/
+src/kehrnel/engine/domains/fhir/libs/**/.hypothesis/
+src/kehrnel/engine/domains/fhir/libs/**/htmlcov/
+src/kehrnel/engine/domains/fhir/libs/**/.coverage
+src/kehrnel/engine/domains/fhir/libs/**/coverage.xml
+src/kehrnel/engine/domains/fhir/libs/**/.tox/
+src/kehrnel/engine/domains/fhir/libs/**/.nox/
+src/kehrnel/engine/domains/fhir/libs/**/dist/
+src/kehrnel/engine/domains/fhir/libs/**/build/
+src/kehrnel/engine/domains/fhir/libs/**/.eggs/
+src/kehrnel/engine/domains/fhir/libs/**/*.egg-info/
+src/kehrnel/engine/domains/fhir/libs/**/.pdm-python/
+src/kehrnel/engine/domains/fhir/libs/**/.pdm-build/
+src/kehrnel/engine/domains/fhir/libs/**/node_modules/
+src/kehrnel/engine/domains/fhir/libs/**/.cursor/
+src/kehrnel/engine/domains/fhir/libs/**/pytest_results.txt
+src/kehrnel/engine/domains/fhir/libs/**/.DS_Store

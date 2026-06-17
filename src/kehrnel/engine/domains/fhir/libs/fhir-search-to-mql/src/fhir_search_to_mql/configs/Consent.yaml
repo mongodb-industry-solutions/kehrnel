@@ -1,0 +1,468 @@
+resource: Consent
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec Consent)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/
+#   patient.json, relatedperson.json (grantee — dynamic resolver only)
+#
+# Total parameters: 20 (18 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `Consent.subject` is Reference(Patient | Practitioner | Group);
+#     `patient` is the Patient/* shortcut.
+#   * `provision[]` is recursive; `action`, `actor`, `data`, `period`,
+#     `purpose`, and `securityLabel` search nested provision fields
+#     (including nested `provision.provision[]`).
+#   * `Consent_Actor.reference` is the Reference searched by `actor`.
+#   * `verified` is boolean on `verification[]`; `verified-date` on
+#     `verificationDate[]`.
+#   * Root `date` searches `Consent.date` (date, not dateTime).
+#   * `sourceReference[]` powers `source-reference` search.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters
+  # ─────────────────────────────────────────────────────────────
+  actor:
+    type: reference
+    description: "Who is granting rights (provision.actor.reference)"
+    fields:
+      - field: "_search.provisionActorReferenceIds"
+        referenceType: id
+      - field: "_search.provisionActorReferenceTypes"
+        referenceType: type
+
+  controller:
+    type: reference
+    description: "Consent Enforcer"
+    fields:
+      - field: "_search.controllerIds"
+        referenceType: id
+      - field: "_search.controllerTypes"
+        referenceType: type
+      - field: "controller.reference"
+        referenceType: full
+
+  data:
+    type: reference
+    description: "Data that is controlled by this provision"
+    fields:
+      - field: "_search.provisionDataReferenceIds"
+        referenceType: id
+      - field: "_search.provisionDataReferenceTypes"
+        referenceType: type
+
+  grantee:
+    type: reference
+    description: "Who is agreeing to the policy"
+    fields:
+      - field: "_search.granteeIds"
+        referenceType: id
+      - field: "_search.granteeTypes"
+        referenceType: type
+      - field: "grantee.reference"
+        referenceType: full
+
+  manager:
+    type: reference
+    description: "Consent workflow management"
+    fields:
+      - field: "_search.managerIds"
+        referenceType: id
+      - field: "_search.managerTypes"
+        referenceType: type
+      - field: "manager.reference"
+        referenceType: full
+
+  patient:
+    type: reference
+    description: "Who the consent applies to (Patient subject)"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  source-reference:
+    type: reference
+    description: "Source from which this consent is taken"
+    fields:
+      - field: "_search.sourceReferenceIds"
+        referenceType: id
+      - field: "_search.sourceReferenceTypes"
+        referenceType: type
+      - field: "sourceReference.reference"
+        referenceType: full
+
+  subject:
+    type: reference
+    description: "Who the consent applies to"
+    fields:
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "_search.subjectType"
+        referenceType: type
+      - field: "subject.reference"
+        referenceType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters
+  # ─────────────────────────────────────────────────────────────
+  action:
+    type: token
+    description: "Action controlled by this provision"
+    fields:
+      - field: "_search.provisionAction_systemCode"
+        tokenType: systemCode
+      - field: "_search.provisionAction_codes"
+        tokenType: code
+
+  category:
+    type: token
+    description: "Classification of the consent statement"
+    fields:
+      - field: "_search.category_systemCode"
+        tokenType: systemCode
+      - field: "_search.category_codes"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: "Identifier for this record"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  purpose:
+    type: token
+    description: "Context of activities covered by this provision"
+    fields:
+      - field: "_search.provisionPurpose_systemCode"
+        tokenType: systemCode
+      - field: "_search.provisionPurpose_codes"
+        tokenType: code
+
+  security-label:
+    type: token
+    description: "Security Labels that apply to this provision"
+    fields:
+      - field: "_search.provisionSecurityLabel_systemCode"
+        tokenType: systemCode
+      - field: "_search.provisionSecurityLabel_codes"
+        tokenType: code
+
+  status:
+    type: token
+    description: "draft | active | inactive | not-done | entered-in-error | unknown"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  verified:
+    type: token
+    description: "Whether verification was performed"
+    fields:
+      - field: "_search.verificationVerified_values"
+        tokenType: boolean
+
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters
+  # ─────────────────────────────────────────────────────────────
+  date:
+    type: date
+    description: "When this Consent was created or indexed"
+    fields:
+      - field: "date"
+        type: date
+
+  period:
+    type: date
+    description: "Timeframe for this rule (provision.period)"
+    fields:
+      - field: "_search.provisionPeriod"
+        type: period
+
+  verified-date:
+    type: date
+    description: "When consent was verified"
+    fields:
+      - field: "_search.verificationDate_values"
+        type: date
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  category:
+    source: category
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: category[*].coding[*].code
+        target_field: category_codes
+        datatype: array[string]
+      - source_path: category[*].coding[*]
+        target_field: category_systemCode
+        datatype: array[string]
+
+  subject:
+    source: subject
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: subject.reference
+        target_field: subjectId
+        datatype: string
+        extractType: id
+      - source_path: subject.reference
+        target_field: subjectType
+        datatype: string
+        extractType: type
+      - source_path: subject.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+        filterType: Patient
+        comment: "Patient/* subject only — powers `patient` search parameter"
+
+  controller:
+    source: controller
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: controller[*].reference
+        target_field: controllerIds
+        datatype: array[string]
+        extractType: id
+      - source_path: controller[*].reference
+        target_field: controllerTypes
+        datatype: array[string]
+        extractType: type
+
+  grantee:
+    source: grantee
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: grantee[*].reference
+        target_field: granteeIds
+        datatype: array[string]
+        extractType: id
+      - source_path: grantee[*].reference
+        target_field: granteeTypes
+        datatype: array[string]
+        extractType: type
+
+  manager:
+    source: manager
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: manager[*].reference
+        target_field: managerIds
+        datatype: array[string]
+        extractType: id
+      - source_path: manager[*].reference
+        target_field: managerTypes
+        datatype: array[string]
+        extractType: type
+
+  source_reference:
+    source: sourceReference
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: sourceReference[*].reference
+        target_field: sourceReferenceIds
+        datatype: array[string]
+        extractType: id
+      - source_path: sourceReference[*].reference
+        target_field: sourceReferenceTypes
+        datatype: array[string]
+        extractType: type
+
+  provision_action:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: provision[*].action[*].coding[*].code | provision[*].provision[*].action[*].coding[*].code
+        target_field: provisionAction_codes
+        datatype: array[string]
+      - source_path: provision[*].action[*].coding[*] | provision[*].provision[*].action[*].coding[*]
+        target_field: provisionAction_systemCode
+        datatype: array[string]
+
+  provision_actor:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: provision[*].actor[*].reference.reference | provision[*].provision[*].actor[*].reference.reference
+        target_field: provisionActorReferenceIds
+        datatype: array[string]
+        extractType: id
+      - source_path: provision[*].actor[*].reference.reference | provision[*].provision[*].actor[*].reference.reference
+        target_field: provisionActorReferenceTypes
+        datatype: array[string]
+        extractType: type
+
+  provision_data:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: provision[*].data[*].reference.reference | provision[*].provision[*].data[*].reference.reference
+        target_field: provisionDataReferenceIds
+        datatype: array[string]
+        extractType: id
+      - source_path: provision[*].data[*].reference.reference | provision[*].provision[*].data[*].reference.reference
+        target_field: provisionDataReferenceTypes
+        datatype: array[string]
+        extractType: type
+
+  provision_purpose:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: provision[*].purpose[*].code | provision[*].provision[*].purpose[*].code
+        target_field: provisionPurpose_codes
+        datatype: array[string]
+      - source_path: provision[*].purpose[*] | provision[*].provision[*].purpose[*]
+        target_field: provisionPurpose_systemCode
+        datatype: array[string]
+
+  provision_security_label:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: provision[*].securityLabel[*].code | provision[*].provision[*].securityLabel[*].code
+        target_field: provisionSecurityLabel_codes
+        datatype: array[string]
+      - source_path: provision[*].securityLabel[*] | provision[*].provision[*].securityLabel[*]
+        target_field: provisionSecurityLabel_systemCode
+        datatype: array[string]
+
+  provision_period:
+    source: $resource
+    target: _search
+    extractor: PeriodExtractor
+    field_mappings:
+      - source_path: provision[*].period | provision[*].provision[*].period
+        target_field: provisionPeriod
+        datatype: array[object]
+        comment: "Provision period(s) as [{start,end}, ...]; powers `period` date queries"
+
+  verification_verified:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: verification[*].verified
+        target_field: verificationVerified_values
+        datatype: array[boolean]
+
+  verification_date:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: verification[*].verificationDate[*]
+        target_field: verificationDate_values
+        datatype: array[date]
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - subject
+          - patient
+        reference_type: Patient
+        datatype: array[string]
+        comment: "Patient compartment (patient.json linking param subject)"
+
+compartments:
+  precomputed:
+    - Patient
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+  - fields:
+      - "_search.patientId": 1
+    options:
+      name: idx_patient_id
+      sparse: true
+  - fields:
+      - "_search.subjectId": 1
+    options:
+      name: idx_subject_id
+      sparse: true
+  - fields:
+      - "_search.granteeIds": 1
+    options:
+      name: idx_grantee_ids
+      sparse: true
+  - fields:
+      - "_search.provisionPurpose_codes": 1
+    options:
+      name: idx_provision_purpose_codes
+      sparse: true
+  - fields:
+      - "date": 1
+    options:
+      name: idx_date
+      sparse: true
+  - fields:
+      - "_search.provisionPeriod": 1
+    options:
+      name: idx_provision_period
+      sparse: true
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_meta_last_updated

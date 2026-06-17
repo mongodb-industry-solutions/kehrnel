@@ -170,6 +170,15 @@ class ConditionProcessor:
             levels.update(self._collect_node_levels(child))
         return levels
 
+    def _can_flat_merge_field(self, existing: Any, incoming: Any) -> bool:
+        if not isinstance(existing, dict) or not isinstance(incoming, dict):
+            return False
+        if "$regex" in existing or "$regex" in incoming:
+            return False
+        if "$not" in existing or "$not" in incoming:
+            return False
+        return not (set(existing) & set(incoming))
+
     def _merge_mongo_match(self, target: Dict[str, Any], condition: Dict[str, Any]) -> None:
         if not condition:
             return
@@ -178,13 +187,25 @@ class ConditionProcessor:
             target.update(condition)
             return
 
-        if "$and" in target and len(target) == 1:
-            target["$and"].append(condition)
+        if "$and" in target or "$or" in target or "$and" in condition or "$or" in condition:
+            if "$and" in target and len(target) == 1:
+                target["$and"].append(condition)
+                return
+            existing = dict(target)
+            target.clear()
+            target["$and"] = [existing, condition]
             return
 
-        existing = dict(target)
-        target.clear()
-        target["$and"] = [existing, condition]
+        for field_name, value in condition.items():
+            if field_name not in target:
+                target[field_name] = value
+            elif self._can_flat_merge_field(target[field_name], value):
+                target[field_name] = {**target[field_name], **value}
+            else:
+                existing = dict(target)
+                target.clear()
+                target["$and"] = [existing, condition]
+                return
 
     def _build_ehr_condition_tree(self, node: Dict) -> Dict[str, Any]:
         if not node:

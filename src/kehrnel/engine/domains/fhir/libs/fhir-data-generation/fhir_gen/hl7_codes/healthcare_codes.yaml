@@ -1,0 +1,2672 @@
+# Healthcare Code Systems — FHIR R5 synthetic data generation
+# Sources: https://terminology.hl7.org (HL7 Terminology, FHIR R5)
+#          https://www.hl7.org/fhir/terminologies.html
+#          http://loinc.org | http://snomed.info/sct | RxNorm | CVX
+# Regenerate: python -m fhir_gen.hl7_codes._build_healthcare_codes
+#   or: python fhir_gen/hl7_codes/_build_healthcare_codes.py
+# Section keys match fhir_gen.codes.loader.get_codes(section)
+appointment_status:
+  system: http://hl7.org/fhir/appointmentstatus
+  binding: REQUIRED
+  codes:
+  - code: proposed
+    display: Proposed
+  - code: pending
+    display: Pending
+  - code: booked
+    display: Booked
+  - code: arrived
+    display: Arrived
+  - code: fulfilled
+    display: Fulfilled
+  - code: cancelled
+    display: Cancelled
+  - code: noshow
+    display: No Show
+  - code: entered-in-error
+    display: Entered in Error
+  - code: checked-in
+    display: Checked In
+  - code: waitlist
+    display: Waitlist
+slot_status:
+  system: http://hl7.org/fhir/slotstatus
+  binding: REQUIRED
+  codes:
+  - code: busy
+    display: Busy
+  - code: free
+    display: Free
+  - code: busy-unavailable
+    display: Busy - Unavailable
+  - code: busy-tentative
+    display: Busy - Tentative
+  - code: entered-in-error
+    display: Entered in Error
+participation_status:
+  system: http://hl7.org/fhir/participationstatus
+  binding: REQUIRED
+  codes:
+  - code: accepted
+    display: Accepted
+  - code: declined
+    display: Declined
+  - code: tentative
+    display: Tentative
+  - code: needs-action
+    display: Needs Action
+service_category:
+  system: http://terminology.hl7.org/CodeSystem/service-category
+  binding: EXAMPLE
+  codes:
+  - code: '1'
+    display: Adoption
+  - code: '10'
+    display: Dental
+  - code: '17'
+    display: General Practice
+  - code: '22'
+    display: Mental Health
+  - code: '27'
+    display: Specialist Medical
+  - code: '31'
+    display: Specialist Surgical
+  - code: '34'
+    display: Allied Health
+  - code: '35'
+    display: Hospital
+  - code: '2'
+    display: Aged Care
+  - code: '5'
+    display: Counselling
+  - code: '8'
+    display: Cancer Services
+service_type:
+  system: http://terminology.hl7.org/CodeSystem/service-type
+  binding: EXAMPLE
+  codes:
+  - code: '57'
+    display: Immunization
+  - code: '124'
+    display: General Practice
+  - code: '165'
+    display: Cardiology
+  - code: '394'
+    display: Occupational Health & Safety
+  - code: '532'
+    display: Diabetes Education
+  - code: '533'
+    display: Cardiac Rehabilitation
+  - code: '118'
+    display: Gastroenterology
+  - code: '135'
+    display: Physiotherapy
+  - code: '159'
+    display: Urology
+specialties:
+  system: http://snomed.info/sct
+  binding: PREFERRED
+  codes:
+  - code: '394579002'
+    display: Cardiology
+  - code: '394582007'
+    display: Dermatology
+  - code: '394583002'
+    display: Endocrinology
+  - code: '394584008'
+    display: Gastroenterology
+  - code: '394585009'
+    display: Obstetrics and Gynecology
+  - code: '394587001'
+    display: Psychiatry
+  - code: '394591006'
+    display: Neurology
+  - code: '394610002'
+    display: Neurosurgery
+  - code: '394814009'
+    display: General Practice
+  - code: '419772000'
+    display: Family Practice
+specialty:
+  system: http://snomed.info/sct
+  binding: PREFERRED
+  codes:
+  - code: '394579002'
+    display: Cardiology
+  - code: '394582007'
+    display: Dermatology
+  - code: '394583002'
+    display: Endocrinology
+  - code: '394584008'
+    display: Gastroenterology
+  - code: '394585009'
+    display: Obstetrics and Gynecology
+  - code: '394587001'
+    display: Psychiatry
+  - code: '394591006'
+    display: Neurology
+  - code: '394610002'
+    display: Neurosurgery
+  - code: '394814009'
+    display: General Practice
+  - code: '419772000'
+    display: Family Practice
+  - code: '394537008'
+    display: Pediatrics
+  - code: '394802001'
+    display: General Medicine
+  - code: '394609007'
+    display: General Surgery
+  - code: '394801008'
+    display: Trauma & Orthopedics
+appointment_type:
+  system: http://terminology.hl7.org/CodeSystem/v2-0276
+  binding: PREFERRED
+  codes:
+  - code: ROUTINE
+    display: Routine
+  - code: WALKIN
+    display: Walk-in
+  - code: CHECKUP
+    display: Checkup
+  - code: FOLLOWUP
+    display: Follow-up
+  - code: EMERGENCY
+    display: Emergency
+appointment_class:
+  system: http://terminology.hl7.org/CodeSystem/v3-ActCode
+  binding: PREFERRED
+  codes:
+  - code: AMB
+    display: Ambulatory
+  - code: EMER
+    display: Emergency
+  - code: FLD
+    display: Field
+  - code: HH
+    display: Home Health
+  - code: IMP
+    display: Inpatient
+  - code: VR
+    display: Virtual
+  - code: ACUTE
+    display: Inpatient Acute
+  - code: OBSENC
+    display: Observation Encounter
+priority:
+  system: http://terminology.hl7.org/CodeSystem/v3-ActPriority
+  binding: EXAMPLE
+  codes:
+  - code: R
+    display: Routine
+  - code: UR
+    display: Urgent
+  - code: EM
+    display: Emergency
+  - code: EL
+    display: Elective
+  - code: A
+    display: ASAP
+  - code: S
+    display: Stat
+cancellation_reason:
+  system: http://terminology.hl7.org/CodeSystem/appointment-cancellation-reason
+  binding: EXAMPLE
+  codes:
+  - code: pat
+    display: Patient
+  - code: pat-crs
+    display: Patient - Canceled via Reminder
+  - code: pat-cpp
+    display: Patient - Canceled via Portal
+  - code: pat-dec
+    display: Patient - Deceased
+  - code: pat-fb
+    display: Patient - Feeling Better
+  - code: pat-lt
+    display: Patient - Lack of Transportation
+  - code: pat-mt
+    display: Patient - Member Terminated
+  - code: pat-mv
+    display: Patient - Moved
+  - code: prov
+    display: Provider
+  - code: prov-pers
+    display: Provider - Personal
+  - code: prov-dch
+    display: Provider - Discharged
+  - code: prov-edu
+    display: Provider - Education
+  - code: prov-hosp
+    display: Provider - Hospitalized
+  - code: maint
+    display: Equipment Maintenance
+  - code: oth-err
+    display: Error
+  - code: oth-fin
+    display: Financial
+  - code: oth-weath
+    display: Weather
+participant_type:
+  system: http://terminology.hl7.org/CodeSystem/v3-ParticipationType
+  binding: EXTENSIBLE
+  codes:
+  - code: PPRF
+    display: Primary Performer
+  - code: ATND
+    display: Attender
+  - code: SPRF
+    display: Secondary Performer
+  - code: CON
+    display: Consultant
+  - code: REF
+    display: Referrer
+encounter_reason:
+  system: http://snomed.info/sct
+  binding: PREFERRED
+  codes:
+  - code: '404684003'
+    display: Clinical Finding
+  - code: '439401001'
+    display: Diagnosis
+  - code: '410620009'
+    display: Well Child Visit
+  - code: '390906007'
+    display: Follow-up Encounter
+  - code: '185349003'
+    display: Encounter for Check Up
+  - code: '11429006'
+    display: Consultation
+  - code: '308335008'
+    display: Patient Encounter Procedure
+  - code: '33879002'
+    display: Immunization
+  - code: '386053000'
+    display: Evaluation Procedure
+  - code: '409063005'
+    display: Counseling
+conditions:
+  system: http://snomed.info/sct
+  codes:
+  - code: '38341003'
+    display: Hypertension
+  - code: '73211009'
+    display: Diabetes Mellitus
+  - code: '13645005'
+    display: COPD
+  - code: '49436004'
+    display: Atrial Fibrillation
+  - code: '195967001'
+    display: Asthma
+timezones:
+  system: https://www.iana.org/time-zones
+  binding: REQUIRED
+  codes:
+  - code: America/New_York
+    display: Eastern Time
+  - code: America/Chicago
+    display: Central Time
+  - code: America/Denver
+    display: Mountain Time
+  - code: America/Los_Angeles
+    display: Pacific Time
+  - code: Europe/London
+    display: GMT/BST
+  - code: America/Phoenix
+    display: MST (No DST)
+organization_type:
+  system: http://terminology.hl7.org/CodeSystem/organization-type
+  codes:
+  - code: prov
+    display: Healthcare Provider
+  - code: dept
+    display: Hospital Department
+  - code: team
+    display: Organizational Team
+  - code: govt
+    display: Government
+  - code: ins
+    display: Insurance Company
+  - code: edu
+    display: Educational Institute
+  - code: reli
+    display: Religious Institution
+  - code: crs
+    display: Clinical Research Sponsor
+  - code: cg
+    display: Community Group
+  - code: bus
+    display: Non-Healthcare Business
+  - code: other
+    display: Other
+administrative_gender:
+  system: http://hl7.org/fhir/administrative-gender
+  binding: REQUIRED
+  codes:
+  - code: male
+    display: Male
+  - code: female
+    display: Female
+  - code: other
+    display: Other
+  - code: unknown
+    display: Unknown
+marital_status:
+  system: http://terminology.hl7.org/CodeSystem/v3-MaritalStatus
+  binding: EXTENSIBLE
+  codes:
+  - code: A
+    display: Annulled
+  - code: D
+    display: Divorced
+  - code: I
+    display: Interlocutory
+  - code: L
+    display: Legally Separated
+  - code: M
+    display: Married
+  - code: P
+    display: Polygamous
+  - code: S
+    display: Never Married
+  - code: T
+    display: Domestic Partner
+  - code: U
+    display: Unmarried
+  - code: W
+    display: Widowed
+  - code: UNK
+    display: Unknown
+language:
+  system: urn:ietf:bcp:47
+  binding: PREFERRED
+  codes:
+  - code: en
+    display: English
+  - code: en-US
+    display: English (United States)
+  - code: es
+    display: Spanish
+  - code: es-US
+    display: Spanish (United States)
+  - code: fr
+    display: French
+  - code: de
+    display: German
+  - code: zh
+    display: Chinese
+  - code: ar
+    display: Arabic
+  - code: hi
+    display: Hindi
+  - code: pt
+    display: Portuguese
+  - code: ru
+    display: Russian
+  - code: ja
+    display: Japanese
+  - code: ko
+    display: Korean
+contact_point_system:
+  system: http://hl7.org/fhir/contact-point-system
+  binding: REQUIRED
+  codes:
+  - code: phone
+    display: Phone
+  - code: fax
+    display: Fax
+  - code: email
+    display: Email
+  - code: pager
+    display: Pager
+  - code: url
+    display: URL
+  - code: sms
+    display: SMS
+  - code: other
+    display: Other
+contact_point_use:
+  system: http://hl7.org/fhir/contact-point-use
+  binding: REQUIRED
+  codes:
+  - code: home
+    display: Home
+  - code: work
+    display: Work
+  - code: temp
+    display: Temporary
+  - code: old
+    display: Old
+  - code: mobile
+    display: Mobile
+address_use:
+  system: http://hl7.org/fhir/address-use
+  binding: REQUIRED
+  codes:
+  - code: home
+    display: Home
+  - code: work
+    display: Work
+  - code: temp
+    display: Temporary
+  - code: old
+    display: Old
+  - code: billing
+    display: Billing
+address_type:
+  system: http://hl7.org/fhir/address-type
+  binding: REQUIRED
+  codes:
+  - code: postal
+    display: Postal
+  - code: physical
+    display: Physical
+  - code: both
+    display: Postal & Physical
+identifier_type:
+  system: http://terminology.hl7.org/CodeSystem/v2-0203
+  binding: EXTENSIBLE
+  codes:
+  - code: MR
+    display: Medical Record Number
+  - code: SSN
+    display: Social Security Number
+  - code: DL
+    display: Driver's License Number
+  - code: PPN
+    display: Passport Number
+  - code: NPI
+    display: National Provider Identifier
+  - code: PRN
+    display: Provider Number
+  - code: TAX
+    display: Tax ID Number
+  - code: AN
+    display: Account Number
+  - code: SN
+    display: Serial Number
+  - code: UDI
+    display: Universal Device Identifier
+account_status:
+  system: http://hl7.org/fhir/account-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: inactive
+    display: Inactive
+  - code: entered-in-error
+    display: Entered in Error
+  - code: on-hold
+    display: On Hold
+  - code: unknown
+    display: Unknown
+request_status:
+  system: http://hl7.org/fhir/request-status
+  binding: REQUIRED
+  codes:
+  - code: draft
+    display: Draft
+  - code: active
+    display: Active
+  - code: on-hold
+    display: On Hold
+  - code: revoked
+    display: Revoked
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: unknown
+    display: Unknown
+request_intent:
+  system: http://hl7.org/fhir/request-intent
+  binding: REQUIRED
+  codes:
+  - code: proposal
+    display: Proposal
+  - code: plan
+    display: Plan
+  - code: directive
+    display: Directive
+  - code: order
+    display: Order
+  - code: original-order
+    display: Original Order
+  - code: reflex-order
+    display: Reflex Order
+  - code: filler-order
+    display: Filler Order
+  - code: instance-order
+    display: Instance Order
+  - code: option
+    display: Option
+request_priority:
+  system: http://hl7.org/fhir/request-priority
+  binding: REQUIRED
+  codes:
+  - code: routine
+    display: Routine
+  - code: urgent
+    display: Urgent
+  - code: asap
+    display: ASAP
+  - code: stat
+    display: STAT
+device_type:
+  system: http://snomed.info/sct
+  binding: EXAMPLE
+  codes:
+  - code: '706689003'
+    display: Wheelchair
+  - code: '467138008'
+    display: Imaging Device
+  - code: '63653004'
+    display: Cardiac Monitor
+  - code: '257192006'
+    display: Infusion Pump
+  - code: '19257004'
+    display: Defibrillator
+  - code: '462894003'
+    display: Ventilator
+  - code: '86184003'
+    display: Electrocardiograph
+  - code: '102303004'
+    display: Pulse Oximeter
+  - code: '43770009'
+    display: Doppler Device
+device_status:
+  system: http://hl7.org/fhir/device-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: inactive
+    display: Inactive
+  - code: entered-in-error
+    display: Entered in Error
+  - code: unknown
+    display: Unknown
+location_status:
+  system: http://hl7.org/fhir/location-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: suspended
+    display: Suspended
+  - code: inactive
+    display: Inactive
+location_mode:
+  system: http://hl7.org/fhir/location-mode
+  binding: REQUIRED
+  codes:
+  - code: instance
+    display: Instance
+  - code: kind
+    display: Kind
+location_type:
+  system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+  binding: EXTENSIBLE
+  codes:
+  - code: HOSP
+    display: Hospital
+  - code: PHARM
+    display: Pharmacy
+  - code: PC
+    display: Primary Care Clinic
+  - code: ACC
+    display: Accident Site
+  - code: COMM
+    display: Community Location
+  - code: CSC
+    display: Community Service Center
+  - code: PTRES
+    display: Patient's Residence
+  - code: SCHOOL
+    display: School
+  - code: UPC
+    display: Urgent Care Center
+  - code: WORK
+    display: Work Site
+  - code: MOBL
+    display: Mobile Unit
+group_type:
+  system: http://hl7.org/fhir/group-type
+  binding: REQUIRED
+  codes:
+  - code: person
+    display: Person
+  - code: animal
+    display: Animal
+  - code: practitioner
+    display: Practitioner
+  - code: device
+    display: Device
+  - code: medication
+    display: Medication
+  - code: substance
+    display: Substance
+name_use:
+  system: http://hl7.org/fhir/name-use
+  binding: REQUIRED
+  codes:
+  - code: usual
+    display: Usual
+  - code: official
+    display: Official
+  - code: temp
+    display: Temporary
+  - code: nickname
+    display: Nickname
+  - code: anonymous
+    display: Anonymous
+  - code: old
+    display: Old
+  - code: maiden
+    display: Maiden
+practitioner_role:
+  system: http://terminology.hl7.org/CodeSystem/practitioner-role
+  binding: EXAMPLE
+  codes:
+  - code: doctor
+    display: Doctor
+  - code: nurse
+    display: Nurse
+  - code: pharmacist
+    display: Pharmacist
+  - code: researcher
+    display: Researcher
+  - code: teacher
+    display: Teacher/Educator
+  - code: ict
+    display: ICT Professional
+qualification_code:
+  system: http://terminology.hl7.org/CodeSystem/v2-0360
+  binding: EXAMPLE
+  codes:
+  - code: MD
+    display: Doctor of Medicine
+  - code: DO
+    display: Doctor of Osteopathic Medicine
+  - code: PharmD
+    display: Doctor of Pharmacy
+  - code: DDS
+    display: Doctor of Dental Surgery
+  - code: NP
+    display: Nurse Practitioner
+  - code: PA
+    display: Physician Assistant
+  - code: RN
+    display: Registered Nurse
+  - code: PhD
+    display: Doctor of Philosophy
+  - code: BS
+    display: Bachelor of Science
+  - code: MS
+    display: Master of Science
+mime_types:
+  system: http://terminology.hl7.org/CodeSystem/mimetypes
+  binding: EXAMPLE
+  codes:
+  - code: application/pdf
+    display: PDF
+  - code: application/fhir+json
+    display: FHIR JSON
+  - code: application/json
+    display: JSON
+  - code: application/xml
+    display: XML
+  - code: text/plain
+    display: Plain Text
+  - code: text/html
+    display: HTML
+  - code: image/jpeg
+    display: JPEG
+  - code: image/png
+    display: PNG
+  - code: image/dicom
+    display: DICOM
+  - code: audio/mpeg
+    display: MPEG Audio
+  - code: video/mp4
+    display: MP4 Video
+contact_relationship:
+  system: http://terminology.hl7.org/CodeSystem/v2-0131
+  binding: EXTENSIBLE
+  codes:
+  - code: C
+    display: Emergency Contact
+  - code: E
+    display: Employer
+  - code: F
+    display: Federal Agency
+  - code: I
+    display: Insurance Company
+  - code: N
+    display: Next-of-Kin
+  - code: S
+    display: State Agency
+  - code: U
+    display: Unknown
+  - code: O
+    display: Other
+  - code: P
+    display: Parent
+  - code: G
+    display: Guardian
+encounter_status:
+  system: http://hl7.org/fhir/encounter-status
+  binding: REQUIRED
+  codes:
+  - code: planned
+    display: Planned
+  - code: in-progress
+    display: In Progress
+  - code: on-hold
+    display: On Hold
+  - code: discharged
+    display: Discharged
+  - code: completed
+    display: Completed
+  - code: cancelled
+    display: Cancelled
+  - code: discontinued
+    display: Discontinued
+  - code: entered-in-error
+    display: Entered in Error
+  - code: unknown
+    display: Unknown
+encounter_class:
+  system: http://terminology.hl7.org/CodeSystem/v3-ActCode
+  binding: EXTENSIBLE
+  codes:
+  - code: AMB
+    display: ambulatory
+  - code: EMER
+    display: emergency
+  - code: FLD
+    display: field
+  - code: HH
+    display: home health
+  - code: IMP
+    display: inpatient encounter
+  - code: ACUTE
+    display: inpatient acute
+  - code: NONAC
+    display: inpatient non-acute
+  - code: OBSENC
+    display: observation encounter
+  - code: PRENC
+    display: pre-admission
+  - code: SS
+    display: short stay
+  - code: VR
+    display: virtual
+observation_status:
+  system: http://hl7.org/fhir/observation-status
+  binding: REQUIRED
+  codes:
+  - code: registered
+    display: Registered
+  - code: preliminary
+    display: Preliminary
+  - code: final
+    display: Final
+  - code: amended
+    display: Amended
+  - code: corrected
+    display: Corrected
+  - code: cancelled
+    display: Cancelled
+  - code: entered-in-error
+    display: Entered in Error
+  - code: unknown
+    display: Unknown
+observation_categories:
+  system: http://terminology.hl7.org/CodeSystem/observation-category
+  binding: EXTENSIBLE
+  codes:
+  - code: vital-signs
+    display: Vital Signs
+  - code: imaging
+    display: Imaging
+  - code: laboratory
+    display: Laboratory
+  - code: procedure
+    display: Procedure
+  - code: survey
+    display: Survey
+  - code: exam
+    display: Exam
+  - code: therapy
+    display: Therapy
+  - code: activity
+    display: Activity
+  - code: social-history
+    display: Social History
+loinc_observations:
+  system: http://loinc.org
+  binding: PREFERRED
+  codes:
+  - code: 8867-4
+    display: Heart rate
+    value: 72
+    unit: beats/min
+    low: 60
+    high: 100
+  - code: 9279-1
+    display: Respiratory rate
+    value: 16
+    unit: breaths/min
+    low: 12
+    high: 20
+  - code: 8310-5
+    display: Body temperature
+    value: 37.0
+    unit: Cel
+    low: 36.1
+    high: 37.8
+  - code: 85354-9
+    display: Blood pressure panel
+    value: 120
+    unit: mm[Hg]
+    low: 90
+    high: 140
+  - code: 8480-6
+    display: Systolic blood pressure
+    value: 120
+    unit: mm[Hg]
+    low: 90
+    high: 140
+  - code: 8462-4
+    display: Diastolic blood pressure
+    value: 80
+    unit: mm[Hg]
+    low: 60
+    high: 90
+  - code: 29463-7
+    display: Body weight
+    value: 70
+    unit: kg
+    low: 40
+    high: 150
+  - code: 8302-2
+    display: Body height
+    value: 170
+    unit: cm
+    low: 140
+    high: 210
+  - code: 39156-5
+    display: BMI
+    value: 24.2
+    unit: kg/m2
+    low: 18.5
+    high: 24.9
+  - code: 2708-6
+    display: Oxygen saturation
+    value: 98
+    unit: '%'
+    low: 95
+    high: 100
+  - code: 2339-0
+    display: Glucose
+    value: 95
+    unit: mg/dL
+    low: 70
+    high: 140
+  - code: 2093-3
+    display: Total cholesterol
+    value: 180
+    unit: mg/dL
+    low: 125
+    high: 200
+  - code: 718-7
+    display: Hemoglobin
+    value: 14
+    unit: g/dL
+    low: 12
+    high: 17
+  - code: 6690-2
+    display: WBC count
+    value: 7.5
+    unit: 10*3/uL
+    low: 4.5
+    high: 11.0
+  - code: 4548-4
+    display: HbA1c
+    value: 5.6
+    unit: '%'
+    low: 4.0
+    high: 5.7
+condition_clinical_status:
+  system: http://terminology.hl7.org/CodeSystem/condition-clinical
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: recurrence
+    display: Recurrence
+  - code: relapse
+    display: Relapse
+  - code: inactive
+    display: Inactive
+  - code: remission
+    display: Remission
+  - code: resolved
+    display: Resolved
+condition_verification_status:
+  system: http://terminology.hl7.org/CodeSystem/condition-ver-status
+  binding: REQUIRED
+  codes:
+  - code: unconfirmed
+    display: Unconfirmed
+  - code: provisional
+    display: Provisional
+  - code: differential
+    display: Differential
+  - code: confirmed
+    display: Confirmed
+  - code: refuted
+    display: Refuted
+  - code: entered-in-error
+    display: Entered in Error
+condition_severity:
+  system: http://snomed.info/sct
+  binding: PREFERRED
+  codes:
+  - code: '255604002'
+    display: Mild
+  - code: '6736007'
+    display: Moderate
+  - code: '24484000'
+    display: Severe
+snomed_conditions:
+  system: http://snomed.info/sct
+  binding: PREFERRED
+  codes:
+  - code: '38341003'
+    display: Hypertensive disorder
+  - code: '73211009'
+    display: Diabetes mellitus
+  - code: '13645005'
+    display: Chronic obstructive lung disease
+  - code: '49436004'
+    display: Atrial fibrillation
+  - code: '195967001'
+    display: Asthma
+  - code: '84114007'
+    display: Heart failure
+  - code: '22298006'
+    display: Myocardial infarction
+  - code: '44054006'
+    display: Type 2 diabetes mellitus
+  - code: '396275006'
+    display: Osteoarthritis
+  - code: '35489007'
+    display: Depressive disorder
+  - code: '40930008'
+    display: Hypothyroidism
+  - code: '235856003'
+    display: Chronic kidney disease
+  - code: '87433001'
+    display: Pulmonary embolism
+  - code: '91302008'
+    display: Sepsis
+  - code: '233604007'
+    display: Pneumonia
+allergy_clinical_status:
+  system: http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: inactive
+    display: Inactive
+  - code: resolved
+    display: Resolved
+allergy_verification_status:
+  system: http://terminology.hl7.org/CodeSystem/allergyintolerance-verification
+  binding: REQUIRED
+  codes:
+  - code: unconfirmed
+    display: Unconfirmed
+  - code: confirmed
+    display: Confirmed
+  - code: refuted
+    display: Refuted
+  - code: entered-in-error
+    display: Entered in Error
+allergy_substances:
+  system: http://snomed.info/sct
+  binding: PREFERRED
+  codes:
+  - code: '91930004'
+    display: Allergy to eggs
+  - code: '91934008'
+    display: Allergy to nuts
+  - code: '91935009'
+    display: Allergy to peanuts
+  - code: '91936005'
+    display: Allergy to seafood
+  - code: '91937002'
+    display: Allergy to fish
+  - code: '91938007'
+    display: Allergy to dairy product
+  - code: '91939004'
+    display: Allergy to wheat
+  - code: '91940001'
+    display: Allergy to soy
+  - code: '293586001'
+    display: Allergy to penicillin
+  - code: '294505008'
+    display: Allergy to sulfonamide
+  - code: '294627000'
+    display: Allergy to aspirin
+  - code: '418038007'
+    display: Propensity to adverse reaction to substance
+snomed_allergies:
+  system: http://snomed.info/sct
+  binding: PREFERRED
+  codes:
+  - code: '91930004'
+    display: Allergy to eggs
+  - code: '91934008'
+    display: Allergy to nuts
+  - code: '91935009'
+    display: Allergy to peanuts
+  - code: '91936005'
+    display: Allergy to seafood
+  - code: '91937002'
+    display: Allergy to fish
+  - code: '91938007'
+    display: Allergy to dairy product
+  - code: '91939004'
+    display: Allergy to wheat
+  - code: '91940001'
+    display: Allergy to soy
+  - code: '293586001'
+    display: Allergy to penicillin
+  - code: '294505008'
+    display: Allergy to sulfonamide
+  - code: '294627000'
+    display: Allergy to aspirin
+  - code: '418038007'
+    display: Propensity to adverse reaction to substance
+reaction_severity:
+  system: http://hl7.org/fhir/reaction-event-severity
+  binding: REQUIRED
+  codes:
+  - code: mild
+    display: Mild
+  - code: moderate
+    display: Moderate
+  - code: severe
+    display: Severe
+procedure_status:
+  system: http://hl7.org/fhir/event-status
+  binding: REQUIRED
+  codes:
+  - code: preparation
+    display: Preparation
+  - code: in-progress
+    display: In Progress
+  - code: not-done
+    display: Not Done
+  - code: on-hold
+    display: On Hold
+  - code: stopped
+    display: Stopped
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: unknown
+    display: Unknown
+immunization_status:
+  system: http://hl7.org/fhir/event-status
+  binding: REQUIRED
+  codes:
+  - code: preparation
+    display: Preparation
+  - code: in-progress
+    display: In Progress
+  - code: not-done
+    display: Not Done
+  - code: on-hold
+    display: On Hold
+  - code: stopped
+    display: Stopped
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: unknown
+    display: Unknown
+snomed_procedures:
+  system: http://snomed.info/sct
+  binding: PREFERRED
+  codes:
+  - code: '80146002'
+    display: Appendectomy
+  - code: '387713003'
+    display: Surgical procedure
+  - code: '103693007'
+    display: Diagnostic procedure
+  - code: '169396008'
+    display: Antenatal care
+  - code: '252160004'
+    display: Standard chest X-ray
+  - code: '73761001'
+    display: Colonoscopy
+  - code: '386053000'
+    display: Evaluation procedure
+  - code: '11429006'
+    display: Consultation
+  - code: '33879002'
+    display: Administration of vaccine
+  - code: '71388002'
+    display: Procedure on heart
+medication_status:
+  system: http://hl7.org/fhir/medication-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: inactive
+    display: Inactive
+  - code: entered-in-error
+    display: Entered in Error
+medication_request_status:
+  system: http://hl7.org/fhir/medicationrequest-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: on-hold
+    display: On Hold
+  - code: cancelled
+    display: Cancelled
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: stopped
+    display: Stopped
+  - code: draft
+    display: Draft
+  - code: unknown
+    display: Unknown
+medication_request_intent:
+  system: http://hl7.org/fhir/medicationrequest-intent
+  binding: REQUIRED
+  codes:
+  - code: proposal
+    display: Proposal
+  - code: plan
+    display: Plan
+  - code: order
+    display: Order
+  - code: original-order
+    display: Original Order
+  - code: reflex-order
+    display: Reflex Order
+  - code: filler-order
+    display: Filler Order
+  - code: instance-order
+    display: Instance Order
+  - code: option
+    display: Option
+medication_admin_status:
+  system: http://hl7.org/fhir/medication-admin-status
+  binding: REQUIRED
+  codes:
+  - code: in-progress
+    display: In Progress
+  - code: not-done
+    display: Not Done
+  - code: on-hold
+    display: On Hold
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: stopped
+    display: Stopped
+  - code: unknown
+    display: Unknown
+medication_dispense_status:
+  system: http://hl7.org/fhir/medicationdispense-status
+  binding: REQUIRED
+  codes:
+  - code: preparation
+    display: Preparation
+  - code: in-progress
+    display: In Progress
+  - code: cancelled
+    display: Cancelled
+  - code: on-hold
+    display: On Hold
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: stopped
+    display: Stopped
+  - code: declined
+    display: Declined
+  - code: unknown
+    display: Unknown
+rxnorm_medications:
+  system: http://www.nlm.nih.gov/research/umls/rxnorm
+  binding: PREFERRED
+  codes:
+  - code: '197361'
+    display: Lisinopril 20 MG Oral Tablet
+  - code: '860975'
+    display: Metformin 500 MG Oral Tablet
+  - code: '197380'
+    display: Albuterol 90 MCG Inhalation
+  - code: '197319'
+    display: Ibuprofen 200 MG Oral Tablet
+  - code: '198211'
+    display: Atorvastatin 40 MG Oral Tablet
+  - code: '197454'
+    display: Hydrochlorothiazide 25 MG Oral Tablet
+  - code: '1049502'
+    display: Amoxicillin 500 MG Oral Capsule
+  - code: '198440'
+    display: Omeprazole 20 MG Oral Capsule
+  - code: '197381'
+    display: Warfarin 5 MG Oral Tablet
+  - code: '197313'
+    display: Levothyroxine 100 MCG Oral Tablet
+  - code: '198051'
+    display: Prednisone 10 MG Oral Tablet
+snomed_medications:
+  system: http://snomed.info/sct
+  binding: PREFERRED
+  codes:
+  - code: '387517004'
+    display: Paracetamol
+  - code: '387458008'
+    display: Aspirin
+  - code: '387467008'
+    display: Amoxicillin
+  - code: '372756006'
+    display: Warfarin
+dosage_routes:
+  system: http://snomed.info/sct
+  binding: PREFERRED
+  codes:
+  - code: '26643006'
+    display: Oral route
+  - code: '78421000'
+    display: Intramuscular route
+  - code: '47625008'
+    display: Intravenous route
+  - code: '34206005'
+    display: Subcutaneous route
+  - code: '37161004'
+    display: Rectal route
+  - code: '46713006'
+    display: Nasal route
+  - code: '37839007'
+    display: Sublingual route
+  - code: '54485002'
+    display: Ophthalmic route
+  - code: '6064005'
+    display: Topical route
+  - code: '16857009'
+    display: Vaginal route
+dosage_timing:
+  system: http://terminology.hl7.org/CodeSystem/timing-abbreviation
+  binding: EXAMPLE
+  codes:
+  - code: QD
+    display: Once daily
+    frequency: 1
+    period: 1
+    period_unit: d
+  - code: BID
+    display: Twice daily
+    frequency: 2
+    period: 1
+    period_unit: d
+  - code: TID
+    display: Three times daily
+    frequency: 3
+    period: 1
+    period_unit: d
+  - code: QID
+    display: Four times daily
+    frequency: 4
+    period: 1
+    period_unit: d
+  - code: Q4H
+    display: Every 4 hours
+    frequency: 1
+    period: 4
+    period_unit: h
+  - code: Q6H
+    display: Every 6 hours
+    frequency: 1
+    period: 6
+    period_unit: h
+  - code: Q8H
+    display: Every 8 hours
+    frequency: 1
+    period: 8
+    period_unit: h
+  - code: Q12H
+    display: Every 12 hours
+    frequency: 1
+    period: 12
+    period_unit: h
+  - code: QHS
+    display: At bedtime
+    frequency: 1
+    period: 1
+    period_unit: d
+  - code: PRN
+    display: As needed
+    frequency: 1
+    period: 1
+    period_unit: d
+claim_status:
+  system: http://hl7.org/fhir/claim-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: cancelled
+    display: Cancelled
+  - code: draft
+    display: Draft
+  - code: entered-in-error
+    display: Entered in Error
+coverage_status:
+  system: http://hl7.org/fhir/fm-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: cancelled
+    display: Cancelled
+  - code: draft
+    display: Draft
+  - code: entered-in-error
+    display: Entered in Error
+coverage_type:
+  system: http://terminology.hl7.org/CodeSystem/v3-ActCode
+  binding: EXTENSIBLE
+  codes:
+  - code: EHCPOL
+    display: extended healthcare
+  - code: HSAPOL
+    display: health spending account
+  - code: AUTOPOL
+    display: automobile
+  - code: COL
+    display: collision coverage policy
+  - code: LIFE
+    display: life insurance policy
+  - code: DIS
+    display: disability insurance policy
+  - code: PUBLICPOL
+    display: public healthcare
+  - code: DENTPRG
+    display: dental program
+  - code: DISEASEPRG
+    display: public health program
+care_plan_status:
+  system: http://hl7.org/fhir/request-status
+  binding: REQUIRED
+  codes:
+  - code: draft
+    display: Draft
+  - code: active
+    display: Active
+  - code: on-hold
+    display: On Hold
+  - code: revoked
+    display: Revoked
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: unknown
+    display: Unknown
+care_plan_intent:
+  system: http://hl7.org/fhir/request-intent
+  binding: REQUIRED
+  codes:
+  - code: proposal
+    display: Proposal
+  - code: plan
+    display: Plan
+  - code: order
+    display: Order
+  - code: option
+    display: Option
+  - code: directive
+    display: Directive
+goal_status:
+  system: http://hl7.org/fhir/goal-status
+  binding: REQUIRED
+  codes:
+  - code: proposed
+    display: Proposed
+  - code: planned
+    display: Planned
+  - code: accepted
+    display: Accepted
+  - code: active
+    display: Active
+  - code: on-hold
+    display: On Hold
+  - code: completed
+    display: Completed
+  - code: cancelled
+    display: Cancelled
+  - code: entered-in-error
+    display: Entered in Error
+  - code: rejected
+    display: Rejected
+task_status:
+  system: http://hl7.org/fhir/task-status
+  binding: REQUIRED
+  codes:
+  - code: draft
+    display: Draft
+  - code: requested
+    display: Requested
+  - code: received
+    display: Received
+  - code: accepted
+    display: Accepted
+  - code: rejected
+    display: Rejected
+  - code: ready
+    display: Ready
+  - code: cancelled
+    display: Cancelled
+  - code: in-progress
+    display: In Progress
+  - code: on-hold
+    display: On Hold
+  - code: failed
+    display: Failed
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+document_reference_status:
+  system: http://hl7.org/fhir/document-reference-status
+  binding: REQUIRED
+  codes:
+  - code: current
+    display: Current
+  - code: superseded
+    display: Superseded
+  - code: entered-in-error
+    display: Entered in Error
+composition_status:
+  system: http://hl7.org/fhir/composition-status
+  binding: REQUIRED
+  codes:
+  - code: registered
+    display: Registered
+  - code: partial
+    display: Partial
+  - code: preliminary
+    display: Preliminary
+  - code: final
+    display: Final
+  - code: amended
+    display: Amended
+  - code: corrected
+    display: Corrected
+  - code: appended
+    display: Appended
+  - code: cancelled
+    display: Cancelled
+  - code: entered-in-error
+    display: Entered in Error
+  - code: deprecated
+    display: Deprecated
+  - code: unknown
+    display: Unknown
+diagnostic_report_status:
+  system: http://hl7.org/fhir/diagnostic-report-status
+  binding: REQUIRED
+  codes:
+  - code: registered
+    display: Registered
+  - code: partial
+    display: Partial
+  - code: preliminary
+    display: Preliminary
+  - code: final
+    display: Final
+  - code: amended
+    display: Amended
+  - code: corrected
+    display: Corrected
+  - code: appended
+    display: Appended
+  - code: cancelled
+    display: Cancelled
+  - code: entered-in-error
+    display: Entered in Error
+  - code: unknown
+    display: Unknown
+diagnostic_report_categories:
+  system: http://terminology.hl7.org/CodeSystem/v2-0074
+  binding: EXTENSIBLE
+  codes:
+  - code: LAB
+    display: Laboratory
+  - code: RAD
+    display: Radiology
+  - code: PATH
+    display: Pathology
+  - code: CUS
+    display: Cardiac Ultrasound
+  - code: CT
+    display: CAT Scan
+  - code: MRI
+    display: Magnetic Resonance
+  - code: NUC
+    display: Nuclear Medicine Scan
+  - code: OTH
+    display: Other
+vaccines:
+  system: http://hl7.org/fhir/sid/cvx
+  binding: PREFERRED
+  codes:
+  - code: 08
+    display: Hep B, adolescent or pediatric
+  - code: '10'
+    display: IPV
+  - code: '20'
+    display: DTaP
+  - code: '21'
+    display: Varicella
+  - code: '03'
+    display: MMR
+  - code: '33'
+    display: Pneumococcal conjugate
+  - code: '115'
+    display: Tdap
+  - code: '140'
+    display: Influenza, seasonal, injectable
+  - code: '141'
+    display: Influenza, seasonal, intranasal
+  - code: '52'
+    display: Hep A, adult
+  - code: '83'
+    display: Hep A, ped/adol, 2 dose
+  - code: '114'
+    display: Meningococcal MCV4P
+  - code: '62'
+    display: HPV, quadrivalent
+  - code: '165'
+    display: HPV9
+  - code: '187'
+    display: COVID-19, mRNA, LNP-S
+body_sites:
+  system: http://snomed.info/sct
+  binding: PREFERRED
+  codes:
+  - code: '368209003'
+    display: Right deltoid
+  - code: '368208006'
+    display: Left arm
+  - code: '368210008'
+    display: Right thigh
+  - code: '368211007'
+    display: Left thigh
+  - code: '368207001'
+    display: Right buttock
+  - code: '368206005'
+    display: Left buttock
+  - code: '49521007'
+    display: Left lower forearm
+  - code: '89666000'
+    display: Right hand
+  - code: '7771000'
+    display: Left hand
+  - code: '69536005'
+    display: Head structure
+  - code: '45048000'
+    display: Neck structure
+  - code: '818983003'
+    display: Structure of left thigh
+  - code: '91775009'
+    display: Structure of right deltoid region
+countries:
+  system: urn:iso:std:iso:3166
+  binding: REQUIRED
+  codes:
+  - code: US
+    display: United States
+  - code: GB
+    display: United Kingdom
+  - code: CA
+    display: Canada
+  - code: AU
+    display: Australia
+  - code: DE
+    display: Germany
+  - code: FR
+    display: France
+  - code: IN
+    display: India
+  - code: JP
+    display: Japan
+  - code: BR
+    display: Brazil
+  - code: MX
+    display: Mexico
+  - code: ZA
+    display: South Africa
+  - code: IE
+    display: Ireland
+  - code: NZ
+    display: New Zealand
+  - code: NL
+    display: Netherlands
+  - code: SE
+    display: Sweden
+us_states:
+  system: urn:iso:std:iso:3166-2
+  binding: EXAMPLE
+  codes:
+  - code: AL
+    display: AL
+  - code: AK
+    display: AK
+  - code: AZ
+    display: AZ
+  - code: AR
+    display: AR
+  - code: CA
+    display: CA
+  - code: CO
+    display: CO
+  - code: CT
+    display: CT
+  - code: DE
+    display: DE
+  - code: FL
+    display: FL
+  - code: GA
+    display: GA
+  - code: HI
+    display: HI
+  - code: ID
+    display: ID
+  - code: IL
+    display: IL
+  - code: IN
+    display: IN
+  - code: IA
+    display: IA
+  - code: KS
+    display: KS
+  - code: KY
+    display: KY
+  - code: LA
+    display: LA
+  - code: ME
+    display: ME
+  - code: MD
+    display: MD
+  - code: MA
+    display: MA
+  - code: MI
+    display: MI
+  - code: MN
+    display: MN
+  - code: MS
+    display: MS
+  - code: MO
+    display: MO
+  - code: MT
+    display: MT
+  - code: NE
+    display: NE
+  - code: NV
+    display: NV
+  - code: NH
+    display: NH
+  - code: NJ
+    display: NJ
+  - code: NM
+    display: NM
+  - code: NY
+    display: NY
+  - code: NC
+    display: NC
+  - code: ND
+    display: ND
+  - code: OH
+    display: OH
+  - code: OK
+    display: OK
+  - code: OR
+    display: OR
+  - code: PA
+    display: PA
+  - code: RI
+    display: RI
+  - code: SC
+    display: SC
+  - code: SD
+    display: SD
+  - code: TN
+    display: TN
+  - code: TX
+    display: TX
+  - code: UT
+    display: UT
+  - code: VT
+    display: VT
+  - code: VA
+    display: VA
+  - code: WA
+    display: WA
+  - code: WV
+    display: WV
+  - code: WI
+    display: WI
+  - code: WY
+    display: WY
+  - code: DC
+    display: DC
+gender:
+  system: http://hl7.org/fhir/administrative-gender
+  binding: REQUIRED
+  codes:
+  - code: male
+    display: Male
+  - code: female
+    display: Female
+  - code: other
+    display: Other
+  - code: unknown
+    display: Unknown
+languages:
+  system: urn:ietf:bcp:47
+  binding: PREFERRED
+  codes:
+  - code: en
+    display: English
+  - code: en-US
+    display: English (United States)
+  - code: es
+    display: Spanish
+  - code: es-US
+    display: Spanish (United States)
+  - code: fr
+    display: French
+  - code: de
+    display: German
+  - code: zh
+    display: Chinese
+  - code: ar
+    display: Arabic
+  - code: hi
+    display: Hindi
+  - code: pt
+    display: Portuguese
+  - code: ru
+    display: Russian
+  - code: ja
+    display: Japanese
+  - code: ko
+    display: Korean
+identifier_types:
+  system: http://terminology.hl7.org/CodeSystem/v2-0203
+  binding: EXTENSIBLE
+  codes:
+  - code: MR
+    display: Medical Record Number
+  - code: SSN
+    display: Social Security Number
+  - code: DL
+    display: Driver's License Number
+  - code: PPN
+    display: Passport Number
+  - code: NPI
+    display: National Provider Identifier
+  - code: PRN
+    display: Provider Number
+  - code: TAX
+    display: Tax ID Number
+  - code: AN
+    display: Account Number
+  - code: SN
+    display: Serial Number
+  - code: UDI
+    display: Universal Device Identifier
+telecom_system:
+  system: http://hl7.org/fhir/contact-point-system
+  binding: REQUIRED
+  codes:
+  - code: phone
+    display: Phone
+  - code: fax
+    display: Fax
+  - code: email
+    display: Email
+  - code: pager
+    display: Pager
+  - code: url
+    display: URL
+  - code: sms
+    display: SMS
+  - code: other
+    display: Other
+telecom_use:
+  system: http://hl7.org/fhir/contact-point-use
+  binding: REQUIRED
+  codes:
+  - code: home
+    display: Home
+  - code: work
+    display: Work
+  - code: temp
+    display: Temporary
+  - code: old
+    display: Old
+  - code: mobile
+    display: Mobile
+practitioner_roles:
+  system: http://terminology.hl7.org/CodeSystem/practitioner-role
+  binding: EXAMPLE
+  codes:
+  - code: doctor
+    display: Doctor
+  - code: nurse
+    display: Nurse
+  - code: pharmacist
+    display: Pharmacist
+  - code: researcher
+    display: Researcher
+  - code: teacher
+    display: Teacher/Educator
+  - code: ict
+    display: ICT Professional
+organization_types:
+  system: http://terminology.hl7.org/CodeSystem/organization-type
+  codes:
+  - code: prov
+    display: Healthcare Provider
+  - code: dept
+    display: Hospital Department
+  - code: team
+    display: Organizational Team
+  - code: govt
+    display: Government
+  - code: ins
+    display: Insurance Company
+  - code: edu
+    display: Educational Institute
+  - code: reli
+    display: Religious Institution
+  - code: crs
+    display: Clinical Research Sponsor
+  - code: cg
+    display: Community Group
+  - code: bus
+    display: Non-Healthcare Business
+  - code: other
+    display: Other
+location_types:
+  system: http://terminology.hl7.org/CodeSystem/v3-RoleCode
+  binding: EXTENSIBLE
+  codes:
+  - code: HOSP
+    display: Hospital
+  - code: PHARM
+    display: Pharmacy
+  - code: PC
+    display: Primary Care Clinic
+  - code: ACC
+    display: Accident Site
+  - code: COMM
+    display: Community Location
+  - code: CSC
+    display: Community Service Center
+  - code: PTRES
+    display: Patient's Residence
+  - code: SCHOOL
+    display: School
+  - code: UPC
+    display: Urgent Care Center
+  - code: WORK
+    display: Work Site
+  - code: MOBL
+    display: Mobile Unit
+flag_status:
+  system: http://hl7.org/fhir/flag-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: inactive
+    display: Inactive
+  - code: entered-in-error
+    display: Entered in Error
+consent_status:
+  system: http://hl7.org/fhir/consent-state-codes
+  binding: REQUIRED
+  codes:
+  - code: draft
+    display: Draft
+  - code: proposed
+    display: Proposed
+  - code: active
+    display: Active
+  - code: rejected
+    display: Rejected
+  - code: inactive
+    display: Inactive
+  - code: entered-in-error
+    display: Entered in Error
+communication_status:
+  system: http://hl7.org/fhir/event-status
+  binding: REQUIRED
+  codes:
+  - code: preparation
+    display: Preparation
+  - code: in-progress
+    display: In Progress
+  - code: not-done
+    display: Not Done
+  - code: on-hold
+    display: On Hold
+  - code: stopped
+    display: Stopped
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: unknown
+    display: Unknown
+supply_delivery_status:
+  system: http://hl7.org/fhir/supplydelivery-status
+  binding: REQUIRED
+  codes:
+  - code: in-progress
+    display: In Progress
+  - code: completed
+    display: Completed
+  - code: abandoned
+    display: Abandoned
+  - code: entered-in-error
+    display: Entered in Error
+specimen_status:
+  system: http://hl7.org/fhir/specimen-status
+  binding: REQUIRED
+  codes:
+  - code: available
+    display: Available
+  - code: unavailable
+    display: Unavailable
+  - code: unsatisfactory
+    display: Unsatisfactory
+  - code: entered-in-error
+    display: Entered in Error
+observation_interpretation:
+  system: http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation
+  binding: EXTENSIBLE
+  codes:
+  - code: N
+    display: Normal
+  - code: A
+    display: Abnormal
+  - code: H
+    display: High
+  - code: L
+    display: Low
+  - code: HH
+    display: Critical high
+  - code: LL
+    display: Critical low
+  - code: U
+    display: Significant change up
+  - code: D
+    display: Significant change down
+relatedperson_relationship:
+  system: http://terminology.hl7.org/CodeSystem/v2-0131
+  binding: EXTENSIBLE
+  codes:
+  - code: C
+    display: Emergency Contact
+  - code: E
+    display: Employer
+  - code: F
+    display: Federal Agency
+  - code: I
+    display: Insurance Company
+  - code: N
+    display: Next-of-Kin
+  - code: S
+    display: State Agency
+  - code: U
+    display: Unknown
+  - code: O
+    display: Other
+  - code: P
+    display: Parent
+  - code: G
+    display: Guardian
+condition_category:
+  system: http://terminology.hl7.org/CodeSystem/condition-category
+  binding: REQUIRED
+  codes:
+  - code: problem-list-item
+    display: Problem List Item
+  - code: encounter-diagnosis
+    display: Encounter Diagnosis
+  - code: health-concern
+    display: Health Concern
+flag_codes:
+  system: http://snomed.info/sct
+  binding: EXAMPLE
+  codes:
+  - code: '160245001'
+    display: Airborne precautions
+  - code: '409524006'
+    display: Contact precautions
+  - code: '409525007'
+    display: Droplet precautions
+  - code: '386472006'
+    display: Fall risk
+  - code: '225728007'
+    display: Latex allergy
+  - code: '182836005'
+    display: Medication review due
+participation_type:
+  system: http://terminology.hl7.org/CodeSystem/v3-ParticipationType
+  binding: EXTENSIBLE
+  codes:
+  - code: ATND
+    display: attender
+  - code: ADM
+    display: admitter
+  - code: SBJ
+    display: subject
+  - code: PART
+    display: Participation
+  - code: REF
+    display: referrer
+  - code: IRCP
+    display: information recipient
+loinc_composition_types:
+  system: http://loinc.org
+  binding: EXAMPLE
+  codes:
+  - code: 18842-5
+    display: Discharge summary
+  - code: 11488-4
+    display: Consultation note
+  - code: 34117-2
+    display: History and physical note
+  - code: 88569-4
+    display: Outpatient Note
+loinc_questionnaire_panels:
+  system: http://loinc.org
+  binding: EXAMPLE
+  codes:
+  - code: 44249-1
+    display: Health and social assessment panel
+  - code: 69737-5
+    display: PHQ-9 quick depression assessment
+publication_status:
+  system: http://hl7.org/fhir/publication-status
+  binding: REQUIRED
+  codes:
+  - code: draft
+    display: Draft
+  - code: active
+    display: Active
+  - code: retired
+    display: Retired
+  - code: unknown
+    display: Unknown
+claim_type:
+  system: http://terminology.hl7.org/CodeSystem/claim-type
+  binding: REQUIRED
+  codes:
+  - code: institutional
+    display: Institutional
+  - code: professional
+    display: Professional
+  - code: pharmacy
+    display: Pharmacy
+  - code: oral
+    display: Oral
+  - code: vision
+    display: Vision
+claim_use:
+  system: http://hl7.org/fhir/claim-use
+  binding: REQUIRED
+  codes:
+  - code: claim
+    display: Claim
+  - code: preauthorization
+    display: Preauthorization
+  - code: predetermination
+    display: Predetermination
+adverse_event_actuality:
+  system: http://hl7.org/fhir/adverse-event-actuality
+  binding: REQUIRED
+  codes:
+  - code: actual
+    display: Actual
+  - code: potential
+    display: Potential
+adverse_event_seriousness:
+  system: http://terminology.hl7.org/CodeSystem/adverse-event-seriousness
+  binding: EXTENSIBLE
+  codes:
+  - code: serious
+    display: Serious
+  - code: non-serious
+    display: Non-serious
+immunization_forecast_status:
+  system: http://terminology.hl7.org/CodeSystem/immunization-recommendation-status
+  binding: EXTENSIBLE
+  codes:
+  - code: due
+    display: Due
+  - code: overdue
+    display: Overdue
+  - code: eligible
+    display: Eligible
+  - code: not-due
+    display: Not Due
+device_dispense_status:
+  system: http://hl7.org/fhir/devicedispense-status
+  binding: REQUIRED
+  codes:
+  - code: preparation
+    display: Preparation
+  - code: in-progress
+    display: In Progress
+  - code: not-done
+    display: Not Done
+  - code: on-hold
+    display: On Hold
+  - code: stopped
+    display: Stopped
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: unknown
+    display: Unknown
+device_usage_status:
+  system: http://hl7.org/fhir/deviceusage-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+biologically_derived_product_category:
+  system: http://hl7.org/fhir/biologicallyderivedproductcategory
+  binding: REQUIRED
+  codes:
+  - code: organ
+    display: Organ
+  - code: tissue
+    display: Tissue
+  - code: fluid
+    display: Fluid
+  - code: cells
+    display: Cells
+biologically_derived_product_status:
+  system: http://hl7.org/fhir/biologicallyderivedproductstatus
+  binding: REQUIRED
+  codes:
+  - code: available
+    display: Available
+  - code: unavailable
+    display: Unavailable
+measure_report_status:
+  system: http://hl7.org/fhir/measure-report-status
+  binding: REQUIRED
+  codes:
+  - code: complete
+    display: Complete
+  - code: pending
+    display: Pending
+  - code: error
+    display: Error
+measure_report_type:
+  system: http://hl7.org/fhir/measure-report-type
+  binding: REQUIRED
+  codes:
+  - code: individual
+    display: Individual
+  - code: subject-list
+    display: Subject List
+  - code: summary
+    display: Summary
+  - code: data-collection
+    display: Data Collection
+genomic_study_status:
+  system: http://hl7.org/fhir/genomicstudy-status
+  binding: REQUIRED
+  codes:
+  - code: registered
+    display: Registered
+  - code: available
+    display: Available
+  - code: cancelled
+    display: Cancelled
+  - code: entered-in-error
+    display: Entered in Error
+endpoint_connection_type:
+  system: http://terminology.hl7.org/CodeSystem/endpoint-connection-type
+  binding: REQUIRED
+  codes:
+  - code: hl7-fhir-rest
+    display: HL7 FHIR
+  - code: hl7-fhir-msg
+    display: HL7 FHIR Messaging
+provenance_activity:
+  system: http://terminology.hl7.org/CodeSystem/v3-DataOperation
+  binding: REQUIRED
+  codes:
+  - code: CREATE
+    display: create
+  - code: UPDATE
+    display: revise
+  - code: DELETE
+    display: delete
+basic_resource_codes:
+  system: http://terminology.hl7.org/CodeSystem/basic-resource-type
+  binding: EXAMPLE
+  codes:
+  - code: referral
+    display: Referral
+  - code: disease
+    display: Disease outbreak
+nutrition_foods:
+  system: http://snomed.info/sct
+  binding: PREFERRED
+  codes:
+  - code: '226211001'
+    display: Apple
+  - code: '78275001'
+    display: Orange fruit
+  - code: '228360005'
+    display: Whole milk
+supply_categories:
+  system: http://terminology.hl7.org/CodeSystem/supply-category
+  binding: REQUIRED
+  codes:
+  - code: central
+    display: Central Supply
+  - code: non-stock
+    display: Non-Stock
+eligibility_purpose:
+  system: http://terminology.hl7.org/CodeSystem/coverageeligibilityrequest-purpose
+  binding: REQUIRED
+  codes:
+  - code: auth-requirements
+    display: Coverage auth requirements
+  - code: benefits
+    display: Benefits
+  - code: discovery
+    display: Discovery
+  - code: validation
+    display: Validation
+payment_status:
+  system: http://terminology.hl7.org/CodeSystem/paymentstatus
+  binding: REQUIRED
+  codes:
+  - code: paid
+    display: Paid
+  - code: cleared
+    display: Cleared
+process_priority:
+  system: http://terminology.hl7.org/CodeSystem/processpriority
+  binding: REQUIRED
+  codes:
+  - code: stat
+    display: Immediate
+  - code: normal
+    display: Normal
+  - code: deferred
+    display: Deferred
+contract_signing_types:
+  system: http://terminology.hl7.org/CodeSystem/contract-signer-type-codes
+  binding: EXTENSIBLE
+  codes:
+  - code: VERIFIED
+    display: Verified
+insurance_plan_types:
+  system: http://terminology.hl7.org/CodeSystem/insurance-plan-type
+  binding: EXTENSIBLE
+  codes:
+  - code: medical
+    display: Medical
+  - code: dental
+    display: Dental
+  - code: vision
+    display: Vision
+adverse_event_status:
+  system: http://hl7.org/fhir/event-status
+  binding: REQUIRED
+  codes:
+  - code: preparation
+    display: Preparation
+  - code: in-progress
+    display: In Progress
+  - code: not-done
+    display: Not Done
+  - code: on-hold
+    display: On Hold
+  - code: stopped
+    display: Stopped
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: unknown
+    display: Unknown
+supply_request_status:
+  system: http://hl7.org/fhir/request-status
+  binding: REQUIRED
+  codes:
+  - code: draft
+    display: Draft
+  - code: active
+    display: Active
+  - code: on-hold
+    display: On Hold
+  - code: revoked
+    display: Revoked
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: unknown
+    display: Unknown
+enrollment_status:
+  system: http://hl7.org/fhir/fm-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: cancelled
+    display: Cancelled
+  - code: draft
+    display: Draft
+  - code: entered-in-error
+    display: Entered in Error
+explanation_of_benefit_status:
+  system: http://hl7.org/fhir/claim-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: cancelled
+    display: Cancelled
+  - code: draft
+    display: Draft
+  - code: entered-in-error
+    display: Entered in Error
+charge_item_definition_status:
+  system: http://hl7.org/fhir/publication-status
+  binding: REQUIRED
+  codes:
+  - code: draft
+    display: Draft
+  - code: active
+    display: Active
+  - code: retired
+    display: Retired
+  - code: unknown
+    display: Unknown
+questionnaire_status:
+  system: http://hl7.org/fhir/publication-status
+  binding: REQUIRED
+  codes:
+  - code: draft
+    display: Draft
+  - code: active
+    display: Active
+  - code: retired
+    display: Retired
+  - code: unknown
+    display: Unknown
+insurance_plan_status:
+  system: http://hl7.org/fhir/publication-status
+  binding: REQUIRED
+  codes:
+  - code: draft
+    display: Draft
+  - code: active
+    display: Active
+  - code: retired
+    display: Retired
+  - code: unknown
+    display: Unknown
+measure_status:
+  system: http://hl7.org/fhir/publication-status
+  binding: REQUIRED
+  codes:
+  - code: draft
+    display: Draft
+  - code: active
+    display: Active
+  - code: retired
+    display: Retired
+  - code: unknown
+    display: Unknown
+vision_prescription_status:
+  system: http://hl7.org/fhir/medicationrequest-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: on-hold
+    display: On Hold
+  - code: cancelled
+    display: Cancelled
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: stopped
+    display: Stopped
+  - code: draft
+    display: Draft
+  - code: unknown
+    display: Unknown
+nutrition_intake_status:
+  system: http://hl7.org/fhir/event-status
+  binding: REQUIRED
+  codes:
+  - code: preparation
+    display: Preparation
+  - code: in-progress
+    display: In Progress
+  - code: not-done
+    display: Not Done
+  - code: on-hold
+    display: On Hold
+  - code: stopped
+    display: Stopped
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: unknown
+    display: Unknown
+snomed_devices:
+  system: http://snomed.info/sct
+  binding: PREFERRED
+  codes:
+  - code: '706172005'
+    display: Wheelchair
+  - code: '449345005'
+    display: Insulin pump
+  - code: '86184003'
+    display: Electrocardiograph
+biologically_derived_product_codes:
+  system: http://snomed.info/sct
+  binding: PREFERRED
+  codes:
+  - code: '119297000'
+    display: Blood product
+  - code: '180270004'
+    display: Whole blood
+  - code: '33389009'
+    display: Platelet concentrate
+medication_statement_status:
+  system: http://hl7.org/fhir/medication-statement-status
+  binding: REQUIRED
+  codes:
+  - code: recorded
+    display: Recorded
+  - code: entered-in-error
+    display: Entered in Error
+  - code: draft
+    display: Draft
+payment_reconciliation_outcome:
+  system: http://hl7.org/fhir/payment-outcome
+  binding: REQUIRED
+  codes:
+  - code: queued
+    display: Queued
+  - code: complete
+    display: Complete
+  - code: error
+    display: Error
+  - code: partial
+    display: Partial
+provenance_participant_type:
+  system: http://terminology.hl7.org/CodeSystem/provenance-participant-type
+  binding: EXTENSIBLE
+  codes:
+  - code: author
+    display: Author
+  - code: verifier
+    display: Verifier
+  - code: transmitter
+    display: Transmitter
+eye_laterality:
+  system: http://hl7.org/fhir/vision-eye-codes
+  binding: REQUIRED
+  codes:
+  - code: right
+    display: Right Eye
+  - code: left
+    display: Left Eye
+device_request_status:
+  system: http://hl7.org/fhir/request-status
+  binding: REQUIRED
+  codes:
+  - code: draft
+    display: Draft
+  - code: active
+    display: Active
+  - code: on-hold
+    display: On Hold
+  - code: revoked
+    display: Revoked
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: unknown
+    display: Unknown
+request_orchestration_status:
+  system: http://hl7.org/fhir/request-status
+  binding: REQUIRED
+  codes:
+  - code: draft
+    display: Draft
+  - code: active
+    display: Active
+  - code: on-hold
+    display: On Hold
+  - code: revoked
+    display: Revoked
+  - code: completed
+    display: Completed
+  - code: entered-in-error
+    display: Entered in Error
+  - code: unknown
+    display: Unknown
+coverage_eligibility_request_status:
+  system: http://hl7.org/fhir/fm-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: cancelled
+    display: Cancelled
+  - code: draft
+    display: Draft
+  - code: entered-in-error
+    display: Entered in Error
+coverage_eligibility_response_status:
+  system: http://hl7.org/fhir/fm-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: cancelled
+    display: Cancelled
+  - code: draft
+    display: Draft
+  - code: entered-in-error
+    display: Entered in Error
+payment_notice_status:
+  system: http://hl7.org/fhir/claim-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: cancelled
+    display: Cancelled
+  - code: draft
+    display: Draft
+  - code: entered-in-error
+    display: Entered in Error
+payment_reconciliation_status:
+  system: http://hl7.org/fhir/claim-status
+  binding: REQUIRED
+  codes:
+  - code: active
+    display: Active
+  - code: cancelled
+    display: Cancelled
+  - code: draft
+    display: Draft
+  - code: entered-in-error
+    display: Entered in Error
+contract_status:
+  system: http://hl7.org/fhir/contract-status
+  binding: REQUIRED
+  codes:
+  - code: executed
+    display: Executed
+  - code: amended
+    display: Amended
+  - code: terminated
+    display: Terminated
+  - code: entered-in-error
+    display: Entered in Error

@@ -1,0 +1,339 @@
+resource: OrganizationAffiliation
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec OrganizationAffiliation)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: none — not listed in compartments/definitions/*.json
+#
+# Total parameters: 16 (14 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `contact` is ExtendedContactDetail[] — telecom at contact[*].telecom.
+#   * `role` searches `code[]`; `specialty` searches `specialty[]`.
+#   * `primary-organization` searches `organization`; `participating-organization`
+#     searches `participatingOrganization`.
+#   * Top-level scalar `active` uses tokenType boolean.
+
+search_parameters:
+  active:
+    type: token
+    description: "Whether this organization affiliation record is in active use"
+    fields:
+      - field: "active"
+        tokenType: boolean
+
+  date:
+    type: date
+    description: "The period during which the participatingOrganization is affiliated"
+    fields:
+      - field: "_search.period"
+        type: period
+
+  email:
+    type: token
+    description: "A value in an email contact"
+    fields:
+      - field: "_search.email"
+        tokenType: code
+
+  endpoint:
+    type: reference
+    description: "Technical endpoints providing access to services operated for this affiliation"
+    fields:
+      - field: "_search.endpointIds"
+        referenceType: id
+      - field: "endpoint.reference"
+        referenceType: full
+
+  identifier:
+    type: token
+    description: "An organization affiliation's Identifier"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  location:
+    type: reference
+    description: "Location(s) where the participatingOrganization provides services"
+    fields:
+      - field: "_search.locationIds"
+        referenceType: id
+      - field: "_search.locationTypes"
+        referenceType: type
+      - field: "location.reference"
+        referenceType: full
+
+  network:
+    type: reference
+    description: "Healthcare networks with which the participatingOrganization is associated"
+    fields:
+      - field: "_search.networkIds"
+        referenceType: id
+      - field: "_search.networkTypes"
+        referenceType: type
+      - field: "network.reference"
+        referenceType: full
+
+  participating-organization:
+    type: reference
+    description: "Organization participating in the network"
+    fields:
+      - field: "_search.participatingOrganizationId"
+        referenceType: id
+      - field: "participatingOrganization.reference"
+        referenceType: full
+
+  phone:
+    type: token
+    description: "A value in a phone contact"
+    fields:
+      - field: "_search.phone"
+        tokenType: code
+
+  primary-organization:
+    type: reference
+    description: "Organization that is not the participatingOrganization"
+    fields:
+      - field: "_search.organizationId"
+        referenceType: id
+      - field: "organization.reference"
+        referenceType: full
+
+  role:
+    type: token
+    description: "Definition of the role the participatingOrganization plays"
+    fields:
+      - field: "_search.code_systemCode"
+        tokenType: systemCode
+      - field: "_search.code_codes"
+        tokenType: code
+
+  service:
+    type: reference
+    description: "Healthcare services provided through this affiliation"
+    fields:
+      - field: "_search.healthcareServiceIds"
+        referenceType: id
+      - field: "_search.healthcareServiceTypes"
+        referenceType: type
+      - field: "healthcareService.reference"
+        referenceType: full
+
+  specialty:
+    type: token
+    description: "Specific specialty of the participatingOrganization"
+    fields:
+      - field: "_search.specialty_systemCode"
+        tokenType: systemCode
+      - field: "_search.specialty_codes"
+        tokenType: code
+
+  telecom:
+    type: token
+    description: "The value in any kind of contact"
+    fields:
+      - field: "_search.telecom_systemCode"
+        tokenType: systemCode
+      - field: "_search.telecom_values"
+        tokenType: code
+
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  code:
+    source: code
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code[*].coding[*].code
+        target_field: code_codes
+        datatype: array[string]
+      - source_path: code[*].coding[*]
+        target_field: code_systemCode
+        datatype: array[string]
+
+  specialty:
+    source: specialty
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: specialty[*].coding[*].code
+        target_field: specialty_codes
+        datatype: array[string]
+      - source_path: specialty[*].coding[*]
+        target_field: specialty_systemCode
+        datatype: array[string]
+
+  contact_telecom:
+    source: $resource
+    target: _search
+    extractor: ContactPointExtractor
+    field_mappings:
+      - source_path: contact[*].telecom
+        target_field: email
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: contact[*].telecom
+        target_field: phone
+        datatype: array[string]
+      - source_path: contact[*].telecom
+        target_field: telecom_values
+        datatype: array[string]
+      - source_path: contact[*].telecom
+        target_field: telecom_systemCode
+        datatype: array[string]
+
+  period:
+    source: period
+    target: _search
+    extractor: PeriodExtractor
+    field_mappings:
+      - source_path: start
+        target_field: period.start
+        datatype: date
+        optional: true
+      - source_path: end
+        target_field: period.end
+        datatype: date
+        optional: true
+
+  organization:
+    source: organization
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: organization.reference
+        target_field: organizationId
+        datatype: string
+        extractType: id
+
+  participatingOrganization:
+    source: participatingOrganization
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: participatingOrganization.reference
+        target_field: participatingOrganizationId
+        datatype: string
+        extractType: id
+
+  endpoint:
+    source: endpoint
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: endpoint[*].reference
+        target_field: endpointIds
+        datatype: array[string]
+        extractType: id
+
+  location:
+    source: location
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: location[*].reference
+        target_field: locationIds
+        datatype: array[string]
+        extractType: id
+      - source_path: location[*].reference
+        target_field: locationTypes
+        datatype: array[string]
+        extractType: type
+
+  network:
+    source: network
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: network[*].reference
+        target_field: networkIds
+        datatype: array[string]
+        extractType: id
+      - source_path: network[*].reference
+        target_field: networkTypes
+        datatype: array[string]
+        extractType: type
+
+  healthcareService:
+    source: healthcareService
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: healthcareService[*].reference
+        target_field: healthcareServiceIds
+        datatype: array[string]
+        extractType: id
+      - source_path: healthcareService[*].reference
+        target_field: healthcareServiceTypes
+        datatype: array[string]
+        extractType: type
+
+indexes:
+  - fields:
+      - "active": 1
+    options:
+      name: idx_active
+      sparse: true
+
+  - fields:
+      - "_search.organizationId": 1
+    options:
+      name: idx_organization_id
+      sparse: true
+
+  - fields:
+      - "_search.participatingOrganizationId": 1
+    options:
+      name: idx_participating_organization_id
+      sparse: true
+
+  - fields:
+      - "_search.code_codes": 1
+    options:
+      name: idx_code_codes
+      sparse: true
+
+  - fields:
+      - "_search.identifier_systemCode": 1
+    options:
+      name: idx_identifier_system_code
+      sparse: true
+
+  - fields:
+      - "_search.period.start": 1
+    options:
+      name: idx_period_start
+      sparse: true
+
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_meta_last_updated

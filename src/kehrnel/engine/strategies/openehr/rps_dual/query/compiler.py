@@ -245,6 +245,7 @@ async def build_query_pipeline_from_ast(
     ehr_id: Optional[str] = None,
     raw_cfg: Optional[Dict[str, Any]] = None,
     compile_cache: Optional[Dict[str, Any]] = None,
+    compatibility_match: bool = False,
 ) -> Tuple[str, List[Dict[str, Any]], str, Dict[str, Any], Dict[str, Any], Dict[str, Any]]:
     cfg = cfg_model.model_dump()
     ASTValidator.validate_ast(ast_doc)
@@ -286,6 +287,7 @@ async def build_query_pipeline_from_ast(
         strategy=runtime_strategy or get_default_strategy(),
         shortcut_map=shortcut_map or {},
         archetype_resolver=archetype_resolver,
+        compatibility_match=compatibility_match,
     )
     if scope == "cross_patient" and cfg.get("collections", {}).get("search", {}).get("enabled") and not prefer_match:
         pipeline = await transformer.build_search_pipeline()
@@ -336,4 +338,7 @@ async def build_query_pipeline(
         ehr_id=extract_ehr_id(ir),
         raw_cfg=raw_cfg,
         compile_cache=compile_cache,
+        # The IR/structured query path is the compatibility/legacy transformer path,
+        # which expects composition filters merged into a flat composition-array key.
+        compatibility_match=True,
     )

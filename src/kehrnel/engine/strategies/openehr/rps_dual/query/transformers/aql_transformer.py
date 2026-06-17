@@ -38,6 +38,7 @@ class AQLtoMQLTransformer:
         strategy: Optional[PersistenceStrategy] = None,
         shortcut_map: Optional[Dict[str, str]] = None,
         archetype_resolver: Optional[ArchetypeResolver] = None,
+        compatibility_match: bool = False,
     ):
         self.ast = ast
         self.ehr_id = ehr_id
@@ -46,6 +47,7 @@ class AQLtoMQLTransformer:
         self.strategy = strategy or get_default_strategy()
         self.shortcut_map = shortcut_map or {}
         self.archetype_resolver = archetype_resolver
+        self.compatibility_match = compatibility_match
         
         # Schema field configuration (Point 3 preparation)
         self.schema_config = schema_config or self._build_schema_config_from_strategy(self.strategy)
@@ -114,6 +116,7 @@ class AQLtoMQLTransformer:
             self.context_map,
             self.let_variables,
             version_alias=self.version_alias,
+            compatibility_match=self.compatibility_match,
         )
         
         # 8. Initialize search pipeline builder

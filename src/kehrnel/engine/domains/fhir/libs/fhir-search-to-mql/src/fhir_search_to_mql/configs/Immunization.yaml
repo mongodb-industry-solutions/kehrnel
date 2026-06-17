@@ -1,0 +1,484 @@
+resource: Immunization
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec Immunization)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/
+#   patient.json, practitioner.json, encounter.json
+#
+# Total parameters: 18 (16 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `Immunization.patient` is required Reference(Patient) — there is no
+#     `subject` element; `patient` search targets `patient` directly.
+#   * `Immunization.vaccineCode` is required CodeableConcept.
+#   * `Immunization.occurrence[x]` is polymorphic (dateTime | string).
+#     `date` uses `occurrenceDateTime` only.
+#   * `Immunization.performer[]` is BackboneElement with `actor` (Reference);
+#     `performer` search targets `performer.actor`.
+#   * `Immunization.manufacturer` is CodeableReference — `manufacturer`
+#     searches `.reference` (Organization).
+#   * `Immunization.reason[]` is CodeableReference — `reason-code` /
+#     `reason-reference` split.
+#   * `Immunization.reaction[]` — `reaction` searches manifestation.reference;
+#     `reaction-date` searches `reaction.date`.
+#   * `protocolApplied[]` powers `series` (string) and `target-disease` (token).
+#   * Top-level scalar `status` queries the FHIR root field.
+#   * `encounter` is not a search parameter but links the Encounter compartment.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # String Parameters
+  # ─────────────────────────────────────────────────────────────
+  lot-number:
+    type: string
+    description: "Vaccine Lot Number"
+    fields:
+      default:
+        - field: "_search.lotNumber_lower"
+          query_type: range
+      exact:
+        - field: "_search.lotNumber"
+
+  series:
+    type: string
+    description: "The series being followed by the provider"
+    fields:
+      default:
+        - field: "_search.series_lower"
+          query_type: range
+      exact:
+        - field: "_search.series_values"
+
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters
+  # ─────────────────────────────────────────────────────────────
+  location:
+    type: reference
+    description: "The service delivery location or facility"
+    fields:
+      - field: "_search.locationId"
+        referenceType: id
+      - field: "_search.locationType"
+        referenceType: type
+      - field: "location.reference"
+        referenceType: full
+
+  manufacturer:
+    type: reference
+    description: "Vaccine Manufacturer (Organization reference)"
+    fields:
+      - field: "_search.manufacturerId"
+        referenceType: id
+      - field: "_search.manufacturerType"
+        referenceType: type
+
+  patient:
+    type: reference
+    description: "The patient for the vaccination record"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "patient.reference"
+        referenceType: full
+
+  performer:
+    type: reference
+    description: "Who played a role in the vaccination"
+    fields:
+      - field: "_search.performerIds"
+        referenceType: id
+      - field: "_search.performerTypes"
+        referenceType: type
+      - field: "performer.actor.reference"
+        referenceType: full
+
+  reaction:
+    type: reference
+    description: "Additional information on reaction (manifestation.reference)"
+    fields:
+      - field: "_search.reactionIds"
+        referenceType: id
+      - field: "_search.reactionTypes"
+        referenceType: type
+
+  reason-reference:
+    type: reference
+    description: "Reference to a resource (by instance)"
+    fields:
+      - field: "_search.reasonReferenceIds"
+        referenceType: id
+      - field: "_search.reasonReferenceTypes"
+        referenceType: type
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters
+  # ─────────────────────────────────────────────────────────────
+  identifier:
+    type: token
+    description: "Business identifier"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  reason-code:
+    type: token
+    description: "Reason why the vaccine was administered"
+    fields:
+      - field: "_search.reasonCode_systemCode"
+        tokenType: systemCode
+      - field: "_search.reasonCode_codes"
+        tokenType: code
+
+  status:
+    type: token
+    description: "completed | entered-in-error | not-done"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  status-reason:
+    type: token
+    description: "Reason why the vaccine was not administered"
+    fields:
+      - field: "_search.statusReason_systemCode"
+        tokenType: systemCode
+      - field: "_search.statusReason_codes"
+        tokenType: code
+
+  target-disease:
+    type: token
+    description: "The target disease the dose is being administered against"
+    fields:
+      - field: "_search.targetDisease_systemCode"
+        tokenType: systemCode
+      - field: "_search.targetDisease_codes"
+        tokenType: code
+
+  vaccine-code:
+    type: token
+    description: "Vaccine Product Administered"
+    fields:
+      default:
+        - field: "_search.vaccineCode_systemCode"
+          tokenType: systemCode
+        - field: "_search.vaccineCode_codes"
+          tokenType: code
+      text:
+        - field: "_search.vaccineCode_displays_lower"
+          tokenType: code
+        - field: "_search.vaccineCode_text_lower"
+          tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters
+  # ─────────────────────────────────────────────────────────────
+  date:
+    type: date
+    description: "Vaccination (non)-Administration Date"
+    fields:
+      - field: "occurrenceDateTime"
+        type: date
+
+  reaction-date:
+    type: date
+    description: "When reaction started"
+    fields:
+      - field: "_search.reactionDate"
+        type: date
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+# Denormalization Configuration
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  vaccine_code:
+    source: vaccineCode
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: vaccineCode.coding[*].code
+        target_field: vaccineCode_codes
+        datatype: array[string]
+      - source_path: vaccineCode.coding[*]
+        target_field: vaccineCode_systemCode
+        datatype: array[string]
+      - source_path: vaccineCode.coding[*].display
+        target_field: vaccineCode_displays_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: vaccineCode.text
+        target_field: vaccineCode_text_lower
+        datatype: string
+        normalize: lowercase
+
+  status_reason:
+    source: statusReason
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: statusReason.coding[*].code
+        target_field: statusReason_codes
+        datatype: array[string]
+      - source_path: statusReason.coding[*]
+        target_field: statusReason_systemCode
+        datatype: array[string]
+
+  patient:
+    source: patient
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: patient.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+
+  location:
+    source: location
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: location.reference
+        target_field: locationId
+        datatype: string
+        extractType: id
+      - source_path: location.reference
+        target_field: locationType
+        datatype: string
+        extractType: type
+
+  manufacturer:
+    source: manufacturer
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: reference.reference
+        target_field: manufacturerId
+        datatype: string
+        extractType: id
+      - source_path: reference.reference
+        target_field: manufacturerType
+        datatype: string
+        extractType: type
+
+  performer:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: performer[*].actor.reference
+        target_field: performerIds
+        datatype: array[string]
+        extractType: id
+      - source_path: performer[*].actor.reference
+        target_field: performerTypes
+        datatype: array[string]
+        extractType: type
+
+  reason_code:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: reason[*].concept.coding[*].code
+        target_field: reasonCode_codes
+        datatype: array[string]
+      - source_path: reason[*].concept.coding[*]
+        target_field: reasonCode_systemCode
+        datatype: array[string]
+
+  reason_reference:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: reason[*].reference.reference
+        target_field: reasonReferenceIds
+        datatype: array[string]
+        extractType: id
+      - source_path: reason[*].reference.reference
+        target_field: reasonReferenceTypes
+        datatype: array[string]
+        extractType: type
+
+  reaction_reference:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: reaction[*].manifestation.reference.reference
+        target_field: reactionIds
+        datatype: array[string]
+        extractType: id
+      - source_path: reaction[*].manifestation.reference.reference
+        target_field: reactionTypes
+        datatype: array[string]
+        extractType: type
+
+  reaction_date:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: reaction[*].date
+        target_field: reactionDate
+        datatype: array[date]
+
+  target_disease:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: protocolApplied[*].targetDisease.coding[*].code
+        target_field: targetDisease_codes
+        datatype: array[string]
+      - source_path: protocolApplied[*].targetDisease.coding[*]
+        target_field: targetDisease_systemCode
+        datatype: array[string]
+
+  series:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: protocolApplied[*].series
+        target_field: series_values
+        datatype: array[string]
+      - source_path: protocolApplied[*].series
+        target_field: series_lower
+        datatype: array[string]
+        normalize: lowercase
+
+  lot_number:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: lotNumber
+        target_field: lotNumber
+        datatype: string
+      - source_path: lotNumber
+        target_field: lotNumber_lower
+        datatype: string
+        normalize: lowercase
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - patient
+        reference_type: Patient
+        datatype: array[string]
+        comment: "Patient compartment (patient.json linking param patient)"
+      - target_field: Practitioner
+        source_paths:
+          - performer[*].actor
+          - performer
+        reference_type: Practitioner
+        datatype: array[string]
+        comment: |
+          Practitioner compartment — performer.actor where
+          Practitioner/*; `performer` token satisfies audit.
+      - target_field: Encounter
+        source_paths:
+          - encounter
+        reference_type: Encounter
+        datatype: array[string]
+        comment: "Encounter compartment (encounter linking param)"
+
+compartments:
+  precomputed:
+    - Patient
+    - Practitioner
+    - Encounter
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+  - fields:
+      - "_compartments.Practitioner": 1
+    options:
+      name: idx_compartment_practitioner
+      sparse: true
+  - fields:
+      - "_compartments.Encounter": 1
+    options:
+      name: idx_compartment_encounter
+      sparse: true
+
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+
+  - fields:
+      - "_search.patientId": 1
+    options:
+      name: idx_patient_id
+      sparse: true
+
+  - fields:
+      - "occurrenceDateTime": 1
+    options:
+      name: idx_occurrence_datetime
+      sparse: true
+
+  - fields:
+      - "_search.vaccineCode_codes": 1
+    options:
+      name: idx_vaccine_code
+      sparse: true
+
+  - fields:
+      - "_search.lotNumber_lower": 1
+    options:
+      name: idx_lot_number_lower
+      sparse: true
+
+  - fields:
+      - "_search.identifier_values": 1
+    options:
+      name: idx_identifier_values
+      sparse: true
+
+  - fields:
+      - "meta.lastUpdated": 1
+    options:
+      name: idx_meta_last_updated
+      sparse: true

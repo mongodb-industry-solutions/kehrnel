@@ -18,7 +18,7 @@ def _extract_model_id(item: Dict[str, Any]) -> str:
 
 
 def _extract_catalog_template_id(doc: Dict[str, Any]) -> str:
-    for key in ("template_id", "templateId", "name"):
+    for key in ("template_id", "templateId", "name", "_id", "id"):
         if doc.get(key):
             return str(doc.get(key)).strip()
     meta = doc.get("metadata") or {}
@@ -73,6 +73,7 @@ def _get_model_catalog_db(storage: Any, model_source: Dict[str, Any] | None) -> 
         if client is None:
             return None
         return client[str(db_name)]
+    # Fallback to current database if no database_name specified
     return db
 
 
@@ -88,7 +89,11 @@ async def resolve_model_specs(
     if not isinstance(requested_models, list) or not requested_models:
         raise KehrnelError(code="INVALID_INPUT", status=400, message="models must be a non-empty array")
 
-    catalog_collection = (model_source or {}).get("catalog_collection") or "user-data-models"
+    catalog_collection = (model_source or {}).get("catalog_collection")
+    # Default to "templates" for openEHR domain, otherwise "user-data-models"
+    if not catalog_collection:
+        catalog_collection = "templates" if _as_lower(domain) == "openehr" else "user-data-models"
+    
     domain_l = _as_lower(domain)
     strategy_l = _as_lower(strategy_id)
     resolved: List[Dict[str, Any]] = []

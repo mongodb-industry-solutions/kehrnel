@@ -129,6 +129,7 @@ Admin mapping endpoints (HDL compatibility):
 
 For exhaustive CLI and endpoint inventory generated from `pyproject.toml` and OpenAPI:
 
+- [`docs/cli-api-reference.md`](https://github.com/mongodb-industry-solutions/kehrnel/blob/main/docs/cli-api-reference.md)
 
 ## Authentication
 

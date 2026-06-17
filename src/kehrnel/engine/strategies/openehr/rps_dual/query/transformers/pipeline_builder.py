@@ -28,9 +28,9 @@ class PipelineBuilder:
     Builds individual MongoDB aggregation pipeline stages.
     """
 
-    def __init__(self, ehr_alias: str, composition_alias: str, schema_config: Dict[str, str], 
+    def __init__(self, ehr_alias: str, composition_alias: str, schema_config: Dict[str, str],
                  format_resolver: FormatResolver, context_map: Dict[str, Dict], let_variables: Dict[str, Any] = None,
-                 version_alias: str | None = None):
+                 version_alias: str | None = None, compatibility_match: bool = False):
         self.ehr_alias = ehr_alias
         self.composition_alias = composition_alias
         self.version_alias = version_alias
@@ -39,6 +39,13 @@ class PipelineBuilder:
         self.context_map = context_map
         self.let_variables = let_variables or {}
         self.format = schema_config.get('format', 'full')
+        # When True, the legacy/compatibility match shape is produced: composition
+        # filters are merged into a single composition-array key (yielding $all when
+        # several apply) and scalar fields stay flat, instead of being split into
+        # explicit top-level $and branches. This mirrors the historical pipeline that
+        # the compatibility contract tests depend on. The newer (raw_aql) feature
+        # path keeps the $and-branch shape.
+        self.compatibility_match = compatibility_match
         
         # Use the provided FormatResolver (which should have ArchetypeResolver configured)
         self.format_resolver = format_resolver
@@ -78,21 +85,34 @@ class PipelineBuilder:
                 # Separate EHR-level conditions from composition-node conditions
                 ehr_conditions, comp_conditions_structure = self.condition_processor.separate_conditions(processed_where)
 
+        # When the WHERE clause carries composition-node ($elemMatch) predicates we
+        # keep every clause as a standalone top-level $and branch rather than
+        # flattening scalar fields, so the composition filters remain explicit.
+        # In compatibility mode we instead preserve the historical flat shape, where
+        # composition filters are merged into a single composition-array key.
+        has_comp_where = comp_conditions_structure is not None and not self.compatibility_match
+
+        def _add_top_level(condition: Dict[str, Any]) -> None:
+            if has_comp_where:
+                self._append_and_condition(match_conditions, condition)
+            else:
+                self._merge_top_level_match_conditions(match_conditions, condition)
+
         # Add EHR-level conditions
         if ehr_conditions:
-            self._merge_top_level_match_conditions(match_conditions, ehr_conditions)
-        
+            _add_top_level(ehr_conditions)
+
         # Add external EHR ID if provided and not already in conditions
         ehr_field = self.schema_config.get("ehr_id", "ehr_id")
-        if ehr_id:
+        if ehr_id and not self._top_level_field_present(match_conditions, ehr_field):
             # For shortened format collections, keep EHR ID as string to match document format
-            self._merge_top_level_match_conditions(match_conditions, {
+            _add_top_level({
                 ehr_field: self.value_formatter.format_id_value(
                 ehr_id,
                 self.schema_config.get("ehr_id_encoding", "string"),
                 )
             })
-        
+
         # Process CONTAINS clause for composition filtering
         if contains_clause:
             contains_conditions = await self._process_contains_clause(contains_clause)
@@ -103,12 +123,13 @@ class PipelineBuilder:
                     match_conditions[comp_array_field] = {
                         "$and": [match_conditions[comp_array_field], contains_conditions]
                     }
+                elif self._is_negated_condition(contains_conditions):
+                    # NOT CONTAINS predicates cannot be flattened alongside other
+                    # top-level predicates; combine them through an explicit $and.
+                    self._append_and_condition(match_conditions, {comp_array_field: contains_conditions})
                 else:
-                    self._merge_top_level_match_conditions(
-                        match_conditions,
-                        {comp_array_field: contains_conditions},
-                    )
-        
+                    _add_top_level({comp_array_field: contains_conditions})
+
         # Add composition-level conditions with proper OR/AND support
         if comp_conditions_structure:
             comp_array_field = self.schema_config['composition_array']
@@ -117,13 +138,53 @@ class PipelineBuilder:
                 # Merge with existing composition conditions properly
                 existing_condition = match_conditions[comp_array_field]
                 match_conditions[comp_array_field] = self._merge_composition_conditions(existing_condition, comp_match)
+            elif self.compatibility_match:
+                # Legacy/compatibility shape: keep composition filters on a single
+                # flat composition-array key alongside scalar top-level fields.
+                self._merge_top_level_match_conditions(match_conditions, {comp_array_field: comp_match})
             else:
-                self._merge_top_level_match_conditions(
-                    match_conditions,
-                    {comp_array_field: comp_match},
-                )
-        
+                # WHERE predicates that resolve to composition-node ($elemMatch)
+                # filters stay as standalone $and branches alongside top-level fields.
+                self._append_and_condition(match_conditions, {comp_array_field: comp_match})
+
         return {"$match": match_conditions} if match_conditions else None
+
+    def _is_negated_condition(self, condition: Dict[str, Any]) -> bool:
+        return isinstance(condition, dict) and "$not" in condition
+
+    def _top_level_field_present(self, match_conditions: Dict[str, Any], field: str) -> bool:
+        if field in match_conditions:
+            return True
+        for branch in match_conditions.get("$and", []) or []:
+            if isinstance(branch, dict) and field in branch:
+                return True
+        return False
+
+    def _append_and_condition(self, target: Dict[str, Any], condition: Dict[str, Any]) -> None:
+        """Combine ``condition`` with ``target`` through an explicit top-level $and."""
+        if not condition:
+            return
+        if not target:
+            target.update(condition)
+            return
+        if "$and" in target and len(target) == 1:
+            target["$and"].append(condition)
+            return
+        existing = dict(target)
+        target.clear()
+        target["$and"] = [existing, condition]
+
+    def _can_flat_merge_field(self, existing: Any, incoming: Any) -> bool:
+        """Two conditions on the same top-level field can be merged into a single
+        operator dictionary only when both are operator dictionaries that do not
+        share any operator keys (e.g. combining ``$gte`` with ``$lt``)."""
+        if not isinstance(existing, dict) or not isinstance(incoming, dict):
+            return False
+        if "$regex" in existing or "$regex" in incoming:
+            return False
+        if "$not" in existing or "$not" in incoming:
+            return False
+        return not (set(existing) & set(incoming))
 
     def _merge_top_level_match_conditions(self, target: Dict[str, Any], condition: Dict[str, Any]) -> None:
         if not condition:
@@ -133,13 +194,28 @@ class PipelineBuilder:
             target.update(condition)
             return
 
-        if "$and" in target and len(target) == 1:
-            target["$and"].append(condition)
+        # Logical containers are merged as a whole to preserve their semantics.
+        if "$and" in target or "$or" in target or "$and" in condition or "$or" in condition:
+            if "$and" in target and len(target) == 1:
+                target["$and"].append(condition)
+                return
+            existing = dict(target)
+            target.clear()
+            target["$and"] = [existing, condition]
             return
 
-        existing = dict(target)
-        target.clear()
-        target["$and"] = [existing, condition]
+        # Otherwise merge field-by-field, keeping a flat top-level $match when
+        # the involved field names are distinct or can be safely combined.
+        for field_name, value in condition.items():
+            if field_name not in target:
+                target[field_name] = value
+            elif self._can_flat_merge_field(target[field_name], value):
+                target[field_name] = {**target[field_name], **value}
+            else:
+                existing = dict(target)
+                target.clear()
+                target["$and"] = [existing, condition]
+                return
 
     def _merge_composition_conditions(self, existing: Dict, new: Dict) -> Dict:
         """
@@ -479,7 +555,7 @@ class PipelineBuilder:
         pieces: List[Any] = ["^"]
         if prefix:
             pieces.extend([prefix, separator])
-        pieces.extend([alias_path_expr, {"$literal": "$"}])
+        pieces.extend([alias_path_expr, "$"])
         return {"$concat": pieces}
 
     async def build_row_fanout_stages(self, ast: Dict[str, Any]) -> List[Dict[str, Any]]:

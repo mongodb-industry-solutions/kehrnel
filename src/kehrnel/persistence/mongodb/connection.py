@@ -11,19 +11,27 @@ def get_client(bindings: dict) -> AsyncIOMotorClient:
     uri = (bindings or {}).get("db", {}).get("uri")
     if not uri:
         raise ValueError("Mongo bindings must include db.uri")
+
+    # Only apply TLS settings if explicitly requested in URI or environment
+    use_tls = mongo_tls_enabled(uri)
     allow_invalid = os.getenv("KEHRNEL_MONGO_TLS_ALLOW_INVALID_CERTS", "false").lower() in ("1", "true", "yes")
-    tls_ca_file = os.getenv("KEHRNEL_MONGO_TLS_CA_FILE")
+
     kwargs = {"serverSelectionTimeoutMS": 5000}
-    if mongo_tls_enabled(uri):
-        if not tls_ca_file:
+
+    if use_tls or allow_invalid:
+        tls_ca_file = os.getenv("KEHRNEL_MONGO_TLS_CA_FILE")
+        if not tls_ca_file and use_tls:
             try:
                 import certifi  # type: ignore
                 tls_ca_file = certifi.where()
             except Exception:
                 tls_ca_file = None
-        kwargs["tlsAllowInvalidCertificates"] = allow_invalid
-        if tls_ca_file and not allow_invalid:
+
+        if allow_invalid:
+            kwargs["tlsAllowInvalidCertificates"] = allow_invalid
+        if tls_ca_file and use_tls and not allow_invalid:
             kwargs["tlsCAFile"] = tls_ca_file
+
     return AsyncIOMotorClient(
         uri,
         **kwargs,
