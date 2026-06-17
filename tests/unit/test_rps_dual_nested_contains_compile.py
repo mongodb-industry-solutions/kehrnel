@@ -664,3 +664,176 @@ async def test_compile_query_raw_aql_search_pipeline_adds_exact_row_match_after_
     correlation_expr = row_match_stage["$gt"][0]["$size"]["$filter"]["cond"]["$and"][1]["$and"]
     assert correlation_expr[0]["$eq"][1] == "$__fanout_paths.ar"
     assert correlation_expr[1]["$eq"][1] == "$__fanout_instances.ar"
+
+
+@pytest.mark.asyncio
+async def test_compile_query_raw_aql_supports_not_contains_for_linear_archetype_chain():
+    db = _FakeDb(
+        {
+            "_codes": _FakeCollection(
+                {
+                    "ar_code": {
+                        "_id": "ar_code",
+                        "openEHR-EHR-COMPOSITION": {
+                            "report-result": {
+                                "v1": "24",
+                            }
+                        },
+                        "openEHR-EHR-ACTION": {
+                            "procedure": {
+                                "v1": "50",
+                            }
+                        },
+                    }
+                }
+            ),
+            "_shortcuts": _FakeCollection(
+                {
+                    "shortcuts": {
+                        "_id": "shortcuts",
+                        "items": {
+                            "uid": "uid",
+                            "value": "v",
+                            "archetype_details": "ad",
+                            "template_id": "ti",
+                        },
+                    }
+                }
+            ),
+            "compositions_rps": _FakeCollection({}),
+            "compositions_search": _FakeCollection({}),
+        }
+    )
+
+    ctx = StrategyContext(
+        environment_id="env-1",
+        config=MANIFEST.default_config,
+        adapters={"storage": _FakeStorage(db)},
+        manifest=MANIFEST.model_copy(deep=True),
+        meta={},
+    )
+    strategy = RPSDualStrategy()
+    raw_aql = """
+    SELECT
+        c/uid/value AS compositionId
+    FROM
+        EHR e
+            CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
+                NOT CONTAINS ACTION a[openEHR-EHR-ACTION.procedure.v1]
+    WHERE
+        c/archetype_details/template_id/value = 'sample_laboratory_v0.4'
+    ORDER BY
+        c/uid/value
+    """
+
+    plan = await strategy.compile_query(
+        ctx,
+        "openEHR",
+        {
+            "raw_aql": raw_aql,
+            "debug": True,
+        },
+    )
+
+    assert plan.engine == "mongo_pipeline"
+    assert plan.plan["collection"] == "compositions_rps"
+    assert plan.explain["builder"]["chosen"] == "pipeline_builder"
+    assert plan.explain["builder"]["reason"] == "scope_cross_patient_match_friendly"
+
+    match_stage = plan.plan["pipeline"][0]["$match"]
+    assert match_stage == {
+        "$and": [
+            {"tid": "sample_laboratory_v0.4"},
+            {
+                "cn": {
+                    "$not": {
+                        "$elemMatch": {
+                            "p": {"$regex": "^50(?::[^:]+)*:24$"},
+                            "data.ani": "50",
+                        }
+                    }
+                }
+            },
+        ]
+    }
+
+
+@pytest.mark.asyncio
+async def test_compile_query_raw_aql_supports_not_contains_with_unconstrained_composition_parent():
+    db = _FakeDb(
+        {
+            "_codes": _FakeCollection(
+                {
+                    "ar_code": {
+                        "_id": "ar_code",
+                        "openEHR-EHR-OBSERVATION": {
+                            "laboratory_test_result": {
+                                "v1": "33",
+                            }
+                        },
+                    }
+                }
+            ),
+            "_shortcuts": _FakeCollection(
+                {
+                    "shortcuts": {
+                        "_id": "shortcuts",
+                        "items": {
+                            "uid": "uid",
+                            "value": "v",
+                            "archetype_details": "ad",
+                            "template_id": "ti",
+                        },
+                    }
+                }
+            ),
+            "compositions_rps": _FakeCollection({}),
+            "compositions_search": _FakeCollection({}),
+        }
+    )
+
+    ctx = StrategyContext(
+        environment_id="env-1",
+        config=MANIFEST.default_config,
+        adapters={"storage": _FakeStorage(db)},
+        manifest=MANIFEST.model_copy(deep=True),
+        meta={},
+    )
+    strategy = RPSDualStrategy()
+    raw_aql = """
+    SELECT
+        c/uid/value AS compositionId
+    FROM
+        EHR e
+            CONTAINS COMPOSITION c
+                NOT CONTAINS OBSERVATION o[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]
+    WHERE
+        c/archetype_details/template_id/value = 'sample_laboratory_v0.4'
+    ORDER BY
+        c/uid/value
+    """
+
+    plan = await strategy.compile_query(
+        ctx,
+        "openEHR",
+        {
+            "raw_aql": raw_aql,
+            "debug": True,
+        },
+    )
+
+    assert plan.plan["pipeline"][0]["$match"] == {
+        "$and": [
+            {"tid": "sample_laboratory_v0.4"},
+            {
+                "cn": {
+                    "$not": {
+                        "$elemMatch": {
+                            "p": {"$regex": "^33(?::[^:]+)*$"},
+                            "data.ani": "33",
+                        }
+                    }
+                }
+            },
+        ]
+    }

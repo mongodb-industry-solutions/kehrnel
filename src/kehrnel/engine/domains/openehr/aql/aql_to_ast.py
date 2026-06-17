@@ -129,6 +129,9 @@ class AQLToASTParser:
         """Parse the SELECT clause"""
         if not select_text:
             return {"distinct": False, "columns": {}}
+
+        if re.match(r'^TOP\s+\d+\b', select_text, re.IGNORECASE):
+            raise ValueError("Deprecated keyword 'TOP' not implemented. Use 'LIMIT'.")
         
         # Check for DISTINCT
         distinct = bool(re.search(r'DISTINCT\s+', select_text, re.IGNORECASE))
@@ -216,21 +219,31 @@ class AQLToASTParser:
         """Parse FROM clause and extract CONTAINS structures"""
         if not from_text:
             return {"from": {}, "contains": None}
-        
-        # Split the FROM clause by CONTAINS, respecting parentheses
-        parts = self._split_by_top_level_contains(from_text)
-        
-        # The first part is the main FROM expression
-        main_from = self._parse_rm_type(parts[0])
-        
-        # If there are no CONTAINS clauses, return just the FROM part
-        if len(parts) <= 1:
-            return {"from": main_from, "contains": None}
-        
-        # Build the nested CONTAINS structure from the remaining parts
-        contains_structure = self._build_nested_contains_structure(parts[1:])
-        
+
+        contains_index = self._find_top_level_keyword(from_text, 'CONTAINS')
+        if contains_index == -1:
+            return {"from": self._parse_rm_type(from_text), "contains": None}
+
+        before_contains, after_contains, contains_negated = self._split_contains_edge(from_text, contains_index)
+        if contains_negated:
+            raise ValueError("NOT CONTAINS directly after FROM is not supported yet.")
+
+        main_from = self._parse_rm_type(before_contains)
+        contains_structure = self._parse_contains_expression(after_contains)
         return {"from": main_from, "contains": contains_structure}
+
+    def _split_contains_edge(self, text: str, contains_index: int) -> Tuple[str, str, bool]:
+        """Split an expression around CONTAINS and detect a preceding NOT edge modifier."""
+        before_contains = text[:contains_index].strip()
+        after_contains = text[contains_index + 8:].strip()
+
+        negated = False
+        not_match = re.search(r'(?i)\bNOT\s*$', before_contains)
+        if not_match:
+            negated = True
+            before_contains = before_contains[:not_match.start()].rstrip()
+
+        return before_contains, after_contains, negated
     
     def _split_by_top_level_contains(self, text: str) -> List[str]:
         """Split a FROM clause by top-level CONTAINS"""
@@ -385,13 +398,14 @@ class AQLToASTParser:
         
         if contains_index != -1:
             # This has a nested CONTAINS
-            before_contains = expr[:contains_index].strip()
-            after_contains = expr[contains_index + 8:].strip()
+            before_contains, after_contains, contains_negated = self._split_contains_edge(expr, contains_index)
             
             containing_node = self._parse_rm_type(before_contains)
             contained_node = self._parse_contains_expression(after_contains)
             
             containing_node["contains"] = contained_node
+            if contains_negated:
+                containing_node["containsNegated"] = True
             return containing_node
         
         # Simple RM type expression

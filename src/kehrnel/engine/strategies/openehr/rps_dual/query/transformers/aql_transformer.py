@@ -166,6 +166,14 @@ class AQLtoMQLTransformer:
         if let_stage:
             pipeline.append(let_stage)
 
+        # 2.5. Aggregate-only SELECT clauses should run before any row fanout.
+        # Fanout is useful for row projections, but it duplicates values for aggregate
+        # result sets where each matched source value must be counted exactly once.
+        aggregate_stages = await self.pipeline_builder.build_aggregate_stages(self.ast)
+        if aggregate_stages:
+            pipeline.extend(aggregate_stages)
+            return pipeline
+
         # 3. Fan out rows only when the selected leaf alias is repeated.
         fanout_stages = await self.pipeline_builder.build_row_fanout_stages(self.ast)
         if fanout_stages:

@@ -73,6 +73,24 @@ def has_nested_contains_clause(contains_clause: Dict[str, Any] | None) -> bool:
     return bool(chain and len(chain) > 1)
 
 
+def count_negated_contains_edges(contains_clause: Dict[str, Any] | None) -> int:
+    if not isinstance(contains_clause, dict) or not contains_clause:
+        return 0
+
+    count = 1 if contains_clause.get("containsNegated") else 0
+    count += count_negated_contains_edges(contains_clause.get("contains"))
+
+    children = contains_clause.get("children")
+    if isinstance(children, dict):
+        for child in children.values():
+            count += count_negated_contains_edges(child)
+    return count
+
+
+def has_negated_contains_edge(contains_clause: Dict[str, Any] | None) -> bool:
+    return count_negated_contains_edges(contains_clause) > 0
+
+
 def _iter_referenced_paths(ast: Dict[str, Any] | None) -> List[str]:
     if not isinstance(ast, dict):
         return []
@@ -86,6 +104,14 @@ def _iter_referenced_paths(ast: Dict[str, Any] | None) -> List[str]:
                 continue
             value = col.get("value")
             if isinstance(value, dict):
+                value_type = value.get("type")
+                if value_type == "aggregateFunctionCall":
+                    function = value.get("function") if isinstance(value.get("function"), dict) else {}
+                    args = function.get("args")
+                    if isinstance(args, str) and "/" in args and args.strip():
+                        paths.append(args.strip())
+                    continue
+
                 path = value.get("path")
                 if isinstance(path, str) and path.strip():
                     paths.append(path.strip())
@@ -153,6 +179,20 @@ def build_shortened_ancestry_regex(codes: List[Any], separator: str) -> Optional
     return pattern
 
 
+def _linear_contains_depth(contains_clause: Dict[str, Any] | None) -> int:
+    depth = 0
+    current = contains_clause
+    while isinstance(current, dict) and current:
+        depth += 1
+        child = current.get("contains")
+        if child is None:
+            break
+        if not isinstance(child, dict):
+            return depth
+        current = child
+    return depth
+
+
 async def build_shortened_contains_condition(
     contains_clause: Dict[str, Any] | None,
     archetype_resolver: Any,
@@ -185,9 +225,16 @@ async def build_shortened_contains_condition(
 
     deepest_code = codes[-1]
     if len(codes) == 1:
+        depth = _linear_contains_depth(contains_clause)
+        path_match: Any = str(deepest_code)
+        if depth > 1:
+            escaped_sep = re.escape(separator)
+            path_match = {
+                "$regex": f"^{re.escape(str(deepest_code))}(?:{escaped_sep}[^{re.escape(separator)}]+)*$"
+            }
         return {
             "$elemMatch": {
-                path_field: str(deepest_code),
+                path_field: path_match,
                 f"{data_field}.ani": deepest_code,
             }
         }

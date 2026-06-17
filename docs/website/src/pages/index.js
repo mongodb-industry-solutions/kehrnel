@@ -16,6 +16,9 @@ export default function Home() {
             Build, activate, and operate persistence strategies for structured and unstructured healthcare data workflows.
           </p>
           <div className="kehrnel-hero-actions">
+            <Link className="button button--primary button--lg" to={useBaseUrl('/demo')}>
+              CLI Demo
+            </Link>
             <Link className="button button--primary button--lg" to={useBaseUrl('/docs')}>
               Documentation
             </Link>

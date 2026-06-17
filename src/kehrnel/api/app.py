@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Optional
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI, Request, HTTPException, Security
-from fastapi.responses import JSONResponse, FileResponse, HTMLResponse
+from fastapi.responses import JSONResponse, FileResponse, HTMLResponse, RedirectResponse
 from fastapi.security import APIKeyHeader
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html
@@ -44,7 +44,7 @@ from kehrnel.engine.core.redaction import redact_sensitive
 API_KEY_HEADER = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 # Paths that don't require authentication
-PUBLIC_PATHS = {"/health", "/openapi.json", "/favicon.ico"}
+PUBLIC_PATHS = {"/", "/health", "/openapi.json", "/favicon.ico"}
 PUBLIC_PATH_PREFIXES = ("/docs", "/redoc", "/openapi/", "/guide")
 PUBLIC_PATH_PATTERNS = (
     # Strategy static assets referenced from docs/specs.
@@ -332,6 +332,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     from kehrnel.api.core.admin.ops_by_domain import router as ops_domain_router
     from kehrnel.api.core.admin.routes import router as admin_router
     from kehrnel.api.domains.fhir.routes import router as fhir_domain_router
+    from kehrnel.api.internal.routes import router as internal_runtime_router
     from kehrnel.api.domains.openehr.routes import router as openehr_domain_router
     from kehrnel.api.strategies.openehr.rps_dual.routes import router as openehr_rps_dual_router
     from kehrnel.api.strategies.openehr.rps_dual_ibm.routes import router as openehr_rps_dual_ibm_router
@@ -678,6 +679,14 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     for router in runtime_routers:
         app.include_router(router)
         app.include_router(router, prefix="/v1")
+
+    # Internal runtime paths use explicit versioning in the router prefix to avoid
+    # duplicate /v1 prefixes and keep the service-to-service contract stable.
+    app.include_router(internal_runtime_router)
+
+    @app.get("/", include_in_schema=False)
+    async def root_redirect():
+        return RedirectResponse(url="/guide/", status_code=307)
 
     # Mount Docusaurus documentation if build exists
     docs_build_path = Path(__file__).resolve().parents[3] / "docs" / "website" / "build"

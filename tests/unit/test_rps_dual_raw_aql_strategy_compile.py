@@ -47,6 +47,74 @@ class _FakeStorage:
         return await self.db[collection].find_one(flt)
 
 
+def _build_fake_lab_db() -> _FakeDb:
+    return _FakeDb(
+        {
+            "_codes": _FakeCollection(
+                {
+                    "ar_code": {
+                        "_id": "ar_code",
+                        "at": {
+                            "at0001": -1,
+                            "at0002": -2,
+                            "at0003": -3,
+                        },
+                        "openEHR-EHR-COMPOSITION": {
+                            "report_result": {
+                                "v1": 1
+                            }
+                        },
+                        "openEHR-EHR-OBSERVATION": {
+                            "laboratory_test_result": {
+                                "v1": 2
+                            }
+                        },
+                        "openEHR-EHR-CLUSTER": {
+                            "laboratory_test_analyte": {
+                                "v1": 3
+                            }
+                        },
+                    }
+                }
+            ),
+            "_shortcuts": _FakeCollection(
+                {
+                    "shortcuts": {
+                        "_id": "shortcuts",
+                        "items": {
+                            "archetype_details": "ad",
+                            "context": "cx",
+                            "data": "d",
+                            "events": "ev",
+                            "items": "i",
+                            "magnitude": "m",
+                            "start_time": "st",
+                            "template_id": "ti",
+                            "value": "v",
+                        },
+                    }
+                }
+            ),
+            "compositions_rps": _FakeCollection(
+                {
+                    "sample": {
+                        "_id": "comp-1",
+                        "cn": [{"p": "1", "data": {"ani": 1}}],
+                    }
+                }
+            ),
+            "compositions_search": _FakeCollection(
+                {
+                    "sample": {
+                        "_id": "comp-1",
+                        "sn": [{"p": "1"}],
+                    }
+                }
+            ),
+        }
+    )
+
+
 @pytest.mark.asyncio
 async def test_compile_query_raw_aql_reuses_parsed_ast_across_parameter_changes(monkeypatch):
     parse_calls = []
@@ -252,6 +320,283 @@ async def test_compile_query_raw_aql_uses_strategy_field_names_codes_and_shortcu
     assert project_stage["StartTime"]["$first"]["$map"]["in"] == "$$node.data.cx.st.v"
     assert project_stage["StartTime"]["$first"]["$map"]["input"]["$filter"]["cond"]["$regexMatch"]["input"] == "$$node.p"
     assert project_stage["StartTime"]["$first"]["$map"]["input"]["$filter"]["cond"]["$regexMatch"]["regex"] == "^1$"
+
+
+@pytest.mark.asyncio
+async def test_compile_query_raw_aql_supports_mixed_or_across_ehr_and_composition_levels():
+    db = _FakeDb(
+        {
+            "_codes": _FakeCollection(
+                {
+                    "ar_code": {
+                        "_id": "ar_code",
+                        "at": {
+                            "at0001": -1,
+                            "at0005": -5,
+                            "at0011": -11,
+                        },
+                        "openEHR-EHR-COMPOSITION": {
+                            "probs_base_composition": {
+                                "v0": 1
+                            }
+                        },
+                        "openEHR-EHR-CLUSTER": {
+                            "admin_salut": {
+                                "v0": 11
+                            }
+                        },
+                    }
+                }
+            ),
+            "_shortcuts": _FakeCollection(
+                {
+                    "shortcuts": {
+                        "_id": "shortcuts",
+                        "items": {
+                            "context": "cx",
+                            "start_time": "st",
+                            "value": "v",
+                            "other_context": "oc",
+                            "items": "i",
+                            "archetype_details": "ad",
+                            "template_id": "ti",
+                            "defining_code": "dc",
+                            "code_string": "cs",
+                        },
+                    }
+                }
+            ),
+            "compositions_rps": _FakeCollection(
+                {
+                    "sample": {
+                        "_id": "comp-1",
+                        "cn": [{"p": "1"}],
+                    }
+                }
+            ),
+            "compositions_search": _FakeCollection({}),
+        }
+    )
+
+    ctx = StrategyContext(
+        environment_id="env-1",
+        config=MANIFEST.default_config,
+        adapters={"storage": _FakeStorage(db)},
+        manifest=MANIFEST.model_copy(deep=True),
+        meta={},
+    )
+    strategy = RPSDualStrategy()
+    raw_aql = """
+    SELECT
+        e/ehr_id/value AS ehrId,
+        c/context/start_time/value AS StartTime
+    FROM
+        EHR e
+            CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.probs_base_composition.v0]
+    WHERE
+        c/archetype_details/template_id/value = 'PO_Obstetric_process_v0.8_FORMULARIS'
+        AND (
+            e/ehr_id/value = 'ehr-1'
+            OR c/context/other_context[at0001]/items[openEHR-EHR-CLUSTER.admin_salut.v0]/items[at0005]/items[at0011]/value/defining_code/code_string = 'E08033260'
+        )
+    ORDER BY
+        c/context/start_time/value DESC
+    LIMIT 10
+    """
+
+    plan = await strategy.compile_query(
+        ctx,
+        "openEHR",
+        {
+            "raw_aql": raw_aql,
+            "debug": True,
+        },
+    )
+
+    match_stage = plan.plan["pipeline"][0]["$match"]
+    assert "$and" in match_stage
+    assert any(part.get("tid") == "PO_Obstetric_process_v0.8_FORMULARIS" for part in match_stage["$and"])
+
+    or_branch = next((part["$or"] for part in match_stage["$and"] if "$or" in part), None)
+    assert or_branch is not None
+    assert any(option.get("ehr_id") == "ehr-1" for option in or_branch)
+    assert any("cn" in option for option in or_branch)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("operator_fragment", "expected_regex"),
+    [
+        ("LIKE 'E08033*'", "^E08033.*$"),
+        ("MATCHES {'E08033260','H17001484'}", "^(?:E08033260|H17001484)$"),
+    ],
+)
+async def test_compile_query_raw_aql_supports_string_pattern_operators_in_patient_scope(
+    operator_fragment: str,
+    expected_regex: str,
+):
+    db = _FakeDb(
+        {
+            "_codes": _FakeCollection(
+                {
+                    "ar_code": {
+                        "_id": "ar_code",
+                        "at": {
+                            "at0001": -1,
+                            "at0005": -5,
+                            "at0011": -11,
+                        },
+                        "openEHR-EHR-COMPOSITION": {
+                            "probs_base_composition": {
+                                "v0": 1
+                            }
+                        },
+                        "openEHR-EHR-CLUSTER": {
+                            "admin_salut": {
+                                "v0": 11
+                            }
+                        },
+                    }
+                }
+            ),
+            "_shortcuts": _FakeCollection(
+                {
+                    "shortcuts": {
+                        "_id": "shortcuts",
+                        "items": {
+                            "context": "cx",
+                            "start_time": "st",
+                            "value": "v",
+                            "other_context": "oc",
+                            "items": "i",
+                            "archetype_details": "ad",
+                            "template_id": "ti",
+                            "defining_code": "dc",
+                            "code_string": "cs",
+                        },
+                    }
+                }
+            ),
+            "compositions_rps": _FakeCollection(
+                {
+                    "sample": {
+                        "_id": "comp-1",
+                        "cn": [{"p": "1"}],
+                    }
+                }
+            ),
+            "compositions_search": _FakeCollection({}),
+        }
+    )
+
+    ctx = StrategyContext(
+        environment_id="env-1",
+        config=MANIFEST.default_config,
+        adapters={"storage": _FakeStorage(db)},
+        manifest=MANIFEST.model_copy(deep=True),
+        meta={},
+    )
+    strategy = RPSDualStrategy()
+    raw_aql = f"""
+    SELECT
+        e/ehr_id/value AS ehrId
+    FROM
+        EHR e
+            CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.probs_base_composition.v0]
+    WHERE
+        e/ehr_id/value = 'ehr-1'
+        AND c/archetype_details/template_id/value = 'PO_Obstetric_process_v0.8_FORMULARIS'
+        AND c/context/other_context[at0001]/items[openEHR-EHR-CLUSTER.admin_salut.v0]/items[at0005]/items[at0011]/value/defining_code/code_string {operator_fragment}
+    """
+
+    plan = await strategy.compile_query(
+        ctx,
+        "openEHR",
+        {
+            "raw_aql": raw_aql,
+            "debug": True,
+        },
+    )
+
+    match_stage = plan.plan["pipeline"][0]["$match"]
+    regex_branch = next(
+        part["cn"]["$elemMatch"]
+        for part in match_stage["$and"]
+        if part.get("cn", {}).get("$elemMatch", {}).get("data.v.dc.cs")
+    )
+    assert regex_branch["p"]["$regex"] == "^\\-11:\\-5:11:\\-1:1(?::[^:]+)*$"
+    assert regex_branch["data.v.dc.cs"]["$regex"] == expected_regex
+
+
+@pytest.mark.asyncio
+async def test_compile_query_raw_aql_rejects_order_by_projection_alias():
+    db = _FakeDb(
+        {
+            "_codes": _FakeCollection(
+                {
+                    "ar_code": {
+                        "_id": "ar_code",
+                        "openEHR-EHR-COMPOSITION": {
+                            "probs_base_composition": {
+                                "v0": 1
+                            }
+                        },
+                    }
+                }
+            ),
+            "_shortcuts": _FakeCollection(
+                {
+                    "shortcuts": {
+                        "_id": "shortcuts",
+                        "items": {
+                            "archetype_details": "ad",
+                            "template_id": "ti",
+                        },
+                    }
+                }
+            ),
+            "compositions_rps": _FakeCollection(
+                {
+                    "sample": {
+                        "_id": "comp-1",
+                        "cn": [{"p": "1"}],
+                    }
+                }
+            ),
+            "compositions_search": _FakeCollection({}),
+        }
+    )
+
+    ctx = StrategyContext(
+        environment_id="env-1",
+        config=MANIFEST.default_config,
+        adapters={"storage": _FakeStorage(db)},
+        manifest=MANIFEST.model_copy(deep=True),
+        meta={},
+    )
+    strategy = RPSDualStrategy()
+    raw_aql = """
+    SELECT
+        e/ehr_id/value AS ehrId
+    FROM
+        EHR e
+            CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.probs_base_composition.v0]
+    WHERE
+        c/archetype_details/template_id/value = 'PO_Obstetric_process_v0.8_FORMULARIS'
+    ORDER BY
+        ehrId ASC
+    LIMIT 10
+    """
+
+    with pytest.raises(ValueError, match="ORDER BY projection alias 'ehrId' is not supported"):
+        await strategy.compile_query(
+            ctx,
+            "openEHR",
+            {
+                "raw_aql": raw_aql,
+                "debug": True,
+            },
+        )
 
 
 @pytest.mark.asyncio
@@ -499,3 +844,92 @@ async def test_compile_query_raw_aql_supports_configured_separator_and_compact_a
     data_inici_regex = pipeline[1]["$project"]["DataInici"]["$first"]["$map"]["input"]["$filter"]["cond"]["$regexMatch"]["regex"]
     assert "A4:8:A3:A2:A1:2:1" in data_inici_regex
     assert ".2\\.1" not in data_inici_regex
+
+
+@pytest.mark.asyncio
+async def test_compile_query_raw_aql_supports_min_aggregate_on_standard_pipeline():
+    db = _build_fake_lab_db()
+
+    ctx = StrategyContext(
+        environment_id="env-1",
+        config=MANIFEST.default_config,
+        adapters={"storage": _FakeStorage(db)},
+        manifest=MANIFEST.model_copy(deep=True),
+        meta={},
+    )
+    strategy = RPSDualStrategy()
+    raw_aql = """
+    SELECT
+        MIN(c/context/start_time/value) AS minStartTime
+    FROM
+        EHR e
+            CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
+    WHERE
+        e/ehr_id/value = 'ehr-1'
+        AND c/archetype_details/template_id/value = 'sample_laboratory_v0.4'
+    """
+
+    plan = await strategy.compile_query(
+        ctx,
+        "openEHR",
+        {
+            "raw_aql": raw_aql,
+            "debug": True,
+        },
+    )
+
+    assert plan.plan["explain"]["builder"]["compiler_engine"] == "pipeline_builder"
+    pipeline = plan.plan["pipeline"]
+    match_stage = pipeline[0]["$match"]
+    match_parts = match_stage.get("$and") if isinstance(match_stage.get("$and"), list) else [match_stage]
+    assert any(part.get("ehr_id") == "ehr-1" for part in match_parts if isinstance(part, dict))
+    assert pipeline[1]["$addFields"]["__aggregate_values"]["$filter"]["input"]["$map"]["in"] == "$$node.data.cx.st.v"
+    assert pipeline[2] == {"$unwind": "$__aggregate_values"}
+    assert pipeline[3]["$group"]["minStartTime"] == {"$min": "$__aggregate_values"}
+    assert pipeline[4]["$project"]["minStartTime"] == 1
+
+
+@pytest.mark.asyncio
+async def test_compile_query_raw_aql_supports_avg_aggregate_on_cross_patient_pipeline():
+    db = _build_fake_lab_db()
+
+    ctx = StrategyContext(
+        environment_id="env-1",
+        config=MANIFEST.default_config,
+        adapters={"storage": _FakeStorage(db)},
+        manifest=MANIFEST.model_copy(deep=True),
+        meta={},
+    )
+    strategy = RPSDualStrategy()
+    raw_aql = """
+    SELECT
+        AVG(o/data[at0001]/events[at0002]/data[at0003]/items[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]/items[at0001]/value/magnitude) AS avgMagnitude
+    FROM
+        EHR e
+            CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
+            CONTAINS OBSERVATION o[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]
+    WHERE
+        c/archetype_details/template_id/value = 'sample_laboratory_v0.4'
+    """
+
+    plan = await strategy.compile_query(
+        ctx,
+        "openEHR",
+        {
+            "raw_aql": raw_aql,
+            "debug": True,
+        },
+    )
+
+    assert plan.plan["explain"]["builder"]["compiler_engine"] == "pipeline_builder"
+    pipeline = plan.plan["pipeline"]
+    assert pipeline[0].get("$match")
+    aggregate_values_stage = next(
+        stage["$addFields"]["__aggregate_values"]
+        for stage in pipeline
+        if "$addFields" in stage and "__aggregate_values" in stage["$addFields"]
+    )
+    assert aggregate_values_stage["$filter"]["input"]["$map"]["in"] == "$$node.data.v.m"
+    assert any(stage == {"$unwind": "$__aggregate_values"} for stage in pipeline)
+    group_stage = next(stage["$group"] for stage in pipeline if "$group" in stage)
+    assert group_stage["avgMagnitude"] == {"$avg": "$__aggregate_values"}

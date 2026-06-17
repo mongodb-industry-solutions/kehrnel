@@ -166,6 +166,10 @@ def _parse_api_key_env_scopes() -> dict[str, object]:
 
 
 def _is_env_access_allowed(request: Request, env_id: str) -> bool:
+    auth_enabled = (os.getenv("KEHRNEL_AUTH_ENABLED", "true") or "").strip().lower() in ("1", "true", "yes")
+    if not auth_enabled:
+        return True
+
     scopes = _parse_api_key_env_scopes()
     api_key = (request.headers.get("x-api-key") or "").strip()
     if scopes:

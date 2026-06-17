@@ -1,5 +1,6 @@
 # src/kehrnel/api/compatibility/v1/directory/routes.py
 
+from email.utils import formatdate
 from fastapi import APIRouter, Depends, status, Header, HTTPException, Response, Query
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import Optional
@@ -54,7 +55,7 @@ async def get_directory_endpoint(
     - Otherwise, retrieves the latest (current) directory FOLDER version.
     - If `path` is supplied, retrieves the sub-FOLDER at that path.
     """
-    folder, root_version_uid = await retrieve_directory(
+    folder, root_version_uid, time_committed = await retrieve_directory(
         ehr_id=ehr_id,
         version_at_time=version_at_time,
         path=path,
@@ -63,6 +64,8 @@ async def get_directory_endpoint(
 
     response.headers["ETag"] = f'"{root_version_uid}"'
     response.headers["Location"] = f"/v1/ehr/{ehr_id}/directory/{root_version_uid}"
+    if time_committed is not None:
+        response.headers["Last-Modified"] = formatdate(time_committed.timestamp(), usegmt=True)
 
     return folder
 
@@ -89,7 +92,7 @@ async def get_directory_by_version_id_endpoint(
 
     - If `path` is supplied, retrieves only the sub-FOLDER at that path. 
     """
-    folder = await retrieve_directory_by_version_id(
+    folder, time_committed = await retrieve_directory_by_version_id(
         ehr_id=ehr_id,
         version_uid=version_uid,
         path=path,
@@ -98,6 +101,8 @@ async def get_directory_by_version_id_endpoint(
 
     response.headers["ETag"] = f'"{version_uid}"'
     response.headers["Location"] = f"/v1/ehr/{ehr_id}/directory/{version_uid}"
+    if time_committed is not None:
+        response.headers["Last-Modified"] = formatdate(time_committed.timestamp(), usegmt=True)
 
     return folder
 
@@ -130,7 +135,7 @@ async def create_directory_endpoint(
             detail = "Invalid 'Prefer' header value. Must be 'return=representation' or 'return=minimal'."
         )
     
-    created_directory = await create_directory(
+    created_directory, time_created = await create_directory(
         ehr_id=ehr_id,
         directory_payload=payload,
         db=db
@@ -139,6 +144,7 @@ async def create_directory_endpoint(
     version_uid = created_directory.uid.value
     response.headers["Location"] = f"/v1/ehr/{ehr_id}/directory/{version_uid}"
     response.headers["ETag"] = f'"{version_uid}"'
+    response.headers["Last-Modified"] = formatdate(time_created.timestamp(), usegmt=True)
 
     if prefer == "return=representation":
         return created_directory
@@ -182,7 +188,7 @@ async def update_directory_endpoint(
     # The version UID in If-Match is quoted
     preceding_version_uid = if_match.strip('"')
 
-    updated_directory = await update_directory(
+    updated_directory, time_committed = await update_directory(
         ehr_id=ehr_id,
         if_match_uid=preceding_version_uid,
         directory_payload=payload,
@@ -192,6 +198,7 @@ async def update_directory_endpoint(
     new_version_uid = updated_directory.uid.value
     response.headers["Location"] = f"/v1/ehr/{ehr_id}/directory/{new_version_uid}"
     response.headers["ETag"] = f'"{new_version_uid}"'
+    response.headers["Last-Modified"] = formatdate(time_committed.timestamp(), usegmt=True)
 
     if prefer == "return=representation":
         return updated_directory

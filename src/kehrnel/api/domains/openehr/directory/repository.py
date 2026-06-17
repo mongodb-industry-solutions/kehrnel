@@ -4,7 +4,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from pymongo.errors import PyMongoError
 import logging
 from datetime import datetime
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Tuple
 from kehrnel.api.bridge.app.core.config import settings
 
 logger = logging.getLogger(__name__)
@@ -69,7 +69,9 @@ async def update_ehr_and_insert_contribution_for_directory(
                 raise
 
 
-async def find_folder_in_contribution_by_uid(ehr_id: str, version_uid: str, db: AsyncIOMotorDatabase) -> Optional[Dict[str, Any]]:
+async def find_folder_in_contribution_by_uid(
+    ehr_id: str, version_uid: str, db: AsyncIOMotorDatabase
+) -> Optional[Tuple[Dict[str, Any], Optional[datetime]]]:
     """
     Finds the contribution containing a specific FOLDER version for a given EHR
     and returns the FOLDER.
@@ -89,16 +91,20 @@ async def find_folder_in_contribution_by_uid(ehr_id: str, version_uid: str, db: 
 
     if not contribution:
         return None
+
+    time_committed = contribution.get("audit", {}).get("time_committed")
     
     # Iterate through the versions in the contribution to find the matching FOLDER
     for version in contribution.get("versions", []):
         if version.get("_type") == "FOLDER" and version.get("uid", {}).get("value") == version_uid:
-            return version
+            return version, time_committed
             
     return None
 
 
-async def find_folder_in_contribution_at_time(ehr_id: str, timestamp: datetime, db: AsyncIOMotorDatabase) -> Optional[Dict[str, Any]]:
+async def find_folder_in_contribution_at_time(
+    ehr_id: str, timestamp: datetime, db: AsyncIOMotorDatabase
+) -> Optional[Tuple[Dict[str, Any], Optional[datetime]]]:
     """
     Finds the latest FOLDER version for an EHR at or before a specific time
 
@@ -143,10 +149,12 @@ async def find_folder_in_contribution_at_time(ehr_id: str, timestamp: datetime, 
         {
             "$limit": 1
         },
-        # 7. Make the 'versions' object the root of the returned document.
+        # 7. Return the folder together with the contribution commit time so headers can reflect the stored version.
         {
-            "$replaceRoot": {
-                "newRoot": "$versions"
+            "$project": {
+                "_id": 0,
+                "folder": "$versions",
+                "time_committed": "$audit.time_committed",
             }
         }
     ]
@@ -154,7 +162,10 @@ async def find_folder_in_contribution_at_time(ehr_id: str, timestamp: datetime, 
     cursor = db[_contrib_coll()].aggregate(pipeline)
     result = await cursor.to_list(length=1)
 
-    return result[0] if result else None
+    if not result:
+        return None
+
+    return result[0].get("folder"), result[0].get("time_committed")
 
 
 async def delete_directory_and_insert_contribution(
