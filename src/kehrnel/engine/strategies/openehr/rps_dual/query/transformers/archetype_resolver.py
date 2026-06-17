@@ -21,16 +21,60 @@ class ArchetypeResolver:
         codes_doc_id: str | None = None,
         search_collection: str | None = None,
         composition_collection: str | None = None,
+        separator: str | None = None,
+        atcode_strategy: str | None = None,
     ):
         self.db = db
         self.codes_collection = codes_collection or "_codes"
         self.codes_doc_id = codes_doc_id or "ar_code"
         self.search_collection = search_collection or "sm_search3"
         self.composition_collection = composition_collection or "compositions"
-        self._archetype_to_code_cache: Dict[str, int] = {}
-        self._at_code_to_int_cache: Dict[str, int] = {}
+        self.separator = separator or ":"
+        self.atcode_strategy = (atcode_strategy or "negative_int").strip().lower()
+        self._archetype_to_code_cache: Dict[str, Any] = {}
+        self._at_code_to_int_cache: Dict[str, Any] = {}
         self._structural_pattern_cache: Dict[str, List[str]] = {}
         self._codes_loaded = False
+
+    def _escaped_separator(self) -> str:
+        return re.escape(self.separator)
+
+    def _not_separator_class(self) -> str:
+        return f"[^{re.escape(self.separator)}]"
+
+    def _root_path_regex(self) -> str:
+        return rf"^{self._not_separator_class()}+$"
+
+    def _join_tokens(self, *tokens: Any) -> str:
+        return self.separator.join(str(token) for token in tokens if token is not None and str(token) != "")
+
+    def _path_suffix_regex(self) -> str:
+        escaped_sep = self._escaped_separator()
+        not_sep = self._not_separator_class()
+        return rf"(?:{escaped_sep}{not_sep}+)*$"
+
+    @staticmethod
+    def _candidate_code_values(code: Any) -> List[Any]:
+        candidates: List[Any] = []
+        for candidate in (code, str(code)):
+            if candidate not in candidates:
+                candidates.append(candidate)
+        try:
+            numeric = int(str(code))
+        except Exception:
+            numeric = None
+        if numeric is not None and numeric not in candidates:
+            candidates.append(numeric)
+        return candidates
+
+    @staticmethod
+    def _node_selector_value(item: Dict[str, Any]) -> Any:
+        data = item.get("data", {}) if isinstance(item, dict) else {}
+        if not isinstance(data, dict):
+            return None
+        if "archetype_node_id" in data:
+            return data.get("archetype_node_id")
+        return data.get("ani")
     
     async def _load_codes_if_needed(self):
         """Load codes from database if not already loaded."""
@@ -66,11 +110,12 @@ class ArchetypeResolver:
         at_codes = doc.get("at", {})
         for at_code, code_value in at_codes.items():
             self._at_code_to_int_cache[at_code] = code_value
-        
+            self._at_code_to_int_cache[str(at_code).lower()] = code_value
+
         self._codes_loaded = True
         logger.info(f"Loaded {len(self._archetype_to_code_cache)} archetype codes and {len(self._at_code_to_int_cache)} AT codes")
     
-    async def get_archetype_code(self, archetype_id: str) -> Optional[int]:
+    async def get_archetype_code(self, archetype_id: str) -> Optional[Any]:
         """
         Get the numeric code for a full archetype ID.
         
@@ -84,7 +129,7 @@ class ArchetypeResolver:
         result = self._archetype_to_code_cache.get(archetype_id)
         return result
     
-    async def get_at_code(self, at_code: str) -> Optional[int]:
+    async def get_at_code(self, at_code: str) -> Optional[Any]:
         """
         Get the numeric code for an AT code.
         
@@ -95,7 +140,70 @@ class ArchetypeResolver:
             The numeric code or None if not found
         """
         await self._load_codes_if_needed()
-        return self._at_code_to_int_cache.get(at_code)
+        if not at_code:
+            return None
+
+        normalized = str(at_code).lower()
+        resolved = self._at_code_to_int_cache.get(at_code)
+        if resolved is None:
+            resolved = self._at_code_to_int_cache.get(normalized)
+        if resolved is not None:
+            return resolved
+
+        fallback = self._synthesize_at_code(normalized)
+        if fallback is not None:
+            self._at_code_to_int_cache[at_code] = fallback
+            self._at_code_to_int_cache[normalized] = fallback
+        return fallback
+
+    def _synthesize_at_code(self, at_code: str) -> Optional[Any]:
+        strategy = self.atcode_strategy or "negative_int"
+        if strategy == "negative_int":
+            return self._encode_at_negative_int(at_code)
+        if strategy == "literal":
+            return at_code
+        if strategy == "compact_prefix":
+            return self._encode_at_compact_prefix(at_code)
+        return None
+
+    @staticmethod
+    def _extract_at_digits(at_code: str) -> Optional[str]:
+        match = re.match(r"^at(\d+)$", str(at_code).strip().lower())
+        if not match:
+            return None
+        return match.group(1)
+
+    def _encode_at_negative_int(self, at_code: str) -> Optional[int]:
+        digits = self._extract_at_digits(at_code)
+        if digits is None:
+            return None
+        return -int(digits)
+
+    def _encode_at_compact_prefix(self, at_code: str) -> Optional[str]:
+        digits = self._extract_at_digits(at_code)
+        if digits is None:
+            return None
+
+        if self.separator == "/":
+            significant = digits.lstrip("0") or "0"
+            if len(significant) == 1:
+                prefix = "D"
+            elif len(significant) == 2:
+                prefix = "C"
+            elif len(significant) == 3:
+                prefix = "B"
+            else:
+                prefix = "A"
+            return f"{prefix}{significant}"
+
+        selector = f"at{digits}"
+        if selector.startswith("at000"):
+            return "A" + selector[5:]
+        if selector.startswith("at00"):
+            return "B" + selector[4:]
+        if selector.startswith("at0"):
+            return "C" + selector[3:]
+        return selector
     
     async def resolve_variable_to_p_pattern(self, variable_alias: str, context_map: Dict[str, Dict]) -> Optional[str]:
         """
@@ -196,13 +304,14 @@ class ArchetypeResolver:
             # Build the expected pattern structure
             # For admin_salut/items[at0007]/items[at0014], we expect:
             # at0014 (deepest) -> at0007 -> admin_salut archetype -> ... -> composition
-            expected_start = f"{at_code_sequence[-1]}.{'.'.join(reversed(at_code_sequence[:-1]))}.{base_archetype_code}" if len(at_code_sequence) > 1 else f"{at_code_sequence[0]}.{base_archetype_code}"
+            expected_tokens = [at_code_sequence[-1], *reversed(at_code_sequence[:-1]), base_archetype_code]
+            expected_start = self._join_tokens(*expected_tokens)
             
             # Query documents that have sn elements with p-values starting with our expected pattern
             #regex_pattern = f"^{expected_start.replace('.', '\\.')}\\."
 
-            escaped = expected_start.replace(".", r"\.")
-            regex_pattern = rf"^{escaped}\."
+            escaped = re.escape(expected_start)
+            regex_pattern = rf"^{escaped}(?:{self._escaped_separator()}|$)"
             
             # Find documents with matching patterns
             matching_docs = await search_col.find({
@@ -225,18 +334,18 @@ class ArchetypeResolver:
                     
                     # Get the longest common pattern to understand the structure
                     sample_pattern = all_patterns[0]
-                    pattern_parts = sample_pattern.split('.')
+                    pattern_parts = sample_pattern.split(self.separator)
                     
                     # Build a flexible regex that matches the discovered structure
                     # This allows for variations in the composition/parent structure
-                    if len(pattern_parts) >= len(expected_start.split('.')):
+                    if len(pattern_parts) >= len(expected_start.split(self.separator)):
                         # Create a pattern that matches the AT code sequence exactly
                         # but is flexible about what comes after
-                        escaped_start = expected_start.replace('.', '\\.')
-                        return f"^{escaped_start}(?:\\.[-\\d]+)*$"
+                        escaped_start = re.escape(expected_start)
+                        return rf"^{escaped_start}{self._path_suffix_regex()}"
                     else:
                         # Fallback to exact match if pattern is shorter than expected
-                        escaped_pattern = sample_pattern.replace('.', '\\.')
+                        escaped_pattern = re.escape(sample_pattern)
                         return f"^{escaped_pattern}$"
                 else:
                     logger.warning(f"Warning: Found documents but no matching p-values for pattern {expected_start}")
@@ -248,9 +357,9 @@ class ArchetypeResolver:
         
         # Fallback: if no data-driven pattern found, create a basic pattern
         # This should match the AT code sequence + base archetype
-        fallback_pattern = f"{at_code_sequence[-1]}.{'.'.join(reversed(at_code_sequence[:-1]))}.{base_archetype_code}" if len(at_code_sequence) > 1 else f"{at_code_sequence[0]}.{base_archetype_code}"
-        escaped_fallback = fallback_pattern.replace('.', '\\.')
-        return f"^{escaped_fallback}(?:\\.[-\\d]+)*$"
+        fallback_pattern = self._join_tokens(at_code_sequence[-1], *reversed(at_code_sequence[:-1]), base_archetype_code)
+        escaped_fallback = re.escape(fallback_pattern)
+        return rf"^{escaped_fallback}{self._path_suffix_regex()}"
     
     async def _build_containment_chain(self, variable_alias: str, context_map: Dict[str, Dict]) -> List[Dict]:
         """
@@ -378,12 +487,19 @@ class ArchetypeResolver:
         try:
             # Query compositions to find patterns between these archetypes
             compositions_col = self.db[self.composition_collection]
+            candidate_values = [
+                *self._candidate_code_values(child_archetype_code),
+                *self._candidate_code_values(parent_archetype_code),
+            ]
             
             # Look for documents that contain both archetypes in their cn array
             pipeline = [
                 {
                     "$match": {
-                        "cn.data.archetype_node_id": {"$in": [int(child_archetype_code), int(parent_archetype_code)]}
+                        "$or": [
+                            {"cn.data.archetype_node_id": {"$in": candidate_values}},
+                            {"cn.data.ani": {"$in": candidate_values}},
+                        ]
                     }
                 },
                 {
@@ -392,7 +508,10 @@ class ArchetypeResolver:
                             "$filter": {
                                 "input": "$cn",
                                 "cond": {
-                                    "$in": ["$$this.data.archetype_node_id", [int(child_archetype_code), int(parent_archetype_code)]]
+                                    "$or": [
+                                        {"$in": ["$$this.data.archetype_node_id", candidate_values]},
+                                        {"$in": ["$$this.data.ani", candidate_values]},
+                                    ]
                                 }
                             }
                         }
@@ -436,21 +555,29 @@ class ArchetypeResolver:
             List of intermediate element patterns found
         """
         patterns = []
+        child_candidates = set(self._candidate_code_values(child_code))
+        parent_candidates = set(self._candidate_code_values(parent_code))
         
         # Find p-values for child and parent archetypes
-        child_p_values = [item["p"] for item in cn_array if item.get("data", {}).get("archetype_node_id") == int(child_code)]
-        parent_p_values = [item["p"] for item in cn_array if item.get("data", {}).get("archetype_node_id") == int(parent_code)]
+        child_p_values = [
+            item["p"] for item in cn_array
+            if self._node_selector_value(item) in child_candidates
+        ]
+        parent_p_values = [
+            item["p"] for item in cn_array
+            if self._node_selector_value(item) in parent_candidates
+        ]
         
         # Analyze the hierarchical relationship
         for child_p in child_p_values:
             for parent_p in parent_p_values:
                 if child_p.endswith(parent_p):
                     # Extract intermediate elements
-                    prefix = child_p[:-len(parent_p)].rstrip('.')
+                    prefix = child_p[:-len(parent_p)].rstrip(self.separator)
                     if prefix:
                         # Remove the child code itself and extract intermediate elements
-                        parts = prefix.split('.')
-                        if parts and parts[0] == child_code:
+                        parts = prefix.split(self.separator)
+                        if parts and parts[0] == str(child_code):
                             intermediate = parts[1:] if len(parts) > 1 else []
                             if intermediate:
                                 patterns.append(intermediate)
@@ -469,5 +596,4 @@ class ArchetypeResolver:
             Regex pattern for composition p-value (defaults to "^\\d+$" if not found)
         """
         pattern = await self.resolve_variable_to_p_pattern(composition_alias, context_map)
-        # Default to match any numeric composition p-value when no specific predicate
-        return pattern or "^\\d+$"
+        return pattern or self._root_path_regex()

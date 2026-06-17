@@ -63,6 +63,11 @@ _SUPPORTED_QUERY_SAFE_ENCODING_PROFILES = {
     "profile.search_shortcuts",
 }
 
+# Path separators the query compiler can safely escape and round-trip. ":" is the
+# default; "." is retained for backward compatibility. Others (e.g. "/") collide
+# with AQL path parsing and are rejected.
+_SUPPORTED_QUERY_SAFE_SEPARATORS = {".", ":"}
+
 _INGEST_CONTROL_KEYS = {
     "data_mode",
     "debug",
@@ -207,9 +212,11 @@ class RPSDualStrategy(StrategyPlugin):
         strategy_cfg = normalize_config(raw_config or {})
         errors: list[str] = []
 
-        if strategy_cfg.paths.separator != ".":
+        if strategy_cfg.paths.separator not in _SUPPORTED_QUERY_SAFE_SEPARATORS:
             errors.append(
-                "paths.separator must remain '.' because query compilation still assumes dot-separated stored paths."
+                "paths.separator must be one of "
+                f"{sorted(_SUPPORTED_QUERY_SAFE_SEPARATORS)} because query compilation must be able to "
+                "round-trip stored paths."
             )
 
         comp_profile = (strategy_cfg.collections.compositions.encodingProfile or "").strip().lower()

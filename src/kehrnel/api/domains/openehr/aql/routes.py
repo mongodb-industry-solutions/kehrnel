@@ -1,7 +1,7 @@
 # src/kehrnel/api/compatibility/v1/aql/routes.py
 
 from starlette.responses import JSONResponse
-from fastapi import APIRouter, Depends, status, Body, Response, Request, Query, HTTPException
+from fastapi import APIRouter, Depends, status, Body, Response, Request, Query, HTTPException, Header
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import List, Dict, Any
 
@@ -35,6 +35,11 @@ async def execute_query(
     aql: str = Body(..., media_type="text/plain", description="The AQL query string."),
     ehr_id: str = Query(None, description="Optional EHR ID. If provided, uses $match strategy on flatten_compositions. If not provided, uses $search strategy on search collection."),
     force_search: bool = Query(False, description="Force the use of search strategy for testing purposes."),
+    aql_feature_mode: str | None = Header(
+        default=None,
+        alias="X-AQL-Feature-Mode",
+        description="Optional AQL feature mode. Use 'extended' to enable Mongo-only features such as EXISTS/NOT EXISTS.",
+    ),
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
 ):
     """
@@ -53,7 +58,14 @@ async def execute_query(
         settings.search_config.force_search_strategy = True
     
     try:
-        response = await process_aql_query(aql_query=aql, request_url=request.url, db=db, ehr_id=ehr_id, request=request)
+        response = await process_aql_query(
+            aql_query=aql,
+            request_url=request.url,
+            db=db,
+            ehr_id=ehr_id,
+            request=request,
+            feature_mode=aql_feature_mode,
+        )
         return response
     finally:
         # Restore original setting
@@ -124,6 +136,11 @@ async def execute_ast_query(
     request: Request,
     ast_data: Dict[str, Any] = Body(..., description="The AQL AST structure."),
     ehr_id: str = None,
+    aql_feature_mode: str | None = Header(
+        default=None,
+        alias="X-AQL-Feature-Mode",
+        description="Optional AQL feature mode. Use 'extended' to enable Mongo-only features such as EXISTS/NOT EXISTS.",
+    ),
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
 ):
     """
@@ -132,7 +149,14 @@ async def execute_ast_query(
     """
     try:
         
-        response = await process_aql_ast_query(ast_query= ast_data, request_url=request.url, db=db, ehr_id=ehr_id, request=request)
+        response = await process_aql_ast_query(
+            ast_query=ast_data,
+            request_url=request.url,
+            db=db,
+            ehr_id=ehr_id,
+            request=request,
+            feature_mode=aql_feature_mode,
+        )
         return response
         
     except Exception as e:
@@ -176,6 +200,11 @@ async def debug_aql_to_mql_query(
             }
         },
     ),
+    aql_feature_mode: str | None = Header(
+        default=None,
+        alias="X-AQL-Feature-Mode",
+        description="Optional AQL feature mode. Use 'extended' to enable Mongo-only features such as EXISTS/NOT EXISTS.",
+    ),
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
 ):
     """
@@ -197,7 +226,13 @@ async def debug_aql_to_mql_query(
         # ast_data = Parsed query
         # mql_pipeline = MongoDB Aggregation Pipeline
         
-        mql_pipeline = await build_aql_pipeline(ast_data, db, ehr_id, request=request)
+        mql_pipeline = await build_aql_pipeline(
+            ast_data,
+            db,
+            ehr_id,
+            request=request,
+            feature_mode=aql_feature_mode,
+        )
     
         return AQLtoMQLDebugResponse(
             success=True,
@@ -227,6 +262,11 @@ async def debug_ast_query(
     request: Request,
     ast_data: Dict[str, Any] = Body(..., description="The AQL AST structure."),
     ehr_id: str = None,
+    aql_feature_mode: str | None = Header(
+        default=None,
+        alias="X-AQL-Feature-Mode",
+        description="Optional AQL feature mode. Use 'extended' to enable Mongo-only features such as EXISTS/NOT EXISTS.",
+    ),
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
 ):
     """
@@ -236,7 +276,13 @@ async def debug_ast_query(
         # Import here to avoid circular imports
         from .service import build_aql_pipeline
         
-        pipeline = await build_aql_pipeline(ast_data, db, ehr_id, request=request)
+        pipeline = await build_aql_pipeline(
+            ast_data,
+            db,
+            ehr_id,
+            request=request,
+            feature_mode=aql_feature_mode,
+        )
         
         return {
             "query": ast_data,

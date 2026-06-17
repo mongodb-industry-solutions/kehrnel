@@ -181,7 +181,7 @@ async def test_build_query_pipeline_maps_version_commit_time_to_top_level_match_
         2026, 4, 11, 0, 0, tzinfo=timezone.utc
     )
     assert match_stage["tid"] == "test-template"
-    assert match_stage["cn"]["$elemMatch"] == {"p": {"$regex": r"^[^\\.]+$"}}
+    assert match_stage["cn"]["$elemMatch"] == {"p": {"$regex": r"^[^:]+$"}}
     assert pipeline[1]["$project"]["DataRegistre"] == "$time_c"
     assert pipeline[1]["$project"]["TemplateId"] == "$tid"
     assert pipeline[2]["$sort"] == {"DataRegistre": 1}
@@ -251,7 +251,7 @@ async def test_build_query_pipeline_prefers_match_for_cross_patient_template_and
     assert match_stage["time_c"]["$gte"] == datetime(
         2026, 4, 11, 0, 0, tzinfo=timezone.utc
     )
-    assert match_stage["cn"]["$elemMatch"] == {"p": {"$regex": r"^[^\\.]+$"}}
+    assert match_stage["cn"]["$elemMatch"] == {"p": {"$regex": r"^[^:]+$"}}
     assert pipeline[1]["$project"]["DataRegistre"] == "$time_c"
     assert pipeline[2]["$sort"] == {"DataRegistre": -1}
 

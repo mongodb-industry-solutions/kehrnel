@@ -37,6 +37,8 @@ class AQLtoMQLTransformer:
         search_index_name: str = "search_compositions_index",
         strategy: Optional[PersistenceStrategy] = None,
         shortcut_map: Optional[Dict[str, str]] = None,
+        archetype_resolver: Optional[ArchetypeResolver] = None,
+        compatibility_match: bool = False,
     ):
         self.ast = ast
         self.ehr_id = ehr_id
@@ -44,6 +46,8 @@ class AQLtoMQLTransformer:
         self.search_index_name = search_index_name
         self.strategy = strategy or get_default_strategy()
         self.shortcut_map = shortcut_map or {}
+        self.archetype_resolver = archetype_resolver
+        self.compatibility_match = compatibility_match
         
         # Schema field configuration (Point 3 preparation)
         self.schema_config = schema_config or self._build_schema_config_from_strategy(self.strategy)
@@ -72,14 +76,15 @@ class AQLtoMQLTransformer:
         self._process_let_variables()
         
         # 5. Initialize archetype resolver if database is available
-        self.archetype_resolver = None
-        if self.db is not None:
+        if self.archetype_resolver is None and self.db is not None:
             self.archetype_resolver = ArchetypeResolver(
                 self.db,
                 codes_collection=self.schema_config.get("codes_collection"),
                 codes_doc_id=self.schema_config.get("codes_doc_id"),
                 search_collection=self.search_schema_config.get("collection"),
                 composition_collection=self.schema_config.get("collection"),
+                separator=self.schema_config.get("separator"),
+                atcode_strategy=self.schema_config.get("atcode_strategy"),
             )
         
         # 6. Initialize format resolver with archetype resolver
@@ -111,6 +116,7 @@ class AQLtoMQLTransformer:
             self.context_map,
             self.let_variables,
             version_alias=self.version_alias,
+            compatibility_match=self.compatibility_match,
         )
         
         # 8. Initialize search pipeline builder
@@ -163,24 +169,51 @@ class AQLtoMQLTransformer:
         if let_stage:
             pipeline.append(let_stage)
 
-        # 3. Build the $project stage from the SELECT clause
-        project_stage = await self.pipeline_builder.build_project_stage(self.ast)
+        # 2.5. Aggregate-only SELECT clauses should run before any row fanout.
+        # Fanout is useful for row projections, but it duplicates values for aggregate
+        # result sets where each matched source value must be counted exactly once.
+        aggregate_stages = await self.pipeline_builder.build_aggregate_stages(self.ast)
+        if aggregate_stages:
+            pipeline.extend(aggregate_stages)
+            return pipeline
+
+        # 3. Fan out rows only when the selected leaf alias is repeated.
+        fanout_stages = await self.pipeline_builder.build_row_fanout_stages(self.ast)
+        if fanout_stages:
+            pipeline.extend(fanout_stages)
+
+        # 4. Re-apply supported WHERE logic at row level when exact fanout correlation is available.
+        row_exact_match = await self.pipeline_builder.build_row_exact_match_stage(self.ast)
+        if row_exact_match:
+            pipeline.append(row_exact_match)
+
+        # 5. Cache repeated node filters only when the expected scan savings justify it.
+        projection_cache_plan = await self.pipeline_builder.build_projection_cache_plan(self.ast)
+        projection_cache_stage = self.pipeline_builder.build_projection_cache_stage(projection_cache_plan)
+        if projection_cache_stage:
+            pipeline.append(projection_cache_stage)
+
+        # 6. Build the $project stage from the SELECT clause
+        project_stage = await self.pipeline_builder.build_project_stage(
+            self.ast,
+            projection_cache_plan=projection_cache_plan,
+        )
         if project_stage:
             pipeline.append(project_stage)
 
-        # 4. Build DISTINCT stages ($group + $replaceRoot) if SELECT DISTINCT is used
+        # 7. Build DISTINCT stages ($group + $replaceRoot) if SELECT DISTINCT is used
         # This must come after $project so we can group by the projected field names
         projected_fields = self.pipeline_builder.get_projected_field_names(self.ast)
         distinct_stages = self.pipeline_builder.build_distinct_stages(self.ast, projected_fields)
         if distinct_stages:
             pipeline.extend(distinct_stages)
 
-        # 5. Build the $sort stage from ORDER BY clause
+        # 8. Build the $sort stage from ORDER BY clause
         sort_stage = self.pipeline_builder.build_sort_stage(self.ast)
         if sort_stage:
             pipeline.append(sort_stage)
         
-        # 6. Build the $limit stage from LIMIT clause
+        # 9. Build the $limit stage from LIMIT clause
         limit_stage = self.pipeline_builder.build_limit_stage(self.ast)
         if limit_stage:
             pipeline.append(limit_stage)
@@ -236,6 +269,7 @@ class AQLtoMQLTransformer:
 
     def _build_schema_config_from_strategy(self, strategy: PersistenceStrategy) -> Dict[str, str]:
         composition_fields = strategy.fields.get("composition")
+        atcode_cfg = strategy.coding.atcodes if strategy.coding and strategy.coding.atcodes else {}
         return {
             'composition_array': composition_fields.nodes if composition_fields and composition_fields.nodes else 'cn',
             'path_field': composition_fields.path if composition_fields and composition_fields.path else 'p',
@@ -244,10 +278,12 @@ class AQLtoMQLTransformer:
             'comp_id': composition_fields.comp_id if composition_fields and composition_fields.comp_id else 'comp_id',
             'template_id': composition_fields.template_id if composition_fields and composition_fields.template_id else 'tid',
             'time_committed': composition_fields.time_committed if composition_fields and composition_fields.time_committed else 'time_c',
+            'atcode_strategy': atcode_cfg.get('strategy', 'negative_int') if isinstance(atcode_cfg, dict) else 'negative_int',
         }
 
     def _build_search_schema_config_from_strategy(self, strategy: PersistenceStrategy) -> Dict[str, str]:
         search_fields = strategy.fields.get("search")
+        atcode_cfg = strategy.coding.atcodes if strategy.coding and strategy.coding.atcodes else {}
         return {
             'composition_array': search_fields.nodes if search_fields and search_fields.nodes else 'sn',
             'path_field': search_fields.path if search_fields and search_fields.path else 'p',
@@ -257,4 +293,5 @@ class AQLtoMQLTransformer:
             'template_id': search_fields.template_id if search_fields and search_fields.template_id else 'tid',
             'time_committed': search_fields.sort_time if search_fields and search_fields.sort_time else 'sort_time',
             'sort_time': search_fields.sort_time if search_fields and search_fields.sort_time else 'sort_time',
+            'atcode_strategy': atcode_cfg.get('strategy', 'negative_int') if isinstance(atcode_cfg, dict) else 'negative_int',
         }

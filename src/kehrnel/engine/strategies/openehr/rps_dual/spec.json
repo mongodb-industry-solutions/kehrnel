@@ -99,7 +99,7 @@
         "id": "profile.codedpath",
         "title": "Coded paths",
         "description": "Numeric coded path segments using dictionary.",
-        "paths": {"mode": "coded", "separator": ".", "order": "leaf_to_root", "dictRef": "bundles.dictionaries"},
+        "paths": {"mode": "coded", "separator": ":", "order": "leaf_to_root", "dictRef": "bundles.dictionaries"},
         "keys": {"mode": "verbatim"},
         "payload": {"mode": "full"},
         "dictionaries": {"at_codes": "required", "archetype_ids": "optional"},
@@ -109,7 +109,7 @@
         "id": "profile.search_shortcuts",
         "title": "Search shortcuts",
         "description": "Coded paths + key/value shortcuts + minimized payload.",
-        "paths": {"mode": "coded", "separator": ".", "order": "leaf_to_root", "dictRef": "bundles.dictionaries"},
+        "paths": {"mode": "coded", "separator": ":", "order": "leaf_to_root", "dictRef": "bundles.dictionaries"},
         "keys": {"mode": "shortcuts", "dictRef": "bundles.shortcuts"},
         "payload": {"mode": "minimized"},
         "ids": {"ehr_id": "objectId|string|uuidBin", "composition_id": "objectId|string|uuidBin"}

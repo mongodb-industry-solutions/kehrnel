@@ -89,6 +89,11 @@ const config = {
             label: 'Documentation',
           },
           {
+            to: '/demo',
+            label: 'Demo',
+            position: 'left',
+          },
+          {
             href: 'https://github.com/mongodb-industry-solutions/kehrnel',
             label: 'GitHub',
             position: 'right',

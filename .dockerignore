@@ -1,46 +1,63 @@
-# Ignore node_modules and dependencies
-/node_modules/
-/.pnp
+# VCS and local virtual environments
+.git
+.github
+.venv
+.venv-debug
+.pytest_cache
+__pycache__
+*.py[cod]
+.DS_Store
+
+# Local runtime data and large sample assets
+.kehrnel
+.kehrnel_registry.json
+data
+environments
+samples
+demo
+
+# Test, example, and helper content not required for the backend image
+tests
+examples
+scripts
+startKehrnel
+
+# Docs are not needed for the backend image except the website build input
+docs/*
+!docs/website/
+!docs/website/**
+
+# Frontend/build artifacts
+node_modules
+docs/website/node_modules
+docs/website/.next
+docs/website/out
+docs/website/build
+coverage
+htmlcov
+
+# Misc project files not needed in the image
+*.pem
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.vercel/
+.pnp
 .pnp.*
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-
-# Ignore build/test/Next.js output
-/.next/
-/out/
-/build/
-/coverage/
-
-# Ignore misc and debug files
-.DS_Store
-*.pem
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# Ignore Vercel
-.vercel/
-
-# Ignore TypeScript build info
 *.tsbuildinfo
 next-env.d.ts
-
-# Ignore deployment/config files
 policy.json
 task-def.json
 Makefile
-
-# Ignore CI/CD and legal files
 .drone.yml
-LICENSE
 THIRD-PARTY-NOTICES.md
 third-party-licenses.json
-
-
 # Ignore other folders not needed for build
 /data/
 /environments/
