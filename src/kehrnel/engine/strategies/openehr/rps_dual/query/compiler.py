@@ -7,6 +7,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from kehrnel.engine.domains.openehr.aql.ir import AqlQueryIR
 from kehrnel.engine.strategies.openehr.rps_dual.config import RPSDualConfig, build_schema_config
 from kehrnel.engine.strategies.openehr.rps_dual.query.ast_adapter import adapt_ir_to_ast
+from kehrnel.engine.strategies.openehr.rps_dual.query.pagination import normalize_ast_pagination
 from kehrnel.engine.strategies.openehr.rps_dual.query.strategy_selector import (
     should_prefer_match_for_cross_patient_ast,
 )
@@ -206,11 +207,23 @@ def _shared_resolver_cache_key(schema_cfgs: Dict[str, Dict[str, Any]]) -> str:
     )
 
 
+def _transformer_cache_info(transformer: AQLtoMQLTransformer) -> Dict[str, Any]:
+    pipeline_builder = getattr(transformer, "pipeline_builder", None)
+    projection_source = {}
+    if pipeline_builder is not None and hasattr(pipeline_builder, "projection_source_cache_stats"):
+        projection_source = pipeline_builder.projection_source_cache_stats()
+    return {
+        "projection_source": projection_source,
+        "projection_runtime": getattr(transformer, "projection_cache_summary", None),
+    }
+
+
 def _get_or_create_shared_archetype_resolver(
     *,
     db: Any,
     schema_cfgs: Dict[str, Dict[str, Any]],
     compile_cache: Optional[Dict[str, Any]] = None,
+    code_items: Optional[Dict[str, Any]] = None,
 ) -> Tuple[Optional[ArchetypeResolver], str]:
     if db is None:
         return None, "disabled"
@@ -230,6 +243,7 @@ def _get_or_create_shared_archetype_resolver(
         composition_collection=(schema_cfgs.get("composition") or {}).get("collection"),
         separator=(schema_cfgs.get("composition") or {}).get("separator"),
         atcode_strategy=(schema_cfgs.get("composition") or {}).get("atcode_strategy"),
+        code_items=code_items,
     )
     _remember_cached_value(bucket, cache_key, resolver, limit=_SHARED_RESOLVER_CACHE_LIMIT)
     return resolver, "miss"
@@ -246,8 +260,14 @@ async def build_query_pipeline_from_ast(
     raw_cfg: Optional[Dict[str, Any]] = None,
     compile_cache: Optional[Dict[str, Any]] = None,
     compatibility_match: bool = False,
+    pagination_options: Optional[Dict[str, Any]] = None,
+    code_items: Optional[Dict[str, Any]] = None,
 ) -> Tuple[str, List[Dict[str, Any]], str, Dict[str, Any], Dict[str, Any], Dict[str, Any]]:
     cfg = cfg_model.model_dump()
+    ast_doc, pagination_info = normalize_ast_pagination(
+        ast_doc,
+        pagination_options=pagination_options,
+    )
     ASTValidator.validate_ast(ast_doc)
     ehr_alias, comp_alias = ASTValidator.detect_key_aliases(ast_doc)
     ctx_map = ContextMapper().build_context_map(ast_doc)
@@ -258,6 +278,7 @@ async def build_query_pipeline_from_ast(
         db=db,
         schema_cfgs=schema_cfgs,
         compile_cache=compile_cache,
+        code_items=code_items,
     )
     resolved_ehr_id = ehr_id if ehr_id is not None else extract_ehr_id_from_ast(ast_doc)
     scope = "patient" if resolved_ehr_id is not None else "cross_patient"
@@ -313,7 +334,9 @@ async def build_query_pipeline_from_ast(
         "search_enabled": cfg.get("collections", {}).get("search", {}).get("enabled"),
         "cache": {
             "archetype_resolver": resolver_cache_status,
+            **_transformer_cache_info(transformer),
         },
+        "pagination": pagination_info,
     }
     return engine, pipeline, stage0, schema_cfgs, ast_doc, builder_info
 
@@ -327,6 +350,8 @@ async def build_query_pipeline(
     strategy: Any = None,
     raw_cfg: Optional[Dict[str, Any]] = None,
     compile_cache: Optional[Dict[str, Any]] = None,
+    pagination_options: Optional[Dict[str, Any]] = None,
+    code_items: Optional[Dict[str, Any]] = None,
 ) -> Tuple[str, List[Dict[str, Any]], str, Dict[str, Any], Dict[str, Any], Dict[str, Any]]:
     ast_doc = adapt_ir_to_ast(ir, ehr_alias="e", composition_alias="c")
     return await build_query_pipeline_from_ast(
@@ -338,6 +363,8 @@ async def build_query_pipeline(
         ehr_id=extract_ehr_id(ir),
         raw_cfg=raw_cfg,
         compile_cache=compile_cache,
+        pagination_options=pagination_options,
+        code_items=code_items,
         # The IR/structured query path is the compatibility/legacy transformer path,
         # which expects composition filters merged into a flat composition-array key.
         compatibility_match=True,

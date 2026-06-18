@@ -146,6 +146,9 @@ async def test_default_plan_materializes_expected_default_artifacts(tmp_path):
 
     index_keys = {(idx["collection"], tuple(idx["keys"])) for idx in artifacts["indexes"]}
     assert ("compositions_rps", (("ehr_id", 1), ("cn.p", 1), ("time_c", 1))) in index_keys
+    assert ("compositions_rps", (("tid", 1), ("time_c", 1))) in index_keys
+    assert ("compositions_rps", (("tid", 1), ("time_c", 1), ("v", 1))) in index_keys
+    assert ("compositions_rps", (("tid", 1), ("cn.data.ani", 1), ("cn.p", 1), ("time_c", 1))) in index_keys
     assert ("compositions_search", (("ehr_id", 1), ("sort_time", 1))) in index_keys
 
     assert len(artifacts["search_indexes"]) == 1
@@ -201,7 +204,7 @@ async def test_active_mappings_prefer_generated_search_index_definition_over_see
 async def test_validate_config_accepts_supported_separator_override():
     strategy = RPSDualStrategy(MANIFEST.model_copy(deep=True))
     cfg = deepcopy(strategy.defaults)
-    cfg["paths"]["separator"] = ":"
+    cfg["paths"]["separator"] = "/"
 
     ctx = StrategyContext(
         environment_id="env-valid-separator",
@@ -213,7 +216,7 @@ async def test_validate_config_accepts_supported_separator_override():
 
     await strategy.validate_config(ctx)
     assert strategy.normalized_config is not None
-    assert strategy.normalized_config.paths.separator == ":"
+    assert strategy.normalized_config.paths.separator == "/"
 
 
 @pytest.mark.asyncio

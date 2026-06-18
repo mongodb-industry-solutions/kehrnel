@@ -1,7 +1,7 @@
 {
   "$schema": "https://example.org/strategy-pack/spec.schema.json",
   "meta": {
-    "strategyId": "openehr.rps_dual",
+    "strategyId": "openehr.rps_dual_ibm",
     "specVersion": "1.1",
     "title": "Reversed Path Search - Dual Collection",
     "summary": "Logical openEHR dual-store model with configurable physical encodings.",

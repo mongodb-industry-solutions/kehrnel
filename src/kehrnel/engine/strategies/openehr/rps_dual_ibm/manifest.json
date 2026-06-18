@@ -1,0 +1,136 @@
+{
+  "id": "openehr.rps_dual_ibm",
+  "name": "Reversed Path Search - IBM Exact Model",
+  "version": "0.2.0",
+  "maturity": "published",
+  "pack_format": "strategy-pack/v1",
+  "spec": { "path": "spec.json", "version": "1.1" },
+  "variants": ["composition.codedpath", "search.codedpath", "search.shortcuts", "ibm-exact-model"],
+  "domain": "openEHR",
+  "summary": "Compatibility alias for the IBM exact-model RPS Dual runtime used by HDL environments.",
+  "description": "This strategy id preserves compatibility with environments activated as openehr.rps_dual_ibm while delegating execution to the RPS Dual implementation.",
+  "config": {
+    "strategy": {
+      "schema": "schema.json",
+      "defaults": "defaults.json",
+      "description": "Data model and storage configuration (portal-visible)"
+    },
+    "bulk": {
+      "schema": "../rps_dual/ingest/bulk_schema.json",
+      "defaults": "../rps_dual/ingest/bulk_defaults.json",
+      "description": "Bulk operation settings (CLI/API only, not visible in portal)"
+    }
+  },
+  "capabilities": [
+    "transform",
+    "ingest",
+    "validate",
+    "query",
+    "synthetic",
+    "plan",
+    "apply"
+  ],
+  "entrypoint": "kehrnel.engine.strategies.openehr.rps_dual_ibm.strategy:RPSDualIBMStrategy",
+  "ui": {
+    "tags": ["openEHR", "reversed-paths", "atlas-search", "dual-collection", "slim-search", "IBM"],
+    "domain_badge": "openEHR",
+    "works_with": ["atlas_search_dual"],
+    "docs": "/guide/docs/strategies/openehr/rps-dual",
+    "links": {
+      "strategy_base": "/api/strategies/openehr/rps_dual",
+      "strategy_config": "/api/strategies/openehr/rps_dual/config",
+      "strategy_ingest_body": "/api/strategies/openehr/rps_dual/ingest/body",
+      "strategy_ingest_file": "/api/strategies/openehr/rps_dual/ingest/file",
+      "strategy_ingest_database": "/api/strategies/openehr/rps_dual/ingest/database",
+      "strategy_synthetic_generate": "/api/strategies/openehr/rps_dual/synthetic/generate",
+      "strategy_synthetic_stats": "/api/strategies/openehr/rps_dual/synthetic/stats",
+      "domain_base": "/api/domains/openehr",
+      "domain_aql": "/api/domains/openehr/query/aql",
+      "runtime_activate": "/environments/{env_id}/activate",
+      "runtime_capabilities": "/environments/{env_id}/capabilities",
+      "runtime_run": "/environments/{env_id}/run",
+      "runtime_plan": "/environments/{env_id}/plan",
+      "runtime_apply": "/environments/{env_id}/apply",
+      "runtime_transform": "/environments/{env_id}/transform",
+      "runtime_ingest": "/environments/{env_id}/ingest",
+      "runtime_query": "/environments/{env_id}/query",
+      "runtime_compile_query": "/environments/{env_id}/compile_query",
+      "runtime_strategy_op": "/environments/{env_id}/activations/{domain}/ops/{op}",
+      "runtime_synthetic_jobs": "/environments/{env_id}/synthetic/jobs",
+      "runtime_synthetic_job": "/environments/{env_id}/synthetic/jobs/{job_id}",
+      "runtime_synthetic_job_cancel": "/environments/{env_id}/synthetic/jobs/{job_id}/cancel",
+      "strategy_manifest": "/strategies/openehr.rps_dual_ibm",
+      "strategy_spec": "/strategies/openehr.rps_dual_ibm/spec",
+      "strategy_endpoints": "/strategies/openehr.rps_dual_ibm/endpoints",
+      "strategy_asset_paper": "/strategies/openehr.rps_dual/assets/rps-paper.pdf",
+      "catalog_ops": "/ops"
+    },
+    "story": "Compatibility alias for CatSalut and other HDL environments that were activated under the IBM exact-model strategy id. Query, transform, ingest, and maintenance operations execute through the same RPS Dual implementation.",
+    "benefits": [
+      "Lets local runtimes load production HDL environments whose activation references openehr.rps_dual_ibm.",
+      "Keeps the existing RPS Dual query and Atlas Search behavior without duplicating implementation code."
+    ],
+    "ideal_for": "HDL environments whose persisted activation strategy id is openehr.rps_dual_ibm.",
+    "scorecard": {
+      "read_patient": 4,
+      "read_population": 5,
+      "writes": 2,
+      "storage": 3,
+      "index_cost": 3,
+      "migration_ease": 2
+    },
+    "tabs": {
+      "overview": {
+        "cards": [
+          { "title": "Querying", "body": "Compatibility alias for RPS Dual query compilation and execution." },
+          { "title": "Storage", "body": "Uses the environment activation config, including IBM collection names and UUID settings." }
+        ]
+      }
+    }
+  },
+  "ops": [
+    {
+      "name": "ensure_dictionaries",
+      "kind": "maintenance",
+      "summary": "Ensure and seed _codes/_shortcuts dictionaries",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "codes": { "type": "string", "enum": ["none", "ensure", "seed"] },
+          "shortcuts": { "type": "string", "enum": ["none", "ensure", "seed"] }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "rebuild_codes",
+      "kind": "maintenance",
+      "summary": "Rebuild codes dictionary from configured seed",
+      "input_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "rebuild_shortcuts",
+      "kind": "maintenance",
+      "summary": "Rebuild shortcuts dictionary from configured seed",
+      "input_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "build_search_index_definition",
+      "kind": "maintenance",
+      "summary": "Build Atlas Search index definition for the configured search collection",
+      "input_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "rebuild_search_collection",
+      "kind": "maintenance",
+      "summary": "Rebuild the slim search collection from composition documents",
+      "input_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "synthetic_generate_batch",
+      "kind": "extension",
+      "summary": "Generate synthetic openEHR documents",
+      "input_schema": { "type": "object", "additionalProperties": true }
+    }
+  ]
+}

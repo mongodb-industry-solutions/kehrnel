@@ -1,6 +1,8 @@
 # src/kehrnel/api/compatibility/v1/aql/transformers/condition_processor.py
 import re
 from typing import Dict, Any, List, Tuple, Set
+
+from ..metadata_paths import is_version_commit_time_path
 from .value_formatter import ValueFormatter
 
 
@@ -314,7 +316,7 @@ class ConditionProcessor:
             id_encoding = self.schema_config.get("composition_id_encoding", "string")
         elif path == f"{self.composition_alias}/archetype_details/template_id/value":
             field_name = self.schema_config.get("template_id", "tid")
-        elif self.version_alias and path == f"{self.version_alias}/commit_audit/time_committed/value":
+        elif is_version_commit_time_path(path, self.version_alias):
             field_name = (
                 self.schema_config.get("time_committed")
                 or self.schema_config.get("sort_time")

@@ -43,6 +43,7 @@ from kehrnel.engine.strategies.openehr.rps_dual.query.compiler import (
     build_query_pipeline_from_ast,
     build_runtime_strategy,
 )
+from kehrnel.engine.strategies.openehr.rps_dual.query.pagination import render_effective_aql
 
 
 def load_json(path: Path) -> Dict[str, Any]:
@@ -64,9 +65,9 @@ _SUPPORTED_QUERY_SAFE_ENCODING_PROFILES = {
 }
 
 # Path separators the query compiler can safely escape and round-trip. ":" is the
-# default; "." is retained for backward compatibility. Others (e.g. "/") collide
-# with AQL path parsing and are rejected.
-_SUPPORTED_QUERY_SAFE_SEPARATORS = {".", ":"}
+# default; "." is retained for backward compatibility. "/" is used by IBM
+# exact-model HDL environments.
+_SUPPORTED_QUERY_SAFE_SEPARATORS = {".", "/", ":"}
 
 _INGEST_CONTROL_KEYS = {
     "data_mode",
@@ -115,6 +116,19 @@ def _bind_query_params(node: Any, params: Dict[str, Any], missing: set[str]) -> 
     if isinstance(node, list):
         return [_bind_query_params(item, params, missing) for item in node]
     return node
+
+
+def _extract_query_pagination_options(query: Dict[str, Any] | None) -> Dict[str, Any]:
+    if not isinstance(query, dict):
+        return {}
+    pagination = query.get("pagination") if isinstance(query.get("pagination"), dict) else {}
+    options: Dict[str, Any] = {}
+    if pagination:
+        options["pagination"] = pagination
+    for key in ("pageToken", "searchAfter", "searchBefore"):
+        if query.get(key) is not None:
+            options[key] = query.get(key)
+    return options
 
 
 def _allow_local_file_ingest() -> bool:
@@ -206,6 +220,20 @@ class RPSDualStrategy(StrategyPlugin):
         self.manifest.default_config = self.defaults
         self.normalized_config: RPSDualConfig | None = None
         self.normalized_bulk_config: BulkConfig | None = None
+        self._query_compile_caches: Dict[str, Dict[str, Any]] = {}
+
+    def _compile_cache_for_context(self, ctx: StrategyContext) -> Dict[str, Any]:
+        env_id = getattr(ctx, "environment_id", None) or "default"
+        cache = self._query_compile_caches.get(env_id)
+        if isinstance(cache, dict):
+            return cache
+        if len(self._query_compile_caches) >= 16:
+            oldest_key = next(iter(self._query_compile_caches), None)
+            if oldest_key is not None:
+                self._query_compile_caches.pop(oldest_key, None)
+        cache = {}
+        self._query_compile_caches[env_id] = cache
+        return cache
 
     async def validate_config(self, ctx: StrategyContext | Dict[str, Any]) -> None:
         raw_config = ctx.config if isinstance(ctx, StrategyContext) else ctx
@@ -384,6 +412,39 @@ class RPSDualStrategy(StrategyPlugin):
         stores = (spec.get("storage") or {}).get("stores") or (spec.get("storageModel") or {}).get("stores") or []
         store_profiles = (ctx.meta or {}).get("store_profiles") or {}
         collections_cfg = ctx.config.get("collections", {}) if isinstance(ctx.config, dict) else {}
+        try:
+            strategy_cfg = normalize_config(ctx.config or {})
+        except Exception:
+            strategy_cfg = None
+        document_fields = getattr(getattr(strategy_cfg, "fields", None), "document", None)
+        node_fields = getattr(getattr(strategy_cfg, "fields", None), "node", None)
+
+        document_aliases = {
+            "ehr_id": getattr(document_fields, "ehr_id", "ehr_id"),
+            "comp_id": getattr(document_fields, "comp_id", "comp_id"),
+            "tid": getattr(document_fields, "tid", "tid"),
+            "v": getattr(document_fields, "v", "v"),
+            "time_c": getattr(document_fields, "time_committed", "time_c"),
+            "time_committed": getattr(document_fields, "time_committed", "time_c"),
+            "sort_time": getattr(document_fields, "sort_time", "sort_time"),
+            "cn": getattr(document_fields, "cn", "cn"),
+            "sn": getattr(document_fields, "sn", "sn"),
+        }
+        node_aliases = {
+            "p": getattr(node_fields, "p", "p"),
+            "pi": getattr(node_fields, "pi", "pi"),
+            "data": getattr(node_fields, "data", "data"),
+        }
+        node_array_fields = {document_aliases["cn"], document_aliases["sn"]}
+
+        def resolve_index_field(field: str) -> str:
+            if not isinstance(field, str) or not field:
+                return field
+            parts = field.split(".")
+            parts[0] = document_aliases.get(parts[0], parts[0])
+            if len(parts) > 1 and parts[0] in node_array_fields:
+                parts[1] = node_aliases.get(parts[1], parts[1])
+            return ".".join(parts)
 
         def resolve_collection(store: Dict[str, Any]) -> str | None:
             role = store.get("role") or store.get("id")
@@ -406,11 +467,11 @@ class RPSDualStrategy(StrategyPlugin):
                 idx_type = idx.get("type")
                 if idx_type == "btree":
                     fields = idx.get("fields") or []
-                    keys = [(f, 1) for f in fields]
+                    keys = [(resolve_index_field(f), 1) for f in fields]
                     if coll and keys:
                         artifacts["indexes"].append({"collection": coll, "keys": keys, "options": idx.get("options", {})})
                 elif idx_type == "wildcard":
-                    field = idx.get("field") or "data"
+                    field = resolve_index_field(idx.get("field") or "data")
                     if coll:
                         artifacts["indexes"].append({"collection": coll, "keys": [(f"{field}.$**", 1)], "options": idx.get("options", {})})
                 elif idx_type == "search":
@@ -626,6 +687,7 @@ class RPSDualStrategy(StrategyPlugin):
         runtime_strategy = build_runtime_strategy(cfg_model)
         storage = (ctx.adapters or {}).get("storage") if ctx else None
         motor_db = getattr(storage, "db", None) if storage else None
+        compile_cache = self._compile_cache_for_context(ctx)
 
         def _execution_contract(stage_name: str, schema_cfgs: Dict[str, Any]) -> tuple[str, str | None]:
             if stage_name == "$search":
@@ -634,6 +696,7 @@ class RPSDualStrategy(StrategyPlugin):
 
         if isinstance(query, dict):
             debug = bool(query.get("debug"))
+            pagination_options = _extract_query_pagination_options(query)
             raw_aql = query.get("raw_aql")
             if isinstance(raw_aql, str) and raw_aql.strip():
                 params = query.get("params") or query.get("parameters") or {}
@@ -666,7 +729,12 @@ class RPSDualStrategy(StrategyPlugin):
                     db=motor_db,
                     shortcut_map=shortcuts_res.get("items") or {},
                     strategy=runtime_strategy,
+                    compile_cache=compile_cache,
+                    pagination_options=pagination_options,
+                    code_items=codes_res.get("items") or {},
                 )
+                pagination_info = builder_info.get("pagination") or {}
+                warnings.extend(pagination_info.get("warnings") or [])
                 scope = builder_info.get("scope") or "patient"
                 if scope == "cross_patient":
                     post_match = [stage for stage in pipeline[1:] if "$match" in stage]
@@ -678,6 +746,9 @@ class RPSDualStrategy(StrategyPlugin):
                     "pipeline": pipeline,
                     "scope": scope,
                     "collection": collection,
+                }
+                plan_dict["pagination"] = {
+                    key: value for key, value in pagination_info.items() if key != "warnings"
                 }
                 plan_dict["dicts"] = {
                     "codes": {"source": codes_res.get("source"), "missing": codes_res.get("missing", False)},
@@ -694,7 +765,9 @@ class RPSDualStrategy(StrategyPlugin):
                     "ast": ast_doc if debug else None,
                     "builder": {**builder_info, "compiler_engine": engine, "execution_engine": execution_engine},
                     "rawAql": raw_aql if debug else None,
+                    "effectiveAql": render_effective_aql(raw_aql, pagination_info) if debug else None,
                     "parameters": params if debug else None,
+                    "pagination": plan_dict["pagination"],
                     "mode": "raw_aql_strategy",
                 }
                 explain = enrich_explain(
@@ -707,7 +780,13 @@ class RPSDualStrategy(StrategyPlugin):
                 plan_dict["explain"] = explain
                 return QueryPlan(engine=plan_dict["engine"], plan=plan_dict, explain=explain)
             # The IR dataclass does not accept extra keys like "debug".
-            query_payload = {k: v for k, v in query.items() if k != "debug"}
+            query_payload = {
+                k: v
+                for k, v in query.items()
+                if k not in {"debug", "pageToken", "searchAfter", "searchBefore", "pagination"}
+            }
+        else:
+            pagination_options = {}
 
         ir = AqlQueryIR(**query_payload) if not isinstance(query, AqlQueryIR) else query
         # Build query pipeline using the query compiler
@@ -717,7 +796,12 @@ class RPSDualStrategy(StrategyPlugin):
             db=motor_db,
             shortcut_map=shortcuts_res.get("items") or {},
             strategy=runtime_strategy,
+            compile_cache=compile_cache,
+            pagination_options=pagination_options,
+            code_items=codes_res.get("items") or {},
         )
+        pagination_info = builder_info.get("pagination") or {}
+        warnings.extend(pagination_info.get("warnings") or [])
         if ir.scope == "cross_patient":
             post_match = [stage for stage in pipeline[1:] if "$match" in stage]
             if post_match:
@@ -727,6 +811,9 @@ class RPSDualStrategy(StrategyPlugin):
             "engine": execution_engine,
             "pipeline": pipeline,
             "collection": collection,
+        }
+        plan_dict["pagination"] = {
+            key: value for key, value in pagination_info.items() if key != "warnings"
         }
         plan_dict["dicts"] = {
             "codes": {"source": codes_res.get("source"), "missing": codes_res.get("missing", False)},
@@ -742,6 +829,7 @@ class RPSDualStrategy(StrategyPlugin):
             "schema": schema_cfgs,
             "ast": ast_doc if debug else None,
             "builder": {**builder_info, "compiler_engine": engine, "execution_engine": execution_engine},
+            "pagination": plan_dict["pagination"],
         }
         explain = enrich_explain(
             explain,

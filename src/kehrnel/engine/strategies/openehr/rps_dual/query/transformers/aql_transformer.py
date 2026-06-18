@@ -8,6 +8,7 @@ from .pipeline_builder import PipelineBuilder
 from .search_pipeline_builder import SearchPipelineBuilder
 from .archetype_resolver import ArchetypeResolver
 from ..strategy_selector import should_prefer_match_for_cross_patient_ast
+from ..pagination import DEFAULT_PAGE_LIMIT
 from kehrnel.persistence import PersistenceStrategy, get_default_strategy
 
 
@@ -55,9 +56,42 @@ class AQLtoMQLTransformer:
         
         # LET variable storage
         self.let_variables: Dict[str, Any] = {}
+        self.projection_cache_summary: Optional[Dict[str, Any]] = None
         
         # Initialize components
         self._initialize_components()
+
+    def _pagination_stages(self) -> List[Dict[str, Any]]:
+        stages: List[Dict[str, Any]] = []
+        skip_stage = self.pipeline_builder.build_skip_stage(self.ast)
+        if skip_stage:
+            stages.append(skip_stage)
+        limit_stage = self.pipeline_builder.build_limit_stage(self.ast, default_limit=DEFAULT_PAGE_LIMIT)
+        if limit_stage:
+            stages.append(limit_stage)
+        return stages
+
+    def _pre_projection_sort_stage(
+        self,
+        sort_stage: Optional[Dict[str, Any]],
+        project_stage: Optional[Dict[str, Any]],
+    ) -> Optional[Dict[str, Any]]:
+        if not sort_stage or "$sort" not in sort_stage:
+            return None
+        if not project_stage or not isinstance(project_stage.get("$project"), dict):
+            return None
+
+        projection = project_stage["$project"]
+        remapped_sort: Dict[str, Any] = {}
+        for field_name, direction in sort_stage["$sort"].items():
+            expression = projection.get(field_name)
+            if not isinstance(expression, str) or not expression.startswith("$"):
+                return None
+            source_field = expression[1:]
+            if not source_field or source_field.startswith("__") or "." in source_field:
+                return None
+            remapped_sort[source_field] = direction
+        return {"$sort": remapped_sort} if remapped_sort else None
 
     def _initialize_components(self):
         """Initialize all transformer components with proper dependencies."""
@@ -177,46 +211,86 @@ class AQLtoMQLTransformer:
             pipeline.extend(aggregate_stages)
             return pipeline
 
-        # 3. Fan out rows only when the selected leaf alias is repeated.
+        # 3. Prepare row fanout and row-level filters. We only apply the page cap
+        # before fanout when no row-level post-filter is needed; otherwise the
+        # cap must stay after that filter to avoid dropping valid rows.
         fanout_stages = await self.pipeline_builder.build_row_fanout_stages(self.ast)
-        if fanout_stages:
-            pipeline.extend(fanout_stages)
-
-        # 4. Re-apply supported WHERE logic at row level when exact fanout correlation is available.
         row_exact_match = await self.pipeline_builder.build_row_exact_match_stage(self.ast)
-        if row_exact_match:
-            pipeline.append(row_exact_match)
 
         # 5. Cache repeated node filters only when the expected scan savings justify it.
         projection_cache_plan = await self.pipeline_builder.build_projection_cache_plan(self.ast)
+        if projection_cache_plan:
+            self.projection_cache_summary = {
+                "group_count": projection_cache_plan.get("group_count", 0),
+                "saved_scans": projection_cache_plan.get("saved_scans", 0),
+                "exact_lookup_sources": projection_cache_plan.get("exact_lookup_sources", 0),
+                "uses_path_lookup": bool(projection_cache_plan.get("needs_path_lookup")),
+            }
+        else:
+            self.projection_cache_summary = {
+                "group_count": 0,
+                "saved_scans": 0,
+                "exact_lookup_sources": 0,
+                "uses_path_lookup": False,
+            }
+        projection_path_lookup_stage = self.pipeline_builder.build_projection_path_lookup_stage(projection_cache_plan)
         projection_cache_stage = self.pipeline_builder.build_projection_cache_stage(projection_cache_plan)
-        if projection_cache_stage:
-            pipeline.append(projection_cache_stage)
 
         # 6. Build the $project stage from the SELECT clause
         project_stage = await self.pipeline_builder.build_project_stage(
             self.ast,
             projection_cache_plan=projection_cache_plan,
         )
-        if project_stage:
-            pipeline.append(project_stage)
 
         # 7. Build DISTINCT stages ($group + $replaceRoot) if SELECT DISTINCT is used
         # This must come after $project so we can group by the projected field names
         projected_fields = self.pipeline_builder.get_projected_field_names(self.ast)
         distinct_stages = self.pipeline_builder.build_distinct_stages(self.ast, projected_fields)
-        if distinct_stages:
-            pipeline.extend(distinct_stages)
 
         # 8. Build the $sort stage from ORDER BY clause
         sort_stage = self.pipeline_builder.build_sort_stage(self.ast)
-        if sort_stage:
-            pipeline.append(sort_stage)
-        
-        # 9. Build the $limit stage from LIMIT clause
-        limit_stage = self.pipeline_builder.build_limit_stage(self.ast)
-        if limit_stage:
-            pipeline.append(limit_stage)
+
+        pre_projection_sort = None
+        if not distinct_stages:
+            pre_projection_sort = self._pre_projection_sort_stage(sort_stage, project_stage)
+        can_apply_pagination_before_projection = (
+            not distinct_stages and (pre_projection_sort is not None or sort_stage is None)
+        )
+        page_before_fanout = can_apply_pagination_before_projection and row_exact_match is None
+        page_after_fanout = can_apply_pagination_before_projection and not page_before_fanout
+
+        if page_before_fanout and pre_projection_sort:
+            pipeline.append(pre_projection_sort)
+        if page_before_fanout:
+            pipeline.extend(self._pagination_stages())
+
+        if fanout_stages:
+            pipeline.extend(fanout_stages)
+
+        if row_exact_match:
+            pipeline.append(row_exact_match)
+
+        if page_after_fanout and pre_projection_sort:
+            pipeline.append(pre_projection_sort)
+        if page_after_fanout:
+            pipeline.extend(self._pagination_stages())
+
+        if projection_path_lookup_stage:
+            pipeline.append(projection_path_lookup_stage)
+
+        if projection_cache_stage:
+            pipeline.append(projection_cache_stage)
+
+        if project_stage:
+            pipeline.append(project_stage)
+
+        if distinct_stages:
+            pipeline.extend(distinct_stages)
+
+        if not can_apply_pagination_before_projection:
+            if sort_stage:
+                pipeline.append(sort_stage)
+            pipeline.extend(self._pagination_stages())
         
         return pipeline
 

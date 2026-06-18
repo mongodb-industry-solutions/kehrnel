@@ -233,7 +233,7 @@ def _get_activation(request: Request, env_id: str, domain: str):
 def _is_rps_dual_activation(activation) -> bool:
     strategy_id = (getattr(activation, "strategy_id", None) or "").strip().lower()
     domain = (getattr(activation, "domain", None) or "").strip().lower()
-    return domain == "openehr" and strategy_id == "openehr.rps_dual"
+    return domain == "openehr" and strategy_id in {"openehr.rps_dual", "openehr.rps_dual_ibm"}
 
 
 def _dictionary_bootstrap_payload(activation) -> dict[str, str]:
