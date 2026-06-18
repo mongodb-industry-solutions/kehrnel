@@ -12,7 +12,7 @@ from kehrnel.strategy_sdk import StrategyBindings
 @pytest.mark.asyncio
 async def test_compile_query_accepts_raw_aql_and_compiles_patient_pipeline(tmp_path):
     rt = StrategyRuntime(FileActivationRegistry(tmp_path / "reg.json"))
-    pack_dir = Path(__file__).resolve().parents[2] / "src" / "kehrnel" / "engine" / "strategies" / "openehr" / "rps_dual"
+    pack_dir = Path(__file__).resolve().parents[3] / "src" / "kehrnel" / "engine" / "strategies" / "openehr" / "rps_dual"
     manifest = load_strategy("openehr.rps_dual", pack_dir)
     rt.register_manifest(manifest)
 
@@ -35,7 +35,7 @@ async def test_compile_query_accepts_raw_aql_and_compiles_patient_pipeline(tmp_p
 @pytest.mark.asyncio
 async def test_compile_query_rejects_invalid_aql_before_execute(tmp_path):
     rt = StrategyRuntime(FileActivationRegistry(tmp_path / "reg.json"))
-    pack_dir = Path(__file__).resolve().parents[2] / "src" / "kehrnel" / "engine" / "strategies" / "openehr" / "rps_dual"
+    pack_dir = Path(__file__).resolve().parents[3] / "src" / "kehrnel" / "engine" / "strategies" / "openehr" / "rps_dual"
     manifest = load_strategy("openehr.rps_dual", pack_dir)
     rt.register_manifest(manifest)
 

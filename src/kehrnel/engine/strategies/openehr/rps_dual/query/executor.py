@@ -47,6 +47,20 @@ async def execute(ctx: StrategyContext, plan: QueryPlan) -> QueryResult:
                 db_duration_ms = round((perf_counter() - db_started) * 1000, 2)
     except Exception as exc:  # surface pipeline even on failure
         explain["error"] = str(exc)
+    if rows:
+        sequence_tokens = [
+            row.get("__searchSequenceToken")
+            for row in rows
+            if isinstance(row, dict) and row.get("__searchSequenceToken")
+        ]
+        if sequence_tokens:
+            pagination = dict(explain.get("pagination") or plan.plan.get("pagination") or {})
+            pagination["previousPageToken"] = sequence_tokens[0]
+            pagination["nextPageToken"] = sequence_tokens[-1]
+            explain["pagination"] = pagination
+            for row in rows:
+                if isinstance(row, dict):
+                    row.pop("__searchSequenceToken", None)
     if db_duration_ms is not None:
         explain_timings = dict(explain.get("timings") or {})
         explain_timings["kehrnel_db_ms"] = db_duration_ms

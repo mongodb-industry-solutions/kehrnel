@@ -54,6 +54,9 @@ class PipelineBuilder:
             ehr_alias, composition_alias, schema_config, format_resolver, let_variables, version_alias=version_alias
         )
         self.value_formatter = ValueFormatter()
+        self._projection_source_cache: Dict[str, Optional[Dict[str, Any]]] = {}
+        self._projection_source_cache_hits = 0
+        self._projection_source_cache_misses = 0
 
     def _root_path_regex(self) -> str:
         separator = self.schema_config.get("separator", ":") or ":"
@@ -334,14 +337,18 @@ class PipelineBuilder:
         path_regex_pattern: Any,
         data_path: str,
     ) -> Dict[str, Any]:
-        return self._project_first_value_from_nodes(
-            self._matching_nodes_expr(
-                nodes_expr,
-                path_field=path_field,
-                path_regex_pattern=path_regex_pattern,
-            ),
-            data_path=data_path,
-        )
+        return {
+            "$let": {
+                "vars": {
+                    "node": self._first_matching_node_expr(
+                        nodes_expr,
+                        path_field=path_field,
+                        path_regex_pattern=path_regex_pattern,
+                    )
+                },
+                "in": f"$$node.{data_path}",
+            }
+        }
 
     def _matching_nodes_expr(
         self,
@@ -349,8 +356,9 @@ class PipelineBuilder:
         *,
         path_field: str,
         path_regex_pattern: Any,
+        limit: Optional[int] = None,
     ) -> Dict[str, Any]:
-        return {
+        filter_expr = {
             "$filter": {
                 "input": nodes_expr,
                 "as": "node",
@@ -361,6 +369,25 @@ class PipelineBuilder:
                     }
                 },
             }
+        }
+        if limit is not None:
+            filter_expr["$filter"]["limit"] = limit
+        return filter_expr
+
+    def _first_matching_node_expr(
+        self,
+        nodes_expr: Any,
+        *,
+        path_field: str,
+        path_regex_pattern: Any,
+    ) -> Dict[str, Any]:
+        return {
+            "$first": self._matching_nodes_expr(
+                nodes_expr,
+                path_field=path_field,
+                path_regex_pattern=path_regex_pattern,
+                limit=1,
+            )
         }
 
     def _project_first_value_from_nodes(
@@ -409,7 +436,26 @@ class PipelineBuilder:
         }
 
     def _stable_serialize(self, value: Any) -> str:
-        return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+        return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, default=str)
+
+    def projection_source_cache_stats(self) -> Dict[str, int]:
+        return {
+            "entries": len(self._projection_source_cache),
+            "hits": self._projection_source_cache_hits,
+            "misses": self._projection_source_cache_misses,
+        }
+
+    def _projection_source_resolution_cache_key(
+        self,
+        aql_path: str,
+        fanout_spec: Optional[Dict[str, Any]],
+    ) -> str:
+        return self._stable_serialize(
+            {
+                "aql_path": aql_path,
+                "fanout": fanout_spec or None,
+            }
+        )
 
     def _projection_cache_key(self, source: Dict[str, Any]) -> str:
         return self._stable_serialize(
@@ -419,6 +465,64 @@ class PipelineBuilder:
                 "path_regex_pattern": source.get("path_regex_pattern"),
             }
         )
+
+    def _exact_lookup_field_expr(self, path_regex_pattern: Any) -> Optional[Any]:
+        if not isinstance(path_regex_pattern, dict):
+            return None
+        pieces = path_regex_pattern.get("$concat")
+        if not isinstance(pieces, list) or len(pieces) < 3:
+            return None
+        if pieces[0] != "^":
+            return None
+        if pieces[-1] != {"$literal": "$"}:
+            return None
+
+        field_pieces = pieces[1:-1]
+        if not field_pieces:
+            return None
+        if len(field_pieces) == 1:
+            return field_pieces[0]
+        return {"$concat": field_pieces}
+
+    def _node_lookup_expr_from_source(self, source: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        if source.get("nodes_expr") != f"${self.schema_config['composition_array']}":
+            return None
+        if source.get("path_field") != self.schema_config["path_field"]:
+            return None
+        field_expr = self._exact_lookup_field_expr(source.get("path_regex_pattern"))
+        if field_expr is None:
+            return None
+        return {
+            "$getField": {
+                "field": field_expr,
+                "input": "$__nodes_by_path",
+            }
+        }
+
+    def build_projection_path_lookup_stage(
+        self,
+        plan: Optional[Dict[str, Any]],
+    ) -> Optional[Dict[str, Any]]:
+        if not plan or not plan.get("needs_path_lookup"):
+            return None
+        nodes_field = self.schema_config["composition_array"]
+        path_field = self.schema_config["path_field"]
+        return {
+            "$addFields": {
+                "__nodes_by_path": {
+                    "$arrayToObject": {
+                        "$map": {
+                            "input": {"$reverseArray": {"$ifNull": [f"${nodes_field}", []]}},
+                            "as": "node",
+                            "in": {
+                                "k": f"$$node.{path_field}",
+                                "v": "$$node",
+                            },
+                        }
+                    }
+                }
+            }
+        }
 
     async def _get_row_fanout_spec(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         if self.format != "shortened":
@@ -555,7 +659,7 @@ class PipelineBuilder:
         pieces: List[Any] = ["^"]
         if prefix:
             pieces.extend([prefix, separator])
-        pieces.extend([alias_path_expr, "$"])
+        pieces.extend([alias_path_expr, {"$literal": "$"}])
         return {"$concat": pieces}
 
     async def build_row_fanout_stages(self, ast: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -914,6 +1018,21 @@ class PipelineBuilder:
         aql_path: str,
         fanout_spec: Optional[Dict[str, Any]],
     ) -> Optional[Dict[str, Any]]:
+        cache_key = self._projection_source_resolution_cache_key(aql_path, fanout_spec)
+        if cache_key in self._projection_source_cache:
+            self._projection_source_cache_hits += 1
+            return self._projection_source_cache[cache_key]
+
+        self._projection_source_cache_misses += 1
+        source = await self._resolve_projection_source_uncached(aql_path, fanout_spec)
+        self._projection_source_cache[cache_key] = source
+        return source
+
+    async def _resolve_projection_source_uncached(
+        self,
+        aql_path: str,
+        fanout_spec: Optional[Dict[str, Any]],
+    ) -> Optional[Dict[str, Any]]:
         variable = aql_path.split('/')[0]
         if variable == self.ehr_alias:
             if 'ehr_id' in aql_path:
@@ -1061,6 +1180,7 @@ class PipelineBuilder:
 
         fanout_spec = await self._get_row_fanout_spec(ast)
         candidates: Dict[str, Dict[str, Any]] = {}
+        exact_lookup_count = 0
 
         for col_data in columns.values():
             value_spec = col_data.get("value", {})
@@ -1073,6 +1193,8 @@ class PipelineBuilder:
             source = await self._resolve_projection_source(aql_path, fanout_spec)
             if not source or source.get("kind") != "filtered":
                 continue
+            if self._node_lookup_expr_from_source(source) is not None:
+                exact_lookup_count += 1
 
             cache_key = self._projection_cache_key(source)
             entry = candidates.setdefault(cache_key, {"source": source, "count": 0})
@@ -1083,31 +1205,34 @@ class PipelineBuilder:
             for cache_key, entry in candidates.items()
             if entry.get("count", 0) >= 2
         ]
-        if not repeated:
+        needs_path_lookup = exact_lookup_count >= 6
+        if not repeated and not needs_path_lookup:
             return None
 
-        saved_scans = sum(entry["count"] - 1 for _, entry in repeated)
-        max_reuse = max(entry["count"] for _, entry in repeated)
-        if saved_scans < 3 and max_reuse < 3:
-            return None
-
-        cached_arrays: Dict[str, Any] = {}
+        cached_nodes: Dict[str, Any] = {}
         cache_refs: Dict[str, str] = {}
         for index, (cache_key, entry) in enumerate(repeated):
             cache_id = f"c{index}"
             source = entry["source"]
-            cached_arrays[cache_id] = self._matching_nodes_expr(
-                source["nodes_expr"],
-                path_field=source["path_field"],
-                path_regex_pattern=source["path_regex_pattern"],
-            )
+            lookup_expr = self._node_lookup_expr_from_source(source)
+            if lookup_expr is not None:
+                cached_nodes[cache_id] = lookup_expr
+                needs_path_lookup = True
+            else:
+                cached_nodes[cache_id] = self._first_matching_node_expr(
+                    source["nodes_expr"],
+                    path_field=source["path_field"],
+                    path_regex_pattern=source["path_regex_pattern"],
+                )
             cache_refs[cache_key] = f"$__projection_cache.{cache_id}"
 
         return {
-            "fields": {"__projection_cache": cached_arrays},
+            "fields": {"__projection_cache": cached_nodes},
             "refs": cache_refs,
-            "saved_scans": saved_scans,
+            "saved_scans": sum(entry["count"] - 1 for _, entry in repeated),
             "group_count": len(repeated),
+            "needs_path_lookup": needs_path_lookup,
+            "exact_lookup_sources": exact_lookup_count,
         }
 
     def build_projection_cache_stage(
@@ -1172,12 +1297,25 @@ class PipelineBuilder:
                     self._projection_cache_key(source)
                 )
 
-            projection[alias] = self._project_first_value_from_nodes(
-                cache_ref or self._matching_nodes_expr(
-                    source["nodes_expr"],
-                    path_field=source["path_field"],
-                    path_regex_pattern=source["path_regex_pattern"],
-                ),
+            if cache_ref:
+                projection[alias] = f"{cache_ref}.{source['data_path']}"
+                continue
+
+            if projection_cache_plan and projection_cache_plan.get("needs_path_lookup"):
+                lookup_expr = self._node_lookup_expr_from_source(source)
+                if lookup_expr is not None:
+                    projection[alias] = {
+                        "$let": {
+                            "vars": {"node": lookup_expr},
+                            "in": f"$$node.{source['data_path']}",
+                        }
+                    }
+                    continue
+
+            projection[alias] = self._first_matching_node_value(
+                source["nodes_expr"],
+                path_field=source["path_field"],
+                path_regex_pattern=source["path_regex_pattern"],
                 data_path=source["data_path"],
             )
         return {"$project": projection}
@@ -1312,7 +1450,23 @@ class PipelineBuilder:
 
         return None
 
-    def build_limit_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    def build_skip_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Constructs the $skip stage from OFFSET when present."""
+        offset_value = ast.get("offset")
+        if offset_value is None:
+            return None
+
+        try:
+            offset_int = int(offset_value)
+            if offset_int < 0:
+                raise ValueError(f"OFFSET value must be non-negative, got: {offset_int}")
+            if offset_int == 0:
+                return None
+            return {"$skip": offset_int}
+        except (ValueError, TypeError) as e:
+            raise ValueError(f"Invalid OFFSET value: {offset_value}. Must be a non-negative integer.") from e
+
+    def build_limit_stage(self, ast: Dict[str, Any], *, default_limit: Optional[int] = None) -> Optional[Dict[str, Any]]:
         """
         Constructs the $limit stage from the LIMIT clause.
         
@@ -1323,6 +1477,8 @@ class PipelineBuilder:
         
         # Check if limit exists and is a positive integer
         if limit_value is None:
+            limit_value = default_limit
+        if limit_value is None:
             return None
             
         try:
@@ -1331,7 +1487,7 @@ class PipelineBuilder:
                 raise ValueError(f"LIMIT value must be a positive integer greater than zero, got: {limit_int}")
             return {"$limit": limit_int}
         except (ValueError, TypeError) as e:
-            raise ValueError(f"Invalid LIMIT value: {limit_value}. Must be a positive integer.")
+            raise ValueError(f"Invalid LIMIT value: {limit_value}. Must be a positive integer.") from e
 
     async def build_aggregate_stages(self, ast: Dict[str, Any]) -> List[Dict[str, Any]]:
         """

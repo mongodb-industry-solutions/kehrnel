@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any, Dict, Iterable, List
 
 from .contains_clause import is_match_friendly_contains_clause
+from .metadata_paths import is_version_commit_time_path
 
 _MATCH_FRIENDLY_OPERATORS = {"=", "!=", ">", "<", ">=", "<="}
 
@@ -39,6 +40,7 @@ def _iter_order_paths(order_by: Dict[str, Any] | None) -> Iterable[str]:
             if isinstance(path, str) and path.strip():
                 yield path.strip()
 
+
 def should_prefer_match_for_cross_patient_ast(
     ast: Dict[str, Any],
     *,
@@ -62,12 +64,10 @@ def should_prefer_match_for_cross_patient_ast(
         f"{composition_alias}/uid/value",
         f"{composition_alias}/archetype_details/template_id/value",
         f"{composition_alias}/archetype_node_id",
-        f"{version_alias}/commit_audit/time_committed/value",
     }
     allowed_order_paths = {
         f"{ehr_alias}/ehr_id/value",
         f"{composition_alias}/uid/value",
-        f"{version_alias}/commit_audit/time_committed/value",
     }
 
     where_conditions: List[Dict[str, Any]] = list(_iter_condition_nodes(ast.get("where")))
@@ -76,11 +76,11 @@ def should_prefer_match_for_cross_patient_ast(
         path = str(condition.get("path") or "").strip()
         if operator not in _MATCH_FRIENDLY_OPERATORS:
             return False
-        if path not in allowed_where_paths:
+        if path not in allowed_where_paths and not is_version_commit_time_path(path, version_alias):
             return False
 
     for path in _iter_order_paths(ast.get("orderBy")):
-        if path not in allowed_order_paths:
+        if path not in allowed_order_paths and not is_version_commit_time_path(path, version_alias):
             return False
 
     contains_clause = ast.get("contains")

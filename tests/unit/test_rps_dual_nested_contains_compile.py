@@ -5,7 +5,18 @@ from copy import deepcopy
 import pytest
 
 from kehrnel.engine.core.types import StrategyContext
+from kehrnel.engine.strategies.openehr.rps_dual.query.transformers.search_pipeline_builder import (
+    SearchPipelineBuilder,
+)
 from kehrnel.engine.strategies.openehr.rps_dual.strategy import MANIFEST, RPSDualStrategy
+
+
+def _first_node_filter(expr: dict) -> dict:
+    return expr["$let"]["vars"]["node"]["$first"]["$filter"]
+
+
+def _first_stage(pipeline: list[dict], stage_name: str) -> dict:
+    return next(stage[stage_name] for stage in pipeline if stage_name in stage)
 
 
 class _FakeCollection:
@@ -43,6 +54,56 @@ class _FakeStorage:
 
     async def find_one(self, collection, flt):
         return await self.db[collection].find_one(flt)
+
+
+def test_search_pipeline_builder_uses_literal_regex_end_anchor_in_dynamic_fanout_regex():
+    builder = object.__new__(SearchPipelineBuilder)
+    builder.search_config = {"separator": ":"}
+
+    regex_expr = builder._build_fanout_regex_expr("$__fanout_paths.a", ["1", "2"])
+
+    assert regex_expr["$concat"] == ["^", "2:1", ":", "$__fanout_paths.a", {"$literal": "$"}]
+
+
+def test_search_pipeline_builder_wraps_sn_child_predicates_for_atlas_embedded_documents():
+    builder = object.__new__(SearchPipelineBuilder)
+    builder.search_config = {"composition_array": "sn"}
+
+    wrapped = builder._wrap_search_node_predicates_in_embedded_documents(
+        {
+            "compound": {
+                "must": [
+                    {"equals": {"path": "template", "value": "air_adverse_reaction_record_v1"}},
+                    {
+                        "compound": {
+                            "mustNot": [
+                                {
+                                    "equals": {
+                                        "path": "sn.data.v.df.cs",
+                                        "value": "ar2/data[at0001]/items[at0002]/value/defining_code/code_string",
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                ]
+            }
+        }
+    )
+
+    must = wrapped["compound"]["must"]
+    assert must[0] == {"equals": {"path": "template", "value": "air_adverse_reaction_record_v1"}}
+    assert must[1]["compound"]["mustNot"][0] == {
+        "embeddedDocument": {
+            "path": "sn",
+            "operator": {
+                "equals": {
+                    "path": "sn.data.v.df.cs",
+                    "value": "ar2/data[at0001]/items[at0002]/value/defining_code/code_string",
+                }
+            },
+        }
+    }
 
 
 @pytest.mark.asyncio
@@ -233,18 +294,31 @@ async def test_compile_query_raw_aql_adds_row_fanout_for_deepest_selected_alias(
     )
 
     pipeline = plan.plan["pipeline"]
-    assert pipeline[1]["$addFields"]["__fanout_nodes"]["$filter"]["cond"]["$regexMatch"]["regex"] == "^31(?::[^:]+)*:33(?::[^:]+)*:30(?::[^:]+)*:24$"
-    assert pipeline[2] == {"$unwind": "$__fanout_nodes"}
-    assert pipeline[3]["$addFields"]["__fanout_paths"]["ev"] == "$__fanout_nodes.p"
+    assert pipeline[1] == {"$limit": 100}
+    assert pipeline[2]["$addFields"]["__fanout_nodes"]["$filter"]["cond"]["$regexMatch"]["regex"] == "^31(?::[^:]+)*:33(?::[^:]+)*:30(?::[^:]+)*:24$"
+    assert pipeline[3] == {"$unwind": "$__fanout_nodes"}
+    assert pipeline[4]["$addFields"]["__fanout_paths"]["ev"] == "$__fanout_nodes.p"
 
-    project_stage = pipeline[4]["$project"]
+    project_stage = _first_stage(pipeline, "$project")
     assert project_stage["compositionId"] == "$comp_id"
-    assert project_stage["Substance"]["$first"]["$map"]["input"]["$filter"]["cond"]["$regexMatch"]["regex"]["$concat"] == ["^", "-2:-1", ":", "$__fanout_paths.ar", "$"]
-    assert project_stage["Manifestacio"]["$first"]["$map"]["input"]["$filter"]["cond"]["$regexMatch"]["regex"]["$concat"] == ["^", "-6", ":", "$__fanout_paths.ev", "$"]
+    assert _first_node_filter(project_stage["Substance"])["cond"]["$regexMatch"]["regex"]["$concat"] == [
+        "^",
+        "-2:-1",
+        ":",
+        "$__fanout_paths.ar",
+        {"$literal": "$"},
+    ]
+    assert _first_node_filter(project_stage["Manifestacio"])["cond"]["$regexMatch"]["regex"]["$concat"] == [
+        "^",
+        "-6",
+        ":",
+        "$__fanout_paths.ev",
+        {"$literal": "$"},
+    ]
 
 
 @pytest.mark.asyncio
-async def test_compile_query_raw_aql_projection_cache_activates_only_for_high_reuse():
+async def test_compile_query_raw_aql_projection_cache_reuses_repeated_sources():
     db = _FakeDb(
         {
             "_codes": _FakeCollection(
@@ -328,7 +402,24 @@ async def test_compile_query_raw_aql_projection_cache_activates_only_for_high_re
         },
     )
 
-    assert not any("__projection_cache" in stage.get("$addFields", {}) for stage in low_reuse_plan.plan["pipeline"])
+    low_cache_stage = next(
+        stage["$addFields"]
+        for stage in low_reuse_plan.plan["pipeline"]
+        if "__projection_cache" in stage.get("$addFields", {})
+    )
+    low_path_lookup_stage = next(
+        stage["$addFields"]
+        for stage in low_reuse_plan.plan["pipeline"]
+        if "__nodes_by_path" in stage.get("$addFields", {})
+    )
+    assert low_path_lookup_stage["__nodes_by_path"]["$arrayToObject"]["$map"]["input"] == {
+        "$reverseArray": {"$ifNull": ["$cn", []]}
+    }
+    assert low_cache_stage["__projection_cache"]["c0"]["$getField"]["input"] == "$__nodes_by_path"
+
+    low_project_stage = next(stage["$project"] for stage in low_reuse_plan.plan["pipeline"] if "$project" in stage)
+    assert low_project_stage["SubstanceCode"].startswith("$__projection_cache.c0.")
+    assert low_project_stage["SubstanceValue"].startswith("$__projection_cache.c0.")
 
     high_reuse_aql = """
     SELECT
@@ -359,12 +450,12 @@ async def test_compile_query_raw_aql_projection_cache_activates_only_for_high_re
         for stage in high_reuse_plan.plan["pipeline"]
         if "__projection_cache" in stage.get("$addFields", {})
     )
-    assert cache_stage["__projection_cache"]["c0"]["$filter"]["input"] == "$cn"
+    assert cache_stage["__projection_cache"]["c0"]["$getField"]["input"] == "$__nodes_by_path"
 
     project_stage = next(stage["$project"] for stage in high_reuse_plan.plan["pipeline"] if "$project" in stage)
-    assert project_stage["SubstanceCode"]["$first"]["$map"]["input"] == "$__projection_cache.c0"
-    assert project_stage["SubstanceValue"]["$first"]["$map"]["input"] == "$__projection_cache.c0"
-    assert project_stage["SubstanceTerminology"]["$first"]["$map"]["input"] == "$__projection_cache.c0"
+    assert project_stage["SubstanceCode"].startswith("$__projection_cache.c0.")
+    assert project_stage["SubstanceValue"].startswith("$__projection_cache.c0.")
+    assert project_stage["SubstanceTerminology"].startswith("$__projection_cache.c0.")
 
 
 @pytest.mark.asyncio
@@ -463,6 +554,7 @@ async def test_compile_query_raw_aql_search_pipeline_keeps_row_fanout_for_select
     assert pipeline[3]["$addFields"]["__fanout_nodes"]["$filter"]["cond"]["$regexMatch"]["regex"] == "^31(?::[^:]+)*:33(?::[^:]+)*:30(?::[^:]+)*:24$"
     assert pipeline[4] == {"$unwind": "$__fanout_nodes"}
     assert pipeline[5]["$addFields"]["__fanout_paths"]["ev"] == "$__fanout_nodes.p"
+    assert pipeline[-1] == {"$limit": 100}
 
 
 @pytest.mark.asyncio

@@ -1,7 +1,7 @@
 # src/kehrnel/api/compatibility/v1/aql/transformers/value_formatter.py
 import re
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 from bson import Binary
 from bson import ObjectId
@@ -41,9 +41,10 @@ class ValueFormatter:
         
         # Check if it's a date string and format it appropriately for MongoDB
         if ValueFormatter._is_iso_date_string(value):
-            # Convert to MongoDB ISODate format but keep as string for the aggregation pipeline
-            # The MongoDB driver will handle the actual conversion
+            # Convert to a BSON date-compatible datetime for MongoDB comparisons.
             try:
+                if re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+                    return datetime.fromisoformat(value).replace(tzinfo=timezone.utc)
                 dt = datetime.fromisoformat(value.replace("Z", "+00:00"))
                 return dt
             except (ValueError, TypeError):
@@ -97,6 +98,7 @@ class ValueFormatter:
             return False
         # Basic check for ISO format patterns
         iso_patterns = [
+            r'\d{4}-\d{2}-\d{2}$',  # Date only
             r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}',  # Basic ISO format
             r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+\d{2}:\d{2}',  # With timezone
             r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z',  # With Z timezone

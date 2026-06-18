@@ -11,6 +11,7 @@ from ..contains_clause import (
 )
 from .value_formatter import ValueFormatter
 from .format_resolver import FormatResolver
+from ..pagination import DEFAULT_PAGE_LIMIT
 from kehrnel.persistence import PersistenceStrategy, get_default_strategy
 from kehrnel.api.bridge.app.core.config import settings
 import logging
@@ -82,6 +83,55 @@ class SearchPipelineBuilder:
         search_collection = self.strategy.collections.get("search") if self.strategy else None
         return search_collection.atlas_index_name if search_collection else None
 
+    def _search_nodes_array_field(self) -> str:
+        return self.search_config.get("composition_array") or "sn"
+
+    def _search_predicate_targets_search_node_child(self, query: Dict[str, Any]) -> bool:
+        if not isinstance(query, dict) or len(query) != 1:
+            return False
+
+        op, body = next(iter(query.items()))
+        if op not in {
+            "autocomplete",
+            "equals",
+            "exists",
+            "in",
+            "near",
+            "phrase",
+            "queryString",
+            "range",
+            "regex",
+            "text",
+            "wildcard",
+        }:
+            return False
+        if not isinstance(body, dict):
+            return False
+
+        path = body.get("path")
+        paths = path if isinstance(path, list) else [path]
+        prefix = f"{self._search_nodes_array_field()}."
+        return any(isinstance(item, str) and item.startswith(prefix) for item in paths)
+
+    def _wrap_search_node_predicates_in_embedded_documents(self, query: Any) -> Any:
+        if isinstance(query, list):
+            return [self._wrap_search_node_predicates_in_embedded_documents(item) for item in query]
+        if not isinstance(query, dict):
+            return query
+        if "embeddedDocument" in query:
+            return query
+        if self._search_predicate_targets_search_node_child(query):
+            return {
+                "embeddedDocument": {
+                    "path": self._search_nodes_array_field(),
+                    "operator": query,
+                }
+            }
+        return {
+            key: self._wrap_search_node_predicates_in_embedded_documents(value)
+            for key, value in query.items()
+        }
+
     def _first_matching_node_value(
         self,
         nodes_expr: Any,
@@ -91,23 +141,15 @@ class SearchPipelineBuilder:
         data_path: str,
     ) -> Dict[str, Any]:
         return {
-            "$first": {
-                "$map": {
-                    "input": {
-                        "$filter": {
-                            "input": nodes_expr,
-                            "as": "node",
-                            "cond": {
-                                "$regexMatch": {
-                                    "input": f"$$node.{path_field}",
-                                    "regex": path_regex_pattern,
-                                }
-                            },
-                        }
-                    },
-                    "as": "node",
-                    "in": f"$$node.{data_path}",
-                }
+            "$let": {
+                "vars": {
+                    "node": self._first_matching_node_expr(
+                        nodes_expr,
+                        path_field=path_field,
+                        path_regex_pattern=path_regex_pattern,
+                    )
+                },
+                "in": f"$$node.{data_path}",
             }
         }
 
@@ -117,8 +159,9 @@ class SearchPipelineBuilder:
         *,
         path_field: str,
         path_regex_pattern: Any,
+        limit: Optional[int] = None,
     ) -> Dict[str, Any]:
-        return {
+        filter_expr = {
             "$filter": {
                 "input": nodes_expr,
                 "as": "node",
@@ -129,6 +172,25 @@ class SearchPipelineBuilder:
                     }
                 },
             }
+        }
+        if limit is not None:
+            filter_expr["$filter"]["limit"] = limit
+        return filter_expr
+
+    def _first_matching_node_expr(
+        self,
+        nodes_expr: Any,
+        *,
+        path_field: str,
+        path_regex_pattern: Any,
+    ) -> Dict[str, Any]:
+        return {
+            "$first": self._matching_nodes_expr(
+                nodes_expr,
+                path_field=path_field,
+                path_regex_pattern=path_regex_pattern,
+                limit=1,
+            )
         }
 
     def _project_all_values_from_nodes(
@@ -306,7 +368,7 @@ class SearchPipelineBuilder:
         pieces: List[Any] = ["^"]
         if prefix:
             pieces.extend([prefix, separator])
-        pieces.extend([alias_path_expr, "$"])
+        pieces.extend([alias_path_expr, {"$literal": "$"}])
         return {"$concat": pieces}
 
     async def build_row_fanout_stages(self, ast: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -642,11 +704,16 @@ class SearchPipelineBuilder:
         Constructs the full MongoDB aggregation pipeline starting with $search.
         """
         pipeline = []
+        search_sort_spec = self._build_search_sort_spec(ast)
 
         # 1. Build the $search stage from WHERE clause
         search_stage = await self.build_search_stage(ast)
         if search_stage:
             pipeline.append(search_stage)
+
+        token_stage = self.build_search_sequence_token_stage(search_sort_spec)
+        if token_stage:
+            pipeline.append(token_stage)
 
         # 2. Build additional $match stages for conditions not handled by $search
         additional_match = await self.build_additional_match_stage(ast)
@@ -695,12 +762,16 @@ class SearchPipelineBuilder:
             logger.info(f"Added DISTINCT stages for fields: {projected_fields}")
 
         # 9. Build the $sort stage from ORDER BY clause
-        sort_stage = self.build_sort_stage(ast)
+        sort_stage = None if search_sort_spec else self.build_sort_stage(ast)
         if sort_stage:
             pipeline.append(sort_stage)
         
-        # 10. Build the $limit stage from LIMIT clause
-        limit_stage = self.build_limit_stage(ast)
+        # 10. Apply result pagination. Explicit AQL LIMIT wins; otherwise cap
+        # library/query-lab pages to a conservative default.
+        skip_stage = None if self._has_search_page_token(ast) else self.build_skip_stage(ast)
+        if skip_stage:
+            pipeline.append(skip_stage)
+        limit_stage = self.build_limit_stage(ast, default_limit=DEFAULT_PAGE_LIMIT)
         if limit_stage:
             pipeline.append(limit_stage)
         
@@ -949,42 +1020,92 @@ class SearchPipelineBuilder:
             },
         ]
 
+    def _order_by_columns(self, ast: Dict[str, Any]) -> Dict[str, Any]:
+        order_by = ast.get("orderBy", {})
+        if isinstance(order_by, dict) and isinstance(order_by.get("columns"), dict):
+            return order_by["columns"]
+        return order_by if isinstance(order_by, dict) else {}
+
+    def _build_search_sort_spec(self, ast: Dict[str, Any]) -> Optional[Dict[str, int]]:
+        columns = self._order_by_columns(ast)
+        if not columns:
+            return None
+
+        sort_spec: Dict[str, int] = {}
+        for col_data in columns.values():
+            if not isinstance(col_data, dict):
+                return None
+            aql_path = col_data.get("path")
+            if not aql_path:
+                return None
+            field_name = self.format_resolver.resolve_document_field(aql_path)
+            if not field_name or "." in field_name:
+                return None
+            direction = str(col_data.get("direction", "ASC")).upper()
+            sort_spec[field_name] = 1 if direction == "ASC" else -1
+        return sort_spec or None
+
+    def _has_search_page_token(self, ast: Dict[str, Any]) -> bool:
+        pagination = ast.get("__pagination") if isinstance(ast.get("__pagination"), dict) else {}
+        return bool(pagination.get("searchAfter") or pagination.get("searchBefore"))
+
+    def _apply_search_pagination_options(self, search_body: Dict[str, Any], ast: Dict[str, Any]) -> None:
+        pagination = ast.get("__pagination") if isinstance(ast.get("__pagination"), dict) else {}
+        if pagination.get("searchAfter"):
+            search_body["searchAfter"] = pagination["searchAfter"]
+        elif pagination.get("searchBefore"):
+            search_body["searchBefore"] = pagination["searchBefore"]
+
+    def build_search_sequence_token_stage(self, search_sort_spec: Optional[Dict[str, int]]) -> Optional[Dict[str, Any]]:
+        if not search_sort_spec:
+            return None
+        return {"$addFields": {"__searchSequenceToken": {"$meta": "searchSequenceToken"}}}
+
     async def build_search_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """
         Constructs the $search stage from AQL WHERE clause using Atlas Search.
         """
+        search_sort_spec = self._build_search_sort_spec(ast)
+
+        def finalize_search_body(body: Dict[str, Any]) -> Dict[str, Any]:
+            if search_sort_spec:
+                body["sort"] = search_sort_spec
+            self._apply_search_pagination_options(body, ast)
+            return body
+
         where_clause = ast.get("where")
         if not where_clause:
             # If no WHERE clause, create a basic $search to match all documents
             return {
-                "$search": {
+                "$search": finalize_search_body({
                     "index": self.search_index_name,
                     "exists": {
                         "path": "sn"
                     }
-                }
+                })
             }
 
         # Convert WHERE clause to search query
         search_query = await self._convert_where_to_search(where_clause)
         
         if search_query:
+            search_query = self._wrap_search_node_predicates_in_embedded_documents(search_query)
             return {
-                "$search": {
+                "$search": finalize_search_body({
                     "index": self.search_index_name,
                     **search_query
-                }
+                })
             }
         else:
             # Fallback to basic search if WHERE clause couldn't be converted
             logger.warning(f"Could not convert WHERE clause to search query, using basic exists search: {where_clause}")
             return {
-                "$search": {
+                "$search": finalize_search_body({
                     "index": self.search_index_name,
                     "exists": {
                         "path": "sn"
                     }
-                }
+                })
             }
 
     async def _convert_where_to_search(self, where_clause: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -1785,6 +1906,9 @@ class SearchPipelineBuilder:
             else:
                 # Default case
                 projection[alias] = f"${alias}"
+
+        if self._build_search_sort_spec(ast):
+            projection["__searchSequenceToken"] = "$__searchSequenceToken"
         
         return {"$project": projection}
 
@@ -1824,12 +1948,30 @@ class SearchPipelineBuilder:
             
         return {"$sort": sort_spec} if sort_spec else None
 
-    def build_limit_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    def build_skip_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Constructs the $skip stage from OFFSET when present."""
+        offset_value = ast.get("offset")
+        if offset_value is None:
+            return None
+
+        try:
+            offset_int = int(offset_value)
+            if offset_int < 0:
+                return None
+            if offset_int == 0:
+                return None
+            return {"$skip": offset_int}
+        except (ValueError, TypeError):
+            return None
+
+    def build_limit_stage(self, ast: Dict[str, Any], *, default_limit: Optional[int] = None) -> Optional[Dict[str, Any]]:
         """
         Constructs the $limit stage from the LIMIT clause.
         """
         limit_value = ast.get("limit")
         
+        if limit_value is None:
+            limit_value = default_limit
         if limit_value is None:
             return None
             
