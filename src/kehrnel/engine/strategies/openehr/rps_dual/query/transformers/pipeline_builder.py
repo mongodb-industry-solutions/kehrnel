@@ -329,6 +329,16 @@ class PipelineBuilder:
         
         return {"$addFields": add_fields}
 
+    @staticmethod
+    def _safe_string_expr(expr: Any) -> Dict[str, Any]:
+        return {
+            "$cond": [
+                {"$eq": [{"$type": expr}, "string"]},
+                expr,
+                "",
+            ]
+        }
+
     def _first_matching_node_value(
         self,
         nodes_expr: Any,
@@ -364,7 +374,7 @@ class PipelineBuilder:
                 "as": "node",
                 "cond": {
                     "$regexMatch": {
-                        "input": f"$$node.{path_field}",
+                        "input": self._safe_string_expr(f"$$node.{path_field}"),
                         "regex": path_regex_pattern,
                     }
                 },
@@ -512,7 +522,15 @@ class PipelineBuilder:
                 "__nodes_by_path": {
                     "$arrayToObject": {
                         "$map": {
-                            "input": {"$reverseArray": {"$ifNull": [f"${nodes_field}", []]}},
+                            "input": {
+                                "$reverseArray": {
+                                    "$filter": {
+                                        "input": {"$ifNull": [f"${nodes_field}", []]},
+                                        "as": "node",
+                                        "cond": {"$eq": [{"$type": f"$$node.{path_field}"}, "string"]},
+                                    }
+                                }
+                            },
                             "as": "node",
                             "in": {
                                 "k": f"$$node.{path_field}",
@@ -683,7 +701,7 @@ class PipelineBuilder:
                             "as": "node",
                             "cond": {
                                 "$regexMatch": {
-                                    "input": f"$$node.{path_field}",
+                                    "input": self._safe_string_expr(f"$$node.{path_field}"),
                                     "regex": spec["target_regex"],
                                 }
                             },
@@ -890,7 +908,7 @@ class PipelineBuilder:
         conds: List[Dict[str, Any]] = [
             {
                 "$regexMatch": {
-                    "input": f"$$node.{path_field}",
+                    "input": self._safe_string_expr(f"$$node.{path_field}"),
                     "regex": path_regex_pattern,
                 }
             }
@@ -1709,7 +1727,14 @@ class PipelineBuilder:
                                         "$filter": {
                                             "input": f"${self.schema_config['composition_array']}",
                                             "as": "item",
-                                            "cond": {"$regexMatch": {"input": f"$$item.{self.schema_config['path_field']}", "regex": ".*"}}
+                                            "cond": {
+                                                "$regexMatch": {
+                                                    "input": self._safe_string_expr(
+                                                        f"$$item.{self.schema_config['path_field']}"
+                                                    ),
+                                                    "regex": ".*",
+                                                }
+                                            }
                                         }
                                     }
                                 }

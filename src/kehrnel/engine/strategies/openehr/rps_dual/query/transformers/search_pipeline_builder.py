@@ -153,6 +153,16 @@ class SearchPipelineBuilder:
             }
         }
 
+    @staticmethod
+    def _safe_string_expr(expr: Any) -> Dict[str, Any]:
+        return {
+            "$cond": [
+                {"$eq": [{"$type": expr}, "string"]},
+                expr,
+                "",
+            ]
+        }
+
     def _matching_nodes_expr(
         self,
         nodes_expr: Any,
@@ -167,7 +177,7 @@ class SearchPipelineBuilder:
                 "as": "node",
                 "cond": {
                     "$regexMatch": {
-                        "input": f"$$node.{path_field}",
+                        "input": self._safe_string_expr(f"$$node.{path_field}"),
                         "regex": path_regex_pattern,
                     }
                 },
@@ -391,7 +401,7 @@ class SearchPipelineBuilder:
                             "as": "node",
                             "cond": {
                                 "$regexMatch": {
-                                    "input": f"$$node.{path_field}",
+                                    "input": self._safe_string_expr(f"$$node.{path_field}"),
                                     "regex": spec["target_regex"],
                                 }
                             },
@@ -598,7 +608,7 @@ class SearchPipelineBuilder:
         conds: List[Dict[str, Any]] = [
             {
                 "$regexMatch": {
-                    "input": f"$$node.{path_field}",
+                    "input": self._safe_string_expr(f"$$node.{path_field}"),
                     "regex": path_regex_pattern,
                 }
             }

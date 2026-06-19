@@ -296,6 +296,9 @@ async def test_compile_query_raw_aql_adds_row_fanout_for_deepest_selected_alias(
     pipeline = plan.plan["pipeline"]
     assert pipeline[1] == {"$limit": 100}
     assert pipeline[2]["$addFields"]["__fanout_nodes"]["$filter"]["cond"]["$regexMatch"]["regex"] == "^31(?::[^:]+)*:33(?::[^:]+)*:30(?::[^:]+)*:24$"
+    assert pipeline[2]["$addFields"]["__fanout_nodes"]["$filter"]["cond"]["$regexMatch"]["input"] == {
+        "$cond": [{"$eq": [{"$type": "$$node.p"}, "string"]}, "$$node.p", ""]
+    }
     assert pipeline[3] == {"$unwind": "$__fanout_nodes"}
     assert pipeline[4]["$addFields"]["__fanout_paths"]["ev"] == "$__fanout_nodes.p"
 
@@ -413,7 +416,13 @@ async def test_compile_query_raw_aql_projection_cache_reuses_repeated_sources():
         if "__nodes_by_path" in stage.get("$addFields", {})
     )
     assert low_path_lookup_stage["__nodes_by_path"]["$arrayToObject"]["$map"]["input"] == {
-        "$reverseArray": {"$ifNull": ["$cn", []]}
+        "$reverseArray": {
+            "$filter": {
+                "input": {"$ifNull": ["$cn", []]},
+                "as": "node",
+                "cond": {"$eq": [{"$type": "$$node.p"}, "string"]},
+            }
+        }
     }
     assert low_cache_stage["__projection_cache"]["c0"]["$getField"]["input"] == "$__nodes_by_path"
 
@@ -552,6 +561,9 @@ async def test_compile_query_raw_aql_search_pipeline_keeps_row_fanout_for_select
     assert plan.engine == "text_search_dual"
     assert "$lookup" in pipeline[2]
     assert pipeline[3]["$addFields"]["__fanout_nodes"]["$filter"]["cond"]["$regexMatch"]["regex"] == "^31(?::[^:]+)*:33(?::[^:]+)*:30(?::[^:]+)*:24$"
+    assert pipeline[3]["$addFields"]["__fanout_nodes"]["$filter"]["cond"]["$regexMatch"]["input"] == {
+        "$cond": [{"$eq": [{"$type": "$$node.p"}, "string"]}, "$$node.p", ""]
+    }
     assert pipeline[4] == {"$unwind": "$__fanout_nodes"}
     assert pipeline[5]["$addFields"]["__fanout_paths"]["ev"] == "$__fanout_nodes.p"
     assert pipeline[-1] == {"$limit": 100}

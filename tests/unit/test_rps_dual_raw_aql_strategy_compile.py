@@ -446,7 +446,9 @@ async def test_compile_query_raw_aql_uses_strategy_field_names_codes_and_shortcu
     assert project_stage["DataRegistre"] == "$time_c"
     assert project_stage["StartTime"]["$let"]["in"] == "$$node.data.cx.st.v"
     start_time_filter = _first_node_filter(project_stage["StartTime"])
-    assert start_time_filter["cond"]["$regexMatch"]["input"] == "$$node.p"
+    assert start_time_filter["cond"]["$regexMatch"]["input"] == {
+        "$cond": [{"$eq": [{"$type": "$$node.p"}, "string"]}, "$$node.p", ""]
+    }
     assert start_time_filter["cond"]["$regexMatch"]["regex"] == "^1$"
 
 
