@@ -7,6 +7,7 @@ import tempfile
 import secrets
 import logging
 import ipaddress
+import base64
 from pathlib import Path
 from fastapi import APIRouter, Request, Body
 from fastapi.encoders import jsonable_encoder
@@ -98,9 +99,16 @@ def _error_response(exc: Exception) -> JSONResponse:
     return JSONResponse(status_code=status, content={"error": {"code": code, "message": message, "details": details}})
 
 
+def _json_safe_binary(value: bytes) -> Dict[str, str]:
+    return {
+        "$binary": base64.b64encode(bytes(value)).decode("ascii"),
+        "encoding": "base64",
+    }
+
+
 def _json_safe(payload: Any) -> Any:
     """Encode runtime payloads so BSON/ObjectId values do not break API responses."""
-    return jsonable_encoder(payload, custom_encoder={ObjectId: str})
+    return jsonable_encoder(payload, custom_encoder={ObjectId: str, bytes: _json_safe_binary})
 
 
 def _require_admin_access(request: Request) -> None:
@@ -1753,8 +1761,8 @@ async def query_env(env_id: str, request: Request, payload: Dict[str, Any] = Bod
         res = await rt.dispatch(env_id, "query", payload or {})
         # when dispatch returns QueryResult dict or simple, wrap as ok/result if needed
         if isinstance(res, dict) and "ok" in res:
-            return res
-        return {"ok": True, "result": res}
+            return _json_safe(res)
+        return _json_safe({"ok": True, "result": res})
     except Exception as exc:
         return _error_response(exc)
 
@@ -1774,7 +1782,7 @@ async def compile_query_env(env_id: str, request: Request, payload: Dict[str, An
         if debug and isinstance(payload, dict):
             payload["debug"] = True
         res = await rt.dispatch(env_id, "compile_query", payload or {})
-        return {"ok": True, "result": res}
+        return _json_safe({"ok": True, "result": res})
     except Exception as exc:
         return _error_response(exc)
 
