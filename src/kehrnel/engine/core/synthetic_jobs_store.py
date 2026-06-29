@@ -6,6 +6,8 @@ from typing import Any, Dict, List
 import certifi
 from pymongo import MongoClient
 
+from kehrnel.persistence.mongodb.tls import mongo_tls_enabled
+
 
 class MongoSyntheticJobStore:
     """Simple MongoDB-backed store for synthetic job records."""
@@ -19,7 +21,8 @@ class MongoSyntheticJobStore:
     @property
     def _coll(self):
         if self._client is None:
-            self._client = MongoClient(self._uri, tlsCAFile=certifi.where())
+            kwargs = {"tlsCAFile": certifi.where()} if mongo_tls_enabled(self._uri) else {}
+            self._client = MongoClient(self._uri, **kwargs)
         return self._client[self._database][self._collection]
 
     def upsert(self, rec: Dict[str, Any]) -> None:
@@ -47,4 +50,3 @@ class MongoSyntheticJobStore:
             q["domain"] = str(domain).lower()
         cursor = self._coll.find(q, {"_id": 0}).sort("created_at", -1)
         return list(cursor)
-

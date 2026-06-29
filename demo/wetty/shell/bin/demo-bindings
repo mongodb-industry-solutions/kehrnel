@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ -n "${BINDINGS_REF:-}" ]]; then
+  cat <<EOF
+Resolver-backed demo mode is configured.
+
+Current BINDINGS_REF:
+  ${BINDINGS_REF}
+
+The runtime-backed commands can use resolver-backed activation.
+EOF
+  exit 0
+fi
+
+if [[ -n "${MONGODB_URI:-}" ]]; then
+  masked="${MONGODB_URI%%@*}"
+  if [[ "${masked}" == "${MONGODB_URI}" ]]; then
+    masked="configured"
+  else
+    masked="${masked}@..."
+  fi
+  cat <<EOF
+MongoDB URI mode is configured.
+
+Current MONGODB_URI:
+  ${masked}
+
+Current MONGODB_DB:
+  ${MONGODB_DB:-openEHR_demo}
+
+The runtime-backed commands can activate using plaintext demo bindings.
+EOF
+  exit 0
+fi
+
+cat <<'EOF'
+No runtime bindings were provided to the prototype.
+
+You can still explore:
+  - templates
+  - generation
+  - validation
+  - flattening
+  - strategy and op catalogs
+
+For the full runtime-backed flow, restart the compose stack with one of:
+  - MONGODB_URI (+ optional MONGODB_DB)
+  - BINDINGS_REF
+
+Then run:
+  demo-smoke
+EOF

@@ -27,7 +27,7 @@ class QueryResultColumn(BaseModel):
     Defines the name and path of a single column in an AQL query result set.
     """
     name: str
-    path: str
+    path: str | None = None
 
 class MetaData(BaseModel):
     """

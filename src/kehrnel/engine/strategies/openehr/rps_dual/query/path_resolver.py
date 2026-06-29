@@ -30,7 +30,7 @@ class PathResolver:
         self.comp_nodes = comp.get("nodes", "cn")
         self.search_nodes = search.get("nodes", "sn")
         self.shortcuts = shortcuts or {}
-        path_sep = (cfg.get("paths") or {}).get("separator", ".")
+        path_sep = (cfg.get("paths") or {}).get("separator", ":")
         self.token_joiner = path_sep
         ar_codes = (cfg.get("dict_cache") or {}).get("codes") or {}
         at_codes = (cfg.get("dict_cache") or {}).get("at") or {}

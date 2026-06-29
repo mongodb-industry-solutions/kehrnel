@@ -20,6 +20,8 @@ import certifi
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from pymongo import MongoClient
 
+from kehrnel.persistence.mongodb.tls import mongo_tls_enabled
+
 
 DEFAULT_ENV_META_COLLECTIONS = ("teams", "users", "workspaces")
 
@@ -35,6 +37,10 @@ class _CoreStore:
 
 
 _STORE: Optional[_CoreStore] = None
+
+
+def _client_kwargs(uri: str) -> dict:
+    return {"tlsCAFile": certifi.where()} if mongo_tls_enabled(uri) else {}
 
 
 def _b64_decode(value: str) -> bytes:
@@ -61,7 +67,7 @@ def _core_store() -> _CoreStore:
     db_name = (os.getenv("CORE_DATABASE_NAME") or "").strip()
     if not db_name:
         raise ValueError("CORE_DATABASE_NAME is required for HDL bindings resolver")
-    client = MongoClient(uri, tlsCAFile=certifi.where())
+    client = MongoClient(uri, **_client_kwargs(uri))
     _STORE = _CoreStore(client=client, db_name=db_name)
     return _STORE
 

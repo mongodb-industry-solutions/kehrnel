@@ -99,7 +99,7 @@
         "id": "profile.codedpath",
         "title": "Coded paths",
         "description": "Numeric coded path segments using dictionary.",
-        "paths": {"mode": "coded", "separator": ".", "order": "leaf_to_root", "dictRef": "bundles.dictionaries"},
+        "paths": {"mode": "coded", "separator": ":", "order": "leaf_to_root", "dictRef": "bundles.dictionaries"},
         "keys": {"mode": "verbatim"},
         "payload": {"mode": "full"},
         "dictionaries": {"at_codes": "required", "archetype_ids": "optional"},
@@ -109,7 +109,7 @@
         "id": "profile.search_shortcuts",
         "title": "Search shortcuts",
         "description": "Coded paths + key/value shortcuts + minimized payload.",
-        "paths": {"mode": "coded", "separator": ".", "order": "leaf_to_root", "dictRef": "bundles.dictionaries"},
+        "paths": {"mode": "coded", "separator": ":", "order": "leaf_to_root", "dictRef": "bundles.dictionaries"},
         "keys": {"mode": "shortcuts", "dictRef": "bundles.shortcuts"},
         "payload": {"mode": "minimized"},
         "ids": {"ehr_id": "objectId|string|uuidBin", "composition_id": "objectId|string|uuidBin"}
@@ -139,6 +139,27 @@
             "type": "btree",
             "fields": ["ehr_id", "cn.p", "time_c"],
             "purpose": "Fast patient-scoped path resolution with commit-time filtering (optional if too large)"
+          },
+          {
+            "id": "idx_template_commit",
+            "type": "btree",
+            "fields": ["tid", "time_c"],
+            "options": { "name": "idx_template_commit" },
+            "purpose": "Fast cross-patient template/date filters on the composition store without Atlas Search fanout"
+          },
+          {
+            "id": "idx_template_commit_version",
+            "type": "btree",
+            "fields": ["tid", "time_c", "v"],
+            "options": { "name": "idx_template_commit_version" },
+            "purpose": "Fast sorted cross-patient template/date pages ordered by commit time and version"
+          },
+          {
+            "id": "idx_template_node_commit",
+            "type": "btree",
+            "fields": ["tid", "cn.data.ani", "cn.p", "time_c"],
+            "options": { "name": "idx_template_node_commit" },
+            "purpose": "Fast cross-patient template/date/node predicates on the composition store when AQL filters bind a contained archetype"
           }
         ]
       },

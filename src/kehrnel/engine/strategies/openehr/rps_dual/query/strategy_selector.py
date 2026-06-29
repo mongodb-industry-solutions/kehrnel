@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Any, Dict, Iterable, List
 
+from .contains_clause import is_match_friendly_contains_clause
+from .metadata_paths import is_version_commit_time_path
 
 _MATCH_FRIENDLY_OPERATORS = {"=", "!=", ">", "<", ">=", "<="}
 
@@ -39,36 +41,6 @@ def _iter_order_paths(order_by: Dict[str, Any] | None) -> Iterable[str]:
                 yield path.strip()
 
 
-def _is_simple_composition_contains(
-    contains_clause: Dict[str, Any] | None,
-) -> bool:
-    if not isinstance(contains_clause, dict) or not contains_clause:
-        return False
-
-    rm_type = str(contains_clause.get("rmType") or "").upper()
-    if rm_type != "COMPOSITION":
-        nested = contains_clause.get("contains")
-        if nested:
-            return _is_simple_composition_contains(nested)
-        return False
-
-    if contains_clause.get("contains"):
-        return False
-
-    predicate = contains_clause.get("predicate")
-    if predicate is None:
-        return True
-
-    if not isinstance(predicate, dict):
-        return False
-
-    return (
-        predicate.get("path") == "archetype_node_id"
-        and predicate.get("operator") == "="
-        and bool(predicate.get("value"))
-    )
-
-
 def should_prefer_match_for_cross_patient_ast(
     ast: Dict[str, Any],
     *,
@@ -92,12 +64,10 @@ def should_prefer_match_for_cross_patient_ast(
         f"{composition_alias}/uid/value",
         f"{composition_alias}/archetype_details/template_id/value",
         f"{composition_alias}/archetype_node_id",
-        f"{version_alias}/commit_audit/time_committed/value",
     }
     allowed_order_paths = {
         f"{ehr_alias}/ehr_id/value",
         f"{composition_alias}/uid/value",
-        f"{version_alias}/commit_audit/time_committed/value",
     }
 
     where_conditions: List[Dict[str, Any]] = list(_iter_condition_nodes(ast.get("where")))
@@ -106,15 +76,15 @@ def should_prefer_match_for_cross_patient_ast(
         path = str(condition.get("path") or "").strip()
         if operator not in _MATCH_FRIENDLY_OPERATORS:
             return False
-        if path not in allowed_where_paths:
+        if path not in allowed_where_paths and not is_version_commit_time_path(path, version_alias):
             return False
 
     for path in _iter_order_paths(ast.get("orderBy")):
-        if path not in allowed_order_paths:
+        if path not in allowed_order_paths and not is_version_commit_time_path(path, version_alias):
             return False
 
     contains_clause = ast.get("contains")
-    if contains_clause and not _is_simple_composition_contains(contains_clause):
+    if contains_clause and not is_match_friendly_contains_clause(contains_clause):
         return False
 
-    return bool(where_conditions) or _is_simple_composition_contains(contains_clause)
+    return bool(where_conditions) or is_match_friendly_contains_clause(contains_clause)

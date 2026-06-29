@@ -5,7 +5,13 @@ from pymongo import MongoClient
 from pathlib import Path
 from typing import Iterable, Iterator, Optional
 
+from kehrnel.persistence.mongodb.tls import mongo_tls_enabled
+
 log = logging.getLogger(__name__)
+
+
+def _client_kwargs(uri: str) -> dict:
+    return {"tlsCAFile": certifi.where()} if mongo_tls_enabled(uri) else {}
 
 
 def _search_doc_key(doc: dict) -> str | None:
@@ -29,7 +35,7 @@ class MongoStore:
 
     def connect(self):
         uri = self.cfg["connection_string"]
-        cli = MongoClient(uri, tlsCAFile=certifi.where())
+        cli = MongoClient(uri, **_client_kwargs(uri))
         db  = cli[self.cfg["database_name"]]
         self.col_base   = db[self.cfg["compositions_collection"]]
         self.col_search = db[self.cfg["search_collection"]]
@@ -79,7 +85,7 @@ class MongoSource:
         self.cfg = cfg
         self.limit = limit
         uri = cfg["connection_string"]
-        cli = MongoClient(uri, tlsCAFile=certifi.where())
+        cli = MongoClient(uri, **_client_kwargs(uri))
         db = cli[cfg["database_name"]]
         col_name = (
             cfg.get("source_collection")

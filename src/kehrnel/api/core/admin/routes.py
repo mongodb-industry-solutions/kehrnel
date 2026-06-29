@@ -33,6 +33,12 @@ from kehrnel.engine.core.redaction import redact_sensitive
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
+RPS_DUAL_STRATEGY_IDS = {"openehr.rps_dual", "openehr.rps_dual_ibm"}
+
+
+def _is_rps_dual_strategy_id(strategy_id: Any) -> bool:
+    return str(strategy_id or "").strip().lower() in RPS_DUAL_STRATEGY_IDS
+
 
 ALLOWED_DOC_EXTENSIONS = {".xml", ".csv", ".cda", ".json", ".txt", ".hl7"}
 ALLOWED_DOC_MIME_TYPES = {
@@ -408,7 +414,7 @@ async def _initialize_activation_artifacts(rt, env_id: str, activation) -> Dict[
             ((activation.config or {}).get("transform") or {}).get("apply_shortcuts", True)
         )
         bootstrap_cfg = (((activation.config or {}).get("bootstrap") or {}).get("dictionariesOnActivate") or {})
-        is_rps_dual = (getattr(activation, "strategy_id", "") or "").strip().lower() == "openehr.rps_dual"
+        is_rps_dual = _is_rps_dual_strategy_id(getattr(activation, "strategy_id", ""))
         bootstrap_payload = {}
         if is_rps_dual:
             bootstrap_payload = {
@@ -885,7 +891,7 @@ async def endpoints_registry(request: Request):
 async def strategy_endpoints(strategy_id: str, request: Request):
     _require_admin_access(request)
     base = ""
-    if strategy_id == "openehr.rps_dual":
+    if _is_rps_dual_strategy_id(strategy_id):
         return {
             "strategy_id": strategy_id,
             "endpoints": {

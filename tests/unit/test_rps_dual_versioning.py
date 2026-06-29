@@ -181,10 +181,11 @@ async def test_build_query_pipeline_maps_version_commit_time_to_top_level_match_
         2026, 4, 11, 0, 0, tzinfo=timezone.utc
     )
     assert match_stage["tid"] == "test-template"
-    assert match_stage["cn"]["$elemMatch"] == {"p": {"$regex": r"^[^\\.]+$"}}
-    assert pipeline[1]["$project"]["DataRegistre"] == "$time_c"
-    assert pipeline[1]["$project"]["TemplateId"] == "$tid"
-    assert pipeline[2]["$sort"] == {"DataRegistre": 1}
+    assert match_stage["cn"]["$elemMatch"] == {"p": {"$regex": r"^[^:]+$"}}
+    assert pipeline[1]["$sort"] == {"time_c": 1}
+    assert pipeline[2] == {"$limit": 100}
+    assert pipeline[3]["$project"]["DataRegistre"] == "$time_c"
+    assert pipeline[3]["$project"]["TemplateId"] == "$tid"
 
 
 @pytest.mark.asyncio
@@ -251,9 +252,80 @@ async def test_build_query_pipeline_prefers_match_for_cross_patient_template_and
     assert match_stage["time_c"]["$gte"] == datetime(
         2026, 4, 11, 0, 0, tzinfo=timezone.utc
     )
-    assert match_stage["cn"]["$elemMatch"] == {"p": {"$regex": r"^[^\\.]+$"}}
-    assert pipeline[1]["$project"]["DataRegistre"] == "$time_c"
-    assert pipeline[2]["$sort"] == {"DataRegistre": -1}
+    assert match_stage["cn"]["$elemMatch"] == {"p": {"$regex": r"^[^:]+$"}}
+    assert pipeline[1]["$sort"] == {"time_c": -1}
+    assert pipeline[2] == {"$limit": 100}
+    assert pipeline[3]["$project"]["DataRegistre"] == "$time_c"
+
+
+@pytest.mark.asyncio
+async def test_build_query_pipeline_treats_commit_time_as_implicit_value_path():
+    cfg = normalize_config({})
+    ast = {
+        "select": {
+            "distinct": False,
+            "columns": {
+                "0": {
+                    "value": {
+                        "type": "dataMatchPath",
+                        "path": "v/commit_audit/time_committed",
+                    },
+                    "alias": "DataRegistre",
+                }
+            },
+        },
+        "from": {"rmType": "EHR", "alias": "e", "predicate": None},
+        "contains": {
+            "rmType": "VERSION",
+            "alias": "v",
+            "predicate": None,
+            "contains": {
+                "rmType": "COMPOSITION",
+                "alias": "c",
+                "predicate": {
+                    "path": "archetype_node_id",
+                    "operator": "=",
+                    "value": "openEHR-EHR-COMPOSITION.probs_base_composition.v0",
+                },
+            },
+        },
+        "where": {
+            "operator": "AND",
+            "conditions": {
+                "0": {
+                    "path": "c/archetype_details/template_id/value",
+                    "operator": "=",
+                    "value": "test-template",
+                },
+                "1": {
+                    "path": "v/commit_audit/time_committed",
+                    "operator": ">=",
+                    "value": "2026-04-11",
+                },
+            },
+        },
+        "orderBy": {
+            "columns": {
+                "0": {
+                    "path": "v/commit_audit/time_committed",
+                    "direction": "DESC",
+                }
+            }
+        },
+    }
+
+    engine, pipeline, *_ = await build_query_pipeline_from_ast(ast, cfg)
+
+    assert engine == "pipeline_builder"
+    match_stage = pipeline[0]["$match"]
+    assert match_stage["tid"] == "test-template"
+    assert match_stage["time_c"]["$gte"] == datetime(
+        2026, 4, 11, 0, 0, tzinfo=timezone.utc
+    )
+    assert "data.commit_audit.time_committed" not in str(match_stage)
+    assert pipeline[1]["$sort"] == {"time_c": -1}
+    assert pipeline[2] == {"$limit": 100}
+    assert pipeline[3]["$project"]["DataRegistre"] == "$time_c"
 
 
 @pytest.mark.asyncio

@@ -75,18 +75,18 @@ def test_index_hints():
 
 def test_path_encoding_profiles():
     flattener = make_flattener({"templates": []})
-    # populate codebook to decode fullpath
+    # populate codebook to support the codedpath profile
     flattener.code_book["ar_code"] = {"openEHR-EHR-SECTION.immunisation_list.v0": 1}
     flattener.code_book["at"] = {"at0007": -7}
     flattener._refresh_codec()
-    # path encoded numeric
-    path_numeric = "1.-7"
-    human = flattener._encode_path_for_profile(path_numeric, "profile.fullpath")
-    assert human == "openEHR-EHR-SECTION.immunisation_list.v0.at0007"
+    path_numeric = "1:-7"
     coded = flattener._encode_path_for_profile(path_numeric, "profile.codedpath")
     assert coded == path_numeric
-    slash = flattener._encode_path_for_profile(path_numeric, "profile.codedpath")
-    assert slash == path_numeric
+    shortcut_safe = flattener._encode_path_for_profile(path_numeric, "profile.search_shortcuts")
+    assert shortcut_safe == path_numeric
+
+    with pytest.raises(ValueError):
+        flattener._encode_path_for_profile(path_numeric, "profile.fullpath")
 
 
 def test_id_encoding_policy():

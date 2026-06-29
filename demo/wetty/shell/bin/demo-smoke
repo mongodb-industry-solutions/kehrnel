@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd /workspace/kehrnel
+
+export RUNTIME_URL="${RUNTIME_URL:-http://127.0.0.1:8080}"
+export ENV_ID="${ENV_ID:-dev}"
+export DOMAIN="${DOMAIN:-openehr}"
+export STRATEGY_ID="${STRATEGY_ID:-openehr.rps_dual}"
+export WORKDIR="${WORKDIR:-/home/demo/.kehrnel-demo/workflow-smoke}"
+export REQUIRE_RUNTIME="${REQUIRE_RUNTIME:-0}"
+
+exec examples/cli/full_workflow_console.sh
