@@ -446,7 +446,9 @@ async def test_compile_query_raw_aql_uses_strategy_field_names_codes_and_shortcu
     assert project_stage["DataRegistre"] == "$time_c"
     assert project_stage["StartTime"]["$let"]["in"] == "$$node.data.cx.st.v"
     start_time_filter = _first_node_filter(project_stage["StartTime"])
-    assert start_time_filter["cond"]["$regexMatch"]["input"] == "$$node.p"
+    assert start_time_filter["cond"]["$regexMatch"]["input"] == {
+        "$cond": [{"$eq": [{"$type": "$$node.p"}, "string"]}, "$$node.p", ""]
+    }
     assert start_time_filter["cond"]["$regexMatch"]["regex"] == "^1$"
 
 
@@ -1109,6 +1111,102 @@ async def test_compile_query_raw_aql_resolves_content_paths_and_order_by_for_mat
     assert ":2:1" in data_inici_regex
     assert ":2:1" in data_hora_fi_regex
     assert ":1:1" not in data_inici_regex
+
+
+@pytest.mark.asyncio
+async def test_compile_query_raw_aql_contains_name_predicate_uses_match_pipeline():
+    db = _FakeDb(
+        {
+            "_codes": _FakeCollection(
+                {
+                    "ar_code": {
+                        "_id": "ar_code",
+                        "at": {
+                            "at0001": "A1",
+                            "at0002": "A2",
+                            "at0003": "A3",
+                        },
+                        "openEHR-EHR-COMPOSITION": {
+                            "probs_base_composition": {
+                                "v0": 1
+                            }
+                        },
+                        "openEHR-EHR-OBSERVATION": {
+                            "probs_base_observation": {
+                                "v0": 2
+                            }
+                        },
+                        "openEHR-EHR-CLUSTER": {
+                            "health_thread": {
+                                "v0": 8
+                            }
+                        },
+                    }
+                }
+            ),
+            "_shortcuts": _FakeCollection(
+                {
+                    "shortcuts": {
+                        "_id": "shortcuts",
+                        "items": {
+                            "archetype_details": "ad",
+                            "template_id": "ti",
+                            "uid": "uid",
+                        },
+                    }
+                }
+            ),
+            "compositions_rps": _FakeCollection(
+                {
+                    "sample": {
+                        "_id": "comp-1",
+                        "cn": [{"p": "1:2:8", "data": {"ani": 8}}],
+                    }
+                }
+            ),
+            "compositions_search": _FakeCollection({}),
+        }
+    )
+
+    ctx = StrategyContext(
+        environment_id="env-contains-name-predicate",
+        config={"paths": {"separator": ":"}},
+        adapters={"storage": _FakeStorage(db)},
+        manifest=MANIFEST.model_copy(deep=True),
+        meta={},
+    )
+    strategy = RPSDualStrategy()
+    raw_aql = """
+    SELECT
+        c/uid/value AS uid
+    FROM
+        EHR e
+            CONTAINS VERSION v
+                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.probs_base_composition.v0]
+                    CONTAINS OBSERVATION o[openEHR-EHR-OBSERVATION.probs_base_observation.v0 and name/value='Nadó/Fetus 1-n']
+                        CONTAINS CLUSTER cl[openEHR-EHR-CLUSTER.health_thread.v0]
+    WHERE
+        c/archetype_details/template_id/value = 'PO_Care_of_newborn_and_fetus_1-n_v0.13_FORMULARIS'
+    """
+
+    plan = await strategy.compile_query(
+        ctx,
+        "openEHR",
+        {
+            "raw_aql": raw_aql,
+            "debug": True,
+        },
+    )
+
+    pipeline = plan.plan["pipeline"]
+    assert plan.explain["builder"]["reason"] == "scope_cross_patient_match_friendly"
+    assert "$match" in pipeline[0]
+    assert "$search" not in pipeline[0]
+    assert pipeline[0]["$match"]["tid"] == "PO_Care_of_newborn_and_fetus_1-n_v0.13_FORMULARIS"
+    assert pipeline[0]["$match"]["cn"]["$elemMatch"] == {
+        "p": {"$regex": "^8(?::[^:]+)*:2(?::[^:]+)*:1$"},
+        "data.ani": 8,
+    }
 
 
 @pytest.mark.asyncio

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from copy import deepcopy
 
 import pytest
@@ -104,6 +105,115 @@ def test_search_pipeline_builder_wraps_sn_child_predicates_for_atlas_embedded_do
             },
         }
     }
+
+
+@pytest.mark.asyncio
+async def test_compile_query_raw_aql_uses_sidecar_exact_match_for_path_to_path_comparison():
+    db = _FakeDb(
+        {
+            "_codes": _FakeCollection(
+                {
+                    "ar_code": {
+                        "_id": "ar_code",
+                        "at": {
+                            "at0001": "-1",
+                            "at0002": "-2",
+                        },
+                        "openEHR-EHR-COMPOSITION": {
+                            "encounter": {
+                                "v1": "24",
+                            }
+                        },
+                        "openEHR-EHR-EVALUATION": {
+                            "adverse_reaction_risk": {
+                                "v2": "33",
+                            }
+                        },
+                    }
+                }
+            ),
+            "_shortcuts": _FakeCollection(
+                {
+                    "shortcuts": {
+                        "_id": "shortcuts",
+                        "items": {
+                            "data": "data",
+                            "items": "i",
+                            "value": "v",
+                            "defining_code": "df",
+                            "code_string": "cs",
+                            "archetype_details": "ad",
+                            "template_id": "ti",
+                        },
+                    }
+                }
+            ),
+            "compositions_rps": _FakeCollection({}),
+            "compositions_search": _FakeCollection({}),
+        }
+    )
+
+    ctx = StrategyContext(
+        environment_id="env-path-to-path",
+        config=MANIFEST.default_config,
+        adapters={"storage": _FakeStorage(db)},
+        manifest=MANIFEST.model_copy(deep=True),
+        meta={},
+    )
+    strategy = RPSDualStrategy()
+    raw_aql = """
+    SELECT
+        c/uid/value AS compositionId
+    FROM
+        EHR e
+            CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.encounter.v1]
+                CONTAINS (
+                    EVALUATION ar[openEHR-EHR-EVALUATION.adverse_reaction_risk.v2]
+                    AND EVALUATION ar2[openEHR-EHR-EVALUATION.adverse_reaction_risk.v2]
+                )
+    WHERE
+        ar/data[at0001]/items[at0002]/value/defining_code/code_string
+        != ar2/data[at0001]/items[at0002]/value/defining_code/code_string
+    """
+
+    plan = await strategy.compile_query(
+        ctx,
+        "openEHR",
+        {
+            "raw_aql": raw_aql,
+            "debug": True,
+        },
+    )
+
+    assert plan.explain["builder"]["chosen"] == "search_pipeline_builder"
+    pipeline = plan.plan["pipeline"]
+    search_stage = pipeline[0]["$search"]
+    search_json = json.dumps(search_stage)
+    assert "ar2/data" not in search_json
+
+    must = search_stage["compound"]["must"]
+    assert len(must) == 2
+    assert must[0]["embeddedDocument"]["operator"]["compound"]["must"] == [
+        {
+            "regex": {
+                "path": "sn.p",
+                "query": r"^\-2:\-1:33(?::[^:]+)*$",
+            }
+        },
+        {
+            "exists": {
+                "path": "sn.data.v.df.cs",
+            }
+        },
+    ]
+
+    exact_stage = next(stage["$match"] for stage in pipeline if "$match" in stage and "$expr" in stage["$match"])
+    exact_json = json.dumps(exact_stage)
+    assert '"$ne": ["$$left.data.v.df.cs", "$$right.data.v.df.cs"]' in exact_json
+    assert "$$left.pi" in exact_json
+    assert "$$right.pi" in exact_json
+    assert "$$left.li" in exact_json
+    assert "$$right.li" in exact_json
 
 
 @pytest.mark.asyncio
@@ -296,6 +406,9 @@ async def test_compile_query_raw_aql_adds_row_fanout_for_deepest_selected_alias(
     pipeline = plan.plan["pipeline"]
     assert pipeline[1] == {"$limit": 100}
     assert pipeline[2]["$addFields"]["__fanout_nodes"]["$filter"]["cond"]["$regexMatch"]["regex"] == "^31(?::[^:]+)*:33(?::[^:]+)*:30(?::[^:]+)*:24$"
+    assert pipeline[2]["$addFields"]["__fanout_nodes"]["$filter"]["cond"]["$regexMatch"]["input"] == {
+        "$cond": [{"$eq": [{"$type": "$$node.p"}, "string"]}, "$$node.p", ""]
+    }
     assert pipeline[3] == {"$unwind": "$__fanout_nodes"}
     assert pipeline[4]["$addFields"]["__fanout_paths"]["ev"] == "$__fanout_nodes.p"
 
@@ -413,7 +526,13 @@ async def test_compile_query_raw_aql_projection_cache_reuses_repeated_sources():
         if "__nodes_by_path" in stage.get("$addFields", {})
     )
     assert low_path_lookup_stage["__nodes_by_path"]["$arrayToObject"]["$map"]["input"] == {
-        "$reverseArray": {"$ifNull": ["$cn", []]}
+        "$reverseArray": {
+            "$filter": {
+                "input": {"$ifNull": ["$cn", []]},
+                "as": "node",
+                "cond": {"$eq": [{"$type": "$$node.p"}, "string"]},
+            }
+        }
     }
     assert low_cache_stage["__projection_cache"]["c0"]["$getField"]["input"] == "$__nodes_by_path"
 
@@ -552,6 +671,9 @@ async def test_compile_query_raw_aql_search_pipeline_keeps_row_fanout_for_select
     assert plan.engine == "text_search_dual"
     assert "$lookup" in pipeline[2]
     assert pipeline[3]["$addFields"]["__fanout_nodes"]["$filter"]["cond"]["$regexMatch"]["regex"] == "^31(?::[^:]+)*:33(?::[^:]+)*:30(?::[^:]+)*:24$"
+    assert pipeline[3]["$addFields"]["__fanout_nodes"]["$filter"]["cond"]["$regexMatch"]["input"] == {
+        "$cond": [{"$eq": [{"$type": "$$node.p"}, "string"]}, "$$node.p", ""]
+    }
     assert pipeline[4] == {"$unwind": "$__fanout_nodes"}
     assert pipeline[5]["$addFields"]["__fanout_paths"]["ev"] == "$__fanout_nodes.p"
     assert pipeline[-1] == {"$limit": 100}

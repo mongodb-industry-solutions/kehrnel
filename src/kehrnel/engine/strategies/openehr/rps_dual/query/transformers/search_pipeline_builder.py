@@ -67,6 +67,12 @@ class SearchPipelineBuilder:
         return {
             'composition_array': search_fields.nodes if search_fields and search_fields.nodes else 'sn',
             'path_field': search_fields.path if search_fields and search_fields.path else 'p',
+            'path_instance_field': (
+                search_fields.path_instance
+                if search_fields and search_fields.path_instance
+                else self.schema_config.get("path_instance_field", "pi")
+            ),
+            'path_instance_mode': self.schema_config.get("path_instance_mode", "chain"),
             'data_field': search_fields.data if search_fields and search_fields.data else 'data',
             'ehr_id': search_fields.ehr_id if search_fields and search_fields.ehr_id else 'ehr_id',
             'comp_id': search_fields.comp_id if search_fields and search_fields.comp_id else 'comp_id',
@@ -153,6 +159,16 @@ class SearchPipelineBuilder:
             }
         }
 
+    @staticmethod
+    def _safe_string_expr(expr: Any) -> Dict[str, Any]:
+        return {
+            "$cond": [
+                {"$eq": [{"$type": expr}, "string"]},
+                expr,
+                "",
+            ]
+        }
+
     def _matching_nodes_expr(
         self,
         nodes_expr: Any,
@@ -167,7 +183,7 @@ class SearchPipelineBuilder:
                 "as": "node",
                 "cond": {
                     "$regexMatch": {
-                        "input": f"$$node.{path_field}",
+                        "input": self._safe_string_expr(f"$$node.{path_field}"),
                         "regex": path_regex_pattern,
                     }
                 },
@@ -391,7 +407,7 @@ class SearchPipelineBuilder:
                             "as": "node",
                             "cond": {
                                 "$regexMatch": {
-                                    "input": f"$$node.{path_field}",
+                                    "input": self._safe_string_expr(f"$$node.{path_field}"),
                                     "regex": spec["target_regex"],
                                 }
                             },
@@ -520,6 +536,328 @@ class SearchPipelineBuilder:
             preformatted=True,
         )
 
+    @staticmethod
+    def _path_operand_path(value: Any) -> Optional[str]:
+        if (
+            isinstance(value, dict)
+            and value.get("type") == "dataMatchPath"
+            and isinstance(value.get("path"), str)
+            and "/" in value["path"]
+        ):
+            return value["path"]
+        return None
+
+    def _is_path_to_path_condition(self, node: Dict[str, Any]) -> bool:
+        if not isinstance(node, dict):
+            return False
+        operator = str(node.get("operator") or "").upper()
+        if operator not in {"=", "!=", "<>", ">", ">=", "<", "<="}:
+            return False
+        path = node.get("path")
+        return isinstance(path, str) and "/" in path and self._path_operand_path(node.get("value")) is not None
+
+    def _where_has_path_to_path_condition(self, node: Dict[str, Any] | None) -> bool:
+        if not isinstance(node, dict) or not node:
+            return False
+        if self._is_path_to_path_condition(node):
+            return True
+        operator = str(node.get("operator") or "").upper()
+        if operator in {"AND", "OR"}:
+            return any(self._where_has_path_to_path_condition(child) for child in self._iter_where_children(node))
+        return False
+
+    def _sidecar_nodes_expr(self) -> Dict[str, Any]:
+        return {"$ifNull": [f"${self.search_config['composition_array']}", []]}
+
+    def _value_present_expr(self, value_expr: Any) -> Dict[str, Any]:
+        return {
+            "$and": [
+                {"$ne": [{"$type": value_expr}, "missing"]},
+                {"$ne": [value_expr, None]},
+            ]
+        }
+
+    def _sidecar_nodes_with_value_expr(
+        self,
+        *,
+        path_regex_pattern: Any,
+        data_path: str,
+    ) -> Dict[str, Any]:
+        path_field = self.search_config["path_field"]
+        return {
+            "$filter": {
+                "input": self._sidecar_nodes_expr(),
+                "as": "candidate",
+                "cond": {
+                    "$and": [
+                        {
+                            "$regexMatch": {
+                                "input": self._safe_string_expr(f"$$candidate.{path_field}"),
+                                "regex": path_regex_pattern,
+                            }
+                        },
+                        self._value_present_expr(f"$$candidate.{data_path}"),
+                    ]
+                },
+            }
+        }
+
+    async def _contains_alias_archetype_codes(self, contains_clause: Any) -> Dict[str, str]:
+        alias_codes: Dict[str, str] = {}
+        resolver = getattr(self.format_resolver, "archetype_resolver", None)
+
+        async def visit(node: Any) -> None:
+            if not isinstance(node, dict):
+                return
+
+            alias = node.get("alias")
+            predicate = node.get("predicate") if isinstance(node.get("predicate"), dict) else {}
+            archetype_id = predicate.get("value") if predicate.get("path") == "archetype_node_id" else None
+            if isinstance(alias, str) and alias and isinstance(archetype_id, str) and archetype_id:
+                code = None
+                if resolver is not None:
+                    try:
+                        code = await resolver.get_archetype_code(archetype_id)
+                    except Exception as exc:
+                        logger.debug("Could not resolve archetype code for %s: %s", archetype_id, exc)
+                if code is not None:
+                    alias_codes[alias] = str(code)
+
+            children = node.get("children")
+            if isinstance(children, dict):
+                for child in children.values():
+                    await visit(child)
+            elif isinstance(children, list):
+                for child in children:
+                    await visit(child)
+
+            conditions = node.get("conditions")
+            if isinstance(conditions, dict):
+                for child in conditions.values():
+                    await visit(child)
+            elif isinstance(conditions, list):
+                for child in conditions:
+                    await visit(child)
+
+            await visit(node.get("contains"))
+
+        await visit(contains_clause)
+        return alias_codes
+
+    def _alias_parent_instance_expr(self, leaf_path_expr: Any, leaf_instance_expr: Any, alias_code: str) -> Dict[str, Any]:
+        return {
+            "$let": {
+                "vars": {
+                    "instances": self._fanout_alias_instance_expr(leaf_path_expr, leaf_instance_expr, alias_code),
+                },
+                "in": {
+                    "$cond": [
+                        {"$isArray": "$$instances"},
+                        {"$slice": ["$$instances", 1, {"$size": "$$instances"}]},
+                        None,
+                    ]
+                },
+            }
+        }
+
+    def _node_instance_expr(self, node_var: str, instance_field: str) -> Any:
+        configured_expr = f"$${node_var}.{instance_field}"
+        if instance_field == "li":
+            return configured_expr
+        return {"$ifNull": [configured_expr, f"$${node_var}.li"]}
+
+    def _alias_instance_identity_expr(self, leaf_path_expr: Any, leaf_instance_expr: Any, alias_code: str) -> Dict[str, Any]:
+        return {
+            "$let": {
+                "vars": {
+                    "rawInstance": leaf_instance_expr,
+                },
+                "in": {
+                    "$cond": [
+                        {"$isArray": "$$rawInstance"},
+                        self._fanout_alias_instance_expr(leaf_path_expr, "$$rawInstance", alias_code),
+                        "$$rawInstance",
+                    ]
+                },
+            }
+        }
+
+    def _alias_parent_instance_identity_expr(self, leaf_path_expr: Any, leaf_instance_expr: Any, alias_code: str) -> Dict[str, Any]:
+        return {
+            "$let": {
+                "vars": {
+                    "rawInstance": leaf_instance_expr,
+                },
+                "in": {
+                    "$cond": [
+                        {"$isArray": "$$rawInstance"},
+                        self._alias_parent_instance_expr(leaf_path_expr, "$$rawInstance", alias_code),
+                        "legacy-scalar-li-parent",
+                    ]
+                },
+            }
+        }
+
+    def _path_pair_correlation_expr(
+        self,
+        *,
+        left_alias: str,
+        right_alias: str,
+        left_node_var: str,
+        right_node_var: str,
+        alias_codes: Dict[str, str],
+    ) -> Optional[Dict[str, Any]]:
+        left_code = alias_codes.get(left_alias)
+        right_code = alias_codes.get(right_alias)
+        if not left_code or not right_code:
+            return None
+
+        path_field = self.search_config["path_field"]
+        instance_field = self.search_config.get("path_instance_field") or self.schema_config.get("path_instance_field", "pi")
+        left_path_expr = f"$${left_node_var}.{path_field}"
+        right_path_expr = f"$${right_node_var}.{path_field}"
+        left_instance_expr = self._node_instance_expr(left_node_var, instance_field)
+        right_instance_expr = self._node_instance_expr(right_node_var, instance_field)
+        left_alias_path = self._fanout_alias_path_expr(left_path_expr, left_code)
+        right_alias_path = self._fanout_alias_path_expr(right_path_expr, right_code)
+        left_alias_instance = self._alias_instance_identity_expr(left_path_expr, left_instance_expr, left_code)
+        right_alias_instance = self._alias_instance_identity_expr(right_path_expr, right_instance_expr, right_code)
+
+        if left_alias == right_alias:
+            return {
+                "$and": [
+                    {"$eq": [left_alias_path, right_alias_path]},
+                    {"$eq": [left_alias_instance, right_alias_instance]},
+                ]
+            }
+
+        if left_code == right_code:
+            return {
+                "$and": [
+                    {"$eq": [left_alias_path, right_alias_path]},
+                    {
+                        "$eq": [
+                            self._alias_parent_instance_identity_expr(left_path_expr, left_instance_expr, left_code),
+                            self._alias_parent_instance_identity_expr(right_path_expr, right_instance_expr, right_code),
+                        ]
+                    },
+                    {"$ne": [left_alias_instance, right_alias_instance]},
+                ]
+            }
+
+        return None
+
+    async def _build_path_to_path_leaf_expr(
+        self,
+        condition: Dict[str, Any],
+        alias_codes: Dict[str, str],
+    ) -> Optional[Dict[str, Any]]:
+        if not self._is_path_to_path_condition(condition):
+            return None
+
+        left_path = condition.get("path")
+        right_path = self._path_operand_path(condition.get("value"))
+        operator = str(condition.get("operator") or "").upper()
+        if not isinstance(left_path, str) or not isinstance(right_path, str):
+            return None
+
+        try:
+            left_path_regex, left_data_path = await self.format_resolver.translate_aql_path(left_path)
+            right_path_regex, right_data_path = await self.format_resolver.translate_aql_path(right_path)
+        except Exception as exc:
+            logger.warning("Could not resolve path-to-path comparison %s %s %s: %s", left_path, operator, right_path, exc)
+            return None
+
+        if left_path_regex is None or right_path_regex is None:
+            logger.debug("Skipping sidecar path-to-path exact match for direct field comparison: %s %s %s", left_path, operator, right_path)
+            return None
+
+        left_nodes = self._sidecar_nodes_with_value_expr(
+            path_regex_pattern=left_path_regex,
+            data_path=left_data_path,
+        )
+        right_nodes = self._sidecar_nodes_with_value_expr(
+            path_regex_pattern=right_path_regex,
+            data_path=right_data_path,
+        )
+        value_expr = self._build_value_predicate_expr(
+            f"$$left.{left_data_path}",
+            operator,
+            f"$$right.{right_data_path}",
+            preformatted=True,
+        )
+        if value_expr is None:
+            return None
+
+        left_alias = left_path.split("/", 1)[0].strip()
+        right_alias = right_path.split("/", 1)[0].strip()
+        pair_conds = [value_expr]
+        correlation_expr = self._path_pair_correlation_expr(
+            left_alias=left_alias,
+            right_alias=right_alias,
+            left_node_var="left",
+            right_node_var="right",
+            alias_codes=alias_codes,
+        )
+        if correlation_expr is not None:
+            pair_conds.append(correlation_expr)
+
+        pair_expr = self._combine_exprs("$and", pair_conds)
+        if pair_expr is None:
+            return None
+
+        return {
+            "$anyElementTrue": {
+                "$map": {
+                    "input": left_nodes,
+                    "as": "left",
+                    "in": {
+                        "$anyElementTrue": {
+                            "$map": {
+                                "input": right_nodes,
+                                "as": "right",
+                                "in": pair_expr,
+                            }
+                        }
+                    },
+                }
+            }
+        }
+
+    async def _build_path_to_path_where_expr(
+        self,
+        node: Dict[str, Any] | None,
+        alias_codes: Dict[str, str],
+    ) -> Optional[Dict[str, Any]]:
+        if not isinstance(node, dict) or not node:
+            return None
+
+        operator = str(node.get("operator") or "").upper()
+        if operator in {"AND", "OR"}:
+            children = self._iter_where_children(node)
+            child_exprs: List[Dict[str, Any]] = []
+            for child in children:
+                child_expr = await self._build_path_to_path_where_expr(child, alias_codes)
+                if child_expr is not None:
+                    child_exprs.append(child_expr)
+            if not child_exprs:
+                return None
+            if operator == "OR" and len(child_exprs) != len(children):
+                return None
+            return self._combine_exprs(f"${operator.lower()}", child_exprs)
+
+        return await self._build_path_to_path_leaf_expr(node, alias_codes)
+
+    async def build_path_to_path_exact_match_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        if not self._where_has_path_to_path_condition(ast.get("where")):
+            return None
+
+        alias_codes = await self._contains_alias_archetype_codes(ast.get("contains"))
+        path_expr = await self._build_path_to_path_where_expr(ast.get("where"), alias_codes)
+        if path_expr is None:
+            return None
+        return {"$match": {"$expr": path_expr}}
+
     def _resolve_row_match_direct_field_expr(self, path: str) -> Optional[str]:
         if path in {"ehr_id", f"{self.ehr_alias}/ehr_id/value"}:
             return f"${self.search_config.get('ehr_id', 'ehr_id')}"
@@ -579,6 +917,8 @@ class SearchPipelineBuilder:
         operator = str(condition.get("operator") or "").upper()
         if not isinstance(path, str) or not operator:
             return None
+        if self._path_operand_path(condition.get("value")) is not None:
+            return None
 
         direct_field_expr = self._resolve_row_match_direct_field_expr(path)
         if direct_field_expr is not None:
@@ -598,7 +938,7 @@ class SearchPipelineBuilder:
         conds: List[Dict[str, Any]] = [
             {
                 "$regexMatch": {
-                    "input": f"$$node.{path_field}",
+                    "input": self._safe_string_expr(f"$$node.{path_field}"),
                     "regex": path_regex_pattern,
                 }
             }
@@ -719,6 +1059,12 @@ class SearchPipelineBuilder:
         additional_match = await self.build_additional_match_stage(ast)
         if additional_match:
             pipeline.append(additional_match)
+
+        # 2.5. Path-to-path comparisons use Atlas Search only for candidate
+        # reduction; the exact comparison must run over correlated sidecar nodes.
+        path_to_path_exact_match = await self.build_path_to_path_exact_match_stage(ast)
+        if path_to_path_exact_match:
+            pipeline.append(path_to_path_exact_match)
 
         # 3. Build the $lookup stage to get complete composition data
         lookup_stage = self.build_lookup_stage(ast)
@@ -1161,6 +1507,10 @@ class SearchPipelineBuilder:
         except Exception as e:
             logger.warning(f"Could not resolve path {aql_path}: {e}")
             return None
+
+        rhs_path = self._path_operand_path(value)
+        if rhs_path and str(operator or "").upper() in {"=", "!=", "<>", ">", ">=", "<", "<="}:
+            return await self._build_path_to_path_candidate_search(aql_path, rhs_path)
         
         # Handle special operators
         if operator == "EXISTS":
@@ -1378,6 +1728,10 @@ class SearchPipelineBuilder:
         except Exception as e:
             logger.warning(f"Could not resolve path {aql_path}: {e}")
             return None
+
+        right_path = self._path_operand_path(right)
+        if right_path and str(operator or "").upper() in {"=", "!=", "<>", ">", ">=", "<", "<="}:
+            return await self._build_path_to_path_candidate_search(aql_path, right_path)
             
         value = self.value_formatter.format_literal_value(right)
         
@@ -2219,6 +2573,66 @@ class SearchPipelineBuilder:
                 }
             }
         }
+
+    def _build_embedded_document_path_exists_query(
+        self,
+        search_path: str,
+        path_regex_pattern: Optional[str],
+    ) -> Dict[str, Any]:
+        nodes_field = self._search_nodes_array_field()
+        if not search_path.startswith(f"{nodes_field}.") or not path_regex_pattern:
+            return self._build_embedded_document_exists_query(search_path)
+
+        return {
+            "embeddedDocument": {
+                "path": nodes_field,
+                "operator": {
+                    "compound": {
+                        "must": [
+                            {
+                                "regex": {
+                                    "path": f"{nodes_field}.{self.search_config.get('path_field', 'p')}",
+                                    "query": path_regex_pattern,
+                                }
+                            },
+                            {
+                                "exists": {
+                                    "path": search_path,
+                                }
+                            },
+                        ]
+                    }
+                },
+            }
+        }
+
+    async def _build_path_to_path_candidate_search(
+        self,
+        left_aql_path: str,
+        right_aql_path: str,
+    ) -> Optional[Dict[str, Any]]:
+        clauses: List[Dict[str, Any]] = []
+        nodes_field = self._search_nodes_array_field()
+
+        for aql_path in (left_aql_path, right_aql_path):
+            try:
+                path_regex_pattern, data_path = await self.format_resolver.translate_aql_path(aql_path)
+            except Exception as exc:
+                logger.warning("Could not resolve path-to-path candidate path %s: %s", aql_path, exc)
+                return None
+
+            if path_regex_pattern is None:
+                clauses.append({"exists": {"path": data_path}})
+                continue
+
+            search_path = f"{nodes_field}.{data_path}" if data_path else f"{nodes_field}.data"
+            clauses.append(self._build_embedded_document_path_exists_query(search_path, path_regex_pattern))
+
+        if not clauses:
+            return None
+        if len(clauses) == 1:
+            return clauses[0]
+        return {"compound": {"must": clauses}}
 
     def _build_embedded_document_equals_query(self, search_path: str, value: Any) -> Dict[str, Any]:
         """

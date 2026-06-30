@@ -92,6 +92,8 @@ class CompositionFlattener:
         self.sf_nodes = s_fields.get("nodes", "sn")
         self.sf_data  = s_fields.get("data", "data")
         self.sf_path  = s_fields.get("path", "p")
+        self.sf_pi    = s_fields.get("path_instance", self.cf_pi)
+        self.sf_kp    = s_fields.get("keyPath") or s_fields.get("key_path") or "kp"
         self.sf_ap    = s_fields.get("archetype_path")
         self.sf_anc   = s_fields.get("ancestors", "anc")
         self.sf_ehr   = s_fields.get("ehr_id", "ehr_id")
@@ -534,6 +536,8 @@ class CompositionFlattener:
             },
             "search_nodes": {
                 "path": "p",
+                "keyPath": "kp",
+                "path_instance": "pi",
                 "data": "data"
             },
         }
@@ -1105,6 +1109,12 @@ class CompositionFlattener:
         # 3. Ancestors
         if self.sf_anc and "_anc" in node:
              slim[self.sf_anc] = node["_anc"]
+
+        # 3b. Lineage metadata for exact post-search correlation.
+        if self.sf_kp and "kp" in node:
+            slim[self.sf_kp] = node["kp"]
+        if self.cf_pi in node:
+            slim[self.sf_pi] = node[self.cf_pi]
 
         # 4. Data
         for expr in rule["copy"]:

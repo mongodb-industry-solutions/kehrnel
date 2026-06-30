@@ -25,6 +25,9 @@ from kehrnel.engine.strategies.openehr.rps_dual.strategy import (
     RPSDualStrategy,
     load_json,
 )
+from kehrnel.engine.strategies.openehr.rps_dual_ibm.strategy import (
+    RPSDualIBMStrategy,
+)
 from kehrnel.strategy_sdk import StrategyBindings
 
 
@@ -54,6 +57,42 @@ def test_defaults_json_matches_schema_and_python_config_builders():
     assert schema_cfg["search"]["ehr_id_encoding"] == defaults["ids"]["ehr_id"]
     assert schema_cfg["search"]["sort_time"] == defaults["fields"]["document"]["sort_time"]
     assert flattener_cfg["search_fields"]["comp_id"] == defaults["fields"]["document"]["comp_id"]
+
+
+def test_ibm_defaults_use_legacy_li_instance_field():
+    ibm_dir = (
+        Path(__file__).resolve().parents[2]
+        / "src"
+        / "kehrnel"
+        / "engine"
+        / "strategies"
+        / "openehr"
+        / "rps_dual_ibm"
+    )
+    defaults = load_json(ibm_dir / "defaults.json")
+    schema = load_json(ibm_dir / "schema.json")
+
+    jsonschema.validate(defaults, schema)
+
+    cfg = normalize_config(defaults)
+    flattener_cfg = build_flattener_config(cfg)
+    schema_cfg = build_schema_config(cfg)
+
+    assert defaults["fields"]["node"]["pi"] == "li"
+    assert flattener_cfg["composition_fields"]["path_instance"] == "li"
+    assert flattener_cfg["search_fields"]["path_instance"] == "li"
+    assert schema_cfg["composition"]["path_instance_field"] == "li"
+    assert schema_cfg["search"]["path_instance_field"] == "li"
+    assert schema_cfg["search"]["path_instance_mode"] == "scalar"
+
+    strategy = RPSDualIBMStrategy()
+    assert strategy.defaults["fields"]["node"]["pi"] == "li"
+    assert strategy.manifest.default_config["fields"]["node"]["pi"] == "li"
+
+    legacy_activation_cfg = deepcopy(strategy.defaults)
+    legacy_activation_cfg["fields"]["node"]["pi"] = "pi"
+    coerced_cfg = strategy._coerce_ibm_config(legacy_activation_cfg)
+    assert coerced_cfg["fields"]["node"]["pi"] == "li"
 
 
 def test_manifest_schema_and_spec_advertise_current_supported_surface():

@@ -140,7 +140,7 @@
           "description": "Node-level field names (inside cn/sn arrays)",
           "properties": {
             "p": { "type": "string", "default": "p", "description": "Reversed path" },
-            "pi": { "type": "string", "default": "pi", "description": "Path instance chain (list indexes aligned with path segments)" },
+            "pi": { "type": "string", "default": "li", "description": "Configured path instance field. IBM exact-model data uses scalar local list index 'li'; newer RPS data may use array lineage 'pi'." },
             "data": { "type": "string", "default": "data", "description": "Payload fragment" }
           }
         }

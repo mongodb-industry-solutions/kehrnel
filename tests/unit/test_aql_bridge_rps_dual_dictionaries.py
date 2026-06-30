@@ -42,6 +42,32 @@ def test_aql_parser_preserves_quoted_literal_and_nested_version_alias():
     assert ASTValidator.detect_version_alias(ast) == "v"
 
 
+def test_aql_parser_ignores_and_inside_contains_name_predicate():
+    query = (
+        "SELECT c/uid/value AS uid "
+        "FROM EHR e CONTAINS VERSION v CONTAINS COMPOSITION "
+        "c[openEHR-EHR-COMPOSITION.probs_base_composition.v0] "
+        "CONTAINS OBSERVATION o[openEHR-EHR-OBSERVATION.probs_base_observation.v0 "
+        "and name/value='Nadó/Fetus 1-n'] "
+        "CONTAINS CLUSTER cl[openEHR-EHR-CLUSTER.health_thread.v0] "
+        "WHERE c/archetype_details/template_id/value="
+        "'PO_Care_of_newborn_and_fetus_1-n_v0.13_FORMULARIS'"
+    )
+
+    ast = AQLParser(query).parse()
+
+    assert "children" not in ast["contains"]
+    assert ASTValidator.detect_key_aliases(ast) == ("e", "c")
+    assert ASTValidator.detect_version_alias(ast) == "v"
+    observation = ast["contains"]["contains"]["contains"]
+    assert observation["rmType"] == "OBSERVATION"
+    assert observation["predicate"] == {
+        "path": "archetype_node_id",
+        "operator": "=",
+        "value": "openEHR-EHR-OBSERVATION.probs_base_observation.v0",
+    }
+
+
 @pytest.mark.asyncio
 async def test_build_aql_pipeline_uses_request_scoped_codes_and_shortcuts(monkeypatch):
     ast = {
@@ -166,9 +192,11 @@ async def test_build_aql_pipeline_uses_request_scoped_codes_and_shortcuts(monkey
     assert match_stage["time_c"]["$lt"].isoformat() == "2026-04-14T14:46:03.217000+00:00"
     assert match_stage["cn"]["$elemMatch"] == {"p": "1", "data.ani": 1}
 
-    project_stage = pipeline[1]["$project"]
+    project_stage = next(stage["$project"] for stage in pipeline if "$project" in stage)
     assert project_stage["compositionId"] == "$comp_id"
     assert project_stage["DataRegistre"] == "$time_c"
     start_time = project_stage["StartTime"]
-    assert start_time["$first"]["$map"]["in"] == "$$node.data.cx.st.v"
-    assert start_time["$first"]["$map"]["input"]["$filter"]["cond"]["$regexMatch"]["input"] == "$$node.p"
+    assert start_time["$let"]["in"] == "$$node.data.cx.st.v"
+    start_time_filter = start_time["$let"]["vars"]["node"]["$first"]["$filter"]
+    assert start_time_filter["input"] == "$cn"
+    assert start_time_filter["cond"]["$regexMatch"]["regex"] == "^1$"

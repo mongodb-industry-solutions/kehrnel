@@ -437,6 +437,21 @@ class AQLToASTParser:
     def _parse_predicate(self, text: str) -> Dict[str, Any]:
         """Parse a predicate expression (content inside square brackets)"""
         text = text.strip()
+
+        # CONTAINS predicates commonly combine the archetype id with a name
+        # constraint, e.g. [openEHR-EHR-OBSERVATION.foo.v0 and name/value='Bar'].
+        # The query builders consume the archetype id as the structural
+        # predicate; keep that part instead of folding the full expression into
+        # a malformed equality predicate.
+        and_index = self._find_top_level_keyword(text, 'AND')
+        if and_index != -1:
+            first_predicate = text[:and_index].strip()
+            if first_predicate.startswith('openEHR-') and '=' not in first_predicate:
+                return {
+                    "path": "archetype_node_id",
+                    "operator": "=",
+                    "value": first_predicate
+                }
         
         # If it's an openEHR archetype ID without operator
         if text.startswith('openEHR-') and '=' not in text:
@@ -569,27 +584,46 @@ class AQLToASTParser:
             
             # Remove quotes if present
             value = raw_value.strip('\'"')
+            value_operand: Any = value
             
             # Only attempt numeric conversion for unquoted values
             # Quoted values should always be preserved as strings to maintain
             # leading zeros and other string semantics (e.g., '01817273', '007')
             if not is_quoted:
-                try:
-                    if '.' in value:
-                        value = float(value)
-                    else:
-                        value = int(value)
-                except ValueError:
-                    pass  # Keep as string
+                if self._looks_like_data_path(value):
+                    value_operand = {
+                        "type": "dataMatchPath",
+                        "path": value,
+                    }
+                else:
+                    try:
+                        if '.' in value:
+                            value_operand = float(value)
+                        else:
+                            value_operand = int(value)
+                    except ValueError:
+                        value_operand = value  # Keep as string
             
             return {
                 "path": path,
                 "operator": operator,
-                "value": value
+                "value": value_operand
             }
         
         # If no pattern matched, return the raw condition
         return {"raw": text}
+
+    def _looks_like_data_path(self, value: Any) -> bool:
+        """Return true for unquoted RHS operands that look like AQL identified paths."""
+        if not isinstance(value, str):
+            return False
+        candidate = value.strip()
+        if "/" not in candidate or re.search(r"\s", candidate):
+            return False
+        if candidate.startswith("$"):
+            return False
+        first, _sep, rest = candidate.partition("/")
+        return bool(first and rest and re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", first))
     
     def _parse_order_by_clause(self, order_by_text: str) -> Dict[str, Any]:
         """Parse the ORDER BY clause"""
@@ -644,7 +678,7 @@ class AQLToASTParser:
     # Helper methods
     
     def _find_top_level_keyword(self, text: str, keyword: str) -> int:
-        """Find a top-level keyword in text, respecting parentheses depth"""
+        """Find a top-level keyword in text, respecting nested delimiters."""
         depth = 0
         in_single = False
         in_double = False
@@ -661,9 +695,9 @@ class AQLToASTParser:
             if in_single or in_double:
                 continue
 
-            if char == '(':
+            if char in '([{':
                 depth += 1
-            elif char == ')':
+            elif char in ')]}' and depth > 0:
                 depth -= 1
             
             if depth == 0 and upper_text[i:i + keyword_length] == keyword:

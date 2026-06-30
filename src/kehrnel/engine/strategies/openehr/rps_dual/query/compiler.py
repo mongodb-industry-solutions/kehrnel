@@ -64,6 +64,7 @@ def build_runtime_strategy(cfg_model: RPSDualConfig):
                 "search": {
                     "nodes": cfg_model.fields.document.sn,
                     "path": cfg_model.fields.node.p,
+                    "path_instance": cfg_model.fields.node.pi,
                     "data": cfg_model.fields.node.data,
                     "archetype_path": "ap",
                     "ehr_id": cfg_model.fields.document.ehr_id,
