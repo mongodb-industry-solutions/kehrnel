@@ -54,6 +54,7 @@
         "fields": {
           "p": {"type": "string", "role": "path.reversed", "required": true},
           "kp": {"type": "string[]", "role": "path.keypath", "required": false},
+          "li": {"type": "number", "role": "lineage.localIndex", "required": false},
           "pi": {"type": "number[]", "role": "lineage.pathInstance", "required": false},
           "data": {"type": "json", "role": "payload.fragment", "required": true}
         }
@@ -216,13 +217,13 @@
         "params": {
           "nodeConcept": "openehr.node.v1",
           "pathMode": "fromEncodingProfile.paths",
-          "emit": ["p", "kp", "pi", "data"],
+          "emit": ["p", "kp", "li", "data"],
           "includeRootNode": true
         },
         "visual": {
           "group": "Transform",
           "icon": "layers",
-          "notes": "Produces one node per locatable subtree + essential lineage metadata."
+          "notes": "Produces one node per locatable subtree + IBM exact-model lineage metadata."
         }
       },
       {
@@ -384,7 +385,7 @@
           "label": "compositions",
           "fields": ["_id", "ehr_id", "comp_id", "v", "time_c", "tid", "cn"],
           "expand": {
-            "cn": ["p", "kp", "pi", "data"]
+            "cn": ["p", "kp", "li", "data"]
           },
           "badges": ["canonical", "patient", "hydration"],
           "links": [
@@ -398,7 +399,7 @@
           "label": "search",
           "fields": ["_id", "ehr_id", "comp_id", "tid", "sort_time", "sn"],
           "expand": {
-            "sn": ["p", "data"]
+            "sn": ["p", "kp", "li", "data"]
           },
           "badges": ["slim", "cross-patient", "search-indexed"],
           "links": [
@@ -488,7 +489,8 @@
         "entries": [
           {"label": "p", "meaning": "reversed path (leaf → root)", "example": "at0014/at0007/.../COMPOSITION", "configPath": "fields.node.p"},
           {"label": "kp", "meaning": "key-path in JSON (for reconstruction/projection)", "example": "[\"context\",\"other_context\"]"},
-          {"label": "pi", "meaning": "path instance chain (list indexes aligned with path segments)", "example": [0, -1, 2], "configPath": "fields.node.pi"},
+          {"label": "li", "meaning": "IBM local list index for the emitted node", "example": 0, "configPath": "fields.node.pi"},
+          {"label": "pi", "meaning": "Optional path instance chain used by newer RPS data", "example": [0, -1, 2], "configPath": "fields.node.pi"},
           {"label": "data", "meaning": "node payload fragment", "example": "{\"value\": {...}}", "configPath": "fields.node.data"},
           {"label": "cn", "meaning": "canonical node array", "example": "composition nodes", "configPath": "fields.document.cn"},
           {"label": "sn", "meaning": "search node array", "example": "projection nodes", "configPath": "fields.document.sn"},

@@ -305,6 +305,8 @@ def build_flattener_config(
         "search_fields": {
             "nodes": strategy_cfg.fields.document.sn,
             "path": strategy_cfg.fields.node.p,
+            "keyPath": "kp",
+            "path_instance": strategy_cfg.fields.node.pi,
             "data": strategy_cfg.fields.node.data,
             "ehr_id": strategy_cfg.fields.document.ehr_id,
             "comp_id": strategy_cfg.fields.document.comp_id,

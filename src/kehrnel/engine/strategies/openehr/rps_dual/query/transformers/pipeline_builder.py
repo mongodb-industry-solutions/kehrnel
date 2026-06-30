@@ -830,6 +830,17 @@ class PipelineBuilder:
             preformatted=True,
         )
 
+    @staticmethod
+    def _path_operand_path(value: Any) -> Optional[str]:
+        if (
+            isinstance(value, dict)
+            and value.get("type") == "dataMatchPath"
+            and isinstance(value.get("path"), str)
+            and "/" in value["path"]
+        ):
+            return value["path"]
+        return None
+
     def _resolve_row_match_direct_field_expr(self, path: str) -> Optional[str]:
         if path in {"ehr_id", f"{self.ehr_alias}/ehr_id/value"}:
             return f"${self.schema_config.get('ehr_id', 'ehr_id')}"
@@ -888,6 +899,8 @@ class PipelineBuilder:
         path = condition.get("path")
         operator = str(condition.get("operator") or "").upper()
         if not isinstance(path, str) or not operator:
+            return None
+        if self._path_operand_path(condition.get("value")) is not None:
             return None
 
         direct_field_expr = self._resolve_row_match_direct_field_expr(path)

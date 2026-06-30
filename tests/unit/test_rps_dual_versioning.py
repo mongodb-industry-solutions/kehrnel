@@ -145,6 +145,31 @@ def test_transform_composition_uses_configured_search_comp_id_field_name(monkeyp
     assert search_doc["composition_uid"] == ObjectId("64b64c2e5f6270b5c2c2c2c2")
 
 
+def test_flattener_preserves_sidecar_lineage_for_search_nodes():
+    flattener = _build_flattener()
+
+    slim = flattener._apply_rule(
+        {"copy": ["p", "data.v.df.cs"]},
+        {
+            "p": "-2:-1:33:24",
+            "pi": [0, 0, 1, -1],
+            "kp": ["data", "items", "value"],
+        },
+        {
+            "v": {
+                "df": {
+                    "cs": "372726002",
+                }
+            }
+        },
+    )
+
+    assert slim["p"] == "-2:-1:33:24"
+    assert slim["pi"] == [0, 0, 1, -1]
+    assert slim["kp"] == ["data", "items", "value"]
+    assert slim["data"]["v"]["df"]["cs"] == "372726002"
+
+
 @pytest.mark.asyncio
 async def test_build_query_pipeline_maps_version_commit_time_to_top_level_match_and_projection():
     cfg = normalize_config({})

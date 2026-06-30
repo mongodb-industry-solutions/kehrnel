@@ -35,6 +35,7 @@ EXTENDED_AQL_FEATURE_MODE = "extended"
 SUPPORTED_AQL_FEATURE_MODES = (PARITY_AQL_FEATURE_MODE, EXTENDED_AQL_FEATURE_MODE)
 EXTENDED_ONLY_AQL_OPERATORS = frozenset({"EXISTS", "NOT EXISTS"})
 EXTENDED_ONLY_CONTAINS_FEATURES = frozenset({"NOT CONTAINS"})
+EXTENDED_ONLY_AQL_FEATURES = frozenset({"PATH-TO-PATH COMPARISON"})
 
 
 def _safe_error_message(message: str) -> str:
@@ -329,6 +330,8 @@ def _collect_extended_only_operators_recursive(node: Any, found: set[str]) -> No
             normalized_operator = operator.strip().upper()
             if normalized_operator in EXTENDED_ONLY_AQL_OPERATORS:
                 found.add(normalized_operator)
+            if _is_path_to_path_comparison(node):
+                found.update(EXTENDED_ONLY_AQL_FEATURES)
         if node.get("containsNegated"):
             found.update(EXTENDED_ONLY_CONTAINS_FEATURES)
         for value in node.values():
@@ -336,6 +339,22 @@ def _collect_extended_only_operators_recursive(node: Any, found: set[str]) -> No
     elif isinstance(node, list):
         for item in node:
             _collect_extended_only_operators_recursive(item, found)
+
+
+def _is_path_to_path_comparison(node: Dict[str, Any]) -> bool:
+    operator = str(node.get("operator") or "").strip().upper()
+    if operator not in {"=", "!=", "<>", ">", ">=", "<", "<="}:
+        return False
+    path = node.get("path")
+    value = node.get("value")
+    return (
+        isinstance(path, str)
+        and "/" in path
+        and isinstance(value, dict)
+        and value.get("type") == "dataMatchPath"
+        and isinstance(value.get("path"), str)
+        and "/" in value["path"]
+    )
 
 
 def _apply_query_runtime_options(
