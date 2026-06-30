@@ -6,6 +6,7 @@ from .contains_clause import is_match_friendly_contains_clause
 from .metadata_paths import is_version_commit_time_path
 
 _MATCH_FRIENDLY_OPERATORS = {"=", "!=", ">", "<", ">=", "<="}
+_EXISTS_OPERATORS = {"EXISTS", "NOT EXISTS"}
 
 
 def _iter_condition_nodes(node: Dict[str, Any] | None) -> Iterable[Dict[str, Any]]:
@@ -33,12 +34,16 @@ def _iter_order_paths(order_by: Dict[str, Any] | None) -> Iterable[str]:
         return
     columns = order_by.get("columns")
     if not isinstance(columns, dict):
-        return
+        columns = order_by
     for col in columns.values():
         if isinstance(col, dict):
             path = col.get("path")
             if isinstance(path, str) and path.strip():
                 yield path.strip()
+
+
+def _is_metadata_match_path(path: str, allowed_paths: set[str], version_alias: str) -> bool:
+    return path in allowed_paths or is_version_commit_time_path(path, version_alias)
 
 
 def should_prefer_match_for_cross_patient_ast(
@@ -68,22 +73,37 @@ def should_prefer_match_for_cross_patient_ast(
     allowed_order_paths = {
         f"{ehr_alias}/ehr_id/value",
         f"{composition_alias}/uid/value",
+        f"{composition_alias}/context/start_time",
+        f"{composition_alias}/context/start_time/value",
     }
 
     where_conditions: List[Dict[str, Any]] = list(_iter_condition_nodes(ast.get("where")))
+    contains_clause = ast.get("contains")
+    has_anchor = is_match_friendly_contains_clause(contains_clause)
+    for condition in where_conditions:
+        path = str(condition.get("path") or "").strip()
+        if _is_metadata_match_path(path, allowed_where_paths, version_alias):
+            has_anchor = True
+            break
+
     for condition in where_conditions:
         operator = str(condition.get("operator") or "").upper()
         path = str(condition.get("path") or "").strip()
-        if operator not in _MATCH_FRIENDLY_OPERATORS:
-            return False
-        if path not in allowed_where_paths and not is_version_commit_time_path(path, version_alias):
-            return False
+
+        if _is_metadata_match_path(path, allowed_where_paths, version_alias):
+            if operator not in _MATCH_FRIENDLY_OPERATORS:
+                return False
+            continue
+
+        if operator in _EXISTS_OPERATORS and path.startswith(f"{composition_alias}/") and has_anchor:
+            continue
+
+        return False
 
     for path in _iter_order_paths(ast.get("orderBy")):
         if path not in allowed_order_paths and not is_version_commit_time_path(path, version_alias):
             return False
 
-    contains_clause = ast.get("contains")
     if contains_clause and not is_match_friendly_contains_clause(contains_clause):
         return False
 

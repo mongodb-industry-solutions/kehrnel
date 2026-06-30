@@ -437,6 +437,21 @@ class AQLToASTParser:
     def _parse_predicate(self, text: str) -> Dict[str, Any]:
         """Parse a predicate expression (content inside square brackets)"""
         text = text.strip()
+
+        # CONTAINS predicates commonly combine the archetype id with a name
+        # constraint, e.g. [openEHR-EHR-OBSERVATION.foo.v0 and name/value='Bar'].
+        # The query builders consume the archetype id as the structural
+        # predicate; keep that part instead of folding the full expression into
+        # a malformed equality predicate.
+        and_index = self._find_top_level_keyword(text, 'AND')
+        if and_index != -1:
+            first_predicate = text[:and_index].strip()
+            if first_predicate.startswith('openEHR-') and '=' not in first_predicate:
+                return {
+                    "path": "archetype_node_id",
+                    "operator": "=",
+                    "value": first_predicate
+                }
         
         # If it's an openEHR archetype ID without operator
         if text.startswith('openEHR-') and '=' not in text:
@@ -644,7 +659,7 @@ class AQLToASTParser:
     # Helper methods
     
     def _find_top_level_keyword(self, text: str, keyword: str) -> int:
-        """Find a top-level keyword in text, respecting parentheses depth"""
+        """Find a top-level keyword in text, respecting nested delimiters."""
         depth = 0
         in_single = False
         in_double = False
@@ -661,9 +676,9 @@ class AQLToASTParser:
             if in_single or in_double:
                 continue
 
-            if char == '(':
+            if char in '([{':
                 depth += 1
-            elif char == ')':
+            elif char in ')]}' and depth > 0:
                 depth -= 1
             
             if depth == 0 and upper_text[i:i + keyword_length] == keyword:
