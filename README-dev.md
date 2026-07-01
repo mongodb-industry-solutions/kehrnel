@@ -2,12 +2,20 @@
 
 ## Run the new runtime API
 
+From a fresh clone:
+
 ```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 ./startKehrnel
 # Swagger: http://localhost:8080/docs
 # ReDoc:   http://localhost:8080/redoc
 # Site:    http://localhost:8080/guide
 ```
+
+If dependencies are already installed in `.venv`, use `./startKehrnel --skip-sync`. Do not use `pip install --user` inside an active virtualenv; install into the virtualenv with `python -m pip install ...`.
 
 `./startKehrnel` always binds to `8080`. If you launch the runtime directly with `kehrnel-api` or `uvicorn kehrnel.api.app:app`, the API server instead uses `KEHRNEL_API_PORT` and defaults to `8000`.
 

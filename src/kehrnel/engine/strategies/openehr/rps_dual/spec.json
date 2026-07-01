@@ -125,6 +125,26 @@
   },
 
   "storageModel": {
+    "indexContract": {
+      "description": "MongoDB B-tree and Atlas Search indexes are declared with logical store fields. Runtime plan/apply resolves collection names and field aliases from the active strategy configuration before creating indexes.",
+      "configResolved": true,
+      "collectionConfigPaths": {
+        "store:compositions": "collections.compositions.name",
+        "store:search": "collections.search.name"
+      },
+      "fieldConfigPaths": {
+        "ehr_id": "fields.document.ehr_id",
+        "tid": "fields.document.tid",
+        "time_c": "fields.document.time_committed",
+        "v": "fields.document.v",
+        "sort_time": "fields.document.sort_time",
+        "cn": "fields.document.cn",
+        "sn": "fields.document.sn",
+        "cn.p": "fields.document.cn + fields.node.p",
+        "cn.data": "fields.document.cn + fields.node.data",
+        "sn.data": "fields.document.sn + fields.node.data"
+      }
+    },
     "stores": [
       {
         "id": "store:compositions",
@@ -138,28 +158,61 @@
             "id": "idx_patient_path",
             "type": "btree",
             "fields": ["ehr_id", "cn.p", "time_c"],
-            "purpose": "Fast patient-scoped path resolution with commit-time filtering (optional if too large)"
+            "requirement": "required",
+            "configResolved": true,
+            "workloads": ["patient_scope", "path_predicate", "commit_time_filter"],
+            "fieldsFromConfig": [
+              { "field": "ehr_id", "configPath": "fields.document.ehr_id" },
+              { "field": "cn.p", "configPath": "fields.document.cn + fields.node.p" },
+              { "field": "time_c", "configPath": "fields.document.time_committed" }
+            ],
+            "purpose": "Patient-scoped path resolution and optional commit-time filtering for AQL queries with an EHR ID predicate."
           },
           {
             "id": "idx_template_commit",
             "type": "btree",
             "fields": ["tid", "time_c"],
             "options": { "name": "idx_template_commit" },
-            "purpose": "Fast cross-patient template/date filters on the composition store without Atlas Search fanout"
+            "requirement": "optional",
+            "autoCreate": false,
+            "configResolved": true,
+            "workloads": ["cross_patient_match", "template_filter", "commit_time_filter", "default_pagination"],
+            "fieldsFromConfig": [
+              { "field": "tid", "configPath": "fields.document.tid" },
+              { "field": "time_c", "configPath": "fields.document.time_committed" }
+            ],
+            "purpose": "Small planner-friendly index for simple template/date filters. The versioned template/date index covers this prefix, so this index is optional and is not created automatically."
           },
           {
             "id": "idx_template_commit_version",
             "type": "btree",
             "fields": ["tid", "time_c", "v"],
             "options": { "name": "idx_template_commit_version" },
-            "purpose": "Fast sorted cross-patient template/date pages ordered by commit time and version"
+            "requirement": "required",
+            "configResolved": true,
+            "workloads": ["cross_patient_match", "stable_pagination", "commit_time_sort"],
+            "fieldsFromConfig": [
+              { "field": "tid", "configPath": "fields.document.tid" },
+              { "field": "time_c", "configPath": "fields.document.time_committed" },
+              { "field": "v", "configPath": "fields.document.v" }
+            ],
+            "purpose": "Primary cross-patient template/date index with version as a stable pagination tie-breaker; covers the template/date prefix used by simple filters."
           },
           {
             "id": "idx_template_node_commit",
             "type": "btree",
             "fields": ["tid", "cn.data.ani", "cn.p", "time_c"],
             "options": { "name": "idx_template_node_commit" },
-            "purpose": "Fast cross-patient template/date/node predicates on the composition store when AQL filters bind a contained archetype"
+            "requirement": "recommended",
+            "configResolved": true,
+            "workloads": ["cross_patient_match", "template_filter", "archetype_node_filter", "commit_time_filter"],
+            "fieldsFromConfig": [
+              { "field": "tid", "configPath": "fields.document.tid" },
+              { "field": "cn.data.ani", "configPath": "fields.document.cn + fields.node.data + archetype node id payload" },
+              { "field": "cn.p", "configPath": "fields.document.cn + fields.node.p" },
+              { "field": "time_c", "configPath": "fields.document.time_committed" }
+            ],
+            "purpose": "Fast cross-patient template/date/node predicates on the composition store when AQL filters bind a contained archetype. Keep when these contained-node filters are part of the expected workload."
           }
         ]
       },
@@ -175,6 +228,13 @@
             "id": "idx_patient_sort",
             "type": "btree",
             "fields": ["ehr_id", "sort_time"],
+            "requirement": "recommended",
+            "configResolved": true,
+            "workloads": ["search_patient_scope", "search_pagination", "commit_time_sort"],
+            "fieldsFromConfig": [
+              { "field": "ehr_id", "configPath": "fields.document.ehr_id" },
+              { "field": "sort_time", "configPath": "fields.document.sort_time" }
+            ],
             "purpose": "Patient+time ordering, quick paging"
           }
         ],
@@ -182,6 +242,10 @@
           "kind": "atlas_search",
           "indexNameFromConfig": "collections.search.atlasIndex.name",
           "definitionFromConfig": "collections.search.atlasIndex.definition",
+          "requirement": "conditional",
+          "condition": "Required when the search collection is enabled and AQL predicates need analytics sidecar fields not covered by EHR ID, template, or commit-time B-tree filters.",
+          "configResolved": true,
+          "workloads": ["analytics_sidecar_filter", "cross_patient_search", "token_pagination"],
           "purpose": "Cross-patient filtered retrieval using embeddedDocument + wildcard/range"
         }
       },

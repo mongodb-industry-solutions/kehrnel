@@ -185,10 +185,10 @@ async def test_default_plan_materializes_expected_default_artifacts(tmp_path):
 
     index_keys = {(idx["collection"], tuple(idx["keys"])) for idx in artifacts["indexes"]}
     assert ("compositions_rps", (("ehr_id", 1), ("cn.p", 1), ("time_c", 1))) in index_keys
-    assert ("compositions_rps", (("tid", 1), ("time_c", 1))) in index_keys
     assert ("compositions_rps", (("tid", 1), ("time_c", 1), ("v", 1))) in index_keys
     assert ("compositions_rps", (("tid", 1), ("cn.data.ani", 1), ("cn.p", 1), ("time_c", 1))) in index_keys
     assert ("compositions_search", (("ehr_id", 1), ("sort_time", 1))) in index_keys
+    assert ("compositions_rps", (("tid", 1), ("time_c", 1))) not in index_keys
 
     assert len(artifacts["search_indexes"]) == 1
     search_index = artifacts["search_indexes"][0]

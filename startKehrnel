@@ -67,6 +67,14 @@ find_python_cmd() {
 
 find_bootstrap_python() {
   local candidate
+  if [[ -n "${VIRTUAL_ENV:-}" ]]; then
+    for candidate in "$VIRTUAL_ENV/bin/python" "$VIRTUAL_ENV/Scripts/python.exe"; do
+      if [[ -x "$candidate" ]] && "$candidate" -m pip --version >/dev/null 2>&1; then
+        printf '%s\n' "$candidate"
+        return 0
+      fi
+    done
+  fi
   for candidate in python3 python /usr/bin/python3 /opt/homebrew/bin/python3 /usr/local/bin/python3; do
     if have_cmd "$candidate" && "$candidate" -m pip --version >/dev/null 2>&1; then
       printf '%s\n' "$candidate"
@@ -74,6 +82,13 @@ find_bootstrap_python() {
     fi
   done
   return 1
+}
+
+python_in_virtualenv() {
+  "$1" - <<'PY' >/dev/null 2>&1
+import sys
+raise SystemExit(0 if sys.prefix != getattr(sys, "base_prefix", sys.prefix) or hasattr(sys, "real_prefix") else 1)
+PY
 }
 
 run_uv() {
@@ -114,8 +129,13 @@ ensure_uv() {
     exit 1
   fi
 
-  log "Installing uv via $bootstrap_python -m pip"
-  "$bootstrap_python" -m pip install --user uv
+  if python_in_virtualenv "$bootstrap_python"; then
+    log "Installing uv into the active virtual environment via $bootstrap_python -m pip"
+    "$bootstrap_python" -m pip install uv
+  else
+    log "Installing uv for the current user via $bootstrap_python -m pip"
+    "$bootstrap_python" -m pip install --user uv
+  fi
 }
 
 ensure_python() {
