@@ -17,6 +17,8 @@ python -m pip install -r requirements.txt
 
 If dependencies are already installed in `.venv`, use `./startKehrnel --skip-sync`. Do not use `pip install --user` inside an active virtualenv; install into the virtualenv with `python -m pip install ...`.
 
+If startup logs `Installing uv via python3 -m pip`, the checkout is stale. Pull `fix/normalize-bson-uuid-results` again; current scripts print `Using startKehrnel 2026-07-01.2 from <branch>@<commit>` before bootstrapping.
+
 `./startKehrnel` always binds to `8080`. If you launch the runtime directly with `kehrnel-api` or `uvicorn kehrnel.api.app:app`, the API server instead uses `KEHRNEL_API_PORT` and defaults to `8000`.
 
 ## Run / Build Docusaurus Docs

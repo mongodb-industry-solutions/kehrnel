@@ -59,6 +59,23 @@ Avoid `pip install --user ...` while a virtual environment is active. Python hid
 ERROR: Can not perform a '--user' install. User site-packages are not visible in this virtualenv.
 ```
 
+Troubleshooting stale checkouts:
+
+```bash
+git fetch origin
+git checkout fix/normalize-bson-uuid-results
+git pull --ff-only origin fix/normalize-bson-uuid-results
+./startKehrnel
+```
+
+On startup the script prints its branch and commit, for example:
+
+```text
+[startKehrnel] Using startKehrnel 2026-07-01.2 from fix/normalize-bson-uuid-results@<commit>
+```
+
+If the log says `Installing uv via python3 -m pip`, you are running an old copy of `startKehrnel`; pull the branch again.
+
 API docs:
 - `http://localhost:8080/docs`
 - `http://localhost:8080/redoc`
