@@ -12,7 +12,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from .exceptions_g import UnknownCodeError
 from .encoding import PathCodec
 import jsonschema
-from bson import ObjectId
+from bson import Binary, ObjectId
 import uuid
 
 # Constants from original ingestionOptimized.py
@@ -1174,7 +1174,7 @@ class CompositionFlattener:
         if policy in ("uuid", "uuidbin", "uuid_bin"):
             try:
                 u = uuid.UUID(str(value))
-                return u.bytes
+                return Binary.from_uuid(u)
             except Exception:
                 return value
         return value
