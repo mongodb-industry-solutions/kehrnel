@@ -4,6 +4,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
+SCRIPT_VERSION="2026-07-01.2"
 HOST="${KEHRNEL_HOST:-127.0.0.1}"
 PORT="${KEHRNEL_PORT:-8080}"
 RUNTIME_URL="http://${HOST}:${PORT}"
@@ -53,6 +54,20 @@ find_user_uv() {
   return 1
 }
 
+find_virtualenv_uv() {
+  local candidate
+  if [[ -z "${VIRTUAL_ENV:-}" ]]; then
+    return 1
+  fi
+  for candidate in "$VIRTUAL_ENV/bin/uv" "$VIRTUAL_ENV/Scripts/uv.exe" "$VIRTUAL_ENV/Scripts/uv"; do
+    if [[ -x "$candidate" ]]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+  return 1
+}
+
 # Returns the name of a usable Python interpreter (python3 preferred, python as fallback).
 find_python_cmd() {
   local candidate
@@ -94,6 +109,8 @@ PY
 run_uv() {
   if have_cmd uv; then
     uv "$@"
+  elif uv_path="$(find_virtualenv_uv 2>/dev/null)"; then
+    "$uv_path" "$@"
   elif [[ -x "$HOME/.local/bin/uv" ]]; then
     "$HOME/.local/bin/uv" "$@"
   elif uv_path="$(find_user_uv 2>/dev/null)"; then
@@ -111,6 +128,7 @@ run_uv() {
 
 ensure_uv() {
   local bootstrap_python py
+  local uv_requirement="${KEHRNEL_UV_REQUIREMENT:-uv>=0.5}"
 
   if have_cmd uv; then
     return
@@ -131,10 +149,16 @@ ensure_uv() {
 
   if python_in_virtualenv "$bootstrap_python"; then
     log "Installing uv into the active virtual environment via $bootstrap_python -m pip"
-    "$bootstrap_python" -m pip install uv
+    "$bootstrap_python" -m pip install --disable-pip-version-check "$uv_requirement"
   else
     log "Installing uv for the current user via $bootstrap_python -m pip"
-    "$bootstrap_python" -m pip install --user uv
+    "$bootstrap_python" -m pip install --disable-pip-version-check --user "$uv_requirement"
+  fi
+
+  if ! run_uv --version >/dev/null 2>&1; then
+    log "ERROR: uv was installed but is still not runnable."
+    log "Try: python -m pip install -r requirements.txt"
+    exit 1
   fi
 }
 
@@ -371,6 +395,17 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+if have_cmd git && git rev-parse --show-toplevel >/dev/null 2>&1; then
+  current_branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
+  current_commit="$(git rev-parse --short HEAD 2>/dev/null || true)"
+  log "Using startKehrnel $SCRIPT_VERSION from ${current_branch:-unknown}@${current_commit:-unknown}"
+else
+  log "Using startKehrnel $SCRIPT_VERSION"
+fi
+if [[ -n "${VIRTUAL_ENV:-}" ]]; then
+  log "Active virtual environment: $VIRTUAL_ENV"
+fi
 
 if ! find_python_cmd >/dev/null 2>&1; then
   log "Python 3.8+ is required but was not found (tried: python3, python)"
