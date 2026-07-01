@@ -82,10 +82,15 @@ class ValueFormatter:
                 return value
 
         if policy in ("uuid", "uuidbin", "uuid_bin"):
+            if isinstance(value, Binary):
+                return value
             if isinstance(value, (bytes, bytearray)):
-                return bytes(value)
+                raw = bytes(value)
+                if len(raw) == 16:
+                    return Binary.from_uuid(uuid.UUID(bytes=raw))
+                return raw
             try:
-                return uuid.UUID(str(value)).bytes
+                return Binary.from_uuid(uuid.UUID(str(value)))
             except (TypeError, ValueError, AttributeError):
                 return value
 

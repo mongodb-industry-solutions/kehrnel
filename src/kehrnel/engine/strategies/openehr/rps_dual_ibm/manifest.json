@@ -65,6 +65,16 @@
       "strategy_asset_paper": "/strategies/openehr.rps_dual/assets/rps-paper.pdf",
       "catalog_ops": "/ops"
     },
+    "index_contract": {
+      "specPath": "storageModel.stores[].indexes",
+      "searchSpecPath": "storageModel.stores[].search",
+      "configResolved": true,
+      "summary": "Required and recommended MongoDB indexes are declared in the IBM strategy spec with logical field aliases. Runtime plan/apply resolves the IBM collection names, UUID settings, and field aliases from the active environment config.",
+      "requiredForOptimizedAql": ["idx_patient_path", "idx_template_commit_version"],
+      "recommendedForOptimizedAql": ["idx_template_node_commit", "idx_patient_sort"],
+      "optionalForOptimizedAql": ["idx_template_commit"],
+      "conditionalSearchIndex": "collections.search.atlasIndex"
+    },
     "story": "Compatibility alias for CatSalut and other HDL environments that were activated under the IBM exact-model strategy id. Query, transform, ingest, and maintenance operations execute through the same RPS Dual implementation.",
     "benefits": [
       "Lets local runtimes load production HDL environments whose activation references openehr.rps_dual_ibm.",
@@ -83,7 +93,8 @@
       "overview": {
         "cards": [
           { "title": "Querying", "body": "Compatibility alias for RPS Dual query compilation and execution." },
-          { "title": "Storage", "body": "Uses the environment activation config, including IBM collection names and UUID settings." }
+          { "title": "Storage", "body": "Uses the environment activation config, including IBM collection names and UUID settings." },
+          { "title": "Indexes", "body": "Spec-declared B-tree and Atlas Search indexes are resolved from the active IBM collection and field configuration." }
         ]
       }
     }

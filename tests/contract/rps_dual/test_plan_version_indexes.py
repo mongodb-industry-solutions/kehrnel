@@ -24,15 +24,15 @@ async def test_plan_includes_patient_path_index_and_search_sort_mapping(tmp_path
     artifacts = (plan or {}).get("artifacts", {})
     indexes = artifacts.get("indexes", [])
     search_indexes = artifacts.get("search_indexes", [])
+    ui_index_contract = (manifest.model_dump().get("ui") or {}).get("index_contract") or {}
+    spec_index_contract = ((manifest.pack_spec or {}).get("storageModel") or {}).get("indexContract") or {}
+
+    assert ui_index_contract.get("requiredForOptimizedAql") == ["idx_patient_path", "idx_template_commit_version"]
+    assert spec_index_contract.get("configResolved") is True
 
     assert any(
         idx.get("collection") == "compositions_rps"
         and [field for field, _ in idx.get("keys", [])] == ["ehr_id", "cn.p", "time_c"]
-        for idx in indexes
-    )
-    assert any(
-        idx.get("collection") == "compositions_rps"
-        and [field for field, _ in idx.get("keys", [])] == ["tid", "time_c"]
         for idx in indexes
     )
     assert any(
@@ -45,6 +45,15 @@ async def test_plan_includes_patient_path_index_and_search_sort_mapping(tmp_path
         and [field for field, _ in idx.get("keys", [])] == ["tid", "cn.data.ani", "cn.p", "time_c"]
         for idx in indexes
     )
+
+    patient_path = next(idx for idx in indexes if idx.get("id") == "idx_patient_path")
+    template_commit_version = next(idx for idx in indexes if idx.get("id") == "idx_template_commit_version")
+    assert patient_path.get("requirement") == "required"
+    assert patient_path.get("logicalFields") == ["ehr_id", "cn.p", "time_c"]
+    assert template_commit_version.get("requirement") == "required"
+    assert template_commit_version.get("logicalFields") == ["tid", "time_c", "v"]
+    assert not any(idx.get("id") == "idx_template_commit" for idx in indexes)
+
     assert not any(
         idx.get("collection") == "compositions_rps"
         and [field for field, _ in idx.get("keys", [])] == ["ehr_id", "v"]
@@ -60,6 +69,10 @@ async def test_plan_includes_patient_path_index_and_search_sort_mapping(tmp_path
         and si.get("definition", {}).get("mappings", {}).get("fields", {}).get("sort_time", {}).get("type") == "date"
         for si in search_indexes
     )
+    search_index = next(si for si in search_indexes if si.get("collection") == "compositions_search")
+    assert search_index.get("requirement") == "conditional"
+    assert search_index.get("kind") == "atlas_search"
+    assert "analytics_sidecar_filter" in search_index.get("workloads", [])
 
 
 @pytest.mark.asyncio
@@ -95,11 +108,6 @@ async def test_plan_resolves_indexes_through_configured_ibm_field_names(tmp_path
     )
     assert any(
         idx.get("collection") == "ibm-semiflattened-compositions"
-        and [field for field, _ in idx.get("keys", [])] == ["template", "creation_date"]
-        for idx in indexes
-    )
-    assert any(
-        idx.get("collection") == "ibm-semiflattened-compositions"
         and [field for field, _ in idx.get("keys", [])] == ["template", "creation_date", "version"]
         for idx in indexes
     )
@@ -108,3 +116,7 @@ async def test_plan_resolves_indexes_through_configured_ibm_field_names(tmp_path
         and [field for field, _ in idx.get("keys", [])] == ["template", "cn.data.ani", "cn.p", "creation_date"]
         for idx in indexes
     )
+    template_commit_version = next(idx for idx in indexes if idx.get("id") == "idx_template_commit_version")
+    assert template_commit_version.get("requirement") == "required"
+    assert template_commit_version.get("logicalFields") == ["tid", "time_c", "v"]
+    assert not any(idx.get("id") == "idx_template_commit" for idx in indexes)

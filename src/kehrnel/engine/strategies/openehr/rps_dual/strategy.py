@@ -457,23 +457,69 @@ class RPSDualStrategy(StrategyPlugin):
                 return (collections_cfg.get("search") or {}).get("name")
             return store.get("destinationType")
 
+        def plan_metadata(idx: Dict[str, Any], logical_fields: list[str] | None = None) -> Dict[str, Any]:
+            metadata: Dict[str, Any] = {
+                "id": idx.get("id"),
+                "type": idx.get("type"),
+                "requirement": idx.get("requirement"),
+                "purpose": idx.get("purpose"),
+                "workloads": idx.get("workloads"),
+                "configResolved": idx.get("configResolved"),
+                "fieldsFromConfig": idx.get("fieldsFromConfig"),
+            }
+            if logical_fields:
+                metadata["logicalFields"] = logical_fields
+            return {key: value for key, value in metadata.items() if value not in (None, [], {})}
+
+        def search_plan_metadata(search: Dict[str, Any]) -> Dict[str, Any]:
+            metadata: Dict[str, Any] = {
+                "kind": search.get("kind"),
+                "requirement": search.get("requirement"),
+                "condition": search.get("condition"),
+                "purpose": search.get("purpose"),
+                "workloads": search.get("workloads"),
+                "configResolved": search.get("configResolved"),
+            }
+            return {key: value for key, value in metadata.items() if value not in (None, [], {})}
+
         for store in stores:
             if not isinstance(store, dict):
                 continue
             coll = resolve_collection(store)
+            search_contract = store.get("search")
+            if coll and isinstance(search_contract, dict):
+                for search_index in artifacts.get("search_indexes", []):
+                    if search_index.get("collection") == coll:
+                        search_index.update(search_plan_metadata(search_contract))
             for idx in store.get("indexes") or []:
                 if not isinstance(idx, dict):
+                    continue
+                if idx.get("autoCreate") is False:
                     continue
                 idx_type = idx.get("type")
                 if idx_type == "btree":
                     fields = idx.get("fields") or []
                     keys = [(resolve_index_field(f), 1) for f in fields]
                     if coll and keys:
-                        artifacts["indexes"].append({"collection": coll, "keys": keys, "options": idx.get("options", {})})
+                        artifacts["indexes"].append(
+                            {
+                                "collection": coll,
+                                "keys": keys,
+                                "options": idx.get("options", {}),
+                                **plan_metadata(idx, fields),
+                            }
+                        )
                 elif idx_type == "wildcard":
                     field = resolve_index_field(idx.get("field") or "data")
                     if coll:
-                        artifacts["indexes"].append({"collection": coll, "keys": [(f"{field}.$**", 1)], "options": idx.get("options", {})})
+                        artifacts["indexes"].append(
+                            {
+                                "collection": coll,
+                                "keys": [(f"{field}.$**", 1)],
+                                "options": idx.get("options", {}),
+                                **plan_metadata(idx, [idx.get("field") or "data"]),
+                            }
+                        )
                 elif idx_type == "search":
                     if coll:
                         artifacts["search_indexes"].append(
@@ -482,6 +528,7 @@ class RPSDualStrategy(StrategyPlugin):
                                 "name": idx.get("name") or store.get("role") or "search_index",
                                 "definition": idx.get("definition", {}),
                                 "storedSource": idx.get("storedSource"),
+                                **plan_metadata(idx),
                             }
                         )
         return artifacts

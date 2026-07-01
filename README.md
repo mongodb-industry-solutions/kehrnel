@@ -23,20 +23,46 @@ Removed from active scope:
 
 ## Quick Start
 
+Recommended one-command startup from a fresh clone:
+
 ```bash
 git clone <repo>
 cd kehrnel
 ./startKehrnel
 ```
 
+`./startKehrnel` bootstraps `uv` if needed, installs Python 3.12 locally, creates `.venv`, syncs `.[all]`, builds the docs site if `docs/website/build` is missing, and starts the API with dev-friendly defaults:
+- `KEHRNEL_AUTH_ENABLED=false`
+- `KEHRNEL_INIT_INGESTION_RUNTIME=false`
+
+Manual setup, useful when you want to control the virtual environment yourself:
+
+```bash
+git clone <repo>
+cd kehrnel
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+./startKehrnel --skip-sync
+```
+
+On Windows PowerShell, activate the environment with:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Avoid `pip install --user ...` while a virtual environment is active. Python hides user site-packages inside many virtualenvs, which produces:
+
+```text
+ERROR: Can not perform a '--user' install. User site-packages are not visible in this virtualenv.
+```
+
 API docs:
 - `http://localhost:8080/docs`
 - `http://localhost:8080/redoc`
 - `http://localhost:8080/guide`
-
-`./startKehrnel` bootstraps `uv` if needed, installs Python 3.12 locally, creates `.venv`, syncs `.[all]`, builds the docs site if `docs/website/build` is missing, and starts the API with dev-friendly defaults:
-- `KEHRNEL_AUTH_ENABLED=false`
-- `KEHRNEL_INIT_INGESTION_RUNTIME=false`
 
 Local port note:
 - `./startKehrnel` serves the runtime on `http://localhost:8080`

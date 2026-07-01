@@ -65,6 +65,16 @@
       "strategy_asset_paper": "/strategies/openehr.rps_dual/assets/rps-paper.pdf",
       "catalog_ops": "/ops"
     },
+    "index_contract": {
+      "specPath": "storageModel.stores[].indexes",
+      "searchSpecPath": "storageModel.stores[].search",
+      "configResolved": true,
+      "summary": "Required and recommended MongoDB indexes are declared in the strategy spec with logical field aliases. Runtime plan/apply resolves collection names and fields from the active environment config.",
+      "requiredForOptimizedAql": ["idx_patient_path", "idx_template_commit_version"],
+      "recommendedForOptimizedAql": ["idx_template_node_commit", "idx_patient_sort"],
+      "optionalForOptimizedAql": ["idx_template_commit"],
+      "conditionalSearchIndex": "collections.search.atlasIndex"
+    },
     "story": "Clinical teams need to access individual patient histories quickly and completely, while research and population health teams need to search across thousands of patients efficiently. This strategy solves both needs by storing the full clinical record for patient care, alongside a compact search layer optimized for population queries.\n\nWhen a clinician opens a patient chart, they get the complete record exactly as it was documented—every observation, every medication, every note preserved with full fidelity. When a researcher searches for patients with specific conditions, the system uses an optimized search layer to return results in seconds rather than minutes, without ever compromising the integrity of the source data.\n\nThe result is a single source of truth that serves both operational and analytical workloads. Clinical teams trust it for patient care because nothing is lost or transformed. Research teams trust it for population health because queries are fast and comprehensive. IT teams appreciate it because there's no ETL pipeline to maintain, no data warehouse to synchronize, and no risk of operational and analytical systems drifting apart.",
     "how_it_works": "Your data lives in two synchronized collections that work together seamlessly. The primary collection stores complete clinical documents—each composition preserved as a single document with every field, every nested structure, exactly as the source system created it. This collection is optimized for patient-scoped queries: when you need everything about one patient, the system retrieves it instantly using efficient B-tree indexes.\n\nThe search collection maintains a streamlined projection of the same data, purpose-built for population queries. It contains just enough information to find patients matching complex criteria—diagnoses, medications, lab values, dates—without the overhead of full document storage. Atlas Search indexes this collection, enabling sub-second queries across millions of records.\n\nThe system automatically routes each query to the right collection. Ask for a specific patient's records, and it goes to the primary collection. Search for all patients with a particular condition, and it uses the search collection. You write standard AQL queries; the routing happens transparently.",
     "benefits": [
@@ -102,7 +112,8 @@
       "overview": {
         "cards": [
           { "title": "Querying", "body": "Dual pipelines: $match for patient scope, $search for population with slim docs." },
-          { "title": "Ingest", "body": "Stores canonical compositions and optional slim search documents." }
+          { "title": "Ingest", "body": "Stores canonical compositions and optional slim search documents." },
+          { "title": "Indexes", "body": "Spec-declared B-tree and Atlas Search indexes are resolved from the active collection and field configuration." }
         ]
       }
     }
