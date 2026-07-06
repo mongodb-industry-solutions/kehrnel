@@ -28,6 +28,10 @@ from kehrnel.engine.strategies.openehr.rps_dual.strategy import (
 from kehrnel.engine.strategies.openehr.rps_dual_ibm.strategy import (
     RPSDualIBMStrategy,
 )
+from kehrnel.engine.strategies.openehr.rps_dual.query.compiler import build_runtime_strategy
+from kehrnel.engine.strategies.openehr.rps_dual.query.transformers.search_pipeline_builder import (
+    SearchPipelineBuilder,
+)
 from kehrnel.strategy_sdk import StrategyBindings
 
 
@@ -79,20 +83,83 @@ def test_ibm_defaults_use_legacy_li_instance_field():
     schema_cfg = build_schema_config(cfg)
 
     assert defaults["fields"]["node"]["pi"] == "li"
+    assert defaults["fields"]["document"]["comp_id"] == "_id"
     assert flattener_cfg["composition_fields"]["path_instance"] == "li"
     assert flattener_cfg["search_fields"]["path_instance"] == "li"
     assert schema_cfg["composition"]["path_instance_field"] == "li"
     assert schema_cfg["search"]["path_instance_field"] == "li"
     assert schema_cfg["search"]["path_instance_mode"] == "scalar"
+    assert schema_cfg["composition"]["comp_id"] == "_id"
+    assert schema_cfg["search"]["comp_id"] == "_id"
 
     strategy = RPSDualIBMStrategy()
     assert strategy.defaults["fields"]["node"]["pi"] == "li"
+    assert strategy.defaults["fields"]["document"]["comp_id"] == "_id"
     assert strategy.manifest.default_config["fields"]["node"]["pi"] == "li"
+    assert strategy.manifest.default_config["fields"]["document"]["comp_id"] == "_id"
 
     legacy_activation_cfg = deepcopy(strategy.defaults)
     legacy_activation_cfg["fields"]["node"]["pi"] = "pi"
+    legacy_activation_cfg["fields"]["document"]["v"] = "version"
+    legacy_activation_cfg["fields"]["document"]["comp_id"] = "version"
     coerced_cfg = strategy._coerce_ibm_config(legacy_activation_cfg)
     assert coerced_cfg["fields"]["node"]["pi"] == "li"
+    assert coerced_cfg["fields"]["document"]["comp_id"] == "_id"
+
+
+def test_ibm_legacy_version_comp_id_lookup_uses_uuid_id_field():
+    strategy = RPSDualIBMStrategy()
+    legacy_cfg = deepcopy(strategy.defaults)
+    legacy_cfg["collections"]["compositions"]["name"] = "ibm-semiflattened-compositions"
+    legacy_cfg["collections"]["search"]["name"] = "compositions_search_ibm"
+    legacy_cfg["ids"]["ehr_id"] = "uuidbin"
+    legacy_cfg["ids"]["composition_id"] = "uuidbin"
+    legacy_cfg["fields"]["document"].update(
+        {
+            "comp_id": "version",
+            "tid": "template",
+            "v": "version",
+            "time_committed": "creation_date",
+            "sort_time": "creation_date",
+        }
+    )
+
+    cfg_model = normalize_config(strategy._coerce_ibm_config(legacy_cfg))
+    schema_cfg = build_schema_config(cfg_model)
+    builder = SearchPipelineBuilder(
+        "e",
+        "c",
+        schema_cfg["composition"],
+        None,
+        {},
+        strategy=build_runtime_strategy(cfg_model),
+        search_index_name=schema_cfg["search"]["index_name"],
+    )
+
+    lookup_stage = builder.build_lookup_stage(
+        {
+            "select": {
+                "columns": {
+                    "0": {
+                        "value": {
+                            "type": "dataMatchPath",
+                            "path": "c/name/value",
+                        },
+                        "alias": "composition_name",
+                    }
+                }
+            }
+        }
+    )
+
+    assert lookup_stage == {
+        "$lookup": {
+            "from": "ibm-semiflattened-compositions",
+            "localField": "_id",
+            "foreignField": "_id",
+            "as": "full_composition",
+        }
+    }
 
 
 def test_manifest_schema_and_spec_advertise_current_supported_surface():
