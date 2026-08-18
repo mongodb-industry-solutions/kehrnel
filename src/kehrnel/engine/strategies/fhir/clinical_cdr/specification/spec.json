@@ -1,28 +1,552 @@
 {
   "meta": {
     "strategyId": "fhir.clinical_cdr",
-    "specVersion": "1.0",
+    "specVersion": "1.1",
     "title": "FHIR Clinical CDR",
-    "summary": "Native FHIR R5 resources per collection with fhir-gen synthesis and fhir-mql search denormalization.",
+    "summary": "Native FHIR R5 storage with per-resource-type MongoDB collections, fhir-gen synthetic data generation, and fhir-mql search-parameter denormalization.",
     "domain": "FHIR",
-    "tags": ["FHIR", "synthetic", "search", "fhir-mql", "fhir-gen"],
+    "tags": ["FHIR", "R5", "clinical", "cdr", "fhir-mql", "fhir-gen", "synthetic", "search"],
+    "owners": [],
     "compat": {
       "packFormat": "strategy-pack/v1",
       "requires": ["storage.mongo"],
-      "optional": [],
+      "optional": ["search.atlas"],
       "minRuntime": "0.1.0"
     }
   },
-  "logicalModel": {
-    "storage": {
-      "mode": "per_resource_type",
-      "description": "Each FHIR resource type is stored in its own MongoDB collection (e.g. Patient, Observation)."
+
+  "glossary": {
+    "fhir_resource": {
+      "term": "FHIR Resource",
+      "definition": "A JSON document conforming to the HL7 FHIR R5 specification. Each resource has a `resourceType` discriminator, a logical `id`, and a `meta` block. The payload fields are defined per resource type in the FHIR R5 specification."
     },
-    "generation": {
-      "recipesFile": "recipes.json",
-      "defaultRecipe": "clinical_dev",
-      "ownedSearchResourceCount": 52,
-      "shippedSearchResourceCount": 84
+    "search_parameter": {
+      "term": "Search Parameter",
+      "definition": "A standardized query parameter defined per resource type in the FHIR specification. Examples: `patient`, `code`, `date`, `status`. fhir-mql translates these into MongoDB MQL expressions against the `_search` denormalized index."
+    },
+    "_search": {
+      "term": "_search field",
+      "definition": "A denormalized sub-document appended to every stored resource by the `fhir_denormalize` operation. Contains pre-extracted search parameter values (patient reference, code tokens, date, status, identifier, etc.) to enable efficient index-driven FHIR Search execution without full-document scans."
+    },
+    "fhir_mql": {
+      "term": "fhir-mql",
+      "definition": "MongoDB query translation library that converts FHIR Search parameter expressions into MQL filter documents, using the `_search` denormalized fields and the configured per-resource-type MongoDB indexes."
+    },
+    "fhir_gen": {
+      "term": "fhir-gen",
+      "definition": "Synthetic FHIR resource generation library. Uses named recipes (defined in recipes.json) to generate realistic patient populations across all 52 owned resource types."
+    },
+    "compartment": {
+      "term": "Compartment",
+      "definition": "A FHIR CompartmentDefinition that groups resources by their reference to a Patient. The `_search.patient` field stores the resolved compartment reference and enables patient-scoped queries across all resource types."
+    },
+    "per_resource_type": {
+      "term": "Per-resource-type pattern",
+      "definition": "Storage layout where each FHIR resource type gets its own MongoDB collection (e.g. `Patient`, `Observation`). This simplifies schema management, allows resource-type-specific indexes, and supports atomic writes per resource."
+    },
+    "denormalization": {
+      "term": "Denormalization",
+      "definition": "The `fhir_denormalize` operation scans all stored resources and writes computed `_search.*` fields derived from FHIR search parameter definitions. Must be run after bulk ingest or can be enabled inline via `denormalize_on_generate`."
+    },
+    "recipe": {
+      "term": "Recipe",
+      "definition": "A named generation template in recipes.json specifying which FHIR resource types to generate and at what counts. `clinical_dev` targets 10 types (~535 docs); `clinical_full84` covers all 52 owned types for soak testing."
+    }
+  },
+
+  "logicalModel": {
+    "source": {
+      "types": [
+        {
+          "id": "type.fhir_resource",
+          "title": "FHIR R5 Resource",
+          "kind": "document",
+          "description": "Any HL7 FHIR R5 resource delivered as a JSON document.",
+          "fields": {
+            "resourceType": {
+              "type": "string",
+              "role": ["discriminator"],
+              "description": "FHIR resource type (e.g. Patient, Observation). Used to route to the correct per-type collection."
+            },
+            "id": {
+              "type": "string",
+              "role": ["identity", "document"],
+              "description": "FHIR logical id. Unique within a resource type."
+            },
+            "meta": {
+              "type": "object",
+              "description": "FHIR metadata: versionId, lastUpdated, source, profile, tag, security."
+            },
+            "payload": {
+              "type": "object",
+              "role": ["data"],
+              "description": "Resource-type-specific FHIR fields (varies per resourceType)."
+            }
+          }
+        }
+      ]
+    },
+    "concepts": [
+      {
+        "id": "concept.search_param_value",
+        "title": "Search Parameter Value",
+        "kind": "projection",
+        "meaning": "A pre-computed value for a FHIR search parameter, stored inside `_search` alongside the resource. Enables index-driven query execution via fhir-mql without touching the resource payload."
+      },
+      {
+        "id": "concept.resource_routing",
+        "title": "Resource-type Router",
+        "kind": "discriminator",
+        "meaning": "The `resourceType` field routes each inbound document to the correct per-type MongoDB collection at write time."
+      },
+      {
+        "id": "concept.patient_reference",
+        "title": "Patient Compartment Reference",
+        "kind": "reference",
+        "meaning": "The resolved Patient FHIR reference stored in `_search.patient`. Anchors compartment-scoped queries: find all resources belonging to a given patient across all resource types."
+      }
+    ],
+    "destinations": {
+      "description": "52 per-resource-type MongoDB collections, each following the same document pattern. Representative types are defined explicitly; the remainder follow the same schema.",
+      "types": [
+        { "id": "fhir.clinical_cdr.patient.v1",            "title": "Patient collection",            "collection": "Patient" },
+        { "id": "fhir.clinical_cdr.practitioner.v1",       "title": "Practitioner collection",       "collection": "Practitioner" },
+        { "id": "fhir.clinical_cdr.organization.v1",       "title": "Organization collection",       "collection": "Organization" },
+        { "id": "fhir.clinical_cdr.encounter.v1",          "title": "Encounter collection",          "collection": "Encounter" },
+        { "id": "fhir.clinical_cdr.observation.v1",        "title": "Observation collection",        "collection": "Observation" },
+        { "id": "fhir.clinical_cdr.condition.v1",          "title": "Condition collection",          "collection": "Condition" },
+        { "id": "fhir.clinical_cdr.procedure.v1",          "title": "Procedure collection",          "collection": "Procedure" },
+        { "id": "fhir.clinical_cdr.medicationrequest.v1",  "title": "MedicationRequest collection",  "collection": "MedicationRequest" },
+        { "id": "fhir.clinical_cdr.diagnosticreport.v1",   "title": "DiagnosticReport collection",   "collection": "DiagnosticReport" },
+        { "id": "fhir.clinical_cdr.allergyintolerance.v1", "title": "AllergyIntolerance collection", "collection": "AllergyIntolerance" }
+      ]
+    }
+  },
+
+  "physicalProfiles": {
+    "encodingProfiles": [
+      {
+        "id": "profile.native_fhir",
+        "title": "Native FHIR R5",
+        "description": "Resources are stored as-is from the FHIR JSON representation. No path encoding, no key compression. The only transformation is appending the `_search` denormalized index sub-document.",
+        "payload": { "mode": "full" },
+        "keys": { "mode": "verbatim" },
+        "ids": { "fhir_id": "string", "mongo_id": "objectid" },
+        "isDefault": true
+      }
+    ]
+  },
+
+  "storageModel": {
+    "indexContract": {
+      "description": "Each of the 52 resource-type collections carries the same base index set. Additional resource-specific indexes may be added by `fhir_ensure_indexes`.",
+      "fieldConfigPaths": {
+        "collectionPrefix":  "config.collection_prefix",
+        "searchEnabled":     "config.search.enabled",
+        "autoIndex":         "config.search.auto_index",
+        "configDir":         "config.search.config_dir"
+      },
+      "baseIndexes": [
+        {
+          "name": "id_unique",
+          "type": "unique",
+          "fields": ["id"],
+          "requirement": "required",
+          "purpose": "FHIR logical id uniqueness within the resource type."
+        },
+        {
+          "name": "search_patient_date",
+          "type": "compound",
+          "fields": ["_search.patient", "_search.date", "_search.status"],
+          "requirement": "recommended",
+          "purpose": "Patient-compartment queries filtered by date and status (most common clinical access pattern)."
+        },
+        {
+          "name": "meta_lastupdated",
+          "type": "ascending",
+          "fields": ["meta.lastUpdated"],
+          "requirement": "optional",
+          "purpose": "History and incremental sync queries."
+        }
+      ]
+    },
+    "stores": [
+      {
+        "id": "store:Patient",
+        "title": "Patient",
+        "engine": "mongodb",
+        "destinationType": "collection",
+        "collectionNameFromConfig": "config.collection_prefix + 'Patient'",
+        "purpose": "Canonical FHIR R5 Patient records. The anchor collection for all patient-compartment queries.",
+        "indexes": [
+          { "id": "idx.patient.id",         "name": "id_unique",           "type": "unique",   "fields": ["id"],                                                    "requirement": "required",     "purpose": "FHIR logical id uniqueness." },
+          { "id": "idx.patient.identifier", "name": "identifier",          "type": "compound", "fields": ["identifier.system", "identifier.value"],                 "requirement": "recommended",  "purpose": "Patient identifier lookup (MRN, SSN, national id)." },
+          { "id": "idx.patient.name",       "name": "name_family",         "type": "compound", "fields": ["name.family", "name.given"],                             "requirement": "recommended",  "purpose": "Patient name search." },
+          { "id": "idx.patient.birthdate",  "name": "birthdate",           "type": "ascending","fields": ["birthDate"],                                             "requirement": "optional",     "purpose": "Age-range population queries." },
+          { "id": "idx.patient.gender",     "name": "gender_birthdate",    "type": "compound", "fields": ["gender", "birthDate"],                                   "requirement": "optional",     "purpose": "Demographic cohort filters." }
+        ]
+      },
+      {
+        "id": "store:Practitioner",
+        "title": "Practitioner",
+        "engine": "mongodb",
+        "destinationType": "collection",
+        "collectionNameFromConfig": "config.collection_prefix + 'Practitioner'",
+        "purpose": "FHIR R5 Practitioner records. Referenced by Encounter, MedicationRequest, and other clinical resources.",
+        "indexes": [
+          { "id": "idx.practitioner.id",         "name": "id_unique",    "type": "unique",   "fields": ["id"],                                 "requirement": "required",    "purpose": "FHIR logical id uniqueness." },
+          { "id": "idx.practitioner.identifier", "name": "identifier",   "type": "compound", "fields": ["identifier.system", "identifier.value"], "requirement": "recommended", "purpose": "Practitioner NPI / license lookup." }
+        ]
+      },
+      {
+        "id": "store:Organization",
+        "title": "Organization",
+        "engine": "mongodb",
+        "destinationType": "collection",
+        "collectionNameFromConfig": "config.collection_prefix + 'Organization'",
+        "purpose": "FHIR R5 Organization records (hospitals, clinics, payers, labs).",
+        "indexes": [
+          { "id": "idx.organization.id",   "name": "id_unique", "type": "unique",   "fields": ["id"],   "requirement": "required",    "purpose": "FHIR logical id uniqueness." },
+          { "id": "idx.organization.name", "name": "name",      "type": "ascending","fields": ["name"], "requirement": "recommended", "purpose": "Organization name lookup." }
+        ]
+      },
+      {
+        "id": "store:Encounter",
+        "title": "Encounter",
+        "engine": "mongodb",
+        "destinationType": "collection",
+        "collectionNameFromConfig": "config.collection_prefix + 'Encounter'",
+        "purpose": "FHIR R5 Encounter records. Entry point for most clinical event queries.",
+        "indexes": [
+          { "id": "idx.encounter.id",              "name": "id_unique",           "type": "unique",   "fields": ["id"],                                                            "requirement": "required",    "purpose": "FHIR logical id uniqueness." },
+          { "id": "idx.encounter.patient_date",    "name": "patient_date_status", "type": "compound", "fields": ["_search.patient", "_search.date", "_search.status"],             "requirement": "required",    "purpose": "Patient encounter timeline." },
+          { "id": "idx.encounter.class_status",    "name": "class_status",        "type": "compound", "fields": ["class.code", "status"],                                          "requirement": "recommended", "purpose": "Encounter class and status cohort filters." }
+        ]
+      },
+      {
+        "id": "store:Observation",
+        "title": "Observation",
+        "engine": "mongodb",
+        "destinationType": "collection",
+        "collectionNameFromConfig": "config.collection_prefix + 'Observation'",
+        "purpose": "FHIR R5 Observation records (vitals, labs, social history). Highest-volume collection in clinical datasets.",
+        "indexes": [
+          { "id": "idx.observation.id",            "name": "id_unique",           "type": "unique",   "fields": ["id"],                                                            "requirement": "required",    "purpose": "FHIR logical id uniqueness." },
+          { "id": "idx.observation.patient_date",  "name": "patient_date",        "type": "compound", "fields": ["_search.patient", "_search.date"],                               "requirement": "required",    "purpose": "Patient observation timeline (most frequent query)." },
+          { "id": "idx.observation.code_date",     "name": "code_date",           "type": "compound", "fields": ["_search.code", "_search.date"],                                  "requirement": "recommended", "purpose": "LOINC/SNOMED code-based cohort queries." },
+          { "id": "idx.observation.category",      "name": "patient_category",    "type": "compound", "fields": ["_search.patient", "_search.category", "_search.date"],           "requirement": "optional",    "purpose": "Observation category filtering (vital-signs, laboratory, etc.)." }
+        ]
+      },
+      {
+        "id": "store:Condition",
+        "title": "Condition",
+        "engine": "mongodb",
+        "destinationType": "collection",
+        "collectionNameFromConfig": "config.collection_prefix + 'Condition'",
+        "purpose": "FHIR R5 Condition records (problem list, encounter diagnoses).",
+        "indexes": [
+          { "id": "idx.condition.id",              "name": "id_unique",           "type": "unique",   "fields": ["id"],                                                            "requirement": "required",    "purpose": "FHIR logical id uniqueness." },
+          { "id": "idx.condition.patient_status",  "name": "patient_status",      "type": "compound", "fields": ["_search.patient", "_search.clinical-status"],                    "requirement": "required",    "purpose": "Active problem list per patient." },
+          { "id": "idx.condition.code",            "name": "code_status",         "type": "compound", "fields": ["_search.code", "_search.clinical-status"],                        "requirement": "recommended", "purpose": "ICD/SNOMED code population queries." }
+        ]
+      },
+      {
+        "id": "store:Procedure",
+        "title": "Procedure",
+        "engine": "mongodb",
+        "destinationType": "collection",
+        "collectionNameFromConfig": "config.collection_prefix + 'Procedure'",
+        "purpose": "FHIR R5 Procedure records (surgical, diagnostic, therapeutic procedures).",
+        "indexes": [
+          { "id": "idx.procedure.id",             "name": "id_unique",      "type": "unique",   "fields": ["id"],                                          "requirement": "required",    "purpose": "FHIR logical id uniqueness." },
+          { "id": "idx.procedure.patient_date",   "name": "patient_date",   "type": "compound", "fields": ["_search.patient", "_search.date"],             "requirement": "required",    "purpose": "Patient procedure history." },
+          { "id": "idx.procedure.code",           "name": "code",           "type": "compound", "fields": ["_search.code", "_search.date"],                 "requirement": "recommended", "purpose": "CPT/SNOMED code-based procedure cohorts." }
+        ]
+      },
+      {
+        "id": "store:MedicationRequest",
+        "title": "MedicationRequest",
+        "engine": "mongodb",
+        "destinationType": "collection",
+        "collectionNameFromConfig": "config.collection_prefix + 'MedicationRequest'",
+        "purpose": "FHIR R5 MedicationRequest records (prescriptions and medication orders).",
+        "indexes": [
+          { "id": "idx.medrx.id",              "name": "id_unique",          "type": "unique",   "fields": ["id"],                                                            "requirement": "required",    "purpose": "FHIR logical id uniqueness." },
+          { "id": "idx.medrx.patient_status",  "name": "patient_status",     "type": "compound", "fields": ["_search.patient", "_search.status"],                             "requirement": "required",    "purpose": "Active medication list per patient." },
+          { "id": "idx.medrx.medication",      "name": "medication_date",    "type": "compound", "fields": ["_search.medication", "_search.date"],                             "requirement": "recommended", "purpose": "RxNorm medication cohort queries." }
+        ]
+      },
+      {
+        "id": "store:DiagnosticReport",
+        "title": "DiagnosticReport",
+        "engine": "mongodb",
+        "destinationType": "collection",
+        "collectionNameFromConfig": "config.collection_prefix + 'DiagnosticReport'",
+        "purpose": "FHIR R5 DiagnosticReport records (lab panels, imaging reports, pathology).",
+        "indexes": [
+          { "id": "idx.dr.id",             "name": "id_unique",       "type": "unique",   "fields": ["id"],                                                        "requirement": "required",    "purpose": "FHIR logical id uniqueness." },
+          { "id": "idx.dr.patient_date",   "name": "patient_date",    "type": "compound", "fields": ["_search.patient", "_search.date", "_search.status"],          "requirement": "required",    "purpose": "Patient report timeline." },
+          { "id": "idx.dr.category",       "name": "category_date",   "type": "compound", "fields": ["_search.category", "_search.date"],                           "requirement": "optional",    "purpose": "Report category filter (LAB, RAD, PAT)." }
+        ]
+      },
+      {
+        "id": "store:AllergyIntolerance",
+        "title": "AllergyIntolerance",
+        "engine": "mongodb",
+        "destinationType": "collection",
+        "collectionNameFromConfig": "config.collection_prefix + 'AllergyIntolerance'",
+        "purpose": "FHIR R5 AllergyIntolerance records.",
+        "indexes": [
+          { "id": "idx.allergy.id",             "name": "id_unique",       "type": "unique",   "fields": ["id"],                                                        "requirement": "required",    "purpose": "FHIR logical id uniqueness." },
+          { "id": "idx.allergy.patient_status", "name": "patient_status",  "type": "compound", "fields": ["_search.patient", "_search.clinical-status"],                "requirement": "required",    "purpose": "Active allergy list per patient." }
+        ]
+      }
+    ],
+    "storePattern": {
+      "description": "All 52 owned resource-type collections follow this pattern. Only representative types are defined explicitly above.",
+      "fields": ["_id", "id", "resourceType", "meta", "_search", "<<resource-type-specific FHIR fields>>"],
+      "baseIndexes": ["id_unique", "search_patient_date"],
+      "additionalIndexes": "Resource-specific search parameter indexes added by fhir_ensure_indexes."
+    }
+  },
+
+  "transformModel": {
+    "pipeline": [
+      {
+        "id": "step.receive",
+        "op": "fhir.receive",
+        "title": "Receive FHIR Resource",
+        "in": "artifact.fhir_payload",
+        "out": "artifact.raw_resource",
+        "visual": { "group": "Ingest", "icon": "FileJson", "notes": "Accepts a single resource or a Bundle. Bundles are unpacked to individual resources before processing." }
+      },
+      {
+        "id": "step.validate",
+        "op": "fhir.validate",
+        "title": "Schema Validation",
+        "in": "artifact.raw_resource",
+        "out": "artifact.validated_resource",
+        "visual": { "group": "Ingest", "icon": "CheckCircle", "notes": "Validates resourceType presence and basic FHIR R5 conformance. Profile validation is optional (config.search.config_dir)." }
+      },
+      {
+        "id": "step.denormalize",
+        "op": "fhir.denormalize",
+        "title": "Denormalize → _search",
+        "in": "artifact.validated_resource",
+        "out": "artifact.enriched_resource",
+        "visual": { "group": "Transform", "icon": "Layers", "notes": "fhir-mql extracts configured search parameters per resource type and writes them to _search. Skip if denormalize_on_generate=false (run fhir_denormalize op separately after bulk load)." }
+      },
+      {
+        "id": "step.route",
+        "op": "fhir.route",
+        "title": "Resource-type Router",
+        "in": "artifact.enriched_resource",
+        "visual": { "group": "Transform", "icon": "Route", "notes": "Reads resourceType, resolves the target collection name (prefix + resourceType), and dispatches the upsert." }
+      },
+      {
+        "id": "step.store",
+        "op": "fhir.upsert",
+        "title": "Upsert to Collection",
+        "in": "artifact.enriched_resource",
+        "toStore": "store:<resourceType>",
+        "visual": { "group": "Materialize", "icon": "Database", "notes": "Upserts on FHIR logical id (filter: {id: resource.id}). Replaces full document on conflict." }
+      }
+    ],
+    "invariants": [
+      "resourceType must be a non-empty string present in every incoming document.",
+      "id must be present. Documents without an id are rejected.",
+      "_search is always written by step.denormalize unless denormalize_on_generate=false.",
+      "Upsert semantics: {id} is the unique key; duplicate ingests replace the previous version."
+    ]
+  },
+
+  "queryModel": {
+    "modes": [
+      {
+        "id": "mode.id_lookup",
+        "title": "Resource Lookup",
+        "description": "Direct lookup of a single FHIR resource by its logical id.",
+        "filter": "{ id: <fhir_id> }",
+        "index": "id_unique",
+        "cost": "O(1)"
+      },
+      {
+        "id": "mode.compartment_scoped",
+        "title": "Patient-compartment Search",
+        "description": "All resources belonging to a given patient, optionally filtered by FHIR search parameters (date, status, code, category). Uses the `_search.patient` index as the leading key.",
+        "filter": "{ '_search.patient': <patient_ref>, ...fhir-mql criteria }",
+        "index": "search_patient_date",
+        "cost": "O(log n + patient_volume)"
+      },
+      {
+        "id": "mode.cross_patient",
+        "title": "Population / Cross-patient Search",
+        "description": "Search across all patients for a given resource type using FHIR search parameters. Useful for cohort definition, analytics, and population health queries.",
+        "filter": "{ ...fhir-mql criteria (no patient filter) }",
+        "index": "resource-specific compound indexes",
+        "cost": "O(log n + result_set)"
+      }
+    ]
+  },
+
+  "visualization": {
+    "layout": "LR",
+    "colors": {
+      "source":       "#3b82f6",
+      "intermediate": "#8b5cf6",
+      "sink":         "#10b981",
+      "dictionary":   "#f59e0b"
+    },
+    "grouping": {
+      "Ingest":      { "label": "Ingest",     "color": "#3b82f6" },
+      "Transform":   { "label": "Transform",  "color": "#8b5cf6" },
+      "Materialize": { "label": "Materialize","color": "#10b981" }
+    },
+    "legends": {
+      "canonical": { "label": "FHIR Resource Collection",   "color": "#10b981" },
+      "patient":   { "label": "Patient-anchored collection", "color": "#3b82f6" }
+    },
+    "collectionModel": {
+      "entities": [
+        {
+          "id": "coll.patient",
+          "kind": "collection",
+          "store": "store:Patient",
+          "label": "Patient",
+          "fields": ["_id", "id", "resourceType", "meta", "_search", "name", "birthDate", "gender", "identifier"],
+          "expand": { "_search": ["identifier", "name", "gender", "birthdate"] },
+          "badges": ["canonical", "patient"],
+          "links": []
+        },
+        {
+          "id": "coll.practitioner",
+          "kind": "collection",
+          "store": "store:Practitioner",
+          "label": "Practitioner",
+          "fields": ["_id", "id", "resourceType", "meta", "_search", "name", "identifier", "qualification"],
+          "expand": { "_search": ["identifier", "name"] },
+          "badges": ["canonical"],
+          "links": []
+        },
+        {
+          "id": "coll.organization",
+          "kind": "collection",
+          "store": "store:Organization",
+          "label": "Organization",
+          "fields": ["_id", "id", "resourceType", "meta", "_search", "name", "type", "identifier"],
+          "expand": { "_search": ["name", "type", "identifier"] },
+          "badges": ["canonical"],
+          "links": []
+        },
+        {
+          "id": "coll.encounter",
+          "kind": "collection",
+          "store": "store:Encounter",
+          "label": "Encounter",
+          "fields": ["_id", "id", "resourceType", "meta", "_search", "status", "class", "subject", "period"],
+          "expand": { "_search": ["patient", "status", "class", "date"] },
+          "badges": ["canonical"],
+          "links": [{ "type": "joinsTo", "target": "coll.patient", "on": "_search.patient" }]
+        },
+        {
+          "id": "coll.observation",
+          "kind": "collection",
+          "store": "store:Observation",
+          "label": "Observation",
+          "fields": ["_id", "id", "resourceType", "meta", "_search", "status", "code", "subject", "effective", "value"],
+          "expand": { "_search": ["patient", "code", "date", "category", "status"] },
+          "badges": ["canonical"],
+          "links": [{ "type": "joinsTo", "target": "coll.patient", "on": "_search.patient" }]
+        },
+        {
+          "id": "coll.condition",
+          "kind": "collection",
+          "store": "store:Condition",
+          "label": "Condition",
+          "fields": ["_id", "id", "resourceType", "meta", "_search", "clinicalStatus", "code", "subject", "onset"],
+          "expand": { "_search": ["patient", "code", "clinical-status", "category"] },
+          "badges": ["canonical"],
+          "links": [{ "type": "joinsTo", "target": "coll.patient", "on": "_search.patient" }]
+        },
+        {
+          "id": "coll.procedure",
+          "kind": "collection",
+          "store": "store:Procedure",
+          "label": "Procedure",
+          "fields": ["_id", "id", "resourceType", "meta", "_search", "status", "code", "subject", "performed"],
+          "expand": { "_search": ["patient", "code", "date", "status"] },
+          "badges": ["canonical"],
+          "links": [{ "type": "joinsTo", "target": "coll.patient", "on": "_search.patient" }]
+        },
+        {
+          "id": "coll.medicationrequest",
+          "kind": "collection",
+          "store": "store:MedicationRequest",
+          "label": "MedicationRequest",
+          "fields": ["_id", "id", "resourceType", "meta", "_search", "status", "intent", "medication", "subject", "authoredOn"],
+          "expand": { "_search": ["patient", "medication", "status", "date"] },
+          "badges": ["canonical"],
+          "links": [{ "type": "joinsTo", "target": "coll.patient", "on": "_search.patient" }]
+        },
+        {
+          "id": "coll.diagnosticreport",
+          "kind": "collection",
+          "store": "store:DiagnosticReport",
+          "label": "DiagnosticReport",
+          "fields": ["_id", "id", "resourceType", "meta", "_search", "status", "category", "code", "subject", "effective"],
+          "expand": { "_search": ["patient", "code", "date", "category", "status"] },
+          "badges": ["canonical"],
+          "links": [{ "type": "joinsTo", "target": "coll.patient", "on": "_search.patient" }]
+        },
+        {
+          "id": "coll.allergyintolerance",
+          "kind": "collection",
+          "store": "store:AllergyIntolerance",
+          "label": "AllergyIntolerance",
+          "fields": ["_id", "id", "resourceType", "meta", "_search", "clinicalStatus", "code", "patient"],
+          "expand": { "_search": ["patient", "code", "clinical-status"] },
+          "badges": ["canonical"],
+          "links": [{ "type": "joinsTo", "target": "coll.patient", "on": "_search.patient" }]
+        }
+      ]
+    },
+    "transformGraph": {
+      "layout": "LR",
+      "nodes": [
+        { "id": "src.fhir_payload",      "kind": "source",    "label": "FHIR R5 Resource (or Bundle)" },
+        { "id": "op.validate",           "kind": "transform", "label": "Schema Validation", "group": "Ingest" },
+        { "id": "op.denormalize",        "kind": "transform", "label": "Denormalize → _search (fhir-mql)", "group": "Transform" },
+        { "id": "op.route",              "kind": "transform", "label": "Resource-type Router", "group": "Transform" },
+        { "id": "sink.patient",          "kind": "sink",      "label": "Patient",           "entityRef": "coll.patient" },
+        { "id": "sink.practitioner",     "kind": "sink",      "label": "Practitioner",      "entityRef": "coll.practitioner" },
+        { "id": "sink.organization",     "kind": "sink",      "label": "Organization",      "entityRef": "coll.organization" },
+        { "id": "sink.encounter",        "kind": "sink",      "label": "Encounter",         "entityRef": "coll.encounter" },
+        { "id": "sink.observation",      "kind": "sink",      "label": "Observation",       "entityRef": "coll.observation" },
+        { "id": "sink.condition",        "kind": "sink",      "label": "Condition",         "entityRef": "coll.condition" },
+        { "id": "sink.procedure",        "kind": "sink",      "label": "Procedure",         "entityRef": "coll.procedure" },
+        { "id": "sink.medicationrequest","kind": "sink",      "label": "MedicationRequest", "entityRef": "coll.medicationrequest" },
+        { "id": "sink.diagnosticreport", "kind": "sink",      "label": "DiagnosticReport",  "entityRef": "coll.diagnosticreport" },
+        { "id": "sink.allergyintolerance","kind": "sink",     "label": "AllergyIntolerance","entityRef": "coll.allergyintolerance" }
+      ],
+      "edges": [
+        { "from": "src.fhir_payload",  "to": "op.validate" },
+        { "from": "op.validate",       "to": "op.denormalize" },
+        { "from": "op.denormalize",    "to": "op.route" },
+        { "from": "op.route",          "to": "sink.patient" },
+        { "from": "op.route",          "to": "sink.practitioner" },
+        { "from": "op.route",          "to": "sink.organization" },
+        { "from": "op.route",          "to": "sink.encounter" },
+        { "from": "op.route",          "to": "sink.observation" },
+        { "from": "op.route",          "to": "sink.condition" },
+        { "from": "op.route",          "to": "sink.procedure" },
+        { "from": "op.route",          "to": "sink.medicationrequest" },
+        { "from": "op.route",          "to": "sink.diagnosticreport" },
+        { "from": "op.route",          "to": "sink.allergyintolerance" }
+      ]
+    },
+    "indexOverlay": {
+      "enabled": true,
+      "note": "All collections carry `id_unique` and `search_patient_date` as base indexes. Resource-specific indexes shown per collection above."
     }
   }
 }
