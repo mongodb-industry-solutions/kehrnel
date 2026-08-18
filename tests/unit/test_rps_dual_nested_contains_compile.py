@@ -217,6 +217,126 @@ async def test_compile_query_raw_aql_uses_sidecar_exact_match_for_path_to_path_c
 
 
 @pytest.mark.asyncio
+async def test_compile_query_raw_aql_supports_distinct_adverse_reaction_path_to_path_query():
+    db = _FakeDb(
+        {
+            "_codes": _FakeCollection(
+                {
+                    "ar_code": {
+                        "_id": "ar_code",
+                        "at": {
+                            "at0001": "-1",
+                            "at0002": "-2",
+                        },
+                        "openEHR-EHR-COMPOSITION": {
+                            "encounter": {
+                                "v1": "24",
+                            }
+                        },
+                        "openEHR-EHR-EVALUATION": {
+                            "adverse_reaction_risk": {
+                                "v2": "33",
+                            }
+                        },
+                        "openEHR-EHR-CLUSTER": {
+                            "adverse_reaction_event": {
+                                "v1": "31",
+                            }
+                        },
+                    }
+                }
+            ),
+            "_shortcuts": _FakeCollection(
+                {
+                    "shortcuts": {
+                        "_id": "shortcuts",
+                        "items": {
+                            "uid": "uid",
+                            "context": "cx",
+                            "start_time": "st",
+                            "value": "v",
+                            "data": "data",
+                            "items": "i",
+                            "defining_code": "df",
+                            "code_string": "cs",
+                            "archetype_details": "ad",
+                            "template_id": "ti",
+                        },
+                    }
+                }
+            ),
+            "compositions_rps": _FakeCollection({}),
+            "compositions_search": _FakeCollection({}),
+        }
+    )
+
+    ctx = StrategyContext(
+        environment_id="env-distinct-path-to-path",
+        config=MANIFEST.default_config,
+        adapters={"storage": _FakeStorage(db)},
+        manifest=MANIFEST.model_copy(deep=True),
+        meta={},
+    )
+    strategy = RPSDualStrategy()
+    raw_aql = """
+    SELECT DISTINCT
+        c/uid/value AS composition_uid,
+        e/ehr_id/value AS ehr_id,
+        c/context/start_time/value AS creation_date,
+        ar/data[at0001]/items[at0002]/value/value AS substance_name,
+        ar/data[at0001]/items[at0002]/value/defining_code/code_string AS substance_code,
+        ar/data[at0001]/items[openEHR-EHR-CLUSTER.adverse_reaction_event.v1]/items[at0001]/value/value AS specific_substance_name,
+        ar/data[at0001]/items[openEHR-EHR-CLUSTER.adverse_reaction_event.v1]/items[at0001]/value/defining_code/code_string AS specific_substance_code
+    FROM EHR e
+        CONTAINS VERSION v
+        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.encounter.v1]
+        CONTAINS (
+            EVALUATION ar[openEHR-EHR-EVALUATION.adverse_reaction_risk.v2]
+            AND
+            EVALUATION ar2[openEHR-EHR-EVALUATION.adverse_reaction_risk.v2]
+        )
+    WHERE
+        c/archetype_details/template_id/value = 'air_adverse_reaction_record_v1'
+        AND ar/data[at0001]/items[at0002]/value/defining_code/code_string
+            != ar2/data[at0001]/items[at0002]/value/defining_code/code_string
+    """
+
+    plan = await strategy.compile_query(
+        ctx,
+        "openEHR",
+        {
+            "raw_aql": raw_aql,
+            "debug": True,
+        },
+    )
+
+    assert plan.engine == "text_search_dual"
+    assert plan.explain["builder"]["chosen"] == "search_pipeline_builder"
+
+    pipeline = plan.plan["pipeline"]
+    assert [next(iter(stage)) for stage in pipeline] == [
+        "$search",
+        "$match",
+        "$lookup",
+        "$project",
+        "$group",
+        "$replaceRoot",
+        "$limit",
+    ]
+    assert "$expr" in pipeline[1]["$match"]
+    assert pipeline[3]["$project"].keys() >= {
+        "composition_uid",
+        "ehr_id",
+        "creation_date",
+        "substance_name",
+        "substance_code",
+        "specific_substance_name",
+        "specific_substance_code",
+    }
+    assert pipeline[4]["$group"]["_id"]["composition_uid"] == "$composition_uid"
+
+
+@pytest.mark.asyncio
 async def test_compile_query_raw_aql_prefers_match_pipeline_for_linear_nested_contains():
     db = _FakeDb(
         {

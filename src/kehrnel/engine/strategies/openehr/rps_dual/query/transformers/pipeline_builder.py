@@ -339,6 +339,88 @@ class PipelineBuilder:
             ]
         }
 
+    @staticmethod
+    def _string_expr(expr: Any) -> Any:
+        if isinstance(expr, str) and not expr.startswith("$"):
+            return expr
+        return {
+            "$cond": [
+                {"$in": [{"$type": expr}, ["missing", "null"]]},
+                "",
+                {"$toString": expr},
+            ]
+        }
+
+    @staticmethod
+    def _numeric_expr(expr: Any) -> Any:
+        if isinstance(expr, (int, float)):
+            return expr
+        if isinstance(expr, str) and re.fullmatch(r"-?\d+", expr.strip()):
+            return int(expr.strip())
+        if isinstance(expr, str) and re.fullmatch(r"-?\d+\.\d+", expr.strip()):
+            return float(expr.strip())
+        return {"$toInt": {"$ifNull": [expr, 0]}}
+
+    def _split_function_args(self, args_text: str) -> List[str]:
+        args: List[str] = []
+        current: List[str] = []
+        depth = 0
+        quote: Optional[str] = None
+        escaped = False
+
+        for char in str(args_text or ""):
+            if quote:
+                current.append(char)
+                if escaped:
+                    escaped = False
+                elif char == "\\":
+                    escaped = True
+                elif char == quote:
+                    quote = None
+                continue
+
+            if char in {"'", '"'}:
+                quote = char
+                current.append(char)
+            elif char in "([{":
+                depth += 1
+                current.append(char)
+            elif char in ")]}":
+                depth = max(0, depth - 1)
+                current.append(char)
+            elif char == "," and depth == 0:
+                args.append("".join(current).strip())
+                current = []
+            else:
+                current.append(char)
+
+        tail = "".join(current).strip()
+        if tail:
+            args.append(tail)
+        return args
+
+    def _parse_function_arg(self, arg_text: str) -> Dict[str, Any]:
+        arg = str(arg_text or "").strip()
+        if re.fullmatch(r"(['\"]).*\1", arg):
+            return {"type": "literal", "value": arg[1:-1]}
+        if re.fullmatch(r"-?\d+", arg):
+            return {"type": "literal", "value": int(arg)}
+        if re.fullmatch(r"-?\d+\.\d+", arg):
+            return {"type": "literal", "value": float(arg)}
+
+        nested_function = re.match(r"^(\w+)\s*\((.*)\)$", arg, re.IGNORECASE)
+        if nested_function:
+            return {
+                "type": "functionCall",
+                "path": arg,
+                "function": {
+                    "name": nested_function.group(1),
+                    "args": nested_function.group(2).strip(),
+                },
+            }
+
+        return {"type": "dataMatchPath", "path": arg}
+
     def _first_matching_node_value(
         self,
         nodes_expr: Any,
@@ -1097,25 +1179,140 @@ class PipelineBuilder:
             "data_path": data_path,
         }
 
+    def _projection_expr_from_source(
+        self,
+        source: Dict[str, Any],
+        *,
+        projection_cache_plan: Optional[Dict[str, Any]] = None,
+    ) -> Any:
+        if source["kind"] == "direct":
+            return source["expr"]
+
+        cache_ref = None
+        if projection_cache_plan:
+            cache_ref = (projection_cache_plan.get("refs") or {}).get(
+                self._projection_cache_key(source)
+            )
+
+        if cache_ref:
+            return f"{cache_ref}.{source['data_path']}"
+
+        if projection_cache_plan and projection_cache_plan.get("needs_path_lookup"):
+            lookup_expr = self._node_lookup_expr_from_source(source)
+            if lookup_expr is not None:
+                return {
+                    "$let": {
+                        "vars": {"node": lookup_expr},
+                        "in": f"$$node.{source['data_path']}",
+                    }
+                }
+
+        return self._first_matching_node_value(
+            source["nodes_expr"],
+            path_field=source["path_field"],
+            path_regex_pattern=source["path_regex_pattern"],
+            data_path=source["data_path"],
+        )
+
+    async def _build_data_path_projection_expr(
+        self,
+        aql_path: str,
+        fanout_spec: Optional[Dict[str, Any]],
+        *,
+        projection_cache_plan: Optional[Dict[str, Any]] = None,
+    ) -> Any:
+        source = await self._resolve_projection_source(aql_path, fanout_spec)
+        if not source:
+            return None
+        return self._projection_expr_from_source(
+            source,
+            projection_cache_plan=projection_cache_plan,
+        )
+
+    async def _build_value_projection_expr(
+        self,
+        value_spec: Dict[str, Any],
+        fanout_spec: Optional[Dict[str, Any]],
+        *,
+        projection_cache_plan: Optional[Dict[str, Any]] = None,
+    ) -> Any:
+        value_type = value_spec.get("type")
+        if value_type == "literal":
+            return self.value_formatter.format_value(value_spec.get("value"))
+        if value_type == "dataMatchPath":
+            aql_path = value_spec.get("path")
+            if not aql_path:
+                return None
+            return await self._build_data_path_projection_expr(
+                aql_path,
+                fanout_spec,
+                projection_cache_plan=projection_cache_plan,
+            )
+        if value_type == "functionCall":
+            return await self._build_function_projection_expr(
+                value_spec,
+                fanout_spec,
+                projection_cache_plan=projection_cache_plan,
+            )
+        return None
+
+    async def _build_function_projection_expr(
+        self,
+        value_spec: Dict[str, Any],
+        fanout_spec: Optional[Dict[str, Any]],
+        *,
+        projection_cache_plan: Optional[Dict[str, Any]] = None,
+    ) -> Any:
+        function = value_spec.get("function", {}) if isinstance(value_spec.get("function"), dict) else {}
+        function_name = str(function.get("name") or "").upper()
+        arg_specs = [self._parse_function_arg(arg) for arg in self._split_function_args(str(function.get("args") or ""))]
+        arg_exprs = [
+            await self._build_value_projection_expr(
+                arg_spec,
+                fanout_spec,
+                projection_cache_plan=projection_cache_plan,
+            )
+            for arg_spec in arg_specs
+        ]
+
+        if function_name == "LENGTH":
+            if len(arg_exprs) != 1:
+                raise ValueError("LENGTH expects one argument.")
+            return {"$strLenCP": self._string_expr(arg_exprs[0])}
+
+        if function_name == "CONCAT":
+            if not arg_exprs:
+                raise ValueError("CONCAT expects at least one argument.")
+            return {"$concat": [self._string_expr(expr) for expr in arg_exprs]}
+
+        if function_name == "SUBSTRING":
+            if len(arg_exprs) not in {2, 3}:
+                raise ValueError("SUBSTRING expects two or three arguments.")
+            string_expr = self._string_expr(arg_exprs[0])
+            start_expr = {
+                "$max": [
+                    {"$subtract": [self._numeric_expr(arg_exprs[1]), 1]},
+                    0,
+                ]
+            }
+            length_expr = self._numeric_expr(arg_exprs[2]) if len(arg_exprs) == 3 else {"$strLenCP": string_expr}
+            return {"$substrCP": [string_expr, start_expr, length_expr]}
+
+        raise NotImplementedError(f"Function '{function_name or 'UNKNOWN'}' is not supported yet.")
+
     def _parse_aggregate_columns(self, ast: Dict[str, Any]) -> List[Dict[str, Any]]:
         columns = ast.get("select", {}).get("columns", {})
         if not columns:
             return []
 
         aggregate_columns: List[Dict[str, Any]] = []
-        has_aggregate_projection = False
 
         for col_data in columns.values():
             value_spec = col_data.get("value", {}) if isinstance(col_data.get("value"), dict) else {}
             value_type = value_spec.get("type")
             if value_type != "aggregateFunctionCall":
-                if has_aggregate_projection:
-                    raise NotImplementedError(
-                        "Mixed aggregate and non-aggregate SELECT projections are not supported yet."
-                    )
-                return []
+                continue
 
-            has_aggregate_projection = True
             function = value_spec.get("function", {}) if isinstance(value_spec.get("function"), dict) else {}
             function_name = str(function.get("name", "")).upper()
             if function_name not in {"COUNT", "MIN", "MAX", "SUM", "AVG"}:
@@ -1136,6 +1333,17 @@ class PipelineBuilder:
             )
 
         return aggregate_columns
+
+    def _has_non_aggregate_projection(self, ast: Dict[str, Any]) -> bool:
+        columns = ast.get("select", {}).get("columns", {})
+        for col_data in columns.values():
+            value_spec = col_data.get("value", {}) if isinstance(col_data.get("value"), dict) else {}
+            if value_spec.get("type") != "aggregateFunctionCall":
+                return True
+        return False
+
+    def has_mixed_aggregate_projection(self, ast: Dict[str, Any]) -> bool:
+        return bool(self._parse_aggregate_columns(ast)) and self._has_non_aggregate_projection(ast)
 
     def _is_row_count_aggregate(self, aggregate: Dict[str, Any]) -> bool:
         if aggregate.get("function_name") != "COUNT":
@@ -1215,7 +1423,7 @@ class PipelineBuilder:
 
         for col_data in columns.values():
             value_spec = col_data.get("value", {})
-            if value_spec.get("type") == "variable":
+            if value_spec.get("type") in {"variable", "aggregateFunctionCall", "functionCall"}:
                 continue
             aql_path = value_spec.get("path")
             if not aql_path:
@@ -1290,9 +1498,10 @@ class PipelineBuilder:
         for col_data in columns.values():
             alias = col_data.get("alias")
             value_spec = col_data.get("value", {})
+            value_type = value_spec.get("type")
             
             # Check if this is a variable reference
-            if value_spec.get("type") == "variable":
+            if value_type == "variable":
                 var_name = value_spec.get("name")
                 if not alias:
                     alias = var_name.lstrip('$')  # Use variable name as alias
@@ -1300,6 +1509,26 @@ class PipelineBuilder:
                 # Reference the field created by the LET stage
                 field_name = var_name.lstrip('$')
                 projection[alias] = f"${field_name}"
+                continue
+
+            if value_type == "aggregateFunctionCall":
+                continue
+
+            if value_type == "functionCall":
+                function = value_spec.get("function", {}) if isinstance(value_spec.get("function"), dict) else {}
+                if not alias:
+                    alias = f"{str(function.get('name') or 'function').lower()}Result"
+                projection[alias] = await self._build_function_projection_expr(
+                    value_spec,
+                    fanout_spec,
+                    projection_cache_plan=projection_cache_plan,
+                )
+                continue
+
+            if value_type == "literal":
+                if not alias:
+                    alias = "literal"
+                projection[alias] = self.value_formatter.format_value(value_spec.get("value"))
                 continue
             
             # Handle regular path-based columns
@@ -1315,39 +1544,10 @@ class PipelineBuilder:
                 else:
                     alias = path_parts[-1]
 
-            source = await self._resolve_projection_source(aql_path, fanout_spec)
-            if not source:
-                continue
-            if source["kind"] == "direct":
-                projection[alias] = source["expr"]
-                continue
-
-            cache_ref = None
-            if projection_cache_plan:
-                cache_ref = (projection_cache_plan.get("refs") or {}).get(
-                    self._projection_cache_key(source)
-                )
-
-            if cache_ref:
-                projection[alias] = f"{cache_ref}.{source['data_path']}"
-                continue
-
-            if projection_cache_plan and projection_cache_plan.get("needs_path_lookup"):
-                lookup_expr = self._node_lookup_expr_from_source(source)
-                if lookup_expr is not None:
-                    projection[alias] = {
-                        "$let": {
-                            "vars": {"node": lookup_expr},
-                            "in": f"$$node.{source['data_path']}",
-                        }
-                    }
-                    continue
-
-            projection[alias] = self._first_matching_node_value(
-                source["nodes_expr"],
-                path_field=source["path_field"],
-                path_regex_pattern=source["path_regex_pattern"],
-                data_path=source["data_path"],
+            projection[alias] = await self._build_data_path_projection_expr(
+                aql_path,
+                fanout_spec,
+                projection_cache_plan=projection_cache_plan,
             )
         return {"$project": projection}
 
@@ -1530,6 +1730,8 @@ class PipelineBuilder:
         aggregate_columns = self._parse_aggregate_columns(ast)
         if not aggregate_columns:
             return []
+        if self._has_non_aggregate_projection(ast):
+            return []
 
         aggregate_aliases = [aggregate["alias"] for aggregate in aggregate_columns]
         row_count_aggregates = [aggregate for aggregate in aggregate_columns if self._is_row_count_aggregate(aggregate)]
@@ -1605,6 +1807,40 @@ class PipelineBuilder:
             },
         ]
 
+    def build_mixed_aggregate_stages(self, ast: Dict[str, Any], projected_fields: List[str]) -> List[Dict[str, Any]]:
+        aggregate_columns = self._parse_aggregate_columns(ast)
+        if not aggregate_columns or not projected_fields:
+            return []
+        if not self._has_non_aggregate_projection(ast):
+            return []
+
+        unsupported = [
+            aggregate for aggregate in aggregate_columns
+            if not self._is_row_count_aggregate(aggregate)
+        ]
+        if unsupported:
+            raise NotImplementedError(
+                "Mixed path-based aggregate projections are not supported yet; "
+                "grouped COUNT(*)/COUNT(e|c|v) projections are supported."
+            )
+
+        group_id = {field: f"${field}" for field in projected_fields if field != "_id"}
+        if not group_id:
+            return []
+
+        group_stage = {"$group": {"_id": group_id}}
+        for aggregate in aggregate_columns:
+            group_stage["$group"][aggregate["alias"]] = {"$sum": 1}
+
+        project_stage = {
+            "$project": {
+                "_id": 0,
+                **{field: f"$_id.{field}" for field in group_id},
+                **{aggregate["alias"]: 1 for aggregate in aggregate_columns},
+            }
+        }
+        return [group_stage, project_stage]
+
     def build_distinct_stages(self, ast: Dict[str, Any], projected_fields: List[str]) -> List[Dict[str, Any]]:
         """
         Constructs the $group and $replaceRoot stages for DISTINCT queries.
@@ -1676,13 +1912,20 @@ class PipelineBuilder:
         for col_data in columns.values():
             alias = col_data.get("alias")
             value_spec = col_data.get("value", {})
-            
+            value_type = value_spec.get("type")
+
+            if value_type == "aggregateFunctionCall":
+                continue
+
             if alias:
                 field_names.append(alias)
-            elif value_spec.get("type") == "variable":
+            elif value_type == "variable":
                 # Variable reference - use variable name as field name
                 var_name = value_spec.get("name", "")
                 field_names.append(var_name.lstrip('$'))
+            elif value_type == "functionCall":
+                function = value_spec.get("function", {}) if isinstance(value_spec.get("function"), dict) else {}
+                field_names.append(f"{str(function.get('name') or 'function').lower()}Result")
             elif value_spec.get("path"):
                 # Path-based column - generate name from path
                 aql_path = value_spec.get("path")

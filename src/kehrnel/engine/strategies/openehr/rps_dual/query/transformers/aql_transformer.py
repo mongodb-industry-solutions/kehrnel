@@ -210,6 +210,7 @@ class AQLtoMQLTransformer:
         if aggregate_stages:
             pipeline.extend(aggregate_stages)
             return pipeline
+        has_mixed_aggregate_projection = self.pipeline_builder.has_mixed_aggregate_projection(self.ast)
 
         # 3. Prepare row fanout and row-level filters. We only apply the page cap
         # before fanout when no row-level post-filter is needed; otherwise the
@@ -254,7 +255,9 @@ class AQLtoMQLTransformer:
         if not distinct_stages:
             pre_projection_sort = self._pre_projection_sort_stage(sort_stage, project_stage)
         can_apply_pagination_before_projection = (
-            not distinct_stages and (pre_projection_sort is not None or sort_stage is None)
+            not has_mixed_aggregate_projection
+            and not distinct_stages
+            and (pre_projection_sort is not None or sort_stage is None)
         )
         page_before_fanout = can_apply_pagination_before_projection and row_exact_match is None
         page_after_fanout = can_apply_pagination_before_projection and not page_before_fanout
@@ -283,6 +286,18 @@ class AQLtoMQLTransformer:
 
         if project_stage:
             pipeline.append(project_stage)
+
+        if has_mixed_aggregate_projection:
+            mixed_aggregate_stages = self.pipeline_builder.build_mixed_aggregate_stages(
+                self.ast,
+                projected_fields,
+            )
+            if mixed_aggregate_stages:
+                pipeline.extend(mixed_aggregate_stages)
+            if sort_stage:
+                pipeline.append(sort_stage)
+            pipeline.extend(self._pagination_stages())
+            return pipeline
 
         if distinct_stages:
             pipeline.extend(distinct_stages)
