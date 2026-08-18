@@ -429,9 +429,20 @@ async def _initialize_activation_artifacts(rt, env_id: str, activation) -> Dict[
                 "codes": bootstrap_cfg.get("codes") or "ensure",
                 "shortcuts": bootstrap_cfg.get("shortcuts") or ("seed" if apply_shortcuts else "none"),
             }
+        # For non-rps-dual strategies, only bootstrap if the strategy manifest declares
+        # an ensure_dictionaries op — avoids spurious failures on FHIR and other domains.
+        has_ensure_dicts = False
+        if not is_rps_dual:
+            try:
+                _manifest = rt.registry.get_manifest(getattr(activation, "strategy_id", ""))
+                has_ensure_dicts = any(
+                    op.name == "ensure_dictionaries" for op in (_manifest.ops if _manifest else [])
+                )
+            except Exception:
+                pass
         should_bootstrap = (
             is_rps_dual and any(bootstrap_payload.get(key) != "none" for key in ("codes", "shortcuts"))
-        ) or (not is_rps_dual and apply_shortcuts)
+        ) or (not is_rps_dual and apply_shortcuts and has_ensure_dicts)
         if should_bootstrap:
             dict_result = await rt.dispatch(
                 env_id,

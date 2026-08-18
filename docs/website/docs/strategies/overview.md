@@ -54,6 +54,19 @@ Reference strategy for native **FHIR R5** in MongoDB (fhir-gen + fhir-mql).
 
 [Learn more about FHIR Clinical CDR →](/docs/strategies/fhir/clinical-cdr/)
 
+### SNOMED CT on MongoDB
+
+Preview strategy for licensed **SNOMED CT** terminology releases in MongoDB.
+
+| Aspect | Description |
+|--------|-------------|
+| **Domain** | snomedct |
+| **Storage** | Canonical concept collection + optional term sidecar |
+| **Query** | Lookup, basic ECL/subsumption, lexical terminology search |
+| **Grounding** | Mention-to-candidate retrieval for clinical NLP/LLM workflows |
+
+[Learn more about SNOMED CT on MongoDB →](/docs/strategies/snomedct/mongodb/)
+
 ## Strategy Pack Structure
 
 ```text
