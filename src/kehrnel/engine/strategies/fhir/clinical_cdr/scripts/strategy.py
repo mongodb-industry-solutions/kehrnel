@@ -75,10 +75,54 @@ class FHIRClinicalCDRStrategy(StrategyPlugin):
         return True
 
     async def plan(self, ctx: StrategyContext) -> ApplyPlan:
-        raise NotImplementedError("fhir.clinical_cdr plan not implemented")
+        """Discover which resource types need indexes ensured."""
+        try:
+            cfg = bridge.resolve_strategy_config(ctx)
+            uri, database, prefix = bridge.resolve_mongo(ctx)
+            search_cfg = cfg.get("search") or {}
+            mql_ctx = bridge.build_mql_context(
+                uri, database, prefix,
+                search_cfg.get("config_dir"),
+                search_cfg.get("compartment_definitions_dir"),
+            )
+            try:
+                resource_types = list(bridge.supported_search_resource_types(mql_ctx.config_loader))
+            finally:
+                bridge.close_mql_context(mql_ctx)
+            return ApplyPlan(artifacts={
+                "resource_types": resource_types,
+                "database": database,
+                "collection_prefix": prefix or "",
+                "action": "ensure_indexes",
+            })
+        except Exception as exc:
+            # Return a minimal plan so apply() can still attempt index creation
+            return ApplyPlan(artifacts={
+                "resource_types": [],
+                "action": "ensure_indexes",
+                "plan_error": str(exc),
+            })
 
     async def apply(self, ctx: StrategyContext, plan: ApplyPlan) -> ApplyResult:
-        raise NotImplementedError("fhir.clinical_cdr apply not implemented")
+        """Ensure MongoDB indexes for all FHIR resource types discovered in plan()."""
+        # plan arrives as a plain dict when called via runtime dispatch (_to_dict conversion)
+        if isinstance(plan, dict):
+            artifacts = plan.get("artifacts") or {}
+        else:
+            artifacts = (plan.artifacts if plan else {}) or {}
+
+        resource_types = artifacts.get("resource_types") or []
+        payload: Dict[str, Any] = {"resource_types": resource_types} if resource_types else {}
+
+        result = await indexes.fhir_ensure_indexes(ctx, payload)
+
+        index_entries = result.get("indexes", [])
+        return ApplyResult(
+            created=[e["collection"] for e in index_entries if e.get("status") == "created"],
+            updated=[e["collection"] for e in index_entries if e.get("status") == "exists"],
+            skipped=result.get("skipped", []),
+            warnings=result.get("warnings", []),
+        )
 
     async def transform(self, ctx: StrategyContext, payload: Dict[str, Any]) -> TransformResult:
         raise NotImplementedError("fhir.clinical_cdr transform not implemented")

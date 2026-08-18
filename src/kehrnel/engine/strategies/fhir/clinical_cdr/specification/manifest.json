@@ -2,9 +2,9 @@
   "id": "fhir.clinical_cdr",
   "name": "FHIR Clinical CDR",
   "version": "0.1.0",
-  "maturity": "beta",
+  "maturity": "published",
   "pack_format": "strategy-pack/v1",
-  "spec": { "path": "spec.json", "version": "1.0" },
+  "spec": { "path": "spec.json", "version": "1.1" },
   "domain": "FHIR",
   "summary": "Native FHIR R5 storage with fhir-gen synthetic data and fhir-mql search translation.",
   "description": "Stores canonical FHIR resources in per-type MongoDB collections, generates synthetic corpora via fhir-gen, and executes FHIR search parameters through fhir-mql denormalized indexes.",
@@ -18,9 +18,81 @@
   "capabilities": ["ingest", "query", "search", "synthetic", "validate"],
   "entrypoint": "kehrnel.engine.strategies.fhir.clinical_cdr.strategy:FHIRClinicalCDRStrategy",
   "ui": {
-    "tags": ["FHIR", "synthetic", "search", "fhir-mql", "fhir-gen"],
+    "tags": ["FHIR", "R5", "native-storage", "per-resource-type", "fhir-mql", "fhir-gen", "synthetic", "search"],
     "domain_badge": "FHIR",
-    "docs": "/guide/docs/strategies/fhir/clinical-cdr"
+    "status": "stable",
+    "status_message": "Core ingest, synthetic generation, and FHIR Search are production-ready. negotiate_fhir_search (NL→FHIR) is planned.",
+    "docs": "/guide/docs/strategies/fhir/clinical-cdr",
+    "story": "Clinical data arrives as FHIR R5 resources — Patients, Observations, Conditions, Encounters and 48 more. Each resource type lands in its own MongoDB collection, exactly matching the FHIR mental model. Search parameters are pre-computed into a `_search` field so fhir-mql can translate any FHIR Search expression into a MongoDB query without touching the resource payload.",
+    "how_it_works": "On ingest, each resource is validated, its FHIR search parameters are extracted and written to `_search`, and the document is upserted into its per-type collection. Synthetic corpora are produced by fhir-gen using named recipes (clinical_dev or clinical_full84). Queries are compiled by fhir-mql from standard FHIR Search parameter syntax into MongoDB MQL, using the `_search` compound indexes.",
+    "benefits": [
+      "Native FHIR R5 — no translation layer; documents are stored exactly as received",
+      "52 resource types, each with its own collection and tailored index set",
+      "FHIR Search parameters execute via compound MongoDB indexes — no full-document scans",
+      "fhir-gen recipes generate realistic clinical populations across all owned resource types",
+      "Straightforward schema migration: update fhir-mql config, re-run fhir_denormalize"
+    ],
+    "ideal_for": [
+      "FHIR-native CDR or SMART-on-FHIR application backends",
+      "Synthetic patient population generation for demos, QA, and AI training",
+      "Interoperability projects requiring standard FHIR Search API behavior",
+      "Environments where the upstream system already speaks FHIR R5"
+    ],
+    "consider_alternatives": [
+      "If your source data is OpenEHR archetypes, use openehr.rps_dual instead",
+      "If you need claim/EDI processing, look at x12.co_single",
+      "If you need complex AQL-style path traversal, consider whether the FHIR Search parameter set covers your query patterns"
+    ],
+    "scorecard": {
+      "read_patient":      4,
+      "read_population":   3,
+      "writes":            4,
+      "storage":           3,
+      "index_cost":        3,
+      "migration_ease":    4
+    },
+    "index_contract": {
+      "required": [
+        { "collection": "<ResourceType>", "index": "id_unique",         "fields": ["id"],                                          "note": "All 52 collections — FHIR logical id uniqueness." },
+        { "collection": "<ResourceType>", "index": "search_patient_date","fields": ["_search.patient","_search.date","_search.status"],"note": "Patient-compartment queries on all patient-anchored resource types." }
+      ],
+      "recommended": [
+        { "collection": "Patient",         "index": "identifier",       "fields": ["identifier.system","identifier.value"],         "note": "MRN and national identifier lookups." },
+        { "collection": "Observation",     "index": "code_date",        "fields": ["_search.code","_search.date"],                  "note": "LOINC/SNOMED population queries." },
+        { "collection": "Condition",       "index": "code_status",      "fields": ["_search.code","_search.clinical-status"],       "note": "ICD/SNOMED active problem cohorts." },
+        { "collection": "MedicationRequest","index":"medication_date",  "fields": ["_search.medication","_search.date"],            "note": "RxNorm medication population queries." }
+      ],
+      "optional": [
+        { "collection": "Patient", "index": "birthdate",   "fields": ["birthDate"],          "note": "Age-range demographic filters." },
+        { "collection": "DiagnosticReport","index":"category_date","fields":["_search.category","_search.date"],"note":"Report category filter (LAB, RAD)." }
+      ]
+    },
+    "tabs": {
+      "overview": {
+        "cards": [
+          {
+            "title": "Querying",
+            "body": "FHIR Search parameters are compiled to MongoDB MQL by fhir-mql. Patient-compartment queries use `_search.patient` as the leading index key. Population queries use resource-specific compound indexes on `_search.code`, `_search.date`, etc.",
+            "icon": "Search"
+          },
+          {
+            "title": "Ingest",
+            "body": "Resources arrive as individual FHIR JSON documents or as Bundle entries. Each is validated, `_search` fields are populated, and the document is upserted by FHIR logical id. Bundle unpacking happens transparently.",
+            "icon": "Upload"
+          },
+          {
+            "title": "Synthetic Generation",
+            "body": "fhir-gen produces realistic FHIR R5 patient populations. Use the `clinical_dev` recipe for fast local setup (~535 documents, 10 resource types) or `clinical_full84` for soak testing (52 resource types). Run `fhir_denormalize` after bulk generation if `denormalize_on_generate` is disabled.",
+            "icon": "FlaskConical"
+          },
+          {
+            "title": "Schema & Indexes",
+            "body": "Run `fhir_ensure_indexes` after activation to create all required and recommended indexes. Re-run safely at any time — uses createIndex with background mode. `fhir_denormalize` can be scoped to specific resource types for incremental updates.",
+            "icon": "Database"
+          }
+        ]
+      }
+    }
   },
   "ops": [
     {
