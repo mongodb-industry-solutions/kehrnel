@@ -1,0 +1,366 @@
+{
+  "id": "snomedct.mongodb",
+  "name": "SNOMED CT on MongoDB",
+  "version": "0.1.0",
+  "domain": "snomedct",
+  "pack_format": "strategy-pack/v1",
+  "summary": "SNOMED CT canonical terminology model and term sidecar search on MongoDB.",
+  "description": "Stores official SNOMED CT JSON releases as canonical concept documents and derives a term sidecar for terminology search, NLP grounding, release comparison, and LLM benchmark retrieval. The strategy is designed for customer-owned MongoDB deployments, with parity between MongoDB Atlas and non-Atlas MongoDB.",
+  "entrypoint": "kehrnel.engine.strategies.snomedct.mongodb.strategy:SNOMEDCTMongoDBStrategy",
+  "spec": { "path": "spec.json" },
+  "capabilities": [
+    "terminology.canonical",
+    "terminology.search",
+    "terminology.grounding",
+    "terminology.release_diff"
+  ],
+  "adapters": {
+    "storage": ["mongodb"],
+    "search": ["mongodb"],
+    "vector": [],
+    "queue": []
+  },
+  "compatibility": {
+    "packFormat": "strategy-pack/v1",
+    "requires": ["storage.mongo"],
+    "optional": ["search.atlas"]
+  },
+  "maturity": "preview",
+  "license": "Apache-2.0",
+  "keywords": ["snomed", "snomedct", "terminology", "clinical semantics", "mongodb"],
+  "ui": {
+    "status": "preview",
+    "docs": "/docs/strategies/snomedct/mongodb/",
+    "domain_badge": "SNOMED CT",
+    "icon": "Database",
+    "tags": ["SNOMED CT", "MongoDB", "Search", "Grounding"],
+    "works_with": ["MongoDB", "MongoDB Atlas", "SNOMED CT JSON"],
+    "benefits": [
+      "Keeps the official terminology model as the system of record while adding MongoDB-native operational indexes.",
+      "Separates canonical concepts from term-level search projections so search can evolve without rewriting licensed source data.",
+      "Supports multi-tenant customer deployments where each tenant brings its own licensed SNOMED CT release and MongoDB binding."
+    ],
+    "constraints": [
+      "SNOMED CT distribution access and licensing remain the customer's responsibility.",
+      "Search and grounding require the term sidecar; canonical-only deployments support lookup, hierarchy, diff, and basic ECL only.",
+      "The first implementation provides deterministic lexical search; semantic/vector retrieval can be layered later without changing canonical storage."
+    ],
+    "pick_when": [
+      "You need a MongoDB-resident SNOMED CT terminology service for search, grounding, and clinical AI workflows.",
+      "You want the same pack to run on MongoDB Atlas and non-Atlas MongoDB.",
+      "You need to compare official release JSON against the active tenant collection before ingesting updates."
+    ],
+    "avoid_when": [
+      "You only need a remote terminology server and do not want to manage licensed SNOMED CT releases.",
+      "You require full ECL grammar coverage immediately; this pack currently implements a basic subsumption subset."
+    ]
+  },
+  "ops": [
+    {
+      "name": "snomed_list_releases",
+      "kind": "ingest",
+      "summary": "List licensed SNOMED CT JSON files placed in the configured local release folder",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "local_dir": { "type": "string" },
+          "file_pattern": { "type": "string" }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_inspect_release",
+      "kind": "ingest",
+      "summary": "Stream-inspect an official JSON release file",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "limit": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_diff_release",
+      "kind": "maintenance",
+      "summary": "Compare an official JSON release with the canonical MongoDB collection",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "release_id": { "type": "string" },
+          "limit": { "type": "integer", "minimum": 1 },
+          "sample_limit": { "type": "integer", "minimum": 1 },
+          "include_descendants": { "type": "boolean" }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_ingest_release",
+      "kind": "ingest",
+      "summary": "Ingest an official JSON release into the canonical concept collection",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "release_id": { "type": "string" },
+          "release_label": { "type": "string" },
+          "limit": { "type": "integer", "minimum": 1 },
+          "batch_size": { "type": "integer", "minimum": 1 },
+          "dry_run": { "type": "boolean" },
+          "drop_before_ingest": { "type": "boolean" },
+          "include_descendants": { "type": "boolean" },
+          "rebuild_sidecar": { "type": "boolean" }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_rebuild_sidecar",
+      "kind": "maintenance",
+      "summary": "Rebuild the term sidecar from canonical concepts",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "release_id": { "type": "string" },
+          "languages": { "type": "array", "items": { "type": "string" } },
+          "limit": { "type": "integer", "minimum": 1 },
+          "batch_size": { "type": "integer", "minimum": 1 },
+          "drop_before_rebuild": { "type": "boolean" },
+          "dry_run": { "type": "boolean" }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_ensure_indexes",
+      "kind": "maintenance",
+      "summary": "Ensure MongoDB indexes for canonical and sidecar collections",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "dry_run": { "type": "boolean" }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_readiness",
+      "kind": "query",
+      "summary": "Report release, collection, sidecar, and readiness status",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "release_id": { "type": "string" }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_lookup",
+      "kind": "query",
+      "summary": "Lookup one SNOMED CT concept",
+      "input_schema": {
+        "type": "object",
+        "required": ["concept_id"],
+        "properties": {
+          "concept_id": { "type": "string" },
+          "release_id": { "type": "string" }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_search",
+      "kind": "query",
+      "summary": "Search SNOMED CT terms through the sidecar collection",
+      "input_schema": {
+        "type": "object",
+        "required": ["q"],
+        "properties": {
+          "q": { "type": "string" },
+          "language": { "type": "string" },
+          "release_id": { "type": "string" },
+          "limit": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_ecl",
+      "kind": "query",
+      "summary": "Run an ECL query compiled to MongoDB aggregation over canonical SNOMED CT documents",
+      "input_schema": {
+        "type": "object",
+        "required": ["expression"],
+        "properties": {
+          "expression": { "type": "string" },
+          "release_id": { "type": "string" },
+          "limit": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_hybrid_search",
+      "kind": "query",
+      "summary": "MongoDB-native hybrid terminology search combining lexical text with ontology scope and semantic tags",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "q": { "type": "string" },
+          "language": { "type": "string" },
+          "release_id": { "type": "string" },
+          "ancestor_id": { "type": "string" },
+          "area_tag": { "type": "string" },
+          "semantic_tag": { "type": "string" },
+          "semantic_tag_key": { "type": "string" },
+          "limit": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_concept_children",
+      "kind": "query",
+      "summary": "Return direct children of a concept using inferredParentIds",
+      "input_schema": {
+        "type": "object",
+        "required": ["concept_id"],
+        "properties": {
+          "concept_id": { "type": "string" },
+          "release_id": { "type": "string" },
+          "limit": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_concept_descendants",
+      "kind": "query",
+      "summary": "Return descendants of a concept using inferredAncestorIds",
+      "input_schema": {
+        "type": "object",
+        "required": ["concept_id"],
+        "properties": {
+          "concept_id": { "type": "string" },
+          "release_id": { "type": "string" },
+          "include_self": { "type": "boolean" },
+          "limit": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_concept_ancestors",
+      "kind": "query",
+      "summary": "Return ancestors of a concept with a target-first aggregation lookup",
+      "input_schema": {
+        "type": "object",
+        "required": ["concept_id"],
+        "properties": {
+          "concept_id": { "type": "string" },
+          "release_id": { "type": "string" },
+          "include_self": { "type": "boolean" },
+          "limit": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_expand_value_set",
+      "kind": "query",
+      "summary": "Expand an ECL expression or focus concept to concept documents",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "expression": { "type": "string" },
+          "concept_id": { "type": "string" },
+          "release_id": { "type": "string" },
+          "include_self": { "type": "boolean" },
+          "limit": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_relationship_search",
+      "kind": "query",
+      "summary": "Find concepts by relationship type and/or destination",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "type_id": { "type": "string" },
+          "destination_id": { "type": "string" },
+          "release_id": { "type": "string" },
+          "limit": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_semantic_facets",
+      "kind": "query",
+      "summary": "Return MongoDB-native facets for area tags, semantic tags, and top roots",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "q": { "type": "string" },
+          "language": { "type": "string" },
+          "release_id": { "type": "string" },
+          "ancestor_id": { "type": "string" }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_parse_ecl",
+      "kind": "query",
+      "summary": "Parse ECL into an AST for validation, teaching, and tooling",
+      "input_schema": {
+        "type": "object",
+        "required": ["expression"],
+        "properties": {
+          "expression": { "type": "string" },
+          "release_id": { "type": "string" },
+          "limit": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_compile_ecl",
+      "kind": "query",
+      "summary": "Compile ECL into MongoDB aggregation without executing it",
+      "input_schema": {
+        "type": "object",
+        "required": ["expression"],
+        "properties": {
+          "expression": { "type": "string" },
+          "release_id": { "type": "string" },
+          "limit": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_ground_note",
+      "kind": "query",
+      "summary": "Ground extracted clinical mentions to SNOMED CT candidate concepts",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "mentions": { "type": "array", "items": { "type": "string" } },
+          "text": { "type": "string" },
+          "language": { "type": "string" },
+          "release_id": { "type": "string" },
+          "limit_per_mention": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    }
+  ]
+}

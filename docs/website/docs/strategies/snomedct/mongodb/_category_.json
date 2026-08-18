@@ -1,0 +1,10 @@
+{
+  "label": "mongodb",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "title": "SNOMED CT on MongoDB",
+    "description": "Canonical SNOMED CT terminology documents and term sidecar search on MongoDB.",
+    "slug": "/strategies/snomedct/mongodb"
+  }
+}

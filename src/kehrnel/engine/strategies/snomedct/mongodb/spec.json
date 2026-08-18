@@ -1,0 +1,364 @@
+{
+  "meta": {
+    "strategyId": "snomedct.mongodb",
+    "specVersion": "0.1",
+    "title": "SNOMED CT on MongoDB",
+    "summary": "Canonical SNOMED CT document storage with an optional term sidecar for terminology search and clinical note grounding.",
+    "domain": "SNOMED CT",
+    "tags": ["SNOMED CT", "terminology", "MongoDB", "search", "grounding"],
+    "maturity": "preview",
+    "runtimeStrategy": "snomedct.mongodb"
+  },
+  "rationale": {
+    "whyMongoDB": [
+      "SNOMED CT concepts are naturally document-shaped: each concept carries descriptions, language refsets, relationships, parents, ancestors, module metadata, and release metadata.",
+      "MongoDB can preserve the official JSON model as the canonical source while adding operational indexes for lookup, hierarchy traversal, and term retrieval.",
+      "The same persistence model runs on MongoDB Atlas and self-managed MongoDB. Atlas Search or vector search can be layered later, but the baseline strategy only requires MongoDB collections and indexes.",
+      "A separate term sidecar lets search and grounding evolve without rewriting the licensed canonical terminology payload."
+    ],
+    "primaryUseCases": [
+      "Tenant-owned ingestion of licensed official SNOMED CT JSON releases.",
+      "Release inspection and diff before applying a new release.",
+      "Terminology search and navigation over descriptions, synonyms, parents, ancestors, and semantic tags.",
+      "Grounding clinical NLP mentions to candidate SNOMED CT concepts.",
+      "Benchmark retrieval support for clinical LLM extraction/grounding workflows."
+    ],
+    "nonGoalsForThisPack": [
+      "It is not a SNOMED CT license manager.",
+      "It does not ship official SNOMED CT content.",
+      "It does not claim complete ECL grammar coverage in this first implementation."
+    ]
+  },
+  "glossary": {
+    "canonical_concept": {
+      "term": "Canonical concept document",
+      "definition": "One MongoDB document per SNOMED CT concept, preserving official IDs, descriptions, relationships, parents, ancestors, refsets, release metadata, and relationship attribute keys."
+    },
+    "term_sidecar": {
+      "term": "Term sidecar",
+      "definition": "A derived collection with one document per searchable description/language. It supports lexical retrieval, grounding candidates, and LLM benchmark retrieval inputs."
+    },
+    "release_diff": {
+      "term": "Release diff",
+      "definition": "A streamed comparison between the official JSON release and the active canonical MongoDB collection."
+    }
+  },
+  "configurability": {
+    "tenantSpecific": [
+      "database",
+      "source.local_dir",
+      "source.file_name",
+      "source.file_pattern",
+      "release.id",
+      "release.label",
+      "collections.concepts",
+      "collections.terms",
+      "languages"
+    ],
+    "operationalToggles": [
+      "collections.sidecar_enabled",
+      "ingest.batch_size",
+      "ingest.include_descendants",
+      "ingest.rebuild_sidecar",
+      "ingest.create_indexes_before_ingest",
+      "indexes.canonical",
+      "indexes.sidecar",
+      "indexes.text",
+      "search.default_language",
+      "search.default_limit",
+      "search.max_limit"
+    ],
+    "fixedByStrategy": [
+      "Canonical identity is releaseId + conceptId.",
+      "Sidecar identity is releaseId + conceptId + descriptionId + languageCode.",
+      "Distribution credentials are not part of the runtime contract.",
+      "Distribution is not a runtime concern: customers obtain licensed JSON through official channels and place it in the configured local folder.",
+      "Default search is deterministic normalized lexical retrieval for MongoDB parity."
+    ]
+  },
+  "logicalModel": {
+    "source": {
+      "types": [
+        {
+          "id": "type.snomedct_official_json_concept",
+          "title": "Official SNOMED CT JSON concept",
+          "kind": "document",
+          "description": "A concept object from the official combined JSON release.",
+          "identity": ["conceptId"],
+          "importantFields": [
+            "conceptId",
+            "active",
+            "effectiveTime",
+            "moduleId",
+            "definitionStatusId",
+            "descriptions",
+            "relationships",
+            "concreteRelationships",
+            "inferredParentIds",
+            "inferredAncestorIds",
+            "inferredChildIds",
+            "inferredDescendantIds"
+          ]
+        }
+      ]
+    },
+    "canonical": {
+      "type": "document",
+      "collectionNameFromConfig": "collections.concepts",
+      "identity": ["releaseId", "conceptId"],
+      "policy": {
+        "preserveOfficialPayload": true,
+        "dropInferredDescendantsByDefault": true,
+        "reasonForDroppingDescendants": "Descendant arrays can be very large and are redundant for common ancestor/subsumption queries when inferredAncestorIds are present."
+      },
+      "addedFields": [
+        "releaseId",
+        "releaseLabel",
+        "releaseDate",
+        "releaseAppliedAt",
+        "relationshipAttributeKeys"
+      ],
+      "supportedFeatures": [
+        "lookup",
+        "basic ECL/subsumption",
+        "hierarchy traversal",
+        "release diff",
+        "readiness diagnostics"
+      ]
+    },
+    "derived": {
+      "termSidecar": {
+        "type": "projection",
+        "collectionNameFromConfig": "collections.terms",
+        "identity": ["releaseId", "conceptId", "descriptionId", "languageCode"],
+        "requiredFor": ["search", "clinical mention grounding", "benchmark retrieval"],
+        "fields": [
+          "term",
+          "normalizedTerm",
+          "preferredTerm",
+          "fsn",
+          "termType",
+          "languageCode",
+          "semanticTag",
+          "areaTags",
+          "parentIds",
+          "ancestorIds",
+          "topRoots",
+          "termRank",
+          "embedText"
+        ]
+      }
+    },
+    "destinations": {
+      "types": [
+        {
+          "id": "snomedct.mongodb.concept.v1",
+          "title": "Canonical concept collection",
+          "collectionNameFromConfig": "config.collections.concepts"
+        },
+        {
+          "id": "snomedct.mongodb.term_sidecar.v1",
+          "title": "Term sidecar collection",
+          "collectionNameFromConfig": "config.collections.terms"
+        }
+      ]
+    }
+  },
+  "transformationPipeline": [
+    {
+      "step": "stage licensed release",
+      "op": "customer action",
+      "input": "licensed official SNOMED CT JSON file obtained outside Kehrnel",
+      "output": "JSON file placed in source.local_dir"
+    },
+    {
+      "step": "discover",
+      "op": "snomed_list_releases",
+      "input": "source.local_dir and source.file_pattern",
+      "output": "candidate local JSON release files"
+    },
+    {
+      "step": "inspect",
+      "op": "snomed_inspect_release",
+      "input": "local JSON release file",
+      "output": "counts, fields, active/inactive distribution, languages"
+    },
+    {
+      "step": "diff",
+      "op": "snomed_diff_release",
+      "input": "official JSON + canonical collection",
+      "output": "missing, changed, unchanged samples"
+    },
+    {
+      "step": "canonicalize",
+      "op": "transform / snomed_ingest_release",
+      "input": "official concept JSON",
+      "output": "canonical concept document"
+    },
+    {
+      "step": "derive term sidecar",
+      "op": "snomed_rebuild_sidecar",
+      "input": "canonical concepts",
+      "output": "term documents by language and description"
+    },
+    {
+      "step": "index",
+      "op": "snomed_ensure_indexes",
+      "input": "canonical + sidecar collections",
+      "output": "MongoDB indexes for release, concept, hierarchy, relationship, and term search"
+    }
+  ],
+  "encodingProfiles": [
+    {
+      "id": "profile.native_snomedct_json",
+      "title": "Native SNOMED CT JSON",
+      "description": "Preserve official SNOMED CT fields and add normalized release/search fields.",
+      "isDefault": true
+    }
+  ],
+  "storage": {
+    "stores": [
+      {
+        "role": "canonical",
+        "collectionNameFromConfig": "collections.concepts"
+      },
+      {
+        "role": "search_sidecar",
+        "collectionNameFromConfig": "collections.terms"
+      }
+    ],
+    "indexContract": {
+      "baseIndexes": [
+        {
+          "name": "concept_release_unique",
+          "collectionRole": "canonical",
+          "fields": ["releaseId", "conceptId"],
+          "type": "unique",
+          "purpose": "Stable concept lookup by release."
+        },
+        {
+          "name": "ancestor_lookup",
+          "collectionRole": "canonical",
+          "fields": ["releaseId", "inferredAncestorIds"],
+          "type": "compound",
+          "purpose": "Basic ECL descendant/subsumption queries."
+        },
+        {
+          "name": "parent_lookup",
+          "collectionRole": "canonical",
+          "fields": ["releaseId", "inferredParentIds"],
+          "type": "compound",
+          "purpose": "Navigation from parent to direct child concepts."
+        },
+        {
+          "name": "relationship_attribute_lookup",
+          "collectionRole": "canonical",
+          "fields": ["releaseId", "relationshipAttributeKeys"],
+          "type": "compound",
+          "purpose": "Attribute-value filters derived from active relationships."
+        },
+        {
+          "name": "term_release_language",
+          "collectionRole": "search_sidecar",
+          "fields": ["releaseId", "languageCode", "normalizedTerm"],
+          "type": "compound",
+          "purpose": "Lexical search by release and language."
+        },
+        {
+          "name": "term_concept",
+          "collectionRole": "search_sidecar",
+          "fields": ["releaseId", "conceptId"],
+          "type": "compound",
+          "purpose": "Join/search result expansion back to canonical concepts."
+        },
+        {
+          "name": "term_rank",
+          "collectionRole": "search_sidecar",
+          "fields": ["releaseId", "languageCode", "termRank"],
+          "type": "compound",
+          "purpose": "Stable deterministic ordering for candidate retrieval."
+        },
+        {
+          "name": "term_area_lookup",
+          "collectionRole": "search_sidecar",
+          "fields": ["releaseId", "languageCode", "areaTags"],
+          "type": "compound",
+          "purpose": "MongoDB-native filtering and faceting by high-level terminology area."
+        },
+        {
+          "name": "term_semantic_lookup",
+          "collectionRole": "search_sidecar",
+          "fields": ["releaseId", "languageCode", "semanticTagKey"],
+          "type": "compound",
+          "purpose": "MongoDB-native filtering and faceting by normalized semantic tag."
+        }
+      ]
+    }
+  },
+  "queryModel": {
+    "modes": [
+      {
+        "mode": "lookup",
+        "input": ["concept_id", "release_id"],
+        "requiresSidecar": false,
+        "collectionRole": "canonical"
+      },
+      {
+        "mode": "ecl",
+        "input": ["expression", "release_id", "limit"],
+        "supportedSubset": [
+          "*",
+          "conceptId",
+          "< conceptId",
+          "<< conceptId",
+          "> conceptId",
+          ">> conceptId",
+          "^ refsetId",
+          "AND",
+          "OR",
+          "MINUS",
+          "parentheses",
+          "exact attribute refinements",
+          "grouped exact attribute refinements"
+        ],
+        "requiresSidecar": false,
+        "collectionRole": "canonical"
+      },
+      {
+        "mode": "expand",
+        "input": ["expression", "concept_id", "release_id", "include_self", "limit"],
+        "requiresSidecar": false,
+        "collectionRole": "canonical"
+      },
+      {
+        "mode": "relationship_search",
+        "input": ["type_id", "destination_id", "release_id", "limit"],
+        "requiresSidecar": false,
+        "collectionRole": "canonical"
+      },
+      {
+        "mode": "semantic_facets",
+        "input": ["q", "language", "release_id", "ancestor_id"],
+        "requiresSidecar": true,
+        "collectionRole": "search_sidecar"
+      },
+      {
+        "mode": "search",
+        "input": ["q", "language", "release_id", "limit"],
+        "requiresSidecar": true,
+        "collectionRole": "search_sidecar"
+      },
+      {
+        "mode": "ground",
+        "input": ["mentions", "text", "language", "release_id", "limit_per_mention"],
+        "requiresSidecar": true,
+        "collectionRole": "search_sidecar"
+      }
+    ]
+  },
+  "architectureNotes": [
+    "The canonical collection is mandatory and supports lookup, hierarchy traversal, release diff, and basic ECL/subsumption queries.",
+    "The term sidecar is configurable but default-on. Search, grounding, and benchmark retrieval require it for production-quality behavior.",
+    "Release updates are streamed from JSON so large official files do not need to fit in memory."
+  ]
+}
