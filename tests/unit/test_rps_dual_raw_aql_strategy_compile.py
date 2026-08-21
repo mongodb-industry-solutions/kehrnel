@@ -1406,3 +1406,137 @@ async def test_compile_query_raw_aql_supports_avg_aggregate_on_cross_patient_pip
     assert any(stage == {"$unwind": "$__aggregate_values"} for stage in pipeline)
     group_stage = next(stage["$group"] for stage in pipeline if "$group" in stage)
     assert group_stage["avgMagnitude"] == {"$avg": "$__aggregate_values"}
+
+
+@pytest.mark.asyncio
+async def test_compile_query_raw_aql_supports_mixed_count_projection_on_standard_pipeline():
+    db = _build_fake_lab_db()
+
+    ctx = StrategyContext(
+        environment_id="env-mixed-count-match",
+        config=MANIFEST.default_config,
+        adapters={"storage": _FakeStorage(db)},
+        manifest=MANIFEST.model_copy(deep=True),
+        meta={},
+    )
+    strategy = RPSDualStrategy()
+    raw_aql = """
+    SELECT
+        c/context/start_time/value AS creationDate,
+        COUNT(*) AS rowCount
+    FROM
+        EHR e
+            CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
+    WHERE
+        e/ehr_id/value = 'ehr-1'
+        AND c/archetype_details/template_id/value = 'sample_laboratory_v0.4'
+    """
+
+    plan = await strategy.compile_query(
+        ctx,
+        "openEHR",
+        {
+            "raw_aql": raw_aql,
+            "debug": True,
+        },
+    )
+
+    assert plan.engine == "mongo_pipeline"
+    pipeline = plan.plan["pipeline"]
+    assert [next(iter(stage)) for stage in pipeline] == ["$match", "$project", "$group", "$project", "$limit"]
+    group_stage = pipeline[2]["$group"]
+    assert group_stage["_id"] == {"creationDate": "$creationDate"}
+    assert group_stage["rowCount"] == {"$sum": 1}
+    assert pipeline[3]["$project"] == {
+        "_id": 0,
+        "creationDate": "$_id.creationDate",
+        "rowCount": 1,
+    }
+    assert all("__aggregate_values" not in str(stage) for stage in pipeline)
+
+
+@pytest.mark.asyncio
+async def test_compile_query_raw_aql_supports_mixed_count_projection_on_search_pipeline():
+    db = _build_fake_lab_db()
+
+    ctx = StrategyContext(
+        environment_id="env-mixed-count-search",
+        config=MANIFEST.default_config,
+        adapters={"storage": _FakeStorage(db)},
+        manifest=MANIFEST.model_copy(deep=True),
+        meta={},
+    )
+    strategy = RPSDualStrategy()
+    raw_aql = """
+    SELECT
+        c/context/start_time/value AS creationDate,
+        COUNT(c) AS compositionCount
+    FROM
+        EHR e
+            CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
+            CONTAINS OBSERVATION o[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]
+    WHERE
+        o/data[at0001]/events[at0002]/data[at0003]/items[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]/items[at0001]/value/magnitude > 1
+    """
+
+    plan = await strategy.compile_query(
+        ctx,
+        "openEHR",
+        {
+            "raw_aql": raw_aql,
+            "debug": True,
+        },
+    )
+
+    assert plan.engine == "text_search_dual"
+    assert plan.plan["explain"]["builder"]["chosen"] == "search_pipeline_builder"
+    pipeline = plan.plan["pipeline"]
+    assert [next(iter(stage)) for stage in pipeline][-4:] == ["$project", "$group", "$project", "$limit"]
+    group_stage = next(stage["$group"] for stage in pipeline if "$group" in stage)
+    assert group_stage["_id"] == {"creationDate": "$creationDate"}
+    assert group_stage["compositionCount"] == {"$sum": 1}
+
+
+@pytest.mark.asyncio
+async def test_compile_query_raw_aql_supports_deterministic_function_projections():
+    db = _build_fake_lab_db()
+
+    ctx = StrategyContext(
+        environment_id="env-function-projections",
+        config=MANIFEST.default_config,
+        adapters={"storage": _FakeStorage(db)},
+        manifest=MANIFEST.model_copy(deep=True),
+        meta={},
+    )
+    strategy = RPSDualStrategy()
+    raw_aql = """
+    SELECT
+        LENGTH(c/context/start_time/value) AS startLength,
+        CONCAT(e/ehr_id/value, ':', c/context/start_time/value) AS startLabel,
+        SUBSTRING(c/context/start_time/value, 1, 10) AS startDate
+    FROM
+        EHR e
+            CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
+    WHERE
+        e/ehr_id/value = 'ehr-1'
+    """
+
+    plan = await strategy.compile_query(
+        ctx,
+        "openEHR",
+        {
+            "raw_aql": raw_aql,
+            "debug": True,
+        },
+    )
+
+    pipeline = plan.plan["pipeline"]
+    project_stage = next(stage["$project"] for stage in pipeline if "$project" in stage)
+    assert "$strLenCP" in project_stage["startLength"]
+    assert project_stage["startLabel"]["$concat"][1] == ":"
+    assert project_stage["startDate"]["$substrCP"][1] == {
+        "$max": [
+            {"$subtract": [1, 1]},
+            0,
+        ]
+    }

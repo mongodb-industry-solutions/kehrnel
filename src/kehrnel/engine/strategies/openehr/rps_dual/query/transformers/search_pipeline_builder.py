@@ -169,6 +169,88 @@ class SearchPipelineBuilder:
             ]
         }
 
+    @staticmethod
+    def _string_expr(expr: Any) -> Any:
+        if isinstance(expr, str) and not expr.startswith("$"):
+            return expr
+        return {
+            "$cond": [
+                {"$in": [{"$type": expr}, ["missing", "null"]]},
+                "",
+                {"$toString": expr},
+            ]
+        }
+
+    @staticmethod
+    def _numeric_expr(expr: Any) -> Any:
+        if isinstance(expr, (int, float)):
+            return expr
+        if isinstance(expr, str) and re.fullmatch(r"-?\d+", expr.strip()):
+            return int(expr.strip())
+        if isinstance(expr, str) and re.fullmatch(r"-?\d+\.\d+", expr.strip()):
+            return float(expr.strip())
+        return {"$toInt": {"$ifNull": [expr, 0]}}
+
+    def _split_function_args(self, args_text: str) -> List[str]:
+        args: List[str] = []
+        current: List[str] = []
+        depth = 0
+        quote: Optional[str] = None
+        escaped = False
+
+        for char in str(args_text or ""):
+            if quote:
+                current.append(char)
+                if escaped:
+                    escaped = False
+                elif char == "\\":
+                    escaped = True
+                elif char == quote:
+                    quote = None
+                continue
+
+            if char in {"'", '"'}:
+                quote = char
+                current.append(char)
+            elif char in "([{":
+                depth += 1
+                current.append(char)
+            elif char in ")]}":
+                depth = max(0, depth - 1)
+                current.append(char)
+            elif char == "," and depth == 0:
+                args.append("".join(current).strip())
+                current = []
+            else:
+                current.append(char)
+
+        tail = "".join(current).strip()
+        if tail:
+            args.append(tail)
+        return args
+
+    def _parse_function_arg(self, arg_text: str) -> Dict[str, Any]:
+        arg = str(arg_text or "").strip()
+        if re.fullmatch(r"(['\"]).*\1", arg):
+            return {"type": "literal", "value": arg[1:-1]}
+        if re.fullmatch(r"-?\d+", arg):
+            return {"type": "literal", "value": int(arg)}
+        if re.fullmatch(r"-?\d+\.\d+", arg):
+            return {"type": "literal", "value": float(arg)}
+
+        nested_function = re.match(r"^(\w+)\s*\((.*)\)$", arg, re.IGNORECASE)
+        if nested_function:
+            return {
+                "type": "functionCall",
+                "path": arg,
+                "function": {
+                    "name": nested_function.group(1),
+                    "args": nested_function.group(2).strip(),
+                },
+            }
+
+        return {"type": "dataMatchPath", "path": arg}
+
     def _matching_nodes_expr(
         self,
         nodes_expr: Any,
@@ -1083,6 +1165,7 @@ class SearchPipelineBuilder:
         if aggregate_stages:
             pipeline.extend(aggregate_stages)
             return pipeline
+        has_mixed_aggregate_projection = self.has_mixed_aggregate_projection(ast)
 
         # 4. Fan out rows only when the deepest selected alias can repeat.
         fanout_stages = await self.build_row_fanout_stages(ast)
@@ -1102,6 +1185,21 @@ class SearchPipelineBuilder:
         # 8. Build DISTINCT stages ($group + $replaceRoot) if SELECT DISTINCT is used
         # This must come after $project so we can group by the projected field names
         projected_fields = self.get_projected_field_names(ast)
+        if has_mixed_aggregate_projection:
+            mixed_aggregate_stages = self.build_mixed_aggregate_stages(ast, projected_fields)
+            if mixed_aggregate_stages:
+                pipeline.extend(mixed_aggregate_stages)
+            sort_stage = None if search_sort_spec else self.build_sort_stage(ast)
+            if sort_stage:
+                pipeline.append(sort_stage)
+            skip_stage = None if self._has_search_page_token(ast) else self.build_skip_stage(ast)
+            if skip_stage:
+                pipeline.append(skip_stage)
+            limit_stage = self.build_limit_stage(ast, default_limit=DEFAULT_PAGE_LIMIT)
+            if limit_stage:
+                pipeline.append(limit_stage)
+            return pipeline
+
         distinct_stages = self.build_distinct_stages(ast, projected_fields)
         if distinct_stages:
             pipeline.extend(distinct_stages)
@@ -1129,20 +1227,14 @@ class SearchPipelineBuilder:
             return []
 
         aggregate_columns: List[Dict[str, Any]] = []
-        has_aggregate_projection = False
 
         for col_data in columns.values():
             path = col_data.get("path") or col_data.get("value", {})
             value_spec = path if isinstance(path, dict) else {}
             value_type = value_spec.get("type")
             if value_type != "aggregateFunctionCall":
-                if has_aggregate_projection:
-                    raise NotImplementedError(
-                        "Mixed aggregate and non-aggregate SELECT projections are not supported yet."
-                    )
-                return []
+                continue
 
-            has_aggregate_projection = True
             function = value_spec.get("function", {}) if isinstance(value_spec.get("function"), dict) else {}
             function_name = str(function.get("name", "")).upper()
             if function_name not in {"COUNT", "MIN", "MAX", "SUM", "AVG"}:
@@ -1163,6 +1255,17 @@ class SearchPipelineBuilder:
             )
 
         return aggregate_columns
+
+    def _has_non_aggregate_projection(self, ast: Dict[str, Any]) -> bool:
+        columns = ast.get("select", {}).get("columns", {})
+        for col_data in columns.values():
+            value_spec = col_data.get("path") or col_data.get("value", {})
+            if isinstance(value_spec, dict) and value_spec.get("type") != "aggregateFunctionCall":
+                return True
+        return False
+
+    def has_mixed_aggregate_projection(self, ast: Dict[str, Any]) -> bool:
+        return bool(self._parse_aggregate_columns(ast)) and self._has_non_aggregate_projection(ast)
 
     def _is_row_count_aggregate(self, aggregate: Dict[str, Any]) -> bool:
         if aggregate.get("function_name") != "COUNT":
@@ -1291,6 +1394,8 @@ class SearchPipelineBuilder:
         aggregate_columns = self._parse_aggregate_columns(ast)
         if not aggregate_columns:
             return []
+        if self._has_non_aggregate_projection(ast):
+            return []
 
         aggregate_aliases = [aggregate["alias"] for aggregate in aggregate_columns]
         row_count_aggregates = [aggregate for aggregate in aggregate_columns if self._is_row_count_aggregate(aggregate)]
@@ -1365,6 +1470,40 @@ class SearchPipelineBuilder:
                 }
             },
         ]
+
+    def build_mixed_aggregate_stages(self, ast: Dict[str, Any], projected_fields: List[str]) -> List[Dict[str, Any]]:
+        aggregate_columns = self._parse_aggregate_columns(ast)
+        if not aggregate_columns or not projected_fields:
+            return []
+        if not self._has_non_aggregate_projection(ast):
+            return []
+
+        unsupported = [
+            aggregate for aggregate in aggregate_columns
+            if not self._is_row_count_aggregate(aggregate)
+        ]
+        if unsupported:
+            raise NotImplementedError(
+                "Mixed path-based aggregate projections are not supported yet; "
+                "grouped COUNT(*)/COUNT(e|c|v) projections are supported."
+            )
+
+        group_id = {field: f"${field}" for field in projected_fields if field not in {"_id", "__searchSequenceToken"}}
+        if not group_id:
+            return []
+
+        group_stage = {"$group": {"_id": group_id}}
+        for aggregate in aggregate_columns:
+            group_stage["$group"][aggregate["alias"]] = {"$sum": 1}
+
+        project_stage = {
+            "$project": {
+                "_id": 0,
+                **{field: f"$_id.{field}" for field in group_id},
+                **{aggregate["alias"]: 1 for aggregate in aggregate_columns},
+            }
+        }
+        return [group_stage, project_stage]
 
     def _order_by_columns(self, ast: Dict[str, Any]) -> Dict[str, Any]:
         order_by = ast.get("orderBy", {})
@@ -2192,6 +2331,104 @@ class SearchPipelineBuilder:
         
         return {"$addFields": add_fields}
 
+    async def _build_data_path_projection_expr(
+        self,
+        aql_path: str,
+        fanout_spec: Optional[Dict[str, Any]],
+        *,
+        alias_hint: str,
+    ) -> Any:
+        variable = aql_path.split('/')[0]
+
+        if variable == self.ehr_alias:
+            if 'ehr_id' in aql_path:
+                return "$ehr_id"
+            return f"${alias_hint}"
+
+        if variable == self.composition_alias:
+            if '/uid/value' in aql_path or aql_path.endswith('/uid/value'):
+                return "$_id"
+            return await self._build_hybrid_field_projection(aql_path, alias_hint)
+
+        fanout_projection = None
+        if fanout_spec:
+            fanout_projection = await self._build_fanout_aware_projection(
+                aql_path,
+                fanout_spec,
+            )
+        return fanout_projection or await self._build_hybrid_field_projection(aql_path, alias_hint)
+
+    async def _build_value_projection_expr(
+        self,
+        value_spec: Dict[str, Any],
+        fanout_spec: Optional[Dict[str, Any]],
+        *,
+        alias_hint: str,
+    ) -> Any:
+        value_type = value_spec.get("type")
+        if value_type == "literal":
+            return self.value_formatter.format_value(value_spec.get("value"))
+        if value_type == "dataMatchPath":
+            aql_path = self._extract_aql_path_from_path_object(value_spec)
+            if not aql_path:
+                return f"${alias_hint}"
+            return await self._build_data_path_projection_expr(
+                aql_path,
+                fanout_spec,
+                alias_hint=alias_hint,
+            )
+        if value_type == "functionCall":
+            return await self._build_function_projection_expr(
+                value_spec,
+                fanout_spec,
+                alias_hint=alias_hint,
+            )
+        return f"${alias_hint}"
+
+    async def _build_function_projection_expr(
+        self,
+        value_spec: Dict[str, Any],
+        fanout_spec: Optional[Dict[str, Any]],
+        *,
+        alias_hint: str,
+    ) -> Any:
+        function = value_spec.get("function", {}) if isinstance(value_spec.get("function"), dict) else {}
+        function_name = str(function.get("name") or "").upper()
+        arg_specs = [self._parse_function_arg(arg) for arg in self._split_function_args(str(function.get("args") or ""))]
+        arg_exprs = [
+            await self._build_value_projection_expr(
+                arg_spec,
+                fanout_spec,
+                alias_hint=alias_hint,
+            )
+            for arg_spec in arg_specs
+        ]
+
+        if function_name == "LENGTH":
+            if len(arg_exprs) != 1:
+                raise ValueError("LENGTH expects one argument.")
+            return {"$strLenCP": self._string_expr(arg_exprs[0])}
+
+        if function_name == "CONCAT":
+            if not arg_exprs:
+                raise ValueError("CONCAT expects at least one argument.")
+            return {"$concat": [self._string_expr(expr) for expr in arg_exprs]}
+
+        if function_name == "SUBSTRING":
+            if len(arg_exprs) not in {2, 3}:
+                raise ValueError("SUBSTRING expects two or three arguments.")
+            string_expr = self._string_expr(arg_exprs[0])
+            start_expr = {
+                "$max": [
+                    {"$subtract": [self._numeric_expr(arg_exprs[1]), 1]},
+                    0,
+                ]
+            }
+            length_expr = self._numeric_expr(arg_exprs[2]) if len(arg_exprs) == 3 else {"$strLenCP": string_expr}
+            return {"$substrCP": [string_expr, start_expr, length_expr]}
+
+        raise NotImplementedError(f"Function '{function_name or 'UNKNOWN'}' is not supported yet.")
+
     async def build_project_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """
         Constructs the $project stage from the SELECT clause for search collection.
@@ -2207,59 +2444,37 @@ class SearchPipelineBuilder:
             alias = col_data.get("alias")
             # The path is actually in the 'value' field based on AST structure
             path = col_data.get("path") or col_data.get("value", {})
+            value_type = path.get("type") if isinstance(path, dict) else None
             
             # Generate alias if not provided
             if not alias:
-                if path.get("type") == "dataMatchPath":
+                if value_type == "dataMatchPath":
                     aql_path = path.get("path")
                     if aql_path:
                         # Generate alias from path: c/uid/value -> c_uid_value
                         alias = aql_path.replace("/", "_")
                     else:
                         continue
+                elif value_type == "functionCall":
+                    function = path.get("function", {}) if isinstance(path.get("function"), dict) else {}
+                    alias = f"{str(function.get('name') or 'function').lower()}Result"
+                elif value_type == "literal":
+                    alias = "literal"
+                elif value_type == "aggregateFunctionCall":
+                    continue
                 else:
                     continue
             
-            if path.get("type") == "dataMatchPath":
-                # Extract AQL path from the path object
-                aql_path = self._extract_aql_path_from_path_object(path)
-                
-                if aql_path:
-                    variable = aql_path.split('/')[0]
-                    
-                    # Handle EHR-level paths
-                    if variable == self.ehr_alias:
-                        if 'ehr_id' in aql_path:
-                            projection[alias] = "$ehr_id"
-                        else:
-                            projection[alias] = f"${alias}"
-                    
-                    # Handle composition-level paths with hybrid data routing
-                    elif variable == self.composition_alias:
-                        # Special handling for composition UID - it's stored in document _id
-                        if '/uid/value' in aql_path or aql_path.endswith('/uid/value'):
-                            projection[alias] = "$_id"
-                        else:
-                            # Route field to appropriate data source
-                            projection[alias] = await self._build_hybrid_field_projection(aql_path, alias)
-                    else:
-                        fanout_projection = None
-                        if fanout_spec:
-                            fanout_projection = await self._build_fanout_aware_projection(
-                                aql_path,
-                                fanout_spec,
-                            )
-                        projection[alias] = fanout_projection or await self._build_hybrid_field_projection(aql_path, alias)
-                else:
-                    # Fallback to alias if path cannot be extracted
-                    projection[alias] = f"${alias}"
-            
-            elif path.get("type") == "literal":
-                projection[alias] = self.value_formatter.format_literal_value(path)
-            
-            else:
-                # Default case
-                projection[alias] = f"${alias}"
+            if value_type == "aggregateFunctionCall":
+                continue
+
+            if value_type in {"dataMatchPath", "functionCall", "literal"}:
+                projection[alias] = await self._build_value_projection_expr(
+                    path,
+                    fanout_spec,
+                    alias_hint=alias,
+                )
+                continue
 
         if self._build_search_sort_spec(ast):
             projection["__searchSequenceToken"] = "$__searchSequenceToken"
@@ -2409,15 +2624,24 @@ class SearchPipelineBuilder:
         for col_data in columns.values():
             alias = col_data.get("alias")
             path = col_data.get("path") or col_data.get("value", {})
+            value_type = path.get("type") if isinstance(path, dict) else None
+
+            if value_type == "aggregateFunctionCall":
+                continue
             
             if alias:
                 field_names.append(alias)
-            elif isinstance(path, dict) and path.get("type") == "dataMatchPath":
+            elif isinstance(path, dict) and value_type == "dataMatchPath":
                 # Path-based column - generate name from path
                 aql_path = path.get("path", "")
                 if aql_path:
                     # Generate alias from path: c/uid/value -> c_uid_value
                     field_names.append(aql_path.replace("/", "_"))
+            elif isinstance(path, dict) and value_type == "functionCall":
+                function = path.get("function", {}) if isinstance(path.get("function"), dict) else {}
+                field_names.append(f"{str(function.get('name') or 'function').lower()}Result")
+            elif isinstance(path, dict) and value_type == "literal":
+                field_names.append("literal")
         
         return field_names
 

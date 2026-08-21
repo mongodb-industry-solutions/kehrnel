@@ -257,7 +257,7 @@ def _extract_columns_from_ast(ast_query: Dict[str, Any]) -> List[Dict[str, Any]]
         elif value_type == "variable":
             variable_name = value_spec.get("name")
             path = variable_name if isinstance(variable_name, str) and variable_name.strip() else None
-        elif value_type == "aggregateFunctionCall":
+        elif value_type in {"aggregateFunctionCall", "functionCall"}:
             path = None
 
         if not alias:
@@ -265,7 +265,7 @@ def _extract_columns_from_ast(ast_query: Dict[str, Any]) -> List[Dict[str, Any]]
                 alias = str(value_spec.get("name", "")).lstrip("$")
             elif path:
                 alias = path.split("/")[-1] or path.replace("/", "_")
-            elif value_type == "aggregateFunctionCall":
+            elif value_type in {"aggregateFunctionCall", "functionCall"}:
                 function = value_spec.get("function") if isinstance(value_spec.get("function"), dict) else {}
                 function_name = str(function.get("name", "result")).strip().lower() or "result"
                 alias = f"{function_name}Result"
