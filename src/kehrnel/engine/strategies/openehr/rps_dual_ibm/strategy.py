@@ -37,6 +37,11 @@ class RPSDualIBMStrategy(RPSDualStrategy):
     def _coerce_ibm_config(self, config: dict[str, Any] | None) -> dict[str, Any]:
         coerced = deepcopy(config or self.defaults)
         fields = coerced.setdefault("fields", {})
+        document_fields = fields.setdefault("document", {})
+        version_field = document_fields.get("v")
+        comp_id_field = document_fields.get("comp_id")
+        if comp_id_field in (None, "", "comp_id", "version", version_field):
+            document_fields["comp_id"] = "_id"
         node_fields = fields.setdefault("node", {})
         if node_fields.get("pi") in (None, "", "pi"):
             node_fields["pi"] = "li"

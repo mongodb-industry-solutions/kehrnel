@@ -32,7 +32,7 @@
   "fields": {
     "document": {
       "ehr_id": "ehr_id",
-      "comp_id": "comp_id",
+      "comp_id": "_id",
       "tid": "tid",
       "v": "v",
       "time_committed": "time_c",

@@ -126,7 +126,7 @@
           "description": "Document-level field names",
           "properties": {
             "ehr_id": { "type": "string", "default": "ehr_id" },
-            "comp_id": { "type": "string", "default": "comp_id" },
+            "comp_id": { "type": "string", "default": "_id", "description": "Document identity field used to join slim search rows back to IBM semiflattened compositions. IBM exact-model data stores the UUID in _id while version is the openEHR OBJECT_VERSION_ID string." },
             "tid": { "type": "string", "default": "tid" },
             "v": { "type": "string", "default": "v" },
             "time_committed": { "type": "string", "default": "time_c", "description": "Server commit time for the version represented by this document" },
