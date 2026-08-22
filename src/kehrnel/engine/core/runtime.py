@@ -1,10 +1,12 @@
 """StrategyRuntime scaffold (to be implemented in later steps)."""
 from __future__ import annotations
 
+import asyncio
 import importlib
 import importlib.util
 import json
 import hashlib
+import weakref
 from datetime import datetime
 from typing import Dict, Optional, Any
 from dataclasses import is_dataclass, asdict, replace
@@ -34,7 +36,7 @@ class StrategyRuntime:
         self.bundle_store = bundle_store
         self.bindings_resolver = bindings_resolver
         self.env_manifests: Dict[str, StrategyManifest] = {}
-        # per-env cache: {"adapters": {...}, "dict_cache": {...}}
+        # per-env cache: {"adapters_by_loop": {loop_key: {...}}, "dict_cache": {...}}
         self._env_cache: Dict[str, Dict[str, Any]] = {}
 
     @classmethod
@@ -672,8 +674,17 @@ class StrategyRuntime:
 
     def _build_adapters(self, env_id: str, bindings: Optional[Dict[str, Any]]) -> Dict[str, Any]:
         env_cache = self._env_cache.setdefault(env_id, {})
-        if "adapters" in env_cache:
-            return env_cache["adapters"]
+        # Motor binds a client to the event loop that first performs an operation on it
+        # and routes every later operation through that loop's executor. Synthetic jobs
+        # dispatch on a throwaway worker loop, so a client shared with the API loop (or
+        # with a previous job's loop) raises "got Future attached to a different loop".
+        # Cache one adapter set per loop instead, and drop sets whose loop is gone.
+        adapters_by_loop: Dict[Any, Dict[str, Any]] = env_cache.setdefault("adapters_by_loop", {})
+        self._prune_dead_loop_adapters(adapters_by_loop)
+        loop_key = self._current_loop_key()
+        cached = adapters_by_loop.get(loop_key)
+        if cached is not None:
+            return cached["adapters"]
         adapters: Dict[str, Any] = {}
         db_cfg = (bindings or {}).get("db") if isinstance(bindings, dict) else None
         if db_cfg and db_cfg.get("provider") == "mongodb":
@@ -683,8 +694,50 @@ class StrategyRuntime:
             adapters["atlas_search"] = MongoAtlasSearchAdapter(db)
             # backward-compatible alias (deprecated)
             adapters["text_search"] = adapters["atlas_search"]
-        env_cache["adapters"] = adapters
+        loop = self._current_loop()
+        adapters_by_loop[loop_key] = {
+            "adapters": adapters,
+            "loop": weakref.ref(loop) if loop is not None else None,
+        }
         return adapters
+
+    @staticmethod
+    def _current_loop() -> Optional[asyncio.AbstractEventLoop]:
+        try:
+            return asyncio.get_running_loop()
+        except RuntimeError:
+            return None
+
+    def _current_loop_key(self) -> Any:
+        loop = self._current_loop()
+        # No running loop means a synchronous caller; keep those in their own bucket.
+        return id(loop) if loop is not None else "__no_loop__"
+
+    def _prune_dead_loop_adapters(self, adapters_by_loop: Dict[Any, Dict[str, Any]]) -> None:
+        for key in [k for k in adapters_by_loop if k != "__no_loop__"]:
+            entry = adapters_by_loop.get(key) or {}
+            loop_ref = entry.get("loop")
+            loop = loop_ref() if loop_ref is not None else None
+            if loop is not None and not loop.is_closed():
+                continue
+            self._close_adapters(adapters_by_loop.pop(key, {}).get("adapters") or {})
+
+    @staticmethod
+    def _close_adapters(adapters: Dict[str, Any]) -> None:
+        seen: set[int] = set()
+        for adapter in (adapters or {}).values():
+            # Motor Database objects reject truth testing, so compare with None.
+            db = getattr(adapter, "db", None)
+            if db is None:
+                db = getattr(adapter, "_db", None)
+            client = getattr(db, "client", None) if db is not None else None
+            if client is None or id(client) in seen:
+                continue
+            seen.add(id(client))
+            try:
+                client.close()
+            except Exception:
+                pass
 
     def _redact_uri(self, uri: str) -> str:
         if "@" in uri:
@@ -701,6 +754,8 @@ class StrategyRuntime:
             if env_id in self._env_cache and "dict_cache" in self._env_cache[env_id]:
                 self._env_cache[env_id]["dict_cache"] = {}
             return
+        # Only drop the reference here: an in-flight dispatch may still hold these
+        # adapters. Clients for dead loops are closed by _prune_dead_loop_adapters.
         self._env_cache.pop(env_id, None)
 
     def _is_maintenance_op(self, manifest: StrategyManifest, op_name: str) -> bool:
