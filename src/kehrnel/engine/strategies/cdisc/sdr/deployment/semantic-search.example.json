@@ -1,0 +1,8 @@
+{
+  "q": "liver microscopic hypertrophy",
+  "mode": "hybrid",
+  "profile": "send",
+  "domains": ["MI"],
+  "studyIds": ["SYNTH-SEND-001"],
+  "limit": 20
+}

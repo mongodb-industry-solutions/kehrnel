@@ -31,7 +31,7 @@ def _ctx(*, config: dict | None = None) -> StrategyContext:
 
 def test_search_auto_index_defaults_true():
     assert search_auto_index_enabled({}) is True
-    assert search_auto_index_enabled({"search": {"auto_index": False}}) is False
+    assert search_auto_index_enabled({"search": {"auto_index": False}}) is True
 
 
 @pytest.mark.asyncio

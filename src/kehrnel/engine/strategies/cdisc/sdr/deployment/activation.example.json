@@ -1,0 +1,12 @@
+{
+  "strategy_id": "cdisc.sdr",
+  "version": "0.1.0",
+  "domain": "cdisc",
+  "config": {
+    "tenant_id": "sponsor-a",
+    "validation": {
+      "require_before_publish": true
+    }
+  },
+  "bindings_ref": "secret://kehrnel/cdisc-sdr/sponsor-a"
+}

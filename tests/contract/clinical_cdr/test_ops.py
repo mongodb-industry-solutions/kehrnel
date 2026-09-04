@@ -127,6 +127,9 @@ async def test_fhir_stats_dry_structure():
         def list_resources(self):
             return ["Patient", "Observation"]
 
+        def get_config(self, resource_type):
+            return {"resourceType": resource_type, "indexes": []}
+
     class FakeClient:
         def close(self):
             return None
@@ -136,6 +139,7 @@ async def test_fhir_stats_dry_structure():
             self.config_loader = FakeLoader()
             self.db = FakeDb()
             self.client = FakeClient()
+            self.compartment_definitions_dir = None
 
     with patch(
         "kehrnel.engine.strategies.fhir.clinical_cdr.stats.bridge.build_mql_context",
@@ -152,6 +156,9 @@ async def test_fhir_stats_dry_structure():
     assert result["collections"][0]["document_count"] == 5
     assert result["collections"][0]["denormalized_percent"] == 60.0
     assert result["collections"][0]["search_index_present"] is True
+    assert result["summary"]["document_count"] == 5
+    assert result["summary"]["populated_resource_type_count"] == 1
+    assert result["summary"]["unclassified_count"] == 5
     assert "Patient" in result["indexed_resource_types"]
 
 
@@ -174,9 +181,9 @@ async def test_strategy_run_op_fhir_list_search_params():
 
 
 @pytest.mark.asyncio
-async def test_strategy_run_op_negotiate_not_implemented():
+async def test_strategy_rejects_unadvertised_natural_language_search_op():
     strat = FHIRClinicalCDRStrategy(MANIFEST)
-    with pytest.raises(NotImplementedError, match="negotiate_fhir_search"):
+    with pytest.raises(ValueError, match="not supported"):
         await strat.run_op(_ctx(), "negotiate_fhir_search", {"text": "female patients"})
 
 

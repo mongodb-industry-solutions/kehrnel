@@ -25,8 +25,10 @@ from kehrnel.engine.strategies.fhir.clinical_cdr._paths import SPEC_DIR
 from kehrnel.engine.strategies.fhir.clinical_cdr.scripts import bridge
 from kehrnel.engine.strategies.fhir.clinical_cdr.scripts import denormalize
 from kehrnel.engine.strategies.fhir.clinical_cdr.scripts import generation
+from kehrnel.engine.strategies.fhir.clinical_cdr.scripts import import_resources
 from kehrnel.engine.strategies.fhir.clinical_cdr.scripts import indexes
 from kehrnel.engine.strategies.fhir.clinical_cdr.scripts import query as fhir_query
+from kehrnel.engine.strategies.fhir.clinical_cdr.scripts import resource_catalog
 from kehrnel.engine.strategies.fhir.clinical_cdr.scripts import stats as fhir_stats_mod
 
 
@@ -47,8 +49,10 @@ _KNOWN_OPS = frozenset(
         "fhir_ensure_indexes",
         "fhir_search",
         "fhir_list_search_params",
+        "fhir_resource_catalog",
+        "fhir_capabilities",
         "fhir_stats",
-        "negotiate_fhir_search",
+        "fhir_import_resources",
     }
 )
 
@@ -177,7 +181,21 @@ class FHIRClinicalCDRStrategy(StrategyPlugin):
         if op == "fhir_list_search_params":
             return fhir_query.fhir_list_search_params(ctx, payload)
 
+        if op == "fhir_resource_catalog":
+            return resource_catalog.fhir_resource_catalog(ctx, payload)
+
+        if op == "fhir_capabilities":
+            return fhir_query.fhir_capabilities(ctx, payload)
+
         if op == "fhir_stats":
             return await fhir_stats_mod.fhir_stats(ctx, payload)
+
+        if op == "fhir_import_resources":
+            return await import_resources.fhir_import_resources(
+                ctx,
+                payload,
+                progress_cb=progress_cb,
+                should_cancel=should_cancel,
+            )
 
         raise NotImplementedError(f"fhir.clinical_cdr op '{op}' not implemented")

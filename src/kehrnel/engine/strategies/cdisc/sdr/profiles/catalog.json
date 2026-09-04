@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0",
+  "profiles": {
+    "sdtm": {
+      "anchorDomain": "DM",
+      "syntheticDomains": ["DM", "AE", "LB", "VS"],
+      "materialization": "subject-timeline",
+      "principalEntities": ["study", "humanSubject", "treatmentGroup", "specimen"]
+    },
+    "send": {
+      "anchorDomain": "DM",
+      "syntheticDomains": ["DM", "TX", "MI", "LB"],
+      "materialization": "nonclinical-finding",
+      "principalEntities": ["study", "animalSubject", "treatmentGroup", "testArticle", "specimen"]
+    },
+    "adam": {
+      "anchorDomain": "ADSL",
+      "syntheticDomains": ["ADSL", "ADAE", "ADLB"],
+      "materialization": "analysis-traceability",
+      "principalEntities": ["study", "humanSubject", "analysisParameter"]
+    },
+    "tig": {
+      "anchorDomain": "PROD",
+      "syntheticDomains": ["PROD", "BATCH", "EVID"],
+      "materialization": "product-evidence",
+      "principalEntities": ["study", "product", "batch"]
+    }
+  }
+}

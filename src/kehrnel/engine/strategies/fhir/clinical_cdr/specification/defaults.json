@@ -1,11 +1,12 @@
 {
-  "database": "fhir_synthetic",
+  "database": "fhir_cdr",
   "schema_version": "R5",
+  "import": { "max_resources_per_request": 10000 },
   "collection_prefix": "",
   "collections": { "mode": "per_resource_type" },
   "search": {
     "enabled": true,
-    "denormalize_on_generate": false,
+    "denormalize_on_generate": true,
     "auto_index": true,
     "config_dir": null,
     "compartment_definitions_dir": null

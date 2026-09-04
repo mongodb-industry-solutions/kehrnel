@@ -1,0 +1,15 @@
+{
+  "recipe": {
+    "studyId": "SYNTH-DEMO-001",
+    "profile": "sdtm",
+    "subjects": 100,
+    "seed": 20260821,
+    "domains": ["DM", "AE", "LB", "VS"],
+    "anomalyRate": 0.0
+  },
+  "packageId": "synthetic-demo-package",
+  "snapshotId": "v1",
+  "persist": true,
+  "validate": true,
+  "publish": true
+}

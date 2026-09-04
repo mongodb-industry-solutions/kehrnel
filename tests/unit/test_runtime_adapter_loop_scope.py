@@ -59,6 +59,23 @@ def test_adapters_are_reused_within_one_loop():
     assert first["storage"].db.client is second["storage"].db.client
 
 
+def test_adapters_are_isolated_by_strategy_database_within_one_environment():
+    runtime = _runtime()
+
+    async def main():
+        fhir = runtime._build_adapters("env-1", BINDINGS)
+        openehr_bindings = {
+            "db": {**BINDINGS["db"], "database": "kehrnel_openehr"}
+        }
+        openehr = runtime._build_adapters("env-1", openehr_bindings)
+        return fhir, openehr
+
+    fhir, openehr = asyncio.run(main())
+    assert fhir is not openehr
+    assert fhir["storage"].db.name == "kehrnel_test"
+    assert openehr["storage"].db.name == "kehrnel_openehr"
+
+
 def test_adapters_are_not_shared_across_loops():
     runtime = _runtime()
 

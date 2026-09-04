@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # FHIR Clinical CDR Strategy
 
-The **FHIR Clinical CDR** strategy (`fhir.clinical_cdr`) is \{kehrnel\}'s reference persistence and search strategy for native **FHIR R5** resources in MongoDB.
+The **FHIR Clinical CDR** strategy (`fhir.clinical_cdr`) is \{kehrnel\}'s reference persistence and search strategy for native **FHIR R5 and R6** resources in MongoDB.
 
 It composes two vendored libraries under `src/kehrnel/engine/domains/fhir/libs/` (installed via the kehrnel `[fhir]` extra):
 
@@ -26,6 +26,14 @@ Typical workflow:
 3. Run **`fhir_denormalize`** and **`fhir_ensure_indexes`** (inline after generation or as maintenance ops).
 4. Query via **`compile_query` / `execute_query`**, the **`fhir_search`** op, or **`POST /api/domains/fhir/search`**.
 
+Healthcare Data Lab does not persist copies of the standard resource definitions
+to render its FHIR catalog. It reads the active package model from
+`GET /api/domains/fhir/resource-catalog` and loads detailed structure, choice
+elements, search projections, and MongoDB indexes from
+`GET /api/domains/fhir/resource-catalog/{resourceType}`. The list response also
+provides the generation recipes valid for the selected release, so clients do
+not need to hard-code recipe scope or document counts.
+
 ## API placement
 
 | Layer | Responsibility |
@@ -44,12 +52,12 @@ Practical implication: use the **FHIR domain search route** for Bundle-shaped HT
 | **Canonical FHIR** | Documents match FHIR JSON shape; no proprietary shredding |
 | **Per-type collections** | Aligns with fhir-gen and fhir-mql defaults; simpler ops and indexing |
 | **Search denormalization** | `_search.<param>` fields compiled from fhir-mql YAML per resource type |
-| **Synthetic jobs** | Same async job model as openEHR (`domain: fhir`, `op: synthetic_generate_batch`) |
+| **Synthetic jobs** | Asynchronous generation through `domain: fhir` and `op: synthetic_generate_batch` |
 | **Contract-tested** | Golden queries for Patient, Schedule, Slot, Appointment in kehrnel contract tests |
 
 ## Maturity
 
-Manifest maturity: **beta** (`0.1.0`). Domain search and synthetic generation are implemented; NL search (`negotiate_fhir_search`) and agentic surfaces are planned in later integration prompts.
+The manifest advertises only implemented resource-store operations. The active CapabilityStatement is authoritative for supported FHIR interactions and resource types.
 
 ## Next steps
 

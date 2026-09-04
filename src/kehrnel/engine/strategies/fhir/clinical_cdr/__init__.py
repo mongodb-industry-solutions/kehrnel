@@ -9,6 +9,7 @@ _SUBMODULES = (
     "bridge",
     "denormalize",
     "generation",
+    "import_resources",
     "indexes",
     "query",
     "stats",

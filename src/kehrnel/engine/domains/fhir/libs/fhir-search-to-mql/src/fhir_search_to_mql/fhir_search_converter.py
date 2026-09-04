@@ -100,10 +100,12 @@ class FHIRSearchConverter:
         self._converter_cache: Dict[str, Any] = {}
     
     def convert(
-        self, 
-        resource_type: str, 
-        query_string: Optional[str] = None, 
-        url: Optional[str] = None
+        self,
+        resource_type: str,
+        query_string: Optional[str] = None,
+        url: Optional[str] = None,
+        handling: str = "strict",
+        ignored_out: Optional[List[Dict[str, Any]]] = None,
     ) -> Dict[str, Any]:
         """
         Convert FHIR search query to MongoDB query.
@@ -151,13 +153,33 @@ class FHIRSearchConverter:
         # Parse query string
         parsed_query = self.query_parser.parse(query_string=query_string, url=url)
         parameters = parsed_query.get('parameters', [])
-        
+        parse_errors = parsed_query.get('errors') or []
+        lenient = str(handling or "strict").lower() == "lenient"
+
+        # Parser-level errors (malformed params, e.g. "?=x") must not be silently
+        # dropped — that could execute a narrower/broader query than requested.
+        if parse_errors:
+            if not lenient:
+                raise ConversionError(
+                    f"Malformed search parameter(s): {'; '.join(str(e) for e in parse_errors)}"
+                )
+            if ignored_out is not None:
+                for err in parse_errors:
+                    ignored_out.append({"name": None, "value": None, "reason": str(err)})
+
         if not parameters:
-            return {}  # Empty query matches all
-        
+            # No usable parameters. If the parser reported errors we handled them
+            # above; refuse to fall through to match-all when parsing failed.
+            if parse_errors:
+                raise ConversionError(
+                    "All search parameters were malformed; refusing an unfiltered query."
+                )
+            return {}  # genuinely empty query matches all
+
         # Convert each parameter to MongoDB query
         parameter_queries: List[Dict[str, Any]] = []
         multi_step_queries: List[MultiStepQuery] = []
+        handled = 0  # params converted without error (incl. supported no-op params)
 
         for param in parameters:
             param_name = param['name']
@@ -199,15 +221,41 @@ class FHIRSearchConverter:
                     multi_step_queries.append(mongo_query)
                 elif mongo_query:
                     parameter_queries.append(mongo_query)
+                handled += 1
 
-            except UnsupportedParameterError:
-                print(f"Warning: Parameter '{param_name}' not supported for {resource_type}")
+            except UnsupportedParameterError as exc:
+                # Fail closed by default: an unsupported parameter must not be
+                # silently dropped (which could broaden the query to match-all).
+                if not lenient:
+                    raise
+                if ignored_out is not None:
+                    ignored_out.append(
+                        {"name": param_name, "value": param_value, "reason": "unsupported"}
+                    )
                 continue
-            except Exception as e:
-                print(f"Warning: Failed to convert parameter '{param_name}={param_value}': {str(e)}")
+            except Exception as exc:
+                if not lenient:
+                    raise ConversionError(
+                        f"Failed to convert parameter '{param_name}={param_value}' "
+                        f"for {resource_type}: {exc}"
+                    ) from exc
+                if ignored_out is not None:
+                    ignored_out.append(
+                        {"name": param_name, "value": param_value, "reason": str(exc)}
+                    )
                 continue
 
-        # Build final MongoDB query
+        # Fail closed: filter params were requested but none could be applied.
+        # Refuse rather than execute an unfiltered (match-all) query. Reaching
+        # here means `parameters` was non-empty (empty returns {} above).
+        if handled == 0:
+            raise ConversionError(
+                f"No supported search parameters for {resource_type}; "
+                f"refusing to execute an unfiltered query."
+            )
+
+        # Build final MongoDB query. `handled > 0` here — an empty result means
+        # supported params imposed no constraint, which is a legitimate list.
         if not parameter_queries and not multi_step_queries:
             return {}
 
@@ -305,10 +353,12 @@ class FHIRSearchConverter:
     
     def convert_with_compartment(
         self, 
-        compartment_type: str, 
-        compartment_id: str, 
-        resource_type: str, 
-        query_string: Optional[str] = None
+        compartment_type: str,
+        compartment_id: str,
+        resource_type: str,
+        query_string: Optional[str] = None,
+        handling: str = "strict",
+        ignored_out: Optional[List[Dict[str, Any]]] = None,
     ) -> Dict[str, Any]:
         """
         Convert FHIR compartment search to MongoDB query.
@@ -370,12 +420,24 @@ class FHIRSearchConverter:
         
         # Convert additional query parameters if present
         parameter_queries = []
-        
+        lenient = str(handling or "strict").lower() == "lenient"
+
         if query_string:
             # Parse query string
             parsed_query = self.query_parser.parse(query_string=query_string)
             parameters = parsed_query.get('parameters', [])
-            
+            parse_errors = parsed_query.get('errors') or []
+
+            # Fail closed on malformed params (same policy as convert()).
+            if parse_errors:
+                if not lenient:
+                    raise ConversionError(
+                        f"Malformed search parameter(s): {'; '.join(str(e) for e in parse_errors)}"
+                    )
+                if ignored_out is not None:
+                    for err in parse_errors:
+                        ignored_out.append({"name": None, "value": None, "reason": str(err)})
+
             # Convert each parameter
             for param in parameters:
                 param_name = param['name']
@@ -416,12 +478,25 @@ class FHIRSearchConverter:
                         parameter_queries.append(mongo_query)
 
                 except UnsupportedParameterError:
-                    print(f"Warning: Parameter '{param_name}' not supported for {resource_type}")
+                    if not lenient:
+                        raise
+                    if ignored_out is not None:
+                        ignored_out.append(
+                            {"name": param_name, "value": param_value, "reason": "unsupported"}
+                        )
                     continue
                 except Exception as e:
-                    print(f"Warning: Failed to convert parameter '{param_name}={param_value}': {str(e)}")
+                    if not lenient:
+                        raise ConversionError(
+                            f"Failed to convert parameter '{param_name}={param_value}' "
+                            f"for {resource_type}: {e}"
+                        ) from e
+                    if ignored_out is not None:
+                        ignored_out.append(
+                            {"name": param_name, "value": param_value, "reason": str(e)}
+                        )
                     continue
-        
+
         # Combine compartment query with parameter queries
         final_query = self.compartment_resolver.combine_with_parameters(
             compartment_query,

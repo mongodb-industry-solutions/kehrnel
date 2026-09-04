@@ -51,7 +51,7 @@ def unique_db_name(prefix: str = "fhir_contract") -> str:
 
 MINIMAL_FHIR_ACTIVATE: dict[str, Any] = {
     "strategy_id": "fhir.clinical_cdr",
-    "version": "0.1.0",
+    "version": "0.4.0",
     "config": {},
     "bindings": {},
     "allow_plaintext_bindings": True,
@@ -72,13 +72,17 @@ def activation_payload(*, database: str) -> dict[str, Any]:
     uri = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
     return {
         "strategy_id": "fhir.clinical_cdr",
-        "version": "0.1.0",
+        "version": "0.4.0",
         "domain": "fhir",
         "config": {
             "database": database,
             "schema_version": "R5",
             "collections": {"mode": "per_resource_type"},
-            "search": {"enabled": True, "auto_index": False},
+            "search": {
+                "enabled": True,
+                "denormalize_on_generate": True,
+                "auto_index": True,
+            },
         },
         "bindings": {
             "db": {

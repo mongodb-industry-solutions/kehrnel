@@ -1,18 +1,19 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "FHIR Clinical CDR Strategy Configuration",
-  "description": "MongoDB layout, fhir-gen generation, and fhir-mql search settings for native FHIR R5 resources.",
+  "description": "MongoDB layout, import, generation, and fhir-mql search settings for the bundled FHIR R5 and R6 packages.",
   "type": "object",
   "properties": {
     "database": {
       "type": "string",
-      "description": "MongoDB database name for FHIR resource collections"
+      "minLength": 1,
+      "description": "Required strategy-owned MongoDB database for FHIR resources. Review this value during activation."
     },
     "schema_version": {
       "type": "string",
       "enum": ["R5", "R6"],
       "default": "R5",
-      "description": "FHIR schema version passed to fhir-gen"
+      "description": "FHIR release supplied by the bundled fhir-gen and fhir-mql packages"
     },
     "collection_prefix": {
       "type": "string",
@@ -30,14 +31,28 @@
       "required": ["mode"],
       "additionalProperties": false
     },
+    "import": {
+      "type": "object",
+      "properties": {
+        "max_resources_per_request": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100000,
+          "default": 10000,
+          "description": "Safety bound for one Bundle/NDJSON request; larger migrations are chunked by clients"
+        }
+      },
+      "additionalProperties": false
+    },
     "search": {
       "type": "object",
       "properties": {
-        "enabled": { "type": "boolean", "default": true },
+        "enabled": { "type": "boolean", "const": true, "default": true },
         "denormalize_on_generate": {
           "type": "boolean",
-          "default": false,
-          "description": "Run fhir-mql denormalization after synthetic generation"
+          "const": true,
+          "default": true,
+          "description": "Mandatory invariant: project search and compartment fields before synthetic resources become visible"
         },
         "config_dir": {
           "type": ["string", "null"],
@@ -49,10 +64,12 @@
         },
         "auto_index": {
           "type": "boolean",
+          "const": true,
           "default": true,
-          "description": "After fhir_denormalize, run fhir_ensure_indexes for processed types"
+          "description": "Mandatory invariant: ensure resource search indexes before writes"
         }
       },
+      "required": ["enabled", "denormalize_on_generate", "auto_index"],
       "additionalProperties": false
     },
     "generation": {
@@ -94,6 +111,25 @@
             }
           },
           "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "query": {
+      "type": "object",
+      "description": "Query execution limits.",
+      "properties": {
+        "max_count": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1000,
+          "description": "Server maximum result count enforced across all input forms (URL _count, structured, internal ops)."
+        },
+        "default_count": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1000,
+          "description": "Default page size applied when a request specifies no _count."
         }
       },
       "additionalProperties": false

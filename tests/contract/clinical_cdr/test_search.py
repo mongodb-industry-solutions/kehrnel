@@ -50,7 +50,6 @@ async def test_golden_search_execute(case):
                 "resources": seed_resources,
                 "seed": seed,
                 "store_canonical": True,
-                "denormalize_after": False,
             },
         )
         assert gen["ok"] is True

@@ -1,0 +1,111 @@
+{
+  "catalogVersion": "1.0.0",
+  "examples": [
+    {
+      "id": "cdisc-pilot-sdtm-dm",
+      "title": "CDISC Pilot — clinical SDTM demographics",
+      "description": "Official CDISC pilot DM data in Dataset-JSON and XPT, with Define-XML metadata. This is the smallest useful clinical journey for comparing both supported intake paths.",
+      "profile": "sdtm",
+      "studyId": "CDISCPILOT01",
+      "packageId": "official-cdisc-pilot",
+      "standard": {
+        "family": "SDTM",
+        "implementationGuide": "SDTMIG",
+        "implementationGuideVersion": "3.1.2"
+      },
+      "source": {
+        "repository": "https://github.com/cdisc-org/sdtm-adam-pilot-project",
+        "revision": "667511d4b183871d74392ba691c935c38d431d39",
+        "terms": "https://github.com/cdisc-org/sdtm-adam-pilot-project/blob/master/README.md",
+        "distribution": "fetch-only"
+      },
+      "files": [
+        {
+          "name": "dm.json",
+          "role": "dataset-json",
+          "mediaType": "application/json",
+          "url": "https://raw.githubusercontent.com/cdisc-org/sdtm-adam-pilot-project/667511d4b183871d74392ba691c935c38d431d39/updated-pilot-submission-package/900172/m5/datasets/cdiscpilot01/tabulations/sdtm/dm.json",
+          "sha256": "785e2ccbdfec91c8a5c667b74b9f01ae99952fb8679d9c56053437916c404cf2"
+        },
+        {
+          "name": "dm.xpt",
+          "role": "dataset",
+          "domain": "DM",
+          "mediaType": "application/x-sas-xport",
+          "url": "https://raw.githubusercontent.com/cdisc-org/sdtm-adam-pilot-project/667511d4b183871d74392ba691c935c38d431d39/updated-pilot-submission-package/900172/m5/datasets/cdiscpilot01/tabulations/sdtm/dm.xpt",
+          "sha256": "7327baea97fd532d02385248da0c7240402e770099507e2c3a88e2ac706c02a6"
+        },
+        {
+          "name": "define.xml",
+          "role": "define-xml",
+          "mediaType": "application/xml",
+          "url": "https://raw.githubusercontent.com/cdisc-org/sdtm-adam-pilot-project/667511d4b183871d74392ba691c935c38d431d39/updated-pilot-submission-package/900172/m5/datasets/cdiscpilot01/tabulations/sdtm/define.xml",
+          "sha256": "fbb065b8bb72d609e1a12670940e0d2ef11e6757cbbcd56bf9d0ba55ce1fc76b"
+        }
+      ],
+      "journey": ["inspect", "ingest", "validate", "publish", "query", "export"]
+    },
+    {
+      "id": "phuse-ffu-send",
+      "title": "PhUSE FFU contribution — preclinical SEND",
+      "description": "A compact public SEND study containing demographics, trial sets, microscopic findings and laboratory results with Define-XML metadata.",
+      "profile": "send",
+      "studyId": "Study ID",
+      "packageId": "phuse-ffu-send",
+      "standard": {
+        "family": "SEND",
+        "implementationGuide": "SENDIG",
+        "implementationGuideVersion": "3.0"
+      },
+      "source": {
+        "repository": "https://github.com/phuse-org/SENDConform",
+        "revision": "eb438ce3f7cbd74eea77677f43b916dd46c802cd",
+        "license": "MIT",
+        "licenseUrl": "https://github.com/phuse-org/SENDConform/blob/master/LICENSE",
+        "distribution": "fetch-only"
+      },
+      "files": [
+        {
+          "name": "define.xml",
+          "role": "define-xml",
+          "mediaType": "application/xml",
+          "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/FFU-Contribution-to-FDA/define.xml",
+          "sha256": "f9474ff5c96d4158a2c7a52c3f102495b6511d91ebd95ebb489cc87b87d65f17"
+        },
+        {
+          "name": "dm.xpt",
+          "role": "dataset",
+          "domain": "DM",
+          "mediaType": "application/x-sas-xport",
+          "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/FFU-Contribution-to-FDA/dm.xpt",
+          "sha256": "b96fd8e5da32cbba9a97981fee973de3b7e56149f5fe0f312a90f36b333397a3"
+        },
+        {
+          "name": "tx.xpt",
+          "role": "dataset",
+          "domain": "TX",
+          "mediaType": "application/x-sas-xport",
+          "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/FFU-Contribution-to-FDA/tx.xpt",
+          "sha256": "eaf8f1bf9e47c7f4a46cf655eeb9257b42f6f333f80aa124a94c37a977a90491"
+        },
+        {
+          "name": "mi.xpt",
+          "role": "dataset",
+          "domain": "MI",
+          "mediaType": "application/x-sas-xport",
+          "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/FFU-Contribution-to-FDA/mi.xpt",
+          "sha256": "edc563592c9ba368fe636aefd1126a1848f5753e6f005153e6bf5bc3425f5c96"
+        },
+        {
+          "name": "lb.xpt",
+          "role": "dataset",
+          "domain": "LB",
+          "mediaType": "application/x-sas-xport",
+          "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/FFU-Contribution-to-FDA/lb.xpt",
+          "sha256": "2213d9a70a4bb7170542edb79f9929f1813b122baaeded0dc6a04e5bd9a30cff"
+        }
+      ],
+      "journey": ["inspect", "ingest", "validate", "publish", "query", "analyze-findings"]
+    }
+  ]
+}

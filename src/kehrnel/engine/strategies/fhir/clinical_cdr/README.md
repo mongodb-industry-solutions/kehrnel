@@ -1,11 +1,12 @@
 # FHIR Clinical CDR (`fhir.clinical_cdr`)
 
-Strategy pack for **native FHIR R5** resources in MongoDB:
+Strategy pack for **native FHIR R5 and R6** resources in MongoDB:
 
 - **Generation:** **fhir-gen** (`fhir_gen`) — `src/kehrnel/engine/domains/fhir/libs/fhir-data-generation`
 - **Search:** **fhir-mql** (`fhir_search_to_mql`) — `src/kehrnel/engine/domains/fhir/libs/fhir-search-to-mql`
 
-Owns **52** of **84** shipped fhir-mql search configs (general clinical umbrella). See [FHIR_STRATEGIES_DOCUMENT.md](../../../../../../FHIR_STRATEGIES_DOCUMENT.md) §2.2.
+The active resource scope is derived at runtime from the configured recipes and
+the shipped fhir-mql search configs; it is not duplicated as a hard-coded UI list.
 
 **Also:** [FHIR_TESTING.md](../../../../../../FHIR_TESTING.md) · Portal `/guide/docs/strategies/fhir/clinical-cdr`
 
@@ -22,8 +23,7 @@ Owns **52** of **84** shipped fhir-mql search configs (general clinical umbrella
 
 | State | Ops |
 |-------|-----|
-| **Implemented** | `synthetic_generate_batch` (with `recipe`), `fhir_denormalize`, `fhir_ensure_indexes`, `fhir_search`, `fhir_list_search_params`, `fhir_stats` |
-| **Planned** | `negotiate_fhir_search` (see `manifest.json`) |
+| **Implemented** | `synthetic_generate_batch` (with `recipe`), `fhir_denormalize`, `fhir_ensure_indexes`, `fhir_search`, `fhir_list_search_params`, `fhir_resource_catalog`, `fhir_capabilities`, `fhir_stats`, `fhir_import_resources` |
 
 ---
 
@@ -39,6 +39,7 @@ Imported by Kehrnel via `manifest.json` entrypoint `kehrnel.engine.strategies.fh
 | `denormalize.py` | `fhir_denormalize` |
 | `indexes.py` | `fhir_ensure_indexes` |
 | `query.py` | `fhir_search`, compile/execute FHIR queries |
+| `resource_catalog.py` | Read-only package-backed resource structures, search projections, and index definitions |
 | `stats.py` | `fhir_stats` |
 | `watermark.py` | Synthetic provenance tags on save |
 
@@ -74,9 +75,34 @@ load_pack_defaults()     ← defaults.json + recipes.json (bridge.py)
   → per-op overrides     ← e.g. job payload "seed"
 ```
 
-MongoDB connection comes from **bindings** (`db.uri`, `db.database`) — keep aligned with `config.database`.
+MongoDB connectivity comes from **bindings** (`db.uri`). The logical database
+comes from the reviewed activation `config.database` and overrides any database
+embedded in the URI or generic environment binding.
 
 After editing JSON under `specification/`, **restart the API** or re-activate the environment.
+
+### Resource model catalog
+
+FHIR base resource definitions are package assets, not tenant data. Healthcare
+Data Lab reads the active catalog through Kehrnel:
+
+```text
+GET /api/domains/fhir/resource-catalog
+GET /api/domains/fhir/resource-catalog/Patient
+```
+
+The list is restricted to the active Clinical CDR scope. A detail response joins
+the selected R5/R6 schema definition with its fhir-mql search parameters,
+denormalization projections, collection name, and declared MongoDB indexes. The
+list also exposes release-compatible generation recipes and names configured
+types omitted by the selected release. The response declares
+`database_backed: false`; clients must not copy these standard definitions into
+`user-data-models` merely to render them.
+
+Tenant-stored FHIR conformance artifacts need a separate lifecycle. Before
+removing legacy FHIR rows from `user-data-models`, classify them so custom
+`StructureDefinition`, `ValueSet`, and `CodeSystem` content is not mistaken for a
+generated copy of the base resource catalog.
 
 ### `manifest.json`
 
@@ -103,15 +129,19 @@ Logical model metadata (`manifest.json` → `"spec.path"`). Not used for runtime
 
 Default activation **config** (no resource counts).
 
+Activation materializes the storage and index contract only. It never generates
+or imports FHIR resources. Data is written only by an explicit import/API request
+or an explicitly submitted `synthetic_generate_batch` job.
+
 | Field | Default | Meaning |
 |-------|---------|---------|
-| `database` | `fhir_synthetic` | Logical DB name |
-| `schema_version` | `R5` | fhir-gen FHIR version |
+| `database` | `fhir_cdr` | Required strategy-owned DB, distinct from the environment DB |
+| `schema_version` | `R5` | FHIR release (not the MongoDB document-schema version) |
 | `collections.mode` | `per_resource_type` | Required |
 | `collection_prefix` | `""` | Optional collection name prefix |
 | `search.enabled` | `true` | FHIR search ops |
-| `search.denormalize_on_generate` | `false` | Auto denorm after generate |
-| `search.auto_index` | `true` | Indexes after denorm |
+| `search.denormalize_on_generate` | `true` (required) | Search and compartment projection is a storage invariant |
+| `search.auto_index` | `true` (required) | Resource search indexes are a storage invariant |
 | `search.config_dir` | `null` | `null` = bundled fhir-mql YAML |
 | `generation.seed` | `42` | Default RNG seed |
 | `generation.use_enrichers` | `true` | fhir-gen enrichers |
@@ -123,7 +153,7 @@ Example override:
 {
   "database": "my_fhir_db",
   "generation": { "seed": 1001, "watermark": { "enabled": false } },
-  "search": { "denormalize_on_generate": true }
+  "search": { "config_dir": null, "compartment_definitions_dir": null }
 }
 ```
 
@@ -138,7 +168,7 @@ JSON Schema for activation `config`. Extend when adding new config keys (and wir
 Named generation recipes merged at load time. Reference by name in jobs:
 
 ```json
-{ "recipe": "clinical_dev", "denormalize_after": true }
+{ "recipe": "clinical_dev" }
 ```
 
 | Recipe | Types | ~Docs | Sample job |
@@ -167,7 +197,7 @@ Job `resources` **overrides** per-type counts without editing `recipes.json`. Re
 |------|---------|
 | `activate_dev.json` | Sample `POST /environments/{env}/activate` — edit `config.database`, `bindings.db.uri` |
 | `job_generate_small.json` | Minimal: 2 Patient + 5 Observation (CI / spike) |
-| `job_generate_dev.json` | `recipe: clinical_dev` + `denormalize_after` |
+| `job_generate_dev.json` | `recipe: clinical_dev` |
 | `job_generate_full84.json` | `recipe: clinical_full84` soak/regression |
 
 Activate and run (API on `:8080`):
@@ -188,7 +218,7 @@ curl -X POST http://localhost:8080/environments/dev/synthetic/jobs \
 
 **Corpus size:** Edit `recipes.json`, or job `payload.resources`, or POST `recipe` / `resources` directly.
 
-**Denorm after every generate:** `defaults.json` → `"search": { "denormalize_on_generate": true }` or job `"denormalize_after": true`.
+**Projection and indexes:** Always applied before imported or generated resources become visible. They cannot be disabled by activation or job payload.
 
 **Validate:**
 
@@ -205,13 +235,11 @@ pytest tests/contract/clinical_cdr -q
 | `recipe` | no* | Name from `recipes.json` |
 | `resources` / `resource_counts` | no* | Overrides recipe counts |
 | `seed` | no | Overrides `generation.seed` |
-| `denormalize_after` | no | Inline `fhir_denormalize` after save |
 | `plan_only` / `dry_run` | no | Plan or in-memory only |
-| `write_batch_size` | no | Mongo insert batch size |
 
 \* One of `recipe`, `resources`, or `resource_counts` required.
 
-Without `denormalize_after`, run `fhir_denormalize` before FHIR domain search.
+`fhir_denormalize` is now a repair/reprojection operation. It always rebuilds `_search` and `_compartments`, stamps current projection versions, and ensures the configured indexes.
 
 ### Golden search tests
 

@@ -65,8 +65,7 @@ curl -sS -X POST "${RUNTIME_URL}/environments/dev/synthetic/jobs" \
         "Slot": 100,
         "Appointment": 40
       },
-      "denormalize_after": true,
-      "denormalize_resource_types": ["Patient", "Schedule", "Slot", "Appointment"]
+      "store_canonical": true
     }
   }'
 ```
@@ -84,10 +83,11 @@ curl -sS "${RUNTIME_URL}/environments/dev/synthetic/jobs/JOB_ID"
 | `resources` / `resource_counts` | ResourceType → count |
 | `seed` | Overrides `generation.seed` |
 | `scenarios` | fhir-gen scenario tags (e.g. `Patient:deceased_datetime`) |
-| `denormalize_after` | Inline `fhir_denormalize` after save |
-| `denormalize_resource_types` | Subset for denormalize |
 | `dry_run` / `plan_only` | Plan or generate in memory only |
 | `store_canonical` | Write canonical JSON to MongoDB (default true) |
+
+Stored output is always validated, projected into `_search` and `_compartments`,
+version-stamped, and indexed. There is no persistence opt-out for those steps.
 
 ## 3. Maintenance ops (`/run`)
 

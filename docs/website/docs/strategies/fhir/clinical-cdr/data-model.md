@@ -4,7 +4,7 @@ sidebar_position: 4
 
 # FHIR Clinical CDR Data Model
 
-`fhir.clinical_cdr` persists **native FHIR JSON** in MongoDB with **one collection per resource type**. Search uses **in-place denormalization** on the same documents—unlike openEHR RPS Dual, there is no separate search sidecar collection.
+`fhir.clinical_cdr` persists **native FHIR JSON** in MongoDB with **one collection per resource type**. Search uses mandatory **in-place projections** on the same documents; there is no separate search sidecar collection.
 
 ## Collection layout
 
@@ -22,7 +22,7 @@ Example database `fhir_synthetic` after generating Patient and Observation:
 | `Observation` | Canonical Observation resources |
 | `Schedule`, `Slot`, `Appointment` | Scheduling corpora when generated |
 
-Documents retain FHIR fields (`resourceType`, `id`, `meta`, …). Kehrnel synthetic watermarking (when enabled) adds `meta.tag` and extension metadata before insert.
+Documents retain FHIR fields (`resourceType`, `id`, `meta`, …). Kehrnel synthetic watermarking (when enabled) adds canonical `meta.tag` and extension metadata before projection and persistence.
 
 ## Canonical document shape
 
@@ -34,18 +34,27 @@ Representative Patient (abbreviated):
   "resourceType": "Patient",
   "id": "patient-uuid",
   "name": [{ "family": "Smith", "given": ["John"] }],
-  "meta": {
-    "versionId": "1",
-    "lastUpdated": "2026-05-28T12:00:00Z"
+  "meta": { "profile": ["https://example.org/StructureDefinition/patient"] },
+  "_search": { "familyName_lower": ["smith"] },
+  "_compartments": { "Patient": ["patient-uuid"] },
+  "_kehrnel": {
+    "storage_schema_version": "1",
+    "projection_contract_version": "v1:<sha256>",
+    "resource_projection_version": "v1:<sha256>",
+    "fhir_release": "R5",
+    "projected_at": "2026-09-03T12:00:00Z",
+    "stored_at": "2026-09-03T12:00:00Z"
   }
 }
 ```
 
-MongoDB `_id` typically aligns with FHIR logical `id` for generated resources.
+FHIR `meta` remains canonical and is never used for persistence schema versioning.
+MongoDB `_id`, `_search`, `_compartments`, and `_kehrnel` are removed from FHIR
+responses. Valid primitive extensions such as `_birthDate` are preserved.
 
 ## Search denormalization (`_search`)
 
-After **`fhir_denormalize`**, fhir-mql adds flattened search fields on the **same** document:
+Before every stored write, fhir-mql adds flattened search fields on the **same** document:
 
 ```json
 {
@@ -70,17 +79,24 @@ FHIR search against MongoDB targets these denormalized paths via compiled MQL fi
 
 Compartment membership supports chained and compartment-scoped searches (for example Patient-linked resources). Definitions come from fhir-mql compartment JSON unless overridden by `search.compartment_definitions_dir`.
 
-Re-run denormalize when compartment definitions or search YAML change.
+Run `fhir_denormalize` for affected resource types when compartment definitions
+or search YAML change. The resource projection version identifies targeted work;
+a shared compartment-definition change invalidates all affected types.
 
 ## Indexes
 
-**`fhir_ensure_indexes`** creates MongoDB indexes declared in fhir-mql resource configs for `_search.*` (and related paths). With `search.auto_index: true` (default), index creation runs after denormalize maintenance.
+**`fhir_ensure_indexes`** creates MongoDB indexes declared in fhir-mql resource
+configs for `_search.*`, `_compartments.*`, and related paths. These indexes are
+mandatory and are ensured before normal writes and after reprojection.
 
 Inspect index presence via the **`fhir_stats`** op (counts, `_search` coverage, generation vs search gaps).
 
 ## Generation vs search coverage
 
-fhir-gen can emit many resource types; fhir-mql only provides search configs for a subset. **`fhir_stats`** reports types with documents but missing search YAML—generate is not enough for search until denormalize + config exist for that type.
+fhir-gen can emit many resource types; fhir-mql only provides search configs for
+a subset. The Clinical CDR fails closed instead of storing generated resource
+types outside its configured and searchable scope. **`fhir_stats`** reports
+projection/version coverage and any package coverage gaps.
 
 Known generation types are exposed from the strategy bridge (`known_generation_resource_types()`).
 

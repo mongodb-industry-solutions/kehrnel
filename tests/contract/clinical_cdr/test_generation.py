@@ -82,6 +82,16 @@ async def test_synthetic_generate_batch_cancel_raises():
 
 
 @pytest.mark.asyncio
+async def test_synthetic_generate_batch_cannot_disable_projection():
+    with pytest.raises(KehrnelError) as exc:
+        await synthetic_generate_batch(
+            _ctx(),
+            {"resources": {"Patient": 1}, "denormalize_after": False},
+        )
+    assert exc.value.code == "FHIR_PERSISTENCE_INVARIANT_REQUIRED"
+
+
+@pytest.mark.asyncio
 async def test_strategy_run_op_synthetic_generate_batch_dry_run():
     strat = FHIRClinicalCDRStrategy(MANIFEST)
     result = await strat.run_op(

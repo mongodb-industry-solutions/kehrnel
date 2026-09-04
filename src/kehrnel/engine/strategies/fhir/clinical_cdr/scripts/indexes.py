@@ -27,12 +27,8 @@ def _require_fhir_mql_indexes():
 
 
 def search_auto_index_enabled(strategy_config: dict[str, Any] | None) -> bool:
-    """Read ``search.auto_index`` (default true)."""
-    search = (strategy_config or {}).get("search") or {}
-    auto_index = search.get("auto_index")
-    if auto_index is None:
-        return True
-    return bool(auto_index)
+    """Indexes are a non-configurable FHIR persistence invariant."""
+    return True
 
 
 async def _emit_progress(

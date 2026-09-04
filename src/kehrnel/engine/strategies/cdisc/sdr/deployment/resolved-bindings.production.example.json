@@ -1,0 +1,27 @@
+{
+  "db": {
+    "provider": "mongodb",
+    "uri": "mongodb+srv://resolved-by-secret-manager",
+    "database": "kehrnel_cdisc"
+  },
+  "artifact": {
+    "provider": "s3",
+    "bucket": "regulated-study-artifacts",
+    "prefix": "production",
+    "region": "eu-west-1",
+    "server_side_encryption": "aws:kms",
+    "kms_key_id": "resolved-by-secret-manager"
+  },
+  "validation": {
+    "provider": "command",
+    "argv": ["cdisc-validator-bridge", "--input", "{input}", "--output", "{output}"],
+    "timeout_seconds": 1800,
+    "max_output_bytes": 50000000
+  },
+  "embedding": {
+    "provider": "http",
+    "endpoint": "https://embedding-gateway.example/v1/embeddings",
+    "model": "deployment-owned-model",
+    "api_key": "resolved-by-secret-manager"
+  }
+}

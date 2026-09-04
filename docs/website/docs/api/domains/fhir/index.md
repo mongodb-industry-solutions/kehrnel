@@ -59,6 +59,6 @@ Generation, denormalization, indexes, and diagnostics use the universal runtime 
 
 ## Maturity
 
-Domain search and strategy-backed generation are **beta** (`fhir.clinical_cdr` v0.1.0). Natural-language search (`negotiate_fhir_search`) and agentic endpoints are not yet production-ready.
+The FHIR resource-store accelerator is delivered as `fhir.clinical_cdr`. Its authoritative scope is the active CapabilityStatement and strategy manifest; it does not advertise natural-language search or agentic operations.
 
 `fhir.clinical_cdr` is the only FHIR strategy in kehrnel.

@@ -13,7 +13,7 @@ from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.core.types import StrategyContext
 from kehrnel.engine.strategies.fhir.clinical_cdr._paths import FHIR_GEN_ROOT
 from kehrnel.engine.strategies.fhir.clinical_cdr.scripts import bridge
-from kehrnel.engine.strategies.fhir.clinical_cdr.scripts import denormalize
+from kehrnel.engine.strategies.fhir.clinical_cdr.scripts import import_resources
 from kehrnel.engine.strategies.fhir.clinical_cdr.scripts import watermark
 
 ProgressCallback = Callable[..., Any]
@@ -139,13 +139,30 @@ async def synthetic_generate_batch(
     dry_run = bool(effective_payload.get("dry_run", False))
     plan_only = bool(effective_payload.get("plan_only", False))
     store_canonical = bool(effective_payload.get("store_canonical", True))
-    write_batch_size = max(10, int(effective_payload.get("write_batch_size", 250) or 250))
     variants = bool(effective_payload.get("variants", False))
     variant_resources = effective_payload.get("variant_resources")
-    denormalize_after = bool(effective_payload.get("denormalize_after", False))
     scenarios = _parse_scenario_specs(effective_payload.get("scenarios"))
 
-    uri, database, prefix = bridge.resolve_mongo(ctx)
+    if effective_payload.get("denormalize_after") is False:
+        raise KehrnelError(
+            code="FHIR_PERSISTENCE_INVARIANT_REQUIRED",
+            status=400,
+            message="Stored synthetic FHIR resources must always be projected and indexed",
+        )
+
+    if schema_version.upper() not in {"R5", "R6"}:
+        raise KehrnelError(
+            code="FHIR_GENERATION_VERSION_UNSUPPORTED",
+            status=400,
+            message=(
+                f"Synthetic generation is not available for {schema_version}; "
+                "use an R5 or R6 activation."
+            ),
+            details={"schema_version": schema_version, "supported": ["R5", "R6"]},
+        )
+
+    database = str(cfg["database"])
+    prefix = str(cfg.get("collection_prefix") or "")
     generation_order = _import_fhir_gen()[1](list(requested.keys()))
     collection_names = [
         bridge.collection_name(prefix, rt) for rt in sorted(set(requested) | set(generation_order))
@@ -210,6 +227,8 @@ async def synthetic_generate_batch(
         all_docs = watermark.apply_watermark_many(all_docs, enabled=True)
 
     inserted: dict[str, int] = {}
+    updated: dict[str, int] = {}
+    persistence_report: dict[str, Any] | None = None
     if store_canonical and not dry_run and all_docs:
         await _emit_progress(
             progress_cb,
@@ -217,62 +236,39 @@ async def synthetic_generate_batch(
             phase="saving",
             stats={"generated": generated, "total_documents": len(all_docs)},
         )
-        store = bridge.build_fhir_gen_store(uri, database, prefix)
-        for offset in range(0, len(all_docs), write_batch_size):
-            _check_canceled(should_cancel)
-            chunk = all_docs[offset : offset + write_batch_size]
-            chunk_types = sorted({str(d.get("resourceType")) for d in chunk if d.get("resourceType")})
-            batch_counts = store.save_many(chunk, batch_size=write_batch_size)
-            for resource_type, count in batch_counts.items():
-                inserted[resource_type] = inserted.get(resource_type, 0) + int(count)
-            progress = min(99, 50 + int((offset + len(chunk)) / max(1, len(all_docs)) * 49))
-            saving_stats: dict[str, Any] = {
-                "inserted": inserted,
-                "saved_documents": offset + len(chunk),
-                "resource_types": chunk_types,
-            }
-            if len(chunk_types) == 1:
-                saving_stats["resource_type"] = chunk_types[0]
-            await _emit_progress(
-                progress_cb,
-                progress=progress,
-                phase="saving",
-                stats=saving_stats,
-            )
-
-    denormalized_stats: dict[str, Any] | None = None
-    if denormalize_after and store_canonical and not dry_run and not plan_only:
-        mql_ctx = bridge.build_mql_context(
-            uri,
-            database,
-            prefix,
-            (cfg.get("search") or {}).get("config_dir"),
-            (cfg.get("search") or {}).get("compartment_definitions_dir"),
+        persistence_report = await import_resources.fhir_import_resources(
+            ctx,
+            {
+                "resources": all_docs,
+                "validation_level": "base",
+                "mode": "upsert",
+                "fail_on_error": True,
+            },
+            progress_cb=progress_cb,
+            should_cancel=should_cancel,
+            provenance={
+                "source": "synthetic",
+                "operation": "synthetic_generate_batch",
+                "job_id": (ctx.meta or {}).get("job_id"),
+                "recipe": effective_payload.get("recipe") or effective_payload.get("generation_recipe"),
+            },
         )
-        try:
-            supported = set(bridge.supported_search_resource_types(mql_ctx.config_loader))
-            denorm_types = denormalize.resolve_denormalize_resource_types(
-                generated, effective_payload, supported
+        if not persistence_report.get("committed"):
+            raise KehrnelError(
+                code="FHIR_GENERATED_RESOURCE_INVALID",
+                status=500,
+                message="Generated resources failed the mandatory FHIR persistence contract",
+                details={"validation": persistence_report.get("validation") or {}},
             )
-            if denorm_types:
-                denorm_payload: dict[str, Any] = {
-                    "resource_types": denorm_types,
-                    "batch_size": effective_payload.get("batch_size", 500),
-                    "rebuild": bool(effective_payload.get("rebuild", False)),
-                }
-                if effective_payload.get("limit") is not None:
-                    denorm_payload["limit"] = effective_payload.get("limit")
-                denorm_result = await denormalize.fhir_denormalize(
-                    ctx,
-                    denorm_payload,
-                    progress_cb=progress_cb,
-                    should_cancel=should_cancel,
-                )
-                denormalized_stats = denorm_result.get("denormalized")
-            else:
-                denormalized_stats = {}
-        finally:
-            bridge.close_mql_context(mql_ctx)
+        by_type = ((persistence_report.get("write") or {}).get("by_resource_type") or {})
+        inserted = {
+            resource_type: int(values.get("inserted", 0))
+            for resource_type, values in by_type.items()
+        }
+        updated = {
+            resource_type: int(values.get("updated", 0))
+            for resource_type, values in by_type.items()
+        }
 
     result: dict[str, Any] = {
         "ok": True,
@@ -281,20 +277,25 @@ async def synthetic_generate_batch(
         "recipe": effective_payload.get("recipe") or effective_payload.get("generation_recipe"),
         "generated": generated,
         "inserted": inserted,
+        "updated": updated,
         "dependencies_auto_generated": dependencies_auto_generated,
         "database": database,
         "collections": sorted({bridge.collection_name(prefix, rt) for rt in all_counts}),
         "total_documents": len(all_docs),
         "schema_version": schema_version,
         "watermark_applied": watermark_enabled,
+        "persistence_contract": "mandatory-search-compartments-indexes",
     }
 
-    if denormalize_after:
-        result["denormalized"] = denormalized_stats or {}
-        if denormalized_stats is None and (dry_run or not store_canonical):
-            result.setdefault("warnings", []).append(
-                "denormalize_after skipped (requires store_canonical and not dry_run)",
-            )
+    if persistence_report:
+        result["search_projection"] = persistence_report.get("search_projection") or {}
+        projected_by_type = (result["search_projection"].get("by_resource_type") or {})
+        result["denormalized"] = {
+            resource_type: {"processed": int(count), "failed": 0}
+            for resource_type, count in projected_by_type.items()
+        }
+        result["indexes"] = persistence_report.get("indexes") or {}
+        result["document_contract"] = persistence_report.get("document_contract") or {}
 
     await _emit_progress(
         progress_cb,

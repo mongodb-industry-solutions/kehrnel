@@ -1,13 +1,13 @@
 {
   "id": "fhir.clinical_cdr",
   "name": "FHIR Clinical CDR",
-  "version": "0.1.0",
+  "version": "0.4.1",
   "maturity": "published",
   "pack_format": "strategy-pack/v1",
-  "spec": { "path": "spec.json", "version": "1.1" },
+  "spec": { "path": "spec.json", "version": "1.2" },
   "domain": "FHIR",
-  "summary": "Native FHIR R5 storage with fhir-gen synthetic data and fhir-mql search translation.",
-  "description": "Stores canonical FHIR resources in per-type MongoDB collections, generates synthetic corpora via fhir-gen, and executes FHIR search parameters through fhir-mql denormalized indexes.",
+  "summary": "An open, portable FHIR resource-store accelerator for MongoDB with standard APIs, transparent storage, and explainable search.",
+  "description": "Imports FHIR JSON, Bundle, and NDJSON data into a reviewed strategy-owned database, preserves canonical resources, materializes mandatory operational search projections, and exposes FHIR read/write/search workflows with visible FHIR Search to MQL compilation.",
   "config": {
     "strategy": {
       "schema": "schema.json",
@@ -15,34 +15,25 @@
       "description": "FHIR database, generation, and search configuration"
     }
   },
-  "capabilities": ["ingest", "query", "search", "synthetic", "validate"],
+  "capabilities": ["ingest", "query", "search", "synthetic", "write"],
   "entrypoint": "kehrnel.engine.strategies.fhir.clinical_cdr.strategy:FHIRClinicalCDRStrategy",
   "ui": {
-    "tags": ["FHIR", "R5", "native-storage", "per-resource-type", "fhir-mql", "fhir-gen", "synthetic", "search"],
+    "tags": ["FHIR", "R5", "R6", "resource-store", "migration", "per-resource-type", "fhir-mql", "fhir-gen", "synthetic", "search"],
     "domain_badge": "FHIR",
-    "status": "stable",
-    "status_message": "Core ingest, synthetic generation, and FHIR Search are production-ready. negotiate_fhir_search (NL→FHIR) is planned.",
+    "status": "preview",
+    "status_message": "Implemented: FHIR R5/R6 resource catalog, JSON/Bundle/NDJSON import, bundled structural and base-schema validation, mandatory search and compartment projection, mandatory indexes, synthetic generation, CapabilityStatement, create/update, read, type search, and FHIR Search-to-MQL explain. History, transactions, conditional operations, subscriptions, terminology validation, profile conformance, and SMART authorization are not implemented.",
     "docs": "/guide/docs/strategies/fhir/clinical-cdr",
-    "story": "Clinical data arrives as FHIR R5 resources — Patients, Observations, Conditions, Encounters and 48 more. Each resource type lands in its own MongoDB collection, exactly matching the FHIR mental model. Search parameters are pre-computed into a `_search` field so fhir-mql can translate any FHIR Search expression into a MongoDB query without touching the resource payload.",
-    "how_it_works": "On ingest, each resource is validated, its FHIR search parameters are extracted and written to `_search`, and the document is upserted into its per-type collection. Synthetic corpora are produced by fhir-gen using named recipes (clinical_dev or clinical_full84). Queries are compiled by fhir-mql from standard FHIR Search parameter syntax into MongoDB MQL, using the `_search` compound indexes.",
+    "story": "Teams moving a FHIR workload to MongoDB usually agree that resources fit the document model, but they still need proof that the result behaves like a usable FHIR system: familiar APIs, predictable identity, declared validation, searchable resources, and a migration path they can inspect. A database layout alone does not provide that confidence.\n\nThis accelerator supplies the reusable kernel for that middle ground. Canonical FHIR R5 or R6 resources remain recognizable, each configured resource type is isolated in its own collection, and operational search projections sit beside the resource for efficient MongoDB execution. Healthcare Data Lab then exposes the complete journey: inspect the metamodel, import or generate data, compile FHIR Search to MQL, execute it against the tenant database, and inspect the result.\n\nThe goal is portability and extension rather than claiming to be a finished commercial FHIR server. Customers and partners can use the kernel as a foundation for real migrations, add the conformance, security, history, terminology, and operational controls their product requires, and keep the storage and query behavior visible.",
+    "how_it_works": "The activated strategy configuration selects one of the bundled R5 or R6 packages. The import boundary accepts a resource, Bundle, or NDJSON batch; rejects resource types outside both the Clinical CDR recipe scope and bundled fhir-mql configuration; removes client-supplied operational fields; validates at the selected supported level; and computes mandatory `_search` and `_compartments` projections through fhir-mql.\n\nThe storage adapter routes each resource by `resourceType` to a prefixed MongoDB collection and uses the pair `(resourceType, id)` as logical identity. Canonical JSON stays at the document root. `_search` and `_compartments` remain directly indexable siblings, while Kehrnel-owned control metadata is grouped under `_kehrnel`; MongoDB retains its own `_id`. The stored-document schema version, global projection-contract version, and per-resource projection version are stripped from FHIR responses together with the operational projections; valid FHIR primitive-extension fields are preserved. Search projections, compartment materialization, and configured indexes cannot be disabled for stored data.\n\nAt query time, the compiler resolves the search parameters supported for the selected resource type and returns the MongoDB collection, filter, sort, limit, and offset. Unknown or unsupported parameters fail closed in strict mode. Runtime capability and index operations derive their facts from the bundled fhir-mql and fhir-gen packages instead of a broader release-wide claim.",
     "benefits": [
-      "Native FHIR R5 — no translation layer; documents are stored exactly as received",
-      "52 resource types, each with its own collection and tailored index set",
-      "FHIR Search parameters execute via compound MongoDB indexes — no full-document scans",
-      "fhir-gen recipes generate realistic clinical populations across all owned resource types",
-      "Straightforward schema migration: update fhir-mql config, re-run fhir_denormalize"
+      "Canonical FHIR JSON remains readable and round-trippable; a narrow, documented operational projection is removed from FHIR-facing responses.",
+      "The per-resource-type collection family matches FHIR identity and allows search projections and indexes to evolve independently by resource type.",
+      "FHIR Search compilation is visible before execution, so teams can inspect the generated MQL and test whether configured indexes serve their real query shapes.",
+      "The activated R5 or R6 release and package-backed resource catalogs make the implemented scope explicit.",
+      "The same kernel supports guided learning, migration rehearsal, synthetic data, and tenant-backed operational experimentation without locking the workload to a managed cloud API."
     ],
-    "ideal_for": [
-      "FHIR-native CDR or SMART-on-FHIR application backends",
-      "Synthetic patient population generation for demos, QA, and AI training",
-      "Interoperability projects requiring standard FHIR Search API behavior",
-      "Environments where the upstream system already speaks FHIR R5"
-    ],
-    "consider_alternatives": [
-      "If your source data is OpenEHR archetypes, use openehr.rps_dual instead",
-      "If you need claim/EDI processing, look at x12.co_single",
-      "If you need complex AQL-style path traversal, consider whether the FHIR Search parameter set covers your query patterns"
-    ],
+    "ideal_for": "This strategy is a good fit for teams migrating an existing FHIR integration or data service to MongoDB, building a portable FHIR data foundation, evaluating MongoDB against real FHIR search patterns, or creating a partner product that needs an extensible resource-store kernel. It is especially useful when the team wants to own its infrastructure and application behavior while retaining familiar FHIR APIs and an inspectable MongoDB implementation.",
+    "consider_alternatives": "Choose a complete FHIR server or managed FHIR service when the project requires broad specification conformance, version history, transactions, conditional interactions, subscriptions, terminology services, implementation-guide and profile validation, SMART authorization, or a supported production platform out of the box. This accelerator is appropriate when teams want a portable MongoDB foundation and intend to own or partner on the remaining product and operational layers. Its conformance claim is limited to the interactions and resource types reported by the active CapabilityStatement.",
     "scorecard": {
       "read_patient":      4,
       "read_population":   3,
@@ -52,42 +43,33 @@
       "migration_ease":    4
     },
     "index_contract": {
-      "required": [
-        { "collection": "<ResourceType>", "index": "id_unique",         "fields": ["id"],                                          "note": "All 52 collections — FHIR logical id uniqueness." },
-        { "collection": "<ResourceType>", "index": "search_patient_date","fields": ["_search.patient","_search.date","_search.status"],"note": "Patient-compartment queries on all patient-anchored resource types." }
-      ],
-      "recommended": [
-        { "collection": "Patient",         "index": "identifier",       "fields": ["identifier.system","identifier.value"],         "note": "MRN and national identifier lookups." },
-        { "collection": "Observation",     "index": "code_date",        "fields": ["_search.code","_search.date"],                  "note": "LOINC/SNOMED population queries." },
-        { "collection": "Condition",       "index": "code_status",      "fields": ["_search.code","_search.clinical-status"],       "note": "ICD/SNOMED active problem cohorts." },
-        { "collection": "MedicationRequest","index":"medication_date",  "fields": ["_search.medication","_search.date"],            "note": "RxNorm medication population queries." }
-      ],
-      "optional": [
-        { "collection": "Patient", "index": "birthdate",   "fields": ["birthDate"],          "note": "Age-range demographic filters." },
-        { "collection": "DiagnosticReport","index":"category_date","fields":["_search.category","_search.date"],"note":"Report category filter (LAB, RAD)." }
-      ]
+      "specPath": "storageModel.indexContract",
+      "configResolved": true,
+      "identityIndex": "A unique ascending index on `id` is enforced by the storage adapter in each materialized resource collection.",
+      "searchIndexSource": "The active fhir-mql resource configuration supplies resource-specific index definitions to `fhir_ensure_indexes`.",
+      "summary": "Search indexes are runtime-resolved because supported resource types, search parameters, and field projections vary by FHIR release and active configuration. The manifest therefore documents the contract and source of truth rather than duplicating a static index list that can drift."
     },
     "tabs": {
       "overview": {
         "cards": [
           {
             "title": "Querying",
-            "body": "FHIR Search parameters are compiled to MongoDB MQL by fhir-mql. Patient-compartment queries use `_search.patient` as the leading index key. Population queries use resource-specific compound indexes on `_search.code`, `_search.date`, etc.",
+            "body": "FHIR Search parameters supported for the selected resource type are compiled to MongoDB MQL by fhir-mql. The lab shows the collection, filter, controls, ignored parameters, and execution summary.",
             "icon": "Search"
           },
           {
-            "title": "Ingest",
-            "body": "Resources arrive as individual FHIR JSON documents or as Bundle entries. Each is validated, `_search` fields are populated, and the document is upserted by FHIR logical id. Bundle unpacking happens transparently.",
+            "title": "Migration import",
+            "body": "FHIR R5/R6 JSON, Bundle entries, and NDJSON are checked against the activated release and bundled resource configuration, projected into operational fields, and persisted through the tenant-bound storage adapter. Large migrations should use bounded NDJSON chunks.",
             "icon": "Upload"
           },
           {
             "title": "Synthetic Generation",
-            "body": "fhir-gen produces realistic FHIR R5 patient populations. Use the `clinical_dev` recipe for fast local setup (~535 documents, 10 resource types) or `clinical_full84` for soak testing (52 resource types). Run `fhir_denormalize` after bulk generation if `denormalize_on_generate` is disabled.",
+            "body": "fhir-gen recipes create representative FHIR datasets for the active release. Every stored resource passes through the same validation, projection, versioning, and index contract as imported data.",
             "icon": "FlaskConical"
           },
           {
             "title": "Schema & Indexes",
-            "body": "Run `fhir_ensure_indexes` after activation to create all required and recommended indexes. Re-run safely at any time — uses createIndex with background mode. `fhir_denormalize` can be scoped to specific resource types for incremental updates.",
+            "body": "The logical-id index and resource-specific fhir-mql search indexes are mandatory. The catalog exposes the stored-document and projection versions used to identify targeted rebuilds.",
             "icon": "Database"
           }
         ]
@@ -96,21 +78,83 @@
   },
   "ops": [
     {
+      "name": "fhir_import_resources",
+      "kind": "ingest",
+      "summary": "Validate, project, index, and persist a FHIR resource, Bundle, NDJSON corpus, or resource batch",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "resource": { "type": "object", "description": "One FHIR resource." },
+          "bundle": { "type": "object", "description": "A FHIR Bundle whose entries contain resources." },
+          "resources": { "type": "array", "items": { "type": "object" } },
+          "ndjson": { "type": "string", "description": "Newline-delimited FHIR JSON resources." },
+          "validation_level": { "type": "string", "enum": ["structure", "base"], "default": "base" },
+          "mode": { "type": "string", "enum": ["upsert", "create"], "default": "upsert" },
+          "dry_run": { "type": "boolean", "default": false },
+          "fail_on_error": { "type": "boolean", "default": true },
+          "ensure_indexes": { "type": "boolean", "const": true, "default": true }
+        },
+        "additionalProperties": true
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "committed": { "type": "boolean" },
+          "validation": { "type": "object" },
+          "search_projection": { "type": "object" },
+          "document_contract": { "type": "object" },
+          "indexes": { "type": "object" },
+          "write": { "type": "object" }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
       "name": "synthetic_generate_batch",
       "kind": "synthetic",
       "summary": "Generate FHIR resources in batch via fhir-gen",
-      "input_schema": { "type": "object", "additionalProperties": true },
-      "output_schema": { "type": "object", "additionalProperties": true }
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "recipe": { "type": "string", "description": "A generation recipe declared by the active strategy." },
+          "resources": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } },
+          "seed": { "type": "integer" },
+          "dry_run": { "type": "boolean", "default": false },
+          "plan_only": { "type": "boolean", "default": false },
+          "store_canonical": { "type": "boolean", "default": true },
+          "variants": { "type": "boolean", "default": false },
+          "variant_resources": { "type": "array", "items": { "type": "string" } },
+          "scenarios": { "type": "array" },
+          "denormalize_after": { "type": "boolean", "const": true, "default": true }
+        },
+        "additionalProperties": true
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "generated": { "type": "object" },
+          "inserted": { "type": "object" },
+          "updated": { "type": "object" },
+          "document_contract": { "type": "object" },
+          "indexes": { "type": "object" }
+        },
+        "additionalProperties": true
+      }
     },
     {
       "name": "fhir_denormalize",
       "kind": "maintenance",
-      "summary": "Build _search denormalized fields for FHIR search",
+      "summary": "Rebuild mandatory _search, _compartments, versions, and indexes",
       "input_schema": {
         "type": "object",
+        "required": ["resource_types"],
         "properties": {
           "resource_types": { "type": "array", "items": { "type": "string" } },
-          "dry_run": { "type": "boolean" }
+          "dry_run": { "type": "boolean" },
+          "batch_size": { "type": "integer", "minimum": 1, "default": 500 },
+          "limit": { "type": "integer", "minimum": 1 }
         }
       },
       "output_schema": { "type": "object", "additionalProperties": true }
@@ -140,18 +184,29 @@
           "fhir_search": { "type": "string" },
           "explain_only": { "type": "boolean" },
           "limit": { "type": "integer", "minimum": 1 },
-          "_count": { "type": "integer", "minimum": 1 },
+          "_count": { "type": "integer", "minimum": 0 },
           "_offset": { "type": "integer", "minimum": 0 },
+          "_sort": { "type": "string", "description": "Comma-separated sortable params; leading '-' = descending. Unsortable keys fail closed." },
+          "handling": { "type": "string", "enum": ["strict", "lenient"], "description": "Unsupported-param handling (default strict). REST clients use the Prefer: handling= header." },
           "compartment": { "type": "object" }
         }
       },
       "output_schema": {
         "type": "object",
+        "description": "Versioned search envelope. Legacy keys (rows/plan/explain) retained for compatibility.",
         "properties": {
           "ok": { "type": "boolean" },
-          "rows": { "type": "array" },
+          "contract_version": { "type": "string" },
+          "engine_used": { "type": "string" },
+          "resource_type": { "type": "string" },
+          "bundle": { "type": "object", "description": "FHIR searchset Bundle (canonical resources)." },
           "total": { "type": "integer" },
-          "plan": { "type": "object" },
+          "returned": { "type": "integer" },
+          "compiled_plan": { "type": "object", "description": "filter/collection/handling/ignored_parameters." },
+          "execution_summary": { "type": "object", "description": "Bounded telemetry (no resolved-id arrays)." },
+          "executed": { "type": "object", "description": "snapshot (session|best_effort) + multi_step_resolved." },
+          "rows": { "type": "array", "description": "Legacy: canonical resource rows." },
+          "plan": { "type": "object", "description": "Legacy compiled plan." },
           "explain": { "type": "object" },
           "explain_only": { "type": "boolean" }
         }
@@ -189,9 +244,77 @@
       }
     },
     {
+      "name": "fhir_resource_catalog",
+      "kind": "query",
+      "summary": "Read the active package-backed FHIR resource model, search mappings, and MongoDB indexes",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "resource_type": { "type": "string", "description": "Omit to list resource summaries; provide it for full detail." }
+        }
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "contract_version": { "type": "string" },
+          "source": { "type": "string" },
+          "database_backed": { "type": "boolean", "const": false },
+          "fhir_version": { "type": "string" },
+          "resource_count": { "type": "integer" },
+          "configured_resource_count": { "type": "integer" },
+          "schema_resource_count": { "type": "integer" },
+          "omitted_configured_resource_types": { "type": "array", "items": { "type": "string" } },
+          "generation_recipes": { "type": "array" },
+          "resources": { "type": "array" },
+          "resource": { "type": "object" },
+          "storage_schema_version": { "type": "string" },
+          "projection_contract_version": { "type": "string" },
+          "resource_projection_version": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "fhir_capabilities",
+      "kind": "query",
+      "summary": "Authoritative capability catalog: storable/searchable/generatable resource types and supported params",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "resource_type": { "type": "string" }
+        }
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "degraded": { "type": "boolean" },
+          "discovery_errors": { "type": "array" },
+          "contract_version": { "type": "string" },
+          "fhir_version": { "type": "string" },
+          "searchable_resource_types": { "type": "array", "items": { "type": "string" } },
+          "generatable_resource_types": { "type": "array", "items": { "type": "string" } },
+          "storable_resource_types": { "type": "array", "items": { "type": "string" } },
+          "synthetic_writable_resource_types": { "type": "array", "items": { "type": "string" } },
+          "ingest_supported": { "type": "boolean" },
+          "write_supported": { "type": "boolean" },
+          "import_formats": { "type": "array", "items": { "type": "string" } },
+          "validation_levels": { "type": "array", "items": { "type": "string" } },
+          "profile_conformance": { "type": "boolean" },
+          "supported_result_controls": { "type": "array", "items": { "type": "string" } },
+          "planned_result_controls": { "type": "array", "items": { "type": "string" } },
+          "unsupported_result_controls": { "type": "array", "items": { "type": "string" } },
+          "handling_modes": { "type": "array", "items": { "type": "string" } },
+          "chaining_supported": { "type": "boolean" },
+          "reverse_chaining_supported": { "type": "boolean" },
+          "include_supported": { "type": "boolean" }
+        }
+      }
+    },
+    {
       "name": "fhir_stats",
       "kind": "diagnostic",
-      "summary": "Collection counts and denormalization coverage",
+      "summary": "Collection counts, mandatory projection coverage, index presence, and document-contract versions",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -205,20 +328,14 @@
           "database": { "type": "string" },
           "collections": { "type": "array" },
           "indexed_resource_types": { "type": "array", "items": { "type": "string" } },
+          "storage_schema_version": { "type": "string" },
+          "projection_contract_version": { "type": "string" },
           "gaps": { "type": "object" }
         }
       }
-    },
-    {
-      "name": "negotiate_fhir_search",
-      "kind": "extension",
-      "summary": "Natural-language draft to validated FHIR search criteria",
-      "input_schema": { "type": "object", "additionalProperties": true },
-      "output_schema": { "type": "object", "additionalProperties": true }
     }
   ],
   "adapters": {
     "storage": ["mongo"]
   }
 }
-

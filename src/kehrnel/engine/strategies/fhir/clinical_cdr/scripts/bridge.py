@@ -97,6 +97,7 @@ def resolve_strategy_config(ctx: StrategyContext) -> dict[str, Any]:
     schema_version = merged.get("schema_version")
     collections = merged.get("collections") or {}
     mode = collections.get("mode") if isinstance(collections, dict) else None
+    search = merged.get("search")
 
     errors: list[str] = []
     if not database:
@@ -105,6 +106,8 @@ def resolve_strategy_config(ctx: StrategyContext) -> dict[str, Any]:
         errors.append("schema_version is required")
     if mode != "per_resource_type":
         errors.append("collections.mode must be 'per_resource_type'")
+    if not isinstance(search, dict):
+        errors.append("search configuration must be an object")
 
     if errors:
         raise KehrnelError(
@@ -113,6 +116,16 @@ def resolve_strategy_config(ctx: StrategyContext) -> dict[str, Any]:
             message="Invalid FHIR strategy configuration",
             details={"errors": errors, "config_keys": sorted(merged.keys())},
         )
+    # These are persistence invariants, not tenant tuning switches. Coercing old
+    # stored activations keeps their read-only catalog usable while every runtime
+    # write path still enforces the current contract. New activations reject false
+    # values through the JSON Schema and validate_config().
+    merged["search"] = {
+        **(search if isinstance(search, dict) else {}),
+        "enabled": True,
+        "denormalize_on_generate": True,
+        "auto_index": True,
+    }
     return merged
 
 
@@ -249,7 +262,7 @@ def build_mql_context(
 
 def close_mql_context(mql_ctx: MqlContext) -> None:
     """Close the Mongo client only when this context owns it (not the shared pool)."""
-    if mql_ctx.owns_client and getattr(mql_ctx, "client", None) is not None:
+    if getattr(mql_ctx, "owns_client", False) and getattr(mql_ctx, "client", None) is not None:
         mql_ctx.client.close()
 
 
@@ -261,6 +274,23 @@ def supported_search_resource_types(loader: Any) -> list[str]:
 def known_generation_resource_types() -> set[str]:
     """Resource types defined in fhir-gen schema registry."""
     return _known_generation_resource_types()
+
+
+def configured_cdr_resource_types(cfg: dict[str, Any]) -> set[str]:
+    """Resource types explicitly present in this strategy's configured recipes.
+
+    The vendored libraries contain broader reusable catalogs shared by multiple
+    FHIR strategies. Recipe membership is the clinical CDR's explicit resource
+    scope and therefore the safe boundary for its import/write APIs.
+    """
+    recipes = (cfg.get("generation") or {}).get("recipes") or {}
+    configured: set[str] = set()
+    if isinstance(recipes, dict):
+        for recipe in recipes.values():
+            resources = recipe.get("resources") if isinstance(recipe, dict) else None
+            if isinstance(resources, dict):
+                configured.update(str(name) for name in resources if str(name))
+    return configured
 
 
 def _known_generation_resource_types() -> set[str]:

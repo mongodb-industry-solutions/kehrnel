@@ -1,0 +1,53 @@
+{
+  "database": "cdisc_sdr",
+  "tenant_id": "default",
+  "collections": {
+    "studies": "cdisc_studies",
+    "snapshots": "cdisc_snapshots",
+    "datasets": "cdisc_datasets",
+    "records": "cdisc_records",
+    "entities": "cdisc_entities",
+    "materializations": "cdisc_materializations",
+    "standards": "cdisc_standards",
+    "artifacts": "cdisc_artifacts",
+    "validation_runs": "cdisc_validation_runs",
+    "validation_findings": "cdisc_validation_findings",
+    "validation_waivers": "cdisc_validation_waivers",
+    "transformations": "cdisc_transformations"
+  },
+  "ingest": {
+    "default_publication_state": "staged",
+    "batch_size": 1000,
+    "max_records_per_dataset": 2000000
+  },
+  "artifact": {
+    "max_inline_bytes": 25000000,
+    "max_replay_bytes": 25000000
+  },
+  "validation": {
+    "require_before_publish": true,
+    "require_registered_standards": false,
+    "external_failure_policy": "finding",
+    "blocking_severities": ["error"]
+  },
+  "projections": {
+    "rebuild_on_publish": true,
+    "max_records_per_rebuild": 250000
+  },
+  "semantic": {
+    "enabled": true,
+    "embed_on_rebuild": false,
+    "embedding_batch_size": 128,
+    "embedding_dimensions": 1536,
+    "max_text_chars": 4000,
+    "max_fallback_scan": 10000,
+    "lexical_index": "cdisc_semantic_text",
+    "vector_index": "cdisc_semantic_vector",
+    "exclude_variables": ["USUBJID", "SUBJID"]
+  },
+  "query": {
+    "default_limit": 100,
+    "max_limit": 1000,
+    "extra_allowed_paths": []
+  }
+}

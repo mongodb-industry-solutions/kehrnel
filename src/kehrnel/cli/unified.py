@@ -29,10 +29,41 @@ from kehrnel.cli.state import load_cli_state, save_cli_state, mask_api_key
 
 LOCAL_GUIDE_URL = os.getenv("KEHRNEL_GUIDE_URL", "http://localhost:8080/guide")
 
-TOP_LEVEL_HELP = """Unified kehrnel CLI
+TOP_LEVEL_HELP = """Unified kehrnel CLI — discover, activate, and execute healthcare data strategies
 
 \b
-Help discovery (at every level):
+1. Connect and inspect the runtime:
+  kehrnel setup --runtime-url http://localhost:8080
+  kehrnel core health
+  kehrnel strategy list
+
+\b
+2. Select an openEHR strategy and create an environment:
+  kehrnel strategy list --domain openehr
+  kehrnel strategy use openehr.rps_dual --domain openehr
+  kehrnel core env create --env dev --name "Development"
+
+\b
+3. Activate it (resolver-backed example):
+  kehrnel core env activate --env dev --domain openehr --strategy openehr.rps_dual --bindings-ref <bindings-ref>
+
+\b
+4. Discover every executable capability and its command:
+  kehrnel op capabilities --env dev
+  kehrnel op schema <operation> --strategy openehr.rps_dual
+
+\b
+5. Compile and execute AQL:
+  kehrnel core env compile-query --env dev --domain openehr --aql <query.aql> --debug
+  kehrnel core env query --env dev --domain openehr --aql <query.aql>
+  kehrnel core env query --env dev --domain openehr --aql-text "SELECT e/ehr_id/value AS ehr_id FROM EHR e LIMIT 5"
+
+\b
+6. Execute any standard or strategy operation:
+  kehrnel run <operation> --env dev --domain openehr --strategy openehr.rps_dual --payload <payload.json>
+
+\b
+Detailed help:
   kehrnel --help
   kehrnel core env --help
   kehrnel core env op --help
@@ -44,13 +75,6 @@ Pass-through command help:
   kehrnel common map-skeleton -- --help
   kehrnel common transform -- --help
   kehrnel common validate -- --help
-
-\b
-Workflow commands:
-  kehrnel resource --help
-  kehrnel op list
-  kehrnel op schema synthetic_generate_batch
-  kehrnel run synthetic_generate_batch --from resource://src --to resource://dst
 
 \b
 Local guide (when the docs site is running):
@@ -73,6 +97,10 @@ Useful detailed help:
   kehrnel core env op --help
   kehrnel core env query --help
   kehrnel core env compile-query --help
+
+\b
+Discover everything executable in an environment:
+  kehrnel op capabilities --env <env>
 """
 
 COMMON_HELP = """Cross-domain shared operations
@@ -87,7 +115,7 @@ Delegated tool help (pass-through):
 
 RESOURCE_HELP = """Reusable source/sink profiles (file, mongo, ...)."""
 
-OPS_HELP = """Discover available strategy operations and schemas."""
+OPS_HELP = """Discover every executable environment capability, strategy operation, schema, and copy-ready command."""
 
 app = typer.Typer(help=TOP_LEVEL_HELP, rich_markup_mode="rich")
 auth_app = typer.Typer(help="Authenticate once and reuse credentials", rich_markup_mode="rich")
@@ -446,6 +474,111 @@ def _build_guidance(kind: str, *, env_id: Optional[str], domain: Optional[str], 
     if LOCAL_GUIDE_URL:
         lines.append(LOCAL_GUIDE_URL)
     return lines
+
+
+def _capability_context(
+    data: Dict[str, Any],
+    *,
+    domain_filter: Optional[str] = None,
+    strategy_filter: Optional[str] = None,
+) -> tuple[Optional[str], Optional[str], bool]:
+    """Resolve a concrete active domain/strategy for capability command examples."""
+    activations = [row for row in (data.get("domains") or []) if isinstance(row, dict)]
+    matching = []
+    for row in activations:
+        row_domain = str(row.get("domain") or "").strip().lower()
+        row_strategy = str(row.get("strategy_id") or "").strip()
+        if domain_filter and row_domain != domain_filter:
+            continue
+        if strategy_filter and row_strategy != strategy_filter:
+            continue
+        matching.append(row)
+
+    if not matching:
+        return domain_filter, strategy_filter, not (domain_filter or strategy_filter)
+    if len(matching) == 1:
+        row = matching[0]
+        return (
+            str(row.get("domain") or domain_filter or "").strip() or None,
+            str(row.get("strategy_id") or strategy_filter or "").strip() or None,
+            True,
+        )
+    return domain_filter, strategy_filter, True
+
+
+def _capability_command(
+    row: Dict[str, Any],
+    *,
+    env_id: str,
+    domain: Optional[str],
+    strategy_id: Optional[str],
+) -> str:
+    name = str(row.get("name") or "").strip()
+    scope = str(row.get("scope") or "").strip().lower()
+    selected_domain = str(row.get("domain") or domain or "<domain>")
+    selected_strategy = str(row.get("strategy_id") or strategy_id or "<strategy>")
+
+    if scope == "strategy":
+        return (
+            f"kehrnel run {name} --env {env_id} --domain {selected_domain} "
+            f"--strategy {selected_strategy}"
+        )
+    if name == "query":
+        return f"kehrnel core env query --env {env_id} --domain {selected_domain} --aql <query.aql>"
+    if name == "compile_query":
+        return f"kehrnel core env compile-query --env {env_id} --domain {selected_domain} --aql <query.aql> --debug"
+    return (
+        f"kehrnel run {name} --env {env_id} --domain {selected_domain} "
+        f"--strategy {selected_strategy} --payload <payload.json>"
+    )
+
+
+def _effective_capability_rows(
+    data: Dict[str, Any],
+    *,
+    env_id: str,
+    domain_filter: Optional[str] = None,
+    strategy_filter: Optional[str] = None,
+) -> tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    """Return filtered standard and strategy operations with executable CLI examples."""
+    domain, strategy_id, context_matches = _capability_context(
+        data,
+        domain_filter=domain_filter,
+        strategy_filter=strategy_filter,
+    )
+    standard = []
+    if context_matches:
+        for item in (data.get("operations") or {}).get("standard") or []:
+            if not isinstance(item, dict) or not item.get("name"):
+                continue
+            row = {**item, "domain": domain, "strategy_id": strategy_id}
+            row["command"] = _capability_command(
+                row,
+                env_id=env_id,
+                domain=domain,
+                strategy_id=strategy_id,
+            )
+            standard.append(row)
+
+    strategy_rows = []
+    for item in (data.get("operations") or {}).get("strategy") or []:
+        if not isinstance(item, dict) or not item.get("name"):
+            continue
+        row_domain = str(item.get("domain") or "").strip().lower()
+        row_strategy = str(item.get("strategy_id") or "").strip()
+        if domain_filter and row_domain != domain_filter:
+            continue
+        if strategy_filter and row_strategy != strategy_filter:
+            continue
+        row = dict(item)
+        row["command"] = _capability_command(
+            row,
+            env_id=env_id,
+            domain=domain,
+            strategy_id=strategy_id,
+        )
+        strategy_rows.append(row)
+    return standard, strategy_rows
 
 
 def _render_rich_response(
@@ -1439,6 +1572,7 @@ def env_compile_query(
     env: Optional[str] = typer.Option(None, "--env", help="Environment key/id"),
     domain: Optional[str] = typer.Option(None, "--domain", help="Domain id (openehr, fhir, ...)"),
     aql_file: Optional[Path] = typer.Option(None, "--aql", help="AQL file (convenience for openEHR)"),
+    aql_text: Optional[str] = typer.Option(None, "--aql-text", help="Inline AQL text (convenience for openEHR)"),
     payload_file: Optional[Path] = typer.Option(None, "--payload", help="Payload JSON/YAML file (generic)"),
     debug: bool = typer.Option(False, "--debug"),
     runtime_url: Optional[str] = typer.Option(None),
@@ -1449,12 +1583,18 @@ def env_compile_query(
         raise typer.BadParameter("No runtime URL configured. Set via `kehrnel auth login` or `kehrnel context set`.")
     env_id = _require_env(env)
     chosen_domain = _require_domain(domain)
+    if aql_file and aql_text:
+        raise typer.BadParameter("Use either --aql or --aql-text, not both.")
+    if payload_file and (aql_file or aql_text):
+        raise typer.BadParameter("Use either --payload or an AQL option, not both.")
     if payload_file:
         payload = _load_json_or_yaml(payload_file)
     else:
         payload = {"domain": chosen_domain}
         if aql_file:
             payload["aql"] = aql_file.read_text(encoding="utf-8")
+        elif aql_text:
+            payload["aql"] = aql_text
     url = f"{base.rstrip('/')}/environments/{env_id}/compile_query"
     if debug:
         url += "?debug=true"
@@ -1478,6 +1618,7 @@ def env_query(
     env: Optional[str] = typer.Option(None, "--env", help="Environment key/id"),
     domain: Optional[str] = typer.Option(None, "--domain", help="Domain id (openehr, fhir, ...)"),
     aql_file: Optional[Path] = typer.Option(None, "--aql", help="AQL file (convenience for openEHR)"),
+    aql_text: Optional[str] = typer.Option(None, "--aql-text", help="Inline AQL text (convenience for openEHR)"),
     payload_file: Optional[Path] = typer.Option(None, "--payload", help="Payload JSON/YAML file (generic)"),
     runtime_url: Optional[str] = typer.Option(None),
     api_key: Optional[str] = typer.Option(None),
@@ -1487,12 +1628,18 @@ def env_query(
         raise typer.BadParameter("No runtime URL configured. Set via `kehrnel auth login` or `kehrnel context set`.")
     env_id = _require_env(env)
     chosen_domain = _require_domain(domain)
+    if aql_file and aql_text:
+        raise typer.BadParameter("Use either --aql or --aql-text, not both.")
+    if payload_file and (aql_file or aql_text):
+        raise typer.BadParameter("Use either --payload or an AQL option, not both.")
     if payload_file:
         payload = _load_json_or_yaml(payload_file)
     else:
         payload = {"domain": chosen_domain}
         if aql_file:
             payload["aql"] = aql_file.read_text(encoding="utf-8")
+        elif aql_text:
+            payload["aql"] = aql_text
     resolved_api_key = _resolve_api_key(api_key)
     status, data = _http_json("POST", f"{base.rstrip('/')}/environments/{env_id}/query", resolved_api_key, payload)
     _emit_api_response(
@@ -2011,101 +2158,70 @@ def op_capabilities(
         typer.echo(json.dumps({"status": status, "response": data}, indent=2))
         raise typer.Exit(1)
 
-    if domain is None and strategy is None:
-        if json_output:
-            typer.echo(json.dumps(data, indent=2))
-        else:
-            std = (data.get("operations") or {}).get("standard") or []
-            strat = (data.get("operations") or {}).get("strategy") or []
-            if _rich_stdout_enabled():
-                context_rows = [
-                    ("environment", str(data.get("env_id") or env_id)),
-                    ("standard ops", str(len(std))),
-                    ("strategy ops", str(len(strat))),
-                ]
-                rows = []
-                for row in strat:
-                    if not isinstance(row, dict):
-                        continue
-                    rows.append(
-                        [
-                            str(row.get("name") or "—"),
-                            str(row.get("kind") or "—"),
-                            _friendly_domain_label(row.get("domain")),
-                            str(row.get("strategy_id") or "—"),
-                        ]
-                    )
-                _emit_rich_table(
-                    "Environment Capabilities",
-                    ["Name", "Kind", "Domain", "Strategy"],
-                    rows,
-                    context_rows=context_rows,
-                    empty_message="No strategy capabilities found.",
-                    guide_lines=[
-                        f"kehrnel core env show --env {env_id}",
-                        "kehrnel op schema <operation> --strategy <strategy>",
-                        LOCAL_GUIDE_URL,
-                    ],
-                )
-            else:
-                typer.echo(f"env={data.get('env_id')} standard_ops={len(std)} strategy_ops={len(strat)}")
-                for row in strat:
-                    if not isinstance(row, dict):
-                        continue
-                    typer.echo(
-                        f"{row.get('name')}\t{row.get('kind') or '?'}\t{row.get('domain') or '?'}\t{row.get('strategy_id') or '?'}"
-                    )
-        return
-
     domain_filter = (domain or "").strip().lower() if domain is not None else None
     strategy_filter = (strategy or "").strip() if strategy is not None else None
-    rows = []
-    for row in (data.get("operations") or {}).get("strategy") or []:
-        if not isinstance(row, dict):
-            continue
-        if domain_filter and str(row.get("domain") or "").strip().lower() != domain_filter:
-            continue
-        if strategy_filter and str(row.get("strategy_id") or "").strip() != strategy_filter:
-            continue
-        rows.append(row)
+    standard_rows, strategy_rows = _effective_capability_rows(
+        data,
+        env_id=env_id,
+        domain_filter=domain_filter,
+        strategy_filter=strategy_filter,
+    )
+    rows = [*standard_rows, *strategy_rows]
 
     if json_output:
-        typer.echo(json.dumps({"env_id": env_id, "strategy_operations": rows}, indent=2))
+        typer.echo(json.dumps({
+            "env_id": env_id,
+            "domains": data.get("domains") or [],
+            "operations": {
+                "standard": standard_rows,
+                "strategy": strategy_rows,
+            },
+        }, indent=2))
         return
     if not rows:
-        typer.echo("(no strategy operations matched)")
+        typer.echo("(no capabilities matched)")
         return
     if _rich_stdout_enabled():
         table_rows = [
             [
                 str(row.get("name") or "—"),
                 str(row.get("kind") or "—"),
-                _friendly_domain_label(row.get("domain")),
-                str(row.get("strategy_id") or "—"),
+                str(row.get("scope") or "—"),
+                str(row.get("command") or "—"),
             ]
             for row in rows
         ]
-        context_rows = [("environment", env_id)]
+        context_rows = [
+            ("environment", str(data.get("env_id") or env_id)),
+            ("standard capabilities", str(len(standard_rows))),
+            ("strategy operations", str(len(strategy_rows))),
+        ]
         if domain_filter:
             context_rows.append(("domain filter", _friendly_domain_label(domain_filter)))
         if strategy_filter:
             context_rows.append(("strategy filter", strategy_filter))
         _emit_rich_table(
             "Environment Capabilities",
-            ["Name", "Kind", "Domain", "Strategy"],
+            ["Name", "Kind", "Scope", "How to run"],
             table_rows,
             context_rows=context_rows,
-            empty_message="No strategy capabilities matched the current filter.",
+            empty_message="No capabilities matched the current filter.",
             guide_lines=[
                 f"kehrnel core env show --env {env_id}",
+                f"kehrnel core env query --env {env_id} --domain {domain_filter or '<domain>'} --aql <query.aql>",
+                f"kehrnel core env compile-query --env {env_id} --domain {domain_filter or '<domain>'} --aql <query.aql> --debug",
                 "kehrnel op schema <operation> --strategy <strategy>",
                 LOCAL_GUIDE_URL,
             ],
         )
     else:
+        typer.echo(
+            f"env={data.get('env_id') or env_id} "
+            f"standard_capabilities={len(standard_rows)} strategy_operations={len(strategy_rows)}"
+        )
         for row in rows:
             typer.echo(
-                f"{row.get('name')}\t{row.get('kind') or '?'}\t{row.get('domain') or '?'}\t{row.get('strategy_id') or '?'}"
+                f"{row.get('name')}\t{row.get('kind') or '?'}\t{row.get('scope') or '?'}\t{row.get('command') or '?'}"
             )
 
 
