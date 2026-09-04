@@ -253,9 +253,9 @@ def _generate_for_ref(
 ) -> Any:
     rtype = resource.get("resourceType")
     if ref is None:
-        return t.p.gen_string(
-            max_length=120, resource_type=rtype, field_name=field_name
-        )
+        # An unresolved schema union is not safely representable as arbitrary
+        # text. Leave optional content absent instead of emitting invalid JSON.
+        return None
 
     if ref in t.p.PRIMITIVE_TYPES:
         ctx = {"resource_type": rtype, "field_name": field_name}

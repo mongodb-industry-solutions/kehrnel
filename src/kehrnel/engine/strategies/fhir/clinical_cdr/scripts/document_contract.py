@@ -15,9 +15,12 @@ from pathlib import Path
 from typing import Any, Iterable
 
 
-STORED_DOCUMENT_SCHEMA_VERSION = "1"
+STORED_DOCUMENT_SCHEMA_VERSION = "2"
 PROJECTION_VERSION_ALGORITHM = "1"
 OPERATIONAL_METADATA_FIELD = "_kehrnel"
+CUSTOM_DATA_FIELD = "_custom"
+ENRICHMENT_DATA_FIELD = "_enrichments"
+PRESERVED_EXTENSION_FIELDS = frozenset({CUSTOM_DATA_FIELD, ENRICHMENT_DATA_FIELD})
 
 
 def _digest(value: Any) -> str:
@@ -41,10 +44,7 @@ def _compartment_contract(definitions_dir: str | None) -> dict[str, str]:
     files = sorted((*root.glob("*.json"), *root.glob("*.yaml"), *root.glob("*.yml")))
     if not files:
         raise ValueError(f"No compartment definitions found in: {root}")
-    return {
-        path.name: hashlib.sha256(path.read_bytes()).hexdigest()
-        for path in files
-    }
+    return {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in files}
 
 
 def _version(payload: Any) -> str:
@@ -89,7 +89,9 @@ def build_projection_versions(
     )
     unknown = sorted(set(selected) - set(all_types))
     if unknown:
-        raise ValueError(f"No search projection configuration for: {', '.join(unknown)}")
+        raise ValueError(
+            f"No search projection configuration for: {', '.join(unknown)}"
+        )
 
     compartment_contract = _compartment_contract(compartment_definitions_dir)
     compartment_version = _digest(compartment_contract)

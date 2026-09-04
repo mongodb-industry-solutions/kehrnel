@@ -8,6 +8,14 @@ from typing import Any, Callable
 from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.core.types import StrategyContext
 from kehrnel.engine.strategies.fhir.clinical_cdr.scripts import bridge
+from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.capabilities import (
+    resolve_resource_capabilities,
+)
+from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.index_manifest import (
+    DEFAULT_MANAGED_INDEX_BUDGET,
+    build_index_manifest,
+    expected_fingerprints,
+)
 
 ProgressCallback = Callable[..., Any]
 CancelCallback = Callable[[], bool]
@@ -56,20 +64,27 @@ def _is_canceled(should_cancel: CancelCallback | None) -> bool:
 
 def _check_canceled(should_cancel: CancelCallback | None) -> None:
     if _is_canceled(should_cancel):
-        raise KehrnelError(code="JOB_CANCELED", status=499, message="Index ensure canceled by user")
+        raise KehrnelError(
+            code="JOB_CANCELED", status=499, message="Index ensure canceled by user"
+        )
 
 
-def _resolve_resource_types(payload: dict[str, Any], loader: Any) -> list[str]:
+def _resolve_resource_types(
+    payload: dict[str, Any], loader: Any, *, allowed: set[str] | None = None
+) -> list[str]:
     raw = payload.get("resource_types")
     if isinstance(raw, list) and raw:
         types = [str(rt).strip() for rt in raw if str(rt).strip()]
         if types:
-            return types
-    return list(loader.list_resources())
+            return [value for value in types if allowed is None or value in allowed]
+    resolved = list(loader.list_resources())
+    return [value for value in resolved if allowed is None or value in allowed]
 
 
 def _existing_index_names(collection: Any) -> set[str]:
-    return {str(info.get("name")) for info in collection.list_indexes() if info.get("name")}
+    return {
+        str(info.get("name")) for info in collection.list_indexes() if info.get("name")
+    }
 
 
 def _index_key_fingerprint(key_spec: Any) -> tuple | None:
@@ -77,7 +92,10 @@ def _index_key_fingerprint(key_spec: Any) -> tuple | None:
     if isinstance(key_spec, str):
         return ((key_spec, 1),)
     if isinstance(key_spec, list):
-        return tuple(tuple(item) if isinstance(item, (list, tuple)) else item for item in key_spec)
+        return tuple(
+            tuple(item) if isinstance(item, (list, tuple)) else item
+            for item in key_spec
+        )
     if isinstance(key_spec, dict):
         return tuple(sorted(key_spec.items()))
     return None
@@ -95,6 +113,21 @@ def _existing_index_by_keys(collection: Any) -> dict[tuple, str]:
         if fp is not None:
             mapping[fp] = str(name)
     return mapping
+
+
+def _unmanaged_or_stale_indexes(
+    collection: Any, expected: set[tuple]
+) -> list[dict[str, Any]]:
+    """Report unexpected indexes without deleting possibly customer-owned indexes."""
+    found: list[dict[str, Any]] = []
+    for info in collection.list_indexes():
+        name = str(info.get("name") or "")
+        if name == "_id_":
+            continue
+        fingerprint = _index_key_fingerprint(dict(info.get("key") or {}))
+        if fingerprint is not None and fingerprint not in expected:
+            found.append({"name": name, "fields": [list(item) for item in fingerprint]})
+    return found
 
 
 def _normalize_index_fields(index_spec: dict[str, Any]) -> Any:
@@ -117,7 +150,9 @@ def _normalize_index_fields(index_spec: dict[str, Any]) -> Any:
     return fields
 
 
-def _create_index_idempotent(collection: Any, index_spec: dict[str, Any]) -> tuple[str, str]:
+def _create_index_idempotent(
+    collection: Any, index_spec: dict[str, Any]
+) -> tuple[str, str]:
     """
     Create one index; skip if the same keys already exist (any name).
 
@@ -242,14 +277,41 @@ async def fhir_ensure_indexes(
     config_dir = search_cfg.get("config_dir")
     compartment_dir = search_cfg.get("compartment_definitions_dir")
 
-    mql_ctx = bridge.build_mql_context(uri, database, prefix, config_dir, compartment_dir)
+    mql_ctx = bridge.build_mql_context(
+        uri, database, prefix, config_dir, compartment_dir
+    )
     loader = mql_ctx.config_loader
-    resource_types = _resolve_resource_types(payload, loader)
+    allowed = set(resolve_resource_capabilities(cfg, loader).storable)
+    resource_types = _resolve_resource_types(payload, loader, allowed=allowed)
     supported = set(bridge.supported_search_resource_types(loader))
+    index_policy = cfg.get("index_policy") or {}
+    budget = int(
+        index_policy.get(
+            "max_managed_indexes_per_collection", DEFAULT_MANAGED_INDEX_BUDGET
+        )
+    )
+    manifest = build_index_manifest(
+        loader,
+        prefix,
+        resource_types=resource_types,
+        max_managed_indexes_per_collection=budget,
+    )
+    if not manifest["within_budget"]:
+        bridge.close_mql_context(mql_ctx)
+        raise KehrnelError(
+            code="FHIR_INDEX_BUDGET_EXCEEDED",
+            status=400,
+            message="FHIR managed index plan exceeds the configured per-collection budget",
+            details={
+                "violations": manifest["violations"],
+                "manifest_digest": manifest["digest"],
+            },
+        )
 
     index_entries: list[dict[str, Any]] = []
     skipped: list[str] = []
     warnings: list[str] = []
+    stale_candidates: list[dict[str, Any]] = []
 
     await _emit_progress(
         progress_cb,
@@ -264,7 +326,9 @@ async def fhir_ensure_indexes(
 
             if resource_type not in supported:
                 skipped.append(resource_type)
-                warnings.append(f"No fhir-mql search config for {resource_type}; skipped")
+                warnings.append(
+                    f"No fhir-mql search config for {resource_type}; skipped"
+                )
                 continue
 
             try:
@@ -286,6 +350,19 @@ async def fhir_ensure_indexes(
                 dry_run=dry_run,
             )
             index_entries.extend(entries)
+            if not dry_run:
+                unexpected = _unmanaged_or_stale_indexes(
+                    collection,
+                    expected_fingerprints(manifest, resource_type),
+                )
+                if unexpected:
+                    stale_candidates.append(
+                        {
+                            "resource_type": resource_type,
+                            "collection": collection_name,
+                            "indexes": unexpected,
+                        }
+                    )
 
             progress = int((index + 1) / max(1, len(resource_types)) * 100)
             await _emit_progress(
@@ -306,11 +383,65 @@ async def fhir_ensure_indexes(
         "dry_run": dry_run,
         "database": database,
         "indexes": index_entries,
+        "index_manifest": {
+            "manifest_version": manifest["manifest_version"],
+            "digest": manifest["digest"],
+            "resource_count": manifest["resource_count"],
+            "managed_index_count": manifest["managed_index_count"],
+            "within_budget": manifest["within_budget"],
+        },
     }
     if skipped:
         result["skipped"] = skipped
     if warnings:
         result["warnings"] = warnings
+    if stale_candidates:
+        result["unmanaged_or_stale_indexes"] = stale_candidates
 
-    await _emit_progress(progress_cb, progress=100, phase="completed", stats={"indexes": len(index_entries)})
+    await _emit_progress(
+        progress_cb,
+        progress=100,
+        phase="completed",
+        stats={"indexes": len(index_entries)},
+    )
     return result
+
+
+def fhir_index_manifest(
+    ctx: StrategyContext, payload: dict[str, Any]
+) -> dict[str, Any]:
+    """Return the generated managed-index contract without mutating MongoDB."""
+    cfg = bridge.resolve_strategy_config(ctx)
+    uri, database, prefix = bridge.resolve_mongo(ctx)
+    search_cfg = cfg.get("search") or {}
+    mql_ctx = bridge.build_mql_context(
+        uri,
+        database,
+        prefix,
+        search_cfg.get("config_dir"),
+        search_cfg.get("compartment_definitions_dir"),
+    )
+    try:
+        allowed = set(
+            resolve_resource_capabilities(cfg, mql_ctx.config_loader).storable
+        )
+        resource_types = _resolve_resource_types(
+            payload, mql_ctx.config_loader, allowed=allowed
+        )
+        budget = int(
+            (cfg.get("index_policy") or {}).get(
+                "max_managed_indexes_per_collection", DEFAULT_MANAGED_INDEX_BUDGET
+            )
+        )
+        return {
+            "ok": True,
+            "database": database,
+            **build_index_manifest(
+                mql_ctx.config_loader,
+                prefix,
+                resource_types=resource_types,
+                max_managed_indexes_per_collection=budget,
+            ),
+        }
+    finally:
+        bridge.close_mql_context(mql_ctx)

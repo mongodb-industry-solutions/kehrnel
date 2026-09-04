@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "FHIR Clinical CDR Strategy Configuration",
-  "description": "MongoDB layout, import, generation, and fhir-mql search settings for the bundled FHIR R5 and R6 packages.",
+  "description": "MongoDB layout, conformance overlays, import, semantic projection, generation, and fhir-mql search settings for FHIR R4, R5, and R6.",
   "type": "object",
   "properties": {
     "database": {
@@ -11,9 +11,9 @@
     },
     "schema_version": {
       "type": "string",
-      "enum": ["R5", "R6"],
+      "enum": ["R4", "R5", "R6"],
       "default": "R5",
-      "description": "FHIR release supplied by the bundled fhir-gen and fhir-mql packages"
+      "description": "FHIR release. R4 is currently a minimal Patient/Observation interoperability baseline; R5 and R6 are package-backed."
     },
     "collection_prefix": {
       "type": "string",
@@ -70,6 +70,202 @@
         }
       },
       "required": ["enabled", "denormalize_on_generate", "auto_index"],
+      "additionalProperties": false
+    },
+    "implementation_guides": {
+      "type": "object",
+      "description": "Optional customer or jurisdictional FHIR NPM packages layered over the selected FHIR Core release. Omit packages to use base conformance mode.",
+      "properties": {
+        "compiled_root": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Local destination for immutable, checksum-addressed activation artifacts. Required when packages are configured."
+        },
+        "packages": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "object",
+            "required": ["source"],
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "default": true,
+                "description": "Include this package in the activation overlay."
+              },
+              "source": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Local FHIR NPM package directory or .tgz archive. Packages are never downloaded on a request path."
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-fA-F]{64}$",
+                "description": "Optional pinned package checksum verified during activation."
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "active_profiles": {
+          "type": "array",
+          "default": [],
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Optional canonical profile URLs selected from enabled IG packages. Empty keeps the store unconstrained. Selection is reported separately from profile validation."
+        },
+        "profile_validation": {
+          "type": "object",
+          "description": "Optional fail-closed profile enforcement through a configured validation adapter.",
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": ["disabled", "required"],
+              "default": "disabled"
+            },
+            "binding": {
+              "type": "string",
+              "minLength": 1,
+              "default": "validation_engine"
+            },
+            "fail_on_warning": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "index_policy": {
+      "type": "object",
+      "description": "Generated index governance. Indexes are always ensured before writes; activation-time materialization is optional.",
+      "properties": {
+        "max_managed_indexes_per_collection": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 63,
+          "default": 63,
+          "description": "Maximum Kehrnel-managed indexes per collection, excluding MongoDB's built-in _id index."
+        },
+        "materialize_on_activation": {
+          "type": "boolean",
+          "default": false,
+          "description": "Create every configured resource index during activation. False uses lazy per-resource materialization before writes."
+        }
+      },
+      "additionalProperties": false
+    },
+    "semantic": {
+      "type": "object",
+      "description": "Optional, rebuildable semantic projections. Canonical FHIR resources are never modified and no embedding request runs during activation.",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "pipelines": {
+          "type": "array",
+          "default": [],
+          "description": "Optional semantic extraction pipelines. Start from the clinical-note example, then review every resource type and path before activation.",
+          "maxItems": 32,
+          "examples": [
+            [
+              {
+                "id": "clinical-notes-v1",
+                "enabled": true,
+                "resource_types": ["DiagnosticReport", "Composition"],
+                "profiles": [],
+                "fields": [
+                  { "path": "DiagnosticReport.conclusion", "label": "Conclusion" },
+                  { "path": "Composition.section.text.div", "label": "Narrative" }
+                ],
+                "chunking": { "max_chars": 3000, "overlap_chars": 300 },
+                "embedding": { "binding": "embedding", "model": "configure-provider-model", "dimensions": 768 },
+                "trigger": "manual",
+                "storage": { "mode": "sidecar", "collection": "fhir_semantic_chunks" }
+              }
+            ]
+          ],
+          "items": {
+            "type": "object",
+            "required": ["id", "resource_types", "fields"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9._-]{0,63}$"
+              },
+              "enabled": { "type": "boolean", "default": true },
+              "resource_types": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9]{0,63}$" }
+              },
+              "profiles": {
+                "type": "array",
+                "default": [],
+                "uniqueItems": true,
+                "items": { "type": "string", "minLength": 1 }
+              },
+              "fields": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 32,
+                "items": {
+                  "type": "object",
+                  "required": ["path"],
+                  "properties": {
+                    "path": { "type": "string", "minLength": 1 },
+                    "label": { "type": "string" }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "separator": { "type": "string", "default": "\n" },
+              "max_source_chars": {
+                "type": "integer",
+                "minimum": 128,
+                "maximum": 1000000,
+                "default": 50000
+              },
+              "chunking": {
+                "type": "object",
+                "properties": {
+                  "max_chars": { "type": "integer", "minimum": 128, "maximum": 50000, "default": 3000 },
+                  "overlap_chars": { "type": "integer", "minimum": 0, "maximum": 10000, "default": 300 }
+                },
+                "additionalProperties": false
+              },
+              "embedding": {
+                "type": "object",
+                "properties": {
+                  "binding": { "type": "string", "default": "embedding" },
+                  "model": { "type": "string", "minLength": 1 },
+                  "dimensions": { "type": "integer", "minimum": 1, "maximum": 8192 }
+                },
+                "additionalProperties": false
+              },
+              "trigger": {
+                "type": "string",
+                "enum": ["manual", "async_on_import"],
+                "default": "manual"
+              },
+              "storage": {
+                "type": "object",
+                "properties": {
+                  "mode": { "type": "string", "const": "sidecar", "default": "sidecar" },
+                  "collection": { "type": "string", "minLength": 1, "default": "fhir_semantic_chunks" },
+                  "vector_index": { "type": "string", "minLength": 1 }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
       "additionalProperties": false
     },
     "generation": {

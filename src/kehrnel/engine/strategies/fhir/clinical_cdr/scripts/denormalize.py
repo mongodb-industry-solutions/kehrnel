@@ -9,14 +9,18 @@ from typing import Any, Callable
 from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.core.types import StrategyContext
 from kehrnel.engine.strategies.fhir.clinical_cdr.scripts import bridge
-from kehrnel.engine.strategies.fhir.clinical_cdr.scripts import indexes as indexes_module
+from kehrnel.engine.strategies.fhir.clinical_cdr.scripts import (
+    indexes as indexes_module,
+)
 from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.document_contract import (
     STORED_DOCUMENT_SCHEMA_VERSION,
     build_projection_versions,
     metadata_set_fields,
     normalize_projection_buckets,
 )
-from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.serialization import canonical_resource
+from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.serialization import (
+    canonical_resource,
+)
 
 ProgressCallback = Callable[..., Any]
 CancelCallback = Callable[[], bool]
@@ -61,7 +65,9 @@ def _is_canceled(should_cancel: CancelCallback | None) -> bool:
 
 def _check_canceled(should_cancel: CancelCallback | None) -> None:
     if _is_canceled(should_cancel):
-        raise KehrnelError(code="JOB_CANCELED", status=499, message="Denormalize canceled by user")
+        raise KehrnelError(
+            code="JOB_CANCELED", status=499, message="Denormalize canceled by user"
+        )
 
 
 def _parse_resource_types(payload: dict[str, Any]) -> list[str]:
@@ -99,7 +105,9 @@ def _denormalizer_for_type(
 ) -> Callable[[dict[str, Any]], dict[str, Any]]:
     """Return a processor bound to a single resource type config."""
 
-    def processor(resource: dict[str, Any], warnings: list[str] | None = None) -> dict[str, Any]:
+    def processor(
+        resource: dict[str, Any], warnings: list[str] | None = None
+    ) -> dict[str, Any]:
         resource = canonical_resource(resource)
         if resource.get("resourceType") != resource_type:
             resource = {**resource, "resourceType": resource_type}
@@ -145,9 +153,13 @@ async def fhir_denormalize(
     compartment_dir = search_cfg.get("compartment_definitions_dir")
 
     ResourceDenormalizer, MongoDBHandler = _require_fhir_mql_denorm()
-    mql_ctx = bridge.build_mql_context(uri, database, prefix, config_dir, compartment_dir)
+    mql_ctx = bridge.build_mql_context(
+        uri, database, prefix, config_dir, compartment_dir
+    )
     denormalizer = (
-        ResourceDenormalizer(config_dir=config_dir) if config_dir else ResourceDenormalizer()
+        ResourceDenormalizer(config_dir=config_dir)
+        if config_dir
+        else ResourceDenormalizer()
     )
 
     supported = set(bridge.supported_search_resource_types(mql_ctx.config_loader))
@@ -155,7 +167,11 @@ async def fhir_denormalize(
         mql_ctx.config_loader,
         fhir_release=str(cfg.get("schema_version") or "R5"),
         compartment_definitions_dir=mql_ctx.compartment_definitions_dir,
-        resource_types=[resource_type for resource_type in resource_types if resource_type in supported],
+        resource_types=[
+            resource_type
+            for resource_type in resource_types
+            if resource_type in supported
+        ],
     )
     denormalized: dict[str, dict[str, int]] = {}
     skipped: list[str] = []
@@ -174,7 +190,9 @@ async def fhir_denormalize(
 
             if resource_type not in supported:
                 skipped.append(resource_type)
-                warnings.append(f"No fhir-mql search config for {resource_type}; skipped")
+                warnings.append(
+                    f"No fhir-mql search config for {resource_type}; skipped"
+                )
                 continue
 
             collection_name = bridge.collection_name(prefix, resource_type)
@@ -182,18 +200,23 @@ async def fhir_denormalize(
             query = _build_query(collection, limit_int)
 
             if dry_run:
-                count = collection.count_documents(query)
                 denormalized[resource_type] = {
-                    "processed": count,
+                    # Planning must remain usable when the configured tenant
+                    # MongoDB is unavailable from a developer workstation.
+                    "processed": 0,
                     "updated": 0,
                     "failed": 0,
                     "dry_run": True,
+                    "count_estimated": False,
                     "collection": collection_name,
                 }
                 await _emit_progress(
                     progress_cb,
                     phase="denormalizing",
-                    stats={resource_type: denormalized[resource_type], "resource_type": resource_type},
+                    stats={
+                        resource_type: denormalized[resource_type],
+                        "resource_type": resource_type,
+                    },
                 )
                 continue
 
@@ -246,7 +269,9 @@ async def fhir_denormalize(
                         query,
                         {"_search": {"$exists": True, "$type": "object"}},
                         {"_compartments": {"$exists": True, "$type": "object"}},
-                        {"_kehrnel.storage_schema_version": STORED_DOCUMENT_SCHEMA_VERSION},
+                        {
+                            "_kehrnel.storage_schema_version": STORED_DOCUMENT_SCHEMA_VERSION
+                        },
                         {
                             "_kehrnel.resource_projection_version": versions.for_resource(
                                 resource_type
@@ -260,7 +285,11 @@ async def fhir_denormalize(
                     code="FHIR_PROJECTION_INVARIANT_FAILED",
                     status=500,
                     message=f"Not every {resource_type} document satisfies the FHIR storage contract",
-                    details={"resource_type": resource_type, "expected": expected, "compliant": compliant},
+                    details={
+                        "resource_type": resource_type,
+                        "expected": expected,
+                        "compliant": compliant,
+                    },
                 )
             denormalized[resource_type] = {
                 "processed": int(stats.get("processed", 0)),
@@ -282,7 +311,10 @@ async def fhir_denormalize(
                 progress_cb,
                 progress=min(99, progress),
                 phase="denormalizing",
-                stats={resource_type: denormalized[resource_type], "resource_type": resource_type},
+                stats={
+                    resource_type: denormalized[resource_type],
+                    "resource_type": resource_type,
+                },
             )
     finally:
         bridge.close_mql_context(mql_ctx)

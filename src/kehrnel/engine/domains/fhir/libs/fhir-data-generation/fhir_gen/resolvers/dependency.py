@@ -5,7 +5,7 @@ from __future__ import annotations
 import heapq
 from collections import defaultdict
 
-from ..schema.registry import registry
+from ..schema.registry import SchemaRegistry, registry
 
 # Resources with fhir-search-to-mql configs (84). Keep in sync with
 # fhir-search-to-mql/src/fhir_search_to_mql/configs/*.yaml and
@@ -260,24 +260,37 @@ _CORE_DEPENDENCIES_EXTENDED: dict[str, list[str]] = {
     "SubscriptionStatus": ["Subscription", "Patient"],
     "ImmunizationEvaluation": ["Immunization", "Patient", "Practitioner"],
     "Transport": ["Patient", "Location", "Encounter"],
-    "BiologicallyDerivedProductDispense": ["Patient", "Practitioner", "Location"],
+    "BiologicallyDerivedProductDispense": [
+        "Patient",
+        "Practitioner",
+        "Location",
+        "BiologicallyDerivedProduct",
+    ],
+    "DeviceAlert": ["Patient", "Device"],
     "MedicationKnowledge": ["Medication", "Organization"],
 }
 
 CORE_DEPENDENCIES.update(_CORE_DEPENDENCIES_EXTENDED)
 
 
-def _known_resources() -> set[str]:
-    return set(registry.all_resources())
+def _active_registry(schema_registry: SchemaRegistry | None) -> SchemaRegistry:
+    return schema_registry or registry
 
 
-def _direct_dependencies(resource_name: str) -> list[str]:
+def _known_resources(schema_registry: SchemaRegistry | None = None) -> set[str]:
+    return set(_active_registry(schema_registry).all_resources())
+
+
+def _direct_dependencies(
+    resource_name: str, schema_registry: SchemaRegistry | None = None
+) -> list[str]:
     """CORE_DEPENDENCIES plus schema-derived Reference targets when unknown."""
-    known = _known_resources()
+    active_registry = _active_registry(schema_registry)
+    known = _known_resources(active_registry)
     deps = list(CORE_DEPENDENCIES.get(resource_name, []))
     if resource_name not in CORE_DEPENDENCIES:
         try:
-            for dep in registry.references_for(resource_name):
+            for dep in active_registry.references_for(resource_name):
                 if dep not in deps and dep != resource_name:
                     deps.append(dep)
         except KeyError:
@@ -285,13 +298,17 @@ def _direct_dependencies(resource_name: str) -> list[str]:
     return [d for d in deps if d != resource_name and d in known]
 
 
-def _collect_transitive(resource_name: str, collected: set[str]) -> None:
+def _collect_transitive(
+    resource_name: str,
+    collected: set[str],
+    schema_registry: SchemaRegistry | None = None,
+) -> None:
     """Add resource and all transitive dependencies to collected."""
     if resource_name in collected:
         return
     collected.add(resource_name)
-    for dep in _direct_dependencies(resource_name):
-        _collect_transitive(dep, collected)
+    for dep in _direct_dependencies(resource_name, schema_registry):
+        _collect_transitive(dep, collected, schema_registry)
 
 
 def _priority_key(name: str) -> tuple[int, str]:
@@ -301,7 +318,9 @@ def _priority_key(name: str) -> tuple[int, str]:
         return (len(_GENERATION_PRIORITY), name)
 
 
-def resolve_order(resource_names: list[str]) -> list[str]:
+def resolve_order(
+    resource_names: list[str], schema_registry: SchemaRegistry | None = None
+) -> list[str]:
     """
     Topological sort — dependencies before dependents.
     Includes transitive closure of CORE_DEPENDENCIES and schema references.
@@ -309,13 +328,13 @@ def resolve_order(resource_names: list[str]) -> list[str]:
     """
     all_nodes: set[str] = set()
     for name in resource_names:
-        _collect_transitive(name, all_nodes)
+        _collect_transitive(name, all_nodes, schema_registry)
 
     in_degree: dict[str, int] = {n: 0 for n in all_nodes}
     graph: dict[str, list[str]] = defaultdict(list)
 
     for node in all_nodes:
-        for dep in _direct_dependencies(node):
+        for dep in _direct_dependencies(node, schema_registry):
             if dep not in all_nodes:
                 continue
             graph[dep].append(node)

@@ -11,6 +11,23 @@
     "config_dir": null,
     "compartment_definitions_dir": null
   },
+  "implementation_guides": {
+    "packages": [],
+    "active_profiles": [],
+    "profile_validation": {
+      "mode": "disabled",
+      "binding": "validation_engine",
+      "fail_on_warning": false
+    }
+  },
+  "index_policy": {
+    "max_managed_indexes_per_collection": 63,
+    "materialize_on_activation": false
+  },
+  "semantic": {
+    "enabled": false,
+    "pipelines": []
+  },
   "generation": {
     "seed": 42,
     "use_enrichers": true,

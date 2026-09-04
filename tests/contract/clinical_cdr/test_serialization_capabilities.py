@@ -39,10 +39,12 @@ def test_canonical_resource_strips_operational_keeps_primitive_extensions():
         "_stored_at": "2026-08-22T00:00:00Z",
         "_fhir_resource_type": "Patient",
         "_kehrnel": {"storage_schema_version": "1"},
+        "_custom": {"customerScore": 7},
+        "_enrichments": {"cohort": "example"},
     }
     out = ser.canonical_resource(doc)
     # operational fields removed
-    for k in ("_id", "_search", "_compartments", "_stored_at", "_fhir_resource_type", "_kehrnel"):
+    for k in ("_id", "_search", "_compartments", "_stored_at", "_fhir_resource_type", "_kehrnel", "_custom", "_enrichments"):
         assert k not in out
     # canonical + primitive extension preserved
     assert out["resourceType"] == "Patient"
@@ -86,8 +88,15 @@ def test_fhir_capabilities_reports_distinct_sets():
     assert cat["ingest_supported"] is True
     assert cat["write_supported"] is True
     assert "Patient" in cat["storable_resource_types"]
-    assert set(cat["storable_resource_types"]) < set(cat["searchable_resource_types"])
+    assert set(cat["storable_resource_types"]) == set(cat["searchable_resource_types"])
+    assert set(cat["recipe_resource_types"]) < set(cat["storable_resource_types"])
+    assert set(cat["storable_resource_types"]) < set(cat["schema_supported_resource_types"])
+    assert set(cat["synthetic_writable_resource_types"]) <= set(cat["generatable_resource_types"])
     assert set(cat["validation_levels"]) == {"structure", "base"}
+    assert cat["conformance_mode"] == "fhir-core"
+    assert cat["implementation_guide_packages"] == []
+    assert cat["available_profiles"] == []
+    assert cat["profile_conformance"] is False
     assert "_count" in cat["supported_result_controls"]
     assert set(cat["handling_modes"]) == {"strict", "lenient"}
 
@@ -121,7 +130,9 @@ def test_storage_adapter_protocol_and_readpath():
     )
 
     class _FakeColl:
-        def find_one(self, q):
+        def find_one(self, q, projection=None):
+            assert projection["_custom"] == 0
+            assert projection["_enrichments"] == 0
             return {"_id": "x", "resourceType": "Patient", "id": q["id"], "_search": {"a": 1}}
 
     class _FakeDb:

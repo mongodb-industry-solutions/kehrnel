@@ -138,6 +138,58 @@ async def test_validation_gate_prevents_partial_write(monkeypatch):
 
 
 @pytest.mark.asyncio
+async def test_required_profile_failure_prevents_any_write(monkeypatch):
+    writes = []
+
+    class _Adapter:
+        def __init__(self, db, collection_prefix="", **kwargs):
+            pass
+
+        def persist_many(self, resources, *, mode="upsert"):
+            writes.extend(resources)
+            return {"processed": len(resources)}
+
+    async def _profile_failure(ctx, config, resources, *, resource_indexes=None):
+        assert resource_indexes == [0]
+        return {
+            "enforced": True,
+            "checked": 1,
+            "passed": 0,
+            "failed": 1,
+            "failed_resource_indexes": [0],
+            "findings": [
+                {
+                    "index": 0,
+                    "severity": "error",
+                    "code": "FHIR_PROFILE_INVALID",
+                    "message": "Customer profile validation failed",
+                }
+            ],
+        }
+
+    monkeypatch.setattr(importer, "_build_denormalizer", lambda cfg: _FakeDenormalizer())
+    monkeypatch.setattr(importer, "MongoFHIRStorageAdapter", _Adapter)
+    monkeypatch.setattr(
+        importer.profile_validation, "validate_profiles", _profile_failure
+    )
+
+    report = await importer.fhir_import_resources(
+        _ctx(),
+        {
+            "resource": {"resourceType": "Patient", "id": "profile-invalid"},
+            "validation_level": "structure",
+            "fail_on_error": True,
+        },
+    )
+
+    assert report["ok"] is False
+    assert report["committed"] is False
+    assert report["validation"]["profile_conformance"] is False
+    assert report["validation"]["valid"] == 0
+    assert writes == []
+
+
+@pytest.mark.asyncio
 async def test_import_projects_then_writes_valid_resources(monkeypatch):
     writes = []
 
@@ -171,7 +223,7 @@ async def test_import_projects_then_writes_valid_resources(monkeypatch):
     assert report["write"]["inserted"] == 1
     assert writes[0]["_search"] == {"logicalId": "p1"}
     assert writes[0]["_compartments"] == {}
-    assert writes[0]["_kehrnel"]["storage_schema_version"] == "1"
+    assert writes[0]["_kehrnel"]["storage_schema_version"] == "2"
 
 
 @pytest.mark.asyncio
@@ -234,6 +286,9 @@ def test_storage_adapter_bulk_contract_preserves_projection():
     assert result["processed"] == 1
     assert result["inserted"] == 1
     assert len(captured) == 1
+    update_pipeline = captured[0]._doc
+    preserved_fields = update_pipeline[0]["$replaceWith"]["$arrayToObject"]["$concatArrays"][0]["$filter"]["cond"]["$in"][1]
+    assert preserved_fields == ["_custom", "_enrichments", "_id"]
 
 
 def test_storage_adapter_rejects_stale_projection_metadata():

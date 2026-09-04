@@ -142,18 +142,17 @@ def resolve_mongo(ctx: StrategyContext) -> tuple[str, str, str]:
     db_binding = bindings.get("db") if isinstance(bindings.get("db"), dict) else {}
 
     uri = db_binding.get("uri") or os.getenv("MONGODB_URI")
-    database = (
-        db_binding.get("database")
-        or db_binding.get("name")
-        or os.getenv("MONGODB_DB")
-        or cfg.get("database")
-    )
+    # The connection binding supplies credentials and topology; the reviewed
+    # strategy activation owns the logical database name. Runtime activation
+    # already normalizes the binding this way, and enforcing it again here keeps
+    # direct SDK/CLI calls from accidentally falling back to the core database.
+    database = cfg.get("database")
 
     if not uri or not database:
         raise KehrnelError(
             code="BINDINGS_NOT_RESOLVED",
             status=400,
-            message="MongoDB bindings are not resolved (need bindings.db.uri and database, or MONGODB_URI / MONGODB_DB)",
+            message="MongoDB bindings are not resolved (need bindings.db.uri or MONGODB_URI, plus strategy config.database)",
             details={
                 "has_uri": bool(uri),
                 "has_database": bool(database),
@@ -262,7 +261,10 @@ def build_mql_context(
 
 def close_mql_context(mql_ctx: MqlContext) -> None:
     """Close the Mongo client only when this context owns it (not the shared pool)."""
-    if getattr(mql_ctx, "owns_client", False) and getattr(mql_ctx, "client", None) is not None:
+    if (
+        getattr(mql_ctx, "owns_client", False)
+        and getattr(mql_ctx, "client", None) is not None
+    ):
         mql_ctx.client.close()
 
 
@@ -277,11 +279,10 @@ def known_generation_resource_types() -> set[str]:
 
 
 def configured_cdr_resource_types(cfg: dict[str, Any]) -> set[str]:
-    """Resource types explicitly present in this strategy's configured recipes.
+    """Resource types explicitly present in this strategy's example recipes.
 
-    The vendored libraries contain broader reusable catalogs shared by multiple
-    FHIR strategies. Recipe membership is the clinical CDR's explicit resource
-    scope and therefore the safe boundary for its import/write APIs.
+    Recipe membership describes curated synthetic datasets only.  It must not be
+    used as the import/write allowlist; capability resolution owns that boundary.
     """
     recipes = (cfg.get("generation") or {}).get("recipes") or {}
     configured: set[str] = set()
@@ -307,7 +308,9 @@ def _known_generation_resource_types() -> set[str]:
         os.chdir(prev_cwd)
 
 
-def resolve_generation_payload(cfg: dict[str, Any], payload: dict[str, Any] | None) -> dict[str, Any]:
+def resolve_generation_payload(
+    cfg: dict[str, Any], payload: dict[str, Any] | None
+) -> dict[str, Any]:
     """
     Merge a named ``recipe`` from ``generation.recipes`` (defaults + recipes.json).
 
@@ -334,9 +337,13 @@ def resolve_generation_payload(cfg: dict[str, Any], payload: dict[str, Any] | No
     recipe_resources = recipe.get("resources")
     if isinstance(recipe_resources, dict):
         merged_resources = {str(k): int(v) for k, v in recipe_resources.items()}
-        payload_resources = effective.get("resources") or effective.get("resource_counts")
+        payload_resources = effective.get("resources") or effective.get(
+            "resource_counts"
+        )
         if isinstance(payload_resources, dict):
-            merged_resources.update({str(k): int(v) for k, v in payload_resources.items()})
+            merged_resources.update(
+                {str(k): int(v) for k, v in payload_resources.items()}
+            )
         effective["resources"] = merged_resources
         effective.pop("resource_counts", None)
 
@@ -349,7 +356,11 @@ def resolve_generation_payload(cfg: dict[str, Any], payload: dict[str, Any] | No
     return effective
 
 
-def parse_resources_payload(payload: dict[str, Any] | None) -> dict[str, int]:
+def parse_resources_payload(
+    payload: dict[str, Any] | None,
+    *,
+    known_resource_types: set[str] | None = None,
+) -> dict[str, int]:
     """
     Normalize synthetic generation resource counts.
 
@@ -390,7 +401,11 @@ def parse_resources_payload(payload: dict[str, Any] | None) -> dict[str, int]:
                     )
                 counts[match.group("resource")] = int(match.group("count"))
             elif isinstance(item, dict):
-                resource_type = item.get("resource_type") or item.get("resourceType") or item.get("type")
+                resource_type = (
+                    item.get("resource_type")
+                    or item.get("resourceType")
+                    or item.get("type")
+                )
                 count = item.get("count")
                 if not resource_type or count is None:
                     raise KehrnelError(
@@ -418,7 +433,11 @@ def parse_resources_payload(payload: dict[str, Any] | None) -> dict[str, int]:
                 message=f"Resource count must be non-negative: {resource_type}={count}",
             )
 
-    known_gen = _known_generation_resource_types()
+    known_gen = (
+        known_resource_types
+        if known_resource_types is not None
+        else _known_generation_resource_types()
+    )
     unknown = sorted(rt for rt in counts if rt not in known_gen)
     if unknown:
         raise KehrnelError(

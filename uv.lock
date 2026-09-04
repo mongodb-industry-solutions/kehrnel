@@ -477,6 +477,7 @@ source = { editable = "src/kehrnel/engine/domains/fhir/libs/fhir-data-generation
 dependencies = [
     { name = "click" },
     { name = "faker" },
+    { name = "jsonschema" },
     { name = "pydantic" },
     { name = "pydantic-settings" },
     { name = "pymongo" },
@@ -487,6 +488,7 @@ dependencies = [
 requires-dist = [
     { name = "click", specifier = ">=8.1" },
     { name = "faker", specifier = ">=24.0" },
+    { name = "jsonschema", specifier = ">=4.22" },
     { name = "mongomock", marker = "extra == 'dev'", specifier = ">=4.1" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.5" },
     { name = "pydantic", specifier = ">=2.0" },

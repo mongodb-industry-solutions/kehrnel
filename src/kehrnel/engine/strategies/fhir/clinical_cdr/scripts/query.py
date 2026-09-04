@@ -3,22 +3,38 @@
 from __future__ import annotations
 
 import asyncio
+from datetime import UTC, datetime
 from typing import Any
 from urllib.parse import parse_qsl, urlencode
 
 from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.core.explain import enrich_explain
 from kehrnel.engine.core.types import QueryPlan, QueryResult, StrategyContext
+from kehrnel.engine.domains.fhir import implementation_guides
 from kehrnel.engine.strategies.fhir.clinical_cdr.scripts import bridge
+from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.capabilities import (
+    resolve_resource_capabilities,
+)
+from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.document_contract import (
+    STORED_DOCUMENT_SCHEMA_VERSION,
+    build_projection_versions,
+)
+from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.profile_validation import (
+    describe_profile_validation,
+)
+from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.release_support import (
+    allowed_search_parameters,
+    release_evidence,
+    validate_search_scope,
+)
+from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.semantic import (
+    describe_semantic_config,
+)
 from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.serialization import (
     SEARCH_CONTRACT_VERSION,
     build_compile_response,
     build_search_response,
     canonical_resources,
-)
-from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.document_contract import (
-    STORED_DOCUMENT_SCHEMA_VERSION,
-    build_projection_versions,
 )
 
 # FHIRSearchConverter loads 80+ YAML configs on init (~3–5s). Cache per search path set.
@@ -110,10 +126,19 @@ _COMPARATORS_BY_TYPE = {
     "number": ["eq", "ne", "gt", "lt", "ge", "le", "ap"],
     "quantity": ["eq", "ne", "gt", "lt", "ge", "le", "ap"],
 }
-_KNOWN_UNSUPPORTED_RESULT_CONTROLS = {"_total", "_summary", "_elements", "_contained", "_include", "_revinclude"}
+_KNOWN_UNSUPPORTED_RESULT_CONTROLS = {
+    "_total",
+    "_summary",
+    "_elements",
+    "_contained",
+    "_include",
+    "_revinclude",
+}
 
 
-def _split_result_controls(query_string: str | None) -> tuple[str | None, dict[str, Any]]:
+def _split_result_controls(
+    query_string: str | None,
+) -> tuple[str | None, dict[str, Any]]:
     """Extract result controls from a filter query string.
 
     Returns (filter_query_string_without_controls, controls). Raises KehrnelError
@@ -166,7 +191,9 @@ def _resolve_sort_field(spec: dict[str, Any] | None) -> str | None:
     return None
 
 
-def resolve_sort(sort_value: str, search_params: dict[str, Any]) -> list[tuple[str, int]]:
+def resolve_sort(
+    sort_value: str, search_params: dict[str, Any]
+) -> list[tuple[str, int]]:
     """Compile a FHIR ``_sort`` value to a Mongo sort spec.
 
     Comma-separated keys; a leading ``-`` means descending. Each key must map to a
@@ -228,7 +255,11 @@ def normalize_compile_input(query: dict[str, Any] | None) -> dict[str, Any]:
             ) from exc
         payload["resource_type"] = parsed_search["resource_type"]
         compartment = parsed_search.get("compartment")
-        if isinstance(compartment, dict) and compartment and not payload.get("compartment"):
+        if (
+            isinstance(compartment, dict)
+            and compartment
+            and not payload.get("compartment")
+        ):
             payload["compartment"] = compartment
         qs = (parsed_search.get("query_string") or "").strip()
         if qs:
@@ -276,13 +307,15 @@ def normalize_compile_input(query: dict[str, Any] | None) -> dict[str, Any]:
                 payload[key] = int(payload[key])
             except (TypeError, ValueError) as exc:
                 raise KehrnelError(
-                    code="INVALID_INPUT", status=400,
+                    code="INVALID_INPUT",
+                    status=400,
                     message=f"{key} must be an integer",
                     details={key: payload.get(key)},
                 ) from exc
             if payload[key] < 0:
                 raise KehrnelError(
-                    code="INVALID_INPUT", status=400,
+                    code="INVALID_INPUT",
+                    status=400,
                     message=f"{key} must be non-negative",
                     details={key: payload[key]},
                 )
@@ -372,7 +405,11 @@ async def compile_fhir_query(
     normalized = normalize_compile_input(query)
     resource_type = normalized["resource_type"]
     query_string = normalized.get("query_string")
-    compartment = normalized.get("compartment") if isinstance(normalized.get("compartment"), dict) else None
+    compartment = (
+        normalized.get("compartment")
+        if isinstance(normalized.get("compartment"), dict)
+        else None
+    )
     handling = normalized.get("handling", "strict")
 
     (
@@ -393,7 +430,12 @@ async def compile_fhir_query(
     # 1000, but URL _count bypasses that — clamp here so no path can request an
     # unbounded page. Config `query.max_count` overrides the default.
     cfg_for_limit = bridge.resolve_strategy_config(ctx)
-    query_cfg = cfg_for_limit.get("query") if isinstance(cfg_for_limit.get("query"), dict) else {}
+    release = str(cfg_for_limit.get("schema_version") or "R5").strip().upper()
+    query_cfg = (
+        cfg_for_limit.get("query")
+        if isinstance(cfg_for_limit.get("query"), dict)
+        else {}
+    )
     max_count = query_cfg.get("max_count") or DEFAULT_MAX_RESULT_COUNT
     default_count = query_cfg.get("default_count") or max_count
     # Apply a default page size to EVERY path with no _count (incl. internal ops),
@@ -413,6 +455,14 @@ async def compile_fhir_query(
             message=str(exc),
             details={"resource_type": resource_type},
         ) from exc
+
+    validate_search_scope(
+        release,
+        resource_type,
+        query_string=query_string,
+        compartment=compartment,
+        sort_value=normalized.get("_sort"),
+    )
 
     mql_filter = _compile_mql(
         converter,
@@ -456,7 +506,15 @@ async def compile_fhir_query(
         "sort": [[field, direction] for field, direction in resolved_sort],
         "query_input": {
             k: normalized[k]
-            for k in ("resource_type", "criteria", "fhir_search", "compartment", "_count", "_sort", "_offset")
+            for k in (
+                "resource_type",
+                "criteria",
+                "fhir_search",
+                "compartment",
+                "_count",
+                "_sort",
+                "_offset",
+            )
             if k in normalized
         },
     }
@@ -528,15 +586,23 @@ def _coerce_query_plan(plan: QueryPlan | dict[str, Any] | None) -> QueryPlan:
 
 def pagination_from_plan(plan_body: dict[str, Any]) -> tuple[int | None, int | None]:
     """Read FHIR _count / _offset (or limit / offset) from compiled plan metadata."""
-    query_input = plan_body.get("query_input") if isinstance(plan_body.get("query_input"), dict) else {}
+    query_input = (
+        plan_body.get("query_input")
+        if isinstance(plan_body.get("query_input"), dict)
+        else {}
+    )
     limit_raw = query_input.get("_count", query_input.get("limit"))
     offset_raw = query_input.get("_offset", query_input.get("offset"))
     limit = int(limit_raw) if limit_raw is not None else None
     offset = int(offset_raw) if offset_raw is not None else None
     if limit is not None and limit < 0:
-        raise KehrnelError(code="INVALID_INPUT", status=400, message="_count must be non-negative")
+        raise KehrnelError(
+            code="INVALID_INPUT", status=400, message="_count must be non-negative"
+        )
     if offset is not None and offset < 0:
-        raise KehrnelError(code="INVALID_INPUT", status=400, message="_offset must be non-negative")
+        raise KehrnelError(
+            code="INVALID_INPUT", status=400, message="_offset must be non-negative"
+        )
     return limit, offset
 
 
@@ -678,7 +744,9 @@ async def execute_fhir_query(
             # filter. When the deployment supports snapshot sessions we run both in
             # one snapshot so rows/total are consistent; otherwise totals are
             # best-effort under concurrent writes (reported truthfully below).
-            multi_step_resolved = isinstance(mql_filter, dict) and "_multi_step" in mql_filter
+            multi_step_resolved = (
+                isinstance(mql_filter, dict) and "_multi_step" in mql_filter
+            )
             client = getattr(getattr(collection, "database", None), "client", None)
             session = None
             snapshot_mode = "best_effort"
@@ -735,7 +803,8 @@ async def execute_fhir_query(
                         if limit is not None:
                             find_cmd["limit"] = limit
                         stats = collection.database.command(
-                            {"explain": find_cmd, "verbosity": "executionStats"}, **kwargs
+                            {"explain": find_cmd, "verbosity": "executionStats"},
+                            **kwargs,
                         )
                         exec_stats = stats.get("executionStats")
                     except Exception:
@@ -743,12 +812,16 @@ async def execute_fhir_query(
             finally:
                 if session is not None:
                     session.__exit__(None, None, None)
-            return row_list, match_total, {
-                "multi_step_resolved": multi_step_resolved,
-                "snapshot": snapshot_mode,
-                "resolved_filter": resolved_filter,
-                "mongo_execution_stats": exec_stats,
-            }
+            return (
+                row_list,
+                match_total,
+                {
+                    "multi_step_resolved": multi_step_resolved,
+                    "snapshot": snapshot_mode,
+                    "resolved_filter": resolved_filter,
+                    "mongo_execution_stats": exec_stats,
+                },
+            )
 
         rows, total, executed = await asyncio.to_thread(_run_query)
     finally:
@@ -794,7 +867,9 @@ def _search_payload_to_compile_query(payload: dict[str, Any]) -> dict[str, Any]:
     return query
 
 
-async def fhir_search(ctx: StrategyContext, payload: dict[str, Any] | None) -> dict[str, Any]:
+async def fhir_search(
+    ctx: StrategyContext, payload: dict[str, Any] | None
+) -> dict[str, Any]:
     """
     Compile and execute FHIR search (or compile-only when ``explain_only`` is true).
     """
@@ -835,7 +910,9 @@ async def fhir_search(ctx: StrategyContext, payload: dict[str, Any] | None) -> d
     return response
 
 
-def fhir_list_search_params(ctx: StrategyContext, payload: dict[str, Any] | None) -> dict[str, Any]:
+def fhir_list_search_params(
+    ctx: StrategyContext, payload: dict[str, Any] | None
+) -> dict[str, Any]:
     """List fhir-mql search parameter definitions for a resource type."""
     payload = payload or {}
     resource_type = payload.get("resource_type")
@@ -848,8 +925,12 @@ def fhir_list_search_params(ctx: StrategyContext, payload: dict[str, Any] | None
 
     _, MissingConfigurationError, _, *_ = _require_converter()
     converter = build_search_converter(ctx)
+    cfg = bridge.resolve_strategy_config(ctx)
+    release = str(cfg.get("schema_version") or "R5").strip().upper()
     try:
-        raw_params = converter.config_loader.get_search_parameters(resource_type.strip())
+        raw_params = converter.config_loader.get_search_parameters(
+            resource_type.strip()
+        )
     except MissingConfigurationError as exc:
         raise KehrnelError(
             code="FHIR_SEARCH_NOT_CONFIGURED",
@@ -859,8 +940,11 @@ def fhir_list_search_params(ctx: StrategyContext, payload: dict[str, Any] | None
         ) from exc
 
     parameters: list[dict[str, Any]] = []
+    allowed = allowed_search_parameters(release, resource_type.strip())
     for name, spec in sorted(raw_params.items()):
         if not isinstance(spec, dict):
+            continue
+        if allowed is not None and name not in allowed:
             continue
         modifiers: list[str] = []
         fields = spec.get("fields")
@@ -894,15 +978,18 @@ def fhir_list_search_params(ctx: StrategyContext, payload: dict[str, Any] | None
     }
 
 
-def fhir_capabilities(ctx: StrategyContext, payload: dict[str, Any] | None = None) -> dict[str, Any]:
+def fhir_capabilities(
+    ctx: StrategyContext, payload: dict[str, Any] | None = None
+) -> dict[str, Any]:
     """Authoritative capability catalog (T6).
 
     Reports the DISTINCT sets the strategy actually supports so the Explorer can
     build truthful UI instead of inferring from parameter type or a static list:
-      - searchable_resource_types:  have fhir-mql YAML search configs
-      - generatable_resource_types: known to fhir-gen synthetic recipes
-      - storable_resource_types:    are explicitly configured by the Clinical CDR
-                                    recipes and have bundled fhir-mql configuration
+      - schema_supported_resource_types: concrete resources in the active release
+      - searchable_resource_types:      have active fhir-mql search configs
+      - generatable_resource_types:     are understood by fhir-gen
+      - storable_resource_types:        satisfy the mandatory projection contract
+      - recipe_resource_types:          occur in one or more example data recipes
 
     Discovery failures are surfaced via ``degraded`` + ``discovery_errors`` rather
     than silently returning empty arrays.
@@ -911,44 +998,34 @@ def fhir_capabilities(ctx: StrategyContext, payload: dict[str, Any] | None = Non
     converter = build_search_converter(ctx)
     discovery_errors: list[dict[str, str]] = []
     try:
-        searchable = sorted(bridge.supported_search_resource_types(converter.config_loader))
-    except Exception as exc:
-        searchable = []
-        discovery_errors.append({"source": "searchable", "error": str(exc)})
-
-    # FHIR version and the strategy-owned resource set come from activation plus
-    # the packaged Clinical CDR recipes, not the broader reusable libraries.
-    try:
         cfg = bridge.resolve_strategy_config(ctx)
         fhir_version = cfg.get("schema_version") or "R5"
-        configured_types = bridge.configured_cdr_resource_types(cfg)
     except Exception as exc:
         cfg = {}
         fhir_version = "R5"
-        configured_types = set()
         discovery_errors.append({"source": "strategy_config", "error": str(exc)})
 
     try:
-        schema_generation_types = bridge.known_generation_resource_types()
-        from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.validation import (
-            schema_resource_types,
-        )
-
-        release_types = schema_resource_types(str(fhir_version))
-        generatable = sorted(configured_types & schema_generation_types & release_types)
+        capability_sets = resolve_resource_capabilities(cfg, converter.config_loader)
+        schema_supported = sorted(capability_sets.schema_supported)
+        searchable = sorted(capability_sets.searchable)
+        generatable = sorted(capability_sets.generatable)
+        storable = sorted(capability_sets.storable)
+        synthetic_writable = sorted(capability_sets.synthetic_writable)
+        recipe_resources = sorted(capability_sets.recipe_resources)
     except Exception as exc:
-        release_types = set()
+        schema_supported = []
+        searchable = []
         generatable = []
-        discovery_errors.append({"source": "release_schema", "error": str(exc)})
-    synthetic_writable = list(generatable)
+        storable = []
+        synthetic_writable = []
+        recipe_resources = []
+        discovery_errors.append({"source": "resource_capabilities", "error": str(exc)})
 
-    # The import/write boundary must not silently inherit every resource in the
-    # shared libraries. It is the intersection of this strategy's configured
-    # recipe resources and its package-backed search catalog.
-    storable = sorted(
-        configured_types & set(searchable) & set(release_types)
+    from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.cohort_blueprints import (
+        BLUEPRINT_CONTRACT_VERSION,
+        fhir_cohort_catalog,
     )
-
     from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.validation import (
         available_validation_levels,
     )
@@ -959,21 +1036,90 @@ def fhir_capabilities(ctx: StrategyContext, payload: dict[str, Any] | None = Non
         validation_levels = []
         discovery_errors.append({"source": "fhir_release", "error": str(exc)})
 
+    ig_packages: list[dict[str, Any]] = []
+    available_profiles: list[dict[str, Any]] = []
+    active_profiles: list[dict[str, Any]] = []
+    profile_validation_status: dict[str, Any] = {
+        "contract_version": "fhir-profile-validation.v1",
+        "mode": "disabled",
+        "adapter_available": False,
+        "enforced": False,
+    }
+    try:
+        inspected_packages = (
+            implementation_guides.inspect_configured_implementation_guides(cfg)
+        )
+        for compiled in inspected_packages:
+            ig_packages.append(compiled["package"])
+            available_profiles.extend(compiled["inventory"]["profiles"])
+        active_profiles = implementation_guides.resolve_active_profiles(
+            cfg, inspected_packages
+        )
+        profile_validation_status = describe_profile_validation(cfg, ctx.adapters)
+    except Exception as exc:
+        discovery_errors.append({"source": "implementation_guides", "error": str(exc)})
+
     catalog: dict[str, Any] = {
         "ok": True,
         "degraded": bool(discovery_errors),
         "discovery_errors": discovery_errors,
         "contract_version": SEARCH_CONTRACT_VERSION,
         "fhir_version": fhir_version,
+        "release_support": release_evidence(fhir_version),
+        "schema_supported_resource_types": schema_supported,
         "searchable_resource_types": searchable,
         "generatable_resource_types": generatable,
         "storable_resource_types": storable,
         "synthetic_writable_resource_types": synthetic_writable,
+        "recipe_resource_types": recipe_resources,
+        "synthetic_cohorts": {
+            "supported": str(fhir_version).upper() in {"R5", "R6"},
+            "contract_version": BLUEPRINT_CONTRACT_VERSION,
+            "catalog_operation": "fhir_cohort_catalog",
+            "plan_operation": "fhir_cohort_plan",
+            "execute_operation": "synthetic_generate_batch",
+            "execution_mode": "asynchronous-job-recommended",
+            "assets": [
+                {
+                    "id": item["id"],
+                    "version": item["version"],
+                    "title": item["title"],
+                    "maturity": item["maturity"],
+                }
+                for item in (
+                    fhir_cohort_catalog(
+                        ctx,
+                        {
+                            "schema_version": fhir_version,
+                            "include_blueprints": False,
+                        },
+                    ).get("assets")
+                    if str(fhir_version).upper() in {"R5", "R6"}
+                    else []
+                )
+            ],
+        },
         "ingest_supported": True,
-        "write_supported": True,
+        "write_supported": bool(storable),
         "import_formats": ["bundle", "ndjson", "resource"],
+        "migration": {
+            "run_history": True,
+            "chunked_execution": True,
+            "idempotent_checkpoints": True,
+            "cooperative_cancellation": True,
+            "retry_from_checkpoint": True,
+            "source_payload_retained": False,
+            "reference_integrity": "informational",
+        },
         "validation_levels": validation_levels,
-        "profile_conformance": False,
+        "profile_conformance": profile_validation_status["enforced"],
+        "profile_validation": profile_validation_status,
+        "active_profiles": active_profiles,
+        "conformance_mode": "implementation-guide-overlay"
+        if ig_packages
+        else "fhir-core",
+        "implementation_guide_packages": ig_packages,
+        "available_profiles": available_profiles,
         "persistence_invariants": {
             "search_projection": "mandatory",
             "compartment_projection": "mandatory",
@@ -990,6 +1136,7 @@ def fhir_capabilities(ctx: StrategyContext, payload: dict[str, Any] | None = Non
         "chaining_supported": False,
         "reverse_chaining_supported": False,
         "include_supported": False,
+        "semantic": describe_semantic_config(cfg, ctx.adapters),
     }
 
     if not discovery_errors:
@@ -1012,9 +1159,91 @@ def fhir_capabilities(ctx: StrategyContext, payload: dict[str, Any] | None = Non
     resource_type = payload.get("resource_type")
     if isinstance(resource_type, str) and resource_type.strip():
         try:
-            catalog["parameters"] = fhir_list_search_params(ctx, {"resource_type": resource_type})["parameters"]
+            catalog["parameters"] = fhir_list_search_params(
+                ctx, {"resource_type": resource_type}
+            )["parameters"]
             catalog["resource_type"] = resource_type.strip()
         except KehrnelError as exc:
             catalog["parameters_error"] = {"code": exc.code, "message": exc.message}
 
     return catalog
+
+
+def fhir_support_matrix(
+    ctx: StrategyContext, payload: dict[str, Any] | None = None
+) -> dict[str, Any]:
+    """Generate portable JSON and Markdown support evidence from capabilities.
+
+    This is deliberately derived from ``fhir_capabilities`` rather than a second
+    maintained list, so portal, CLI, and published pilot evidence cannot drift.
+    """
+    payload = payload or {}
+    capabilities = fhir_capabilities(ctx, {})
+    schema = set(capabilities.get("schema_supported_resource_types") or [])
+    searchable = set(capabilities.get("searchable_resource_types") or [])
+    storable = set(capabilities.get("storable_resource_types") or [])
+    generatable = set(capabilities.get("generatable_resource_types") or [])
+    recipe = set(capabilities.get("recipe_resource_types") or [])
+    rows: list[dict[str, Any]] = []
+    include_parameters = bool(payload.get("include_parameters", False))
+    for resource_type in sorted(schema | searchable | storable | generatable | recipe):
+        row: dict[str, Any] = {
+            "resource_type": resource_type,
+            "schema": resource_type in schema,
+            "search": resource_type in searchable,
+            "write": resource_type in storable,
+            "generate": resource_type in generatable,
+            "example_recipe": resource_type in recipe,
+        }
+        if include_parameters and resource_type in searchable:
+            try:
+                parameters = fhir_list_search_params(
+                    ctx, {"resource_type": resource_type}
+                )
+                row["search_parameter_count"] = parameters.get("parameter_count", 0)
+                row["search_parameters"] = [
+                    item.get("name") for item in parameters.get("parameters") or []
+                ]
+            except KehrnelError as exc:
+                row["search_parameters_error"] = {
+                    "code": exc.code,
+                    "message": exc.message,
+                }
+        rows.append(row)
+
+    def mark(value: bool) -> str:
+        return "yes" if value else "—"
+
+    markdown_lines = [
+        f"# FHIR {capabilities.get('fhir_version')} accelerator support matrix",
+        "",
+        (
+            "Generated from the activated `fhir_capabilities` contract. "
+            "A yes indicates implemented accelerator behavior, not certification or full FHIR conformance."
+        ),
+        "",
+        "| Resource | Schema | Search | Write | Generate | Example recipe |",
+        "|---|---:|---:|---:|---:|---:|",
+    ]
+    markdown_lines.extend(
+        "| {resource_type} | {schema} | {search} | {write} | {generate} | {recipe} |".format(
+            resource_type=row["resource_type"],
+            schema=mark(row["schema"]),
+            search=mark(row["search"]),
+            write=mark(row["write"]),
+            generate=mark(row["generate"]),
+            recipe=mark(row["example_recipe"]),
+        )
+        for row in rows
+    )
+    return {
+        "ok": not capabilities.get("degraded", False),
+        "contract_version": capabilities.get("contract_version"),
+        "fhir_version": capabilities.get("fhir_version"),
+        "release_support": capabilities.get("release_support"),
+        "generated_from": "fhir_capabilities",
+        "generated_at": datetime.now(UTC).isoformat(),
+        "profile_conformance": capabilities.get("profile_conformance", False),
+        "rows": rows,
+        "markdown": "\n".join(markdown_lines) + "\n",
+    }

@@ -31,8 +31,15 @@ OPERATIONAL_FIELDS = frozenset(
         "_compartments",
         "_fhir_resource_type",
         "_kehrnel",
+        "_custom",
+        "_enrichments",
     }
 )
+
+
+def mongo_exclusion_projection() -> Dict[str, int]:
+    """Projection that prevents operational namespaces leaving MongoDB reads."""
+    return {field: 0 for field in OPERATIONAL_FIELDS}
 
 
 # Keys that mark the ADR's target envelope shape ({resource, search, compartments,
@@ -68,6 +75,7 @@ def canonical_resources(docs: Iterable[Dict[str, Any]] | None) -> List[Dict[str,
 
 # ── FHIR searchset Bundle (canonical) ─────────────────────────────────────────
 
+
 def searchset_bundle(
     resources: Iterable[Dict[str, Any]] | None,
     *,
@@ -98,14 +106,41 @@ _ISSUE_TYPE_BY_CODE = {
 
 # Valid FHIR R5 issue-type codes (subset used here) — accepted directly so callers
 # can pass a real FHIR code without it being remapped to "processing".
-_VALID_FHIR_ISSUE_TYPES = frozenset({
-    "invalid", "structure", "required", "value", "invariant", "security",
-    "login", "unknown", "expired", "forbidden", "suppressed", "processing",
-    "not-supported", "duplicate", "multiple-matches", "not-found", "deleted",
-    "too-long", "code-invalid", "extension", "too-costly", "business-rule",
-    "conflict", "transient", "lock-error", "no-store", "exception", "timeout",
-    "incomplete", "throttled", "informational",
-})
+_VALID_FHIR_ISSUE_TYPES = frozenset(
+    {
+        "invalid",
+        "structure",
+        "required",
+        "value",
+        "invariant",
+        "security",
+        "login",
+        "unknown",
+        "expired",
+        "forbidden",
+        "suppressed",
+        "processing",
+        "not-supported",
+        "duplicate",
+        "multiple-matches",
+        "not-found",
+        "deleted",
+        "too-long",
+        "code-invalid",
+        "extension",
+        "too-costly",
+        "business-rule",
+        "conflict",
+        "transient",
+        "lock-error",
+        "no-store",
+        "exception",
+        "timeout",
+        "incomplete",
+        "throttled",
+        "informational",
+    }
+)
 
 
 def operation_outcome(
@@ -120,7 +155,11 @@ def operation_outcome(
     Use ONLY at the FHIR HTTP boundary. Internal ops keep raising ``KehrnelError``.
     """
     # Accept a valid FHIR issue-type directly; otherwise map an internal code.
-    issue_type = code if code in _VALID_FHIR_ISSUE_TYPES else _ISSUE_TYPE_BY_CODE.get(code, "processing")
+    issue_type = (
+        code
+        if code in _VALID_FHIR_ISSUE_TYPES
+        else _ISSUE_TYPE_BY_CODE.get(code, "processing")
+    )
     issue: Dict[str, Any] = {
         "severity": severity,
         "code": issue_type,
@@ -141,14 +180,19 @@ def operation_outcome_from_error(err: Any) -> Dict[str, Any]:
 
 # ── Versioned search envelope (T4) ────────────────────────────────────────────
 
-def _bounded_execution_summary(explain: Dict[str, Any] | None, plan_body: Dict[str, Any] | None) -> Dict[str, Any]:
+
+def _bounded_execution_summary(
+    explain: Dict[str, Any] | None, plan_body: Dict[str, Any] | None
+) -> Dict[str, Any]:
     """A small, safe execution summary — never large resolved-id arrays.
 
     Full multi-step / resolved-id detail is only exposed under privileged debug.
     """
     explain = explain or {}
     plan_body = plan_body or {}
-    execution = explain.get("execution") if isinstance(explain.get("execution"), dict) else {}
+    execution = (
+        explain.get("execution") if isinstance(explain.get("execution"), dict) else {}
+    )
 
     multi_step = None
     filt = plan_body.get("filter")

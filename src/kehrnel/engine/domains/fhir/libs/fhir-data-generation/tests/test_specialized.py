@@ -13,7 +13,7 @@ def make_gen() -> ResourceGenerator:
 
 class TestSpecializedEnrichers:
     def test_enrichers_registered(self):
-        assert len(ENRICHERS) == 21
+        assert len(ENRICHERS) == 24
         assert "ImagingStudy" in ENRICHERS
         assert "MeasureReport" in ENRICHERS
         assert "Endpoint" in ENRICHERS
@@ -86,13 +86,13 @@ class TestSpecializedEnrichers:
         usage = gen.generate("DeviceUsage")[0]
         assert usage["device"]["concept"]["coding"]
         disp = gen.generate("DeviceDispense")[0]
-        assert disp["code"]["concept"]["coding"]
+        assert disp["device"]["concept"]["coding"]
 
     def test_biologically_derived_product(self):
         gen = make_gen()
         bdp = gen.generate("BiologicallyDerivedProduct")[0]
-        assert bdp["productCategory"] in ["organ", "tissue", "fluid", "cells"]
-        assert bdp["code"]["coding"][0]["system"] == "http://snomed.info/sct"
+        assert bdp["productCategory"]["code"] in ["organ", "tissue", "fluid", "cells"]
+        assert bdp["productStatus"]["code"] in ["available", "unavailable"]
 
     def test_organization_affiliation(self):
         gen = make_gen()
@@ -102,19 +102,19 @@ class TestSpecializedEnrichers:
     def test_endpoint(self):
         gen = make_gen()
         ep = gen.generate("Endpoint")[0]
-        assert ep["connectionType"]["coding"]
+        assert ep["connectionType"][0]["coding"]
         assert ep["address"].startswith("https://")
 
     def test_genomic_study(self):
         gen = make_gen()
         gs = gen.generate("GenomicStudy")[0]
         assert gs["status"]
-        assert gs["subject"][0]["reference"].startswith("Patient/")
+        assert gs["subject"]["reference"].startswith("Patient/")
 
     def test_measure_and_report(self):
         gen = make_gen()
         report = gen.generate("MeasureReport")[0]
-        assert report["measure"]["reference"].startswith("Measure/")
+        assert report["measure"].startswith("http://example.org/Measure/")
         assert report["type"] in [
             "individual", "subject-list", "summary", "data-collection",
         ]

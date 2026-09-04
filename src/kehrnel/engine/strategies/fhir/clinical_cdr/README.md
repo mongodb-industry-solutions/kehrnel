@@ -1,12 +1,14 @@
 # FHIR Clinical CDR (`fhir.clinical_cdr`)
 
-Strategy pack for **native FHIR R5 and R6** resources in MongoDB:
+Strategy pack for native FHIR resources in MongoDB: a deliberately minimal R4
+Patient/Observation tier plus package-backed R5 and R6 support.
 
 - **Generation:** **fhir-gen** (`fhir_gen`) — `src/kehrnel/engine/domains/fhir/libs/fhir-data-generation`
 - **Search:** **fhir-mql** (`fhir_search_to_mql`) — `src/kehrnel/engine/domains/fhir/libs/fhir-search-to-mql`
 
-The active resource scope is derived at runtime from the configured recipes and
-the shipped fhir-mql search configs; it is not duplicated as a hard-coded UI list.
+The active capability sets are derived independently from the selected release
+schema, shipped fhir-mql search configs, fhir-gen schemas, and example recipes;
+recipes never act as the write allowlist.
 
 **Also:** [FHIR_TESTING.md](../../../../../../FHIR_TESTING.md) · Portal `/guide/docs/strategies/fhir/clinical-cdr`
 
@@ -14,7 +16,7 @@ the shipped fhir-mql search configs; it is not duplicated as a hard-coded UI lis
 
 | Path | Contents |
 |------|----------|
-| `specification/` | `manifest.json`, `schema.json`, `defaults.json`, `recipes.json`, sample activate/job JSON |
+| `specification/` | Manifest/config, flat recipes, versioned cohort blueprints and their JSON Schema, and sample payloads |
 | `scripts/` | Runtime Python (`strategy.py`, `bridge.py`, `generation.py`, …) + `spike_generate_and_search.py` |
 | `strategy.py` | Entrypoint shim → `scripts/strategy.py` |
 | [`engine/domains/fhir/libs/`](../../../domains/fhir/libs/README.md) | Vendored fhir-gen + fhir-mql |
@@ -23,7 +25,7 @@ the shipped fhir-mql search configs; it is not duplicated as a hard-coded UI lis
 
 | State | Ops |
 |-------|-----|
-| **Implemented** | `synthetic_generate_batch` (with `recipe`), `fhir_denormalize`, `fhir_ensure_indexes`, `fhir_search`, `fhir_list_search_params`, `fhir_resource_catalog`, `fhir_capabilities`, `fhir_stats`, `fhir_import_resources` |
+| **Implemented** | `synthetic_generate_batch` (R5/R6 flat recipes and patient-centred cohorts), `fhir_cohort_catalog`, `fhir_cohort_plan`, `fhir_denormalize`, `fhir_ensure_indexes`, `fhir_index_manifest`, `fhir_search`, `fhir_list_search_params`, `fhir_resource_catalog`, `fhir_capabilities`, `fhir_support_matrix`, `fhir_stats`, `fhir_import_resources`, checkpointed `fhir_migration_*` operations, `fhir_reference_integrity`, `fhir_compile_implementation_guides`, `fhir_semantic_preview`, `fhir_semantic_materialize`, `fhir_semantic_search` |
 
 ---
 
@@ -35,9 +37,11 @@ Imported by Kehrnel via `manifest.json` entrypoint `kehrnel.engine.strategies.fh
 |--------|------|
 | `strategy.py` | `StrategyPlugin` — `run_op`, `compile_query`, `validate_config` |
 | `bridge.py` | Config merge, Mongo bindings, fhir-gen / fhir-mql clients, recipe resolution |
-| `generation.py` | `synthetic_generate_batch` |
+| `generation.py` | Flat and cohort execution through `synthetic_generate_batch` |
+| `cohort_blueprints.py` | Catalog, contract validation, deterministic planning, patient graphs, clinical rules, and measured quality evidence |
 | `denormalize.py` | `fhir_denormalize` |
 | `indexes.py` | `fhir_ensure_indexes` |
+| `index_manifest.py` | Deterministic index inventory, digest, and per-collection budget |
 | `query.py` | `fhir_search`, compile/execute FHIR queries |
 | `resource_catalog.py` | Read-only package-backed resource structures, search projections, and index definitions |
 | `stats.py` | `fhir_stats` |
@@ -62,6 +66,7 @@ JSON files define discovery, activation, and sample API payloads. Three groups:
 |-------|-------|-------------------|
 | **Pack registry** | `manifest.json`, `spec.json` | Yes — startup / pack discovery |
 | **Activation config** | `defaults.json`, `schema.json`, `recipes.json` | Yes — merged on activate and ops |
+| **Cohort assets** | `cohort_blueprints.json`, `cohort_blueprint.schema.json` | Yes — read and validated by cohort catalog/plan/generation |
 | **API samples** | `activate_dev.json`, `job_generate_*.json` | No — `curl -d @file` templates only |
 
 ### How configuration merges
@@ -91,8 +96,9 @@ GET /api/domains/fhir/resource-catalog
 GET /api/domains/fhir/resource-catalog/Patient
 ```
 
-The list is restricted to the active Clinical CDR scope. A detail response joins
-the selected R5/R6 schema definition with its fhir-mql search parameters,
+The list covers the selected release schema and marks each resource's separate
+storage, search, generation, and recipe capabilities. A detail response joins
+the selected release definition with its reviewed fhir-mql search parameters,
 denormalization projections, collection name, and declared MongoDB indexes. The
 list also exposes release-compatible generation recipes and names configured
 types omitted by the selected release. The response declares
@@ -136,13 +142,19 @@ or an explicitly submitted `synthetic_generate_batch` job.
 | Field | Default | Meaning |
 |-------|---------|---------|
 | `database` | `fhir_cdr` | Required strategy-owned DB, distinct from the environment DB |
-| `schema_version` | `R5` | FHIR release (not the MongoDB document-schema version) |
+| `schema_version` | `R5` | FHIR release (`R4`, `R5`, or `R6`; R4 is currently minimal) |
 | `collections.mode` | `per_resource_type` | Required |
 | `collection_prefix` | `""` | Optional collection name prefix |
 | `search.enabled` | `true` | FHIR search ops |
 | `search.denormalize_on_generate` | `true` (required) | Search and compartment projection is a storage invariant |
 | `search.auto_index` | `true` (required) | Resource search indexes are a storage invariant |
 | `search.config_dir` | `null` | `null` = bundled fhir-mql YAML |
+| `implementation_guides.packages` | `[]` | Optional local package overlays; empty means FHIR Core mode |
+| `implementation_guides.active_profiles` | `[]` | Optional selected profile canonical URLs; empty means unconstrained |
+| `implementation_guides.profile_validation` | `disabled` | Optional fail-closed enforcement using a configured external validator |
+| `semantic.enabled` | `false` | Opt into semantic pipeline declarations; activation never generates vectors |
+| `semantic.pipelines` | `[]` | Named FHIR field-selection and chunking contracts |
+| `index_policy.materialize_on_activation` | `false` | Create indexes lazily before the first write unless explicitly eager |
 | `generation.seed` | `42` | Default RNG seed |
 | `generation.use_enrichers` | `true` | fhir-gen enrichers |
 | `generation.watermark.enabled` | `true` | Synthetic meta tags |
@@ -190,6 +202,30 @@ Recipe shape:
 ```
 
 Job `resources` **overrides** per-type counts without editing `recipes.json`. Resource types must exist in fhir-gen; prefer types with fhir-mql YAML for search.
+Named recipes are filtered to the types present in the selected release and the
+result reports `omitted_recipe_resource_types`. An explicitly requested unknown
+type still fails; it is never silently discarded.
+
+### Patient-centred cohort blueprints
+
+Use a bundled blueprint or submit an inline blueprint that satisfies
+`cohort_blueprint.schema.json`. The workflow is discover → plan → preview →
+asynchronous generation:
+
+```text
+GET  /api/domains/fhir/synthetic/cohorts
+POST /api/domains/fhir/synthetic/cohorts/plan
+POST /api/domains/fhir/synthetic/cohorts/preview
+POST /environments/{env}/synthetic/jobs
+```
+
+Bundled assets cover cardiometabolic monitoring, an oncology care pathway, and
+a payer/claims journey. Plans are deterministic for the blueprint version,
+overrides, reference date, and seed. Execution returns count, reference,
+patient-linkage, clinical-rule, and base-schema evidence. `curated-demo` is an
+explicit demonstration-data maturity level, not an epidemiological or clinical
+validity claim. See the portal page **Synthetic cohorts and the Healthcare Data
+Lab journey** for the complete frontend contract.
 
 ### API sample files
 
@@ -236,8 +272,17 @@ pytest tests/contract/clinical_cdr -q
 | `resources` / `resource_counts` | no* | Overrides recipe counts |
 | `seed` | no | Overrides `generation.seed` |
 | `plan_only` / `dry_run` | no | Plan or in-memory only |
+| `cohort.blueprint_id` | no* | Bundled patient-centred cohort asset |
+| `cohort.blueprint` | no* | Inline customer blueprint using `fhir-cohort-blueprint/v1` |
+| `cohort.patients` | no | Patient count, bounded to 10,000 (preview is capped at 10) |
+| `cohort.history_years` / `reference_date` | no | Deterministic longitudinal window |
+| `cohort.population` | no | Replacement age-band and gender distributions |
+| `cohort.per_patient_resources` | no | Per-type min/max/probability overrides |
+| `cohort.shared_resources` | no | Shared directory/catalog resource-count overrides |
+| `cohort.clinical_rules` | no | Replacement supported-rule configuration |
+| `include_sample` / `sample_limit` | no | Include bounded canonical examples in a dry run or preview |
 
-\* One of `recipe`, `resources`, or `resource_counts` required.
+\* One of `recipe`, `resources`, `resource_counts`, or `cohort` required.
 
 `fhir_denormalize` is now a repair/reprojection operation. It always rebuilds `_search` and `_compartments`, stamps current projection versions, and ensures the configured indexes.
 

@@ -12,14 +12,18 @@ from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.document_contract impor
     STORED_DOCUMENT_SCHEMA_VERSION,
     build_projection_versions,
 )
-from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.query import _search_paths_from_config
+from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.query import (
+    _search_paths_from_config,
+)
 
 
 def _collection_has_search_index(collection: Any) -> bool:
     try:
         for info in collection.list_indexes():
             key = info.get("key") or {}
-            if any(str(field).startswith(("_search", "_compartments")) for field in key):
+            if any(
+                str(field).startswith(("_search", "_compartments")) for field in key
+            ):
                 return True
     except Exception as exc:
         if "NamespaceNotFound" not in str(exc) and getattr(exc, "code", None) != 26:
@@ -27,7 +31,9 @@ def _collection_has_search_index(collection: Any) -> bool:
     return False
 
 
-def _resolve_resource_types(payload: dict[str, Any], search_types: set[str], gen_types: set[str]) -> list[str]:
+def _resolve_resource_types(
+    payload: dict[str, Any], search_types: set[str], gen_types: set[str]
+) -> list[str]:
     raw = payload.get("resource_types")
     if isinstance(raw, list) and raw:
         return sorted({str(rt).strip() for rt in raw if str(rt).strip()})
@@ -51,7 +57,9 @@ def _database_document_count(db: Any) -> int | None:
         return None
 
 
-async def fhir_stats(ctx: StrategyContext, payload: dict[str, Any] | None) -> dict[str, Any]:
+async def fhir_stats(
+    ctx: StrategyContext, payload: dict[str, Any] | None
+) -> dict[str, Any]:
     """
     Per-collection document counts, ``_search`` denormalization coverage, and
     generation vs search configuration gaps.
@@ -71,14 +79,20 @@ async def fhir_stats(ctx: StrategyContext, payload: dict[str, Any] | None) -> di
     )
 
     try:
-        search_types = set(bridge.supported_search_resource_types(mql_ctx.config_loader))
+        search_types = set(
+            bridge.supported_search_resource_types(mql_ctx.config_loader)
+        )
         gen_types = bridge.known_generation_resource_types()
         resource_types = _resolve_resource_types(payload, search_types, gen_types)
         versions = build_projection_versions(
             mql_ctx.config_loader,
             fhir_release=str(cfg.get("schema_version") or "R5"),
             compartment_definitions_dir=mql_ctx.compartment_definitions_dir,
-            resource_types=[resource_type for resource_type in resource_types if resource_type in search_types],
+            resource_types=[
+                resource_type
+                for resource_type in resource_types
+                if resource_type in search_types
+            ],
         )
 
         collections: list[dict[str, Any]] = []
@@ -90,11 +104,14 @@ async def fhir_stats(ctx: StrategyContext, payload: dict[str, Any] | None) -> di
         database_document_count = _database_document_count(mql_ctx.db)
         database_is_empty = database_document_count == 0
 
-        def inspect_resource_type(resource_type: str) -> tuple[dict[str, Any], set[str]]:
+        def inspect_resource_type(
+            resource_type: str,
+        ) -> tuple[dict[str, Any], set[str]]:
             coll_name = bridge.collection_name(prefix, resource_type)
             collection = mql_ctx.db[coll_name]
             collection_exists = (
-                existing_collection_names is None or coll_name in existing_collection_names
+                existing_collection_names is None
+                or coll_name in existing_collection_names
             )
             document_count = (
                 0
@@ -109,15 +126,21 @@ async def fhir_stats(ctx: StrategyContext, payload: dict[str, Any] | None) -> di
             latest_stored_at = None
             resource_job_ids: set[str] = set()
             if document_count:
-                denormalized_count = collection.count_documents({"_search": {"$exists": True}})
-                compartment_count = collection.count_documents({"_compartments": {"$exists": True}})
+                denormalized_count = collection.count_documents(
+                    {"_search": {"$exists": True}}
+                )
+                compartment_count = collection.count_documents(
+                    {"_compartments": {"$exists": True}}
+                )
                 if resource_type in search_types:
                     contract_current_count = collection.count_documents(
                         {
                             "_search": {"$exists": True, "$type": "object"},
                             "_compartments": {"$exists": True, "$type": "object"},
                             "_kehrnel.storage_schema_version": STORED_DOCUMENT_SCHEMA_VERSION,
-                            "_kehrnel.resource_projection_version": versions.for_resource(resource_type),
+                            "_kehrnel.resource_projection_version": versions.for_resource(
+                                resource_type
+                            ),
                         }
                     )
                 synthetic_markers = [
@@ -150,7 +173,9 @@ async def fhir_stats(ctx: StrategyContext, payload: dict[str, Any] | None) -> di
                         sort=[("_kehrnel.stored_at", -1)],
                     )
                     if latest:
-                        latest_stored_at = (latest.get("_kehrnel") or {}).get("stored_at")
+                        latest_stored_at = (latest.get("_kehrnel") or {}).get(
+                            "stored_at"
+                        )
                 if hasattr(collection, "distinct"):
                     resource_job_ids.update(
                         str(value)
@@ -159,7 +184,9 @@ async def fhir_stats(ctx: StrategyContext, payload: dict[str, Any] | None) -> di
                     )
 
             denorm_percent = (
-                round((denormalized_count / document_count) * 100.0, 2) if document_count else 0.0
+                round((denormalized_count / document_count) * 100.0, 2)
+                if document_count
+                else 0.0
             )
             search_configured = resource_type in search_types
             generation_schema = resource_type in gen_types
@@ -169,32 +196,39 @@ async def fhir_stats(ctx: StrategyContext, payload: dict[str, Any] | None) -> di
                 else collection_exists and _collection_has_search_index(collection)
             )
 
-            return ({
-                "resource_type": resource_type,
-                "collection": coll_name,
-                "document_count": document_count,
-                "denormalized_count": denormalized_count,
-                "denormalized_percent": denorm_percent,
-                "compartment_count": compartment_count,
-                "contract_current_count": contract_current_count,
-                "synthetic_count": synthetic_count,
-                "imported_count": imported_count,
-                "unclassified_count": max(0, document_count - synthetic_count - imported_count),
-                "latest_stored_at": latest_stored_at,
-                "contract_current_percent": (
-                    round((contract_current_count / document_count) * 100.0, 2)
-                    if document_count
-                    else 0.0
-                ),
-                "storage_schema_version": STORED_DOCUMENT_SCHEMA_VERSION,
-                "resource_projection_version": (
-                    versions.for_resource(resource_type) if resource_type in search_types else None
-                ),
-                "search_configured": search_configured,
-                "generation_schema": generation_schema,
-                "search_index_present": has_search_index,
-                "coverage_gap": generation_schema and not search_configured,
-            }, resource_job_ids)
+            return (
+                {
+                    "resource_type": resource_type,
+                    "collection": coll_name,
+                    "document_count": document_count,
+                    "denormalized_count": denormalized_count,
+                    "denormalized_percent": denorm_percent,
+                    "compartment_count": compartment_count,
+                    "contract_current_count": contract_current_count,
+                    "synthetic_count": synthetic_count,
+                    "imported_count": imported_count,
+                    "unclassified_count": max(
+                        0, document_count - synthetic_count - imported_count
+                    ),
+                    "latest_stored_at": latest_stored_at,
+                    "contract_current_percent": (
+                        round((contract_current_count / document_count) * 100.0, 2)
+                        if document_count
+                        else 0.0
+                    ),
+                    "storage_schema_version": STORED_DOCUMENT_SCHEMA_VERSION,
+                    "resource_projection_version": (
+                        versions.for_resource(resource_type)
+                        if resource_type in search_types
+                        else None
+                    ),
+                    "search_configured": search_configured,
+                    "generation_schema": generation_schema,
+                    "search_index_present": has_search_index,
+                    "coverage_gap": generation_schema and not search_configured,
+                },
+                resource_job_ids,
+            )
 
         # A store can expose hundreds of resource types. Mongo clients are thread-safe,
         # so collect independent per-collection diagnostics concurrently rather than
@@ -211,7 +245,9 @@ async def fhir_stats(ctx: StrategyContext, payload: dict[str, Any] | None) -> di
             synthetic_job_ids.update(resource_job_ids)
 
         indexed_types = sorted(
-            row["resource_type"] for row in collections if row.get("search_index_present")
+            row["resource_type"]
+            for row in collections
+            if row.get("search_index_present")
         )
 
         return {
@@ -226,7 +262,9 @@ async def fhir_stats(ctx: StrategyContext, payload: dict[str, Any] | None) -> di
             "summary": {
                 "document_count": total_documents,
                 "initialized_resource_type_count": (
-                    len(existing_collection_names) if existing_collection_names is not None else None
+                    len(existing_collection_names)
+                    if existing_collection_names is not None
+                    else None
                 ),
                 "populated_resource_type_count": sum(
                     1 for row in collections if row.get("document_count", 0) > 0

@@ -14,12 +14,14 @@ from typing import Any, Dict, List, Optional, Protocol, runtime_checkable
 
 from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.document_contract import (
     OPERATIONAL_METADATA_FIELD,
+    PRESERVED_EXTENSION_FIELDS,
     ProjectionVersions,
     STORED_DOCUMENT_SCHEMA_VERSION,
 )
 from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.serialization import (
     canonical_resource,
     canonical_resources,
+    mongo_exclusion_projection,
 )
 
 
@@ -31,8 +33,9 @@ class FHIRStorageAdapter(Protocol):
         """Stored document → canonical FHIR resource (operational fields removed)."""
         ...
 
-    def serialize_many(self, stored_docs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        ...
+    def serialize_many(
+        self, stored_docs: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]: ...
 
     def read(self, resource_type: str, resource_id: str) -> Optional[Dict[str, Any]]:
         """Return the canonical current version of a resource, or None."""
@@ -98,7 +101,7 @@ class MongoFHIRStorageAdapter:
     # ── read ───────────────────────────────────────────────────────────────
     def read(self, resource_type: str, resource_id: str) -> Optional[Dict[str, Any]]:
         coll = self._db[self._collection_name(resource_type)]
-        doc = coll.find_one({"id": resource_id})
+        doc = coll.find_one({"id": resource_id}, mongo_exclusion_projection())
         return self.serialize(doc) if doc else None
 
     # ── persist ────────────────────────────────────────────────────────────
@@ -106,7 +109,10 @@ class MongoFHIRStorageAdapter:
         if resource.get("resourceType") != resource_type:
             raise ValueError("resource_type must match resource.resourceType")
         result = self.persist_many([resource], mode="upsert")
-        return {**result, "resource": self.read(resource_type, str(resource.get("id") or ""))}
+        return {
+            **result,
+            "resource": self.read(resource_type, str(resource.get("id") or "")),
+        }
 
     def persist_many(
         self,
@@ -126,7 +132,7 @@ class MongoFHIRStorageAdapter:
             raise ValueError("Current projection versions are required for FHIR writes")
 
         try:
-            from pymongo import InsertOne, ReplaceOne
+            from pymongo import InsertOne, UpdateOne
             from pymongo.errors import BulkWriteError, DuplicateKeyError
         except ImportError as exc:  # pragma: no cover - installation failure
             raise RuntimeError("pymongo is required for FHIR persistence") from exc
@@ -141,12 +147,16 @@ class MongoFHIRStorageAdapter:
             if not isinstance(resource.get("_search"), dict):
                 raise ValueError("Resource must have a materialized _search object")
             if not isinstance(resource.get("_compartments"), dict):
-                raise ValueError("Resource must have a materialized _compartments object")
+                raise ValueError(
+                    "Resource must have a materialized _compartments object"
+                )
             metadata = resource.get(OPERATIONAL_METADATA_FIELD)
             if not isinstance(metadata, dict):
                 raise ValueError("Resource must have versioned _kehrnel metadata")
             if metadata.get("storage_schema_version") != STORED_DOCUMENT_SCHEMA_VERSION:
-                raise ValueError("Resource storage schema version is missing or unsupported")
+                raise ValueError(
+                    "Resource storage schema version is missing or unsupported"
+                )
             for required in (
                 "projection_contract_version",
                 "resource_projection_version",
@@ -156,17 +166,20 @@ class MongoFHIRStorageAdapter:
                 if not metadata.get(required):
                     raise ValueError(f"Resource _kehrnel.{required} is required")
             if metadata.get("fhir_release") != self._projection_versions.fhir_release:
-                raise ValueError("Resource FHIR release does not match the active projection contract")
+                raise ValueError(
+                    "Resource FHIR release does not match the active projection contract"
+                )
             if (
                 metadata.get("projection_contract_version")
                 != self._projection_versions.projection_contract_version
             ):
                 raise ValueError("Resource projection contract version is stale")
-            if (
-                metadata.get("resource_projection_version")
-                != self._projection_versions.for_resource(resource_type)
-            ):
-                raise ValueError(f"Resource projection version is stale for {resource_type}")
+            if metadata.get(
+                "resource_projection_version"
+            ) != self._projection_versions.for_resource(resource_type):
+                raise ValueError(
+                    f"Resource projection version is stale for {resource_type}"
+                )
             stored = dict(resource)
             stored[OPERATIONAL_METADATA_FIELD] = {**metadata, "stored_at": now}
             grouped.setdefault(resource_type, []).append(stored)
@@ -182,7 +195,31 @@ class MongoFHIRStorageAdapter:
                 if mode == "create":
                     operations.append(InsertOne(doc))
                 else:
-                    operations.append(ReplaceOne({"id": doc["id"]}, doc, upsert=True))
+                    # A canonical FHIR PUT replaces canonical and projection fields,
+                    # but preserves extension data written directly by customer or
+                    # partner workloads.  The pipeline makes that preservation atomic.
+                    preserved = sorted({"_id", *PRESERVED_EXTENSION_FIELDS})
+                    replacement = {
+                        "$arrayToObject": {
+                            "$concatArrays": [
+                                {
+                                    "$filter": {
+                                        "input": {"$objectToArray": "$$ROOT"},
+                                        "as": "field",
+                                        "cond": {"$in": ["$$field.k", preserved]},
+                                    }
+                                },
+                                {"$objectToArray": {"$literal": doc}},
+                            ]
+                        }
+                    }
+                    operations.append(
+                        UpdateOne(
+                            {"id": doc["id"]},
+                            [{"$replaceWith": replacement}],
+                            upsert=True,
+                        )
+                    )
             try:
                 result = collection.bulk_write(operations, ordered=False)
             except (BulkWriteError, DuplicateKeyError):

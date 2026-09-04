@@ -1,11 +1,11 @@
 {
   "meta": {
     "strategyId": "fhir.clinical_cdr",
-    "specVersion": "1.2",
+    "specVersion": "1.5",
     "title": "FHIR Clinical CDR",
     "summary": "A portable FHIR resource-store model that preserves canonical resources, makes MongoDB operational projections explicit, and translates supported FHIR Search parameters to inspectable MQL.",
     "domain": "FHIR",
-    "tags": ["FHIR", "R5", "R6", "resource-store", "migration", "fhir-mql", "fhir-gen", "search"],
+    "tags": ["FHIR", "R4", "R5", "R6", "resource-store", "migration", "fhir-mql", "fhir-gen", "search", "semantic"],
     "owners": [],
     "compat": {
       "packFormat": "strategy-pack/v1",
@@ -18,7 +18,7 @@
   "glossary": {
     "fhir_resource": {
       "term": "FHIR Resource<T>",
-      "definition": "A canonical FHIR JSON resource whose concrete shape T is selected by the `resourceType` discriminator and the R5 or R6 release selected at strategy activation."
+      "definition": "A canonical FHIR JSON resource whose concrete shape T is selected by the `resourceType` discriminator and activated release. R4 currently exposes a minimal Patient/Observation contract; R5/R6 are package-backed."
     },
     "logical_identity": {
       "term": "Logical identity",
@@ -51,6 +51,10 @@
     "collection_family": {
       "term": "Collection<ResourceType>",
       "definition": "An abstract family of MongoDB collections. A concrete collection is created or used when a supported resource type is persisted, with an optional configured prefix followed by the exact `resourceType`."
+    },
+    "cohort_blueprint": {
+      "term": "Synthetic cohort blueprint",
+      "definition": "A versioned, portable intent document that defines patient demographics, resource-count distributions, longitudinal scope, and named clinical rules. Kehrnel compiles it into a deterministic plan before any data is generated; curated-demo does not claim epidemiological or clinical validity."
     }
   },
 
@@ -61,7 +65,7 @@
           "id": "type.fhir_resource",
           "title": "FHIR Resource<T>",
           "kind": "polymorphic-document",
-          "description": "The common FHIR resource metamodel. T is a concrete resource shape from the bundled R5 or R6 package selected at activation.",
+          "description": "The common FHIR resource metamodel. T is a concrete resource shape from the activated release support tier.",
           "discriminator": "resourceType",
           "identity": ["resourceType", "id"],
           "fields": {
@@ -113,7 +117,7 @@
       {
         "id": "profile.canonical_fhir_json",
         "title": "Canonical FHIR JSON at document root",
-        "description": "FHIR property names, nesting, arrays, choice elements, extensions, and primitive extensions remain recognizable. The activation selects the bundled R5 or R6 release.",
+        "description": "FHIR property names, nesting, arrays, choice elements, extensions, and primitive extensions remain recognizable. Activation selects the R4, R5, or R6 support tier.",
         "payload": { "mode": "full", "location": "document-root" },
         "keys": { "mode": "verbatim" },
         "ids": { "fhir": ["resourceType", "id"], "mongo": "_id" },
@@ -125,9 +129,11 @@
       "fields": {
         "_search": "Typed search-parameter projections generated from the active fhir-mql resource configuration.",
         "_compartments": "Resolved compartment memberships such as `_compartments.Patient` when configured.",
-        "_kehrnel": "Kehrnel-owned metadata: stored-document schema version, global and per-resource projection versions, FHIR release, and persistence/projection timestamps."
+        "_kehrnel": "Kehrnel-owned metadata: stored-document schema version, global and per-resource projection versions, FHIR release, and persistence/projection timestamps.",
+        "_custom": "Customer-owned non-FHIR data preserved across canonical resource updates.",
+        "_enrichments": "Partner or accelerator enrichment data preserved across canonical resource updates."
       },
-      "serializationDenylist": ["_id", "_search", "_compartments", "_kehrnel", "_stored_at", "_fhir_resource_type"]
+      "serializationDenylist": ["_id", "_search", "_compartments", "_kehrnel", "_stored_at", "_fhir_resource_type", "_custom", "_enrichments"]
     }
   },
 
@@ -169,7 +175,7 @@
   "transformModel": {
     "pipeline": [
       { "id": "step.receive", "op": "fhir.receive", "title": "Receive FHIR payload", "in": "artifact.fhir_payload", "out": "artifact.resource_batch", "visual": { "group": "Ingest", "icon": "FileJson", "notes": "Accept one resource, a Bundle, an array, or NDJSON and normalize it to bounded resource batches." } },
-      { "id": "step.validate", "op": "fhir.validate", "title": "Validate at the selected level", "in": "artifact.resource_batch", "out": "artifact.validated_resources", "visual": { "group": "Ingest", "icon": "CheckCircle", "notes": "Enforces safe routing and identity invariants, limits resources to the bundled configuration, and can validate against the activated R5 or R6 base schema. Profile conformance is not claimed." } },
+      { "id": "step.validate", "op": "fhir.validate", "title": "Validate at the selected level", "in": "artifact.resource_batch", "out": "artifact.validated_resources", "visual": { "group": "Ingest", "icon": "CheckCircle", "notes": "Enforces safe routing and identity invariants. R5/R6 can use bundled base-schema validation; the provisional R4 tier is structural only. Profile conformance is not claimed." } },
       { "id": "step.project", "op": "fhir.project_search", "title": "Build operational projections", "in": "artifact.validated_resources", "out": "artifact.projected_resources", "visual": { "group": "Transform", "icon": "Layers", "notes": "fhir-mql extracts configured typed search values and compartment memberships into `_search` and `_compartments`." } },
       { "id": "step.route", "op": "fhir.route", "title": "Route by resourceType", "in": "artifact.projected_resources", "out": "artifact.collection_batches", "visual": { "group": "Transform", "icon": "Route", "notes": "Resolve `config.collection_prefix + resourceType`; the discriminator is never inferred from another field." } },
       { "id": "step.persist", "op": "fhir.persist", "title": "Persist canonical + operational document", "in": "artifact.collection_batches", "toStore": "store:<resourceType>", "visual": { "group": "Materialize", "icon": "Database", "notes": "Create or replace by logical id through the storage adapter. The search projection is written atomically with the canonical fields." } }
@@ -180,7 +186,7 @@
       "MongoDB-unsafe property names are rejected at the import boundary.",
       "Client-supplied operational fields are removed before validation and projection.",
       "FHIR serialization removes only the explicit operational denylist and preserves primitive-extension fields.",
-      "The validation level and resource type must be supported by the activated R5 or R6 package."
+      "The validation level and resource type must be supported by the activated release tier."
     ]
   },
 
@@ -237,7 +243,8 @@
           { "label": "_<primitiveName>", "meaning": "canonical FHIR primitive extension, preserved during serialization", "example": "_birthDate" },
           { "label": "_search", "meaning": "typed operational search projections generated by fhir-mql", "example": "resource-configuration dependent" },
           { "label": "_compartments", "meaning": "operational compartment memberships", "example": { "Patient": ["123"] } },
-          { "label": "_kehrnel", "meaning": "stored shape and projection versions plus operational timestamps", "example": "storage_schema_version: 1" }
+          { "label": "_kehrnel", "meaning": "stored shape and projection versions plus operational timestamps", "example": "storage_schema_version: 2" },
+          { "label": "_custom / _enrichments", "meaning": "reserved partner and customer namespaces preserved atomically across canonical FHIR updates and never returned by the FHIR API", "example": "customer-owned extension data" }
         ]
       }
     },
@@ -257,20 +264,28 @@
         { "id": "coll.procedure", "kind": "collection", "store": "store:Procedure", "label": "Procedure", "fields": ["_id", "resourceType", "id", "meta", "status", "code", "subject Reference<T>", "occurrence[x] (R5/R6)", "_search", "_compartments", "_kehrnel"], "expand": { "occurrence[x] (R5/R6)": ["occurrenceDateTime", "occurrencePeriod", "occurrenceString", "occurrenceAge", "occurrenceRange", "occurrenceTiming"], "_search": ["configured reference/token/date projections"] }, "badges": ["canonical", "operational", "polymorphic", "representative"], "links": [{ "type": "reference", "target": "coll.patient", "on": "subject.reference", "label": "subject Reference<T>", "polymorphic": true, "targets": ["Patient", "Group", "Device", "Practitioner", "Organization", "Location"] }] },
         { "id": "coll.medicationrequest", "kind": "collection", "store": "store:MedicationRequest", "label": "MedicationRequest", "fields": ["_id", "resourceType", "id", "meta", "status", "intent", "medication CodeableReference", "subject Reference<T>", "authoredOn", "_search", "_compartments", "_kehrnel"], "expand": { "medication CodeableReference": ["concept", "reference"], "_search": ["configured reference/token/date projections"] }, "badges": ["canonical", "operational", "polymorphic", "representative"], "links": [{ "type": "reference", "target": "coll.patient", "on": "subject.reference", "label": "subject Reference<T>", "polymorphic": true, "targets": ["Patient", "Group"] }] },
         { "id": "coll.diagnosticreport", "kind": "collection", "store": "store:DiagnosticReport", "label": "DiagnosticReport", "fields": ["_id", "resourceType", "id", "meta", "status", "category[]", "code", "subject Reference<T>", "effective[x]", "result[] Reference<Observation>", "_search", "_compartments", "_kehrnel"], "expand": { "effective[x]": ["effectiveDateTime", "effectivePeriod"], "_search": ["configured reference/token/date projections"] }, "badges": ["canonical", "operational", "polymorphic", "representative"], "links": [{ "type": "reference", "target": "coll.patient", "on": "subject.reference", "label": "subject Reference<T>", "polymorphic": true, "targets": ["Patient", "Group", "Device", "Location", "Organization", "Practitioner", "Medication", "Substance"] }] },
-        { "id": "coll.allergyintolerance", "kind": "collection", "store": "store:AllergyIntolerance", "label": "AllergyIntolerance", "fields": ["_id", "resourceType", "id", "meta", "clinicalStatus", "verificationStatus", "code", "patient Reference<Patient>", "reaction[]", "_search", "_compartments", "_kehrnel"], "expand": { "_search": ["configured reference/token/date projections"], "_compartments": ["Patient"] }, "badges": ["canonical", "operational", "representative"], "links": [{ "type": "reference", "target": "coll.patient", "on": "patient.reference", "label": "patient Reference<Patient>", "targets": ["Patient"] }] }
+        { "id": "coll.allergyintolerance", "kind": "collection", "store": "store:AllergyIntolerance", "label": "AllergyIntolerance", "fields": ["_id", "resourceType", "id", "meta", "clinicalStatus", "verificationStatus", "code", "patient Reference<Patient>", "reaction[]", "_search", "_compartments", "_kehrnel"], "expand": { "_search": ["configured reference/token/date projections"], "_compartments": ["Patient"] }, "badges": ["canonical", "operational", "representative"], "links": [{ "type": "reference", "target": "coll.patient", "on": "patient.reference", "label": "patient Reference<Patient>", "targets": ["Patient"] }] },
+        { "id": "coll.migration_runs", "kind": "collection", "store": "store:_kehrnel_fhir_migration_runs", "label": "Migration runs", "fields": ["run_id", "environment_id", "fhir_release", "status", "source.sha256", "options", "totals", "checkpoint", "reference_integrity", "created_at", "completed_at"], "badges": ["operational"], "operationalRelationships": [{ "type": "audit-provenance", "target": "coll.resource_template", "field": "_kehrnel.provenance.migration_run_id", "label": "import provenance; not a FHIR Reference or implicit join" }] },
+        { "id": "coll.migration_chunks", "kind": "collection", "store": "store:_kehrnel_fhir_migration_chunks", "label": "Migration chunks", "fields": ["run_id", "chunk_index", "sha256", "status", "attempt", "report", "completed_at"], "badges": ["operational"], "operationalRelationships": [{ "type": "checkpoint-owner", "target": "coll.migration_runs", "field": "run_id", "label": "ordered run checkpoint; not a FHIR Reference or implicit join" }] }
       ]
     },
     "transformGraph": {
       "layout": "LR",
       "nodes": [
         { "id": "src.fhir_payload", "kind": "source", "label": "FHIR JSON / Bundle / NDJSON" },
-        { "id": "op.validate", "kind": "transform", "label": "R5/R6 package validation", "group": "Ingest" },
+        { "id": "src.cohort_blueprint", "kind": "source", "label": "Cohort blueprint + overrides" },
+        { "id": "op.plan_cohort", "kind": "transform", "label": "Compile deterministic cohort plan", "group": "Transform" },
+        { "id": "op.generate_cohort", "kind": "transform", "label": "Generate patient graphs + quality evidence", "group": "Transform" },
+        { "id": "op.validate", "kind": "transform", "label": "release-tier validation", "group": "Ingest" },
         { "id": "op.project", "kind": "transform", "label": "Build _search + _compartments", "group": "Transform" },
         { "id": "op.route", "kind": "transform", "label": "Route by resourceType", "group": "Transform" },
         { "id": "sink.resource_collection", "kind": "sink", "label": "Collection<ResourceType>", "entityRef": "coll.resource_template" }
       ],
       "edges": [
         { "from": "src.fhir_payload", "to": "op.validate" },
+        { "from": "src.cohort_blueprint", "to": "op.plan_cohort" },
+        { "from": "op.plan_cohort", "to": "op.generate_cohort" },
+        { "from": "op.generate_cohort", "to": "op.validate" },
         { "from": "op.validate", "to": "op.project" },
         { "from": "op.project", "to": "op.route" },
         { "from": "op.route", "to": "sink.resource_collection" }

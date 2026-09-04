@@ -103,6 +103,44 @@ async def test_strategy_run_op_synthetic_generate_batch_dry_run():
     assert result["generated"]["Patient"] >= 1
 
 
+@pytest.mark.parametrize(
+    ("release", "recipe", "expected_omissions"),
+    [
+        ("R5", "clinical_dev", 0),
+        ("R5", "clinical_full84", 0),
+        ("R6", "clinical_dev", 0),
+        ("R6", "clinical_full84", 6),
+    ],
+)
+@pytest.mark.asyncio
+async def test_every_release_compatible_recipe_document_conforms_to_base_schema(
+    release: str, recipe: str, expected_omissions: int
+):
+    result = await synthetic_generate_batch(
+        _ctx(config={"database": "fhir_test", "schema_version": release}),
+        {"recipe": recipe, "dry_run": True, "seed": 42},
+    )
+
+    assert result["generation_conformance"]["passed"] is True
+    assert result["generation_conformance"]["resources_checked"] == result["total_documents"]
+    assert len(result["omitted_recipe_resource_types"]) == expected_omissions
+
+
+@pytest.mark.asyncio
+async def test_recipe_filter_never_silently_drops_an_explicit_unsupported_type():
+    with pytest.raises(KehrnelError) as exc:
+        await synthetic_generate_batch(
+            _ctx(config={"database": "fhir_test", "schema_version": "R6"}),
+            {
+                "recipe": "clinical_full84",
+                "resources": {"DeviceDispense": 1},
+                "dry_run": True,
+            },
+        )
+
+    assert exc.value.code == "INVALID_INPUT"
+
+
 @pytest.mark.skipif(
     not os.getenv("FHIR_GENERATION_INTEGRATION"),
     reason="Set FHIR_GENERATION_INTEGRATION=1 to persist to local MongoDB",

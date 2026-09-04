@@ -49,7 +49,7 @@ def test_resolve_strategy_config_rejects_invalid_mode():
 def test_resolve_mongo_from_bindings():
     uri, database, prefix = bridge.resolve_mongo(
         _ctx(
-            config={"database": "ignored_when_binding_set"},
+            config={"database": "reviewed_strategy_db"},
             bindings={
                 "db": {
                     "provider": "mongodb",
@@ -60,11 +60,11 @@ def test_resolve_mongo_from_bindings():
         )
     )
     assert uri == "mongodb://localhost:27017"
-    assert database == "fhir_bindings_db"
+    assert database == "reviewed_strategy_db"
     assert prefix == ""
 
 
-def test_resolve_mongo_env_fallback(monkeypatch):
+def test_resolve_mongo_env_uri_does_not_override_strategy_database(monkeypatch):
     monkeypatch.delenv("MONGODB_URI", raising=False)
     monkeypatch.delenv("MONGODB_DB", raising=False)
     monkeypatch.setenv("MONGODB_URI", "mongodb://127.0.0.1:27017")
@@ -72,7 +72,7 @@ def test_resolve_mongo_env_fallback(monkeypatch):
 
     uri, database, prefix = bridge.resolve_mongo(_ctx(config={}, bindings={}))
     assert uri == "mongodb://127.0.0.1:27017"
-    assert database == "fhir_from_env"
+    assert database == "fhir_cdr"
     assert prefix == ""
 
 

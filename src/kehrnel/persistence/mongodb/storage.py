@@ -1,4 +1,5 @@
 """Mongo storage adapter."""
+
 from __future__ import annotations
 
 from typing import Any, Dict, Iterable, List
@@ -27,7 +28,9 @@ class MongoStorageAdapter(StorageAdapter):
     ) -> Any:
         return await self.db[collection].replace_one(flt, doc, upsert=upsert)
 
-    async def replace_many(self, collection: str, docs: Iterable[Dict[str, Any]]) -> Any:
+    async def replace_many(
+        self, collection: str, docs: Iterable[Dict[str, Any]]
+    ) -> Any:
         """Idempotently replace documents by ``_id`` using one bulk write."""
         from pymongo import ReplaceOne
 
@@ -40,9 +43,22 @@ class MongoStorageAdapter(StorageAdapter):
             return None
         return await self.db[collection].bulk_write(operations, ordered=False)
 
-    async def find_one(self, collection: str, flt: Dict[str, Any], projection: Dict[str, Any] | None = None) -> Dict[str, Any] | None:
+    async def delete_many(self, collection: str, flt: Dict[str, Any]) -> Any:
+        return await self.db[collection].delete_many(flt)
+
+    async def find_one(
+        self,
+        collection: str,
+        flt: Dict[str, Any],
+        projection: Dict[str, Any] | None = None,
+    ) -> Dict[str, Any] | None:
         return await self.db[collection].find_one(flt, projection)
 
-    async def aggregate(self, collection: str, pipeline: List[Dict[str, Any]], allow_disk_use: bool = True) -> List[Dict[str, Any]]:
+    async def aggregate(
+        self,
+        collection: str,
+        pipeline: List[Dict[str, Any]],
+        allow_disk_use: bool = True,
+    ) -> List[Dict[str, Any]]:
         cursor = self.db[collection].aggregate(pipeline, allowDiskUse=allow_disk_use)
         return [doc async for doc in cursor]
