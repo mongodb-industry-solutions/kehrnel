@@ -92,12 +92,25 @@ def test_fhir_capabilities_reports_distinct_sets():
     assert set(cat["recipe_resource_types"]) < set(cat["storable_resource_types"])
     assert set(cat["storable_resource_types"]) < set(cat["schema_supported_resource_types"])
     assert set(cat["synthetic_writable_resource_types"]) <= set(cat["generatable_resource_types"])
+    assert set(cat["generation_only_resource_types"]) == (
+        set(cat["generatable_resource_types"])
+        - set(cat["synthetic_writable_resource_types"])
+    )
+    assert cat["capability_counts"]["synthetic_writable"] == len(
+        cat["synthetic_writable_resource_types"]
+    )
+    assert "does not imply persistence" in cat["capability_semantics"][
+        "generatable_resource_types"
+    ]
     assert set(cat["validation_levels"]) == {"structure", "base"}
     assert cat["conformance_mode"] == "fhir-core"
     assert cat["implementation_guide_packages"] == []
     assert cat["available_profiles"] == []
     assert cat["profile_conformance"] is False
     assert "_count" in cat["supported_result_controls"]
+    assert cat["chaining_supported"] is True
+    assert cat["reverse_chaining_supported"] is True
+    assert cat["chaining_limits"]["maximum_hops"] == 1
     assert set(cat["handling_modes"]) == {"strict", "lenient"}
 
 

@@ -800,8 +800,10 @@ async def execute_fhir_query(
 
     limit, skip = pagination_from_plan(plan_body)
 
-    # Compiled sort spec (resolved at compile time); always followed by an id
-    # tie-breaker for stable paging. Empty → id-only ordering.
+    # Compiled sort spec (resolved at compile time). Explicit sorts receive an
+    # id tie-breaker for deterministic ordering. An unsorted FHIR search remains
+    # unsorted so MongoDB can select the most selective filter index; forcing an
+    # id-only order makes range searches scan ``id_unique`` and filter every row.
     sort_spec: list[tuple[str, int]] = [
         (f, int(d)) for f, d in (plan_body.get("sort") or []) if isinstance(f, str)
     ]
@@ -859,14 +861,17 @@ async def execute_fhir_query(
                 resolved_filter = resolve_multi_step_mql(
                     collection.database, collection.name, mql_filter, session=session
                 )
-                # Requested sort, then a logical-id tie-breaker for stable paging.
+                # Explicit sort, then a logical-id tie-breaker for stable paging.
+                # FHIR does not guarantee result order when `_sort` is absent.
                 order = list(sort_spec)
-                if not any(f == "id" for f, _ in order):
+                if order and not any(f == "id" for f, _ in order):
                     order.append(("id", 1))
                 if limit == 0:
                     row_list: list[dict[str, Any]] = []  # FHIR _count=0 → count only
                 else:
-                    cursor = collection.find(resolved_filter, **kwargs).sort(order)
+                    cursor = collection.find(resolved_filter, **kwargs)
+                    if order:
+                        cursor = cursor.sort(order)
                     if skip:
                         cursor = cursor.skip(skip)
                     if limit is not None:
@@ -881,8 +886,9 @@ async def execute_fhir_query(
                         find_cmd: dict[str, Any] = {
                             "find": collection.name,
                             "filter": resolved_filter,
-                            "sort": {f: d for f, d in order},
                         }
+                        if order:
+                            find_cmd["sort"] = {f: d for f, d in order}
                         if skip:
                             find_cmd["skip"] = skip
                         if limit is not None:
@@ -1072,8 +1078,10 @@ def fhir_capabilities(
     build truthful UI instead of inferring from parameter type or a static list:
       - schema_supported_resource_types: concrete resources in the active release
       - searchable_resource_types:      have active fhir-mql search configs
-      - generatable_resource_types:     are understood by fhir-gen
+      - generatable_resource_types:     can be synthesized for preview/inspection
       - storable_resource_types:        satisfy the mandatory projection contract
+      - synthetic_writable_resource_types: can be synthesized and persisted
+      - generation_only_resource_types: can be previewed but not persisted
       - recipe_resource_types:          occur in one or more example data recipes
 
     Discovery failures are surfaced via ``degraded`` + ``discovery_errors`` rather
@@ -1097,6 +1105,9 @@ def fhir_capabilities(
         generatable = sorted(capability_sets.generatable)
         storable = sorted(capability_sets.storable)
         synthetic_writable = sorted(capability_sets.synthetic_writable)
+        generation_only = sorted(
+            capability_sets.generatable - capability_sets.synthetic_writable
+        )
         recipe_resources = sorted(capability_sets.recipe_resources)
     except Exception as exc:
         schema_supported = []
@@ -1104,6 +1115,7 @@ def fhir_capabilities(
         generatable = []
         storable = []
         synthetic_writable = []
+        generation_only = []
         recipe_resources = []
         discovery_errors.append({"source": "resource_capabilities", "error": str(exc)})
 
@@ -1156,7 +1168,30 @@ def fhir_capabilities(
         "generatable_resource_types": generatable,
         "storable_resource_types": storable,
         "synthetic_writable_resource_types": synthetic_writable,
+        "generation_only_resource_types": generation_only,
         "recipe_resource_types": recipe_resources,
+        "capability_counts": {
+            "schema_supported": len(schema_supported),
+            "searchable": len(searchable),
+            "storable": len(storable),
+            "generatable_preview": len(generatable),
+            "synthetic_writable": len(synthetic_writable),
+            "generation_only": len(generation_only),
+            "recipe_resources": len(recipe_resources),
+        },
+        "capability_semantics": {
+            "generatable_resource_types": (
+                "Resources fhir-gen can synthesize for preview and inspection; "
+                "this does not imply persistence support."
+            ),
+            "synthetic_writable_resource_types": (
+                "Resources that can be synthesized, denormalized, indexed, and persisted."
+            ),
+            "generation_only_resource_types": (
+                "Generatable resources excluded from persistence because the active "
+                "strategy has no mandatory search/compartment projection."
+            ),
+        },
         "synthetic_cohorts": {
             "supported": str(fhir_version).upper() in {"R5", "R6"},
             "contract_version": BLUEPRINT_CONTRACT_VERSION,
@@ -1218,8 +1253,14 @@ def fhir_capabilities(
         "unsupported_result_controls": sorted(_KNOWN_UNSUPPORTED_RESULT_CONTROLS),
         "handling_modes": ["strict", "lenient"],
         # Truthful feature flags — advertise only what executes.
-        "chaining_supported": False,
-        "reverse_chaining_supported": False,
+        "chaining_supported": True,
+        "reverse_chaining_supported": True,
+        "chaining_limits": {
+            "maximum_hops": 1,
+            "typed_forward_chain_required": True,
+            "combined_with_compartment_search": False,
+            "maximum_intermediate_ids": 10000,
+        },
         "include_supported": False,
         "semantic": describe_semantic_config(cfg, ctx.adapters),
     }
@@ -1268,6 +1309,9 @@ def fhir_support_matrix(
     searchable = set(capabilities.get("searchable_resource_types") or [])
     storable = set(capabilities.get("storable_resource_types") or [])
     generatable = set(capabilities.get("generatable_resource_types") or [])
+    synthetic_writable = set(
+        capabilities.get("synthetic_writable_resource_types") or []
+    )
     recipe = set(capabilities.get("recipe_resource_types") or [])
     rows: list[dict[str, Any]] = []
     include_parameters = bool(payload.get("include_parameters", False))
@@ -1277,7 +1321,11 @@ def fhir_support_matrix(
             "schema": resource_type in schema,
             "search": resource_type in searchable,
             "write": resource_type in storable,
+            # `generate` is retained for contract compatibility and means
+            # preview/inspection. Consumers should prefer the explicit fields.
             "generate": resource_type in generatable,
+            "generate_preview": resource_type in generatable,
+            "generate_and_store": resource_type in synthetic_writable,
             "example_recipe": resource_type in recipe,
         }
         if include_parameters and resource_type in searchable:
@@ -1307,16 +1355,17 @@ def fhir_support_matrix(
             "A yes indicates implemented accelerator behavior, not certification or full FHIR conformance."
         ),
         "",
-        "| Resource | Schema | Search | Write | Generate | Example recipe |",
-        "|---|---:|---:|---:|---:|---:|",
+        "| Resource | Schema | Search | Write | Generate preview | Generate + store | Example recipe |",
+        "|---|---:|---:|---:|---:|---:|---:|",
     ]
     markdown_lines.extend(
-        "| {resource_type} | {schema} | {search} | {write} | {generate} | {recipe} |".format(
+        "| {resource_type} | {schema} | {search} | {write} | {preview} | {persist} | {recipe} |".format(
             resource_type=row["resource_type"],
             schema=mark(row["schema"]),
             search=mark(row["search"]),
             write=mark(row["write"]),
-            generate=mark(row["generate"]),
+            preview=mark(row["generate_preview"]),
+            persist=mark(row["generate_and_store"]),
             recipe=mark(row["example_recipe"]),
         )
         for row in rows
@@ -1329,6 +1378,7 @@ def fhir_support_matrix(
         "generated_from": "fhir_capabilities",
         "generated_at": datetime.now(UTC).isoformat(),
         "profile_conformance": capabilities.get("profile_conformance", False),
+        "capability_semantics": capabilities.get("capability_semantics", {}),
         "rows": rows,
         "markdown": "\n".join(markdown_lines) + "\n",
     }

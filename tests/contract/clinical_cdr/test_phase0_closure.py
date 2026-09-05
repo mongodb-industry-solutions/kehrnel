@@ -240,7 +240,7 @@ async def test_find_and_count_over_same_filter(monkeypatch):
 
 
 @pytest.mark.asyncio
-async def test_find_sort_has_id_tiebreaker_and_paging(monkeypatch):
+async def test_unsorted_find_preserves_filter_index_choice_and_paging(monkeypatch):
     coll = _FakeCollection([], total=0)
     _patch_mongo(monkeypatch, coll)
     plan = QueryPlan(engine="fhir_mql",
@@ -249,7 +249,7 @@ async def test_find_sort_has_id_tiebreaker_and_paging(monkeypatch):
                      explain={})
     await fhir_query.execute_fhir_query(_ctx(), plan)
     cur = coll.last_cursor
-    assert cur.sorts == [[("id", 1)]]
+    assert cur.sorts == []
     assert cur.skips == [10] and cur.limits == [5]
 
 

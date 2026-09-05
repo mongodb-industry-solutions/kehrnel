@@ -560,7 +560,10 @@
           "generatable_resource_types": { "type": "array", "items": { "type": "string" } },
           "storable_resource_types": { "type": "array", "items": { "type": "string" } },
           "synthetic_writable_resource_types": { "type": "array", "items": { "type": "string" } },
+          "generation_only_resource_types": { "type": "array", "items": { "type": "string" } },
           "recipe_resource_types": { "type": "array", "items": { "type": "string" } },
+          "capability_counts": { "type": "object" },
+          "capability_semantics": { "type": "object" },
           "ingest_supported": { "type": "boolean" },
           "write_supported": { "type": "boolean" },
           "import_formats": { "type": "array", "items": { "type": "string" } },
@@ -578,6 +581,7 @@
           "handling_modes": { "type": "array", "items": { "type": "string" } },
           "chaining_supported": { "type": "boolean" },
           "reverse_chaining_supported": { "type": "boolean" },
+          "chaining_limits": { "type": "object" },
           "include_supported": { "type": "boolean" }
         }
       }

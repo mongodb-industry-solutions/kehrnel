@@ -257,6 +257,7 @@ def test_support_matrix_is_derived_from_runtime_capabilities(monkeypatch):
             "searchable_resource_types": ["Patient"],
             "storable_resource_types": ["Patient"],
             "generatable_resource_types": [],
+            "synthetic_writable_resource_types": [],
             "recipe_resource_types": [],
             "profile_conformance": False,
         },
@@ -270,6 +271,8 @@ def test_support_matrix_is_derived_from_runtime_capabilities(monkeypatch):
             "search": False,
             "write": False,
             "generate": False,
+            "generate_preview": False,
+            "generate_and_store": False,
             "example_recipe": False,
         },
         {
@@ -278,7 +281,9 @@ def test_support_matrix_is_derived_from_runtime_capabilities(monkeypatch):
             "search": True,
             "write": True,
             "generate": False,
+            "generate_preview": False,
+            "generate_and_store": False,
             "example_recipe": False,
         },
     ]
-    assert "| Patient | yes | yes | yes | — | — |" in matrix["markdown"]
+    assert "| Patient | yes | yes | yes | — | — | — |" in matrix["markdown"]

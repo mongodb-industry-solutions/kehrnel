@@ -8,7 +8,10 @@ Patient/Observation tier plus package-backed R5 and R6 support.
 
 The active capability sets are derived independently from the selected release
 schema, shipped fhir-mql search configs, fhir-gen schemas, and example recipes;
-recipes never act as the write allowlist.
+recipes never act as the write allowlist. `generatable_resource_types` means
+preview/inspection support; `synthetic_writable_resource_types` is the stricter
+intersection that can be denormalized, indexed, and persisted. The capability
+response also reports their difference as `generation_only_resource_types`.
 
 **Also:** [FHIR_TESTING.md](../../../../../../FHIR_TESTING.md) · Portal `/guide/docs/strategies/fhir/clinical-cdr`
 
