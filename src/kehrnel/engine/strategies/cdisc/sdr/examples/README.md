@@ -5,7 +5,7 @@ source files are intentionally not vendored into Kehrnel. Every URL is pinned
 to a source revision and every downloaded file is verified with SHA-256.
 
 - `cdisc-pilot-sdtm-dm` is the official CDISC clinical pilot DM example.
-- `phuse-ffu-send` is the compact PhUSE FFU SEND example used by the guided single-study journey.
+- `phuse-ffu-send` is the complete 25-domain PhUSE FFU SEND example used by the guided single-study journey.
 - `phuse-nimble-send` is an independent 100-animal rat study with three dose groups.
 - `phuse-instem-send` is an independent 241-animal rat study with a large pathology and laboratory corpus.
 - `phuse-pointcross-send` is an independent 150-animal rat study with main and recovery cohorts.
