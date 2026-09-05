@@ -777,6 +777,33 @@ async def test_validation_gate_blocks_then_allows_publication():
 
 
 @pytest.mark.asyncio
+async def test_validation_reports_source_duplicate_keys_without_dropping_rows():
+    storage = MemoryStorage()
+    strategy = CDISCSDRStrategy()
+    ctx = _context(storage, require_validation=True)
+    payload = _payload()
+    payload["publicationState"] = "staged"
+    payload["datasetJSON"]["rows"][1][1] = payload["datasetJSON"]["rows"][0][1]
+
+    ingested = await strategy.ingest(ctx, payload)
+    validated = await strategy.run_op(
+        ctx,
+        "cdisc_validate_snapshot",
+        {"studyId": "STUDY-001", "snapshotId": "snapshot-1"},
+    )
+
+    assert ingested["recordCount"] == 2
+    assert validated["ok"] is True
+    assert validated["run"]["summary"]["warnings"] == 1
+    assert validated["findings"][0]["ruleId"] == "SDR.KEY.DUPLICATE_SOURCE"
+    assert validated["findings"][0]["details"] == {
+        "duplicateDeclaredKeys": 1,
+        "affectedRecords": 2,
+        "identityStrategy": "declared-key-plus-source-row-ordinal",
+    }
+
+
+@pytest.mark.asyncio
 async def test_synthetic_study_runs_through_ingest_validate_and_publish():
     storage = MemoryStorage()
     strategy = CDISCSDRStrategy()

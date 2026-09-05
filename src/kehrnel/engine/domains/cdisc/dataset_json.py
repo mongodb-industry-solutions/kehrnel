@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from collections import Counter
 from typing import Any, Dict, List, Optional, Tuple
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
@@ -181,11 +182,26 @@ def canonicalize_dataset_json(
     records: List[CanonicalRecord] = []
     record_hashes: List[str] = []
     column_names = [column.name for column in document.columns]
+    declared_keys = [
+        {name: row[column_names.index(name)] for name in key_names}
+        for row in document.rows
+    ]
+    declared_key_counts = Counter(
+        _canonical_json(record_key) for record_key in declared_keys if record_key
+    )
+    duplicate_declared_keys = {
+        encoded for encoded, count in declared_key_counts.items() if count > 1
+    }
+    duplicate_affected_records = sum(
+        declared_key_counts[encoded] for encoded in duplicate_declared_keys
+    )
     for ordinal, row in enumerate(document.rows, start=1):
         data = dict(zip(column_names, row))
         facets, entity_refs = project_record(resolved_profile, domain, data)
         record_key = {name: data.get(name) for name in key_names}
         identity_key = record_key or {"__rowOrdinal": ordinal}
+        if record_key and _canonical_json(record_key) in duplicate_declared_keys:
+            identity_key = {**record_key, "__sourceRowOrdinal": ordinal}
         record_hash = _sha256({"columns": column_names, "values": row})
         identity_hash = _sha256(
             {
@@ -224,18 +240,6 @@ def canonicalize_dataset_json(
             )
         )
 
-    seen_ids = set()
-    duplicate_ids = set()
-    for record in records:
-        if record.id in seen_ids:
-            duplicate_ids.add(record.id)
-        seen_ids.add(record.id)
-    if duplicate_ids:
-        raise ValueError(
-            "Dataset-JSON contains duplicate declared record keys; "
-            f"sample identities: {sorted(duplicate_ids)[:5]}"
-        )
-
     content_hash = _sha256(
         {
             "variables": [variable.model_dump(by_alias=True, exclude_none=True) for variable in variables],
@@ -260,7 +264,20 @@ def canonicalize_dataset_json(
         recordCount=len(records),
         contentHash=content_hash,
         sourceArtifactId=source_artifact_id,
-        sourceMetadata=_dataset_source_metadata(document),
+        sourceMetadata={
+            **_dataset_source_metadata(document),
+            **(
+                {
+                    "recordIdentity": {
+                        "strategy": "declared-key-plus-source-row-ordinal",
+                        "duplicateDeclaredKeys": len(duplicate_declared_keys),
+                        "affectedRecords": duplicate_affected_records,
+                    }
+                }
+                if duplicate_declared_keys
+                else {}
+            ),
+        },
         publicationState=publication_state,
     )
     return dataset, records

@@ -27,6 +27,36 @@ def _json_value(value: Any) -> Any:
     return item() if callable(item) else value
 
 
+def _resolve_xpt_domain(table_name: Any, values: Dict[str, Any]) -> str:
+    """Resolve the CDISC domain without losing supplemental-qualifier identity.
+
+    Some valid XPT producers label every SUPPQUAL member ``SUPP`` even though
+    the standard dataset identity is ``SUPP`` plus its one RDOMAIN value (for
+    example SUPPMA or SUPPMI). Treating all of those members as one domain
+    causes immutable dataset and record identity collisions during package
+    ingestion.
+    """
+
+    domain = str(table_name or "").strip().upper()
+    if domain == "SUPP" and "RDOMAIN" in values:
+        related_domains = {
+            str(value).strip().upper()
+            for value in values["RDOMAIN"]
+            if value not in (None, "") and str(value).strip()
+        }
+        if len(related_domains) == 1:
+            return f"SUPP{related_domains.pop()}"
+    if not domain and "DOMAIN" in values:
+        domain_values = {
+            str(value).strip().upper()
+            for value in values["DOMAIN"]
+            if value not in (None, "") and str(value).strip()
+        }
+        if len(domain_values) == 1:
+            return domain_values.pop()
+    return domain
+
+
 def xpt_to_dataset_json(
     content: bytes,
     *,
@@ -52,11 +82,7 @@ def xpt_to_dataset_json(
 
     names = list(metadata.column_names)
     record_count = len(values[names[0]]) if names else 0
-    domain = str(metadata.table_name or "").strip().upper()
-    if not domain and "DOMAIN" in values:
-        domain_values = {str(value).strip().upper() for value in values["DOMAIN"] if value not in (None, "")}
-        if len(domain_values) == 1:
-            domain = domain_values.pop()
+    domain = _resolve_xpt_domain(metadata.table_name, values)
     if not domain:
         raise ValueError("XPT dataset domain/name could not be determined")
     resolved_study_oid = study_oid or (define.study_oid if define else None)

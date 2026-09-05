@@ -129,6 +129,19 @@ class ValidationService:
             datasets.append({"dataset": dataset, "records": records})
             if len(records) != dataset.get("recordCount"):
                 findings.append({"severity": "error", "ruleId": "SDR.RECORD_COUNT", "message": "Stored record count differs from metadata.", "datasetId": dataset_id})
+            identity_metadata = (dataset.get("sourceMetadata") or {}).get("recordIdentity") or {}
+            if identity_metadata.get("duplicateDeclaredKeys"):
+                findings.append({
+                    "severity": "warning",
+                    "ruleId": "SDR.KEY.DUPLICATE_SOURCE",
+                    "message": "Source rows contain duplicate declared keys; canonical identities were disambiguated by source row ordinal.",
+                    "datasetId": dataset_id,
+                    "details": {
+                        "duplicateDeclaredKeys": identity_metadata["duplicateDeclaredKeys"],
+                        "affectedRecords": identity_metadata.get("affectedRecords", 0),
+                        "identityStrategy": identity_metadata.get("strategy"),
+                    },
+                })
             variables_by_name = {
                 str(variable.get("name")): variable
                 for variable in dataset.get("variables") or []

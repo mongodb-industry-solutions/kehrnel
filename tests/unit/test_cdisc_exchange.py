@@ -2,7 +2,7 @@ import copy
 
 from kehrnel.engine.domains.cdisc.dataset_json import canonicalize_dataset_json
 from kehrnel.engine.domains.cdisc.exchange import compare_export_to_canonical, export_dataset_json
-from kehrnel.engine.domains.cdisc.xpt import _read_xport
+from kehrnel.engine.domains.cdisc.xpt import _read_xport, _resolve_xpt_domain
 from tests.unit.test_cdisc_dataset_json import _payload
 
 
@@ -96,3 +96,10 @@ def test_xpt_reader_retries_legacy_windows_1252_text():
         ("/tmp/legacy.xpt", {"output_format": "dict"}),
         ("/tmp/legacy.xpt", {"output_format": "dict", "encoding": "WINDOWS-1252"}),
     ]
+
+
+def test_xpt_domain_restores_suppqual_identity_from_rdomain():
+    assert _resolve_xpt_domain("SUPP", {"RDOMAIN": ["MA", "MA"]}) == "SUPPMA"
+    assert _resolve_xpt_domain("SUPP", {"RDOMAIN": ["MI", "MI"]}) == "SUPPMI"
+    assert _resolve_xpt_domain("SUPP", {"RDOMAIN": ["MI", "MA"]}) == "SUPP"
+    assert _resolve_xpt_domain("", {"DOMAIN": ["LB", "LB"]}) == "LB"

@@ -70,11 +70,19 @@ def test_dataset_json_rejects_row_width_and_record_count_mismatches():
         parse_dataset_json(payload)
 
 
-def test_dataset_json_rejects_duplicate_declared_keys():
+def test_dataset_json_preserves_and_reports_duplicate_declared_keys():
     payload = _payload()
     payload["rows"][1][1] = payload["rows"][0][1]
-    with pytest.raises(ValueError, match="duplicate declared record keys"):
-        _canonicalize(payload)
+    dataset, records = _canonicalize(payload)
+
+    assert len(records) == len(payload["rows"])
+    assert len({record.id for record in records}) == len(records)
+    assert records[0].record_key == records[1].record_key
+    assert dataset.source_metadata["recordIdentity"] == {
+        "strategy": "declared-key-plus-source-row-ordinal",
+        "duplicateDeclaredKeys": 1,
+        "affectedRecords": 2,
+    }
 
 
 def test_dataset_json_rejects_a_different_major_minor_version():

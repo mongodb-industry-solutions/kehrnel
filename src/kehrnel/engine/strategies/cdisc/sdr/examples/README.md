@@ -25,6 +25,18 @@ python scripts/fetch_cdisc_examples.py phuse-nimble-send /tmp/cdisc-nimble
 python scripts/fetch_cdisc_examples.py phuse-pds-send /tmp/cdisc-pds
 ```
 
+For a local, deployment-neutral solution handoff, exercise the complete
+fetch-to-publish workflow and export the resulting evidence package with:
+
+```bash
+uv run --extra cdisc --extra api python scripts/export_cdisc_example_evidence.py \
+  phuse-pds-send /tmp/PDS2014-solution-evidence.json --acknowledge-terms
+```
+
+The command uses transient local strategy storage. It does not bypass checksum
+verification, validation, publication, projection, or the governed package
+export operation.
+
 An activated strategy exposes the same catalog through
 `cdisc_list_examples`. After showing the attribution and terms, a client can
 call `cdisc_ingest_example` with `acknowledgeTerms: true`. Setting `validate`
