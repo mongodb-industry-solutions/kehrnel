@@ -28,7 +28,7 @@ class TestPatientScenarioCatalog:
     def test_generate_scenarios_count(self):
         gen = _gen()
         gen.generate("Organization", count=1)
-        patients = gen.generate_scenarios("Patient")
+        patients = gen.generate_scenarios("Patient", named_only=True)
         assert len(patients) == len(PATIENT_SCENARIOS)
 
 
@@ -94,7 +94,7 @@ class TestPatientDeceasedDateTimeScenario:
         gen = _gen()
         gen.generate("Organization", count=1)
         with_dt = [
-            p for p in gen.generate_scenarios("Patient")
+            p for p in gen.generate_scenarios("Patient", named_only=True)
             if isinstance(p.get("deceasedDateTime"), str)
         ]
         assert len(with_dt) == 1

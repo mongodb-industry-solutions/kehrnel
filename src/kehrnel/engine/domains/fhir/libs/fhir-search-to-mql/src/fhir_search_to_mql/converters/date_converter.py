@@ -18,6 +18,7 @@ from dateutil import parser as date_parser
 from fhir_search_to_mql.converters.base_converter import BaseConverter
 from fhir_search_to_mql.core.exceptions import ConversionError
 from fhir_search_to_mql.core.constants import PREFIXES
+from fhir_search_to_mql.temporal import date_projection_field
 
 
 class DateConverter(BaseConverter):
@@ -67,6 +68,17 @@ class DateConverter(BaseConverter):
             date_range = self._parse_date_range(value)
         except Exception as e:
             raise ConversionError(f"Invalid date format '{value}': {str(e)}")
+
+        # Normal FHIRSearchConverter calls carry the search-parameter name.
+        # Query the BSON-date interval shadow rather than the canonical FHIR
+        # string. Direct DateConverter users retain legacy field behavior.
+        parameter_name = self.param_config.get('_parameter_name')
+        if parameter_name:
+            return self._build_interval_query(
+                date_projection_field(str(parameter_name)),
+                date_range,
+                prefix or 'eq',
+            )
         
         # Get fields to query
         fields = self._get_fields_for_modifier(modifier)
@@ -100,6 +112,50 @@ class DateConverter(BaseConverter):
         
         # Combine with OR if multiple fields
         return self._create_or_query(field_queries)
+
+    def _build_interval_query(
+        self,
+        field_name: str,
+        date_range: Dict[str, datetime],
+        prefix: str,
+    ) -> Dict[str, Any]:
+        """Build a query over half-open BSON date intervals."""
+
+        start = date_range['start']
+        inclusive_end = date_range['end']
+        end = (
+            inclusive_end + timedelta(microseconds=1)
+            if inclusive_end > start
+            else inclusive_end + timedelta(milliseconds=1)
+        )
+        overlap = {
+            "$elemMatch": {
+                "start": {"$lt": end},
+                "end": {"$gt": start},
+            }
+        }
+        if prefix == 'eq':
+            return {field_name: overlap}
+        if prefix == 'ne':
+            return {field_name: {"$not": overlap}}
+        if prefix in ('gt', 'sa'):
+            return {field_name: {"$elemMatch": {"start": {"$gte": end}}}}
+        if prefix == 'ge':
+            return {field_name: {"$elemMatch": {"end": {"$gt": start}}}}
+        if prefix in ('lt', 'eb'):
+            return {field_name: {"$elemMatch": {"end": {"$lte": start}}}}
+        if prefix == 'le':
+            return {field_name: {"$elemMatch": {"start": {"$lt": end}}}}
+        if prefix == 'ap':
+            return {
+                field_name: {
+                    "$elemMatch": {
+                        "start": {"$lt": end + timedelta(days=1)},
+                        "end": {"$gt": start - timedelta(days=1)},
+                    }
+                }
+            }
+        return {field_name: overlap}
     
     def _parse_date_range(self, value: str) -> Dict[str, datetime]:
         """

@@ -12,18 +12,17 @@ from __future__ import annotations
 
 import base64
 import os
+import re
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Optional
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlsplit
 
 import certifi
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from pymongo import MongoClient
 
 from kehrnel.persistence.mongodb.tls import mongo_tls_enabled
-
-
-DEFAULT_ENV_META_COLLECTIONS = ("teams", "users", "workspaces")
 
 
 @dataclass
@@ -37,6 +36,57 @@ class _CoreStore:
 
 
 _STORE: Optional[_CoreStore] = None
+
+
+def _artifact_binding(env_id: str) -> Optional[dict[str, Any]]:
+    """Resolve an optional, environment-scoped artifact store for HDL.
+
+    MongoDB connection secrets and artifact-store credentials have different
+    lifecycles.  HDL's encrypted environment document currently owns only the
+    MongoDB URI, so deployments configure the shared artifact service through
+    Kehrnel environment variables.  Every returned root/prefix is scoped by the
+    environment id to prevent cross-environment object reuse.
+    """
+
+    provider = (os.getenv("KEHRNEL_HDL_ARTIFACT_PROVIDER") or "").strip().lower()
+    if not provider:
+        return None
+    safe_env_id = re.sub(r"[^A-Za-z0-9._-]+", "-", env_id).strip("-.")
+    if not safe_env_id:
+        raise ValueError("env_id cannot be converted to a safe artifact namespace")
+
+    if provider == "filesystem":
+        root = (os.getenv("KEHRNEL_HDL_ARTIFACT_ROOT") or "").strip()
+        if not root:
+            raise ValueError("KEHRNEL_HDL_ARTIFACT_ROOT is required for filesystem artifacts")
+        return {"provider": "filesystem", "root": str(Path(root).expanduser() / safe_env_id)}
+
+    if provider == "s3":
+        bucket = (os.getenv("KEHRNEL_HDL_ARTIFACT_S3_BUCKET") or "").strip()
+        if not bucket:
+            raise ValueError("KEHRNEL_HDL_ARTIFACT_S3_BUCKET is required for S3 artifacts")
+        base_prefix = (os.getenv("KEHRNEL_HDL_ARTIFACT_S3_PREFIX") or "").strip("/")
+        binding: dict[str, Any] = {
+            "provider": "s3",
+            "bucket": bucket,
+            "prefix": "/".join(part for part in (base_prefix, safe_env_id) if part),
+        }
+        optional = {
+            "region": "KEHRNEL_HDL_ARTIFACT_S3_REGION",
+            "endpoint_url": "KEHRNEL_HDL_ARTIFACT_S3_ENDPOINT_URL",
+            "server_side_encryption": "KEHRNEL_HDL_ARTIFACT_S3_SERVER_SIDE_ENCRYPTION",
+            "kms_key_id": "KEHRNEL_HDL_ARTIFACT_S3_KMS_KEY_ID",
+            "access_key_id": "KEHRNEL_HDL_ARTIFACT_S3_ACCESS_KEY_ID",
+            "secret_access_key": "KEHRNEL_HDL_ARTIFACT_S3_SECRET_ACCESS_KEY",
+            "session_token": "KEHRNEL_HDL_ARTIFACT_S3_SESSION_TOKEN",
+        }
+        for key, variable in optional.items():
+            value = (os.getenv(variable) or "").strip()
+            if value:
+                binding[key] = value
+        return binding
+
+    raise ValueError("KEHRNEL_HDL_ARTIFACT_PROVIDER must be 'filesystem' or 's3'")
 
 
 def _client_kwargs(uri: str) -> dict:
@@ -105,40 +155,6 @@ def _decrypt_sealed_uri(sealed_uri: dict[str, Any]) -> str:
     return plaintext.decode("utf-8")
 
 
-def _uri_database_name(uri: str) -> Optional[str]:
-    try:
-        parsed = urlparse(uri)
-        path = (parsed.path or "").lstrip("/")
-        if not path:
-            return None
-        return path.split("/", 1)[0] or None
-    except Exception:
-        return None
-
-
-def _collections_for_env_metadata() -> tuple[str, ...]:
-    raw = (os.getenv("KEHRNEL_HDL_ENV_METADATA_COLLECTIONS") or "").strip()
-    if not raw:
-        return DEFAULT_ENV_META_COLLECTIONS
-    return tuple(part.strip() for part in raw.split(",") if part.strip())
-
-
-def _lookup_env_database(env_id: str) -> Optional[str]:
-    store = _core_store()
-    for coll_name in _collections_for_env_metadata():
-        coll = store.db[coll_name]
-        doc = coll.find_one({"environments.id": env_id}, {"environments.$": 1})
-        if not doc:
-            continue
-        envs = doc.get("environments") or []
-        if not envs:
-            continue
-        db_name = (envs[0] or {}).get("database")
-        if db_name:
-            return str(db_name)
-    return None
-
-
 def _resolve_database_name(
     *,
     explicit_db: Optional[str],
@@ -146,34 +162,87 @@ def _resolve_database_name(
     context: dict[str, Any] | None,
     env_id: str,
 ) -> Optional[str]:
-    if explicit_db:
-        return explicit_db
-    from_uri = _uri_database_name(uri)
-    if from_uri:
-        return from_uri
+    """Resolve only the database reviewed in the strategy activation.
 
+    The URI and HDL environment metadata describe connectivity and core tenant
+    storage. They must never silently select the database used by a strategy.
+    """
     cfg = ((context or {}).get("activation_config") or {})
+    configured: Optional[str] = None
     if isinstance(cfg, dict):
-        for path in (
-            ("database",),
-            ("db", "database"),
-            ("target", "database_name"),
-            ("source", "database_name"),
-        ):
-            cur = cfg
-            for part in path:
-                if isinstance(cur, dict) and part in cur:
-                    cur = cur[part]
-                else:
-                    cur = None
-                    break
-            if isinstance(cur, str) and cur.strip():
-                return cur.strip()
+        candidate = cfg.get("database") or cfg.get("database_name")
+        if isinstance(candidate, str) and candidate.strip():
+            configured = candidate.strip()
+    if not configured:
+        return None
+    if explicit_db and explicit_db.strip() != configured:
+        raise ValueError(
+            f"bindings_ref database '{explicit_db.strip()}' does not match reviewed strategy database '{configured}'"
+        )
+    # HDL environment connection URIs may carry the environment's transversal
+    # database as their default path. A domain strategy must never reuse it.
+    try:
+        environment_database = unquote(urlsplit(uri).path.lstrip("/").split("/", 1)[0]).strip()
+    except Exception:
+        environment_database = ""
+    if environment_database and configured == environment_database and not _package_only_operation(context):
+        raise ValueError(
+            f"strategy database '{configured}' must be different from the environment core database"
+        )
+    return configured
 
-    from_env = _lookup_env_database(env_id)
-    if from_env:
-        return from_env
-    return None
+
+def _package_only_operation(context: dict[str, Any] | None) -> bool:
+    dispatch_payload = ((context or {}).get("payload") or {})
+    requested_operation = dispatch_payload.get("op") if isinstance(dispatch_payload, dict) else None
+    return requested_operation in {
+        "fhir_resource_catalog",
+        "fhir_capabilities",
+        "fhir_list_search_params",
+    }
+
+
+def _environment_database_names(store: _CoreStore, env_id: str) -> set[str]:
+    """Resolve every HDL database assigned to an env id across owner scopes.
+
+    Older HDL data can contain the same environment id under a user and a team.
+    Rejecting every matching database is safer than guessing the active owner.
+    """
+    names: set[str] = set()
+    for collection_name in ("teams", "users"):
+        pipeline = [
+            {
+                "$match": {
+                    "$or": [
+                        {"environments.id": env_id},
+                        {"environments.envId": env_id},
+                        {"environments._id": env_id},
+                    ]
+                }
+            },
+            {"$unwind": "$environments"},
+            {
+                "$match": {
+                    "$or": [
+                        {"environments.id": env_id},
+                        {"environments.envId": env_id},
+                        {"environments._id": env_id},
+                    ]
+                }
+            },
+            {"$project": {"_id": 0, "database": "$environments.database"}},
+        ]
+        for row in store.db[collection_name].aggregate(pipeline):
+            value = row.get("database")
+            if isinstance(value, str) and value.strip():
+                names.add(value.strip())
+    for row in store.db["managed_environment_snapshots"].find(
+        {"envId": env_id}, {"_id": 0, "dbName": 1}
+    ):
+        value = row.get("dbName")
+        if isinstance(value, str) and value.strip():
+            names.add(value.strip())
+    return names
 
 
 def resolve_hdl_bindings(
@@ -202,13 +271,25 @@ def resolve_hdl_bindings(
     db_name = _resolve_database_name(explicit_db=ref_db, uri=uri, context=context, env_id=ref_env_id)
     if not db_name:
         raise ValueError(
-            "Could not determine database name from bindings_ref, URI, activation config, or environment metadata"
+            "Strategy activation config must define its MongoDB database"
+        )
+    if (
+        str(domain or "").strip().lower() == "fhir"
+        and not _package_only_operation(context)
+        and db_name in _environment_database_names(store, env_id)
+    ):
+        raise ValueError(
+            f"FHIR strategy database '{db_name}' must be different from the HDL environment database"
         )
 
-    return {
+    resolved = {
         "db": {
             "provider": "mongodb",
             "uri": uri,
             "database": db_name,
         }
     }
+    artifact = _artifact_binding(env_id)
+    if artifact:
+        resolved["artifact"] = artifact
+    return resolved

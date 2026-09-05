@@ -57,11 +57,15 @@ def enrich_Medication(
         ]),
     )
     r["ingredient"] = [{
-        "item": t.gen_CodeableConcept(
-            system="http://www.nlm.nih.gov/research/umls/rxnorm",
-            code=med["code"] if med else "161",
-            display=rng.choice(["Acetaminophen", "Amoxicillin", "Ibuprofen", "Metformin"]),
-        ),
+        "item": {
+            "concept": t.gen_CodeableConcept(
+                system="http://www.nlm.nih.gov/research/umls/rxnorm",
+                code=med["code"] if med else "161",
+                display=rng.choice(
+                    ["Acetaminophen", "Amoxicillin", "Ibuprofen", "Metformin"]
+                ),
+            )
+        },
         "isActive": True,
         "strengthRatio": t.gen_Ratio(),
     }]
@@ -88,7 +92,18 @@ def enrich_MedicationRequest(
         r["requester"] = store.get_reference("Practitioner", rng)
         r["recorder"] = store.get_reference("Practitioner", rng)
     r["authoredOn"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
-    r["dosageInstruction"] = [t.gen_Dosage()]
+    from ...schema.registry import SchemaRegistry
+
+    schema_registry = getattr(t, "schema_registry", None) or SchemaRegistry.get()
+    dosage_field = schema_registry.definition("MedicationRequest").fields.get(
+        "dosageInstruction"
+    )
+    if dosage_field and dosage_field.is_array:
+        r["dosageInstruction"] = [t.gen_Dosage()]
+    else:
+        r["dosageInstruction"] = {
+            "renderedInstruction": "Take medication as directed."
+        }
     r["dispenseRequest"] = {
         "validityPeriod": t.gen_Period(),
         "numberOfRepeatsAllowed": rng.randint(0, 5),
@@ -117,10 +132,26 @@ def enrich_MedicationAdministration(
     if store.has("Encounter"):
         r["encounter"] = store.get_reference("Encounter", rng)
     if store.has("Practitioner"):
-        r["performer"] = [{"actor": store.get_reference("Practitioner", rng)}]
+        r["performer"] = [{
+            "actor": {"reference": store.get_reference("Practitioner", rng)}
+        }]
     if store.has("MedicationRequest"):
         r["basedOn"] = [store.get_reference("MedicationRequest", rng)]
-    r["occurredDateTime"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
+    from ...schema.registry import SchemaRegistry
+
+    schema_registry = getattr(t, "schema_registry", None) or SchemaRegistry.get()
+    date_field = (
+        "occurrenceDateTime"
+        if "occurrenceDateTime"
+        in schema_registry.definition("MedicationAdministration").fields
+        else "occurenceDateTime"
+    )
+    for key in list(r):
+        if (
+            key.startswith("occurrence") or key.startswith("occurence")
+        ) and not key.startswith("_"):
+            r.pop(key, None)
+    r[date_field] = t.p.gen_dateTime(min_year=2023, max_year=2024)
     route = random_code("dosage_routes", rng)
     r["dosage"] = {
         "route": t.gen_CodeableConcept(

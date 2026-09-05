@@ -1,0 +1,14 @@
+{
+  "version": "cdisc-query/v1",
+  "scope": {"studies": ["SYNTH-DEMO-001"], "snapshots": "published"},
+  "from": {"profile": "sdtm", "domains": ["AE"]},
+  "where": {
+    "and": [
+      {"path": "facets.severity", "op": "in", "value": ["MODERATE", "SEVERE"]},
+      {"path": "facets.studyDay", "op": "gte", "value": 1}
+    ]
+  },
+  "select": ["studyId", "snapshotId", "data.USUBJID", "data.AEDECOD", "facets.studyDay"],
+  "orderBy": [{"path": "facets.studyDay", "direction": "asc"}],
+  "page": {"limit": 100}
+}

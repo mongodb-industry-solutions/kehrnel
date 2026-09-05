@@ -1,0 +1,156 @@
+{
+  "contract_version": "fhir-cohort-blueprint/v1",
+  "assets": [
+    {
+      "id": "cardiometabolic-monitoring",
+      "version": "1.0.0",
+      "title": "Cardiometabolic monitoring",
+      "description": "A longitudinal primary-care cohort with encounters, diagnoses, vital signs, laboratory reports, and medication requests.",
+      "purpose": "Demonstrate clinically plausible longitudinal FHIR search, analytics, and blood-pressure workflows.",
+      "maturity": "curated-demo",
+      "fhir_releases": ["R5", "R6"],
+      "tags": ["clinical", "vital-signs", "longitudinal", "cardiometabolic"],
+      "defaults": {
+        "patients": 25,
+        "history_years": 3,
+        "reference_date": "2026-01-01",
+        "seed": 4242
+      },
+      "population": {
+        "age_bands": [
+          {"min": 18, "max": 39, "weight": 0.2},
+          {"min": 40, "max": 64, "weight": 0.5},
+          {"min": 65, "max": 90, "weight": 0.3}
+        ],
+        "gender_distribution": {"female": 0.5, "male": 0.48, "other": 0.02}
+      },
+      "shared_resources": {
+        "Organization": 2,
+        "Practitioner": 8,
+        "Location": 3,
+        "Medication": 8
+      },
+      "per_patient_resources": {
+        "Encounter": {"min": 2, "max": 5},
+        "Condition": {"min": 1, "max": 3},
+        "Observation": {"min": 8, "max": 16},
+        "DiagnosticReport": {"min": 1, "max": 3},
+        "MedicationRequest": {"min": 0, "max": 2, "probability": 0.75}
+      },
+      "clinical_rules": [
+        {"id": "longitudinal-dates-v1"},
+        {"id": "blood-pressure-panel-v1", "fraction": 0.35},
+        {"id": "cardiometabolic-condition-v1", "prevalence": 0.55}
+      ],
+      "learning_objectives": [
+        "Search observations by patient, code, category, and date",
+        "Inspect systolic and diastolic components in a FHIR blood-pressure panel",
+        "Compare FHIR search parameters with the generated MongoDB query"
+      ],
+      "disclaimer": "Curated demonstration data, not an epidemiological model or a source of clinical evidence."
+    },
+    {
+      "id": "oncology-care-pathway",
+      "version": "1.0.0",
+      "title": "Oncology care pathway",
+      "description": "A diagnosis-to-treatment cohort containing conditions, pathology-oriented reports, specimens, procedures, care plans, and medication activity.",
+      "purpose": "Demonstrate a connected multi-resource cancer pathway and longitudinal document/search workflows.",
+      "maturity": "curated-demo",
+      "fhir_releases": ["R5", "R6"],
+      "tags": ["clinical", "oncology", "care-pathway", "longitudinal"],
+      "defaults": {
+        "patients": 20,
+        "history_years": 2,
+        "reference_date": "2026-01-01",
+        "seed": 5151
+      },
+      "population": {
+        "age_bands": [
+          {"min": 18, "max": 44, "weight": 0.12},
+          {"min": 45, "max": 64, "weight": 0.43},
+          {"min": 65, "max": 90, "weight": 0.45}
+        ],
+        "gender_distribution": {"female": 0.5, "male": 0.48, "other": 0.02}
+      },
+      "shared_resources": {
+        "Organization": 2,
+        "Practitioner": 10,
+        "Location": 4,
+        "Medication": 10
+      },
+      "per_patient_resources": {
+        "Encounter": {"min": 3, "max": 7},
+        "Condition": {"min": 1, "max": 2},
+        "Specimen": {"min": 1, "max": 2},
+        "Observation": {"min": 4, "max": 10},
+        "ServiceRequest": {"min": 1, "max": 3},
+        "DiagnosticReport": {"min": 1, "max": 3},
+        "Procedure": {"min": 1, "max": 3},
+        "CareTeam": {"min": 1, "max": 1},
+        "Goal": {"min": 1, "max": 2},
+        "CarePlan": {"min": 1, "max": 1},
+        "MedicationRequest": {"min": 1, "max": 3},
+        "MedicationAdministration": {"min": 0, "max": 4, "probability": 0.8}
+      },
+      "clinical_rules": [
+        {"id": "longitudinal-dates-v1"},
+        {"id": "oncology-pathway-v1"}
+      ],
+      "learning_objectives": [
+        "Follow references across diagnosis, diagnostic work-up, and treatment resources",
+        "Search a patient's oncology timeline through standard FHIR endpoints",
+        "Inspect how connected FHIR documents remain independently queryable in MongoDB"
+      ],
+      "disclaimer": "Curated demonstration data, not a clinical protocol, treatment recommendation, or epidemiological model."
+    },
+    {
+      "id": "payer-claims-journey",
+      "version": "1.0.0",
+      "title": "Payer and claims journey",
+      "description": "A member-centred insurance cohort with eligibility, coverage, encounters, claims, adjudication responses, and explanations of benefit.",
+      "purpose": "Demonstrate payer interoperability, claims search, and operational analytics over connected FHIR resources.",
+      "maturity": "curated-demo",
+      "fhir_releases": ["R5", "R6"],
+      "tags": ["payer", "insurance", "claims", "financial"],
+      "defaults": {
+        "patients": 30,
+        "history_years": 2,
+        "reference_date": "2026-01-01",
+        "seed": 6262
+      },
+      "population": {
+        "age_bands": [
+          {"min": 18, "max": 39, "weight": 0.35},
+          {"min": 40, "max": 64, "weight": 0.45},
+          {"min": 65, "max": 90, "weight": 0.2}
+        ],
+        "gender_distribution": {"female": 0.5, "male": 0.48, "other": 0.02}
+      },
+      "shared_resources": {
+        "Organization": 3,
+        "Practitioner": 8,
+        "Location": 3,
+        "InsurancePlan": 3
+      },
+      "per_patient_resources": {
+        "Coverage": {"min": 1, "max": 1},
+        "Encounter": {"min": 1, "max": 4},
+        "CoverageEligibilityRequest": {"min": 1, "max": 2},
+        "CoverageEligibilityResponse": {"min": 1, "max": 2},
+        "Claim": {"min": 1, "max": 4},
+        "ClaimResponse": {"min": 1, "max": 4},
+        "ExplanationOfBenefit": {"min": 1, "max": 4}
+      },
+      "clinical_rules": [
+        {"id": "longitudinal-dates-v1"},
+        {"id": "financial-chain-v1"}
+      ],
+      "learning_objectives": [
+        "Trace eligibility, coverage, claim, response, and explanation-of-benefit references",
+        "Compare FHIR financial-resource searches with native MongoDB analytics",
+        "Inspect a member timeline without relying on a closed managed FHIR service"
+      ],
+      "disclaimer": "Curated demonstration data, not an actuarial model, reimbursement schedule, or regulatory test corpus."
+    }
+  ]
+}

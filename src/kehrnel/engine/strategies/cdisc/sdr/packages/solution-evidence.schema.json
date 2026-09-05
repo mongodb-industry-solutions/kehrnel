@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mongodb-industry-solutions/kehrnel/contracts/cdisc-solution-evidence-v1.schema.json",
+  "title": "Kehrnel CDISC Solution Evidence Package",
+  "type": "object",
+  "required": ["apiVersion", "kind", "modelSchemaVersion", "manifest", "evidence"],
+  "properties": {
+    "apiVersion": { "const": "kehrnel.dev/cdisc-solution-evidence/v1" },
+    "kind": { "const": "CDISCSolutionEvidencePackage" },
+    "modelSchemaVersion": { "type": "string", "pattern": "^1\\." },
+    "manifest": {
+      "type": "object",
+      "required": ["packageId", "strategyId", "studyId", "snapshotId", "profile", "publicationState", "contentDigest", "counts"],
+      "properties": {
+        "packageId": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "strategyId": { "const": "cdisc.sdr" },
+        "studyId": { "type": "string", "minLength": 1 },
+        "snapshotId": { "type": "string", "minLength": 1 },
+        "profile": { "enum": ["send", "sdtm", "adam", "tig"] },
+        "publicationState": { "enum": ["canonicalized", "validated", "published"] },
+        "standardsPackageId": { "type": ["string", "null"] },
+        "contentDigest": {
+          "type": "object",
+          "required": ["algorithm", "value"],
+          "properties": {
+            "algorithm": { "const": "sha256" },
+            "value": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+          },
+          "additionalProperties": false
+        },
+        "counts": {
+          "type": "object",
+          "required": ["datasets", "records", "entities", "materializations", "sourceArtifacts", "validationRuns", "validationFindings", "transformations"],
+          "properties": {
+            "datasets": { "type": "integer", "minimum": 0 },
+            "records": { "type": "integer", "minimum": 0 },
+            "entities": { "type": "integer", "minimum": 0 },
+            "materializations": { "type": "integer", "minimum": 0 },
+            "sourceArtifacts": { "type": "integer", "minimum": 0 },
+            "validationRuns": { "type": "integer", "minimum": 0 },
+            "validationFindings": { "type": "integer", "minimum": 0 },
+            "transformations": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["snapshot", "datasets", "records", "entities", "materializations", "sourceArtifacts", "validationRuns", "validationFindings", "transformations"],
+      "properties": {
+        "snapshot": { "type": "object", "required": ["sourceId", "studyId", "snapshotId", "profile", "state", "modelSchemaVersion"] },
+        "datasets": { "type": "array", "items": { "type": "object", "required": ["sourceId", "studyId", "snapshotId", "domain", "variables", "recordCount", "contentHash", "modelSchemaVersion"] } },
+        "records": { "type": "array", "items": { "type": "object", "required": ["sourceId", "studyId", "snapshotId", "sourceDatasetId", "domain", "rowOrdinal", "data", "facets", "lineage", "modelSchemaVersion"] } },
+        "entities": { "type": "array", "items": { "type": "object" } },
+        "materializations": { "type": "array", "items": { "type": "object" } },
+        "sourceArtifacts": { "type": "array", "items": { "type": "object", "required": ["sourceId", "mediaType", "digest", "modelSchemaVersion"] } },
+        "validationRuns": { "type": "array", "items": { "type": "object" } },
+        "validationFindings": { "type": "array", "items": { "type": "object" } },
+        "transformations": { "type": "array", "items": { "type": "object" } }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
+

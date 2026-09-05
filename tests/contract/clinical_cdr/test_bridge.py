@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import os
+import json
 
 import pytest
+import jsonschema
 
 from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.core.types import StrategyContext
@@ -47,7 +49,7 @@ def test_resolve_strategy_config_rejects_invalid_mode():
 def test_resolve_mongo_from_bindings():
     uri, database, prefix = bridge.resolve_mongo(
         _ctx(
-            config={"database": "ignored_when_binding_set"},
+            config={"database": "reviewed_strategy_db"},
             bindings={
                 "db": {
                     "provider": "mongodb",
@@ -58,11 +60,11 @@ def test_resolve_mongo_from_bindings():
         )
     )
     assert uri == "mongodb://localhost:27017"
-    assert database == "fhir_bindings_db"
+    assert database == "reviewed_strategy_db"
     assert prefix == ""
 
 
-def test_resolve_mongo_env_fallback(monkeypatch):
+def test_resolve_mongo_env_uri_does_not_override_strategy_database(monkeypatch):
     monkeypatch.delenv("MONGODB_URI", raising=False)
     monkeypatch.delenv("MONGODB_DB", raising=False)
     monkeypatch.setenv("MONGODB_URI", "mongodb://127.0.0.1:27017")
@@ -70,7 +72,7 @@ def test_resolve_mongo_env_fallback(monkeypatch):
 
     uri, database, prefix = bridge.resolve_mongo(_ctx(config={}, bindings={}))
     assert uri == "mongodb://127.0.0.1:27017"
-    assert database == "fhir_from_env"
+    assert database == "fhir_cdr"
     assert prefix == ""
 
 
@@ -140,6 +142,23 @@ async def test_strategy_validate_config_uses_bridge():
     strat = FHIRClinicalCDRStrategy(MANIFEST)
     ok = await strat.validate_config(_ctx(config={"database": "fhir_test"}))
     assert ok is True
+
+
+@pytest.mark.parametrize("field", ["enabled", "denormalize_on_generate", "auto_index"])
+def test_legacy_disabled_persistence_flags_are_coerced_true(field):
+    cfg = bridge.resolve_strategy_config(
+        _ctx(config={"database": "fhir_test", "search": {field: False}})
+    )
+    assert cfg["search"][field] is True
+
+
+@pytest.mark.parametrize("field", ["enabled", "denormalize_on_generate", "auto_index"])
+def test_activation_schema_rejects_disabled_persistence_invariant(field):
+    schema = json.loads(bridge.DEFAULTS_PATH.with_name("schema.json").read_text(encoding="utf-8"))
+    config = bridge.load_pack_defaults()
+    config["search"][field] = False
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate(config, schema)
 
 
 @pytest.mark.asyncio

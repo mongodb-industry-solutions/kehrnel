@@ -25,13 +25,13 @@ def test_activation_is_env_scoped(app_client):
     # activate openehr in envA
     res_a = client.post(
         "/v1/environments/envA/activate",
-        json={"strategy_id": "openehr.rps_dual", "version": "0.1.0", "config": {}, "bindings": {"extras": {"db": {"provider": "none"}}}, "allow_plaintext_bindings": True, "domain": "openEHR"},
+        json={"strategy_id": "openehr.rps_dual", "version": "0.1.0", "config": {"database": "env_a_openehr"}, "bindings": {"extras": {"db": {"provider": "none"}}}, "allow_plaintext_bindings": True, "domain": "openEHR"},
     )
     assert res_a.status_code == 200
     # activate fhir in envB
     res_b = client.post(
         "/v1/environments/envB/activate",
-        json={"strategy_id": "fhir.clinical_cdr", "version": "0.1.0", "config": {}, "bindings": {"extras": {"db": {"provider": "none"}}}, "allow_plaintext_bindings": True, "domain": "fhir"},
+        json={"strategy_id": "fhir.clinical_cdr", "version": "0.1.0", "config": {"database": "env_b_fhir"}, "bindings": {"extras": {"db": {"provider": "none"}}}, "allow_plaintext_bindings": True, "domain": "fhir"},
     )
     assert res_b.status_code == 200
 
@@ -71,7 +71,7 @@ def test_activation_endpoint_returns_state(app_client):
         json={
             "strategy_id": "openehr.rps_dual",
             "version": "0.1.0",
-            "config": {},
+            "config": {"database": "env_state_openehr"},
             "bindings": {"extras": {"db": {"provider": "none"}}},
             "allow_plaintext_bindings": True,
             "domain": "openEHR",

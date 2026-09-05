@@ -117,5 +117,5 @@ class TestFinancialEnrichers:
         notice = gen.generate("PaymentNotice")[0]
         assert notice["paymentStatus"]["coding"]
         recon = gen.generate("PaymentReconciliation")[0]
-        assert recon["outcome"]["coding"]
+        assert isinstance(recon["outcome"], str) and recon["outcome"]
         assert recon["request"]["reference"].startswith("PaymentNotice/")

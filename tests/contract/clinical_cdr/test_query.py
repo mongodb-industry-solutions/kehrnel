@@ -141,6 +141,52 @@ def test_pagination_from_plan_count_and_offset():
     assert skip == 5
 
 
+def test_multi_step_resolver_executes_nested_plan_contract():
+    class Cursor(list):
+        def limit(self, count):
+            return Cursor(self[:count])
+
+    class Collection:
+        def __init__(self, rows):
+            self.rows = rows
+
+        def find(self, query, projection, **kwargs):
+            assert query == {"status": "final"}
+            return Cursor(self.rows)
+
+    database = {
+        "tenant_Observation": Collection(
+            [
+                {"_search": {"subjectId": "p1"}},
+                {"_search": {"subjectId": "p2"}},
+            ]
+        )
+    }
+    resolved = fhir_query.resolve_multi_step_mql(
+        database,
+        "tenant_Patient",
+        {
+            "_query": {"active": True},
+            "_multi_step": [
+                {
+                    "version": 1,
+                    "target_field": "id",
+                    "steps": [
+                        {
+                            "collection": "tenant_Observation",
+                            "query": {"status": "final"},
+                            "extract_field": "_search.subjectId",
+                        }
+                    ],
+                }
+            ],
+        },
+    )
+    assert resolved == {
+        "$and": [{"active": True}, {"id": {"$in": ["p1", "p2"]}}]
+    }
+
+
 def test_coerce_query_plan_runtime_shape():
     qp = fhir_query._coerce_query_plan(
         {

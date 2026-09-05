@@ -34,7 +34,9 @@ def _patient_family_name(patient: dict[str, Any]) -> str | None:
     return None
 
 
-def _execute_mql(db, collection_name: str, mql: dict[str, Any], limit: int) -> list[dict[str, Any]]:
+def _execute_mql(
+    db, collection_name: str, mql: dict[str, Any], limit: int
+) -> list[dict[str, Any]]:
     """Minimal search execution (matches fhir-mql CLI envelope handling)."""
     if isinstance(mql, dict) and "_multi_step" in mql:
         composed = dict(mql.get("_query") or {})
@@ -55,7 +57,11 @@ def _execute_mql(db, collection_name: str, mql: dict[str, Any], limit: int) -> l
             else:
                 and_clauses.append({"_id": {"$in": []}})
         if and_clauses:
-            mql = {"$and": [composed] + and_clauses} if composed else {"$and": and_clauses}
+            mql = (
+                {"$and": [composed] + and_clauses}
+                if composed
+                else {"$and": and_clauses}
+            )
         else:
             mql = composed
 
@@ -66,13 +72,19 @@ def _execute_mql(db, collection_name: str, mql: dict[str, Any], limit: int) -> l
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="FHIR gen + mql MongoDB spike for fhir.clinical_cdr")
-    parser.add_argument("--uri", default="mongodb://localhost:27017/", help="MongoDB URI")
+    parser = argparse.ArgumentParser(
+        description="FHIR gen + mql MongoDB spike for fhir.clinical_cdr"
+    )
+    parser.add_argument(
+        "--uri", default="mongodb://localhost:27017/", help="MongoDB URI"
+    )
     parser.add_argument("--db", default="fhir_kehrnel_spike", help="Database name")
     parser.add_argument("--seed", type=int, default=1, help="Generator seed")
     args = parser.parse_args()
 
-    print(f"[spike] pack={PACK_ROOT.name} MongoDB {args.uri} db={args.db} seed={args.seed}")
+    print(
+        f"[spike] pack={PACK_ROOT.name} MongoDB {args.uri} db={args.db} seed={args.seed}"
+    )
 
     gen = ResourceGenerator(seed=args.seed)
     patients = gen.generate("Patient", count=2)
@@ -87,7 +99,10 @@ def main() -> int:
 
     family = _patient_family_name(patients[0])
     if not family:
-        print("[spike] ERROR: could not read family name from first Patient", file=sys.stderr)
+        print(
+            "[spike] ERROR: could not read family name from first Patient",
+            file=sys.stderr,
+        )
         return 1
     print(f"[spike] search target family: {family!r}")
 
@@ -96,7 +111,9 @@ def main() -> int:
     collection = db[patient_coll]
 
     denorm = ResourceDenormalizer()
-    denorm.denormalize_from_mongodb(collection, query={}, batch_size=50, update_in_place=True)
+    denorm.denormalize_from_mongodb(
+        collection, query={}, batch_size=50, update_in_place=True
+    )
     print("[spike] denormalized Patient in place (_search fields)")
 
     converter = FHIRSearchConverter()
@@ -107,9 +124,14 @@ def main() -> int:
     print(f"[spike] search {query_string!r} matched {len(results)} document(s)")
     if results:
         first = results[0]
-        print(f"[spike] first match id={first.get('id')} resourceType={first.get('resourceType')}")
+        print(
+            f"[spike] first match id={first.get('id')} resourceType={first.get('resourceType')}"
+        )
     else:
-        print("[spike] WARNING: zero matches (check denorm / search param config)", file=sys.stderr)
+        print(
+            "[spike] WARNING: zero matches (check denorm / search param config)",
+            file=sys.stderr,
+        )
         client.close()
         return 1
 

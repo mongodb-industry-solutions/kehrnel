@@ -120,6 +120,46 @@
   },
   "ops": [
     {
+      "name": "list_native_ehrs",
+      "kind": "read",
+      "summary": "List distinct EHR ids represented in the configured composition collection",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "limit": { "type": "integer", "minimum": 1, "maximum": 5000, "default": 1000 }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "list_native_compositions",
+      "kind": "read",
+      "summary": "List native composition summaries for an EHR",
+      "input_schema": {
+        "type": "object",
+        "required": ["ehr_id"],
+        "properties": {
+          "ehr_id": { "type": "string" },
+          "limit": { "type": "integer", "minimum": 1, "maximum": 2000, "default": 500 }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "fetch_native_composition",
+      "kind": "read",
+      "summary": "Fetch one stored native composition document",
+      "input_schema": {
+        "type": "object",
+        "required": ["ehr_id", "uid"],
+        "properties": {
+          "ehr_id": { "type": "string" },
+          "uid": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
       "name": "ensure_dictionaries",
       "kind": "maintenance",
       "summary": "Ensure and seed _codes/_shortcuts dictionaries",

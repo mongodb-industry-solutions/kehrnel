@@ -1,10 +1,12 @@
 """StrategyRuntime scaffold (to be implemented in later steps)."""
 from __future__ import annotations
 
+import asyncio
 import importlib
 import importlib.util
 import json
 import hashlib
+import weakref
 from datetime import datetime
 from typing import Dict, Optional, Any
 from dataclasses import is_dataclass, asdict, replace
@@ -25,6 +27,9 @@ from kehrnel.persistence.mongodb.connection import get_database as _mongo_get_db
 from kehrnel.persistence.mongodb.storage import MongoStorageAdapter
 from kehrnel.persistence.mongodb.index_admin import MongoIndexAdminAdapter
 from kehrnel.persistence.mongodb.atlas_search import MongoAtlasSearchAdapter
+from kehrnel.persistence.artifacts import AzureBlobArtifactStore, FileSystemArtifactStore, S3ArtifactStore
+from kehrnel.persistence.validation import CommandValidationEngine
+from kehrnel.persistence.embeddings import HttpEmbeddingAdapter
 from pathlib import Path
 
 
@@ -34,7 +39,7 @@ class StrategyRuntime:
         self.bundle_store = bundle_store
         self.bindings_resolver = bindings_resolver
         self.env_manifests: Dict[str, StrategyManifest] = {}
-        # per-env cache: {"adapters": {...}, "dict_cache": {...}}
+        # per-env cache: {"adapters_by_loop": {loop_key: {...}}, "dict_cache": {...}}
         self._env_cache: Dict[str, Dict[str, Any]] = {}
 
     @classmethod
@@ -92,6 +97,61 @@ class StrategyRuntime:
         except Exception:
             return ""
 
+    @staticmethod
+    def _uses_mongodb(manifest: StrategyManifest | None) -> bool:
+        storage = getattr(getattr(manifest, "adapters", None), "storage", []) or []
+        return any(str(provider).strip().lower() in {"mongo", "mongodb"} for provider in storage)
+
+    @classmethod
+    def _strategy_database(cls, manifest: StrategyManifest | None, config: Dict[str, Any] | None) -> str | None:
+        """Return the strategy-owned MongoDB database declared at activation.
+
+        ``database`` is the canonical key. ``database_name`` remains accepted for
+        older strategy packs while they migrate to the shared activation contract.
+        """
+        if not cls._uses_mongodb(manifest):
+            return None
+        raw = config or {}
+        value = raw.get("database") or raw.get("database_name")
+        if not isinstance(value, str) or not value.strip():
+            raise KehrnelError(
+                code="STRATEGY_DATABASE_REQUIRED",
+                status=400,
+                message="A MongoDB-backed strategy requires an explicit database in its activation configuration.",
+                details={"strategy_id": getattr(manifest, "id", None), "field": "database"},
+            )
+        database = value.strip()
+        if len(database.encode("utf-8")) > 63 or any(char in database for char in '/\\.\"$*<>:|?\0'):
+            raise KehrnelError(
+                code="INVALID_STRATEGY_DATABASE",
+                status=400,
+                message="The strategy database name is not valid for MongoDB.",
+                details={"strategy_id": getattr(manifest, "id", None), "database": database},
+            )
+        return database
+
+    @classmethod
+    def _bind_strategy_database(
+        cls,
+        manifest: StrategyManifest | None,
+        config: Dict[str, Any] | None,
+        bindings: Dict[str, Any] | None,
+    ) -> Dict[str, Any]:
+        """Make the reviewed strategy database authoritative over URI/env defaults."""
+        database = cls._strategy_database(manifest, config)
+        resolved = dict(bindings or {})
+        if database is None:
+            return resolved
+        current_db_binding = resolved.get("db")
+        if not isinstance(current_db_binding, dict):
+            return resolved
+        db_binding = dict(current_db_binding)
+        db_binding["database"] = database
+        if not db_binding.get("provider"):
+            db_binding["provider"] = "mongodb"
+        resolved["db"] = db_binding
+        return resolved
+
     async def activate(
         self,
         env_id: str,
@@ -135,6 +195,10 @@ class StrategyRuntime:
             )
         existing_hash = existing.config_hash if existing else None
         current_manifest_digest = manifest_digest_override or self._manifest_digest(manifest)
+        # A manifest default is a UI/CLI suggestion, not approval to place data
+        # in that database. Mongo-backed activations must carry the reviewed
+        # database explicitly in their submitted configuration.
+        strategy_database = self._strategy_database(manifest, config)
         # idempotent: if same strategy and config hash matches, return existing
         restore_snapshot = replace_reason == "rollback" and bool(config)
         if restore_snapshot:
@@ -147,18 +211,23 @@ class StrategyRuntime:
             merged_config = self._deep_merge(merged_config, config or {})
         # simple required validation from schema if present
         schema = getattr(manifest, "config_schema", None) or self._load_schema_from_entrypoint(manifest) or {}
+        if strategy_database:
+            schema_properties = schema.get("properties") if isinstance(schema, dict) else {}
+            database_field = "database" if "database" in (schema_properties or {}) else "database_name"
+            merged_config[database_field] = strategy_database
         validate_config(schema, merged_config)
         self._validate_pack_config(manifest, merged_config)
         store_profiles = self._build_store_profiles(manifest, merged_config)
         bundle_refs = self._validate_bundle_refs(merged_config, manifest)
         new_config_hash = config_hash_override or self._config_hash(merged_config)
-        bdict = self._bindings_payload(bindings)
+        bdict = self._bind_strategy_database(manifest, merged_config, self._bindings_payload(bindings))
+        bindings = StrategyBindings(**bdict)
         uri = (bdict.get("db") or {}).get("uri")
         redacted_uri = self._redact_uri(uri) if uri else None
         bindings_meta = {
             "db": {
-                "provider": (bdict.get("db") or {}).get("provider"),
-                "database": (bdict.get("db") or {}).get("database"),
+                "provider": (bdict.get("db") or {}).get("provider") or ("mongodb" if strategy_database else None),
+                "database": strategy_database or (bdict.get("db") or {}).get("database"),
                 "uri": redacted_uri,
             }
         }
@@ -462,6 +531,12 @@ class StrategyRuntime:
                 },
             )
 
+        # The environment binding owns connectivity and credentials. The
+        # activation owns the logical strategy database. Never allow a database
+        # embedded in the URI, environment metadata, or a generic resolver to
+        # redirect strategy collections into the tenant core database.
+        effective_bindings = self._bind_strategy_database(manifest, activation.config, effective_bindings)
+
         cache = self._env_cache.setdefault(env_id, {}).setdefault("dict_cache", {})
         config_hash = activation.config_hash or self._config_hash(activation.config)
         manifest_digest = activation.manifest_digest or self._manifest_digest(manifest)
@@ -475,10 +550,17 @@ class StrategyRuntime:
             "store_profiles": activation.store_profiles or {},
         }
         if isinstance(payload, dict):
+            if payload.get("__job_id"):
+                meta["job_id"] = str(payload.get("__job_id"))
             if payload.get("__progress_cb"):
                 meta["progress_cb"] = payload.get("__progress_cb")
             if payload.get("__should_cancel"):
                 meta["should_cancel"] = payload.get("__should_cancel")
+            # Privileged diagnostics are enabled ONLY via this server-set internal
+            # marker (the HTTP boundary sets it after a server-side policy check);
+            # never from a client-facing payload field.
+            if payload.get("__privileged"):
+                meta["privileged"] = True
         ctx = StrategyContext(
             environment_id=env_id,
             config=activation.config,
@@ -672,8 +754,19 @@ class StrategyRuntime:
 
     def _build_adapters(self, env_id: str, bindings: Optional[Dict[str, Any]]) -> Dict[str, Any]:
         env_cache = self._env_cache.setdefault(env_id, {})
-        if "adapters" in env_cache:
-            return env_cache["adapters"]
+        # Motor binds a client to the event loop that first performs an operation on it
+        # and routes every later operation through that loop's executor. Synthetic jobs
+        # dispatch on a throwaway worker loop, so a client shared with the API loop (or
+        # with a previous job's loop) raises "got Future attached to a different loop".
+        # Cache one adapter set per loop instead, and drop sets whose loop is gone.
+        adapters_by_loop: Dict[Any, Dict[str, Any]] = env_cache.setdefault("adapters_by_loop", {})
+        self._prune_dead_loop_adapters(adapters_by_loop)
+        loop_key = self._current_loop_key()
+        binding_key = self._bindings_hash(bindings)
+        cache_key = (loop_key, binding_key)
+        cached = adapters_by_loop.get(cache_key)
+        if cached is not None:
+            return cached["adapters"]
         adapters: Dict[str, Any] = {}
         db_cfg = (bindings or {}).get("db") if isinstance(bindings, dict) else None
         if db_cfg and db_cfg.get("provider") == "mongodb":
@@ -683,8 +776,113 @@ class StrategyRuntime:
             adapters["atlas_search"] = MongoAtlasSearchAdapter(db)
             # backward-compatible alias (deprecated)
             adapters["text_search"] = adapters["atlas_search"]
-        env_cache["adapters"] = adapters
+        artifact_cfg = (bindings or {}).get("artifact") if isinstance(bindings, dict) else None
+        if not artifact_cfg and isinstance(bindings, dict):
+            extras = bindings.get("extras")
+            artifact_cfg = extras.get("artifact") if isinstance(extras, dict) else None
+        if artifact_cfg and artifact_cfg.get("provider") == "filesystem":
+            root = str(artifact_cfg.get("root") or "").strip()
+            if not root:
+                raise KehrnelError(
+                    code="INVALID_ARTIFACT_BINDING",
+                    status=400,
+                    message="Filesystem artifact bindings require artifact.root.",
+                )
+            adapters["artifact_store"] = FileSystemArtifactStore(root)
+        elif artifact_cfg and artifact_cfg.get("provider") == "s3":
+            client_options = {
+                target: artifact_cfg[source]
+                for source, target in (
+                    ("access_key_id", "aws_access_key_id"),
+                    ("secret_access_key", "aws_secret_access_key"),
+                    ("session_token", "aws_session_token"),
+                )
+                if artifact_cfg.get(source)
+            }
+            adapters["artifact_store"] = S3ArtifactStore(
+                str(artifact_cfg.get("bucket") or ""),
+                prefix=str(artifact_cfg.get("prefix") or ""),
+                region=artifact_cfg.get("region"),
+                endpoint_url=artifact_cfg.get("endpoint_url"),
+                server_side_encryption=artifact_cfg.get("server_side_encryption"),
+                kms_key_id=artifact_cfg.get("kms_key_id"),
+                client_options=client_options,
+            )
+        elif artifact_cfg and artifact_cfg.get("provider") in {"azure", "azure-blob"}:
+            adapters["artifact_store"] = AzureBlobArtifactStore(
+                str(artifact_cfg.get("container") or ""),
+                prefix=str(artifact_cfg.get("prefix") or ""),
+                connection_string=artifact_cfg.get("connection_string"),
+            )
+        validation_cfg = (bindings or {}).get("validation") if isinstance(bindings, dict) else None
+        if not validation_cfg and isinstance(bindings, dict):
+            extras = bindings.get("extras")
+            validation_cfg = extras.get("validation") if isinstance(extras, dict) else None
+        if validation_cfg and validation_cfg.get("provider") == "command":
+            adapters["validation_engine"] = CommandValidationEngine(
+                list(validation_cfg.get("argv") or []),
+                timeout_seconds=int(validation_cfg.get("timeout_seconds") or 900),
+                max_output_bytes=int(validation_cfg.get("max_output_bytes") or 20_000_000),
+                environment=validation_cfg.get("environment") or {},
+            )
+        embedding_cfg = (bindings or {}).get("embedding") if isinstance(bindings, dict) else None
+        if not embedding_cfg and isinstance(bindings, dict):
+            extras = bindings.get("extras")
+            embedding_cfg = extras.get("embedding") if isinstance(extras, dict) else None
+        if embedding_cfg and embedding_cfg.get("provider") == "http":
+            adapters["embedding"] = HttpEmbeddingAdapter(
+                str(embedding_cfg.get("endpoint") or ""),
+                model=embedding_cfg.get("model"),
+                api_key=embedding_cfg.get("api_key"),
+                timeout_seconds=int(embedding_cfg.get("timeout_seconds") or 60),
+                headers=embedding_cfg.get("headers") or {},
+            )
+        loop = self._current_loop()
+        adapters_by_loop[cache_key] = {
+            "adapters": adapters,
+            "loop": weakref.ref(loop) if loop is not None else None,
+        }
         return adapters
+
+    @staticmethod
+    def _current_loop() -> Optional[asyncio.AbstractEventLoop]:
+        try:
+            return asyncio.get_running_loop()
+        except RuntimeError:
+            return None
+
+    def _current_loop_key(self) -> Any:
+        loop = self._current_loop()
+        # No running loop means a synchronous caller; keep those in their own bucket.
+        return id(loop) if loop is not None else "__no_loop__"
+
+    def _prune_dead_loop_adapters(self, adapters_by_loop: Dict[Any, Dict[str, Any]]) -> None:
+        for key in list(adapters_by_loop):
+            entry = adapters_by_loop.get(key) or {}
+            loop_ref = entry.get("loop")
+            if loop_ref is None:
+                continue
+            loop = loop_ref() if loop_ref is not None else None
+            if loop is not None and not loop.is_closed():
+                continue
+            self._close_adapters(adapters_by_loop.pop(key, {}).get("adapters") or {})
+
+    @staticmethod
+    def _close_adapters(adapters: Dict[str, Any]) -> None:
+        seen: set[int] = set()
+        for adapter in (adapters or {}).values():
+            # Motor Database objects reject truth testing, so compare with None.
+            db = getattr(adapter, "db", None)
+            if db is None:
+                db = getattr(adapter, "_db", None)
+            client = getattr(db, "client", None) if db is not None else None
+            if client is None or id(client) in seen:
+                continue
+            seen.add(id(client))
+            try:
+                client.close()
+            except Exception:
+                pass
 
     def _redact_uri(self, uri: str) -> str:
         if "@" in uri:
@@ -701,6 +899,8 @@ class StrategyRuntime:
             if env_id in self._env_cache and "dict_cache" in self._env_cache[env_id]:
                 self._env_cache[env_id]["dict_cache"] = {}
             return
+        # Only drop the reference here: an in-flight dispatch may still hold these
+        # adapters. Clients for dead loops are closed by _prune_dead_loop_adapters.
         self._env_cache.pop(env_id, None)
 
     def _is_maintenance_op(self, manifest: StrategyManifest, op_name: str) -> bool:

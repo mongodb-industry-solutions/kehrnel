@@ -3,6 +3,7 @@
   "cases": [
     {
       "id": "patient_gender_female",
+      "releases": ["R5", "R6"],
       "resource_type": "Patient",
       "criteria": { "gender": "female" },
       "expected_mql_keys": ["gender"],
@@ -16,6 +17,7 @@
     },
     {
       "id": "patient_name_family",
+      "releases": ["R5", "R6"],
       "resource_type": "Patient",
       "criteria": { "name": "Smith" },
       "expected_mql_keys": ["familyName_lower"],
@@ -29,6 +31,7 @@
     },
     {
       "id": "schedule_active",
+      "releases": ["R5", "R6"],
       "resource_type": "Schedule",
       "criteria": { "active": "true" },
       "expected_mql_keys": ["active"],
@@ -44,6 +47,7 @@
     },
     {
       "id": "slot_status_free",
+      "releases": ["R5", "R6"],
       "resource_type": "Slot",
       "criteria": { "status": "free" },
       "expected_mql_keys": ["status"],
@@ -58,6 +62,7 @@
     },
     {
       "id": "appointment_status",
+      "releases": ["R5", "R6"],
       "resource_type": "Appointment",
       "criteria": { "status": "booked" },
       "expected_mql_keys": ["status"],
@@ -71,6 +76,22 @@
         "Appointment": 5
       },
       "denormalize_resource_types": ["Appointment", "Slot"]
+    },
+    {
+      "id": "r4_patient_gender",
+      "releases": ["R4"],
+      "compile_only": true,
+      "resource_type": "Patient",
+      "criteria": { "gender": "female" },
+      "expected_mql_keys": ["gender"]
+    },
+    {
+      "id": "r4_observation_status",
+      "releases": ["R4"],
+      "compile_only": true,
+      "resource_type": "Observation",
+      "criteria": { "status": "final" },
+      "expected_mql_keys": ["status"]
     }
   ]
 }

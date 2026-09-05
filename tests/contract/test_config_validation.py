@@ -17,14 +17,13 @@ def test_invalid_config_missing_required(client):
     )
     assert res.status_code == 400
     body = res.json()
-    assert body.get("error", {}).get("code") == "CONFIG_INVALID"
-    assert "path" in body.get("error", {}).get("details", {})
+    assert body.get("error", {}).get("code") == "STRATEGY_DATABASE_REQUIRED"
 
 
 def test_activation_returns_effective_config(client):
     res = client.post(
         "/v1/environments/env-config/activate",
-        json={"strategy_id": "openehr.rps_dual", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "openEHR"},
+        json={"strategy_id": "openehr.rps_dual", "version": "0.1.0", "config": {"database": "openehr_test"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "openEHR"},
     )
     assert res.status_code == 200
     res_get = client.get("/v1/environments/env-config")

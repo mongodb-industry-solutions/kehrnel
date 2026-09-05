@@ -7,8 +7,10 @@ from importlib import import_module
 
 _SUBMODULES = (
     "bridge",
+    "cohort_blueprints",
     "denormalize",
     "generation",
+    "import_resources",
     "indexes",
     "query",
     "stats",

@@ -1,0 +1,758 @@
+{
+  "$schema": "https://example.org/strategy-pack/spec.schema.json",
+  "meta": {
+    "strategyId": "cdisc.sdr",
+    "specVersion": "1.0",
+    "modelSchemaVersion": "1.1.0",
+    "title": "Document-First CDISC Study Data Repository",
+    "summary": "Immutable study snapshots preserve CDISC artifacts and rows while typed facets, lineage, materializations, and governed queries make the data operational on MongoDB.",
+    "domain": "CDISC",
+    "tags": ["CDISC", "SEND", "SDTM", "ADaM", "TIG", "study-snapshot", "polymorphic-records"],
+    "compat": {
+      "packFormat": "strategy-pack/v1",
+      "requires": ["storage.mongo"],
+      "optional": ["search.atlas", "validation.cdisc_core", "artifact.object_store"]
+    }
+  },
+  "glossary": {
+    "terms": {
+      "artifact": "Original immutable Dataset-JSON, XPT, Define-XML, or package bytes, retained directly or by checksum-addressed object reference.",
+      "snapshot": "An immutable governed version of one study package and its datasets.",
+      "datasetMetamodel": "The variable definitions, data types, labels, keys, order, terminology, and origins that describe a CDISC dataset.",
+      "canonicalRecord": "One logical CDISC row whose original variable names and values are preserved in data.",
+      "polymorphicRecord": "A record with a stable governance envelope and a data object whose fields vary by profile, domain, standard version, and sponsor extension.",
+      "facet": "A deterministic typed projection of important CDISC values used for indexed operational queries.",
+      "entityReference": "A typed link from a record to a subject, animal, treatment group, specimen, product, batch, or analysis parameter.",
+      "materialization": "A rebuildable workload-specific view such as a subject timeline, nonclinical finding, analysis traceability view, or product-evidence view."
+    }
+  },
+  "logicalModel": {
+    "source": {
+      "types": [
+        {
+          "id": "cdisc.artifact.v1",
+          "title": "CDISC source artifact",
+          "kind": "artifact",
+          "description": "Immutable Dataset-JSON, XPT, Define-XML, or package content.",
+          "fields": {
+            "artifactId": {"type": "string", "role": "identity.artifact"},
+            "mediaType": {"type": "string", "role": "format"},
+            "digest": {"type": "sha256", "role": "integrity"},
+            "sourceName": {"type": "string", "role": "provenance"}
+          }
+        }
+      ]
+    },
+    "concepts": [
+      {
+        "id": "cdisc.snapshot.v1",
+        "title": "Study snapshot",
+        "kind": "aggregate",
+        "meaning": "The immutable governance and publication boundary for a version of a study.",
+        "fields": {
+          "modelSchemaVersion": {"type": "semver", "role": "evolution.schema"},
+          "tenantId": {"type": "string", "role": "scope.tenant"},
+          "studyId": {"type": "string", "role": "identity.study"},
+          "snapshotId": {"type": "string", "role": "identity.snapshot"},
+          "profile": {"type": "send|sdtm|adam|tig", "role": "standard.profile"},
+          "state": {"type": "received|parsed|canonicalized|validated|published|quarantined|superseded", "role": "governance.state"},
+          "datasetIds": {"type": "string[]", "role": "contains.datasets"},
+          "artifactIds": {"type": "string[]", "role": "provenance.artifacts"}
+        }
+      },
+      {
+        "id": "cdisc.dataset.metamodel.v1",
+        "title": "Dataset metamodel",
+        "kind": "schema",
+        "meaning": "Describes the variables that may appear in the polymorphic record data object.",
+        "fields": {
+          "modelSchemaVersion": {"type": "semver", "role": "evolution.schema"},
+          "domain": {"type": "string", "role": "discriminator.domain"},
+          "variables": {"type": "variable[]", "role": "schema.variables"},
+          "keyVariables": {"type": "string[]", "role": "identity.record"},
+          "recordCount": {"type": "integer", "role": "integrity.count"},
+          "contentHash": {"type": "sha256", "role": "integrity.dataset"}
+        }
+      },
+      {
+        "id": "cdisc.record.v1",
+        "title": "Polymorphic CDISC record",
+        "kind": "record",
+        "meaning": "A stable governance envelope around one CDISC row. The dataset metamodel defines the domain-specific fields inside data.",
+        "polymorphism": {
+          "discriminator": ["profile", "domain"],
+          "schemaSource": "cdisc.dataset.metamodel.v1.variables",
+          "dynamicObject": "data",
+          "stableProjection": "facets"
+        },
+        "fields": {
+          "modelSchemaVersion": {"type": "semver", "role": "evolution.schema"},
+          "_id": {"type": "string", "role": "pk"},
+          "tenantId": {"type": "string", "role": "scope.tenant"},
+          "studyId": {"type": "string", "role": "identity.study"},
+          "snapshotRef": {"type": "string", "role": "fk.snapshot"},
+          "datasetId": {"type": "string", "role": "fk.dataset"},
+          "profile": {"type": "send|sdtm|adam|tig", "role": "discriminator.profile"},
+          "domain": {"type": "string", "role": "discriminator.domain"},
+          "recordKey": {"type": "object", "role": "identity.record"},
+          "data": {"type": "object<CDISC variable,value>", "role": "payload.polymorphic"},
+          "facets": {"type": "object", "role": "projection.typed"},
+          "entityRefs": {"type": "entityReference[]", "role": "relationship"},
+          "lineage": {"type": "object", "role": "provenance"}
+        }
+      }
+    ],
+    "destinations": {
+      "types": [
+        {
+          "id": "cdisc.study.document.v1",
+          "title": "Study portfolio document",
+          "kind": "collectionRecord",
+          "fields": {
+            "modelSchemaVersion": {"type": "semver", "role": "evolution.schema"},
+            "_id": {"type": "string", "role": "pk"},
+            "tenantId": {"type": "string", "role": "scope.tenant"},
+            "studyId": {"type": "string", "role": "identity.study"},
+            "title": {"type": "string", "role": "display"},
+            "profiles": {"type": "string[]", "role": "standard.profile"},
+            "updatedAt": {"type": "date", "role": "audit.time"}
+          }
+        },
+        {
+          "id": "cdisc.snapshot.document.v1",
+          "title": "Immutable study snapshot",
+          "kind": "collectionRecord",
+          "fields": {
+            "modelSchemaVersion": {"type": "semver", "role": "evolution.schema"},
+            "_id": {"type": "string", "role": "pk"},
+            "tenantId": {"type": "string", "role": "scope.tenant"},
+            "studyId": {"type": "string", "role": "identity.study"},
+            "snapshotId": {"type": "string", "role": "identity.snapshot"},
+            "profile": {"type": "string", "role": "standard.profile"},
+            "standardsPackageId": {"type": "string", "role": "fk.standard"},
+            "state": {"type": "string", "role": "governance.state"},
+            "datasetIds": {"type": "string[]", "role": "contains.datasets"},
+            "artifactIds": {"type": "string[]", "role": "provenance.artifacts"}
+          }
+        },
+        {
+          "id": "cdisc.dataset.document.v1",
+          "title": "Dataset and variable metamodel",
+          "kind": "collectionRecord",
+          "fields": {
+            "modelSchemaVersion": {"type": "semver", "role": "evolution.schema"},
+            "_id": {"type": "string", "role": "pk"},
+            "snapshotRef": {"type": "string", "role": "fk.snapshot"},
+            "datasetId": {"type": "string", "role": "identity.dataset"},
+            "profile": {"type": "string", "role": "discriminator.profile"},
+            "domain": {"type": "string", "role": "discriminator.domain"},
+            "variables": {"type": "variable[]", "role": "schema.variables"},
+            "keyVariables": {"type": "string[]", "role": "identity.record"},
+            "recordCount": {"type": "integer", "role": "integrity.count"},
+            "contentHash": {"type": "sha256", "role": "integrity.dataset"}
+          }
+        },
+        {
+          "id": "cdisc.record.document.v1",
+          "title": "Canonical polymorphic record",
+          "kind": "collectionRecord",
+          "fields": {
+            "modelSchemaVersion": {"type": "semver", "role": "evolution.schema"},
+            "_id": {"type": "string", "role": "pk"},
+            "tenantId": {"type": "string", "role": "scope.tenant"},
+            "studyId": {"type": "string", "role": "identity.study"},
+            "snapshotRef": {"type": "string", "role": "fk.snapshot"},
+            "datasetId": {"type": "string", "role": "fk.dataset"},
+            "profile": {"type": "string", "role": "discriminator.profile"},
+            "domain": {"type": "string", "role": "discriminator.domain"},
+            "rowOrdinal": {"type": "integer", "role": "ordering"},
+            "recordKey": {"type": "object", "role": "identity.record"},
+            "data": {"type": "object", "role": "payload.polymorphic"},
+            "facets": {"type": "object", "role": "projection.typed"},
+            "entityRefs": {"type": "entityReference[]", "role": "relationship"},
+            "lineage": {"type": "object", "role": "provenance"},
+            "semantic": {"type": "object", "role": "projection.search"}
+          }
+        }
+      ]
+    }
+  },
+  "physicalProfiles": {
+    "encodingProfiles": [
+      {
+        "id": "profile.send",
+        "title": "SEND",
+        "description": "Nonclinical studies organized around animals, treatment groups, test articles, specimens, organs, and findings.",
+        "datasetExamples": ["DM", "TX", "MI", "LB"],
+        "principalEntities": ["study", "animalSubject", "treatmentGroup", "testArticle", "specimen"],
+        "materialization": "nonclinical-finding"
+      },
+      {
+        "id": "profile.sdtm",
+        "title": "SDTM",
+        "description": "Clinical tabulation data organized around subjects, arms, epochs, visits, interventions, events, and findings.",
+        "datasetExamples": ["DM", "AE", "LB", "VS"],
+        "principalEntities": ["study", "humanSubject", "arm", "visit", "intervention"],
+        "materialization": "subject-timeline"
+      },
+      {
+        "id": "profile.adam",
+        "title": "ADaM",
+        "description": "Analysis-ready datasets with explicit parameters, populations, derivations, and links back to SDTM or source evidence.",
+        "datasetExamples": ["ADSL", "ADAE", "ADLB"],
+        "principalEntities": ["study", "humanSubject", "analysisParameter"],
+        "materialization": "analysis-traceability"
+      },
+      {
+        "id": "profile.tig",
+        "title": "TIG",
+        "description": "Product and evidence overlays connecting products, batches, constituents, studies, and evidence items.",
+        "datasetExamples": ["PROD", "BATCH", "EVID"],
+        "principalEntities": ["product", "batch", "constituent", "study", "evidence"],
+        "materialization": "product-evidence"
+      }
+    ]
+  },
+  "bundles": {
+    "standards": {
+      "description": "Deployment-owned immutable manifests pin model, implementation guide, terminology, exchange, regulator, validation-engine, and sponsor-overlay versions.",
+      "collection": "store:standards",
+      "operation": "cdisc_list_standards"
+    }
+  },
+  "storageModel": {
+    "schemaEvolution": {
+      "field": "modelSchemaVersion",
+      "current": "1.1.0",
+      "appliesTo": "every persisted CDISC SDR document",
+      "compatibilityPolicy": "Operational reads target the current version. Shape changes require a new semantic version and an explicit, idempotent migration; the strategy release and external CDISC standard versions evolve independently.",
+      "indexPolicy": "The field is intentionally not a standalone index because it has low cardinality; tenant and workload indexes bound migration scans."
+    },
+    "indexContract": {
+      "description": "Indexes target the stable governance envelope and deterministic facets. The polymorphic data object remains queryable through an allowlist but only promoted workload fields should receive dedicated indexes.",
+      "configResolved": true,
+      "collectionConfigPaths": {
+        "store:studies": "collections.studies",
+        "store:snapshots": "collections.snapshots",
+        "store:datasets": "collections.datasets",
+        "store:records": "collections.records",
+        "store:entities": "collections.entities",
+        "store:materializations": "collections.materializations",
+        "store:standards": "collections.standards",
+        "store:artifacts": "collections.artifacts",
+        "store:validationRuns": "collections.validation_runs",
+        "store:validationFindings": "collections.validation_findings",
+        "store:validationWaivers": "collections.validation_waivers",
+        "store:transformations": "collections.transformations"
+      }
+    },
+    "stores": [
+      {
+        "id": "store:studies",
+        "title": "Studies",
+        "engine": "mongo",
+        "destinationType": "cdisc.study.document.v1",
+        "collectionNameFromConfig": "collections.studies",
+        "purpose": "Stable portfolio identity and study-level discovery."
+      },
+      {
+        "id": "store:snapshots",
+        "title": "Study snapshots",
+        "engine": "mongo",
+        "destinationType": "cdisc.snapshot.document.v1",
+        "collectionNameFromConfig": "collections.snapshots",
+        "purpose": "Immutable version and publication boundary.",
+        "indexes": [
+          {
+            "id": "idx_cdisc_snapshot_state",
+            "type": "btree",
+            "fields": ["tenantId", "studyId", "snapshotId", "state"],
+            "requirement": "required",
+            "configResolved": true,
+            "workloads": ["study_discovery", "published_snapshot_scope", "publication"],
+            "purpose": "Locate one study version and enforce published-snapshot visibility."
+          }
+        ]
+      },
+      {
+        "id": "store:datasets",
+        "title": "Dataset metamodels",
+        "engine": "mongo",
+        "destinationType": "cdisc.dataset.document.v1",
+        "collectionNameFromConfig": "collections.datasets",
+        "purpose": "Variable definitions, keys, ordering, counts, standard pins, and content hashes.",
+        "indexes": [
+          {
+            "id": "idx_cdisc_dataset_identity",
+            "type": "btree",
+            "fields": ["tenantId", "studyId", "snapshotId", "domain"],
+            "requirement": "required",
+            "configResolved": true,
+            "workloads": ["dataset_discovery", "domain_selection", "schema_lookup"],
+            "purpose": "Resolve the dataset metamodel that governs polymorphic records."
+          }
+        ]
+      },
+      {
+        "id": "store:records",
+        "title": "Polymorphic CDISC records",
+        "engine": "mongo",
+        "destinationType": "cdisc.record.document.v1",
+        "collectionNameFromConfig": "collections.records",
+        "purpose": "One canonical CDISC row per document with original data, typed facets, entity references, lineage, and optional semantic projection.",
+        "polymorphism": {
+          "discriminator": ["profile", "domain"],
+          "schemaFrom": "store:datasets.variables",
+          "dynamicField": "data",
+          "stableFields": ["modelSchemaVersion", "tenantId", "studyId", "snapshotRef", "datasetId", "profile", "domain", "recordKey", "facets", "entityRefs", "lineage"]
+        },
+        "indexes": [
+          {
+            "id": "idx_cdisc_dataset_order",
+            "type": "btree",
+            "fields": ["tenantId", "snapshotRef", "datasetId", "rowOrdinal"],
+            "requirement": "required",
+            "configResolved": true,
+            "workloads": ["dataset_reconstruction", "stable_pagination", "artifact_export"],
+            "purpose": "Read and reconstruct a dataset in deterministic row order."
+          },
+          {
+            "id": "idx_cdisc_study_subject",
+            "type": "btree",
+            "fields": ["tenantId", "studyId", "facets.subjectId", "domain", "facets.studyDay"],
+            "requirement": "recommended",
+            "configResolved": true,
+            "workloads": ["subject_timeline", "animal_timeline", "cross_domain_review"],
+            "purpose": "Navigate one human subject or animal across domains and time."
+          },
+          {
+            "id": "idx_cdisc_profile_domain_test",
+            "type": "btree",
+            "fields": ["tenantId", "profile", "domain", "facets.testCode"],
+            "requirement": "recommended",
+            "configResolved": true,
+            "workloads": ["portfolio_facets", "finding_review", "analysis_parameter"],
+            "purpose": "Filter common tests and parameters across profile datasets."
+          }
+        ],
+        "search": {
+          "kind": "atlas_search",
+          "indexNameFromConfig": "semantic.lexical_index",
+          "requirement": "conditional",
+          "condition": "Used when semantic retrieval is enabled.",
+          "configResolved": true,
+          "workloads": ["lexical_search", "hybrid_search", "evidence_discovery"],
+          "purpose": "Search the rebuildable semantic.text projection without changing canonical CDISC data."
+        },
+        "vectorSearch": {
+          "kind": "atlas_vector_search",
+          "indexNameFromConfig": "semantic.auto_embed_index",
+          "requirement": "optional",
+          "condition": "Uses Atlas Automated Embedding over semantic.text.",
+          "workloads": ["semantic_search", "hybrid_rrf"]
+        }
+      },
+      {
+        "id": "store:entities",
+        "title": "Entity index",
+        "engine": "mongo",
+        "collectionNameFromConfig": "collections.entities",
+        "purpose": "Typed subject, animal, specimen, treatment, product, batch, and parameter navigation.",
+        "indexes": [
+          {
+            "id": "idx_cdisc_entity",
+            "type": "btree",
+            "fields": ["tenantId", "snapshotRef", "entityType", "entityId"],
+            "requirement": "required",
+            "configResolved": true,
+            "workloads": ["entity_navigation", "cross_dataset_relationships"],
+            "purpose": "Resolve an entity deterministically within a snapshot."
+          }
+        ]
+      },
+      {
+        "id": "store:materializations",
+        "title": "Profile materializations",
+        "engine": "mongo",
+        "collectionNameFromConfig": "collections.materializations",
+        "purpose": "Rebuildable subject timelines, nonclinical findings, analysis traceability, and product evidence.",
+        "indexes": [
+          {
+            "id": "idx_cdisc_materialization",
+            "type": "btree",
+            "fields": ["tenantId", "snapshotRef", "kind", "groupId"],
+            "requirement": "recommended",
+            "configResolved": true,
+            "workloads": ["repeated_cross_domain_review", "profile_assistant"],
+            "purpose": "Serve repeated profile-specific questions without unbounded cross-domain joins."
+          }
+        ]
+      },
+      {
+        "id": "store:standards",
+        "title": "Standards and terminology",
+        "engine": "mongo",
+        "collectionNameFromConfig": "collections.standards",
+        "purpose": "Pinned CDISC model, implementation guide, terminology, exchange, regulator, and validation-rule manifests."
+      },
+      {
+        "id": "store:artifacts",
+        "title": "Artifact manifests",
+        "engine": "mongo",
+        "collectionNameFromConfig": "collections.artifacts",
+        "purpose": "Checksums, media types, object-store references, and acquisition provenance.",
+        "indexes": [
+          {
+            "id": "idx_cdisc_artifact_digest",
+            "type": "btree",
+            "fields": ["tenantId", "digest.value"],
+            "requirement": "required",
+            "configResolved": true,
+            "workloads": ["deduplication", "artifact_replay", "integrity_check"],
+            "purpose": "Guarantee checksum-addressed artifact identity per tenant."
+          }
+        ]
+      },
+      {
+        "id": "store:validationRuns",
+        "title": "Validation runs",
+        "engine": "mongo",
+        "collectionNameFromConfig": "collections.validation_runs",
+        "purpose": "Validation engine, rules, coverage, status, and reproducible execution evidence.",
+        "indexes": [
+          {
+            "id": "idx_cdisc_validation_run",
+            "type": "btree",
+            "fields": ["tenantId", "snapshotRef", "completedAt"],
+            "requirement": "recommended",
+            "configResolved": true,
+            "workloads": ["latest_validation", "publication_gate"],
+            "purpose": "Resolve the latest validation evidence for a snapshot."
+          }
+        ]
+      },
+      {
+        "id": "store:validationFindings",
+        "title": "Validation findings",
+        "engine": "mongo",
+        "collectionNameFromConfig": "collections.validation_findings",
+        "purpose": "Normalized rule findings linked to datasets, records, and variables.",
+        "indexes": [
+          {
+            "id": "idx_cdisc_finding",
+            "type": "btree",
+            "fields": ["tenantId", "snapshotRef", "severity"],
+            "requirement": "recommended",
+            "configResolved": true,
+            "workloads": ["finding_triage", "publication_gate"],
+            "purpose": "Review blocking and non-blocking findings by snapshot."
+          }
+        ]
+      },
+      {
+        "id": "store:validationWaivers",
+        "title": "Validation waivers",
+        "engine": "mongo",
+        "collectionNameFromConfig": "collections.validation_waivers",
+        "purpose": "Immutable, scoped, expiring decisions attached to validation findings.",
+        "indexes": [
+          {
+            "id": "idx_cdisc_waiver",
+            "type": "btree",
+            "fields": ["tenantId", "ruleId", "expiresAt"],
+            "requirement": "recommended",
+            "configResolved": true,
+            "workloads": ["waiver_resolution", "validation_review"],
+            "purpose": "Resolve applicable non-expired waivers safely."
+          }
+        ]
+      },
+      {
+        "id": "store:transformations",
+        "title": "Transformation lineage",
+        "engine": "mongo",
+        "collectionNameFromConfig": "collections.transformations",
+        "purpose": "Mapping, generation, derivation, and export executions with input and output references.",
+        "indexes": [
+          {
+            "id": "idx_cdisc_transformation_input",
+            "type": "btree",
+            "fields": ["tenantId", "inputRefs", "completedAt"],
+            "requirement": "recommended",
+            "configResolved": true,
+            "workloads": ["lineage_navigation", "derivation_trace"],
+            "purpose": "Trace outputs back to source artifacts, datasets, and records."
+          }
+        ]
+      }
+    ],
+    "artifactBytes": {
+      "adapter": "artifact_store",
+      "addressing": "sha256",
+      "replayIntegrity": ["digest", "size"],
+      "reason": "Large binary exchange artifacts remain outside MongoDB documents while manifests retain governance and replay evidence."
+    }
+  },
+  "transformModel": {
+    "pipeline": [
+      {
+        "id": "step.registerArtifact",
+        "op": "register_artifact",
+        "title": "Register immutable artifact",
+        "in": "cdisc.artifact.v1",
+        "out": "registered_artifact",
+        "params": {"integrity": "sha256", "storage": "artifact_store"},
+        "visual": {"group": "Ingest", "icon": "file", "notes": "Verify checksum, media type, size, and provenance before parsing."}
+      },
+      {
+        "id": "step.parse",
+        "op": "parse_cdisc_exchange",
+        "title": "Parse CDISC exchange",
+        "from": "registered_artifact",
+        "out": "parsed_dataset",
+        "params": {"formats": ["Dataset-JSON 1.1", "XPT v5/v8", "Define-XML"]},
+        "visual": {"group": "Transform", "icon": "layers", "notes": "Resolve dataset structure and variable metadata without publishing records."}
+      },
+      {
+        "id": "step.canonicalize",
+        "op": "canonicalize_dataset_records",
+        "title": "Build dataset metamodel and records",
+        "from": "parsed_dataset",
+        "out": "canonical_snapshot",
+        "params": {"preserveVariableNames": true, "derive": ["facets", "entityRefs", "lineage"]},
+        "visual": {"group": "Transform", "icon": "database", "notes": "Preserve original CDISC variables while creating deterministic typed query projections."}
+      },
+      {
+        "id": "step.validate",
+        "op": "validate_snapshot",
+        "title": "Validate governed snapshot",
+        "from": "canonical_snapshot",
+        "out": "validated_snapshot",
+        "params": {"standards": "pinned package", "publicationGate": "validation.require_before_publish"},
+        "visual": {"group": "Govern", "icon": "check", "notes": "Record structural, terminology, conformance, and sponsor findings with reproducible versions."}
+      },
+      {
+        "id": "step.publish",
+        "op": "publish_snapshot",
+        "title": "Publish immutable snapshot",
+        "from": "validated_snapshot",
+        "toStore": "store:snapshots",
+        "out": "published_snapshot",
+        "visual": {"group": "Materialize", "icon": "shield", "notes": "Switch visibility atomically; corrections create a new snapshot rather than mutating published evidence."}
+      },
+      {
+        "id": "step.project",
+        "op": "rebuild_profile_projections",
+        "title": "Build query projections",
+        "from": "published_snapshot",
+        "toStore": "store:materializations",
+        "params": {"profiles": ["send", "sdtm", "adam", "tig"], "semantic": "optional"},
+        "visual": {"group": "Materialize", "icon": "search", "notes": "Build disposable timelines, findings, traceability, product-evidence, lexical, and optional vector projections."}
+      }
+    ],
+    "invariants": [
+      {
+        "id": "inv.artifact",
+        "title": "Original evidence remains replayable",
+        "assert": "artifact.digest and artifact.size identify retained bytes or an immutable object reference",
+        "why": "Regulatory traceability distinguishes exact artifact replay from semantic regeneration."
+      },
+      {
+        "id": "inv.metamodel",
+        "title": "Dataset metadata governs polymorphic data",
+        "assert": "record.data fields are described by the linked dataset.variables metamodel",
+        "why": "Different CDISC domains and versions can coexist without losing field meaning."
+      },
+      {
+        "id": "inv.immutable",
+        "title": "Published snapshots are immutable",
+        "assert": "a correction creates a new snapshot and lineage edge",
+        "why": "Queries and exports remain reproducible."
+      },
+    {
+      "id": "inv.projections",
+      "title": "Derived views are rebuildable",
+      "assert": "facets, entities, materializations, and semantic fields can be recreated from canonical data plus pinned metadata",
+      "why": "Search and AI features never become competing sources of truth."
+    },
+    {
+      "id": "inv.model-schema-version",
+      "title": "Every stored document declares its model version",
+      "assert": "modelSchemaVersion is present on every persisted document and operational record queries inject the current version",
+      "why": "Schema migrations can be explicit, idempotent, observable, and independent from CDISC standard upgrades."
+    }
+    ]
+  },
+  "queryModel": {
+    "language": "cdisc-query/v1",
+    "operators": ["eq", "ne", "in", "nin", "gt", "gte", "lt", "lte", "exists", "contains"],
+    "governance": ["tenant predicate injection", "published snapshot constraint", "path allowlist", "MongoDB operator rejection"],
+    "modes": [
+      {
+        "id": "dataset_key",
+        "title": "Dataset reconstruction",
+        "uses": ["store:datasets", "store:records"],
+        "pattern": "match-sort-project",
+        "primaryFilters": ["tenantId", "snapshotRef", "datasetId"],
+        "notes": "Retrieve exact records in stable row order for browsing and export.",
+        "exampleQuestion": "Show the first 100 rows of the AE dataset in this published study snapshot."
+      },
+      {
+        "id": "study_entity",
+        "title": "Subject or animal timeline",
+        "uses": ["store:records", "store:entities", "store:materializations"],
+        "pattern": "match",
+        "primaryFilters": ["studyId", "facets.subjectId", "domain", "facets.studyDay"],
+        "notes": "Navigate clinical subjects or nonclinical animals across bounded domains and time.",
+        "exampleQuestion": "Show adverse events and laboratory results for this subject, ordered by study day."
+      },
+      {
+        "id": "portfolio_facets",
+        "title": "Cross-study facets",
+        "uses": ["store:records"],
+        "pattern": "match-project",
+        "primaryFilters": ["profile", "domain", "facets.testCode", "facets.organ", "facets.severity"],
+        "notes": "Use stable typed facets for repeated clinical and nonclinical discovery.",
+        "exampleQuestion": "Find liver findings of mild or greater severity across published SEND studies."
+      },
+      {
+        "id": "grouped_analysis",
+        "title": "Governed grouped analysis",
+        "uses": ["store:records", "store:materializations"],
+        "pattern": "match-group-project",
+        "metrics": ["count", "countDistinct", "sum", "avg", "min", "max"],
+        "notes": "Bounded aggregation with declared group fields, metrics, evidence scope, and result limits.",
+        "exampleQuestion": "Count findings by treatment group, organ, and severity."
+      },
+      {
+        "id": "semantic_retrieval",
+        "title": "Lexical, semantic, or hybrid search",
+        "uses": ["store:records"],
+        "pattern": "atlas-search|atlas-vector|hybrid-rrf",
+        "primaryFilters": ["tenantId", "snapshotRef", "studyId", "profile", "domain"],
+        "notes": "Search rebuildable semantic projections while preserving published-snapshot governance.",
+        "exampleQuestion": "Find evidence related to hepatocellular hypertrophy even when wording differs."
+      },
+      {
+        "id": "traceability",
+        "title": "Lineage and validation evidence",
+        "uses": ["store:transformations", "store:validationRuns", "store:validationFindings", "store:artifacts"],
+        "pattern": "bounded-reference-navigation",
+        "notes": "Trace an analysis value or finding to its dataset, source row, artifact, rules, and transformation.",
+        "exampleQuestion": "Which SDTM records and derivation produced this ADaM analysis value?"
+      }
+    ],
+    "limits": [
+      "Arbitrary dynamic data fields remain queryable but are not automatically indexed.",
+      "Heavy biostatistical scans should use governed extracts or analytical systems.",
+      "Semantic mode requires an Atlas Automated Embedding index; the portable lexical fallback is intentionally bounded."
+    ]
+  },
+  "samples": {
+    "externalCatalog": {
+      "path": "examples/catalog.json",
+      "policy": "Reference public revision-pinned sources; verify every file by SHA-256 and retain upstream attribution instead of vendoring study data."
+    },
+    "scenarios": [
+      {
+        "id": "scenario.send.findings",
+        "title": "SEND nonclinical finding review",
+        "profile": "send",
+        "domains": ["DM", "TX", "MI", "LB"],
+        "show": ["transformGraph", "collectionModel", "indexOverlay"]
+      },
+      {
+        "id": "scenario.sdtm.safety",
+        "title": "SDTM clinical safety review",
+        "profile": "sdtm",
+        "domains": ["DM", "AE", "LB", "VS"],
+        "show": ["transformGraph", "collectionModel", "indexOverlay"]
+      }
+    ]
+  },
+  "profiles": ["send", "sdtm", "adam", "tig"],
+  "visualization": {
+    "canvas": {
+      "defaultView": "overview",
+      "views": [
+        {"id": "overview", "title": "Overview", "shows": ["collectionModel", "transformGraph"], "layout": {"type": "grid", "columns": 2}},
+        {"id": "collections", "title": "Collections", "shows": ["collectionModel"], "layout": {"type": "free"}},
+        {"id": "dictionaries", "title": "Dictionaries", "shows": ["physicalProfiles", "bundles.standards"], "layout": {"type": "cards"}},
+        {"id": "transform", "title": "Transform", "shows": ["transformGraph"], "layout": {"type": "dag", "direction": "LR"}}
+      ]
+    },
+    "architecture": {
+      "kind": "cdisc-study-repository",
+      "layers": [
+        {"id": "artifacts", "title": "Original artifacts", "items": ["Dataset-JSON", "XPT", "Define-XML"]},
+        {"id": "snapshot", "title": "Immutable study snapshot", "items": ["Study", "Snapshot", "Dataset metamodel", "Polymorphic records"]},
+        {"id": "projections", "title": "Rebuildable projections", "items": ["Facets", "Entity index", "Materializations", "Semantic search"]},
+        {"id": "queries", "title": "Governed use", "items": ["Browse", "Query", "Analysis", "Lineage", "AI retrieval"]}
+      ]
+    },
+    "collectionModel": {
+      "sharedEnvelope": {
+        "appliesTo": "all collections",
+        "fields": [
+          {"name": "modelSchemaVersion", "type": "semver", "role": "evolution.schema", "required": true, "current": "1.1.0"},
+          {"name": "tenantId", "type": "string", "role": "scope.tenant", "required": true}
+        ],
+        "note": "The version identifies the Kehrnel document shape. It is independent from SEND, SDTM, ADaM, TIG, exchange, and implementation-guide versions."
+      },
+      "entities": [
+        {"id": "coll.studies", "kind": "collection", "store": "store:studies", "label": "cdisc_studies", "fields": ["_id", "tenantId", "studyId", "title", "profiles[]", "updatedAt"], "badges": ["portfolio", "identity"], "links": [{"type": "joinsTo", "target": "coll.snapshots", "on": "studyId", "cardinality": "1:N"}]},
+        {"id": "coll.snapshots", "kind": "collection", "store": "store:snapshots", "label": "cdisc_snapshots", "fields": ["_id", "tenantId", "studyId", "snapshotId", "profile", "standardsPackageId", "state", "datasetIds[]", "artifactIds[]"], "badges": ["immutable", "publication-gate"], "links": [{"type": "joinsTo", "target": "coll.datasets", "on": "snapshotRef", "cardinality": "1:N"}, {"type": "joinsTo", "target": "coll.artifacts", "on": "artifactIds[]", "cardinality": "N:N"}, {"type": "joinsTo", "target": "coll.validationRuns", "on": "snapshotRef", "cardinality": "1:N"}]},
+        {"id": "coll.datasets", "kind": "collection", "store": "store:datasets", "label": "cdisc_datasets", "fields": ["_id", "snapshotRef", "datasetId", "profile", "domain", "variables", "keyVariables[]", "recordCount", "contentHash"], "expand": {"variables": ["ordinal", "name", "label", "dataType", "length", "keySequence", "codelistOID", "origin"]}, "badges": ["metamodel", "immutable"], "links": [{"type": "joinsTo", "target": "coll.records", "on": "datasetId", "cardinality": "1:N"}, {"type": "joinsTo", "target": "coll.standards", "on": "standardsPackageId", "cardinality": "N:1"}]},
+        {"id": "coll.records", "kind": "collection", "store": "store:records", "label": "cdisc_records", "fields": ["_id", "tenantId", "studyId", "snapshotRef", "datasetId", "profile", "domain", "rowOrdinal", "recordKey", "data", "facets", "entityRefs", "lineage", "semantic"], "expand": {"data": ["<variable name>: <typed value>"], "facets": ["subjectId", "studyDay", "testCode", "organ", "finding", "parameterCode", "productId", "projectionVersion"], "entityRefs": ["type", "id"], "lineage": ["sourceArtifactId", "sourceDataset", "sourceRow", "recordHash"]}, "badges": ["canonical", "polymorphic", "queryable"], "links": [{"type": "joinsTo", "target": "coll.entities", "on": "entityRefs[]", "cardinality": "N:N"}, {"type": "joinsTo", "target": "coll.materializations", "on": "snapshotRef", "cardinality": "N:N"}]},
+        {"id": "coll.entities", "kind": "collection", "store": "store:entities", "label": "cdisc_entities", "fields": ["_id", "tenantId", "snapshotRef", "entityType", "entityId", "recordRefs[]"], "badges": ["rebuildable", "relationships"]},
+        {"id": "coll.materializations", "kind": "collection", "store": "store:materializations", "label": "cdisc_materializations", "fields": ["_id", "tenantId", "snapshotRef", "kind", "groupId", "records[]"], "badges": ["rebuildable", "workload-view"]},
+        {"id": "coll.standards", "kind": "collection", "store": "store:standards", "label": "cdisc_standards", "fields": ["_id", "tenantId", "packageId", "profile", "standard", "assets[]", "validationEngines", "rulePackages[]"], "expand": {"standard": ["family", "modelVersion", "implementationGuide", "implementationGuideVersion", "terminologyPackages[]", "regulatorContext"]}, "badges": ["version-pinned", "deployment-owned"]},
+        {"id": "coll.artifacts", "kind": "collection", "store": "store:artifacts", "label": "cdisc_artifacts", "fields": ["_id", "tenantId", "provider", "uri", "mediaType", "size", "digest", "sourceName", "acquiredAt"], "expand": {"digest": ["algorithm", "value"]}, "badges": ["immutable", "checksum-addressed"]},
+        {"id": "coll.validationRuns", "kind": "collection", "store": "store:validationRuns", "label": "cdisc_validation_runs", "fields": ["_id", "runId", "tenantId", "snapshotRef", "engine", "engineVersion", "status", "summary", "rulePackages[]", "completedAt"], "badges": ["evidence", "append-only"], "links": [{"type": "joinsTo", "target": "coll.validationFindings", "on": "runId", "cardinality": "1:N"}]},
+        {"id": "coll.validationFindings", "kind": "collection", "store": "store:validationFindings", "label": "cdisc_validation_findings", "fields": ["_id", "runId", "snapshotRef", "severity", "ruleId", "datasetId", "recordId", "variable", "waived"], "badges": ["evidence", "append-only"], "links": [{"type": "joinsTo", "target": "coll.validationWaivers", "on": "waiverId", "cardinality": "N:1"}]},
+        {"id": "coll.validationWaivers", "kind": "collection", "store": "store:validationWaivers", "label": "cdisc_validation_waivers", "fields": ["_id", "tenantId", "ruleId", "scope", "reason", "expiresAt"], "badges": ["governed", "expiring"]},
+        {"id": "coll.transformations", "kind": "collection", "store": "store:transformations", "label": "cdisc_transformations", "fields": ["_id", "tenantId", "kind", "inputRefs[]", "outputRefs[]", "mappingId", "mappingVersion", "completedAt"], "badges": ["lineage", "append-only"], "links": [{"type": "joinsTo", "target": "coll.artifacts", "on": "inputRefs[]", "cardinality": "N:N"}]}
+      ]
+    },
+    "transformGraph": {
+      "nodes": [
+        {"id": "src.artifact", "kind": "source", "label": "Dataset-JSON / XPT / Define-XML", "typeRef": "cdisc.artifact.v1"},
+        {"id": "op.register", "kind": "transform", "label": "Checksum & register", "stepRef": "step.registerArtifact"},
+        {"id": "op.parse", "kind": "transform", "label": "Parse exchange + metadata", "stepRef": "step.parse"},
+        {"id": "op.canonicalize", "kind": "transform", "label": "Build metamodel + records", "stepRef": "step.canonicalize"},
+        {"id": "op.validate", "kind": "transform", "label": "Validate snapshot", "stepRef": "step.validate"},
+        {"id": "op.publish", "kind": "sink", "label": "Publish immutable snapshot", "stepRef": "step.publish", "entityRef": "coll.snapshots"},
+        {"id": "op.project", "kind": "sink", "label": "Build query projections", "stepRef": "step.project", "entityRef": "coll.materializations"}
+      ],
+      "edges": [
+        {"from": "src.artifact", "to": "op.register"},
+        {"from": "op.register", "to": "op.parse"},
+        {"from": "op.parse", "to": "op.canonicalize"},
+        {"from": "op.canonicalize", "to": "op.validate"},
+        {"from": "op.validate", "to": "op.publish"},
+        {"from": "op.publish", "to": "op.project"}
+      ]
+    },
+    "indexOverlay": {
+      "indexGroups": [
+        {"id": "idxgrp.records", "entityRef": "coll.records", "items": ["idx_cdisc_dataset_order", "idx_cdisc_study_subject", "idx_cdisc_profile_domain_test"], "search": {"kind": "atlas_search", "ref": "semantic.lexical_index"}, "vectorSearch": {"kind": "atlas_vector_search", "ref": "semantic.auto_embed_index"}},
+        {"id": "idxgrp.governance", "entityRef": "coll.snapshots", "items": ["idx_cdisc_snapshot_state", "idx_cdisc_validation_run", "idx_cdisc_finding"]},
+        {"id": "idxgrp.projections", "entityRef": "coll.materializations", "items": ["idx_cdisc_entity", "idx_cdisc_materialization"]}
+      ]
+    },
+    "legends": {
+      "pathLegend": {
+        "entries": [
+          {"label": "variables", "meaning": "Dataset metamodel that defines the allowed CDISC variable names, types, labels, keys, order, terminology, and origins.", "example": "[{name: 'USUBJID', dataType: 'string', keySequence: 2}]"},
+          {"label": "data", "meaning": "Polymorphic payload that preserves the original CDISC variable names and logical values.", "example": "{USUBJID: 'SUBJ-001', AEDECOD: 'HEADACHE'}"},
+          {"label": "facets", "meaning": "Stable typed and rebuildable fields promoted for cross-domain operational queries.", "example": "{subjectId: 'SUBJ-001', severity: 'MILD', studyDay: 8}"},
+          {"label": "entityRefs", "meaning": "Typed references used to navigate subjects, animals, specimens, products, batches, and analysis parameters.", "example": "[{type: 'humanSubject', id: 'SUBJ-001'}]"},
+          {"label": "lineage", "meaning": "Source artifact, dataset, row, mapping, and hash evidence for this record.", "example": "{sourceDataset: 'AE', sourceRow: 12, recordHash: 'sha256:...'}"},
+          {"label": "snapshotRef", "meaning": "Tenant-scoped immutable publication boundary used by queries, validation, and projections.", "example": "tenant-a:STUDY-001:v2"},
+          {"label": "profile", "meaning": "CDISC workload profile that drives facets and materializations.", "example": "send | sdtm | adam | tig"},
+          {"label": "domain", "meaning": "Dataset/domain discriminator such as AE, LB, MI, or ADLB.", "example": "AE"}
+        ]
+      }
+    }
+  }
+}

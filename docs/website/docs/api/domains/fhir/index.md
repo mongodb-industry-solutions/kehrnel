@@ -57,8 +57,44 @@ Generation, denormalization, indexes, and diagnostics use the universal runtime 
 | `POST /environments/{env}/synthetic/jobs` | Async `synthetic_generate_batch` |
 | `POST /environments/{env}/run` | `fhir_denormalize`, `fhir_search`, `fhir_stats`, … |
 
+## Discovery and enrichment
+
+| API | Purpose |
+|-----|---------|
+| `GET /api/domains/fhir/metadata` | Standard CapabilityStatement for the activated release and implemented interactions |
+| `GET /api/domains/fhir/capabilities` | Detailed release tier, resource sets, IGs, active profiles, validation and semantic execution status |
+| `GET /api/domains/fhir/support-matrix` | JSON support matrix generated from runtime capabilities; use `?format=markdown` to download evidence |
+| `GET /api/domains/fhir/resource-catalog` | Package-backed resource and MongoDB model catalog |
+| `GET /api/domains/fhir/synthetic/cohorts` | Versioned patient-centred cohort blueprint catalog |
+| `POST /api/domains/fhir/synthetic/cohorts/plan` | Deterministic resource-distribution plan; never writes data |
+| `POST /api/domains/fhir/synthetic/cohorts/preview` | Bounded, non-persistent sample and quality evidence |
+| `POST /api/domains/fhir/implementation-guides/stage` | Validate and stage a bounded `.tgz` for later voluntary activation |
+| `POST /api/domains/fhir/import` | Validate and optionally import Bundle, NDJSON or a resource |
+| `POST /api/domains/fhir/migration/runs` | Start a resumable tenant-scoped migration without retaining the source payload |
+| `GET /api/domains/fhir/migration/runs` | List persisted migration history and checkpoints |
+| `POST /api/domains/fhir/migration/runs/{run}/chunks/{index}` | Import one bounded, ordered, idempotently replayable chunk |
+| `POST /api/domains/fhir/migration/runs/{run}/cancel` | Cooperatively cancel before or during a chunk boundary |
+| `POST /api/domains/fhir/migration/runs/{run}/reference-integrity` | Report unresolved relative references without modifying resources |
+| `POST /api/domains/fhir/semantic/preview` | Preview configured field extraction and chunking; never embeds or writes |
+| `POST /api/domains/fhir/semantic/materialize` | Explicitly embed selected stored resources and persist rebuildable sidecar chunks |
+| `POST /api/domains/fhir/semantic/search` | Embed a query and execute Atlas Vector Search over configured sidecars |
+
+Every operation is also available through `POST /environments/{env}/run` and
+the CLI `kehrnel core env run ...`. Configuration is supplied once during
+strategy activation; credentials remain in environment bindings.
+
+Migration history is stored in `_kehrnel_fhir_migration_runs` and
+`_kehrnel_fhir_migration_chunks` inside the activated strategy database. These
+collections contain audit metadata, digests, checkpoints, and bounded reports—not
+the imported clinical source documents. Source bytes are streamed by the client
+and remain subject to the caller's retention policy.
+
 ## Maturity
 
-Domain search and strategy-backed generation are **beta** (`fhir.clinical_cdr` v0.1.0). Natural-language search (`negotiate_fhir_search`) and agentic endpoints are not yet production-ready.
+The FHIR resource-store accelerator is delivered as `fhir.clinical_cdr`. R4 is
+currently a minimal Patient/Observation tier; R5 and R6 are package-backed. Its
+authoritative scope is the active CapabilityStatement and detailed capability
+response. Semantic execution is advertised only when its embedding, storage,
+index, and Atlas adapters are actually available.
 
 `fhir.clinical_cdr` is the only FHIR strategy in kehrnel.

@@ -1,0 +1,818 @@
+{
+  "id": "cdisc.sdr",
+  "name": "Document-First CDISC Study Data Repository",
+  "version": "0.2.0",
+  "domain": "cdisc",
+  "pack_format": "strategy-pack/v1",
+  "spec": {"path": "spec.json", "version": "1.0"},
+  "config": {
+    "strategy": {
+      "schema": "schema.json",
+      "defaults": "defaults.json",
+      "description": "CDISC study repository, governance, query, projection, and artifact configuration"
+    }
+  },
+  "summary": "Governed CDISC study snapshots with operational, semantic, and AI-ready query projections.",
+  "description": "Preserves CDISC artifacts and canonical dataset records while deriving typed facets, entity references, lineage, and optional semantic projections for SEND, SDTM, ADaM, and TIG workloads.",
+  "entrypoint": "kehrnel.engine.strategies.cdisc.sdr.strategy:CDISCSDRStrategy",
+  "capabilities": ["transform", "reverse_transform", "ingest", "query", "validate", "generate", "plan", "apply", "study_data", "artifact_replay", "semantic_equivalence", "semantic_ready"],
+  "adapters": {
+    "storage": ["mongodb"],
+    "artifact": ["filesystem", "s3", "azure-blob"],
+    "search": ["mongodb"],
+    "vector": [],
+    "queue": []
+  },
+  "compatibility": {
+    "packFormat": "strategy-pack/v1",
+    "requires": ["storage.mongo"],
+    "optional": ["search.atlas", "validation.cdisc_core", "artifact.object_store"]
+  },
+  "maturity": "preview",
+  "license": "Apache-2.0",
+  "keywords": ["CDISC", "SEND", "SDTM", "ADaM", "TIG", "regulatory", "semantic search", "AI"],
+  "ui": {
+    "status": "preview",
+    "activatable": true,
+    "docs": "/guide/docs/cdisc-sdr-strategy",
+    "domain_badge": "CDISC",
+    "icon": "Database",
+    "tags": ["CDISC", "Study Data", "Regulatory", "AI-ready"],
+    "works_with": ["Dataset-JSON", "SAS XPORT", "Define-XML", "MongoDB", "S3", "Azure Blob"],
+    "example_data": {
+      "catalog": "examples/catalog.json",
+      "delivery": "fetch-and-checksum-verify",
+      "journeys": ["cdisc-pilot-sdtm-dm", "phuse-ffu-send", "phuse-nimble-send", "phuse-instem-send", "phuse-pointcross-send"]
+    },
+    "links": {
+      "strategy_base": "/api/strategies/cdisc/sdr",
+      "strategy_config": "/api/strategies/cdisc/sdr/config",
+      "runtime_activate": "/environments/{env_id}/activate",
+      "runtime_capabilities": "/environments/{env_id}/capabilities",
+      "runtime_plan": "/environments/{env_id}/plan",
+      "runtime_apply": "/environments/{env_id}/apply",
+      "runtime_query": "/environments/{env_id}/query",
+      "runtime_compile_query": "/environments/{env_id}/compile_query",
+      "runtime_strategy_op": "/environments/{env_id}/activations/{domain}/ops/{op}",
+      "strategy_manifest": "/strategies/cdisc.sdr",
+      "strategy_spec": "/strategies/cdisc.sdr/spec",
+      "catalog_ops": "/ops"
+    },
+    "scorecard": {
+      "study_snapshot_governance": 5,
+      "clinical_and_nonclinical": 4,
+      "operational_queries": 4,
+      "artifact_traceability": 5,
+      "schema_evolution": 4,
+      "submission_authoring": 1
+    },
+    "index_contract": {
+      "specPath": "storageModel.stores[].indexes",
+      "searchSpecPath": "storageModel.stores[].search",
+      "configResolved": true,
+      "summary": "Operational indexes are declared against stable study, snapshot, dataset, profile, domain, entity, and facet fields. Runtime plan/apply resolves the configured MongoDB collection names.",
+      "requiredForGovernedQueries": ["idx_cdisc_dataset_order", "idx_cdisc_snapshot_state"],
+      "recommendedForStudyQueries": ["idx_cdisc_study_subject", "idx_cdisc_profile_domain_test"],
+      "conditionalSearchIndex": "semantic.lexical_index",
+      "conditionalAutoEmbedIndex": "semantic.auto_embed_index"
+    },
+    "story": "Research-study data arrives as many related tabular datasets, metadata files, and binary exchange artifacts. The variables differ by CDISC domain and standard version, yet reviewers must still be able to prove which source produced every value, which rules were applied, and which immutable study version was queried. Treating this information as a patient record loses the study and submission context; creating a separate rigid schema for every domain creates operational sprawl.\n\nThis strategy keeps the CDISC study snapshot as the governing unit. Original Dataset-JSON, XPT, and Define-XML artifacts remain checksum-addressed and replayable. Dataset documents describe the variable-level metamodel, while one polymorphic record collection preserves each CDISC row under its original variable names. Stable typed facets and entity references make clinical, nonclinical, analysis, and product-evidence records queryable through one governed contract.\n\nThe result is a repository that respects CDISC rather than replacing it: SEND, SDTM, ADaM, and TIG remain recognizable to domain users, while MongoDB supplies flexible storage, indexes, search, lineage, and optional AI retrieval around the standards.",
+    "how_it_works": "An intake creates a staged immutable snapshot and registers the original artifact with its checksum and provenance. The parser reads Dataset-JSON or XPT plus Define-XML metadata, creates one dataset metamodel document, and writes one canonical document per logical CDISC row. Each record has a fixed governance envelope, a polymorphic data object containing the original CDISC variables, typed facets for common access paths, entity references, and lineage.\n\nValidation runs against pinned standards and terminology before publication. Publishing makes the snapshot visible without rewriting its records. Rebuildable projections then provide subject timelines, nonclinical findings, ADaM traceability, product evidence, lexical search, and optional vector search.\n\nUsers query through cdisc-query/v1 rather than submitting arbitrary MongoDB operators. Kehrnel injects the tenant and published-snapshot constraints, validates paths and operators, and compiles the request into an explainable MongoDB aggregation. Grouped analysis and semantic retrieval use the same governed study scope.",
+    "benefits": [
+      "Preserves original CDISC variables, metadata, artifacts, and immutable study snapshots instead of forcing research data into a patient-record model.",
+      "Uses a dataset metamodel plus polymorphic record documents, avoiding a new physical collection and migration path for every CDISC domain or sponsor extension.",
+      "Adds deterministic typed facets and compound indexes for common study, subject or animal, domain, test, timing, and finding access paths.",
+      "Provides governed operational queries, grouped analysis, lineage, lexical search, and optional vector retrieval through one explainable contract.",
+      "Keeps semantic, AI, openEHR, FHIR, and knowledge-graph representations as traceable rebuildable projections rather than competing sources of truth."
+    ],
+    "ideal_for": "Use this strategy for governed clinical and nonclinical study repositories that need to ingest CDISC exchange formats, preserve source evidence, compare immutable study versions, validate before publication, and support operational exploration across SEND, SDTM, ADaM, or TIG data. It is particularly useful when datasets evolve across standards and sponsors but users still need one secure query and lineage model.",
+    "consider_alternatives": "This is an operational study-data repository, not an EDC, LIMS, statistical-computing platform, or submission-authoring system. Heavy unrestricted analytical scans should use governed extracts or dedicated analytical systems. Semantic and vector search require Atlas Search with Automated Embedding enabled. Ingestion does not by itself make a study regulatory-compliant; conformance depends on the pinned standards, terminology, validation engines, and review process.",
+    "constraints": [
+      "Large source bytes should be uploaded directly to the configured object store; inline operation payloads are deliberately size-bounded.",
+      "Standards, terminology, and conformance assets must be supplied and licensed by the deployment owner."
+    ],
+    "tabs": {
+      "overview": {
+        "cards": [
+          {"title": "Model", "body": "Dataset metadata describes polymorphic CDISC rows; stable facets, entities, lineage, and modelSchemaVersion make them operationally governable."},
+          {"title": "Querying", "body": "Governed study queries, grouped analysis, lexical search, and optional vector retrieval compile to MongoDB plans."},
+          {"title": "Efficiency", "body": "Compound indexes serve bounded study workloads while rebuildable materializations serve repeated cross-domain questions."}
+        ]
+      }
+    }
+  },
+  "ops": [
+    {
+      "name": "cdisc_store_artifact",
+      "kind": "ingest",
+      "summary": "Store immutable source bytes by SHA-256 through the configured artifact adapter",
+      "input_schema": {
+        "type": "object",
+        "required": ["contentBase64", "mediaType"],
+        "properties": {
+          "contentBase64": {"type": "string", "minLength": 1},
+          "mediaType": {"type": "string", "minLength": 1},
+          "sourceName": {"type": "string"},
+          "kind": {"type": "string"},
+          "expectedSha256": {"type": "string"},
+          "artifactId": {"type": "string"},
+          "metadata": {"type": "object"}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "artifact", "created"], "properties": {"ok": {"type": "boolean"}, "artifact": {"type": "object"}, "created": {"type": "boolean"}}, "additionalProperties": true}
+    },
+    {
+      "name": "cdisc_initiate_upload",
+      "kind": "ingest",
+      "summary": "Create a short-lived direct object-store upload target for a checksum-addressed artifact",
+      "input_schema": {
+        "type": "object",
+        "required": ["sha256", "size", "mediaType"],
+        "properties": {
+          "sha256": {"type": "string", "minLength": 64, "maxLength": 71},
+          "size": {"type": "integer", "minimum": 1},
+          "mediaType": {"type": "string", "minLength": 1},
+          "expiresIn": {"type": "integer", "minimum": 60, "maximum": 3600}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "uploadId", "objectKey", "sha256", "size", "mediaType", "expiresIn", "target"], "properties": {"ok": {"type": "boolean"}, "uploadId": {"type": "string"}, "objectKey": {"type": "string"}, "sha256": {"type": "string"}, "size": {"type": "integer"}, "mediaType": {"type": "string"}, "expiresIn": {"type": "integer"}, "target": {"type": "object"}}, "additionalProperties": true}
+    },
+    {
+      "name": "cdisc_finalize_upload",
+      "kind": "ingest",
+      "summary": "Verify and register a completed checksum-addressed direct upload",
+      "input_schema": {
+        "type": "object",
+        "required": ["uploadId", "sha256", "size", "mediaType"],
+        "properties": {
+          "uploadId": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "minLength": 64, "maxLength": 71},
+          "size": {"type": "integer", "minimum": 1},
+          "mediaType": {"type": "string", "minLength": 1},
+          "sourceName": {"type": "string"},
+          "kind": {"type": "string"},
+          "artifactId": {"type": "string"},
+          "metadata": {"type": "object"}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "artifact", "created"], "properties": {"ok": {"type": "boolean"}, "artifact": {"type": "object"}, "created": {"type": "boolean"}}, "additionalProperties": true}
+    },
+    {
+      "name": "cdisc_prepare_download",
+      "kind": "export",
+      "summary": "Create a short-lived direct object-store download target for a retained artifact",
+      "input_schema": {
+        "type": "object",
+        "required": ["artifactId"],
+        "properties": {
+          "artifactId": {"type": "string", "minLength": 1},
+          "expiresIn": {"type": "integer", "minimum": 60, "maximum": 3600}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "artifact", "expiresIn", "target"], "properties": {"ok": {"type": "boolean"}, "artifact": {"type": "object"}, "expiresIn": {"type": "integer"}, "target": {"type": "object"}}, "additionalProperties": true}
+    },
+    {
+      "name": "cdisc_register_external_artifact",
+      "kind": "ingest",
+      "summary": "Register and verify bytes uploaded directly to the configured object store",
+      "input_schema": {
+        "type": "object", "required": ["objectKey", "sha256", "mediaType"],
+        "properties": {
+          "objectKey": {"type": "string"}, "sha256": {"type": "string"}, "size": {"type": "integer", "minimum": 0},
+          "mediaType": {"type": "string"}, "sourceName": {"type": "string"}, "kind": {"type": "string"},
+          "artifactId": {"type": "string"}, "metadata": {"type": "object"}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "artifact", "created"], "properties": {"ok": {"type": "boolean"}, "artifact": {"type": "object"}, "created": {"type": "boolean"}}, "additionalProperties": true}
+    },
+    {
+      "name": "cdisc_replay_artifact",
+      "kind": "export",
+      "summary": "Replay original artifact bytes after digest and size verification",
+      "input_schema": {
+        "type": "object",
+        "required": ["artifactId"],
+        "properties": {"artifactId": {"type": "string", "minLength": 1}},
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "artifact", "contentBase64", "integrityVerified"], "properties": {"ok": {"type": "boolean"}, "artifact": {"type": "object"}, "contentBase64": {"type": "string"}, "integrityVerified": {"type": "boolean"}}, "additionalProperties": true}
+    },
+    {
+      "name": "cdisc_inspect_define_xml",
+      "kind": "ingest",
+      "summary": "Securely parse a retained Define-XML artifact and expose its dataset metadata",
+      "input_schema": {
+        "type": "object",
+        "required": ["artifactId"],
+        "properties": {"artifactId": {"type": "string", "minLength": 1}},
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "define", "datasetCount"], "properties": {"ok": {"type": "boolean"}, "define": {"type": "object"}, "datasetCount": {"type": "integer"}}, "additionalProperties": true}
+    },
+    {
+      "name": "cdisc_ingest_xpt",
+      "kind": "ingest",
+      "summary": "Convert a retained SAS XPORT artifact with optional Define-XML metadata and ingest it canonically",
+      "input_schema": {
+        "type": "object",
+        "required": ["xptArtifactId", "packageId", "snapshotId", "profile", "standard"],
+        "properties": {
+          "xptArtifactId": {"type": "string", "minLength": 1},
+          "defineArtifactId": {"type": "string"},
+          "studyOID": {"type": "string"},
+          "packageId": {"type": "string", "minLength": 1},
+          "snapshotId": {"type": "string", "minLength": 1},
+          "standardsPackageId": {"type": "string"},
+          "profile": {"type": "string", "enum": ["send", "sdtm", "adam", "tig"]},
+          "standard": {"type": "object"},
+          "publicationState": {"type": "string", "enum": ["staged", "published"]}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "studyId", "datasetId", "snapshotId", "recordCount", "sourceFormat"], "properties": {"ok": {"type": "boolean"}, "studyId": {"type": "string"}, "datasetId": {"type": "string"}, "snapshotId": {"type": "string"}, "recordCount": {"type": "integer"}, "sourceFormat": {"const": "XPT"}, "defineArtifactId": {"type": ["string", "null"]}}, "additionalProperties": true}
+    },
+    {
+      "name": "cdisc_inspect_dataset_json",
+      "kind": "ingest",
+      "summary": "Validate and inspect an inline Dataset-JSON document without persistence",
+      "input_schema": {"type": "object", "required": ["datasetJSON"], "properties": {"datasetJSON": {"type": "object"}}},
+      "output_schema": {"type": "object", "required": ["ok", "format", "version", "studyOID", "name", "columns", "records"], "properties": {"ok": {"type": "boolean"}, "format": {"const": "Dataset-JSON"}, "version": {"type": "string"}, "studyOID": {"type": "string"}, "name": {"type": "string"}, "columns": {"type": "integer"}, "records": {"type": "integer"}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_ingest_dataset_json",
+      "kind": "ingest",
+      "summary": "Canonicalize and idempotently persist an inline Dataset-JSON document",
+      "input_schema": {
+        "type": "object",
+        "required": ["datasetJSON", "packageId", "snapshotId", "profile", "standard"],
+        "properties": {
+          "datasetJSON": {"type": "object"},
+          "packageId": {"type": "string", "minLength": 1},
+          "snapshotId": {"type": "string", "minLength": 1},
+          "profile": {"type": "string", "enum": ["send", "sdtm", "adam", "tig"]},
+          "standard": {"type": "object"},
+          "sourceArtifactId": {"type": "string"},
+          "publicationState": {"type": "string", "enum": ["staged", "published"]},
+          "dryRun": {"type": "boolean"}
+        }
+      },
+      "output_schema": {"type": "object", "required": ["ok"], "properties": {"ok": {"type": "boolean"}, "dryRun": {"type": "boolean"}, "dataset": {"type": "object"}, "snapshot": {"type": "object"}, "tenantId": {"type": "string"}, "studyId": {"type": "string"}, "datasetId": {"type": "string"}, "snapshotId": {"type": "string"}, "snapshotRef": {"type": "string"}, "publicationState": {"type": "string"}, "recordCount": {"type": "integer"}, "contentHash": {"type": "string"}, "idempotent": {"type": "boolean"}}, "additionalProperties": true}
+    },
+    {
+      "name": "cdisc_publish_snapshot",
+      "kind": "maintenance",
+      "summary": "Atomically expose a canonicalized or validated staged snapshot",
+      "input_schema": {
+        "type": "object",
+        "required": ["studyId", "snapshotId"],
+        "properties": {
+          "studyId": {"type": "string", "minLength": 1},
+          "snapshotId": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "snapshotRef", "state", "alreadyPublished"], "properties": {"ok": {"type": "boolean"}, "snapshotRef": {"type": "string"}, "state": {"const": "published"}, "alreadyPublished": {"type": "boolean"}, "datasetCount": {"type": "integer"}, "projections": {"type": "object"}}, "additionalProperties": true}
+    },
+    {
+      "name": "cdisc_validate_snapshot",
+      "kind": "maintenance",
+      "summary": "Run structural and configured external validation and persist normalized findings",
+      "input_schema": {
+        "type": "object",
+        "required": ["studyId", "snapshotId"],
+        "properties": {
+          "studyId": {"type": "string", "minLength": 1},
+          "snapshotId": {"type": "string", "minLength": 1},
+          "options": {"type": "object"}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "run", "findings", "snapshotState"], "properties": {"ok": {"type": "boolean"}, "run": {"type": "object"}, "findings": {"type": "array", "items": {"type": "object"}}, "snapshotState": {"type": "string"}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_register_validation_waiver",
+      "kind": "maintenance",
+      "summary": "Register an immutable, scoped and auditable validation waiver",
+      "input_schema": {
+        "type": "object",
+        "required": ["ruleId", "justification", "approvedBy"],
+        "properties": {
+          "waiverId": {"type": "string"}, "ruleId": {"type": "string"},
+          "justification": {"type": "string"}, "approvedBy": {"type": "string"},
+          "studyId": {"type": "string"}, "snapshotId": {"type": "string"},
+          "datasetId": {"type": "string"}, "recordId": {"type": "string"},
+          "variable": {"type": "string"}, "expiresAt": {"type": "string"}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "waiver", "created"], "properties": {"ok": {"type": "boolean"}, "waiver": {"type": "object"}, "created": {"type": "boolean"}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_get_validation_run",
+      "kind": "query",
+      "summary": "Retrieve one validation run and its normalized tenant-scoped findings",
+      "input_schema": {
+        "type": "object", "required": ["runId"],
+        "properties": {"runId": {"type": "string"}, "severity": {"type": "string", "enum": ["error", "warning", "info"]}, "limit": {"type": "integer", "minimum": 1, "maximum": 10000}},
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "run", "findings"], "properties": {"ok": {"type": "boolean"}, "run": {"type": "object"}, "findings": {"type": "array", "items": {"type": "object"}}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_rebuild_projections",
+      "kind": "maintenance",
+      "summary": "Rebuild profile facets, entity references, and workload materializations",
+      "input_schema": {
+        "type": "object", "required": ["studyId", "snapshotId"],
+        "properties": {"studyId": {"type": "string"}, "snapshotId": {"type": "string"}},
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "snapshotRef", "projectionBuildId", "projectionVersion", "recordCount", "entityCount", "materializationCount"], "properties": {"ok": {"type": "boolean"}, "snapshotRef": {"type": "string"}, "projectionBuildId": {"type": "string"}, "projectionVersion": {"type": "string"}, "recordCount": {"type": "integer"}, "entityCount": {"type": "integer"}, "materializationCount": {"type": "integer"}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_browse_projections",
+      "kind": "query",
+      "summary": "Browse tenant-scoped entity and workload materialization documents",
+      "input_schema": {
+        "type": "object", "required": ["studyId", "snapshotId"],
+        "properties": {
+          "studyId": {"type": "string"}, "snapshotId": {"type": "string"},
+          "resource": {"type": "string", "enum": ["entities", "materializations"]},
+          "kind": {"type": "string"}, "groupId": {"type": "string"},
+          "entityType": {"type": "string"}, "entityId": {"type": "string"},
+          "publishedOnly": {"type": "boolean"}, "limit": {"type": "integer", "minimum": 1, "maximum": 1000}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "resource", "snapshotRef", "rows", "count"], "properties": {"ok": {"type": "boolean"}, "resource": {"type": "string"}, "snapshotRef": {"type": "string"}, "rows": {"type": "array", "items": {"type": "object"}}, "count": {"type": "integer"}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_ingest_package",
+      "kind": "ingest",
+      "summary": "Preflight and ingest a coherent multi-dataset Dataset-JSON package",
+      "input_schema": {
+        "type": "object",
+        "required": ["datasets", "packageId", "snapshotId", "profile", "standard"],
+        "properties": {
+          "datasets": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+          "packageId": {"type": "string"}, "snapshotId": {"type": "string"},
+          "standardsPackageId": {"type": "string"},
+          "profile": {"type": "string", "enum": ["send", "sdtm", "adam", "tig"]},
+          "standard": {"type": "object"}, "validate": {"type": "boolean"},
+          "publish": {"type": "boolean"}, "validationOptions": {"type": "object"}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "studyId", "snapshotId", "domains", "ingested"], "properties": {"ok": {"type": "boolean"}, "studyId": {"type": "string"}, "snapshotId": {"type": "string"}, "domains": {"type": "array", "items": {"type": "string"}}, "ingested": {"type": "array", "items": {"type": "object"}}, "validation": {"type": ["object", "null"]}, "publication": {"type": ["object", "null"]}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_export_package",
+      "kind": "export",
+      "summary": "Create a deterministic Dataset-JSON package with manifest and equivalence evidence",
+      "input_schema": {
+        "type": "object", "required": ["studyId", "snapshotId"],
+        "properties": {"studyId": {"type": "string"}, "snapshotId": {"type": "string"}, "allowUnpublished": {"type": "boolean"}},
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "snapshotRef", "datasetCount", "manifest", "artifact", "artifactCreated", "executionId"], "properties": {"ok": {"type": "boolean"}, "snapshotRef": {"type": "string"}, "datasetCount": {"type": "integer"}, "manifest": {"type": "object"}, "artifact": {"type": "object"}, "artifactCreated": {"type": "boolean"}, "executionId": {"type": "string"}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_export_solution_evidence",
+      "kind": "export",
+      "summary": "Create a portable, versioned evidence package for a self-contained business solution",
+      "input_schema": {
+        "type": "object", "required": ["studyId", "snapshotId"],
+        "properties": {"studyId": {"type": "string"}, "snapshotId": {"type": "string"}, "allowUnpublished": {"type": "boolean"}},
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "apiVersion", "packageId", "snapshotRef", "counts", "artifact", "artifactCreated", "executionId"], "properties": {"ok": {"type": "boolean"}, "apiVersion": {"const": "kehrnel.dev/cdisc-solution-evidence/v1"}, "packageId": {"type": "string"}, "snapshotRef": {"type": "string"}, "counts": {"type": "object"}, "artifact": {"type": "object"}, "artifactCreated": {"type": "boolean"}, "executionId": {"type": "string"}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_get_lineage",
+      "kind": "query",
+      "summary": "Return snapshot, dataset, artifact, validation, and transformation lineage",
+      "input_schema": {
+        "type": "object", "required": ["studyId", "snapshotId"],
+        "properties": {"studyId": {"type": "string"}, "snapshotId": {"type": "string"}},
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "snapshot", "datasets", "artifacts", "validationRuns", "transformations"], "properties": {"ok": {"type": "boolean"}, "snapshot": {"type": "object"}, "datasets": {"type": "array", "items": {"type": "object"}}, "artifacts": {"type": "array", "items": {"type": "object"}}, "validationRuns": {"type": "array", "items": {"type": "object"}}, "transformations": {"type": "array", "items": {"type": "object"}}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_record_transformation",
+      "kind": "maintenance",
+      "summary": "Record deterministic source-to-output transformation lineage",
+      "input_schema": {
+        "type": "object", "required": ["operation", "inputRefs", "outputRefs"],
+        "properties": {
+          "operation": {"type": "string"}, "inputRefs": {"type": "array", "items": {"type": "string"}},
+          "outputRefs": {"type": "array", "items": {"type": "string"}}, "mappingId": {"type": "string"},
+          "mappingVersion": {"type": "string"}, "codeVersion": {"type": "string"}, "parameters": {"type": "object"}
+        },
+        "additionalProperties": true
+      },
+      "output_schema": {"type": "object", "required": ["ok", "transformation", "created"], "properties": {"ok": {"type": "boolean"}, "transformation": {"type": "object"}, "created": {"type": "boolean"}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_supersede_snapshot",
+      "kind": "maintenance",
+      "summary": "Link a published snapshot to its published replacement without deleting history",
+      "input_schema": {
+        "type": "object", "required": ["studyId", "snapshotId", "replacementSnapshotId", "reason"],
+        "properties": {"studyId": {"type": "string"}, "snapshotId": {"type": "string"}, "replacementSnapshotId": {"type": "string"}, "reason": {"type": "string"}},
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "snapshotRef", "supersededBy", "alreadySuperseded"], "properties": {"ok": {"type": "boolean"}, "snapshotRef": {"type": "string"}, "supersededBy": {"type": "string"}, "alreadySuperseded": {"type": "boolean"}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_export_dataset_json",
+      "kind": "export",
+      "summary": "Reconstruct Dataset-JSON, verify semantic equivalence, and optionally retain the generated artifact",
+      "input_schema": {
+        "type": "object",
+        "required": ["datasetId"],
+        "properties": {
+          "datasetId": {"type": "string", "minLength": 1},
+          "persistArtifact": {"type": "boolean"}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "datasetJSON", "equivalence", "artifactCreated", "executionId"], "properties": {"ok": {"type": "boolean"}, "datasetJSON": {"type": "object"}, "equivalence": {"type": "object"}, "artifact": {"type": ["object", "null"]}, "artifactCreated": {"type": "boolean"}, "executionId": {"type": "string"}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_export_xpt",
+      "kind": "export",
+      "summary": "Generate XPT v5/v8, verify columns and values by readback, and retain the artifact",
+      "input_schema": {
+        "type": "object", "required": ["datasetId"],
+        "properties": {"datasetId": {"type": "string"}, "version": {"type": "integer", "enum": [5, 8]}},
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "datasetId", "xptVersion", "recordCount", "equivalence", "artifact", "artifactCreated", "executionId"], "properties": {"ok": {"type": "boolean"}, "datasetId": {"type": "string"}, "xptVersion": {"type": "integer"}, "recordCount": {"type": "integer"}, "equivalence": {"type": "object"}, "artifact": {"type": "object"}, "artifactCreated": {"type": "boolean"}, "executionId": {"type": "string"}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_register_standards",
+      "kind": "maintenance",
+      "summary": "Register an immutable standards-package manifest",
+      "input_schema": {"type": "object", "required": ["package"], "properties": {"package": {"type": "object"}}},
+      "output_schema": {"type": "object", "required": ["ok", "packageId", "created", "package"], "properties": {"ok": {"type": "boolean"}, "packageId": {"type": "string"}, "created": {"type": "boolean"}, "package": {"type": "object"}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_get_standards_package",
+      "kind": "query",
+      "summary": "Retrieve one tenant-scoped immutable standards-package manifest",
+      "input_schema": {
+        "type": "object", "required": ["packageId"],
+        "properties": {"packageId": {"type": "string"}}, "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "package"], "properties": {"ok": {"type": "boolean"}, "package": {"type": "object"}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_list_studies",
+      "kind": "query",
+      "summary": "List tenant-scoped studies with their latest snapshot",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "pageSize": {"type": "integer", "minimum": 1, "maximum": 200},
+          "cursor": {"type": "string"}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "items", "page"], "properties": {"ok": {"type": "boolean"}, "items": {"type": "array", "items": {"type": "object"}}, "page": {"type": "object", "required": ["size", "hasMore", "nextCursor"], "properties": {"size": {"type": "integer"}, "hasMore": {"type": "boolean"}, "nextCursor": {"type": ["string", "null"]}}, "additionalProperties": false}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_list_snapshots",
+      "kind": "query",
+      "summary": "List tenant-scoped snapshots for one study",
+      "input_schema": {
+        "type": "object",
+        "required": ["studyId"],
+        "properties": {
+          "studyId": {"type": "string", "minLength": 1},
+          "state": {"type": "string", "enum": ["received", "parsed", "canonicalized", "validated", "published", "quarantined", "superseded"]},
+          "pageSize": {"type": "integer", "minimum": 1, "maximum": 200},
+          "cursor": {"type": "string"}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "items", "page"], "properties": {"ok": {"type": "boolean"}, "items": {"type": "array", "items": {"type": "object"}}, "page": {"type": "object", "required": ["size", "hasMore", "nextCursor"], "properties": {"size": {"type": "integer"}, "hasMore": {"type": "boolean"}, "nextCursor": {"type": ["string", "null"]}}, "additionalProperties": false}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_snapshot_summary",
+      "kind": "query",
+      "summary": "Retrieve a governed snapshot summary with datasets and source artifacts",
+      "input_schema": {
+        "type": "object",
+        "required": ["studyId", "snapshotId"],
+        "properties": {
+          "studyId": {"type": "string", "minLength": 1},
+          "snapshotId": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": ["ok", "snapshot", "summary", "datasets", "artifacts"],
+        "properties": {
+          "ok": {"type": "boolean"},
+          "snapshot": {"type": "object"},
+          "summary": {
+            "type": "object",
+            "required": ["datasetCount", "recordCount", "artifactCount", "validationRunCount", "latestValidationRun", "domains"],
+            "properties": {
+              "datasetCount": {"type": "integer"},
+              "recordCount": {"type": "integer"},
+              "artifactCount": {"type": "integer"},
+              "validationRunCount": {"type": "integer"},
+              "latestValidationRun": {"type": ["object", "null"]},
+              "domains": {"type": "array", "items": {"type": "string"}}
+            },
+            "additionalProperties": false
+          },
+          "datasets": {"type": "array", "items": {"type": "object"}},
+          "artifacts": {"type": "array", "items": {"type": "object"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "cdisc_list_datasets",
+      "kind": "query",
+      "summary": "List tenant-scoped canonical CDISC datasets",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "studyId": {"type": "string"},
+          "snapshotId": {"type": "string"},
+          "profile": {"type": "string", "enum": ["send", "sdtm", "adam", "tig"]},
+          "domain": {"type": "string"},
+          "pageSize": {"type": "integer", "minimum": 1, "maximum": 200},
+          "cursor": {"type": "string"}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "items", "page"], "properties": {"ok": {"type": "boolean"}, "items": {"type": "array", "items": {"type": "object"}}, "page": {"type": "object", "required": ["size", "hasMore", "nextCursor"], "properties": {"size": {"type": "integer"}, "hasMore": {"type": "boolean"}, "nextCursor": {"type": ["string", "null"]}}, "additionalProperties": false}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_list_validation_runs",
+      "kind": "query",
+      "summary": "List tenant-scoped CDISC validation runs",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "studyId": {"type": "string"},
+          "snapshotId": {"type": "string"},
+          "status": {"type": "string", "enum": ["passed", "failed"]},
+          "pageSize": {"type": "integer", "minimum": 1, "maximum": 200},
+          "cursor": {"type": "string"}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "items", "page"], "properties": {"ok": {"type": "boolean"}, "items": {"type": "array", "items": {"type": "object"}}, "page": {"type": "object", "required": ["size", "hasMore", "nextCursor"], "properties": {"size": {"type": "integer"}, "hasMore": {"type": "boolean"}, "nextCursor": {"type": ["string", "null"]}}, "additionalProperties": false}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_list_standards",
+      "kind": "query",
+      "summary": "List tenant-scoped immutable standards packages",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "profile": {"type": "string", "enum": ["send", "sdtm", "adam", "tig"]},
+          "pageSize": {"type": "integer", "minimum": 1, "maximum": 200},
+          "cursor": {"type": "string"}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": ["ok", "items", "page"],
+        "properties": {
+          "ok": {"const": true},
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["packageId", "profile", "standard", "createdAt"],
+              "properties": {
+                "packageId": {"type": "string"},
+                "profile": {"type": "string", "enum": ["send", "sdtm", "adam", "tig"]},
+                "standard": {
+                  "type": "object",
+                  "required": ["family"],
+                  "properties": {
+                    "family": {"type": "string"},
+                    "modelVersion": {"type": "string"},
+                    "implementationGuide": {"type": "string"},
+                    "implementationGuideVersion": {"type": "string"},
+                    "terminologyPackages": {"type": "array", "items": {"type": "string"}},
+                    "exchangeStandard": {"type": "string"},
+                    "exchangeVersion": {"type": "string"},
+                    "regulatorContext": {"type": "string"}
+                  },
+                  "additionalProperties": false
+                },
+                "assets": {"type": "array", "items": {"type": "object"}},
+                "validationEngines": {"type": "object", "additionalProperties": {"type": "string"}},
+                "rulePackages": {"type": "array", "items": {"type": "string"}},
+                "createdAt": {"type": "string"}
+              },
+              "additionalProperties": true
+            }
+          },
+          "page": {
+            "type": "object",
+            "required": ["size", "hasMore", "nextCursor"],
+            "properties": {
+              "size": {"type": "integer", "minimum": 0},
+              "hasMore": {"type": "boolean"},
+              "nextCursor": {"type": ["string", "null"]}
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "cdisc_list_artifacts",
+      "kind": "query",
+      "summary": "List tenant-scoped retained artifacts, optionally for one snapshot",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "studyId": {"type": "string"},
+          "snapshotId": {"type": "string"},
+          "kind": {"type": "string"},
+          "pageSize": {"type": "integer", "minimum": 1, "maximum": 200},
+          "cursor": {"type": "string"}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "items", "page"], "properties": {"ok": {"type": "boolean"}, "items": {"type": "array", "items": {"type": "object"}}, "page": {"type": "object", "required": ["size", "hasMore", "nextCursor"], "properties": {"size": {"type": "integer"}, "hasMore": {"type": "boolean"}, "nextCursor": {"type": ["string", "null"]}}, "additionalProperties": false}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_list_examples",
+      "kind": "query",
+      "summary": "List curated revision- and checksum-pinned clinical and preclinical example data",
+      "input_schema": {
+        "type": "object",
+        "properties": {"profile": {"type": "string", "enum": ["send", "sdtm"]}},
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": ["ok", "catalogVersion", "items"],
+        "properties": {
+          "ok": {"type": "boolean"},
+          "catalogVersion": {"type": "string"},
+          "items": {"type": "array", "items": {"type": "object"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "cdisc_ingest_example",
+      "kind": "ingest",
+      "summary": "Fetch, checksum-verify, retain, ingest, validate, and optionally publish a curated example",
+      "input_schema": {
+        "type": "object",
+        "required": ["exampleId", "acknowledgeTerms"],
+        "properties": {
+          "exampleId": {"type": "string", "enum": ["cdisc-pilot-sdtm-dm", "phuse-ffu-send", "phuse-nimble-send", "phuse-instem-send", "phuse-pointcross-send"]},
+          "acknowledgeTerms": {"const": true},
+          "snapshotId": {"type": "string", "minLength": 1},
+          "validate": {"type": "boolean"},
+          "publish": {"type": "boolean"}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": ["ok", "exampleId", "profile", "studyId", "snapshotId", "artifacts", "ingested", "source"],
+        "properties": {
+          "ok": {"type": "boolean"},
+          "exampleId": {"type": "string"},
+          "profile": {"type": "string"},
+          "studyId": {"type": "string"},
+          "snapshotId": {"type": "string"},
+          "artifacts": {"type": "array", "items": {"type": "object"}},
+          "ingested": {"type": "array", "items": {"type": "object"}},
+          "validation": {"type": ["object", "null"]},
+          "publication": {"type": ["object", "null"]},
+          "source": {"type": "object"}
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "cdisc_run_analysis",
+      "kind": "query",
+      "summary": "Run governed grouped metrics over tenant-scoped CDISC records",
+      "input_schema": {
+        "type": "object",
+        "required": ["version", "metrics"],
+        "properties": {
+          "version": {"const": "cdisc-analysis/v1"},
+          "scope": {"type": "object"},
+          "from": {"type": "object"},
+          "where": {"type": "object"},
+          "groupBy": {"type": "array", "maxItems": 5, "items": {"type": "string"}},
+          "metrics": {
+            "type": "array", "minItems": 1, "maxItems": 20,
+            "items": {
+              "type": "object", "required": ["name", "op"],
+              "properties": {
+                "name": {"type": "string"},
+                "op": {"type": "string", "enum": ["count", "countDistinct", "sum", "avg", "min", "max"]},
+                "path": {"type": "string"}
+              },
+              "additionalProperties": false
+            }
+          },
+          "orderBy": {
+            "type": "array", "maxItems": 5,
+            "items": {
+              "type": "object", "required": ["field"],
+              "properties": {
+                "field": {"type": "string"},
+                "direction": {"type": "string", "enum": ["asc", "desc"]}
+              },
+              "additionalProperties": false
+            }
+          },
+          "limit": {"type": "integer", "minimum": 1, "maximum": 500}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "version", "rows", "columns", "explain"], "properties": {"ok": {"type": "boolean"}, "version": {"const": "cdisc-analysis/v1"}, "rows": {"type": "array", "items": {"type": "object"}}, "columns": {"type": "object"}, "explain": {"type": "object"}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_ask_assistant",
+      "kind": "query",
+      "summary": "Answer a bounded CDISC question using read-only governed tools with evidence citations",
+      "input_schema": {
+        "type": "object",
+        "required": ["question", "studyId", "snapshotId"],
+        "properties": {
+          "question": {"type": "string", "minLength": 1},
+          "studyId": {"type": "string", "minLength": 1},
+          "snapshotId": {"type": "string", "minLength": 1},
+          "intent": {"type": "string", "enum": ["summary", "validation", "lineage", "search", "analysis"]},
+          "profile": {"type": "string", "enum": ["send", "sdtm", "adam", "tig"]},
+          "domains": {"type": "array", "items": {"type": "string"}},
+          "mode": {"type": "string", "enum": ["lexical", "semantic", "hybrid"]},
+          "limit": {"type": "integer", "minimum": 1, "maximum": 50},
+          "analysis": {"type": "object"}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "intent", "answer", "citations", "toolCalls", "data", "guardrails"], "properties": {"ok": {"type": "boolean"}, "intent": {"type": "string"}, "answer": {"type": "string"}, "citations": {"type": "array", "items": {"type": "object"}}, "toolCalls": {"type": "array", "items": {"type": "object"}}, "data": {"type": "object"}, "guardrails": {"type": "object"}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_semantic_search",
+      "kind": "query",
+      "summary": "Run tenant-safe lexical, semantic-vector, or reciprocal-rank hybrid retrieval",
+      "input_schema": {
+        "type": "object", "required": ["q"],
+        "properties": {
+          "q": {"type": "string", "minLength": 1},
+          "mode": {"type": "string", "enum": ["lexical", "semantic", "hybrid"]},
+          "studyIds": {"type": "array", "items": {"type": "string"}},
+          "snapshotIds": {"type": "array", "items": {"type": "string"}},
+          "domains": {"type": "array", "items": {"type": "string"}},
+          "profile": {"type": "string", "enum": ["send", "sdtm", "adam", "tig"]},
+          "limit": {"type": "integer", "minimum": 1, "maximum": 1000}
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "modeRequested", "modeUsed", "rows", "explain"], "properties": {"ok": {"type": "boolean"}, "modeRequested": {"type": "string"}, "modeUsed": {"type": "string"}, "rows": {"type": "array", "items": {"type": "object"}}, "explain": {"type": "object"}}, "additionalProperties": false}
+    },
+    {
+      "name": "cdisc_generate_synthetic_study",
+      "kind": "synthetic",
+      "summary": "Generate deterministic linked SDTM, SEND, ADaM, or TIG study data and optionally publish it",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "recipe": {"type": "object"},
+          "persist": {"type": "boolean"},
+          "validate": {"type": "boolean"},
+          "publish": {"type": "boolean"},
+          "includeDocuments": {"type": "boolean"},
+          "packageId": {"type": "string"},
+          "snapshotId": {"type": "string"},
+          "standardsPackageId": {"type": "string"},
+          "standard": {"type": "object"}
+        },
+        "additionalProperties": true
+      },
+      "output_schema": {"type": "object", "required": ["ok", "synthetic", "recipe", "recipeDigest", "generatorVersion", "modelSource", "watermark", "expectedAnomalies", "expectedSignals"], "properties": {"ok": {"type": "boolean"}, "synthetic": {"const": true}, "recipe": {"type": "object"}, "recipeDigest": {"type": "string"}, "generatorVersion": {"type": "string"}, "modelSource": {"type": "object"}, "watermark": {"type": "object"}, "expectedAnomalies": {"type": "array", "items": {"type": "object"}}, "expectedSignals": {"type": "array", "items": {"type": "object"}}, "datasets": {"type": "object"}, "ingested": {"type": "array", "items": {"type": "object"}}, "validation": {"type": ["object", "null"]}, "publication": {"type": ["object", "null"]}}, "additionalProperties": false}
+    }
+  ]
+}

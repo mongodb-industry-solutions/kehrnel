@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Optional
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI, Request, HTTPException, Security
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, FileResponse, HTMLResponse, RedirectResponse
 from fastapi.security import APIKeyHeader
 from fastapi.middleware.cors import CORSMiddleware
@@ -442,6 +443,19 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     app.state.allowed_strategy_paths = [p.resolve() for p in _strategy_paths()]
 
     @app.on_event("startup")
+    async def _recover_persisted_strategy_jobs() -> None:
+        manager = getattr(app.state, "synthetic_job_manager", None)
+        if manager is None:
+            return
+        mode = (os.getenv("KEHRNEL_JOBS_RECOVERY") or "fail").strip().lower()
+        try:
+            recovered = await manager.recover_incomplete_jobs(retry=mode == "retry")
+            if recovered.get("found"):
+                logging.getLogger("kehrnel.jobs").info("Recovered persisted jobs: %s", recovered)
+        except Exception as exc:
+            logging.getLogger("kehrnel.jobs").warning("Persisted job recovery failed: %s", exc)
+
+    @app.on_event("startup")
     async def _init_default_ingestion_runtime() -> None:
         """
         Best-effort bootstrap for domain composition/synthetic endpoints that
@@ -663,6 +677,26 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         # Defense-in-depth: avoid leaking credentials / filesystem internals in exception messages.
         message = redact_sensitive(message) or message
         return JSONResponse(status_code=status, content={"error": {"code": code, "message": message, "details": details}})
+    @app.exception_handler(RequestValidationError)
+    async def validation_exception_handler(request: Request, exc: RequestValidationError):
+        # FHIR endpoints must return OperationOutcome (application/fhir+json), even
+        # for request-body validation errors that fire before the route handler.
+        if "/api/domains/fhir" in request.url.path:
+            from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.serialization import (
+                operation_outcome,
+            )
+            detail = "; ".join(
+                f"{'.'.join(str(p) for p in e.get('loc', []))}: {e.get('msg', 'invalid')}"
+                for e in exc.errors()
+            ) or "Invalid request body"
+            return JSONResponse(
+                status_code=422,
+                media_type="application/fhir+json",
+                content=operation_outcome(code="INVALID_INPUT", message=detail),
+            )
+        # Default behavior for non-FHIR routes.
+        return JSONResponse(status_code=422, content={"detail": exc.errors()})
+
     runtime_routers = [
         admin_router,
         ops_domain_router,

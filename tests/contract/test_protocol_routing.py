@@ -14,7 +14,7 @@ def test_missing_domain_returns_400(client):
     # activate openEHR so env exists
     client.post(
         "/v1/environments/envX/activate",
-        json={"strategy_id": "openehr.rps_dual", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "openEHR"},
+        json={"strategy_id": "openehr.rps_dual", "version": "0.1.0", "config": {"database": "env_x_openehr"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "openEHR"},
     )
     res = client.post("/v1/environments/envX/compile_query", json={"query": {"scope": "patient"}})
     assert res.status_code == 400
@@ -34,11 +34,11 @@ def test_missing_activation_for_domain(client):
 def test_multi_domain_routing(client):
     client.post(
         "/v1/environments/envY/activate",
-        json={"strategy_id": "openehr.rps_dual", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "openEHR"},
+        json={"strategy_id": "openehr.rps_dual", "version": "0.1.0", "config": {"database": "env_y_openehr"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "openEHR"},
     )
     client.post(
         "/v1/environments/envY/activate",
-        json={"strategy_id": "fhir.clinical_cdr", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"},
+        json={"strategy_id": "fhir.clinical_cdr", "version": "0.1.0", "config": {"database": "env_y_fhir"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"},
     )
     res_act = client.get("/v1/environments/envY/activations")
     assert res_act.status_code == 200

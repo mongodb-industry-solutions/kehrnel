@@ -51,7 +51,7 @@ def unique_db_name(prefix: str = "fhir_contract") -> str:
 
 MINIMAL_FHIR_ACTIVATE: dict[str, Any] = {
     "strategy_id": "fhir.clinical_cdr",
-    "version": "0.1.0",
+    "version": "0.4.0",
     "config": {},
     "bindings": {},
     "allow_plaintext_bindings": True,
@@ -68,17 +68,21 @@ FHIR_COMPILE_QUERY_BODY: dict[str, Any] = {
 }
 
 
-def activation_payload(*, database: str) -> dict[str, Any]:
+def activation_payload(*, database: str, release: str = "R5") -> dict[str, Any]:
     uri = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
     return {
         "strategy_id": "fhir.clinical_cdr",
-        "version": "0.1.0",
+        "version": "0.4.0",
         "domain": "fhir",
         "config": {
             "database": database,
-            "schema_version": "R5",
+            "schema_version": release,
             "collections": {"mode": "per_resource_type"},
-            "search": {"enabled": True, "auto_index": False},
+            "search": {
+                "enabled": True,
+                "denormalize_on_generate": True,
+                "auto_index": True,
+            },
         },
         "bindings": {
             "db": {
@@ -91,12 +95,14 @@ def activation_payload(*, database: str) -> dict[str, Any]:
     }
 
 
-def strategy_context(*, database: str, environment_id: str = "contract-env") -> StrategyContext:
+def strategy_context(
+    *, database: str, environment_id: str = "contract-env", release: str = "R5"
+) -> StrategyContext:
     uri = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
     return StrategyContext(
         environment_id=environment_id,
-        config=activation_payload(database=database)["config"],
-        bindings=activation_payload(database=database)["bindings"],
+        config=activation_payload(database=database, release=release)["config"],
+        bindings=activation_payload(database=database, release=release)["bindings"],
         manifest=MANIFEST,
     )
 

@@ -36,3 +36,5 @@ class FhirSearchRequest(BaseModel):
             "Patient/{id}/Observation?params."
         ),
     )
+    # Error-handling leniency is controlled via the FHIR `Prefer: handling=` HTTP
+    # header (strict|lenient), not a body field — see the search route.

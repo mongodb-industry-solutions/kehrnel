@@ -1,4 +1,5 @@
 {
+  "database": "openehr_cdr",
   "collections": {
     "compositions": {
       "name": "compositions_rps",

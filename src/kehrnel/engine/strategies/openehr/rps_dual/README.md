@@ -214,9 +214,9 @@ Supported `bindings_ref` formats:
 
 - `hdl:env:<env_id>`
 - `hdl:env:<env_id>:mongo`
-- `hdl:env:<env_id>:mongo:<database_name>`
 
 Notes:
 
 - Resolver reads `environment_secrets` by `envId` and decrypts `sealedUri` (AES-256-GCM).
-- If database name is not in the URI or ref, resolver tries environment metadata (`environments[].database`) in collections `teams,users,workspaces`.
+- The binding supplies MongoDB connectivity only. Set the required strategy-owned database in activation `config.database`; it must not reuse the HDL environment core/shared database.
+- A legacy `hdl:env:<env_id>:mongo:<database_name>` reference is accepted only when its database exactly matches `config.database`.

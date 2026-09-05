@@ -65,6 +65,14 @@ class StrategyPackValidator:
                     jsonschema.Draft7Validator.check_schema(schema)
                 except Exception as exc:
                     errors.append(f"op[{idx}] input_schema invalid JSON schema: {exc}")
+            output_schema = op.get("output_schema")
+            if output_schema is not None and not isinstance(output_schema, dict):
+                errors.append(f"op[{idx}] output_schema must be a dict")
+            elif output_schema is not None:
+                try:
+                    jsonschema.Draft7Validator.check_schema(output_schema)
+                except Exception as exc:
+                    errors.append(f"op[{idx}] output_schema invalid JSON schema: {exc}")
         return errors
 
     def _validate_defaults_and_schema(self) -> List[str]:

@@ -1,6 +1,6 @@
 {
   "strategy_id": "fhir.clinical_cdr",
-  "version": "0.1.0",
+  "version": "0.9.0",
   "domain": "fhir",
   "config": {
     "database": "fhir_synthetic_clinical_cdr",
@@ -15,7 +15,7 @@
     },
     "search": {
       "enabled": true,
-      "denormalize_on_generate": false
+      "denormalize_on_generate": true
     }
   },
   "bindings": {
