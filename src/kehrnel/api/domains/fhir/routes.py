@@ -8,7 +8,7 @@ import os
 import uuid
 from datetime import UTC, datetime
 from typing import Any
-from urllib.parse import quote, urlencode
+from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 
 from fastapi import APIRouter, Body, HTTPException, Request
 from fastapi.responses import JSONResponse, PlainTextResponse
@@ -160,12 +160,64 @@ def _prefer_handling(request: Request) -> str | None:
     return None
 
 
+def _with_offset(url: str, offset: int) -> str:
+    """Return ``url`` with ``_offset`` replaced (or removed when zero)."""
+    parts = urlsplit(url)
+    query = [
+        (name, value)
+        for name, value in parse_qsl(parts.query, keep_blank_values=True)
+        if name != "_offset"
+    ]
+    if offset > 0:
+        query.append(("_offset", str(offset)))
+    return urlunsplit(parts._replace(query=urlencode(query, doseq=True)))
+
+
+def _build_bundle_links(
+    *,
+    self_url: str | None,
+    returned: int,
+    total: int | None,
+    explain: dict[str, Any],
+) -> list[dict[str, str]]:
+    """Conformant Bundle.link entries for a searchset.
+
+    Paging is expressed through the server-specific ``_offset`` parameter — this
+    store has no opaque continuation tokens — but the ``self``/``next``/
+    ``previous`` relations themselves are standard, so ordinary FHIR clients can
+    page without knowing that detail.
+    """
+    if not self_url:
+        return []
+    links = [{"relation": "self", "url": self_url}]
+
+    execution = explain.get("execution")
+    if not isinstance(execution, dict):
+        return links
+    limit = execution.get("limit")
+    skip = execution.get("skip") or 0
+    if not isinstance(limit, int) or limit <= 0 or not isinstance(skip, int):
+        return links
+
+    if skip > 0:
+        links.append(
+            {"relation": "previous", "url": _with_offset(self_url, max(0, skip - limit))}
+        )
+    # With a known total, offer `next` only while results remain. Without one,
+    # a full page is the only available signal that more may exist.
+    has_more = (skip + returned) < total if isinstance(total, int) else returned >= limit
+    if has_more:
+        links.append({"relation": "next", "url": _with_offset(self_url, skip + limit)})
+    return links
+
+
 def build_search_bundle(
     *,
     rows: list[dict[str, Any]],
     total: int | None,
     env_id: str,
     explain: dict[str, Any] | None,
+    self_url: str | None = None,
 ) -> dict[str, Any]:
     """FHIR R5 searchset Bundle with Kehrnel execution metadata."""
     explain = explain or {}
@@ -194,12 +246,21 @@ def build_search_bundle(
                 ),
             }
         )
-    return {
+    bundle: dict[str, Any] = {
         "resourceType": "Bundle",
         "type": "searchset",
         "total": bundle_total,
-        "entry": entries,
     }
+    links = _build_bundle_links(
+        self_url=self_url,
+        returned=len(canonical_rows),
+        total=total,
+        explain=explain,
+    )
+    if links:
+        bundle["link"] = links
+    bundle["entry"] = entries
+    return bundle
 
 
 def _fhir_version_number(value: Any) -> str:
@@ -339,7 +400,11 @@ async def search_fhir(request: Request, payload: FhirSearchRequest = Body(...)):
         total = int(total_raw) if total_raw is not None else None
 
         bundle = build_search_bundle(
-            rows=rows, total=total, env_id=env_id, explain=explain
+            rows=rows,
+            total=total,
+            env_id=env_id,
+            explain=explain,
+            self_url=getattr(request.state, "fhir_self_url", None),
         )
         resp = _fhir_json(_json_safe(bundle))
         if prefer:
@@ -1175,6 +1240,37 @@ async def search_fhir_get(request: Request, resource_type: str):
     ]
     query_string = urlencode(query_items, doseq=True)
     expression = resource_type + (f"?{query_string}" if query_string else "")
+    # Type-level search is addressable, so its Bundle can carry paging links.
+    # POST /search is RPC-style and deliberately gets none.
+    request.state.fhir_self_url = str(request.url)
+    return await search_fhir(
+        request,
+        FhirSearchRequest(resource_type=resource_type, fhir_search=expression),
+    )
+
+
+@router.get("/{compartment_type}/{compartment_id}/{resource_type}")
+async def search_fhir_compartment_get(
+    request: Request,
+    compartment_type: str,
+    compartment_id: str,
+    resource_type: str,
+):
+    """FHIR compartment search, e.g. ``GET /Patient/p-1/Observation``."""
+
+    query_items = [
+        (name, value)
+        for name, value in request.query_params.multi_items()
+        if name not in {"env_id", "environment"}
+    ]
+    query_string = urlencode(query_items, doseq=True)
+    expression = "/".join(
+        quote(value, safe="")
+        for value in (compartment_type, compartment_id, resource_type)
+    )
+    if query_string:
+        expression += f"?{query_string}"
+    request.state.fhir_self_url = str(request.url)
     return await search_fhir(
         request,
         FhirSearchRequest(resource_type=resource_type, fhir_search=expression),

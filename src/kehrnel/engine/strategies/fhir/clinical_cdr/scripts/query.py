@@ -489,6 +489,7 @@ async def compile_fhir_query(
     cfg = bridge.resolve_strategy_config(ctx)
     database = cfg.get("database")
     prefix = str(cfg.get("collection_prefix") or "")
+    mql_filter = _bind_multi_step_collections(mql_filter, prefix)
     collection = bridge.collection_name(prefix, resource_type)
 
     debug = bool(normalized.get("debug"))
@@ -625,27 +626,111 @@ def resolve_multi_step_mql(
     find_kwargs = {"session": session} if session is not None else {}
     composed = dict(mql.get("_query") or {})
     and_clauses: list[dict[str, Any]] = []
-    for step in mql["_multi_step"]:
-        step_coll_name = step.get("collection") or default_collection
+    for plan in mql["_multi_step"]:
+        if not isinstance(plan, dict):
+            continue
+        steps = plan.get("steps")
+        if not isinstance(steps, list):
+            # Backward-compatible support for the old flat stage envelope.
+            steps = [plan]
+        if len(steps) != 1:
+            raise KehrnelError(
+                code="FHIR_SEARCH_CHAIN_DEPTH_UNSUPPORTED",
+                status=400,
+                message="Only one-hop FHIR chaining is currently supported",
+            )
+        step = steps[0]
+        step_coll_name = (
+            step.get("collection")
+            or step.get("resource_type")
+            or default_collection
+        )
         step_coll = db[step_coll_name]
-        field = step.get("project_field", "_id")
-        ids = list(
+        field = step.get("extract_field") or step.get("project_field") or "id"
+        docs = list(
             step_coll.find(
                 step.get("query") or {},
                 {field: 1, "_id": 0},
                 **find_kwargs,
-            )
+            ).limit(10001)
         )
-        id_values = [doc.get(field) for doc in ids if doc.get(field) is not None]
-        target_field = step.get("target_field") or field
+        if len(docs) > 10000:
+            raise KehrnelError(
+                code="FHIR_SEARCH_CHAIN_LIMIT_EXCEEDED",
+                status=422,
+                message="FHIR chained search produced more than 10000 intermediate ids",
+            )
+        id_values: list[Any] = []
+        for doc in docs:
+            id_values.extend(_extract_dotted_values(doc, str(field)))
+        if step.get("extract_transform") == "reference_id":
+            id_values = [_reference_id(value) for value in id_values]
+        id_values = list(dict.fromkeys(value for value in id_values if value is not None))
+        target_field = plan.get("target_field") or step.get("target_field") or "id"
         if id_values:
             and_clauses.append({target_field: {"$in": id_values}})
+            constraints = plan.get("target_constraints")
+            if isinstance(constraints, dict) and constraints:
+                and_clauses.append(constraints)
         else:
-            and_clauses.append({"_id": {"$in": []}})
+            and_clauses.append({"id": {"$in": []}})
 
     if and_clauses:
         return {"$and": [composed] + and_clauses} if composed else {"$and": and_clauses}
     return composed
+
+
+def _extract_dotted_values(document: Any, dotted_path: str) -> list[Any]:
+    """Resolve a projected dotted field through embedded objects and arrays."""
+
+    parts = [part for part in dotted_path.split(".") if part]
+
+    def walk(value: Any, index: int) -> list[Any]:
+        if index == len(parts):
+            return value if isinstance(value, list) else [value]
+        if isinstance(value, list):
+            result: list[Any] = []
+            for item in value:
+                result.extend(walk(item, index))
+            return result
+        if not isinstance(value, dict) or parts[index] not in value:
+            return []
+        return walk(value[parts[index]], index + 1)
+
+    return walk(document, 0)
+
+
+def _reference_id(value: Any) -> Any:
+    """Normalize relative or absolute FHIR references to their logical id."""
+
+    if not isinstance(value, str):
+        return value
+    reference = value.rstrip("/")
+    if not reference or reference.startswith("#"):
+        return None
+    return reference.rsplit("/", 1)[-1]
+
+
+def _bind_multi_step_collections(
+    mql: dict[str, Any], collection_prefix: str
+) -> dict[str, Any]:
+    """Bind compiler resource names to tenant-prefixed Mongo collections."""
+
+    if not isinstance(mql, dict) or "_multi_step" not in mql:
+        return mql
+    for plan in mql.get("_multi_step") or []:
+        if not isinstance(plan, dict):
+            continue
+        steps = plan.get("steps") if isinstance(plan.get("steps"), list) else [plan]
+        for step in steps:
+            if not isinstance(step, dict) or step.get("collection"):
+                continue
+            resource_type = step.get("resource_type")
+            if resource_type:
+                step["collection"] = bridge.collection_name(
+                    collection_prefix, str(resource_type)
+                )
+    return mql
 
 
 def _execute_find(

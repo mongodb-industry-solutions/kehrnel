@@ -16,6 +16,10 @@ from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.index_manifest import (
     build_index_manifest,
     expected_fingerprints,
 )
+from fhir_search_to_mql.temporal import (
+    date_projection_index_spec,
+    has_date_search_parameters,
+)
 
 ProgressCallback = Callable[..., Any]
 CancelCallback = Callable[[], bool]
@@ -339,6 +343,8 @@ async def fhir_ensure_indexes(
                 continue
 
             index_specs = list(resource_cfg.get("indexes") or [])
+            if has_date_search_parameters(resource_cfg):
+                index_specs.append(date_projection_index_spec())
             collection_name = bridge.collection_name(prefix, resource_type)
             collection = mql_ctx.collection(resource_type)
 

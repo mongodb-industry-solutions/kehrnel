@@ -36,8 +36,8 @@ def test_catalog_lists_only_the_active_strategy_scope_without_database_access():
     assert catalog["contract_version"] == CATALOG_CONTRACT_VERSION
     assert catalog["source"] == "kehrnel.fhir_packages"
     assert catalog["database_backed"] is False
-    assert catalog["storage_schema_version"] == "2"
-    assert catalog["projection_contract_version"].startswith("v1:")
+    assert catalog["storage_schema_version"] == "3"
+    assert catalog["projection_contract_version"].startswith("v2:")
     assert catalog["resource_count"] == len(catalog["resources"])
     assert catalog["resource_count"] == catalog["schema_resource_count"]
     assert catalog["resource_count"] > catalog["storable_resource_count"]
@@ -64,7 +64,7 @@ def test_patient_detail_joins_schema_search_projection_and_index_metadata(releas
     assert patient["collection"] == "fhir_Patient"
     assert patient["storage"]["database"] == "fhir_catalog_test"
     assert patient["storage"]["canonical_location"] == "document root"
-    assert result["resource_projection_version"].startswith("v1:")
+    assert result["resource_projection_version"].startswith("v2:")
     assert "_kehrnel" in patient["storage"]["operational_fields"]
     assert patient["structure"]["root"] == "Patient"
     assert any(field["name"] == "name" and field["type"] == "HumanName" for field in patient["structure"]["fields"])

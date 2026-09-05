@@ -7,9 +7,13 @@ import json
 from typing import Any, Iterable
 
 from kehrnel.engine.strategies.fhir.clinical_cdr.scripts import bridge
+from fhir_search_to_mql.temporal import (
+    date_projection_index_spec,
+    has_date_search_parameters,
+)
 
 
-INDEX_MANIFEST_VERSION = "fhir-index-manifest.v1"
+INDEX_MANIFEST_VERSION = "fhir-index-manifest.v2"
 DEFAULT_MANAGED_INDEX_BUDGET = 63  # MongoDB's 64-index limit includes _id.
 
 
@@ -86,6 +90,12 @@ def build_index_manifest(
             _manifest_index(spec, source="fhir-mql")
             for spec in list(config.get("indexes") or [])
         )
+        if has_date_search_parameters(config):
+            declared.append(
+                _manifest_index(
+                    date_projection_index_spec(), source="fhir-date-projection"
+                )
+            )
         indexes: list[dict[str, Any]] = []
         seen: set[str] = set()
         duplicate_names: list[str] = []

@@ -138,6 +138,34 @@ def test_fhir_get_search_uses_standard_query_string(client, monkeypatch):
     assert res.json()["entry"][0]["resource"]["id"] == "p-1"
 
 
+def test_fhir_compartment_get_delegates_to_strategy_search(client, monkeypatch):
+    _activate_fhir(client)
+
+    async def fake_dispatch(env_id: str, op: str, payload: dict):
+        assert op == "query"
+        assert payload["query"]["resource_type"] == "Observation"
+        assert payload["query"]["fhir_search"] == (
+            "Patient/p-1/Observation?status=final&_count=5"
+        )
+        return {
+            "rows": [{"resourceType": "Observation", "id": "o-1"}],
+            "explain": {"total": 1},
+        }
+
+    monkeypatch.setattr(
+        client.app.state.strategy_runtime,
+        "dispatch",
+        AsyncMock(side_effect=fake_dispatch),
+    )
+    response = client.get(
+        "/api/domains/fhir/Patient/p-1/Observation?status=final&_count=5",
+        headers={"x-active-env": "dev"},
+    )
+    assert response.status_code == 200, response.text
+    assert response.json()["entry"][0]["resource"]["id"] == "o-1"
+    assert response.json()["link"][0]["relation"] == "self"
+
+
 def test_fhir_explain_compiles_without_executing(client, monkeypatch):
     _activate_fhir(client)
 

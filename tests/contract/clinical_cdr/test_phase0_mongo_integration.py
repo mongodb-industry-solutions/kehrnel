@@ -233,16 +233,6 @@ async def test_identifier_search(seeded_db):
     assert [r["id"] for r in res["rows"]] == ["p3"]
 
 
-@pytest.mark.xfail(
-    reason=(
-        "KNOWN DEFECT (pre-existing, vendored fhir-mql/fhir-gen): date search compiles "
-        "birthdate to a BSON datetime ({'birthDate': {'$gte': datetime}}), but canonical "
-        "Patient.birthDate is stored as an ISO string ('1990-05-01'), so Mongo matches "
-        "nothing across BSON types. Sorting works (string order is chronological). Fix is a "
-        "converter/denormalize date-type alignment — tracked separately, not a Phase-0 item."
-    ),
-    strict=True,
-)
 @pytest.mark.asyncio
 async def test_date_range_search(seeded_db):
     # birthdate >= 1990-01-01 → p1(1990) p3(2000) p5(2010)

@@ -110,6 +110,7 @@ Target Modules:
 import pytest
 from fhir_search_to_mql import FHIRSearchConverter, ResourceDenormalizer
 from fhir_search_to_mql.compartments import CompartmentResolver
+from fhir_search_to_mql.core.exceptions import UnsupportedParameterError
 from fhir_search_to_mql.denormalizer.extractors.phonetic import (
     PhoneticExtractor,
     soundex)
@@ -324,7 +325,8 @@ class TestPatientDateParameters:
         query = converter.convert('Patient', 'birthdate=lt2000-12-31')
         query_str = str(query)
         
-        assert '2000' in query_str
+        assert '_search._dates.birthdate' in query_str
+        assert '$lt' in query_str
         assert '$lt' in query_str
     
     def test_birthdate_less_or_equal(self, converter):
@@ -332,7 +334,7 @@ class TestPatientDateParameters:
         query = converter.convert('Patient', 'birthdate=le2000-12-31')
         query_str = str(query)
         
-        assert '2000' in query_str
+        assert '_search._dates.birthdate' in query_str
         assert '$lte' in query_str or '$lt' in query_str
     
     def test_birthdate_starts_after(self, converter):
@@ -367,7 +369,7 @@ class TestPatientDateParameters:
         query_str = str(query)
         
         assert '1980' in query_str
-        assert '2000' in query_str
+        assert '_search._dates.birthdate' in query_str
         assert '$and' in query_str  # Should combine with AND
     
     def test_death_date_search(self, converter):
@@ -489,7 +491,7 @@ class TestPatientParameterCombinations:
         query = converter.convert('Patient', 'birthdate=ge1980-01-01&birthdate=le2000-12-31')
         query_str = str(query)
         
-        assert '1980' in query_str and '2000' in query_str
+        assert '1980' in query_str and '_search._dates.birthdate' in query_str
         assert '$and' in query_str
     
     def test_three_way_and_combination(self, converter):
@@ -1205,7 +1207,7 @@ class TestPatientChaining:
     
     def test_general_practitioner_name_chaining(self, converter):
         """Search patients by practitioner name using chaining."""
-        query = converter.convert('Patient', 'general-practitioner.name=Jones')
+        query = converter.convert('Patient', 'general-practitioner:Practitioner.name=Jones')
         query_str = str(query)
         
         # Chaining creates multi-step or nested query
@@ -1213,7 +1215,7 @@ class TestPatientChaining:
     
     def test_organization_name_chaining(self, converter):
         """Search patients by organization name using chaining."""
-        query = converter.convert('Patient', 'organization.name=Hospital')
+        query = converter.convert('Patient', 'organization:Organization.name=Hospital')
         query_str = str(query)
         
         # Should create chained query
@@ -1221,7 +1223,7 @@ class TestPatientChaining:
     
     def test_link_name_chaining(self, converter):
         """Chain through link to search linked patient by name."""
-        query = converter.convert('Patient', 'link.name=Smith')
+        query = converter.convert('Patient', 'link:Patient.name=Smith')
         query_str = str(query)
         
         # Chaining through link reference
@@ -1229,7 +1231,7 @@ class TestPatientChaining:
     
     def test_general_practitioner_identifier_chaining(self, converter):
         """Chain to search by practitioner identifier."""
-        query = converter.convert('Patient', 'general-practitioner.identifier=http://npi.org|1234567890')
+        query = converter.convert('Patient', 'general-practitioner:Practitioner.identifier=http://npi.org|1234567890')
         query_str = str(query)
         
         # Identifier chaining
@@ -1425,11 +1427,9 @@ class TestPatientEdgeCases:
     # Parameter Parser Tests (from test_coverage_improvements.py)
     def test_invalid_parameter_name(self, converter):
         """Test parameter that doesn't exist in configuration."""
-        # Non-existent parameter should be handled
-        query = converter.convert('Patient', 'nonexistent=value')
-        
-        # Should return empty or handle gracefully
-        assert query is not None
+        # Strict mode must fail closed rather than broaden to match-all.
+        with pytest.raises(UnsupportedParameterError):
+            converter.convert('Patient', 'nonexistent=value')
     
     def test_parameter_with_empty_value(self, converter):
         """Test parameter with empty value."""
@@ -1571,11 +1571,8 @@ class TestPatientErrorValidation:
     
     def test_invalid_parameter_name(self, converter):
         """Test searching with non-existent parameter."""
-        # Should handle gracefully or warn
-        query = converter.convert('Patient', 'nonexistent-param=value')
-        
-        # Returns empty or processes anyway
-        assert query is not None
+        with pytest.raises(UnsupportedParameterError):
+            converter.convert('Patient', 'nonexistent-param=value')
     
     def test_invalid_resource_type(self):
         """Test converter with invalid resource type."""
@@ -1742,7 +1739,7 @@ class TestPatientDateEdgeCases:
         query_str = str(query)
         
         # Should have both conditions
-        assert '1920' in query_str and '2020' in query_str
+        assert '1920' in query_str and '_search._dates.death-date' in query_str
     
     # Date Precision Tests (from test_coverage_improvements.py)
     def test_birthdate_year_month_precision(self, converter):
@@ -2347,7 +2344,7 @@ class TestPatientDateValidation:
         
         assert query is not None
         query_str = str(query)
-        assert '1990' in query_str and '2000' in query_str
+        assert '1990' in query_str and '_search._dates.birthdate' in query_str
 
 
 class TestPatientBuilderValidation:

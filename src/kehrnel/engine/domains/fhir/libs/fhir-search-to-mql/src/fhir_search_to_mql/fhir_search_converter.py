@@ -5,6 +5,7 @@ This is the primary interface for converting FHIR search queries to MongoDB quer
 """
 
 from typing import Dict, Any, Optional, List
+from urllib.parse import urlencode
 
 from fhir_search_to_mql.core.config_loader import ConfigLoader
 from fhir_search_to_mql.core.exceptions import (
@@ -186,9 +187,20 @@ class FHIRSearchConverter:
             param_value = param['value']
             modifier = param.get('modifier')
             prefix = param.get('prefix')
+            raw_name = param.get('raw_name') or param_name
 
             try:
-                if param_name in _SPECIAL_PARAMS:
+                # Chaining must be recognized before ``:`` is interpreted as a
+                # reference modifier. The parser intentionally retains raw_name.
+                if self._is_chained_parameter(str(raw_name)):
+                    mongo_query = self._convert_forward_chain(
+                        source_resource_type=resource_type,
+                        source_config=config,
+                        parameter_name=str(raw_name),
+                        value=param_value,
+                        handling=handling,
+                    )
+                elif param_name in _SPECIAL_PARAMS:
                     # Common FHIR parameters apply to every resource. Prefer
                     # the resource's explicit YAML declaration (so a config
                     # can pin `_id` to a custom field path), otherwise route
@@ -205,7 +217,12 @@ class FHIRSearchConverter:
                         )
                     else:
                         mongo_query = self._convert_special_param(
-                            param_name, param_value, modifier, prefix, resource_type
+                            param_name,
+                            param_value,
+                            modifier,
+                            prefix,
+                            resource_type,
+                            handling,
                         )
                 else:
                     param_config = self._get_parameter_config(config, param_name)
@@ -279,6 +296,151 @@ class FHIRSearchConverter:
 
         return mql_query
 
+    @staticmethod
+    def _is_chained_parameter(parameter_name: str) -> bool:
+        if ':' not in parameter_name or '.' not in parameter_name:
+            return False
+        return parameter_name.find(':') < parameter_name.find('.')
+
+    @staticmethod
+    def _reference_fields(param_config: Dict[str, Any]) -> tuple[str | None, str | None]:
+        """Return configured id/type projections for a reference parameter."""
+
+        fields = param_config.get('fields') or []
+        if isinstance(fields, dict):
+            fields = fields.get('default') or []
+        if not isinstance(fields, list):
+            fields = [fields]
+        id_field = None
+        type_field = None
+        for item in fields:
+            if not isinstance(item, dict):
+                continue
+            kind = item.get('referenceType') or item.get('reference_type')
+            if kind == 'id' and not id_field:
+                id_field = item.get('field')
+            elif kind == 'type' and not type_field:
+                type_field = item.get('field')
+        return id_field, type_field
+
+    def _compiled_subquery(
+        self,
+        resource_type: str,
+        parameter_name: str,
+        value: str,
+        handling: str,
+    ) -> Dict[str, Any]:
+        query = self.convert(
+            resource_type,
+            query_string=urlencode([(parameter_name, value)]),
+            handling=handling,
+        )
+        if is_multi_step_query(query) or (isinstance(query, dict) and '_multi_step' in query):
+            raise ConversionError("Nested/deep FHIR chaining is not yet supported")
+        return query
+
+    def _convert_forward_chain(
+        self,
+        *,
+        source_resource_type: str,
+        source_config: Dict[str, Any],
+        parameter_name: str,
+        value: str,
+        handling: str,
+    ) -> MultiStepQuery:
+        """Compile one-hop ``reference:Type.parameter=value`` chaining."""
+
+        reference_param, remainder = parameter_name.split(':', 1)
+        target_resource_type, separator, target_param = remainder.partition('.')
+        if not separator or not reference_param or not target_resource_type or not target_param:
+            raise ConversionError(f"Invalid chain syntax: {parameter_name}")
+        # A second typed hop requires a dependency-aware plan; fail truthfully
+        # until that executor exists instead of producing a misleading query.
+        if ':' in target_param and '.' in target_param:
+            raise ConversionError("Deep FHIR chaining is not yet supported")
+
+        source_reference = self._get_parameter_config(source_config, reference_param)
+        if source_reference.get('type') != 'reference':
+            raise ConversionError(
+                f"Parameter '{reference_param}' is not a reference on {source_resource_type}"
+            )
+        source_id_field, source_type_field = self._reference_fields(source_reference)
+        if not source_id_field:
+            raise ConversionError(
+                f"Reference parameter '{reference_param}' has no id projection for chaining"
+            )
+
+        target_query = self._compiled_subquery(
+            target_resource_type, target_param, value, handling
+        )
+        multi_step = MultiStepQuery(
+            description=f"Chain {parameter_name}={value}",
+            target_field=str(source_id_field),
+            target_constraints=(
+                {str(source_type_field): target_resource_type}
+                if source_type_field
+                else {}
+            ),
+        )
+        multi_step.add_step(
+            resource_type=target_resource_type,
+            query=target_query,
+            extract_field='id',
+            description=f"Find {target_resource_type} where {target_param}={value}",
+        )
+        return multi_step
+
+    def _convert_reverse_chain(
+        self,
+        *,
+        modifier: Optional[str],
+        value: str,
+        base_resource_type: str,
+        handling: str,
+    ) -> MultiStepQuery:
+        """Compile one-hop FHIR ``_has`` through ordinary resource configs."""
+
+        parts = str(modifier or '').split(':', 2)
+        if len(parts) != 3 or not all(parts):
+            raise ConversionError(
+                "Invalid _has syntax; expected _has:ResourceType:reference:parameter=value"
+            )
+        target_resource_type, reference_param, target_param = parts
+        target_config = self.config_loader.get_config(target_resource_type)
+        reference_config = self._get_parameter_config(target_config, reference_param)
+        if reference_config.get('type') != 'reference':
+            raise ConversionError(
+                f"Parameter '{reference_param}' is not a reference on {target_resource_type}"
+            )
+        reference_id_field, reference_type_field = self._reference_fields(reference_config)
+        if not reference_id_field:
+            raise ConversionError(
+                f"Reference parameter '{reference_param}' has no id projection for _has"
+            )
+
+        target_query = self._compiled_subquery(
+            target_resource_type, target_param, value, handling
+        )
+        if reference_type_field:
+            type_filter = {str(reference_type_field): base_resource_type}
+            target_query = (
+                {"$and": [target_query, type_filter]} if target_query else type_filter
+            )
+        multi_step = MultiStepQuery(
+            description=(
+                f"Reverse chain: find {base_resource_type} referenced by "
+                f"{target_resource_type} where {target_param}={value}"
+            ),
+            target_field='id',
+        )
+        multi_step.add_step(
+            resource_type=target_resource_type,
+            query=target_query,
+            extract_field=str(reference_id_field),
+            description=f"Find {target_resource_type} where {target_param}={value}",
+        )
+        return multi_step
+
     def _convert_special_param(
         self,
         param_name: str,
@@ -286,6 +448,7 @@ class FHIRSearchConverter:
         modifier: Optional[str],
         prefix: Optional[str],
         resource_type: str,
+        handling: str = "strict",
     ) -> Any:
         """Dispatch a common FHIR parameter to SpecialConverter."""
         if param_name == "_id":
@@ -309,15 +472,11 @@ class FHIRSearchConverter:
         if param_name == "_content":
             return SpecialConverter.convert_content(param_value)
         if param_name == "_has":
-            # The query parser extracts `_has:Observation:patient:code=8480-6`
-            # as base="_has", modifier="Observation:patient:code", value="8480-6".
-            # SpecialConverter.convert_has needs the full
-            # "ResourceType:ref:searchParam=value" form, so re-stitch it here.
-            chain_spec = (
-                f"{modifier}={param_value}" if modifier else param_value
-            )
-            return SpecialConverter.convert_has(
-                chain_spec, base_resource_type=resource_type
+            return self._convert_reverse_chain(
+                modifier=modifier,
+                value=param_value,
+                base_resource_type=resource_type,
+                handling=handling,
             )
         if param_name == "_filter":
             # _filter expression syntax is not implemented; surface a clear
@@ -444,9 +603,18 @@ class FHIRSearchConverter:
                 param_value = param['value']
                 modifier = param.get('modifier')
                 prefix = param.get('prefix')
+                raw_name = param.get('raw_name') or param_name
 
                 try:
-                    if param_name in _SPECIAL_PARAMS:
+                    if self._is_chained_parameter(str(raw_name)):
+                        mongo_query = self._convert_forward_chain(
+                            source_resource_type=resource_type,
+                            source_config=config,
+                            parameter_name=str(raw_name),
+                            value=param_value,
+                            handling=handling,
+                        )
+                    elif param_name in _SPECIAL_PARAMS:
                         try:
                             param_config = self._get_parameter_config(config, param_name)
                         except UnsupportedParameterError:
@@ -459,7 +627,12 @@ class FHIRSearchConverter:
                             )
                         else:
                             mongo_query = self._convert_special_param(
-                                param_name, param_value, modifier, prefix, resource_type
+                                param_name,
+                                param_value,
+                                modifier,
+                                prefix,
+                                resource_type,
+                                handling,
                             )
                     else:
                         param_config = self._get_parameter_config(config, param_name)
@@ -469,10 +642,8 @@ class FHIRSearchConverter:
                         )
 
                     if is_multi_step_query(mongo_query):
-                        # Compartment + multi-step is rare; surface the plan via
-                        # the same envelope used by `convert()`.
-                        parameter_queries.append(
-                            {"_multi_step": mongo_query.get_execution_plan()}
+                        raise ConversionError(
+                            "Combining compartment search with chaining is not yet supported"
                         )
                     elif mongo_query:
                         parameter_queries.append(mongo_query)
@@ -529,7 +700,14 @@ class FHIRSearchConverter:
                 f"Parameter '{param_name}' not configured for {config.get('resource')}"
             )
         
-        return search_params[param_name]
+        param_config = search_params[param_name]
+        # DateConverter uses the parameter code to address the generic BSON-date
+        # interval projection produced by ResourceDenormalizer. Keep loader
+        # configs immutable because they are cached and are also hashed into the
+        # resource projection contract.
+        if isinstance(param_config, dict):
+            param_config = {**param_config, '_parameter_name': param_name}
+        return param_config
     
     def _get_converter(self, param_config: Dict[str, Any]):
         """

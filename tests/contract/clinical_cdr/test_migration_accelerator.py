@@ -223,7 +223,7 @@ async def test_import_projects_then_writes_valid_resources(monkeypatch):
     assert report["write"]["inserted"] == 1
     assert writes[0]["_search"] == {"logicalId": "p1"}
     assert writes[0]["_compartments"] == {}
-    assert writes[0]["_kehrnel"]["storage_schema_version"] == "2"
+    assert writes[0]["_kehrnel"]["storage_schema_version"] == "3"
 
 
 @pytest.mark.asyncio
