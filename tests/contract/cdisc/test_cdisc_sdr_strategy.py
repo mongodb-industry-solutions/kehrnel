@@ -288,10 +288,22 @@ async def test_spec_indexes_match_the_runtime_plan():
                 "fields": index["fields"],
             }
     assert runtime == modeled
+    assert plan.artifacts["vector_indexes"] == [{
+        "collection": manifest.default_config["collections"]["records"],
+        "name": "cdisc_semantic_auto_embed",
+        "definition": {"fields": [
+            {"type": "autoEmbed", "modality": "text", "path": "semantic.text", "model": "voyage-4"},
+            {"type": "filter", "path": "tenantId"},
+            {"type": "filter", "path": "snapshotRef"},
+            {"type": "filter", "path": "studyId"},
+            {"type": "filter", "path": "profile"},
+            {"type": "filter", "path": "domain"},
+        ]},
+    }]
 
 
 @pytest.mark.asyncio
-async def test_config_rejects_ambiguous_collections_and_inconsistent_semantic_settings():
+async def test_config_rejects_ambiguous_collections():
     strategy = CDISCSDRStrategy()
     defaults = load_strategy("cdisc.sdr", PACK).default_config
 
@@ -300,13 +312,6 @@ async def test_config_rejects_ambiguous_collections_and_inconsistent_semantic_se
     with pytest.raises(KehrnelError) as exc:
         await strategy.validate_config(duplicate)
     assert exc.value.code == "CONFIG_INVALID"
-
-    inconsistent = json.loads(json.dumps(defaults))
-    inconsistent["semantic"].update(enabled=False, embed_on_rebuild=True)
-    with pytest.raises(KehrnelError) as exc:
-        await strategy.validate_config(inconsistent)
-    assert exc.value.code == "CONFIG_INVALID"
-
 
 @pytest.mark.asyncio
 async def test_cdisc_ingest_is_idempotent_and_writes_snapshot_marker_last():

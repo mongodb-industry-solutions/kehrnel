@@ -17,9 +17,9 @@
    snapshot-marker update and automatically rebuilds configured projections.
 
 Recommended production controls include a private object-store endpoint,
-server-side encryption, object retention/versioning, MongoDB backups, API-key
-environment scoping, outbound allowlists for embedding endpoints, and an
-approved validator executable/container. Regulator acceptance and validation
+server-side encryption, object retention/versioning, MongoDB backups, Atlas
+Automated Embedding governance and billing controls, and an approved validator
+executable/container. Regulator acceptance and validation
 of the deployed computerized system remain organizational responsibilities.
 
 ## Long-running CDISC job example

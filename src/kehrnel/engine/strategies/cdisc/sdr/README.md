@@ -43,9 +43,11 @@ clients, is overridden by the reviewed activation database.
 }
 ```
 
-Optional secure bindings can add a command-based validator and an HTTP
-embedding provider. Commands use an argv array and a JSON file protocol; no
-shell is invoked. See `deployment/resolved-bindings.production.example.json`.
+Optional secure bindings can add a command-based validator. Commands use an
+argv array and a JSON file protocol; no shell is invoked. Atlas Automated
+Embedding is declared by the strategy's vector-search index and does not need
+an application embedding adapter. See
+`deployment/resolved-bindings.production.example.json`.
 
 Use `cdisc_store_artifact` before `cdisc_ingest_xpt`. A normal governed flow is:
 

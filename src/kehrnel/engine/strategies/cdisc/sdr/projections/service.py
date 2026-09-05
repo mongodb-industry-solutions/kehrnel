@@ -213,29 +213,6 @@ class ProjectionService:
                     "projectionVersion": PROJECTION_VERSION,
                 }
             projected.append(updated)
-        embedding = (ctx.adapters or {}).get("embedding")
-        if semantic_enabled and bool(semantic_cfg.get("embed_on_rebuild")) and embedding is not None:
-            batch_size = int(semantic_cfg.get("embedding_batch_size", 128))
-            for start in range(0, len(projected), batch_size):
-                batch = projected[start:start + batch_size]
-                vectors = await embedding.embed([item["semantic"]["text"] for item in batch])
-                if len(vectors) != len(batch):
-                    raise KehrnelError(
-                        code="CDISC_EMBEDDING_FAILED",
-                        status=502,
-                        message="Embedding adapter returned an unexpected vector count.",
-                    )
-                expected_dimensions = int(semantic_cfg.get("embedding_dimensions", 1536))
-                for record, vector in zip(batch, vectors):
-                    if len(vector) != expected_dimensions:
-                        raise KehrnelError(
-                            code="CDISC_EMBEDDING_DIMENSIONS",
-                            status=502,
-                            message="Embedding vector dimensions do not match the configured search index.",
-                            details={"expected": expected_dimensions, "actual": len(vector)},
-                        )
-                    record["semantic"]["vector"] = vector
-                    record["semantic"]["dimensions"] = len(vector)
         projection_fingerprint = [
             {
                 "recordId": item.get("_id"),

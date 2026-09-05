@@ -81,13 +81,11 @@
       "description": "Optional search projections; canonical CDISC documents remain authoritative.",
       "properties": {
         "enabled": {"type": "boolean", "default": true},
-        "embed_on_rebuild": {"type": "boolean", "default": false},
-        "embedding_batch_size": {"type": "integer", "minimum": 1, "maximum": 2048, "default": 128},
-        "embedding_dimensions": {"type": "integer", "minimum": 1, "maximum": 8192, "default": 1536},
+        "auto_embedding_model": {"type": "string", "minLength": 1, "default": "voyage-4"},
         "max_text_chars": {"type": "integer", "minimum": 128, "maximum": 50000, "default": 4000},
         "max_fallback_scan": {"type": "integer", "minimum": 1, "maximum": 1000000, "default": 10000},
         "lexical_index": {"type": "string", "minLength": 1, "default": "cdisc_semantic_text"},
-        "vector_index": {"type": "string", "minLength": 1, "default": "cdisc_semantic_vector"},
+        "auto_embed_index": {"type": "string", "minLength": 1, "default": "cdisc_semantic_auto_embed"},
         "exclude_variables": {"type": "array", "items": {"type": "string"}, "uniqueItems": true, "default": ["USUBJID", "SUBJID"]}
       },
       "additionalProperties": false

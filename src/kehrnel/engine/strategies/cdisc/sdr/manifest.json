@@ -26,7 +26,7 @@
   "compatibility": {
     "packFormat": "strategy-pack/v1",
     "requires": ["storage.mongo"],
-    "optional": ["search.atlas", "embedding.http", "validation.cdisc_core", "artifact.object_store"]
+    "optional": ["search.atlas", "validation.cdisc_core", "artifact.object_store"]
   },
   "maturity": "preview",
   "license": "Apache-2.0",
@@ -74,7 +74,7 @@
       "requiredForGovernedQueries": ["idx_cdisc_dataset_order", "idx_cdisc_snapshot_state"],
       "recommendedForStudyQueries": ["idx_cdisc_study_subject", "idx_cdisc_profile_domain_test"],
       "conditionalSearchIndex": "semantic.lexical_index",
-      "conditionalVectorIndex": "semantic.vector_index"
+      "conditionalAutoEmbedIndex": "semantic.auto_embed_index"
     },
     "story": "Research-study data arrives as many related tabular datasets, metadata files, and binary exchange artifacts. The variables differ by CDISC domain and standard version, yet reviewers must still be able to prove which source produced every value, which rules were applied, and which immutable study version was queried. Treating this information as a patient record loses the study and submission context; creating a separate rigid schema for every domain creates operational sprawl.\n\nThis strategy keeps the CDISC study snapshot as the governing unit. Original Dataset-JSON, XPT, and Define-XML artifacts remain checksum-addressed and replayable. Dataset documents describe the variable-level metamodel, while one polymorphic record collection preserves each CDISC row under its original variable names. Stable typed facets and entity references make clinical, nonclinical, analysis, and product-evidence records queryable through one governed contract.\n\nThe result is a repository that respects CDISC rather than replacing it: SEND, SDTM, ADaM, and TIG remain recognizable to domain users, while MongoDB supplies flexible storage, indexes, search, lineage, and optional AI retrieval around the standards.",
     "how_it_works": "An intake creates a staged immutable snapshot and registers the original artifact with its checksum and provenance. The parser reads Dataset-JSON or XPT plus Define-XML metadata, creates one dataset metamodel document, and writes one canonical document per logical CDISC row. Each record has a fixed governance envelope, a polymorphic data object containing the original CDISC variables, typed facets for common access paths, entity references, and lineage.\n\nValidation runs against pinned standards and terminology before publication. Publishing makes the snapshot visible without rewriting its records. Rebuildable projections then provide subject timelines, nonclinical findings, ADaM traceability, product evidence, lexical search, and optional vector search.\n\nUsers query through cdisc-query/v1 rather than submitting arbitrary MongoDB operators. Kehrnel injects the tenant and published-snapshot constraints, validates paths and operators, and compiles the request into an explainable MongoDB aggregation. Grouped analysis and semantic retrieval use the same governed study scope.",
@@ -86,7 +86,7 @@
       "Keeps semantic, AI, openEHR, FHIR, and knowledge-graph representations as traceable rebuildable projections rather than competing sources of truth."
     ],
     "ideal_for": "Use this strategy for governed clinical and nonclinical study repositories that need to ingest CDISC exchange formats, preserve source evidence, compare immutable study versions, validate before publication, and support operational exploration across SEND, SDTM, ADaM, or TIG data. It is particularly useful when datasets evolve across standards and sponsors but users still need one secure query and lineage model.",
-    "consider_alternatives": "This is an operational study-data repository, not an EDC, LIMS, statistical-computing platform, or submission-authoring system. Heavy unrestricted analytical scans should use governed extracts or dedicated analytical systems. Semantic and vector search require the corresponding Atlas Search and embedding capabilities. Ingestion does not by itself make a study regulatory-compliant; conformance depends on the pinned standards, terminology, validation engines, and review process.",
+    "consider_alternatives": "This is an operational study-data repository, not an EDC, LIMS, statistical-computing platform, or submission-authoring system. Heavy unrestricted analytical scans should use governed extracts or dedicated analytical systems. Semantic and vector search require Atlas Search with Automated Embedding enabled. Ingestion does not by itself make a study regulatory-compliant; conformance depends on the pinned standards, terminology, validation engines, and review process.",
     "constraints": [
       "Large source bytes should be uploaded directly to the configured object store; inline operation payloads are deliberately size-bounded.",
       "Standards, terminology, and conformance assets must be supplied and licensed by the deployment owner."

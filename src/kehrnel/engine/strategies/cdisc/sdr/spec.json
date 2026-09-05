@@ -11,7 +11,7 @@
     "compat": {
       "packFormat": "strategy-pack/v1",
       "requires": ["storage.mongo"],
-      "optional": ["search.atlas", "embedding.http", "validation.cdisc_core", "artifact.object_store"]
+      "optional": ["search.atlas", "validation.cdisc_core", "artifact.object_store"]
     }
   },
   "glossary": {
@@ -346,9 +346,9 @@
         },
         "vectorSearch": {
           "kind": "atlas_vector_search",
-          "indexNameFromConfig": "semantic.vector_index",
+          "indexNameFromConfig": "semantic.auto_embed_index",
           "requirement": "optional",
-          "condition": "Requires semantic.embed_on_rebuild and an embedding adapter.",
+          "condition": "Uses Atlas Automated Embedding over semantic.text.",
           "workloads": ["semantic_search", "hybrid_rrf"]
         }
       },
@@ -645,7 +645,7 @@
     "limits": [
       "Arbitrary dynamic data fields remain queryable but are not automatically indexed.",
       "Heavy biostatistical scans should use governed extracts or analytical systems.",
-      "Semantic mode requires an embedding adapter and vector index; the portable lexical fallback is intentionally bounded."
+      "Semantic mode requires an Atlas Automated Embedding index; the portable lexical fallback is intentionally bounded."
     ]
   },
   "samples": {
@@ -735,7 +735,7 @@
     },
     "indexOverlay": {
       "indexGroups": [
-        {"id": "idxgrp.records", "entityRef": "coll.records", "items": ["idx_cdisc_dataset_order", "idx_cdisc_study_subject", "idx_cdisc_profile_domain_test"], "search": {"kind": "atlas_search", "ref": "semantic.lexical_index"}, "vectorSearch": {"kind": "atlas_vector_search", "ref": "semantic.vector_index"}},
+        {"id": "idxgrp.records", "entityRef": "coll.records", "items": ["idx_cdisc_dataset_order", "idx_cdisc_study_subject", "idx_cdisc_profile_domain_test"], "search": {"kind": "atlas_search", "ref": "semantic.lexical_index"}, "vectorSearch": {"kind": "atlas_vector_search", "ref": "semantic.auto_embed_index"}},
         {"id": "idxgrp.governance", "entityRef": "coll.snapshots", "items": ["idx_cdisc_snapshot_state", "idx_cdisc_validation_run", "idx_cdisc_finding"]},
         {"id": "idxgrp.projections", "entityRef": "coll.materializations", "items": ["idx_cdisc_entity", "idx_cdisc_materialization"]}
       ]

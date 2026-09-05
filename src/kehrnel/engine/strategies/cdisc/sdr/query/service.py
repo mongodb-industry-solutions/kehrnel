@@ -143,26 +143,19 @@ class QueryService:
         vector_rows: List[Dict[str, Any]] = []
         vector_warning = None
         if mode in {"semantic", "hybrid"}:
-            embedding = (ctx.adapters or {}).get("embedding")
-            if embedding is None:
+            try:
+                vector_rows = await storage.aggregate(coll["records"], [
+                    {"$vectorSearch": {
+                        "index": semantic_cfg.get("auto_embed_index", "cdisc_semantic_auto_embed"),
+                        "path": "semantic.text", "query": query,
+                        "numCandidates": max(limit * 10, 100), "limit": limit * 5, "filter": match,
+                    }},
+                    {"$project": {"_id": 1, "studyId": 1, "snapshotId": 1, "datasetId": 1, "domain": 1, "facets": 1, "data": 1, "score": {"$meta": "vectorSearchScore"}}},
+                ])
+            except Exception as exc:
                 if mode == "semantic":
-                    raise KehrnelError(code="CDISC_EMBEDDING_UNAVAILABLE", status=503, message="Semantic mode requires an embedding adapter.")
-                vector_warning = "embedding adapter unavailable; hybrid search used lexical results only"
-            else:
-                vector = (await embedding.embed([query]))[0]
-                try:
-                    vector_rows = await storage.aggregate(coll["records"], [
-                        {"$vectorSearch": {
-                            "index": semantic_cfg.get("vector_index", "cdisc_semantic_vector"),
-                            "path": "semantic.vector", "queryVector": vector,
-                            "numCandidates": max(limit * 10, 100), "limit": limit * 5, "filter": match,
-                        }},
-                        {"$project": {"_id": 1, "studyId": 1, "snapshotId": 1, "datasetId": 1, "domain": 1, "facets": 1, "data": 1, "score": {"$meta": "vectorSearchScore"}}},
-                    ])
-                except Exception as exc:
-                    if mode == "semantic":
-                        raise KehrnelError(code="CDISC_SEMANTIC_SEARCH_FAILED", status=502, message=str(exc)) from exc
-                    vector_warning = f"vector retrieval unavailable; hybrid search used lexical results only: {exc}"
+                    raise KehrnelError(code="CDISC_SEMANTIC_SEARCH_FAILED", status=502, message=str(exc)) from exc
+                vector_warning = f"Atlas Automated Embedding unavailable; hybrid search used lexical results only: {exc}"
 
         if mode == "lexical" or not vector_rows:
             rows = lexical_rows[:limit]
@@ -190,7 +183,7 @@ class QueryService:
                 "tenantInjected": True,
                 "publishedSnapshotConstraint": True,
                 "lexicalEngine": lexical_engine if lexical_rows or mode in {"lexical", "hybrid"} else None,
-                "vectorIndex": semantic_cfg.get("vector_index") if vector_rows else None,
+                "autoEmbedIndex": semantic_cfg.get("auto_embed_index") if vector_rows else None,
                 "warning": vector_warning,
             },
         }

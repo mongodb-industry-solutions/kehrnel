@@ -36,13 +36,11 @@
   },
   "semantic": {
     "enabled": true,
-    "embed_on_rebuild": false,
-    "embedding_batch_size": 128,
-    "embedding_dimensions": 1536,
+    "auto_embedding_model": "voyage-4",
     "max_text_chars": 4000,
     "max_fallback_scan": 10000,
     "lexical_index": "cdisc_semantic_text",
-    "vector_index": "cdisc_semantic_vector",
+    "auto_embed_index": "cdisc_semantic_auto_embed",
     "exclude_variables": ["USUBJID", "SUBJID"]
   },
   "query": {

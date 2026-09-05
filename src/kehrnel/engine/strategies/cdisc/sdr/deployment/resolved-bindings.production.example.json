@@ -17,11 +17,5 @@
     "argv": ["cdisc-validator-bridge", "--input", "{input}", "--output", "{output}"],
     "timeout_seconds": 1800,
     "max_output_bytes": 50000000
-  },
-  "embedding": {
-    "provider": "http",
-    "endpoint": "https://embedding-gateway.example/v1/embeddings",
-    "model": "deployment-owned-model",
-    "api_key": "resolved-by-secret-manager"
   }
 }

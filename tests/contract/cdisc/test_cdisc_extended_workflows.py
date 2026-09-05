@@ -279,16 +279,11 @@ async def test_external_validator_failure_is_persisted_as_blocking_finding():
 
 
 @pytest.mark.asyncio
-async def test_projection_can_embed_semantic_text_with_configured_dimensions():
-    class Embeddings:
-        async def embed(self, texts):
-            return [[float(len(text)), 1.0, 0.0] for text in texts]
-
+async def test_projection_materializes_semantic_text_without_vector_fields():
     storage = MemoryStorage()
     strategy = CDISCSDRStrategy()
     ctx = _context(storage)
-    ctx.adapters["embedding"] = Embeddings()
-    ctx.config["semantic"] = {"enabled": True, "embed_on_rebuild": True, "embedding_dimensions": 3}
+    ctx.config["semantic"] = {"enabled": True}
     document = strategy.synthetic.generate({"studyId": "EMBED-1", "subjects": 2})["datasets"]["DM"]
     await strategy.ingest(ctx, {
         "datasetJSON": document, "packageId": "p", "snapshotId": "v1",
@@ -299,7 +294,8 @@ async def test_projection_can_embed_semantic_text_with_configured_dimensions():
 
     records = list(storage.data["cdisc_records"].values())
     assert rebuilt["recordCount"] == 2
-    assert all(len(record["semantic"]["vector"]) == 3 for record in records)
+    assert all("vector" not in record["semantic"] for record in records)
+    assert all("dimensions" not in record["semantic"] for record in records)
     assert all("EMBED-1-" not in record["semantic"]["text"] for record in records)
 
 

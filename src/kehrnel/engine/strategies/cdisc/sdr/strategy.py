@@ -97,13 +97,6 @@ class CDISCSDRStrategy(StrategyPlugin):
         ]
         if invalid:
             raise KehrnelError(code="CONFIG_INVALID", status=400, message="Invalid query extension paths.", details={"invalidPaths": invalid})
-        semantic_cfg = cfg.get("semantic") or {}
-        if semantic_cfg.get("embed_on_rebuild") and not semantic_cfg.get("enabled"):
-            raise KehrnelError(
-                code="CONFIG_INVALID",
-                status=400,
-                message="semantic.embed_on_rebuild requires semantic.enabled.",
-            )
         if not ((cfg.get("validation") or {}).get("blocking_severities") or []):
             raise KehrnelError(
                 code="CONFIG_INVALID",
@@ -142,13 +135,13 @@ class CDISCSDRStrategy(StrategyPlugin):
             }] if semantic.get("enabled", True) else [],
             "vector_indexes": [{
                 "collection": coll["records"],
-                "name": semantic.get("vector_index", "cdisc_semantic_vector"),
+                "name": semantic.get("auto_embed_index", "cdisc_semantic_auto_embed"),
                 "definition": {"fields": [
-                    {"type": "vector", "path": "semantic.vector", "numDimensions": int(semantic.get("embedding_dimensions", 1536)), "similarity": "cosine"},
+                    {"type": "autoEmbed", "modality": "text", "path": "semantic.text", "model": semantic.get("auto_embedding_model", "voyage-4")},
                     {"type": "filter", "path": "tenantId"}, {"type": "filter", "path": "snapshotRef"},
                     {"type": "filter", "path": "studyId"}, {"type": "filter", "path": "profile"}, {"type": "filter", "path": "domain"},
                 ]},
-            }] if semantic.get("enabled", True) and semantic.get("embed_on_rebuild", False) else [],
+            }] if semantic.get("enabled", True) else [],
         })
 
     async def apply(self, ctx: StrategyContext, plan: ApplyPlan) -> ApplyResult:
