@@ -326,8 +326,11 @@ class PackageService:
         transformations = [
             item
             for item in all_transformations
-            if related.intersection(item.get("inputRefs") or [])
-            or related.intersection(item.get("outputRefs") or [])
+            if item.get("operation") != "cdisc_export_solution_evidence"
+            and (
+                related.intersection(item.get("inputRefs") or [])
+                or related.intersection(item.get("outputRefs") or [])
+            )
         ]
 
         evidence = _canonical_json_value({

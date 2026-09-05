@@ -108,6 +108,11 @@ async def test_solution_evidence_export_is_portable_complete_and_digest_verified
         "cdisc_export_solution_evidence",
         {"studyId": "SOLUTION-001", "snapshotId": "v1"},
     )
+    repeated = await strategy.run_op(
+        ctx,
+        "cdisc_export_solution_evidence",
+        {"studyId": "SOLUTION-001", "snapshotId": "v1"},
+    )
 
     assert imported["publication"]["state"] == "published"
     package = json.loads(artifacts.objects[exported["artifact"]["objectKey"]])
@@ -118,6 +123,8 @@ async def test_solution_evidence_export_is_portable_complete_and_digest_verified
     assert exported["counts"]["datasets"] == 4
     assert exported["counts"]["records"] > 0
     assert exported["counts"]["entities"] > 0
+    assert repeated["packageId"] == exported["packageId"]
+    assert repeated["artifactCreated"] is False
     assert all("tenantId" not in item for item in package["evidence"]["records"])
     assert all("sourceId" in item for item in package["evidence"]["records"])
     canonical = json.dumps(
