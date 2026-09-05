@@ -807,6 +807,9 @@ projections, source-artifact metadata, validation evidence, and transformation
 lineage. Deployment-specific tenant scope is removed while source identities
 are retained explicitly for traceability; the package payload is protected by
 a cross-runtime canonical JSON SHA-256 digest.
+The machine-readable contract is shipped beside the package service as
+`packages/solution-evidence.schema.json` and is validated in the contract test
+suite.
 
 The preview also includes an external example-data catalog with no vendored
 study bytes. The official clinical CDISC Pilot DM data and the public PhUSE

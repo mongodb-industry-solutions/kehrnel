@@ -4,12 +4,13 @@ import hashlib
 import json
 import zipfile
 
+import jsonschema
 import pytest
 
 from kehrnel.engine.strategies.cdisc.sdr.strategy import CDISCSDRStrategy
 from kehrnel.engine.strategies.cdisc.sdr.common import MODEL_SCHEMA_VERSION
 from kehrnel.persistence.artifacts import FileSystemArtifactStore
-from tests.contract.cdisc.test_cdisc_sdr_strategy import MemoryArtifactStore, MemoryStorage, _context
+from tests.contract.cdisc.test_cdisc_sdr_strategy import PACK, MemoryArtifactStore, MemoryStorage, _context
 
 
 @pytest.mark.asyncio
@@ -116,6 +117,10 @@ async def test_solution_evidence_export_is_portable_complete_and_digest_verified
 
     assert imported["publication"]["state"] == "published"
     package = json.loads(artifacts.objects[exported["artifact"]["objectKey"]])
+    jsonschema.validate(
+        package,
+        json.loads((PACK / "packages" / "solution-evidence.schema.json").read_text()),
+    )
     assert package["apiVersion"] == "kehrnel.dev/cdisc-solution-evidence/v1"
     assert package["kind"] == "CDISCSolutionEvidencePackage"
     assert package["modelSchemaVersion"] == MODEL_SCHEMA_VERSION
