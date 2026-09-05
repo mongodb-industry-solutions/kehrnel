@@ -1,5 +1,5 @@
 {
-  "catalogVersion": "1.0.0",
+  "catalogVersion": "1.1.0",
   "examples": [
     {
       "id": "cdisc-pilot-sdtm-dm",
@@ -163,6 +163,45 @@
         { "name": "ts.xpt", "role": "dataset", "domain": "TS", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PointCross/ts.xpt", "sha256": "1fd59460c55cbe1a3b7ef37b5a8166769ffac6fc1e3d2cf528ade6c94d280400" }
       ],
       "journey": ["inspect", "ingest", "validate", "publish", "query", "analyze-findings"]
+    },
+    {
+      "id": "phuse-pds-send",
+      "title": "PhUSE PDS2014 — cross-domain safety and recovery study",
+      "description": "A public 124-animal Sprague-Dawley SEND study with both sexes, terminal and recovery cohorts, body and organ weights, clinical pathology reference fields, clinical observations, toxicokinetics, macroscopic and microscopic findings, and source RELREC relationships.",
+      "profile": "send",
+      "studyId": "PDS2014",
+      "packageId": "phuse-pds-send",
+      "standard": { "family": "SEND", "implementationGuide": "SENDIG", "implementationGuideVersion": "3.0" },
+      "source": { "repository": "https://github.com/phuse-org/SENDConform", "revision": "eb438ce3f7cbd74eea77677f43b916dd46c802cd", "license": "MIT", "licenseUrl": "https://github.com/phuse-org/SENDConform/blob/master/LICENSE", "distribution": "fetch-only" },
+      "files": [
+        { "name": "define.xml", "role": "define-xml", "mediaType": "application/xml", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/define.xml", "sha256": "ca5e8606f8c4775bc85ef85c7ec6458fd325516bcd74e0f9ca927ad235e73111" },
+        { "name": "bg.xpt", "role": "dataset", "domain": "BG", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/bg.xpt", "sha256": "0a2ec900c8510029f10b80b5ae0336c25d23434e92ec91e1c49bb90e821d1754" },
+        { "name": "bw.xpt", "role": "dataset", "domain": "BW", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/bw.xpt", "sha256": "9b4b7cd1018caa5136ed34eb420390a748c20a9363e125ce8e4d017fa9d34726" },
+        { "name": "cl.xpt", "role": "dataset", "domain": "CL", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/cl.xpt", "sha256": "6791c5e826181f7c2ec93e2991919593cfab1c646b52072463f8955541dc5807" },
+        { "name": "co.xpt", "role": "dataset", "domain": "CO", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/co.xpt", "sha256": "71f09b259dc350bdd1f58f279d5e28e7f5657358c2e5058af18385c789e028e2" },
+        { "name": "dm.xpt", "role": "dataset", "domain": "DM", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/dm.xpt", "sha256": "22030661b8204aec4d656fe51b2d86fad36f125c151ccb68f1c8b356537c1862" },
+        { "name": "ds.xpt", "role": "dataset", "domain": "DS", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/ds.xpt", "sha256": "908a7dfdb1d5974c0a504abe9c85dde5bf5be0a119a3fa61ecb399e85a03af00" },
+        { "name": "ex.xpt", "role": "dataset", "domain": "EX", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/ex.xpt", "sha256": "ca4c46ac725b7e6371f3d0fd5d7cd7470fe17b78dcf5fe04360442b2f372868a" },
+        { "name": "fw.xpt", "role": "dataset", "domain": "FW", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/fw.xpt", "sha256": "46335ef671533098516f39853bfb8a33ae9c8e2b5b2c2dabf72801185690f855" },
+        { "name": "lb.xpt", "role": "dataset", "domain": "LB", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/lb.xpt", "sha256": "126f99db8a3e05908edf356a45cf64a6ba481c58deb21c89bb1f45b376d38520" },
+        { "name": "ma.xpt", "role": "dataset", "domain": "MA", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/ma.xpt", "sha256": "d379cde5e2be3e4dd17d580710094df71ee9552c3c1686aec8c71df703180d8f" },
+        { "name": "mi.xpt", "role": "dataset", "domain": "MI", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/mi.xpt", "sha256": "faa3c5d52ec7743519d047bd302e95ceabc914e612fdc60a69ff30ee83483462" },
+        { "name": "om.xpt", "role": "dataset", "domain": "OM", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/om.xpt", "sha256": "009361338167c7174bfd5eb415e84bd59a5200a10d31ee42ec5f8de0e7749827" },
+        { "name": "pc.xpt", "role": "dataset", "domain": "PC", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/pc.xpt", "sha256": "84480a5963ec10d1421c204a1f105ed258382e745ee609a70fca6e1c35750b28" },
+        { "name": "pooldef.xpt", "role": "dataset", "domain": "POOLDEF", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/pooldef.xpt", "sha256": "bb0d267ee527f5ddedd37b4e098567087c692b5a788df363ec7ccf4d96083b64" },
+        { "name": "pp.xpt", "role": "dataset", "domain": "PP", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/pp.xpt", "sha256": "49849c3e84cf113e34374008dd5622293d3fe8a09a8635c8677f7b56e4d9aa14" },
+        { "name": "relrec.xpt", "role": "dataset", "domain": "RELREC", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/relrec.xpt", "sha256": "e7f7c42caf42266df47e6bfa09ce6f63df7a495dc6f03c046ddcfb1f553c0d4f" },
+        { "name": "sc.xpt", "role": "dataset", "domain": "SC", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/sc.xpt", "sha256": "a79ae2a550ab1b3a8a2e91391f69f8a7f7e60a9f9db9f4fe516cd9c7094a1e09" },
+        { "name": "se.xpt", "role": "dataset", "domain": "SE", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/se.xpt", "sha256": "9cf2902b54a979f9f2db98da4a9902a9f411355aa8ac0b52c0a0068e256a3b6d" },
+        { "name": "suppma.xpt", "role": "dataset", "domain": "SUPPMA", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/suppma.xpt", "sha256": "b94cebec83a98467dbedbc65fa6e0134310a602abb74511b5802a46c29289afd" },
+        { "name": "suppmi.xpt", "role": "dataset", "domain": "SUPPMI", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/suppmi.xpt", "sha256": "0d74b2e6cddb6444cf181ca92443ad3935bb3e9503a89f87700d3c3ed0b226de" },
+        { "name": "supppp.xpt", "role": "dataset", "domain": "SUPPPP", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/supppp.xpt", "sha256": "0778655d02a1949c8136df179ff6e64605892b84f84009fb23f788813b09977e" },
+        { "name": "ta.xpt", "role": "dataset", "domain": "TA", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/ta.xpt", "sha256": "a4143532822f86b7e0d2b1fd5f139a02577976b9f6d36656d95809c5bdb32a9e" },
+        { "name": "te.xpt", "role": "dataset", "domain": "TE", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/te.xpt", "sha256": "68f8568b281fa0eb3788138bdd5059f4b7eb76b3ca72d0b1667473ee3fe548b7" },
+        { "name": "ts.xpt", "role": "dataset", "domain": "TS", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/ts.xpt", "sha256": "f2415ef2c39ff39f92af8d69b25d1c05104d4b1dd775193205a00c6320a06499" },
+        { "name": "tx.xpt", "role": "dataset", "domain": "TX", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PDS/Xpt/tx.xpt", "sha256": "e4e3638359e36605d24d59143cd3e4b4ed505f2e9580a9ef06811e3677b531b7" }
+      ],
+      "journey": ["inspect", "ingest", "validate", "publish", "query", "analyze-findings", "assess-recovery"]
     }
   ]
 }

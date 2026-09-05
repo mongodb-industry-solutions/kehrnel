@@ -211,6 +211,7 @@ def test_cdisc_example_catalog_is_small_external_and_checksum_pinned():
         "phuse-nimble-send",
         "phuse-instem-send",
         "phuse-pointcross-send",
+        "phuse-pds-send",
     }
     for example in catalog["examples"]:
         assert example["source"]["distribution"] == "fetch-only"
@@ -220,6 +221,15 @@ def test_cdisc_example_catalog_is_small_external_and_checksum_pinned():
             assert item["url"].startswith("https://raw.githubusercontent.com/")
             assert example["source"]["revision"] in item["url"]
             assert len(item["sha256"]) == 64
+
+    pds = next(item for item in catalog["examples"] if item["id"] == "phuse-pds-send")
+    assert pds["studyId"] == "PDS2014"
+    assert len(pds["files"]) == 26
+    assert {item.get("domain") for item in pds["files"] if item["role"] == "dataset"} == {
+        "BG", "BW", "CL", "CO", "DM", "DS", "EX", "FW", "LB", "MA", "MI",
+        "OM", "PC", "POOLDEF", "PP", "RELREC", "SC", "SE", "SUPPMA", "SUPPMI",
+        "SUPPPP", "TA", "TE", "TS", "TX",
+    }
 
 
 def test_cdisc_pack_matches_the_rps_visualization_contract():

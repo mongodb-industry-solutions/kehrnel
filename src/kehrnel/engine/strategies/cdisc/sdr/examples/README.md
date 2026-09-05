@@ -9,8 +9,11 @@ to a source revision and every downloaded file is verified with SHA-256.
 - `phuse-nimble-send` is an independent 100-animal rat study with three dose groups.
 - `phuse-instem-send` is an independent 241-animal rat study with a large pathology and laboratory corpus.
 - `phuse-pointcross-send` is an independent 150-animal rat study with main and recovery cohorts.
+- `phuse-pds-send` is the deep safety vertical: a 124-animal Sprague-Dawley
+  study with both sexes, terminal and recovery cohorts, 25 SEND domains,
+  laboratory reference fields, toxicokinetics, organ weights, and RELREC.
 
-All four SEND studies come from the public PhUSE SENDConform repository and
+All five SEND studies come from the public PhUSE SENDConform repository and
 retain its MIT license, pinned revision, source URL, and per-file checksum.
 
 Fetch either example with:
@@ -19,6 +22,7 @@ Fetch either example with:
 python scripts/fetch_cdisc_examples.py cdisc-pilot-sdtm-dm /tmp/cdisc-clinical
 python scripts/fetch_cdisc_examples.py phuse-ffu-send /tmp/cdisc-preclinical
 python scripts/fetch_cdisc_examples.py phuse-nimble-send /tmp/cdisc-nimble
+python scripts/fetch_cdisc_examples.py phuse-pds-send /tmp/cdisc-pds
 ```
 
 An activated strategy exposes the same catalog through

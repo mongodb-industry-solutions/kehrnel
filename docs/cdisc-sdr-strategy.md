@@ -816,7 +816,7 @@ The machine-readable contract is shipped beside the package service as
 suite.
 
 The preview also includes an external example-data catalog with no vendored
-study bytes. The official clinical CDISC Pilot DM data and four public PhUSE
+study bytes. The official clinical CDISC Pilot DM data and five public PhUSE
 SEND studies are revision-pinned, SHA-256 verified, and exercised through the
 normal repository workflow. Real clinical and preclinical fixtures cover XPT
 and Define-XML intake, validation, publication, governed query, and export.
@@ -834,7 +834,7 @@ redistributable repository assets.
 | Strategy manifest/spec/config | Preview versioned, cross-validated, and documented |
 | Operation contracts | 39 operations with typed, runtime-validated top-level responses |
 | Clinical example | Official CDISC Pilot XPT/Define journey passes |
-| Preclinical examples | Four public PhUSE SEND XPT/Define journeys cover compact, large-pathology, and recovery-cohort data |
+| Preclinical examples | Five public PhUSE SEND XPT/Define journeys cover compact, large-pathology, recovery-cohort, and cross-domain safety-assessment data |
 | Schema evolution | `modelSchemaVersion` stored on every document and injected into governed reads |
 | Tenant isolation | Cross-tenant query and repository-discovery contract tests pass |
 | Real MongoDB | Isolated plan/apply/ingest/query/export test exists; it must pass against the target release tenant |

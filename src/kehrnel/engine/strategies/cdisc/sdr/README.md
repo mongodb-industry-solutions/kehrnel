@@ -74,9 +74,9 @@ for XPT import/export.
 Run `scripts/fetch_cdisc_examples.py <example-id> <directory>` to fetch a
 checksum-pinned public example without adding the source data to this
 repository. The curated catalog contains the official clinical CDISC Pilot and
-four public MIT-licensed PhUSE SEND studies, including larger pathology and
-recovery-cohort examples. Use remains subject to the upstream
-terms linked in `examples/catalog.json`.
+five public MIT-licensed PhUSE SEND studies, including larger pathology,
+recovery-cohort, and cross-domain safety-assessment examples. Use remains
+subject to the upstream terms linked in `examples/catalog.json`.
 
 Synthetic generation follows the same governance principle as openEHR
 template-driven generation, with a CDISC-specific source of truth: a pinned
