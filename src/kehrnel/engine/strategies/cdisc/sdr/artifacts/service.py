@@ -165,10 +165,11 @@ class ArtifactService:
         expected_sha256: str | None = None,
         artifact_id: str | None = None,
         metadata: Dict[str, Any] | None = None,
+        enforce_inline_limit: bool = True,
     ) -> Dict[str, Any]:
         cfg = config(ctx)
         maximum = int((cfg.get("artifact") or {}).get("max_inline_bytes", 25_000_000))
-        if len(content) > maximum:
+        if enforce_inline_limit and len(content) > maximum:
             raise KehrnelError(code="ARTIFACT_TOO_LARGE", status=413, message="Artifact exceeds the configured inline size limit.")
         digest = sha256_bytes(content)
         if expected_sha256 and normalize_sha256(expected_sha256) != digest:

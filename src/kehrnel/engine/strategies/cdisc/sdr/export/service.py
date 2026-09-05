@@ -80,6 +80,7 @@ class ExportService:
                 source_name=f"{transformed.base.get('name', 'dataset')}.dataset.json",
                 kind="generated-dataset-json",
                 metadata={"datasetId": dataset_id, "equivalenceGuarantee": "semantic"},
+                enforce_inline_limit=False,
             )
         execution_id = str(uuid4())
         now = datetime.now(timezone.utc).isoformat()
@@ -132,6 +133,7 @@ class ExportService:
             source_name=f"{str(transformed.base.get('name') or 'dataset').lower()}.xpt",
             kind="generated-xpt",
             metadata={"datasetId": dataset_id, "xptVersion": version, "equivalenceGuarantee": "verified-readback"},
+            enforce_inline_limit=False,
         )
         await self._link_artifact_to_dataset_snapshot(
             ctx, dataset_id, stored["artifact"]["artifactId"]

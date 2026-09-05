@@ -42,7 +42,7 @@
     "example_data": {
       "catalog": "examples/catalog.json",
       "delivery": "fetch-and-checksum-verify",
-      "journeys": ["cdisc-pilot-sdtm-dm", "phuse-ffu-send"]
+      "journeys": ["cdisc-pilot-sdtm-dm", "phuse-ffu-send", "phuse-nimble-send", "phuse-instem-send", "phuse-pointcross-send"]
     },
     "links": {
       "strategy_base": "/api/strategies/cdisc/sdr",
@@ -684,7 +684,7 @@
         "type": "object",
         "required": ["exampleId", "acknowledgeTerms"],
         "properties": {
-          "exampleId": {"type": "string", "enum": ["cdisc-pilot-sdtm-dm", "phuse-ffu-send"]},
+          "exampleId": {"type": "string", "enum": ["cdisc-pilot-sdtm-dm", "phuse-ffu-send", "phuse-nimble-send", "phuse-instem-send", "phuse-pointcross-send"]},
           "acknowledgeTerms": {"const": true},
           "snapshotId": {"type": "string", "minLength": 1},
           "validate": {"type": "boolean"},

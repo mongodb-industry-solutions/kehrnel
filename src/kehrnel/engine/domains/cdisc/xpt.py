@@ -11,6 +11,15 @@ from typing import Any, Dict, Optional
 from .define_xml import DefineDocument
 
 
+def _read_xport(pyreadstat, path: str):
+    """Read modern UTF-8 XPT and tolerate common legacy Windows-1252 text."""
+
+    try:
+        return pyreadstat.read_xport(path, output_format="dict")
+    except UnicodeDecodeError:
+        return pyreadstat.read_xport(path, output_format="dict", encoding="WINDOWS-1252")
+
+
 def _json_value(value: Any) -> Any:
     if value is None or (isinstance(value, float) and math.isnan(value)):
         return None
@@ -34,7 +43,7 @@ def xpt_to_dataset_json(
     try:
         with os.fdopen(descriptor, "wb") as handle:
             handle.write(content)
-        values, metadata = pyreadstat.read_xport(path, output_format="dict")
+        values, metadata = _read_xport(pyreadstat, path)
     finally:
         try:
             os.unlink(path)

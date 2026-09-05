@@ -47,6 +47,10 @@ class DefineDocument(BaseModel):
 
 
 def _local_name(element: etree._Element) -> str:
+    # lxml exposes comments and processing instructions during ``iter()``;
+    # their ``tag`` is a callable sentinel rather than a QName-compatible name.
+    if not isinstance(element.tag, str):
+        return ""
     return etree.QName(element).localname
 
 

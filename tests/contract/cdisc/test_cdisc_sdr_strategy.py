@@ -206,7 +206,11 @@ def test_cdisc_example_catalog_is_small_external_and_checksum_pinned():
 
     assert {item["profile"] for item in catalog["examples"]} == {"sdtm", "send"}
     assert {item["id"] for item in catalog["examples"]} == {
-        "cdisc-pilot-sdtm-dm", "phuse-ffu-send",
+        "cdisc-pilot-sdtm-dm",
+        "phuse-ffu-send",
+        "phuse-nimble-send",
+        "phuse-instem-send",
+        "phuse-pointcross-send",
     }
     for example in catalog["examples"]:
         assert example["source"]["distribution"] == "fetch-only"

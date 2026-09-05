@@ -25,6 +25,18 @@ def test_define_xml_extracts_version_independent_metadata():
     assert [variable.key_sequence for variable in document.datasets["DM"].variables] == [1, 2]
 
 
+def test_define_xml_ignores_comments_and_processing_instructions():
+    decorated = DEFINE.replace(
+        b'<ODM ',
+        b'<?xml-stylesheet type="text/xsl" href="define.xsl"?>\n<!-- vendor metadata -->\n<ODM ',
+    ).replace(b'<Study ', b'<!-- study section -->\n  <Study ')
+
+    document = parse_define_xml(decorated)
+
+    assert document.study_oid == "STUDY.1"
+    assert "DM" in document.datasets
+
+
 def test_define_xml_rejects_doctype_and_oversize_input():
     with pytest.raises(ValueError, match="DOCTYPE"):
         parse_define_xml(b'<!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]><foo/>')

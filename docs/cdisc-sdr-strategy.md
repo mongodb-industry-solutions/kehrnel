@@ -515,13 +515,13 @@ The SEND `safety-signal` scenario is a solution-testing contract rather than a r
 Recommended demonstration paths:
 
 1. The official SDTM pilot, fetched from its authoritative repository at a pinned revision, checksum-verified, and used according to its terms.
-2. The public PhUSE SEND study, fetched from its authoritative repository at a pinned revision, checksum-verified, and used according to its license.
+2. Four independent public PhUSE SEND studies, fetched from their authoritative repository at a pinned revision, checksum-verified, and used according to its license. The additional Nimble, Instem GLP003, and PointCross packages exercise larger animal populations, pathology corpora, and recovery cohorts.
 3. A synthetic repeat-dose SEND study with TS, TX, DM, EX, BW, CL, LB, OM, MA, MI, and optional TF; control/low/mid/high groups; both sexes; scheduled sacrifices; and internally consistent dose-response findings.
 4. A small synthetic TIG overlay linking product and batch data to a test article, nonclinical study, and optional clinical/population evidence.
 
 Customer or licensed examples should be used for verification when available, but must not become silently redistributable fixtures.
 
-The checked-in `examples/catalog.json` is the delivery contract for the first two journeys. It stores attribution, terms/license links, immutable source revisions, and SHA-256 digests—not the datasets. `cdisc_list_examples` exposes this catalog and `cdisc_ingest_example` performs the same artifact retention, XPT/Define ingestion, validation, publication, and projection workflow used for customer data. It accepts only entries in the curated catalog and therefore does not become an arbitrary URL fetcher.
+The checked-in `examples/catalog.json` is the delivery contract for the public journeys. It stores attribution, terms/license links, immutable source revisions, and SHA-256 digests—not the datasets. `cdisc_list_examples` exposes this catalog and `cdisc_ingest_example` performs the same artifact retention, XPT/Define ingestion, validation, publication, and projection workflow used for customer data. It accepts only entries in the curated catalog and therefore does not become an arbitrary URL fetcher.
 
 ## 10. Export and round-trip verification
 
@@ -812,8 +812,8 @@ The machine-readable contract is shipped beside the package service as
 suite.
 
 The preview also includes an external example-data catalog with no vendored
-study bytes. The official clinical CDISC Pilot DM data and the public PhUSE
-SEND study are revision-pinned, SHA-256 verified, and exercised through the
+study bytes. The official clinical CDISC Pilot DM data and four public PhUSE
+SEND studies are revision-pinned, SHA-256 verified, and exercised through the
 normal repository workflow. Real clinical and preclinical fixtures cover XPT
 and Define-XML intake, validation, publication, governed query, and export.
 Every persisted document is stamped with `modelSchemaVersion`, and governed
@@ -830,7 +830,7 @@ redistributable repository assets.
 | Strategy manifest/spec/config | Preview versioned, cross-validated, and documented |
 | Operation contracts | 39 operations with typed, runtime-validated top-level responses |
 | Clinical example | Official CDISC Pilot XPT/Define journey passes |
-| Preclinical example | Public PhUSE SEND XPT/Define journey passes across DM, TX, MI, and LB |
+| Preclinical examples | Four public PhUSE SEND XPT/Define journeys cover compact, large-pathology, and recovery-cohort data |
 | Schema evolution | `modelSchemaVersion` stored on every document and injected into governed reads |
 | Tenant isolation | Cross-tenant query and repository-discovery contract tests pass |
 | Real MongoDB | Isolated plan/apply/ingest/query/export test exists; it must pass against the target release tenant |

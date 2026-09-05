@@ -2,6 +2,7 @@ import copy
 
 from kehrnel.engine.domains.cdisc.dataset_json import canonicalize_dataset_json
 from kehrnel.engine.domains.cdisc.exchange import compare_export_to_canonical, export_dataset_json
+from kehrnel.engine.domains.cdisc.xpt import _read_xport
 from tests.unit.test_cdisc_dataset_json import _payload
 
 
@@ -74,3 +75,24 @@ def test_export_rejects_non_contiguous_record_ordinals():
         assert "contiguous" in str(exc)
     else:
         raise AssertionError("non-contiguous ordinals should fail")
+
+
+def test_xpt_reader_retries_legacy_windows_1252_text():
+    class Reader:
+        def __init__(self):
+            self.calls = []
+
+        def read_xport(self, path, **options):
+            self.calls.append((path, options))
+            if "encoding" not in options:
+                raise UnicodeDecodeError("utf-8", b"\x92", 0, 1, "invalid start byte")
+            return {"DOMAIN": ["MI"]}, object()
+
+    reader = Reader()
+    values, _ = _read_xport(reader, "/tmp/legacy.xpt")
+
+    assert values == {"DOMAIN": ["MI"]}
+    assert reader.calls == [
+        ("/tmp/legacy.xpt", {"output_format": "dict"}),
+        ("/tmp/legacy.xpt", {"output_format": "dict", "encoding": "WINDOWS-1252"}),
+    ]

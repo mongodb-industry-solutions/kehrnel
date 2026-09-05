@@ -215,6 +215,7 @@ class PackageService:
             source_name=f"{study_id}-{snapshot_id}-dataset-json.zip",
             kind="generated-cdisc-package",
             metadata={"snapshotRef": snapshot_ref, "format": manifest["format"]},
+            enforce_inline_limit=False,
         )
         await replace_documents(storage, coll["snapshots"], [{
             **snapshot,
@@ -393,6 +394,7 @@ class PackageService:
                 "apiVersion": SOLUTION_EVIDENCE_API_VERSION,
                 "contentDigest": digest,
             },
+            enforce_inline_limit=False,
         )
         execution_id = hashlib.sha256(
             f"cdisc_export_solution_evidence:{snapshot_ref}:{digest}".encode()
