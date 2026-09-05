@@ -3,7 +3,7 @@
   "meta": {
     "strategyId": "cdisc.sdr",
     "specVersion": "1.0",
-    "modelSchemaVersion": "1.0.0",
+    "modelSchemaVersion": "1.1.0",
     "title": "Document-First CDISC Study Data Repository",
     "summary": "Immutable study snapshots preserve CDISC artifacts and rows while typed facets, lineage, materializations, and governed queries make the data operational on MongoDB.",
     "domain": "CDISC",
@@ -223,7 +223,7 @@
   "storageModel": {
     "schemaEvolution": {
       "field": "modelSchemaVersion",
-      "current": "1.0.0",
+      "current": "1.1.0",
       "appliesTo": "every persisted CDISC SDR document",
       "compatibilityPolicy": "Operational reads target the current version. Shape changes require a new semantic version and an explicit, idempotent migration; the strategy release and external CDISC standard versions evolve independently.",
       "indexPolicy": "The field is intentionally not a standalone index because it has low cardinality; tenant and workload indexes bound migration scans."
@@ -694,7 +694,7 @@
       "sharedEnvelope": {
         "appliesTo": "all collections",
         "fields": [
-          {"name": "modelSchemaVersion", "type": "semver", "role": "evolution.schema", "required": true, "current": "1.0.0"},
+          {"name": "modelSchemaVersion", "type": "semver", "role": "evolution.schema", "required": true, "current": "1.1.0"},
           {"name": "tenantId", "type": "string", "role": "scope.tenant", "required": true}
         ],
         "note": "The version identifies the Kehrnel document shape. It is independent from SEND, SDTM, ADaM, TIG, exchange, and implementation-guide versions."

@@ -87,6 +87,12 @@ identity; ingestion pins the chosen standards package and persists the current
 small executable teaching model, not a replacement for licensed CDISC metadata
 or a sponsor's Define-XML.
 
+Persisted row documents are sparse: optional null, blank, empty-array, and
+empty-object values are omitted. Dataset variables and order remain in the
+dataset metamodel, and the immutable source artifact remains retained, so
+Dataset-JSON/XPT export can reconstruct missing cells without inflating every
+MongoDB row.
+
 ## Operational boundaries
 
 Kehrnel ships structural and cross-dataset integrity rules plus an adapter for

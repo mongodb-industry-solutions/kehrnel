@@ -282,7 +282,11 @@ Rules for this contract:
 - `facets` is deterministic, typed, versioned, and rebuildable from `data` plus pinned metadata.
 - variable metadata, column order, labels, lengths, display formats, origins, and codelist references live on the dataset document rather than being repeated per row;
 - the record key comes from Define-XML or pinned standard metadata, with row ordinal only as a controlled fallback;
-- missing, blank, null, unknown, and not-applicable states must not be silently collapsed;
+- blank and null cells are represented by field absence in the sparse MongoDB row;
+  the dataset variable metamodel reconstructs their positions for Dataset-JSON/XPT export,
+  while explicit unknown and not-applicable codes remain unchanged;
+- the retained source artifact and per-row hash preserve byte-level and logical replay
+  independently from the sparse operational representation;
 - raw lexical XML representations are retained when they are needed for exact semantics;
 - records include `tenantId` and `snapshotId` in every access path so isolation and publication state can be enforced.
 

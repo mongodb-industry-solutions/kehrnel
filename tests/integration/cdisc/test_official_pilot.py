@@ -219,4 +219,4 @@ async def test_curated_example_operation_is_one_step_and_checksum_governed():
     assert result["ok"] is True
     assert result["publication"]["state"] == "published"
     assert result["ingested"][0]["recordCount"] == 306
-    assert all(item["modelSchemaVersion"] == "1.0.0" for item in result["artifacts"])
+    assert all(item["modelSchemaVersion"] == "1.1.0" for item in result["artifacts"])

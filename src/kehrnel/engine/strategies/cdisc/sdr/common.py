@@ -19,7 +19,39 @@ SCHEMA_PATH = PACK_ROOT / "schema.json"
 # Version of the persisted CDISC SDR document contract.  This is deliberately
 # independent from the strategy release and the external CDISC standard
 # versions: change it only when a stored document shape requires migration.
-MODEL_SCHEMA_VERSION = "1.0.0"
+MODEL_SCHEMA_VERSION = "1.1.0"
+
+
+_EMPTY = object()
+
+
+def _compact(value: Any) -> Any:
+    """Remove values that carry no information while preserving zero and false."""
+
+    if value is None or (isinstance(value, str) and not value.strip()):
+        return _EMPTY
+    if isinstance(value, dict):
+        compacted = {}
+        for key, item in value.items():
+            resolved = _compact(item)
+            if resolved is not _EMPTY:
+                compacted[key] = resolved
+        return compacted if compacted else _EMPTY
+    if isinstance(value, list):
+        compacted = [
+            resolved
+            for item in value
+            if (resolved := _compact(item)) is not _EMPTY
+        ]
+        return compacted if compacted else _EMPTY
+    return value
+
+
+def compact_document(document: Dict[str, Any]) -> Dict[str, Any]:
+    """Apply the CDISC persistence rule that optional empty fields are absent."""
+
+    compacted = _compact(document)
+    return compacted if isinstance(compacted, dict) else {}
 
 
 def load_json(path: Path) -> Dict[str, Any]:
@@ -68,7 +100,7 @@ def collections(cfg: Dict[str, Any]) -> Dict[str, str]:
 
 
 def model_doc(model: Any) -> Dict[str, Any]:
-    return model.model_dump(by_alias=True, mode="json", exclude_none=True)
+    return compact_document(model.model_dump(by_alias=True, mode="json", exclude_none=True))
 
 
 def stamp_model_schema(document: Dict[str, Any]) -> Dict[str, Any]:
@@ -113,7 +145,7 @@ async def replace_documents(
     *,
     batch_size: int | None = None,
 ) -> int:
-    materialized = [stamp_model_schema(doc) for doc in docs]
+    materialized = [stamp_model_schema(compact_document(doc)) for doc in docs]
     if not materialized:
         return 0
     replace_many = getattr(storage, "replace_many", None)

@@ -125,7 +125,7 @@ async def test_cdisc_plan_ingest_validate_publish_query_export_on_real_mongo(tmp
 
         assert validated["ok"] is True
         assert published["state"] == "published"
-        assert queried.rows and all(row["modelSchemaVersion"] == "1.0.0" for row in queried.rows)
+        assert queried.rows and all(row["modelSchemaVersion"] == "1.1.0" for row in queried.rows)
         assert exported["equivalence"]["equivalent"] is True
         assert exported["artifact"]["digest"]["value"]
     finally:

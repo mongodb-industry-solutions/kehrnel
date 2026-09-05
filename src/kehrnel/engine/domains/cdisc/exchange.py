@@ -71,8 +71,17 @@ def export_dataset_json(
         )
         for variable in variables
     ]
-    column_names = [variable.name for variable in variables]
-    rows = [[record.data.get(name) for name in column_names] for record in canonical_records]
+    rows = [
+        [
+            record.data[variable.name]
+            if variable.name in record.data
+            else ""
+            if variable.data_type.lower() in {"string", "character"}
+            else None
+            for variable in variables
+        ]
+        for record in canonical_records
+    ]
     source = canonical_dataset.source_metadata
     document: Dict[str, Any] = {
         "datasetJSONVersion": str(source.get("datasetJSONVersion") or "1.1.0"),

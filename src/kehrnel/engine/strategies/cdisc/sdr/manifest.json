@@ -598,7 +598,7 @@
             "type": "array",
             "items": {
               "type": "object",
-              "required": ["packageId", "profile", "standard", "assets", "validationEngines", "rulePackages", "createdAt"],
+              "required": ["packageId", "profile", "standard", "createdAt"],
               "properties": {
                 "packageId": {"type": "string"},
                 "profile": {"type": "string", "enum": ["send", "sdtm", "adam", "tig"]},

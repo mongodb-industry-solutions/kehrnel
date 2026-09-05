@@ -318,9 +318,18 @@ async def test_cdisc_ingest_is_idempotent_and_writes_snapshot_marker_last():
     storage = MemoryStorage()
     strategy = CDISCSDRStrategy()
     ctx = _context(storage)
+    payload = _payload()
+    payload["datasetJSON"]["columns"].append({
+        "itemOID": "IT.DM.BLANK",
+        "name": "BLANK",
+        "label": "Optional blank value",
+        "dataType": "string",
+    })
+    for row in payload["datasetJSON"]["rows"]:
+        row.append("")
 
-    first = await strategy.ingest(ctx, _payload())
-    second = await strategy.ingest(ctx, _payload())
+    first = await strategy.ingest(ctx, payload)
+    second = await strategy.ingest(ctx, payload)
 
     assert first["contentHash"] == second["contentHash"]
     assert len(storage.data["cdisc_records"]) == 2
@@ -328,6 +337,11 @@ async def test_cdisc_ingest_is_idempotent_and_writes_snapshot_marker_last():
     snapshot = storage.data["cdisc_snapshots"]["tenant-a:STUDY-001:snapshot-1"]
     assert snapshot["state"] == "published"
     assert first["idempotent"] is True
+    assert all("BLANK" not in document["data"] for document in storage.data["cdisc_records"].values())
+    assert all(
+        "terminologyPackages" not in document["standard"]
+        for document in storage.data["cdisc_records"].values()
+    )
     for collection in ("cdisc_records", "cdisc_datasets", "cdisc_studies", "cdisc_snapshots", "cdisc_transformations"):
         assert storage.data[collection]
         assert all(
@@ -538,7 +552,7 @@ async def test_repository_lists_validation_standards_and_snapshot_artifacts():
     assert len(runs["items"]) == 1
     assert [item["packageId"] for item in standards["items"]] == ["standards-1"]
     assert standards["items"][0]["profile"] == "sdtm"
-    assert standards["items"][0]["standard"] == {"family": "SDTM", "terminologyPackages": []}
+    assert standards["items"][0]["standard"] == {"family": "SDTM"}
     assert [item["artifactId"] for item in artifacts["items"]] == [stored["artifact"]["artifactId"]]
 
 
@@ -668,7 +682,16 @@ async def test_dataset_json_export_persists_equivalent_artifact_and_audit():
     artifact_store = MemoryArtifactStore()
     strategy = CDISCSDRStrategy()
     ctx = _context(storage, artifact_store)
-    ingested = await strategy.ingest(ctx, _payload())
+    payload = _payload()
+    payload["datasetJSON"]["columns"].append({
+        "itemOID": "IT.DM.BLANK",
+        "name": "BLANK",
+        "label": "Optional blank value",
+        "dataType": "string",
+    })
+    for row in payload["datasetJSON"]["rows"]:
+        row.append("")
+    ingested = await strategy.ingest(ctx, payload)
 
     exported = await strategy.run_op(
         ctx,
@@ -676,7 +699,11 @@ async def test_dataset_json_export_persists_equivalent_artifact_and_audit():
         {"datasetId": ingested["datasetId"], "persistArtifact": True},
     )
 
-    assert exported["datasetJSON"]["rows"] == _payload()["datasetJSON"]["rows"]
+    assert all("BLANK" not in row["data"] for row in storage.data["cdisc_records"].values())
+    assert [row[:-1] for row in exported["datasetJSON"]["rows"]] == [
+        row[:-1] for row in payload["datasetJSON"]["rows"]
+    ]
+    assert all(row[-1] == "" for row in exported["datasetJSON"]["rows"])
     assert exported["equivalence"]["equivalent"] is True
     assert exported["equivalence"]["guarantee"] == "semantic"
     assert exported["artifact"]["metadata"]["kind"] == "generated-dataset-json"
