@@ -510,6 +510,8 @@ A recipe pins:
 
 Generation must be deterministic for the same recipe, seed, generator version, and standards package. Every generated artifact is watermarked as synthetic and includes its recipe digest.
 
+The SEND `safety-signal` scenario is a solution-testing contract rather than a random-data preset. It requires DM, TX, MI, and LB and creates a known, reproducible evidence path across five dose groups: treatment assignment, a treated-only thymus finding with dose-related incidence/severity, longitudinal lymphocyte measurements, and a background finding for contrast. The response declares `expectedSignals`, including the intended domains and expected control/treated pattern, so a consuming application can test its governed queries and visualizations without duplicating toxicology rules.
+
 Recommended demonstration paths:
 
 1. The official SDTM pilot, fetched from its authoritative repository at a pinned revision, checksum-verified, and used according to its terms.
@@ -564,6 +566,7 @@ Use universal runtime endpoints first. Add CDISC-specific HTTP routes only after
 | `compile_query` / `query` | Compile and execute CDISC Study Query IR. |
 | `cdisc_export_dataset_json` | Generate Dataset-JSON, verify semantic equivalence, retain it optionally, and write an execution record. |
 | `cdisc_export_package` | Generate a deterministic multi-dataset exchange package and manifest. |
+| `cdisc_export_solution_evidence` | Emit a checksum-protected, deployment-neutral evidence handoff for a self-contained business solution. |
 | `cdisc_generate_synthetic_study` | Generate a deterministic, linked study from a governed recipe and optionally ingest it. |
 | `cdisc_run_analysis` | Execute bounded grouped metrics over governed records. |
 | `cdisc_semantic_search` | Run lexical, semantic, or hybrid retrieval inside the published study scope. |
@@ -772,7 +775,7 @@ Every result must state dataset shape, record count, profile/domain mix, indexes
 
 ## 18. First implementation increments
 
-Implementation status on 2 September 2026: the pack scaffold, canonical contracts,
+Implementation status on 4 September 2026: the pack scaffold, canonical contracts,
 Dataset-JSON 1.1 parser/canonicalizer/exporter, XPT conversion, secure Define-XML
 metadata extraction, deterministic SDTM facets,
 immutable Mongo upserts, staged publication marker, governed Mongo query
@@ -786,6 +789,24 @@ optional Atlas vector/hybrid modes, XPT v5/v8 export is verified by readback,
 and portable multi-dataset packages can be emitted. Filesystem, S3-compatible,
 and Azure Blob artifact adapters are available, and persisted strategy jobs
 have explicit fail-or-retry restart recovery.
+
+The deterministic SEND generator also provides a versioned `safety-signal`
+scenario with explicit expected truth across TX, DM, MI, and LB. This is the
+seed path for the AI-Ready Nonclinical Safety solution library while keeping
+business-specific signal ranking, language, and review workflow outside the
+kernel.
+
+That solution boundary is an export/import handoff. A deployed business
+solution owns its database, APIs, retrieval indexes, and agent runtime; it does
+not require a live Kehrnel connection. Kehrnel remains the reusable environment
+for data creation, CDISC validation, model evolution, and query-pattern
+learning. `cdisc_export_solution_evidence` formalizes that boundary as
+`kehrnel.dev/cdisc-solution-evidence/v1`: one published-snapshot package with
+dataset metamodels, canonical records, generic entity/materialization
+projections, source-artifact metadata, validation evidence, and transformation
+lineage. Deployment-specific tenant scope is removed while source identities
+are retained explicitly for traceability; the package payload is protected by
+a cross-runtime canonical JSON SHA-256 digest.
 
 The preview also includes an external example-data catalog with no vendored
 study bytes. The official clinical CDISC Pilot DM data and the public PhUSE
@@ -804,7 +825,7 @@ redistributable repository assets.
 | Readiness evidence | Current result |
 |---|---|
 | Strategy manifest/spec/config | Preview versioned, cross-validated, and documented |
-| Operation contracts | 38 operations with typed, runtime-validated top-level responses |
+| Operation contracts | 39 operations with typed, runtime-validated top-level responses |
 | Clinical example | Official CDISC Pilot XPT/Define journey passes |
 | Preclinical example | Public PhUSE SEND XPT/Define journey passes across DM, TX, MI, and LB |
 | Schema evolution | `modelSchemaVersion` stored on every document and injected into governed reads |

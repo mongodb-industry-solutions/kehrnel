@@ -1,11 +1,13 @@
 import base64
 import io
 import hashlib
+import json
 import zipfile
 
 import pytest
 
 from kehrnel.engine.strategies.cdisc.sdr.strategy import CDISCSDRStrategy
+from kehrnel.engine.strategies.cdisc.sdr.common import MODEL_SCHEMA_VERSION
 from kehrnel.persistence.artifacts import FileSystemArtifactStore
 from tests.contract.cdisc.test_cdisc_sdr_strategy import MemoryArtifactStore, MemoryStorage, _context
 
@@ -70,6 +72,58 @@ async def test_package_ingest_publish_projection_search_export_and_lineage():
     assert validation_run["run"]["status"] == "passed"
     snapshot = storage.data["cdisc_snapshots"]["tenant-a:PKG-001:v1"]
     assert exported["artifact"]["artifactId"] in snapshot["artifactIds"]
+
+
+@pytest.mark.asyncio
+async def test_solution_evidence_export_is_portable_complete_and_digest_verified():
+    storage, artifacts = MemoryStorage(), MemoryArtifactStore()
+    strategy = CDISCSDRStrategy()
+    ctx = _context(storage, artifacts, require_validation=True)
+    generated = strategy.synthetic.generate(
+        {
+            "studyId": "SOLUTION-001",
+            "profile": "send",
+            "scenario": "safety-signal",
+            "subjects": 10,
+            "seed": 42,
+        }
+    )
+    imported = await strategy.run_op(
+        ctx,
+        "cdisc_ingest_package",
+        {
+            "datasets": list(generated["datasets"].values()),
+            "packageId": "solution-source",
+            "snapshotId": "v1",
+            "standardsPackageId": "sendig-3.0",
+            "profile": "send",
+            "standard": {"family": "SEND", "implementationGuideVersion": "3.0"},
+            "validate": True,
+            "publish": True,
+        },
+    )
+
+    exported = await strategy.run_op(
+        ctx,
+        "cdisc_export_solution_evidence",
+        {"studyId": "SOLUTION-001", "snapshotId": "v1"},
+    )
+
+    assert imported["publication"]["state"] == "published"
+    package = json.loads(artifacts.objects[exported["artifact"]["objectKey"]])
+    assert package["apiVersion"] == "kehrnel.dev/cdisc-solution-evidence/v1"
+    assert package["kind"] == "CDISCSolutionEvidencePackage"
+    assert package["modelSchemaVersion"] == MODEL_SCHEMA_VERSION
+    assert package["manifest"]["counts"] == exported["counts"]
+    assert exported["counts"]["datasets"] == 4
+    assert exported["counts"]["records"] > 0
+    assert exported["counts"]["entities"] > 0
+    assert all("tenantId" not in item for item in package["evidence"]["records"])
+    assert all("sourceId" in item for item in package["evidence"]["records"])
+    canonical = json.dumps(
+        package["evidence"], ensure_ascii=False, separators=(",", ":"), sort_keys=True
+    ).encode()
+    assert hashlib.sha256(canonical).hexdigest() == package["manifest"]["contentDigest"]["value"]
 
 
 @pytest.mark.asyncio

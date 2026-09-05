@@ -382,6 +382,17 @@
       "output_schema": {"type": "object", "required": ["ok", "snapshotRef", "datasetCount", "manifest", "artifact", "artifactCreated", "executionId"], "properties": {"ok": {"type": "boolean"}, "snapshotRef": {"type": "string"}, "datasetCount": {"type": "integer"}, "manifest": {"type": "object"}, "artifact": {"type": "object"}, "artifactCreated": {"type": "boolean"}, "executionId": {"type": "string"}}, "additionalProperties": false}
     },
     {
+      "name": "cdisc_export_solution_evidence",
+      "kind": "export",
+      "summary": "Create a portable, versioned evidence package for a self-contained business solution",
+      "input_schema": {
+        "type": "object", "required": ["studyId", "snapshotId"],
+        "properties": {"studyId": {"type": "string"}, "snapshotId": {"type": "string"}, "allowUnpublished": {"type": "boolean"}},
+        "additionalProperties": false
+      },
+      "output_schema": {"type": "object", "required": ["ok", "apiVersion", "packageId", "snapshotRef", "counts", "artifact", "artifactCreated", "executionId"], "properties": {"ok": {"type": "boolean"}, "apiVersion": {"const": "kehrnel.dev/cdisc-solution-evidence/v1"}, "packageId": {"type": "string"}, "snapshotRef": {"type": "string"}, "counts": {"type": "object"}, "artifact": {"type": "object"}, "artifactCreated": {"type": "boolean"}, "executionId": {"type": "string"}}, "additionalProperties": false}
+    },
+    {
       "name": "cdisc_get_lineage",
       "kind": "query",
       "summary": "Return snapshot, dataset, artifact, validation, and transformation lineage",
@@ -801,7 +812,7 @@
         },
         "additionalProperties": true
       },
-      "output_schema": {"type": "object", "required": ["ok", "synthetic", "recipe", "recipeDigest", "generatorVersion", "modelSource", "watermark", "expectedAnomalies"], "properties": {"ok": {"type": "boolean"}, "synthetic": {"const": true}, "recipe": {"type": "object"}, "recipeDigest": {"type": "string"}, "generatorVersion": {"type": "string"}, "modelSource": {"type": "object"}, "watermark": {"type": "object"}, "expectedAnomalies": {"type": "array", "items": {"type": "object"}}, "datasets": {"type": "object"}, "ingested": {"type": "array", "items": {"type": "object"}}, "validation": {"type": ["object", "null"]}, "publication": {"type": ["object", "null"]}}, "additionalProperties": false}
+      "output_schema": {"type": "object", "required": ["ok", "synthetic", "recipe", "recipeDigest", "generatorVersion", "modelSource", "watermark", "expectedAnomalies", "expectedSignals"], "properties": {"ok": {"type": "boolean"}, "synthetic": {"const": true}, "recipe": {"type": "object"}, "recipeDigest": {"type": "string"}, "generatorVersion": {"type": "string"}, "modelSource": {"type": "object"}, "watermark": {"type": "object"}, "expectedAnomalies": {"type": "array", "items": {"type": "object"}}, "expectedSignals": {"type": "array", "items": {"type": "object"}}, "datasets": {"type": "object"}, "ingested": {"type": "array", "items": {"type": "object"}}, "validation": {"type": ["object", "null"]}, "publication": {"type": ["object", "null"]}}, "additionalProperties": false}
     }
   ]
 }

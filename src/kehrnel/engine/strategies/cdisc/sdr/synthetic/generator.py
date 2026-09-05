@@ -5,10 +5,9 @@ from __future__ import annotations
 import hashlib
 import json
 import random
-from typing import Any, Dict, List, Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
-
 
 PROFILE_DOMAINS = {
     "sdtm": ["DM", "AE", "LB", "VS"],
@@ -17,7 +16,7 @@ PROFILE_DOMAINS = {
     "tig": ["PROD", "BATCH", "EVID"],
 }
 
-SYNTHETIC_MODEL_CATALOG_VERSION = "1.0.0"
+SYNTHETIC_MODEL_CATALOG_VERSION = "1.1.0"
 
 
 class SyntheticRecipe(BaseModel):
@@ -25,18 +24,28 @@ class SyntheticRecipe(BaseModel):
     profile: Literal["sdtm", "send", "adam", "tig"] = "sdtm"
     subjects: int = Field(default=20, ge=1, le=10_000)
     seed: int = 20260821
-    domains: List[str] | None = None
+    domains: list[str] | None = None
     anomaly_rate: float = Field(default=0.0, ge=0.0, le=0.25, alias="anomalyRate")
+    scenario: Literal["baseline", "safety-signal"] = "baseline"
 
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
     @model_validator(mode="after")
     def normalize_domains(self):
+        if self.scenario == "safety-signal" and self.profile != "send":
+            raise ValueError("the safety-signal scenario is only available for the SEND profile")
         requested = self.domains or PROFILE_DOMAINS[self.profile]
         normalized = list(dict.fromkeys(domain.upper() for domain in requested))
         unsupported = sorted(set(normalized) - set(PROFILE_DOMAINS[self.profile]))
         if unsupported:
             raise ValueError(f"unsupported synthetic {self.profile} domains: {unsupported}")
+        if self.scenario == "safety-signal":
+            missing = sorted(set(PROFILE_DOMAINS["send"]) - set(normalized))
+            if missing:
+                raise ValueError(
+                    "the safety-signal scenario requires DM, TX, MI, and LB; "
+                    f"missing: {missing}"
+                )
         anchor = PROFILE_DOMAINS[self.profile][0]
         if anchor not in normalized:
             normalized.insert(0, anchor)
@@ -54,9 +63,9 @@ def _column(name: str, label: str, data_type: str = "string", length: int | None
 
 
 class SyntheticStudyGenerator:
-    version = "2.0.0"
+    version = "2.1.0"
 
-    def generate(self, value: Dict[str, Any]) -> Dict[str, Any]:
+    def generate(self, value: dict[str, Any]) -> dict[str, Any]:
         recipe = SyntheticRecipe.model_validate(value or {})
         recipe_data = recipe.model_dump(by_alias=True)
         digest = hashlib.sha256(json.dumps(
@@ -70,9 +79,15 @@ class SyntheticStudyGenerator:
             "sex": "F" if index % 2 else "M", "armcd": "PBO" if index % 2 else "TRT",
             "arm": "Placebo" if index % 2 else "Investigational Treatment", "age": rng.randint(18, 80),
         } for index in range(1, recipe.subjects + 1)]
-        documents = {
-            "sdtm": self._sdtm, "send": self._send, "adam": self._adam, "tig": self._tig,
-        }[recipe.profile](recipe, subjects, rng, recipe_digest)
+        expected_signals: list[dict[str, Any]] = []
+        if recipe.profile == "send" and recipe.scenario == "safety-signal":
+            documents, expected_signals = self._send_safety_signal(
+                recipe, subjects, rng, recipe_digest
+            )
+        else:
+            documents = {
+                "sdtm": self._sdtm, "send": self._send, "adam": self._adam, "tig": self._tig,
+            }[recipe.profile](recipe, subjects, rng, recipe_digest)
         model = {
             domain: {
                 "itemGroupOID": document["itemGroupOID"],
@@ -86,7 +101,7 @@ class SyntheticStudyGenerator:
         ).encode()).hexdigest()
         for document in documents.values():
             document["sourceSystem"]["modelDigest"] = model_digest
-        anomalies: List[Dict[str, Any]] = []
+        anomalies: list[dict[str, Any]] = []
         if recipe.anomaly_rate and "AE" in documents and documents["AE"]["rows"]:
             count = max(1, round(len(documents["AE"]["rows"]) * recipe.anomaly_rate))
             names = [column["name"] for column in documents["AE"]["columns"]]
@@ -110,6 +125,7 @@ class SyntheticStudyGenerator:
                 "modelDigest": model_digest,
             },
             "datasets": documents, "expectedAnomalies": anomalies,
+            "expectedSignals": expected_signals,
         }
 
     def _sdtm(self, recipe, subjects, rng, digest):
@@ -187,6 +203,118 @@ class SyntheticStudyGenerator:
             rows = [[recipe.study_id, s["id"], 1, "LB", "ALT", "Alanine Aminotransferase", round(rng.uniform(20, 90), 2), "U/L", 29] for s in animals]
             documents["LB"] = self._document(recipe, "LB", "Laboratory Results", columns, rows, digest)
         return documents
+
+    def _send_safety_signal(self, recipe, subjects, rng, digest):
+        """Generate a coherent dose/pathology/laboratory SEND investigation.
+
+        The scenario provides known truth for solution and query tests: a
+        treated-only thymus finding with a related lymphocyte trajectory plus
+        a background lung finding. It makes no toxicologic conclusion.
+        """
+        dose_groups = [
+            ("G1", 0.0, "Vehicle control"),
+            ("G2", 4.0, "Low dose"),
+            ("G3", 6.0, "Low-mid dose"),
+            ("G4", 8.0, "Mid-high dose"),
+            ("G5", 12.0, "High dose"),
+        ]
+        animals = []
+        for index, subject in enumerate(subjects):
+            code, dose, label = dose_groups[index % len(dose_groups)]
+            animals.append({**subject, "group": code, "dose": dose, "group_label": label})
+
+        documents: dict[str, dict[str, Any]] = {}
+        if "DM" in recipe.domains:
+            columns = [
+                _column("STUDYID", "Study Identifier", key=1),
+                _column("USUBJID", "Animal Identifier", key=2),
+                _column("DOMAIN", "Domain"),
+                _column("SUBJID", "Subject"),
+                _column("SEX", "Sex"),
+                _column("SPECIES", "Species"),
+                _column("STRAIN", "Strain"),
+                _column("SPGRPCD", "Group Code"),
+            ]
+            rows = [[recipe.study_id, animal["id"], "DM", animal["subjid"], animal["sex"], "RAT", "WISTAR", animal["group"]] for animal in animals]
+            documents["DM"] = self._document(recipe, "DM", "Animal Demographics", columns, rows, digest)
+
+        if "TX" in recipe.domains:
+            columns = [
+                _column("STUDYID", "Study Identifier", key=1),
+                _column("SETCD", "Set Code", key=2),
+                _column("DOMAIN", "Domain"),
+                _column("TXPARMCD", "Trial Parameter"),
+                _column("TXVAL", "Value"),
+                _column("TXVALN", "Numeric Value", "float"),
+                _column("TXVALU", "Unit"),
+            ]
+            rows = [[recipe.study_id, code, "TX", "TRTDOS", label, dose, "mg/kg/day"] for code, dose, label in dose_groups]
+            documents["TX"] = self._document(recipe, "TX", "Trial Sets", columns, rows, digest)
+
+        affected_by_group: dict[str, list[str]] = {code: [] for code, _, _ in dose_groups}
+        if "MI" in recipe.domains:
+            columns = [
+                _column("STUDYID", "Study Identifier", key=1),
+                _column("USUBJID", "Animal", key=2),
+                _column("MISEQ", "Sequence", "integer", key=3),
+                _column("DOMAIN", "Domain"),
+                _column("MITESTCD", "Test Code"),
+                _column("MITEST", "Test"),
+                _column("MISPEC", "Specimen"),
+                _column("MISTRESC", "Finding"),
+                _column("MISEV", "Severity"),
+                _column("MIDY", "Study Day", "integer"),
+            ]
+            rows = []
+            probabilities = {"G1": 0.0, "G2": 0.35, "G3": 0.60, "G4": 0.75, "G5": 0.90}
+            severity_by_group = {"G2": "MINIMAL", "G3": "MINIMAL", "G4": "MILD", "G5": "MODERATE"}
+            for animal in animals:
+                sequence = 1
+                if rng.random() < probabilities[animal["group"]]:
+                    affected_by_group[animal["group"]].append(animal["id"])
+                    rows.append([recipe.study_id, animal["id"], sequence, "MI", "MIFIND", "Microscopic Finding", "THYMUS", "DECREASED LYMPHOCYTES, CORTEX", severity_by_group[animal["group"]], 29])
+                    sequence += 1
+                if rng.random() < 0.55:
+                    rows.append([recipe.study_id, animal["id"], sequence, "MI", "MIFIND", "Microscopic Finding", "LUNG", "MONONUCLEAR CELL INFILTRATION", "MINIMAL", 29])
+            documents["MI"] = self._document(recipe, "MI", "Microscopic Findings", columns, rows, digest)
+
+        if "LB" in recipe.domains:
+            columns = [
+                _column("STUDYID", "Study Identifier", key=1),
+                _column("USUBJID", "Animal", key=2),
+                _column("LBSEQ", "Sequence", "integer", key=3),
+                _column("DOMAIN", "Domain"),
+                _column("LBTESTCD", "Test Code"),
+                _column("LBTEST", "Test"),
+                _column("LBSTRESN", "Result", "float"),
+                _column("LBSTRESU", "Unit"),
+                _column("LBDY", "Study Day", "integer"),
+            ]
+            rows = []
+            days = [-14, 8, 22, 29]
+            for animal in animals:
+                for sequence, day in enumerate(days, start=1):
+                    baseline = 7.2 + rng.uniform(-0.7, 0.7)
+                    exposure = max(day, 0) / 29.0
+                    treatment_effect = (animal["dose"] / 12.0) * 3.7 * exposure
+                    value = max(0.5, baseline - treatment_effect + rng.uniform(-0.35, 0.35))
+                    rows.append([recipe.study_id, animal["id"], sequence, "LB", "LYM", "Lymphocytes", round(value, 2), "10^9/L", day])
+            documents["LB"] = self._document(recipe, "LB", "Laboratory Results", columns, rows, digest)
+
+        expected_signals = [{
+            "signalId": "thymus-lymphocyte-decrease",
+            "kind": "cross-domain-safety-signal",
+            "profile": "send",
+            "finding": "DECREASED LYMPHOCYTES, CORTEX",
+            "specimen": "THYMUS",
+            "correlatedTestCode": "LYM",
+            "controlIncidence": len(affected_by_group["G1"]),
+            "treatedIncidence": sum(len(affected_by_group[code]) for code in ("G2", "G3", "G4", "G5")),
+            "groupAnimalIds": affected_by_group,
+            "expectedQueryPath": ["TX", "DM", "MI", "LB"],
+            "interpretation": "synthetic review hypothesis only",
+        }]
+        return documents, expected_signals
 
     def _adam(self, recipe, subjects, rng, digest):
         documents = {}

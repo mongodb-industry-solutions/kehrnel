@@ -276,6 +276,7 @@ class CDISCSDRStrategy(StrategyPlugin):
             "generatorVersion": generated["generatorVersion"],
             "modelSource": generated["modelSource"], "watermark": generated["watermark"],
             "expectedAnomalies": generated["expectedAnomalies"],
+            "expectedSignals": generated["expectedSignals"],
             "ingested": ingested, "validation": validation, "publication": publication,
         }
         if payload.get("includeDocuments"):
@@ -330,6 +331,7 @@ class CDISCSDRStrategy(StrategyPlugin):
             "cdisc_export_xpt": self.exports.export_xpt,
             "cdisc_ingest_package": self.packages.ingest_package,
             "cdisc_export_package": self.packages.export_package,
+            "cdisc_export_solution_evidence": self.packages.export_solution_evidence,
             "cdisc_register_standards": self.ingestion.register_standards,
             "cdisc_get_standards_package": self.ingestion.get_standards,
             "cdisc_generate_synthetic_study": self.generate,
