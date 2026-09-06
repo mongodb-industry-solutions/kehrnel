@@ -121,17 +121,20 @@ async def test_solution_evidence_export_is_portable_complete_and_digest_verified
         package,
         json.loads((PACK / "packages" / "solution-evidence.schema.json").read_text()),
     )
-    assert package["apiVersion"] == "kehrnel.dev/cdisc-solution-evidence/v1"
+    assert package["apiVersion"] == "kehrnel.dev/cdisc-solution-evidence/v2"
     assert package["kind"] == "CDISCSolutionEvidencePackage"
-    assert package["modelSchemaVersion"] == MODEL_SCHEMA_VERSION
+    assert package["modelSchemaVersion"] == "2.0.0"
     assert package["manifest"]["counts"] == exported["counts"]
     assert exported["counts"]["datasets"] == 4
     assert exported["counts"]["records"] > 0
     assert exported["counts"]["entities"] > 0
     assert repeated["packageId"] == exported["packageId"]
     assert repeated["artifactCreated"] is False
-    assert all("tenantId" not in item for item in package["evidence"]["records"])
-    assert all("sourceId" in item for item in package["evidence"]["records"])
+    assert all(item["_control"]["tenantId"] == "portable" for item in package["evidence"]["records"])
+    assert all(item["_control"]["modelSchemaVersion"] == "2.0.0" for item in package["evidence"]["records"])
+    assert all(item["canonical"]["data"] for item in package["evidence"]["records"])
+    assert all(item["_provenance"]["recordHash"].startswith("sha256:") for item in package["evidence"]["records"])
+    assert all(not item.get("_enrichment") for item in package["evidence"]["records"])
     canonical = json.dumps(
         package["evidence"], ensure_ascii=False, separators=(",", ":"), sort_keys=True
     ).encode()

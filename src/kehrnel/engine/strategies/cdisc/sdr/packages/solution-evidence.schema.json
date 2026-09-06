@@ -1,13 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/mongodb-industry-solutions/kehrnel/contracts/cdisc-solution-evidence-v1.schema.json",
-  "title": "Kehrnel CDISC Solution Evidence Package",
+  "$id": "https://github.com/mongodb-industry-solutions/kehrnel/contracts/cdisc-solution-evidence-v2.schema.json",
+  "title": "Kehrnel CDISC Solution Evidence Package v2",
+  "description": "A lossless CDISC evidence package whose row documents separate canonical data, controls, retrieval indexes, reviewed enrichment, and provenance.",
   "type": "object",
   "required": ["apiVersion", "kind", "modelSchemaVersion", "manifest", "evidence"],
   "properties": {
-    "apiVersion": { "const": "kehrnel.dev/cdisc-solution-evidence/v1" },
+    "apiVersion": { "const": "kehrnel.dev/cdisc-solution-evidence/v2" },
     "kind": { "const": "CDISCSolutionEvidencePackage" },
-    "modelSchemaVersion": { "type": "string", "pattern": "^1\\." },
+    "modelSchemaVersion": { "type": "string", "pattern": "^2\\." },
     "manifest": {
       "type": "object",
       "required": ["packageId", "strategyId", "studyId", "snapshotId", "profile", "publicationState", "contentDigest", "counts"],
@@ -17,8 +18,8 @@
         "studyId": { "type": "string", "minLength": 1 },
         "snapshotId": { "type": "string", "minLength": 1 },
         "profile": { "enum": ["send", "sdtm", "adam", "tig"] },
-        "publicationState": { "enum": ["canonicalized", "validated", "published"] },
-        "standardsPackageId": { "type": ["string", "null"] },
+        "publicationState": { "const": "published" },
+        "standardsPackageId": { "type": "string" },
         "contentDigest": {
           "type": "object",
           "required": ["algorithm", "value"],
@@ -52,7 +53,10 @@
       "properties": {
         "snapshot": { "type": "object", "required": ["sourceId", "studyId", "snapshotId", "profile", "state", "modelSchemaVersion"] },
         "datasets": { "type": "array", "items": { "type": "object", "required": ["sourceId", "studyId", "snapshotId", "domain", "variables", "recordCount", "contentHash", "modelSchemaVersion"] } },
-        "records": { "type": "array", "items": { "type": "object", "required": ["sourceId", "studyId", "snapshotId", "sourceDatasetId", "domain", "rowOrdinal", "data", "facets", "lineage", "modelSchemaVersion"] } },
+        "records": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/cdiscRecord" }
+        },
         "entities": { "type": "array", "items": { "type": "object" } },
         "materializations": { "type": "array", "items": { "type": "object" } },
         "sourceArtifacts": { "type": "array", "items": { "type": "object", "required": ["sourceId", "mediaType", "digest", "modelSchemaVersion"] } },
@@ -63,6 +67,93 @@
       "additionalProperties": false
     }
   },
+  "$defs": {
+    "nonEmptyObject": { "type": "object", "minProperties": 1 },
+    "cdiscRecord": {
+      "type": "object",
+      "required": ["_id", "canonical", "_control", "_index", "_provenance"],
+      "properties": {
+        "_id": { "type": "string", "minLength": 1 },
+        "canonical": {
+          "type": "object",
+          "required": ["standard", "domain", "rowOrdinal", "recordKey", "data"],
+          "properties": {
+            "standard": {
+              "type": "object",
+              "required": ["family", "implementationGuide", "version"],
+              "properties": {
+                "family": { "type": "string", "minLength": 1 },
+                "implementationGuide": { "type": "string", "minLength": 1 },
+                "version": { "type": "string", "minLength": 1 }
+              },
+              "additionalProperties": false
+            },
+            "domain": { "type": "string", "pattern": "^[A-Z][A-Z0-9]{1,7}$" },
+            "rowOrdinal": { "type": "integer", "minimum": 1 },
+            "recordKey": { "$ref": "#/$defs/nonEmptyObject" },
+            "data": { "$ref": "#/$defs/nonEmptyObject" }
+          },
+          "additionalProperties": false
+        },
+        "_control": {
+          "type": "object",
+          "required": ["tenantId", "studyId", "snapshotId", "publicationState", "modelSchemaVersion", "evidencePackageId"],
+          "properties": {
+            "tenantId": { "type": "string", "minLength": 1 },
+            "studyId": { "type": "string", "minLength": 1 },
+            "snapshotId": { "type": "string", "minLength": 1 },
+            "publicationState": { "const": "published" },
+            "modelSchemaVersion": { "type": "string", "pattern": "^2\\." },
+            "evidencePackageId": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        "_index": {
+          "type": "object",
+          "required": ["semanticText", "projectionVersion"],
+          "properties": {
+            "facets": { "$ref": "#/$defs/nonEmptyObject" },
+            "entityRefs": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["type", "id"],
+                "properties": {
+                  "type": { "type": "string", "minLength": 1 },
+                  "id": { "type": "string", "minLength": 1 }
+                },
+                "additionalProperties": false
+              }
+            },
+            "semanticText": { "type": "string", "minLength": 1 },
+            "projectionVersion": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        "_enrichment": {
+          "type": "object",
+          "minProperties": 1,
+          "properties": {
+            "terminologyBindings": { "type": "array", "minItems": 1 },
+            "reviewedAssertions": { "type": "array", "minItems": 1 }
+          },
+          "additionalProperties": false
+        },
+        "_provenance": {
+          "type": "object",
+          "required": ["sourceDatasetId", "sourceRow", "recordHash"],
+          "properties": {
+            "sourceArtifactId": { "type": "string", "minLength": 1 },
+            "sourceDatasetId": { "type": "string", "minLength": 1 },
+            "sourceRow": { "type": "integer", "minimum": 1 },
+            "recordHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
   "additionalProperties": false
 }
-

@@ -390,7 +390,7 @@
         "properties": {"studyId": {"type": "string"}, "snapshotId": {"type": "string"}, "allowUnpublished": {"type": "boolean"}},
         "additionalProperties": false
       },
-      "output_schema": {"type": "object", "required": ["ok", "apiVersion", "packageId", "snapshotRef", "counts", "artifact", "artifactCreated", "executionId"], "properties": {"ok": {"type": "boolean"}, "apiVersion": {"const": "kehrnel.dev/cdisc-solution-evidence/v1"}, "packageId": {"type": "string"}, "snapshotRef": {"type": "string"}, "counts": {"type": "object"}, "artifact": {"type": "object"}, "artifactCreated": {"type": "boolean"}, "executionId": {"type": "string"}}, "additionalProperties": false}
+      "output_schema": {"type": "object", "required": ["ok", "apiVersion", "packageId", "snapshotRef", "counts", "artifact", "artifactCreated", "executionId"], "properties": {"ok": {"type": "boolean"}, "apiVersion": {"const": "kehrnel.dev/cdisc-solution-evidence/v2"}, "packageId": {"type": "string"}, "snapshotRef": {"type": "string"}, "counts": {"type": "object"}, "artifact": {"type": "object"}, "artifactCreated": {"type": "boolean"}, "executionId": {"type": "string"}}, "additionalProperties": false}
     },
     {
       "name": "cdisc_get_lineage",

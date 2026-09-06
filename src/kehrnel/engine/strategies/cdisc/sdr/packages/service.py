@@ -14,7 +14,7 @@ from kehrnel.engine.core.types import StrategyContext
 
 from ..artifacts import ArtifactService
 from ..common import (
-    MODEL_SCHEMA_VERSION,
+    compact_document,
     collections,
     config,
     ensure_not_cancelled,
@@ -35,7 +35,8 @@ def _zip_entry(name: str, content: bytes) -> tuple[zipfile.ZipInfo, bytes]:
     return info, content
 
 
-SOLUTION_EVIDENCE_API_VERSION = "kehrnel.dev/cdisc-solution-evidence/v1"
+SOLUTION_EVIDENCE_API_VERSION = "kehrnel.dev/cdisc-solution-evidence/v2"
+SOLUTION_EVIDENCE_MODEL_SCHEMA_VERSION = "2.0.0"
 
 
 def _portable(document: Dict[str, Any]) -> Dict[str, Any]:
@@ -54,6 +55,79 @@ def _portable(document: Dict[str, Any]) -> Dict[str, Any]:
     if result.get("artifactIds") is not None:
         result["sourceArtifactIds"] = result.pop("artifactIds")
     return result
+
+
+def _portable_versioned(document: Dict[str, Any]) -> Dict[str, Any]:
+    result = _portable(document)
+    result["modelSchemaVersion"] = SOLUTION_EVIDENCE_MODEL_SCHEMA_VERSION
+    return result
+
+
+def _solution_record(
+    document: Dict[str, Any], *, study_id: str, snapshot_id: str, package_id: str
+) -> Dict[str, Any]:
+    """Compile one internal CDISC row into the portable solution envelope."""
+
+    standard = document.get("standard") or {}
+    family = str(standard.get("family") or "CDISC").upper()
+    implementation_guide = standard.get("implementationGuide") or {
+        "SEND": "SENDIG",
+        "SDTM": "SDTMIG",
+        "ADAM": "ADaMIG",
+    }.get(family, "CDISC")
+    facets = document.get("facets") or {}
+    data = document.get("data") or {}
+    lineage = document.get("lineage") or {}
+    semantic = document.get("semantic") or {}
+    subject_id = facets.get("subjectId") or data.get("USUBJID") or data.get("SUBJID")
+    entity_refs = ([{"type": "animalSubject", "id": str(subject_id)}] if subject_id else None)
+    index = {
+        "facets": facets or None,
+        "entityRefs": entity_refs,
+        "semanticText": semantic.get("text")
+        or " | ".join(
+            [str(document.get("domain") or "CDISC")]
+            + [f"{key} {value}" for key, value in sorted(data.items())]
+        ),
+        "projectionVersion": semantic.get("projectionVersion")
+        or facets.get("projectionVersion")
+        or SOLUTION_EVIDENCE_MODEL_SCHEMA_VERSION,
+    }
+    enrichment = document.get("enrichment") or document.get("_enrichment")
+    return compact_document(
+        {
+            "_id": str(document.get("_id")),
+            "canonical": {
+                "standard": {
+                    "family": family,
+                    "implementationGuide": implementation_guide,
+                    "version": standard.get("implementationGuideVersion")
+                    or standard.get("version"),
+                },
+                "domain": document.get("domain"),
+                "rowOrdinal": document.get("rowOrdinal"),
+                "recordKey": document.get("recordKey") or {"sourceId": str(document.get("_id"))},
+                "data": data,
+            },
+            "_control": {
+                "tenantId": "portable",
+                "studyId": study_id,
+                "snapshotId": snapshot_id,
+                "publicationState": "published",
+                "modelSchemaVersion": SOLUTION_EVIDENCE_MODEL_SCHEMA_VERSION,
+                "evidencePackageId": package_id,
+            },
+            "_index": index,
+            "_enrichment": enrichment,
+            "_provenance": {
+                "sourceArtifactId": lineage.get("sourceArtifactId"),
+                "sourceDatasetId": document.get("datasetId")
+                or lineage.get("sourceDataset"),
+                "sourceRow": lineage.get("sourceRow"),
+                "recordHash": lineage.get("recordHash"),
+            },
+        }
+    )
 
 
 def _canonical_json_value(value: Any) -> Any:
@@ -334,16 +408,44 @@ class PackageService:
             )
         ]
 
+        package_identity = {
+            "strategyId": "cdisc.sdr",
+            "studyId": study_id,
+            "snapshotId": snapshot_id,
+            "recordHashes": sorted(
+                str((item.get("lineage") or {}).get("recordHash")) for item in records
+            ),
+            "artifactDigests": sorted(
+                str((item.get("digest") or {}).get("value")) for item in artifacts
+            ),
+        }
+        identity_digest = hashlib.sha256(
+            json.dumps(
+                package_identity,
+                ensure_ascii=False,
+                separators=(",", ":"),
+                sort_keys=True,
+            ).encode()
+        ).hexdigest()
+        package_id = f"sha256:{identity_digest}"
         evidence = _canonical_json_value({
-            "snapshot": _portable(snapshot),
-            "datasets": [_portable(item) for item in datasets],
-            "records": [_portable(item) for item in records],
-            "entities": [_portable(item) for item in entities],
-            "materializations": [_portable(item) for item in materializations],
-            "sourceArtifacts": [_portable(item) for item in artifacts],
-            "validationRuns": [_portable(item) for item in validation_runs],
-            "validationFindings": [_portable(item) for item in validation_findings],
-            "transformations": [_portable(item) for item in transformations],
+            "snapshot": _portable_versioned(snapshot),
+            "datasets": [_portable_versioned(item) for item in datasets],
+            "records": [
+                _solution_record(
+                    item,
+                    study_id=study_id,
+                    snapshot_id=snapshot_id,
+                    package_id=package_id,
+                )
+                for item in records
+            ],
+            "entities": [_portable_versioned(item) for item in entities],
+            "materializations": [_portable_versioned(item) for item in materializations],
+            "sourceArtifacts": [_portable_versioned(item) for item in artifacts],
+            "validationRuns": [_portable_versioned(item) for item in validation_runs],
+            "validationFindings": [_portable_versioned(item) for item in validation_findings],
+            "transformations": [_portable_versioned(item) for item in transformations],
         })
         canonical = json.dumps(
             evidence,
@@ -366,9 +468,9 @@ class PackageService:
         package = {
             "apiVersion": SOLUTION_EVIDENCE_API_VERSION,
             "kind": "CDISCSolutionEvidencePackage",
-            "modelSchemaVersion": MODEL_SCHEMA_VERSION,
+            "modelSchemaVersion": SOLUTION_EVIDENCE_MODEL_SCHEMA_VERSION,
             "manifest": {
-                "packageId": f"sha256:{digest}",
+                "packageId": package_id,
                 "strategyId": "cdisc.sdr",
                 "studyId": study_id,
                 "snapshotId": snapshot_id,
