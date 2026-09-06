@@ -33,8 +33,8 @@ Commands:
 - `kehrnel core env endpoints` — list which domains/strategies are active in an environment
 - `kehrnel core env activate` — activate a strategy in an environment
 - `kehrnel core env op` — run a strategy op (for example `ensure_dictionaries`)
-- `kehrnel core env compile-query` — compile a query payload without executing it (openEHR AQL supported via `--aql`)
-- `kehrnel core env query` — run a query payload (openEHR AQL supported via `--aql`)
+- `kehrnel core env compile-query` — compile a query payload without executing it (openEHR AQL supported via `--aql` or `--aql-text`)
+- `kehrnel core env query` — run a query payload (openEHR AQL supported via `--aql` or `--aql-text`)
 - `kehrnel op capabilities --env <env>` — discover environment capabilities (`GET /environments/{env}/capabilities`)
 - `kehrnel run <operation> ...` — execute via `POST /environments/{env}/run`
 
@@ -85,3 +85,16 @@ kehrnel core env op ensure_dictionaries --env dev
 ```
 
 `kehrnel core env compile-query` and `kehrnel core env query` wrap the explicit runtime query endpoints. `compile-query --debug` asks the runtime to include extra compiler diagnostics in the response, but it still does not execute the query. For automation-heavy workflows, prefer `kehrnel run compile_query ...` and `kehrnel run query ...`, which keep the same environment contract as other runtime and strategy operations.
+
+For a quick inline smoke test after activation:
+
+```bash
+kehrnel core env query \
+  --env dev \
+  --domain openehr \
+  --aql-text "SELECT e/ehr_id/value AS ehr_id FROM EHR e LIMIT 5"
+```
+
+Run `kehrnel op capabilities --env dev` to see all standard runtime
+capabilities and every operation contributed by the active strategy. The
+output includes the exact CLI invocation for each capability.

@@ -36,7 +36,9 @@ def apply_watermark(
     meta = dict(doc.get("meta") or {})
 
     tags = [dict(t) for t in (meta.get("tag") or []) if isinstance(t, dict)]
-    if not any(t.get("system") == system and t.get("code") == SYNTHETIC_TAG_CODE for t in tags):
+    if not any(
+        t.get("system") == system and t.get("code") == SYNTHETIC_TAG_CODE for t in tags
+    ):
         tags.append({"system": system, "code": SYNTHETIC_TAG_CODE})
     meta["tag"] = tags
 
@@ -64,10 +66,14 @@ def apply_watermark_many(
     ]
 
 
-def has_synthetic_watermark(resource: dict[str, Any], *, system: str = KEHRNEL_FHIR_SYSTEM) -> bool:
+def has_synthetic_watermark(
+    resource: dict[str, Any], *, system: str = KEHRNEL_FHIR_SYSTEM
+) -> bool:
     """True when ``meta.tag`` contains the Kehrnel synthetic marker."""
     tags = (resource.get("meta") or {}).get("tag") or []
     return any(
-        isinstance(tag, dict) and tag.get("system") == system and tag.get("code") == SYNTHETIC_TAG_CODE
+        isinstance(tag, dict)
+        and tag.get("system") == system
+        and tag.get("code") == SYNTHETIC_TAG_CODE
         for tag in tags
     )

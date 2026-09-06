@@ -1,0 +1,168 @@
+{
+  "catalogVersion": "1.0.0",
+  "examples": [
+    {
+      "id": "cdisc-pilot-sdtm-dm",
+      "title": "CDISC Pilot — clinical SDTM demographics",
+      "description": "Official CDISC pilot DM data in Dataset-JSON and XPT, with Define-XML metadata. This is the smallest useful clinical journey for comparing both supported intake paths.",
+      "profile": "sdtm",
+      "studyId": "CDISCPILOT01",
+      "packageId": "official-cdisc-pilot",
+      "standard": {
+        "family": "SDTM",
+        "implementationGuide": "SDTMIG",
+        "implementationGuideVersion": "3.1.2"
+      },
+      "source": {
+        "repository": "https://github.com/cdisc-org/sdtm-adam-pilot-project",
+        "revision": "667511d4b183871d74392ba691c935c38d431d39",
+        "terms": "https://github.com/cdisc-org/sdtm-adam-pilot-project/blob/master/README.md",
+        "distribution": "fetch-only"
+      },
+      "files": [
+        {
+          "name": "dm.json",
+          "role": "dataset-json",
+          "mediaType": "application/json",
+          "url": "https://raw.githubusercontent.com/cdisc-org/sdtm-adam-pilot-project/667511d4b183871d74392ba691c935c38d431d39/updated-pilot-submission-package/900172/m5/datasets/cdiscpilot01/tabulations/sdtm/dm.json",
+          "sha256": "785e2ccbdfec91c8a5c667b74b9f01ae99952fb8679d9c56053437916c404cf2"
+        },
+        {
+          "name": "dm.xpt",
+          "role": "dataset",
+          "domain": "DM",
+          "mediaType": "application/x-sas-xport",
+          "url": "https://raw.githubusercontent.com/cdisc-org/sdtm-adam-pilot-project/667511d4b183871d74392ba691c935c38d431d39/updated-pilot-submission-package/900172/m5/datasets/cdiscpilot01/tabulations/sdtm/dm.xpt",
+          "sha256": "7327baea97fd532d02385248da0c7240402e770099507e2c3a88e2ac706c02a6"
+        },
+        {
+          "name": "define.xml",
+          "role": "define-xml",
+          "mediaType": "application/xml",
+          "url": "https://raw.githubusercontent.com/cdisc-org/sdtm-adam-pilot-project/667511d4b183871d74392ba691c935c38d431d39/updated-pilot-submission-package/900172/m5/datasets/cdiscpilot01/tabulations/sdtm/define.xml",
+          "sha256": "fbb065b8bb72d609e1a12670940e0d2ef11e6757cbbcd56bf9d0ba55ce1fc76b"
+        }
+      ],
+      "journey": ["inspect", "ingest", "validate", "publish", "query", "export"]
+    },
+    {
+      "id": "phuse-ffu-send",
+      "title": "PhUSE FFU contribution — preclinical SEND",
+      "description": "A compact public SEND study containing demographics, trial sets, microscopic findings and laboratory results with Define-XML metadata.",
+      "profile": "send",
+      "studyId": "Study ID",
+      "packageId": "phuse-ffu-send",
+      "standard": {
+        "family": "SEND",
+        "implementationGuide": "SENDIG",
+        "implementationGuideVersion": "3.0"
+      },
+      "source": {
+        "repository": "https://github.com/phuse-org/SENDConform",
+        "revision": "eb438ce3f7cbd74eea77677f43b916dd46c802cd",
+        "license": "MIT",
+        "licenseUrl": "https://github.com/phuse-org/SENDConform/blob/master/LICENSE",
+        "distribution": "fetch-only"
+      },
+      "files": [
+        {
+          "name": "define.xml",
+          "role": "define-xml",
+          "mediaType": "application/xml",
+          "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/FFU-Contribution-to-FDA/define.xml",
+          "sha256": "f9474ff5c96d4158a2c7a52c3f102495b6511d91ebd95ebb489cc87b87d65f17"
+        },
+        {
+          "name": "dm.xpt",
+          "role": "dataset",
+          "domain": "DM",
+          "mediaType": "application/x-sas-xport",
+          "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/FFU-Contribution-to-FDA/dm.xpt",
+          "sha256": "b96fd8e5da32cbba9a97981fee973de3b7e56149f5fe0f312a90f36b333397a3"
+        },
+        {
+          "name": "tx.xpt",
+          "role": "dataset",
+          "domain": "TX",
+          "mediaType": "application/x-sas-xport",
+          "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/FFU-Contribution-to-FDA/tx.xpt",
+          "sha256": "eaf8f1bf9e47c7f4a46cf655eeb9257b42f6f333f80aa124a94c37a977a90491"
+        },
+        {
+          "name": "mi.xpt",
+          "role": "dataset",
+          "domain": "MI",
+          "mediaType": "application/x-sas-xport",
+          "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/FFU-Contribution-to-FDA/mi.xpt",
+          "sha256": "edc563592c9ba368fe636aefd1126a1848f5753e6f005153e6bf5bc3425f5c96"
+        },
+        {
+          "name": "lb.xpt",
+          "role": "dataset",
+          "domain": "LB",
+          "mediaType": "application/x-sas-xport",
+          "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/FFU-Contribution-to-FDA/lb.xpt",
+          "sha256": "2213d9a70a4bb7170542edb79f9929f1813b122baaeded0dc6a04e5bd9a30cff"
+        }
+      ],
+      "journey": ["inspect", "ingest", "validate", "publish", "query", "analyze-findings"]
+    },
+    {
+      "id": "phuse-nimble-send",
+      "title": "PhUSE Nimble — 100-animal SEND study",
+      "description": "An independent public rat SEND study with three dose groups, microscopic findings, laboratory results, trial summary and Define-XML metadata.",
+      "profile": "send",
+      "studyId": "Nimort-01",
+      "packageId": "phuse-nimble-send",
+      "standard": { "family": "SEND", "implementationGuide": "SENDIG", "implementationGuideVersion": "3.0" },
+      "source": { "repository": "https://github.com/phuse-org/SENDConform", "revision": "eb438ce3f7cbd74eea77677f43b916dd46c802cd", "license": "MIT", "licenseUrl": "https://github.com/phuse-org/SENDConform/blob/master/LICENSE", "distribution": "fetch-only" },
+      "files": [
+        { "name": "define.xml", "role": "define-xml", "mediaType": "application/xml", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/Nimble/define.xml", "sha256": "13cf4f8290917787104d6ae2844e6ab6646c080bd06aee5997941bc12e62f8cf" },
+        { "name": "dm.xpt", "role": "dataset", "domain": "DM", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/Nimble/DM.xpt", "sha256": "0dd98a323106dd926adb659dccc810fe80ab439b0d0a7e19f08c345732db8800" },
+        { "name": "tx.xpt", "role": "dataset", "domain": "TX", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/Nimble/TX.xpt", "sha256": "c674d65a80fd19b8c51c3928ff82bb2f2eef04da06c79118330ed60c15e7e4eb" },
+        { "name": "mi.xpt", "role": "dataset", "domain": "MI", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/Nimble/MI.xpt", "sha256": "aad5cf4577fe89ebdc6e6de2480b068a072f6beb3180ce71edba3c7840ca4b0b" },
+        { "name": "lb.xpt", "role": "dataset", "domain": "LB", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/Nimble/LB.xpt", "sha256": "ee8353ce96dccba19c87bbe6b0af257c30d51173da1044682a33c479c25bd57b" },
+        { "name": "ts.xpt", "role": "dataset", "domain": "TS", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/Nimble/TS.xpt", "sha256": "90875b0061e9f29262e01ec8994754c79a509ba0d4ab99698afdd260fa603c70" }
+      ],
+      "journey": ["inspect", "ingest", "validate", "publish", "query", "analyze-findings"]
+    },
+    {
+      "id": "phuse-instem-send",
+      "title": "PhUSE Instem GLP003 — comprehensive SEND study",
+      "description": "A public 241-animal Sprague-Dawley SEND study with a large histopathology and laboratory corpus, trial summary and Define-XML.",
+      "profile": "send",
+      "studyId": "GLP003",
+      "packageId": "phuse-instem-send",
+      "standard": { "family": "SEND", "implementationGuide": "SENDIG", "implementationGuideVersion": "3.0" },
+      "source": { "repository": "https://github.com/phuse-org/SENDConform", "revision": "eb438ce3f7cbd74eea77677f43b916dd46c802cd", "license": "MIT", "licenseUrl": "https://github.com/phuse-org/SENDConform/blob/master/LICENSE", "distribution": "fetch-only" },
+      "files": [
+        { "name": "define.xml", "role": "define-xml", "mediaType": "application/xml", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/instem/define.xml", "sha256": "bb9d0a5e5b013e3d182c90f59705c3c0ea05cd0c221e347219d682975346092c" },
+        { "name": "dm.xpt", "role": "dataset", "domain": "DM", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/instem/dm.xpt", "sha256": "c0795570d8622553b1bc38727b9f2c3c6b60bd3283a1afe50b8a029d5379a259" },
+        { "name": "tx.xpt", "role": "dataset", "domain": "TX", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/instem/tx.xpt", "sha256": "3a087f46afca0d2d023319cb559fcb17425a50cbd75717e415023a528f54e591" },
+        { "name": "mi.xpt", "role": "dataset", "domain": "MI", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/instem/mi.xpt", "sha256": "8f52e23f84b1f4e8d898d8c40ba36fcef63f093f9d38efce939083c1bdd824f9" },
+        { "name": "lb.xpt", "role": "dataset", "domain": "LB", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/instem/lb.xpt", "sha256": "8acb7b8d2a0fa4da124890aee74c7a9274bd3bc939af20b0ac8236301135aca6" },
+        { "name": "ts.xpt", "role": "dataset", "domain": "TS", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/instem/ts.xpt", "sha256": "96eba01f257f7e86b9af342f11c5ff2b63b306c275d8dceec038f6763621e051" }
+      ],
+      "journey": ["inspect", "ingest", "validate", "publish", "query", "analyze-findings"]
+    },
+    {
+      "id": "phuse-pointcross-send",
+      "title": "PhUSE PointCross — recovery-cohort SEND study",
+      "description": "A public 150-animal SEND study with recovery cohorts, four dose levels, extensive histopathology, laboratory results, trial summary and Define-XML.",
+      "profile": "send",
+      "studyId": "PC201708",
+      "packageId": "phuse-pointcross-send",
+      "standard": { "family": "SEND", "implementationGuide": "SENDIG", "implementationGuideVersion": "3.0" },
+      "source": { "repository": "https://github.com/phuse-org/SENDConform", "revision": "eb438ce3f7cbd74eea77677f43b916dd46c802cd", "license": "MIT", "licenseUrl": "https://github.com/phuse-org/SENDConform/blob/master/LICENSE", "distribution": "fetch-only" },
+      "files": [
+        { "name": "define.xml", "role": "define-xml", "mediaType": "application/xml", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PointCross/define.xml", "sha256": "ca05e333eb7b598498330b9d0e87bcfda59f3bd754f6ba33381f2f5947274a4c" },
+        { "name": "dm.xpt", "role": "dataset", "domain": "DM", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PointCross/dm.xpt", "sha256": "ab5d342a5ae13d3b8613fc318d319f7ea642a4caa8bd8e360f080dda383b341f" },
+        { "name": "tx.xpt", "role": "dataset", "domain": "TX", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PointCross/tx.xpt", "sha256": "99bae80ad3542aa5412b7f7002293f6763d2cde81fa5980460253eab9e57b224" },
+        { "name": "mi.xpt", "role": "dataset", "domain": "MI", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PointCross/mi.xpt", "sha256": "3916977b8e778c156e055cce6bb6fa4ac339f0313e4501a9b1df338143608c16" },
+        { "name": "lb.xpt", "role": "dataset", "domain": "LB", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PointCross/lb.xpt", "sha256": "d63121b6bf4bc9277532ac5ab1b10203eb23124a686200eee0e22a73f73f849e" },
+        { "name": "ts.xpt", "role": "dataset", "domain": "TS", "mediaType": "application/x-sas-xport", "url": "https://raw.githubusercontent.com/phuse-org/SENDConform/eb438ce3f7cbd74eea77677f43b916dd46c802cd/data/studies/PointCross/ts.xpt", "sha256": "1fd59460c55cbe1a3b7ef37b5a8166769ffac6fc1e3d2cf528ade6c94d280400" }
+      ],
+      "journey": ["inspect", "ingest", "validate", "publish", "query", "analyze-findings"]
+    }
+  ]
+}

@@ -16,11 +16,28 @@ from tests.contract.clinical_cdr.contract_helpers import (
     unique_db_name,
 )
 
-@pytest.mark.parametrize("case", load_golden_cases(), ids=lambda c: c["id"])
+_GOLDEN_CASES = load_golden_cases()
+_COMPILE_CASES = [
+    (case, release)
+    for case in _GOLDEN_CASES
+    for release in (case.get("releases") or ["R5"])
+]
+_EXECUTE_CASES = [
+    (case, release)
+    for case, release in _COMPILE_CASES
+    if not case.get("compile_only")
+]
+
+
+@pytest.mark.parametrize(
+    ("case", "release"),
+    _COMPILE_CASES,
+    ids=lambda value: value["id"] if isinstance(value, dict) else value,
+)
 @pytest.mark.asyncio
-async def test_golden_compile_mql_keys(case):
+async def test_golden_compile_mql_keys(case, release):
     """Compile-only: no Mongo required."""
-    ctx = strategy_context(database="fhir_compile_only")
+    ctx = strategy_context(database="fhir_compile_only", release=release)
     plan = await fhir_query.compile_fhir_query(
         ctx,
         "fhir",
@@ -34,13 +51,17 @@ async def test_golden_compile_mql_keys(case):
 
 
 @requires_mongo
-@pytest.mark.parametrize("case", load_golden_cases(), ids=lambda c: f"{c['id']}_execute")
+@pytest.mark.parametrize(
+    ("case", "release"),
+    _EXECUTE_CASES,
+    ids=lambda value: value["id"] if isinstance(value, dict) else value,
+)
 @pytest.mark.asyncio
-async def test_golden_search_execute(case):
+async def test_golden_search_execute(case, release):
     """Seed MongoDB, denormalize, run fhir_search, assert MQL keys and min row count."""
     db_name = unique_db_name("fhir_golden")
     try:
-        ctx = strategy_context(database=db_name)
+        ctx = strategy_context(database=db_name, release=release)
         seed_resources = case.get("seed_resources") or {"Patient": 10}
         seed = case.get("seed", 42)
 
@@ -50,7 +71,6 @@ async def test_golden_search_execute(case):
                 "resources": seed_resources,
                 "seed": seed,
                 "store_canonical": True,
-                "denormalize_after": False,
             },
         )
         assert gen["ok"] is True

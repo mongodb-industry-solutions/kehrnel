@@ -11,9 +11,10 @@ def client(tmp_path):
 
 
 def _activate(client, env_id: str, strategy_id: str = "openehr.rps_dual", domain: str = "openEHR"):
+    database = "fhir_contract" if domain.lower() == "fhir" else "openehr_contract"
     res = client.post(
         f"/v1/environments/{env_id}/activate",
-        json={"strategy_id": strategy_id, "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": domain},
+        json={"strategy_id": strategy_id, "version": "0.1.0", "config": {"database": database}, "bindings": {}, "allow_plaintext_bindings": True, "domain": domain},
     )
     assert res.status_code == 200
 

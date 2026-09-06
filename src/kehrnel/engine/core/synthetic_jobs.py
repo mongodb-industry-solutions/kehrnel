@@ -33,6 +33,62 @@ class SyntheticJobManager:
         self._lock = asyncio.Lock()
         self._main_loop: asyncio.AbstractEventLoop | None = None
 
+    async def recover_incomplete_jobs(self, *, retry: bool = False) -> Dict[str, int]:
+        """Recover persisted work after process restart.
+
+        The safe default records interrupted jobs as failed. Deployments whose
+        strategy operations are idempotent can request retry, preserving the
+        original job id and payload for audit continuity.
+        """
+
+        if not self.store:
+            return {"found": 0, "retried": 0, "failed": 0}
+        persisted = await asyncio.to_thread(self.store.list, env_id=None, domain=None)
+        incomplete = [
+            dict(item)
+            for item in persisted
+            if item.get("status") in {"queued", "running", "canceling"}
+        ]
+        counts = {"found": len(incomplete), "retried": 0, "failed": 0}
+        loop = asyncio.get_running_loop()
+        self._main_loop = loop
+        for record in incomplete:
+            job_id = str(record.get("job_id") or "")
+            if not job_id:
+                continue
+            if not retry or not isinstance(record.get("payload"), dict):
+                now = _now_iso()
+                record.update(
+                    status="failed",
+                    phase="interrupted",
+                    completed_at=record.get("completed_at") or now,
+                    updated_at=now,
+                    error={
+                        "code": "JOB_INTERRUPTED",
+                        "message": "Worker restarted before the job completed.",
+                    },
+                )
+                await asyncio.to_thread(self.store.upsert, record)
+                counts["failed"] += 1
+                continue
+            record.update(status="queued", phase="recovered", progress=0, updated_at=_now_iso())
+            async with self._lock:
+                self._jobs[job_id] = record
+                self._cancel_events[job_id] = threading.Event()
+            await self._persist_upsert(record)
+            async with self._lock:
+                self._tasks[job_id] = loop.create_task(
+                    self._run_job_wrapper(
+                        job_id=job_id,
+                        env_id=str(record.get("env_id") or ""),
+                        domain=str(record.get("domain") or ""),
+                        op=str(record.get("op") or ""),
+                        payload=record["payload"],
+                    )
+                )
+            counts["retried"] += 1
+        return counts
+
     async def create_job(
         self,
         *,
@@ -83,6 +139,10 @@ class SyntheticJobManager:
             self._jobs[job_id] = rec
             cancel_event = threading.Event()
             self._cancel_events[job_id] = cancel_event
+        # Persist the queued state before the worker can publish a newer state.
+        # This avoids a queued-after-running race with slow external stores.
+        await self._persist_upsert(rec)
+        async with self._lock:
             self._tasks[job_id] = loop.create_task(
                 self._run_job_wrapper(
                     job_id=job_id,
@@ -92,7 +152,6 @@ class SyntheticJobManager:
                     payload=payload,
                 )
             )
-        await self._persist_upsert(rec)
         return self._public(rec)
 
     async def _run_job_wrapper(
@@ -147,6 +206,7 @@ class SyntheticJobManager:
                             "domain": domain,
                             "op": op,
                             "payload": payload,
+                            "__job_id": job_id,
                             "__progress_cb": progress_cb,
                             "__should_cancel": should_cancel,
                         },
@@ -326,6 +386,7 @@ class SyntheticJobManager:
         data["requester_id"] = rec.get("requester_id")
         data["team_id"] = rec.get("team_id")
         payload = (rec.get("payload") or {}) if isinstance(rec.get("payload"), dict) else {}
+        recipe_summary = payload.get("recipe") if isinstance(payload.get("recipe"), dict) else {}
         # Do not echo full payload back for large jobs unless needed by caller.
         data["payload"] = {"keys": sorted(list(payload.keys()))}
         # Expose minimal request summary for UI traceability.
@@ -336,6 +397,11 @@ class SyntheticJobManager:
             "dry_run": payload.get("dry_run"),
             "source_collection": payload.get("source_collection"),
             "model_source": payload.get("model_source") if isinstance(payload.get("model_source"), dict) else None,
+            "study_id": payload.get("studyId") or recipe_summary.get("studyId"),
+            "profile": payload.get("profile") or recipe_summary.get("profile"),
+            "subjects": payload.get("subjects") or recipe_summary.get("subjects"),
+            "persist": payload.get("persist"),
+            "publish": payload.get("publish"),
         }
         has_models = isinstance(payload.get("models"), list) and len(payload.get("models")) > 0
         has_templates = isinstance(payload.get("templates"), list) and len(payload.get("templates")) > 0

@@ -10,6 +10,7 @@ from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.core.types import StrategyContext
 from kehrnel.engine.strategies.fhir.clinical_cdr.denormalize import fhir_denormalize
 from kehrnel.engine.strategies.fhir.clinical_cdr.strategy import FHIRClinicalCDRStrategy, MANIFEST
+from kehrnel.engine.strategies.fhir.clinical_cdr.scripts import bridge
 
 
 def _ctx(*, config: dict | None = None, bindings: dict | None = None) -> StrategyContext:
@@ -28,6 +29,27 @@ def _ctx(*, config: dict | None = None, bindings: dict | None = None) -> Strateg
     )
 
 
+@pytest.fixture
+def dry_mongo(monkeypatch):
+    from fhir_search_to_mql import ConfigLoader
+
+    class _Collection:
+        @staticmethod
+        def count_documents(query):
+            return 0
+
+    class _Context:
+        config_loader = ConfigLoader()
+        compartment_definitions_dir = bridge._bundled_compartment_definitions_dir()
+
+        @staticmethod
+        def collection(resource_type):
+            return _Collection()
+
+    monkeypatch.setattr(bridge, "build_mql_context", lambda *args, **kwargs: _Context())
+    monkeypatch.setattr(bridge, "close_mql_context", lambda ctx: None)
+
+
 @pytest.mark.asyncio
 async def test_fhir_denormalize_requires_resource_types():
     with pytest.raises(KehrnelError) as exc:
@@ -36,7 +58,7 @@ async def test_fhir_denormalize_requires_resource_types():
 
 
 @pytest.mark.asyncio
-async def test_fhir_denormalize_dry_run_patient():
+async def test_fhir_denormalize_dry_run_patient(dry_mongo):
     result = await fhir_denormalize(
         _ctx(),
         {"resource_types": ["Patient"], "dry_run": True},
@@ -48,7 +70,7 @@ async def test_fhir_denormalize_dry_run_patient():
 
 
 @pytest.mark.asyncio
-async def test_fhir_denormalize_skips_unknown_config():
+async def test_fhir_denormalize_skips_unknown_config(dry_mongo):
     result = await fhir_denormalize(
         _ctx(),
         {"resource_types": ["Patient", "NotInMqlConfigXYZ"], "dry_run": True},
@@ -58,7 +80,7 @@ async def test_fhir_denormalize_skips_unknown_config():
 
 
 @pytest.mark.asyncio
-async def test_strategy_run_op_fhir_denormalize_dry_run():
+async def test_strategy_run_op_fhir_denormalize_dry_run(dry_mongo):
     strat = FHIRClinicalCDRStrategy(MANIFEST)
     result = await strat.run_op(
         _ctx(),

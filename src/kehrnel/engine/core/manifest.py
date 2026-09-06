@@ -10,6 +10,7 @@ StrategyStatus = Literal["stable", "preview", "example", "community"]
 
 class AdapterRequirements(BaseModel):
     storage: List[str] = Field(default_factory=list)
+    artifact: List[str] = Field(default_factory=list)
     search: List[str] = Field(default_factory=list)
     vector: List[str] = Field(default_factory=list)
     queue: List[str] = Field(default_factory=list)
