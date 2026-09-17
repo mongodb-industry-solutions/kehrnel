@@ -64,3 +64,51 @@ async def test_rebuild_slim_search_uses_bundle_rules(tmp_path):
     search_nodes = inserted_doc[sn_field]
     assert any(node.get("p") == "admin_salut/items[at0007]" for node in search_nodes)
     assert all("other/path" not in node.get("p", "") for node in search_nodes)
+
+
+@pytest.mark.asyncio
+async def test_rebuild_slim_search_skips_empty_projection_documents(tmp_path):
+    bundle_store = BundleStore(tmp_path / "bundles")
+    bundle = {
+        "bundle_id": "openehr.analytics.empty.v1",
+        "domain": "openEHR",
+        "kind": "slim_search_definition",
+        "version": "1.0.0",
+        "payload": {
+            "templates": [
+                {
+                    "templateId": "Sample",
+                    "rules": [{"when": {"pathChain": ["does-not-match"]}, "copy": ["p"]}],
+                }
+            ]
+        },
+    }
+    bundle_store.save_bundle(bundle, mode="upsert")
+    cfg = load_json(DEFAULTS_PATH)
+    cfg["collections"]["search"]["atlasIndex"]["definition"] = bundle["bundle_id"]
+    storage = RecordingStorage(
+        [
+            {
+                "_id": "comp-empty",
+                "comp_id": "comp-empty",
+                "ehr_id": "ehr-1",
+                "tid": "Sample",
+                "cn": [{"p": "other/path", "data": {"value": "VAL"}}],
+            }
+        ]
+    )
+    strat = RPSDualStrategy(MANIFEST)
+    ctx = StrategyContext(
+        environment_id="env",
+        config=cfg,
+        adapters={"storage": storage},
+        manifest=MANIFEST,
+        meta={"bundle_store": bundle_store},
+    )
+
+    res = await strat.run_op(ctx, "rebuild_slim_search_collection", {"batch_size": 10})
+
+    assert res["processed"] == 1
+    assert res["inserted"] == 0
+    assert res["skipped_empty"] == 1
+    assert storage.inserted == []

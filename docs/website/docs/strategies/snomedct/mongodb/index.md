@@ -10,12 +10,14 @@ It stores the official release as canonical MongoDB documents and derives a term
 
 ## Overview
 
-The strategy has two stores:
+The strategy has four tenant-scoped stores:
 
 | Store | Collection | Required | Purpose |
 |-------|------------|----------|---------|
 | Canonical concepts | `collections.concepts` | Yes | Official concept payload plus normalized release fields, ancestors, parents, relationships, and relationship attribute keys |
 | Term sidecar | `collections.terms` | Default-on | Description-level search projection by language, preferred term, FSN, semantic tag, rank, parents, and ancestors |
+| ValueSet registry | `collections.value_sets` | Yes | Immutable canonical URL/version definitions backed by ECL or explicit concept ids, pinned to one SNOMED release |
+| Grounding reviews | `collections.grounding_reviews` | Yes | Reviewer-confirmed/rejected codings with source hashes, provenance, and materialized ancestor paths |
 
 The canonical collection is enough for lookup, hierarchy navigation, basic ECL/subsumption, readiness checks, and release diffs. The sidecar is required for terminology search and NLP grounding.
 
@@ -33,8 +35,8 @@ The baseline pack only requires MongoDB collections and B-tree/text indexes. It 
 | Release update review | `snomed_inspect_release`, `snomed_diff_release` |
 | Terminology search and navigation | `snomed_search`, lookup, hierarchy APIs, ECL subset |
 | MongoDB-native terminology APIs | Hybrid search, semantic facets, relationship search, value-set expansion |
-| Clinical note grounding | `snomed_ground_note` and `/api/domains/snomedct/ground` |
-| LLM benchmark retrieval | Term sidecar candidates with deterministic ranking |
+| Clinical note grounding | Candidate generation, reviewer decisions, and ancestor-based corpus query |
+| Retrieval benchmark | Bounded hit@k and mean reciprocal rank with deterministic ranking |
 
 ## API Placement
 
@@ -47,9 +49,13 @@ The baseline pack only requires MongoDB collections and B-tree/text indexes. It 
 
 ## Maturity
 
-Manifest maturity: **preview** (`0.1.0`).
+Manifest maturity: **preview** (`0.5.0`).
 
-Implemented: transform, local release discovery, inspect, diff, ingest, rebuild sidecar, ensure indexes, lookup, ECL subset/subsumption, hierarchy expansion, value-set expansion, relationship search, hybrid search, semantic facets, grounding, readiness, domain API registration, and strategy-pack validation.
+Implemented: transform, local release discovery, inspect, diff, ingest, rebuild sidecar, ensure indexes, lookup, code/display validation, hierarchy-based `$subsumes`, ECL subset, paged hierarchy/search/expansion, typeahead, cross-release history, immutable named ValueSet registration/expansion/membership validation, relationship search, hybrid search, semantic facets, candidate grounding, reviewer decisions, ancestor-based corpus queries, bounded retrieval benchmarks, readiness, domain API registration, provider-neutral terminology routing, and strategy-pack validation.
+
+Healthcare Data Lab exposes the same domain OpenAPI as a live, tenant-bound
+console. Release ingest, sidecar rebuild, index creation, ValueSet registration,
+and grounding-review writes remain permission checked.
 
 Not yet complete enough to call "final": full ECL transitive relationship semantics, production Atlas Search/vector specs, large-release soak tests against the official 3.4 GB file, and end-to-end MongoDB validation with real tenant bindings.
 
@@ -59,3 +65,4 @@ Not yet complete enough to call "final": full ECL transitive relationship semant
 - [CLI and API workflows](./workflows.md)
 - [Data model](./data-model.md)
 - [Search and grounding](./search-grounding.md)
+- [Terminology service and FHIR operations](./terminology-service.md)

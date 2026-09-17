@@ -25,6 +25,40 @@ def _compute_manifest_digest(manifest: StrategyManifest | None) -> str | None:
     return digest or None
 
 
+def _resolve_interaction_contract(
+    manifest: StrategyManifest | None,
+    engine: str,
+    explain: Dict[str, Any],
+) -> Dict[str, Any] | None:
+    if manifest is None:
+        return None
+    builder = str(((explain.get("builder") or {}).get("chosen") or "")).strip()
+    candidates = []
+    for contract in manifest.interaction_contracts or []:
+        # Only contracts that explicitly bind an execution engine participate
+        # in query-plan attribution. Other contracts remain discoverable but
+        # must not be guessed from a generic query execution.
+        if not contract.engines:
+            continue
+        if contract.engines and engine not in contract.engines:
+            continue
+        if contract.builders and builder not in contract.builders:
+            continue
+        candidates.append(contract)
+    if len(candidates) != 1:
+        return None
+    contract = candidates[0]
+    return {
+        "id": contract.id,
+        "name": contract.name,
+        "mode": contract.mode,
+        "kind": contract.kind,
+        "authority": contract.authority,
+        "standard": contract.standard,
+        "contract": contract.contract,
+    }
+
+
 def enrich_explain(
     explain: Dict[str, Any],
     ctx: StrategyContext,
@@ -45,6 +79,9 @@ def enrich_explain(
     explain.setdefault("activation_id", ctx_meta.get("activation_id"))
     explain.setdefault("config_hash", cfg_hash)
     explain.setdefault("manifest_digest", manifest_digest)
+    interaction = _resolve_interaction_contract(manifest, engine, explain)
+    if interaction:
+        explain.setdefault("interaction", interaction)
     if scope:
         explain.setdefault("scope", scope)
     return explain

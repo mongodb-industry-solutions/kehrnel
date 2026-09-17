@@ -31,6 +31,11 @@
     }
   },
   "properties": {
+    "database": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Required strategy-owned MongoDB database for openEHR records and search projections. Review this value during activation."
+    },
     "collections": {
       "type": "object",
       "description": "MongoDB collection configuration",
@@ -245,6 +250,6 @@
       "additionalProperties": false
     }
   },
-  "required": ["collections"],
+  "required": ["database", "collections"],
   "additionalProperties": false
 }

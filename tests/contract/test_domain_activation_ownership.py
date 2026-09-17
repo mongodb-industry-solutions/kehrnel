@@ -13,8 +13,8 @@ def client(tmp_path):
 def _activate(client: TestClient, env: str, domain: str = "openEHR", force: bool = False, reason: str | None = None):
     body = {
         "strategy_id": "openehr.rps_dual",
-        "version": "0.1.0",
-        "config": {},
+        "version": "latest",
+        "config": {"database": "openehr_contract"},
         "bindings": {},
         "allow_plaintext_bindings": True,
         "domain": domain,

@@ -218,7 +218,7 @@ class TestHighValueOptionalFields:
             ("Patient", "identifier"),
             ("Patient", "contact"),
             ("Practitioner", "telecom"),
-            ("Organization", "telecom"),
+            ("Organization", "contact.telecom"),
             ("Encounter", "status"),
         ],
     )

@@ -70,7 +70,13 @@ def validate_primitive(value: Any, primitive_type: str) -> str | None:
         if not isinstance(value, bool):
             return f"expected boolean, got {type(value).__name__}"
         return None
-    if primitive_type in ("integer", "integer64", "unsignedInt", "positiveInt"):
+    # FHIR JSON represents integer64 as a JSON string so values are not rounded
+    # by clients whose numeric type is IEEE-754 double precision.
+    if primitive_type == "integer64":
+        if not isinstance(value, str) or not re.fullmatch(r"-?\d+", value):
+            return f"expected integer64 string, got {type(value).__name__}"
+        return None
+    if primitive_type in ("integer", "unsignedInt", "positiveInt"):
         if not isinstance(value, int) or isinstance(value, bool):
             return f"expected integer, got {type(value).__name__}"
         return None

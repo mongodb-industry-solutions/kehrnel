@@ -101,6 +101,24 @@
   },
   "ops": [
     {
+      "name": "list_native_ehrs",
+      "kind": "read",
+      "summary": "List distinct EHR ids represented in the configured composition collection",
+      "input_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "list_native_compositions",
+      "kind": "read",
+      "summary": "List native composition summaries for an EHR",
+      "input_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "fetch_native_composition",
+      "kind": "read",
+      "summary": "Fetch one stored native composition document",
+      "input_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
       "name": "ensure_dictionaries",
       "kind": "maintenance",
       "summary": "Ensure and seed _codes/_shortcuts dictionaries",

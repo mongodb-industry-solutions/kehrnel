@@ -222,10 +222,10 @@ def enrich_ChargeItem(
         r["performer"] = [{"actor": store.get_reference("Practitioner", rng)}]
     r["occurrenceDateTime"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
     r["quantity"] = t.gen_Quantity(value=1.0, unit="each")
-    r["unitPriceComponent"] = [{
+    r["unitPriceComponent"] = {
         "type": "base",
         "amount": t.gen_Money(),
-    }]
+    }
     return r
 
 
@@ -387,7 +387,7 @@ def enrich_PaymentReconciliation(
     rng: random.Random,
 ) -> dict[str, Any]:
     r["status"] = pick_code("payment_reconciliation_status", rng, "active")
-    r["outcome"] = concept_from_section("payment_reconciliation_outcome", rng, t)
+    r["outcome"] = pick_code("payment_reconciliation_outcome", rng, "complete")
     r["created"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
     r["disposition"] = "Payment processed"
     if store.has("Organization"):

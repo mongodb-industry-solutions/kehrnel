@@ -28,6 +28,9 @@ _REFERENCE_FIELD_TARGETS: dict[str, list[str]] = {
     "information": ["Coverage", "DocumentReference"],
     "account": ["Account"],
     "item": ["Patient", "Encounter", "Appointment", "Observation"],
+    "observation": ["Observation"],
+    "manipulated": ["Device"],
+    "reference": ["Observation", "DocumentReference", "DiagnosticReport", "Patient"],
 }
 
 
@@ -191,6 +194,10 @@ class ReferenceStore:
             "coverage", "sequence", "focal", "relationship", "claim", "identifier",
             "businessArrangement", "preAuthRef", "claimResponse", "party", "role",
         }:
+            return True
+        # CodeableReference is a datatype wrapper, not a Reference placeholder.
+        # Its ``reference`` arm is itself a Reference object.
+        if "concept" in keys or isinstance(node.get("reference"), dict):
             return True
         return len(keys) >= 2
 

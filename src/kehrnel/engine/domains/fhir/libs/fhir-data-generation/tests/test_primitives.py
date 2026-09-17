@@ -27,6 +27,9 @@ class TestPrimitiveTypes:
         val = prim.gen_integer(0, 100)
         assert 0 <= val <= 100
 
+    def test_integer64_uses_fhir_json_string_representation(self, prim: PrimitiveGenerator):
+        assert re.match(r"^-?\d+$", prim.gen_integer64())
+
     def test_positive_int(self, prim: PrimitiveGenerator):
         assert prim.gen_positiveInt(max_val=100) > 0
 
@@ -68,6 +71,7 @@ class TestPrimitiveTypes:
     def test_oid_format(self, prim: PrimitiveGenerator):
         oid = prim.gen_oid()
         assert oid.startswith("urn:oid:")
+        assert int(oid.removeprefix("urn:oid:").split(".", 1)[0]) <= 2
 
     def test_uuid_format(self, prim: PrimitiveGenerator):
         u = prim.gen_uuid()
@@ -115,5 +119,12 @@ class TestPrimitiveTypes:
         lowered = text.lower()
         assert any(
             w in lowered
-            for w in ("patient", "clinical", "problem", "hypertension", "condition")
+            for w in (
+                "patient",
+                "clinical",
+                "problem",
+                "hypertension",
+                "condition",
+                "chronic",
+            )
         )

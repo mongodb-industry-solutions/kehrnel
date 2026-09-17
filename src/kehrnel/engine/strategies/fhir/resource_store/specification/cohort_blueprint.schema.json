@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://kehrnel.dev/schemas/fhir-cohort-blueprint-v1.json",
+  "title": "Kehrnel FHIR Cohort Blueprint",
+  "type": "object",
+  "required": [
+    "id",
+    "version",
+    "title",
+    "purpose",
+    "maturity",
+    "fhir_releases",
+    "defaults",
+    "population",
+    "shared_resources",
+    "per_patient_resources",
+    "clinical_rules",
+    "disclaimer"
+  ],
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{1,63}$"},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "title": {"type": "string", "minLength": 1},
+    "description": {"type": "string"},
+    "purpose": {"type": "string", "minLength": 1},
+    "maturity": {"enum": ["structural", "enriched", "curated-demo"]},
+    "fhir_releases": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"enum": ["R5", "R6"]}
+    },
+    "tags": {"type": "array", "items": {"type": "string"}},
+    "defaults": {
+      "type": "object",
+      "required": ["patients", "history_years", "reference_date", "seed"],
+      "properties": {
+        "patients": {"type": "integer", "minimum": 1, "maximum": 10000},
+        "history_years": {"type": "integer", "minimum": 1, "maximum": 20},
+        "reference_date": {"type": "string", "format": "date"},
+        "seed": {"type": "integer"}
+      },
+      "additionalProperties": false
+    },
+    "population": {
+      "type": "object",
+      "required": ["age_bands", "gender_distribution"],
+      "properties": {
+        "age_bands": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["min", "max", "weight"],
+            "properties": {
+              "min": {"type": "integer", "minimum": 0, "maximum": 120},
+              "max": {"type": "integer", "minimum": 0, "maximum": 120},
+              "weight": {"type": "number", "exclusiveMinimum": 0}
+            },
+            "additionalProperties": false
+          }
+        },
+        "gender_distribution": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {"type": "number", "minimum": 0}
+        }
+      },
+      "additionalProperties": false
+    },
+    "shared_resources": {
+      "type": "object",
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "per_patient_resources": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["min", "max"],
+        "properties": {
+          "min": {"type": "integer", "minimum": 0},
+          "max": {"type": "integer", "minimum": 0},
+          "probability": {"type": "number", "minimum": 0, "maximum": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "clinical_rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "fraction": {"type": "number", "minimum": 0, "maximum": 1},
+          "prevalence": {"type": "number", "minimum": 0, "maximum": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "learning_objectives": {"type": "array", "items": {"type": "string"}},
+    "disclaimer": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}

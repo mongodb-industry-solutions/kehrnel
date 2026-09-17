@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 
 
 class FhirSearchRequest(BaseModel):
-    """FHIR search parameters routed to fhir.clinical_cdr compile + execute."""
+    """FHIR search parameters routed to fhir.resource_store compile + execute."""
 
     resource_type: str = Field(
         default="Patient",
@@ -36,3 +36,5 @@ class FhirSearchRequest(BaseModel):
             "Patient/{id}/Observation?params."
         ),
     )
+    # Error-handling leniency is controlled via the FHIR `Prefer: handling=` HTTP
+    # header (strict|lenient), not a body field — see the search route.

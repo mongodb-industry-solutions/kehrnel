@@ -35,7 +35,9 @@ Traditional approaches face trade-offs:
 
 ### The Solution
 
-RPS Dual maintains two synchronized collections:
+RPS Dual can materialize two related collections. The search sidecar is derived
+from configured mappings, so deployments must monitor its coverage rather than
+assuming it contains every base composition:
 
 | Collection | Purpose | Index Type |
 |------------|---------|------------|
@@ -46,12 +48,16 @@ The query engine automatically routes to the optimal collection based on query s
 
 ## Performance
 
-Internal benchmark sample at billion-document scale:
+Historical internal benchmark sample at billion-document scale:
 
 | Query Type | Median | P90 |
 |------------|--------|-----|
 | Patient-scoped | 5ms | 19ms |
 | Cross-patient | 13ms | 380ms |
+
+These numbers describe that benchmark only; they are not a product SLA. Re-run
+the benchmark with the target data distribution, projections, sidecar coverage,
+Atlas tier, and network placement before quoting expected latency.
 
 ## Key Innovations
 
@@ -177,7 +183,7 @@ understands:
     "composition_id": "objectid"
   },
   "paths": {
-    "separator": "."
+    "separator": ":"
   },
   "fields": {
     "document": {
@@ -198,6 +204,10 @@ understands:
   },
   "transform": {
     "apply_shortcuts": true,
+    "envelope": {
+      "base": {},
+      "search": {}
+    },
     "coding": {
       "arcodes": { "strategy": "sequential" },
       "atcodes": { "strategy": "negative_int", "store_original": false }
@@ -214,7 +224,8 @@ understands:
 
 Current supported config surface:
 
-- path separator is fixed to `.`
+- query-safe path separators are `.`, `/`, and `:`; the default is `:`, and IBM
+  exact-model environments commonly use `/`
 - supported encoding profiles are `profile.codedpath` and
   `profile.search_shortcuts`
 - the search-side document carries `_id`, `ehr_id`, `comp_id`, `tid`,
@@ -234,8 +245,9 @@ and config reference live in:
 
 - Clinical Data Repositories requiring both patient care and research queries
 - High-volume systems with millions of compositions
-- Applications needing sub-second query response times
-- Systems requiring full openEHR compliance
+- Applications that benefit from indexed patient and cohort query paths
+- Systems whose required AQL features are covered by the documented
+  [support matrix](./query-translation.md)
 
 ### When Not to Use
 

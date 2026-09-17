@@ -67,6 +67,11 @@ kehrnel strategy list --domain openehr
 kehrnel core env list
 ```
 
+`strategy list` is the authoritative inventory for the runtime you are using.
+For this walkthrough, choose `openehr.rps_dual`. The
+`openehr.rps_dual_ibm` strategy is a compatibility profile for environments
+that already use the IBM exact-model field conventions.
+
 ## 2. Create And Inspect The Environment
 
 The environment is the unit of activation in Kehrnel. It isolates strategy
@@ -152,11 +157,11 @@ cat > .kehrnel/bindings.mongo.yaml <<EOF
 db:
   provider: mongodb
   uri: ${MONGODB_URI}
-  database: openEHR_demo
 EOF
 
 cat > .kehrnel/rps-dual.config.json <<EOF
 {
+  "database": "openEHR_demo",
   "transform": {
     "mappings": "file://samples/reference/projection_mappings.json"
   }
@@ -182,8 +187,8 @@ kehrnel core env activate \
   --bindings-ref "<resolver-specific-ref>"
 ```
 
-For the built-in HDL resolver, valid examples include `env:dev`,
-`hdl:env:dev`, and `hdl:env:dev:mongo:openEHR_demo`.
+For the built-in HDL resolver, use `env:dev` or `hdl:env:dev`. The binding
+selects credentials; the reviewed strategy configuration selects the database.
 
 After activation, seed the code and shortcut dictionaries from the packaged
 strategy bundles:
@@ -333,6 +338,16 @@ kehrnel run compile_query \
   --payload .kehrnel/query.payload.json
 ```
 
+For a short copy-paste smoke test, pass AQL directly without creating a file:
+
+```bash
+kehrnel core env compile-query \
+  --env dev \
+  --domain openehr \
+  --aql-text "SELECT e/ehr_id/value AS ehr_id FROM EHR e LIMIT 5" \
+  --debug
+```
+
 ## 8. Run Patient And Cross-Patient Queries
 
 Use `query` when you want the runtime to both compile and execute the AQL and
@@ -368,6 +383,15 @@ db.compositions_search.findOne({}, { ehr_id: 1, comp_id: 1, tid: 1, sort_time: 1
 MONGOSH
 ```
 
+You can also execute a short statement inline:
+
+```bash
+kehrnel core env query \
+  --env dev \
+  --domain openehr \
+  --aql-text "SELECT e/ehr_id/value AS ehr_id FROM EHR e LIMIT 5"
+```
+
 This is where the document-first design becomes tangible:
 
 - canonical compositions remain the source input
@@ -389,6 +413,10 @@ kehrnel run rebuild_codes --env dev --domain openehr
 kehrnel run rebuild_shortcuts --env dev --domain openehr
 kehrnel run build_search_index_definition --env dev --domain openehr --strategy openehr.rps_dual
 ```
+
+The capabilities view includes both the standard runtime operations—such as
+`query`, `compile_query`, `transform`, and `ingest`—and the operations exposed
+by the active strategy. Every row includes a copy-ready CLI invocation.
 
 ## Related Pages
 
