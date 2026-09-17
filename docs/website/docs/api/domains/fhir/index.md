@@ -4,13 +4,13 @@ sidebar_position: 4
 
 # Domain API: FHIR
 
-The FHIR domain exposes HTTP operations backed by the active FHIR strategy on an environment. Production workflows should use **`fhir.clinical_cdr`**.
+The FHIR domain exposes HTTP operations backed by the active FHIR strategy on an environment. Production workflows should use **`fhir.resource_store`**.
 
 ## Strategy documentation
 
 Full configuration, data model, and CLI workflows:
 
-- [FHIR Clinical CDR strategy](/docs/strategies/fhir/clinical-cdr/)
+- [FHIR Resource Store strategy](/docs/strategies/fhir/resource-store/)
 
 ## Search
 
@@ -19,7 +19,7 @@ Full configuration, data model, and CLI workflows:
 Requirements:
 
 - Environment resolved from `x-active-env` (or platform default)
-- Active activation with `strategy_id: fhir.clinical_cdr` and `domain: fhir`
+- Active activation with `strategy_id: fhir.resource_store` and `domain: fhir`
 - Resources denormalized for the requested parameters (`fhir_denormalize`)
 
 ### Request body
@@ -45,15 +45,15 @@ curl -sS -X POST "http://localhost:8080/api/domains/fhir/search" \
   }'
 ```
 
-Configure the default strategy with `KEHRNEL_FHIR_STRATEGY_ID` (default `fhir.clinical_cdr`).
+Configure the default strategy with `KEHRNEL_FHIR_STRATEGY_ID` (default `fhir.resource_store`).
 
 ## Platform operations
 
-Generation, denormalization, indexes, and diagnostics use the universal runtime and synthetic jobs APIs with `domain: fhir`. See [CLI workflows](/docs/strategies/fhir/clinical-cdr/cli-workflows).
+Generation, denormalization, indexes, and diagnostics use the universal runtime and synthetic jobs APIs with `domain: fhir`. See [CLI workflows](/docs/strategies/fhir/resource-store/cli-workflows).
 
 | API | Purpose |
 |-----|---------|
-| `POST /environments/{env}/activate` | Bind `fhir.clinical_cdr` + MongoDB |
+| `POST /environments/{env}/activate` | Bind `fhir.resource_store` + MongoDB |
 | `POST /environments/{env}/synthetic/jobs` | Async `synthetic_generate_batch` |
 | `POST /environments/{env}/run` | `fhir_denormalize`, `fhir_search`, `fhir_stats`, … |
 
@@ -91,10 +91,10 @@ and remain subject to the caller's retention policy.
 
 ## Maturity
 
-The FHIR resource-store accelerator is delivered as `fhir.clinical_cdr`. R4 is
+The FHIR resource-store accelerator is delivered as `fhir.resource_store`. R4 is
 currently a minimal Patient/Observation tier; R5 and R6 are package-backed. Its
 authoritative scope is the active CapabilityStatement and detailed capability
 response. Semantic execution is advertised only when its embedding, storage,
 index, and Atlas adapters are actually available.
 
-`fhir.clinical_cdr` is the only FHIR strategy in kehrnel.
+`fhir.resource_store` is the only FHIR strategy in kehrnel.

@@ -24,7 +24,7 @@ from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-COMPILER_VERSION = "fhir-ig-compiler.v1"
+COMPILER_VERSION = "fhir-ig-compiler.v2"
 MAX_PACKAGE_FILES = 50_000
 MAX_JSON_BYTES = 32 * 1024 * 1024
 MAX_PACKAGE_UNCOMPRESSED_BYTES = 256 * 1024 * 1024
@@ -193,6 +193,71 @@ def _simple_search_paths(
     return candidates, "candidate"
 
 
+def _profile_terminology_contracts(
+    filename: str, resource: dict[str, Any]
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Inventory binding and invariant declarations without claiming validation."""
+    bindings: list[dict[str, Any]] = []
+    invariants: list[dict[str, Any]] = []
+    seen_bindings: set[tuple[str, str, str]] = set()
+    seen_invariants: set[tuple[str, str]] = set()
+    for section_name in ("snapshot", "differential"):
+        section = resource.get(section_name)
+        elements = section.get("element") if isinstance(section, dict) else None
+        if not isinstance(elements, list):
+            continue
+        for element in elements:
+            if not isinstance(element, dict):
+                continue
+            element_id = str(element.get("id") or element.get("path") or "").strip()
+            binding = element.get("binding")
+            if element_id and isinstance(binding, dict) and binding.get("valueSet"):
+                canonical = str(binding["valueSet"]).strip()
+                value_set_url, separator, value_set_version = canonical.partition("|")
+                strength = str(binding.get("strength") or "example").strip()
+                key = (element_id, value_set_url, value_set_version)
+                if key not in seen_bindings:
+                    seen_bindings.add(key)
+                    bindings.append(
+                        {
+                            "file": filename,
+                            "profile_url": resource.get("url"),
+                            "profile_version": resource.get("version"),
+                            "resource_type": resource.get("type"),
+                            "element_id": element_id,
+                            "path": element.get("path"),
+                            "min": element.get("min"),
+                            "max": element.get("max"),
+                            "strength": strength,
+                            "value_set": value_set_url,
+                            "value_set_version": value_set_version if separator else None,
+                            "purpose": binding.get("description"),
+                            "validation_required": strength == "required",
+                        }
+                    )
+            for constraint in element.get("constraint") or []:
+                if not isinstance(constraint, dict) or not constraint.get("key"):
+                    continue
+                key = (element_id, str(constraint["key"]))
+                if key in seen_invariants:
+                    continue
+                seen_invariants.add(key)
+                invariants.append(
+                    {
+                        "file": filename,
+                        "profile_url": resource.get("url"),
+                        "resource_type": resource.get("type"),
+                        "element_id": element_id,
+                        "key": str(constraint["key"]),
+                        "severity": constraint.get("severity"),
+                        "human": constraint.get("human"),
+                        "expression": constraint.get("expression"),
+                        "source": constraint.get("source"),
+                    }
+                )
+    return bindings, invariants
+
+
 def inspect_implementation_guide(
     source: str | Path,
     *,
@@ -236,6 +301,8 @@ def inspect_implementation_guide(
         )
 
     profiles: list[dict[str, Any]] = []
+    terminology_bindings: list[dict[str, Any]] = []
+    invariants: list[dict[str, Any]] = []
     for filename, resource in resources:
         if resource.get("resourceType") != "StructureDefinition":
             continue
@@ -253,6 +320,11 @@ def inspect_implementation_guide(
                 "has_differential": isinstance(resource.get("differential"), dict),
             }
         )
+        profile_bindings, profile_invariants = _profile_terminology_contracts(
+            filename, resource
+        )
+        terminology_bindings.extend(profile_bindings)
+        invariants.extend(profile_invariants)
 
     search_parameters: list[dict[str, Any]] = []
     for filename, resource in resources:
@@ -294,6 +366,7 @@ def inspect_implementation_guide(
         (
             _SAFE_ID.sub("-", name).strip("-") or "fhir-package",
             _SAFE_ID.sub("-", version).strip("-") or "unknown",
+            _SAFE_ID.sub("-", COMPILER_VERSION).strip("-") or "compiler",
             content.digest[:12],
         )
     )
@@ -321,6 +394,22 @@ def inspect_implementation_guide(
                 search_parameters,
                 key=lambda value: (str(value.get("code")), str(value.get("url"))),
             ),
+            "terminology_bindings": sorted(
+                terminology_bindings,
+                key=lambda value: (
+                    str(value.get("profile_url")),
+                    str(value.get("element_id")),
+                    str(value.get("value_set")),
+                ),
+            ),
+            "invariants": sorted(
+                invariants,
+                key=lambda value: (
+                    str(value.get("profile_url")),
+                    str(value.get("element_id")),
+                    str(value.get("key")),
+                ),
+            ),
             "compartment_definitions": by_type.get("CompartmentDefinition", []),
             "examples": [
                 {
@@ -345,6 +434,12 @@ def inspect_implementation_guide(
                 if item["compilation_status"] != "candidate"
             ],
             "profile_validation_enabled": False,
+            "terminology_validation_enabled": False,
+            "terminology_binding_count": len(terminology_bindings),
+            "required_terminology_binding_count": sum(
+                1 for binding in terminology_bindings if binding["validation_required"]
+            ),
+            "invariant_count": len(invariants),
             "activation_ready": not invalid_files,
         },
     }
@@ -390,7 +485,9 @@ def stage_implementation_guide(
         )
     safe_filename = Path(filename or "package.tgz").name
     if not safe_filename.lower().endswith((".tgz", ".tar.gz", ".tar")):
-        raise ImplementationGuideError("FHIR package upload must be a .tgz or .tar archive")
+        raise ImplementationGuideError(
+            "FHIR package upload must be a .tgz or .tar archive"
+        )
 
     root = Path(staging_root).resolve()
     safe_environment = _SAFE_ID.sub("-", environment_id).strip("-") or "environment"
@@ -417,7 +514,9 @@ def stage_implementation_guide(
         compilation = inspect_implementation_guide(temporary_path)
         _assert_release_compatibility(compilation, expected_release)
         if compilation["package"]["sha256"] != digest:
-            raise ImplementationGuideError("FHIR package checksum changed during staging")
+            raise ImplementationGuideError(
+                "FHIR package checksum changed during staging"
+            )
         if destination.exists():
             temporary_path.unlink(missing_ok=True)
         else:
@@ -427,6 +526,11 @@ def stage_implementation_guide(
         if temporary_path is not None:
             temporary_path.unlink(missing_ok=True)
 
+    activation_entry = {
+        "enabled": True,
+        "source": str(destination),
+        "sha256": digest,
+    }
     return {
         "staged_id": digest,
         "filename": safe_filename,
@@ -437,16 +541,32 @@ def stage_implementation_guide(
         "inventory": {
             "resource_count": compilation["inventory"]["resource_count"],
             "profile_count": len(compilation["inventory"]["profiles"]),
+            "profiles": [
+                {
+                    "url": profile.get("url"),
+                    "type": profile.get("type"),
+                    "name": profile.get("id"),
+                }
+                for profile in compilation["inventory"]["profiles"]
+                if profile.get("url")
+            ],
             "search_parameter_count": len(
                 compilation["inventory"]["search_parameters"]
             ),
+            "terminology_binding_count": len(
+                compilation["inventory"]["terminology_bindings"]
+            ),
+            "required_terminology_binding_count": compilation["evidence"][
+                "required_terminology_binding_count"
+            ],
+            "invariant_count": len(compilation["inventory"]["invariants"]),
             "invalid_json_files": compilation["inventory"]["invalid_json_files"],
         },
         "evidence": compilation["evidence"],
-        "activation_entry": {
-            "enabled": True,
-            "source": str(destination),
-            "sha256": digest,
+        "activation_entry": activation_entry,
+        "activation_patch": {
+            "compiled_root": str(environment_root / "compiled"),
+            "packages": [activation_entry],
         },
         "activated": False,
         "profiles_selected": False,
@@ -475,6 +595,13 @@ def write_compiled_implementation_guide(
             "compiled_id": compilation["compiled_id"],
             "search_parameters": compilation["inventory"]["search_parameters"],
             "evidence": compilation["evidence"],
+        },
+        "terminology-plan.json": {
+            "compiler_version": compilation["compiler_version"],
+            "compiled_id": compilation["compiled_id"],
+            "bindings": compilation["inventory"]["terminology_bindings"],
+            "invariants": compilation["inventory"]["invariants"],
+            "validation_enabled": False,
         },
         "compiled-package.json": compilation,
     }
@@ -612,3 +739,101 @@ def resolve_active_profiles(
             + ", ".join(missing)
         )
     return [available[url] for url in requested_urls]
+
+
+def build_terminology_lock(
+    config: dict[str, Any],
+    inspected: list[dict[str, Any]] | None = None,
+) -> dict[str, Any] | None:
+    """Build deterministic active-profile terminology/invariant evidence.
+
+    This lock records exactly which constraints were selected at activation.
+    Provider routing remains tenant configuration and is resolved by the
+    terminology gateway when validation executes.
+    """
+
+    packages = inspected
+    if packages is None:
+        packages = inspect_configured_implementation_guides(config)
+    active_profiles = resolve_active_profiles(config, packages)
+    if not packages and not active_profiles:
+        return None
+    active_urls = {
+        str(profile.get("url") or "").strip()
+        for profile in active_profiles
+        if str(profile.get("url") or "").strip()
+    }
+    bindings: list[dict[str, Any]] = []
+    invariants: list[dict[str, Any]] = []
+    for package in packages:
+        inventory = package.get("inventory") or {}
+        bindings.extend(
+            item
+            for item in inventory.get("terminology_bindings") or []
+            if str(item.get("profile_url") or "").strip() in active_urls
+        )
+        invariants.extend(
+            item
+            for item in inventory.get("invariants") or []
+            if str(item.get("profile_url") or "").strip() in active_urls
+        )
+    ig_config = config.get("implementation_guides") or {}
+    profile_validation = ig_config.get("profile_validation") or {}
+    terminology_validation = config.get("terminology_validation") or {}
+    payload = {
+        "contract_version": "fhir-terminology-lock.v1",
+        "fhir_release": config.get("schema_version"),
+        "packages": [
+            {
+                "name": (item.get("package") or {}).get("name"),
+                "version": (item.get("package") or {}).get("version"),
+                "sha256": (item.get("package") or {}).get("sha256"),
+                "compiled_id": item.get("compiled_id"),
+            }
+            for item in packages
+        ],
+        "active_profiles": active_profiles,
+        "bindings": sorted(
+            bindings,
+            key=lambda item: (
+                str(item.get("profile_url") or ""),
+                str(item.get("element_id") or ""),
+                str(item.get("value_set") or ""),
+            ),
+        ),
+        "invariants": sorted(
+            invariants,
+            key=lambda item: (
+                str(item.get("profile_url") or ""),
+                str(item.get("element_id") or ""),
+                str(item.get("key") or ""),
+            ),
+        ),
+        "enforcement": {
+            "profile_mode": str(profile_validation.get("mode") or "disabled"),
+            "terminology_mode": str(terminology_validation.get("mode") or "disabled"),
+        },
+    }
+    payload["digest"] = hashlib.sha256(
+        json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
+    ).hexdigest()
+    return payload
+
+
+def write_terminology_lock(config: dict[str, Any]) -> Path | None:
+    """Persist the immutable active-profile constraint lock for an activation."""
+
+    lock = build_terminology_lock(config)
+    if lock is None:
+        return None
+    ig_config = config.get("implementation_guides") or {}
+    root = Path(str(ig_config.get("compiled_root") or "")).resolve()
+    destination = root / "locks" / lock["digest"] / "terminology-lock.json"
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    serialized = json.dumps(lock, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    if destination.exists() and destination.read_text(encoding="utf-8") != serialized:
+        raise ImplementationGuideError(
+            f"Terminology lock is immutable and already differs: {destination}"
+        )
+    destination.write_text(serialized, encoding="utf-8")
+    return destination

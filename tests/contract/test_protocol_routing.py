@@ -38,7 +38,7 @@ def test_multi_domain_routing(client):
     )
     client.post(
         "/v1/environments/envY/activate",
-        json={"strategy_id": "fhir.clinical_cdr", "version": "0.1.0", "config": {"database": "env_y_fhir"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"},
+        json={"strategy_id": "fhir.resource_store", "version": "0.1.0", "config": {"database": "env_y_fhir"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"},
     )
     res_act = client.get("/v1/environments/envY/activations")
     assert res_act.status_code == 200
@@ -63,5 +63,5 @@ def test_multi_domain_routing(client):
     )
     assert res_f.status_code == 200
     explain_f = res_f.json()["result"]["plan"]["explain"]
-    assert explain_f["strategy_id"] == "fhir.clinical_cdr"
+    assert explain_f["strategy_id"] == "fhir.resource_store"
     assert explain_f["domain"] == "fhir"

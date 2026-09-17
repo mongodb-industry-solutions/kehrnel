@@ -108,7 +108,7 @@ def test_fhir_binding_rejects_database_from_hdl_environment_record(monkeypatch):
             bindings_ref="hdl:env:env-1",
             env_id="env-1",
             domain="fhir",
-            strategy_id="fhir.clinical_cdr",
+            strategy_id="fhir.resource_store",
             op="op",
             context={
                 "activation_config": {"database": "hdl-team"},

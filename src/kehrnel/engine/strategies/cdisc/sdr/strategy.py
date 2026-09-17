@@ -66,7 +66,26 @@ class CDISCSDRStrategy(StrategyPlugin):
             lineage=self.lineage,
         )
         self.packages = PackageService(
-            self.artifacts, self.ingestion, self.exports, self.validation, self.projections
+            self.artifacts,
+            self.ingestion,
+            self.exports,
+            self.validation,
+            self.projections,
+            interaction_contracts=[
+                {
+                    "id": item.id,
+                    "name": item.name,
+                    "mode": item.mode,
+                    "kind": item.kind,
+                    "authority": item.authority,
+                    "standard": item.standard,
+                    "contract": item.contract,
+                    "description": item.description,
+                    "operations": item.operations,
+                    "sourceDomains": item.source_domains,
+                }
+                for item in self.manifest.interaction_contracts
+            ],
         )
 
     async def validate_config(self, ctx: StrategyContext | Dict[str, Any]) -> None:

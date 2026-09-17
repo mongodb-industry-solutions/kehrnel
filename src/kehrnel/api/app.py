@@ -336,6 +336,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     from kehrnel.api.internal.routes import router as internal_runtime_router
     from kehrnel.api.domains.openehr.routes import router as openehr_domain_router
     from kehrnel.api.domains.snomedct.routes import router as snomedct_domain_router
+    from kehrnel.api.terminology.routes import router as terminology_router
     from kehrnel.api.strategies.openehr.rps_dual.routes import router as openehr_rps_dual_router
 
     # Disable built-in docs handlers so we can control the HTML (favicon, titles, etc.)
@@ -682,7 +683,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         # FHIR endpoints must return OperationOutcome (application/fhir+json), even
         # for request-body validation errors that fire before the route handler.
         if "/api/domains/fhir" in request.url.path:
-            from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.serialization import (
+            from kehrnel.engine.strategies.fhir.resource_store.scripts.serialization import (
                 operation_outcome,
             )
             detail = "; ".join(
@@ -704,6 +705,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         fhir_domain_router,
         openehr_domain_router,
         snomedct_domain_router,
+        terminology_router,
         openehr_rps_dual_router,
     ]
 

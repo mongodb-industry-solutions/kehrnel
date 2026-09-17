@@ -17,6 +17,6 @@ Recommended order:
 The current kernel implementation lives in:
 
 - [contextobjects package](/Users/francesc.mateu/Documents/GitHub/kehrnel/src/kehrnel/contextobjects)
-- [FHIR Clinical CDR strategy](../src/kehrnel/engine/strategies/fhir/clinical_cdr/)
+- [FHIR Resource Store strategy](../src/kehrnel/engine/strategies/fhir/resource_store/)
 - [CDISC Study Data Repository strategy](/Users/francesc.mateu/Documents/GitHub/kehrnel/src/kehrnel/engine/strategies/cdisc/sdr)
 - [X12 CO single strategy](/Users/francesc.mateu/Documents/GitHub/kehrnel/src/kehrnel/engine/strategies/x12/co_single/strategy.py)

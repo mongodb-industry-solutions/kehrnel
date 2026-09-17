@@ -1,9 +1,9 @@
 {
   "meta": {
     "strategyId": "snomedct.mongodb",
-    "specVersion": "0.1",
+    "specVersion": "0.3",
     "title": "SNOMED CT on MongoDB",
-    "summary": "Canonical SNOMED CT document storage with an optional term sidecar for terminology search and clinical note grounding.",
+    "summary": "Canonical SNOMED CT document storage with a term sidecar and tenant ValueSet registry for terminology search, validation, expansion, and clinical note grounding.",
     "domain": "SNOMED CT",
     "tags": ["SNOMED CT", "terminology", "MongoDB", "search", "grounding"],
     "maturity": "preview",
@@ -21,7 +21,8 @@
       "Release inspection and diff before applying a new release.",
       "Terminology search and navigation over descriptions, synonyms, parents, ancestors, and semantic tags.",
       "Grounding clinical NLP mentions to candidate SNOMED CT concepts.",
-      "Benchmark retrieval support for clinical LLM extraction/grounding workflows."
+      "Benchmark retrieval support for clinical LLM extraction/grounding workflows.",
+      "A native terminology-server provider for tenant-routed lookup, validation, subsumption, and bounded expansion."
     ],
     "nonGoalsForThisPack": [
       "It is not a SNOMED CT license manager.",
@@ -41,6 +42,14 @@
     "release_diff": {
       "term": "Release diff",
       "definition": "A streamed comparison between the official JSON release and the active canonical MongoDB collection."
+    },
+    "value_set_registry": {
+      "term": "Tenant ValueSet registry",
+      "definition": "Immutable canonical URL/version definitions backed by ECL or explicit concept ids and pinned to a licensed SNOMED CT release."
+    },
+    "grounding_review": {
+      "term": "Reviewed grounding artifact",
+      "definition": "A tenant-owned reviewer decision that stores accepted/rejected codings and their ancestor paths separately from the licensed terminology and source clinical payload."
     }
   },
   "configurability": {
@@ -53,6 +62,8 @@
       "release.label",
       "collections.concepts",
       "collections.terms",
+      "collections.value_sets",
+      "collections.grounding_reviews",
       "languages"
     ],
     "operationalToggles": [
@@ -66,7 +77,9 @@
       "indexes.text",
       "search.default_language",
       "search.default_limit",
-      "search.max_limit"
+      "search.max_limit",
+      "grounding.store_source_text",
+      "grounding.max_codings_per_review"
     ],
     "fixedByStrategy": [
       "Canonical identity is releaseId + conceptId.",
@@ -160,6 +173,16 @@
           "id": "snomedct.mongodb.term_sidecar.v1",
           "title": "Term sidecar collection",
           "collectionNameFromConfig": "config.collections.terms"
+        },
+        {
+          "id": "snomedct.mongodb.value_set.v1",
+          "title": "Tenant ValueSet registry",
+          "collectionNameFromConfig": "config.collections.value_sets"
+        },
+        {
+          "id": "snomedct.mongodb.grounding_review.v1",
+          "title": "Reviewed grounding artifacts",
+          "collectionNameFromConfig": "config.collections.grounding_reviews"
         }
       ]
     }
@@ -225,6 +248,14 @@
       {
         "role": "search_sidecar",
         "collectionNameFromConfig": "collections.terms"
+      },
+      {
+        "role": "value_set_registry",
+        "collectionNameFromConfig": "collections.value_sets"
+      },
+      {
+        "role": "grounding_reviews",
+        "collectionNameFromConfig": "collections.grounding_reviews"
       }
     ],
     "indexContract": {
@@ -291,6 +322,27 @@
           "fields": ["releaseId", "languageCode", "semanticTagKey"],
           "type": "compound",
           "purpose": "MongoDB-native filtering and faceting by normalized semantic tag."
+        },
+        {
+          "name": "valueset_url_version_unique",
+          "collectionRole": "value_set_registry",
+          "fields": ["url", "version"],
+          "type": "unique",
+          "purpose": "Immutable identity for a tenant-authored ValueSet definition."
+        },
+        {
+          "name": "grounding_review_unique",
+          "collectionRole": "grounding_reviews",
+          "fields": ["reviewId"],
+          "type": "unique",
+          "purpose": "Idempotent reviewer decision identity."
+        },
+        {
+          "name": "grounding_ancestor_query",
+          "collectionRole": "grounding_reviews",
+          "fields": ["acceptedAncestorIds", "reviewedAt"],
+          "type": "compound",
+          "purpose": "Query accepted coding evidence by exact concept or ancestor."
         }
       ]
     }
@@ -300,6 +352,20 @@
       {
         "mode": "lookup",
         "input": ["concept_id", "release_id"],
+        "requiresSidecar": false,
+        "collectionRole": "canonical"
+      },
+      {
+        "mode": "validate_code",
+        "input": ["system", "version", "code", "display", "language"],
+        "semantics": "Validates concept existence, active state, requested release, and optional display against active descriptions.",
+        "requiresSidecar": false,
+        "collectionRole": "canonical"
+      },
+      {
+        "mode": "subsumes",
+        "input": ["system", "version", "code_a", "code_b"],
+        "outcomes": ["equivalent", "subsumes", "subsumed-by", "not-subsumed"],
         "requiresSidecar": false,
         "collectionRole": "canonical"
       },
@@ -326,7 +392,7 @@
       },
       {
         "mode": "expand",
-        "input": ["expression", "concept_id", "release_id", "include_self", "limit"],
+        "input": ["url", "value_set_version", "expression", "concept_id", "release_id", "include_self", "limit"],
         "requiresSidecar": false,
         "collectionRole": "canonical"
       },
@@ -349,6 +415,13 @@
         "collectionRole": "search_sidecar"
       },
       {
+        "mode": "hybrid_search",
+        "input": ["q", "language", "release_id", "ancestor_id", "area_tag", "semantic_tag_key", "limit"],
+        "semantics": "Deterministic lexical retrieval combined with ontology and semantic facets; this baseline does not claim vector search.",
+        "requiresSidecar": true,
+        "collectionRole": "search_sidecar"
+      },
+      {
         "mode": "ground",
         "input": ["mentions", "text", "language", "release_id", "limit_per_mention"],
         "requiresSidecar": true,
@@ -356,9 +429,133 @@
       }
     ]
   },
+  "visualization": {
+    "canvas": {
+      "defaultView": "overview",
+      "views": [
+        {
+          "id": "overview",
+          "title": "Overview",
+          "shows": ["collectionModel", "transformGraph"],
+          "layout": { "type": "grid", "columns": 2 }
+        },
+        {
+          "id": "collections",
+          "title": "Collections",
+          "shows": ["collectionModel"],
+          "layout": { "type": "free" }
+        },
+        {
+          "id": "transform",
+          "title": "Transform",
+          "shows": ["transformGraph"],
+          "layout": { "type": "dag", "direction": "LR" }
+        },
+        {
+          "id": "indexes",
+          "title": "Indexes & Search",
+          "shows": ["indexOverlay"],
+          "layout": { "type": "free" }
+        }
+      ]
+    },
+    "collectionModel": {
+      "entities": [
+        {
+          "id": "coll.snomed_concepts",
+          "kind": "collection",
+          "store": "store:concepts",
+          "label": "snomed_concepts",
+          "fields": ["releaseId", "conceptId", "active", "effectiveTime", "descriptions[]", "relationships[]", "inferredParentIds[]", "inferredAncestorIds[]", "relationshipAttributeKeys[]"],
+          "badges": ["canonical", "licensed", "hierarchy"],
+          "links": [{ "type": "derives", "target": "coll.snomed_terms", "on": "releaseId + conceptId" }]
+        },
+        {
+          "id": "coll.snomed_terms",
+          "kind": "collection",
+          "store": "store:terms",
+          "label": "snomed_terms",
+          "fields": ["releaseId", "conceptId", "descriptionId", "languageCode", "term", "normalizedTerm", "preferredTerm", "semanticTagKey", "areaTags[]", "ancestorIds[]", "embedText"],
+          "badges": ["derived", "search", "rebuildable"],
+          "links": [{ "type": "projectsFrom", "target": "coll.snomed_concepts", "on": "releaseId + conceptId" }]
+        },
+        {
+          "id": "coll.snomed_value_sets",
+          "kind": "collection",
+          "store": "store:value_sets",
+          "label": "snomed_value_sets",
+          "fields": ["url", "version", "name", "status", "releaseId", "definition", "definitionDigest", "createdAt"],
+          "badges": ["tenant-authored", "versioned", "governed"],
+          "links": [{ "type": "expandsAgainst", "target": "coll.snomed_concepts", "on": "releaseId" }]
+        },
+        {
+          "id": "coll.snomed_grounding_reviews",
+          "kind": "collection",
+          "store": "store:grounding_reviews",
+          "label": "snomed_grounding_reviews",
+          "fields": ["reviewId", "sourceRef", "sourceTextHash", "releaseId", "reviewer", "codings[].status", "codings[].ancestorIds", "acceptedAncestorIds[]", "reviewedAt"],
+          "badges": ["tenant-authored", "reviewed", "queryable"],
+          "links": [{ "type": "codesAgainst", "target": "coll.snomed_concepts", "on": "releaseId + codings.conceptId" }]
+        }
+      ]
+    },
+    "transformGraph": {
+      "nodes": [
+        { "id": "src.release", "kind": "source", "label": "Licensed SNOMED JSON release" },
+        { "id": "op.inspect", "kind": "transform", "label": "Inspect and diff" },
+        { "id": "op.canonicalize", "kind": "transform", "label": "Canonicalize release document" },
+        { "id": "sink.concepts", "kind": "sink", "label": "Canonical concepts", "entityRef": "coll.snomed_concepts" },
+        { "id": "op.project_terms", "kind": "transform", "label": "Project searchable descriptions" },
+        { "id": "sink.terms", "kind": "sink", "label": "Term sidecar", "entityRef": "coll.snomed_terms" },
+        { "id": "sink.value_sets", "kind": "sink", "label": "Tenant ValueSets", "entityRef": "coll.snomed_value_sets" },
+        { "id": "src.review", "kind": "source", "label": "Reviewer decision" },
+        { "id": "sink.grounding", "kind": "sink", "label": "Reviewed grounding", "entityRef": "coll.snomed_grounding_reviews" }
+      ],
+      "edges": [
+        { "from": "src.release", "to": "op.inspect" },
+        { "from": "op.inspect", "to": "op.canonicalize" },
+        { "from": "op.canonicalize", "to": "sink.concepts" },
+        { "from": "sink.concepts", "to": "op.project_terms" },
+        { "from": "op.project_terms", "to": "sink.terms" },
+        { "from": "src.review", "to": "sink.grounding" },
+        { "from": "sink.concepts", "to": "sink.grounding" }
+      ]
+    },
+    "indexOverlay": {
+      "indexGroups": [
+        {
+          "id": "idxgrp.concepts",
+          "entityRef": "coll.snomed_concepts",
+          "items": ["release_concept_unique", "ancestor_lookup", "parent_lookup", "relationship_attribute_lookup"]
+        },
+        {
+          "id": "idxgrp.terms",
+          "entityRef": "coll.snomed_terms",
+          "items": ["term_release_language", "term_concept", "term_rank", "term_area_lookup", "term_semantic_lookup"]
+        },
+        {
+          "id": "idxgrp.value_sets",
+          "entityRef": "coll.snomed_value_sets",
+          "items": ["valueset_url_version_unique", "valueset_status_updated"]
+        },
+        {
+          "id": "idxgrp.grounding_reviews",
+          "entityRef": "coll.snomed_grounding_reviews",
+          "items": ["grounding_review_unique", "grounding_source_updated", "grounding_ancestor_query"]
+        }
+      ]
+    },
+    "legends": {
+      "canonical": "Licensed source-of-truth concept documents",
+      "derived": "Rebuildable search projection",
+      "polymorphic": "Descriptions and relationships retain their varying SNOMED component shapes"
+    }
+  },
   "architectureNotes": [
     "The canonical collection is mandatory and supports lookup, hierarchy traversal, release diff, and basic ECL/subsumption queries.",
     "The term sidecar is configurable but default-on. Search, grounding, and benchmark retrieval require it for production-quality behavior.",
-    "Release updates are streamed from JSON so large official files do not need to fit in memory."
+    "Release updates are streamed from JSON so large official files do not need to fit in memory.",
+    "The provider-neutral terminology gateway is outside this storage pack and can route SNOMED here while routing other code systems to customer-managed FHIR terminology servers.",
+    "Complex FHIR ValueSet.compose import, complete ECL, native ConceptMap authoring, and vector retrieval are not implied by the current capability set."
   ]
 }

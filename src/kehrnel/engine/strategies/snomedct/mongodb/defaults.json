@@ -12,6 +12,8 @@
   "collections": {
     "concepts": "snomed_concepts",
     "terms": "snomed_terms",
+    "value_sets": "snomed_value_sets",
+    "grounding_reviews": "snomed_grounding_reviews",
     "sidecar_enabled": true
   },
   "languages": ["es", "en"],
@@ -34,5 +36,9 @@
     "default_language": "es",
     "use_sidecar": true,
     "lexical_strategy": "normalized_regex"
+  },
+  "grounding": {
+    "store_source_text": false,
+    "max_codings_per_review": 50
   }
 }

@@ -1,11 +1,11 @@
-# ADR: FHIR Resource Store — stored-document model (`fhir.clinical_cdr`)
+# ADR: FHIR Resource Store — stored-document model (`fhir.resource_store`)
 
 **Status:** Accepted and implemented · 2026-09-03  
 **Contract:** stored-document schema `1`
 
 ## Context
 
-The Clinical CDR stores FHIR R5 or R6 resources in one MongoDB collection per
+The Resource Store stores FHIR R5 or R6 resources in one MongoDB collection per
 resource type. The first implementation mixed `_stored_at` and
 `_fhir_resource_type` into the canonical resource and allowed generation without
 search projection. That produced documents which looked stored but were not

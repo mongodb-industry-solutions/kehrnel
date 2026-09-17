@@ -150,12 +150,14 @@ class PackageService:
         exports: ExportService,
         validation: ValidationService,
         projections: ProjectionService,
+        interaction_contracts: List[Dict[str, Any]] | None = None,
     ):
         self.artifacts = artifacts
         self.ingestion = ingestion
         self.exports = exports
         self.validation = validation
         self.projections = projections
+        self.interaction_contracts = interaction_contracts or []
 
     async def ingest_package(self, ctx: StrategyContext, payload: Dict[str, Any]) -> Dict[str, Any]:
         documents = payload.get("datasets")
@@ -460,6 +462,9 @@ class PackageService:
             "records": len(records),
             "entities": len(entities),
             "materializations": len(materializations),
+            "operationalObjects": sum(
+                1 for item in materializations if item.get("objectType")
+            ),
             "sourceArtifacts": len(artifacts),
             "validationRuns": len(validation_runs),
             "validationFindings": len(validation_findings),
@@ -479,6 +484,7 @@ class PackageService:
                 "standardsPackageId": snapshot.get("standardsPackageId"),
                 "contentDigest": {"algorithm": "sha256", "value": digest},
                 "counts": counts,
+                "interactionContracts": self.interaction_contracts,
             },
             "evidence": evidence,
         }

@@ -16,6 +16,23 @@ from kehrnel.engine.domains.cdisc.projection import PROJECTION_VERSION, project_
 from ..common import collections, config, replace_documents, storage_adapter
 
 
+OPERATIONAL_OBJECT_SCHEMA_VERSION = "1.0.0"
+
+SEND_EVIDENCE_DIMENSIONS = {
+    "demographics": {"label": "Subject and study context", "domains": {"DM"}},
+    "exposure": {"label": "Treatment and administered dose", "domains": {"TX", "EX"}},
+    "bodyWeight": {"label": "Body weight and gain", "domains": {"BW", "BG"}},
+    "foodConsumption": {"label": "Food consumption", "domains": {"FW"}},
+    "clinicalObservations": {"label": "Clinical observations", "domains": {"CL"}},
+    "laboratory": {"label": "Laboratory measurements", "domains": {"LB"}},
+    "grossPathology": {"label": "Gross pathology", "domains": {"MA"}},
+    "microscopicPathology": {"label": "Microscopic pathology", "domains": {"MI"}},
+    "organMeasurements": {"label": "Organ measurements", "domains": {"OM"}},
+    "toxicokinetics": {"label": "Concentration and exposure", "domains": {"PC", "PP"}},
+    "studyContext": {"label": "Study phase and disposition", "domains": {"SE", "DS"}},
+}
+
+
 def _digest(value: Any) -> str:
     encoded = json.dumps(value, sort_keys=True, separators=(",", ":"), default=str).encode()
     return hashlib.sha256(encoded).hexdigest()
@@ -79,6 +96,76 @@ def _materialization_kind(profile: str) -> str:
     }.get(profile, "subject-timeline")
 
 
+def _first_facet(entries: List[Dict[str, Any]], key: str) -> Any:
+    for entry in entries:
+        value = (entry.get("facets") or {}).get(key)
+        if value is not None and value != "":
+            return value
+    return None
+
+
+def _send_operational_object(group_id: str, entries: List[Dict[str, Any]]) -> Dict[str, Any]:
+    dimensions: Dict[str, Any] = {}
+    for dimension_id, definition in SEND_EVIDENCE_DIMENSIONS.items():
+        matching = [
+            entry
+            for entry in entries
+            if str(entry.get("domain") or "").upper() in definition["domains"]
+        ]
+        days = {
+            (entry.get("facets") or {}).get("studyDay")
+            for entry in matching
+            if (entry.get("facets") or {}).get("studyDay") is not None
+        }
+        dimensions[dimension_id] = {
+            "label": definition["label"],
+            "available": bool(matching),
+            "domains": sorted(
+                {str(entry.get("domain")) for entry in matching if entry.get("domain")}
+            ),
+            "recordCount": len(matching),
+            "studyDays": sorted(days, key=lambda value: str(value)),
+            "sourceRecordIds": [entry.get("recordId") for entry in matching if entry.get("recordId")],
+        }
+
+    return {
+        "objectType": "SubjectExposureResponse",
+        "objectSchemaVersion": OPERATIONAL_OBJECT_SCHEMA_VERSION,
+        "subject": {
+            "id": group_id,
+            "species": _first_facet(entries, "species"),
+            "strain": _first_facet(entries, "strain"),
+            "sex": _first_facet(entries, "sex"),
+            "treatmentGroup": _first_facet(entries, "treatmentGroup"),
+        },
+        "exposure": {
+            "treatments": sorted({
+                str((entry.get("facets") or {}).get("testArticle"))
+                for entry in entries
+                if (entry.get("facets") or {}).get("testArticle") not in (None, "")
+            }),
+            "doseLevels": sorted({
+                str((entry.get("facets") or {}).get("doseLevel"))
+                for entry in entries
+                if (entry.get("facets") or {}).get("doseLevel") not in (None, "")
+            }),
+            "doseUnits": sorted({
+                str((entry.get("facets") or {}).get("doseUnit"))
+                for entry in entries
+                if (entry.get("facets") or {}).get("doseUnit") not in (None, "")
+            }),
+            "routes": sorted({
+                str((entry.get("facets") or {}).get("route"))
+                for entry in entries
+                if (entry.get("facets") or {}).get("route") not in (None, "")
+            }),
+        },
+        "evidenceDimensions": dimensions,
+        "sourceRecordIds": [entry.get("recordId") for entry in entries if entry.get("recordId")],
+        "objectRecordCount": len(entries),
+    }
+
+
 def _materialization_documents(
     *, tenant_id: str, snapshot_ref: str, records: Iterable[Dict[str, Any]], build_id: str
 ) -> List[Dict[str, Any]]:
@@ -109,6 +196,11 @@ def _materialization_documents(
         )
     kind = _materialization_kind(profile)
     documents = []
+    send_group_evidence = {
+        group_id: group_entries
+        for group_id, group_entries in grouped.items()
+        if profile == "send" and _first_facet(group_entries, "subjectId") is None
+    }
     for group_id, entries in sorted(grouped.items()):
         entries.sort(
             key=lambda item: (
@@ -118,21 +210,28 @@ def _materialization_documents(
                 item.get("rowOrdinal") or 0,
             )
         )
-        documents.append(
-            {
-                "_id": f"{snapshot_ref}:view:{kind}:{group_id}",
-                "tenantId": tenant_id,
-                "snapshotRef": snapshot_ref,
-                "studyId": study_id,
-                "profile": profile,
-                "kind": kind,
-                "groupId": group_id,
-                "entries": entries,
-                "entryCount": len(entries),
-                "projectionBuildId": build_id,
-                "projectionVersion": PROJECTION_VERSION,
-            }
-        )
+        document = {
+            "_id": f"{snapshot_ref}:view:{kind}:{group_id}",
+            "tenantId": tenant_id,
+            "snapshotRef": snapshot_ref,
+            "studyId": study_id,
+            "profile": profile,
+            "kind": kind,
+            "groupId": group_id,
+            "entries": entries,
+            "entryCount": len(entries),
+            "projectionBuildId": build_id,
+            "projectionVersion": PROJECTION_VERSION,
+        }
+        subject_id = _first_facet(entries, "subjectId") if profile == "send" else None
+        if subject_id is not None:
+            treatment_group = _first_facet(entries, "treatmentGroup")
+            object_entries = [
+                *entries,
+                *send_group_evidence.get(str(treatment_group), []),
+            ]
+            document.update(_send_operational_object(str(subject_id), object_entries))
+        documents.append(document)
     return documents
 
 
@@ -229,6 +328,7 @@ class ProjectionService:
         views = _materialization_documents(
             tenant_id=str(cfg["tenant_id"]), snapshot_ref=snapshot_ref, records=projected, build_id=build_id
         )
+        operational_object_count = sum(1 for item in views if item.get("objectType"))
         now = datetime.now(timezone.utc).isoformat()
         manifest = {
             "_id": f"{snapshot_ref}:projection:{build_id}",
@@ -242,6 +342,7 @@ class ProjectionService:
             "recordCount": len(projected),
             "entityCount": len(entities),
             "viewCount": len(views),
+            "operationalObjectCount": operational_object_count,
             "createdAt": now,
         }
         await replace_documents(storage, coll["records"], projected)
@@ -260,4 +361,5 @@ class ProjectionService:
             "recordCount": len(projected),
             "entityCount": len(entities),
             "materializationCount": len(views),
+            "operationalObjectCount": operational_object_count,
         }

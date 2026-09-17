@@ -155,6 +155,30 @@ def _decrypt_sealed_uri(sealed_uri: dict[str, Any]) -> str:
     return plaintext.decode("utf-8")
 
 
+def resolve_hdl_terminology_secret(*, env_id: str, provider_id: str) -> str:
+    """Resolve one encrypted terminology credential stored by HDL.
+
+    Secrets are kept in the existing environment-scoped secret document but in
+    a separate array so terminology credentials never become strategy metadata
+    or MongoDB connection bindings.
+    """
+    safe_provider_id = str(provider_id or "").strip()
+    if not safe_provider_id:
+        raise ValueError("provider_id is required")
+    store = _core_store()
+    secret_doc = store.db["environment_secrets"].find_one(
+        {"envId": env_id},
+        {"_id": 0, "terminologySecrets": 1},
+    )
+    for item in (secret_doc or {}).get("terminologySecrets") or []:
+        if isinstance(item, dict) and str(item.get("providerId") or "") == safe_provider_id:
+            sealed = item.get("sealedSecret")
+            if not sealed:
+                break
+            return _decrypt_sealed_uri(sealed)
+    raise ValueError(f"No terminology credential found for provider {safe_provider_id!r} in envId={env_id}")
+
+
 def _resolve_database_name(
     *,
     explicit_db: Optional[str],

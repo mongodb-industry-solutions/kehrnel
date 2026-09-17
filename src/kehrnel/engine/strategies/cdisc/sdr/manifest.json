@@ -15,7 +15,60 @@
   "summary": "Governed CDISC study snapshots with operational, semantic, and AI-ready query projections.",
   "description": "Preserves CDISC artifacts and canonical dataset records while deriving typed facets, entity references, lineage, and optional semantic projections for SEND, SDTM, ADaM, and TIG workloads.",
   "entrypoint": "kehrnel.engine.strategies.cdisc.sdr.strategy:CDISCSDRStrategy",
-  "capabilities": ["transform", "reverse_transform", "ingest", "query", "validate", "generate", "plan", "apply", "study_data", "artifact_replay", "semantic_equivalence", "semantic_ready"],
+  "capabilities": ["transform", "reverse_transform", "ingest", "query", "validate", "generate", "plan", "apply", "study_data", "artifact_replay", "semantic_equivalence", "semantic_ready", "operational_objects"],
+  "interaction_contracts": [
+    {
+      "id": "cdisc.dataset-exchange",
+      "name": "CDISC dataset exchange",
+      "mode": "native",
+      "kind": "exchange",
+      "authority": "CDISC",
+      "standard": "Dataset-JSON v1.1 API v1.0 and SAS XPORT",
+      "contract": "CDISC exchange formats",
+      "description": "Preserves and exchanges standards-conformant datasets and metadata without claiming a standard scientific query API.",
+      "operations": ["cdisc_inspect_dataset_json", "cdisc_ingest_dataset_json", "cdisc_export_dataset_json", "cdisc_ingest_xpt", "cdisc_export_xpt"],
+      "source_domains": ["SEND", "SDTM", "ADaM", "TIG"]
+    },
+    {
+      "id": "cdisc.study-query",
+      "name": "Governed cross-domain study query",
+      "mode": "compiled",
+      "kind": "query",
+      "authority": "Kehrnel",
+      "standard": "CDISC SEND, SDTM, ADaM and TIG semantics",
+      "contract": "cdisc-query/v1",
+      "description": "Compiles scientific study questions into bounded MongoDB plans because CDISC does not define an equivalent operational research query interaction.",
+      "engines": ["mongo_pipeline"],
+      "builders": ["cdisc_study_query_v1"],
+      "source_domains": ["DM", "TX", "EX", "BW", "BG", "FW", "LB", "CL", "MA", "MI", "OM", "PC", "PP", "SE", "DS"]
+    },
+    {
+      "id": "cdisc.study-analysis",
+      "name": "Governed grouped study analysis",
+      "mode": "compiled",
+      "kind": "analysis",
+      "authority": "Kehrnel",
+      "standard": "CDISC SEND, SDTM, ADaM and TIG semantics",
+      "contract": "cdisc-analysis/v1",
+      "description": "Compiles governed groupings and metrics into an inspectable MongoDB aggregation while preserving study and snapshot scope.",
+      "engines": ["mongo_pipeline"],
+      "builders": ["cdisc_analysis_v1"],
+      "operations": ["cdisc_run_analysis"],
+      "source_domains": ["SEND", "SDTM", "ADaM", "TIG"]
+    },
+    {
+      "id": "cdisc.operational-evidence",
+      "name": "Scientific operational evidence objects",
+      "mode": "hybrid",
+      "kind": "semantic-object",
+      "authority": "Kehrnel",
+      "standard": "CDISC study semantics plus governed operational projections",
+      "contract": "CDISC Solution Evidence Package",
+      "description": "Combines canonical CDISC evidence with rebuildable timelines, findings, analyses, lineage, and solution-facing objects.",
+      "operations": ["cdisc_rebuild_projections", "cdisc_browse_projections", "cdisc_run_analysis", "cdisc_export_solution_evidence", "cdisc_get_lineage"],
+      "source_domains": ["SEND", "SDTM", "ADaM", "TIG"]
+    }
+  ],
   "adapters": {
     "storage": ["mongodb"],
     "artifact": ["filesystem", "s3", "azure-blob"],
@@ -332,7 +385,7 @@
         "properties": {"studyId": {"type": "string"}, "snapshotId": {"type": "string"}},
         "additionalProperties": false
       },
-      "output_schema": {"type": "object", "required": ["ok", "snapshotRef", "projectionBuildId", "projectionVersion", "recordCount", "entityCount", "materializationCount"], "properties": {"ok": {"type": "boolean"}, "snapshotRef": {"type": "string"}, "projectionBuildId": {"type": "string"}, "projectionVersion": {"type": "string"}, "recordCount": {"type": "integer"}, "entityCount": {"type": "integer"}, "materializationCount": {"type": "integer"}}, "additionalProperties": false}
+      "output_schema": {"type": "object", "required": ["ok", "snapshotRef", "projectionBuildId", "projectionVersion", "recordCount", "entityCount", "materializationCount", "operationalObjectCount"], "properties": {"ok": {"type": "boolean"}, "snapshotRef": {"type": "string"}, "projectionBuildId": {"type": "string"}, "projectionVersion": {"type": "string"}, "recordCount": {"type": "integer"}, "entityCount": {"type": "integer"}, "materializationCount": {"type": "integer"}, "operationalObjectCount": {"type": "integer"}}, "additionalProperties": false}
     },
     {
       "name": "cdisc_browse_projections",

@@ -1,7 +1,7 @@
 {
   "id": "snomedct.mongodb",
   "name": "SNOMED CT on MongoDB",
-  "version": "0.1.0",
+  "version": "0.5.0",
   "domain": "snomedct",
   "pack_format": "strategy-pack/v1",
   "summary": "SNOMED CT canonical terminology model and term sidecar search on MongoDB.",
@@ -11,7 +11,13 @@
   "capabilities": [
     "terminology.canonical",
     "terminology.search",
+    "terminology.validate-code",
+    "terminology.subsumes",
+    "terminology.expand",
+    "terminology.value-sets",
     "terminology.grounding",
+    "terminology.reviewed-grounding",
+    "terminology.benchmark",
     "terminology.release_diff"
   ],
   "adapters": {
@@ -63,7 +69,6 @@
       "input_schema": {
         "type": "object",
         "properties": {
-          "local_dir": { "type": "string" },
           "file_pattern": { "type": "string" }
         }
       },
@@ -111,6 +116,10 @@
           "limit": { "type": "integer", "minimum": 1 },
           "batch_size": { "type": "integer", "minimum": 1 },
           "dry_run": { "type": "boolean" },
+          "license_acknowledged": {
+            "type": "boolean",
+            "description": "Required and true for persistence; confirms tenant authorization to use the staged SNOMED CT content."
+          },
           "drop_before_ingest": { "type": "boolean" },
           "include_descendants": { "type": "boolean" },
           "rebuild_sidecar": { "type": "boolean" }
@@ -160,6 +169,106 @@
       "output_schema": { "type": "object", "additionalProperties": true }
     },
     {
+      "name": "snomed_capabilities",
+      "kind": "query",
+      "summary": "Describe the native terminology operations, release, languages, ECL subset, and readiness",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "release_id": { "type": "string" },
+          "include_readiness": { "type": "boolean" }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_validate_code",
+      "kind": "query",
+      "summary": "Validate a SNOMED CT code and optional display against the activated release",
+      "input_schema": {
+        "type": "object",
+        "required": ["code"],
+        "properties": {
+          "code": { "type": "string" },
+          "system": { "type": "string" },
+          "version": { "type": "string" },
+          "release_id": { "type": "string" },
+          "display": { "type": "string" },
+          "language": { "type": "string" }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_subsumes",
+      "kind": "query",
+      "summary": "Evaluate equivalent, subsumes, subsumed-by, or not-subsumed for two concepts",
+      "input_schema": {
+        "type": "object",
+        "required": ["code_a", "code_b"],
+        "properties": {
+          "code_a": { "type": "string" },
+          "code_b": { "type": "string" },
+          "system": { "type": "string" },
+          "version": { "type": "string" },
+          "release_id": { "type": "string" }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_put_value_set",
+      "kind": "maintenance",
+      "summary": "Register an immutable, versioned SNOMED ValueSet backed by ECL or explicit concepts",
+      "input_schema": {
+        "type": "object",
+        "required": ["url", "version"],
+        "properties": {
+          "url": { "type": "string" },
+          "version": { "type": "string" },
+          "name": { "type": "string" },
+          "status": { "type": "string", "enum": ["draft", "active", "retired", "unknown"] },
+          "release_id": { "type": "string" },
+          "expression": { "type": "string" },
+          "concepts": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_list_value_sets",
+      "kind": "query",
+      "summary": "List registered tenant SNOMED ValueSet definitions",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string" },
+          "limit": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_validate_value_set",
+      "kind": "query",
+      "summary": "Validate code existence, display, and membership in a registered ValueSet",
+      "input_schema": {
+        "type": "object",
+        "required": ["url", "code"],
+        "properties": {
+          "url": { "type": "string" },
+          "value_set_version": { "type": "string" },
+          "code": { "type": "string" },
+          "system": { "type": "string" },
+          "version": { "type": "string" },
+          "release_id": { "type": "string" },
+          "display": { "type": "string" },
+          "language": { "type": "string" }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
       "name": "snomed_lookup",
       "kind": "query",
       "summary": "Lookup one SNOMED CT concept",
@@ -184,6 +293,7 @@
           "q": { "type": "string" },
           "language": { "type": "string" },
           "release_id": { "type": "string" },
+          "offset": { "type": "integer", "minimum": 0 },
           "limit": { "type": "integer", "minimum": 1 }
         }
       },
@@ -199,6 +309,7 @@
         "properties": {
           "expression": { "type": "string" },
           "release_id": { "type": "string" },
+          "offset": { "type": "integer", "minimum": 0 },
           "limit": { "type": "integer", "minimum": 1 }
         }
       },
@@ -218,6 +329,7 @@
           "area_tag": { "type": "string" },
           "semantic_tag": { "type": "string" },
           "semantic_tag_key": { "type": "string" },
+          "offset": { "type": "integer", "minimum": 0 },
           "limit": { "type": "integer", "minimum": 1 }
         }
       },
@@ -233,6 +345,7 @@
         "properties": {
           "concept_id": { "type": "string" },
           "release_id": { "type": "string" },
+          "offset": { "type": "integer", "minimum": 0 },
           "limit": { "type": "integer", "minimum": 1 }
         }
       },
@@ -249,6 +362,7 @@
           "concept_id": { "type": "string" },
           "release_id": { "type": "string" },
           "include_self": { "type": "boolean" },
+          "offset": { "type": "integer", "minimum": 0 },
           "limit": { "type": "integer", "minimum": 1 }
         }
       },
@@ -265,6 +379,7 @@
           "concept_id": { "type": "string" },
           "release_id": { "type": "string" },
           "include_self": { "type": "boolean" },
+          "offset": { "type": "integer", "minimum": 0 },
           "limit": { "type": "integer", "minimum": 1 }
         }
       },
@@ -273,14 +388,17 @@
     {
       "name": "snomed_expand_value_set",
       "kind": "query",
-      "summary": "Expand an ECL expression or focus concept to concept documents",
+      "summary": "Expand a registered ValueSet, ECL expression, or focus concept to concept documents",
       "input_schema": {
         "type": "object",
         "properties": {
+          "url": { "type": "string" },
+          "value_set_version": { "type": "string" },
           "expression": { "type": "string" },
           "concept_id": { "type": "string" },
           "release_id": { "type": "string" },
           "include_self": { "type": "boolean" },
+          "offset": { "type": "integer", "minimum": 0 },
           "limit": { "type": "integer", "minimum": 1 }
         }
       },
@@ -296,6 +414,7 @@
           "type_id": { "type": "string" },
           "destination_id": { "type": "string" },
           "release_id": { "type": "string" },
+          "offset": { "type": "integer", "minimum": 0 },
           "limit": { "type": "integer", "minimum": 1 }
         }
       },
@@ -326,6 +445,7 @@
         "properties": {
           "expression": { "type": "string" },
           "release_id": { "type": "string" },
+          "offset": { "type": "integer", "minimum": 0 },
           "limit": { "type": "integer", "minimum": 1 }
         }
       },
@@ -341,6 +461,7 @@
         "properties": {
           "expression": { "type": "string" },
           "release_id": { "type": "string" },
+          "offset": { "type": "integer", "minimum": 0 },
           "limit": { "type": "integer", "minimum": 1 }
         }
       },
@@ -358,6 +479,91 @@
           "language": { "type": "string" },
           "release_id": { "type": "string" },
           "limit_per_mention": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_suggest",
+      "kind": "query",
+      "summary": "Return bounded, concept-deduplicated typeahead suggestions",
+      "input_schema": {
+        "type": "object",
+        "required": ["q"],
+        "properties": {
+          "q": { "type": "string" },
+          "language": { "type": "string" },
+          "release_id": { "type": "string" },
+          "limit": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_concept_history",
+      "kind": "query",
+      "summary": "Inspect one concept across retained SNOMED CT releases",
+      "input_schema": {
+        "type": "object",
+        "required": ["concept_id"],
+        "properties": {
+          "concept_id": { "type": "string" },
+          "language": { "type": "string" },
+          "offset": { "type": "integer", "minimum": 0 },
+          "limit": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_save_grounding_review",
+      "kind": "maintenance",
+      "summary": "Persist reviewer-confirmed or rejected SNOMED CT coding decisions",
+      "input_schema": {
+        "type": "object",
+        "required": ["source_ref", "codings"],
+        "properties": {
+          "source_ref": { "type": "string" },
+          "review_id": { "type": "string" },
+          "text": { "type": "string" },
+          "language": { "type": "string" },
+          "release_id": { "type": "string" },
+          "reviewer": { "type": "string" },
+          "codings": { "type": "array", "items": { "type": "object" } }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_query_grounded_corpus",
+      "kind": "query",
+      "summary": "Query reviewer-confirmed codings by exact concept or ancestor path",
+      "input_schema": {
+        "type": "object",
+        "required": ["concept_id"],
+        "properties": {
+          "concept_id": { "type": "string" },
+          "include_non_present": { "type": "boolean" },
+          "include_family": { "type": "boolean" },
+          "include_text": { "type": "boolean" },
+          "offset": { "type": "integer", "minimum": 0 },
+          "limit": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "output_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "snomed_benchmark_retrieval",
+      "kind": "query",
+      "summary": "Measure top-k terminology retrieval against governed test cases",
+      "input_schema": {
+        "type": "object",
+        "required": ["cases"],
+        "properties": {
+          "cases": { "type": "array", "maxItems": 100, "items": { "type": "object" } },
+          "language": { "type": "string" },
+          "release_id": { "type": "string" },
+          "top_k": { "type": "integer", "minimum": 1, "maximum": 100 }
         }
       },
       "output_schema": { "type": "object", "additionalProperties": true }

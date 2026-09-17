@@ -1,6 +1,6 @@
 # FHIR testing guide (Kehrnel + vendored libraries)
 
-End-to-end commands to install, test, and run **fhir.clinical_cdr** with **fhir-gen** and **fhir-mql**.
+End-to-end commands to install, test, and run **fhir.resource_store** with **fhir-gen** and **fhir-mql**.
 
 **Vendored library root** (all paths below are relative to the kehrnel repo root):
 
@@ -13,9 +13,9 @@ End-to-end commands to install, test, and run **fhir.clinical_cdr** with **fhir-
 
 The former top-level `libs/` folder was removed; FHIR libraries live under the **FHIR domain** package.
 
-**Related:** [clinical_cdr strategy pack](src/kehrnel/engine/strategies/fhir/clinical_cdr/README.md) (config JSON, recipes, ops) · [FHIR_STRATEGIES_DOCUMENT.md](FHIR_STRATEGIES_DOCUMENT.md) · [domains/fhir](src/kehrnel/engine/domains/fhir/README.md) · [vendored libs](src/kehrnel/engine/domains/fhir/libs/README.md) · [Docusaurus clinical-cdr](docs/website/docs/strategies/fhir/clinical-cdr/index.md)
+**Related:** [resource_store strategy pack](src/kehrnel/engine/strategies/fhir/resource_store/README.md) (config JSON, recipes, ops) · [FHIR_STRATEGIES_DOCUMENT.md](FHIR_STRATEGIES_DOCUMENT.md) · [domains/fhir](src/kehrnel/engine/domains/fhir/README.md) · [vendored libs](src/kehrnel/engine/domains/fhir/libs/README.md) · [Docusaurus resource-store](docs/website/docs/strategies/fhir/resource-store/index.md)
 
-**Strategy ID:** `fhir.clinical_cdr` (not `fhir.rps_canonical`). **Default dev MongoDB:** `fhir_synthetic_clinical_cdr` (see `specification/activate_dev.json`).
+**Strategy ID:** `fhir.resource_store` (not `fhir.rps_canonical`). **Default dev MongoDB:** `fhir_synthetic_resource_store` (see `specification/activate_dev.json`).
 
 ---
 
@@ -95,7 +95,7 @@ $env:KEHRNEL_AUTH_ENABLED = "false"
 $env:MONGODB_URI = "mongodb://localhost:27017"
 $env:FHIR_CONTRACT_MONGO = "1"   # force Mongo-backed golden search execute tests
 
-python -m pytest tests\contract\clinical_cdr -v
+python -m pytest tests\contract\resource_store -v
 ```
 
 ### Git Bash
@@ -106,15 +106,15 @@ export KEHRNEL_AUTH_ENABLED=false
 export MONGODB_URI=mongodb://localhost:27017
 export FHIR_CONTRACT_MONGO=1
 
-pytest tests/contract/clinical_cdr -v
+pytest tests/contract/resource_store -v
 ```
 
-Golden FHIR search fixtures: `tests/contract/clinical_cdr/fixtures/fhir_golden_queries.json`.
+Golden FHIR search fixtures: `tests/contract/resource_store/fixtures/fhir_golden_queries.json`.
 
 ### FHIR library spike (no Kehrnel API)
 
 ```powershell
-python src\kehrnel\engine\strategies\fhir\clinical_cdr\scripts\spike_generate_and_search.py --db fhir_kehrnel_spike
+python src\kehrnel\engine\strategies\fhir\resource_store\scripts\spike_generate_and_search.py --db fhir_kehrnel_spike
 ```
 
 Options: `--uri`, `--db`, `--seed` (default `1`).
@@ -193,25 +193,25 @@ export RUNTIME_URL=http://localhost:8080
 
 ## 4. FHIR end-to-end (HTTP API)
 
-### 4.1 Activate `fhir.clinical_cdr`
+### 4.1 Activate `fhir.resource_store`
 
-Activation binds the environment to strategy `fhir.clinical_cdr`, merges pack defaults (`defaults.json` + `recipes.json`), and stores a **manifest digest**. After a real `manifest.json` version bump you must re-activate; routine code reload / pack hydration drift is auto-healed on the next op (see [§Troubleshooting — `ACTIVATION_STRATEGY_MISMATCH](#activation_strategy_mismatch)`).
+Activation binds the environment to strategy `fhir.resource_store`, merges pack defaults (`defaults.json` + `recipes.json`), and stores a **manifest digest**. After a real `manifest.json` version bump you must re-activate; routine code reload / pack hydration drift is auto-healed on the next op (see [§Troubleshooting — `ACTIVATION_STRATEGY_MISMATCH](#activation_strategy_mismatch)`).
 
-Sample body: `src/kehrnel/engine/strategies/fhir/clinical_cdr/specification/activate_dev.json`
+Sample body: `src/kehrnel/engine/strategies/fhir/resource_store/specification/activate_dev.json`
 
 
 | Field             | Sample value                  |
 | ----------------- | ----------------------------- |
-| `strategy_id`     | `fhir.clinical_cdr`           |
+| `strategy_id`     | `fhir.resource_store`           |
 | `domain`          | `fhir`                        |
-| `config.database` | `fhir_synthetic_clinical_cdr` |
+| `config.database` | `fhir_synthetic_resource_store` |
 | `bindings.db.uri` | `mongodb://localhost:27017`   |
 
 
 **PowerShell:**
 
 ```powershell
-$spec = "src\kehrnel\engine\strategies\fhir\clinical_cdr\specification"
+$spec = "src\kehrnel\engine\strategies\fhir\resource_store\specification"
 
 Invoke-RestMethod -Method POST -Uri "$base/environments/dev/activate" `
   -ContentType "application/json" `
@@ -226,7 +226,7 @@ Invoke-RestMethod -Uri "$base/environments/dev/activations"
 ```bash
 curl -sS -X POST "$RUNTIME_URL/environments/dev/activate" \
   -H "Content-Type: application/json" \
-  -d @src/kehrnel/engine/strategies/fhir/clinical_cdr/specification/activate_dev.json
+  -d @src/kehrnel/engine/strategies/fhir/resource_store/specification/activate_dev.json
 
 curl -sS "$RUNTIME_URL/environments/dev/activations"
 ```
@@ -264,7 +264,7 @@ Recipes are defined in `specification/recipes.json`. Override counts in the job 
 **PowerShell — dev corpus (recommended):**
 
 ```powershell
-$spec = "src\kehrnel\engine\strategies\fhir\clinical_cdr\specification"
+$spec = "src\kehrnel\engine\strategies\fhir\resource_store\specification"
 
 $job = Invoke-RestMethod -Method POST -Uri "$base/environments/dev/synthetic/jobs" `
   -ContentType "application/json" `
@@ -313,7 +313,7 @@ $jid = $job.job.job_id
 ```bash
 curl -sS -X POST "$RUNTIME_URL/environments/dev/synthetic/jobs" \
   -H "Content-Type: application/json" \
-  -d @src/kehrnel/engine/strategies/fhir/clinical_cdr/specification/job_generate_dev.json
+  -d @src/kehrnel/engine/strategies/fhir/resource_store/specification/job_generate_dev.json
 
 # Poll (replace JOB_ID)
 curl -sS "$RUNTIME_URL/environments/dev/synthetic/jobs/JOB_ID"
@@ -343,7 +343,7 @@ Invoke-RestMethod -Method POST -Uri "$base/environments/dev/run" `
 
 ### 4.5 FHIR domain search (Bundle)
 
-Requires active `fhir.clinical_cdr` on `dev` and denormalized data. Run `**job_generate_dev.json**` (§4.2) so the `clinical_dev` recipe populates the ten searchable types below.
+Requires active `fhir.resource_store` on `dev` and denormalized data. Run `**job_generate_dev.json**` (§4.2) so the `clinical_dev` recipe populates the ten searchable types below.
 
 For a full **FHIR REST → Kehrnel** query catalog (multi-param searches, reference params, compartment matrix), see [§4.5.8](#458-fhir-search-query-catalog-rest-perspective).
 
@@ -361,7 +361,7 @@ All domain searches need header `**x-active-env: dev`** (or `KEHRNEL_DEFAULT_ENV
 
 #### 4.5.2 `clinical_dev` resource scenarios
 
-After `job_generate_dev.json` completes with `denormalize_after: true`, these types exist in `fhir_synthetic_clinical_cdr` with fhir-mql YAML configs. Example criteria match [golden query fixtures](tests/contract/clinical_cdr/fixtures/fhir_golden_queries.json) and fhir-mql E2E defaults.
+After `job_generate_dev.json` completes with `denormalize_after: true`, these types exist in `fhir_synthetic_resource_store` with fhir-mql YAML configs. Example criteria match [golden query fixtures](tests/contract/resource_store/fixtures/fhir_golden_queries.json) and fhir-mql E2E defaults.
 
 
 | Resource               | Example criteria                             | Notes                                            |
@@ -1180,7 +1180,7 @@ docker compose --profile fhir build fhir-gen fhir-mql
 ```powershell
 $env:RUNTIME_URL = "http://localhost:8080"
 
-kehrnel setup --runtime-url $env:RUNTIME_URL --env dev --domain fhir --strategy fhir.clinical_cdr
+kehrnel setup --runtime-url $env:RUNTIME_URL --env dev --domain fhir --strategy fhir.resource_store
 kehrnel core health
 kehrnel strategy list --domain fhir
 kehrnel core env show --env dev
@@ -1196,8 +1196,8 @@ cd kehrnel
 pip install -e src/kehrnel/engine/domains/fhir/libs/fhir-data-generation -e src/kehrnel/engine/domains/fhir/libs/fhir-search-to-mql
 pip install -e ".[api,mongo,fhir,test]"
 
-python -m pytest tests\contract\clinical_cdr -q
-python src\kehrnel\engine\strategies\fhir\clinical_cdr\scripts\spike_generate_and_search.py --db fhir_kehrnel_spike
+python -m pytest tests\contract\resource_store -q
+python src\kehrnel\engine\strategies\fhir\resource_store\scripts\spike_generate_and_search.py --db fhir_kehrnel_spike
 
 $env:KEHRNEL_AUTH_ENABLED = "false"
 $env:KEHRNEL_API_PORT = "8080"
@@ -1208,7 +1208,7 @@ New terminal:
 
 ```powershell
 $base = "http://localhost:8080"
-$spec = "src\kehrnel\engine\strategies\fhir\clinical_cdr\specification"
+$spec = "src\kehrnel\engine\strategies\fhir\resource_store\specification"
 
 Invoke-RestMethod "$base/health"
 Invoke-RestMethod -Method POST -Uri "$base/environments/dev/activate" `
@@ -1227,7 +1227,7 @@ $job = Invoke-RestMethod -Method POST -Uri "$base/environments/dev/synthetic/job
 
 **Symptom:** `"code": "ACTIVATION_STRATEGY_MISMATCH"`, `"message": "Active strategy differs from current manifest"`.
 
-**Cause:** Environment `dev` was activated against a different strategy manifest identity (e.g. before rename to `fhir.clinical_cdr`, or after a real `manifest.json` **version** bump). Stored `manifest_digest` no longer matches.
+**Cause:** Environment `dev` was activated against a different strategy manifest identity (e.g. before rename to `fhir.resource_store`, or after a real `manifest.json` **version** bump). Stored `manifest_digest` no longer matches.
 
 **Auto-heal:** If `strategy_id` and manifest **version** still match, the next op auto-updates the digest (no action needed). You only need the steps below when the version changed or strategy id differs.
 
@@ -1236,7 +1236,7 @@ $job = Invoke-RestMethod -Method POST -Uri "$base/environments/dev/synthetic/job
 ```powershell
 Invoke-RestMethod -Method POST -Uri "$base/environments/dev/activate" `
   -ContentType "application/json" `
-  -Body (Get-Content src\kehrnel\engine\strategies\fhir\clinical_cdr\specification\activate_dev.json -Raw)
+  -Body (Get-Content src\kehrnel\engine\strategies\fhir\resource_store\specification\activate_dev.json -Raw)
 
 # Or:
 Invoke-RestMethod -Method POST -Uri "$base/environments/dev/activations/fhir/upgrade"
@@ -1266,7 +1266,7 @@ Restart the API after pulling pack changes, then activate again. Use a fresh env
 **Verify Mongo is fast directly:**
 
 ```powershell
-mongosh mongodb://localhost:27017/fhir_synthetic_clinical_cdr --eval "db.Patient.getIndexes().length"
+mongosh mongodb://localhost:27017/fhir_synthetic_resource_store --eval "db.Patient.getIndexes().length"
 ```
 
 ---
@@ -1326,7 +1326,7 @@ Prefer stopping the server with **Ctrl+C** in the terminal where `./startKehrnel
 | Issue                                                                                           | Action                                                                                                                                                                                     |
 | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `ACTIVATION_STRATEGY_MISMATCH`                                                                  | Re-activate or `POST .../activations/fhir/upgrade` — see [above](#activation_strategy_mismatch)                                                                                            |
-| `strategy_id` `fhir.rps_canonical` not found                                                    | Use `fhir.clinical_cdr` in activate body                                                                                                                                                   |
+| `strategy_id` `fhir.rps_canonical` not found                                                    | Use `fhir.resource_store` in activate body                                                                                                                                                   |
 | `No module named fhir_gen` or `fhir_search_to_mql`                                              | `pip install -e src/kehrnel/engine/domains/fhir/libs/fhir-data-generation -e src/kehrnel/engine/domains/fhir/libs/fhir-search-to-mql` then `pip install -e ".[fhir]"`; **restart** the API |
 | `fhir-gen` fails from kehrnel root with pydantic `.env` errors                                  | `pip install -e src/kehrnel/engine/domains/fhir/libs/fhir-data-generation` (uses package-root `.env` only)                                                                                 |
 | Search returns 400 or empty                                                                     | Run `fhir_denormalize` or set `denormalize_after: true` on the synthetic job                                                                                                               |
@@ -1337,7 +1337,7 @@ Prefer stopping the server with **Ctrl+C** in the terminal where `./startKehrnel
 | `FHIR_LIBS_NOT_INSTALLED` on search                                                             | API started before `[fhir]` install — restart server after `pip install`                                                                                                                   |
 | `uv` / `startKehrnel`: `relative path without a working directory`                              | No `file:src/kehrnel/engine/domains/fhir/libs/...` in `pyproject.toml` extras; use `[tool.uv.sources]`; delete `.venv/.startKehrnel-pyproject.sha256`; `./startKehrnel --force-sync`       |
 | `Index already exists with a different name: birthDate_1`                                       | Stale indexes from older fhir-gen (index-on-save removed). Once per DB: `db.Patient.dropIndexes()` in mongosh, then re-run job with `denormalize_after: true`                              |
-| pytest clinical_cdr tests not found                                                             | `python -m pytest tests\contract\clinical_cdr`                                                                                                                                             |
+| pytest resource_store tests not found                                                             | `python -m pytest tests\contract\resource_store`                                                                                                                                             |
 | Port 8080 stuck                                                                                 | See [Port 8080 stuck](#port-8080-stuck-port-8080-is-already-in-use) above                                                                                                                  |
 | `kehrnel-api` on port 8000 vs `./startKehrnel` on 8080                                          | Set `KEHRNEL_API_PORT=8080` and `RUNTIME_URL=http://localhost:8080`, or use `./startKehrnel` only                                                                                          |
 
@@ -1351,7 +1351,7 @@ Prefer stopping the server with **Ctrl+C** in the terminal where `./startKehrnel
 | ----------------------------- | --------------------------- | ----------------------------------------------------------- |
 | `KEHRNEL_AUTH_ENABLED`        | `false` (local dev)         | Disable API key checks                                      |
 | `KEHRNEL_API_PORT`            | `8080`                      | API listen port (`startKehrnel` default)                    |
-| `FHIR_CONTRACT_MONGO`         | `1`                         | Enable Mongo execute tests in `tests/contract/clinical_cdr` |
+| `FHIR_CONTRACT_MONGO`         | `1`                         | Enable Mongo execute tests in `tests/contract/resource_store` |
 | `FHIR_GEN_MONGODB_URI`        | `mongodb://localhost:27017` | fhir-gen settings (optional)                                |
 | `MONGODB_URI`                 | `mongodb://localhost:27017` | Contract tests + Mongo bindings                             |
 | `FHIR_GENERATION_INTEGRATION` | `1`                         | Optional: persist test in `test_generation.py`              |

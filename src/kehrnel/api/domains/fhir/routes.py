@@ -10,7 +10,7 @@ from datetime import UTC, datetime
 from typing import Any
 from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 
-from fastapi import APIRouter, Body, HTTPException, Request
+from fastapi import APIRouter, Body, HTTPException, Query, Request
 from fastapi.responses import JSONResponse, PlainTextResponse
 
 from kehrnel.api.bridge.app.core.database import (
@@ -23,11 +23,12 @@ from kehrnel.api.core.admin.routes import _json_safe
 from kehrnel.api.domains.fhir.models import FhirSearchRequest
 from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.domains.fhir import implementation_guides
-from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.serialization import (
+from kehrnel.engine.terminology import TerminologyService
+from kehrnel.engine.strategies.fhir.resource_store.scripts.serialization import (
     operation_outcome,
     operation_outcome_from_error,
 )
-from kehrnel.engine.strategies.fhir.clinical_cdr.scripts.storage_adapter import (
+from kehrnel.engine.strategies.fhir.resource_store.scripts.storage_adapter import (
     MongoFHIRStorageAdapter,
 )
 
@@ -85,7 +86,7 @@ def _operation_outcome_response(exc: Exception) -> JSONResponse:
 router = APIRouter(prefix="/api/domains/fhir", tags=["FHIR"])
 
 FHIR_DOMAIN = "fhir"
-DEFAULT_STRATEGY_ID = os.getenv("KEHRNEL_FHIR_STRATEGY_ID", "fhir.clinical_cdr")
+DEFAULT_STRATEGY_ID = os.getenv("KEHRNEL_FHIR_STRATEGY_ID", "fhir.resource_store")
 
 
 def _auth_enabled() -> bool:
@@ -125,7 +126,7 @@ def _require_fhir_activation(request: Request, env_id: str):
 
 
 def to_strategy_query(payload: FhirSearchRequest) -> dict[str, Any]:
-    """Map API request to fhir.clinical_cdr compile_query input.
+    """Map API request to fhir.resource_store compile_query input.
 
     For a ``fhir_search`` URL, the URL's own ``_count``/``_offset`` are authoritative;
     the request-level ``limit``/``offset`` are passed only as *defaults* (applied when
@@ -201,11 +202,16 @@ def _build_bundle_links(
 
     if skip > 0:
         links.append(
-            {"relation": "previous", "url": _with_offset(self_url, max(0, skip - limit))}
+            {
+                "relation": "previous",
+                "url": _with_offset(self_url, max(0, skip - limit)),
+            }
         )
     # With a known total, offer `next` only while results remain. Without one,
     # a full page is the only available signal that more may exist.
-    has_more = (skip + returned) < total if isinstance(total, int) else returned >= limit
+    has_more = (
+        (skip + returned) < total if isinstance(total, int) else returned >= limit
+    )
     if has_more:
         links.append({"relation": "next", "url": _with_offset(self_url, skip + limit)})
     return links
@@ -273,6 +279,27 @@ def _fhir_version_number(value: Any) -> str:
     }.get(normalized, str(value or "5.0.0"))
 
 
+def _terminology_operation_declarations(service: TerminologyService) -> list[dict[str, str]]:
+    operations = {
+        str(operation)
+        for provider in service.config.get("providers", [])
+        if provider.get("enabled", True)
+        for operation in provider.get("operations", [])
+    }
+    definitions = {
+        "lookup": "http://hl7.org/fhir/OperationDefinition/CodeSystem-lookup",
+        "validate-code": "http://hl7.org/fhir/OperationDefinition/CodeSystem-validate-code",
+        "subsumes": "http://hl7.org/fhir/OperationDefinition/CodeSystem-subsumes",
+        "expand": "http://hl7.org/fhir/OperationDefinition/ValueSet-expand",
+        "translate": "http://hl7.org/fhir/OperationDefinition/ConceptMap-translate",
+    }
+    return [
+        {"name": name, "definition": definition}
+        for name, definition in definitions.items()
+        if name in operations
+    ]
+
+
 @router.get("/metadata")
 async def fhir_capability_statement(request: Request):
     """Describe the limited, activated FHIR REST surface truthfully."""
@@ -326,6 +353,12 @@ async def fhir_capability_statement(request: Request):
                     "conditionalDelete": "not-supported",
                 }
             )
+        rest = {"mode": "server", "resource": resources}
+        terminology_operations = _terminology_operation_declarations(
+            TerminologyService(runtime, env_id)
+        )
+        if terminology_operations:
+            rest["operation"] = terminology_operations
         statement = {
             "resourceType": "CapabilityStatement",
             "status": "active",
@@ -346,17 +379,276 @@ async def fhir_capability_statement(request: Request):
             },
             "fhirVersion": _fhir_version_number(capabilities.get("fhir_version")),
             "format": [FHIR_JSON_MEDIA_TYPE, "json"],
-            "rest": [{"mode": "server", "resource": resources}],
+            "rest": [rest],
         }
         return _fhir_json(_json_safe(statement))
     except Exception as exc:
         return _operation_outcome_response(exc)
 
 
+def _fhir_parameter_payload(resource: dict[str, Any] | None) -> dict[str, Any]:
+    if not resource:
+        return {}
+    if resource.get("resourceType") != "Parameters":
+        raise KehrnelError(
+            code="INVALID_INPUT",
+            status=400,
+            message="FHIR terminology operations require a Parameters resource body.",
+        )
+    payload: dict[str, Any] = {}
+    for parameter in resource.get("parameter") or []:
+        if not isinstance(parameter, dict) or not parameter.get("name"):
+            continue
+        name = str(parameter["name"])
+        value = next(
+            (item for key, item in parameter.items() if key.startswith("value")),
+            None,
+        )
+        if value is None and isinstance(parameter.get("resource"), dict):
+            value = parameter["resource"]
+        if value is not None:
+            payload[name] = value
+    return payload
+
+
+def _fhir_terminology_request_payload(
+    request: Request,
+    operation: str,
+    body: dict[str, Any] | None,
+    *,
+    resource_type: str,
+) -> dict[str, Any]:
+    payload = _fhir_parameter_payload(body)
+    for name, value in request.query_params.multi_items():
+        if name not in {"env_id", "environment"}:
+            payload[name] = value
+    for name in ("includeDesignations", "activeOnly", "abstract", "reverse"):
+        if name in payload and isinstance(payload[name], str):
+            payload[name] = payload[name].strip().lower() in {"1", "true", "yes", "on"}
+    for name in ("offset", "count"):
+        if name in payload and isinstance(payload[name], str):
+            try:
+                payload[name] = int(payload[name])
+            except ValueError as exc:
+                raise KehrnelError(code="INVALID_INPUT", status=400, message=f"{name} must be an integer") from exc
+    if resource_type == "CodeSystem" and payload.get("url") and not payload.get("system"):
+        payload["system"] = payload["url"]
+        payload.pop("url", None)
+    aliases = {
+        "codeA": "code_a",
+        "codeB": "code_b",
+        "displayLanguage": "language",
+        "valueSetVersion": "value_set_version",
+        "systemVersion": "version",
+        "includeDesignations": "include_designations",
+        "activeOnly": "active_only",
+        "conceptMapVersion": "concept_map_version",
+        "targetsystem": "target_system",
+    }
+    for source, target in aliases.items():
+        if source in payload and target not in payload:
+            payload[target] = payload[source]
+    return payload
+
+
+def _terminology_parameters(operation: str, result: dict[str, Any]) -> dict[str, Any]:
+    parameters: list[dict[str, Any]] = []
+
+    def add(name: str, value: Any, value_type: str = "String") -> None:
+        if value is not None:
+            parameters.append({"name": name, f"value{value_type}": value})
+
+    if operation == "validate-code":
+        add("result", bool(result.get("valid")), "Boolean")
+        add("message", result.get("message"))
+        add("display", result.get("display"))
+    elif operation == "subsumes":
+        add("outcome", result.get("outcome"), "Code")
+    elif operation == "lookup":
+        concept = result.get("concept") if isinstance(result.get("concept"), dict) else {}
+        displays = [
+            item.get("term")
+            for item in concept.get("descriptions") or []
+            if isinstance(item, dict) and item.get("active", True) and item.get("term")
+        ]
+        add("name", "SNOMED CT")
+        add("version", result.get("version") or concept.get("releaseId"))
+        add("display", displays[0] if displays else None)
+        add("inactive", not bool(concept.get("active", True)), "Boolean")
+        for description in concept.get("descriptions") or []:
+            if not isinstance(description, dict) or not description.get("active", True):
+                continue
+            parts = [
+                {"name": "language", "valueCode": description.get("languageCode")},
+                {"name": "value", "valueString": description.get("term")},
+            ]
+            parameters.append(
+                {
+                    "name": "designation",
+                    "part": [part for part in parts if list(part.values())[-1] is not None],
+                }
+            )
+    elif operation == "translate":
+        add("result", bool(result.get("matched")), "Boolean")
+        add("message", result.get("message"))
+    return {"resourceType": "Parameters", "parameter": parameters}
+
+
+def _terminology_response(content: dict[str, Any], result: dict[str, Any]) -> JSONResponse:
+    """Return standard FHIR content with non-clinical execution provenance."""
+    response = _fhir_json(_json_safe(content))
+    evidence = result.get("evidence") if isinstance(result.get("evidence"), dict) else {}
+    provider = result.get("provider") if isinstance(result.get("provider"), dict) else {}
+    header_values = {
+        "X-Kehrnel-Terminology-Provider": provider.get("id"),
+        "X-Kehrnel-Terminology-Correlation": evidence.get("correlationId"),
+        "X-Kehrnel-Terminology-Release": result.get("releaseId"),
+    }
+    for name, value in header_values.items():
+        if value:
+            response.headers[name] = str(value)
+    return response
+
+
+async def _execute_fhir_terminology(
+    request: Request,
+    operation: str,
+    body: dict[str, Any] | None = None,
+    *,
+    resource_type: str = "CodeSystem",
+) -> JSONResponse:
+    try:
+        env_id = resolve_active_env_id(request)
+        runtime, _activation = _require_fhir_activation(request, env_id)
+        payload = _fhir_terminology_request_payload(
+            request, operation, body, resource_type=resource_type
+        )
+        result = await TerminologyService(runtime, env_id).execute(operation, payload)
+        if operation == "expand":
+            value_set = result.get("valueSet")
+            if not isinstance(value_set, dict):
+                concepts = result.get("concepts") or result.get("matches") or []
+                contains = []
+                for concept in concepts:
+                    if not isinstance(concept, dict):
+                        continue
+                    descriptions = concept.get("descriptions") or []
+                    display = next(
+                        (
+                            item.get("term")
+                            for item in descriptions
+                            if isinstance(item, dict) and item.get("active", True) and item.get("term")
+                        ),
+                        None,
+                    )
+                    contains.append(
+                        {
+                            "system": result.get("system") or payload.get("system"),
+                            "code": concept.get("conceptId") or concept.get("code"),
+                            "display": display,
+                            "inactive": not bool(concept.get("active", True)),
+                        }
+                    )
+                value_set = {
+                    "resourceType": "ValueSet",
+                    "url": payload.get("url"),
+                    "version": payload.get("value_set_version"),
+                    "status": "active",
+                    "expansion": {
+                        "timestamp": datetime.now(UTC).isoformat(),
+                        "total": len(contains),
+                        "contains": contains,
+                    },
+                }
+            return _terminology_response(value_set, result)
+        provider_response = result.get("response")
+        if isinstance(provider_response, dict) and provider_response.get("resourceType") == "Parameters":
+            return _terminology_response(provider_response, result)
+        return _terminology_response(_terminology_parameters(operation, result), result)
+    except Exception as exc:
+        return _operation_outcome_response(exc)
+
+
+@router.get("/CodeSystem/$lookup")
+async def fhir_terminology_lookup_get(request: Request):
+    return await _execute_fhir_terminology(request, "lookup", resource_type="CodeSystem")
+
+
+@router.post("/CodeSystem/$lookup")
+async def fhir_terminology_lookup_post(
+    request: Request, body: dict[str, Any] = Body(...)
+):
+    return await _execute_fhir_terminology(request, "lookup", body, resource_type="CodeSystem")
+
+
+@router.get("/CodeSystem/$validate-code")
+async def fhir_terminology_validate_get(request: Request):
+    return await _execute_fhir_terminology(request, "validate-code", resource_type="CodeSystem")
+
+
+@router.post("/CodeSystem/$validate-code")
+async def fhir_terminology_validate_post(
+    request: Request, body: dict[str, Any] = Body(...)
+):
+    return await _execute_fhir_terminology(request, "validate-code", body, resource_type="CodeSystem")
+
+
+@router.get("/CodeSystem/$subsumes")
+async def fhir_terminology_subsumes_get(request: Request):
+    return await _execute_fhir_terminology(request, "subsumes", resource_type="CodeSystem")
+
+
+@router.post("/CodeSystem/$subsumes")
+async def fhir_terminology_subsumes_post(
+    request: Request, body: dict[str, Any] = Body(...)
+):
+    return await _execute_fhir_terminology(request, "subsumes", body, resource_type="CodeSystem")
+
+
+@router.get("/ValueSet/$validate-code")
+async def fhir_terminology_value_set_validate_get(request: Request):
+    return await _execute_fhir_terminology(request, "validate-code", resource_type="ValueSet")
+
+
+@router.post("/ValueSet/$validate-code")
+async def fhir_terminology_value_set_validate_post(
+    request: Request, body: dict[str, Any] = Body(...)
+):
+    return await _execute_fhir_terminology(
+        request, "validate-code", body, resource_type="ValueSet"
+    )
+
+
+@router.get("/ValueSet/$expand")
+async def fhir_terminology_expand_get(request: Request):
+    return await _execute_fhir_terminology(request, "expand", resource_type="ValueSet")
+
+
+@router.post("/ValueSet/$expand")
+async def fhir_terminology_expand_post(
+    request: Request, body: dict[str, Any] = Body(...)
+):
+    return await _execute_fhir_terminology(request, "expand", body, resource_type="ValueSet")
+
+
+@router.get("/ConceptMap/$translate")
+async def fhir_terminology_translate_get(request: Request):
+    return await _execute_fhir_terminology(request, "translate", resource_type="ConceptMap")
+
+
+@router.post("/ConceptMap/$translate")
+async def fhir_terminology_translate_post(
+    request: Request, body: dict[str, Any] = Body(...)
+):
+    return await _execute_fhir_terminology(
+        request, "translate", body, resource_type="ConceptMap"
+    )
+
+
 @router.post("/search")
 async def search_fhir(request: Request, payload: FhirSearchRequest = Body(...)):
     """
-    Execute FHIR search via the active environment's fhir.clinical_cdr strategy.
+    Execute FHIR search via the active environment's fhir.resource_store strategy.
 
     Compiles FHIR search parameters to MQL and runs against MongoDB; returns a
     searchset Bundle.
@@ -439,6 +731,33 @@ async def explain_fhir_search(request: Request, payload: dict[str, Any] = Body(.
                 status=500,
                 message="Unexpected explain result shape from strategy runtime",
             )
+        return JSONResponse(content=_json_safe(result))
+    except Exception as exc:
+        return _operation_outcome_response(exc)
+
+
+@router.post("/native-query")
+async def execute_native_fhir_query(
+    request: Request, payload: dict[str, Any] = Body(...)
+):
+    """Execute a bounded, read-only MongoDB find for implementation work.
+
+    This is an accelerator operation, not part of the FHIR REST specification.
+    It deliberately excludes writes, aggregation pipelines, server-side
+    JavaScript, unbounded result sets and cross-collection access.
+    """
+    try:
+        env_id = resolve_active_env_id(request)
+        runtime, _activation = _require_fhir_activation(request, env_id)
+        result = await runtime.dispatch(
+            env_id,
+            "op",
+            {
+                "domain": FHIR_DOMAIN,
+                "op": "fhir_native_query",
+                "payload": dict(payload or {}),
+            },
+        )
         return JSONResponse(content=_json_safe(result))
     except Exception as exc:
         return _operation_outcome_response(exc)
@@ -645,7 +964,7 @@ async def get_fhir_search_parameters(request: Request, resource_type: str):
 
 @router.get("/resource-catalog")
 async def get_fhir_resource_catalog(request: Request):
-    """List resource models owned by the active Clinical CDR package."""
+    """List resource models owned by the active Resource Store package."""
     try:
         env_id = resolve_active_env_id(request)
         runtime, _activation = _require_fhir_activation(request, env_id)
@@ -779,11 +1098,62 @@ async def preview_fhir_cohort(request: Request, payload: dict[str, Any] = Body(.
 
 
 @router.post("/implementation-guides/stage")
-async def stage_fhir_implementation_guide(request: Request):
-    """Stage and inspect one bounded FHIR NPM archive for later activation."""
+async def stage_fhir_implementation_guide(
+    request: Request,
+    fhir_release: str | None = Query(
+        default=None,
+        description=(
+            "FHIR release of the activation draft (R4, R5, or R6). Required only "
+            "when no FHIR Resource Store activation exists."
+        ),
+    ),
+):
+    """Stage and inspect one bounded FHIR NPM archive for later activation.
+
+    Staging is intentionally available before the FHIR strategy is active so an
+    implementation guide can be reviewed as part of the activation draft. An
+    existing FHIR activation remains authoritative for the release; otherwise
+    callers must provide ``fhir_release=R4|R5|R6``.
+    """
     try:
         env_id = resolve_active_env_id(request)
-        _runtime, activation = _require_fhir_activation(request, env_id)
+        runtime = getattr(request.app.state, "strategy_runtime", None)
+        if runtime is None:
+            raise HTTPException(status_code=503, detail="Strategy runtime is not available.")
+        activation = runtime.registry.get_activation(env_id, FHIR_DOMAIN)
+        configured_release = str(
+            ((getattr(activation, "config", None) or {}).get("schema_version"))
+            or ""
+        ).strip().upper()
+        requested_release = str(fhir_release or "").strip().upper()
+        if activation is not None:
+            strategy_id = (getattr(activation, "strategy_id", None) or "").strip()
+            if strategy_id != DEFAULT_STRATEGY_ID:
+                raise HTTPException(
+                    status_code=409,
+                    detail=(
+                        f"FHIR domain requires strategy {DEFAULT_STRATEGY_ID!r}; "
+                        f"active activation is {strategy_id!r}."
+                    ),
+                )
+            if requested_release and requested_release != configured_release:
+                raise HTTPException(
+                    status_code=409,
+                    detail=(
+                        f"Requested FHIR release {requested_release} does not match "
+                        f"the active release {configured_release}."
+                    ),
+                )
+        expected_release = configured_release or requested_release
+        if expected_release not in {"R4", "R5", "R6"}:
+            raise KehrnelError(
+                code="FHIR_RELEASE_REQUIRED",
+                status=400,
+                message=(
+                    "No FHIR strategy is active. Provide fhir_release=R4, R5, or R6 "
+                    "to stage a package for an activation draft."
+                ),
+            )
         staging_root = str(os.getenv("KEHRNEL_FHIR_IG_STAGING_ROOT") or "").strip()
         if not staging_root:
             raise KehrnelError(
@@ -810,14 +1180,13 @@ async def stage_fhir_implementation_guide(request: Request):
             or request.query_params.get("filename")
             or "package.tgz"
         )
-        config = getattr(activation, "config", None) or {}
         result = await asyncio.to_thread(
             implementation_guides.stage_implementation_guide,
             data,
             filename=filename,
             environment_id=env_id,
             staging_root=staging_root,
-            expected_release=str(config.get("schema_version") or "R5"),
+            expected_release=expected_release,
             max_upload_bytes=FHIR_IG_UPLOAD_MAX_BYTES,
             max_environment_bytes=FHIR_IG_STAGING_MAX_BYTES,
         )
@@ -907,7 +1276,7 @@ async def _decode_import_request(request: Request) -> dict[str, Any]:
 
 @router.post("/import")
 async def import_fhir_resources(request: Request):
-    """Migration endpoint for raw Bundle JSON, NDJSON, or a JSON import envelope."""
+    """Bounded import endpoint for raw FHIR JSON, Bundle, NDJSON, or an envelope."""
     try:
         env_id = resolve_active_env_id(request)
         runtime, _activation = _require_fhir_activation(request, env_id)

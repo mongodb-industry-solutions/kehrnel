@@ -185,7 +185,15 @@
         "description": "Nonclinical studies organized around animals, treatment groups, test articles, specimens, organs, and findings.",
         "datasetExamples": ["DM", "TX", "MI", "LB"],
         "principalEntities": ["study", "animalSubject", "treatmentGroup", "testArticle", "specimen"],
-        "materialization": "nonclinical-finding"
+        "materialization": "nonclinical-finding",
+        "operationalObjects": [
+          {
+            "objectType": "SubjectExposureResponse",
+            "schemaVersion": "1.0.0",
+            "sourceDomains": ["DM", "TX", "EX", "BW", "BG", "FW", "LB", "CL", "MA", "MI", "OM", "PC", "PP", "SE", "DS"],
+            "description": "A rebuildable subject-centred object with evidence-dimension availability and canonical source-row lineage."
+          }
+        ]
       },
       {
         "id": "profile.sdtm",

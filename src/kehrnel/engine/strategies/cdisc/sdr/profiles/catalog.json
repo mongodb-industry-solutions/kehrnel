@@ -11,6 +11,15 @@
       "anchorDomain": "DM",
       "syntheticDomains": ["DM", "TX", "MI", "LB"],
       "materialization": "nonclinical-finding",
+      "operationalObjects": [
+        {
+          "objectType": "SubjectExposureResponse",
+          "schemaVersion": "1.0.0",
+          "materialization": "nonclinical-finding",
+          "sourceDomains": ["DM", "TX", "EX", "BW", "BG", "FW", "LB", "CL", "MA", "MI", "OM", "PC", "PP", "SE", "DS"],
+          "description": "A subject-centred view of exposure, trajectories, observations, pathology, organ measurements, toxicokinetics, study context, and source-row lineage."
+        }
+      ],
       "principalEntities": ["study", "animalSubject", "treatmentGroup", "testArticle", "specimen"]
     },
     "adam": {

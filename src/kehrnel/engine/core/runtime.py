@@ -30,6 +30,7 @@ from kehrnel.persistence.mongodb.atlas_search import MongoAtlasSearchAdapter
 from kehrnel.persistence.artifacts import AzureBlobArtifactStore, FileSystemArtifactStore, S3ArtifactStore
 from kehrnel.persistence.validation import CommandValidationEngine
 from kehrnel.persistence.embeddings import HttpEmbeddingAdapter
+from kehrnel.engine.terminology import RuntimeTerminologyAdapter
 from pathlib import Path
 
 
@@ -767,7 +768,9 @@ class StrategyRuntime:
         cached = adapters_by_loop.get(cache_key)
         if cached is not None:
             return cached["adapters"]
-        adapters: Dict[str, Any] = {}
+        adapters: Dict[str, Any] = {
+            "terminology": RuntimeTerminologyAdapter(self, env_id),
+        }
         db_cfg = (bindings or {}).get("db") if isinstance(bindings, dict) else None
         if db_cfg and db_cfg.get("provider") == "mongodb":
             db = _mongo_get_db(bindings)

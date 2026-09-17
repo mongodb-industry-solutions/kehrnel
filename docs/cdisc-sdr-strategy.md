@@ -805,12 +805,14 @@ solution owns its database, APIs, retrieval indexes, and agent runtime; it does
 not require a live Kehrnel connection. Kehrnel remains the reusable environment
 for data creation, CDISC validation, model evolution, and query-pattern
 learning. `cdisc_export_solution_evidence` formalizes that boundary as
-`kehrnel.dev/cdisc-solution-evidence/v1`: one published-snapshot package with
+`kehrnel.dev/cdisc-solution-evidence/v2`: one published-snapshot package with
 dataset metamodels, canonical records, generic entity/materialization
 projections, source-artifact metadata, validation evidence, and transformation
-lineage. Deployment-specific tenant scope is removed while source identities
-are retained explicitly for traceability; the package payload is protected by
-a cross-runtime canonical JSON SHA-256 digest.
+lineage. Every row separates `canonical`, `_control`, `_index`, optional
+`_enrichment`, and `_provenance`; `_control.modelSchemaVersion` is the explicit
+maintenance boundary for future envelope evolution. The portable tenant marker
+is rebound by the destination importer, source identities remain stable, and
+the package payload is protected by a cross-runtime canonical JSON SHA-256 digest.
 The machine-readable contract is shipped beside the package service as
 `packages/solution-evidence.schema.json` and is validated in the contract test
 suite.
@@ -874,7 +876,7 @@ Repository sources:
 - `src/kehrnel/engine/strategies/openehr/rps_dual/`, including ingest, reverse transform, AQL compilation, query execution, plan/apply, bundles, and synthetic jobs.
 - `src/kehrnel/engine/strategies/openehr/rps_dual/assets/rps-paper.pdf`, *A Document-First openEHR Persistence Layer for Operational Patient and Cross-Patient Workloads*.
 - `src/kehrnel/engine/strategies/contextobjects/rps/` and the ContextObjects/Con2L documentation.
-- `src/kehrnel/engine/strategies/fhir/clinical_cdr/` for reusable query and generation packaging patterns.
+- `src/kehrnel/engine/strategies/fhir/resource_store/` for reusable query and generation packaging patterns.
 - The supplied *Document-First Study Data Repository for CDISC - Research and accelerator strategy*.
 
 Official sources checked on 21 August 2026:

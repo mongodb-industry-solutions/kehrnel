@@ -128,6 +128,10 @@ async def test_solution_evidence_export_is_portable_complete_and_digest_verified
     assert exported["counts"]["datasets"] == 4
     assert exported["counts"]["records"] > 0
     assert exported["counts"]["entities"] > 0
+    assert exported["counts"]["operationalObjects"] > 0
+    assert {item["mode"] for item in package["manifest"]["interactionContracts"]} == {
+        "native", "compiled", "hybrid"
+    }
     assert repeated["packageId"] == exported["packageId"]
     assert repeated["artifactCreated"] is False
     assert all(item["_control"]["tenantId"] == "portable" for item in package["evidence"]["records"])
@@ -300,6 +304,97 @@ async def test_projection_materializes_semantic_text_without_vector_fields():
     assert all("vector" not in record["semantic"] for record in records)
     assert all("dimensions" not in record["semantic"] for record in records)
     assert all("EMBED-1-" not in record["semantic"]["text"] for record in records)
+
+
+@pytest.mark.asyncio
+async def test_send_projection_materializes_subject_exposure_response_objects():
+    storage = MemoryStorage()
+    strategy = CDISCSDRStrategy()
+    ctx = _context(storage)
+    generated = strategy.synthetic.generate(
+        {"studyId": "OBJECT-1", "profile": "send", "scenario": "safety-signal", "subjects": 3}
+    )
+    for document in generated["datasets"].values():
+        await strategy.ingest(
+            ctx,
+            {
+                "datasetJSON": document,
+                "packageId": "p",
+                "snapshotId": "v1",
+                "profile": "send",
+                "standard": {"family": "SEND"},
+                "publicationState": "staged",
+            },
+        )
+
+    rebuilt = await strategy.run_op(
+        ctx, "cdisc_rebuild_projections", {"studyId": "OBJECT-1", "snapshotId": "v1"}
+    )
+
+    objects = [
+        item
+        for item in storage.data["cdisc_materializations"].values()
+        if item.get("objectType") == "SubjectExposureResponse"
+    ]
+    assert len(objects) == 3
+    assert rebuilt["operationalObjectCount"] == 3
+    first = objects[0]
+    assert first["objectSchemaVersion"] == "1.0.0"
+    assert first["subject"]["id"]
+    assert first["evidenceDimensions"]["demographics"]["available"] is True
+    assert first["evidenceDimensions"]["demographics"]["sourceRecordIds"]
+    assert first["sourceRecordIds"]
+
+
+@pytest.mark.asyncio
+async def test_grouped_analysis_returns_the_executed_plan_and_interaction_contract():
+    storage = MemoryStorage()
+    strategy = CDISCSDRStrategy()
+    ctx = _context(storage)
+    generated = strategy.synthetic.generate(
+        {"studyId": "ANALYSIS-1", "profile": "send", "subjects": 2}
+    )
+    for document in generated["datasets"].values():
+        await strategy.ingest(
+            ctx,
+            {
+                "datasetJSON": document,
+                "packageId": "p",
+                "snapshotId": "v1",
+                "profile": "send",
+                "standard": {"family": "SEND"},
+                "publicationState": "staged",
+            },
+        )
+    await strategy.run_op(
+        ctx, "cdisc_publish_snapshot", {"studyId": "ANALYSIS-1", "snapshotId": "v1"}
+    )
+
+    executed = {}
+
+    async def capture_analysis(collection, pipeline, allow_disk_use=True):
+        executed["collection"] = collection
+        executed["pipeline"] = pipeline
+        return []
+
+    storage.aggregate = capture_analysis
+
+    result = await strategy.run_op(
+        ctx,
+        "cdisc_run_analysis",
+        {
+            "version": "cdisc-analysis/v1",
+            "scope": {"studies": ["ANALYSIS-1"], "snapshots": "published"},
+            "groupBy": ["domain"],
+            "metrics": [{"name": "records", "op": "count"}],
+        },
+    )
+
+    assert result["explain"]["interaction"]["id"] == "cdisc.study-analysis"
+    assert result["explain"]["interaction"]["mode"] == "compiled"
+    assert result["explain"]["executedPlan"]["collection"] == "cdisc_records"
+    assert result["explain"]["executedPlan"]["pipeline"]
+    assert executed["pipeline"] == result["explain"]["executedPlan"]["pipeline"]
 
 
 @pytest.mark.asyncio

@@ -13,7 +13,7 @@ def client(tmp_path):
 
 def test_activation_records_digest_and_version(client):
     app, cl = client
-    res = cl.post("/v1/environments/envI/activate", json={"strategy_id": "fhir.clinical_cdr", "version": "0.1.0", "config": {"database": "fhir_test"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
+    res = cl.post("/v1/environments/envI/activate", json={"strategy_id": "fhir.resource_store", "version": "0.1.0", "config": {"database": "fhir_test"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
     assert res.status_code == 200
     act = cl.get("/v1/environments/envI/activations").json()["activations"]
     any_act = list(act.values())[0]
@@ -23,9 +23,9 @@ def test_activation_records_digest_and_version(client):
 
 def test_manifest_mismatch_triggers_conflict(client, monkeypatch):
     app, cl = client
-    cl.post("/v1/environments/envM/activate", json={"strategy_id": "fhir.clinical_cdr", "version": "0.1.0", "config": {"database": "fhir_test"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
+    cl.post("/v1/environments/envM/activate", json={"strategy_id": "fhir.resource_store", "version": "0.1.0", "config": {"database": "fhir_test"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
     rt: StrategyRuntime = app.state.strategy_runtime
-    manifest = rt.registry.get_manifest("fhir.clinical_cdr")
+    manifest = rt.registry.get_manifest("fhir.resource_store")
     # simulate manifest version change
     manifest.version = "9.9.9"
     res = cl.post(
@@ -43,7 +43,7 @@ def test_manifest_mismatch_triggers_conflict(client, monkeypatch):
 
 def test_upgrade_endpoint_refreshes_digest(client):
     app, cl = client
-    cl.post("/v1/environments/envU/activate", json={"strategy_id": "fhir.clinical_cdr", "version": "0.1.0", "config": {"database": "fhir_test"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
+    cl.post("/v1/environments/envU/activate", json={"strategy_id": "fhir.resource_store", "version": "0.1.0", "config": {"database": "fhir_test"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
     res_before = cl.get("/v1/environments/envU/activations").json()
     before_digest = list(res_before["activations"].values())[0]["manifest_digest"]
     # no manifest change but upgrade should produce new activation_id
@@ -56,12 +56,12 @@ def test_upgrade_endpoint_refreshes_digest(client):
 
 def test_upgrade_changes_digest_when_manifest_changes(client):
     app, cl = client
-    cl.post("/v1/environments/envUpgrade/activate", json={"strategy_id": "fhir.clinical_cdr", "version": "0.1.0", "config": {"database": "fhir_test"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
+    cl.post("/v1/environments/envUpgrade/activate", json={"strategy_id": "fhir.resource_store", "version": "0.1.0", "config": {"database": "fhir_test"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
     before = cl.get("/v1/environments/envUpgrade/activations").json()
     before_act = list(before["activations"].values())[0]
     # mutate manifest so digest should change
     rt: StrategyRuntime = app.state.strategy_runtime
-    manifest = rt.registry.get_manifest("fhir.clinical_cdr")
+    manifest = rt.registry.get_manifest("fhir.resource_store")
     manifest.version = "9.9.9"
 
     res = cl.post("/v1/environments/envUpgrade/activations/fhir/upgrade")
@@ -75,7 +75,7 @@ def test_reactivate_same_config_refreshes_digest_when_manifest_changes(client):
     cl.post(
         "/v1/environments/envReactivate/activate",
         json={
-            "strategy_id": "fhir.clinical_cdr",
+            "strategy_id": "fhir.resource_store",
             "version": "0.1.0",
             "config": {"database": "fhir_test"},
             "bindings": {},
@@ -87,13 +87,13 @@ def test_reactivate_same_config_refreshes_digest_when_manifest_changes(client):
     before_act = list(before["activations"].values())[0]
 
     rt: StrategyRuntime = app.state.strategy_runtime
-    manifest = rt.registry.get_manifest("fhir.clinical_cdr")
+    manifest = rt.registry.get_manifest("fhir.resource_store")
     manifest.version = "9.9.9"
 
     res = cl.post(
         "/v1/environments/envReactivate/activate",
         json={
-            "strategy_id": "fhir.clinical_cdr",
+            "strategy_id": "fhir.resource_store",
             "version": "latest",
             "config": {"database": "fhir_test"},
             "bindings": {},
@@ -123,7 +123,7 @@ def test_reactivate_refreshes_when_strategy_database_changes(client):
     res1 = cl.post(
         "/v1/environments/envBindings/activate",
         json={
-            "strategy_id": "fhir.clinical_cdr",
+            "strategy_id": "fhir.resource_store",
             "version": "latest",
             "config": {"database": "db_a"},
             "bindings": {
@@ -145,7 +145,7 @@ def test_reactivate_refreshes_when_strategy_database_changes(client):
     res2 = cl.post(
         "/v1/environments/envBindings/activate",
         json={
-            "strategy_id": "fhir.clinical_cdr",
+            "strategy_id": "fhir.resource_store",
             "version": "latest",
             "config": {"database": "db_b"},
             "bindings": {
@@ -168,11 +168,11 @@ def test_reactivate_refreshes_when_strategy_database_changes(client):
 
 def test_rollback_restores_previous_digest_and_hash(client):
     app, cl = client
-    cl.post("/v1/environments/envRollback/activate", json={"strategy_id": "fhir.clinical_cdr", "version": "0.1.0", "config": {"database": "fhir_test"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
+    cl.post("/v1/environments/envRollback/activate", json={"strategy_id": "fhir.resource_store", "version": "0.1.0", "config": {"database": "fhir_test"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
     before = cl.get("/v1/environments/envRollback/activations").json()
     before_act = list(before["activations"].values())[0]
     rt: StrategyRuntime = app.state.strategy_runtime
-    manifest = rt.registry.get_manifest("fhir.clinical_cdr")
+    manifest = rt.registry.get_manifest("fhir.resource_store")
     manifest.version = "2.0.0"
     res_up = cl.post("/v1/environments/envRollback/activations/fhir/upgrade")
     assert res_up.status_code == 200
@@ -191,7 +191,7 @@ def test_dispatch_auto_heals_digest_drift_without_reactivate(client, monkeypatch
     cl.post(
         "/v1/environments/envHeal/activate",
         json={
-            "strategy_id": "fhir.clinical_cdr",
+            "strategy_id": "fhir.resource_store",
             "version": "latest",
             "config": {"database": "fhir_test"},
             "bindings": {},
@@ -200,7 +200,7 @@ def test_dispatch_auto_heals_digest_drift_without_reactivate(client, monkeypatch
         },
     )
     rt: StrategyRuntime = app.state.strategy_runtime
-    manifest = rt.registry.get_manifest("fhir.clinical_cdr")
+    manifest = rt.registry.get_manifest("fhir.resource_store")
     before_digest = rt._manifest_digest(manifest)
     # Simulate runtime hydration drift (recipes/defaults merged into manifest).
     manifest.default_config = dict(manifest.default_config or {})
@@ -230,7 +230,7 @@ def test_dispatch_auto_heals_digest_drift_without_reactivate(client, monkeypatch
 
 def test_delete_activation_blocks_future_queries(client):
     app, cl = client
-    cl.post("/v1/environments/envDelete/activate", json={"strategy_id": "fhir.clinical_cdr", "version": "0.1.0", "config": {"database": "fhir_test"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
+    cl.post("/v1/environments/envDelete/activate", json={"strategy_id": "fhir.resource_store", "version": "0.1.0", "config": {"database": "fhir_test"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
     res_del = cl.delete("/v1/environments/envDelete/activations/fhir")
     assert res_del.status_code == 200
 

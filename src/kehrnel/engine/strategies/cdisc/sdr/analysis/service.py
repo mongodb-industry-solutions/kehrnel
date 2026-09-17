@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Literal, Optional
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from kehrnel.engine.core.errors import KehrnelError
+from kehrnel.engine.core.explain import enrich_explain
 from kehrnel.engine.core.types import StrategyContext
 from kehrnel.engine.domains.cdisc.query import (
     QueryScope,
@@ -196,10 +197,25 @@ class AnalysisService:
             rows = await storage_adapter(ctx).aggregate(plan["collection"], plan["pipeline"])
         except Exception as exc:
             raise KehrnelError(code="CDISC_ANALYSIS_EXECUTION_FAILED", status=502, message=str(exc)) from exc
+        explain = enrich_explain(
+            {
+                "builder": {"chosen": "cdisc_analysis_v1"},
+                "governance": plan["governance"],
+                "evidence": plan["evidence"],
+                "executedPlan": {
+                    "collection": plan["collection"],
+                    "pipeline": plan["pipeline"],
+                },
+            },
+            ctx,
+            domain="cdisc",
+            engine="mongo_pipeline",
+            scope="study-analysis",
+        )
         return {
             "ok": True,
             "version": plan["version"],
             "rows": rows,
             "columns": plan["columns"],
-            "explain": {"governance": plan["governance"], "evidence": plan["evidence"]},
+            "explain": explain,
         }

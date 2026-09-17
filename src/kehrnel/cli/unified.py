@@ -63,6 +63,12 @@ TOP_LEVEL_HELP = """Unified kehrnel CLI — discover, activate, and execute heal
   kehrnel run <operation> --env dev --domain openehr --strategy openehr.rps_dual --payload <payload.json>
 
 \b
+7. Operate an activated FHIR resource store:
+  kehrnel fhir capabilities --env dev
+  kehrnel fhir resource-catalog Patient --env dev
+  kehrnel fhir explain 'Patient?name=Smith' --env dev
+
+\b
 Detailed help:
   kehrnel --help
   kehrnel core env --help
@@ -117,6 +123,31 @@ RESOURCE_HELP = """Reusable source/sink profiles (file, mongo, ...)."""
 
 OPS_HELP = """Discover every executable environment capability, strategy operation, schema, and copy-ready command."""
 
+FHIR_HELP = """Operate the activated FHIR resource-store accelerator
+
+\b
+Discover the live contract:
+  kehrnel fhir metadata --env dev
+  kehrnel fhir capabilities --env dev
+  kehrnel fhir support-matrix --env dev --format markdown --out fhir-support-matrix.md
+
+\b
+Inspect the model and search implementation:
+  kehrnel fhir resource-catalog Patient --env dev
+  kehrnel fhir search-parameters Observation --env dev
+  kehrnel fhir index-manifest --env dev
+
+\b
+Stage a voluntary IG overlay, then review its activation patch:
+  kehrnel fhir stage-ig customer.fhir.ig.tgz --env dev --out staged-ig.json
+
+\b
+Dry-run import, search, and inspect generated MQL:
+  kehrnel fhir import-data bundle.json --env dev
+  kehrnel fhir search 'Patient?name=Smith' --env dev
+  kehrnel fhir explain 'Patient?name=Smith' --env dev --execution-stats
+"""
+
 app = typer.Typer(help=TOP_LEVEL_HELP, rich_markup_mode="rich")
 auth_app = typer.Typer(help="Authenticate once and reuse credentials", rich_markup_mode="rich")
 context_app = typer.Typer(help="Set/get runtime context (env/domain/strategy/data-mode/source/sink)", rich_markup_mode="rich")
@@ -127,6 +158,14 @@ domain_app = typer.Typer(help="Domain-scoped operations", rich_markup_mode="rich
 strategy_app = typer.Typer(help="Strategy-scoped operations", rich_markup_mode="rich")
 resource_app = typer.Typer(help=RESOURCE_HELP, rich_markup_mode="rich")
 ops_app = typer.Typer(help=OPS_HELP, rich_markup_mode="rich")
+terminology_app = typer.Typer(
+    help="Configure and call the tenant-scoped terminology gateway",
+    rich_markup_mode="rich",
+)
+fhir_app = typer.Typer(
+    help=FHIR_HELP,
+    rich_markup_mode="rich",
+)
 
 stdout_console = Console()
 stderr_console = Console(stderr=True)
@@ -140,6 +179,8 @@ app.add_typer(domain_app, name="domain")
 app.add_typer(strategy_app, name="strategy")
 app.add_typer(resource_app, name="resource")
 app.add_typer(ops_app, name="op")
+app.add_typer(terminology_app, name="terminology")
+app.add_typer(fhir_app, name="fhir")
 
 
 @app.callback(invoke_without_command=True)
@@ -857,6 +898,27 @@ def _maybe_expand_local_ingest_file_payload(operation: str, payload: Dict[str, A
     return expanded
 
 
+def _terminology_api_call(
+    *,
+    method: str,
+    path: str,
+    environment: Optional[str],
+    runtime_url: Optional[str],
+    api_key: Optional[str],
+    payload: Optional[dict] = None,
+    api_root: str = "api/terminology",
+) -> None:
+    base = _resolve_runtime_url(runtime_url)
+    if not base:
+        raise typer.BadParameter("No runtime URL configured. Set it with `kehrnel setup` or pass --runtime-url.")
+    env_id = _require_env(environment)
+    separator = "&" if "?" in path else "?"
+    url = f"{base.rstrip('/')}/{api_root.strip('/')}/{path}{separator}env_id={urllib.parse.quote(env_id)}"
+    status, data = _http_json(method, url, _resolve_api_key(api_key), payload)
+    _emit_json({"status": status, "environment": env_id, "response": data})
+    raise typer.Exit(0 if status < 400 else 1)
+
+
 def _resolve_resource_profile(name: str) -> Dict[str, Any]:
     state = _state()
     resources = state.get("resources") if isinstance(state, dict) else None
@@ -960,6 +1022,100 @@ def _http_json(method: str, url: str, api_key: Optional[str] = None, payload: Op
         return int(getattr(exc, "code", 599) or 599), data
     except Exception as exc:
         return 599, {"error": str(exc)}
+
+
+def _http_raw(
+    method: str,
+    url: str,
+    api_key: Optional[str] = None,
+    *,
+    body: Optional[bytes] = None,
+    content_type: Optional[str] = None,
+    accept: str = "application/json",
+    headers: Optional[Dict[str, str]] = None,
+) -> tuple[int, bytes, str]:
+    """Call a runtime endpoint whose request or response is not JSON.
+
+    FHIR package staging and NDJSON import intentionally preserve the source
+    bytes. Keeping this separate from ``_http_json`` prevents the CLI from
+    silently re-serializing signed packages or large line-delimited exports.
+    """
+
+    req = urllib.request.Request(url=url, method=method.upper(), data=body)
+    req.add_header("Accept", accept)
+    if content_type:
+        req.add_header("Content-Type", content_type)
+    if api_key:
+        req.add_header("X-API-Key", api_key)
+    for name, value in (headers or {}).items():
+        req.add_header(name, value)
+
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            return (
+                resp.status,
+                resp.read(),
+                str(resp.headers.get("Content-Type") or "application/octet-stream"),
+            )
+    except urllib.error.HTTPError as exc:
+        try:
+            raw = exc.read()
+        except Exception:
+            raw = str(exc).encode("utf-8")
+        return (
+            int(getattr(exc, "code", 599) or 599),
+            raw,
+            str(exc.headers.get("Content-Type") or "application/octet-stream"),
+        )
+    except Exception as exc:
+        return 599, json.dumps({"error": str(exc)}).encode("utf-8"), "application/json"
+
+
+def _fhir_endpoint(
+    path: str,
+    *,
+    environment: Optional[str],
+    runtime_url: Optional[str],
+) -> tuple[str, str]:
+    base = _resolve_runtime_url(runtime_url)
+    if not base:
+        raise typer.BadParameter(
+            "No runtime URL configured. Set it with `kehrnel setup` or pass --runtime-url."
+        )
+    env_id = _require_env(environment)
+    separator = "&" if "?" in path else "?"
+    url = (
+        f"{base.rstrip('/')}/api/domains/fhir/{path.lstrip('/')}"
+        f"{separator}env_id={urllib.parse.quote(env_id)}"
+    )
+    return url, env_id
+
+
+def _emit_fhir_json_call(
+    *,
+    method: str,
+    path: str,
+    environment: Optional[str],
+    runtime_url: Optional[str],
+    api_key: Optional[str],
+    payload: Optional[dict] = None,
+) -> None:
+    url, env_id = _fhir_endpoint(
+        path, environment=environment, runtime_url=runtime_url
+    )
+    status, data = _http_json(method, url, _resolve_api_key(api_key), payload)
+    _emit_json({"status": status, "environment": env_id, "response": data})
+    raise typer.Exit(0 if status < 400 else 1)
+
+
+def _decode_response_body(body: bytes, content_type: str) -> Any:
+    text = body.decode("utf-8", errors="replace")
+    if "json" in content_type.lower():
+        try:
+            return json.loads(text) if text else {}
+        except json.JSONDecodeError:
+            pass
+    return text
 
 def _load_json_or_yaml(path: Path) -> dict:
     text = path.read_text(encoding="utf-8")
@@ -2375,6 +2531,7 @@ def run_operation(
 def domain_list():
     typer.echo("openehr")
     typer.echo("fhir")
+    typer.echo("snomedct")
 
 
 @domain_app.command(
@@ -2397,6 +2554,897 @@ def domain_openehr(
     if not module:
         raise typer.BadParameter(f"Unsupported openEHR action: {action}")
     _run_module(module, ctx.args)
+
+
+@terminology_app.command("capabilities")
+def terminology_capabilities(
+    environment: Optional[str] = typer.Option(None, "--env", help="Environment key/id"),
+    include_readiness: bool = typer.Option(False, "--readiness", help="Probe native provider readiness"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """List providers, routes, systems, and supported operations."""
+    _terminology_api_call(
+        method="GET",
+        path=f"capabilities?include_readiness={'true' if include_readiness else 'false'}",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+    )
+
+
+@terminology_app.command("provider-capabilities")
+def terminology_provider_capabilities(
+    provider_id: str = typer.Argument(..., help="Configured terminology provider id"),
+    environment: Optional[str] = typer.Option(None, "--env", help="Environment key/id"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Inspect native readiness or an external FHIR CapabilityStatement."""
+    _terminology_api_call(
+        method="GET",
+        path=f"providers/{urllib.parse.quote(provider_id, safe='')}/capabilities",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+    )
+
+
+@terminology_app.command("snomed-releases")
+def terminology_snomed_releases(
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """List licensed SNOMED CT JSON files in the configured staging directory."""
+    _terminology_api_call(
+        method="GET",
+        path="releases",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+        api_root="api/domains/snomedct",
+    )
+
+
+def _snomed_release_source(path: Optional[Path], file_name: Optional[str]) -> dict[str, Any]:
+    if path and file_name:
+        raise typer.BadParameter("Use either --path or --file-name, not both.")
+    payload: dict[str, Any] = {}
+    if path:
+        payload["path"] = str(path)
+    if file_name:
+        payload["file_name"] = file_name
+    return payload
+
+
+@terminology_app.command("inspect-snomed-release")
+def terminology_inspect_snomed_release(
+    path: Optional[Path] = typer.Option(None, "--path", help="Path inside configured source.local_dir"),
+    file_name: Optional[str] = typer.Option(None, "--file-name"),
+    limit: Optional[int] = typer.Option(None, "--limit", min=1),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Inspect a staged SNOMED CT release without ingesting it."""
+    payload = _snomed_release_source(path, file_name)
+    if limit:
+        payload["limit"] = limit
+    _terminology_api_call(
+        method="POST", path="releases/inspect", environment=environment,
+        runtime_url=runtime_url, api_key=api_key, payload=payload,
+        api_root="api/domains/snomedct",
+    )
+
+
+@terminology_app.command("diff-snomed-release")
+def terminology_diff_snomed_release(
+    release_id: str = typer.Option(..., "--release-id"),
+    path: Optional[Path] = typer.Option(None, "--path", help="Path inside configured source.local_dir"),
+    file_name: Optional[str] = typer.Option(None, "--file-name"),
+    sample_limit: int = typer.Option(20, "--sample-limit", min=1, max=100),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Compare a staged release with its canonical tenant collection."""
+    payload = {**_snomed_release_source(path, file_name), "release_id": release_id, "sample_limit": sample_limit}
+    _terminology_api_call(
+        method="POST", path="releases/diff", environment=environment,
+        runtime_url=runtime_url, api_key=api_key, payload=payload,
+        api_root="api/domains/snomedct",
+    )
+
+
+@terminology_app.command("ingest-snomed-release")
+def terminology_ingest_snomed_release(
+    release_id: str = typer.Option(..., "--release-id"),
+    path: Optional[Path] = typer.Option(None, "--path", help="Path inside configured source.local_dir"),
+    file_name: Optional[str] = typer.Option(None, "--file-name"),
+    execute: bool = typer.Option(False, "--execute", help="Persist the release; omission performs a dry run"),
+    license_acknowledged: bool = typer.Option(
+        False,
+        "--license-acknowledged",
+        help="Confirm tenant authorization to use the staged SNOMED CT content (required with --execute)",
+    ),
+    rebuild_sidecar: bool = typer.Option(True, "--rebuild-sidecar/--no-rebuild-sidecar"),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Dry-run or ingest a staged release. Persistence requires --execute and license acknowledgement."""
+    payload = {
+        **_snomed_release_source(path, file_name),
+        "release_id": release_id,
+        "dry_run": not execute,
+        "license_acknowledged": license_acknowledged,
+        "rebuild_sidecar": rebuild_sidecar,
+    }
+    _terminology_api_call(
+        method="POST", path="releases/ingest", environment=environment,
+        runtime_url=runtime_url, api_key=api_key, payload=payload,
+        api_root="api/domains/snomedct",
+    )
+
+
+@terminology_app.command("rebuild-snomed-sidecar")
+def terminology_rebuild_snomed_sidecar(
+    release_id: str = typer.Option(..., "--release-id"),
+    execute: bool = typer.Option(False, "--execute", help="Rebuild the sidecar; omission performs a dry run"),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Dry-run or rebuild the search sidecar for one release."""
+    _terminology_api_call(
+        method="POST", path="sidecar/rebuild", environment=environment,
+        runtime_url=runtime_url, api_key=api_key,
+        payload={"release_id": release_id, "dry_run": not execute},
+        api_root="api/domains/snomedct",
+    )
+
+
+@terminology_app.command("ensure-snomed-indexes")
+def terminology_ensure_snomed_indexes(
+    execute: bool = typer.Option(False, "--execute", help="Create indexes; omission returns the planned indexes"),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Preview or ensure native SNOMED CT MongoDB indexes."""
+    _terminology_api_call(
+        method="POST", path="indexes/ensure", environment=environment,
+        runtime_url=runtime_url, api_key=api_key, payload={"dry_run": not execute},
+        api_root="api/domains/snomedct",
+    )
+
+
+@terminology_app.command("lookup")
+def terminology_lookup(
+    code: str = typer.Argument(...),
+    system: str = typer.Option(..., "--system"),
+    version: Optional[str] = typer.Option(None, "--version"),
+    provider: Optional[str] = typer.Option(None, "--provider"),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Look up a code through the configured provider route."""
+    _terminology_api_call(
+        method="POST",
+        path="lookup",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+        payload={"system": system, "code": code, **({"version": version} if version else {}), **({"provider_id": provider} if provider else {})},
+    )
+
+
+@terminology_app.command("validate-code")
+def terminology_validate_code(
+    code: str = typer.Argument(...),
+    system: str = typer.Option(..., "--system"),
+    display: Optional[str] = typer.Option(None, "--display"),
+    version: Optional[str] = typer.Option(None, "--version"),
+    value_set: Optional[str] = typer.Option(None, "--value-set", help="Optional ValueSet canonical URL"),
+    value_set_version: Optional[str] = typer.Option(None, "--value-set-version"),
+    provider: Optional[str] = typer.Option(None, "--provider"),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Validate a code and optional display against a tenant terminology provider."""
+    payload = {"system": system, "code": code}
+    if display:
+        payload["display"] = display
+    if version:
+        payload["version"] = version
+    if value_set:
+        payload["url"] = value_set
+    if value_set_version:
+        payload["value_set_version"] = value_set_version
+    if provider:
+        payload["provider_id"] = provider
+    _terminology_api_call(
+        method="POST",
+        path="validate-code",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+        payload=payload,
+    )
+
+
+@terminology_app.command("subsumes")
+def terminology_subsumes(
+    code_a: str = typer.Argument(...),
+    code_b: str = typer.Argument(...),
+    system: str = typer.Option(..., "--system"),
+    version: Optional[str] = typer.Option(None, "--version"),
+    provider: Optional[str] = typer.Option(None, "--provider"),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Evaluate the relationship between two codes."""
+    payload = {"system": system, "code_a": code_a, "code_b": code_b}
+    if version:
+        payload["version"] = version
+    if provider:
+        payload["provider_id"] = provider
+    _terminology_api_call(
+        method="POST",
+        path="subsumes",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+        payload=payload,
+    )
+
+
+@terminology_app.command("expand")
+def terminology_expand(
+    url: Optional[str] = typer.Option(None, "--url", help="ValueSet canonical URL"),
+    expression: Optional[str] = typer.Option(None, "--ecl", help="Native SNOMED ECL expression"),
+    system: Optional[str] = typer.Option(None, "--system"),
+    version: Optional[str] = typer.Option(None, "--version"),
+    value_set_version: Optional[str] = typer.Option(None, "--value-set-version"),
+    provider: Optional[str] = typer.Option(None, "--provider"),
+    count: int = typer.Option(20, "--count", min=1, max=1000),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Expand a routed ValueSet or a native SNOMED ECL expression."""
+    if not url and not expression:
+        raise typer.BadParameter("Provide --url or --ecl.")
+    payload: Dict[str, Any] = {"count": count}
+    for key, value in {
+        "url": url,
+        "expression": expression,
+        "system": system,
+        "version": version,
+        "value_set_version": value_set_version,
+        "provider_id": provider,
+    }.items():
+        if value:
+            payload[key] = value
+    _terminology_api_call(
+        method="POST",
+        path="expand",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+        payload=payload,
+    )
+
+
+@terminology_app.command("translate")
+def terminology_translate(
+    code: str = typer.Argument(...),
+    system: str = typer.Option(..., "--system"),
+    concept_map: Optional[str] = typer.Option(None, "--concept-map"),
+    target_system: Optional[str] = typer.Option(None, "--target-system"),
+    version: Optional[str] = typer.Option(None, "--version"),
+    provider: Optional[str] = typer.Option(None, "--provider"),
+    reverse: bool = typer.Option(False, "--reverse"),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Translate a code through an external FHIR ConceptMap provider."""
+    payload: Dict[str, Any] = {"system": system, "code": code, "reverse": reverse}
+    for key, value in {
+        "url": concept_map,
+        "target_system": target_system,
+        "version": version,
+        "provider_id": provider,
+    }.items():
+        if value:
+            payload[key] = value
+    _terminology_api_call(
+        method="POST",
+        path="translate",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+        payload=payload,
+    )
+
+
+@terminology_app.command("value-sets")
+def terminology_value_sets(
+    status: Optional[str] = typer.Option(None, "--status"),
+    limit: int = typer.Option(100, "--limit", min=1, max=500),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """List ValueSets registered in the native SNOMED tenant strategy."""
+    suffix = f"value-sets?limit={limit}"
+    if status:
+        suffix += f"&status={urllib.parse.quote(status)}"
+    _terminology_api_call(
+        method="GET",
+        path=suffix,
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+        api_root="api/domains/snomedct",
+    )
+
+
+@terminology_app.command("register-value-set")
+def terminology_register_value_set(
+    url: str = typer.Option(..., "--url", help="Stable ValueSet canonical URL"),
+    version: str = typer.Option(..., "--version", help="Immutable ValueSet definition version"),
+    expression: Optional[str] = typer.Option(None, "--ecl", help="ECL-backed definition"),
+    concepts: list[str] = typer.Option([], "--concept", help="Explicit SNOMED concept id; repeat as needed"),
+    name: Optional[str] = typer.Option(None, "--name"),
+    release_id: Optional[str] = typer.Option(None, "--release-id"),
+    status: str = typer.Option("active", "--status"),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Register one immutable ECL- or concept-backed native SNOMED ValueSet."""
+    if bool(expression) == bool(concepts):
+        raise typer.BadParameter("Provide exactly one definition: --ecl or one or more --concept values.")
+    payload: Dict[str, Any] = {
+        "url": url,
+        "version": version,
+        "status": status,
+        **({"expression": expression} if expression else {"concepts": concepts}),
+    }
+    if name:
+        payload["name"] = name
+    if release_id:
+        payload["release_id"] = release_id
+    _terminology_api_call(
+        method="POST",
+        path="value-sets",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+        payload=payload,
+        api_root="api/domains/snomedct",
+    )
+
+
+@terminology_app.command("validate-value-set")
+def terminology_validate_value_set(
+    code: str = typer.Argument(...),
+    url: str = typer.Option(..., "--url"),
+    value_set_version: Optional[str] = typer.Option(None, "--value-set-version"),
+    display: Optional[str] = typer.Option(None, "--display"),
+    language: Optional[str] = typer.Option(None, "--language"),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Validate a code against a registered native SNOMED ValueSet."""
+    payload: Dict[str, Any] = {"url": url, "code": code}
+    for key, value in {
+        "value_set_version": value_set_version,
+        "display": display,
+        "language": language,
+    }.items():
+        if value:
+            payload[key] = value
+    _terminology_api_call(
+        method="POST",
+        path="value-sets/$validate-code",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+        payload=payload,
+        api_root="api/domains/snomedct",
+    )
+
+
+@terminology_app.command("suggest")
+def terminology_suggest(
+    query: str = typer.Argument(...),
+    language: str = typer.Option("es", "--language"),
+    limit: int = typer.Option(10, "--limit", min=1, max=100),
+    release_id: Optional[str] = typer.Option(None, "--release-id"),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Return native SNOMED CT typeahead suggestions."""
+    payload: Dict[str, Any] = {"q": query, "language": language, "limit": limit}
+    if release_id:
+        payload["release_id"] = release_id
+    _terminology_api_call(
+        method="POST",
+        path="suggest",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+        payload=payload,
+        api_root="api/domains/snomedct",
+    )
+
+
+@terminology_app.command("concept-history")
+def terminology_concept_history(
+    concept_id: str = typer.Argument(...),
+    language: str = typer.Option("es", "--language"),
+    offset: int = typer.Option(0, "--offset", min=0),
+    limit: int = typer.Option(20, "--limit", min=1, max=100),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Inspect a native SNOMED CT concept across retained releases."""
+    path = (
+        f"concepts/{urllib.parse.quote(concept_id)}/history"
+        f"?language={urllib.parse.quote(language)}&offset={offset}&limit={limit}"
+    )
+    _terminology_api_call(
+        method="GET",
+        path=path,
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+        api_root="api/domains/snomedct",
+    )
+
+
+@terminology_app.command("save-grounding-review")
+def terminology_save_grounding_review(
+    review: Path = typer.Argument(..., exists=True, dir_okay=False, help="Grounding review JSON/YAML"),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Persist reviewer-confirmed/rejected SNOMED CT coding decisions."""
+    _terminology_api_call(
+        method="POST",
+        path="ground/reviews",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+        payload=_load_json_or_yaml(review),
+        api_root="api/domains/snomedct",
+    )
+
+
+@terminology_app.command("query-grounded-corpus")
+def terminology_query_grounded_corpus(
+    concept_id: str = typer.Argument(...),
+    offset: int = typer.Option(0, "--offset", min=0),
+    limit: int = typer.Option(20, "--limit", min=1, max=100),
+    include_family: bool = typer.Option(False, "--include-family"),
+    include_non_present: bool = typer.Option(False, "--include-non-present"),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Query reviewed coding artifacts by exact concept or ancestor path."""
+    _terminology_api_call(
+        method="POST",
+        path="ground/corpus/search",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+        payload={
+            "concept_id": concept_id,
+            "offset": offset,
+            "limit": limit,
+            "include_family": include_family,
+            "include_non_present": include_non_present,
+        },
+        api_root="api/domains/snomedct",
+    )
+
+
+@terminology_app.command("benchmark-retrieval")
+def terminology_benchmark_retrieval(
+    cases: Path = typer.Argument(..., exists=True, dir_okay=False, help="JSON/YAML object containing a cases array"),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Run a bounded native SNOMED CT retrieval benchmark."""
+    payload = _load_json_or_yaml(cases)
+    _terminology_api_call(
+        method="POST",
+        path="benchmarks/retrieval",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+        payload=payload,
+        api_root="api/domains/snomedct",
+    )
+
+
+@terminology_app.command("configure")
+def terminology_configure(
+    config: Path = typer.Argument(..., exists=True, dir_okay=False, help="Terminology configuration JSON/YAML"),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Validate and replace the environment's non-secret terminology routing configuration."""
+    _terminology_api_call(
+        method="PUT",
+        path="configuration",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+        payload={"configuration": _load_json_or_yaml(config)},
+    )
+
+
+@fhir_app.command("metadata")
+def fhir_metadata(
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Read the activated server's FHIR CapabilityStatement."""
+    _emit_fhir_json_call(
+        method="GET",
+        path="metadata",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+    )
+
+
+@fhir_app.command("capabilities")
+def fhir_capabilities(
+    resource_type: Optional[str] = typer.Option(None, "--resource-type", "-r"),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Read the runtime-derived accelerator capability contract."""
+    path = "capabilities"
+    if resource_type:
+        path += "?resource_type=" + urllib.parse.quote(resource_type)
+    _emit_fhir_json_call(
+        method="GET",
+        path=path,
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+    )
+
+
+@fhir_app.command("support-matrix")
+def fhir_support_matrix(
+    output_format: str = typer.Option("markdown", "--format", help="markdown or json"),
+    include_parameters: bool = typer.Option(False, "--include-parameters"),
+    out: Optional[Path] = typer.Option(None, "--out", dir_okay=False),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Export the exact release/resource/interaction/search support matrix."""
+    normalized = output_format.strip().lower()
+    if normalized not in {"json", "markdown", "md"}:
+        raise typer.BadParameter("--format must be json or markdown")
+    requested = "markdown" if normalized in {"markdown", "md"} else "json"
+    query = urllib.parse.urlencode(
+        {
+            "format": requested,
+            "include_parameters": str(include_parameters).lower(),
+        }
+    )
+    url, env_id = _fhir_endpoint(
+        f"support-matrix?{query}",
+        environment=environment,
+        runtime_url=runtime_url,
+    )
+    status, body, content_type = _http_raw(
+        "GET",
+        url,
+        _resolve_api_key(api_key),
+        accept="text/markdown, application/json",
+    )
+    decoded = _decode_response_body(body, content_type)
+    if out is not None and status < 400:
+        rendered = (
+            _dump_json(decoded) + "\n"
+            if isinstance(decoded, (dict, list))
+            else str(decoded)
+        )
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(rendered, encoding="utf-8")
+        _emit_json(
+            {
+                "status": status,
+                "environment": env_id,
+                "format": requested,
+                "output": str(out),
+            }
+        )
+    elif isinstance(decoded, str):
+        typer.echo(decoded)
+    else:
+        _emit_json({"status": status, "environment": env_id, "response": decoded})
+    raise typer.Exit(0 if status < 400 else 1)
+
+
+@fhir_app.command("resource-catalog")
+def fhir_resource_catalog(
+    resource_type: Optional[str] = typer.Argument(
+        None, help="Optional FHIR resource type to inspect"
+    ),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Inspect package-backed resource, polymorphism, search, and index metadata."""
+    suffix = (
+        "/" + urllib.parse.quote(resource_type, safe="") if resource_type else ""
+    )
+    _emit_fhir_json_call(
+        method="GET",
+        path=f"resource-catalog{suffix}",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+    )
+
+
+@fhir_app.command("search-parameters")
+def fhir_search_parameters(
+    resource_type: str = typer.Argument(..., help="FHIR resource type"),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """List the activated search parameter contract for one resource type."""
+    _emit_fhir_json_call(
+        method="GET",
+        path=f"search-parameters/{urllib.parse.quote(resource_type, safe='')}",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+    )
+
+
+@fhir_app.command("index-manifest")
+def fhir_index_manifest(
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Read generated index definitions, digests, budgets, and violations."""
+    _emit_fhir_json_call(
+        method="GET",
+        path="index-manifest",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+    )
+
+
+@fhir_app.command("stats")
+def fhir_stats(
+    summary_only: bool = typer.Option(False, "--summary-only"),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Inspect bounded FHIR store, index, and provenance statistics."""
+    path = "stats?summary=true" if summary_only else "stats"
+    _emit_fhir_json_call(
+        method="GET",
+        path=path,
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+    )
+
+
+@fhir_app.command("stage-ig")
+def fhir_stage_ig(
+    package: Path = typer.Argument(
+        ..., exists=True, dir_okay=False, help="FHIR NPM .tgz/.tar package"
+    ),
+    out: Optional[Path] = typer.Option(
+        None, "--out", dir_okay=False, help="Write inspection and activation patch"
+    ),
+    release: Optional[str] = typer.Option(
+        None,
+        "--release",
+        help="FHIR release (R4, R5, or R6); required when staging before activation",
+    ),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Stage, checksum, and inspect an IG; never activates it automatically."""
+    if not package.name.lower().endswith((".tgz", ".tar.gz", ".tar")):
+        raise typer.BadParameter("FHIR packages must be .tgz, .tar.gz, or .tar archives")
+    url, env_id = _fhir_endpoint(
+        "implementation-guides/stage",
+        environment=environment,
+        runtime_url=runtime_url,
+    )
+    if release:
+        normalized_release = release.strip().upper()
+        if normalized_release not in {"R4", "R5", "R6"}:
+            raise typer.BadParameter("FHIR release must be R4, R5, or R6", param_hint="--release")
+        url = f"{url}&fhir_release={normalized_release}" if "?" in url else f"{url}?fhir_release={normalized_release}"
+    status, body, content_type = _http_raw(
+        "POST",
+        url,
+        _resolve_api_key(api_key),
+        body=package.read_bytes(),
+        content_type="application/gzip",
+        headers={"X-FHIR-Package-Filename": package.name},
+    )
+    decoded = _decode_response_body(body, content_type)
+    response = {"status": status, "environment": env_id, "response": decoded}
+    if out is not None and status < 400:
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(_dump_json(decoded) + "\n", encoding="utf-8")
+        response["output"] = str(out)
+    _emit_json(response)
+    raise typer.Exit(0 if status < 400 else 1)
+
+
+@fhir_app.command("import-data")
+def fhir_import_data(
+    source: Path = typer.Argument(
+        ..., exists=True, dir_okay=False, help="FHIR JSON, Bundle, or NDJSON file"
+    ),
+    validation_level: str = typer.Option("base", "--validation-level"),
+    mode: str = typer.Option("create", "--mode", help="create or upsert"),
+    execute: bool = typer.Option(
+        False, "--execute", help="Persist after validation; default is a dry run"
+    ),
+    fail_on_error: bool = typer.Option(True, "--fail-on-error/--allow-invalid"),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Validate and import canonical FHIR JSON or NDJSON through Kehrnel."""
+    normalized_mode = mode.strip().lower()
+    if normalized_mode not in {"create", "upsert"}:
+        raise typer.BadParameter("--mode must be create or upsert")
+    is_ndjson = source.suffix.lower() in {".ndjson", ".jsonl"}
+    content_type = "application/fhir+ndjson" if is_ndjson else "application/fhir+json"
+    query = urllib.parse.urlencode(
+        {
+            "validation_level": validation_level,
+            "mode": normalized_mode,
+            "dry_run": str(not execute).lower(),
+            "fail_on_error": str(fail_on_error).lower(),
+        }
+    )
+    url, env_id = _fhir_endpoint(
+        f"import?{query}", environment=environment, runtime_url=runtime_url
+    )
+    status, body, response_content_type = _http_raw(
+        "POST",
+        url,
+        _resolve_api_key(api_key),
+        body=source.read_bytes(),
+        content_type=content_type,
+    )
+    _emit_json(
+        {
+            "status": status,
+            "environment": env_id,
+            "dry_run": not execute,
+            "response": _decode_response_body(body, response_content_type),
+        }
+    )
+    raise typer.Exit(0 if status < 400 else 1)
+
+
+@fhir_app.command("search")
+def fhir_search(
+    fhir_search: str = typer.Argument(
+        ..., help="FHIR search such as Patient?name=Smith or Patient/123/Observation?status=final"
+    ),
+    count: int = typer.Option(20, "--count", min=1, max=1000),
+    offset: int = typer.Option(0, "--offset", min=0),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Execute FHIR search and return a projected searchset Bundle."""
+    _emit_fhir_json_call(
+        method="POST",
+        path="search",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+        payload={"fhir_search": fhir_search, "limit": count, "offset": offset},
+    )
+
+
+@fhir_app.command("explain")
+def fhir_explain(
+    fhir_search: str = typer.Argument(..., help="FHIR search to compile"),
+    execution_stats: bool = typer.Option(
+        False, "--execution-stats", help="Execute and return MongoDB plan evidence without resources"
+    ),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Show generated MQL, optionally with real MongoDB execution statistics."""
+    _emit_fhir_json_call(
+        method="POST",
+        path="explain/execute" if execution_stats else "explain",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+        payload={"fhir_search": fhir_search},
+    )
+
+
+@fhir_app.command("cohorts")
+def fhir_cohorts(
+    include_blueprints: bool = typer.Option(True, "--include-blueprints/--ids-only"),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """List patient-centred synthetic cohort blueprints."""
+    _emit_fhir_json_call(
+        method="GET",
+        path=f"synthetic/cohorts?include_blueprints={str(include_blueprints).lower()}",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+    )
+
+
+@fhir_app.command("plan-cohort")
+def fhir_plan_cohort(
+    blueprint_id: str = typer.Argument(..., help="Blueprint id from `kehrnel fhir cohorts`"),
+    patients: int = typer.Option(100, "--patients", min=1),
+    history_years: int = typer.Option(4, "--history-years", min=1),
+    seed: int = typer.Option(7812, "--seed"),
+    environment: Optional[str] = typer.Option(None, "--env"),
+    runtime_url: Optional[str] = typer.Option(None, "--runtime-url"),
+    api_key: Optional[str] = typer.Option(None, "--api-key"),
+):
+    """Compile cohort intent into deterministic resource counts without writing."""
+    _emit_fhir_json_call(
+        method="POST",
+        path="synthetic/cohorts/plan",
+        environment=environment,
+        runtime_url=runtime_url,
+        api_key=api_key,
+        payload={
+            "blueprint_id": blueprint_id,
+            "patients": patients,
+            "history_years": history_years,
+            "seed": seed,
+        },
+    )
 
 
 @common_app.command(

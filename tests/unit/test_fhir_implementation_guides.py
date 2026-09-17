@@ -8,11 +8,13 @@ import pytest
 
 from kehrnel.engine.domains.fhir.implementation_guides import (
     ImplementationGuideError,
+    build_terminology_lock,
     compile_configured_implementation_guides,
     inspect_configured_implementation_guides,
     inspect_implementation_guide,
     resolve_active_profiles,
     stage_implementation_guide,
+    write_terminology_lock,
 )
 
 
@@ -43,7 +45,28 @@ def _package(tmp_path: Path) -> Path:
             "kind": "resource",
             "derivation": "constraint",
             "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Patient",
-            "differential": {"element": []},
+            "differential": {
+                "element": [
+                    {
+                        "id": "Patient.gender",
+                        "path": "Patient.gender",
+                        "min": 1,
+                        "max": "1",
+                        "binding": {
+                            "strength": "required",
+                            "valueSet": "http://hl7.org/fhir/ValueSet/administrative-gender|5.0.0",
+                        },
+                        "constraint": [
+                            {
+                                "key": "example-1",
+                                "severity": "error",
+                                "human": "Gender must be present",
+                                "expression": "gender.exists()",
+                            }
+                        ],
+                    }
+                ]
+            },
         },
     )
     _write_json(
@@ -111,6 +134,11 @@ def test_compiler_inventories_profiles_examples_and_review_boundaries(
         "complex": "reviewed-override-required",
     }
     assert result["evidence"]["profile_validation_enabled"] is False
+    assert result["evidence"]["terminology_validation_enabled"] is False
+    assert result["evidence"]["required_terminology_binding_count"] == 1
+    assert result["inventory"]["terminology_bindings"][0]["value_set"] == "http://hl7.org/fhir/ValueSet/administrative-gender"
+    assert result["inventory"]["terminology_bindings"][0]["value_set_version"] == "5.0.0"
+    assert result["inventory"]["invariants"][0]["key"] == "example-1"
     assert result["evidence"]["manual_override_required"] == [
         "https://example.test/fhir/SearchParameter/patient-complex"
     ]
@@ -141,6 +169,7 @@ def test_compiler_verifies_checksum_and_writes_immutable_artifacts(
         "compiled-package.json",
         "package.lock.json",
         "search-plan.json",
+        "terminology-plan.json",
     }
 
     with pytest.raises(ImplementationGuideError, match="checksum mismatch"):
@@ -172,6 +201,37 @@ def test_profile_selection_is_optional_and_resolved_from_enabled_packages(
     ]
     with pytest.raises(ImplementationGuideError, match="not present"):
         resolve_active_profiles(config)
+
+
+def test_active_profiles_produce_an_immutable_terminology_lock(tmp_path: Path) -> None:
+    source = _package(tmp_path)
+    profile_url = "https://example.test/fhir/StructureDefinition/example-patient"
+    config = {
+        "schema_version": "R5",
+        "implementation_guides": {
+            "compiled_root": str(tmp_path / "compiled"),
+            "packages": [{"source": str(source)}],
+            "active_profiles": [profile_url],
+            "profile_validation": {"mode": "required"},
+        },
+        "terminology_validation": {"mode": "required"},
+    }
+
+    lock = build_terminology_lock(config)
+    path = write_terminology_lock(config)
+
+    assert lock is not None
+    assert lock["contract_version"] == "fhir-terminology-lock.v1"
+    assert lock["active_profiles"][0]["url"] == profile_url
+    assert lock["bindings"][0]["value_set"] == "http://hl7.org/fhir/ValueSet/administrative-gender"
+    assert lock["invariants"][0]["key"] == "example-1"
+    assert lock["enforcement"] == {
+        "profile_mode": "required",
+        "terminology_mode": "required",
+    }
+    assert path is not None and path.is_file()
+    assert json.loads(path.read_text(encoding="utf-8")) == lock
+    assert write_terminology_lock(config) == path
 
 
 def test_disabled_packages_are_ignored_without_compiled_root(tmp_path: Path) -> None:
@@ -223,6 +283,16 @@ def test_uploaded_package_is_staged_but_not_activated(tmp_path: Path) -> None:
 
     assert staged["package"]["name"] == "example.fhir.ig"
     assert staged["inventory"]["profile_count"] == 1
+    assert staged["inventory"]["profiles"] == [
+        {
+            "url": "https://example.test/fhir/StructureDefinition/example-patient",
+            "type": "Patient",
+            "name": "example-patient",
+        }
+    ]
+    assert staged["inventory"]["terminology_binding_count"] == 1
+    assert staged["inventory"]["required_terminology_binding_count"] == 1
+    assert staged["inventory"]["invariant_count"] == 1
     assert Path(staged["source"]).is_file()
     assert Path(staged["source"]).parent.name == "customer-dev"
     assert staged["activation_entry"] == {
@@ -230,11 +300,17 @@ def test_uploaded_package_is_staged_but_not_activated(tmp_path: Path) -> None:
         "source": staged["source"],
         "sha256": staged["sha256"],
     }
+    assert staged["activation_patch"] == {
+        "compiled_root": str(Path(staged["source"]).parent / "compiled"),
+        "packages": [staged["activation_entry"]],
+    }
     assert staged["activated"] is False
     assert staged["profiles_selected"] is False
     assert staged["profile_validation_enabled"] is False
 
-    with pytest.raises(ImplementationGuideError, match="does not declare compatibility"):
+    with pytest.raises(
+        ImplementationGuideError, match="does not declare compatibility"
+    ):
         stage_implementation_guide(
             data,
             filename=archive.name,

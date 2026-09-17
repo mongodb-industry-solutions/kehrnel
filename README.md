@@ -118,12 +118,12 @@ Full integration guide:
 
 ### FHIR domain (optional)
 
-FHIR is optional: core Kehrnel and openEHR work without it. When enabled, use strategy **`fhir.clinical_cdr`**.
+FHIR is optional: core Kehrnel and openEHR work without it. When enabled, use strategy **`fhir.resource_store`**.
 
 | Layer | Location |
 |-------|----------|
 | HTTP search API | `src/kehrnel/api/domains/fhir/` |
-| Strategy pack | `src/kehrnel/engine/strategies/fhir/clinical_cdr/` |
+| Strategy pack | `src/kehrnel/engine/strategies/fhir/resource_store/` |
 | **fhir-gen** + **fhir-mql** (vendored) | `src/kehrnel/engine/domains/fhir/libs/` |
 
 Install (from repo root):
@@ -136,8 +136,8 @@ pip install -e ".[api,mongo,fhir]"
 
 - Library details: [src/kehrnel/engine/domains/fhir/libs/README.md](src/kehrnel/engine/domains/fhir/libs/README.md)
 - **Full test playbook:** [FHIR_TESTING.md](FHIR_TESTING.md)
-- Strategy pack: [clinical_cdr/README.md](src/kehrnel/engine/strategies/fhir/clinical_cdr/README.md)
-- Smoke: `python src/kehrnel/engine/strategies/fhir/clinical_cdr/scripts/spike_generate_and_search.py --db fhir_kehrnel_spike`
+- Strategy pack: [resource_store/README.md](src/kehrnel/engine/strategies/fhir/resource_store/README.md)
+- Smoke: `python src/kehrnel/engine/strategies/fhir/resource_store/scripts/spike_generate_and_search.py --db fhir_kehrnel_spike`
 
 Docker: `docker compose --profile fhir up kehrnel-fhir-api` or `Dockerfile.backend` (all-in-one with FHIR).
 
@@ -254,7 +254,7 @@ Activation binds:
 
 Domain APIs:
 - `/api/domains/openehr/*`
-- `/api/domains/fhir/*` (requires `[fhir]` install and `fhir.clinical_cdr` activation)
+- `/api/domains/fhir/*` (requires `[fhir]` install and `fhir.resource_store` activation)
 
 ## Security Baseline
 
