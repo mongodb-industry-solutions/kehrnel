@@ -1,0 +1,106 @@
+resource: Provenance
+fhir_version: R4
+profile: us-core
+
+# R4 note: no occurred field; uses recorded for timestamp
+
+search_parameters:
+  patient:
+    type: reference
+    description: "Where the activity involved patient data"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+
+  agent:
+    type: reference
+    description: "Who participated"
+    fields:
+      - field: "_search.agentId"
+        referenceType: id
+
+  recorded:
+    type: date
+    description: "When the activity was recorded / updated"
+    fields:
+      - field: "_search.recorded"
+        type: date
+
+  target:
+    type: reference
+    description: "Target Reference(s) (usually version specific)"
+    fields:
+      - field: "_search.targetId"
+        referenceType: id
+
+  _id:
+    type: token
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+  _profile:
+    type: uri
+    description: "US Core profile URL this resource conforms to"
+    fields:
+      - field: "meta.profile"
+
+denormalization:
+  target:
+    source: target
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: target[*].reference
+        target_field: targetId
+        datatype: array[string]
+        extractType: id
+
+  agent:
+    source: agent
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: agent[*].who.reference
+        target_field: agentId
+        datatype: array[string]
+        extractType: id
+
+  recorded:
+    source: recorded
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: recorded
+        target_field: recorded
+        datatype: date
+
+  meta_profile:
+    source: meta
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: profile
+        target_field: meta_profile
+        datatype: array[string]
+
+indexes:
+  - fields:
+      - "_search.recorded": -1
+    options:
+      name: idx_r4_prov_recorded
+  - fields:
+      - "_search.agentId": 1
+    options:
+      name: idx_r4_prov_agent
+  - fields:
+      - "meta.profile": 1
+    options:
+      name: idx_r4_us_prov_meta_profile
+      sparse: true

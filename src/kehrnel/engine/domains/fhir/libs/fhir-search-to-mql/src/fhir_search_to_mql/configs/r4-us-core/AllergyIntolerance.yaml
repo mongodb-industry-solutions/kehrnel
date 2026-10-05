@@ -1,0 +1,179 @@
+resource: AllergyIntolerance
+fhir_version: R4
+profile: us-core
+
+# US Core AllergyIntolerance: http://hl7.org/fhir/us/core/StructureDefinition/us-core-allergyintolerance
+# R4 note: type is plain code (not CodeableConcept as in R5)
+
+search_parameters:
+  clinical-status:
+    type: token
+    description: "active | inactive | resolved"
+    fields:
+      - field: "_search.clinicalStatusCode"
+        tokenType: code
+
+  verification-status:
+    type: token
+    description: "unconfirmed | confirmed | refuted | entered-in-error"
+    fields:
+      - field: "_search.verificationStatusCode"
+        tokenType: code
+
+  code:
+    type: token
+    description: "Code that identifies the allergy or intolerance"
+    fields:
+      - field: "_search.codeCode"
+        tokenType: code
+      - field: "_search.codeSystemCode"
+        tokenType: systemCode
+
+  patient:
+    type: reference
+    description: "Who the sensitivity is for"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "patient.reference"
+        referenceType: full
+
+  category:
+    type: token
+    description: "food | medication | environment | biologic"
+    fields:
+      - field: "_search.category"
+        tokenType: code
+
+  criticality:
+    type: token
+    description: "low | high | unable-to-assess"
+    fields:
+      - field: "criticality"
+        tokenType: code
+
+  date:
+    type: date
+    description: "Date first version of the resource instance was recorded"
+    fields:
+      - field: "_search.recordedDate"
+        type: date
+
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+  _profile:
+    type: uri
+    description: "US Core profile URL this resource conforms to"
+    fields:
+      - field: "meta.profile"
+
+denormalization:
+  clinicalStatus:
+    source: clinicalStatus
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: clinicalStatus.coding[*].code
+        target_field: clinicalStatusCode
+        datatype: array[string]
+
+  verificationStatus:
+    source: verificationStatus
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: verificationStatus.coding[*].code
+        target_field: verificationStatusCode
+        datatype: array[string]
+
+  code:
+    source: code
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code.coding[*].code
+        target_field: codeCode
+        datatype: array[string]
+      - source_path: code
+        target_field: codeSystemCode
+        datatype: array[string]
+
+  patient:
+    source: patient
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: patient.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+
+  recordedDate:
+    source: recordedDate
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: recordedDate
+        target_field: recordedDate
+        datatype: date
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - patient
+        reference_type: Patient
+        include_self: false
+        datatype: array[string]
+
+  meta_profile:
+    source: meta
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: profile
+        target_field: meta_profile
+        datatype: array[string]
+
+compartments:
+  precomputed:
+    - Patient
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_r4_ai_compartment_patient
+      sparse: true
+  - fields:
+      - "_search.clinicalStatusCode": 1
+    options:
+      name: idx_r4_ai_clinical_status
+  - fields:
+      - "_search.codeCode": 1
+    options:
+      name: idx_r4_ai_code
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_r4_ai_last_updated
+  - fields:
+      - "meta.profile": 1
+    options:
+      name: idx_r4_us_ai_meta_profile
+      sparse: true

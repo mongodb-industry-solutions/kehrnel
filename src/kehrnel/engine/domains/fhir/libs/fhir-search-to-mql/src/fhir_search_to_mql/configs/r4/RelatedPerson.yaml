@@ -1,0 +1,123 @@
+resource: RelatedPerson
+fhir_version: R4
+
+search_parameters:
+  patient:
+    type: reference
+    description: "The patient this related person is related to"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "patient.reference"
+        referenceType: full
+
+  name:
+    type: string
+    description: "A server defined search that may match any of the string fields in the HumanName"
+    fields:
+      default:
+        - field: "_search.familyName_lower"
+          query_type: range
+        - field: "_search.givenNames_lower"
+          query_type: range
+      exact:
+        - field: "_search.familyName"
+        - field: "_search.givenNames"
+
+  active:
+    type: token
+    description: "Indicates if the related person record is active"
+    fields:
+      - field: "active"
+        tokenType: boolean
+
+  identifier:
+    type: token
+    description: "An Identifier of the RelatedPerson"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  _id:
+    type: token
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  patient:
+    source: patient
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: patient.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+
+  name:
+    source: name
+    target: _search
+    extractor: HumanNameExtractor
+    field_mappings:
+      - source_path: name[*].family
+        target_field: familyName
+        datatype: array[string]
+      - source_path: name[*].family
+        target_field: familyName_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: name[*].given
+        target_field: givenNames
+        datatype: array[string]
+      - source_path: name[*].given
+        target_field: givenNames_lower
+        datatype: array[string]
+        normalize: lowercase
+
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - patient
+        reference_type: Patient
+        include_self: false
+        datatype: array[string]
+
+compartments:
+  precomputed:
+    - Patient
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_r4_rp_compartment_patient
+      sparse: true
+  - fields:
+      - "_search.familyName_lower": 1
+    options:
+      name: idx_r4_rp_family_name

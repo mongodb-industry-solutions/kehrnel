@@ -1,0 +1,32 @@
+resource: Subscription
+fhir_version: R4
+
+search_parameters:
+  status:
+    type: token
+    description: "Subscription status"
+    fields:
+      - field: "status"
+        tokenType: code
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+indexes:
+  - fields:
+      - "status": 1
+    options:
+      name: idx_r4_sbscrp_status
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_r4_sbscrp_updated

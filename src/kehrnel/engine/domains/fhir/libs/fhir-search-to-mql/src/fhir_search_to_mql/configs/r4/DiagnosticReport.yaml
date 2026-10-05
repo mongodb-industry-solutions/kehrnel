@@ -1,0 +1,179 @@
+resource: DiagnosticReport
+fhir_version: R4
+
+search_parameters:
+  status:
+    type: token
+    description: "registered | partial | preliminary | final | amended | corrected | appended | cancelled | entered-in-error | unknown"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  category:
+    type: token
+    description: "Which diagnostic discipline/department created the report"
+    fields:
+      - field: "_search.categoryCode"
+        tokenType: code
+
+  code:
+    type: token
+    description: "The code for the report, as opposed to codes for the atomic results"
+    fields:
+      - field: "_search.codeCode"
+        tokenType: code
+      - field: "_search.codeSystemCode"
+        tokenType: systemCode
+
+  patient:
+    type: reference
+    description: "The subject of the report if a patient"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  subject:
+    type: reference
+    description: "The subject of the report"
+    fields:
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  encounter:
+    type: reference
+    description: "The Encounter when the order was made"
+    fields:
+      - field: "_search.encounterId"
+        referenceType: id
+      - field: "encounter.reference"
+        referenceType: full
+
+  date:
+    type: date
+    description: "The clinically relevant time of the report"
+    fields:
+      - field: "_search.effectiveDate"
+        type: date
+
+  identifier:
+    type: token
+    description: "An identifier for the report"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  _id:
+    type: token
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  category:
+    source: category
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: category[*].coding[*].code
+        target_field: categoryCode
+        datatype: array[string]
+
+  code:
+    source: code
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code.coding[*].code
+        target_field: codeCode
+        datatype: array[string]
+      - source_path: code
+        target_field: codeSystemCode
+        datatype: array[string]
+
+  subject:
+    source: subject
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: subject.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+      - source_path: subject.reference
+        target_field: subjectId
+        datatype: string
+        extractType: id
+
+  encounter:
+    source: encounter
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: encounter.reference
+        target_field: encounterId
+        datatype: string
+        extractType: id
+
+  effective:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: effectiveDateTime
+        target_field: effectiveDate
+        datatype: date
+
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - subject
+        reference_type: Patient
+        include_self: false
+        datatype: array[string]
+
+compartments:
+  precomputed:
+    - Patient
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_r4_dr_compartment_patient
+      sparse: true
+  - fields:
+      - "status": 1
+    options:
+      name: idx_r4_dr_status
+  - fields:
+      - "_search.codeCode": 1
+    options:
+      name: idx_r4_dr_code
