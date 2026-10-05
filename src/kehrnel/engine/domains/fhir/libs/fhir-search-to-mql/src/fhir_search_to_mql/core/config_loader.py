@@ -52,18 +52,51 @@ from fhir_search_to_mql.core.constants import (
 
 def _bundled_configs_dir() -> str:
     """
-    Resolve the path to the YAML configs that ship with this package.
+    Resolve the path to the default (R5) YAML configs that ship with this package.
 
-    Returns the filesystem path to ``fhir_search_to_mql/configs/``,
-    which is populated by ``[tool.setuptools.package-data]`` in
-    ``pyproject.toml``. Works for both editable installs (``pip
-    install -e .``) and wheel installs.
+    Returns the filesystem path to ``fhir_search_to_mql/configs/r5/``.
+    Works for both editable installs (``pip install -e .``) and wheel installs.
     """
     if _resources_files is None:  # pragma: no cover
         # Fallback: derive from this module's __file__.
         here = Path(__file__).resolve()
-        return str(here.parent.parent / "configs")
-    return str(_resources_files("fhir_search_to_mql") / "configs")
+        return str(here.parent.parent / "configs" / "r5")
+    return str(_resources_files("fhir_search_to_mql") / "configs" / "r5")
+
+
+def _bundled_r5_configs_dir() -> str:
+    """
+    Resolve the path to the R5 YAML configs.
+
+    Returns the filesystem path to ``fhir_search_to_mql/configs/r5/``.
+    Alias for :func:`_bundled_configs_dir` -- use this when the version
+    must be explicit (e.g. CLI ``--fhir-version R5``).
+    """
+    return _bundled_configs_dir()
+
+
+def _bundled_r4_us_core_configs_dir() -> str:
+    """
+    Resolve the path to the R4 + US Core overlay YAML configs.
+
+    Returns the filesystem path to ``fhir_search_to_mql/configs/r4-us-core/``.
+    """
+    if _resources_files is None:  # pragma: no cover
+        here = Path(__file__).resolve()
+        return str(here.parent.parent / "configs" / "r4-us-core")
+    return str(_resources_files("fhir_search_to_mql") / "configs" / "r4-us-core")
+
+
+def _bundled_r4_configs_dir() -> str:
+    """
+    Resolve the path to the plain R4 YAML configs.
+
+    Returns the filesystem path to ``fhir_search_to_mql/configs/r4/``.
+    """
+    if _resources_files is None:  # pragma: no cover
+        here = Path(__file__).resolve()
+        return str(here.parent.parent / "configs" / "r4")
+    return str(_resources_files("fhir_search_to_mql") / "configs" / "r4")
 
 
 class ConfigLoader:
@@ -121,6 +154,7 @@ class ConfigLoader:
         self.config_dir = dirs[0] if dirs and len(dirs) == 1 else dirs
         self._config_dirs: Optional[List[str]] = dirs
         self._config_cache: Dict[str, Dict[str, Any]] = {}
+        self._versioned_config_cache: Dict[tuple, Dict[str, Any]] = {}
 
         # Load configurations.
         if dirs:
@@ -144,6 +178,12 @@ class ConfigLoader:
             
             # Cache the configuration
             self._config_cache[resource_type] = config
+            fhir_ver = config.get('fhir_version')
+            if fhir_ver:
+                self._versioned_config_cache[(resource_type, fhir_ver)] = config
+                profile = config.get('profile')  # e.g. 'us-core' or None
+                if profile:
+                    self._versioned_config_cache[(resource_type, fhir_ver, profile)] = config
             
             return config
             
@@ -201,13 +241,14 @@ class ConfigLoader:
                 f"No configuration files found in: {dirs}"
             )
     
-    def get_config(self, resource_type: str, fhir_version: Optional[str] = None) -> Dict[str, Any]:
+    def get_config(self, resource_type: str, fhir_version: Optional[str] = None, profile: Optional[str] = None) -> Dict[str, Any]:
         """
         Get configuration for a specific resource type.
         
         Args:
             resource_type: FHIR resource type (e.g., "Patient", "Observation")
             fhir_version: FHIR version (R4, R5, R6). If None, uses any available.
+            profile: Profile pack (e.g. 'us-core'). If None, uses plain version config.
             
         Returns:
             Configuration dictionary
@@ -215,6 +256,18 @@ class ConfigLoader:
         Raises:
             MissingConfigurationError: If configuration not found
         """
+        # Check versioned cache first when fhir_version is specified
+        if fhir_version:
+            # Try profile-specific key first (most specific)
+            if profile:
+                profile_key = (resource_type, fhir_version, profile)
+                if profile_key in self._versioned_config_cache:
+                    return self._versioned_config_cache[profile_key]
+            # Fall back to version-only key
+            versioned_key = (resource_type, fhir_version)
+            if versioned_key in self._versioned_config_cache:
+                return self._versioned_config_cache[versioned_key]
+
         # Try exact match first
         if resource_type in self._config_cache:
             config = self._config_cache[resource_type]
@@ -393,6 +446,7 @@ class ConfigLoader:
     def reload(self) -> None:
         """Reload all configurations from disk."""
         self._config_cache.clear()
+        self._versioned_config_cache.clear()
         if self._config_dirs:
             self._load_all_configs()
         elif self.config_path:
