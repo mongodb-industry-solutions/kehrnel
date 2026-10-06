@@ -30,7 +30,7 @@ def test_convert_date_search(converter):
     """Test converting a date search with prefix."""
     query = converter.convert("Patient", query_string="birthdate=ge1980-01-01")
     
-    assert "birthDate" in query or "$and" in query
+    assert "_search._dates.birthdate" in query
 
 def test_convert_multiple_parameters(converter):
     """Test converting multiple parameters."""
