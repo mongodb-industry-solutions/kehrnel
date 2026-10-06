@@ -25,6 +25,7 @@ class QueryStep:
     resource_type: str
     query: Dict[str, Any]
     extract_field: str = "id"
+    extract_transform: str = "identity"
     description: str = ""
 
 
@@ -63,12 +64,15 @@ class MultiStepQuery:
     final_query_builder: Optional[Callable[[List[str]], Dict[str, Any]]] = None
     description: str = ""
     is_multi_step: bool = True
+    target_field: str = "id"
+    target_constraints: Dict[str, Any] = field(default_factory=dict)
     
     def add_step(
         self,
         resource_type: str,
         query: Dict[str, Any],
         extract_field: str = "id",
+        extract_transform: str = "identity",
         description: str = ""
     ) -> None:
         """
@@ -84,6 +88,7 @@ class MultiStepQuery:
             resource_type=resource_type,
             query=query,
             extract_field=extract_field,
+            extract_transform=extract_transform,
             description=description
         )
         self.steps.append(step)
@@ -108,14 +113,18 @@ class MultiStepQuery:
             Dictionary describing the execution plan
         """
         return {
+            "version": 1,
             "description": self.description,
             "is_multi_step": True,
             "num_steps": len(self.steps),
+            "target_field": self.target_field,
+            "target_constraints": self.target_constraints,
             "steps": [
                 {
                     "step_number": i + 1,
                     "resource_type": step.resource_type,
                     "extract_field": step.extract_field,
+                    "extract_transform": step.extract_transform,
                     "description": step.description,
                     "query": step.query
                 }
@@ -203,6 +212,7 @@ def create_simple_multi_step_query(
         MultiStepQuery object
     """
     multi_step = MultiStepQuery(description=description)
+    multi_step.target_field = final_field
     
     multi_step.add_step(
         resource_type=resource_type,
