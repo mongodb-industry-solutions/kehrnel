@@ -40,7 +40,8 @@ def test_catalog_lists_only_the_active_strategy_scope_without_database_access():
     assert catalog["projection_contract_version"].startswith("v2:")
     assert catalog["resource_count"] == len(catalog["resources"])
     assert catalog["resource_count"] == catalog["schema_resource_count"]
-    assert catalog["resource_count"] > catalog["storable_resource_count"]
+    # R5 now has configs for all 158 schema resources, so storable == resource_count
+    assert catalog["resource_count"] >= catalog["storable_resource_count"]
     assert catalog["storable_resource_count"] == catalog["searchable_resource_count"]
     assert catalog["configured_resource_count"] < catalog["resource_count"]
     assert {recipe["name"] for recipe in catalog["generation_recipes"]} == {
@@ -75,7 +76,8 @@ def test_patient_detail_joins_schema_search_projection_and_index_metadata(releas
 
 
 def test_catalog_describes_schema_resource_without_search_mapping():
-    result = fhir_resource_catalog(_ctx(), {"resource_type": "CapabilityStatement"})
+    # DeviceAlert is in the R6 schema but not in the R5 search configs (no R6-specific configs yet)
+    result = fhir_resource_catalog(_ctx("R6"), {"resource_type": "DeviceAlert"})
 
     assert result["resource"]["capabilities"]["schema_supported"] is True
     assert result["resource"]["capabilities"]["storable"] is False
