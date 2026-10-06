@@ -10,6 +10,7 @@ from faker import Faker
 
 from ...codes import codeable_from_section, pick_code, concept_from_section
 from ...codes.loader import get_system, random_code
+from ...config import settings
 from ...resolvers.reference import ReferenceStore
 from ..special_types import SpecialTypeGenerator
 
@@ -199,23 +200,32 @@ def enrich_Encounter(
     status = random_code("encounter_status", rng)
     r["status"] = status["code"] if status else "finished"
     enc_class = random_code("encounter_class", rng)
-    r["class"] = [t.gen_CodeableConcept(
-        system=get_system("encounter_class"),
-        code=enc_class["code"] if enc_class else "AMB",
-        display=enc_class["display"] if enc_class else "ambulatory",
-    )]
+    if settings.fhir_version == "R4":
+        r["class"] = t.gen_Coding(
+            system=get_system("encounter_class"),
+            code=enc_class["code"] if enc_class else "AMB",
+            display=enc_class["display"] if enc_class else "ambulatory",
+        )
+    else:
+        r["class"] = [t.gen_CodeableConcept(
+            system=get_system("encounter_class"),
+            code=enc_class["code"] if enc_class else "AMB",
+            display=enc_class["display"] if enc_class else "ambulatory",
+        )]
     if store.has("Patient"):
         r["subject"] = store.get_reference("Patient", rng)
     if store.has("Practitioner"):
+        actor_key = "individual" if settings.fhir_version == "R4" else "actor"
         r["participant"] = [{
             "type": [t.gen_CodeableConcept(
                 system="http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
                 code="ATND",
                 display="attender",
             )],
-            "actor": store.get_reference("Practitioner", rng),
+            actor_key: store.get_reference("Practitioner", rng),
         }]
-    r["actualPeriod"] = t.gen_Period()
+    period_field = "period" if settings.fhir_version == "R4" else "actualPeriod"
+    r[period_field] = t.gen_Period()
     if store.has("Organization"):
         r["serviceProvider"] = store.get_reference("Organization", rng)
     if store.has("Location"):
@@ -361,10 +371,13 @@ def enrich_AllergyIntolerance(
         system=get_system("allergy_verification_status"),
         code=vs["code"] if vs else "confirmed",
     )
-    r["type"] = t.gen_CodeableConcept(
-        system="http://hl7.org/fhir/allergy-intolerance-type",
-        code=rng.choice(["allergy", "intolerance"]),
-    )
+    if settings.fhir_version == "R4":
+        r["type"] = rng.choice(["allergy", "intolerance"])  # plain code in R4
+    else:
+        r["type"] = t.gen_CodeableConcept(
+            system="http://hl7.org/fhir/allergy-intolerance-type",
+            code=rng.choice(["allergy", "intolerance"]),
+        )
     r["category"] = [rng.choice(["food", "medication", "environment", "biologic"])]
     r["criticality"] = rng.choice(["low", "high", "unable-to-assess"])
     sub = random_code("allergy_substances", rng)
