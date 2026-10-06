@@ -5,7 +5,7 @@ from __future__ import annotations
 import heapq
 from collections import defaultdict
 
-from ..schema.registry import SchemaRegistry, registry
+from ..schema.registry import registry
 
 # Resources with fhir-search-to-mql configs (84). Keep in sync with
 # fhir-search-to-mql/src/fhir_search_to_mql/configs/*.yaml and
@@ -95,6 +95,20 @@ MQL_SHIPPED_RESOURCES: tuple[str, ...] = (
     "SupplyRequest",
     "Task",
     "VisionPrescription",
+    # ── Additional R4/R5 resources ──
+    "AppointmentResponse",
+    "CommunicationRequest",
+    "DeviceUseStatement",
+    "DocumentManifest",
+    "EncounterHistory",
+    "GuidanceResponse",
+    "ImagingSelection",
+    "ImmunizationEvaluation",
+    "List",
+    "Media",
+    "MolecularSequence",
+    "RequestGroup",
+    "SubscriptionStatus",
 )
 
 # Generate anchor resources before dependents that reference them.
@@ -260,37 +274,121 @@ _CORE_DEPENDENCIES_EXTENDED: dict[str, list[str]] = {
     "SubscriptionStatus": ["Subscription", "Patient"],
     "ImmunizationEvaluation": ["Immunization", "Patient", "Practitioner"],
     "Transport": ["Patient", "Location", "Encounter"],
-    "BiologicallyDerivedProductDispense": [
-        "Patient",
-        "Practitioner",
-        "Location",
-        "BiologicallyDerivedProduct",
-    ],
-    "DeviceAlert": ["Patient", "Device"],
+    "BiologicallyDerivedProductDispense": ["Patient", "Practitioner", "Location"],
     "MedicationKnowledge": ["Medication", "Organization"],
 }
 
 CORE_DEPENDENCIES.update(_CORE_DEPENDENCIES_EXTENDED)
 
+# Schema-only resources (no clinical enricher; generated from schema alone).
+# These cover all remaining R4 and R5 resources not in the MQL-shipped set.
+_CORE_DEPENDENCIES_SCHEMA_ONLY: dict[str, list[str]] = {
+    # ── Terminology / conformance (no patient deps) ──
+    "ActivityDefinition": [],
+    "ActorDefinition": [],
+    "AdministrableProductDefinition": [],
+    "ArtifactAssessment": [],
+    "Binary": [],
+    "Bundle": [],
+    "CapabilityStatement": [],
+    "CatalogEntry": [],
+    "Citation": [],
+    "ClinicalUseDefinition": ["Patient"],
+    "CodeSystem": [],
+    "CompartmentDefinition": [],
+    "ConceptMap": [],
+    "ConditionDefinition": [],
+    "DeviceAssociation": ["Patient", "Device"],
+    "DeviceDefinition": ["Organization"],
+    "DeviceMetric": ["Device"],
+    "DeviceUseStatement": ["Patient", "Device"],
+    "DocumentManifest": ["Patient", "Practitioner", "Organization"],
+    "EffectEvidenceSynthesis": [],
+    "EncounterHistory": ["Patient", "Encounter"],
+    "EventDefinition": [],
+    "Evidence": [],
+    "EvidenceReport": [],
+    "EvidenceVariable": [],
+    "ExampleScenario": [],
+    "FormularyItem": [],
+    "GraphDefinition": [],
+    "GuidanceResponse": ["Patient"],
+    "ImagingSelection": ["Patient", "Practitioner"],
+    "ImplementationGuide": [],
+    "Ingredient": [],
+    "InventoryItem": [],
+    "InventoryReport": ["Location"],
+    "Library": [],
+    "Linkage": ["Practitioner"],
+    "List": ["Patient", "Practitioner"],
+    "ManufacturedItemDefinition": [],
+    "Media": ["Patient", "Practitioner", "Encounter"],
+    "MedicinalProduct": [],
+    "MedicinalProductAuthorization": [],
+    "MedicinalProductContraindication": [],
+    "MedicinalProductDefinition": [],
+    "MedicinalProductIndication": [],
+    "MedicinalProductIngredient": [],
+    "MedicinalProductInteraction": [],
+    "MedicinalProductManufactured": [],
+    "MedicinalProductPackaged": [],
+    "MedicinalProductPharmaceutical": [],
+    "MedicinalProductUndesirableEffect": [],
+    "MessageDefinition": [],
+    "MessageHeader": [],
+    "MolecularSequence": ["Patient"],
+    "NamingSystem": [],
+    "NutritionProduct": [],
+    "ObservationDefinition": [],
+    "OperationDefinition": [],
+    "OperationOutcome": [],
+    "PackagedProductDefinition": [],
+    "Parameters": [],
+    "Permission": [],
+    "PlanDefinition": [],
+    "RegulatedAuthorization": [],
+    "RequestGroup": ["Patient", "Practitioner", "Encounter"],
+    "Requirements": [],
+    "ResearchDefinition": [],
+    "ResearchElementDefinition": [],
+    "RiskEvidenceSynthesis": [],
+    "SearchParameter": [],
+    "SpecimenDefinition": [],
+    "StructureDefinition": [],
+    "StructureMap": [],
+    "Subscription": [],
+    "SubscriptionTopic": [],
+    "SubstanceDefinition": [],
+    "SubstanceNucleicAcid": [],
+    "SubstancePolymer": [],
+    "SubstanceProtein": [],
+    "SubstanceReferenceInformation": [],
+    "SubstanceSourceMaterial": [],
+    "SubstanceSpecification": [],
+    "TerminologyCapabilities": [],
+    "TestPlan": [],
+    "TestReport": [],
+    "TestScript": [],
+    "ValueSet": [],
+    "VerificationResult": [],
+    # ── Workflow / admin ──
+    "CommunicationRequest": ["Patient", "Practitioner", "Encounter"],
+}
 
-def _active_registry(schema_registry: SchemaRegistry | None) -> SchemaRegistry:
-    return schema_registry or registry
+CORE_DEPENDENCIES.update(_CORE_DEPENDENCIES_SCHEMA_ONLY)
 
 
-def _known_resources(schema_registry: SchemaRegistry | None = None) -> set[str]:
-    return set(_active_registry(schema_registry).all_resources())
+def _known_resources() -> set[str]:
+    return set(registry.all_resources())
 
 
-def _direct_dependencies(
-    resource_name: str, schema_registry: SchemaRegistry | None = None
-) -> list[str]:
+def _direct_dependencies(resource_name: str) -> list[str]:
     """CORE_DEPENDENCIES plus schema-derived Reference targets when unknown."""
-    active_registry = _active_registry(schema_registry)
-    known = _known_resources(active_registry)
+    known = _known_resources()
     deps = list(CORE_DEPENDENCIES.get(resource_name, []))
     if resource_name not in CORE_DEPENDENCIES:
         try:
-            for dep in active_registry.references_for(resource_name):
+            for dep in registry.references_for(resource_name):
                 if dep not in deps and dep != resource_name:
                     deps.append(dep)
         except KeyError:
@@ -298,17 +396,13 @@ def _direct_dependencies(
     return [d for d in deps if d != resource_name and d in known]
 
 
-def _collect_transitive(
-    resource_name: str,
-    collected: set[str],
-    schema_registry: SchemaRegistry | None = None,
-) -> None:
+def _collect_transitive(resource_name: str, collected: set[str]) -> None:
     """Add resource and all transitive dependencies to collected."""
     if resource_name in collected:
         return
     collected.add(resource_name)
-    for dep in _direct_dependencies(resource_name, schema_registry):
-        _collect_transitive(dep, collected, schema_registry)
+    for dep in _direct_dependencies(resource_name):
+        _collect_transitive(dep, collected)
 
 
 def _priority_key(name: str) -> tuple[int, str]:
@@ -318,9 +412,7 @@ def _priority_key(name: str) -> tuple[int, str]:
         return (len(_GENERATION_PRIORITY), name)
 
 
-def resolve_order(
-    resource_names: list[str], schema_registry: SchemaRegistry | None = None
-) -> list[str]:
+def resolve_order(resource_names: list[str]) -> list[str]:
     """
     Topological sort — dependencies before dependents.
     Includes transitive closure of CORE_DEPENDENCIES and schema references.
@@ -328,13 +420,13 @@ def resolve_order(
     """
     all_nodes: set[str] = set()
     for name in resource_names:
-        _collect_transitive(name, all_nodes, schema_registry)
+        _collect_transitive(name, all_nodes)
 
     in_degree: dict[str, int] = {n: 0 for n in all_nodes}
     graph: dict[str, list[str]] = defaultdict(list)
 
     for node in all_nodes:
-        for dep in _direct_dependencies(node, schema_registry):
+        for dep in _direct_dependencies(node):
             if dep not in all_nodes:
                 continue
             graph[dep].append(node)

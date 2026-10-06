@@ -8,11 +8,11 @@ from typing import Any
 from ...codes import (
     codeable_from_section,
     codeable_reference_from_section,
-    coding_from_section,
     concept_from_section,
     pick_code,
 )
 from ...codes.loader import get_system, random_code
+from ...config import settings
 from ...resolvers.reference import ReferenceStore
 from ..special_types import SpecialTypeGenerator
 
@@ -110,13 +110,24 @@ def enrich_Device(
     rng: random.Random,
 ) -> dict[str, Any]:
     r["status"] = rng.choice(["active", "inactive", "entered-in-error"])
-    r["name"] = [{
-        "value": rng.choice([
-            "Pulse Oximeter", "Blood Pressure Monitor", "Insulin Pump", "Cardiac Monitor",
-            "Ventilator", "Defibrillator", "Infusion Pump", "ECG Machine",
-        ]),
-        "type": "user-friendly-name",
-    }]
+    # R4 uses deviceName[] with type as plain code; R5 uses name[] with type as string
+    if settings.fhir_version == "R4":
+        r["deviceName"] = [{
+            "name": rng.choice([
+                "Pulse Oximeter", "Blood Pressure Monitor", "Insulin Pump", "Cardiac Monitor",
+                "Ventilator", "Defibrillator", "Infusion Pump", "ECG Machine",
+            ]),
+            "type": rng.choice(["udi-label-name", "user-friendly-name", "patient-reported-name",
+                                "manufacturer-name", "model-name", "other"]),
+        }]
+    else:
+        r["name"] = [{
+            "value": rng.choice([
+                "Pulse Oximeter", "Blood Pressure Monitor", "Insulin Pump", "Cardiac Monitor",
+                "Ventilator", "Defibrillator", "Infusion Pump", "ECG Machine",
+            ]),
+            "type": "user-friendly-name",
+        }]
     r["type"] = [t.gen_CodeableConcept(
         system="http://snomed.info/sct",
         code=rng.choice(["706767009", "19257004", "360008003"]),
@@ -236,37 +247,26 @@ def enrich_AuditEvent(
     store: ReferenceStore,
     rng: random.Random,
 ) -> dict[str, Any]:
-    fields = t.schema_registry.definition("AuditEvent").fields
     r["action"] = rng.choice(["C", "R", "U", "D", "E"])
     r["recorded"] = t.p.gen_instant()
-    outcome_code = rng.choice(["0", "4", "8", "12"])
-    r["outcome"] = {
-        "code": t.gen_Coding(
-            system="http://terminology.hl7.org/CodeSystem/audit-event-outcome",
-            code=outcome_code,
-            display={
-                "0": "Success",
-                "4": "Minor failure",
-                "8": "Serious failure",
-                "12": "Major failure",
-            }[outcome_code],
-        )
-    }
-    event_code = rng.choice(["rest", "hl7-v2", "hl7-v3", "dicom"])
-    event_type = t.gen_CodeableConcept(
+    r["outcome"] = t.gen_CodeableConcept(
+        system="http://terminology.hl7.org/CodeSystem/audit-event-outcome",
+        code=rng.choice(["0", "4", "8", "12"]),
+        display=rng.choice(["Success", "Minor failure", "Serious failure", "Major failure"]),
+    )
+    r["type"] = t.gen_CodeableConcept(
         system="http://terminology.hl7.org/CodeSystem/audit-event-type",
-        code=event_code,
+        code=rng.choice(["rest", "hl7-v2", "hl7-v3", "dicom"]),
         display="Audit event type",
     )
-    if "type" in fields:
-        r["type"] = event_type
-    if "category" in fields:
-        r["category"] = [event_type]
-    if "code" in fields:
-        r["code"] = t.gen_CodeableConcept(
-            system="http://terminology.hl7.org/CodeSystem/audit-event-sub-type",
-            code=rng.choice(["read", "create", "update", "delete", "search"]),
-        )
+    r["category"] = [t.gen_CodeableConcept(
+        system="http://terminology.hl7.org/CodeSystem/audit-event-type",
+        code=rng.choice(["rest", "hl7-v2", "hl7-v3", "dicom"]),
+    )]
+    r["code"] = t.gen_CodeableConcept(
+        system="http://terminology.hl7.org/CodeSystem/audit-event-sub-type",
+        code=rng.choice(["read", "create", "update", "delete", "search"]),
+    )
     who = (
         store.get_reference("Practitioner", rng)
         if store.has("Practitioner")
@@ -280,21 +280,23 @@ def enrich_AuditEvent(
         ),
         "requestor": True,
         "who": who,
-        "networkString": t.p.faker.ipv4(),
+        "network": {
+            "address": t.p.faker.ipv4(),
+            "type": t.gen_CodeableConcept(
+                system="http://hl7.org/fhir/network-type",
+                code="2",
+                display="IP Address",
+            ),
+        },
     }]
     site = (
         store.get_reference("Location", rng)
         if store.has("Location")
         else t.gen_Reference(resource_type="Location")
     )
-    observer = (
-        store.get_reference("Practitioner", rng)
-        if store.has("Practitioner")
-        else t.gen_Reference()
-    )
     r["source"] = {
         "site": site,
-        "observer": observer,
+        "observer": t.gen_Reference(resource_type="Device"),
         "type": [t.gen_CodeableConcept(
             system="http://terminology.hl7.org/CodeSystem/audit-source-type",
             code="4",
@@ -496,16 +498,10 @@ def enrich_Substance(
             "allergen", "biological", "body", "chemical", "food", "drug", "material",
         ]),
     )]
-    code = rng.choice(
-        [
-            ("372687004", "Amoxicillin"),
-            ("387207008", "Ibuprofen"),
-            ("7980", "Penicillin"),
-            ("1191", "Aspirin"),
-        ]
-    )
-    r["code"] = t.gen_CodeableReference(
-        system="http://snomed.info/sct", code=code[0], display=code[1]
+    r["code"] = t.gen_CodeableConcept(
+        system="http://snomed.info/sct",
+        code=rng.choice(["372687004", "387207008", "7980", "1191"]),
+        display=rng.choice(["Amoxicillin", "Ibuprofen", "Penicillin", "Aspirin"]),
     )
     r["description"] = t.p.gen_string(
         resource_type=r.get("resourceType"), field_name="description"
@@ -539,7 +535,7 @@ def enrich_DeviceDispense(
     r["status"] = pick_code("device_dispense_status", rng, "completed")
     if store.has("Patient"):
         r["subject"] = store.get_reference("Patient", rng)
-    r["device"] = codeable_reference_from_section("snomed_devices", rng, t)
+    r["code"] = codeable_reference_from_section("snomed_devices", rng, t)
     return r
 
 
@@ -549,67 +545,12 @@ def enrich_BiologicallyDerivedProduct(
     store: ReferenceStore,
     rng: random.Random,
 ) -> dict[str, Any]:
-    fields = t.schema_registry.definition("BiologicallyDerivedProduct").fields
-    category = fields.get("productCategory")
-    if category and category.is_array:
-        r["productCategory"] = [
-            concept_from_section("biologically_derived_product_category", rng, t)
-        ]
-    else:
-        r["productCategory"] = coding_from_section(
-            "biologically_derived_product_category", rng
-        )
-    r["productStatus"] = coding_from_section(
-        "biologically_derived_product_status", rng
-    )
+    r["productCategory"] = pick_code("biologically_derived_product_category", rng, "fluid")
+    r["productStatus"] = pick_code("biologically_derived_product_status", rng, "available")
+    r["code"] = concept_from_section("biologically_derived_product_codes", rng, t)
     r["identifier"] = [t.gen_Identifier(value=f"BDP-{rng.randint(1000, 9999)}")]
     if store.has("Practitioner"):
         r["collection"] = {"collector": store.get_reference("Practitioner", rng)}
-    return r
-
-
-def enrich_BiologicallyDerivedProductDispense(
-    r: dict[str, Any],
-    t: SpecialTypeGenerator,
-    store: ReferenceStore,
-    rng: random.Random,
-) -> dict[str, Any]:
-    if store.has("BiologicallyDerivedProduct"):
-        r["product"] = store.get_reference("BiologicallyDerivedProduct", rng)
-    if store.has("Patient"):
-        r["patient"] = store.get_reference("Patient", rng)
-    r["status"] = "completed"
-    return r
-
-
-def enrich_Ingredient(
-    r: dict[str, Any],
-    t: SpecialTypeGenerator,
-    store: ReferenceStore,
-    rng: random.Random,
-) -> dict[str, Any]:
-    r["role"] = t.gen_CodeableConcept(
-        system="http://snomed.info/sct",
-        code="246205007",
-        display="Quantity",
-    )
-    r["substance"] = {
-        "code": codeable_reference_from_section("medication_codes", rng, t)
-    }
-    return r
-
-
-def enrich_DeviceAlert(
-    r: dict[str, Any],
-    t: SpecialTypeGenerator,
-    store: ReferenceStore,
-    rng: random.Random,
-) -> dict[str, Any]:
-    r["code"] = concept_from_section("snomed_devices", rng, t)
-    if store.has("Patient"):
-        r["subject"] = store.get_reference("Patient", rng)
-    elif store.has("Device"):
-        r["subject"] = store.get_reference("Device", rng)
     return r
 
 
@@ -638,7 +579,8 @@ def enrich_Endpoint(
     rng: random.Random,
 ) -> dict[str, Any]:
     r["status"] = "active"
-    r["connectionType"] = [concept_from_section("endpoint_connection_type", rng, t)]
+    r["connectionType"] = concept_from_section("endpoint_connection_type", rng, t)
+    r["payloadType"] = [concept_from_section("mime_types", rng, t)]
     r["address"] = "https://fhir.example.org/r5"
     if store.has("Organization"):
         r["managingOrganization"] = store.get_reference("Organization", rng)
@@ -653,7 +595,7 @@ def enrich_GenomicStudy(
 ) -> dict[str, Any]:
     r["status"] = pick_code("genomic_study_status", rng, "registered")
     if store.has("Patient"):
-        r["subject"] = store.get_reference("Patient", rng)
+        r["subject"] = [store.get_reference("Patient", rng)]
     r["identifier"] = [t.gen_Identifier(value=f"GS-{rng.randint(1000, 9999)}")]
     return r
 
@@ -691,11 +633,7 @@ def enrich_MeasureReport(
     r["status"] = pick_code("measure_report_status", rng, "complete")
     r["type"] = pick_code("measure_report_type", rng, "individual")
     if store.has("Measure"):
-        measure = store.get_resource("Measure", rng)
-        if measure:
-            r["measure"] = str(
-                measure.get("url") or f"Measure/{measure.get('id')}"
-            )
+        r["measure"] = store.get_reference("Measure", rng)
     if store.has("Patient"):
         r["subject"] = store.get_reference("Patient", rng)
     r["period"] = t.gen_Period()
@@ -721,9 +659,6 @@ ENRICHERS: dict[str, Any] = {
     "DeviceUsage": enrich_DeviceUsage,
     "DeviceDispense": enrich_DeviceDispense,
     "BiologicallyDerivedProduct": enrich_BiologicallyDerivedProduct,
-    "BiologicallyDerivedProductDispense": enrich_BiologicallyDerivedProductDispense,
-    "Ingredient": enrich_Ingredient,
-    "DeviceAlert": enrich_DeviceAlert,
     "OrganizationAffiliation": enrich_OrganizationAffiliation,
     "Endpoint": enrich_Endpoint,
     "GenomicStudy": enrich_GenomicStudy,

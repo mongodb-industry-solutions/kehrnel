@@ -5,6 +5,7 @@ from __future__ import annotations
 import random
 from typing import Any
 
+from ..config import settings
 from ..resolvers.reference import ReferenceStore
 from .special_types import SpecialTypeGenerator
 
@@ -150,11 +151,17 @@ def normalize_canonical_resource(
         if rtype in _STRING_PUBLISHER_RESOURCES or pub is not None:
             resource["publisher"] = _publisher_label(pub, store, rng)
 
-    if any(k in resource for k in ("versionAlgorithmCoding", "versionAlgorithmString")):
-        _normalize_version_algorithm(resource, t, rng)
-    elif rtype in _STRING_PUBLISHER_RESOURCES:
-        # Canonical artifacts commonly carry a version algorithm when version is set.
-        if resource.get("version") and rng.random() < 0.85:
+    # versionAlgorithm[x] is R5+ only — not present in R4 schema.
+    # On R4: remove these fields if they were somehow generated (belt-and-suspenders).
+    if settings.fhir_version == "R4":
+        resource.pop("versionAlgorithmCoding", None)
+        resource.pop("versionAlgorithmString", None)
+    else:
+        if any(k in resource for k in ("versionAlgorithmCoding", "versionAlgorithmString")):
             _normalize_version_algorithm(resource, t, rng)
+        elif rtype in _STRING_PUBLISHER_RESOURCES:
+            # Canonical artifacts commonly carry a version algorithm when version is set.
+            if resource.get("version") and rng.random() < 0.85:
+                _normalize_version_algorithm(resource, t, rng)
 
     return resource

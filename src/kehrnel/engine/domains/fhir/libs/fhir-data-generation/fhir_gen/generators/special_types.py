@@ -159,12 +159,8 @@ class SpecialTypeGenerator(ComplexTypeGenerator):
 
     def gen_Availability(self) -> dict:
         return {
-            "availableTime": [{
-                "daysOfWeek": ["mon", "tue", "wed", "thu", "fri"],
-                "allDay": False,
-                "availableStartTime": "08:00:00",
-                "availableEndTime": "17:00:00",
-            }],
+            "availableTime": [self.gen_Timing()],
+            "notAvailableTime": [],
         }
 
     def gen_Contributor(self) -> dict:

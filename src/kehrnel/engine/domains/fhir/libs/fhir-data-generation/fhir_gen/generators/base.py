@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import random
-from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -59,10 +58,6 @@ _REFERENCE_TARGETS: dict[str, list[str]] = {
     "currentLocation": ["Location"],
     "requestedLocation": ["Location"],
     "controller": ["Organization", "Patient", "Practitioner"],
-    "observation": ["Observation"],
-    "manipulated": ["Device"],
-    "link": ["DocumentReference", "DiagnosticReport"],
-    "reference": ["Observation", "DocumentReference", "DiagnosticReport", "Patient"],
 }
 
 
@@ -82,50 +77,17 @@ class ResourceGenerator:
     BACKBONE_FIELD_PROB = 0.85
     MAX_BACKBONE_DEPTH = 8
 
-    def __init__(
-        self,
-        seed: int | None = None,
-        store: ReferenceStore | None = None,
-        *,
-        schema_path: str | Path | None = None,
-        schema_version: str | None = None,
-    ) -> None:
+    def __init__(self, seed: int | None = None, store: ReferenceStore | None = None) -> None:
         self.seed = seed
         self.rng = random.Random(seed)
         self._prim = PrimitiveGenerator(seed=seed)
         self._types = SpecialTypeGenerator(self._prim)
         self._store = store or ReferenceStore()
-        if schema_path or schema_version:
-            from ..schema.versions import resolve_schema_path
-
-            resolved = resolve_schema_path(
-                schema_version=schema_version,
-                schema_path=Path(schema_path) if schema_path else None,
-            )
-            self._registry = SchemaRegistry(resolved)
-        else:
-            self._registry = SchemaRegistry.get()
-        self._types.schema_registry = self._registry
-        self._conformance_resources = 0
-        self._conformance_removals: Counter[str] = Counter()
+        self._registry = SchemaRegistry.get()
 
     @property
     def store(self) -> ReferenceStore:
         return self._store
-
-    @property
-    def schema_registry(self) -> SchemaRegistry:
-        return self._registry
-
-    def conformance_report(self) -> dict[str, Any]:
-        """Evidence from the schema guard applied to every generated resource."""
-        return {
-            "passed": True,
-            "resources_checked": self._conformance_resources,
-            "optional_values_removed": sum(self._conformance_removals.values()),
-            "removals_by_path": dict(self._conformance_removals.most_common(50)),
-            "policy": "remove-invalid-optional-content;never-invent-required-content",
-        }
 
     def generate(
         self,
@@ -139,24 +101,22 @@ class ResourceGenerator:
         if schema_path or schema_version:
             from ..schema.versions import resolve_schema_path
 
-            self._registry = SchemaRegistry(
+            SchemaRegistry.reload(
                 resolve_schema_path(
                     schema_version=schema_version,
                     schema_path=Path(schema_path) if schema_path else None,
                 )
             )
-            self._types.schema_registry = self._registry
+        self._registry = SchemaRegistry.get()
 
         known = set(self._registry.all_resources())
-        for dep in resolve_order([resource_type], self._registry):
+        for dep in resolve_order([resource_type]):
             if dep != resource_type and dep in known and not self._store.has(dep):
                 self._generate_one(dep)
 
         results: list[dict[str, Any]] = []
         for i in range(count):
-            scenario_entry = scenario_for_index(
-                resource_type, i, schema_registry=self._registry
-            )
+            scenario_entry = scenario_for_index(resource_type, i)
             results.append(
                 self._generate_one(
                     resource_type,
@@ -181,28 +141,16 @@ class ResourceGenerator:
         Use this when you need a specific variant (e.g. Patient ``deceased_datetime``)
         rather than the first catalog entry used by ``generate(..., count=1)``.
         """
-        entry = scenario_by_id(
-            resource_type,
-            scenario_id,
-            include_poly_variants=True,
-            schema_registry=self._registry,
-        )
+        entry = scenario_by_id(resource_type, scenario_id, include_poly_variants=True)
         if entry is None:
-            known = [
-                s.id
-                for s in scenario_catalog(
-                    resource_type,
-                    include_poly_variants=True,
-                    schema_registry=self._registry,
-                )
-            ]
+            known = [s.id for s in scenario_catalog(resource_type, include_poly_variants=True)]
             raise ValueError(
                 f"Unknown scenario {scenario_id!r} for {resource_type}. "
                 f"Known scenarios: {known}"
             )
 
         known = set(self._registry.all_resources())
-        for dep in resolve_order([resource_type], self._registry):
+        for dep in resolve_order([resource_type]):
             if dep != resource_type and dep in known and not self._store.has(dep):
                 self._generate_one(dep)
 
@@ -231,7 +179,7 @@ class ResourceGenerator:
                     all_needed.add(dep)
 
         results: dict[str, list[dict[str, Any]]] = {}
-        for rt in resolve_order(list(all_needed), self._registry):
+        for rt in resolve_order(list(all_needed)):
             n = counts.get(rt, 1)
             generated = [self._generate_one(rt) for _ in range(n)]
             if rt in requested:
@@ -255,7 +203,7 @@ class ResourceGenerator:
             return self.generate(resource_type, count=1)
 
         known = set(self._registry.all_resources())
-        for dep in resolve_order([resource_type], self._registry):
+        for dep in resolve_order([resource_type]):
             if dep != resource_type and dep in known and not self._store.has(dep):
                 self._generate_one(dep)
 
@@ -267,7 +215,6 @@ class ResourceGenerator:
                     forced_poly={_base: key},
                     register=False,
                     enrich=False,
-                    enforce_conformance=False,
                 )
                 for sib in keys:
                     if sib != key:
@@ -283,11 +230,6 @@ class ResourceGenerator:
                         if value is not None and not self._is_effectively_empty(value):
                             resource[key] = value
                 if not self._is_effectively_empty(resource.get(key)):
-                    resource = self._conform_generated_resource(
-                        resource, resource_type
-                    )
-                    if self._is_effectively_empty(resource.get(key)):
-                        continue
                     self._store.register(resource)
                     variants.append(resource)
         return variants
@@ -308,14 +250,13 @@ class ResourceGenerator:
         catalog = scenario_catalog(
             resource_type,
             include_poly_variants=include_poly_variants and not named_only,
-            schema_registry=self._registry,
         )
         if not catalog:
             variants = self.generate_variants(resource_type)
             return variants if variants else self.generate(resource_type, count=1)
 
         known = set(self._registry.all_resources())
-        for dep in resolve_order([resource_type], self._registry):
+        for dep in resolve_order([resource_type]):
             if dep != resource_type and dep in known and not self._store.has(dep):
                 self._generate_one(dep)
 
@@ -363,23 +304,6 @@ class ResourceGenerator:
             fields.update(keys)
         return fields
 
-    @staticmethod
-    def _enforce_poly_exclusivity(
-        resource: dict[str, Any],
-        resource_def: ResourceDef,
-        forced_poly: dict[str, str] | None,
-    ) -> None:
-        """Keep one concrete property for every FHIR choice element."""
-        for base, variants in resource_def.poly_groups.items():
-            present = [key for key in resource if key in variants]
-            if len(present) <= 1:
-                continue
-            forced = (forced_poly or {}).get(base)
-            chosen = forced if forced in present else present[-1]
-            for key in present:
-                if key != chosen:
-                    resource.pop(key, None)
-
     def _generate_one(
         self,
         resource_type: str,
@@ -388,7 +312,6 @@ class ResourceGenerator:
         register: bool = True,
         enrich: bool = True,
         scenario: str | None = None,
-        enforce_conformance: bool = True,
     ) -> dict[str, Any]:
         resource_def = self._registry.definition(resource_type)
         poly_variants = self._poly_variant_fields(resource_def)
@@ -476,7 +399,6 @@ class ResourceGenerator:
                 self._store,
                 self.rng,
             )
-        self._enforce_poly_exclusivity(resource, resource_def, forced_poly)
         resource = self._store.fill_missing_references(resource, self.rng)
         resource = self._store.repair_resource(resource, self.rng)
         resource = self._ensure_required_fields(resource, resource_def, resource_type)
@@ -488,34 +410,22 @@ class ResourceGenerator:
             resource, self._types, self._store, self.rng
         )
 
+        # Apply profile pack (US Core etc.) — R4 only, opt-in via settings
+        from ..config import settings
+        if settings.profile_pack:
+            from ..profiles.applicator import apply_profile_pack
+            resource = apply_profile_pack(
+                resource,
+                settings.profile_pack,
+                settings.fhir_version,
+                self.rng,
+            )
+
         if overrides:
             resource.update(overrides)
 
-        if enforce_conformance:
-            resource = self._conform_generated_resource(resource, resource_type)
-
         if register:
             self._store.register(resource)
-        return resource
-
-    def _conform_generated_resource(
-        self, resource: dict[str, Any], resource_type: str
-    ) -> dict[str, Any]:
-        from ..schema.conformance import conform_resource_to_schema
-
-        conformance = conform_resource_to_schema(resource, self._registry)
-        if not conformance["passed"]:
-            raise ValueError(
-                f"Generated {resource_type} does not conform to the active base schema: "
-                f"{conformance['unresolved'][:3]}"
-            )
-        self._conformance_resources += 1
-        self._conformance_removals.update(
-            {
-                f"{resource_type}.{path}": count
-                for path, count in conformance["removals"].items()
-            }
-        )
         return resource
 
     def _ensure_required_fields(
@@ -611,13 +521,13 @@ class ResourceGenerator:
             return [value]
         return value
 
-    def _generate_reference_field(self, field: FieldDef) -> Any:
+    def _generate_reference_field(self, field: FieldDef) -> dict[str, Any] | None:
         candidates = _REFERENCE_TARGETS.get(field.name, [])
         for candidate in candidates:
             if self._store.has(candidate):
                 ref = self._store.get_reference(candidate, self.rng)
                 if ref:
-                    return self._wrap_array(field, ref)
+                    return ref
         return None
 
     def _generate_backbone(
@@ -667,13 +577,6 @@ class ResourceGenerator:
                 )
                 if val is not None and not self._is_effectively_empty(val):
                     result[chosen] = val
-
-        if any(
-            self._is_effectively_empty(result.get(field_name))
-            for field_name in nested_def.required
-            if not field_name.startswith("_")
-        ):
-            return {}
 
         return result
 

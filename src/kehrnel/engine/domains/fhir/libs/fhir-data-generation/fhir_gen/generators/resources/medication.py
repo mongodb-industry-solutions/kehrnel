@@ -7,6 +7,7 @@ from typing import Any
 
 from ...codes import pick_code
 from ...codes.loader import get_system, random_code
+from ...config import settings
 from ...resolvers.reference import ReferenceStore
 from ..special_types import SpecialTypeGenerator
 
@@ -26,15 +27,23 @@ def _set_medication(
     rng: random.Random,
     med: dict[str, Any] | None,
 ) -> None:
-    """FHIR R5 CodeableReference for medication[x]-style fields."""
+    """Set medication field with R4/R5 version guard."""
     concept = _rxnorm_concept(t, med)
-    if store.has("Medication"):
-        r["medication"] = {
-            "reference": store.get_reference("Medication", rng),
-            "concept": concept,
-        }
+    if settings.fhir_version == "R4":
+        # R4: polymorphic medicationCodeableConcept or medicationReference
+        if store.has("Medication"):
+            r["medicationReference"] = store.get_reference("Medication", rng)
+        else:
+            r["medicationCodeableConcept"] = concept
     else:
-        r["medication"] = {"concept": concept}
+        # R5/R6: CodeableReference
+        if store.has("Medication"):
+            r["medication"] = {
+                "reference": store.get_reference("Medication", rng),
+                "concept": concept,
+            }
+        else:
+            r["medication"] = {"concept": concept}
 
 
 def enrich_Medication(
@@ -47,7 +56,7 @@ def enrich_Medication(
     r["code"] = _rxnorm_concept(t, med)
     status = random_code("medication_status", rng)
     r["status"] = status["code"] if status else "active"
-    if store.has("Organization"):
+    if store.has("Organization") and settings.fhir_version != "R4":
         r["marketingAuthorizationHolder"] = store.get_reference("Organization", rng)
     r["doseForm"] = t.gen_CodeableConcept(
         system="http://snomed.info/sct",
@@ -57,15 +66,11 @@ def enrich_Medication(
         ]),
     )
     r["ingredient"] = [{
-        "item": {
-            "concept": t.gen_CodeableConcept(
-                system="http://www.nlm.nih.gov/research/umls/rxnorm",
-                code=med["code"] if med else "161",
-                display=rng.choice(
-                    ["Acetaminophen", "Amoxicillin", "Ibuprofen", "Metformin"]
-                ),
-            )
-        },
+        "item": t.gen_CodeableConcept(
+            system="http://www.nlm.nih.gov/research/umls/rxnorm",
+            code=med["code"] if med else "161",
+            display=rng.choice(["Acetaminophen", "Amoxicillin", "Ibuprofen", "Metformin"]),
+        ),
         "isActive": True,
         "strengthRatio": t.gen_Ratio(),
     }]
@@ -92,18 +97,7 @@ def enrich_MedicationRequest(
         r["requester"] = store.get_reference("Practitioner", rng)
         r["recorder"] = store.get_reference("Practitioner", rng)
     r["authoredOn"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
-    from ...schema.registry import SchemaRegistry
-
-    schema_registry = getattr(t, "schema_registry", None) or SchemaRegistry.get()
-    dosage_field = schema_registry.definition("MedicationRequest").fields.get(
-        "dosageInstruction"
-    )
-    if dosage_field and dosage_field.is_array:
-        r["dosageInstruction"] = [t.gen_Dosage()]
-    else:
-        r["dosageInstruction"] = {
-            "renderedInstruction": "Take medication as directed."
-        }
+    r["dosageInstruction"] = [t.gen_Dosage()]
     r["dispenseRequest"] = {
         "validityPeriod": t.gen_Period(),
         "numberOfRepeatsAllowed": rng.randint(0, 5),
@@ -132,26 +126,10 @@ def enrich_MedicationAdministration(
     if store.has("Encounter"):
         r["encounter"] = store.get_reference("Encounter", rng)
     if store.has("Practitioner"):
-        r["performer"] = [{
-            "actor": {"reference": store.get_reference("Practitioner", rng)}
-        }]
+        r["performer"] = [{"actor": store.get_reference("Practitioner", rng)}]
     if store.has("MedicationRequest"):
         r["basedOn"] = [store.get_reference("MedicationRequest", rng)]
-    from ...schema.registry import SchemaRegistry
-
-    schema_registry = getattr(t, "schema_registry", None) or SchemaRegistry.get()
-    date_field = (
-        "occurrenceDateTime"
-        if "occurrenceDateTime"
-        in schema_registry.definition("MedicationAdministration").fields
-        else "occurenceDateTime"
-    )
-    for key in list(r):
-        if (
-            key.startswith("occurrence") or key.startswith("occurence")
-        ) and not key.startswith("_"):
-            r.pop(key, None)
-    r[date_field] = t.p.gen_dateTime(min_year=2023, max_year=2024)
+    r["occurredDateTime"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
     route = random_code("dosage_routes", rng)
     r["dosage"] = {
         "route": t.gen_CodeableConcept(
