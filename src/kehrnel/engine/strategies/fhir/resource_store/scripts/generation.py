@@ -158,6 +158,28 @@ def _merge_conformance_reports(
     }
 
 
+def _build_conformance_report(
+    generator: Any,
+    schema_registry: Any,
+) -> dict[str, Any]:
+    """Run base-schema conformance on all resources in the generator store."""
+    with _fhir_gen_cwd_guard():
+        from fhir_gen.schema.conformance import conform_resource_to_schema
+    resources = list(generator.store.all_resources())
+    removals: Counter[str] = Counter()
+    passed = True
+    for resource in resources:
+        report = conform_resource_to_schema(resource, schema_registry)
+        if not report.get("passed"):
+            passed = False
+        removals.update(report.get("removals") or {})
+    return {
+        "passed": passed,
+        "resources_checked": len(resources),
+        "removals_by_path": dict(removals.most_common(50)),
+    }
+
+
 def _filter_named_recipe_for_active_schema(
     cfg: dict[str, Any],
     original_payload: dict[str, Any],
@@ -206,16 +228,18 @@ async def _generate_cohort_documents(
     should_cancel: CancelCallback | None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
     """Generate isolated patient graphs while reusing shared directory assets."""
-    ResourceGenerator, resolve_order, ReferenceStore, _, _ = _import_fhir_gen()
+    ResourceGenerator, resolve_order, ReferenceStore, SchemaRegistry, _ = _import_fhir_gen()
+    SchemaRegistry.reload(schema_path)
     seed = int(plan["cohort"]["seed"])
     shared_counts = plan["shared_resources"]
-    shared_generator = ResourceGenerator(seed=seed, schema_path=schema_path)
+    shared_generator = ResourceGenerator(seed=seed)
     if shared_counts:
         shared_generator.generate_many(
             list(shared_counts), counts=shared_counts
         )
     shared_docs = shared_generator.store.all_resources()
-    conformance_reports = [shared_generator.conformance_report()]
+    _schema_registry = SchemaRegistry.get()
+    conformance_reports = [_build_conformance_report(shared_generator, _schema_registry)]
     shared_keys = {_resource_key(resource) for resource in shared_docs}
 
     all_docs: list[dict[str, Any]] = list(shared_docs)
@@ -235,17 +259,15 @@ async def _generate_cohort_documents(
         generator = ResourceGenerator(
             seed=seed + (patient_index + 1) * 104_729,
             store=patient_store,
-            schema_path=schema_path,
         )
         generator.generate("Patient", 1)
         for resource_type in resolve_order(
             [key for key, count in requested.items() if count > 0],
-            generator.schema_registry,
         ):
             count = int(requested.get(resource_type, 0))
             if count:
                 generator.generate(resource_type, count)
-        conformance_reports.append(generator.conformance_report())
+        conformance_reports.append(_build_conformance_report(generator, _schema_registry))
 
         patient_docs = [
             resource
@@ -390,7 +412,7 @@ async def synthetic_generate_batch(
     database = str(cfg["database"])
     prefix = str(cfg.get("collection_prefix") or "")
     generation_order = _import_fhir_gen()[1](
-        list(requested.keys()), schema_registry
+        list(requested.keys())
     )
     collection_names = [
         bridge.collection_name(prefix, rt)
@@ -446,8 +468,9 @@ async def synthetic_generate_batch(
             should_cancel=should_cancel,
         )
     else:
-        ResourceGenerator, _, _, _, _ = _import_fhir_gen()
-        generator = ResourceGenerator(seed=seed, schema_path=resolved_schema_path)
+        ResourceGenerator, _, _, SchemaRegistry, _ = _import_fhir_gen()
+        SchemaRegistry.reload(resolved_schema_path)
+        generator = ResourceGenerator(seed=seed)
 
         generator.generate_many(list(requested.keys()), counts=requested)
         _check_canceled(should_cancel)
@@ -467,7 +490,7 @@ async def synthetic_generate_batch(
                 _check_canceled(should_cancel)
 
         all_docs = generator.store.all_resources()
-        generation_conformance = generator.conformance_report()
+        generation_conformance = _build_conformance_report(generator, SchemaRegistry.get())
     all_counts = _count_resources_by_type(all_docs)
     generated = {rt: all_counts.get(rt, 0) for rt in requested}
     dependencies_auto_generated = {
