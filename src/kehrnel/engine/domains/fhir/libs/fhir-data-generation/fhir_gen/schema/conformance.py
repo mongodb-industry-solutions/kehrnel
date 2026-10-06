@@ -42,7 +42,8 @@ def conform_resource_to_schema(
     required content and therefore cannot conceal a missing required root field.
     """
     resource_type = str(resource.get("resourceType") or "")
-    raw_schema = registry.parser().raw_schema
+    parser = registry.parser()
+    raw_schema = getattr(parser, "raw_schema", None) or getattr(parser, "_raw", None)
     if resource_type not in (raw_schema.get("definitions") or {}):
         return {
             "passed": False,
