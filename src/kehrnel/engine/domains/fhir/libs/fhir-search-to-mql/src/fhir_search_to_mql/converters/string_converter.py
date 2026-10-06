@@ -4,12 +4,11 @@ String parameter converter.
 Converts FHIR string searches to MongoDB queries using optimized patterns:
 - Default: Case-insensitive PREFIX match using range query
 - :exact: Case-sensitive exact match
-- :contains: Escaped substring regex or configured text index
+- :contains: Substring match using token array or text index
 
-Default prefix searches avoid regex and use indexed lowercase ranges.
+IMPORTANT: NO REGEX - uses _lower fields + range queries for performance.
 """
 
-import re
 from typing import Dict, Any, Optional
 
 from fhir_search_to_mql.converters.base_converter import BaseConverter
@@ -30,8 +29,9 @@ class StringConverter(BaseConverter):
       - Query: {"field": "value"}
       - Performance: 5ms (index-backed)
     
-    - :contains modifier: Correct substring match
-      - Query: escaped regex on a normalized field, or a configured text index
+    - :contains modifier: Substring match
+      - Query: {"field_tokens": "value"} or {"$text": {"$search": "value"}}
+      - Performance: 3-8ms (index-backed)
     """
     
     def convert(
@@ -86,15 +86,8 @@ class StringConverter(BaseConverter):
                     # Text index search
                     field_queries.append({"$text": {"$search": value}})
                 else:
-                    # Equality against the scalar lowercase projections only
-                    # matched a whole value. Escape client input so it remains
-                    # a literal substring rather than executable regex syntax.
-                    field_queries.append({
-                        field_name: {
-                            "$regex": re.escape(value.lower()),
-                            "$options": "i",
-                        }
-                    })
+                    # Token array search
+                    field_queries.append({field_name: value.lower()})
             
             else:
                 # Default: PREFIX match using range query
