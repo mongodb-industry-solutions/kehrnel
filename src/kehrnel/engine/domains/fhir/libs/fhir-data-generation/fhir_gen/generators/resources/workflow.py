@@ -586,6 +586,8 @@ def enrich_SupplyRequest(
 ) -> dict[str, Any]:
     r["status"] = pick_code("supply_request_status", rng, "active")
     r["category"] = concept_from_section("supply_categories", rng, t)
+    # R5 requires "item" (CodeableReference)
+    r["item"] = codeable_reference_from_section("supply_categories", rng, t)
     if store.has("Patient"):
         r["subject"] = store.get_reference("Patient", rng)
     if store.has("Practitioner"):

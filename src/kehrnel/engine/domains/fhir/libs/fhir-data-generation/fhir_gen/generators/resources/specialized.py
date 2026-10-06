@@ -535,7 +535,8 @@ def enrich_DeviceDispense(
     r["status"] = pick_code("device_dispense_status", rng, "completed")
     if store.has("Patient"):
         r["subject"] = store.get_reference("Patient", rng)
-    r["code"] = codeable_reference_from_section("snomed_devices", rng, t)
+    # R5 requires "device" (CodeableReference); standalone synced "code" which is R4 field name
+    r["device"] = codeable_reference_from_section("snomed_devices", rng, t)
     return r
 
 
@@ -579,7 +580,8 @@ def enrich_Endpoint(
     rng: random.Random,
 ) -> dict[str, Any]:
     r["status"] = "active"
-    r["connectionType"] = concept_from_section("endpoint_connection_type", rng, t)
+    # R5 Endpoint.connectionType is an array
+    r["connectionType"] = [concept_from_section("endpoint_connection_type", rng, t)]
     r["payloadType"] = [concept_from_section("mime_types", rng, t)]
     r["address"] = "https://fhir.example.org/r5"
     if store.has("Organization"):
@@ -595,7 +597,8 @@ def enrich_GenomicStudy(
 ) -> dict[str, Any]:
     r["status"] = pick_code("genomic_study_status", rng, "registered")
     if store.has("Patient"):
-        r["subject"] = [store.get_reference("Patient", rng)]
+        # R5 GenomicStudy.subject is a single Reference, not an array
+        r["subject"] = store.get_reference("Patient", rng)
     r["identifier"] = [t.gen_Identifier(value=f"GS-{rng.randint(1000, 9999)}")]
     return r
 
