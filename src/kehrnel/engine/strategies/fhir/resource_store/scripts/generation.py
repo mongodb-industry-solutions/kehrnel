@@ -471,27 +471,53 @@ async def synthetic_generate_batch(
     else:
         ResourceGenerator, _, _, SchemaRegistry, _, _ = _import_fhir_gen()
         SchemaRegistry.reload(resolved_schema_path)
-        generator = ResourceGenerator(seed=seed)
 
-        generator.generate_many(list(requested.keys()), counts=requested)
-        _check_canceled(should_cancel)
+        # Wire profile_pack (e.g. "us_core") into the fhir-gen settings singleton
+        # so ResourceGenerator.generate() applies profile stamps to each resource.
+        # profile_pack requires schema_version==R4; the normalize step above already
+        # validated the version, so we only need to guard against non-R4 here.
+        profile_pack = effective_payload.get("profile_pack")
+        if profile_pack and schema_version != "R4":
+            raise KehrnelError(
+                code="FHIR_PROFILE_PACK_VERSION_MISMATCH",
+                status=400,
+                message=(
+                    f"profile_pack='{profile_pack}' requires schema_version='R4', "
+                    f"got schema_version='{schema_version}'"
+                ),
+                details={"profile_pack": profile_pack, "schema_version": schema_version},
+            )
 
-        for resource_type, scenario_id in scenarios:
-            generator.generate_scenario(resource_type, scenario_id, register=True)
+        with _fhir_gen_cwd_guard():
+            from fhir_gen.config import settings as _fhir_gen_settings
+        _prev_profile_pack = _fhir_gen_settings.profile_pack
+        _fhir_gen_settings.profile_pack = (
+            profile_pack.replace("-", "_") if profile_pack else None
+        )
+        try:
+            generator = ResourceGenerator(seed=seed)
+
+            generator.generate_many(list(requested.keys()), counts=requested)
             _check_canceled(should_cancel)
 
-        if variants:
-            target_types = (
-                [str(rt) for rt in variant_resources]
-                if isinstance(variant_resources, list) and variant_resources
-                else list(requested.keys())
-            )
-            for resource_type in target_types:
-                generator.generate_variants(resource_type)
+            for resource_type, scenario_id in scenarios:
+                generator.generate_scenario(resource_type, scenario_id, register=True)
                 _check_canceled(should_cancel)
 
-        all_docs = generator.store.all_resources()
-        generation_conformance = _build_conformance_report(generator, SchemaRegistry.get())
+            if variants:
+                target_types = (
+                    [str(rt) for rt in variant_resources]
+                    if isinstance(variant_resources, list) and variant_resources
+                    else list(requested.keys())
+                )
+                for resource_type in target_types:
+                    generator.generate_variants(resource_type)
+                    _check_canceled(should_cancel)
+
+            all_docs = generator.store.all_resources()
+            generation_conformance = _build_conformance_report(generator, SchemaRegistry.get())
+        finally:
+            _fhir_gen_settings.profile_pack = _prev_profile_pack
     all_counts = _count_resources_by_type(all_docs)
     generated = {rt: all_counts.get(rt, 0) for rt in requested}
     dependencies_auto_generated = {
