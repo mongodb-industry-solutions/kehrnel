@@ -40,7 +40,7 @@ def _import_fhir_gen():
         from fhir_gen.resolvers.dependency import resolve_order
         from fhir_gen.resolvers.reference import ReferenceStore
         from fhir_gen.schema.registry import SchemaRegistry
-        from fhir_gen.schema.versions import resolve_schema_path
+        from fhir_gen.schema.versions import normalize_schema_version, resolve_schema_path
 
     return (
         ResourceGenerator,
@@ -48,6 +48,7 @@ def _import_fhir_gen():
         ReferenceStore,
         SchemaRegistry,
         resolve_schema_path,
+        normalize_schema_version,
     )
 
 
@@ -120,7 +121,7 @@ def _generation_schema_registry(
     schema_version: str | None, schema_path: str | None
 ):
     """Build a request-local registry so concurrent tenant releases cannot race."""
-    _, _, _, SchemaRegistry, resolve_schema_path = _import_fhir_gen()
+    _, _, _, SchemaRegistry, resolve_schema_path, _ = _import_fhir_gen()
     path = resolve_schema_path(
         schema_version=schema_version,
         schema_path=Path(schema_path) if schema_path else None,
@@ -228,7 +229,7 @@ async def _generate_cohort_documents(
     should_cancel: CancelCallback | None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
     """Generate isolated patient graphs while reusing shared directory assets."""
-    ResourceGenerator, resolve_order, ReferenceStore, SchemaRegistry, _ = _import_fhir_gen()
+    ResourceGenerator, resolve_order, ReferenceStore, SchemaRegistry, _, _ = _import_fhir_gen()
     SchemaRegistry.reload(schema_path)
     seed = int(plan["cohort"]["seed"])
     shared_counts = plan["shared_resources"]
@@ -340,16 +341,16 @@ async def synthetic_generate_batch(
     )
     schema_path = effective_payload.get("schema_path")
 
-    if schema_version.upper() not in {"R5", "R6"}:
+    _, _, _, _, _, _normalize = _import_fhir_gen()
+    try:
+        schema_version = _normalize(schema_version)
+    except ValueError as exc:
         raise KehrnelError(
             code="FHIR_GENERATION_VERSION_UNSUPPORTED",
             status=400,
-            message=(
-                f"Synthetic generation is not available for {schema_version}; "
-                "use an R5 or R6 activation."
-            ),
-            details={"schema_version": schema_version, "supported": ["R5", "R6"]},
-        )
+            message=str(exc),
+            details={"schema_version": schema_version, "supported": ["R4", "R5", "R6"]},
+        ) from exc
     schema_registry, resolved_schema_path = _generation_schema_registry(
         schema_version, schema_path
     )
@@ -468,7 +469,7 @@ async def synthetic_generate_batch(
             should_cancel=should_cancel,
         )
     else:
-        ResourceGenerator, _, _, SchemaRegistry, _ = _import_fhir_gen()
+        ResourceGenerator, _, _, SchemaRegistry, _, _ = _import_fhir_gen()
         SchemaRegistry.reload(resolved_schema_path)
         generator = ResourceGenerator(seed=seed)
 
