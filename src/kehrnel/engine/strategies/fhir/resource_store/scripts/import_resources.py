@@ -216,7 +216,11 @@ async def fhir_import_resources(
             message="FHIR search indexes are mandatory and cannot be disabled",
         )
     cfg = bridge.resolve_strategy_config(ctx)
-    release = str(cfg.get("schema_version") or "R5").strip().upper()
+    # Prefer the caller-supplied schema_version (e.g. from a generation job
+    # requesting R4) over the activation config, which may be a different release.
+    release = str(
+        payload.get("schema_version") or cfg.get("schema_version") or "R5"
+    ).strip().upper()
     requested_level = payload.get("validation_level") or (
         "structure" if release == "R4" else "base"
     )

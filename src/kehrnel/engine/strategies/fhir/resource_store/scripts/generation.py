@@ -538,6 +538,7 @@ async def synthetic_generate_batch(
             ctx,
             {
                 "resources": all_docs,
+                "schema_version": schema_version,
                 "validation_level": "base",
                 "mode": "upsert",
                 "fail_on_error": True,
