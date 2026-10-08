@@ -93,6 +93,20 @@ MQL_ENRICHED_FIELDS: dict[str, tuple[str, ...]] = {
     "SupplyRequest": ("status", "category"),
     "Task": ("status", "intent"),
     "VisionPrescription": ("status", "lensSpecification"),
+    # ── Additional R4/R5 resources (schema-only; no clinical enricher) ──
+    "AppointmentResponse": ("appointment", "participantStatus"),
+    "CommunicationRequest": ("status", "intent"),
+    "DeviceUseStatement": (),
+    "DocumentManifest": (),
+    "EncounterHistory": ("class", "status"),
+    "GuidanceResponse": ("status",),
+    "ImagingSelection": ("code", "status"),
+    "ImmunizationEvaluation": ("doseStatus", "patient", "targetDisease", "immunizationEvent"),
+    "List": ("status", "mode"),
+    "Media": (),
+    "MolecularSequence": ("type",),
+    "RequestGroup": (),
+    "SubscriptionStatus": ("subscription", "status", "type"),
 }
 
 _missing = set(MQL_SHIPPED_RESOURCES) - set(MQL_ENRICHED_FIELDS)

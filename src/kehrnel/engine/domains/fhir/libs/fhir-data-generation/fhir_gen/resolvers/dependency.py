@@ -7,7 +7,7 @@ from collections import defaultdict
 
 from ..schema.registry import registry
 
-# Resources with fhir-search-to-mql configs (84). Keep in sync with
+# Resources with fhir-search-to-mql configs (97). Keep in sync with
 # fhir-search-to-mql/src/fhir_search_to_mql/configs/*.yaml and
 # fhir-search-to-mql/src/fhir_search_to_mql/resolvers/dependency.py
 MQL_SHIPPED_RESOURCES: tuple[str, ...] = (
