@@ -2,11 +2,11 @@
 
 The levels are intentionally explicit:
 - ``structure`` checks safe JSON/FHIR routing invariants.
-- ``base`` validates against the bundled R5 or R6 JSON Schema selected by the
-  strategy activation.
+- ``base`` validates against the bundled R4, R5 or R6 JSON Schema selected by
+  the strategy activation.
 
-R4 is a deliberately small structural-validation baseline until its generated
-release schema is delivered.  Capability discovery labels that distinction.
+R4, R5 and R6 are all backed by bundled release schemas.  Capability discovery
+labels the active release and its validation levels.
 
 Profile and implementation-guide validation are deliberately outside this
 strategy until they are implemented as complete, separately tested packages.
@@ -78,12 +78,12 @@ def _unsafe_key_path(value: Any, path: str = "$") -> str | None:
     return None
 
 
-@lru_cache(maxsize=2)
+@lru_cache(maxsize=3)
 def _base_schema(release: str) -> dict[str, Any]:
     normalized = normalize_release(release)
     if normalized not in SCHEMA_BACKED_RELEASES:
         raise ValueError(f"Base JSON Schema validation is not bundled for {normalized}")
-    suffix = "v5" if normalized == "R5" else "v6"
+    suffix = {"R4": "v4", "R5": "v5", "R6": "v6"}[normalized]
     path = Path(FHIR_GEN_ROOT) / "fhir_gen" / "schema" / f"fhir.schema.{suffix}.json"
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -91,8 +91,6 @@ def _base_schema(release: str) -> dict[str, Any]:
 def schema_resource_types(release: str) -> frozenset[str]:
     """Resource definitions available in the bundled schema for a release."""
     normalized = _normalized_release(release)
-    if normalized == "R4":
-        return R4_MINIMAL_RESOURCE_TYPES
     definitions = _base_schema(normalized).get("definitions") or {}
     return frozenset(
         name
@@ -249,7 +247,8 @@ def validate_resource(
 
 def available_validation_levels(release: str) -> tuple[str, ...]:
     normalized = _normalized_release(release)
-    return ("structure",) if normalized == "R4" else ("structure", "base")
+    # R4, R5 and R6 are all schema-backed; all levels are available for all releases.
+    return ("structure", "base")
 
 
 def validate_level(level: str, release: str) -> str:

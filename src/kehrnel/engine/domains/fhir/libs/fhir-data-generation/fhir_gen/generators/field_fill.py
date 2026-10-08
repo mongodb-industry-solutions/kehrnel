@@ -6,6 +6,7 @@ import random
 from typing import Any
 
 from ..codes.loader import get_system, random_code
+from ..config import settings
 from ..resolvers.reference import ReferenceStore
 from ..schema.parser import ResourceDef
 from .special_types import SpecialTypeGenerator
@@ -94,11 +95,55 @@ def _fill_encounter_participant(
             display=rng.choice(["attender", "admitter", "Participation", "referrer"]),
         )],
     }
+    actor_key = "individual" if settings.fhir_version == "R4" else "actor"
     if store.has("Practitioner"):
-        part["actor"] = store.get_reference("Practitioner", rng)
+        part[actor_key] = store.get_reference("Practitioner", rng)
+    elif store.has("RelatedPerson"):
+        part[actor_key] = store.get_reference("RelatedPerson", rng)
     elif store.has("Patient"):
-        part["actor"] = store.get_reference("Patient", rng)
+        part[actor_key] = store.get_reference("Patient", rng)
     return part
+
+
+@_register_backbone("Encounter_ClassHistory")
+def _fill_encounter_class_history(
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    return {
+        "period": t.gen_Period(),
+        "class": t.gen_Coding(
+            system="http://terminology.hl7.org/CodeSystem/v3-ActCode",
+            code="AMB",
+        ),
+    }
+
+
+@_register_backbone("Encounter_Diagnosis")
+def _fill_encounter_diagnosis(
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    if store.has("Condition"):
+        ref = store.get_reference("Condition", rng)
+        if ref:
+            return {"condition": ref}
+    return {"condition": {"reference": "Condition/unknown"}}
+
+
+@_register_backbone("Procedure_FocalDevice")
+def _fill_procedure_focal_device(
+    t: SpecialTypeGenerator,
+    store: ReferenceStore,
+    rng: random.Random,
+) -> dict[str, Any]:
+    if store.has("Device"):
+        ref = store.get_reference("Device", rng)
+        if ref:
+            return {"manipulated": ref}
+    return {"manipulated": {"reference": "Device/unknown"}}
 
 
 # Field-name based fillers (resource-level), applied when field absent.

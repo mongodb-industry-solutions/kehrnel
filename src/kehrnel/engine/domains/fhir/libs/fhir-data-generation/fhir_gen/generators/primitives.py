@@ -58,6 +58,14 @@ class PrimitiveGenerator:
         field_name: str | None = None,
         **_,
     ) -> str:
+        # DateTime suffix detection: fields typed as string but named like a date/time
+        if field_name:
+            if field_name.endswith("DateTime") or field_name.endswith("Instant"):
+                return self.gen_dateTime()
+            if field_name.endswith("Date") and not field_name.endswith("DateTime"):
+                return self.gen_date()
+            if field_name.endswith("Time") and not field_name.endswith("DateTime"):
+                return self.gen_time()
         return clinical_text(
             self.rng,
             resource_type=resource_type,

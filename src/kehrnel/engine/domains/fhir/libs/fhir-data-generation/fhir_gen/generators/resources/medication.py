@@ -58,22 +58,27 @@ def enrich_Medication(
     r["status"] = status["code"] if status else "active"
     if store.has("Organization") and settings.fhir_version != "R4":
         r["marketingAuthorizationHolder"] = store.get_reference("Organization", rng)
-    r["doseForm"] = t.gen_CodeableConcept(
+    form_field = "form" if settings.fhir_version == "R4" else "doseForm"
+    r[form_field] = t.gen_CodeableConcept(
         system="http://snomed.info/sct",
         code=rng.choice(["385055001", "385061003", "385049006", "385229008"]),
         display=rng.choice([
             "Tablet dose form", "Capsule dose form", "Oral solution", "Injection",
         ]),
     )
-    r["ingredient"] = [{
-        "item": t.gen_CodeableConcept(
-            system="http://www.nlm.nih.gov/research/umls/rxnorm",
-            code=med["code"] if med else "161",
-            display=rng.choice(["Acetaminophen", "Amoxicillin", "Ibuprofen", "Metformin"]),
-        ),
-        "isActive": True,
-        "strengthRatio": t.gen_Ratio(),
-    }]
+    ingredient_concept = t.gen_CodeableConcept(
+        system="http://www.nlm.nih.gov/research/umls/rxnorm",
+        code=med["code"] if med else "161",
+        display=rng.choice(["Acetaminophen", "Amoxicillin", "Ibuprofen", "Metformin"]),
+    )
+    strength_field = "strength" if settings.fhir_version == "R4" else "strengthRatio"
+    if settings.fhir_version == "R4":
+        ingredient_item = {"itemCodeableConcept": ingredient_concept}
+    else:
+        ingredient_item = {"item": {"concept": ingredient_concept}}
+    ingredient_item["isActive"] = True
+    ingredient_item[strength_field] = t.gen_Ratio()
+    r["ingredient"] = [ingredient_item]
     return r
 
 
