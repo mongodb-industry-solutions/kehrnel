@@ -93,11 +93,51 @@ def _search_paths_from_config(cfg: dict[str, Any]) -> tuple[Any, Any]:
     return search_cfg.get("config_dir"), search_cfg.get("compartment_definitions_dir")
 
 
+def _resolve_config_dir_for_release(
+    config_dir,
+    schema_version,
+):
+    """Return the effective config_dir for the given FHIR release.
+
+    When the activation config does not specify an explicit ``config_dir``
+    (i.e. ``config_dir`` is None/empty) and ``schema_version`` is ``R4``,
+    auto-select the bundled R4 + US Core overlay configs so that US Core
+    search parameters (``_profile``, race/ethnicity extensions, etc.) are
+    available without requiring every operator to set ``search.config_dir``
+    manually.
+
+    For R5/R6 (or any explicit ``config_dir``) the value is returned
+    unchanged so existing behaviour is preserved.
+    """
+    if config_dir:
+        # Explicit override — honour it as-is.
+        return config_dir
+    release = str(schema_version or "R5").strip().upper()
+    if release == "R4":
+        from fhir_search_to_mql.core.config_loader import (
+            _bundled_r4_configs_dir,
+            _bundled_r4_us_core_configs_dir,
+        )
+        # Layer R4 base configs first, then US Core overlay so US Core
+        # search params (e.g. _profile) override the plain R4 defaults.
+        return [_bundled_r4_configs_dir(), _bundled_r4_us_core_configs_dir()]
+    # R5/R6: return None so FHIRSearchConverter uses its own bundled default.
+    return None
+
+
 def build_search_converter(ctx: StrategyContext):
-    """FHIRSearchConverter using activation search paths or bundled defaults."""
+    """FHIRSearchConverter using activation search paths or bundled defaults.
+
+    When ``schema_version`` is ``R4`` and no explicit ``search.config_dir``
+    is configured, the bundled R4 + US Core overlay configs are selected
+    automatically so that US Core search parameters (``_profile``,
+    race/ethnicity extensions, etc.) are available out of the box.
+    """
     FHIRSearchConverter, *_ = _require_converter()
     cfg = bridge.resolve_strategy_config(ctx)
     config_dir, compartment_dir = _search_paths_from_config(cfg)
+    schema_version = str(cfg.get("schema_version") or "R5").strip().upper()
+    config_dir = _resolve_config_dir_for_release(config_dir, schema_version)
     cache_key = _converter_cache_key(config_dir, compartment_dir)
     cached = _converter_cache.get(cache_key)
     if cached is not None:

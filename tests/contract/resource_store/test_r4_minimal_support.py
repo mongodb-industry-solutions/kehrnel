@@ -161,3 +161,75 @@ async def test_universal_ingest_uses_the_same_import_pipeline():
     assert report["ok"] is True
     assert report["committed"] is False
     assert report["resource_counts"] == {"Patient": 1}
+
+
+# ---------------------------------------------------------------------------
+# US Core config auto-selection (R4 + US Core overlay)
+# ---------------------------------------------------------------------------
+
+def test_r4_us_core_profile_search_param_available():
+    """_profile is a US Core search param; it must be available when schema_version=R4."""
+    params = fhir_list_search_params(_ctx(), {"resource_type": "Patient"})
+    names = {item["name"] for item in params["parameters"]}
+    assert "_profile" in names, (
+        "_profile search parameter missing — R4 activation should auto-select "
+        "the bundled R4 + US Core overlay configs"
+    )
+
+
+@pytest.mark.asyncio
+async def test_r4_compile_accepts_profile_search_param():
+    """Compiling a _profile search must succeed for R4 (US Core overlay loaded)."""
+    plan = await compile_fhir_query(
+        _ctx(),
+        "fhir",
+        {
+            "resource_type": "Patient",
+            "criteria": {
+                "_profile": (
+                    "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"
+                )
+            },
+        },
+    )
+    assert plan.plan["resource_type"] == "Patient"
+    # The compiled MQL filter must reference meta.profile
+    mql_filter = plan.plan.get("filter") or {}
+    import json
+    filter_str = json.dumps(mql_filter)
+    assert "meta.profile" in filter_str, (
+        "Compiled MQL filter does not reference meta.profile — "
+        "US Core overlay configs may not be loaded"
+    )
+
+
+def test_resolve_config_dir_for_release_r4_returns_list():
+    """_resolve_config_dir_for_release must return a list of two dirs for R4."""
+    from kehrnel.engine.strategies.fhir.resource_store.scripts.query import (
+        _resolve_config_dir_for_release,
+    )
+    result = _resolve_config_dir_for_release(None, "R4")
+    assert isinstance(result, list), "Expected a list of config dirs for R4"
+    assert len(result) == 2, "Expected [r4_base, r4_us_core] for R4"
+    assert any("r4-us-core" in str(d) or "r4_us_core" in str(d) for d in result), (
+        "US Core overlay dir not in the resolved list"
+    )
+
+
+def test_resolve_config_dir_for_release_r5_returns_none():
+    """_resolve_config_dir_for_release must return None for R5 (use bundled default)."""
+    from kehrnel.engine.strategies.fhir.resource_store.scripts.query import (
+        _resolve_config_dir_for_release,
+    )
+    result = _resolve_config_dir_for_release(None, "R5")
+    assert result is None, "Expected None for R5 (bundled default)"
+
+
+def test_resolve_config_dir_for_release_explicit_override_respected():
+    """An explicit config_dir must be returned unchanged regardless of schema_version."""
+    from kehrnel.engine.strategies.fhir.resource_store.scripts.query import (
+        _resolve_config_dir_for_release,
+    )
+    explicit = "/custom/configs"
+    assert _resolve_config_dir_for_release(explicit, "R4") == explicit
+    assert _resolve_config_dir_for_release(explicit, "R5") == explicit
