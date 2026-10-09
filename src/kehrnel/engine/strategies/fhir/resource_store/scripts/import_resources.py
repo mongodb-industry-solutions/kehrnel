@@ -187,6 +187,14 @@ def _build_denormalizer(cfg: dict[str, Any]):
         ) from exc
     search = cfg.get("search") if isinstance(cfg.get("search"), dict) else {}
     config_dir = search.get("config_dir")
+    schema_version = str(cfg.get("schema_version") or "R5").strip().upper()
+    # Auto-select R4 + US Core bundled configs when schema_version=R4 and no
+    # explicit config_dir is set, so meta.profile and US Core extension fields
+    # are projected into _search during import/generation.
+    from kehrnel.engine.strategies.fhir.resource_store.scripts.query import (
+        _resolve_config_dir_for_release,
+    )
+    config_dir = _resolve_config_dir_for_release(config_dir, schema_version)
     return (
         ResourceDenormalizer(config_dir=config_dir)
         if config_dir
@@ -474,12 +482,19 @@ async def fhir_import_resources(
     }
 
     uri, database, prefix = bridge.resolve_mongo(ctx)
+    _import_search_cfg = cfg.get("search") or {}
+    _import_config_dir = _import_search_cfg.get("config_dir")
+    _import_schema_version = str(cfg.get("schema_version") or "R5").strip().upper()
+    from kehrnel.engine.strategies.fhir.resource_store.scripts.query import (
+        _resolve_config_dir_for_release as _resolve_import_config_dir,
+    )
+    _import_config_dir = _resolve_import_config_dir(_import_config_dir, _import_schema_version)
     mql_ctx = bridge.build_mql_context(
         uri,
         database,
         prefix,
-        (cfg.get("search") or {}).get("config_dir"),
-        (cfg.get("search") or {}).get("compartment_definitions_dir"),
+        _import_config_dir,
+        _import_search_cfg.get("compartment_definitions_dir"),
     )
     try:
         adapter = MongoFHIRStorageAdapter(
