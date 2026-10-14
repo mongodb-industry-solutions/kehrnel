@@ -11,6 +11,12 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 
+def _read_prefix(path: Path, limit: int) -> bytes:
+    """Read at most ``limit`` bytes without loading the whole file."""
+    with path.open("rb") as handle:
+        return handle.read(limit)
+
+
 class CommandValidationEngine:
     """Run a validator through a bounded JSON envelope protocol.
 
@@ -51,24 +57,31 @@ class CommandValidationEngine:
                 root = Path(directory)
                 input_path = root / "input.json"
                 output_path = root / "output.json"
+                stdout_path = root / "stdout.json"
+                stderr_path = root / "stderr.log"
                 input_path.write_text(json.dumps(envelope, ensure_ascii=False, default=str), encoding="utf-8")
                 argv = [item.replace("{input}", str(input_path)).replace("{output}", str(output_path)) for item in self.argv]
                 env = {**os.environ, **self.environment}
-                result = subprocess.run(
-                    argv,
-                    stdin=subprocess.DEVNULL,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    timeout=self.timeout_seconds,
-                    check=False,
-                    env=env,
-                )
+                # Stream both pipes to disk instead of memory: a misbehaving validator
+                # must not be able to exhaust the API process before the size limits apply.
+                with stdout_path.open("wb") as stdout_file, stderr_path.open("wb") as stderr_file:
+                    result = subprocess.run(
+                        argv,
+                        stdin=subprocess.DEVNULL,
+                        stdout=stdout_file,
+                        stderr=stderr_file,
+                        timeout=self.timeout_seconds,
+                        check=False,
+                        env=env,
+                    )
                 if result.returncode != 0:
-                    detail = result.stderr[:4096].decode("utf-8", errors="replace")
+                    detail = _read_prefix(stderr_path, 4096).decode("utf-8", errors="replace")
                     raise RuntimeError(f"validator exited with status {result.returncode}: {detail}")
-                content = output_path.read_bytes() if output_path.is_file() else result.stdout
-                if len(content) > self.max_output_bytes:
+                source = output_path if output_path.is_file() else stdout_path
+                size = source.stat().st_size
+                if size > self.max_output_bytes:
                     raise RuntimeError("validator output exceeds configured limit")
+                content = source.read_bytes()
                 parsed = json.loads(content.decode("utf-8"))
                 if not isinstance(parsed, dict) or not isinstance(parsed.get("findings", []), list):
                     raise RuntimeError("validator output must be an object containing a findings array")

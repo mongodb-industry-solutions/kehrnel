@@ -1,3 +1,4 @@
+import hashlib
 import io
 
 import pytest
@@ -9,9 +10,14 @@ class MissingObject(Exception):
     response = {"Error": {"Code": "404"}}
 
 
+class PreconditionFailed(Exception):
+    response = {"Error": {"Code": "PreconditionFailed"}}
+
+
 class FakeS3:
     def __init__(self):
         self.objects = {}
+        self.race_writer = None
 
     def head_object(self, *, Bucket, Key):
         if (Bucket, Key) not in self.objects:
@@ -20,7 +26,14 @@ class FakeS3:
         return {"ContentLength": len(value["Body"]), "Metadata": value["Metadata"]}
 
     def put_object(self, **kwargs):
-        self.objects[(kwargs["Bucket"], kwargs["Key"])] = kwargs
+        key = (kwargs["Bucket"], kwargs["Key"])
+        if self.race_writer is not None:
+            # Simulate another writer creating the key between head_object and put_object.
+            self.objects[key] = self.race_writer
+            self.race_writer = None
+        if kwargs.get("IfNoneMatch") == "*" and key in self.objects:
+            raise PreconditionFailed()
+        self.objects[key] = kwargs
 
     def get_object(self, *, Bucket, Key):
         return {"Body": io.BytesIO(self.objects[(Bucket, Key)]["Body"])}
@@ -46,6 +59,25 @@ async def test_s3_store_is_immutable_and_prefix_scoped():
         await store.put("sha256/aa/value", b"different", media_type="application/octet-stream")
     with pytest.raises(ValueError):
         await store.get("../escape")
+
+
+@pytest.mark.asyncio
+async def test_s3_put_losing_a_race_never_overwrites_the_winner():
+    client = FakeS3()
+    store = S3ArtifactStore("trial-data", prefix="tenant-a", client=client)
+    key = "sha256/aa/raced"
+    # The other writer lands first, with different bytes, after our existence check.
+    client.race_writer = {
+        "Bucket": "trial-data",
+        "Key": "tenant-a/sha256/aa/raced",
+        "Body": b"someone-else",
+        "Metadata": {"sha256": hashlib.sha256(b"someone-else").hexdigest()},
+    }
+
+    with pytest.raises(ValueError):
+        await store.put(key, b"ours", media_type="application/octet-stream")
+
+    assert client.objects[("trial-data", "tenant-a/sha256/aa/raced")]["Body"] == b"someone-else"
 
 
 @pytest.mark.asyncio

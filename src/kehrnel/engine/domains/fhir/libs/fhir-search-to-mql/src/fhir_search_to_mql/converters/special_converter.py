@@ -338,9 +338,9 @@ class SpecialConverter(BaseConverter):
         )
         
         # Step 2: Build final query with extracted IDs
-        multi_step.set_final_query_builder(
-            lambda ids: {"id": {"$in": ids}} if ids else {"id": None}
-        )
+        # An empty id set must match nothing: {"$in": []} is unsatisfiable, whereas
+        # {"id": None} would match documents whose id is null or missing.
+        multi_step.set_final_query_builder(lambda ids: {"id": {"$in": ids}})
         
         return multi_step
     

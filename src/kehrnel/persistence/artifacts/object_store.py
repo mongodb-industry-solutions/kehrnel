@@ -25,6 +25,20 @@ def _prefixed(prefix: str, key: str) -> str:
     return f"{normalized}/{safe}" if normalized else safe
 
 
+def _is_precondition_failed(exc: Exception) -> bool:
+    """True when a conditional write lost a race against another writer."""
+    response = getattr(exc, "response", {})
+    code = response.get("Error", {}).get("Code") if isinstance(response, dict) else None
+    return code in {"PreconditionFailed", "412"} or exc.__class__.__name__ == "PreconditionFailed"
+
+
+def _assert_identical(existing: Dict[str, Any], content: bytes, digest: str) -> None:
+    """Fail unless the stored object already holds exactly these bytes."""
+    existing_digest = (existing.get("Metadata") or {}).get("sha256")
+    if existing.get("ContentLength") != len(content) or existing_digest != digest:
+        raise ValueError("immutable artifact key already contains different bytes")
+
+
 class S3ArtifactStore:
     """Immutable S3-compatible storage with digest metadata verification."""
 
@@ -133,9 +147,7 @@ class S3ArtifactStore:
                 } and not isinstance(exc, FileNotFoundError):
                     raise
             else:
-                existing_digest = (existing.get("Metadata") or {}).get("sha256")
-                if existing.get("ContentLength") != len(content) or existing_digest != digest:
-                    raise ValueError("immutable artifact key already contains different bytes")
+                _assert_identical(existing, content, digest)
                 return
             options: Dict[str, Any] = {
                 "Bucket": self.bucket,
@@ -143,12 +155,22 @@ class S3ArtifactStore:
                 "Body": content,
                 "ContentType": media_type,
                 "Metadata": {"sha256": digest, **{str(k): str(v) for k, v in (metadata or {}).items()}},
+                # The key is immutable, so create it conditionally: without this a
+                # concurrent writer can slip in between the check above and this
+                # write, and the later write would silently overwrite the first.
+                "IfNoneMatch": "*",
             }
             if self.server_side_encryption:
                 options["ServerSideEncryption"] = self.server_side_encryption
             if self.kms_key_id:
                 options["SSEKMSKeyId"] = self.kms_key_id
-            self.client.put_object(**options)
+            try:
+                self.client.put_object(**options)
+            except Exception as exc:
+                if not _is_precondition_failed(exc):
+                    raise
+                # Another writer created the key first; accept it only if identical.
+                _assert_identical(self.client.head_object(Bucket=self.bucket, Key=object_key), content, digest)
 
         await asyncio.to_thread(store)
         return ArtifactLocation(

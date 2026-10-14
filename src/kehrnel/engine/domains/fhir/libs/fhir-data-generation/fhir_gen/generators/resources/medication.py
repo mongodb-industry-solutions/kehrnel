@@ -132,9 +132,7 @@ def enrich_MedicationAdministration(
     if store.has("Encounter"):
         r["encounter"] = store.get_reference("Encounter", rng)
     if store.has("Practitioner"):
-        r["performer"] = [{
-            "actor": {"reference": store.get_reference("Practitioner", rng)}
-        }]
+        r["performer"] = [{"actor": store.get_reference("Practitioner", rng)}]
     if store.has("MedicationRequest"):
         r["basedOn"] = [store.get_reference("MedicationRequest", rng)]
     from ...schema.registry import SchemaRegistry

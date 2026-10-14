@@ -114,6 +114,7 @@ class ArtifactService:
         media_type = str(payload.get("mediaType") or "application/octet-stream")
         if not object_key:
             raise KehrnelError(code="INVALID_INPUT", status=400, message="objectKey is required")
+        cfg, storage = config(ctx), storage_adapter(ctx)
         artifact_store = (ctx.adapters or {}).get("artifact_store")
         stat = getattr(artifact_store, "stat", None)
         if not callable(stat):
@@ -122,18 +123,34 @@ class ArtifactService:
             location = await stat(object_key)
         except Exception as exc:
             raise KehrnelError(code="ARTIFACT_READ_FAILED", status=502, message=str(exc)) from exc
-        actual = str((location.metadata or {}).get("sha256") or "").lower().removeprefix("sha256:")
-        if actual != expected:
-            raise KehrnelError(
-                code="ARTIFACT_CHECKSUM_MISMATCH",
-                status=422,
-                message="Object-store SHA-256 metadata does not match the declared checksum.",
-                details={"expectedSha256": expected, "actualSha256": actual or None},
-            )
         declared_size = payload.get("size")
         if declared_size is not None and int(declared_size) != int(location.size):
             raise KehrnelError(code="ARTIFACT_SIZE_MISMATCH", status=422, message="Object-store size does not match the declared size.")
-        cfg, storage = config(ctx), storage_adapter(ctx)
+        # Object metadata is written by whoever uploaded the object, so it is not
+        # evidence of the bytes. Read the object back and hash it, exactly as replay
+        # does, before the artifact record is allowed to claim a digest.
+        reader = getattr(artifact_store, "get", None)
+        if not callable(reader):
+            raise KehrnelError(code="ARTIFACT_READ_UNAVAILABLE", status=501, message="Artifact adapter cannot verify external objects.")
+        maximum = int((cfg.get("artifact") or {}).get("max_replay_bytes", 25_000_000))
+        if int(location.size) > maximum:
+            raise KehrnelError(
+                code="ARTIFACT_TOO_LARGE_TO_VERIFY",
+                status=413,
+                message="External artifacts larger than max_replay_bytes cannot be verified before registration.",
+            )
+        try:
+            content = await reader(object_key)
+        except Exception as exc:
+            raise KehrnelError(code="ARTIFACT_READ_FAILED", status=502, message=str(exc)) from exc
+        actual = sha256_bytes(content)
+        if actual != expected or len(content) != int(location.size):
+            raise KehrnelError(
+                code="ARTIFACT_CHECKSUM_MISMATCH",
+                status=422,
+                message="Object bytes do not match the declared checksum.",
+                details={"expectedSha256": expected, "actualSha256": actual},
+            )
         requested_id = str(payload.get("artifactId") or "").strip()
         artifact_id = f"{cfg['tenant_id']}:artifact:{requested_id}" if requested_id else f"{cfg['tenant_id']}:sha256:{expected}"
         document = {

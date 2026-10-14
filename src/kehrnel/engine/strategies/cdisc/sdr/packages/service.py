@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import base64
 import io
 import hashlib
 import json
+import math
 import zipfile
 from datetime import datetime, timezone
 from typing import Any, Dict, List
@@ -130,16 +132,47 @@ def _solution_record(
     )
 
 
-def _canonical_json_value(value: Any) -> Any:
-    """Normalize JSON numbers so Python and JavaScript hash the same payload."""
+def _not_canonical(message: str) -> KehrnelError:
+    return KehrnelError(code="EVIDENCE_NOT_CANONICAL", status=500, message=message)
 
+
+def _canonical_json_value(value: Any) -> Any:
+    """Normalize the evidence payload so independent runtimes hash the same bytes.
+
+    ``json.dumps`` defaults are not portable: ``allow_nan`` emits ``NaN`` and
+    ``Infinity`` tokens that are not valid JSON, and floats serialize with
+    Python-specific formatting. Values that cannot be canonicalized are rejected
+    rather than hashed in a form another runtime would not reproduce.
+    """
+
+    if value is None or isinstance(value, (bool, str)):
+        return value
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            raise _not_canonical("Solution evidence contains a non-finite number, which is not valid JSON.")
+        if value == 0:
+            return 0  # normalizes -0.0
+        if value.is_integer():
+            return int(value)  # JavaScript serializes 1.0 as 1
+        return value
+    if isinstance(value, datetime):
+        return value.isoformat()
+    if isinstance(value, (bytes, bytearray)):
+        return base64.b64encode(bytes(value)).decode("ascii")
     if isinstance(value, dict):
-        return {key: _canonical_json_value(item) for key, item in value.items()}
-    if isinstance(value, list):
+        normalized: Dict[str, Any] = {}
+        for key, item in value.items():
+            if not isinstance(key, str):
+                raise _not_canonical("Solution evidence contains a non-string object key.")
+            normalized[key] = _canonical_json_value(item)
+        return normalized
+    if isinstance(value, (list, tuple)):
         return [_canonical_json_value(item) for item in value]
-    if isinstance(value, float) and value.is_integer():
-        return int(value)
-    return value
+    raise _not_canonical(
+        f"Solution evidence contains a value of unsupported type {type(value).__name__}."
+    )
 
 
 class PackageService:
@@ -454,7 +487,7 @@ class PackageService:
             ensure_ascii=False,
             separators=(",", ":"),
             sort_keys=True,
-            default=str,
+            allow_nan=False,
         ).encode()
         digest = hashlib.sha256(canonical).hexdigest()
         counts = {
