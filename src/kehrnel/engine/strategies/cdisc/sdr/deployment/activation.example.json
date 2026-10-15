@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "domain": "cdisc",
   "config": {
+    "database": "kehrnel_cdisc",
     "tenant_id": "sponsor-a",
     "validation": {
       "require_before_publish": true
