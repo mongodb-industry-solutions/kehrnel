@@ -25,6 +25,11 @@ class HttpEmbeddingAdapter:
         self.api_key = api_key
         self.timeout_seconds = int(timeout_seconds)
         self.headers = dict(headers or {})
+        # A bearer credential over plain HTTP exposes the key and the clinical
+        # text on the wire, so HTTP stays reserved for credential-free endpoints.
+        credential = bool(self.api_key) or any(name.lower() == "authorization" for name in self.headers)
+        if credential and not self.endpoint.startswith("https://"):
+            raise ValueError("embedding endpoint must use HTTPS when a bearer credential is sent")
 
     async def embed(self, texts: List[str]) -> List[List[float]]:
         if not texts:
