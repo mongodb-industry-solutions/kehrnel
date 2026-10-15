@@ -866,6 +866,7 @@ api = [
     { name = "motor" },
     { name = "pydantic" },
     { name = "pydantic-settings" },
+    { name = "python-dotenv" },
     { name = "python-multipart" },
     { name = "uvicorn", extra = ["standard"] },
 ]
@@ -946,6 +947,7 @@ requires-dist = [
     { name = "python-dateutil", specifier = ">=2.8.2" },
     { name = "python-dateutil", marker = "extra == 'all'", specifier = ">=2.8.2" },
     { name = "python-dotenv", marker = "extra == 'all'", specifier = ">=1.0.0" },
+    { name = "python-dotenv", marker = "extra == 'api'", specifier = ">=1.0.0" },
     { name = "python-dotenv", marker = "extra == 'translate'", specifier = ">=1.0.0" },
     { name = "python-multipart", marker = "extra == 'all'", specifier = ">=0.0.6" },
     { name = "python-multipart", marker = "extra == 'api'", specifier = ">=0.0.6" },

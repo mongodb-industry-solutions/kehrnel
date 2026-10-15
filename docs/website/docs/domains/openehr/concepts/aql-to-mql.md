@@ -25,5 +25,4 @@ Query translation compiles a domain query language into an execution-ready backe
 - [AQL Query Engine](/docs/domains/openehr/aql-query-engine) - components and routing rules
 - [openEHR RPS Dual Query Translation](/docs/strategies/openehr/rps-dual/query-translation)
 - [openEHR Domain API](/docs/api/domains/openehr)
-- [Query and Execution](/docs/architecture/query-engine) - how other domains compile queries
-
+- [Query and Execution](/docs/domains/openehr/aql-query-engine) - how other domains compile queries

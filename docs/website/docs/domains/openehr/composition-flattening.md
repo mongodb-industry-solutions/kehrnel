@@ -6,7 +6,6 @@ sidebar_position: 3
 
 This page describes how the `openehr.rps_dual` (RPS Dual) strategy converts a canonical openEHR COMPOSITION into its two stored shapes: the flattened base document and the slim search document.
 
-It is specific to openEHR. For the cross-domain ingest model, see [Ingest and Transformation](/docs/architecture/transformation-pipeline).
 
 ## Where It Runs
 
@@ -105,4 +104,3 @@ Flattening is controlled by the RPS Dual configuration (`collections`, `fields`,
 - [Hierarchical Path Encoding](/docs/domains/openehr/concepts/reversed-paths)
 - [AQL Query Engine](/docs/domains/openehr/aql-query-engine) - how flattened data is queried
 - [openEHR RPS Dual Data Model](/docs/strategies/openehr/rps-dual/data-model) - storage format
-

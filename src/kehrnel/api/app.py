@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 import logging
 import secrets
@@ -22,8 +23,28 @@ from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.base import BaseHTTPMiddleware
 
+
+def _load_local_environment() -> None:
+    """Load developer-local settings unless the caller requests isolation.
+
+    Test and CI processes set ``KEHRNEL_SKIP_DOTENV=true`` so collection can
+    never discover workstation credentials implicitly. Production deployments
+    should provide their configuration through the process environment.
+    """
+    if os.getenv("KEHRNEL_SKIP_DOTENV", "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }:
+        return
+    dotenv_path = find_dotenv(".env.local", usecwd=True)
+    if dotenv_path:
+        load_dotenv(dotenv_path, override=False)
+
+
 # Load environment before importing modules that instantiate settings at import time.
-load_dotenv(find_dotenv(".env.local", usecwd=True), override=False)
+_load_local_environment()
 
 from kehrnel.engine.core.runtime import StrategyRuntime
 from kehrnel.engine.core.manifest import StrategyManifest
@@ -31,10 +52,43 @@ from kehrnel.engine.core.registry import FileActivationRegistry
 from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.core.bundle_store import BundleStore
 from kehrnel.engine.core.pack_validator import StrategyPackValidator
+from kehrnel.engine.core.pack_loader import (
+    iter_strategy_manifest_paths,
+    load_strategy_manifest,
+    strategy_pack_root,
+)
 from kehrnel.engine.core.bindings_resolver import load_bindings_resolver_from_env
 from kehrnel.engine.core.synthetic_jobs import SyntheticJobManager
 from kehrnel.engine.core.synthetic_jobs_store import MongoSyntheticJobStore
 from kehrnel.engine.core.redaction import redact_sensitive
+from kehrnel.engine.core.implementation_artifact_store import (
+    FileImplementationArtifactStore,
+)
+
+
+def _json_safe_validation_value(value):
+    """Normalize Pydantic validation context without leaking unserializable errors.
+
+    Pydantic v2 may retain the original ``ValueError`` under ``ctx.error``.
+    Passing that object directly to ``JSONResponse`` turns an intended 422 into
+    a 500 while Starlette serializes the response.  Keep the useful validation
+    message, but reduce every value to JSON-native data first.
+    """
+
+    if isinstance(value, BaseException):
+        return redact_sensitive(str(value)) or "invalid"
+    if isinstance(value, dict):
+        return {
+            str(key): _json_safe_validation_value(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, (list, tuple)):
+        return [_json_safe_validation_value(item) for item in value]
+    if isinstance(value, float):
+        return value if math.isfinite(value) else str(value)
+    if value is None or isinstance(value, (str, int, bool)):
+        return value
+    return redact_sensitive(str(value)) or type(value).__name__
 
 
 # ============================================================================
@@ -245,39 +299,59 @@ def _seed_default_bundles(store: BundleStore):
 
 
 def _load_manifests() -> tuple[list[StrategyManifest], list[dict[str, object]], dict[str, str]]:
-    manifests: list[StrategyManifest] = []
     diagnostics: list[dict[str, object]] = []
     log = logging.getLogger("kehrnel.strategy.discovery")
-    manifest_records: list[dict[str, object]] = []
+    seen: set[str] = set()
+    manifests: list[StrategyManifest] = []
+    asset_dirs: dict[str, str] = {}
     for base in _strategy_paths():
         if not base.exists():
             continue
-        for manifest_path in base.glob("**/manifest.json"):
-            # Skip disabled strategy folders staged outside active discovery.
-            if any(part.startswith("_disabled") for part in manifest_path.parts):
-                continue
+        for manifest_path in iter_strategy_manifest_paths(base):
             try:
-                data = json.loads(manifest_path.read_text(encoding="utf-8"))
-                base_dir = manifest_path.parent
-                defaults_path = base_dir / "defaults.json"
-                schema_path = base_dir / "schema.json"
-                spec_field = data.get("spec")
-                if isinstance(spec_field, dict):
-                    spec_path = base_dir / (spec_field.get("path") or "spec.json")
-                elif isinstance(spec_field, str):
-                    spec_path = base_dir / spec_field
-                else:
-                    spec_path = base_dir / "spec.json"
-                if defaults_path.exists():
-                    data["default_config"] = json.loads(defaults_path.read_text(encoding="utf-8"))
-                if schema_path.exists():
-                    data["config_schema"] = json.loads(schema_path.read_text(encoding="utf-8"))
-                if data.get("pack_format") == "strategy-pack/v1" and spec_path.exists():
-                    try:
-                        data["pack_spec"] = json.loads(spec_path.read_text(encoding="utf-8"))
-                    except Exception:
-                        pass
-                manifest_records.append({"data": data, "manifest_path": manifest_path})
+                manifest = load_strategy_manifest(manifest_path)
+                errors: list[str] = []
+                if manifest.id in seen:
+                    errors.append(f"Duplicate strategy id detected during discovery: {manifest.id}")
+                if not errors:
+                    seen.add(manifest.id)
+                    manifests.append(manifest)
+                    asset_dirs[manifest.id] = str(strategy_pack_root(manifest_path))
+                diagnostics.append(
+                    {
+                        "id": manifest.id,
+                        "domain": manifest.domain,
+                        "version": manifest.version,
+                        "entrypoint": manifest.entrypoint,
+                        "is_valid": not errors,
+                        "validation_errors": errors,
+                        "structured_diagnostics": [],
+                        "paths": {
+                            "manifest_path": str(manifest_path),
+                            "base_dir": str(strategy_pack_root(manifest_path)),
+                        },
+                    }
+                )
+            except KehrnelError as exc:
+                details = exc.details or {}
+                identity = details.get("manifest") or {}
+                errors = list(details.get("errors") or [str(exc)])
+                log.error("Failed to load manifest %s: %s", manifest_path, exc)
+                diagnostics.append(
+                    {
+                        "id": identity.get("id"),
+                        "domain": identity.get("domain"),
+                        "version": identity.get("version"),
+                        "entrypoint": identity.get("entrypoint"),
+                        "is_valid": False,
+                        "validation_errors": errors,
+                        "structured_diagnostics": details.get("diagnostics") or [],
+                        "paths": {
+                            "manifest_path": str(manifest_path),
+                            "base_dir": str(strategy_pack_root(manifest_path)),
+                        },
+                    }
+                )
             except Exception as exc:
                 log.error("Failed to load manifest %s: %s", manifest_path, exc)
                 diagnostics.append(
@@ -288,47 +362,18 @@ def _load_manifests() -> tuple[list[StrategyManifest], list[dict[str, object]], 
                         "entrypoint": None,
                         "is_valid": False,
                         "validation_errors": [f"{manifest_path}: {exc}"],
-                        "paths": {"manifest_path": str(manifest_path), "base_dir": str(manifest_path.parent)},
+                        "structured_diagnostics": [],
+                        "paths": {
+                            "manifest_path": str(manifest_path),
+                            "base_dir": str(strategy_pack_root(manifest_path)),
+                        },
                     }
                 )
-    # validate and collect diagnostics
-    for rec in manifest_records:
-        data = rec["data"]
-        manifest_path: Path = rec["manifest_path"]
-        errors = validate_strategy_pack(data, manifest_path.parent)
-        rec["errors"] = errors
-    # enforce unique IDs
-    seen = set()
-    unique: list[StrategyManifest] = []
-    asset_dirs: dict[str, str] = {}
-    for rec in manifest_records:
-        data = rec["data"]
-        manifest_path: Path = rec["manifest_path"]
-        errors = list(rec.get("errors") or [])
-        mid = data.get("id")
-        if not errors and mid in seen:
-            errors.append(f"Duplicate strategy id detected during discovery: {mid}")
-        if not errors:
-            seen.add(mid)
-            unique.append(StrategyManifest(**data))
-            if mid:
-                asset_dirs[mid] = str(manifest_path.parent)
-        diagnostics.append(
-            {
-                "id": data.get("id"),
-                "domain": data.get("domain"),
-                "version": data.get("version"),
-                "entrypoint": data.get("entrypoint"),
-                "is_valid": len(errors) == 0,
-                "validation_errors": errors,
-                "paths": {"manifest_path": str(manifest_path), "base_dir": str(manifest_path.parent)},
-            }
-        )
-    return unique, diagnostics, asset_dirs
+    return manifests, diagnostics, asset_dirs
 
 
 def create_app(registry_path: str | None = None, bundle_path: str | None = None) -> FastAPI:
-    load_dotenv(find_dotenv(".env.local", usecwd=True), override=False)
+    _load_local_environment()
     from kehrnel.api.core.admin.activation_routes import router as activation_router
     from kehrnel.api.core.admin.ops_by_domain import router as ops_domain_router
     from kehrnel.api.core.admin.routes import router as admin_router
@@ -385,6 +430,13 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
 
     reg_path = registry_path or os.getenv("KEHRNEL_REGISTRY_PATH") or str(Path(".kehrnel_registry.json").resolve())
     bundle_dir = Path(bundle_path) if bundle_path else Path(".kehrnel/bundles")
+    implementation_artifact_root = Path(
+        os.getenv("KEHRNEL_IMPLEMENTATION_ARTIFACT_STORE_PATH")
+        or (Path(reg_path).parent / ".kehrnel-artifacts")
+    )
+    app.state.implementation_artifact_store = FileImplementationArtifactStore(
+        implementation_artifact_root
+    )
     bundle_store = BundleStore(bundle_dir)
     _seed_default_bundles(bundle_store)
     bindings_resolver = load_bindings_resolver_from_env()
@@ -696,7 +748,10 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
                 content=operation_outcome(code="INVALID_INPUT", message=detail),
             )
         # Default behavior for non-FHIR routes.
-        return JSONResponse(status_code=422, content={"detail": exc.errors()})
+        return JSONResponse(
+            status_code=422,
+            content={"detail": _json_safe_validation_value(exc.errors())},
+        )
 
     runtime_routers = [
         admin_router,
@@ -714,7 +769,9 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     # - newer clients call versioned paths (e.g. /v1/environments/{env}/...)
     for router in runtime_routers:
         app.include_router(router)
-        app.include_router(router, prefix="/v1")
+        # HTTP aliases remain available; document the shared contract once so
+        # explicit operation IDs identify a single OpenAPI operation.
+        app.include_router(router, prefix="/v1", include_in_schema=False)
 
     # Internal runtime paths use explicit versioning in the router prefix to avoid
     # duplicate /v1 prefixes and keep the service-to-service contract stable.

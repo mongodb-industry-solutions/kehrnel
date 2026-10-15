@@ -1,0 +1,521 @@
+{
+  "$defs": {
+    "AcknowledgementLevel": {
+      "enum": [
+        "accepted",
+        "durable_authoritative",
+        "derived_visible"
+      ],
+      "title": "AcknowledgementLevel",
+      "type": "string"
+    },
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "ConsistencyRequirement": {
+      "enum": [
+        "strong",
+        "bounded_staleness",
+        "eventual",
+        "snapshot"
+      ],
+      "title": "ConsistencyRequirement",
+      "type": "string"
+    },
+    "ImplementationPackageRuntimeExecutionReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "artifactRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "behavior": {
+          "$ref": "#/$defs/InteractionBehavior"
+        },
+        "contract": {
+          "const": "implementation-package-runtime-execution-receipt/v1",
+          "title": "Contract",
+          "type": "string"
+        },
+        "environmentId": {
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$",
+          "title": "Environmentid",
+          "type": "string"
+        },
+        "evidencePersistence": {
+          "const": "durable",
+          "default": "durable",
+          "title": "Evidencepersistence",
+          "type": "string"
+        },
+        "executionDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Executiondigest",
+          "type": "string"
+        },
+        "executionId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Executionid",
+          "type": "string"
+        },
+        "interactionId": {
+          "minLength": 1,
+          "title": "Interactionid",
+          "type": "string"
+        },
+        "nextRequiredAction": {
+          "const": "review_runtime_evidence",
+          "title": "Nextrequiredaction",
+          "type": "string"
+        },
+        "packageRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "policyDecision": {
+          "$ref": "#/$defs/RuntimePolicyDecision"
+        },
+        "preparationExecutionRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "queryPlanTrace": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RuntimeQueryPlanTrace"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "resolvedPlanRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "resultEvidence": {
+          "$ref": "#/$defs/RuntimeResultEvidence"
+        },
+        "resultPersistence": {
+          "const": "not_persisted",
+          "default": "not_persisted",
+          "title": "Resultpersistence",
+          "type": "string"
+        },
+        "routeId": {
+          "minLength": 1,
+          "title": "Routeid",
+          "type": "string"
+        },
+        "runtimeExecuted": {
+          "const": true,
+          "default": true,
+          "title": "Runtimeexecuted",
+          "type": "boolean"
+        },
+        "runtimePlanRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "state": {
+          "const": "executed",
+          "title": "State",
+          "type": "string"
+        },
+        "strategyInstanceId": {
+          "minLength": 1,
+          "title": "Strategyinstanceid",
+          "type": "string"
+        },
+        "writeAcknowledgement": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RuntimeWriteAcknowledgement"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "contract",
+        "artifactRef",
+        "executionId",
+        "environmentId",
+        "packageRef",
+        "preparationExecutionRef",
+        "resolvedPlanRef",
+        "runtimePlanRef",
+        "interactionId",
+        "behavior",
+        "routeId",
+        "strategyInstanceId",
+        "policyDecision",
+        "resultEvidence",
+        "state",
+        "nextRequiredAction",
+        "executionDigest"
+      ],
+      "title": "ImplementationPackageRuntimeExecutionReceipt",
+      "type": "object"
+    },
+    "InteractionBehavior": {
+      "enum": [
+        "create",
+        "update",
+        "delete",
+        "command",
+        "read",
+        "search",
+        "query",
+        "subscribe",
+        "publish",
+        "export"
+      ],
+      "title": "InteractionBehavior",
+      "type": "string"
+    },
+    "JsonValue": {},
+    "RuntimePolicyDecision": {
+      "additionalProperties": false,
+      "properties": {
+        "artifactRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "decision": {
+          "const": "allow",
+          "title": "Decision",
+          "type": "string"
+        },
+        "decisionDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Decisiondigest",
+          "type": "string"
+        },
+        "interactionId": {
+          "minLength": 1,
+          "title": "Interactionid",
+          "type": "string"
+        },
+        "packageRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "preparationExecutionRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "scope": {
+          "const": "execute_activated_package_interaction",
+          "title": "Scope",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifactRef",
+        "decision",
+        "scope",
+        "packageRef",
+        "preparationExecutionRef",
+        "interactionId",
+        "decisionDigest"
+      ],
+      "title": "RuntimePolicyDecision",
+      "type": "object"
+    },
+    "RuntimeQueryPlanTrace": {
+      "additionalProperties": false,
+      "properties": {
+        "contract": {
+          "const": "runtime-query-plan-trace/v1",
+          "title": "Contract",
+          "type": "string"
+        },
+        "executorRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "fallbackUsed": {
+          "default": false,
+          "title": "Fallbackused",
+          "type": "boolean"
+        },
+        "interactionId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Interactionid",
+          "type": "string"
+        },
+        "observedFreshnessSeconds": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observedfreshnessseconds"
+        },
+        "planFamilyId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Planfamilyid",
+          "type": "string"
+        },
+        "policyDecisionRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "queryFingerprint": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Queryfingerprint",
+          "type": "string"
+        },
+        "resolvedPlanRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "selectedMechanism": {
+          "minLength": 1,
+          "title": "Selectedmechanism",
+          "type": "string"
+        },
+        "semanticBindingRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "targetCapabilityProfileRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "traceDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Tracedigest",
+          "type": "string"
+        },
+        "traceId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Traceid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "contract",
+        "traceId",
+        "resolvedPlanRef",
+        "planFamilyId",
+        "interactionId",
+        "semanticBindingRef",
+        "targetCapabilityProfileRef",
+        "queryFingerprint",
+        "selectedMechanism",
+        "policyDecisionRef",
+        "executorRef",
+        "traceDigest"
+      ],
+      "title": "RuntimeQueryPlanTrace",
+      "type": "object"
+    },
+    "RuntimeResultEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "containsResultPayload": {
+          "const": false,
+          "default": false,
+          "title": "Containsresultpayload",
+          "type": "boolean"
+        },
+        "itemCount": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Itemcount"
+        },
+        "resultDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Resultdigest",
+          "type": "string"
+        },
+        "resultType": {
+          "enum": [
+            "object",
+            "array",
+            "scalar",
+            "null"
+          ],
+          "title": "Resulttype",
+          "type": "string"
+        }
+      },
+      "required": [
+        "resultDigest",
+        "resultType"
+      ],
+      "title": "RuntimeResultEvidence",
+      "type": "object"
+    },
+    "RuntimeWriteAcknowledgement": {
+      "additionalProperties": false,
+      "properties": {
+        "acknowledgement": {
+          "$ref": "#/$defs/AcknowledgementLevel"
+        },
+        "behavior": {
+          "enum": [
+            "create",
+            "update"
+          ],
+          "title": "Behavior",
+          "type": "string"
+        },
+        "changeType": {
+          "enum": [
+            "creation",
+            "modification"
+          ],
+          "title": "Changetype",
+          "type": "string"
+        },
+        "consistency": {
+          "$ref": "#/$defs/ConsistencyRequirement"
+        },
+        "etag": {
+          "minLength": 1,
+          "title": "Etag",
+          "type": "string"
+        },
+        "idempotencyKeyDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Idempotencykeydigest",
+          "type": "string"
+        },
+        "providerRef": {
+          "minLength": 1,
+          "title": "Providerref",
+          "type": "string"
+        },
+        "recordAuthorityPolicyRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "replayed": {
+          "default": false,
+          "title": "Replayed",
+          "type": "boolean"
+        },
+        "requestDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Requestdigest",
+          "type": "string"
+        },
+        "requesterRef": {
+          "minLength": 1,
+          "title": "Requesterref",
+          "type": "string"
+        },
+        "resourceId": {
+          "minLength": 1,
+          "title": "Resourceid",
+          "type": "string"
+        },
+        "resourceType": {
+          "minLength": 1,
+          "title": "Resourcetype",
+          "type": "string"
+        },
+        "semanticAuthorityRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "versionUid": {
+          "minLength": 1,
+          "title": "Versionuid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "behavior",
+        "semanticAuthorityRef",
+        "recordAuthorityPolicyRef",
+        "requesterRef",
+        "providerRef",
+        "acknowledgement",
+        "consistency",
+        "requestDigest",
+        "idempotencyKeyDigest",
+        "resourceType",
+        "resourceId",
+        "versionUid",
+        "changeType",
+        "etag"
+      ],
+      "title": "RuntimeWriteAcknowledgement",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:implementation-package-runtime-execution-response",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "contract": {
+      "const": "implementation-package-runtime-execution-response/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "receipt": {
+      "$ref": "#/$defs/ImplementationPackageRuntimeExecutionReceipt"
+    },
+    "result": {
+      "$ref": "#/$defs/JsonValue"
+    },
+    "resultPersistence": {
+      "const": "not_persisted",
+      "default": "not_persisted",
+      "title": "Resultpersistence",
+      "type": "string"
+    }
+  },
+  "required": [
+    "contract",
+    "receipt",
+    "result"
+  ],
+  "title": "ImplementationPackageRuntimeExecutionResponse",
+  "type": "object"
+}

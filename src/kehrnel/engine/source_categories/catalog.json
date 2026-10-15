@@ -1,0 +1,356 @@
+{
+  "contract": "source-category-catalog/v1",
+  "categories": [
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "healthcare.ehr", "version": "1.0.0", "digest": "sha256:0c2a6e122c0b52341a32e00ed1d074e0ed763300b433b2f580d29f58c0b82d16"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "healthcare", "segments": ["source-categories", "ehr"]}], "tags": ["clinical", "longitudinal-record"]},
+      "name": "Electronic health record",
+      "description": "Clinical documentation, orders, results and longitudinal care records.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["patient", "encounter", "observation", "order", "medication"],
+      "functionalInteractions": [
+        {"interactionId": "document-care", "label": "Document care", "description": "Create and amend encounter-centred clinical documentation.", "semanticConceptIds": ["healthcare.encounter", "healthcare.clinical-record"]},
+        {"interactionId": "place-order", "label": "Place an order", "description": "Request a laboratory, imaging, medication or procedure service.", "semanticConceptIds": ["healthcare.order"]}
+      ],
+      "referenceProfileRefs": [
+        {"kind": "source-profile", "id": "app.openmrs.mysql", "version": "1.0.0", "digest": "sha256:86cc6614069751be0c6f67c1ee99ccd731fdb89266534ba0c4d980e17c938058"},
+        {"kind": "source-profile", "id": "app.bahmni.reference", "version": "1.0.0", "digest": "sha256:7e567bad1d749067d79db8cb81b47e4329c7b78e8d1ae970e62a12553a8e16c1"}
+      ]
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "healthcare.patient-identity", "version": "1.0.0", "digest": "sha256:e674f15129d1bcaf07810f1375af0051e8832052b9c7cfe247a3c1f1de161216"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "healthcare", "segments": ["source-categories", "patient-identity"]}], "tags": ["mpi", "identity"]},
+      "name": "Patient identity and MPI",
+      "description": "Enterprise identity, demographic reconciliation and cross-facility patient linking.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["person", "patient", "identifier", "organization"],
+      "functionalInteractions": [{"interactionId": "resolve-identity", "label": "Resolve patient identity", "description": "Match, merge and unmerge identities while preserving source identifiers.", "semanticConceptIds": ["healthcare.person.identity"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "healthcare.scheduling-access", "version": "1.0.0", "digest": "sha256:849d75681906896a06e9b6d33b881edaef7772f552eccdbafd36b4d78cf73900"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "healthcare", "segments": ["source-categories", "scheduling-and-access"]}], "tags": ["appointment", "referral", "capacity"]},
+      "name": "Scheduling and patient access",
+      "description": "Referrals, appointments, resources, wait lists and patient access workflows.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["appointment", "schedule", "referral", "location"],
+      "functionalInteractions": [{"interactionId": "manage-appointment", "label": "Manage appointment", "description": "Request, book, reschedule, arrive and cancel a patient appointment.", "semanticConceptIds": ["healthcare.appointment"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "healthcare.emergency-flow", "version": "1.0.0", "digest": "sha256:e842923d505536fcf98a8fdd417d06b365ea0bdfd06c5ed156476e6c56922ace"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "healthcare", "segments": ["source-categories", "emergency-flow"]}], "tags": ["adt", "queue", "capacity"]},
+      "name": "Emergency and patient flow",
+      "description": "Arrival, triage, queues, beds, transfers and discharge coordination.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["encounter", "triage", "queue", "bed", "location"],
+      "functionalInteractions": [{"interactionId": "advance-care-flow", "label": "Advance care flow", "description": "Move a patient through triage, care locations, admission, transfer and discharge.", "semanticConceptIds": ["healthcare.encounter.flow"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "healthcare.laboratory", "version": "1.0.0", "digest": "sha256:10e9b73e79021dc97697ad9924d8578a713aa36bce0d1da88c76180b826ac85e"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "healthcare", "segments": ["source-categories", "laboratory"]}], "tags": ["lis", "specimen", "result"]},
+      "name": "Clinical laboratory",
+      "description": "Laboratory orders, specimens, processing, observations and verified reports.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["service-request", "specimen", "observation", "diagnostic-report"],
+      "functionalInteractions": [{"interactionId": "process-specimen", "label": "Process specimen", "description": "Collect, accession, analyze, verify and report a laboratory specimen.", "semanticConceptIds": ["healthcare.laboratory.specimen", "healthcare.observation"]}],
+      "referenceProfileRefs": [{"kind": "source-profile", "id": "app.bahmni.reference", "version": "1.0.0", "digest": "sha256:7e567bad1d749067d79db8cb81b47e4329c7b78e8d1ae970e62a12553a8e16c1"}]
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "healthcare.imaging", "version": "1.0.0", "digest": "sha256:c609daf0674120f8a9676faacd4cf5a31e40b209a16708b70f0fd23481391785"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "healthcare", "segments": ["source-categories", "imaging"]}], "tags": ["ris", "pacs", "dicom", "vna"]},
+      "name": "Medical imaging",
+      "description": "Imaging orders, modality worklists, DICOM studies, reports and archives.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["imaging-order", "study", "series", "instance", "report"],
+      "functionalInteractions": [{"interactionId": "perform-imaging-study", "label": "Perform imaging study", "description": "Schedule, acquire, interpret and publish an imaging study.", "semanticConceptIds": ["healthcare.imaging.study"]}],
+      "referenceProfileRefs": [{"kind": "source-profile", "id": "app.bahmni.reference", "version": "1.0.0", "digest": "sha256:7e567bad1d749067d79db8cb81b47e4329c7b78e8d1ae970e62a12553a8e16c1"}]
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "healthcare.pharmacy-medication", "version": "1.0.0", "digest": "sha256:2a593ffb3416325e0ebe5d7c2f3980ed992fafc916f6d2448630913618098275"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "healthcare", "segments": ["source-categories", "pharmacy-and-medication"]}], "tags": ["pharmacy", "emar", "medication"]},
+      "name": "Pharmacy and medication administration",
+      "description": "Medication prescribing, dispensing, administration, reconciliation and inventory.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["medication", "prescription", "dispense", "administration"],
+      "functionalInteractions": [{"interactionId": "medication-lifecycle", "label": "Manage medication lifecycle", "description": "Prescribe, validate, dispense, administer and reconcile medication.", "semanticConceptIds": ["healthcare.medication"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "healthcare.revenue-cycle", "version": "1.0.0", "digest": "sha256:818fcd22fb99f6b9c7fc602c19a6750d7bb2a45f4a5e46e2fe1e60c8ebf176af"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "healthcare", "segments": ["source-categories", "revenue-cycle"]}], "tags": ["billing", "invoice", "payment"]},
+      "name": "Revenue cycle and billing",
+      "description": "Charge capture, invoices, payments, authorization and account reconciliation.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["account", "charge", "invoice", "payment", "coverage"],
+      "functionalInteractions": [{"interactionId": "bill-care", "label": "Bill for care", "description": "Capture charges, issue an invoice and reconcile payment against care delivery.", "semanticConceptIds": ["healthcare.billing.invoice"]}],
+      "referenceProfileRefs": [{"kind": "source-profile", "id": "app.bahmni.reference", "version": "1.0.0", "digest": "sha256:7e567bad1d749067d79db8cb81b47e4329c7b78e8d1ae970e62a12553a8e16c1"}]
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "healthcare.claims-payer", "version": "1.0.0", "digest": "sha256:750d66aa145373d0e9c981ce79abf31190cc2972b41dfdf25d73eb314a2cb110"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "healthcare", "segments": ["source-categories", "claims-and-payer"]}], "tags": ["claims", "coverage", "x12"]},
+      "name": "Claims and payer administration",
+      "description": "Eligibility, authorization, claim submission, adjudication and remittance.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["coverage", "authorization", "claim", "adjudication", "remittance"],
+      "functionalInteractions": [{"interactionId": "adjudicate-claim", "label": "Adjudicate claim", "description": "Submit, evaluate, decide and remit a healthcare claim.", "semanticConceptIds": ["healthcare.claim"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "healthcare.devices-monitoring", "version": "1.0.0", "digest": "sha256:88119ba6f21043e589725bb737a112b233ba24b70a25f8b54bde021764880fd6"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "healthcare", "segments": ["source-categories", "devices-and-monitoring"]}], "tags": ["device", "telemetry", "iot"]},
+      "name": "Clinical devices and monitoring",
+      "description": "Device identity, measurements, alarms, waveforms and remote monitoring events.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["device", "measurement", "alarm", "waveform"],
+      "functionalInteractions": [{"interactionId": "capture-device-observation", "label": "Capture device observation", "description": "Associate a device measurement or alarm with patient, device and time context.", "semanticConceptIds": ["healthcare.device.observation"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "healthcare.patient-engagement", "version": "1.0.0", "digest": "sha256:d8d880d2d7468fa8c27b2c7bd6399361a21d270ec91770d9aa5faca037a7ba31"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "healthcare", "segments": ["source-categories", "patient-engagement"]}], "tags": ["portal", "communication", "consent"]},
+      "name": "Patient engagement",
+      "description": "Patient portal, consent, messaging, questionnaires and self-service interactions.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["patient", "consent", "communication", "questionnaire"],
+      "functionalInteractions": [{"interactionId": "patient-self-service", "label": "Patient self-service", "description": "Allow a patient to communicate, consent, submit information and access services.", "semanticConceptIds": ["healthcare.patient.engagement"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "healthcare.interoperability", "version": "1.0.0", "digest": "sha256:2581456059c9de4e9504aad6a0a7029c9ce0b3a1b0665877245075010b6fb85b"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "healthcare", "segments": ["source-categories", "interoperability"]}], "tags": ["hie", "fhir", "openehr", "hl7"]},
+      "name": "Interoperability and health information exchange",
+      "description": "Standards-native inbound and outbound exchange across organizations and systems.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["exchange", "provenance", "subscription", "standard-record"],
+      "functionalInteractions": [{"interactionId": "exchange-health-record", "label": "Exchange health record", "description": "Receive, validate, route and publish standards-native health records.", "semanticConceptIds": ["healthcare.exchange.record"]}],
+      "referenceProfileRefs": [
+        {"kind": "source-profile", "id": "exchange.fhir-r4-json", "version": "1.0.0", "digest": "sha256:ab1b61787c648554ea050d8be72da2bfced0a10fea94942dd440b2ae060f25e6"},
+        {"kind": "source-profile", "id": "exchange.openehr-json", "version": "1.0.0", "digest": "sha256:25879a28eaac9ebccf2935d51c39839405eeb1ad4bbe8a5a4763af2039e95186"}
+      ]
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "healthcare.documents-knowledge", "version": "1.0.0", "digest": "sha256:17dad19b2b10d885815f3c6679c14f7676062ddbf1a50e3df47ca9eba0656357"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "healthcare", "segments": ["source-categories", "documents-and-knowledge"]}], "tags": ["documents", "protocols", "knowledge"]},
+      "name": "Clinical documents and knowledge",
+      "description": "Notes, reports, scanned documents, pathways, policies and care protocols.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["document", "protocol", "policy", "evidence"],
+      "functionalInteractions": [{"interactionId": "publish-clinical-knowledge", "label": "Publish clinical knowledge", "description": "Version and apply documents, protocols and evidence to care context.", "semanticConceptIds": ["healthcare.knowledge.protocol"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "healthcare.genomics", "version": "1.0.0", "digest": "sha256:fb5bf6bca84698a075f4f112d373e6241810bf1421cd270afe7b5620853f471b"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "healthcare", "segments": ["source-categories", "genomics"]}], "tags": ["genomics", "variant", "precision-medicine"]},
+      "name": "Clinical genomics",
+      "description": "Samples, assays, variants, interpretations and precision-medicine findings.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["specimen", "sequence", "variant", "interpretation"],
+      "functionalInteractions": [{"interactionId": "interpret-variant", "label": "Interpret variant", "description": "Relate a genomic variant and interpretation to specimen, patient and evidence.", "semanticConceptIds": ["healthcare.genomics.variant"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "healthcare.enterprise-operations", "version": "1.0.0", "digest": "sha256:193cbb6c09ddfa9b1509db540f87722b9f996a5fab9d49ef269b5f6b1d34cd4b"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "healthcare", "segments": ["source-categories", "enterprise-operations"]}], "tags": ["erp", "workforce", "supply-chain"]},
+      "name": "Healthcare enterprise operations",
+      "description": "Workforce, finance, procurement, assets, inventory and facility operations.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["employee", "asset", "inventory", "procurement", "facility"],
+      "functionalInteractions": [{"interactionId": "allocate-enterprise-resource", "label": "Allocate enterprise resource", "description": "Plan and reconcile workforce, asset, facility and supply resources.", "semanticConceptIds": ["enterprise.resource.allocation"]}],
+      "referenceProfileRefs": []
+    },
+
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "pharmaceutical.edc", "version": "1.0.0", "digest": "sha256:7bd2afc9f8ca7e9425b3b968554210495be77b0db127e454ecb2ba033f4bb170"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "pharmaceutical", "segments": ["source-categories", "clinical-development", "edc"]}], "tags": ["edc", "clinical-trial", "case-report-form"]},
+      "name": "Electronic data capture",
+      "description": "Study subjects, visits, case report forms, data queries and clinical trial observations.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["study", "subject", "visit", "case-report-form", "finding"],
+      "functionalInteractions": [{"interactionId": "capture-study-data", "label": "Capture study data", "description": "Collect, query, correct and lock protocol-governed subject data.", "semanticConceptIds": ["pharmaceutical.study.observation"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "pharmaceutical.ctms", "version": "1.0.0", "digest": "sha256:caf51c65cbdd13340a83798f2788b3cc99f178732c597a43cbd626a56e70a2de"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "pharmaceutical", "segments": ["source-categories", "clinical-development", "ctms"]}], "tags": ["ctms", "site", "trial-operations"]},
+      "name": "Clinical trial management",
+      "description": "Study planning, sites, investigators, milestones, monitoring and operational status.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["study", "site", "investigator", "milestone", "monitoring-visit"],
+      "functionalInteractions": [{"interactionId": "operate-clinical-study", "label": "Operate clinical study", "description": "Activate sites, monitor execution and track study milestones.", "semanticConceptIds": ["pharmaceutical.study.operations"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "pharmaceutical.etmf", "version": "1.0.0", "digest": "sha256:c3917320505519488cf0caf827c54e8720f2e4c632337876981e7d404e2b8c4f"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "pharmaceutical", "segments": ["source-categories", "clinical-development", "etmf"]}], "tags": ["etmf", "document", "inspection"]},
+      "name": "Electronic trial master file",
+      "description": "Essential trial documents, classifications, signatures, completeness and inspection readiness.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["study-document", "artifact", "signature", "inspection"],
+      "functionalInteractions": [{"interactionId": "govern-trial-document", "label": "Govern trial document", "description": "Author, classify, approve and retain essential study documents.", "semanticConceptIds": ["pharmaceutical.study.document"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "pharmaceutical.rtsm", "version": "1.0.0", "digest": "sha256:97c08035b62d1bb2be560875ee12fc8c06d717eb885ef4a14a9e445fc4a993ba"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "pharmaceutical", "segments": ["source-categories", "clinical-development", "rtsm"]}], "tags": ["rtsm", "irt", "randomization", "supply"]},
+      "name": "Randomization and trial supply management",
+      "description": "Subject randomization, treatment assignment, blinding and investigational supply.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["subject", "randomization", "treatment-arm", "kit", "shipment"],
+      "functionalInteractions": [{"interactionId": "randomize-and-supply", "label": "Randomize and supply", "description": "Assign treatment while preserving blinding and controlling site inventory.", "semanticConceptIds": ["pharmaceutical.study.randomization"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "pharmaceutical.ecoa", "version": "1.0.0", "digest": "sha256:40d102f67ca8423414656259e5bfdc012e4ffe45f710021dafb5d95eed7b8dff"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "pharmaceutical", "segments": ["source-categories", "clinical-development", "ecoa"]}], "tags": ["ecoa", "patient-reported-outcome", "assessment"]},
+      "name": "Electronic clinical outcome assessment",
+      "description": "Patient, clinician, observer and performance outcome assessments with schedules and compliance.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["assessment", "questionnaire", "response", "schedule", "compliance"],
+      "functionalInteractions": [{"interactionId": "capture-outcome-assessment", "label": "Capture outcome assessment", "description": "Schedule, administer and score a protocol-defined outcome assessment.", "semanticConceptIds": ["pharmaceutical.clinical-outcome"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "pharmaceutical.pharmacovigilance", "version": "1.0.0", "digest": "sha256:83e5aba9e4a19b55c4e35fce5aac51b2b13b2107cb2ac6340f20aa3022b71fd8"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "pharmaceutical", "segments": ["source-categories", "safety-and-pharmacovigilance"]}], "tags": ["safety", "case", "signal"]},
+      "name": "Safety and pharmacovigilance",
+      "description": "Adverse event cases, medical review, reporting, aggregate safety and signal detection.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["safety-case", "adverse-event", "product", "report", "signal"],
+      "functionalInteractions": [{"interactionId": "manage-safety-case", "label": "Manage safety case", "description": "Receive, de-duplicate, assess and report an adverse event case.", "semanticConceptIds": ["pharmaceutical.safety.case"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "pharmaceutical.regulatory", "version": "1.0.0", "digest": "sha256:2f9f95fc4b986c21a7e41048e1c156539ab1f1d834c07b591c830e65ff0b1e8a"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "pharmaceutical", "segments": ["source-categories", "regulatory"]}], "tags": ["rim", "submission", "registration"]},
+      "name": "Regulatory information and submissions",
+      "description": "Products, registrations, commitments, dossiers, submissions and authority correspondence.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["product", "registration", "submission", "commitment", "authority"],
+      "functionalInteractions": [{"interactionId": "manage-submission", "label": "Manage regulatory submission", "description": "Assemble, submit and track a regulated product dossier and commitments.", "semanticConceptIds": ["pharmaceutical.regulatory.submission"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "pharmaceutical.research-laboratory", "version": "1.0.0", "digest": "sha256:b8165cda0cf84c81a1c0f6907035cd7d1b17fe0a2e4a5fff64c624aea512a98c"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "pharmaceutical", "segments": ["source-categories", "research-and-laboratory", "lims"]}], "tags": ["lims", "assay", "sample"]},
+      "name": "Research laboratory and LIMS",
+      "description": "Samples, experiments, assays, instruments, results and scientific provenance.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["sample", "experiment", "assay", "instrument", "result"],
+      "functionalInteractions": [{"interactionId": "execute-assay", "label": "Execute assay", "description": "Plan, run, evaluate and approve an experiment or assay with provenance.", "semanticConceptIds": ["pharmaceutical.research.assay"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "pharmaceutical.manufacturing", "version": "1.0.0", "digest": "sha256:15f94e309696fc2399f258430ec92e9f6885fef4fb00ba41d9644cbedd746946"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "pharmaceutical", "segments": ["source-categories", "manufacturing", "mes"]}], "tags": ["mes", "batch", "equipment"]},
+      "name": "Pharmaceutical manufacturing",
+      "description": "Recipes, production orders, equipment, electronic batch records and process telemetry.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["recipe", "material", "batch", "equipment", "process-event"],
+      "functionalInteractions": [{"interactionId": "execute-production-batch", "label": "Execute production batch", "description": "Run and release a traceable manufacturing batch against an approved recipe.", "semanticConceptIds": ["pharmaceutical.manufacturing.batch"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "pharmaceutical.quality", "version": "1.0.0", "digest": "sha256:3dd85ba6d845cd6324fc66f82e9a8cb78e274005405e59b151b7dec94f925039"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "pharmaceutical", "segments": ["source-categories", "quality", "qms"]}], "tags": ["qms", "deviation", "capa"]},
+      "name": "Quality management",
+      "description": "Specifications, deviations, investigations, CAPA, change control and audit evidence.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["specification", "deviation", "investigation", "capa", "change-control"],
+      "functionalInteractions": [{"interactionId": "resolve-quality-event", "label": "Resolve quality event", "description": "Investigate a deviation, determine impact and execute corrective action.", "semanticConceptIds": ["pharmaceutical.quality.event"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "pharmaceutical.supply-chain", "version": "1.0.0", "digest": "sha256:e7cdea6069fa43c08d4422baa147b1057316c465af8bdd7654cfeec86bcb3122"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "pharmaceutical", "segments": ["source-categories", "supply-chain-and-serialization"]}], "tags": ["supply-chain", "serialization", "cold-chain"]},
+      "name": "Supply chain and serialization",
+      "description": "Demand, inventory, shipments, serialized product identity and cold-chain events.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["product", "lot", "serial", "shipment", "temperature-event"],
+      "functionalInteractions": [{"interactionId": "trace-product", "label": "Trace product", "description": "Track a serialized product and environmental conditions through the supply chain.", "semanticConceptIds": ["pharmaceutical.product.trace"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "pharmaceutical.commercial", "version": "1.0.0", "digest": "sha256:521be529f87384ee44bcea310fd2cef8eab8ec1b89ba629083d8fd121998a0f4"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "pharmaceutical", "segments": ["source-categories", "commercial-and-medical-affairs"]}], "tags": ["crm", "hcp", "medical-affairs"]},
+      "name": "Commercial and medical affairs",
+      "description": "Healthcare professional engagement, territories, content, inquiries and field medical activity.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["hcp", "organization", "interaction", "content", "inquiry"],
+      "functionalInteractions": [{"interactionId": "engage-healthcare-professional", "label": "Engage healthcare professional", "description": "Plan, conduct and govern a product or scientific interaction.", "semanticConceptIds": ["pharmaceutical.hcp.interaction"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "pharmaceutical.rwe", "version": "1.0.0", "digest": "sha256:09765d7ffc1658617fe068183ab32e623ee9777d8b61d3c5cbbca68ca6862a61"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "pharmaceutical", "segments": ["source-categories", "real-world-evidence"]}], "tags": ["rwe", "rwd", "cohort"]},
+      "name": "Real-world data and evidence",
+      "description": "Linked clinical, claims, registry and observational data for governed evidence generation.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["patient", "exposure", "outcome", "cohort", "provenance"],
+      "functionalInteractions": [{"interactionId": "build-evidence-cohort", "label": "Build evidence cohort", "description": "Define, execute and reproduce a real-world cohort with provenance.", "semanticConceptIds": ["pharmaceutical.rwe.cohort"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "pharmaceutical.omics", "version": "1.0.0", "digest": "sha256:7b39103b55807bf11038a0f7a93dbb87c5a6f1e7d75c5180bdd8429861a9aeac"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "pharmaceutical", "segments": ["source-categories", "omics-and-bioinformatics"]}], "tags": ["omics", "bioinformatics", "biomarker"]},
+      "name": "Omics and bioinformatics",
+      "description": "Multi-omics assays, pipelines, variants, features, biomarkers and analytical provenance.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["sample", "assay", "pipeline", "feature", "biomarker"],
+      "functionalInteractions": [{"interactionId": "derive-biomarker", "label": "Derive biomarker", "description": "Run a versioned analytical pipeline and relate derived features to evidence.", "semanticConceptIds": ["pharmaceutical.biomarker"]}],
+      "referenceProfileRefs": []
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "pharmaceutical.standards-exchange", "version": "1.0.0", "digest": "sha256:a94e07e46d326218d1c865ce8e2c5493e2165dbff728df0077102cce9959a793"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "pharmaceutical", "segments": ["source-categories", "standards-exchange"]}], "tags": ["cdisc", "fhir", "submission"]},
+      "name": "Standards-native exchange",
+      "description": "Inbound or outbound records already encoded in healthcare or pharmaceutical standards.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["standard-record", "exchange", "validation", "provenance"],
+      "functionalInteractions": [{"interactionId": "exchange-standard-record", "label": "Exchange standard record", "description": "Validate, ingest, transform and publish a standards-native record.", "semanticConceptIds": ["pharmaceutical.exchange.record"]}],
+      "referenceProfileRefs": [{"kind": "source-profile", "id": "exchange.fhir-r4-json", "version": "1.0.0", "digest": "sha256:ab1b61787c648554ea050d8be72da2bfced0a10fea94942dd440b2ae060f25e6"}]
+    },
+    {
+      "contract": "source-category/v1",
+      "artifactRef": {"kind": "source-category", "id": "pharmaceutical.documents-knowledge", "version": "1.0.0", "digest": "sha256:b00016a87ecc0aafd3340d266f4bc52413360e427a05b9d2c8fad1f6ebe99cdd"},
+      "catalog": {"role": "source_category", "provenance": "mongodb_curated", "paths": [{"industry": "pharmaceutical", "segments": ["source-categories", "documents-and-knowledge"]}], "tags": ["document", "sop", "protocol"]},
+      "name": "Documents and regulated knowledge",
+      "description": "Protocols, SOPs, reports, scientific content and regulated document lifecycles.",
+      "capabilityMaturity": "specified",
+      "semanticDomains": ["document", "protocol", "sop", "evidence", "approval"],
+      "functionalInteractions": [{"interactionId": "govern-regulated-content", "label": "Govern regulated content", "description": "Author, approve, apply and retain versioned regulated knowledge.", "semanticConceptIds": ["pharmaceutical.knowledge.document"]}],
+      "referenceProfileRefs": []
+    }
+  ]
+}

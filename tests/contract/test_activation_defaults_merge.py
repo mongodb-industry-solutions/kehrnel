@@ -10,9 +10,9 @@ def test_activation_merges_defaults_and_overrides_and_updates_hash(tmp_path):
         "/v1/environments/env-merge/activate",
         json={
             "strategy_id": "openehr.rps_dual",
-            "version": "0.1.0",
+            "version": "0.2.0",
             "domain": "openEHR",
-            "config": {},
+            "config": {"database": "kehrnel_contract_test"},
             "bindings": {},
             "allow_plaintext_bindings": True,
         },
@@ -28,9 +28,12 @@ def test_activation_merges_defaults_and_overrides_and_updates_hash(tmp_path):
         "/v1/environments/env-merge/activate",
         json={
             "strategy_id": "openehr.rps_dual",
-            "version": "0.1.0",
+            "version": "0.2.0",
             "domain": "openEHR",
-            "config": {"collections": {"search": {"atlas_index_name": "custom_idx"}}},
+            "config": {
+                "database": "kehrnel_contract_test",
+                "collections": {"search": {"atlas_index_name": "custom_idx"}},
+            },
             "bindings": {},
             "allow_plaintext_bindings": True,
             "force": True,
@@ -62,19 +65,20 @@ def test_activation_merges_defaults_and_overrides_and_updates_hash(tmp_path):
     search_stage = plan["pipeline"][0]["$search"]
     assert search_stage["index"] == "custom_idx"
 
-    # activation for rps_single also merges defaults
+    # The release-blocking IBM profile also merges its exact-model defaults.
     res = client.post(
         "/v1/environments/env-single/activate",
         json={
-            "strategy_id": "openehr.rps_single",
-            "version": "0.1.0",
+            "strategy_id": "openehr.rps_dual_ibm",
+            "version": "0.2.0",
             "domain": "openEHR",
-            "config": {},
+            "config": {"database": "kehrnel_contract_test"},
             "bindings": {},
             "allow_plaintext_bindings": True,
         },
     )
     assert res.status_code == 200
-    act_single = res.json()["activation"]
-    assert act_single["config"]["collections"]["compositions"]["name"] == "compositions_rps"
-    assert act_single["config_hash"]
+    act_ibm = res.json()["activation"]
+    assert act_ibm["config"]["collections"]["compositions"]["name"] == "compositions_rps"
+    assert act_ibm["config"]["fields"]["node"]["pi"] == "li"
+    assert act_ibm["config_hash"]

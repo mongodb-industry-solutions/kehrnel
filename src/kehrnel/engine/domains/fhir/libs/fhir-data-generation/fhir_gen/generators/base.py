@@ -89,6 +89,11 @@ class ResourceGenerator:
     def store(self) -> ReferenceStore:
         return self._store
 
+    @property
+    def schema_registry(self) -> SchemaRegistry:
+        """Schema definitions used by this generator for the active release."""
+        return self._registry
+
     def generate(
         self,
         resource_type: str,

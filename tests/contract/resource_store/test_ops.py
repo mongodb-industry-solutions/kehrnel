@@ -286,23 +286,12 @@ async def test_fhir_operational_probe_reports_projection_and_index_drift():
     assert result["schemaState"] == "drifted"
     assert result["indexState"] == "drifted"
     assert result["reconciliationDivergenceCount"] == 1
-    assert result["reconciliationDivergenceCount"] == 1
-    assert result["reconciliationDivergenceCount"] == 1
-    assert result["reconciliationDivergenceCount"] == 1
     assert {check["checkId"] for check in result["checks"]} == {
         "runtime_connectivity",
         "required_collections",
         "storage_schema",
         "managed_indexes",
         "derived_projection",
-        "data_freshness",
-        "reconciliation_integrity",
-        "data_freshness",
-        "reconciliation_integrity",
-        "data_freshness",
-        "reconciliation_integrity",
-        "data_freshness",
-        "reconciliation_integrity",
         "data_freshness",
         "reconciliation_integrity",
     }
@@ -318,212 +307,20 @@ async def test_fhir_operational_probe_refuses_an_unbounded_collection_scan():
     assert all(check["state"] == "unavailable" for check in result["checks"])
 
 
-@pytest.mark.asyncio
-async def test_fhir_operational_probe_reports_projection_and_index_drift():
-    stats = {
-        "ok": True,
-        "collections": [
-            {
-                "resource_type": "Observation",
-                "collection_exists": True,
-                "document_count": 2,
-                "contract_current_count": 1,
-                "resource_projection_version": "sha256:" + "a" * 64,
-                "search_index_present": False,
-                "projection_readiness_receipt": {"state": "not_ready"},
-            }
-        ],
-    }
-    with patch.object(
-        fhir_stats_mod,
-        "fhir_stats",
-        new_callable=AsyncMock,
-        return_value=stats,
-    ) as stats_mock:
-        result = await fhir_stats_mod.fhir_operational_probe(
-            _ctx(), {"resource_types": ["Observation"]}
-        )
-
-    stats_mock.assert_awaited_once_with(
-        ANY,
-        {"resource_types": ["Observation"]},
-    )
-    assert result["state"] == "degraded"
-    assert result["schemaState"] == "drifted"
-    assert result["indexState"] == "drifted"
-    assert {check["checkId"] for check in result["checks"]} == {
-        "runtime_connectivity",
-        "required_collections",
-        "storage_schema",
-        "managed_indexes",
-        "derived_projection",
-    }
 
 
-@pytest.mark.asyncio
-async def test_fhir_operational_probe_refuses_an_unbounded_collection_scan():
-    result = await fhir_stats_mod.fhir_operational_probe(_ctx(), {})
-
-    assert result["state"] == "unavailable"
-    assert result["schemaState"] == "unavailable"
-    assert result["indexState"] == "unavailable"
-    assert all(check["state"] == "unavailable" for check in result["checks"])
 
 
-@pytest.mark.asyncio
-async def test_fhir_operational_probe_reports_projection_and_index_drift():
-    stats = {
-        "ok": True,
-        "collections": [
-            {
-                "resource_type": "Observation",
-                "collection_exists": True,
-                "document_count": 2,
-                "contract_current_count": 1,
-                "resource_projection_version": "sha256:" + "a" * 64,
-                "search_index_present": False,
-                "projection_readiness_receipt": {"state": "not_ready"},
-            }
-        ],
-    }
-    with patch.object(
-        fhir_stats_mod,
-        "fhir_stats",
-        new_callable=AsyncMock,
-        return_value=stats,
-    ) as stats_mock:
-        result = await fhir_stats_mod.fhir_operational_probe(
-            _ctx(), {"resource_types": ["Observation"]}
-        )
-
-    stats_mock.assert_awaited_once_with(
-        ANY,
-        {"resource_types": ["Observation"]},
-    )
-    assert result["state"] == "degraded"
-    assert result["schemaState"] == "drifted"
-    assert result["indexState"] == "drifted"
-    assert {check["checkId"] for check in result["checks"]} == {
-        "runtime_connectivity",
-        "required_collections",
-        "storage_schema",
-        "managed_indexes",
-        "derived_projection",
-    }
 
 
-@pytest.mark.asyncio
-async def test_fhir_operational_probe_refuses_an_unbounded_collection_scan():
-    result = await fhir_stats_mod.fhir_operational_probe(_ctx(), {})
-
-    assert result["state"] == "unavailable"
-    assert result["schemaState"] == "unavailable"
-    assert result["indexState"] == "unavailable"
-    assert all(check["state"] == "unavailable" for check in result["checks"])
 
 
-@pytest.mark.asyncio
-async def test_fhir_operational_probe_reports_projection_and_index_drift():
-    stats = {
-        "ok": True,
-        "collections": [
-            {
-                "resource_type": "Observation",
-                "collection_exists": True,
-                "document_count": 2,
-                "contract_current_count": 1,
-                "resource_projection_version": "sha256:" + "a" * 64,
-                "search_index_present": False,
-                "projection_readiness_receipt": {"state": "not_ready"},
-            }
-        ],
-    }
-    with patch.object(
-        fhir_stats_mod,
-        "fhir_stats",
-        new_callable=AsyncMock,
-        return_value=stats,
-    ) as stats_mock:
-        result = await fhir_stats_mod.fhir_operational_probe(
-            _ctx(), {"resource_types": ["Observation"]}
-        )
-
-    stats_mock.assert_awaited_once_with(
-        ANY,
-        {"resource_types": ["Observation"]},
-    )
-    assert result["state"] == "degraded"
-    assert result["schemaState"] == "drifted"
-    assert result["indexState"] == "drifted"
-    assert {check["checkId"] for check in result["checks"]} == {
-        "runtime_connectivity",
-        "required_collections",
-        "storage_schema",
-        "managed_indexes",
-        "derived_projection",
-    }
 
 
-@pytest.mark.asyncio
-async def test_fhir_operational_probe_refuses_an_unbounded_collection_scan():
-    result = await fhir_stats_mod.fhir_operational_probe(_ctx(), {})
-
-    assert result["state"] == "unavailable"
-    assert result["schemaState"] == "unavailable"
-    assert result["indexState"] == "unavailable"
-    assert all(check["state"] == "unavailable" for check in result["checks"])
 
 
-@pytest.mark.asyncio
-async def test_fhir_operational_probe_reports_projection_and_index_drift():
-    stats = {
-        "ok": True,
-        "collections": [
-            {
-                "resource_type": "Observation",
-                "collection_exists": True,
-                "document_count": 2,
-                "contract_current_count": 1,
-                "resource_projection_version": "sha256:" + "a" * 64,
-                "search_index_present": False,
-                "projection_readiness_receipt": {"state": "not_ready"},
-            }
-        ],
-    }
-    with patch.object(
-        fhir_stats_mod,
-        "fhir_stats",
-        new_callable=AsyncMock,
-        return_value=stats,
-    ) as stats_mock:
-        result = await fhir_stats_mod.fhir_operational_probe(
-            _ctx(), {"resource_types": ["Observation"]}
-        )
-
-    stats_mock.assert_awaited_once_with(
-        ANY,
-        {"resource_types": ["Observation"]},
-    )
-    assert result["state"] == "degraded"
-    assert result["schemaState"] == "drifted"
-    assert result["indexState"] == "drifted"
-    assert {check["checkId"] for check in result["checks"]} == {
-        "runtime_connectivity",
-        "required_collections",
-        "storage_schema",
-        "managed_indexes",
-        "derived_projection",
-    }
 
 
-@pytest.mark.asyncio
-async def test_fhir_operational_probe_refuses_an_unbounded_collection_scan():
-    result = await fhir_stats_mod.fhir_operational_probe(_ctx(), {})
-
-    assert result["state"] == "unavailable"
-    assert result["schemaState"] == "unavailable"
-    assert result["indexState"] == "unavailable"
-    assert all(check["state"] == "unavailable" for check in result["checks"])
 
 
 @pytest.mark.asyncio

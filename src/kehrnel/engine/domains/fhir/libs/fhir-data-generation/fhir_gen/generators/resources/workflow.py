@@ -9,6 +9,7 @@ from typing import Any
 from ...codes import (
     codeable_from_section,
     codeable_reference_from_section,
+    coding_from_section,
     concept_from_section,
     pick_code,
 )
@@ -468,7 +469,7 @@ def enrich_Contract(
         r["authority"] = [store.get_reference("Organization", rng)]
     if store.has("Practitioner"):
         r["signer"] = [{
-            "type": concept_from_section("contract_signing_types", rng, t),
+            "type": coding_from_section("contract_signing_types", rng),
             "party": store.get_reference("Practitioner", rng),
         }]
     return r
@@ -553,7 +554,7 @@ def enrich_Questionnaire(
         display="Semantic Versioning (semver.org)",
     )
     r.pop("versionAlgorithmString", None)
-    r["code"] = [codeable_from_section("loinc_questionnaire_panels", rng)]
+    r["code"] = [coding_from_section("loinc_questionnaire_panels", rng)]
     r["jurisdiction"] = [codeable_from_section("countries", rng)]
     r["item"] = [{"linkId": "1", "text": "Sample question", "type": "string"}]
     return r

@@ -1,7 +1,6 @@
 """Real-Mongo CDISC vertical smoke test with strictly isolated collections.
 
-Uses CDISC_TEST_MONGODB_URI/CDISC_TEST_DB when provided, otherwise the
-authorized CORE_MONGODB_URL/CORE_DATABASE_NAME from .env.local.  The test never
+Requires explicit CDISC_TEST_MONGODB_URI/CDISC_TEST_DB values. The test never
 drops a database and only removes collections carrying its random prefix.
 """
 
@@ -30,24 +29,13 @@ FIXTURE = ROOT / "tests" / "fixtures" / "cdisc" / "dm.dataset.json"
 
 
 def _mongo_config() -> tuple[str | None, str | None]:
-    uri = os.getenv("CDISC_TEST_MONGODB_URI")
-    database = os.getenv("CDISC_TEST_DB")
-    if uri and database:
-        return uri, database
-    try:
-        from dotenv import dotenv_values
-
-        values = dotenv_values(ROOT / ".env.local")
-        return uri or values.get("CORE_MONGODB_URL"), database or values.get("CORE_DATABASE_NAME")
-    except Exception:
-        return uri, database
+    return os.getenv("CDISC_TEST_MONGODB_URI"), os.getenv("CDISC_TEST_DB")
 
 
 MONGO_URI, MONGO_DB = _mongo_config()
-EXPLICIT_TEST_MONGO = bool(os.getenv("CDISC_TEST_MONGODB_URI") and os.getenv("CDISC_TEST_DB"))
 pytestmark = pytest.mark.skipif(
     not (MONGO_URI and MONGO_DB),
-    reason="No authorized CDISC test MongoDB configuration is available.",
+    reason="Set CDISC_TEST_MONGODB_URI and CDISC_TEST_DB to run Mongo integration tests.",
 )
 
 
@@ -58,11 +46,9 @@ async def test_cdisc_plan_ingest_validate_publish_query_export_on_real_mongo(tmp
     database = client[MONGO_DB]
     try:
         await client.admin.command("ping")
-    except Exception as exc:
+    except Exception:
         client.close()
-        if EXPLICIT_TEST_MONGO:
-            raise
-        pytest.skip(f"Fallback tenant MongoDB is not reachable: {type(exc).__name__}")
+        raise
     manifest = load_strategy("cdisc.sdr", PACK)
     configured = {
         key: f"{prefix}{key}"

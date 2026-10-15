@@ -1,0 +1,183 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "CapabilityAvailability": {
+      "enum": [
+        "available",
+        "unavailable",
+        "unknown"
+      ],
+      "title": "CapabilityAvailability",
+      "type": "string"
+    },
+    "JsonValue": {},
+    "TargetCapability": {
+      "additionalProperties": false,
+      "properties": {
+        "availability": {
+          "$ref": "#/$defs/CapabilityAvailability"
+        },
+        "capabilityId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Capabilityid",
+          "type": "string"
+        },
+        "constraints": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Constraints",
+          "type": "object"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        }
+      },
+      "required": [
+        "capabilityId",
+        "availability"
+      ],
+      "title": "TargetCapability",
+      "type": "object"
+    },
+    "TargetTopology": {
+      "additionalProperties": false,
+      "properties": {
+        "deploymentModel": {
+          "minLength": 1,
+          "title": "Deploymentmodel",
+          "type": "string"
+        },
+        "regions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Regions",
+          "type": "array"
+        },
+        "searchNodeCount": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Searchnodecount"
+        },
+        "shardCount": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Shardcount"
+        }
+      },
+      "required": [
+        "deploymentModel"
+      ],
+      "title": "TargetTopology",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:target-capability-profile",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "capabilities": {
+      "items": {
+        "$ref": "#/$defs/TargetCapability"
+      },
+      "minItems": 1,
+      "title": "Capabilities",
+      "type": "array"
+    },
+    "contract": {
+      "const": "target-capability-profile/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "deploymentId": {
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Deploymentid",
+      "type": "string"
+    },
+    "mongodbVersion": {
+      "minLength": 1,
+      "title": "Mongodbversion",
+      "type": "string"
+    },
+    "topology": {
+      "$ref": "#/$defs/TargetTopology"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "deploymentId",
+    "mongodbVersion",
+    "topology",
+    "capabilities"
+  ],
+  "title": "TargetCapabilityProfile",
+  "type": "object"
+}

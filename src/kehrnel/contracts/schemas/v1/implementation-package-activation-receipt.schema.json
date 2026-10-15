@@ -1,0 +1,163 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "StrategyActivationSatisfaction": {
+      "additionalProperties": false,
+      "properties": {
+        "activationSpecificationRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "domain": {
+          "minLength": 1,
+          "title": "Domain",
+          "type": "string"
+        },
+        "runtimeActivationId": {
+          "minLength": 1,
+          "title": "Runtimeactivationid",
+          "type": "string"
+        },
+        "state": {
+          "const": "active",
+          "title": "State",
+          "type": "string"
+        },
+        "strategyInstanceId": {
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$",
+          "title": "Strategyinstanceid",
+          "type": "string"
+        },
+        "strategyRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        }
+      },
+      "required": [
+        "strategyInstanceId",
+        "strategyRef",
+        "activationSpecificationRef",
+        "domain",
+        "runtimeActivationId",
+        "state"
+      ],
+      "title": "StrategyActivationSatisfaction",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:implementation-package-activation-receipt",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "activationDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Activationdigest",
+      "type": "string"
+    },
+    "activationId": {
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Activationid",
+      "type": "string"
+    },
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "contract": {
+      "const": "implementation-package-activation-receipt/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "environmentId": {
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$",
+      "title": "Environmentid",
+      "type": "string"
+    },
+    "nextRequiredAction": {
+      "const": "execute_preparation_plan",
+      "title": "Nextrequiredaction",
+      "type": "string"
+    },
+    "packageRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "preparationExecuted": {
+      "const": false,
+      "default": false,
+      "title": "Preparationexecuted",
+      "type": "boolean"
+    },
+    "readinessRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "runtimeExecuted": {
+      "const": false,
+      "default": false,
+      "title": "Runtimeexecuted",
+      "type": "boolean"
+    },
+    "state": {
+      "const": "activated",
+      "title": "State",
+      "type": "string"
+    },
+    "strategyActivations": {
+      "items": {
+        "$ref": "#/$defs/StrategyActivationSatisfaction"
+      },
+      "minItems": 1,
+      "title": "Strategyactivations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "activationId",
+    "environmentId",
+    "packageRef",
+    "readinessRef",
+    "state",
+    "strategyActivations",
+    "nextRequiredAction",
+    "activationDigest"
+  ],
+  "title": "ImplementationPackageActivationReceipt",
+  "type": "object"
+}

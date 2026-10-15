@@ -13,7 +13,7 @@ def make_gen() -> ResourceGenerator:
 
 class TestSpecializedEnrichers:
     def test_enrichers_registered(self):
-        assert len(ENRICHERS) == 24
+        assert len(ENRICHERS) == 21
         assert "ImagingStudy" in ENRICHERS
         assert "MeasureReport" in ENRICHERS
         assert "Endpoint" in ENRICHERS

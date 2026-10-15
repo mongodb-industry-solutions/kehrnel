@@ -100,8 +100,8 @@ const sidebars = {
       label: 'Architecture',
       items: [
         'architecture/overview',
-        'architecture/transformation-pipeline',
-        'architecture/query-engine',
+        'domains/openehr/composition-flattening',
+        'domains/openehr/aql-query-engine',
       ],
     },
     {

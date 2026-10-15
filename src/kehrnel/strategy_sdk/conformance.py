@@ -17,6 +17,7 @@ _CAPABILITY_HOOKS = {
     "reverse_transform": ("reverse_transform",),
     "validate": ("validate_config",),
     "query": ("compile_query", "execute_query"),
+    "authoritative_write": ("execute_authoritative_write",),
     "plan": ("plan",),
     "apply": ("apply",),
 }
@@ -30,6 +31,7 @@ _HOOK_ARGUMENT_COUNTS = {
     "ingest": 2,
     "compile_query": 3,
     "execute_query": 2,
+    "execute_authoritative_write": 2,
     "run_op": 3,
 }
 

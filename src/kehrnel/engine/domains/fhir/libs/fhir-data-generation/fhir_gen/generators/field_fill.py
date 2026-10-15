@@ -168,7 +168,8 @@ def _fill_contact_field(
 ) -> Any:
     if resource.get("resourceType") == "Patient":
         return [_fill_patient_contact(t, store, rng)]
-    if resource.get("resourceType") in ("HealthcareService", "Location"):
+    contact = resource_def.fields.get("contact")
+    if contact and contact.ref == "ExtendedContactDetail":
         return [t.gen_ExtendedContactDetail()]
     if resource.get("resourceType") == "Device":
         return [t.gen_ContactPoint("phone"), t.gen_ContactPoint("email")]

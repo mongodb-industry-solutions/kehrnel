@@ -79,6 +79,7 @@ def enrich_explain(
     explain.setdefault("activation_id", ctx_meta.get("activation_id"))
     explain.setdefault("config_hash", cfg_hash)
     explain.setdefault("manifest_digest", manifest_digest)
+    explain.setdefault("data_target_digest", ctx_meta.get("data_target_digest"))
     interaction = _resolve_interaction_contract(manifest, engine, explain)
     if interaction:
         explain.setdefault("interaction", interaction)

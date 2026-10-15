@@ -9,6 +9,7 @@ from ...codes import (
     codeable_from_section,
     codeable_reference_from_section,
     concept_from_section,
+    coding_from_section,
     pick_code,
 )
 from ...codes.loader import get_system, random_code
@@ -546,8 +547,13 @@ def enrich_BiologicallyDerivedProduct(
     store: ReferenceStore,
     rng: random.Random,
 ) -> dict[str, Any]:
-    r["productCategory"] = pick_code("biologically_derived_product_category", rng, "fluid")
-    r["productStatus"] = pick_code("biologically_derived_product_status", rng, "available")
+    if settings.fhir_version == "R4":
+        r["productCategory"] = pick_code("biologically_derived_product_category", rng, "fluid")
+    elif settings.fhir_version == "R6":
+        r["productCategory"] = [concept_from_section("biologically_derived_product_category", rng, t)]
+    else:
+        r["productCategory"] = coding_from_section("biologically_derived_product_category", rng)
+    r["productStatus"] = coding_from_section("biologically_derived_product_status", rng)
     r["code"] = concept_from_section("biologically_derived_product_codes", rng, t)
     r["identifier"] = [t.gen_Identifier(value=f"BDP-{rng.randint(1000, 9999)}")]
     if store.has("Practitioner"):
@@ -636,7 +642,9 @@ def enrich_MeasureReport(
     r["status"] = pick_code("measure_report_status", rng, "complete")
     r["type"] = pick_code("measure_report_type", rng, "individual")
     if store.has("Measure"):
-        r["measure"] = store.get_reference("Measure", rng)
+        measure = store.get_resource("Measure", rng)
+        if measure:
+            r["measure"] = measure.get("url") or f"http://example.org/Measure/{measure['id']}"
     if store.has("Patient"):
         r["subject"] = store.get_reference("Patient", rng)
     r["period"] = t.gen_Period()

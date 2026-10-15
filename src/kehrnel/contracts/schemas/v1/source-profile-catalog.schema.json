@@ -1,0 +1,580 @@
+{
+  "$defs": {
+    "ArtifactProvenance": {
+      "description": "Who owns the lifecycle of a reusable catalog artifact.",
+      "enum": [
+        "mongodb_curated",
+        "community",
+        "tenant_generated",
+        "tenant_extended"
+      ],
+      "title": "ArtifactProvenance",
+      "type": "string"
+    },
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "CapabilityMaturity": {
+      "enum": [
+        "not_assessed",
+        "specified",
+        "simulated",
+        "compilable",
+        "pilot_validated",
+        "production_validated"
+      ],
+      "title": "CapabilityMaturity",
+      "type": "string"
+    },
+    "CatalogArtifactRole": {
+      "description": "The architectural role an artifact plays, independent of its industry.",
+      "enum": [
+        "source_category",
+        "source_profile",
+        "mapping",
+        "target_strategy",
+        "semantic_asset",
+        "data_architecture",
+        "application",
+        "outcome_pattern",
+        "reference_architecture",
+        "demo_experience",
+        "portfolio_domain",
+        "data_product",
+        "architecture_capability",
+        "visual_pattern",
+        "solution_blueprint_template"
+      ],
+      "title": "CatalogArtifactRole",
+      "type": "string"
+    },
+    "CatalogMetadata": {
+      "additionalProperties": false,
+      "description": "Faceted catalog metadata kept separate from executable behavior.",
+      "properties": {
+        "extendsRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "paths": {
+          "items": {
+            "$ref": "#/$defs/CatalogPath"
+          },
+          "minItems": 1,
+          "title": "Paths",
+          "type": "array"
+        },
+        "provenance": {
+          "$ref": "#/$defs/ArtifactProvenance"
+        },
+        "role": {
+          "$ref": "#/$defs/CatalogArtifactRole"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        }
+      },
+      "required": [
+        "role",
+        "provenance",
+        "paths"
+      ],
+      "title": "CatalogMetadata",
+      "type": "object"
+    },
+    "CatalogPath": {
+      "additionalProperties": false,
+      "description": "One navigational placement; artifacts may appear in several industries.",
+      "properties": {
+        "industry": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Industry",
+          "type": "string"
+        },
+        "segments": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Segments",
+          "type": "array"
+        }
+      },
+      "required": [
+        "industry",
+        "segments"
+      ],
+      "title": "CatalogPath",
+      "type": "object"
+    },
+    "IngestionMode": {
+      "enum": [
+        "snapshot",
+        "batch",
+        "cdc",
+        "polling",
+        "event_stream",
+        "api"
+      ],
+      "title": "IngestionMode",
+      "type": "string"
+    },
+    "MappingMode": {
+      "enum": [
+        "direct",
+        "curated",
+        "generated"
+      ],
+      "title": "MappingMode",
+      "type": "string"
+    },
+    "MappingReadiness": {
+      "enum": [
+        "available",
+        "proposed"
+      ],
+      "title": "MappingReadiness",
+      "type": "string"
+    },
+    "MappingRoute": {
+      "additionalProperties": false,
+      "properties": {
+        "mappingRef": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mappingref"
+        },
+        "mode": {
+          "$ref": "#/$defs/MappingMode"
+        },
+        "readiness": {
+          "$ref": "#/$defs/MappingReadiness"
+        },
+        "strategyIds": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Strategyids",
+          "type": "array"
+        },
+        "targetModel": {
+          "enum": [
+            "openehr",
+            "fhir",
+            "cdisc",
+            "custom_operational"
+          ],
+          "title": "Targetmodel",
+          "type": "string"
+        }
+      },
+      "required": [
+        "targetModel",
+        "mode",
+        "readiness"
+      ],
+      "title": "MappingRoute",
+      "type": "object"
+    },
+    "SemanticBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "conceptId": {
+          "minLength": 1,
+          "title": "Conceptid",
+          "type": "string"
+        },
+        "confidenceBasisPoints": {
+          "anyOf": [
+            {
+              "maximum": 10000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidencebasispoints"
+        },
+        "sourcePath": {
+          "minLength": 1,
+          "title": "Sourcepath",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/SemanticBindingState"
+        },
+        "valueSetRef": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Valuesetref"
+        }
+      },
+      "required": [
+        "sourcePath",
+        "conceptId",
+        "state"
+      ],
+      "title": "SemanticBinding",
+      "type": "object"
+    },
+    "SemanticBindingState": {
+      "enum": [
+        "declared",
+        "inferred",
+        "confirmed"
+      ],
+      "title": "SemanticBindingState",
+      "type": "string"
+    },
+    "SourceField": {
+      "additionalProperties": false,
+      "properties": {
+        "dataType": {
+          "minLength": 1,
+          "title": "Datatype",
+          "type": "string"
+        },
+        "nullable": {
+          "default": true,
+          "title": "Nullable",
+          "type": "boolean"
+        },
+        "path": {
+          "minLength": 1,
+          "title": "Path",
+          "type": "string"
+        },
+        "repeated": {
+          "default": false,
+          "title": "Repeated",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "path",
+        "dataType"
+      ],
+      "title": "SourceField",
+      "type": "object"
+    },
+    "SourceInteraction": {
+      "additionalProperties": false,
+      "properties": {
+        "eventName": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Eventname"
+        },
+        "interactionId": {
+          "minLength": 1,
+          "title": "Interactionid",
+          "type": "string"
+        },
+        "label": {
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "operation": {
+          "enum": [
+            "create",
+            "update",
+            "delete",
+            "event"
+          ],
+          "title": "Operation",
+          "type": "string"
+        },
+        "structureRefs": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Structurerefs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "interactionId",
+        "label",
+        "operation",
+        "structureRefs"
+      ],
+      "title": "SourceInteraction",
+      "type": "object"
+    },
+    "SourceProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "artifactRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "capabilityMaturity": {
+          "$ref": "#/$defs/CapabilityMaturity",
+          "default": "specified"
+        },
+        "catalog": {
+          "$ref": "#/$defs/CatalogMetadata"
+        },
+        "categoryIds": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Categoryids",
+          "type": "array"
+        },
+        "contract": {
+          "const": "source-profile/v1",
+          "title": "Contract",
+          "type": "string"
+        },
+        "ingestionModes": {
+          "items": {
+            "$ref": "#/$defs/IngestionMode"
+          },
+          "minItems": 1,
+          "title": "Ingestionmodes",
+          "type": "array"
+        },
+        "interactions": {
+          "items": {
+            "$ref": "#/$defs/SourceInteraction"
+          },
+          "title": "Interactions",
+          "type": "array"
+        },
+        "mappingRoutes": {
+          "items": {
+            "$ref": "#/$defs/MappingRoute"
+          },
+          "title": "Mappingroutes",
+          "type": "array"
+        },
+        "origin": {
+          "$ref": "#/$defs/SourceProfileOrigin"
+        },
+        "productName": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Productname"
+        },
+        "productVersion": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Productversion"
+        },
+        "semanticBindings": {
+          "items": {
+            "$ref": "#/$defs/SemanticBinding"
+          },
+          "title": "Semanticbindings",
+          "type": "array"
+        },
+        "structures": {
+          "items": {
+            "$ref": "#/$defs/SourceStructure"
+          },
+          "minItems": 1,
+          "title": "Structures",
+          "type": "array"
+        },
+        "technology": {
+          "$ref": "#/$defs/SourceTechnology"
+        }
+      },
+      "required": [
+        "contract",
+        "artifactRef",
+        "catalog",
+        "origin",
+        "technology",
+        "categoryIds",
+        "ingestionModes",
+        "structures"
+      ],
+      "title": "SourceProfile",
+      "type": "object"
+    },
+    "SourceProfileOrigin": {
+      "enum": [
+        "known",
+        "discovered"
+      ],
+      "title": "SourceProfileOrigin",
+      "type": "string"
+    },
+    "SourceStructure": {
+      "additionalProperties": false,
+      "properties": {
+        "fields": {
+          "items": {
+            "$ref": "#/$defs/SourceField"
+          },
+          "title": "Fields",
+          "type": "array"
+        },
+        "kind": {
+          "$ref": "#/$defs/SourceStructureKind"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "polymorphic": {
+          "default": false,
+          "title": "Polymorphic",
+          "type": "boolean"
+        },
+        "primaryKeys": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Primarykeys",
+          "type": "array"
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ],
+      "title": "SourceStructure",
+      "type": "object"
+    },
+    "SourceStructureKind": {
+      "enum": [
+        "collection",
+        "table",
+        "resource",
+        "message",
+        "object",
+        "file"
+      ],
+      "title": "SourceStructureKind",
+      "type": "string"
+    },
+    "SourceTechnology": {
+      "enum": [
+        "mongodb",
+        "postgresql",
+        "mysql",
+        "application_api",
+        "event_stream",
+        "file",
+        "standard_exchange",
+        "composite_application"
+      ],
+      "title": "SourceTechnology",
+      "type": "string"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:source-profile-catalog",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "contract": {
+      "const": "source-profile-catalog/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "profiles": {
+      "items": {
+        "$ref": "#/$defs/SourceProfile"
+      },
+      "minItems": 1,
+      "title": "Profiles",
+      "type": "array"
+    }
+  },
+  "required": [
+    "contract",
+    "profiles"
+  ],
+  "title": "SourceProfileCatalog",
+  "type": "object"
+}

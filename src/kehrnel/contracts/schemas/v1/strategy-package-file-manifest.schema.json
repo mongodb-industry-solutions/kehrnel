@@ -1,0 +1,114 @@
+{
+  "$defs": {
+    "PackageFileEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "description": "NFC-normalized relative POSIX path without dot segments.",
+          "minLength": 1,
+          "pattern": "^(?!/)(?![A-Za-z]:/)(?!\\.{1,2}(?:/|$))(?!.*\\/\\.{1,2}(?:/|$))[^/\\\\]+(?:/[^/\\\\]+)*$",
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "size": {
+          "minimum": 0,
+          "title": "Size",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path",
+        "size",
+        "sha256"
+      ],
+      "title": "PackageFileEntry",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:strategy-package-file-manifest",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "bytePolicy": {
+      "const": "exact",
+      "default": "exact",
+      "title": "Bytepolicy",
+      "type": "string"
+    },
+    "contract": {
+      "const": "strategy-package-file-manifest/v1",
+      "default": "strategy-package-file-manifest/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "exclusions": {
+      "const": [
+        "directory-suffix:.egg-info",
+        "directory:.git",
+        "directory:.hg",
+        "directory:.mypy_cache",
+        "directory:.nox",
+        "directory:.pytest_cache",
+        "directory:.ruff_cache",
+        "directory:.svn",
+        "directory:.tox",
+        "directory:__pycache__",
+        "directory:build",
+        "directory:dist",
+        "file:.DS_Store",
+        "suffix:.pyc",
+        "suffix:.pyo",
+        "suffix:.swp",
+        "suffix:.tmp"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "title": "Exclusions",
+      "type": "array"
+    },
+    "files": {
+      "description": "Entries are unique by path and sorted by UTF-8 path bytes; use the contract verifier for these semantic constraints.",
+      "items": {
+        "$ref": "#/$defs/PackageFileEntry"
+      },
+      "title": "Files",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "hashAlgorithm": {
+      "const": "sha256",
+      "default": "sha256",
+      "title": "Hashalgorithm",
+      "type": "string"
+    },
+    "pathEncoding": {
+      "const": "utf-8-nfc-posix",
+      "default": "utf-8-nfc-posix",
+      "title": "Pathencoding",
+      "type": "string"
+    },
+    "presentationMetadata": {
+      "const": "included",
+      "default": "included",
+      "title": "Presentationmetadata",
+      "type": "string"
+    },
+    "scope": {
+      "const": "strategy-directory/v1",
+      "default": "strategy-directory/v1",
+      "title": "Scope",
+      "type": "string"
+    }
+  },
+  "required": [
+    "files"
+  ],
+  "title": "PackageFileManifest",
+  "type": "object"
+}

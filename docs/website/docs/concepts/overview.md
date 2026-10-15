@@ -65,7 +65,7 @@ Only contracts that list an engine take part in query-plan attribution: when exa
 
 Ops are strategy-specific operations declared in the manifest `ops` list, each with a `name`, a `kind` (for example `ingest`, `maintenance`, `query`, `diagnostic`, `synthetic`, `export`), a `summary` and JSON input and output schemas. The runtime validates the payload against the input schema before calling the strategy's `run_op`. Alongside ops, every strategy can implement the standard operations `plan`, `apply`, `transform`, `ingest`, `compile_query`, `query` and `authoritative_write`.
 
-See [Ingest and Transformation](/docs/architecture/transformation-pipeline) and [Query and Execution](/docs/architecture/query-engine) for how these fit together at runtime.
+See [Ingest and Transformation](/docs/domains/openehr/composition-flattening) and [Query and Execution](/docs/domains/openehr/aql-query-engine) for how these fit together at runtime.
 
 ## Domain Concepts
 
@@ -74,4 +74,3 @@ See [Ingest and Transformation](/docs/architecture/transformation-pipeline) and 
 - CDISC: [CDISC SDR Strategy](/docs/strategies/cdisc/sdr/)
 - SNOMED CT: [SNOMED CT on MongoDB Strategy](/docs/strategies/snomedct/mongodb/)
 - [All official strategies](/docs/strategies/overview)
-

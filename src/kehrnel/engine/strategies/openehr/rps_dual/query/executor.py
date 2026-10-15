@@ -6,9 +6,11 @@ from time import perf_counter
 from typing import Any, Dict, List
 import uuid
 
+from bson import ObjectId
 from bson.binary import Binary, UuidRepresentation
 from bson.code import Code
 
+from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.core.types import QueryResult, QueryPlan, StrategyContext
 
 
@@ -53,6 +55,12 @@ def _uses_uuid_binary_ids(config: Dict[str, Any] | None) -> bool:
 
 
 def _normalize_result_value(value: Any, key: str | None = None, *, normalize_binary_uuid: bool = False) -> Any:
+    # ObjectId is the default identifier representation for RPS Dual.  It is
+    # not JSON serializable, so an otherwise successful query would fail at
+    # the HTTP response boundary unless it is rendered in its canonical text
+    # form.  This conversion is independent of the optional UUID id policy.
+    if isinstance(value, ObjectId):
+        return str(value)
     if isinstance(value, Binary) and normalize_binary_uuid and _looks_like_id_key(key):
         converted = _binary_uuid_to_string(value)
         return converted if converted is not None else value
@@ -92,20 +100,67 @@ async def execute(ctx: StrategyContext, plan: QueryPlan) -> QueryResult:
         explain["collection"] = plan.plan.get("collection")
     if plan.plan.get("scope") is not None and "scope" not in explain:
         explain["scope"] = plan.plan.get("scope")
+
+    supported_engine = (
+        plan.engine == "mongo_pipeline"
+        or plan.engine.startswith("atlas_search")
+        or plan.engine == "text_search_dual"
+    )
+    if not supported_engine:
+        raise KehrnelError(
+            code="OPENEHR_QUERY_ENGINE_UNSUPPORTED",
+            status=500,
+            message="The compiled openEHR query selected an unsupported execution engine.",
+            details={"engine": plan.engine},
+        )
+    collection = plan.plan.get("collection")
+    if not isinstance(collection, str) or not collection.strip():
+        raise KehrnelError(
+            code="OPENEHR_QUERY_PLAN_INVALID",
+            status=500,
+            message="The compiled openEHR query has no target collection.",
+            details={"engine": plan.engine},
+        )
+    if storage is None:
+        raise KehrnelError(
+            code="OPENEHR_QUERY_STORAGE_UNAVAILABLE",
+            status=503,
+            message="The active openEHR strategy has no query storage adapter.",
+            details={"engine": plan.engine, "collection": collection},
+        )
     try:
         if plan.engine == "mongo_pipeline":
-            if storage and plan.plan.get("collection"):
-                db_started = perf_counter()
-                rows = await storage.aggregate(plan.plan["collection"], prepared_pipeline)
-                db_duration_ms = round((perf_counter() - db_started) * 1000, 2)
+            db_started = perf_counter()
+            rows = await storage.aggregate(collection, prepared_pipeline)
+            db_duration_ms = round((perf_counter() - db_started) * 1000, 2)
         elif plan.engine.startswith("atlas_search") or plan.engine == "text_search_dual":
             # same aggregate; pipeline starts with $search
-            if storage and plan.plan.get("collection"):
-                db_started = perf_counter()
-                rows = await storage.aggregate(plan.plan["collection"], prepared_pipeline)
-                db_duration_ms = round((perf_counter() - db_started) * 1000, 2)
-    except Exception as exc:  # surface pipeline even on failure
-        explain["error"] = str(exc)
+            db_started = perf_counter()
+            rows = await storage.aggregate(collection, prepared_pipeline)
+            db_duration_ms = round((perf_counter() - db_started) * 1000, 2)
+    except KehrnelError:
+        raise
+    except Exception as exc:
+        # An execution failure is not an empty cohort.  Return a stable,
+        # non-sensitive error so callers cannot accidentally treat an Atlas
+        # Search index/configuration problem as a valid zero-result query.
+        raise KehrnelError(
+            code="OPENEHR_QUERY_EXECUTION_FAILED",
+            status=502,
+            message="The openEHR query could not be executed.",
+            details={
+                "engine": plan.engine,
+                "collection": collection,
+                "errorType": type(exc).__name__,
+            },
+        ) from exc
+    if not isinstance(rows, list) or any(not isinstance(row, dict) for row in rows):
+        raise KehrnelError(
+            code="OPENEHR_QUERY_RESULT_INVALID",
+            status=502,
+            message="The openEHR storage adapter returned an invalid query result.",
+            details={"engine": plan.engine, "collection": collection},
+        )
     if rows:
         normalize_binary_uuid = _uses_uuid_binary_ids(ctx.config)
         rows = [

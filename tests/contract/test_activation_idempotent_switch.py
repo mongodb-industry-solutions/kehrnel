@@ -8,7 +8,7 @@ def test_activation_idempotent_and_switchable(tmp_path):
     # first activation
     res1 = client.put(
         "/v1/environments/strategy",
-        json={"envId": "env-switch", "strategyId": "fhir.resource_store", "domain": "FHIR", "configOverrides": {}},
+        json={"envId": "env-switch", "strategyId": "fhir.resource_store", "domain": "FHIR", "configOverrides": {"database": "kehrnel_contract_test"}},
     )
     assert res1.status_code == 200
     act1 = res1.json().get("activation") or {}
@@ -16,7 +16,7 @@ def test_activation_idempotent_and_switchable(tmp_path):
     # second activation same strategy/domain -> alreadyActive
     res2 = client.put(
         "/v1/environments/strategy",
-        json={"envId": "env-switch", "strategyId": "fhir.resource_store", "domain": "fhir", "configOverrides": {}},
+        json={"envId": "env-switch", "strategyId": "fhir.resource_store", "domain": "fhir", "configOverrides": {"database": "kehrnel_contract_test"}},
     )
     assert res2.status_code == 200
     act2 = res2.json().get("activation") or {}
@@ -24,7 +24,7 @@ def test_activation_idempotent_and_switchable(tmp_path):
     # switch to different strategy (openEHR) should replace
     res3 = client.put(
         "/v1/environments/strategy",
-        json={"envId": "env-switch", "strategyId": "openehr.rps_dual", "domain": "openEHR", "configOverrides": {}},
+        json={"envId": "env-switch", "strategyId": "openehr.rps_dual", "domain": "openEHR", "configOverrides": {"database": "kehrnel_contract_test"}},
     )
     assert res3.status_code == 200
     act3 = res3.json().get("activation") or {}

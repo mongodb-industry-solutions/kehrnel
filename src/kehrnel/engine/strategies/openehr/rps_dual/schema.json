@@ -112,7 +112,7 @@
         "ehr_id": { "$ref": "#/definitions/idEncoding" },
         "composition_id": { "$ref": "#/definitions/idEncoding" }
       },
-      "default": { "ehr_id": "string", "composition_id": "objectid" }
+      "default": { "ehr_id": "string", "composition_id": "string" }
     },
     "paths": {
       "type": "object",

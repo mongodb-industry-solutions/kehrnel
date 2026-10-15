@@ -242,3 +242,6 @@ src/kehrnel/engine/domains/fhir/libs/**/.DS_Store
 samples/in/semanticQuerying/20250924161205_respuestas_proms_v2_VIH_eVIHa.csv
 # LOCAL_TESTING
 LOCAL_TESTING/
+
+# Local implementation-package runtime evidence
+.kehrnel-artifacts/

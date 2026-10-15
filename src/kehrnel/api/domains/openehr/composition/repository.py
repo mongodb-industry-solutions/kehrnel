@@ -2,11 +2,63 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from pymongo.errors import PyMongoError
 import logging
 from copy import deepcopy
+from datetime import datetime, timezone
 from typing import Dict, Optional, List
 
 from kehrnel.api.bridge.app.core.config_models import CompositionCollectionNames
 
 logger = logging.getLogger(__name__)
+
+_PROJECTION_STATE_COLLECTION = "_kehrnel_projection_state"
+_RPS_DUAL_STRATEGY_ID = "openehr.rps_dual"
+
+
+async def _invalidate_matching_projection_readiness(
+    db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames,
+    *,
+    session,
+    reason: str,
+) -> None:
+    """Invalidate tenant-local receipts for the flattened collection pair.
+
+    These compatibility routes do not know the Kehrnel environment id.  Matching
+    every RPS Dual receipt for the exact physical source/target collections is
+    therefore conservative and prevents any environment from retaining a ready
+    receipt after this transaction changes its underlying data.
+    """
+
+    source_collection = config.flatten_compositions
+    target_collection = config.search_compositions
+    if not source_collection or not target_collection:
+        return
+    now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    await db[_PROJECTION_STATE_COLLECTION].update_many(
+        {
+            "strategyId": _RPS_DUAL_STRATEGY_ID,
+            "sourceCollection": source_collection,
+            "targetCollection": target_collection,
+        },
+        {
+            "$set": {
+                "projection.state": "stale",
+                "projection.complete": False,
+                "projection.completedAt": None,
+                "reconciliation.safe": False,
+                "reconciliation.complete": False,
+                "reconciliation.sourceToTargetCoverage": "unverified",
+                "reconciliation.targetToSourceCoverage": "unverified",
+                "invalidation": {
+                    "reason": reason,
+                    "invalidatedAt": now,
+                    "writer": "legacy-http",
+                },
+            },
+            "$inc": {"mutationSequence": 1},
+        },
+        session=session,
+    )
+
 
 async def find_composition_by_uid(uid: str, db: AsyncIOMotorDatabase, config: CompositionCollectionNames):
     """
@@ -67,7 +119,7 @@ async def find_first_composition_by_object_id(object_id: str, db: AsyncIOMotorDa
     """
     Finds the first version of a composition by its base object ID
 
-    It queries for all versiones matching the base object ID and sorts them by creation time 
+    It queries for all versiones matching the base object ID and sorts them by creation time
     in ascending order to return the very first one
 
     Args:
@@ -199,6 +251,14 @@ async def insert_composition_contribution_and_update_ehr(
                 if update_result.matched_count == 0:
                     # Cause the transaction to abort
                     raise PyMongoError(f"Failed to find and update the EHR with id '{ehr_id}' during transaction.")
+
+                if flattened_base_doc or flattened_search_doc:
+                    await _invalidate_matching_projection_readiness(
+                        db,
+                        config,
+                        session=session,
+                        reason="legacy_http_composition_insert",
+                    )
             except PyMongoError as e:
                 logger.error(f"Composition creating transaction failed: {e}")
                 # Transaction is automatically aborted if there is an exception
@@ -323,6 +383,14 @@ async def insert_compositions_contributions_and_update_ehr(
 
                 if update_result.matched_count == 0:
                     raise PyMongoError(f"Failed to find and update the EHR with id '{ehr_id}' during batch create transaction.")
+
+                if base_docs or search_docs:
+                    await _invalidate_matching_projection_readiness(
+                        db,
+                        config,
+                        session=session,
+                        reason="legacy_http_composition_batch_insert",
+                    )
             except PyMongoError as e:
                 logger.error(f"Batch composition creating transaction failed: {e}")
                 raise
@@ -380,7 +448,7 @@ async def add_deletion_contribution_and_update_ehr(
 
                 # Update the parent EHR document by pushing the new contribution ID
                 update_result = await db[config.ehr].update_one(
-                    {"_id.value": ehr_id}, 
+                    {"_id.value": ehr_id},
                     update_set_criteria,
                     session = session
                 )
@@ -388,6 +456,13 @@ async def add_deletion_contribution_and_update_ehr(
                 # Ensure the EHR was found and updated
                 if update_result.matched_count == 0:
                     raise PyMongoError(f"Failed to find EHR with id '{ehr_id}' during deletion transaction")
+
+                await _invalidate_matching_projection_readiness(
+                    db,
+                    config,
+                    session=session,
+                    reason="legacy_http_composition_delete",
+                )
             except PyMongoError as e:
                 logger.error(f"Composition deletion transaction failed: {e}")
                 raise
@@ -461,6 +536,13 @@ async def add_bulk_deletion_contributions_and_update_ehr(
 
                 if update_result.matched_count == 0:
                     raise PyMongoError(f"Failed to find EHR with id '{ehr_id}' during bulk deletion transaction")
+
+                await _invalidate_matching_projection_readiness(
+                    db,
+                    config,
+                    session=session,
+                    reason="legacy_http_composition_batch_delete",
+                )
             except PyMongoError as e:
                 logger.error(f"Bulk composition deletion transaction failed: {e}")
                 raise

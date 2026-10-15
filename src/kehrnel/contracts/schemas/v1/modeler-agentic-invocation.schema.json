@@ -1,0 +1,419 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "BlueprintRevisionIdentity": {
+      "additionalProperties": false,
+      "description": "One exact immutable Blueprint revision used as proposal input.",
+      "properties": {
+        "blueprintId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Blueprintid",
+          "type": "string"
+        },
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "blueprintId",
+        "revision",
+        "digest"
+      ],
+      "title": "BlueprintRevisionIdentity",
+      "type": "object"
+    },
+    "ModelerAgenticDestination": {
+      "additionalProperties": false,
+      "description": "Exact Agentic Engine workspace selected by the hosting server.",
+      "properties": {
+        "deploymentId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Deploymentid",
+          "type": "string"
+        },
+        "engine": {
+          "const": "mongodb_agentic_engine",
+          "title": "Engine",
+          "type": "string"
+        },
+        "workspaceRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        }
+      },
+      "required": [
+        "engine",
+        "workspaceRef",
+        "deploymentId"
+      ],
+      "title": "ModelerAgenticDestination",
+      "type": "object"
+    },
+    "ModelerAssistantScope": {
+      "additionalProperties": false,
+      "description": "Identity and authorization context injected by the hosting server.\n\nClients and the language model must not choose these values.  The\n``authorizationDigest`` lets an integration fail closed if permissions\nchange between proposal, validation, and approval.",
+      "properties": {
+        "actorId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Actorid",
+          "type": "string"
+        },
+        "authorizationDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Authorizationdigest",
+          "type": "string"
+        },
+        "binding": {
+          "const": "server_bound",
+          "title": "Binding",
+          "type": "string"
+        },
+        "projectId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Projectid",
+          "type": "string"
+        },
+        "purpose": {
+          "maxLength": 512,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Purpose",
+          "type": "string"
+        },
+        "role": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Role",
+          "type": "string"
+        },
+        "sessionId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Sessionid",
+          "type": "string"
+        },
+        "tenantId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Tenantid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "binding",
+        "tenantId",
+        "projectId",
+        "actorId",
+        "sessionId",
+        "role",
+        "purpose",
+        "authorizationDigest"
+      ],
+      "title": "ModelerAssistantScope",
+      "type": "object"
+    },
+    "ModelerConsentStatus": {
+      "enum": [
+        "not_required",
+        "granted",
+        "denied"
+      ],
+      "title": "ModelerConsentStatus",
+      "type": "string"
+    },
+    "ModelerDataClassification": {
+      "enum": [
+        "public",
+        "internal",
+        "confidential",
+        "restricted"
+      ],
+      "title": "ModelerDataClassification",
+      "type": "string"
+    },
+    "ModelerExposureItem": {
+      "additionalProperties": false,
+      "description": "One content-addressed item authorized to cross the agent boundary.",
+      "properties": {
+        "artifactRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "classification": {
+          "$ref": "#/$defs/ModelerDataClassification"
+        },
+        "contentDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Contentdigest",
+          "type": "string"
+        },
+        "exposureId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Exposureid",
+          "type": "string"
+        },
+        "includedPaths": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 256,
+          "title": "Includedpaths",
+          "type": "array"
+        },
+        "kind": {
+          "$ref": "#/$defs/ModelerExposureKind"
+        },
+        "purpose": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Purpose",
+          "type": "string"
+        }
+      },
+      "required": [
+        "exposureId",
+        "kind",
+        "classification",
+        "purpose",
+        "contentDigest"
+      ],
+      "title": "ModelerExposureItem",
+      "type": "object"
+    },
+    "ModelerExposureKind": {
+      "enum": [
+        "blueprint",
+        "catalog_artifact",
+        "source_evidence",
+        "runtime_evidence",
+        "user_requirement",
+        "conversation_context"
+      ],
+      "title": "ModelerExposureKind",
+      "type": "string"
+    },
+    "ModelerPolicyDecision": {
+      "additionalProperties": false,
+      "description": "Explicit policy and consent decision made before an invocation.",
+      "properties": {
+        "consentRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "consentStatus": {
+          "$ref": "#/$defs/ModelerConsentStatus"
+        },
+        "decisionRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "outcome": {
+          "$ref": "#/$defs/ModelerPolicyOutcome"
+        },
+        "policyRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "restrictions": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 128,
+          "title": "Restrictions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "outcome",
+        "policyRef",
+        "decisionRef",
+        "consentStatus"
+      ],
+      "title": "ModelerPolicyDecision",
+      "type": "object"
+    },
+    "ModelerPolicyOutcome": {
+      "enum": [
+        "allow",
+        "deny"
+      ],
+      "title": "ModelerPolicyOutcome",
+      "type": "string"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:modeler-agentic-invocation",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Server-created, content-addressed authorization to call Agentic Engine.\n\nThe contract records an allowlist and policy decision but cannot prove who\ncreated them.  The host must authenticate this record and enforce tool\nmembership and data exposure before dispatch.",
+  "properties": {
+    "authorizedEvidenceRefs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "maxItems": 512,
+      "title": "Authorizedevidencerefs",
+      "type": "array"
+    },
+    "baseBlueprint": {
+      "$ref": "#/$defs/BlueprintRevisionIdentity"
+    },
+    "catalogRefs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "maxItems": 256,
+      "minItems": 1,
+      "title": "Catalogrefs",
+      "type": "array"
+    },
+    "contract": {
+      "const": "modeler-agentic-invocation/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "createdAt": {
+      "format": "date-time",
+      "title": "Createdat",
+      "type": "string"
+    },
+    "destination": {
+      "$ref": "#/$defs/ModelerAgenticDestination"
+    },
+    "exposureManifest": {
+      "items": {
+        "$ref": "#/$defs/ModelerExposureItem"
+      },
+      "maxItems": 512,
+      "minItems": 1,
+      "title": "Exposuremanifest",
+      "type": "array"
+    },
+    "exposureManifestDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Exposuremanifestdigest",
+      "type": "string"
+    },
+    "invocationDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Invocationdigest",
+      "type": "string"
+    },
+    "invocationId": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^\\S(?:.*\\S)?$",
+      "title": "Invocationid",
+      "type": "string"
+    },
+    "issuedBy": {
+      "const": "data_lab_server",
+      "title": "Issuedby",
+      "type": "string"
+    },
+    "payloadDigest": {
+      "description": "Digest of the exact redacted payload dispatched to Agentic Engine.",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Payloaddigest",
+      "type": "string"
+    },
+    "payloadSizeBytes": {
+      "maximum": 4194304,
+      "minimum": 1,
+      "title": "Payloadsizebytes",
+      "type": "integer"
+    },
+    "policyDecision": {
+      "$ref": "#/$defs/ModelerPolicyDecision"
+    },
+    "scope": {
+      "$ref": "#/$defs/ModelerAssistantScope"
+    },
+    "toolRegistryRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    }
+  },
+  "required": [
+    "contract",
+    "issuedBy",
+    "invocationId",
+    "invocationDigest",
+    "createdAt",
+    "scope",
+    "baseBlueprint",
+    "catalogRefs",
+    "destination",
+    "exposureManifest",
+    "exposureManifestDigest",
+    "policyDecision",
+    "payloadDigest",
+    "payloadSizeBytes",
+    "toolRegistryRef"
+  ],
+  "title": "ModelerAgenticInvocation",
+  "type": "object"
+}

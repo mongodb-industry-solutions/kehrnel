@@ -1,17 +1,43 @@
 """Validator for strategy pack portability and completeness."""
 from __future__ import annotations
 
-import importlib.util
+import ast
 import json
+import os
+import re
+import sys
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Any
 
 import jsonschema
+from pydantic import ValidationError
+
+from kehrnel.contracts.manifest import StrategyManifest, StrategyManifestSource
+from kehrnel.contracts.package_digest import PackageLayoutError, validate_package_layout
+from kehrnel.contracts.schema_registry import PUBLISHED_SCHEMA_DIR
+
+
+@dataclass(frozen=True)
+class ValidationDiagnostic:
+    code: str
+    message: str
+    path: str = "/"
+    severity: str = "error"
+
+    def as_dict(self) -> Dict[str, str]:
+        return {
+            "code": self.code,
+            "message": self.message,
+            "path": self.path,
+            "severity": self.severity,
+        }
 
 
 class StrategyPackValidator:
     def __init__(self, manifest_data: Dict[str, Any], base_path: Path):
-        self.manifest = manifest_data or {}
+        self._manifest_is_object = isinstance(manifest_data, dict)
+        self.manifest = manifest_data if self._manifest_is_object else {}
         self.base_path = base_path
         self.domain = str(self.manifest.get("domain") or "").lower()
 
@@ -23,8 +49,17 @@ class StrategyPackValidator:
         return self.base_path
 
     def validate(self) -> List[str]:
+        try:
+            validate_package_layout(self.pack_root)
+        except PackageLayoutError as exc:
+            return [f"package layout invalid: {exc}"]
+        if not self._manifest_is_object:
+            return ["manifest.json must contain a JSON object"]
+
         errors: List[str] = []
         errors.extend(self._validate_required_fields())
+        errors.extend(self._validate_manifest_model())
+        errors.extend(self._validate_runtime_identity_fields())
         errors.extend(self._validate_ops())
         errors.extend(self._validate_defaults_and_schema())
         errors.extend(self._validate_entrypoint())
@@ -36,6 +71,91 @@ class StrategyPackValidator:
             if self.manifest.get("config_schema") and not (self.manifest.get("config_schema") or {}).get("properties"):
                 errors.append("EMPTY_SCHEMA_PROPERTIES")
         return errors
+
+    def validate_diagnostics(self) -> List[ValidationDiagnostic]:
+        """Return stable, machine-readable diagnostics without breaking v1 callers."""
+
+        return [self._to_diagnostic(message) for message in self.validate()]
+
+    @staticmethod
+    def _to_diagnostic(message: str) -> ValidationDiagnostic:
+        op_match = re.match(r"op\[(\d+)\](.*)", message)
+        if op_match:
+            index, remainder = op_match.groups()
+            leaf = "output_schema" if "output_schema" in remainder else "input_schema"
+            return ValidationDiagnostic(
+                code="OP_SCHEMA_INVALID",
+                message=message,
+                path=f"/ops/{index}/{leaf}",
+            )
+        spec_match = re.search(r"spec\.json validation error at '([^']+)'", message)
+        if spec_match:
+            return ValidationDiagnostic(
+                code="SPEC_SCHEMA_INVALID",
+                message=message,
+                path="/spec/" + spec_match.group(1),
+            )
+        manifest_match = re.match(r"manifest validation error at '([^']+)'", message)
+        if manifest_match:
+            return ValidationDiagnostic(
+                code="MANIFEST_SCHEMA_INVALID",
+                message=message,
+                path="/" + manifest_match.group(1),
+            )
+        missing_match = re.match(r"missing required field '([^']+)'", message)
+        if missing_match:
+            return ValidationDiagnostic(
+                code="MANIFEST_FIELD_REQUIRED",
+                message=message,
+                path="/" + missing_match.group(1),
+            )
+        if "entrypoint" in message:
+            return ValidationDiagnostic("ENTRYPOINT_INVALID", message, "/entrypoint")
+        if message == "manifest.json must contain a JSON object":
+            return ValidationDiagnostic("MANIFEST_SCHEMA_INVALID", message, "/")
+        if message.startswith("spec.json"):
+            return ValidationDiagnostic("SPEC_INVALID", message, "/spec")
+        if "DEFAULT" in message or "defaults.json" in message:
+            return ValidationDiagnostic("DEFAULTS_INVALID", message, "/default_config")
+        if "SCHEMA" in message or "schema.json" in message:
+            return ValidationDiagnostic("CONFIG_SCHEMA_INVALID", message, "/config_schema")
+        return ValidationDiagnostic("PACK_INVALID", message)
+
+    def _validate_manifest_model(self) -> List[str]:
+        contract = self.manifest.get("manifestContract")
+        if contract and contract != "strategy-manifest/v1":
+            return [f"unsupported manifestContract '{contract}'"]
+        try:
+            model = (
+                StrategyManifestSource
+                if contract == "strategy-manifest/v1"
+                else StrategyManifest
+            )
+            model.model_validate(self.manifest)
+        except ValidationError as exc:
+            errors: List[str] = []
+            for item in exc.errors(include_url=False):
+                path = "/".join(str(part) for part in item.get("loc") or ()) or "root"
+                errors.append(
+                    f"manifest validation error at '{path}': {item.get('msg', 'invalid value')}"
+                )
+            return errors
+        return []
+
+    def _validate_runtime_identity_fields(self) -> List[str]:
+        forbidden = {
+            "packageDigest",
+            "package_digest",
+            "contractDigest",
+            "contract_digest",
+            "pack_spec",
+        }
+        authored = sorted(forbidden.intersection(self.manifest))
+        if not authored:
+            return []
+        return [
+            "runtime-computed fields must not be authored: " + ", ".join(authored)
+        ]
 
     def _validate_required_fields(self) -> List[str]:
         errors: List[str] = []
@@ -83,9 +203,12 @@ class StrategyPackValidator:
                 errors.append("defaults.json missing and default_config empty")
         if defaults_path.exists():
             try:
-                json.loads(defaults_path.read_text(encoding="utf-8"))
+                defaults_data = json.loads(defaults_path.read_text(encoding="utf-8"))
             except Exception as exc:  # pragma: no cover - defensive
                 errors.append(f"defaults.json invalid JSON: {exc}")
+            else:
+                if not isinstance(defaults_data, dict):
+                    errors.append("defaults.json must contain a JSON object")
 
         schema_path = self.base_path / "schema.json"
         config_schema = self.manifest.get("config_schema")
@@ -109,27 +232,78 @@ class StrategyPackValidator:
         if not entrypoint:
             errors.append("entrypoint is required for strategy discovery")
             return errors
-        mod = entrypoint.split(":")[0]
-        try:
-            spec = importlib.util.find_spec(mod)
-            if spec is None:
-                errors.append(f"entrypoint module not found: {mod}")
-            else:
-                base = self.pack_root.resolve().as_posix()
-                if spec.origin:
-                    if not Path(spec.origin).resolve().as_posix().startswith(base):
-                        errors.append(f"entrypoint module outside strategy pack: {mod}")
-                elif spec.submodule_search_locations:
-                    # Namespace packages have origin=None; ensure *all* search locations are within the pack.
-                    for loc in spec.submodule_search_locations:
-                        if not Path(loc).resolve().as_posix().startswith(base):
-                            errors.append(f"entrypoint module outside strategy pack: {mod}")
-                            break
-                else:
-                    errors.append(f"entrypoint module location unknown: {mod}")
-        except Exception:
+        if not isinstance(entrypoint, str) or entrypoint.count(":") != 1:
+            errors.append("entrypoint must use the form 'module:attribute'")
+            return errors
+        mod, attribute = entrypoint.split(":", 1)
+        if not mod or not attribute:
+            errors.append("entrypoint must use the form 'module:attribute'")
+            return errors
+        source = self._find_module_source_without_import(mod)
+        if source is None:
             errors.append(f"entrypoint module not found: {mod}")
+            return errors
+        if not source.resolve().is_relative_to(self.pack_root.resolve()):
+            errors.append(f"entrypoint module outside strategy pack: {mod}")
+            return errors
+        try:
+            module_ast = ast.parse(source.read_text(encoding="utf-8"), filename=str(source))
+        except (OSError, SyntaxError, UnicodeError) as exc:
+            errors.append(f"entrypoint module is not valid Python: {mod}: {exc}")
+            return errors
+        if not self._module_declares_attribute(module_ast, attribute):
+            errors.append(f"entrypoint attribute not found: {mod}:{attribute}")
         return errors
+
+    @staticmethod
+    def _module_declares_attribute(module_ast: ast.Module, attribute: str) -> bool:
+        """Recognize statically declared or imported top-level attributes."""
+
+        for node in module_ast.body:
+            if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+                if node.name == attribute:
+                    return True
+            elif isinstance(node, (ast.Import, ast.ImportFrom)):
+                for alias in node.names:
+                    exposed = alias.asname or alias.name.split(".")[0]
+                    if exposed == attribute:
+                        return True
+            elif isinstance(node, ast.Assign):
+                if any(
+                    isinstance(target, ast.Name) and target.id == attribute
+                    for target in node.targets
+                ):
+                    return True
+            elif isinstance(node, ast.AnnAssign):
+                if isinstance(node.target, ast.Name) and node.target.id == attribute:
+                    return True
+        return False
+
+    @staticmethod
+    def _find_module_source_without_import(module: str) -> Path | None:
+        """Resolve a filesystem module using sys.path without importing parents.
+
+        ``importlib.util.find_spec('package.module')`` imports ``package`` and can
+        execute untrusted pack code during discovery. Strategy packs are
+        filesystem packages, so deterministic path lookup is sufficient here.
+        The first matching sys.path entry mirrors Python's shadowing behavior.
+        """
+
+        parts = module.split(".")
+        if not parts or any(not re.fullmatch(r"[A-Za-z_]\w*", part) for part in parts):
+            return None
+        relative = Path(*parts)
+        for raw_root in sys.path:
+            try:
+                search_root = Path(raw_root or os.getcwd())
+                module_path = search_root / relative
+                candidates = (module_path / "__init__.py", module_path.with_suffix(".py"))
+                for candidate in candidates:
+                    if candidate.is_file():
+                        return candidate
+            except OSError:
+                continue
+        return None
 
     def _validate_cross_domain_imports(self) -> List[str]:
         errors: List[str] = []
@@ -137,7 +311,11 @@ class StrategyPackValidator:
             return errors
         pattern = "kehrnel.engine.strategies."
         for path in self.pack_root.rglob("*.py"):
-            text = path.read_text(encoding="utf-8")
+            try:
+                text = path.read_text(encoding="utf-8")
+            except (OSError, UnicodeError) as exc:
+                errors.append(f"cannot inspect Python source {path}: {exc}")
+                continue
             start = 0
             while True:
                 idx = text.find(pattern, start)
@@ -167,7 +345,10 @@ class StrategyPackValidator:
             spec_path = spec_ref.get("path") or "spec.json"
         elif isinstance(spec_ref, str):
             spec_path = spec_ref
-        candidate = self.base_path / (spec_path or "spec.json")
+        candidate = (self.base_path / (spec_path or "spec.json")).resolve()
+        if not candidate.is_relative_to(self.pack_root.resolve()):
+            errors.append("spec.json path escapes the strategy pack")
+            return errors
         if not candidate.exists():
             errors.append("spec.json missing for pack_format strategy-pack/v1")
             return errors
@@ -176,19 +357,30 @@ class StrategyPackValidator:
         except Exception as exc:
             errors.append(f"spec.json invalid JSON: {exc}")
             return errors
-        # load metamodel schema (optional - don't fail if schema file doesn't exist)
-        schema_path = Path(__file__).resolve().parents[3] / "docs" / "strategy-pack-v1" / "spec.schema.json"
-        if schema_path.exists():
-            try:
-                schema_data = json.loads(schema_path.read_text(encoding="utf-8"))
-                jsonschema.Draft7Validator(schema_data).validate(spec_data)
-            except jsonschema.ValidationError as exc:
-                path_str = "/".join([str(x) for x in exc.absolute_path])
-                msg = f"spec.json validation error at '{path_str}': {exc.message}" if path_str else f"spec.json validation error: {exc.message}"
-                errors.append(msg)
+        schema_path = PUBLISHED_SCHEMA_DIR / "strategy-pack-spec.schema.json"
+        if not schema_path.exists():
+            errors.append("strategy-pack spec schema is unavailable")
+            return errors
+        try:
+            schema_data = json.loads(schema_path.read_text(encoding="utf-8"))
+            validator = jsonschema.Draft202012Validator(schema_data)
+            validation_errors = sorted(
+                validator.iter_errors(spec_data),
+                key=lambda item: (-len(item.absolute_path), list(item.absolute_path)),
+            )
+            if validation_errors:
+                exc = validation_errors[0]
+                path_str = "/".join(str(item) for item in exc.absolute_path)
+                message = (
+                    f"spec.json validation error at '{path_str}': {exc.message}"
+                    if path_str
+                    else f"spec.json validation error: {exc.message}"
+                )
+                errors.append(message)
                 return errors
-            except Exception:
-                pass  # Schema loading failed, skip validation
+        except Exception as exc:
+            errors.append(f"strategy-pack spec schema invalid: {exc}")
+            return errors
         # Note: bundle file references in spec.json are informational only;
         # missing bundle files don't block strategy loading
         return errors

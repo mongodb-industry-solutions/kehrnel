@@ -22,7 +22,19 @@ def test_missing_domain_returns_400(client):
 
 
 def test_missing_activation_for_domain(client):
-    # no activation for fhir in envX
+    # A sole activation for another domain must not be used as a fallback.
+    activated = client.post(
+        "/v1/environments/envX/activate",
+        json={
+            "strategy_id": "openehr.rps_dual",
+            "version": "0.2.0",
+            "config": {"database": "env_x_openehr"},
+            "bindings": {},
+            "allow_plaintext_bindings": True,
+            "domain": "openEHR",
+        },
+    )
+    assert activated.status_code == 200
     res = client.post(
         "/v1/environments/envX/compile_query",
         json={"domain": "fhir", "query": {"scope": "patient", "predicates": [], "select": []}},

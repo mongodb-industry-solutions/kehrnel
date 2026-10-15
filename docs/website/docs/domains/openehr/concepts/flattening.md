@@ -30,5 +30,4 @@ Flattening (more generally, canonical-to-operational transformation) converts ri
 - [Composition Flattening Pipeline](/docs/domains/openehr/composition-flattening) - stage-by-stage implementation
 - [openEHR RPS Dual CLI Workflows](/docs/strategies/openehr/rps-dual/cli-workflows)
 - [openEHR RPS Dual Data Model](/docs/strategies/openehr/rps-dual/data-model)
-- [Ingest and Transformation](/docs/architecture/transformation-pipeline) - cross-domain ingest model
-
+- [Ingest and Transformation](/docs/domains/openehr/composition-flattening) - cross-domain ingest model

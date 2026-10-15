@@ -51,8 +51,8 @@ Each environment has at most one activation per domain, and domains are activate
 
 ## Execution Paths
 
-- [Query and Execution](/docs/architecture/query-engine) - how a query reaches a domain compiler and runs on MongoDB
-- [Ingest and Transformation](/docs/architecture/transformation-pipeline) - the shared ingest, transform, ops and synthetic-job model
+- [Query and Execution](/docs/domains/openehr/aql-query-engine) - how a query reaches a domain compiler and runs on MongoDB
+- [Ingest and Transformation](/docs/domains/openehr/composition-flattening) - the shared ingest, transform, ops and synthetic-job model
 
 ## Related
 
@@ -60,4 +60,3 @@ Each environment has at most one activation per domain, and domains are activate
 - [Domains](/docs/domains/)
 - [Strategies Overview](/docs/strategies/overview)
 - [Vision & Roadmap](/docs/vision/roadmap)
-

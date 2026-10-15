@@ -1,0 +1,178 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:implementation-package-rollback-receipt",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "contract": {
+      "const": "implementation-package-rollback-receipt/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "deploymentRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "deploymentScope": {
+      "const": "tenant_environment_release",
+      "title": "Deploymentscope",
+      "type": "string"
+    },
+    "environmentId": {
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$",
+      "title": "Environmentid",
+      "type": "string"
+    },
+    "evidencePersistence": {
+      "const": "durable",
+      "default": "durable",
+      "title": "Evidencepersistence",
+      "type": "string"
+    },
+    "executedByRef": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Executedbyref",
+      "type": "string"
+    },
+    "nextRequiredAction": {
+      "enum": [
+        "monitor_restored_release",
+        "review_new_release_candidate"
+      ],
+      "title": "Nextrequiredaction",
+      "type": "string"
+    },
+    "operationState": {
+      "const": "succeeded",
+      "title": "Operationstate",
+      "type": "string"
+    },
+    "packageRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "reason": {
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Reason",
+      "type": "string"
+    },
+    "recordedEffect": {
+      "const": "active_release_binding_reverted",
+      "title": "Recordedeffect",
+      "type": "string"
+    },
+    "restoredDeploymentRef": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "restoredPackageRef": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "rollbackDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Rollbackdigest",
+      "type": "string"
+    },
+    "rollbackId": {
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Rollbackid",
+      "type": "string"
+    },
+    "rollbackOwnerRef": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Rollbackownerref",
+      "type": "string"
+    },
+    "rollbackRequestId": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Rollbackrequestid",
+      "type": "string"
+    },
+    "trafficManagement": {
+      "const": "external",
+      "title": "Trafficmanagement",
+      "type": "string"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "rollbackId",
+    "rollbackRequestId",
+    "environmentId",
+    "deploymentRef",
+    "packageRef",
+    "executedByRef",
+    "rollbackOwnerRef",
+    "reason",
+    "operationState",
+    "deploymentScope",
+    "recordedEffect",
+    "trafficManagement",
+    "nextRequiredAction",
+    "rollbackDigest"
+  ],
+  "title": "ImplementationPackageRollbackReceipt",
+  "type": "object"
+}

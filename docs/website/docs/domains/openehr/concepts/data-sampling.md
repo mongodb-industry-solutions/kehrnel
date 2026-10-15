@@ -40,5 +40,4 @@ For each template, the strategy runs `$match` (template id plus `source_filter`)
 ## Related
 
 - [openEHR RPS Dual CLI Workflows](/docs/strategies/openehr/rps-dual/cli-workflows)
-- [Ingest and Transformation](/docs/architecture/transformation-pipeline#synthetic-generation) - synthetic jobs across domains
-
+- [Ingest and Transformation](/docs/domains/openehr/composition-flattening) - synthetic jobs across domains

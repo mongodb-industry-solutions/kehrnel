@@ -247,7 +247,8 @@ async def test_execute_fhir_query_runs_server_resolved_code_filter(monkeypatch):
     result = await fhir_query.execute_fhir_query(_ctx(), plan)
 
     assert result.engine_used == "fhir_mql"
-    assert result.rows == [matching]
+    assert result.rows == [{key: value for key, value in matching.items() if key != "_search"}]
+    assert "_search" not in result.rows[0]
     assert result.explain["total"] == 1
     assert result.explain["returned"] == 1
     assert result.explain["data_target_digest"] == resolved_data_target_digest(

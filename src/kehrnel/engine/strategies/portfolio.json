@@ -1,0 +1,129 @@
+{
+  "contract": "strategy-portfolio/v1",
+  "entries": [
+    {
+      "strategyId": "openehr.rps_dual",
+      "track": "primary",
+      "priority": 10,
+      "releaseBlocking": true,
+      "statement": "Primary openEHR operational and AQL strategy. Its contract and regression suites block release.",
+      "catalog": {
+        "role": "target_strategy",
+        "provenance": "mongodb_curated",
+        "paths": [
+          {"industry": "healthcare", "segments": ["data-standards", "openehr", "operational-strategies"]}
+        ],
+        "tags": ["canonical-query", "aql", "operational-data"]
+      }
+    },
+    {
+      "strategyId": "openehr.rps_dual_ibm",
+      "track": "primary",
+      "priority": 20,
+      "releaseBlocking": true,
+      "statement": "IBM exact-model compatibility profile. It must preserve RPS Dual behavior with its own storage-field contract.",
+      "catalog": {
+        "role": "target_strategy",
+        "provenance": "mongodb_curated",
+        "paths": [
+          {"industry": "healthcare", "segments": ["data-standards", "openehr", "operational-strategies"]}
+        ],
+        "tags": ["canonical-query", "aql", "ibm-compatibility"]
+      }
+    },
+    {
+      "strategyId": "fhir.resource_store",
+      "track": "supported",
+      "priority": 30,
+      "releaseBlocking": true,
+      "statement": "Supported FHIR resource-store strategy and secondary healthcare interoperability path.",
+      "catalog": {
+        "role": "target_strategy",
+        "provenance": "mongodb_curated",
+        "paths": [
+          {"industry": "healthcare", "segments": ["data-standards", "fhir", "operational-strategies"]},
+          {"industry": "pharmaceutical", "segments": ["data-standards", "fhir", "operational-strategies"]}
+        ],
+        "tags": ["interoperability", "fhir-r4", "operational-data"]
+      }
+    },
+    {
+      "strategyId": "cdisc.sdr",
+      "track": "supported",
+      "priority": 40,
+      "releaseBlocking": true,
+      "statement": "Supported CDISC study-data strategy for pharmaceutical and life-sciences workflows.",
+      "catalog": {
+        "role": "target_strategy",
+        "provenance": "mongodb_curated",
+        "paths": [
+          {"industry": "pharmaceutical", "segments": ["data-standards", "cdisc", "study-data"]}
+        ],
+        "tags": ["clinical-trials", "sdr", "study-data"]
+      }
+    },
+    {
+      "strategyId": "contextobjects.rps",
+      "track": "preview",
+      "priority": 100,
+      "releaseBlocking": false,
+      "statement": "Discovery preview; useful concepts may graduate through the normal evidence and support process.",
+      "catalog": {
+        "role": "semantic_asset",
+        "provenance": "mongodb_curated",
+        "paths": [
+          {"industry": "healthcare", "segments": ["semantic-models", "context-objects"]},
+          {"industry": "pharmaceutical", "segments": ["semantic-models", "context-objects"]}
+        ],
+        "tags": ["semantics", "polymorphism", "preview"]
+      }
+    },
+    {
+      "strategyId": "genomics.variant_first",
+      "track": "preview",
+      "priority": 110,
+      "releaseBlocking": false,
+      "statement": "Discovery preview; not part of the supported runtime release gate.",
+      "catalog": {
+        "role": "target_strategy",
+        "provenance": "mongodb_curated",
+        "paths": [
+          {"industry": "healthcare", "segments": ["data-domains", "genomics"]},
+          {"industry": "pharmaceutical", "segments": ["data-domains", "genomics"]}
+        ],
+        "tags": ["variants", "precision-medicine", "preview"]
+      }
+    },
+    {
+      "strategyId": "snomedct.mongodb",
+      "track": "preview",
+      "priority": 120,
+      "releaseBlocking": false,
+      "statement": "Standalone pack preview. Supported strategies may still consume terminology through the provider-neutral terminology gateway.",
+      "catalog": {
+        "role": "semantic_asset",
+        "provenance": "mongodb_curated",
+        "paths": [
+          {"industry": "healthcare", "segments": ["terminology", "snomed-ct"]},
+          {"industry": "pharmaceutical", "segments": ["terminology", "snomed-ct"]}
+        ],
+        "tags": ["terminology", "snomed-ct", "preview"]
+      }
+    },
+    {
+      "strategyId": "x12.co_single",
+      "track": "preview",
+      "priority": 130,
+      "releaseBlocking": false,
+      "statement": "Discovery preview; not part of the supported runtime release gate.",
+      "catalog": {
+        "role": "target_strategy",
+        "provenance": "mongodb_curated",
+        "paths": [
+          {"industry": "healthcare", "segments": ["data-standards", "x12", "claims"]}
+        ],
+        "tags": ["claims", "edi", "preview"]
+      }
+    }
+  ]
+}

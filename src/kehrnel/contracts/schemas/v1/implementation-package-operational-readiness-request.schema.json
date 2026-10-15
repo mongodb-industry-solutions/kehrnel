@@ -1,0 +1,128 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:implementation-package-operational-readiness-request",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "contract": {
+      "const": "implementation-package-operational-readiness-request/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "expectedPackageRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "monitoringOwnerRef": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Monitoringownerref"
+    },
+    "operationalOwnerRef": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Operationalownerref"
+    },
+    "promotionRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "reviewDecision": {
+      "enum": [
+        "approved",
+        "needs_changes"
+      ],
+      "title": "Reviewdecision",
+      "type": "string"
+    },
+    "reviewNotes": {
+      "anyOf": [
+        {
+          "maxLength": 2000,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reviewnotes"
+    },
+    "rollbackOwnerRef": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Rollbackownerref"
+    }
+  },
+  "required": [
+    "contract",
+    "promotionRef",
+    "expectedPackageRef",
+    "reviewDecision"
+  ],
+  "title": "ImplementationPackageOperationalReadinessRequest",
+  "type": "object"
+}

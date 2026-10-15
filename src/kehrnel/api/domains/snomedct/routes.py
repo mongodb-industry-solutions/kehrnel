@@ -17,20 +17,28 @@ from kehrnel.api.core.admin.routes import _error_response, _json_safe, _require_
 from kehrnel.api.domains.snomedct.models import (
     SnomedConceptExpansionRequest,
     SnomedEclRequest,
+    SnomedGoldNoteRequest,
     SnomedGroundRequest,
     SnomedGroundedCorpusRequest,
     SnomedGroundingReviewRequest,
     SnomedHybridSearchRequest,
     SnomedEnsureIndexesRequest,
+    SnomedLlmGroundRequest,
+    SnomedNlpMapRequest,
     SnomedReleaseDiffRequest,
     SnomedReleaseIngestRequest,
     SnomedReleaseSourceRequest,
+    SnomedReleaseUploadFinalizeRequest,
+    SnomedReleaseUploadInitiateRequest,
+    SnomedReleaseUploadRequest,
     SnomedRelationshipSearchRequest,
     SnomedRetrievalBenchmarkRequest,
+    SnomedScopeRequest,
     SnomedSearchRequest,
     SnomedSemanticFacetsRequest,
     SnomedSidecarRebuildRequest,
     SnomedSubsumesRequest,
+    SnomedUsageEventRequest,
     SnomedValidateCodeRequest,
     SnomedValueSetExpandRequest,
     SnomedValueSetRegistrationRequest,
@@ -150,6 +158,60 @@ async def ingest_snomed_release(request: Request, payload: SnomedReleaseIngestRe
         _require_admin_access(request)
         return _json_safe(
             await _dispatch_snomed_op(request, "snomed_ingest_release", _model_payload(payload))
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/releases/upload")
+async def upload_snomed_release(request: Request, payload: SnomedReleaseUploadRequest = Body(...)):
+    """Stage a licensed release JSON from the browser (inline, up to 5 MB)."""
+    try:
+        _require_admin_access(request)
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_upload_release", _model_payload(payload))
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/releases/upload/initiate")
+async def initiate_snomed_release_upload(
+    request: Request,
+    payload: SnomedReleaseUploadInitiateRequest = Body(...),
+):
+    """Create a signed upload target for a licensed release larger than 5 MB."""
+    try:
+        _require_admin_access(request)
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_initiate_release_upload", _model_payload(payload))
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/releases/upload/finalize")
+async def finalize_snomed_release_upload(
+    request: Request,
+    payload: SnomedReleaseUploadFinalizeRequest = Body(...),
+):
+    """Fetch a completed signed upload and stage it as a local release file."""
+    try:
+        _require_admin_access(request)
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_finalize_release_upload", _model_payload(payload))
         )
     except HTTPException:
         raise
@@ -283,12 +345,17 @@ async def validate_snomed_value_set_code(
 
 @router.post("/search")
 async def search_snomed(request: Request, payload: SnomedSearchRequest = Body(...)):
+    """Search the term sidecar with tiered ranking and an optional semantic scope.
+
+    This dispatches to the ``snomed_search`` operation rather than the bare
+    ``search`` query mode, so the HTTP surface and the op surface return the same
+    tiered ordering. The unscoped query mode remains reachable through the
+    universal runtime.
+    """
     try:
-        env_id = resolve_active_env_id(request)
-        runtime, _ = _require_snomed_activation(request, env_id)
-        result = await runtime.dispatch(env_id, "query", _query_payload("search", payload.model_dump(exclude_none=True)))
-        explain = result.get("explain") or {}
-        return _json_safe({"ok": True, "matches": result.get("rows", []), "page": explain.get("page"), "explain": explain})
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_search", payload.model_dump(exclude_none=True))
+        )
     except HTTPException:
         raise
     except KehrnelError as exc:
@@ -584,6 +651,108 @@ async def benchmark_snomed_retrieval(
                 "snomed_benchmark_retrieval",
                 payload.model_dump(exclude_none=True),
             )
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/scope")
+async def resolve_snomed_scope(request: Request, payload: SnomedScopeRequest = Body(...)):
+    """Resolve an ECL expression and/or area concept into a cached concept-id scope."""
+    try:
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_resolve_scope", payload.model_dump(exclude_none=True))
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/nlp-map")
+async def map_snomed_clinical_note(request: Request, payload: SnomedNlpMapRequest = Body(...)):
+    """Map a clinical note to SNOMED CT candidates with an evidence graph."""
+    try:
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_nlp_map", payload.model_dump(exclude_none=True))
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/llm-ground")
+async def llm_ground_snomed_mentions(request: Request, payload: SnomedLlmGroundRequest = Body(...)):
+    """Let the configured LLM choose among already-retrieved candidates."""
+    try:
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_llm_ground", payload.model_dump(exclude_none=True))
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.get("/gold-notes")
+async def list_snomed_gold_notes(request: Request, limit: int = 100):
+    try:
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_list_gold_notes", {"limit": max(1, min(limit, 500))})
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/gold-notes")
+async def put_snomed_gold_note(request: Request, payload: SnomedGoldNoteRequest = Body(...)):
+    try:
+        _require_admin_access(request)
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_put_gold_note", payload.model_dump(exclude_none=True))
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.delete("/gold-notes/{note_id}")
+async def delete_snomed_gold_note(request: Request, note_id: str):
+    try:
+        _require_admin_access(request)
+        return _json_safe(await _dispatch_snomed_op(request, "snomed_delete_gold_note", {"id": note_id}))
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/usage-events")
+async def record_snomed_usage_event(request: Request, payload: SnomedUsageEventRequest = Body(...)):
+    """Record a product/usage event (search executed, result selected, feedback)."""
+    try:
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_record_usage_event", payload.model_dump(exclude_none=True))
         )
     except HTTPException:
         raise

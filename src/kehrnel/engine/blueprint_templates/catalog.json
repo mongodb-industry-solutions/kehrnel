@@ -1,0 +1,472 @@
+{
+  "contract": "solution-blueprint-template-catalog/v1",
+  "templates": [
+    {
+      "contract": "solution-blueprint-template/v1",
+      "artifactRef": {
+        "kind": "solution-blueprint-template",
+        "id": "template.healthcare.openehr-cdr-starter",
+        "version": "1.0.0",
+        "digest": "sha256:b727788e004c77f20cbdaaf664bf26c37edb2b52e0d21791ce48088edc651e4e"
+      },
+      "catalog": {
+        "role": "solution_blueprint_template",
+        "provenance": "mongodb_curated",
+        "paths": [
+          {
+            "industry": "healthcare",
+            "segments": [
+              "blueprint-templates",
+              "canonical-repositories",
+              "openehr-cdr"
+            ]
+          }
+        ],
+        "tags": [
+          "openehr",
+          "canonical-repository",
+          "aql",
+          "cohort"
+        ]
+      },
+      "industry": "healthcare",
+      "sources": [
+        {
+          "instanceId": "clinical-record",
+          "profileRef": {
+            "kind": "source-profile",
+            "id": "exchange.openehr-json",
+            "version": "1.0.0",
+            "digest": "sha256:25879a28eaac9ebccf2935d51c39839405eeb1ad4bbe8a5a4763af2039e95186"
+          },
+          "ingestionMode": "api",
+          "integrationPosture": "selective_materialization",
+          "interactionIds": [
+            "composition-commit"
+          ]
+        }
+      ],
+      "context": [],
+      "consumptions": [
+        {
+          "consumptionId": "canonical-aql",
+          "kind": "openehr",
+          "protocol": "openEHR REST + AQL",
+          "operations": [
+            "commit-composition",
+            "retrieve-composition",
+            "execute-aql"
+          ],
+          "latencyTargetMs": 500,
+          "workload": {
+            "scope": "subject",
+            "queryFeatures": [
+              "point_lookup",
+              "filter"
+            ],
+            "consistency": "strong"
+          }
+        },
+        {
+          "consumptionId": "population-cohort",
+          "kind": "cohort",
+          "operations": [
+            "execute-multi-patient-aql"
+          ],
+          "latencyTargetMs": 500,
+          "freshnessTargetSeconds": 60,
+          "workload": {
+            "scope": "population",
+            "queryFeatures": [
+              "filter",
+              "aggregation"
+            ],
+            "consistency": "bounded_staleness",
+            "expectedResultDocuments": 1000
+          }
+        }
+      ],
+      "constraints": {
+        "tenancyMode": "single_tenant",
+        "regions": []
+      },
+      "preferredStrategyIds": [
+        "openehr.rps_dual"
+      ],
+      "assumptions": [
+        {
+          "assumptionId": "source.api-ingestion",
+          "statement": "Canonical openEHR compositions and OPTs enter through a controlled API integration and MongoDB holds a selective operational materialization.",
+          "appliesToPaths": [
+            "/sources/0/ingestionMode",
+            "/sources/0/integrationPosture"
+          ],
+          "evidenceRefs": [
+            {
+              "kind": "source-profile",
+              "id": "exchange.openehr-json",
+              "version": "1.0.0",
+              "digest": "sha256:25879a28eaac9ebccf2935d51c39839405eeb1ad4bbe8a5a4763af2039e95186"
+            }
+          ]
+        },
+        {
+          "assumptionId": "deployment.single-tenant",
+          "statement": "The starter deployment uses one tenant and does not preselect a region.",
+          "appliesToPaths": [
+            "/constraints/tenancyMode",
+            "/constraints/regions"
+          ],
+          "evidenceRefs": []
+        },
+        {
+          "assumptionId": "workload.interactive-aql",
+          "statement": "Subject-level canonical AQL access targets 500 ms and strong consistency for this starter proposal.",
+          "appliesToPaths": [
+            "/consumptions/0/latencyTargetMs",
+            "/consumptions/0/workload"
+          ],
+          "evidenceRefs": [
+            {
+              "kind": "strategy",
+              "id": "openehr.rps_dual",
+              "version": "0.2.0",
+              "digest": "sha256:d242b0cfa4ac09a7444f2954f6146251a962505378b64de9e85255e0b0f43713"
+            }
+          ]
+        },
+        {
+          "assumptionId": "workload.population-cohort",
+          "statement": "Population access targets 500 ms with 60-second bounded staleness and an illustrative 1,000-document result envelope.",
+          "appliesToPaths": [
+            "/consumptions/1/latencyTargetMs",
+            "/consumptions/1/freshnessTargetSeconds",
+            "/consumptions/1/workload"
+          ],
+          "evidenceRefs": [
+            {
+              "kind": "strategy",
+              "id": "openehr.rps_dual",
+              "version": "0.2.0",
+              "digest": "sha256:d242b0cfa4ac09a7444f2954f6146251a962505378b64de9e85255e0b0f43713"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "contract": "solution-blueprint-template/v1",
+      "artifactRef": {
+        "kind": "solution-blueprint-template",
+        "id": "template.healthcare.fhir-repository-starter",
+        "version": "1.0.0",
+        "digest": "sha256:ec1088f39bfd6320f3800c058772c2875aaa2bc177db0b84659d5c897d7690fd"
+      },
+      "catalog": {
+        "role": "solution_blueprint_template",
+        "provenance": "mongodb_curated",
+        "paths": [
+          {
+            "industry": "healthcare",
+            "segments": [
+              "blueprint-templates",
+              "canonical-repositories",
+              "fhir-resource-store"
+            ]
+          }
+        ],
+        "tags": [
+          "fhir",
+          "canonical-repository",
+          "fhir-search",
+          "cohort"
+        ]
+      },
+      "industry": "healthcare",
+      "sources": [
+        {
+          "instanceId": "fhir-resources",
+          "profileRef": {
+            "kind": "source-profile",
+            "id": "exchange.fhir-r4-json",
+            "version": "1.0.0",
+            "digest": "sha256:ab1b61787c648554ea050d8be72da2bfced0a10fea94942dd440b2ae060f25e6"
+          },
+          "ingestionMode": "api",
+          "integrationPosture": "selective_materialization",
+          "interactionIds": [
+            "resource-change"
+          ]
+        }
+      ],
+      "context": [],
+      "consumptions": [
+        {
+          "consumptionId": "canonical-fhir",
+          "kind": "fhir",
+          "protocol": "FHIR R4 REST + Search",
+          "operations": [
+            "create-resource",
+            "update-resource",
+            "read-resource",
+            "search-resources"
+          ],
+          "workload": {
+            "scope": "subject",
+            "queryFeatures": [
+              "point_lookup",
+              "filter"
+            ],
+            "consistency": "strong"
+          }
+        },
+        {
+          "consumptionId": "population-search",
+          "kind": "cohort",
+          "protocol": "FHIR Search",
+          "operations": [
+            "search-population"
+          ],
+          "workload": {
+            "scope": "population",
+            "queryFeatures": [
+              "filter"
+            ],
+            "consistency": "strong"
+          }
+        }
+      ],
+      "constraints": {
+        "tenancyMode": "single_tenant",
+        "regions": []
+      },
+      "preferredStrategyIds": [
+        "fhir.resource_store"
+      ],
+      "assumptions": [
+        {
+          "assumptionId": "source.api-ingestion",
+          "statement": "Canonical FHIR R4 resources enter through a controlled API; connector, history, subscription, authorization, and profile-conformance requirements remain deployment responsibilities.",
+          "appliesToPaths": [
+            "/sources/0/profileRef",
+            "/sources/0/ingestionMode",
+            "/sources/0/integrationPosture"
+          ],
+          "evidenceRefs": [
+            {
+              "kind": "source-profile",
+              "id": "exchange.fhir-r4-json",
+              "version": "1.0.0",
+              "digest": "sha256:ab1b61787c648554ea050d8be72da2bfced0a10fea94942dd440b2ae060f25e6"
+            },
+            {
+              "kind": "strategy",
+              "id": "fhir.resource_store",
+              "version": "0.13.1",
+              "digest": "sha256:f5310c3bd7583876bef57436a2b83cdb2735128bb4a75120bee33dc43b9cb69a"
+            }
+          ]
+        },
+        {
+          "assumptionId": "deployment.single-tenant",
+          "statement": "The starter deployment uses one tenant and does not preselect a region.",
+          "appliesToPaths": [
+            "/constraints/tenancyMode",
+            "/constraints/regions"
+          ],
+          "evidenceRefs": []
+        },
+        {
+          "assumptionId": "workload.fhir-search",
+          "statement": "The starter requires only FHIR R4 create, update, read, and search behavior exposed by the active CapabilityStatement; it makes no broader FHIR conformance or latency claim.",
+          "appliesToPaths": [
+            "/consumptions/0/protocol",
+            "/consumptions/0/operations",
+            "/consumptions/0/workload"
+          ],
+          "evidenceRefs": [
+            {
+              "kind": "strategy",
+              "id": "fhir.resource_store",
+              "version": "0.13.1",
+              "digest": "sha256:f5310c3bd7583876bef57436a2b83cdb2735128bb4a75120bee33dc43b9cb69a"
+            }
+          ]
+        },
+        {
+          "assumptionId": "workload.population-search",
+          "statement": "The population starter is bounded FHIR filtering over supported search parameters; it does not assume unrestricted analytics or a precomputed cohort projection.",
+          "appliesToPaths": [
+            "/consumptions/1/protocol",
+            "/consumptions/1/operations",
+            "/consumptions/1/workload"
+          ],
+          "evidenceRefs": [
+            {
+              "kind": "strategy",
+              "id": "fhir.resource_store",
+              "version": "0.13.1",
+              "digest": "sha256:f5310c3bd7583876bef57436a2b83cdb2735128bb4a75120bee33dc43b9cb69a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "contract": "solution-blueprint-template/v1",
+      "artifactRef": {
+        "kind": "solution-blueprint-template",
+        "id": "template.pharmaceutical.cdisc-sdr-starter",
+        "version": "1.0.0",
+        "digest": "sha256:13e72c6562e04697db6a3634ad0118cd08c09bf4d37923662ae3f71ba4a73ed7"
+      },
+      "catalog": {
+        "role": "solution_blueprint_template",
+        "provenance": "mongodb_curated",
+        "paths": [
+          {
+            "industry": "pharmaceutical",
+            "segments": [
+              "blueprint-templates",
+              "canonical-repositories",
+              "cdisc-sdr"
+            ]
+          }
+        ],
+        "tags": [
+          "cdisc",
+          "dataset-json",
+          "canonical-repository",
+          "study-data"
+        ]
+      },
+      "industry": "pharmaceutical",
+      "sources": [
+        {
+          "instanceId": "study-datasets",
+          "profileRef": {
+            "kind": "source-profile",
+            "id": "exchange.cdisc-dataset-json",
+            "version": "1.0.0",
+            "digest": "sha256:d383ab0994e63f6713dd8a43117a69e82a41059a0c17b1d9b1da933efc77e877"
+          },
+          "ingestionMode": "api",
+          "integrationPosture": "selective_materialization",
+          "interactionIds": [
+            "dataset-snapshot-intake"
+          ]
+        }
+      ],
+      "context": [],
+      "consumptions": [
+        {
+          "consumptionId": "governed-study-query",
+          "kind": "cdisc",
+          "protocol": "Kehrnel cdisc-query/v1",
+          "operations": [
+            "query-published-study",
+            "inspect-lineage"
+          ],
+          "workload": {
+            "scope": "population",
+            "queryFeatures": [
+              "point_lookup",
+              "filter"
+            ],
+            "consistency": "snapshot"
+          }
+        },
+        {
+          "consumptionId": "governed-study-export",
+          "kind": "analytics_export",
+          "protocol": "Dataset-JSON 1.1 or SAS XPORT export",
+          "operations": [
+            "export-reviewed-snapshot"
+          ],
+          "workload": {
+            "scope": "population",
+            "queryFeatures": [
+              "export"
+            ],
+            "consistency": "snapshot"
+          }
+        }
+      ],
+      "constraints": {
+        "tenancyMode": "single_tenant",
+        "regions": []
+      },
+      "preferredStrategyIds": [
+        "cdisc.sdr"
+      ],
+      "assumptions": [
+        {
+          "assumptionId": "source.dataset-json-intake",
+          "statement": "The starter accepts CDISC Dataset-JSON 1.1 through a controlled intake. It does not imply an EDC or LIMS connector, submission authoring, or support for every exchange format.",
+          "appliesToPaths": [
+            "/sources/0/profileRef",
+            "/sources/0/ingestionMode",
+            "/sources/0/integrationPosture"
+          ],
+          "evidenceRefs": [
+            {
+              "kind": "source-profile",
+              "id": "exchange.cdisc-dataset-json",
+              "version": "1.0.0",
+              "digest": "sha256:d383ab0994e63f6713dd8a43117a69e82a41059a0c17b1d9b1da933efc77e877"
+            },
+            {
+              "kind": "strategy",
+              "id": "cdisc.sdr",
+              "version": "0.2.0",
+              "digest": "sha256:ec01dae95779457532f030fc189ad44a021c8ca3d9272f193436734ed9a001c3"
+            }
+          ]
+        },
+        {
+          "assumptionId": "deployment.single-tenant",
+          "statement": "The starter deployment uses one tenant and does not preselect a region.",
+          "appliesToPaths": [
+            "/constraints/tenancyMode",
+            "/constraints/regions"
+          ],
+          "evidenceRefs": []
+        },
+        {
+          "assumptionId": "workload.governed-study-query",
+          "statement": "Study queries are bounded by cdisc-query/v1 and published snapshot scope; no unrestricted MongoDB, statistical-computing, or latency claim is made.",
+          "appliesToPaths": [
+            "/consumptions/0/protocol",
+            "/consumptions/0/operations",
+            "/consumptions/0/workload"
+          ],
+          "evidenceRefs": [
+            {
+              "kind": "strategy",
+              "id": "cdisc.sdr",
+              "version": "0.2.0",
+              "digest": "sha256:ec01dae95779457532f030fc189ad44a021c8ca3d9272f193436734ed9a001c3"
+            }
+          ]
+        },
+        {
+          "assumptionId": "workload.reviewed-export",
+          "statement": "Exports are explicit reviewed snapshots; ingestion alone does not establish regulatory conformance.",
+          "appliesToPaths": [
+            "/consumptions/1/protocol",
+            "/consumptions/1/operations",
+            "/consumptions/1/workload"
+          ],
+          "evidenceRefs": [
+            {
+              "kind": "strategy",
+              "id": "cdisc.sdr",
+              "version": "0.2.0",
+              "digest": "sha256:ec01dae95779457532f030fc189ad44a021c8ca3d9272f193436734ed9a001c3"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

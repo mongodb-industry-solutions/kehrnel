@@ -17,6 +17,20 @@ class StorageAdapter(Protocol):
         doc: Dict[str, Any],
         upsert: bool = False,
     ) -> Any: ...
+    async def update_one(
+        self,
+        collection: str,
+        flt: Dict[str, Any],
+        update: Dict[str, Any],
+        upsert: bool = False,
+    ) -> Any: ...
+    async def update_many(
+        self,
+        collection: str,
+        flt: Dict[str, Any],
+        update: Dict[str, Any],
+        upsert: bool = False,
+    ) -> Any: ...
     async def replace_many(
         self, collection: str, docs: Iterable[Dict[str, Any]]
     ) -> Any: ...
@@ -32,6 +46,7 @@ class StorageAdapter(Protocol):
         collection: str,
         pipeline: List[Dict[str, Any]],
         allow_disk_use: bool = True,
+        hint: str | None = None,
     ) -> List[Dict[str, Any]]: ...
 
 

@@ -20,10 +20,24 @@ from rich.json import JSON as RichJSON
 from rich.panel import Panel
 from rich.table import Table
 
-# Load .env.local (then .env as fallback) so env vars like MONGODB_URI are
-# available to CLI commands without requiring `source .env.local` in the shell.
-load_dotenv(find_dotenv(".env.local", usecwd=True), override=False)
-load_dotenv(find_dotenv(".env", usecwd=True), override=False)
+def _load_local_environment() -> None:
+    """Load developer dotenv files unless the process requests isolation."""
+
+    if os.getenv("KEHRNEL_SKIP_DOTENV", "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }:
+        return
+    for filename in (".env.local", ".env"):
+        dotenv_path = find_dotenv(filename, usecwd=True)
+        if dotenv_path:
+            load_dotenv(dotenv_path, override=False)
+
+
+# Preserve local CLI convenience while allowing tests and CI to be hermetic.
+_load_local_environment()
 
 from kehrnel.cli.state import load_cli_state, save_cli_state, mask_api_key
 

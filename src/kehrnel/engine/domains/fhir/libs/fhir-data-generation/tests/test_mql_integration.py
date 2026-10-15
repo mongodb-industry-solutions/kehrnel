@@ -25,8 +25,9 @@ def gen() -> ResourceGenerator:
 
 class TestMqlBatchGeneration:
     def test_generate_many_all_mql_resources(self, gen: ResourceGenerator) -> None:
-        results = gen.generate_many(list(MQL_SHIPPED_RESOURCES), counts={r: 1 for r in MQL_SHIPPED_RESOURCES})
-        assert set(results.keys()) == set(MQL_SHIPPED_RESOURCES)
+        resources = set(MQL_SHIPPED_RESOURCES) & set(gen.schema_registry.all_resources())
+        results = gen.generate_many(sorted(resources), counts={r: 1 for r in resources})
+        assert set(results.keys()) == resources
         for rtype, docs in results.items():
             assert len(docs) == 1, rtype
             assert docs[0]["resourceType"] == rtype
@@ -110,8 +111,9 @@ class TestMqlDependencyChains:
 
 class TestMqlStoreIntegrity:
     def test_store_counts_after_full_mql_batch(self, gen: ResourceGenerator) -> None:
-        gen.generate_many(list(MQL_SHIPPED_RESOURCES), counts={r: 1 for r in MQL_SHIPPED_RESOURCES})
-        for rtype in MQL_SHIPPED_RESOURCES:
+        resources = set(MQL_SHIPPED_RESOURCES) & set(gen.schema_registry.all_resources())
+        gen.generate_many(sorted(resources), counts={r: 1 for r in resources})
+        for rtype in resources:
             assert gen.store.count(rtype) >= 1, f"store missing {rtype}"
 
     def test_find_by_reference_roundtrip(self, gen: ResourceGenerator) -> None:

@@ -6,7 +6,6 @@ sidebar_position: 2
 
 This page describes the openEHR query path: how an AQL query is compiled by the `openehr.rps_dual` (RPS Dual) strategy into a MongoDB aggregation pipeline and routed to one of the two RPS Dual collections.
 
-It is specific to openEHR. For how query requests reach any domain and strategy, see [Query and Execution](/docs/architecture/query-engine).
 
 ## Entry Points
 
@@ -103,5 +102,4 @@ Routed to `compositions_search`. The pipeline starts with a `$search` stage that
 - [Query Translation (concept)](/docs/domains/openehr/concepts/aql-to-mql)
 - [Dual-View Persistence](/docs/domains/openehr/concepts/dual-collection)
 - [openEHR RPS Dual Query Translation](/docs/strategies/openehr/rps-dual/query-translation) - strategy specifics
-- [Query and Execution](/docs/architecture/query-engine) - cross-domain query model
-
+- [Query and Execution](/docs/domains/openehr/aql-query-engine) - cross-domain query model

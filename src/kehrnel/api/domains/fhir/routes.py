@@ -21,6 +21,11 @@ from kehrnel.api.bridge.app.core.database import (
 )
 from kehrnel.api.core.admin.routes import _json_safe
 from kehrnel.api.domains.fhir.models import FhirSearchRequest
+from kehrnel.api.domains.fhir.terminology_cohort import (
+    FhirTerminologyCohortExecutionService,
+    FhirTerminologyCohortQueryRequest,
+    FhirTerminologyCohortQueryResult,
+)
 from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.domains.fhir import implementation_guides
 from kehrnel.engine.terminology import TerminologyService
@@ -643,6 +648,36 @@ async def fhir_terminology_translate_post(
     return await _execute_fhir_terminology(
         request, "translate", body, resource_type="ConceptMap"
     )
+
+
+@router.post(
+    "/semantic/terminology-query-executions",
+    response_model=FhirTerminologyCohortQueryResult,
+    response_model_by_alias=True,
+    summary="Resolve SNOMED and execute a bounded FHIR Condition resource search",
+    description=(
+        "Resolves a pinned SNOMED expansion through the authenticated tenant "
+        "terminology gateway, compiles its exact system-and-code members through "
+        "the active FHIR Resource Store, and executes the bounded query against "
+        "the same activation. This endpoint accepts typed intent only and does "
+        "not perform natural-language interpretation."
+    ),
+)
+async def execute_fhir_terminology_cohort_query(
+    request: Request,
+    payload: FhirTerminologyCohortQueryRequest = Body(...),
+):
+    try:
+        env_id = resolve_active_env_id(request)
+        runtime, _activation = _require_fhir_activation(request, env_id)
+        service = FhirTerminologyCohortExecutionService(
+            terminology_gateway=TerminologyService(runtime, env_id),
+            runtime=runtime,
+            environment_id=env_id,
+        )
+        return await service.execute_query(payload)
+    except Exception as exc:
+        return _operation_outcome_response(exc)
 
 
 @router.post("/search")

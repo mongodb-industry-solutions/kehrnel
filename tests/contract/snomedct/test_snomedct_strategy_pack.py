@@ -1,3 +1,6 @@
+import base64
+import hashlib
+import json
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -175,6 +178,165 @@ async def test_snomedct_release_ingest_requires_license_acknowledgement_before_p
         )
 
     assert exc_info.value.code == "SNOMED_LICENSE_ACKNOWLEDGEMENT_REQUIRED"
+
+
+@pytest.mark.asyncio
+async def test_snomedct_inline_release_upload_stages_inside_the_configured_directory(tmp_path):
+    release_dir = tmp_path / "snomed-releases"
+    manifest = load_strategy("snomedct.mongodb", PACK_DIR)
+    cfg = dict(manifest.default_config)
+    cfg["source"] = {**manifest.default_config["source"], "local_dir": str(release_dir)}
+    strategy = SNOMEDCTMongoDBStrategy(manifest)
+    ctx = StrategyContext(environment_id="test", config=cfg, manifest=manifest)
+    content = b'[{"conceptId": "73211009"}]'
+    digest = "sha256:" + hashlib.sha256(content).hexdigest()
+
+    result = await strategy.snomed_upload_release(
+        ctx,
+        {
+            "file_name": "irbd-20260601.json",
+            "content_base64": base64.b64encode(content).decode("ascii"),
+            "sha256": digest,
+        },
+    )
+
+    assert result["ok"] is True
+    assert result["sha256"] == digest
+    staged = release_dir / "irbd-20260601.json"
+    assert staged.read_bytes() == content
+
+    # The staged file immediately flows through the existing list/inspect chain.
+    listed = await strategy.snomed_list_releases(ctx, {})
+    assert listed["count"] == 1
+    inspected = await strategy.snomed_inspect_release(ctx, {"file_name": staged.name})
+    assert inspected["concepts"] == 1
+
+
+@pytest.mark.asyncio
+async def test_snomedct_inline_release_upload_enforces_size_and_checksum(tmp_path):
+    release_dir = tmp_path / "snomed-releases"
+    manifest = load_strategy("snomedct.mongodb", PACK_DIR)
+    cfg = dict(manifest.default_config)
+    cfg["source"] = {**manifest.default_config["source"], "local_dir": str(release_dir)}
+    strategy = SNOMEDCTMongoDBStrategy(manifest)
+    ctx = StrategyContext(environment_id="test", config=cfg, manifest=manifest)
+    content = b"[]"
+
+    with pytest.raises(KehrnelError) as exc_info:
+        await strategy.snomed_upload_release(
+            ctx,
+            {
+                "file_name": "too-big.json",
+                "content_base64": base64.b64encode(content).decode("ascii"),
+                "max_bytes": 1,
+            },
+        )
+    assert exc_info.value.code == "RELEASE_UPLOAD_TOO_LARGE"
+
+    with pytest.raises(KehrnelError) as exc_info:
+        await strategy.snomed_upload_release(
+            ctx,
+            {
+                "file_name": "mismatch.json",
+                "content_base64": base64.b64encode(content).decode("ascii"),
+                "sha256": "sha256:" + "0" * 64,
+            },
+        )
+    assert exc_info.value.code == "RELEASE_UPLOAD_CHECKSUM_MISMATCH"
+
+    with pytest.raises(KehrnelError) as exc_info:
+        await strategy.snomed_upload_release(
+            ctx,
+            {
+                "file_name": "../escape.json",
+                "content_base64": base64.b64encode(content).decode("ascii"),
+            },
+        )
+    assert exc_info.value.code == "INVALID_RELEASE_FILE_NAME"
+
+    assert not release_dir.exists() or not any(release_dir.iterdir())
+
+
+def test_snomedct_irbd_json_quirks_are_normalized(tmp_path):
+    """Pin the official IRBD JSON quirks documented by the Spanish release format."""
+    from kehrnel.engine.domains.snomedct import iter_concepts_from_json, normalize_concept
+
+    release = tmp_path / "irbd.json"
+    release.write_text(
+        json.dumps(
+            [
+                {
+                    "conceptId": 73211009,  # number, not string
+                    "active": "1",  # string flag
+                    "effectiveTime": "20260601",
+                    "moduleId": "900000000000207008",
+                    "definitionStatusId": "900000000000074008",
+                    "inferredParentIds": [44054006],  # numbers
+                    "inferredAncestorIds": [404684003],
+                    "inferredDescendantIds": [1, 2, 3],  # dropped by the projection
+                    "descriptions": [
+                        {
+                            "descriptionId": 100,
+                            "active": "1",
+                            "languageCode": "es",
+                            "typeId": 900000000000013009,
+                            "term": "Diabetes mellitus",
+                            "acceptabilityMap": {},  # empty map in the Spanish release
+                        }
+                    ],
+                    "relationships": [
+                        {
+                            "relationshipId": 1,
+                            "active": "1",
+                            "typeId": 116680003,
+                            "destinationId": 404684003,
+                            "groupId": 0,
+                        }
+                    ],
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    concepts = list(iter_concepts_from_json(release))
+    assert len(concepts) == 1
+    doc = normalize_concept(concepts[0], release_id="20260601")
+
+    assert doc["conceptId"] == "73211009"
+    assert doc["active"] is True
+    assert doc["inferredParentIds"] == ["44054006"]
+    assert doc["inferredAncestorIds"] == ["404684003"]
+    assert "inferredDescendantIds" not in doc
+    description = doc["descriptions"][0]
+    assert description["descriptionId"] == "100"
+    assert description["active"] is True
+    assert description["acceptabilityMap"] == {}
+    relationship = doc["relationships"][0]
+    assert relationship["active"] is True
+    assert relationship["destinationId"] == "404684003"
+
+
+def test_snomedct_example_catalog_matches_the_manifest_checksum():
+    """The manifest's ui.example_data pointer must match the published catalog."""
+    import hashlib
+
+    manifest = load_strategy("snomedct.mongodb", PACK_DIR)
+    pointer = manifest.ui.example_data
+    assert pointer["catalog"] == "examples/catalog.json"
+    assert pointer["delivery"] == "fetch-and-checksum-verify"
+
+    catalog_path = PACK_DIR / pointer["catalog"]
+    payload = catalog_path.read_bytes()
+    digest = "sha256:" + hashlib.sha256(payload).hexdigest()
+    assert digest == pointer["sha256"], "regenerate ui.example_data.sha256 after editing the catalog"
+
+    import json
+
+    catalog = json.loads(payload)
+    assert catalog["contract"] == "strategy-example-catalog/v1"
+    for section in pointer["sections"]:
+        assert catalog.get(section) is not None, f"catalog section '{section}' is missing"
 
 
 class _ConceptCollection:

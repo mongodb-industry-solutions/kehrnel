@@ -1,0 +1,113 @@
+{
+  "$defs": {
+    "ActionAvailabilityState": {
+      "enum": [
+        "enabled",
+        "disabled",
+        "request_access"
+      ],
+      "title": "ActionAvailabilityState",
+      "type": "string"
+    },
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:action-availability",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actionId": {
+      "minLength": 1,
+      "title": "Actionid",
+      "type": "string"
+    },
+    "blockingCapabilityIds": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Blockingcapabilityids",
+      "type": "array"
+    },
+    "contributingCapabilityIds": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Contributingcapabilityids",
+      "type": "array"
+    },
+    "reasonCode": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reasoncode"
+    },
+    "requiredCapabilityIds": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Requiredcapabilityids",
+      "type": "array"
+    },
+    "state": {
+      "$ref": "#/$defs/ActionAvailabilityState"
+    },
+    "targetRef": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "actionId",
+    "state"
+  ],
+  "title": "ActionAvailability",
+  "type": "object"
+}

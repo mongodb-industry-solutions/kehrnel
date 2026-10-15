@@ -1,0 +1,301 @@
+{
+  "$defs": {
+    "SemanticExecutionEvidenceSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "activationId": {
+          "minLength": 1,
+          "title": "Activationid",
+          "type": "string"
+        },
+        "bindingsHash": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Bindingshash",
+          "type": "string"
+        },
+        "compiledArtifactDigests": {
+          "additionalProperties": {
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "minProperties": 1,
+          "title": "Compiledartifactdigests",
+          "type": "object"
+        },
+        "configHash": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Confighash",
+          "type": "string"
+        },
+        "dataTargetDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Datatargetdigest",
+          "type": "string"
+        },
+        "engineUsed": {
+          "minLength": 1,
+          "title": "Engineused",
+          "type": "string"
+        },
+        "environmentId": {
+          "minLength": 1,
+          "title": "Environmentid",
+          "type": "string"
+        },
+        "manifestDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Manifestdigest",
+          "type": "string"
+        },
+        "projectionLiveVerified": {
+          "const": true,
+          "default": true,
+          "title": "Projectionliveverified",
+          "type": "boolean"
+        },
+        "projectionReadinessDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Projectionreadinessdigest",
+          "type": "string"
+        },
+        "rowCount": {
+          "minimum": 0,
+          "title": "Rowcount",
+          "type": "integer"
+        },
+        "strategyId": {
+          "minLength": 1,
+          "title": "Strategyid",
+          "type": "string"
+        },
+        "strategyVersion": {
+          "minLength": 1,
+          "title": "Strategyversion",
+          "type": "string"
+        },
+        "terminologyExpansionDigests": {
+          "items": {
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Terminologyexpansiondigests",
+          "type": "array"
+        }
+      },
+      "required": [
+        "environmentId",
+        "strategyId",
+        "activationId",
+        "strategyVersion",
+        "manifestDigest",
+        "configHash",
+        "bindingsHash",
+        "dataTargetDigest",
+        "terminologyExpansionDigests",
+        "compiledArtifactDigests",
+        "projectionReadinessDigest",
+        "engineUsed",
+        "rowCount"
+      ],
+      "title": "SemanticExecutionEvidenceSummary",
+      "type": "object"
+    },
+    "SemanticQualificationFailure": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Z][A-Z0-9_]*$",
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "SemanticQualificationFailure",
+      "type": "object"
+    },
+    "SemanticQualificationProbeResult": {
+      "additionalProperties": false,
+      "properties": {
+        "endpointPath": {
+          "pattern": "^/api/",
+          "title": "Endpointpath",
+          "type": "string"
+        },
+        "evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SemanticExecutionEvidenceSummary"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "failure": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SemanticQualificationFailure"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "httpStatus": {
+          "anyOf": [
+            {
+              "maximum": 599,
+              "minimum": 100,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Httpstatus"
+        },
+        "kind": {
+          "enum": [
+            "openehr-terminology-query",
+            "fhir-terminology-cohort"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "probeId": {
+          "title": "Probeid",
+          "type": "string"
+        },
+        "requestDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Requestdigest",
+          "type": "string"
+        },
+        "responseDigest": {
+          "anyOf": [
+            {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Responsedigest"
+        },
+        "resultContract": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resultcontract"
+        },
+        "status": {
+          "enum": [
+            "qualified",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "probeId",
+        "kind",
+        "status",
+        "endpointPath",
+        "requestDigest"
+      ],
+      "title": "SemanticQualificationProbeResult",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:semantic-execution-qualification-result",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifactDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Artifactdigest",
+      "type": "string"
+    },
+    "completedAt": {
+      "format": "date-time",
+      "title": "Completedat",
+      "type": "string"
+    },
+    "contract": {
+      "const": "semantic-execution-qualification-result/v1",
+      "default": "semantic-execution-qualification-result/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "environmentId": {
+      "title": "Environmentid",
+      "type": "string"
+    },
+    "probes": {
+      "items": {
+        "$ref": "#/$defs/SemanticQualificationProbeResult"
+      },
+      "minItems": 1,
+      "title": "Probes",
+      "type": "array"
+    },
+    "qualificationId": {
+      "title": "Qualificationid",
+      "type": "string"
+    },
+    "startedAt": {
+      "format": "date-time",
+      "title": "Startedat",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "qualified",
+        "failed"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "targetOriginDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Targetorigindigest",
+      "type": "string"
+    }
+  },
+  "required": [
+    "qualificationId",
+    "environmentId",
+    "targetOriginDigest",
+    "startedAt",
+    "completedAt",
+    "status",
+    "probes",
+    "artifactDigest"
+  ],
+  "title": "SemanticExecutionQualificationResult",
+  "type": "object"
+}

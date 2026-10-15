@@ -15,16 +15,16 @@ from kehrnel.persistence import PersistenceStrategy, get_default_strategy
 class AQLtoMQLTransformer:
     """
     Transforms an AQL Abstract Syntax Tree (AST) into a MongoDB Aggregation Pipeline.
-    
+
     This transformer is designed for a specific "semi-flattened" openEHR schema where
     a composition document contains a 'cn' array, and each element in 'cn' has:
     - 'p': A string representing the hierarchical path of the node.
     - 'data': The actual openEHR Reference Model object for that node.
-    
+
     This class now orchestrates the transformation using specialized components:
     - ASTValidator: Validates AST structure
     - ContextMapper: Maps variable aliases to archetype IDs
-    - PathResolver: Handles AQL path translation 
+    - PathResolver: Handles AQL path translation
     - PipelineBuilder: Constructs MongoDB aggregation stages
     """
 
@@ -40,6 +40,8 @@ class AQLtoMQLTransformer:
         shortcut_map: Optional[Dict[str, str]] = None,
         archetype_resolver: Optional[ArchetypeResolver] = None,
         compatibility_match: bool = False,
+        require_exact_path_correlation: bool = False,
+        search_field_types: Optional[Dict[str, Any]] = None,
     ):
         self.ast = ast
         self.ehr_id = ehr_id
@@ -49,15 +51,17 @@ class AQLtoMQLTransformer:
         self.shortcut_map = shortcut_map or {}
         self.archetype_resolver = archetype_resolver
         self.compatibility_match = compatibility_match
-        
+        self.require_exact_path_correlation = bool(require_exact_path_correlation)
+        self.search_field_types = search_field_types or {}
+
         # Schema field configuration (Point 3 preparation)
         self.schema_config = schema_config or self._build_schema_config_from_strategy(self.strategy)
         self.search_schema_config = search_schema_config or self._build_search_schema_config_from_strategy(self.strategy)
-        
+
         # LET variable storage
         self.let_variables: Dict[str, Any] = {}
         self.projection_cache_summary: Optional[Dict[str, Any]] = None
-        
+
         # Initialize components
         self._initialize_components()
 
@@ -97,18 +101,18 @@ class AQLtoMQLTransformer:
         """Initialize all transformer components with proper dependencies."""
         # 1. Validate AST structure
         ASTValidator.validate_ast(self.ast)
-        
+
         # 2. Detect key aliases
         self.ehr_alias, self.composition_alias = ASTValidator.detect_key_aliases(self.ast)
         self.version_alias = ASTValidator.detect_version_alias(self.ast)
-        
+
         # 3. Build context map
         self.context_mapper = ContextMapper()
         self.context_map = self.context_mapper.build_context_map(self.ast)
-        
+
         # 4. Process LET variables
         self._process_let_variables()
-        
+
         # 5. Initialize archetype resolver if database is available
         if self.archetype_resolver is None and self.db is not None:
             self.archetype_resolver = ArchetypeResolver(
@@ -120,12 +124,12 @@ class AQLtoMQLTransformer:
                 separator=self.schema_config.get("separator"),
                 atcode_strategy=self.schema_config.get("atcode_strategy"),
             )
-        
+
         # 6. Initialize format resolver with archetype resolver
         self.path_resolver = FormatResolver(
-            self.context_map, 
-            self.ehr_alias, 
-            self.composition_alias, 
+            self.context_map,
+            self.ehr_alias,
+            self.composition_alias,
             self.schema_config,
             self.archetype_resolver,
             shortcut_map=self.shortcut_map,
@@ -140,7 +144,7 @@ class AQLtoMQLTransformer:
             shortcut_map=self.shortcut_map,
             version_alias=self.version_alias,
         )
-        
+
         # 7. Initialize pipeline builders (both standard and search)
         self.pipeline_builder = PipelineBuilder(
             self.ehr_alias,
@@ -152,7 +156,7 @@ class AQLtoMQLTransformer:
             version_alias=self.version_alias,
             compatibility_match=self.compatibility_match,
         )
-        
+
         # 8. Initialize search pipeline builder
         self.search_pipeline_builder = SearchPipelineBuilder(
             self.ehr_alias,
@@ -164,6 +168,8 @@ class AQLtoMQLTransformer:
             strategy=self.strategy,
             search_index_name=self.search_index_name,
             version_alias=self.version_alias,
+            require_exact_path_correlation=self.require_exact_path_correlation,
+            search_field_types=self.search_field_types,
         )
 
     def _process_let_variables(self):
@@ -174,15 +180,15 @@ class AQLtoMQLTransformer:
         let_clause = self.ast.get("let")
         if not let_clause:
             return
-        
+
         variables = let_clause.get("variables", {})
         for var_id, var_def in variables.items():
             var_name = var_def.get("name")
             var_expression = var_def.get("expression")
-            
+
             if not var_name or not var_expression:
                 continue
-                
+
             # Store the variable definition for later resolution
             self.let_variables[var_name] = var_expression
 
@@ -324,7 +330,7 @@ class AQLtoMQLTransformer:
             if sort_stage:
                 pipeline.append(sort_stage)
             pipeline.extend(self._pagination_stages())
-        
+
         return pipeline
 
     async def build_search_pipeline(self) -> List[Dict[str, Any]]:
@@ -337,18 +343,18 @@ class AQLtoMQLTransformer:
     def should_use_search_strategy(self, ehr_id: Optional[str] = None, force_search: bool = False) -> bool:
         """
         Determines whether to use search strategy based on query characteristics.
-        
+
         Args:
             ehr_id: EHR ID if provided in request
             force_search: Force search strategy for testing
-            
+
         Returns:
             True if search strategy should be used, False for standard match strategy
         """
         # Force search strategy if requested (for testing)
         if force_search:
             return True
-            
+
         # Use search strategy when no specific EHR ID is provided
         # unless the query shape is simple enough to stay on the flattened collection.
         if ehr_id is not None:
@@ -361,15 +367,15 @@ class AQLtoMQLTransformer:
         )
 
     # --- Public utility methods for backward compatibility ---
-    
+
     def get_context_map(self) -> Dict[str, Dict]:
         """Returns the context map for external access."""
         return self.context_map
-    
+
     def get_aliases(self) -> tuple[str, str]:
         """Returns the detected EHR and composition aliases."""
         return self.ehr_alias, self.composition_alias
-    
+
     def get_let_variables(self) -> Dict[str, Any]:
         """Returns the processed LET variables."""
         return self.let_variables

@@ -391,7 +391,7 @@ def enrich_PaymentReconciliation(
     rng: random.Random,
 ) -> dict[str, Any]:
     r["status"] = pick_code("payment_reconciliation_status", rng, "active")
-    r["outcome"] = concept_from_section("payment_reconciliation_outcome", rng, t)
+    r["outcome"] = pick_code("payment_reconciliation_outcome", rng, "complete")
     r["created"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
     r["disposition"] = "Payment processed"
     if store.has("Organization"):

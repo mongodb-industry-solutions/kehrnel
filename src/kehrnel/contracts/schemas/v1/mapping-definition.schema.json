@@ -1,0 +1,584 @@
+{
+  "$defs": {
+    "ArtifactProvenance": {
+      "description": "Who owns the lifecycle of a reusable catalog artifact.",
+      "enum": [
+        "mongodb_curated",
+        "community",
+        "tenant_generated",
+        "tenant_extended"
+      ],
+      "title": "ArtifactProvenance",
+      "type": "string"
+    },
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "CapabilityMaturity": {
+      "enum": [
+        "not_assessed",
+        "specified",
+        "simulated",
+        "compilable",
+        "pilot_validated",
+        "production_validated"
+      ],
+      "title": "CapabilityMaturity",
+      "type": "string"
+    },
+    "CatalogArtifactRole": {
+      "description": "The architectural role an artifact plays, independent of its industry.",
+      "enum": [
+        "source_category",
+        "source_profile",
+        "mapping",
+        "target_strategy",
+        "semantic_asset",
+        "data_architecture",
+        "application",
+        "outcome_pattern",
+        "reference_architecture",
+        "demo_experience",
+        "portfolio_domain",
+        "data_product",
+        "architecture_capability",
+        "visual_pattern",
+        "solution_blueprint_template"
+      ],
+      "title": "CatalogArtifactRole",
+      "type": "string"
+    },
+    "CatalogMetadata": {
+      "additionalProperties": false,
+      "description": "Faceted catalog metadata kept separate from executable behavior.",
+      "properties": {
+        "extendsRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "paths": {
+          "items": {
+            "$ref": "#/$defs/CatalogPath"
+          },
+          "minItems": 1,
+          "title": "Paths",
+          "type": "array"
+        },
+        "provenance": {
+          "$ref": "#/$defs/ArtifactProvenance"
+        },
+        "role": {
+          "$ref": "#/$defs/CatalogArtifactRole"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        }
+      },
+      "required": [
+        "role",
+        "provenance",
+        "paths"
+      ],
+      "title": "CatalogMetadata",
+      "type": "object"
+    },
+    "CatalogPath": {
+      "additionalProperties": false,
+      "description": "One navigational placement; artifacts may appear in several industries.",
+      "properties": {
+        "industry": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Industry",
+          "type": "string"
+        },
+        "segments": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Segments",
+          "type": "array"
+        }
+      },
+      "required": [
+        "industry",
+        "segments"
+      ],
+      "title": "CatalogPath",
+      "type": "object"
+    },
+    "DeleteBehavior": {
+      "enum": [
+        "reject"
+      ],
+      "title": "DeleteBehavior",
+      "type": "string"
+    },
+    "ErrorBehavior": {
+      "enum": [
+        "reject_record",
+        "fail_batch"
+      ],
+      "title": "ErrorBehavior",
+      "type": "string"
+    },
+    "JoinCardinality": {
+      "enum": [
+        "one_to_one",
+        "many_to_one",
+        "one_to_many"
+      ],
+      "title": "JoinCardinality",
+      "type": "string"
+    },
+    "MappingExecutionMode": {
+      "enum": [
+        "batch",
+        "cdc"
+      ],
+      "title": "MappingExecutionMode",
+      "type": "string"
+    },
+    "MappingExecutionPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "deadLetterContract": {
+          "default": "mapping-dead-letter/v1",
+          "title": "Deadlettercontract",
+          "type": "string"
+        },
+        "deleteBehavior": {
+          "$ref": "#/$defs/DeleteBehavior",
+          "default": "reject"
+        },
+        "errorBehavior": {
+          "$ref": "#/$defs/ErrorBehavior",
+          "default": "reject_record"
+        },
+        "idempotencySelectors": {
+          "items": {
+            "$ref": "#/$defs/MappingSelector"
+          },
+          "minItems": 1,
+          "title": "Idempotencyselectors",
+          "type": "array"
+        },
+        "orderingSelector": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MappingSelector"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "supportedModes": {
+          "items": {
+            "$ref": "#/$defs/MappingExecutionMode"
+          },
+          "minItems": 1,
+          "title": "Supportedmodes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "supportedModes",
+        "idempotencySelectors"
+      ],
+      "title": "MappingExecutionPolicy",
+      "type": "object"
+    },
+    "MappingRule": {
+      "additionalProperties": false,
+      "properties": {
+        "constant": {
+          "default": null,
+          "title": "Constant"
+        },
+        "lossinessNote": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lossinessnote"
+        },
+        "required": {
+          "default": true,
+          "title": "Required",
+          "type": "boolean"
+        },
+        "reversible": {
+          "default": true,
+          "title": "Reversible",
+          "type": "boolean"
+        },
+        "ruleId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Ruleid",
+          "type": "string"
+        },
+        "semanticConceptId": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Semanticconceptid"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MappingSelector"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "target": {
+          "$ref": "#/$defs/MappingSelector"
+        },
+        "terminologyRef": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Terminologyref"
+        },
+        "transforms": {
+          "items": {
+            "$ref": "#/$defs/MappingTransformStep"
+          },
+          "title": "Transforms",
+          "type": "array"
+        }
+      },
+      "required": [
+        "ruleId",
+        "target"
+      ],
+      "title": "MappingRule",
+      "type": "object"
+    },
+    "MappingSelector": {
+      "additionalProperties": false,
+      "properties": {
+        "dialect": {
+          "$ref": "#/$defs/SelectorDialect",
+          "default": "dotted_path"
+        },
+        "path": {
+          "minLength": 1,
+          "title": "Path",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "title": "MappingSelector",
+      "type": "object"
+    },
+    "MappingSource": {
+      "additionalProperties": false,
+      "properties": {
+        "interactionIds": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Interactionids",
+          "type": "array"
+        },
+        "joins": {
+          "items": {
+            "$ref": "#/$defs/SourceJoin"
+          },
+          "title": "Joins",
+          "type": "array"
+        },
+        "profileRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "rootShape": {
+          "const": "normalized_joined_record",
+          "title": "Rootshape",
+          "type": "string"
+        },
+        "structures": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Structures",
+          "type": "array"
+        }
+      },
+      "required": [
+        "profileRef",
+        "interactionIds",
+        "rootShape",
+        "structures"
+      ],
+      "title": "MappingSource",
+      "type": "object"
+    },
+    "MappingTarget": {
+      "additionalProperties": false,
+      "properties": {
+        "documentIdSource": {
+          "$ref": "#/$defs/MappingSelector"
+        },
+        "model": {
+          "enum": [
+            "openehr",
+            "fhir",
+            "cdisc",
+            "custom_operational"
+          ],
+          "title": "Model",
+          "type": "string"
+        },
+        "schemaId": {
+          "minLength": 1,
+          "title": "Schemaid",
+          "type": "string"
+        },
+        "schemaVersion": {
+          "minLength": 1,
+          "title": "Schemaversion",
+          "type": "string"
+        },
+        "strategyIds": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Strategyids",
+          "type": "array"
+        },
+        "subjectKeySource": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MappingSelector"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "model",
+        "strategyIds",
+        "schemaId",
+        "schemaVersion",
+        "documentIdSource"
+      ],
+      "title": "MappingTarget",
+      "type": "object"
+    },
+    "MappingTransformOperation": {
+      "enum": [
+        "to_string",
+        "to_integer",
+        "to_decimal",
+        "iso_datetime",
+        "lowercase",
+        "uppercase"
+      ],
+      "title": "MappingTransformOperation",
+      "type": "string"
+    },
+    "MappingTransformStep": {
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "$ref": "#/$defs/MappingTransformOperation"
+        }
+      },
+      "required": [
+        "operation"
+      ],
+      "title": "MappingTransformStep",
+      "type": "object"
+    },
+    "SelectorDialect": {
+      "enum": [
+        "dotted_path",
+        "json_pointer"
+      ],
+      "title": "SelectorDialect",
+      "type": "string"
+    },
+    "SourceJoin": {
+      "additionalProperties": false,
+      "properties": {
+        "cardinality": {
+          "$ref": "#/$defs/JoinCardinality"
+        },
+        "leftPath": {
+          "minLength": 1,
+          "title": "Leftpath",
+          "type": "string"
+        },
+        "leftStructure": {
+          "minLength": 1,
+          "title": "Leftstructure",
+          "type": "string"
+        },
+        "rightPath": {
+          "minLength": 1,
+          "title": "Rightpath",
+          "type": "string"
+        },
+        "rightStructure": {
+          "minLength": 1,
+          "title": "Rightstructure",
+          "type": "string"
+        }
+      },
+      "required": [
+        "leftStructure",
+        "leftPath",
+        "rightStructure",
+        "rightPath",
+        "cardinality"
+      ],
+      "title": "SourceJoin",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:mapping-definition",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "capabilityMaturity": {
+      "$ref": "#/$defs/CapabilityMaturity"
+    },
+    "catalog": {
+      "$ref": "#/$defs/CatalogMetadata"
+    },
+    "contract": {
+      "const": "mapping-definition/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "description": {
+      "minLength": 1,
+      "title": "Description",
+      "type": "string"
+    },
+    "evidenceRefs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "title": "Evidencerefs",
+      "type": "array"
+    },
+    "execution": {
+      "$ref": "#/$defs/MappingExecutionPolicy"
+    },
+    "rules": {
+      "items": {
+        "$ref": "#/$defs/MappingRule"
+      },
+      "minItems": 1,
+      "title": "Rules",
+      "type": "array"
+    },
+    "source": {
+      "$ref": "#/$defs/MappingSource"
+    },
+    "target": {
+      "$ref": "#/$defs/MappingTarget"
+    },
+    "title": {
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "catalog",
+    "title",
+    "description",
+    "capabilityMaturity",
+    "source",
+    "target",
+    "rules",
+    "execution"
+  ],
+  "title": "MappingDefinition",
+  "type": "object"
+}

@@ -1,0 +1,429 @@
+{
+  "$defs": {
+    "CohortBooleanOperator": {
+      "enum": [
+        "all",
+        "any",
+        "not"
+      ],
+      "title": "CohortBooleanOperator",
+      "type": "string"
+    },
+    "CohortComparisonOperator": {
+      "enum": [
+        "eq",
+        "neq",
+        "gt",
+        "gte",
+        "lt",
+        "lte",
+        "exists",
+        "not_exists"
+      ],
+      "title": "CohortComparisonOperator",
+      "type": "string"
+    },
+    "CohortGroup": {
+      "additionalProperties": false,
+      "properties": {
+        "children": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/CohortPredicate"
+              },
+              {
+                "$ref": "#/$defs/CohortGroup"
+              }
+            ]
+          },
+          "maxItems": 64,
+          "minItems": 1,
+          "title": "Children",
+          "type": "array"
+        },
+        "groupId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Groupid",
+          "type": "string"
+        },
+        "nodeType": {
+          "const": "group",
+          "default": "group",
+          "title": "Nodetype",
+          "type": "string"
+        },
+        "operator": {
+          "$ref": "#/$defs/CohortBooleanOperator"
+        }
+      },
+      "required": [
+        "groupId",
+        "operator",
+        "children"
+      ],
+      "title": "CohortGroup",
+      "type": "object"
+    },
+    "CohortPredicate": {
+      "additionalProperties": false,
+      "properties": {
+        "comparison": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ScalarConstraint"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "concept": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ConceptMention"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "correlationGroup": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Correlationgroup"
+        },
+        "nodeType": {
+          "const": "predicate",
+          "default": "predicate",
+          "title": "Nodetype",
+          "type": "string"
+        },
+        "predicateId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Predicateid",
+          "type": "string"
+        },
+        "semanticRole": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Semanticrole",
+          "type": "string"
+        },
+        "temporal": {
+          "items": {
+            "$ref": "#/$defs/TemporalConstraint"
+          },
+          "maxItems": 8,
+          "title": "Temporal",
+          "type": "array"
+        }
+      },
+      "required": [
+        "predicateId",
+        "semanticRole"
+      ],
+      "title": "CohortPredicate",
+      "type": "object"
+    },
+    "CohortResultShape": {
+      "additionalProperties": false,
+      "properties": {
+        "includeEvidence": {
+          "default": true,
+          "title": "Includeevidence",
+          "type": "boolean"
+        },
+        "kind": {
+          "default": "pseudonymous_patient_list",
+          "enum": [
+            "pseudonymous_patient_list",
+            "patient_count"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "limit": {
+          "default": 50,
+          "maximum": 1000,
+          "minimum": 1,
+          "title": "Limit",
+          "type": "integer"
+        }
+      },
+      "title": "CohortResultShape",
+      "type": "object"
+    },
+    "ConceptMention": {
+      "additionalProperties": false,
+      "properties": {
+        "explicitCoding": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ExplicitCoding"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "mentionId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Mentionid",
+          "type": "string"
+        },
+        "requestedRelationship": {
+          "$ref": "#/$defs/ConceptRelationship",
+          "default": "exact"
+        },
+        "semanticCategory": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Semanticcategory",
+          "type": "string"
+        },
+        "terminologySystemHint": {
+          "anyOf": [
+            {
+              "maxLength": 2048,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Terminologysystemhint"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "maxLength": 1024,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        },
+        "valueSetHint": {
+          "anyOf": [
+            {
+              "maxLength": 2048,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Valuesethint"
+        }
+      },
+      "required": [
+        "mentionId",
+        "semanticCategory"
+      ],
+      "title": "ConceptMention",
+      "type": "object"
+    },
+    "ConceptRelationship": {
+      "enum": [
+        "exact",
+        "descendant",
+        "descendant_or_self"
+      ],
+      "title": "ConceptRelationship",
+      "type": "string"
+    },
+    "ExplicitCoding": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "display": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Display"
+        },
+        "system": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "System",
+          "type": "string"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        }
+      },
+      "required": [
+        "system",
+        "code"
+      ],
+      "title": "ExplicitCoding",
+      "type": "object"
+    },
+    "ScalarConstraint": {
+      "additionalProperties": false,
+      "properties": {
+        "operator": {
+          "$ref": "#/$defs/CohortComparisonOperator"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "value": {
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "operator"
+      ],
+      "title": "ScalarConstraint",
+      "type": "object"
+    },
+    "TemporalConstraint": {
+      "additionalProperties": false,
+      "properties": {
+        "operator": {
+          "$ref": "#/$defs/CohortComparisonOperator"
+        },
+        "semanticRole": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Semanticrole",
+          "type": "string"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Timezone"
+        },
+        "value": {
+          "title": "Value"
+        }
+      },
+      "required": [
+        "semanticRole",
+        "operator",
+        "value"
+      ],
+      "title": "TemporalConstraint",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:clinical-cohort-intent",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "contract": {
+      "const": "clinical-cohort-intent/v1",
+      "default": "clinical-cohort-intent/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "criteria": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CohortPredicate"
+        },
+        {
+          "$ref": "#/$defs/CohortGroup"
+        }
+      ],
+      "title": "Criteria"
+    },
+    "intentId": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Intentid",
+      "type": "string"
+    },
+    "interactionProfile": {
+      "const": "clinical_cohort",
+      "default": "clinical_cohort",
+      "title": "Interactionprofile",
+      "type": "string"
+    },
+    "result": {
+      "$ref": "#/$defs/CohortResultShape"
+    },
+    "scope": {
+      "const": "cross_patient",
+      "default": "cross_patient",
+      "title": "Scope",
+      "type": "string"
+    },
+    "sourceLanguage": {
+      "default": "en",
+      "maxLength": 32,
+      "minLength": 2,
+      "title": "Sourcelanguage",
+      "type": "string"
+    }
+  },
+  "required": [
+    "intentId",
+    "criteria"
+  ],
+  "title": "ClinicalCohortIntent",
+  "type": "object"
+}

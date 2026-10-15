@@ -45,7 +45,10 @@ class CollectionsCfg(BaseModel):
 
 class IdsCfg(BaseModel):
     ehr_id: str = "string"
-    composition_id: str = "objectid"
+    # openEHR OBJECT_VERSION_ID values are strings and commonly include the
+    # creating system and version (`uuid::system::version`).  Deployments with
+    # native ObjectId or UUID binary keys can opt into those encodings.
+    composition_id: str = "string"
 
 
 # --- Paths ---

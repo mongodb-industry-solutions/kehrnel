@@ -197,7 +197,10 @@ async def test_compile_query_raw_aql_uses_sidecar_exact_match_for_path_to_path_c
         {
             "regex": {
                 "path": "sn.p",
-                "query": r"^\-2:\-1:33(?::[^:]+)*$",
+                # Atlas Search uses Lucene regex syntax: matching is already
+                # over the whole term, so PCRE anchors and non-capturing groups
+                # are intentionally normalized by the compiler.
+                "query": r"\-2:\-1:33(:[^:]+)*",
             }
         },
         {

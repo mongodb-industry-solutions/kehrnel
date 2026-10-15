@@ -6,6 +6,7 @@ import re
 import pytest
 
 from fhir_gen.generators.primitives import PrimitiveGenerator
+from fhir_gen.schema.field_validation import validate_primitive
 
 PRIMITIVE_TYPES = [
     "base64Binary", "boolean", "canonical", "code", "date", "dateTime",
@@ -71,7 +72,9 @@ class TestPrimitiveTypes:
     def test_oid_format(self, prim: PrimitiveGenerator):
         oid = prim.gen_oid()
         assert oid.startswith("urn:oid:")
-        assert int(oid.removeprefix("urn:oid:").split(".", 1)[0]) <= 2
+        arcs = [int(arc) for arc in oid.removeprefix("urn:oid:").split(".")]
+        assert 0 <= arcs[0] <= 2
+        assert arcs[0] == 2 or 0 <= arcs[1] <= 39
 
     def test_uuid_format(self, prim: PrimitiveGenerator):
         u = prim.gen_uuid()
@@ -128,3 +131,13 @@ class TestPrimitiveTypes:
                 "chronic",
             )
         )
+
+
+@pytest.mark.parametrize("value", [str(-(2**63)), "0", str(2**63 - 1)])
+def test_integer64_accepts_exact_signed_64_bit_json_strings(value):
+    assert validate_primitive(value, "integer64") is None
+
+
+@pytest.mark.parametrize("value", [0, True, "1.0", str(2**63), str(-(2**63) - 1)])
+def test_integer64_rejects_non_fhir_json_or_out_of_range_values(value):
+    assert validate_primitive(value, "integer64") is not None

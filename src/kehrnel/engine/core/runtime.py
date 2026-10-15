@@ -7,6 +7,7 @@ import importlib.util
 import json
 import hashlib
 import weakref
+from copy import deepcopy
 from datetime import datetime
 from typing import Dict, Optional, Any
 from dataclasses import is_dataclass, asdict, replace
@@ -23,6 +24,8 @@ from kehrnel.engine.core.bundles import compute_bundle_digest
 from kehrnel.strategy_sdk import StrategyHandle, StrategyBindings
 from .types import QueryPlan, QueryResult, ApplyResult, TransformResult, StrategyContext
 from .bindings_resolver import resolve_bindings as _resolve_bindings_ref
+from .data_target import resolved_data_target_digest
+from kehrnel.persistence.mongodb.connection import get_client as _mongo_get_client
 from kehrnel.persistence.mongodb.connection import get_database as _mongo_get_db
 from kehrnel.persistence.mongodb.storage import MongoStorageAdapter
 from kehrnel.persistence.mongodb.index_admin import MongoIndexAdminAdapter
@@ -30,6 +33,7 @@ from kehrnel.persistence.mongodb.atlas_search import MongoAtlasSearchAdapter
 from kehrnel.persistence.artifacts import AzureBlobArtifactStore, FileSystemArtifactStore, S3ArtifactStore
 from kehrnel.persistence.validation import CommandValidationEngine
 from kehrnel.persistence.embeddings import HttpEmbeddingAdapter
+from kehrnel.persistence.llm import HttpLlmAdapter, HttpRerankAdapter
 from kehrnel.engine.terminology import RuntimeTerminologyAdapter
 from pathlib import Path
 
@@ -153,6 +157,414 @@ class StrategyRuntime:
         resolved["db"] = db_binding
         return resolved
 
+    @staticmethod
+    def _acceptance_records(
+        manifest: StrategyManifest,
+        existing: Optional[EnvironmentActivation],
+        incoming: list[Dict[str, Any]] | None,
+        now: str,
+    ) -> list[Dict[str, Any]]:
+        """Resolve manifest activation conditions into recorded acceptances.
+
+        Required attestations are runtime authority: a missing acceptance is a
+        typed 422. Prior acceptances stay valid while their statement version
+        matches the manifest; a bumped statement version re-requires acceptance.
+        """
+        activation_block = getattr(manifest, "activation", None)
+        declared: Dict[str, Any] = {}
+        required: list[Any] = []
+        if activation_block is not None:
+            for condition in activation_block.conditions or []:
+                declared[condition.id] = condition
+                if condition.required and condition.kind == "attestation":
+                    required.append(condition)
+        records: Dict[str, Dict[str, Any]] = {}
+        if existing is not None:
+            for record in getattr(existing, "condition_acceptances", None) or []:
+                if not isinstance(record, dict):
+                    continue
+                condition = declared.get(record.get("id"))
+                if condition is not None and record.get("statement_version") == condition.statement_version:
+                    records[str(record["id"])] = dict(record)
+        for item in incoming or []:
+            if not isinstance(item, dict):
+                raise KehrnelError(
+                    code="INVALID_CONDITION_ACCEPTANCE",
+                    status=400,
+                    message="Condition acceptances must be objects with an id.",
+                    details={"strategy_id": manifest.id},
+                )
+            condition_id = str(item.get("id") or "").strip()
+            condition = declared.get(condition_id)
+            if condition is None:
+                raise KehrnelError(
+                    code="INVALID_CONDITION_ACCEPTANCE",
+                    status=400,
+                    message=f"Condition '{condition_id}' is not declared by this strategy's manifest.",
+                    details={"strategy_id": manifest.id, "condition_id": condition_id},
+                )
+            accepted = item.get("accepted", True)
+            if not accepted:
+                records.pop(condition_id, None)
+                continue
+            if condition.kind != "attestation":
+                continue
+            records[condition_id] = {
+                "id": condition_id,
+                "kind": condition.kind,
+                "statement_version": condition.statement_version,
+                "accepted": True,
+                "accepted_by": item.get("accepted_by") or item.get("acceptedBy"),
+                "accepted_at": now,
+            }
+        missing = [condition.id for condition in required if condition.id not in records]
+        if missing:
+            condition = next(item for item in required if item.id == missing[0])
+            references = [
+                reference.model_dump() if hasattr(reference, "model_dump") else dict(reference)
+                for reference in (condition.references or [])
+            ]
+            raise KehrnelError(
+                code=condition.code or "STRATEGY_ATTESTATION_REQUIRED",
+                status=422,
+                message=condition.message
+                or f"Activation requires accepting the '{condition.title or condition.id}' attestation.",
+                details={
+                    "strategy_id": manifest.id,
+                    "condition_id": condition.id,
+                    "missing_condition_ids": missing,
+                    "statement_version": condition.statement_version,
+                    "references": references,
+                },
+            )
+        return list(records.values())
+
+    @staticmethod
+    def _acceptances_equal(left: list[Dict[str, Any]], right: list[Dict[str, Any]]) -> bool:
+        def key(records: list[Dict[str, Any]]) -> list[Any]:
+            return sorted(
+                (
+                    record.get("id"),
+                    record.get("statement_version"),
+                    record.get("accepted"),
+                    record.get("accepted_by"),
+                    record.get("accepted_at"),
+                )
+                for record in records or []
+            )
+
+        return key(left) == key(right)
+
+    async def _effective_bindings(
+        self,
+        env_id: str,
+        activation: EnvironmentActivation,
+        *,
+        op: str,
+        payload: Any = None,
+    ) -> Optional[Dict[str, Any]]:
+        """Resolve an activation's bindings (plaintext or via the configured resolver)."""
+        effective_bindings = activation.bindings
+        if not effective_bindings and activation.bindings_ref:
+            if self.bindings_resolver is None:
+                raise KehrnelError(
+                    code="BINDINGS_RESOLVER_NOT_CONFIGURED",
+                    status=500,
+                    message=(
+                        "Activation uses bindings_ref but no bindings resolver is configured. "
+                        "Set KEHRNEL_BINDINGS_RESOLVER or configure HDL resolver env vars."
+                    ),
+                    details={
+                        "env_id": env_id,
+                        "domain": activation.domain,
+                        "strategy_id": activation.strategy_id,
+                        "activation_id": activation.activation_id,
+                        "bindings_ref": activation.bindings_ref,
+                        "required_env": [
+                            "KEHRNEL_BINDINGS_RESOLVER",
+                            "ENV_SECRETS_KEY",
+                            "CORE_MONGODB_URL",
+                            "CORE_DATABASE_NAME",
+                        ],
+                    },
+                )
+            try:
+                effective_bindings = await _resolve_bindings_ref(
+                    self.bindings_resolver,
+                    bindings_ref=activation.bindings_ref,
+                    env_id=env_id,
+                    domain=activation.domain,
+                    strategy_id=activation.strategy_id,
+                    op=op,
+                    context={"payload": payload or {}, "activation_config": activation.config or {}},
+                )
+            except Exception as exc:
+                raise KehrnelError(
+                    code="BINDINGS_REF_RESOLUTION_FAILED",
+                    status=502,
+                    message=str(exc),
+                    details={"bindings_ref": activation.bindings_ref, "env_id": env_id, "domain": activation.domain},
+                )
+        if not effective_bindings:
+            raise KehrnelError(
+                code="BINDINGS_UNAVAILABLE",
+                status=500,
+                message=(
+                    "Bindings not available; activate with bindings_ref and configure a bindings resolver."
+                ),
+                details={
+                    "env_id": env_id,
+                    "domain": activation.domain,
+                    "strategy_id": activation.strategy_id,
+                    "activation_id": activation.activation_id,
+                    "has_plaintext_bindings": bool(activation.bindings),
+                    "bindings_ref": activation.bindings_ref,
+                    "bindings_in_payload": False,
+                },
+            )
+        return effective_bindings
+
+    @staticmethod
+    def _seed_target_collection(manifest: StrategyManifest, config: Dict[str, Any], declared_name: str) -> str:
+        """Map a manifest-declared seed collection to its configured tenant name."""
+        spec = getattr(manifest, "pack_spec", None)
+        if not isinstance(spec, dict):
+            return declared_name
+        defaults = getattr(manifest, "default_config", None) or {}
+
+        def _get(obj: Dict[str, Any], path: str):
+            current: Any = obj
+            for part in (path or "").split("."):
+                if isinstance(current, dict) and part in current:
+                    current = current[part]
+                else:
+                    return None
+            return current
+
+        for store in (spec.get("storage") or {}).get("stores") or []:
+            if not isinstance(store, dict):
+                continue
+            path = store.get("collectionNameFromConfig")
+            if not path:
+                continue
+            if _get(defaults, path) == declared_name:
+                configured = _get(config or {}, path)
+                if isinstance(configured, str) and configured.strip():
+                    return configured.strip()
+        return declared_name
+
+    @staticmethod
+    async def _copy_seed_collection(
+        source_db: Any,
+        target_db: Any,
+        source_name: str,
+        target_name: str,
+        *,
+        replace: bool = False,
+        batch_size: int = 2000,
+    ) -> tuple[str, int]:
+        """Copy one seed collection and return (copy_path, copied_count).
+
+        Prefers a server-side ``$out`` copy (no document round-trips, the right
+        shape for a SaaS activation of a ~150k-document demo subset) and falls
+        back to a bounded client-side batched copy when the deployment forbids
+        it (e.g. restricted roles). Indexes are created afterwards by the
+        activation's plan/apply step.
+        """
+        if source_db.name == target_db.name and source_name == target_name:
+            raise KehrnelError(
+                code="SEED_SOURCE_EQUALS_TARGET",
+                status=400,
+                message=(
+                    "The seed source and target resolve to the same collection; refusing "
+                    "to copy a collection onto itself."
+                ),
+                details={"database": source_db.name, "collection": source_name},
+            )
+        target = target_db[target_name]
+        if not replace:
+            try:
+                await source_db[source_name].aggregate(
+                    [{"$match": {}}, {"$out": {"db": target_db.name, "coll": target_name}}],
+                    allowDiskUse=True,
+                ).to_list(length=None)
+                return "server_side", int(await target.estimated_document_count())
+            except Exception:
+                # Fall through to the portable batched copy.
+                pass
+        if replace:
+            await target.delete_many({})
+        copied = 0
+        batch: list[Dict[str, Any]] = []
+        async for document in source_db[source_name].find({}):
+            batch.append(document)
+            if len(batch) >= batch_size:
+                await target.insert_many(batch, ordered=False)
+                copied += len(batch)
+                batch = []
+        if batch:
+            await target.insert_many(batch, ordered=False)
+            copied += len(batch)
+        return "batched", copied
+
+    async def provision_activation_seed(
+        self,
+        env_id: str,
+        activation: EnvironmentActivation,
+        *,
+        force: bool = False,
+    ) -> Optional[Dict[str, Any]]:
+        """Copy manifest-declared seed collections into the activation-owned database.
+
+        Sample-class content only: the seed source is a redistributable demo
+        subset declared in the pack manifest. Runs only after every required
+        attestation is recorded on the activation.
+        """
+        manifest = self.registry.get_manifest(activation.strategy_id)
+        if manifest is None:
+            raise ValueError(f"Strategy {activation.strategy_id} not registered")
+        activation_block = getattr(manifest, "activation", None)
+        seed = getattr(activation_block, "seed", None)
+        if seed is None:
+            return None
+        declared = {
+            condition.id: condition for condition in (activation_block.conditions or [])
+        }
+        recorded = {
+            str(record.get("id"))
+            for record in (activation.condition_acceptances or [])
+            if isinstance(record, dict)
+        }
+        missing = [cid for cid in activation_block.required_attestation_ids if cid not in recorded]
+        if missing:
+            condition = declared.get(missing[0])
+            references = [
+                reference.model_dump() if hasattr(reference, "model_dump") else dict(reference)
+                for reference in (getattr(condition, "references", None) or [])
+            ]
+            raise KehrnelError(
+                code=getattr(condition, "code", None) or "STRATEGY_ATTESTATION_REQUIRED",
+                status=422,
+                message=(
+                    "Seed provisioning requires an accepted license attestation. "
+                    + (getattr(condition, "message", None) or "")
+                ).strip(),
+                details={
+                    "strategy_id": manifest.id,
+                    "condition_id": missing[0],
+                    "missing_condition_ids": missing,
+                    "references": references,
+                },
+            )
+
+        effective_bindings = await self._effective_bindings(
+            env_id, activation, op="provision_seed"
+        )
+        effective_bindings = self._bind_strategy_database(manifest, activation.config, effective_bindings)
+        db_cfg = (effective_bindings or {}).get("db") or {}
+        if db_cfg.get("provider") != "mongodb":
+            raise KehrnelError(
+                code="SEED_BINDING_REQUIRED",
+                status=400,
+                message="Seed provisioning requires a MongoDB storage binding.",
+                details={"strategy_id": manifest.id},
+            )
+        target_database = self._strategy_database(manifest, activation.config)
+        source_database = str(seed.source_database or "").strip()
+        if not source_database:
+            raise KehrnelError(
+                code="SEED_SOURCE_MISSING",
+                status=400,
+                message="The manifest's activation.seed does not declare a source_database.",
+                details={"strategy_id": manifest.id},
+            )
+        client = _mongo_get_client(effective_bindings)
+        source_db = client[source_database]
+        target_db = client[target_database]
+        results: list[Dict[str, Any]] = []
+        started_at = datetime.utcnow().isoformat()
+        for entry in seed.collections or []:
+            target_name = self._seed_target_collection(manifest, activation.config, entry.name)
+            source_name = entry.source or entry.name
+            if entry.mode == "empty":
+                if target_name not in await target_db.list_collection_names():
+                    await target_db.create_collection(target_name)
+                results.append(
+                    {
+                        "name": entry.name,
+                        "collection": target_name,
+                        "mode": "empty",
+                        "copied": 0,
+                        "skipped": True,
+                    }
+                )
+                continue
+            target = target_db[target_name]
+            existing_count = await target.estimated_document_count()
+            if existing_count and not force:
+                results.append(
+                    {
+                        "name": entry.name,
+                        "collection": target_name,
+                        "mode": "copy",
+                        "copied": 0,
+                        "existing": existing_count,
+                        "skipped": True,
+                        "reason": "target_not_empty",
+                    }
+                )
+                continue
+            copy_mode, copied = await self._copy_seed_collection(
+                source_db,
+                target_db,
+                source_name,
+                target_name,
+                replace=bool(force and existing_count),
+            )
+            entry_result: Dict[str, Any] = {
+                "name": entry.name,
+                "collection": target_name,
+                "mode": "copy",
+                "copy_path": copy_mode,
+                "copied": copied,
+                "skipped": False,
+            }
+            if entry.expected_documents is not None and copied != entry.expected_documents:
+                entry_result["warning"] = (
+                    f"expected {entry.expected_documents} documents but copied {copied}"
+                )
+            results.append(entry_result)
+        observed_digest = "sha256:" + hashlib.sha256(
+            "|".join(
+                f"{entry['collection']}:{entry['copied']}" for entry in sorted(results, key=lambda item: item["collection"])
+            ).encode("utf-8")
+        ).hexdigest()
+        warnings = [
+            f"{entry['collection']}: {entry['warning']}"
+            for entry in results
+            if entry.get("warning")
+        ]
+        if seed.digest and seed.digest != observed_digest:
+            warnings.append(
+                f"seed digest mismatch: manifest declares {seed.digest} but observed {observed_digest}"
+            )
+        result = {
+            "ok": not warnings,
+            "kind": seed.kind,
+            "source_database": source_database,
+            "database": target_database,
+            "license_class": seed.license_class,
+            "scope": seed.scope,
+            "manifest_digest": seed.digest,
+            "observed_digest": observed_digest,
+            "collections": results,
+            "warnings": warnings,
+            "started_at": started_at,
+            "completed_at": datetime.utcnow().isoformat(),
+        }
+        self.registry.update_activation_fields(env_id, activation.domain, seed=result)
+        return result
+
     async def activate(
         self,
         env_id: str,
@@ -168,6 +580,7 @@ class StrategyRuntime:
         force: bool = False,
         replace_reason: str | None = None,
         bindings_ref: str | None = None,
+        condition_acceptances: list[Dict[str, Any]] | None = None,
     ):
         manifest = self.registry.get_manifest(strategy_id)
         if not manifest:
@@ -181,6 +594,8 @@ class StrategyRuntime:
         if env_record and not bindings_ref and getattr(env_record, "bindings_ref", None):
             bindings_ref = env_record.bindings_ref
         existing = self.registry.get_activation(env_id, chosen_domain)
+        accepted_at = datetime.utcnow().isoformat()
+        acceptances = self._acceptance_records(manifest, existing, condition_acceptances, accepted_at)
         incoming_bindings = self._has_meaningful_bindings(bindings)
         if incoming_bindings and not allow_plaintext_bindings:
             raise KehrnelError(
@@ -249,6 +664,12 @@ class StrategyRuntime:
                 and bindings_match
                 and activation_version_compatible(existing, manifest)
             ):
+                if not self._acceptances_equal(acceptances, existing.condition_acceptances or []):
+                    existing = self.registry.update_activation_fields(
+                        env_id,
+                        chosen_domain,
+                        condition_acceptances=acceptances,
+                    ) or existing
                 if digest_matches:
                     return replace(
                         existing,
@@ -296,6 +717,8 @@ class StrategyRuntime:
             replaced_from={"activation_id": existing.activation_id, "strategy_id": existing.strategy_id, "version": existing.version} if existing else None,
             bundle_refs=bundle_refs,
             store_profiles=store_profiles,
+            condition_acceptances=acceptances,
+            seed=getattr(existing, "seed", None) if existing else None,
         )
         hist_reason = replace_reason or (reason if existing else reason) or ("replace" if existing else "activate")
         if existing and not hist_reason:
@@ -427,8 +850,11 @@ class StrategyRuntime:
             raise KehrnelError(code="DOMAIN_REQUIRED", status=400, message="domain is required")
 
         if requested_domain:
+            # An explicit domain is a routing boundary. Never fall back to the
+            # environment's sole activation: that could execute a FHIR request
+            # through openEHR (or vice versa) when only the other domain exists.
             activation = self.registry.get_activation(env_id, requested_domain)
-        if not activation:
+        else:
             activation = self.registry.get_activation(env_id)
         if not activation:
             raise KehrnelError(code="ACTIVATION_NOT_FOUND", status=404, message=f"No activation for env {env_id} (domain={requested_domain})", details={"env_id": env_id, "domain": requested_domain})
@@ -466,6 +892,57 @@ class StrategyRuntime:
                         details=details,
                     )
 
+        # Server-side orchestration may pin a request to the activation it
+        # authorized before performing slower work (for example terminology
+        # expansion).  Re-check that snapshot at the dispatch boundary so an
+        # activation switch cannot execute the reviewed plan against a
+        # different strategy configuration or binding.
+        activation_precondition = (
+            payload.get("__activation_precondition")
+            if isinstance(payload, dict)
+            else None
+        )
+        if activation_precondition is not None:
+            if not isinstance(activation_precondition, dict):
+                raise KehrnelError(
+                    code="ACTIVATION_PRECONDITION_INVALID",
+                    status=400,
+                    message="The activation precondition must be an object.",
+                )
+            actual_activation = {
+                "activationId": activation.activation_id,
+                "strategyId": activation.strategy_id,
+                "configHash": activation.config_hash
+                or self._config_hash(activation.config),
+                "manifestDigest": activation.manifest_digest
+                or current_digest,
+                "bindingsHash": activation.bindings_hash,
+            }
+            mismatches = {
+                field: {
+                    "expected": expected,
+                    "actual": actual_activation.get(field),
+                }
+                for field, expected in activation_precondition.items()
+                if field in actual_activation
+                and expected is not None
+                and actual_activation.get(field) != expected
+            }
+            if mismatches:
+                raise KehrnelError(
+                    code="ACTIVATION_PRECONDITION_FAILED",
+                    status=409,
+                    message=(
+                        "The active strategy changed after the request was "
+                        "authorized; create a new plan against the current activation."
+                    ),
+                    details={
+                        "env_id": env_id,
+                        "domain": requested_domain or activation.domain,
+                        "mismatches": mismatches,
+                    },
+                )
+
         bindings_payload = (payload or {}).get("bindings") if isinstance(payload, dict) else None
         if bindings_payload:
             raise KehrnelError(
@@ -473,70 +950,42 @@ class StrategyRuntime:
                 status=400,
                 message="Per-request plaintext bindings are not allowed. Use bindings_ref activation.",
             )
-        effective_bindings = activation.bindings
-        if not effective_bindings and activation.bindings_ref:
-            if not effective_bindings and self.bindings_resolver is None:
-                raise KehrnelError(
-                    code="BINDINGS_RESOLVER_NOT_CONFIGURED",
-                    status=500,
-                    message=(
-                        "Activation uses bindings_ref but no bindings resolver is configured. "
-                        "Set KEHRNEL_BINDINGS_RESOLVER or configure HDL resolver env vars."
-                    ),
-                    details={
-                        "env_id": env_id,
-                        "domain": activation.domain,
-                        "strategy_id": activation.strategy_id,
-                        "activation_id": activation.activation_id,
-                        "bindings_ref": activation.bindings_ref,
-                        "required_env": [
-                            "KEHRNEL_BINDINGS_RESOLVER",
-                            "ENV_SECRETS_KEY",
-                            "CORE_MONGODB_URL",
-                            "CORE_DATABASE_NAME",
-                        ],
-                    },
-                )
-            try:
-                effective_bindings = await _resolve_bindings_ref(
-                    self.bindings_resolver,
-                    bindings_ref=activation.bindings_ref,
-                    env_id=env_id,
-                    domain=activation.domain,
-                    strategy_id=activation.strategy_id,
-                    op=op,
-                    context={"payload": payload or {}, "activation_config": activation.config or {}},
-                )
-            except Exception as exc:
-                raise KehrnelError(
-                    code="BINDINGS_REF_RESOLUTION_FAILED",
-                    status=502,
-                    message=str(exc),
-                    details={"bindings_ref": activation.bindings_ref, "env_id": env_id, "domain": activation.domain},
-                )
-        if not effective_bindings:
-            raise KehrnelError(
-                code="BINDINGS_UNAVAILABLE",
-                status=500,
-                message=(
-                    "Bindings not available; activate with bindings_ref and configure a bindings resolver."
-                ),
-                details={
-                    "env_id": env_id,
-                    "domain": activation.domain,
-                    "strategy_id": activation.strategy_id,
-                    "activation_id": activation.activation_id,
-                    "has_plaintext_bindings": bool(activation.bindings),
-                    "bindings_ref": activation.bindings_ref,
-                    "bindings_in_payload": False,
-                },
-            )
+        effective_bindings = await self._effective_bindings(
+            env_id,
+            activation,
+            op=op,
+            payload=payload,
+        )
 
         # The environment binding owns connectivity and credentials. The
         # activation owns the logical strategy database. Never allow a database
         # embedded in the URI, environment metadata, or a generic resolver to
         # redirect strategy collections into the tenant core database.
         effective_bindings = self._bind_strategy_database(manifest, activation.config, effective_bindings)
+        resolved_target_digest = resolved_data_target_digest(effective_bindings)
+        expected_target_digest = (
+            activation_precondition.get("dataTargetDigest")
+            if isinstance(activation_precondition, dict)
+            else None
+        )
+        if (
+            expected_target_digest is not None
+            and resolved_target_digest != expected_target_digest
+        ):
+            raise KehrnelError(
+                code="DATA_TARGET_PRECONDITION_FAILED",
+                status=409,
+                message=(
+                    "The resolved persistence target changed after the request "
+                    "was authorized; retry against the current target."
+                ),
+                details={
+                    "env_id": env_id,
+                    "domain": requested_domain or activation.domain,
+                    "expectedDataTargetDigest": expected_target_digest,
+                    "actualDataTargetDigest": resolved_target_digest,
+                },
+            )
 
         cache = self._env_cache.setdefault(env_id, {}).setdefault("dict_cache", {})
         config_hash = activation.config_hash or self._config_hash(activation.config)
@@ -549,6 +998,7 @@ class StrategyRuntime:
             "bundle_refs": activation.bundle_refs or {},
             "bundle_store": self.bundle_store,
             "store_profiles": activation.store_profiles or {},
+            "data_target_digest": resolved_target_digest,
         }
         if isinstance(payload, dict):
             if payload.get("__job_id"):
@@ -596,9 +1046,22 @@ class StrategyRuntime:
                 return _to_dict(await handle.plugin.reverse_transform(ctx, payload or {}))
             if op_lower == "ingest":
                 return await handle.plugin.ingest(ctx, payload or {})
+            if op_lower == "authoritative_write":
+                return _to_dict(
+                    await handle.plugin.execute_authoritative_write(
+                        ctx,
+                        payload or {},
+                    )
+                )
             if op_lower == "compile_query":
                 domain = payload.get("domain")
                 query = payload.get("query")
+                if isinstance(query, dict) and isinstance(query.get("aql"), str):
+                    query = {
+                        "raw_aql": query.get("aql"),
+                        "params": query.get("parameters") or query.get("params") or {},
+                        "debug": bool(query.get("debug") or payload.get("debug")),
+                    }
                 if query is None and isinstance(payload, dict) and isinstance(payload.get("aql"), str):
                     # Accept raw AQL payloads at the runtime layer.
                     # openEHR strategies may choose to compile these through a domain-specific
@@ -654,6 +1117,12 @@ class StrategyRuntime:
             if op_lower == "query":
                 domain = payload.get("domain")
                 query = payload.get("query")
+                if isinstance(query, dict) and isinstance(query.get("aql"), str):
+                    query = {
+                        "raw_aql": query.get("aql"),
+                        "params": query.get("parameters") or query.get("params") or {},
+                        "debug": bool(query.get("debug") or payload.get("debug")),
+                    }
                 if query is None and isinstance(payload, dict) and isinstance(payload.get("aql"), str):
                     # Accept raw AQL payloads and defer domain-specific compilation to the strategy.
                     aql_text = payload.get("aql")
@@ -713,12 +1182,16 @@ class StrategyRuntime:
         return synced or replace(activation, manifest_digest=manifest_digest, updated_at=now)
 
     def _deep_merge(self, base: Dict[str, Any], overlay: Dict[str, Any]) -> Dict[str, Any]:
-        result = dict(base or {})
+        # Activation must never hand a plugin references into the manifest's
+        # shared default_config. Several strategies enrich nested defaults at
+        # runtime; a shallow copy made a second identical activation hash a
+        # different configuration.
+        result = deepcopy(base or {})
         for k, v in (overlay or {}).items():
             if isinstance(v, dict) and isinstance(result.get(k), dict):
                 result[k] = self._deep_merge(result.get(k, {}), v)
             else:
-                result[k] = v
+                result[k] = deepcopy(v)
         return result
 
     def _load_defaults_from_entrypoint(self, manifest: StrategyManifest) -> Dict[str, Any]:
@@ -839,6 +1312,31 @@ class StrategyRuntime:
                 api_key=embedding_cfg.get("api_key"),
                 timeout_seconds=int(embedding_cfg.get("timeout_seconds") or 60),
                 headers=embedding_cfg.get("headers") or {},
+            )
+        llm_cfg = (bindings or {}).get("llm") if isinstance(bindings, dict) else None
+        if not llm_cfg and isinstance(bindings, dict):
+            extras = bindings.get("extras")
+            llm_cfg = extras.get("llm") if isinstance(extras, dict) else None
+        if llm_cfg and llm_cfg.get("provider") == "http" and llm_cfg.get("endpoint"):
+            adapters["llm"] = HttpLlmAdapter(
+                str(llm_cfg.get("endpoint")),
+                model=str(llm_cfg.get("model") or "gpt-5.5"),
+                api_key=llm_cfg.get("api_key"),
+                timeout_seconds=int(llm_cfg.get("timeout_seconds") or 60),
+                max_tokens=int(llm_cfg.get("max_tokens") or 4096),
+                headers=llm_cfg.get("headers") or {},
+            )
+        rerank_cfg = (bindings or {}).get("rerank") if isinstance(bindings, dict) else None
+        if not rerank_cfg and isinstance(bindings, dict):
+            extras = bindings.get("extras")
+            rerank_cfg = extras.get("rerank") if isinstance(extras, dict) else None
+        if rerank_cfg and rerank_cfg.get("provider") == "http" and rerank_cfg.get("endpoint"):
+            adapters["rerank"] = HttpRerankAdapter(
+                str(rerank_cfg.get("endpoint")),
+                model=str(rerank_cfg.get("model") or "rerank-2.5"),
+                api_key=rerank_cfg.get("api_key"),
+                timeout_seconds=int(rerank_cfg.get("timeout_seconds") or 15),
+                headers=rerank_cfg.get("headers") or {},
             )
         loop = self._current_loop()
         adapters_by_loop[cache_key] = {

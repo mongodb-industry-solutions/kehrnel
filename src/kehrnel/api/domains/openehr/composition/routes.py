@@ -12,7 +12,7 @@ from kehrnel.api.bridge.app.core.config_models import CompositionCollectionNames
 
 
 from kehrnel.api.domains.openehr.composition.service import (
-    add_composition, 
+    add_composition,
     bulk_add_compositions,
     bulk_delete_compositions,
     list_composition_summaries,
@@ -65,11 +65,12 @@ router = APIRouter(
 
 async def get_flattener(request: Request) -> CompositionFlattener:
     """
-    Dependency to retrieve the globally initialized CompositionFlattener
+    Resolve the flattener owned by this request's active environment.
     """
-    context = await resolve_active_openehr_context(request, ensure_ingestion=True)
+    context = await resolve_active_openehr_context(request, ensure_ingestion=False)
     await ensure_active_openehr_dictionaries(request, context=context)
-    flattener = getattr(request.app.state, "flattener", None)
+    context = await resolve_active_openehr_context(request, ensure_ingestion=True)
+    flattener = context.get("flattener")
     if flattener is None:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
@@ -79,9 +80,9 @@ async def get_flattener(request: Request) -> CompositionFlattener:
 
 
 async def get_unflattener(request: Request) -> CompositionUnflattener:
-    """Dependency to retrieve the globally initialized CompositionUnflattener."""
-    await resolve_active_openehr_context(request, ensure_ingestion=True)
-    unflattener = getattr(request.app.state, "unflattener", None)
+    """Resolve the unflattener owned by this request's active environment."""
+    context = await resolve_active_openehr_context(request, ensure_ingestion=True)
+    unflattener = context.get("unflattener")
     if unflattener is None:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
@@ -265,20 +266,20 @@ async def get_composition_by_id(
     # Return explicit JSONResponse with headers and status code
     # The 'composition.uid' will always be the full version_uid of the returned object
     last_modified_gmt = formatdate(composition.time_created.timestamp(), usegmt = True)
-    
+
     # Convert the data to JSON-serializable format
     import json
     from datetime import datetime, date
-    
+
     def json_serializer(obj):
         """JSON serializer for objects not serializable by default json code"""
         if isinstance(obj, (datetime, date)):
             return obj.isoformat()
         raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
-    
+
     # Serialize and deserialize to ensure all datetime objects are converted to strings
     json_data = json.loads(json.dumps(composition.data, default=json_serializer))
-    
+
     return JSONResponse(
         content=json_data,
         status_code=status.HTTP_200_OK,
@@ -333,20 +334,20 @@ async def get_composition_by_id_unflattened(
         ) from exc
 
     last_modified_gmt = formatdate(composition.time_created.timestamp(), usegmt=True)
-    
+
     # Convert the data to JSON-serializable format
     import json
     from datetime import datetime, date
-    
+
     def json_serializer(obj):
         """JSON serializer for objects not serializable by default json code"""
         if isinstance(obj, (datetime, date)):
             return obj.isoformat()
         raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
-    
+
     # Serialize and deserialize to ensure all datetime objects are converted to strings
     json_data = json.loads(json.dumps(composition.data, default=json_serializer))
-    
+
     return JSONResponse(
         content=json_data,
         status_code=status.HTTP_200_OK,
@@ -582,7 +583,7 @@ async def get_composition_version_endpoint(
     )
 
     version_uid = version_response.uid.value
-    
+
     # Set headers on the injected Response object
     response.headers["ETag"] = f'"{version_uid}"'
     response.headers["Location"] = f"/v1/ehr/{ehr_id}/composition/{version_uid}"

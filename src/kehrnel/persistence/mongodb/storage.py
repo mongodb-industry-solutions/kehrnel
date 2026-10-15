@@ -28,6 +28,24 @@ class MongoStorageAdapter(StorageAdapter):
     ) -> Any:
         return await self.db[collection].replace_one(flt, doc, upsert=upsert)
 
+    async def update_one(
+        self,
+        collection: str,
+        flt: Dict[str, Any],
+        update: Dict[str, Any],
+        upsert: bool = False,
+    ) -> Any:
+        return await self.db[collection].update_one(flt, update, upsert=upsert)
+
+    async def update_many(
+        self,
+        collection: str,
+        flt: Dict[str, Any],
+        update: Dict[str, Any],
+        upsert: bool = False,
+    ) -> Any:
+        return await self.db[collection].update_many(flt, update, upsert=upsert)
+
     async def replace_many(
         self, collection: str, docs: Iterable[Dict[str, Any]]
     ) -> Any:
@@ -59,6 +77,10 @@ class MongoStorageAdapter(StorageAdapter):
         collection: str,
         pipeline: List[Dict[str, Any]],
         allow_disk_use: bool = True,
+        hint: str | None = None,
     ) -> List[Dict[str, Any]]:
-        cursor = self.db[collection].aggregate(pipeline, allowDiskUse=allow_disk_use)
+        options: Dict[str, Any] = {"allowDiskUse": allow_disk_use}
+        if hint:
+            options["hint"] = hint
+        cursor = self.db[collection].aggregate(pipeline, **options)
         return [doc async for doc in cursor]
