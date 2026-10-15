@@ -4,7 +4,7 @@
     "kind": "industry-outcome-catalog",
     "id": "industry-outcomes",
     "version": "0.1.0",
-    "digest": "sha256:6b72be604b4ef470b2efa8b0e67f300ff9e8987f4ce7ec5fcebe8fcde0f04185"
+    "digest": "sha256:ba4adf22ebd44fc97348eb75878f93e2fb0edcdc931432b61193068d6f0fb497"
   },
   "catalogId": "industry-outcomes",
   "version": "0.1.0",
@@ -32736,7 +32736,7 @@
         "kind": "reference-architecture",
         "id": "architecture.healthcare.openehr-cdr",
         "version": "1.0.0",
-        "digest": "sha256:3f0792dad3ff22ddb81769ab0cae62280903bcddc132e14c04a57aa1ae28c9db"
+        "digest": "sha256:fd1bc0e73576c32d3b067dd4b356462e312d22b5330c56dfffe4387072db1e23"
       },
       "catalog": {
         "role": "reference_architecture",
@@ -32810,7 +32810,7 @@
           "kind": "strategy",
           "id": "openehr.rps_dual",
           "version": "0.2.0",
-          "digest": "sha256:d242b0cfa4ac09a7444f2954f6146251a962505378b64de9e85255e0b0f43713"
+          "digest": "sha256:56bda52f71718d9c2b797dd4fc520e419effb5c899bef643f693a0bea1b06cc6"
         },
         {
           "kind": "strategy",
@@ -32825,7 +32825,7 @@
         "kind": "solution-blueprint-template",
         "id": "template.healthcare.openehr-cdr-starter",
         "version": "1.0.0",
-        "digest": "sha256:b727788e004c77f20cbdaaf664bf26c37edb2b52e0d21791ce48088edc651e4e"
+        "digest": "sha256:a0ae48f3dcd371beed9656a9fbd0ee08d7fca7ce102d25d8087240b5b054b43e"
       },
       "capabilityMaturity": "compilable",
       "supportStatus": "supported",
@@ -32835,7 +32835,7 @@
           "kind": "strategy",
           "id": "openehr.rps_dual",
           "version": "0.2.0",
-          "digest": "sha256:d242b0cfa4ac09a7444f2954f6146251a962505378b64de9e85255e0b0f43713"
+          "digest": "sha256:56bda52f71718d9c2b797dd4fc520e419effb5c899bef643f693a0bea1b06cc6"
         },
         {
           "kind": "strategy",
@@ -32851,7 +32851,7 @@
         "kind": "reference-architecture",
         "id": "architecture.healthcare.openmrs-openehr-laboratory",
         "version": "1.0.0",
-        "digest": "sha256:452867eeddbd2967f458f922e1f0d12e7661584d95bb2abfa7d92070e5d0becf"
+        "digest": "sha256:3e77a6ccc8231e13bbf5b0d1c93b9da06dbc744dd9da4c34bfb69d72a1c5a1d0"
       },
       "catalog": {
         "role": "reference_architecture",
@@ -32924,7 +32924,7 @@
           "kind": "strategy",
           "id": "openehr.rps_dual",
           "version": "0.2.0",
-          "digest": "sha256:d242b0cfa4ac09a7444f2954f6146251a962505378b64de9e85255e0b0f43713"
+          "digest": "sha256:56bda52f71718d9c2b797dd4fc520e419effb5c899bef643f693a0bea1b06cc6"
         },
         {
           "kind": "strategy",
@@ -32950,7 +32950,7 @@
           "kind": "strategy",
           "id": "openehr.rps_dual",
           "version": "0.2.0",
-          "digest": "sha256:d242b0cfa4ac09a7444f2954f6146251a962505378b64de9e85255e0b0f43713"
+          "digest": "sha256:56bda52f71718d9c2b797dd4fc520e419effb5c899bef643f693a0bea1b06cc6"
         },
         {
           "kind": "strategy",
@@ -33651,7 +33651,7 @@
         "kind": "demo-experience",
         "id": "demo.healthcare.openehr-multipatient-aql",
         "version": "1.0.0",
-        "digest": "sha256:2bf0bfe225a36020f4312e44dce15d081ad98573816cec572076989c41479a13"
+        "digest": "sha256:84d9db1b4a564f744fc6af6ea0e12a238ae5d52b3b02598ed282fb5167863a48"
       },
       "catalog": {
         "role": "demo_experience",
@@ -33685,7 +33685,7 @@
           "kind": "reference-architecture",
           "id": "architecture.healthcare.openehr-cdr",
           "version": "1.0.0",
-          "digest": "sha256:3f0792dad3ff22ddb81769ab0cae62280903bcddc132e14c04a57aa1ae28c9db"
+          "digest": "sha256:fd1bc0e73576c32d3b067dd4b356462e312d22b5330c56dfffe4387072db1e23"
         }
       ],
       "interactionIds": [
@@ -33719,7 +33719,7 @@
               "kind": "strategy",
               "id": "openehr.rps_dual",
               "version": "0.2.0",
-              "digest": "sha256:d242b0cfa4ac09a7444f2954f6146251a962505378b64de9e85255e0b0f43713"
+              "digest": "sha256:56bda52f71718d9c2b797dd4fc520e419effb5c899bef643f693a0bea1b06cc6"
             },
             {
               "kind": "strategy",
@@ -33739,7 +33739,7 @@
           "kind": "strategy",
           "id": "openehr.rps_dual",
           "version": "0.2.0",
-          "digest": "sha256:d242b0cfa4ac09a7444f2954f6146251a962505378b64de9e85255e0b0f43713"
+          "digest": "sha256:56bda52f71718d9c2b797dd4fc520e419effb5c899bef643f693a0bea1b06cc6"
         },
         {
           "kind": "strategy",
@@ -33755,7 +33755,7 @@
         "kind": "demo-experience",
         "id": "demo.healthcare.openmrs-openehr-mapping",
         "version": "1.0.0",
-        "digest": "sha256:db55a13106251ac5b0d586365cb39ec992cf0f46cfc4154714b361ca5aa977a2"
+        "digest": "sha256:1dbc42145c415779162c522507af4b36fa5045f389088515938a28acecc8715e"
       },
       "catalog": {
         "role": "demo_experience",
@@ -33789,7 +33789,7 @@
           "kind": "reference-architecture",
           "id": "architecture.healthcare.openmrs-openehr-laboratory",
           "version": "1.0.0",
-          "digest": "sha256:452867eeddbd2967f458f922e1f0d12e7661584d95bb2abfa7d92070e5d0becf"
+          "digest": "sha256:3e77a6ccc8231e13bbf5b0d1c93b9da06dbc744dd9da4c34bfb69d72a1c5a1d0"
         }
       ],
       "interactionIds": [
@@ -33824,7 +33824,7 @@
               "kind": "strategy",
               "id": "openehr.rps_dual",
               "version": "0.2.0",
-              "digest": "sha256:d242b0cfa4ac09a7444f2954f6146251a962505378b64de9e85255e0b0f43713"
+              "digest": "sha256:56bda52f71718d9c2b797dd4fc520e419effb5c899bef643f693a0bea1b06cc6"
             },
             {
               "kind": "strategy",
@@ -33850,7 +33850,7 @@
           "kind": "strategy",
           "id": "openehr.rps_dual",
           "version": "0.2.0",
-          "digest": "sha256:d242b0cfa4ac09a7444f2954f6146251a962505378b64de9e85255e0b0f43713"
+          "digest": "sha256:56bda52f71718d9c2b797dd4fc520e419effb5c899bef643f693a0bea1b06cc6"
         },
         {
           "kind": "strategy",

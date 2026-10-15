@@ -7,7 +7,7 @@
         "kind": "solution-blueprint-template",
         "id": "template.healthcare.openehr-cdr-starter",
         "version": "1.0.0",
-        "digest": "sha256:b727788e004c77f20cbdaaf664bf26c37edb2b52e0d21791ce48088edc651e4e"
+        "digest": "sha256:a0ae48f3dcd371beed9656a9fbd0ee08d7fca7ce102d25d8087240b5b054b43e"
       },
       "catalog": {
         "role": "solution_blueprint_template",
@@ -131,7 +131,7 @@
               "kind": "strategy",
               "id": "openehr.rps_dual",
               "version": "0.2.0",
-              "digest": "sha256:d242b0cfa4ac09a7444f2954f6146251a962505378b64de9e85255e0b0f43713"
+              "digest": "sha256:56bda52f71718d9c2b797dd4fc520e419effb5c899bef643f693a0bea1b06cc6"
             }
           ]
         },
@@ -148,7 +148,7 @@
               "kind": "strategy",
               "id": "openehr.rps_dual",
               "version": "0.2.0",
-              "digest": "sha256:d242b0cfa4ac09a7444f2954f6146251a962505378b64de9e85255e0b0f43713"
+              "digest": "sha256:56bda52f71718d9c2b797dd4fc520e419effb5c899bef643f693a0bea1b06cc6"
             }
           ]
         }
