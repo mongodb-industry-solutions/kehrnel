@@ -94,5 +94,6 @@ completed independently.
 - [Query translation](./query-translation.md) — FHIR search → MQL pipeline
 - [Semantic projections](./semantic-projections.md) — opt-in clinical-text selection and preview
 - [Synthetic cohorts](./synthetic-cohorts.md) — patient-centred assets, API contract, evidence, and HDL journey
-- [Supported pilot runbook](./pilot-runbook.md) — deployment, migration, recovery, security, and delivery boundaries
+- [Pilot runbook](/docs/operate/fhir-pilot-runbook) — deployment, migration, recovery, security, and delivery boundaries
 - [FHIR domain API](/docs/api/domains/fhir/) — HTTP search contract
+

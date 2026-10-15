@@ -25,6 +25,7 @@ from kehrnel.engine.domains.fhir import implementation_guides
 from kehrnel.engine.strategies.fhir.resource_store._paths import SPEC_DIR
 from kehrnel.engine.strategies.fhir.resource_store.scripts import (
     bridge,
+    authoritative_write,
     cohort_blueprints,
     denormalize,
     generation,
@@ -72,6 +73,7 @@ _KNOWN_OPS = frozenset(
         "fhir_capabilities",
         "fhir_support_matrix",
         "fhir_stats",
+        "operational_probe",
         "fhir_import_resources",
         "fhir_migration_start",
         "fhir_migration_import_chunk",
@@ -92,7 +94,10 @@ class FHIRResourceStoreStrategy(StrategyPlugin):
     """Canonical per-resource-type FHIR storage with fhir-gen / fhir-mql integration."""
 
     def __init__(self, manifest: StrategyManifest = MANIFEST):
-        self.manifest = manifest
+        # Plugin-local enrichment (for example recipes.json) must not mutate
+        # the registry's manifest defaults or make identical activations
+        # produce different configuration hashes.
+        self.manifest = manifest.model_copy(deep=True)
         if SCHEMA_PATH.exists():
             self.manifest.config_schema = _load_json(SCHEMA_PATH)
         if DEFAULTS_PATH.exists():
@@ -284,6 +289,13 @@ class FHIRResourceStoreStrategy(StrategyPlugin):
     async def execute_query(self, ctx: StrategyContext, plan: QueryPlan) -> QueryResult:
         return await fhir_query.execute_fhir_query(ctx, plan)
 
+    async def execute_authoritative_write(
+        self,
+        ctx: StrategyContext,
+        request: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        return await authoritative_write.execute_authoritative_write(ctx, request)
+
     async def run_op(
         self, ctx: StrategyContext, op: str, payload: Dict[str, Any]
     ) -> Dict[str, Any]:
@@ -345,6 +357,9 @@ class FHIRResourceStoreStrategy(StrategyPlugin):
         if op == "fhir_stats":
             return await fhir_stats_mod.fhir_stats(ctx, payload)
 
+        if op == "operational_probe":
+            return await fhir_stats_mod.fhir_operational_probe(ctx, payload)
+
         if op == "fhir_import_resources":
             return await import_resources.fhir_import_resources(
                 ctx,
@@ -402,3 +417,4 @@ class FHIRResourceStoreStrategy(StrategyPlugin):
             return await semantic.fhir_semantic_search(ctx, payload)
 
         raise NotImplementedError(f"fhir.resource_store op '{op}' not implemented")
+

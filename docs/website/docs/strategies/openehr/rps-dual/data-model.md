@@ -131,8 +131,7 @@ The `sn` array keeps only the fields required by the active analytics/search map
 ## Path Encoding
 
 `p` stores the reversed path. The default separator is `:`; query-safe
-activation overrides are `.`, `/`, and `:`. IBM exact-model deployments
-commonly use `/`. Depending on strategy config, path segments may be compacted
+activation overrides are `.`, `/`, and `:`. Depending on strategy config, path segments may be compacted
 with:
 
 | Component | Current default |
@@ -185,6 +184,7 @@ kehrnel strategy build-search-index \
 
 ## Related
 
-- [Reversed Paths](/docs/concepts/reversed-paths) - Path encoding explained
-- [Flattening](/docs/concepts/flattening) - Transformation process
+- [Hierarchical Path Encoding](/docs/domains/openehr/concepts/reversed-paths) - Path encoding explained
+- [Composition Flattening Pipeline](/docs/domains/openehr/composition-flattening) - Transformation process
 - [Query Translation](/docs/strategies/openehr/rps-dual/query-translation) - How queries use this model
+

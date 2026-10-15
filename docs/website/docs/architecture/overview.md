@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Architecture Overview
 
-\{kehrnel\} is a runtime platform for healthcare data execution, not a single fixed pipeline.
+\{kehrnel\} is a runtime platform for healthcare data execution, not a single fixed pipeline. Domain standards define the data and the interactions; strategy packs decide how that data is stored, transformed and queried on MongoDB.
 
 ## Core Principle
 
@@ -16,42 +16,48 @@ sidebar_position: 1
 ## High-Level Architecture
 
 ```text
-Clients (HDL UI, API consumers, automation)
+Clients (HDL UI, API consumers, kehrnel CLI, automation)
         |
         v
-FastAPI Runtime (domain APIs + admin APIs + strategy APIs)
+FastAPI runtime
+  domain APIs    /api/domains/openehr | fhir | snomedct
+  runtime APIs   /environments/{env_id}/...  (activate, plan, apply, ingest, query, run, ops)
         |
         v
-Strategy Runtime (activation registry + strategy packs + bindings)
+Strategy runtime
+  manifest registry  ->  activation per (environment, domain)  ->  strategy plugin
         |
         v
-Persistence Backends (MongoDB today, extensible model)
+MongoDB (storage adapter; Atlas Search where the strategy uses it)
 ```
 
-## Multi-Domain / Multi-Strategy Runtime
+The layers:
 
-\{kehrnel\} supports:
+- **Domain APIs** expose standard-shaped interactions (openEHR REST and AQL, FHIR REST and search, SNOMED CT terminology).
+- **Runtime APIs** expose the same operations for every domain: activation, `plan` / `apply`, `transform`, `ingest`, `query` / `compile_query`, strategy ops and synthetic jobs.
+- **The strategy runtime** (`StrategyRuntime` in `kehrnel.engine.core.runtime`) resolves the activation for the requested environment and domain, resolves bindings, and calls the strategy plugin named in the manifest entrypoint.
+- **Strategy packs** carry a `manifest.json` (id, domain, capabilities, ops, interaction contracts), configuration defaults and schema, and the plugin code.
 
-- multiple domain APIs (current: openEHR, extensible)
-- multiple strategy packs per domain
-- independent activation per environment
-- operational probes and lifecycle controls per activation
+## Official Domains and Strategies
 
-## Data Workloads Covered
+| Domain | Strategy | Stores | Query contract |
+|--------|----------|--------|----------------|
+| openEHR | `openehr.rps_dual` | flattened compositions plus a slim search projection | AQL |
+| FHIR | `fhir.resource_store` | FHIR resources with search projections | FHIR REST search |
+| CDISC | `cdisc.sdr` | study datasets, snapshots, artifacts and projections | `cdisc-query/v1`, `cdisc-analysis/v1` |
+| SNOMED CT | `snomedct.mongodb` | release concepts plus a term sidecar | lookup, search, ECL, subsumption |
 
-- canonical structured CDR workflows
-- search and analytics projections
-- synthetic data generation
-- unstructured clinical report extraction (roadmap)
-- hybrid rule + LLM mapping to golden records (roadmap)
+Each environment has at most one activation per domain, and domains are activated independently. A request that names a domain is executed only by that domain's activation.
 
-## Deployment Topologies
+## Execution Paths
 
-- shared instance for multiple workspaces
-- dedicated tenant runtime and data stack
-- cloud and self-managed variants
+- [Query and Execution](/docs/architecture/query-engine) - how a query reaches a domain compiler and runs on MongoDB
+- [Ingest and Transformation](/docs/architecture/transformation-pipeline) - the shared ingest, transform, ops and synthetic-job model
 
 ## Related
 
-- [Vision & Roadmap](/docs/vision/roadmap)
+- [Concepts Overview](/docs/concepts/overview)
+- [Domains](/docs/domains/)
 - [Strategies Overview](/docs/strategies/overview)
+- [Vision & Roadmap](/docs/vision/roadmap)
+

@@ -143,6 +143,16 @@ Docker: `docker compose --profile fhir up kehrnel-fhir-api` or `Dockerfile.backe
 
 ## Runtime Endpoints Used by HDL
 
+The application mounts these paths below `/v1`; the list omits that shared
+prefix for readability.
+
+- `GET /outcome-catalog` (Outcome Patterns, Reference Architectures, and Demo Experiences)
+- `POST /reference-architectures/{architecture_id}/instantiate` (exact,
+  request-bound Blueprint derivation with integrity and compiler validation;
+  no persistence or activation)
+- `POST /solution-blueprints/canonicalize` (structural validation, canonical
+  defaults and authoritative Blueprint digest; catalog, compiler and activation
+  readiness remain explicitly unevaluated)
 - `GET /strategies`
 - `GET /strategies/{id}`
 - `GET /environments`
@@ -163,6 +173,8 @@ Preferred runtime pattern:
 - keep `POST /environments/{env}/compile_query` and `POST /environments/{env}/query` for explicit runtime query surfaces
 
 Detailed contract docs:
+- [Outcome catalog and reference architectures](docs/outcome-catalog-and-reference-architectures.md)
+- [Data Lab Core contracts](docs/data-lab-core-contracts.md)
 - this README (standalone and integration model)
 
 ## Strategy Packs
@@ -290,3 +302,4 @@ Notes:
 Code is Apache 2.0 (`LICENSE`).
 
 Strategy data assets under `src/kehrnel/engine/strategies/` are CC BY 4.0 (see `src/kehrnel/engine/strategies/LICENSE`).
+

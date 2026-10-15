@@ -4,17 +4,18 @@ sidebar_position: 1
 
 # Domains
 
-`Domains` organize runtime behavior by data ecosystem (for example openEHR, FHIR, and future domains).
+`Domains` organize runtime behavior by data ecosystem (for example openEHR, FHIR, CDISC, and SNOMED CT).
 
 Use this section to navigate domain-specific APIs, strategies, and workflows.
 
 ## Available Domains
 
 - [openEHR](/docs/domains/openehr)
-- [FHIR domain API](/docs/api/domains/fhir/) — search Bundle endpoint
-- [FHIR Resource Store strategy](/docs/strategies/fhir/resource-store/) — `fhir.resource_store` storage and workflows
-- unstructured clinical documents / extraction domains
-- cross-domain interoperability patterns
+- [FHIR](/docs/domains/fhir)
+- [CDISC](/docs/domains/cdisc)
+- [SNOMED CT](/docs/domains/snomedct)
+
+On the roadmap: unstructured clinical documents and extraction, and cross-domain interoperability patterns.
 
 ## Domain Responsibilities
 
@@ -23,3 +24,4 @@ Each domain should define:
 - API surface and contracts
 - strategy catalog and lifecycle
 - CLI workflows and operational guidance
+

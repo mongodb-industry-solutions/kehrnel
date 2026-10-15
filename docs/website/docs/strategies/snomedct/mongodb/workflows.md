@@ -294,6 +294,72 @@ curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/semantic-facets" \
   }'
 ```
 
+Resolve a reusable scope and then search inside it. The second call is served
+from the scope cache:
+
+```bash
+curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/scope" \
+  -H "Content-Type: application/json" \
+  -H "x-active-env: dev" \
+  -d '{"ecl": "<< 73211009", "area_concept_id": "404684003"}'
+
+curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/search" \
+  -H "Content-Type: application/json" \
+  -H "x-active-env: dev" \
+  -d '{"q": "neuropathy", "language": "en", "ecl": "<< 73211009", "limit": 10}'
+```
+
+Retrieve with the vector or fused branch. Both degrade to lexical when no vector
+index is configured, and the response says which path ran:
+
+```bash
+curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/hybrid-search" \
+  -H "Content-Type: application/json" \
+  -H "x-active-env: dev" \
+  -d '{"q": "heart attack", "mode": "hybrid", "language": "en", "limit": 10}'
+```
+
+Map a whole clinical note. Every candidate still comes from the release; the
+extractor only finds phrases and reads their context:
+
+```bash
+curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/nlp-map" \
+  -H "Content-Type: application/json" \
+  -H "x-active-env: dev" \
+  -d '{
+    "text": "Assessment: type 2 diabetes mellitus.\nFamily history: mother with type 2 diabetes mellitus.\nNo evidence of diabetic nephropathy.",
+    "language": "en",
+    "release_id": "20260601",
+    "target_context": "Condition.code"
+  }'
+
+kehrnel terminology nlp-map note.txt --language en --env dev
+```
+
+Add `"extract_only": true` to review the evidence graph without running
+retrieval.
+
+Ask the LLM to adjudicate between candidates retrieval already returned. The
+model may not invent a code, and the call fails closed when no `llm` binding is
+configured:
+
+```bash
+curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/llm-ground" \
+  -H "Content-Type: application/json" \
+  -H "x-active-env: dev" \
+  -d '{
+    "language": "en",
+    "mentions": [
+      {
+        "mentionId": "m1",
+        "phrase": "type 2 diabetes mellitus",
+        "assertion": "present",
+        "candidates": [{"conceptId": "44054006", "term": "Diabetes mellitus type 2"}]
+      }
+    ]
+  }'
+```
+
 Ground extracted mentions:
 
 ```bash
@@ -338,9 +404,42 @@ curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/benchmarks/retrieval" \
   }'
 ```
 
+Store a gold note and grade retrieval against it. Only `present`, `patient`
+facts with a `conceptId` become expected answers:
+
+```bash
+curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/gold-notes" \
+  -H "Content-Type: application/json" -H "x-active-env: dev" \
+  -d '{
+    "id":"gold-en-diabetes",
+    "title":"Type 2 diabetes follow-up",
+    "languageCode":"en",
+    "text":"Patient has type 2 diabetes mellitus.",
+    "facts":[{"phrase":"type 2 diabetes mellitus","assertion":"present","subject":"patient","section":"active","conceptId":"44054006"}]
+  }'
+
+curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/benchmarks/retrieval" \
+  -H "Content-Type: application/json" -H "x-active-env: dev" \
+  -d '{"gold_note_ids":["gold-en-diabetes"],"language":"en","top_k":10}'
+
+kehrnel terminology gold-notes --env dev
+kehrnel terminology benchmark-retrieval --gold-note-ids gold-en-diabetes --env dev
+kehrnel terminology delete-gold-note gold-en-diabetes --env dev
+```
+
+Record a product event. The raw query is hashed and truncated, never stored
+verbatim:
+
+```bash
+curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/usage-events" \
+  -H "Content-Type: application/json" -H "x-active-env: dev" \
+  -d '{"event_type":"explorer.result.selected","query":"diabetes mellitus","concept_id":"73211009"}'
+```
+
 Readiness:
 
 ```bash
 curl -sS "${RUNTIME_URL}/api/domains/snomedct/readiness?release_id=20260601" \
   -H "x-active-env: dev"
 ```
+

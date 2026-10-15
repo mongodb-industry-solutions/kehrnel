@@ -180,7 +180,7 @@ understands:
   },
   "ids": {
     "ehr_id": "string",
-    "composition_id": "objectid"
+    "composition_id": "string"
   },
   "paths": {
     "separator": ":"
@@ -224,8 +224,7 @@ understands:
 
 Current supported config surface:
 
-- query-safe path separators are `.`, `/`, and `:`; the default is `:`, and IBM
-  exact-model environments commonly use `/`
+- query-safe path separators are `.`, `/`, and `:`; the default is `:`
 - supported encoding profiles are `profile.codedpath` and
   `profile.search_shortcuts`
 - the search-side document carries `_id`, `ehr_id`, `comp_id`, `tid`,
@@ -261,3 +260,4 @@ and config reference live in:
 - [Data Model](/docs/strategies/openehr/rps-dual/data-model) - Detailed document structure
 - [Query Translation](/docs/strategies/openehr/rps-dual/query-translation) - AQL to MQL compilation
 - [Configuration](/docs/strategies/openehr/rps-dual/configuration) - Full configuration reference
+

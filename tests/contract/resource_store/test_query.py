@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import os
+from types import SimpleNamespace
 
 import pytest
 
+from kehrnel.engine.core.data_target import resolved_data_target_digest
 from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.core.types import QueryPlan, StrategyContext
 from fhir_search_to_mql.parser.search_request_parser import (
@@ -21,17 +23,19 @@ from kehrnel.engine.strategies.fhir.resource_store.strategy import FHIRResourceS
 
 
 def _ctx(*, config: dict | None = None) -> StrategyContext:
+    bindings = {
+        "db": {
+            "provider": "mongodb",
+            "uri": "mongodb://localhost:27017",
+            "database": "fhir_test",
+        }
+    }
     return StrategyContext(
         environment_id="test-env",
         config=config or {"database": "fhir_test"},
-        bindings={
-            "db": {
-                "provider": "mongodb",
-                "uri": "mongodb://localhost:27017",
-                "database": "fhir_test",
-            }
-        },
+        bindings=bindings,
         manifest=MANIFEST,
+        meta={"data_target_digest": resolved_data_target_digest(bindings)},
     )
 
 
@@ -108,6 +112,205 @@ async def test_compile_fhir_query_via_fhir_search_string():
     )
     assert plan.plan["resource_type"] == "Patient"
     assert plan.plan["filter"]
+
+
+@pytest.mark.asyncio
+async def test_compile_fhir_query_uses_exact_or_filter_for_server_resolved_codes():
+    query = {
+        "resource_type": "Condition",
+        "criteria": {"clinical-status": "active"},
+        "_count": 50,
+        "_sort": "_id",
+        "debug": True,
+        "terminology_code_filter": {
+            "parameter": "code",
+            "system": "http://snomed.info/sct",
+            "codes": ["84114007", "195111005", "84114007"],
+        },
+    }
+    plan = await fhir_query.compile_fhir_query(_ctx(), "fhir", query)
+
+    semantic_filter = plan.plan["filter"]["$and"][1]
+    assert semantic_filter == {
+        "_search.code_systemCode": {
+            "$in": [
+                "http://snomed.info/sct|195111005",
+                "http://snomed.info/sct|84114007",
+            ]
+        }
+    }
+    assert plan.plan["sort"] == [["id", 1]]
+    evidence = plan.explain["builder"]["terminology_code_filter"]
+    assert evidence["projection_field"] == "_search.code_systemCode"
+    assert evidence["code_count"] == 2
+    assert evidence["token_digest"].startswith("sha256:")
+    compiler_evidence = plan.plan["compiler_evidence"]
+    assert compiler_evidence["source_query_digest"] == fhir_query._bson_digest(query)
+    assert compiler_evidence["collection"] == "Condition"
+    assert compiler_evidence["sort"] == [["id", 1]]
+    assert compiler_evidence["limit"] == 50
+    assert compiler_evidence["offset"] == 0
+    assert (
+        plan.explain["builder"]["compiler_evidence"]["compiled_query_digest"]
+        == compiler_evidence["compiled_query_digest"]
+    )
+
+
+@pytest.mark.asyncio
+async def test_execute_fhir_query_runs_server_resolved_code_filter(monkeypatch):
+    expected_filter = {
+        "_search.code_systemCode": {
+            "$in": [
+                "http://snomed.info/sct|195111005",
+                "http://snomed.info/sct|84114007",
+            ]
+        }
+    }
+    matching = {
+        "resourceType": "Condition",
+        "id": "condition-heart-failure",
+        "subject": {"reference": "Patient/patient-1"},
+        "code": {
+            "coding": [
+                {"system": "http://snomed.info/sct", "code": "84114007"}
+            ]
+        },
+        "_search": {
+            "code_systemCode": ["http://snomed.info/sct|84114007"]
+        },
+    }
+
+    class Cursor(list):
+        def sort(self, order):
+            assert order == [("id", 1)]
+            return self
+
+        def skip(self, count):
+            return Cursor(self[count:])
+
+        def limit(self, count):
+            return Cursor(self[:count])
+
+    class Collection:
+        name = "Condition"
+
+        def __init__(self):
+            self.database = SimpleNamespace(client=None)
+
+        def find(self, query, **kwargs):
+            assert query == expected_filter
+            assert kwargs == {}
+            return Cursor([matching])
+
+        def count_documents(self, query, **kwargs):
+            assert query == expected_filter
+            assert kwargs == {}
+            return 1
+
+    collection = Collection()
+    collection.database.__getitem__ = lambda _self, name: collection
+
+    class Database:
+        client = None
+
+        def __getitem__(self, name):
+            assert name == "Condition"
+            collection.database = self
+            return collection
+
+    monkeypatch.setattr(
+        fhir_query.bridge,
+        "build_mql_context",
+        lambda *_args, **_kwargs: SimpleNamespace(db=Database()),
+    )
+    monkeypatch.setattr(
+        fhir_query.bridge,
+        "close_mql_context",
+        lambda _ctx: None,
+    )
+
+    plan = await fhir_query.compile_fhir_query(
+        _ctx(),
+        "fhir",
+        {
+            "resource_type": "Condition",
+            "_count": 10,
+            "_sort": "_id",
+            "debug": True,
+            "terminology_code_filter": {
+                "parameter": "code",
+                "system": "http://snomed.info/sct",
+                "codes": ["84114007", "195111005"],
+            },
+        },
+    )
+    result = await fhir_query.execute_fhir_query(_ctx(), plan)
+
+    assert result.engine_used == "fhir_mql"
+    assert result.rows == [matching]
+    assert result.explain["total"] == 1
+    assert result.explain["returned"] == 1
+    assert result.explain["data_target_digest"] == resolved_data_target_digest(
+        _ctx().bindings
+    )
+
+
+@pytest.mark.asyncio
+async def test_compile_fhir_query_rejects_conflicting_caller_code_filter():
+    with pytest.raises(KehrnelError) as caught:
+        await fhir_query.compile_fhir_query(
+            _ctx(),
+            "fhir",
+            {
+                "resource_type": "Condition",
+                "criteria": {"code": "http://snomed.info/sct|84114007"},
+                "terminology_code_filter": {
+                    "parameter": "code",
+                    "system": "http://snomed.info/sct",
+                    "codes": ["84114007"],
+                },
+            },
+        )
+
+    assert caught.value.code == "FHIR_TERMINOLOGY_FILTER_CONFLICT"
+
+
+@pytest.mark.asyncio
+async def test_execute_rejects_a_tampered_terminology_query_plan_before_database_access(
+    monkeypatch,
+):
+    plan = await fhir_query.compile_fhir_query(
+        _ctx(),
+        "fhir",
+        {
+            "resource_type": "Condition",
+            "criteria": {"clinical-status": "active"},
+            "_count": 10,
+            "_sort": "_id",
+            "terminology_code_filter": {
+                "parameter": "code",
+                "system": "http://snomed.info/sct",
+                "codes": ["84114007"],
+            },
+        },
+    )
+    # Remove the ordinary clinical-status criterion while retaining the semantic
+    # term. The original compiler receipt must no longer validate.
+    plan.plan["filter"] = plan.plan["filter"]["$and"][1]
+    database_opened = False
+
+    def fail_if_opened(*_args, **_kwargs):
+        nonlocal database_opened
+        database_opened = True
+        raise AssertionError("tampered plans must fail before opening MongoDB")
+
+    monkeypatch.setattr(fhir_query.bridge, "build_mql_context", fail_if_opened)
+
+    with pytest.raises(KehrnelError) as caught:
+        await fhir_query.execute_fhir_query(_ctx(), plan)
+
+    assert caught.value.code == "FHIR_COMPILED_QUERY_EVIDENCE_INVALID"
+    assert database_opened is False
 
 
 @pytest.mark.asyncio

@@ -25,6 +25,7 @@ from kehrnel.engine.strategies.fhir.resource_store.scripts.document_contract imp
     stamp_projection_metadata,
 )
 from kehrnel.engine.strategies.fhir.resource_store.scripts.storage_adapter import (
+    FHIRVersionConflictError,
     MongoFHIRStorageAdapter,
 )
 from kehrnel.engine.strategies.fhir.resource_store.scripts.validation import (
@@ -201,6 +202,7 @@ async def fhir_import_resources(
     progress_cb: ProgressCallback | None = None,
     should_cancel: CancelCallback | None = None,
     provenance: dict[str, Any] | None = None,
+    expected_versions: dict[tuple[str, str], str] | None = None,
 ) -> dict[str, Any]:
     """Validate, project, and idempotently persist a bounded migration batch."""
     effective_provenance = {
@@ -489,9 +491,20 @@ async def fhir_import_resources(
             "persisting",
             {"valid": len(projected), "database": database},
         )
+        persist_kwargs: dict[str, Any] = {"mode": mode}
+        if expected_versions is not None:
+            persist_kwargs["expected_versions"] = expected_versions
         write_result = await asyncio.to_thread(
-            adapter.persist_many, projected, mode=mode
+            adapter.persist_many,
+            projected,
+            **persist_kwargs,
         )
+    except FHIRVersionConflictError as exc:
+        raise KehrnelError(
+            code="FHIR_VERSION_CONFLICT",
+            status=409,
+            message="The FHIR resource changed after the write was reviewed.",
+        ) from exc
     except Exception as exc:
         if exc.__class__.__name__ in {"BulkWriteError", "DuplicateKeyError"}:
             raise KehrnelError(

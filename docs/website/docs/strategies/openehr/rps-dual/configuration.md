@@ -65,7 +65,7 @@ The current default activation baseline is:
   },
   "ids": {
     "ehr_id": "string",
-    "composition_id": "objectid"
+    "composition_id": "string"
   },
   "paths": {
     "separator": ":"
@@ -162,6 +162,11 @@ Current consistency boundary:
 - top-level `ehr_id` and `comp_id` predicates are coerced according to
   `ids.ehr_id` and `ids.composition_id`, so the query layer matches the ingest
   layer for string, `objectid`, and UUID-backed storage.
+- `composition_id` defaults to `string` because an openEHR OBJECT_VERSION_ID can
+  contain a creating-system identifier and version (`uuid::system::version`).
+  Selecting `objectid` or `uuidbin` is an explicit physical-model choice; ingest
+  rejects incompatible values instead of storing a different BSON type from the
+  one declared by the Atlas Search index.
 
 ## Congruence Rules
 
@@ -207,6 +212,58 @@ With mappings:
 
 Recommended rule: treat the Atlas Search definition as derived from
 `transform.mappings`, not as a hand-maintained artifact.
+
+Healthcare Data Lab's per-template **Analytics** selection is the authoring
+surface for this mapping. Selecting a small set of fields does not create a new
+strategy or another search collection. Kehrnel compiles all active selections
+into the shared `compositions_search` model and its shared Atlas Search index.
+The selected fields should be the smallest set required by the intended
+cross-patient queries.
+
+Projection materialization can be certified for one or more templates without
+requiring every unrelated template in the tenant to be rebuilt at the same
+time:
+
+```json
+{
+  "batch_size": 100,
+  "template_ids": ["sample_laboratory_v0.4"]
+}
+```
+
+This is a logical rebuild scope within `openehr.rps_dual`. It still writes to
+the configured shared search collection and uses the shared index definition.
+Coverage, mapped-empty checks, orphan checks, checkpoints, and readiness are
+evaluated for the requested templates. Sidecars for other templates remain in
+place and do not block the scoped receipt. A governed canonical write
+invalidates both the global receipt and every affected shared-projection scope
+before the write becomes visible.
+
+Healthcare Data Lab's per-template **Analytics** selection is the authoring
+surface for this mapping. Selecting a small set of fields does not create a new
+strategy or another search collection. Kehrnel compiles all active selections
+into the shared `compositions_search` model and its shared Atlas Search index.
+The selected fields should be the smallest set required by the intended
+cross-patient queries.
+
+Projection materialization can be certified for one or more templates without
+requiring every unrelated template in the tenant to be rebuilt at the same
+time:
+
+```json
+{
+  "batch_size": 100,
+  "template_ids": ["sample_laboratory_v0.4"]
+}
+```
+
+This is a logical rebuild scope within `openehr.rps_dual`. It still writes to
+the configured shared search collection and uses the shared index definition.
+Coverage, mapped-empty checks, orphan checks, checkpoints, and readiness are
+evaluated for the requested templates. Sidecars for other templates remain in
+place and do not block the scoped receipt. A governed canonical write
+invalidates both the global receipt and every affected shared-projection scope
+before the write becomes visible.
 
 The packaged `bundles/searchIndex/searchIndex.json` file is still useful as a
 seed or snapshot, but it should reflect the same mappings-driven workflow rather

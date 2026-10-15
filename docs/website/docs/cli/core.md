@@ -60,7 +60,7 @@ cat > .kehrnel/bindings.mongo.yaml <<EOF
 db:
   provider: mongodb
   uri: ${MONGODB_URI}
-  database: openEHR_demo
+  database: openehr_cdr
 EOF
 
 kehrnel core env activate \

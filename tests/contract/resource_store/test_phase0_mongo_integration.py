@@ -26,30 +26,15 @@ from kehrnel.engine.strategies.fhir.resource_store.import_resources import fhir_
 from kehrnel.engine.strategies.fhir.resource_store.strategy import MANIFEST
 
 def _tenant_config() -> tuple[str | None, str | None]:
-    """Resolve (uri, database) for the sandbox tenant Mongo.
+    """Resolve an explicitly authorized, test-only Mongo configuration."""
 
-    Prefer explicit env (FHIR_TEST_MONGODB_URI / FHIR_TEST_DB); otherwise read the
-    sandbox tenant's CORE_MONGODB_URL / CORE_DATABASE_NAME from .env.local. We write
-    into the AUTHORIZED tenant database but isolate everything under a unique
-    collection prefix (below), cleaning up only our own prefixed collections — the
-    least-privilege tenant user cannot (and must not) drop databases.
-    """
-    uri = os.getenv("FHIR_TEST_MONGODB_URI")
-    db = os.getenv("FHIR_TEST_DB")
-    if uri and db:
-        return uri, db
-    try:
-        from dotenv import dotenv_values
-        vals = dotenv_values(".env.local")
-        return uri or vals.get("CORE_MONGODB_URL"), db or vals.get("CORE_DATABASE_NAME")
-    except Exception:
-        return uri, db
+    return os.getenv("FHIR_TEST_MONGODB_URI"), os.getenv("FHIR_TEST_DB")
 
 
 MONGO_URI, TENANT_DB = _tenant_config()
 pytestmark = pytest.mark.skipif(
     not (MONGO_URI and TENANT_DB),
-    reason="No tenant Mongo (set FHIR_TEST_MONGODB_URI+FHIR_TEST_DB or CORE_* in .env.local)",
+    reason="Set FHIR_TEST_MONGODB_URI and FHIR_TEST_DB to run Mongo integration tests.",
 )
 
 # Unique, clearly test-scoped COLLECTION PREFIX inside the authorized tenant db.

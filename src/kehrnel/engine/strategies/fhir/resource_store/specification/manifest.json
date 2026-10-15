@@ -15,7 +15,7 @@
       "description": "FHIR database, generation, and search configuration"
     }
   },
-  "capabilities": ["ingest", "query", "search", "native_read_query", "synthetic", "write", "migration", "support_matrix", "profile_validation", "terminology_validation", "semantic_preview", "semantic_materialization", "vector_search"],
+  "capabilities": ["ingest", "query", "authoritative_write", "search", "native_read_query", "synthetic", "write", "migration", "support_matrix", "profile_validation", "terminology_validation", "semantic_preview", "semantic_materialization", "vector_search"],
   "interaction_contracts": [
     {
       "id": "fhir.rest-search",
@@ -686,9 +686,30 @@
           "gaps": { "type": "object" }
         }
       }
+    },
+    {
+      "name": "operational_probe",
+      "kind": "diagnostic",
+      "summary": "Read-only runtime, collection, projection, and managed-index drift evidence for package-observed FHIR resource types",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "resource_types": {
+            "type": "array",
+            "items": { "type": "string" },
+            "uniqueItems": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": true
+      }
     }
   ],
   "adapters": {
     "storage": ["mongo"]
   }
 }
+

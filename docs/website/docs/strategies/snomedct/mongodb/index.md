@@ -10,7 +10,7 @@ It stores the official release as canonical MongoDB documents and derives a term
 
 ## Overview
 
-The strategy has four tenant-scoped stores:
+The strategy has six tenant-scoped stores:
 
 | Store | Collection | Required | Purpose |
 |-------|------------|----------|---------|
@@ -18,6 +18,8 @@ The strategy has four tenant-scoped stores:
 | Term sidecar | `collections.terms` | Default-on | Description-level search projection by language, preferred term, FSN, semantic tag, rank, parents, and ancestors |
 | ValueSet registry | `collections.value_sets` | Yes | Immutable canonical URL/version definitions backed by ECL or explicit concept ids, pinned to one SNOMED release |
 | Grounding reviews | `collections.grounding_reviews` | Yes | Reviewer-confirmed/rejected codings with source hashes, provenance, and materialized ancestor paths |
+| Gold notes | `collections.gold_notes` | Default-on | Tenant-authored benchmark notes with expected facts, used to grade retrieval |
+| Usage events | `collections.usage_events` | Default-on | Product telemetry: search executed, result selected, feedback submitted |
 
 The canonical collection is enough for lookup, hierarchy navigation, basic ECL/subsumption, readiness checks, and release diffs. The sidecar is required for terminology search and NLP grounding.
 
@@ -25,7 +27,7 @@ The canonical collection is enough for lookup, hierarchy navigation, basic ECL/s
 
 SNOMED CT concepts are document-shaped. A concept naturally contains descriptions, language refsets, relationships, hierarchy fields, module metadata, and release metadata. MongoDB lets the strategy preserve that official JSON shape while adding operational indexes.
 
-The baseline pack only requires MongoDB collections and B-tree/text indexes. It works with MongoDB Atlas and non-Atlas MongoDB. Atlas Search or vector retrieval can be added later without changing the canonical collection contract.
+The baseline pack only requires MongoDB collections and B-tree/text indexes. It works with MongoDB Atlas and non-Atlas MongoDB. Vector retrieval, cross-encoder reranking, and LLM extraction are optional bindings layered on top; when they are absent, retrieval degrades to the deterministic lexical path rather than failing.
 
 ## Use Cases
 
@@ -34,9 +36,11 @@ The baseline pack only requires MongoDB collections and B-tree/text indexes. It 
 | Licensed tenant release ingestion | Customer stages JSON locally, then `snomed_list_releases`, `snomed_ingest_release` |
 | Release update review | `snomed_inspect_release`, `snomed_diff_release` |
 | Terminology search and navigation | `snomed_search`, lookup, hierarchy APIs, ECL subset |
-| MongoDB-native terminology APIs | Hybrid search, semantic facets, relationship search, value-set expansion |
+| Scoped retrieval | `snomed_resolve_scope` resolves an ECL and/or area concept into a cached concept-id scope |
+| MongoDB-native terminology APIs | Lexical/vector/fused search, semantic facets, relationship search, value-set expansion |
+| Clinical note mapping | `snomed_nlp_map` extracts mentions, reads negation/family/plan cues, and returns an evidence graph |
 | Clinical note grounding | Candidate generation, reviewer decisions, and ancestor-based corpus query |
-| Retrieval benchmark | Bounded hit@k and mean reciprocal rank with deterministic ranking |
+| Retrieval benchmark | Bounded hit@k and mean reciprocal rank, optionally graded against stored gold notes |
 
 ## API Placement
 
@@ -51,11 +55,11 @@ The baseline pack only requires MongoDB collections and B-tree/text indexes. It 
 
 Manifest maturity: **preview** (`0.5.0`).
 
-Implemented: transform, local release discovery, inspect, diff, ingest, rebuild sidecar, ensure indexes, lookup, code/display validation, hierarchy-based `$subsumes`, ECL subset, paged hierarchy/search/expansion, typeahead, cross-release history, immutable named ValueSet registration/expansion/membership validation, relationship search, hybrid search, semantic facets, candidate grounding, reviewer decisions, ancestor-based corpus queries, bounded retrieval benchmarks, readiness, domain API registration, provider-neutral terminology routing, and strategy-pack validation.
+Implemented: transform, local release discovery, inspect, diff, ingest, rebuild sidecar, ensure indexes, lookup, code/display validation, hierarchy-based `$subsumes`, ECL subset, paged hierarchy/search/expansion, typeahead, cross-release history, immutable named ValueSet registration/expansion/membership validation, relationship search, tiered lexical reranking, lexical/vector/fused retrieval, semantic facets, semantic scope resolution with caching, candidate grounding, clinical note mapping with an evidence graph and principal-diagnosis candidates, guarded LLM adjudication, reviewer decisions, ancestor-based corpus queries, stored gold notes, bounded retrieval benchmarks, usage-event telemetry, readiness, domain API registration, provider-neutral terminology routing, and strategy-pack validation.
 
 Healthcare Data Lab exposes the same domain OpenAPI as a live, tenant-bound
 console. Release ingest, sidecar rebuild, index creation, ValueSet registration,
-and grounding-review writes remain permission checked.
+gold-note writes, and grounding-review writes remain permission checked.
 
 Not yet complete enough to call "final": full ECL transitive relationship semantics, production Atlas Search/vector specs, large-release soak tests against the official 3.4 GB file, and end-to-end MongoDB validation with real tenant bindings.
 
@@ -66,3 +70,4 @@ Not yet complete enough to call "final": full ECL transitive relationship semant
 - [Data model](./data-model.md)
 - [Search and grounding](./search-grounding.md)
 - [Terminology service and FHIR operations](./terminology-service.md)
+

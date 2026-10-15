@@ -68,9 +68,7 @@ kehrnel core env list
 ```
 
 `strategy list` is the authoritative inventory for the runtime you are using.
-For this walkthrough, choose `openehr.rps_dual`. The
-`openehr.rps_dual_ibm` strategy is a compatibility profile for environments
-that already use the IBM exact-model field conventions.
+For this walkthrough, choose `openehr.rps_dual`.
 
 ## 2. Create And Inspect The Environment
 
@@ -101,7 +99,7 @@ export MONGODB_URI="<your-atlas-connection-string>"
 If you prefer to create them manually and `mongosh` is installed:
 
 ```javascript
-use openEHR_demo
+use openehr_cdr
 
 db.createCollection("compositions_rps")
 db.createCollection("compositions_search")
@@ -161,7 +159,7 @@ EOF
 
 cat > .kehrnel/rps-dual.config.json <<EOF
 {
-  "database": "openEHR_demo",
+  "database": "openehr_cdr",
   "transform": {
     "mappings": "file://samples/reference/projection_mappings.json"
   }
@@ -377,7 +375,7 @@ installed, otherwise inspect the same collections in Atlas UI or MongoDB
 Compass.
 
 ```bash
-mongosh "$MONGODB_URI/openEHR_demo" <<'MONGOSH'
+mongosh "$MONGODB_URI/openehr_cdr" <<'MONGOSH'
 db.compositions_rps.findOne({}, { ehr_id: 1, tid: 1, time_c: 1, cn: { $slice: 3 } })
 db.compositions_search.findOne({}, { ehr_id: 1, comp_id: 1, tid: 1, sort_time: 1, sn: 1 })
 MONGOSH

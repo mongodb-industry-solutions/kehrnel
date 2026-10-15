@@ -57,6 +57,7 @@ api = [
     "uvicorn[standard]>=0.24",
     "motor>=3.3",
     "certifi>=2024.0.0",
+    "python-dotenv>=1.0.0",
     "python-multipart>=0.0.6",
     "pydantic-settings>=2.0.0",
     "pydantic>=2.5"
@@ -129,6 +130,7 @@ include = ["kehrnel*"]
     "**/*.jsonc",
     "**/*.opt",
     "**/*.ndjson",
+    "**/*.aql",
 ]
 "kehrnel.engine.common.mapping" = ["patterns.yaml"]
 
@@ -140,3 +142,4 @@ host = "0.0.0.0"
 port = 8000
 reload = true
 log-level = "info"
+

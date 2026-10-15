@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
 from datetime import UTC, datetime
 from typing import Any
 from urllib.parse import parse_qsl, urlencode
 
+from bson import json_util
+from kehrnel.contracts.package_digest import canonical_json_bytes
 from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.core.explain import enrich_explain
 from kehrnel.engine.core.types import QueryPlan, QueryResult, StrategyContext
@@ -32,6 +35,9 @@ from kehrnel.engine.strategies.fhir.resource_store.scripts.semantic import (
 )
 from kehrnel.engine.strategies.fhir.resource_store.scripts.terminology_validation import (
     describe as describe_terminology_validation,
+)
+from kehrnel.engine.strategies.fhir.resource_store.scripts.valueset_expansion import (
+    expand_implicit_valuesets,
 )
 from kehrnel.engine.strategies.fhir.resource_store.scripts.serialization import (
     SEARCH_CONTRACT_VERSION,
@@ -118,6 +124,8 @@ def build_search_converter(ctx: StrategyContext):
 # One server-side maximum result count enforced across every input form (URL,
 # structured, internal op). Overridable via strategy config `query.max_count`.
 DEFAULT_MAX_RESULT_COUNT = 1000
+MAX_TERMINOLOGY_CODE_FILTER_CODES = 256
+FHIR_COMPILED_QUERY_EVIDENCE_CONTRACT = "fhir-compiled-query-evidence/v1"
 
 _SUPPORTED_RESULT_CONTROLS = {"_count", "_offset", "_sort"}
 
@@ -137,6 +145,233 @@ _KNOWN_UNSUPPORTED_RESULT_CONTROLS = {
     "_include",
     "_revinclude",
 }
+
+
+def _digest(value: Any) -> str:
+    return "sha256:" + hashlib.sha256(canonical_json_bytes(value)).hexdigest()
+
+
+def _bson_digest(value: Any) -> str:
+    encoded = json_util.dumps(
+        value,
+        json_options=json_util.CANONICAL_JSON_OPTIONS,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return "sha256:" + hashlib.sha256(encoded).hexdigest()
+
+
+def _compiled_query_contract(plan_body: dict[str, Any]) -> dict[str, Any]:
+    """Return the complete, execution-relevant query contract.
+
+    The digest deliberately covers more than the MongoDB predicate.  A filter can
+    be perfectly valid while the physical collection, sort, limit, or offset has
+    been changed between compilation and execution.  Keeping those controls in a
+    single canonical contract gives higher layers one value to verify.
+    """
+
+    limit, offset = pagination_from_plan(plan_body)
+    requested_sort = [
+        [field, int(direction)]
+        for field, direction in (plan_body.get("sort") or [])
+        if isinstance(field, str)
+    ]
+    effective_sort = list(requested_sort)
+    if effective_sort and not any(field == "id" for field, _ in effective_sort):
+        effective_sort.append(["id", 1])
+    return {
+        "contract": FHIR_COMPILED_QUERY_EVIDENCE_CONTRACT,
+        "resourceType": plan_body.get("resource_type"),
+        "database": plan_body.get("database"),
+        "collection": plan_body.get("collection"),
+        "filter": plan_body.get("filter"),
+        "sort": effective_sort,
+        "limit": limit,
+        "offset": offset or 0,
+    }
+
+
+def _validate_compiler_evidence(plan_body: dict[str, Any]) -> dict[str, Any] | None:
+    """Validate compiler evidence when present, and require it for semantic plans."""
+
+    evidence = plan_body.get("compiler_evidence")
+    terminology_filter = plan_body.get("terminology_code_filter")
+    if evidence is None and terminology_filter is None:
+        return None
+    if not isinstance(evidence, dict):
+        raise KehrnelError(
+            code="FHIR_COMPILED_QUERY_EVIDENCE_INVALID",
+            status=409,
+            message="The terminology-backed query plan has no compiler evidence.",
+        )
+    compiled_contract = _compiled_query_contract(plan_body)
+    expected_digest = _bson_digest(compiled_contract)
+    if (
+        evidence.get("contract") != FHIR_COMPILED_QUERY_EVIDENCE_CONTRACT
+        or evidence.get("compiled_query_digest") != expected_digest
+        or not isinstance(evidence.get("source_query_digest"), str)
+        or not str(evidence.get("source_query_digest")).startswith("sha256:")
+    ):
+        raise KehrnelError(
+            code="FHIR_COMPILED_QUERY_EVIDENCE_INVALID",
+            status=409,
+            message=(
+                "The compiled FHIR query no longer matches its collection, filter, "
+                "sort, or pagination evidence."
+            ),
+            details={
+                "expectedCompiledQueryDigest": expected_digest,
+                "actualCompiledQueryDigest": evidence.get("compiled_query_digest"),
+            },
+        )
+    return evidence
+
+
+def _normalize_terminology_code_filter(value: Any) -> dict[str, Any] | None:
+    """Validate the server-issued exact-code expansion handed to the compiler.
+
+    This is intentionally not a FHIR Search parameter.  It is an internal,
+    bounded compiler seam used after a terminology provider has resolved an
+    expression or pinned ValueSet.  The resulting predicate still targets the
+    normal fhir-mql ``system|code`` search projection and executes through the
+    ordinary resource-store query path.
+    """
+
+    if value is None:
+        return None
+    if not isinstance(value, dict):
+        raise KehrnelError(
+            code="FHIR_TERMINOLOGY_FILTER_INVALID",
+            status=400,
+            message="terminology_code_filter must be an object.",
+        )
+    unexpected = sorted(set(value) - {"parameter", "system", "codes"})
+    if unexpected:
+        raise KehrnelError(
+            code="FHIR_TERMINOLOGY_FILTER_INVALID",
+            status=400,
+            message="terminology_code_filter contains unsupported fields.",
+            details={"fields": unexpected},
+        )
+    parameter = str(value.get("parameter") or "").strip()
+    system = str(value.get("system") or "").strip()
+    raw_codes = value.get("codes")
+    if (
+        not parameter
+        or not parameter[0].isalpha()
+        or any(
+            not (character.isalnum() or character in "-_")
+            for character in parameter
+        )
+    ):
+        raise KehrnelError(
+            code="FHIR_TERMINOLOGY_FILTER_INVALID",
+            status=400,
+            message=(
+                "terminology_code_filter.parameter must be a simple FHIR search "
+                "parameter name."
+            ),
+        )
+    if not system or "|" in system or "," in system:
+        raise KehrnelError(
+            code="FHIR_TERMINOLOGY_FILTER_INVALID",
+            status=400,
+            message=(
+                "terminology_code_filter.system must be a canonical URI without "
+                "token delimiters."
+            ),
+        )
+    if not isinstance(raw_codes, list) or not raw_codes:
+        raise KehrnelError(
+            code="FHIR_TERMINOLOGY_FILTER_INVALID",
+            status=400,
+            message="terminology_code_filter.codes must be a non-empty array.",
+        )
+    if len(raw_codes) > MAX_TERMINOLOGY_CODE_FILTER_CODES:
+        raise KehrnelError(
+            code="FHIR_TERMINOLOGY_FILTER_LIMIT_EXCEEDED",
+            status=422,
+            message=(
+                "A terminology-backed FHIR query permits at most "
+                f"{MAX_TERMINOLOGY_CODE_FILTER_CODES} codes."
+            ),
+            details={
+                "requestedCodes": len(raw_codes),
+                "maximumCodes": MAX_TERMINOLOGY_CODE_FILTER_CODES,
+            },
+        )
+    codes: list[str] = []
+    for raw_code in raw_codes:
+        if (
+            not isinstance(raw_code, str)
+            or raw_code != raw_code.strip()
+            or not raw_code
+        ):
+            raise KehrnelError(
+                code="FHIR_TERMINOLOGY_FILTER_INVALID",
+                status=400,
+                message=(
+                    "Every terminology_code_filter code must be a non-empty "
+                    "normalized string."
+                ),
+            )
+        if (
+            "|" in raw_code
+            or "," in raw_code
+            or any(ord(char) < 0x20 for char in raw_code)
+        ):
+            raise KehrnelError(
+                code="FHIR_TERMINOLOGY_FILTER_INVALID",
+                status=400,
+                message=(
+                    "Terminology codes must not contain FHIR token delimiters or "
+                    "control characters."
+                ),
+                details={"code": raw_code},
+            )
+        if raw_code not in codes:
+            codes.append(raw_code)
+    return {"parameter": parameter, "system": system, "codes": sorted(codes)}
+
+
+def _resolve_system_code_projection(
+    search_parameters: dict[str, Any],
+    parameter: str,
+) -> str:
+    spec = search_parameters.get(parameter)
+    if not isinstance(spec, dict) or spec.get("type") != "token":
+        raise KehrnelError(
+            code="FHIR_TERMINOLOGY_FILTER_UNSUPPORTED",
+            status=422,
+            message=(
+                f"FHIR search parameter '{parameter}' is not a configured token parameter."
+            ),
+            details={"parameter": parameter},
+        )
+    fields = spec.get("fields")
+    if isinstance(fields, dict):
+        fields = fields.get("default")
+    candidates = sorted(
+        {
+            field.get("field")
+            for field in (fields or [])
+            if isinstance(field, dict)
+            and field.get("tokenType") == "systemCode"
+            and isinstance(field.get("field"), str)
+            and field.get("field").startswith("_search.")
+        }
+    )
+    if len(candidates) != 1:
+        raise KehrnelError(
+            code="FHIR_TERMINOLOGY_FILTER_UNSUPPORTED",
+            status=422,
+            message=(
+                f"FHIR search parameter '{parameter}' has no unambiguous exact "
+                "system|code projection."
+            ),
+            details={"parameter": parameter, "candidateFields": candidates},
+        )
+    return candidates[0]
 
 
 def _split_result_controls(
@@ -405,6 +640,7 @@ async def compile_fhir_query(
     query: dict[str, Any] | None,
 ) -> QueryPlan:
     """Compile FHIR search parameters to a MongoDB filter plan (no execution)."""
+    source_query_digest = _bson_digest(query or {})
     normalized = normalize_compile_input(query)
     resource_type = normalized["resource_type"]
     query_string = normalized.get("query_string")
@@ -413,6 +649,23 @@ async def compile_fhir_query(
         if isinstance(normalized.get("compartment"), dict)
         else None
     )
+    terminology_code_filter = _normalize_terminology_code_filter(
+        normalized.get("terminology_code_filter")
+    )
+    # KDL-007: expand SNOMED implicit ValueSet URLs (code:in / code:below) through
+    # the tenant terminology gateway before compilation; never a literal fallback.
+    (
+        rewritten_query_string,
+        terminology_code_filter,
+        valueset_expansion,
+    ) = await expand_implicit_valuesets(
+        ctx,
+        normalized.get("query_string"),
+        terminology_code_filter,
+    )
+    if valueset_expansion is not None:
+        normalized["query_string"] = rewritten_query_string
+        query_string = rewritten_query_string
     handling = normalized.get("handling", "strict")
 
     (
@@ -459,6 +712,82 @@ async def compile_fhir_query(
             details={"resource_type": resource_type},
         ) from exc
 
+    search_parameters: dict[str, Any] | None = None
+    terminology_filter_metadata: dict[str, Any] | None = None
+    if terminology_code_filter is not None:
+        if compartment:
+            raise KehrnelError(
+                code="FHIR_TERMINOLOGY_FILTER_UNSUPPORTED",
+                status=422,
+                message=(
+                    "Terminology-backed cohort queries do not currently support "
+                    "compartment searches."
+                ),
+            )
+        parameter = terminology_code_filter["parameter"]
+        conflicting_parameters = sorted(
+            {
+                name
+                for name, _value in parse_qsl(query_string or "", keep_blank_values=True)
+                if name.split(":", 1)[0] == parameter
+            }
+        )
+        if conflicting_parameters:
+            raise KehrnelError(
+                code="FHIR_TERMINOLOGY_FILTER_CONFLICT",
+                status=400,
+                message=(
+                    "The terminology-resolved search parameter must not also be supplied "
+                    "through ordinary FHIR criteria."
+                ),
+                details={"parameter": parameter, "conflicts": conflicting_parameters},
+            )
+        allowed = allowed_search_parameters(release, resource_type)
+        if allowed is not None and parameter not in allowed:
+            raise KehrnelError(
+                code="FHIR_TERMINOLOGY_FILTER_UNSUPPORTED",
+                status=422,
+                message=(
+                    f"FHIR search parameter '{parameter}' is not supported for "
+                    f"{resource_type} in {release}."
+                ),
+                details={
+                    "resourceType": resource_type,
+                    "parameter": parameter,
+                    "fhirRelease": release,
+                },
+            )
+        try:
+            search_parameters = converter.config_loader.get_search_parameters(
+                resource_type
+            )
+        except MissingConfigurationError as exc:
+            raise KehrnelError(
+                code="FHIR_SEARCH_NOT_CONFIGURED",
+                status=400,
+                message=str(exc),
+                details={"resource_type": resource_type},
+            ) from exc
+        system_code_field = _resolve_system_code_projection(
+            search_parameters,
+            parameter,
+        )
+        exact_tokens = [
+            f"{terminology_code_filter['system']}|{code}"
+            for code in terminology_code_filter["codes"]
+        ]
+        terminology_filter_metadata = {
+            "parameter": parameter,
+            "system": terminology_code_filter["system"],
+            "projection_field": system_code_field,
+            "code_count": len(exact_tokens),
+            "token_digest": _digest(exact_tokens),
+        }
+        if valueset_expansion is not None:
+            # Expansion evidence (source expression, release, count, completeness)
+            # travels with the plan so the query trace proves how codes were resolved.
+            terminology_filter_metadata["expansion"] = valueset_expansion
+
     validate_search_scope(
         release,
         resource_type,
@@ -478,13 +807,33 @@ async def compile_fhir_query(
         handling=handling,
         ignored_out=ignored_params,
     )
+    if terminology_filter_metadata is not None:
+        if isinstance(mql_filter, dict) and "_multi_step" in mql_filter:
+            raise KehrnelError(
+                code="FHIR_TERMINOLOGY_FILTER_UNSUPPORTED",
+                status=422,
+                message=(
+                    "Terminology-backed cohort queries cannot currently be combined "
+                    "with chained FHIR search parameters."
+                ),
+            )
+        semantic_filter = {
+            terminology_filter_metadata["projection_field"]: {"$in": exact_tokens}
+        }
+        if mql_filter:
+            mql_filter = {"$and": [mql_filter, semantic_filter]}
+        else:
+            mql_filter = semantic_filter
 
     # Resolve _sort to a Mongo sort spec at compile time (converter available here).
     # Unsortable keys fail closed (see resolve_sort).
     resolved_sort: list[tuple[str, int]] = []
     if normalized.get("_sort"):
         try:
-            search_params = converter.config_loader.get_search_parameters(resource_type)
+            search_params = (
+                search_parameters
+                or converter.config_loader.get_search_parameters(resource_type)
+            )
         except Exception:
             search_params = {}
         resolved_sort = resolve_sort(normalized["_sort"], search_params)
@@ -522,9 +871,25 @@ async def compile_fhir_query(
             if k in normalized
         },
     }
+    if terminology_filter_metadata is not None:
+        plan_body["terminology_code_filter"] = terminology_filter_metadata
     for key in ("_count", "_sort", "_offset", "limit", "offset"):
         if key in normalized:
             plan_body["query_input"][key] = normalized[key]
+
+    compiled_query_contract = _compiled_query_contract(plan_body)
+    compiler_evidence = {
+        "contract": FHIR_COMPILED_QUERY_EVIDENCE_CONTRACT,
+        "source_query_digest": source_query_digest,
+        "compiled_query_digest": _bson_digest(compiled_query_contract),
+        "resource_type": resource_type,
+        "database": database,
+        "collection": collection,
+        "sort": compiled_query_contract["sort"],
+        "limit": compiled_query_contract["limit"],
+        "offset": compiled_query_contract["offset"],
+    }
+    plan_body["compiler_evidence"] = compiler_evidence
 
     explain: dict[str, Any] = {
         "builder": {
@@ -532,6 +897,8 @@ async def compile_fhir_query(
             "resource_type": resource_type,
             "query_string": query_string,
             "has_compartment": bool(compartment),
+            "terminology_code_filter": terminology_filter_metadata,
+            "compiler_evidence": compiler_evidence,
         },
         "filter": mql_filter if debug else None,
     }
@@ -779,6 +1146,7 @@ async def execute_fhir_query(
         )
 
     plan_body = qp.plan if isinstance(qp.plan, dict) else {}
+    compiler_evidence = _validate_compiler_evidence(plan_body)
     mql_filter = plan_body.get("filter")
     if mql_filter is None:
         raise KehrnelError(
@@ -810,6 +1178,8 @@ async def execute_fhir_query(
     sort_spec: list[tuple[str, int]] = [
         (f, int(d)) for f, d in (plan_body.get("sort") or []) if isinstance(f, str)
     ]
+    if sort_spec and not any(field == "id" for field, _ in sort_spec):
+        sort_spec.append(("id", 1))
 
     explain = dict(qp.explain or plan_body.get("explain") or {})
     privileged = bool((getattr(ctx, "meta", None) or {}).get("privileged", False))
@@ -867,8 +1237,6 @@ async def execute_fhir_query(
                 # Explicit sort, then a logical-id tie-breaker for stable paging.
                 # FHIR does not guarantee result order when `_sort` is absent.
                 order = list(sort_spec)
-                if order and not any(f == "id" for f, _ in order):
-                    order.append(("id", 1))
                 if limit == 0:
                     row_list: list[dict[str, Any]] = []  # FHIR _count=0 → count only
                 else:
@@ -929,8 +1297,20 @@ async def execute_fhir_query(
         explain["execution"].update(
             {
                 "collection": collection_name,
+                "database": database,
+                "sort": [[field, direction] for field, direction in sort_spec],
                 "limit": limit,
                 "skip": skip or 0,
+                "source_query_digest": (
+                    compiler_evidence.get("source_query_digest")
+                    if compiler_evidence is not None
+                    else None
+                ),
+                "compiled_query_digest": (
+                    compiler_evidence.get("compiled_query_digest")
+                    if compiler_evidence is not None
+                    else None
+                ),
             }
         )
     # Bounded executed summary (no large resolved-id arrays by default). `snapshot`
@@ -949,7 +1329,11 @@ async def execute_fhir_query(
     if privileged:
         explain["_executed_pipeline"] = {"filter": executed["resolved_filter"]}
 
-    return QueryResult(engine_used="fhir_mql", rows=rows, explain=explain)
+    return QueryResult(
+        engine_used="fhir_mql",
+        rows=canonical_resources(rows),
+        explain=explain,
+    )
 
 
 def _search_payload_to_compile_query(payload: dict[str, Any]) -> dict[str, Any]:

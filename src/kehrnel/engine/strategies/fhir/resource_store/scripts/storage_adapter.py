@@ -25,6 +25,10 @@ from kehrnel.engine.strategies.fhir.resource_store.scripts.serialization import 
 )
 
 
+class FHIRVersionConflictError(RuntimeError):
+    """The current resource version no longer matches the reviewed write."""
+
+
 @runtime_checkable
 class FHIRStorageAdapter(Protocol):
     """persist / read / serialize seam for FHIR resources."""
@@ -50,6 +54,7 @@ class FHIRStorageAdapter(Protocol):
         resources: List[Dict[str, Any]],
         *,
         mode: str = "upsert",
+        expected_versions: dict[tuple[str, str], str] | None = None,
     ) -> Dict[str, Any]:
         """Persist a heterogeneous batch and return bounded write statistics."""
         ...
@@ -119,6 +124,7 @@ class MongoFHIRStorageAdapter:
         resources: List[Dict[str, Any]],
         *,
         mode: str = "upsert",
+        expected_versions: dict[tuple[str, str], str] | None = None,
     ) -> Dict[str, Any]:
         """Bulk-create or upsert resources grouped by resource type.
 
@@ -213,11 +219,17 @@ class MongoFHIRStorageAdapter:
                             ]
                         }
                     }
+                    expected_version = (expected_versions or {}).get(
+                        (resource_type, str(doc["id"]))
+                    )
+                    match = {"id": doc["id"]}
+                    if expected_version is not None:
+                        match["meta.versionId"] = expected_version
                     operations.append(
                         UpdateOne(
-                            {"id": doc["id"]},
+                            match,
                             [{"$replaceWith": replacement}],
-                            upsert=True,
+                            upsert=expected_version is None,
                         )
                     )
             try:
@@ -230,6 +242,10 @@ class MongoFHIRStorageAdapter:
             upserted = int(getattr(result, "upserted_count", 0) or 0)
             matched = int(getattr(result, "matched_count", 0) or 0)
             modified = int(getattr(result, "modified_count", 0) or 0)
+            if expected_versions and matched != len(docs):
+                raise FHIRVersionConflictError(
+                    f"FHIR version changed while updating {resource_type}"
+                )
             by_type[resource_type] = {
                 "processed": len(docs),
                 "inserted": inserted + upserted,
@@ -246,3 +262,4 @@ class MongoFHIRStorageAdapter:
             "unchanged": sum(item["unchanged"] for item in by_type.values()),
             "by_resource_type": by_type,
         }
+

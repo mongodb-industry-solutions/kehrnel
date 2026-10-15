@@ -4,6 +4,10 @@ sidebar_position: 6
 
 # Shared Terminology Service
 
+:::info Preview
+This service is part of the `snomedct.mongodb` strategy, whose manifest maturity is **preview**. Endpoints and behaviour can still change between releases.
+:::
+
 The native SNOMED CT strategy can serve its data through three compatible boundaries:
 
 | Boundary | Purpose |
@@ -48,9 +52,13 @@ kehrnel terminology validate-value-set 73211009 --env dev \
   --value-set-version 1.0.0
 kehrnel terminology suggest "myocard" --language en --env dev
 kehrnel terminology concept-history 73211009 --language en --env dev
+kehrnel terminology hybrid-search "heart attack" --mode hybrid --language en --env dev
+kehrnel terminology resolve-scope --ecl "<< 73211009" --env dev
+kehrnel terminology nlp-map note.txt --language en --env dev
 kehrnel terminology save-grounding-review review.json --env dev
 kehrnel terminology query-grounded-corpus 404684003 --env dev
 kehrnel terminology benchmark-retrieval retrieval-cases.json --env dev
+kehrnel terminology benchmark-retrieval --gold-note-ids gold-en-diabetes --env dev
 ```
 
 ## External FHIR Terminology Provider
@@ -146,7 +154,7 @@ curl -sS -X POST "${RUNTIME_URL}/api/domains/fhir/CodeSystem/\$validate-code" \
 
 ## Current Boundary
 
-This slice provides lookup, single and bounded-batch validation, subsumption, expansion, paged search/navigation, typeahead, cross-release concept history, ECL, candidate grounding, reviewer-confirmed coding, ancestor-based reviewed-corpus queries, bounded retrieval benchmarks, external ConceptMap translation, and a native tenant ValueSet registry. Native ValueSets are immutable by canonical URL and version, can use an ECL or explicit-code definition, and retain the pinned SNOMED release plus a definition digest. FHIR imports can optionally validate codings for an explicit list of systems in `advisory` or fail-closed `required` mode.
+This slice provides lookup, single and bounded-batch validation, subsumption, expansion, paged search/navigation, typeahead, cross-release concept history, ECL, semantic scope resolution, lexical/vector/fused retrieval, candidate grounding, clinical note mapping with an evidence graph, guarded LLM adjudication, reviewer-confirmed coding, ancestor-based reviewed-corpus queries, stored gold notes, bounded retrieval benchmarks, usage-event telemetry, external ConceptMap translation, and a native tenant ValueSet registry. Native ValueSets are immutable by canonical URL and version, can use an ECL or explicit-code definition, and retain the pinned SNOMED release plus a definition digest. FHIR imports can optionally validate codings for an explicit list of systems in `advisory` or fail-closed `required` mode.
 
 Grounding reviews live in the tenant strategy database. Kehrnel stores a source reference, source-text hash, reviewer evidence, release, and accepted/rejected codings. Source text is not stored unless `grounding.store_source_text=true` is explicitly activated. This is a governed coding workbench, not autonomous clinical coding.
 
@@ -157,3 +165,4 @@ profile validator. Complex FHIR `ValueSet.compose` import, native ConceptMap
 authoring, closure tables, the complete ECL grammar, model-based clinical
 mention extraction, and production-scale benchmark jobs remain separate
 milestones.
+
