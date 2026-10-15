@@ -18,7 +18,7 @@ from dateutil import parser as date_parser
 from fhir_search_to_mql.converters.base_converter import BaseConverter
 from fhir_search_to_mql.core.exceptions import ConversionError
 from fhir_search_to_mql.core.constants import PREFIXES
-from fhir_search_to_mql.temporal import date_projection_field
+from fhir_search_to_mql.temporal import date_projection_field, parse_fhir_temporal_range
 
 
 class DateConverter(BaseConverter):
@@ -63,22 +63,30 @@ class DateConverter(BaseConverter):
         # Validate prefix
         self._validate_prefix(prefix, self.ALLOWED_PREFIXES)
         
+        # Normal FHIRSearchConverter calls carry the search-parameter name.
+        # Query the BSON-date interval shadow rather than the canonical FHIR
+        # string, deriving the range from the same helper denormalization uses
+        # so FHIR precision (date → whole day, second-precision dateTime →
+        # whole second, …) is honored on both sides. Direct DateConverter
+        # users retain legacy field behavior.
+        parameter_name = self.param_config.get('_parameter_name')
+        if parameter_name:
+            try:
+                start, end = parse_fhir_temporal_range(value)
+            except (TypeError, ValueError, OverflowError) as e:
+                raise ConversionError(f"Invalid date format '{value}': {str(e)}")
+            return self._build_interval_query(
+                date_projection_field(str(parameter_name)),
+                start,
+                end,
+                prefix or 'eq',
+            )
+
         # Parse date value
         try:
             date_range = self._parse_date_range(value)
         except Exception as e:
             raise ConversionError(f"Invalid date format '{value}': {str(e)}")
-
-        # Normal FHIRSearchConverter calls carry the search-parameter name.
-        # Query the BSON-date interval shadow rather than the canonical FHIR
-        # string. Direct DateConverter users retain legacy field behavior.
-        parameter_name = self.param_config.get('_parameter_name')
-        if parameter_name:
-            return self._build_interval_query(
-                date_projection_field(str(parameter_name)),
-                date_range,
-                prefix or 'eq',
-            )
         
         # Get fields to query
         fields = self._get_fields_for_modifier(modifier)
@@ -116,18 +124,16 @@ class DateConverter(BaseConverter):
     def _build_interval_query(
         self,
         field_name: str,
-        date_range: Dict[str, datetime],
+        start: datetime,
+        end: datetime,
         prefix: str,
     ) -> Dict[str, Any]:
-        """Build a query over half-open BSON date intervals."""
+        """Build a query over half-open BSON date intervals.
 
-        start = date_range['start']
-        inclusive_end = date_range['end']
-        end = (
-            inclusive_end + timedelta(microseconds=1)
-            if inclusive_end > start
-            else inclusive_end + timedelta(milliseconds=1)
-        )
+        ``start`` and ``end`` come from ``parse_fhir_temporal_range``, whose
+        ``end`` is already exclusive — no extra widening is applied here.
+        """
+
         overlap = {
             "$elemMatch": {
                 "start": {"$lt": end},

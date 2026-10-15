@@ -23,6 +23,12 @@ from dateutil import parser as date_parser
 DATE_PROJECTION_ROOT = "_search._dates"
 DATE_PROJECTION_INDEX_NAME = "idx_search_dates_wildcard"
 
+# ``_lastUpdated`` is a common parameter: it applies to every resource and is
+# compiled against the interval projection (SpecialConverter.convert_last_updated),
+# so it must be materialized even when a resource config omits it.
+LAST_UPDATED_PARAMETER = "_lastUpdated"
+LAST_UPDATED_FIELD = "meta.lastUpdated"
+
 _YEAR = re.compile(r"^\d{4}$")
 _MONTH = re.compile(r"^\d{4}-\d{2}$")
 _DAY = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -69,6 +75,12 @@ def parse_fhir_temporal_range(value: Any) -> tuple[datetime, datetime]:
         raise ValueError("FHIR temporal value must be a non-empty string or date")
 
     raw = value.strip()
+    # Query-string form decoding turns ``+`` into a space, so a timezone
+    # offset arrives as ``...T10:30:00 05:30``.  Restore the sign so
+    # ``isoparse`` reads the same instant the client sent.
+    head, sep, offset = raw.rpartition(" ")
+    if sep and "T" in head and re.fullmatch(r"\d{2}:?\d{2}", offset):
+        raw = f"{head}+{offset}"
     if _YEAR.fullmatch(raw):
         year = int(raw)
         start = datetime(year, 1, 1, tzinfo=UTC)
@@ -180,4 +192,20 @@ def build_date_projections(
                 intervals.append({"start": interval[0], "end": interval[1]})
         if intervals:
             projections[str(parameter_name)] = intervals
+
+    # Every stored resource carries ``meta.lastUpdated``, so materialize its
+    # interval for all resource configs. A config that omits the common
+    # parameter would otherwise compile ``_lastUpdated`` searches against a
+    # projection that was never written.
+    if LAST_UPDATED_PARAMETER not in projections:
+        values = _path_values(document, LAST_UPDATED_FIELD)
+        if values:
+            try:
+                start, end = parse_fhir_temporal_range(values[0])
+            except (TypeError, ValueError, OverflowError):
+                pass
+            else:
+                projections[LAST_UPDATED_PARAMETER] = [
+                    {"start": start, "end": end}
+                ]
     return projections
