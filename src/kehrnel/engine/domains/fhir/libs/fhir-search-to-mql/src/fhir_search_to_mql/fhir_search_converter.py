@@ -70,6 +70,8 @@ class FHIRSearchConverter:
         config_path: Optional[str] = None,
         config_dir: Optional[Any] = None,
         compartment_definitions_dir: Optional[str] = None,
+        fhir_version: Optional[str] = None,
+        profile: Optional[str] = None,
     ):
         """
         Initialize the FHIR search converter.
@@ -94,6 +96,8 @@ class FHIRSearchConverter:
         self.config_loader = ConfigLoader(
             config_path=config_path, config_dir=config_dir
         )
+        self.fhir_version = fhir_version
+        self.profile = profile
 
         self.query_parser = QueryParser()
         self.mql_builder = MQLBuilder()
@@ -140,7 +144,7 @@ class FHIRSearchConverter:
             if hasattr(self, '_load_config'):
                 config = self._load_config(resource_type)
             elif self.config_loader:
-                config = self.config_loader.get_config(resource_type)
+                config = self.config_loader.get_config(resource_type, fhir_version=self.fhir_version, profile=self.profile)
             else:
                 raise MissingConfigurationError(
                     f"No configuration loader available. Provide config_path or config_dir."

@@ -1,0 +1,32 @@
+resource: VerificationResult
+fhir_version: R5
+
+search_parameters:
+  status:
+    type: token
+    description: "VerificationResult status"
+    fields:
+      - field: status
+        tokenType: code
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: id
+        tokenType: code
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: meta.lastUpdated
+        type: date
+
+indexes:
+  - fields:
+      - "status": 1
+    options:
+      name: idx_r5_verifi_status
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_r5_verifi_updated

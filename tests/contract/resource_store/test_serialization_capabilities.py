@@ -122,7 +122,8 @@ def test_fhir_capabilities_reports_distinct_sets():
     assert "Patient" in cat["storable_resource_types"]
     assert set(cat["storable_resource_types"]) == set(cat["searchable_resource_types"])
     assert set(cat["recipe_resource_types"]) < set(cat["storable_resource_types"])
-    assert set(cat["storable_resource_types"]) < set(
+    # R5 now has configs for all 158 schema resources, so storable == schema_supported
+    assert set(cat["storable_resource_types"]) <= set(
         cat["schema_supported_resource_types"]
     )
     assert set(cat["synthetic_writable_resource_types"]) <= set(

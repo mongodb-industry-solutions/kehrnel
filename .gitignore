@@ -234,3 +234,6 @@ src/kehrnel/engine/domains/fhir/libs/**/node_modules/
 src/kehrnel/engine/domains/fhir/libs/**/.cursor/
 src/kehrnel/engine/domains/fhir/libs/**/pytest_results.txt
 src/kehrnel/engine/domains/fhir/libs/**/.DS_Store
+
+# LOCAL_TESTING
+LOCAL_TESTING/

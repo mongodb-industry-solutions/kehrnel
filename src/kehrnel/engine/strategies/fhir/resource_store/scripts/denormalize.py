@@ -151,6 +151,14 @@ async def fhir_denormalize(
     search_cfg = cfg.get("search") or {}
     config_dir = search_cfg.get("config_dir")
     compartment_dir = search_cfg.get("compartment_definitions_dir")
+    schema_version = str(cfg.get("schema_version") or "R5").strip().upper()
+    # Auto-select R4 + US Core bundled configs when schema_version=R4 and no
+    # explicit config_dir is set, so US Core denormalization fields (meta.profile,
+    # race/ethnicity extensions) are projected correctly.
+    from kehrnel.engine.strategies.fhir.resource_store.scripts.query import (
+        _resolve_config_dir_for_release,
+    )
+    config_dir = _resolve_config_dir_for_release(config_dir, schema_version)
 
     ResourceDenormalizer, MongoDBHandler = _require_fhir_mql_denorm()
     mql_ctx = bridge.build_mql_context(

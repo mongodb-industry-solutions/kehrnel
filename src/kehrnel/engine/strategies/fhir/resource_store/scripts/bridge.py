@@ -61,7 +61,6 @@ def _require_fhir_gen():
 def _require_fhir_mql():
     try:
         from fhir_search_to_mql import ConfigLoader
-        from fhir_search_to_mql.core.config_loader import _bundled_configs_dir
         from fhir_search_to_mql.denormalizer.mongodb_handler import MongoDBHandler
         from pymongo import MongoClient
     except ImportError as exc:
@@ -71,7 +70,7 @@ def _require_fhir_mql():
             message="fhir-search-to-mql is not installed. Install kehrnel with the [fhir] extra.",
             details={"import_error": str(exc)},
         ) from exc
-    return ConfigLoader, _bundled_configs_dir, MongoDBHandler, MongoClient
+    return ConfigLoader, MongoDBHandler, MongoClient
 
 
 def _bundled_compartment_definitions_dir() -> str:
@@ -187,7 +186,7 @@ def _config_loader_cache_key(loader_dirs: list[str] | None) -> tuple[str, ...]:
 
 def get_mongo_client(uri: str):
     """Return a pooled MongoClient for ``uri`` (reused across search/execute)."""
-    _, _, _, MongoClient = _require_fhir_mql()
+    _, _, MongoClient = _require_fhir_mql()
     client = _mongo_client_cache.get(uri)
     if client is None:
         client = MongoClient(uri)
@@ -226,7 +225,7 @@ def build_mql_context(
     client: Any | None = None,
 ) -> MqlContext:
     """Build fhir-mql ConfigLoader + Mongo client (bundled YAML paths when dirs are null)."""
-    ConfigLoader, bundled_configs_dir, MongoDBHandler, MongoClient = _require_fhir_mql()
+    ConfigLoader, MongoDBHandler, MongoClient = _require_fhir_mql()
 
     loader_dirs: list[str] | None = None
     if config_dir is None:

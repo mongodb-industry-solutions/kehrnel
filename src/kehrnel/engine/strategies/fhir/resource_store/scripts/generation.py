@@ -40,7 +40,7 @@ def _import_fhir_gen():
         from fhir_gen.resolvers.dependency import resolve_order
         from fhir_gen.resolvers.reference import ReferenceStore
         from fhir_gen.schema.registry import SchemaRegistry
-        from fhir_gen.schema.versions import resolve_schema_path
+        from fhir_gen.schema.versions import normalize_schema_version, resolve_schema_path
 
     return (
         ResourceGenerator,
@@ -48,6 +48,7 @@ def _import_fhir_gen():
         ReferenceStore,
         SchemaRegistry,
         resolve_schema_path,
+        normalize_schema_version,
     )
 
 
@@ -120,7 +121,7 @@ def _generation_schema_registry(
     schema_version: str | None, schema_path: str | None
 ):
     """Build a request-local registry so concurrent tenant releases cannot race."""
-    _, _, _, SchemaRegistry, resolve_schema_path = _import_fhir_gen()
+    _, _, _, SchemaRegistry, resolve_schema_path, _ = _import_fhir_gen()
     path = resolve_schema_path(
         schema_version=schema_version,
         schema_path=Path(schema_path) if schema_path else None,
@@ -155,6 +156,28 @@ def _merge_conformance_reports(
         "optional_values_removed": sum(removals.values()),
         "removals_by_path": dict(removals.most_common(50)),
         "policy": "remove-invalid-optional-content;never-invent-required-content",
+    }
+
+
+def _build_conformance_report(
+    generator: Any,
+    schema_registry: Any,
+) -> dict[str, Any]:
+    """Run base-schema conformance on all resources in the generator store."""
+    with _fhir_gen_cwd_guard():
+        from fhir_gen.schema.conformance import conform_resource_to_schema
+    resources = list(generator.store.all_resources())
+    removals: Counter[str] = Counter()
+    passed = True
+    for resource in resources:
+        report = conform_resource_to_schema(resource, schema_registry)
+        if not report.get("passed"):
+            passed = False
+        removals.update(report.get("removals") or {})
+    return {
+        "passed": passed,
+        "resources_checked": len(resources),
+        "removals_by_path": dict(removals.most_common(50)),
     }
 
 
@@ -206,16 +229,18 @@ async def _generate_cohort_documents(
     should_cancel: CancelCallback | None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
     """Generate isolated patient graphs while reusing shared directory assets."""
-    ResourceGenerator, resolve_order, ReferenceStore, _, _ = _import_fhir_gen()
+    ResourceGenerator, resolve_order, ReferenceStore, SchemaRegistry, _, _ = _import_fhir_gen()
+    SchemaRegistry.reload(schema_path)
     seed = int(plan["cohort"]["seed"])
     shared_counts = plan["shared_resources"]
-    shared_generator = ResourceGenerator(seed=seed, schema_path=schema_path)
+    shared_generator = ResourceGenerator(seed=seed)
     if shared_counts:
         shared_generator.generate_many(
             list(shared_counts), counts=shared_counts
         )
     shared_docs = shared_generator.store.all_resources()
-    conformance_reports = [shared_generator.conformance_report()]
+    _schema_registry = SchemaRegistry.get()
+    conformance_reports = [_build_conformance_report(shared_generator, _schema_registry)]
     shared_keys = {_resource_key(resource) for resource in shared_docs}
 
     all_docs: list[dict[str, Any]] = list(shared_docs)
@@ -235,17 +260,15 @@ async def _generate_cohort_documents(
         generator = ResourceGenerator(
             seed=seed + (patient_index + 1) * 104_729,
             store=patient_store,
-            schema_path=schema_path,
         )
         generator.generate("Patient", 1)
         for resource_type in resolve_order(
             [key for key, count in requested.items() if count > 0],
-            generator.schema_registry,
         ):
             count = int(requested.get(resource_type, 0))
             if count:
                 generator.generate(resource_type, count)
-        conformance_reports.append(generator.conformance_report())
+        conformance_reports.append(_build_conformance_report(generator, _schema_registry))
 
         patient_docs = [
             resource
@@ -318,16 +341,16 @@ async def synthetic_generate_batch(
     )
     schema_path = effective_payload.get("schema_path")
 
-    if schema_version.upper() not in {"R5", "R6"}:
+    _, _, _, _, _, _normalize = _import_fhir_gen()
+    try:
+        schema_version = _normalize(schema_version)
+    except ValueError as exc:
         raise KehrnelError(
             code="FHIR_GENERATION_VERSION_UNSUPPORTED",
             status=400,
-            message=(
-                f"Synthetic generation is not available for {schema_version}; "
-                "use an R5 or R6 activation."
-            ),
-            details={"schema_version": schema_version, "supported": ["R5", "R6"]},
-        )
+            message=str(exc),
+            details={"schema_version": schema_version, "supported": ["R4", "R5", "R6"]},
+        ) from exc
     schema_registry, resolved_schema_path = _generation_schema_registry(
         schema_version, schema_path
     )
@@ -390,7 +413,7 @@ async def synthetic_generate_batch(
     database = str(cfg["database"])
     prefix = str(cfg.get("collection_prefix") or "")
     generation_order = _import_fhir_gen()[1](
-        list(requested.keys()), schema_registry
+        list(requested.keys())
     )
     collection_names = [
         bridge.collection_name(prefix, rt)
@@ -446,28 +469,55 @@ async def synthetic_generate_batch(
             should_cancel=should_cancel,
         )
     else:
-        ResourceGenerator, _, _, _, _ = _import_fhir_gen()
-        generator = ResourceGenerator(seed=seed, schema_path=resolved_schema_path)
+        ResourceGenerator, _, _, SchemaRegistry, _, _ = _import_fhir_gen()
+        SchemaRegistry.reload(resolved_schema_path)
 
-        generator.generate_many(list(requested.keys()), counts=requested)
-        _check_canceled(should_cancel)
+        # Wire profile_pack (e.g. "us_core") into the fhir-gen settings singleton
+        # so ResourceGenerator.generate() applies profile stamps to each resource.
+        # profile_pack requires schema_version==R4; the normalize step above already
+        # validated the version, so we only need to guard against non-R4 here.
+        profile_pack = effective_payload.get("profile_pack")
+        if profile_pack and schema_version != "R4":
+            raise KehrnelError(
+                code="FHIR_PROFILE_PACK_VERSION_MISMATCH",
+                status=400,
+                message=(
+                    f"profile_pack='{profile_pack}' requires schema_version='R4', "
+                    f"got schema_version='{schema_version}'"
+                ),
+                details={"profile_pack": profile_pack, "schema_version": schema_version},
+            )
 
-        for resource_type, scenario_id in scenarios:
-            generator.generate_scenario(resource_type, scenario_id, register=True)
+        with _fhir_gen_cwd_guard():
+            from fhir_gen.config import settings as _fhir_gen_settings
+        _prev_profile_pack = _fhir_gen_settings.profile_pack
+        _fhir_gen_settings.profile_pack = (
+            profile_pack.replace("-", "_") if profile_pack else None
+        )
+        try:
+            generator = ResourceGenerator(seed=seed)
+
+            generator.generate_many(list(requested.keys()), counts=requested)
             _check_canceled(should_cancel)
 
-        if variants:
-            target_types = (
-                [str(rt) for rt in variant_resources]
-                if isinstance(variant_resources, list) and variant_resources
-                else list(requested.keys())
-            )
-            for resource_type in target_types:
-                generator.generate_variants(resource_type)
+            for resource_type, scenario_id in scenarios:
+                generator.generate_scenario(resource_type, scenario_id, register=True)
                 _check_canceled(should_cancel)
 
-        all_docs = generator.store.all_resources()
-        generation_conformance = generator.conformance_report()
+            if variants:
+                target_types = (
+                    [str(rt) for rt in variant_resources]
+                    if isinstance(variant_resources, list) and variant_resources
+                    else list(requested.keys())
+                )
+                for resource_type in target_types:
+                    generator.generate_variants(resource_type)
+                    _check_canceled(should_cancel)
+
+            all_docs = generator.store.all_resources()
+            generation_conformance = _build_conformance_report(generator, SchemaRegistry.get())
+        finally:
+            _fhir_gen_settings.profile_pack = _prev_profile_pack
     all_counts = _count_resources_by_type(all_docs)
     generated = {rt: all_counts.get(rt, 0) for rt in requested}
     dependencies_auto_generated = {
@@ -514,6 +564,7 @@ async def synthetic_generate_batch(
             ctx,
             {
                 "resources": all_docs,
+                "schema_version": schema_version,
                 "validation_level": "base",
                 "mode": "upsert",
                 "fail_on_error": True,

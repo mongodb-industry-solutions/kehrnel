@@ -1,0 +1,76 @@
+resource: FormularyItem
+fhir_version: R5
+
+search_parameters:
+  status:
+    type: token
+    description: "FormularyItem status"
+    fields:
+      - field: status
+        tokenType: code
+  code:
+    type: token
+    description: "Code for FormularyItem"
+    fields:
+      - field: _search.codeCode
+        tokenType: code
+      - field: _search.codeSystemCode
+        tokenType: systemCode
+  identifier:
+    type: token
+    description: "Identifier for FormularyItem"
+    fields:
+      - field: _search.identifier_systemCode
+        tokenType: systemCode
+      - field: _search.identifier_values
+        tokenType: code
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: id
+        tokenType: code
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: meta.lastUpdated
+        type: date
+
+denormalization:
+  code:
+    source: code
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code.coding[*].code
+        target_field: codeCode
+        datatype: array[string]
+      - source_path: code
+        target_field: codeSystemCode
+        datatype: array[string]
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+indexes:
+  - fields:
+      - "status": 1
+    options:
+      name: idx_r5_formul_status
+  - fields:
+      - "_search.codeCode": 1
+    options:
+      name: idx_r5_formul_code
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_r5_formul_updated
