@@ -5,6 +5,9 @@
       "ehr_id": {
         "type": "token"
       },
+      "comp_id": {
+        "type": "token"
+      },
       "tid": {
         "type": "token"
       },
@@ -29,11 +32,22 @@
                     "fields": {
                       "cs": {
                         "type": "token"
+                      },
+                      "tid": {
+                        "type": "document",
+                        "fields": {
+                          "v": {
+                            "type": "token"
+                          }
+                        }
                       }
                     }
                   },
                   "magnitude": {
                     "type": "number"
+                  },
+                  "v": {
+                    "type": "date"
                   }
                 }
               },
@@ -57,6 +71,9 @@
                     }
                   }
                 }
+              },
+              "ani": {
+                "type": "number"
               }
             }
           }

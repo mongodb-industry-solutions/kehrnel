@@ -12,12 +12,15 @@ from ..contains_clause import (
 from .value_formatter import ValueFormatter
 from .format_resolver import FormatResolver
 from ..pagination import DEFAULT_PAGE_LIMIT
+from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.persistence import PersistenceStrategy, get_default_strategy
 from kehrnel.api.bridge.app.core.config import settings
 import logging
 import re
 
 logger = logging.getLogger(__name__)
+
+_MAX_EXACT_TOKEN_MATCH_VALUES = 1024
 
 
 class SearchPipelineBuilder:
@@ -26,12 +29,14 @@ class SearchPipelineBuilder:
     Designed specifically for the search collection (sm_search3) with 'sn' array structure.
     """
 
-    def __init__(self, ehr_alias: str, composition_alias: str, schema_config: Dict[str, str], 
-                 format_resolver: FormatResolver, context_map: Dict[str, Dict], 
+    def __init__(self, ehr_alias: str, composition_alias: str, schema_config: Dict[str, str],
+                 format_resolver: FormatResolver, context_map: Dict[str, Dict],
                  let_variables: Dict[str, Any] = None,
                  strategy: Optional[PersistenceStrategy] = None,
                  search_index_name: Optional[str] = None,
-                 version_alias: str | None = None):
+                 version_alias: str | None = None,
+                 require_exact_path_correlation: bool = False,
+                 search_field_types: Optional[Dict[str, Any]] = None):
         self.ehr_alias = ehr_alias
         self.composition_alias = composition_alias
         self.version_alias = version_alias
@@ -40,7 +45,17 @@ class SearchPipelineBuilder:
         self.context_map = context_map
         self.let_variables = let_variables or {}
         self.strategy = strategy or get_default_strategy()
-        
+        self.require_exact_path_correlation = bool(require_exact_path_correlation)
+        self.search_field_types = {
+            str(path): (
+                {str(field_type) for field_type in raw_types}
+                if isinstance(raw_types, (list, tuple, set))
+                else {str(raw_types)}
+            )
+            for path, raw_types in (search_field_types or {}).items()
+            if raw_types is not None
+        }
+
         # Use centralized configuration like repository.py does
         self.search_index_name = (
             search_index_name
@@ -48,10 +63,10 @@ class SearchPipelineBuilder:
             or settings.search_config.search_index_name
         )
         self.full_compositions_collection = self.schema_config.get("collection") or settings.search_config.flatten_collection
-        
+
         # For search collection, we use 'sn' instead of 'cn'
         self.search_config = self._build_search_schema_config()
-        
+
         self.condition_processor = ConditionProcessor(
             ehr_alias,
             composition_alias,
@@ -91,6 +106,132 @@ class SearchPipelineBuilder:
 
     def _search_nodes_array_field(self) -> str:
         return self.search_config.get("composition_array") or "sn"
+
+    @staticmethod
+    def _atlas_search_regex_pattern(pattern: Any) -> str:
+        """Translate the path resolver's PCRE anchors to Lucene regex syntax.
+
+        MongoDB's ``$regexMatch`` accepts the resolver pattern unchanged, but
+        Atlas Search's ``regex`` operator uses Lucene regular expressions:
+        matching is against the whole term and ``^``/``$`` anchors plus PCRE
+        non-capturing groups are not supported.
+        """
+        normalized = str(pattern)
+        if normalized.startswith("^"):
+            normalized = normalized[1:]
+        if normalized.endswith("$") and not normalized.endswith(r"\$"):
+            normalized = normalized[:-1]
+        return normalized.replace("(?:", "(")
+
+    def _is_exact_token_search_path(self, search_path: str) -> bool:
+        """Return whether a projected field is mapped as an Atlas Search token.
+
+        RPS Dual keeps codes and terminology identifiers as exact values in the
+        generated index.  Atlas Search's ``text`` and ``regex`` operators only
+        target string mappings; token mappings must use ``equals`` (or an exact
+        compound of ``equals`` clauses for AQL ``MATCHES`` sets).
+
+        Generated or declared index metadata is authoritative when supplied,
+        including for tenant-specific shortcuts.  The suffix check is retained
+        only for legacy callers that do not provide index metadata.
+        """
+        normalized_path = str(search_path)
+        if self.search_field_types:
+            return "token" in self.search_field_types.get(normalized_path, set())
+        return str(search_path).endswith(
+            (
+                ".cs",
+                ".code_string",
+                ".id",
+                ".units",
+                ".tid.v",
+                ".ti.v",
+                ".terminology_id.value",
+            )
+        )
+
+    @staticmethod
+    def _matches_values(value: Any) -> List[Any]:
+        """Normalize the parser's numeric-key object representation of a set."""
+        if isinstance(value, dict):
+            numeric_keys = sorted(
+                (key for key in value if str(key).isdigit()),
+                key=lambda key: int(key),
+            )
+            return [value[key] for key in numeric_keys if value[key] is not None]
+        if isinstance(value, (list, tuple)):
+            return [item for item in value if item is not None]
+        return [] if value is None else [value]
+
+    @staticmethod
+    def _build_exact_token_matches_query(
+        search_path: str,
+        value: Any,
+    ) -> Optional[Dict[str, Any]]:
+        values: List[Any] = []
+        for item in SearchPipelineBuilder._matches_values(value):
+            # MATCHES values are identifier literals.  Preserve their lexical
+            # form (notably numeric-looking SNOMED CT codes) for token equality.
+            candidate = item if isinstance(item, str) else str(item)
+            if candidate not in values:
+                values.append(candidate)
+
+        if len(values) > _MAX_EXACT_TOKEN_MATCH_VALUES:
+            raise KehrnelError(
+                code="AQL_MATCHES_TOO_MANY_VALUES",
+                status=422,
+                message=(
+                    "AQL MATCHES permits at most "
+                    f"{_MAX_EXACT_TOKEN_MATCH_VALUES} distinct exact values."
+                ),
+                details={
+                    "valueCount": len(values),
+                    "maximum": _MAX_EXACT_TOKEN_MATCH_VALUES,
+                    "path": search_path,
+                },
+            )
+
+        if not values:
+            return None
+        if len(values) == 1:
+            return {"equals": {"path": search_path, "value": values[0]}}
+        # Atlas Search's `in` operator preserves exact token membership without
+        # generating one Boolean clause per terminology code.  This keeps the
+        # governed 1,024-code execution ceiling below Lucene clause limits.
+        return {"in": {"path": search_path, "value": values}}
+
+    def _require_resolved_semantic_path(
+        self,
+        *,
+        aql_path: str,
+        path_regex_pattern: Any,
+        data_path: str,
+    ) -> None:
+        if not self.require_exact_path_correlation or path_regex_pattern is not None:
+            return
+
+        root_fields = {
+            self.search_config.get("ehr_id"),
+            self.search_config.get("comp_id"),
+            self.search_config.get("template_id"),
+            self.search_config.get("sort_time"),
+        }
+        if data_path in root_fields:
+            return
+
+        raise KehrnelError(
+            code="OPENEHR_SEMANTIC_PATH_UNRESOLVED",
+            status=422,
+            message=(
+                "Exact openEHR path correlation was requested, but an AQL path could not be resolved "
+                "to the active coded-path dictionary."
+            ),
+            details={
+                "aqlPath": aql_path,
+                "resolvedDataPath": data_path,
+                "requiredDictionary": self.schema_config.get("codes_collection") or "_codes",
+            },
+        )
 
     def _search_predicate_targets_search_node_child(self, query: Dict[str, Any]) -> bool:
         if not isinstance(query, dict) or len(query) != 1:
@@ -847,12 +988,35 @@ class SearchPipelineBuilder:
             left_path_regex, left_data_path = await self.format_resolver.translate_aql_path(left_path)
             right_path_regex, right_data_path = await self.format_resolver.translate_aql_path(right_path)
         except Exception as exc:
+            if self.require_exact_path_correlation:
+                self._raise_exact_correlation_error(
+                    "OPENEHR_SEMANTIC_PATH_UNRESOLVED",
+                    "Exact openEHR path correlation could not resolve a path-to-path predicate.",
+                    leftAqlPath=left_path,
+                    rightAqlPath=right_path,
+                    reason=str(exc),
+                )
             logger.warning("Could not resolve path-to-path comparison %s %s %s: %s", left_path, operator, right_path, exc)
             return None
 
         if left_path_regex is None or right_path_regex is None:
+            if self.require_exact_path_correlation:
+                self._raise_exact_correlation_error(
+                    "OPENEHR_PATH_TO_PATH_CORRELATION_UNSUPPORTED",
+                    "Exact path-to-path correlation requires coded semantic paths on both operands.",
+                    leftAqlPath=left_path,
+                    rightAqlPath=right_path,
+                )
             logger.debug("Skipping sidecar path-to-path exact match for direct field comparison: %s %s %s", left_path, operator, right_path)
             return None
+
+        if self.require_exact_path_correlation and not self._supports_exact_row_correlation():
+            self._raise_exact_correlation_error(
+                "OPENEHR_PATH_INSTANCE_CHAIN_REQUIRED",
+                "Exact path-to-path correlation requires chain-valued path-instance metadata.",
+                leftAqlPath=left_path,
+                rightAqlPath=right_path,
+            )
 
         left_nodes = self._sidecar_nodes_with_value_expr(
             path_regex_pattern=left_path_regex,
@@ -883,6 +1047,13 @@ class SearchPipelineBuilder:
         )
         if correlation_expr is not None:
             pair_conds.append(correlation_expr)
+        elif self.require_exact_path_correlation:
+            self._raise_exact_correlation_error(
+                "OPENEHR_ALIAS_CORRELATION_UNRESOLVED",
+                "Exact path-to-path correlation could not be constructed for the referenced aliases.",
+                leftAlias=left_alias,
+                rightAlias=right_alias,
+            )
 
         pair_expr = self._combine_exprs("$and", pair_conds)
         if pair_expr is None:
@@ -939,6 +1110,280 @@ class SearchPipelineBuilder:
         if path_expr is None:
             return None
         return {"$match": {"$expr": path_expr}}
+
+    def _flatten_conjunctive_where(self, node: Dict[str, Any] | None) -> Optional[List[Dict[str, Any]]]:
+        """Return WHERE leaves when the expression is a pure conjunction.
+
+        Correlating arbitrary boolean expressions requires preserving branches
+        and quantifier scope.  Until that is implemented, the strict semantic
+        query path rejects OR instead of weakening it into an uncorrelated
+        filter.
+        """
+        if not isinstance(node, dict) or not node:
+            return []
+        operator = str(node.get("operator") or "").upper()
+        if operator == "OR":
+            return None
+        if operator != "AND":
+            return [node]
+
+        leaves: List[Dict[str, Any]] = []
+        for child in self._iter_where_children(node):
+            child_leaves = self._flatten_conjunctive_where(child)
+            if child_leaves is None:
+                return None
+            leaves.extend(child_leaves)
+        return leaves
+
+    def _raise_exact_correlation_error(
+        self,
+        code: str,
+        message: str,
+        **details: Any,
+    ) -> None:
+        raise KehrnelError(
+            code=code,
+            status=422,
+            message=message,
+            details=details,
+        )
+
+    def _literal_candidate_nodes_expr(
+        self,
+        *,
+        path_regex_pattern: Any,
+        data_path: str,
+        operator: str,
+        value: Any,
+    ) -> Optional[Dict[str, Any]]:
+        op = str(operator or "").upper()
+        # Atlas Search's document-level mustNot for these operators can discard
+        # a document because *another* repeated occurrence has the forbidden
+        # value.  Until negative existential semantics are implemented in the
+        # post-filter without that lossy prefilter, strict mode must reject it.
+        if op in {"NOT EXISTS", "!=", "<>"}:
+            return None
+
+        path_field = self.search_config["path_field"]
+        instance_field = self.search_config.get("path_instance_field") or self.schema_config.get(
+            "path_instance_field",
+            "pi",
+        )
+        instance_expr = f"$$node.{instance_field}"
+        path_expr = self._safe_string_expr(f"$$node.{path_field}")
+        conditions: List[Dict[str, Any]] = [
+            {
+                "$regexMatch": {
+                    "input": path_expr,
+                    "regex": path_regex_pattern,
+                }
+            },
+            {"$isArray": instance_expr},
+            {
+                "$eq": [
+                    {
+                        "$cond": [
+                            {"$isArray": instance_expr},
+                            {"$size": instance_expr},
+                            -1,
+                        ]
+                    },
+                    {
+                        "$size": {
+                            "$split": [
+                                path_expr,
+                                self.search_config.get("separator", ":") or ":",
+                            ]
+                        }
+                    },
+                ]
+            },
+        ]
+
+        if op == "EXISTS":
+            conditions.append(self._value_present_expr(f"$$node.{data_path}"))
+        else:
+            predicate_value = (
+                self._format_date_value_for_search(value)
+                if op in {">", ">=", "<", "<="}
+                else value
+            )
+            value_expr = self._build_value_predicate_expr(
+                f"$$node.{data_path}",
+                op,
+                predicate_value,
+                preformatted=True,
+            )
+            if value_expr is None:
+                return None
+            conditions.append(value_expr)
+
+        return {
+            "$filter": {
+                "input": self._sidecar_nodes_expr(),
+                "as": "node",
+                "cond": self._combine_exprs("$and", conditions),
+            }
+        }
+
+    async def build_same_alias_literal_correlation_stage(
+        self,
+        ast: Dict[str, Any],
+    ) -> Optional[Dict[str, Any]]:
+        """Recheck correlated literal predicates using the path-instance chain.
+
+        Atlas Search can correlate each value with its own semantic path inside
+        one flattened node.  It cannot by itself prove that values stored in
+        *different* flattened nodes came from the same repeated archetype
+        occurrence.  This exact post-filter compares the corresponding ``pi``
+        slices for conjunctive predicates that reference the same alias.
+        """
+        if not self.require_exact_path_correlation:
+            return None
+
+        leaves = self._flatten_conjunctive_where(ast.get("where"))
+        if leaves is None:
+            if self.require_exact_path_correlation:
+                self._raise_exact_correlation_error(
+                    "OPENEHR_BOOLEAN_CORRELATION_UNSUPPORTED",
+                    "Exact openEHR path correlation currently supports conjunctive predicates only.",
+                )
+            return None
+
+        alias_codes = await self._contains_alias_archetype_codes(ast.get("contains"))
+        grouped: Dict[str, List[Dict[str, Any]]] = {}
+        semantic_aliases: set[str] = set()
+
+        for condition in leaves:
+            path = condition.get("path")
+            operator = str(condition.get("operator") or "").upper()
+            if not isinstance(path, str) or "/" not in path or not operator:
+                continue
+            if self._path_operand_path(condition.get("value")) is not None:
+                continue
+
+            alias = path.split("/", 1)[0].strip()
+            if alias in {self.ehr_alias, self.composition_alias, self.version_alias}:
+                continue
+            semantic_aliases.add(alias)
+
+            try:
+                path_regex_pattern, data_path = await self.format_resolver.translate_aql_path(path)
+            except Exception as exc:
+                if self.require_exact_path_correlation:
+                    self._raise_exact_correlation_error(
+                        "OPENEHR_SEMANTIC_PATH_UNRESOLVED",
+                        "Exact openEHR path correlation could not resolve an AQL predicate path.",
+                        aqlPath=path,
+                        reason=str(exc),
+                    )
+                continue
+
+            if path_regex_pattern is None:
+                if self.require_exact_path_correlation:
+                    self._raise_exact_correlation_error(
+                        "OPENEHR_SEMANTIC_PATH_UNRESOLVED",
+                        "Exact openEHR path correlation requires a coded path for every semantic predicate.",
+                        aqlPath=path,
+                        resolvedDataPath=data_path,
+                    )
+                continue
+
+            candidates = self._literal_candidate_nodes_expr(
+                path_regex_pattern=path_regex_pattern,
+                data_path=data_path,
+                operator=operator,
+                value=condition.get("value"),
+            )
+            if candidates is None:
+                if self.require_exact_path_correlation:
+                    self._raise_exact_correlation_error(
+                        "OPENEHR_CORRELATED_OPERATOR_UNSUPPORTED",
+                        "The AQL operator cannot yet be evaluated with exact repeated-instance correlation.",
+                        aqlPath=path,
+                        operator=operator,
+                    )
+                continue
+            grouped.setdefault(alias, []).append({"condition": condition, "candidates": candidates})
+
+        if self.require_exact_path_correlation and len(semantic_aliases) > 1:
+            self._raise_exact_correlation_error(
+                "OPENEHR_MULTI_ALIAS_CORRELATION_UNSUPPORTED",
+                "Exact correlation across multiple openEHR aliases is not supported yet.",
+                aliases=sorted(semantic_aliases),
+            )
+
+        group_exprs: List[Dict[str, Any]] = []
+        for alias, predicates in grouped.items():
+            if len(predicates) < 2:
+                continue
+            alias_code = alias_codes.get(alias)
+            if not alias_code:
+                if self.require_exact_path_correlation:
+                    self._raise_exact_correlation_error(
+                        "OPENEHR_ALIAS_CODE_UNRESOLVED",
+                        "Exact repeated-instance correlation requires the alias archetype code.",
+                        alias=alias,
+                    )
+                continue
+            if not self._supports_exact_row_correlation():
+                if self.require_exact_path_correlation:
+                    self._raise_exact_correlation_error(
+                        "OPENEHR_PATH_INSTANCE_CHAIN_REQUIRED",
+                        "Exact repeated-instance correlation requires chain-valued path-instance metadata.",
+                        alias=alias,
+                        pathInstanceField=self.search_config.get("path_instance_field"),
+                    )
+                continue
+
+            correlated_requirements: List[Dict[str, Any]] = []
+            for index, predicate in enumerate(predicates[1:], start=1):
+                candidate_var = f"candidate{index}"
+                correlation_expr = self._path_pair_correlation_expr(
+                    left_alias=alias,
+                    right_alias=alias,
+                    left_node_var="anchor",
+                    right_node_var=candidate_var,
+                    alias_codes=alias_codes,
+                )
+                if correlation_expr is None:
+                    if self.require_exact_path_correlation:
+                        self._raise_exact_correlation_error(
+                            "OPENEHR_ALIAS_CORRELATION_UNRESOLVED",
+                            "Exact repeated-instance correlation could not be constructed for an AQL alias.",
+                            alias=alias,
+                        )
+                    correlated_requirements = []
+                    break
+                correlated_requirements.append(
+                    {
+                        "$anyElementTrue": {
+                            "$map": {
+                                "input": predicate["candidates"],
+                                "as": candidate_var,
+                                "in": correlation_expr,
+                            }
+                        }
+                    }
+                )
+
+            if not correlated_requirements:
+                continue
+            group_exprs.append(
+                {
+                    "$anyElementTrue": {
+                        "$map": {
+                            "input": predicates[0]["candidates"],
+                            "as": "anchor",
+                            "in": self._combine_exprs("$and", correlated_requirements),
+                        }
+                    }
+                }
+            )
+
+        if not group_exprs:
+            return None
+        return {"$match": {"$expr": self._combine_exprs("$and", group_exprs)}}
 
     def _resolve_row_match_direct_field_expr(self, path: str) -> Optional[str]:
         if path in {"ehr_id", f"{self.ehr_alias}/ehr_id/value"}:
@@ -1148,6 +1593,14 @@ class SearchPipelineBuilder:
         if path_to_path_exact_match:
             pipeline.append(path_to_path_exact_match)
 
+        # A semantic query can constrain multiple leaf nodes beneath one
+        # repeated archetype alias.  $search provides candidate reduction, but
+        # only the path-instance chain can prove those leaves belong to the
+        # same archetype occurrence.
+        literal_correlation_match = await self.build_same_alias_literal_correlation_stage(ast)
+        if literal_correlation_match:
+            pipeline.append(literal_correlation_match)
+
         # 3. Build the $lookup stage to get complete composition data
         lookup_stage = self.build_lookup_stage(ast)
         if lookup_stage:
@@ -1177,7 +1630,7 @@ class SearchPipelineBuilder:
         if row_exact_match:
             pipeline.append(row_exact_match)
 
-        # 7. Build the $project stage from the SELECT clause  
+        # 7. Build the $project stage from the SELECT clause
         project_stage = await self.build_project_stage(ast)
         if project_stage:
             pipeline.append(project_stage)
@@ -1209,7 +1662,7 @@ class SearchPipelineBuilder:
         sort_stage = None if search_sort_spec else self.build_sort_stage(ast)
         if sort_stage:
             pipeline.append(sort_stage)
-        
+
         # 10. Apply result pagination. Explicit AQL LIMIT wins; otherwise cap
         # library/query-lab pages to a conservative default.
         skip_stage = None if self._has_search_page_token(ast) else self.build_skip_stage(ast)
@@ -1218,7 +1671,7 @@ class SearchPipelineBuilder:
         limit_stage = self.build_limit_stage(ast, default_limit=DEFAULT_PAGE_LIMIT)
         if limit_stage:
             pipeline.append(limit_stage)
-        
+
         return pipeline
 
     def _parse_aggregate_columns(self, ast: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -1565,14 +2018,14 @@ class SearchPipelineBuilder:
                 "$search": finalize_search_body({
                     "index": self.search_index_name,
                     "exists": {
-                        "path": "sn"
+                        "path": self._search_nodes_array_field()
                     }
                 })
             }
 
         # Convert WHERE clause to search query
         search_query = await self._convert_where_to_search(where_clause)
-        
+
         if search_query:
             search_query = self._wrap_search_node_predicates_in_embedded_documents(search_query)
             return {
@@ -1588,7 +2041,7 @@ class SearchPipelineBuilder:
                 "$search": finalize_search_body({
                     "index": self.search_index_name,
                     "exists": {
-                        "path": "sn"
+                        "path": self._search_nodes_array_field()
                     }
                 })
             }
@@ -1601,26 +2054,26 @@ class SearchPipelineBuilder:
         # Handle the actual AQL parser format (flat structure)
         if "path" in where_clause and "operator" in where_clause:
             return await self._handle_direct_condition_search(where_clause)
-        
+
         # Handle logical conditions with multiple sub-conditions
         if "operator" in where_clause and "conditions" in where_clause:
             return await self._handle_logical_conditions_search(where_clause)
-        
+
         # Compatibility format handling (for backward compatibility)
         condition_type = where_clause.get("type")
-        
+
         if condition_type == "comparison":
             return await self._handle_comparison_search(where_clause)
-        
+
         elif condition_type == "logical":
             return await self._handle_logical_search(where_clause)
-        
+
         elif condition_type == "exists":
             return await self._handle_exists_search(where_clause)
-        
+
         elif condition_type == "matches":
             return await self._handle_matches_search(where_clause)
-        
+
         return None
 
     async def _handle_direct_condition_search(self, condition: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -1630,43 +2083,75 @@ class SearchPipelineBuilder:
         aql_path = condition.get("path")
         operator = condition.get("operator")
         value = condition.get("value")
-        
+
         if not aql_path or not operator:
             logger.warning(f"Invalid direct condition format: {condition}")
             return None
-        
+
         # Translate AQL path to search collection path
         try:
             path_regex_pattern, data_path = await self.format_resolver.translate_aql_path(aql_path)
-            # Top-level metadata fields stay at document root; node data lives under sn.
-            if path_regex_pattern is None:
-                search_path = data_path
-            else:
-                search_path = f"sn.{data_path}" if data_path else "sn.data"
         except Exception as e:
+            if self.require_exact_path_correlation:
+                raise KehrnelError(
+                    code="OPENEHR_SEMANTIC_PATH_UNRESOLVED",
+                    status=422,
+                    message=(
+                        "Exact openEHR path correlation was requested, but an AQL path could not be "
+                        "resolved to the active coded-path dictionary."
+                    ),
+                    details={
+                        "aqlPath": aql_path,
+                        "requiredDictionary": self.schema_config.get("codes_collection") or "_codes",
+                        "resolverError": getattr(e, "code", type(e).__name__),
+                    },
+                ) from e
             logger.warning(f"Could not resolve path {aql_path}: {e}")
             return None
+
+        # Keep this check outside the resolver exception handler: the strict
+        # failure itself must reach the caller instead of being converted to a
+        # missing search clause.
+        self._require_resolved_semantic_path(
+            aql_path=aql_path,
+            path_regex_pattern=path_regex_pattern,
+            data_path=data_path,
+        )
+
+        # Top-level metadata fields stay at document root; node data lives under
+        # the configured search-node array.
+        if path_regex_pattern is None:
+            search_path = data_path
+        else:
+            nodes_field = self._search_nodes_array_field()
+            search_path = f"{nodes_field}.{data_path}" if data_path else f"{nodes_field}.data"
 
         rhs_path = self._path_operand_path(value)
         if rhs_path and str(operator or "").upper() in {"=", "!=", "<>", ">", ">=", "<", "<="}:
             return await self._build_path_to_path_candidate_search(aql_path, rhs_path)
-        
+
         # Handle special operators
         if operator == "EXISTS":
             # Use embedded document exists query for sn paths
-            if search_path.startswith("sn."):
-                return self._build_embedded_document_exists_query(search_path)
+            if search_path.startswith(f"{self._search_nodes_array_field()}."):
+                return self._build_embedded_document_path_exists_query(
+                    search_path,
+                    path_regex_pattern,
+                )
             else:
                 return {
                     "exists": {
                         "path": search_path
                     }
                 }
-        
+
         if operator == "NOT EXISTS":
             # Use embedded document exists query wrapped in mustNot for sn paths
-            if search_path.startswith("sn."):
-                exists_query = self._build_embedded_document_exists_query(search_path)
+            if search_path.startswith(f"{self._search_nodes_array_field()}."):
+                exists_query = self._build_embedded_document_path_exists_query(
+                    search_path,
+                    path_regex_pattern,
+                )
                 return {
                     "compound": {
                         "mustNot": [exists_query]
@@ -1682,41 +2167,60 @@ class SearchPipelineBuilder:
                         }]
                     }
                 }
-        
+
         if operator == "MATCHES":
-            # Handle MATCHES with array values
-            if isinstance(value, dict):
+            if self._is_exact_token_search_path(search_path):
+                value_query = self._build_exact_token_matches_query(search_path, value)
+                if value_query is None:
+                    logger.warning("MATCHES set is empty for token path: %s", search_path)
+                    return None
+            # Keep regular-expression semantics for analyzed string fields.
+            elif isinstance(value, dict):
                 # Convert object with numeric keys back to array
                 value_array = [value.get(str(i)) for i in range(len(value))]
                 # Use regex with alternation for multiple values
                 regex_pattern = "|".join(f"({re.escape(str(v))})" for v in value_array if v is not None)
-                return {
+                value_query = {
                     "regex": {
                         "path": search_path,
                         "query": regex_pattern
                     }
                 }
             else:
-                return {
+                value_query = {
                     "regex": {
                         "path": search_path,
                         "query": str(value)
                     }
                 }
-        
+            return self._build_embedded_document_path_value_query(
+                search_path,
+                path_regex_pattern,
+                value_query,
+            )
+
         if operator == "LIKE":
             regex_pattern = self._build_aql_like_pattern(value)
-            return {
+            value_query = {
                 "regex": {
                     "path": search_path,
                     "query": regex_pattern
                 }
             }
-        
+            return self._build_embedded_document_path_value_query(
+                search_path,
+                path_regex_pattern,
+                value_query,
+            )
+
         # Handle comparison operators
         if operator == "=":
-            if search_path.startswith("sn."):
-                return self._build_embedded_document_equals_query(search_path, value)
+            if search_path.startswith(f"{self._search_nodes_array_field()}."):
+                return self._build_embedded_document_equals_query(
+                    search_path,
+                    value,
+                    path_regex_pattern=path_regex_pattern,
+                )
             else:
                 exact_metadata_fields = {
                     self.search_config.get("ehr_id"),
@@ -1762,10 +2266,15 @@ class SearchPipelineBuilder:
         elif operator in [">=", ">", "<=", "<"]:
             # For date/time values, ensure proper formatting and use embedded document queries
             formatted_value = self._format_date_value_for_search(value)
-            
+
             # Check if this is an embedded document query (sn array)
-            if search_path.startswith("sn."):
-                return self._build_embedded_document_range_query(search_path, operator, formatted_value)
+            if search_path.startswith(f"{self._search_nodes_array_field()}."):
+                return self._build_embedded_document_range_query(
+                    search_path,
+                    operator,
+                    formatted_value,
+                    path_regex_pattern=path_regex_pattern,
+                )
             else:
                 # Non-embedded document range query (fallback)
                 range_condition = {}
@@ -1777,7 +2286,7 @@ class SearchPipelineBuilder:
                     range_condition["lte"] = formatted_value
                 elif operator == "<":
                     range_condition["lt"] = formatted_value
-                    
+
                 return {
                     "range": {
                         "path": search_path,
@@ -1786,17 +2295,23 @@ class SearchPipelineBuilder:
                 }
 
         elif operator in ["!=", "<>"]:
-            return {
-                "compound": {
-                    "mustNot": [{
-                        "equals": {
-                            "path": search_path,
-                            "value": value
-                        }
-                    }]
+            value_query = {
+                "equals": {
+                    "path": search_path,
+                    "value": value
                 }
             }
-        
+            value_query = self._build_embedded_document_path_value_query(
+                search_path,
+                path_regex_pattern,
+                value_query,
+            )
+            return {
+                "compound": {
+                    "mustNot": [value_query]
+                }
+            }
+
         logger.warning(f"Unsupported operator in search condition: {operator}")
         return None
 
@@ -1807,11 +2322,11 @@ class SearchPipelineBuilder:
         """
         operator = condition.get("operator")
         conditions = condition.get("conditions", {})
-        
+
         if not operator or not conditions:
             logger.warning(f"Invalid logical condition format: {condition}")
             return None
-        
+
         # Recursively convert child conditions
         search_conditions = []
         for key, child_condition in conditions.items():
@@ -1819,14 +2334,14 @@ class SearchPipelineBuilder:
                 child_search = await self._convert_where_to_search(child_condition)
                 if child_search:
                     search_conditions.append(child_search)
-        
+
         if not search_conditions:
             logger.warning(f"No valid search conditions found in logical condition")
             return None
-            
+
         if len(search_conditions) == 1:
             return search_conditions[0]
-            
+
         if operator == "AND":
             return {
                 "compound": {
@@ -1839,7 +2354,7 @@ class SearchPipelineBuilder:
                     "should": search_conditions
                 }
             }
-        
+
         logger.warning(f"Unsupported logical operator: {operator}")
         return None
 
@@ -1850,20 +2365,21 @@ class SearchPipelineBuilder:
         left = condition.get("left", {})
         operator = condition.get("operator")
         right = condition.get("right", {})
-        
+
         # Extract path from left side
         if left.get("type") != "dataMatchPath":
             return None
-            
+
         # Extract AQL path and use translate_aql_path
         aql_path = self._extract_aql_path_from_path_object(left)
         if not aql_path:
             return None
-            
+
         try:
             path_regex_pattern, data_path = await self.format_resolver.translate_aql_path(aql_path)
             # For search operations, we use the data path directly in the sn.data structure
-            search_path = f"sn.{data_path}" if data_path else "sn.data"
+            nodes_field = self._search_nodes_array_field()
+            search_path = f"{nodes_field}.{data_path}" if data_path else f"{nodes_field}.data"
         except Exception as e:
             logger.warning(f"Could not resolve path {aql_path}: {e}")
             return None
@@ -1871,9 +2387,9 @@ class SearchPipelineBuilder:
         right_path = self._path_operand_path(right)
         if right_path and str(operator or "").upper() in {"=", "!=", "<>", ">", ">=", "<", "<="}:
             return await self._build_path_to_path_candidate_search(aql_path, right_path)
-            
+
         value = self.value_formatter.format_literal_value(right)
-        
+
         # Map AQL operators to Atlas Search
         if operator == "=":
             if isinstance(value, str):
@@ -1890,7 +2406,7 @@ class SearchPipelineBuilder:
                         "value": value
                     }
                 }
-        
+
         elif operator in [">=", ">", "<=", "<"]:
             range_condition = {}
             if operator == ">=":
@@ -1901,14 +2417,14 @@ class SearchPipelineBuilder:
                 range_condition["lte"] = value
             elif operator == "<":
                 range_condition["lt"] = value
-                
+
             return {
                 "range": {
                     "path": search_path,
                     **range_condition
                 }
             }
-        
+
         elif operator == "!=":
             return {
                 "compound": {
@@ -1920,7 +2436,7 @@ class SearchPipelineBuilder:
                     }]
                 }
             }
-        
+
         return None
 
     async def _handle_logical_search(self, condition: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -1929,23 +2445,23 @@ class SearchPipelineBuilder:
         """
         operator = condition.get("operator")
         conditions = condition.get("conditions", [])
-        
+
         if not conditions:
             return None
-            
+
         # Recursively convert child conditions
         search_conditions = []
         for child_condition in conditions:
             child_search = await self._convert_where_to_search(child_condition)
             if child_search:
                 search_conditions.append(child_search)
-        
+
         if not search_conditions:
             return None
-            
+
         if len(search_conditions) == 1:
             return search_conditions[0]
-            
+
         if operator == "AND":
             return {
                 "compound": {
@@ -1959,7 +2475,7 @@ class SearchPipelineBuilder:
                     "minimumShouldMatch": 1
                 }
             }
-        
+
         return None
 
     async def _handle_exists_search(self, condition: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -1967,23 +2483,24 @@ class SearchPipelineBuilder:
         Handles EXISTS conditions for Atlas Search.
         """
         path = condition.get("path", {})
-        
+
         if path.get("type") != "dataMatchPath":
             return None
-            
+
         # Extract AQL path and use translate_aql_path
         aql_path = self._extract_aql_path_from_path_object(path)
         if not aql_path:
             return None
-            
+
         try:
             path_regex_pattern, data_path = await self.format_resolver.translate_aql_path(aql_path)
             # For search operations, we use the data path directly in the sn.data structure
-            search_path = f"sn.{data_path}" if data_path else "sn.data"
+            nodes_field = self._search_nodes_array_field()
+            search_path = f"{nodes_field}.{data_path}" if data_path else f"{nodes_field}.data"
         except Exception as e:
             logger.warning(f"Could not resolve path {aql_path}: {e}")
             return None
-        
+
         return {
             "exists": {
                 "path": search_path
@@ -1996,23 +2513,24 @@ class SearchPipelineBuilder:
         """
         path = condition.get("path", {})
         pattern = condition.get("pattern")
-        
+
         if path.get("type") != "dataMatchPath" or not pattern:
             return None
-            
+
         # Extract AQL path and use translate_aql_path
         aql_path = self._extract_aql_path_from_path_object(path)
         if not aql_path:
             return None
-            
+
         try:
             path_regex_pattern, data_path = await self.format_resolver.translate_aql_path(aql_path)
             # For search operations, we use the data path directly in the sn.data structure
-            search_path = f"sn.{data_path}" if data_path else "sn.data"
+            nodes_field = self._search_nodes_array_field()
+            search_path = f"{nodes_field}.{data_path}" if data_path else f"{nodes_field}.data"
         except Exception as e:
             logger.warning(f"Could not resolve path {aql_path}: {e}")
             return None
-        
+
         return {
             "regex": {
                 "path": search_path,
@@ -2028,7 +2546,7 @@ class SearchPipelineBuilder:
         contains_clause = ast.get("contains")
         where_clause = ast.get("where")
         additional_conditions = {}
-        
+
         # Process CONTAINS clause for structural filtering
         skip_root_composition_match = self._where_has_template_constraint(where_clause)
         if contains_clause:
@@ -2038,7 +2556,7 @@ class SearchPipelineBuilder:
             )
             if contains_conditions:
                 additional_conditions.update(contains_conditions)
-        
+
         return {"$match": additional_conditions} if additional_conditions else None
 
     def _where_has_template_constraint(self, where_clause: Dict[str, Any] | None) -> bool:
@@ -2163,7 +2681,7 @@ class SearchPipelineBuilder:
         columns = ast.get("select", {}).get("columns", {})
         if not columns:
             return False
-        
+
         for col_data in columns.values():
             path = col_data.get("path") or col_data.get("value", {})
             if path.get("type") == "dataMatchPath":
@@ -2179,13 +2697,13 @@ class SearchPipelineBuilder:
         """
         if not aql_path:
             return False
-            
+
         # Composition metadata patterns that are often missing from search collection
         metadata_patterns = [
             '/name/value',
             '/name/defining_code',
             '/context/start_time',
-            '/context/end_time', 
+            '/context/end_time',
             '/context/setting',
             '/context/location',
             '/context/health_care_facility',
@@ -2195,12 +2713,12 @@ class SearchPipelineBuilder:
             '/territory',
             '/language'
         ]
-        
+
         # Check if path contains any metadata patterns
         for pattern in metadata_patterns:
             if pattern in aql_path:
                 return True
-                
+
         # Also check for root composition elements (usually have simple path patterns)
         variable = aql_path.split('/')[0]
         if variable == self.composition_alias:
@@ -2210,52 +2728,52 @@ class SearchPipelineBuilder:
                 path_parts = aql_path.split('/')
                 if len(path_parts) <= 3:  # e.g., c/name/value
                     return True
-        
+
         return False
 
     def _is_archetype_specific_path(self, aql_path: str) -> bool:
         """
         Determines if an AQL path contains archetype-specific elements (AT codes)
         that might not be indexed in the search collection.
-        
+
         This handles cases like:
         - med_ac/description[at0017]/items[at0020]/value/defining_code/code_string
         - action_var/activities[at0001]/description[at0002]/items[at0003]/value
-        
+
         Returns True if the path contains AT codes, indicating it's archetype-specific
         and might need full composition data for resolution.
         """
         if not aql_path:
             return False
-        
+
         # Check if path contains AT code references in square brackets
         # AT codes follow pattern: at followed by digits (e.g., at0001, at0017, at0020)
         import re
         at_code_pattern = r'\[at\d+\]'
-        
+
         if re.search(at_code_pattern, aql_path):
             logger.debug(f"Detected archetype-specific path with AT codes: {aql_path}")
             return True
-        
+
         # Additionally check for paths that go through archetype elements
         # These are typically deeper than simple composition metadata
-        variable = aql_path.split('/')[0] 
-        
+        variable = aql_path.split('/')[0]
+
         # Skip composition alias paths (already handled by metadata check)
         if variable == self.composition_alias:
             return False
-            
+
         # Check if this is a deep path through archetype structures
         # Archetype paths typically have more segments and contain structural elements
         path_parts = aql_path.split('/')
         if len(path_parts) > 3:  # Deep paths are more likely to be archetype-specific
             # Look for common archetype structural elements
             archetype_elements = [
-                'description', 'items', 'activities', 'activity', 'data', 'state', 
+                'description', 'items', 'activities', 'activity', 'data', 'state',
                 'protocol', 'events', 'event', 'value', 'values', 'items_single',
                 'items_multiple', 'other_context'
             ]
-            
+
             # If the path contains archetype structural elements, it's likely archetype-specific
             for part in path_parts[1:]:  # Skip variable name
                 # Remove any bracket notation to get the element name
@@ -2263,29 +2781,29 @@ class SearchPipelineBuilder:
                 if element_name in archetype_elements:
                     logger.debug(f"Detected deep archetype path with structural elements: {aql_path}")
                     return True
-        
+
         return False
 
     async def _build_hybrid_field_projection(self, aql_path: str, alias: str) -> Dict[str, Any]:
         """
-        Builds projection logic that intelligently routes field access between 
+        Builds projection logic that intelligently routes field access between
         search collection (sn array) and full composition data (cn array from lookup).
         """
         try:
             path_regex_pattern, data_path = await self.format_resolver.translate_aql_path(aql_path)
-            
+
             # Determine if this is likely composition metadata or archetype-specific
             is_metadata = self._is_composition_metadata_path(aql_path)
             is_archetype_specific = self._is_archetype_specific_path(aql_path)
-            
+
             # Prefer full composition data for metadata or archetype-specific paths
             prefer_full_composition = is_metadata or is_archetype_specific
-            
+
             if prefer_full_composition:
                 logger.debug(f"Using full-composition-priority projection for {aql_path} (metadata: {is_metadata}, archetype: {is_archetype_specific})")
             else:
                 logger.debug(f"Using search-collection-priority projection for {aql_path}")
-            
+
             if path_regex_pattern is None:
                 # Direct field access
                 if data_path == "comp_id":
@@ -2321,14 +2839,14 @@ class SearchPipelineBuilder:
         """
         if not self.let_variables:
             return None
-        
+
         add_fields = {}
-        
+
         for var_name, expression in self.let_variables.items():
             # Resolve the expression to MongoDB syntax
             resolved_expr = self._resolve_expression(expression)
             add_fields[var_name] = resolved_expr
-        
+
         return {"$addFields": add_fields}
 
     async def _build_data_path_projection_expr(
@@ -2439,13 +2957,13 @@ class SearchPipelineBuilder:
 
         fanout_spec = await self._get_row_fanout_spec(ast)
         projection = {"_id": 0}
-        
+
         for col_data in columns.values():
             alias = col_data.get("alias")
             # The path is actually in the 'value' field based on AST structure
             path = col_data.get("path") or col_data.get("value", {})
             value_type = path.get("type") if isinstance(path, dict) else None
-            
+
             # Generate alias if not provided
             if not alias:
                 if value_type == "dataMatchPath":
@@ -2464,7 +2982,7 @@ class SearchPipelineBuilder:
                     continue
                 else:
                     continue
-            
+
             if value_type == "aggregateFunctionCall":
                 continue
 
@@ -2478,7 +2996,7 @@ class SearchPipelineBuilder:
 
         if self._build_search_sort_spec(ast):
             projection["__searchSequenceToken"] = "$__searchSequenceToken"
-        
+
         return {"$project": projection}
 
     def build_sort_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -2490,7 +3008,7 @@ class SearchPipelineBuilder:
 
         if not isinstance(columns, dict) or not columns:
             return None
-            
+
         sort_spec = {}
         projected_aliases = {
             col.get("value", {}).get("path"): col.get("alias")
@@ -2498,12 +3016,18 @@ class SearchPipelineBuilder:
             if isinstance(col, dict) and isinstance(col.get("value"), dict) and col.get("alias")
         }
         projected_alias_names = {alias for alias in projected_aliases.values() if alias}
-        
+
         for col_data in columns.values():
+            if not isinstance(col_data, dict):
+                raise KehrnelError(
+                    code="AQL_ORDER_BY_UNSUPPORTED",
+                    status=400,
+                    message="ORDER BY entries must be structured path expressions.",
+                )
             alias = col_data.get("alias")
             aql_path = col_data.get("path")
             direction = col_data.get("direction", "ASC")
-            
+
             field_name = alias
             if not field_name and aql_path:
                 if "/" not in aql_path and aql_path in projected_alias_names:
@@ -2511,10 +3035,20 @@ class SearchPipelineBuilder:
                         f"ORDER BY projection alias '{aql_path}' is not supported; use the full AQL path instead."
                     )
                 field_name = projected_aliases.get(aql_path) or self.format_resolver.resolve_document_field(aql_path)
-            
-            if field_name:
-                sort_spec[field_name] = 1 if direction.upper() == "ASC" else -1
-            
+
+            if not field_name:
+                raise KehrnelError(
+                    code="AQL_ORDER_BY_UNSUPPORTED",
+                    status=400,
+                    message=(
+                        f"ORDER BY path '{aql_path or alias or '<missing>'}' cannot "
+                        "be mapped to a deterministic MongoDB sort field. Select the "
+                        "full AQL path with an alias or use supported document metadata."
+                    ),
+                    details={"aqlPath": aql_path, "alias": alias},
+                )
+            sort_spec[field_name] = 1 if direction.upper() == "ASC" else -1
+
         return {"$sort": sort_spec} if sort_spec else None
 
     def build_skip_stage(self, ast: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -2538,47 +3072,47 @@ class SearchPipelineBuilder:
         Constructs the $limit stage from the LIMIT clause.
         """
         limit_value = ast.get("limit")
-        
+
         if limit_value is None:
             limit_value = default_limit
         if limit_value is None:
             return None
-            
+
         try:
             limit_int = int(limit_value)
             if limit_int > 0:
                 return {"$limit": limit_int}
         except (ValueError, TypeError):
             pass
-            
+
         return None
 
     def build_distinct_stages(self, ast: Dict[str, Any], projected_fields: List[str]) -> List[Dict[str, Any]]:
         """
         Constructs the $group and $replaceRoot stages for DISTINCT queries.
-        
+
         DISTINCT in AQL removes duplicate rows from the result set. In MongoDB,
         this is implemented using:
         1. $group stage: Groups documents by all projected fields (compound _id)
         2. $replaceRoot stage: Flattens the grouped _id back to a normal document
-        
+
         Args:
             ast: The parsed AQL AST
             projected_fields: List of field names that are being projected (output columns)
-            
+
         Returns:
             List[Dict[str, Any]]: List containing $group and $replaceRoot stages,
                                   or empty list if DISTINCT is not requested
         """
         select_clause = ast.get("select", {})
         is_distinct = select_clause.get("distinct", False)
-        
+
         if not is_distinct:
             return []
-        
+
         if not projected_fields:
             return []
-        
+
         # Build the compound _id for $group using all projected fields
         # This ensures we group by all columns to find unique combinations
         group_id = {}
@@ -2586,17 +3120,17 @@ class SearchPipelineBuilder:
             if field != "_id":  # Skip _id as it's handled separately
                 # Use the field name as key and reference the projected field value
                 group_id[field] = f"${field}"
-        
+
         if not group_id:
             return []
-        
+
         # Build the $group stage
         group_stage = {
             "$group": {
                 "_id": group_id
             }
         }
-        
+
         # Build the $replaceRoot stage to flatten the _id back to document fields
         # This converts {_id: {field1: val1, field2: val2}} to {field1: val1, field2: val2}
         replace_root_stage = {
@@ -2604,23 +3138,23 @@ class SearchPipelineBuilder:
                 "newRoot": "$_id"
             }
         }
-        
+
         return [group_stage, replace_root_stage]
 
     def get_projected_field_names(self, ast: Dict[str, Any]) -> List[str]:
         """
         Extracts the list of field names that will be in the projection output.
         Used for building DISTINCT stages.
-        
+
         Args:
             ast: The parsed AQL AST
-            
+
         Returns:
             List[str]: List of projected field names (aliases or generated names)
         """
         columns = ast.get("select", {}).get("columns", {})
         field_names = []
-        
+
         for col_data in columns.values():
             alias = col_data.get("alias")
             path = col_data.get("path") or col_data.get("value", {})
@@ -2628,7 +3162,7 @@ class SearchPipelineBuilder:
 
             if value_type == "aggregateFunctionCall":
                 continue
-            
+
             if alias:
                 field_names.append(alias)
             elif isinstance(path, dict) and value_type == "dataMatchPath":
@@ -2642,7 +3176,7 @@ class SearchPipelineBuilder:
                 field_names.append(f"{str(function.get('name') or 'function').lower()}Result")
             elif isinstance(path, dict) and value_type == "literal":
                 field_names.append("literal")
-        
+
         return field_names
 
     def _extract_aql_path_from_path_object(self, path_obj: Dict[str, Any]) -> Optional[str]:
@@ -2652,19 +3186,19 @@ class SearchPipelineBuilder:
         """
         if path_obj.get("type") != "dataMatchPath":
             return None
-        
+
         # First check if path is directly available (simplified AST structure)
         direct_path = path_obj.get("path")
         if direct_path:
             return direct_path
-            
+
         # Fallback to complex structure (variable + segments)
         variable = path_obj.get("variable")
         segments = path_obj.get("segments", [])
-        
+
         if not variable:
             return None
-            
+
         # Construct full path: variable/segment1/segment2/...
         path_parts = [variable]
         for segment in segments:
@@ -2674,7 +3208,7 @@ class SearchPipelineBuilder:
                     path_parts.append(field)
             elif isinstance(segment, str):
                 path_parts.append(segment)
-                
+
         return "/".join(path_parts)
 
     def _resolve_expression(self, expression: Dict[str, Any]) -> Any:
@@ -2682,16 +3216,16 @@ class SearchPipelineBuilder:
         Resolves an expression to its MongoDB representation for search collection.
         """
         expr_type = expression.get("type")
-        
+
         if expr_type == "literal":
             return self.value_formatter.format_literal_value(expression)
-        
+
         elif expr_type == "dataMatchPath":
             # For search collection context, we need to handle sn array
             # This is a simplified version - full implementation would need
             # to properly resolve paths within the sn array structure
             return f"$sn.data"
-        
+
         # Default: return as is
         return expression
 
@@ -2726,32 +3260,89 @@ class SearchPipelineBuilder:
             # For non-string values (numbers, etc.), return as-is
             return value
 
-    def _build_embedded_document_range_query(self, search_path: str, operator: str, value: Any) -> Dict[str, Any]:
+    def _build_embedded_document_path_value_query(
+        self,
+        search_path: str,
+        path_regex_pattern: Any,
+        value_query: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Bind a semantic path and its value predicate to the same search node.
+
+        ``sn`` is an array of flattened semantic nodes.  Querying only
+        ``sn.data.*`` can match a value carried by a different node whose AQL
+        path is unrelated to the predicate being compiled.  Atlas Search's
+        ``embeddedDocument`` operator provides the required per-node
+        correlation, so the path discriminator and value operator must be
+        siblings inside one embedded compound.
+
+        Some compatibility paths resolve directly to a document field and do
+        not have a path discriminator.  Those retain their existing query
+        shape.
+        """
+        nodes_field = self._search_nodes_array_field()
+        if not search_path.startswith(f"{nodes_field}."):
+            return value_query
+        if not path_regex_pattern:
+            return {
+                "embeddedDocument": {
+                    "path": nodes_field,
+                    "operator": value_query,
+                }
+            }
+
+        return {
+            "embeddedDocument": {
+                "path": nodes_field,
+                "operator": {
+                    "compound": {
+                        "must": [
+                            {
+                                "regex": {
+                                    "path": f"{nodes_field}.{self.search_config.get('path_field', 'p')}",
+                                    "query": self._atlas_search_regex_pattern(path_regex_pattern),
+                                }
+                            },
+                            value_query,
+                        ]
+                    }
+                },
+            }
+        }
+
+    def _build_embedded_document_range_query(
+        self,
+        search_path: str,
+        operator: str,
+        value: Any,
+        *,
+        path_regex_pattern: Any = None,
+    ) -> Dict[str, Any]:
         """
         Builds an embedded document range query for Atlas Search.
         Converts paths like 'sn.data.time.value' into proper embeddedDocument queries.
-        
+
         For Atlas Search embedded documents, we need:
         - embeddedDocument.path: The context path to the embedded document level
         - operator.range.path: The full absolute path from document root
-        
+
         Generic logic for determining embedded document context:
         - For paths ending in .value: Use parent path as embedded context
         - For direct data fields: Use sn.data as embedded context
         - Handle arbitrary nesting levels (sn.data.a.b.c.value -> sn.data.a.b.c)
-        
+
         Args:
             search_path: The full path like 'sn.data.time.value'
             operator: The comparison operator (>, <, >=, <=)
             value: The value to compare against
-            
+
         Returns:
             Atlas Search embeddedDocument query structure
         """
-        if not search_path.startswith("sn."):
-            logger.warning(f"Expected sn. prefix in search path: {search_path}")
+        nodes_field = self._search_nodes_array_field()
+        if not search_path.startswith(f"{nodes_field}."):
+            logger.warning(f"Expected {nodes_field}. prefix in search path: {search_path}")
             return None
-        
+
         # Build the range condition
         range_condition = {}
         if operator == ">=":
@@ -2762,34 +3353,34 @@ class SearchPipelineBuilder:
             range_condition["lte"] = value
         elif operator == "<":
             range_condition["lt"] = value
-        
-        return {
-            "embeddedDocument": {
-                "path": "sn",
-                "operator": {
-                    "range": {
-                        "path": search_path,
-                        **range_condition
-                    }
+
+        return self._build_embedded_document_path_value_query(
+            search_path,
+            path_regex_pattern,
+            {
+                "range": {
+                    "path": search_path,
+                    **range_condition,
                 }
-            }
-        }
+            },
+        )
 
     def _build_embedded_document_exists_query(self, search_path: str) -> Dict[str, Any]:
         """
         Builds an embedded document exists query for Atlas Search.
         Uses the same intelligent path resolution logic as range queries.
         """
-        if not search_path.startswith("sn."):
+        nodes_field = self._search_nodes_array_field()
+        if not search_path.startswith(f"{nodes_field}."):
             return {
                 "exists": {
                     "path": search_path
                 }
             }
-        
+
         return {
             "embeddedDocument": {
-                "path": "sn",
+                "path": nodes_field,
                 "operator": {
                     "exists": {
                         "path": search_path
@@ -2816,7 +3407,7 @@ class SearchPipelineBuilder:
                             {
                                 "regex": {
                                     "path": f"{nodes_field}.{self.search_config.get('path_field', 'p')}",
-                                    "query": path_regex_pattern,
+                                    "query": self._atlas_search_regex_pattern(path_regex_pattern),
                                 }
                             },
                             {
@@ -2842,10 +3433,24 @@ class SearchPipelineBuilder:
             try:
                 path_regex_pattern, data_path = await self.format_resolver.translate_aql_path(aql_path)
             except Exception as exc:
+                if self.require_exact_path_correlation:
+                    self._raise_exact_correlation_error(
+                        "OPENEHR_SEMANTIC_PATH_UNRESOLVED",
+                        "Exact openEHR path correlation could not resolve a path-to-path operand.",
+                        aqlPath=aql_path,
+                        reason=str(exc),
+                    )
                 logger.warning("Could not resolve path-to-path candidate path %s: %s", aql_path, exc)
                 return None
 
             if path_regex_pattern is None:
+                if self.require_exact_path_correlation:
+                    self._raise_exact_correlation_error(
+                        "OPENEHR_PATH_TO_PATH_CORRELATION_UNSUPPORTED",
+                        "Exact path-to-path correlation requires coded semantic paths on both operands.",
+                        aqlPath=aql_path,
+                        resolvedDataPath=data_path,
+                    )
                 clauses.append({"exists": {"path": data_path}})
                 continue
 
@@ -2858,15 +3463,20 @@ class SearchPipelineBuilder:
             return clauses[0]
         return {"compound": {"must": clauses}}
 
-    def _build_embedded_document_equals_query(self, search_path: str, value: Any) -> Dict[str, Any]:
+    def _build_embedded_document_equals_query(
+        self,
+        search_path: str,
+        value: Any,
+        *,
+        path_regex_pattern: Any = None,
+    ) -> Dict[str, Any]:
         """
         Builds an embedded document equals query for Atlas Search.
         Uses the same intelligent path resolution logic as range queries.
         """
-        exact_token_suffixes = (".cs", ".id", ".units")
-        prefer_exact = isinstance(value, str) and search_path.endswith(exact_token_suffixes)
+        prefer_exact = isinstance(value, str) and self._is_exact_token_search_path(search_path)
 
-        if not search_path.startswith("sn."):
+        if not search_path.startswith(f"{self._search_nodes_array_field()}."):
             if isinstance(value, str) and not prefer_exact:
                 return {
                     "text": {
@@ -2881,7 +3491,7 @@ class SearchPipelineBuilder:
                         "value": value
                     }
                 }
-        
+
         # Determine the operator query based on value type
         if isinstance(value, str) and not prefer_exact:
             operator_query = {
@@ -2897,10 +3507,9 @@ class SearchPipelineBuilder:
                     "value": value
                 }
             }
-        
-        return {
-            "embeddedDocument": {
-                "path": "sn",
-                "operator": operator_query
-            }
-        }
+
+        return self._build_embedded_document_path_value_query(
+            search_path,
+            path_regex_pattern,
+            operator_query,
+        )

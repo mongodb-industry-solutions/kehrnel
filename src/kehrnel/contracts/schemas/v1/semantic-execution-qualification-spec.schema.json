@@ -1,0 +1,130 @@
+{
+  "$defs": {
+    "FhirQualificationProbe": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "fhir-terminology-cohort",
+          "title": "Kind",
+          "type": "string"
+        },
+        "probeId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+          "title": "Probeid",
+          "type": "string"
+        },
+        "request": {
+          "additionalProperties": true,
+          "title": "Request",
+          "type": "object"
+        }
+      },
+      "required": [
+        "probeId",
+        "kind",
+        "request"
+      ],
+      "title": "FhirQualificationProbe",
+      "type": "object"
+    },
+    "OpenEhrQualificationProbe": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "openehr-terminology-query",
+          "title": "Kind",
+          "type": "string"
+        },
+        "probeId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+          "title": "Probeid",
+          "type": "string"
+        },
+        "request": {
+          "additionalProperties": true,
+          "title": "Request",
+          "type": "object"
+        },
+        "templateId": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Templateid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "probeId",
+        "kind",
+        "templateId",
+        "request"
+      ],
+      "title": "OpenEhrQualificationProbe",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:semantic-execution-qualification-spec",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "baseUrl": {
+      "maxLength": 2048,
+      "minLength": 1,
+      "title": "Baseurl",
+      "type": "string"
+    },
+    "contract": {
+      "const": "semantic-execution-qualification-spec/v1",
+      "default": "semantic-execution-qualification-spec/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "environmentId": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Environmentid",
+      "type": "string"
+    },
+    "probes": {
+      "items": {
+        "discriminator": {
+          "mapping": {
+            "fhir-terminology-cohort": "#/$defs/FhirQualificationProbe",
+            "openehr-terminology-query": "#/$defs/OpenEhrQualificationProbe"
+          },
+          "propertyName": "kind"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/$defs/OpenEhrQualificationProbe"
+          },
+          {
+            "$ref": "#/$defs/FhirQualificationProbe"
+          }
+        ]
+      },
+      "maxItems": 32,
+      "minItems": 1,
+      "title": "Probes",
+      "type": "array"
+    },
+    "qualificationId": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+      "title": "Qualificationid",
+      "type": "string"
+    }
+  },
+  "required": [
+    "qualificationId",
+    "environmentId",
+    "baseUrl",
+    "probes"
+  ],
+  "title": "SemanticExecutionQualificationSpec",
+  "type": "object"
+}

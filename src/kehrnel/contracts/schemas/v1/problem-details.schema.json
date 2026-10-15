@@ -1,0 +1,104 @@
+{
+  "$defs": {
+    "FieldError": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "path": {
+          "pattern": "^(|/.*)$",
+          "title": "Path",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "code",
+        "message"
+      ],
+      "title": "FieldError",
+      "type": "object"
+    },
+    "Retryability": {
+      "enum": [
+        "never",
+        "safe",
+        "conditional"
+      ],
+      "title": "Retryability",
+      "type": "string"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:problem-details",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Normalized error shape based on RFC 9457 with Kehrnel extensions.",
+  "properties": {
+    "code": {
+      "title": "Code",
+      "type": "string"
+    },
+    "correlationId": {
+      "minLength": 1,
+      "title": "Correlationid",
+      "type": "string"
+    },
+    "detail": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Detail"
+    },
+    "extensions": {
+      "additionalProperties": true,
+      "title": "Extensions",
+      "type": "object"
+    },
+    "fieldErrors": {
+      "items": {
+        "$ref": "#/$defs/FieldError"
+      },
+      "title": "Fielderrors",
+      "type": "array"
+    },
+    "retryability": {
+      "$ref": "#/$defs/Retryability",
+      "default": "never"
+    },
+    "status": {
+      "maximum": 599,
+      "minimum": 400,
+      "title": "Status",
+      "type": "integer"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "type": {
+      "default": "about:blank",
+      "title": "Type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "status",
+    "code",
+    "correlationId"
+  ],
+  "title": "ProblemDetails",
+  "type": "object"
+}

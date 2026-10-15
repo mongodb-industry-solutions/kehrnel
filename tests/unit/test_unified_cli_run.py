@@ -66,6 +66,83 @@ def test_build_summary_rows_for_query_reports_engine_scope_collection_and_rows()
     assert summary["warnings"] == "0"
 
 
+def test_capabilities_lists_standard_and_strategy_operations_with_commands(monkeypatch):
+    def fake_http_json(method, url, api_key=None, payload=None):
+        assert method == "GET"
+        assert url == "http://localhost:8000/environments/dev/capabilities?include_schemas=true"
+        return 200, {
+            "env_id": "dev",
+            "domains": [
+                {
+                    "domain": "openehr",
+                    "strategy_id": "openehr.rps_dual",
+                    "strategy_version": "0.2.0",
+                }
+            ],
+            "operations": {
+                "standard": [
+                    {"name": "query", "kind": "runtime", "scope": "domain"},
+                    {"name": "compile_query", "kind": "runtime", "scope": "domain"},
+                ],
+                "strategy": [
+                    {
+                        "name": "ensure_dictionaries",
+                        "kind": "maintenance",
+                        "scope": "strategy",
+                        "domain": "openehr",
+                        "strategy_id": "openehr.rps_dual",
+                    }
+                ],
+            },
+        }
+
+    monkeypatch.setattr(unified, "_http_json", fake_http_json)
+    monkeypatch.setattr(unified, "_resolve_api_key", lambda value=None: None)
+    monkeypatch.setenv("KEHRNEL_CLI_PLAIN", "1")
+
+    result = runner.invoke(
+        unified.app,
+        ["op", "capabilities", "--runtime-url", "http://localhost:8000", "--env", "dev"],
+    )
+
+    assert result.exit_code == 0
+    assert "standard_capabilities=2 strategy_operations=1" in result.stdout
+    assert "query\truntime\tdomain\tkehrnel core env query --env dev --domain openehr --aql <query.aql>" in result.stdout
+    assert "compile_query\truntime\tdomain\tkehrnel core env compile-query --env dev --domain openehr --aql <query.aql> --debug" in result.stdout
+    assert "ensure_dictionaries\tmaintenance\tstrategy\tkehrnel run ensure_dictionaries --env dev --domain openehr --strategy openehr.rps_dual" in result.stdout
+
+
+def test_env_query_accepts_inline_aql(monkeypatch):
+    captured = {}
+
+    def fake_http_json(method, url, api_key=None, payload=None):
+        captured.update({"method": method, "url": url, "payload": payload})
+        return 200, {"ok": True, "result": {"rows": []}}
+
+    monkeypatch.setattr(unified, "_http_json", fake_http_json)
+    monkeypatch.setattr(unified, "_resolve_api_key", lambda value=None: None)
+    monkeypatch.setenv("KEHRNEL_CLI_PLAIN", "1")
+
+    aql = "SELECT e/ehr_id/value AS ehr_id FROM EHR e LIMIT 5"
+    result = runner.invoke(
+        unified.app,
+        [
+            "core", "env", "query",
+            "--runtime-url", "http://localhost:8000",
+            "--env", "dev",
+            "--domain", "openehr",
+            "--aql-text", aql,
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert captured == {
+        "method": "POST",
+        "url": "http://localhost:8000/environments/dev/query",
+        "payload": {"domain": "openehr", "aql": aql},
+    }
+
+
 def test_run_ingest_expands_local_ndjson_file_into_documents(monkeypatch, tmp_path):
     ndjson_path = tmp_path / "sample.ndjson"
     ndjson_path.write_text(

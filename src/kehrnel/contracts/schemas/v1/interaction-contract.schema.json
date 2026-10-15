@@ -1,0 +1,343 @@
+{
+  "$defs": {
+    "AcknowledgementLevel": {
+      "enum": [
+        "accepted",
+        "durable_authoritative",
+        "derived_visible"
+      ],
+      "title": "AcknowledgementLevel",
+      "type": "string"
+    },
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "ConsistencyRequirement": {
+      "enum": [
+        "strong",
+        "bounded_staleness",
+        "eventual",
+        "snapshot"
+      ],
+      "title": "ConsistencyRequirement",
+      "type": "string"
+    },
+    "InteractionBehavior": {
+      "enum": [
+        "create",
+        "update",
+        "delete",
+        "command",
+        "read",
+        "search",
+        "query",
+        "subscribe",
+        "publish",
+        "export"
+      ],
+      "title": "InteractionBehavior",
+      "type": "string"
+    },
+    "InteractionGuarantees": {
+      "additionalProperties": false,
+      "properties": {
+        "acknowledgement": {
+          "$ref": "#/$defs/AcknowledgementLevel",
+          "default": "accepted"
+        },
+        "consistency": {
+          "$ref": "#/$defs/ConsistencyRequirement",
+          "default": "strong"
+        },
+        "freshnessTargetSeconds": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Freshnesstargetseconds"
+        },
+        "idempotencyRequired": {
+          "default": false,
+          "title": "Idempotencyrequired",
+          "type": "boolean"
+        },
+        "latencyTargetMs": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latencytargetms"
+        }
+      },
+      "title": "InteractionGuarantees",
+      "type": "object"
+    },
+    "InteractionInterface": {
+      "additionalProperties": false,
+      "properties": {
+        "capabilityRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "kind": {
+          "$ref": "#/$defs/InterfaceKind"
+        },
+        "protocolVersion": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Protocolversion"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "InteractionInterface",
+      "type": "object"
+    },
+    "InteractionPattern": {
+      "enum": [
+        "request_response",
+        "publish_subscribe",
+        "stream",
+        "batch"
+      ],
+      "title": "InteractionPattern",
+      "type": "string"
+    },
+    "InteractionRoleBindings": {
+      "additionalProperties": false,
+      "properties": {
+        "providerRef": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Providerref"
+        },
+        "publisherRef": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Publisherref"
+        },
+        "requesterRef": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Requesterref"
+        },
+        "subscriberRef": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subscriberref"
+        }
+      },
+      "title": "InteractionRoleBindings",
+      "type": "object"
+    },
+    "InterfaceKind": {
+      "enum": [
+        "rest",
+        "fhir",
+        "openehr",
+        "aql",
+        "mql",
+        "sql",
+        "event",
+        "agent_tool",
+        "natural_language"
+      ],
+      "title": "InterfaceKind",
+      "type": "string"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:interaction-contract",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "authorizationPolicyRef": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "behavior": {
+      "$ref": "#/$defs/InteractionBehavior"
+    },
+    "contract": {
+      "const": "interaction-contract/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "errorContractRef": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "guarantees": {
+      "$ref": "#/$defs/InteractionGuarantees"
+    },
+    "inputContractRef": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "interactionId": {
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Interactionid",
+      "type": "string"
+    },
+    "interface": {
+      "$ref": "#/$defs/InteractionInterface"
+    },
+    "pattern": {
+      "$ref": "#/$defs/InteractionPattern"
+    },
+    "resultContractRef": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "roles": {
+      "$ref": "#/$defs/InteractionRoleBindings"
+    },
+    "semanticScopeId": {
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Semanticscopeid",
+      "type": "string"
+    },
+    "workloadRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "interactionId",
+    "behavior",
+    "pattern",
+    "roles",
+    "interface",
+    "semanticScopeId",
+    "workloadRef"
+  ],
+  "title": "ProjectInteractionContract",
+  "type": "object"
+}

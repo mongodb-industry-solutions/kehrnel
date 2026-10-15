@@ -1,0 +1,976 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "ClinicalCohortIntent": {
+      "additionalProperties": false,
+      "properties": {
+        "contract": {
+          "const": "clinical-cohort-intent/v1",
+          "default": "clinical-cohort-intent/v1",
+          "title": "Contract",
+          "type": "string"
+        },
+        "criteria": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CohortPredicate"
+            },
+            {
+              "$ref": "#/$defs/CohortGroup"
+            }
+          ],
+          "title": "Criteria"
+        },
+        "intentId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Intentid",
+          "type": "string"
+        },
+        "interactionProfile": {
+          "const": "clinical_cohort",
+          "default": "clinical_cohort",
+          "title": "Interactionprofile",
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/$defs/CohortResultShape"
+        },
+        "scope": {
+          "const": "cross_patient",
+          "default": "cross_patient",
+          "title": "Scope",
+          "type": "string"
+        },
+        "sourceLanguage": {
+          "default": "en",
+          "maxLength": 32,
+          "minLength": 2,
+          "title": "Sourcelanguage",
+          "type": "string"
+        }
+      },
+      "required": [
+        "intentId",
+        "criteria"
+      ],
+      "title": "ClinicalCohortIntent",
+      "type": "object"
+    },
+    "CohortBooleanOperator": {
+      "enum": [
+        "all",
+        "any",
+        "not"
+      ],
+      "title": "CohortBooleanOperator",
+      "type": "string"
+    },
+    "CohortComparisonOperator": {
+      "enum": [
+        "eq",
+        "neq",
+        "gt",
+        "gte",
+        "lt",
+        "lte",
+        "exists",
+        "not_exists"
+      ],
+      "title": "CohortComparisonOperator",
+      "type": "string"
+    },
+    "CohortGroup": {
+      "additionalProperties": false,
+      "properties": {
+        "children": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/CohortPredicate"
+              },
+              {
+                "$ref": "#/$defs/CohortGroup"
+              }
+            ]
+          },
+          "maxItems": 64,
+          "minItems": 1,
+          "title": "Children",
+          "type": "array"
+        },
+        "groupId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Groupid",
+          "type": "string"
+        },
+        "nodeType": {
+          "const": "group",
+          "default": "group",
+          "title": "Nodetype",
+          "type": "string"
+        },
+        "operator": {
+          "$ref": "#/$defs/CohortBooleanOperator"
+        }
+      },
+      "required": [
+        "groupId",
+        "operator",
+        "children"
+      ],
+      "title": "CohortGroup",
+      "type": "object"
+    },
+    "CohortPredicate": {
+      "additionalProperties": false,
+      "properties": {
+        "comparison": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ScalarConstraint"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "concept": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ConceptMention"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "correlationGroup": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Correlationgroup"
+        },
+        "nodeType": {
+          "const": "predicate",
+          "default": "predicate",
+          "title": "Nodetype",
+          "type": "string"
+        },
+        "predicateId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Predicateid",
+          "type": "string"
+        },
+        "semanticRole": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Semanticrole",
+          "type": "string"
+        },
+        "temporal": {
+          "items": {
+            "$ref": "#/$defs/TemporalConstraint"
+          },
+          "maxItems": 8,
+          "title": "Temporal",
+          "type": "array"
+        }
+      },
+      "required": [
+        "predicateId",
+        "semanticRole"
+      ],
+      "title": "CohortPredicate",
+      "type": "object"
+    },
+    "CohortResultShape": {
+      "additionalProperties": false,
+      "properties": {
+        "includeEvidence": {
+          "default": true,
+          "title": "Includeevidence",
+          "type": "boolean"
+        },
+        "kind": {
+          "default": "pseudonymous_patient_list",
+          "enum": [
+            "pseudonymous_patient_list",
+            "patient_count"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "limit": {
+          "default": 50,
+          "maximum": 1000,
+          "minimum": 1,
+          "title": "Limit",
+          "type": "integer"
+        }
+      },
+      "title": "CohortResultShape",
+      "type": "object"
+    },
+    "ConceptMention": {
+      "additionalProperties": false,
+      "properties": {
+        "explicitCoding": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ExplicitCoding"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "mentionId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Mentionid",
+          "type": "string"
+        },
+        "requestedRelationship": {
+          "$ref": "#/$defs/ConceptRelationship",
+          "default": "exact"
+        },
+        "semanticCategory": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Semanticcategory",
+          "type": "string"
+        },
+        "terminologySystemHint": {
+          "anyOf": [
+            {
+              "maxLength": 2048,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Terminologysystemhint"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "maxLength": 1024,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        },
+        "valueSetHint": {
+          "anyOf": [
+            {
+              "maxLength": 2048,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Valuesethint"
+        }
+      },
+      "required": [
+        "mentionId",
+        "semanticCategory"
+      ],
+      "title": "ConceptMention",
+      "type": "object"
+    },
+    "ConceptRelationship": {
+      "enum": [
+        "exact",
+        "descendant",
+        "descendant_or_self"
+      ],
+      "title": "ConceptRelationship",
+      "type": "string"
+    },
+    "ExplicitCoding": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "display": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Display"
+        },
+        "system": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "System",
+          "type": "string"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        }
+      },
+      "required": [
+        "system",
+        "code"
+      ],
+      "title": "ExplicitCoding",
+      "type": "object"
+    },
+    "ResolutionDecision": {
+      "enum": [
+        "ready",
+        "clarification_required",
+        "unsupported"
+      ],
+      "title": "ResolutionDecision",
+      "type": "string"
+    },
+    "ResolutionRoute": {
+      "additionalProperties": false,
+      "properties": {
+        "semanticPackRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "strategyId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Strategyid",
+          "type": "string"
+        },
+        "structuralResolverId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Structuralresolverid",
+          "type": "string"
+        },
+        "structuralResolverKind": {
+          "$ref": "#/$defs/StructuralResolverKind"
+        },
+        "terminologyProviderIds": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Terminologyproviderids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "strategyId",
+        "structuralResolverKind",
+        "structuralResolverId"
+      ],
+      "title": "ResolutionRoute",
+      "type": "object"
+    },
+    "ResolutionStatus": {
+      "enum": [
+        "resolved",
+        "clarification_required",
+        "unsupported"
+      ],
+      "title": "ResolutionStatus",
+      "type": "string"
+    },
+    "ScalarConstraint": {
+      "additionalProperties": false,
+      "properties": {
+        "operator": {
+          "$ref": "#/$defs/CohortComparisonOperator"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "value": {
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "operator"
+      ],
+      "title": "ScalarConstraint",
+      "type": "object"
+    },
+    "StructuralBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "bindingId": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Bindingid",
+          "type": "string"
+        },
+        "details": {
+          "additionalProperties": true,
+          "title": "Details",
+          "type": "object"
+        },
+        "modelKind": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Modelkind",
+          "type": "string"
+        },
+        "predicateId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Predicateid",
+          "type": "string"
+        },
+        "semanticRole": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Semanticrole",
+          "type": "string"
+        }
+      },
+      "required": [
+        "predicateId",
+        "semanticRole",
+        "bindingId",
+        "modelKind"
+      ],
+      "title": "StructuralBinding",
+      "type": "object"
+    },
+    "StructuralBindingReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "alternatives": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "maxItems": 20,
+          "title": "Alternatives",
+          "type": "array"
+        },
+        "bindings": {
+          "items": {
+            "$ref": "#/$defs/StructuralBinding"
+          },
+          "maxItems": 64,
+          "title": "Bindings",
+          "type": "array"
+        },
+        "catalogRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "reason": {
+          "maxLength": 1024,
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "resolverId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Resolverid",
+          "type": "string"
+        },
+        "resolverKind": {
+          "$ref": "#/$defs/StructuralResolverKind"
+        },
+        "status": {
+          "$ref": "#/$defs/ResolutionStatus"
+        },
+        "strategyId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Strategyid",
+          "type": "string"
+        },
+        "strategyVersion": {
+          "anyOf": [
+            {
+              "maxLength": 256,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Strategyversion"
+        }
+      },
+      "required": [
+        "status",
+        "resolverKind",
+        "resolverId",
+        "strategyId",
+        "reason"
+      ],
+      "title": "StructuralBindingReceipt",
+      "type": "object"
+    },
+    "StructuralResolverKind": {
+      "enum": [
+        "native_strategy",
+        "compiled_semantic_pack",
+        "federated"
+      ],
+      "title": "StructuralResolverKind",
+      "type": "string"
+    },
+    "TemporalConstraint": {
+      "additionalProperties": false,
+      "properties": {
+        "operator": {
+          "$ref": "#/$defs/CohortComparisonOperator"
+        },
+        "semanticRole": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Semanticrole",
+          "type": "string"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Timezone"
+        },
+        "value": {
+          "title": "Value"
+        }
+      },
+      "required": [
+        "semanticRole",
+        "operator",
+        "value"
+      ],
+      "title": "TemporalConstraint",
+      "type": "object"
+    },
+    "TerminologyCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "authority": {
+          "$ref": "#/$defs/TerminologyCandidateAuthority"
+        },
+        "code": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "display": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Display",
+          "type": "string"
+        },
+        "evidence": {
+          "additionalProperties": true,
+          "title": "Evidence",
+          "type": "object"
+        },
+        "matchMethods": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Matchmethods",
+          "type": "array"
+        },
+        "providerId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Providerid",
+          "type": "string"
+        },
+        "scoreBasisPoints": {
+          "maximum": 10000,
+          "minimum": 0,
+          "title": "Scorebasispoints",
+          "type": "integer"
+        },
+        "system": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "System",
+          "type": "string"
+        },
+        "verified": {
+          "default": false,
+          "title": "Verified",
+          "type": "boolean"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        }
+      },
+      "required": [
+        "system",
+        "code",
+        "display",
+        "providerId",
+        "scoreBasisPoints",
+        "authority"
+      ],
+      "title": "TerminologyCandidate",
+      "type": "object"
+    },
+    "TerminologyCandidateAuthority": {
+      "enum": [
+        "explicit_code",
+        "accepted_binding",
+        "provider_verified",
+        "inferred",
+        "model_proposed"
+      ],
+      "title": "TerminologyCandidateAuthority",
+      "type": "string"
+    },
+    "TerminologyExpansion": {
+      "additionalProperties": false,
+      "description": "Complete, version-pinned code set authorized for query compilation.",
+      "properties": {
+        "codes": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 512,
+          "minItems": 1,
+          "title": "Codes",
+          "type": "array"
+        },
+        "expansionDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Expansiondigest",
+          "type": "string"
+        },
+        "expression": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "Expression",
+          "type": "string"
+        },
+        "expressionLanguage": {
+          "$ref": "#/$defs/TerminologyExpressionLanguage"
+        },
+        "providerId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Providerid",
+          "type": "string"
+        },
+        "system": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "System",
+          "type": "string"
+        },
+        "truncated": {
+          "const": false,
+          "default": false,
+          "title": "Truncated",
+          "type": "boolean"
+        },
+        "valueSetUri": {
+          "anyOf": [
+            {
+              "maxLength": 2048,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Valueseturi"
+        },
+        "valueSetVersion": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Valuesetversion"
+        },
+        "version": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "providerId",
+        "system",
+        "version",
+        "expressionLanguage",
+        "expression",
+        "codes",
+        "expansionDigest"
+      ],
+      "title": "TerminologyExpansion",
+      "type": "object"
+    },
+    "TerminologyExpressionLanguage": {
+      "enum": [
+        "code",
+        "ecl",
+        "value_set"
+      ],
+      "title": "TerminologyExpressionLanguage",
+      "type": "string"
+    },
+    "TerminologyGroundingReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "ambiguityMarginBasisPoints": {
+          "anyOf": [
+            {
+              "maximum": 10000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ambiguitymarginbasispoints"
+        },
+        "candidates": {
+          "items": {
+            "$ref": "#/$defs/TerminologyCandidate"
+          },
+          "maxItems": 20,
+          "title": "Candidates",
+          "type": "array"
+        },
+        "expansion": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TerminologyExpansion"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "mentionId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Mentionid",
+          "type": "string"
+        },
+        "reason": {
+          "maxLength": 1024,
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "requiresConfirmation": {
+          "default": false,
+          "title": "Requiresconfirmation",
+          "type": "boolean"
+        },
+        "selected": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TerminologyCandidate"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "status": {
+          "$ref": "#/$defs/ResolutionStatus"
+        }
+      },
+      "required": [
+        "mentionId",
+        "status",
+        "reason"
+      ],
+      "title": "TerminologyGroundingReceipt",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:clinical-cohort-resolution",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "contract": {
+      "const": "clinical-cohort-resolution/v1",
+      "default": "clinical-cohort-resolution/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "decision": {
+      "$ref": "#/$defs/ResolutionDecision"
+    },
+    "intent": {
+      "$ref": "#/$defs/ClinicalCohortIntent"
+    },
+    "reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "route": {
+      "$ref": "#/$defs/ResolutionRoute"
+    },
+    "structural": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/StructuralBindingReceipt"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "terminology": {
+      "items": {
+        "$ref": "#/$defs/TerminologyGroundingReceipt"
+      },
+      "title": "Terminology",
+      "type": "array"
+    }
+  },
+  "required": [
+    "decision",
+    "intent",
+    "route"
+  ],
+  "title": "ClinicalCohortResolution",
+  "type": "object"
+}

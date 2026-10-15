@@ -1,0 +1,46 @@
+{
+  "contract": "solution-blueprint/v1",
+  "blueprintId": "patient-authority-conflict",
+  "industry": "healthcare",
+  "revision": 1,
+  "objective": "Coordinate two permitted patient-demographics writers under one explicit authority policy.",
+  "participants": [
+    {"participantId": "registration-system", "label": "Registration system", "kind": "system", "lifecycle": "existing"},
+    {"participantId": "coordination-app", "label": "Care coordination application", "kind": "application", "lifecycle": "planned"},
+    {"participantId": "patient-repository", "label": "Patient repository", "kind": "repository", "lifecycle": "planned"}
+  ],
+  "interactions": [
+    {
+      "contract": "interaction-contract/v1",
+      "artifactRef": {"kind": "interaction-contract", "id": "registration.update-demographics", "version": "1.0.0", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+      "interactionId": "registration-update",
+      "behavior": "update",
+      "pattern": "request_response",
+      "roles": {"requesterRef": "registration-system", "providerRef": "patient-repository"},
+      "interface": {"kind": "rest", "protocolVersion": "1"},
+      "semanticScopeId": "patient-demographics",
+      "workloadRef": {"kind": "workload-profile", "id": "demographics-write", "version": "1.0.0", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+      "guarantees": {"acknowledgement": "durable_authoritative", "consistency": "strong", "idempotencyRequired": true}
+    },
+    {
+      "contract": "interaction-contract/v1",
+      "artifactRef": {"kind": "interaction-contract", "id": "coordination.update-demographics", "version": "1.0.0", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"},
+      "interactionId": "coordination-update",
+      "behavior": "update",
+      "pattern": "request_response",
+      "roles": {"requesterRef": "coordination-app", "providerRef": "patient-repository"},
+      "interface": {"kind": "rest", "protocolVersion": "1"},
+      "semanticScopeId": "patient-demographics",
+      "workloadRef": {"kind": "workload-profile", "id": "demographics-write", "version": "1.0.0", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+      "guarantees": {"acknowledgement": "accepted", "consistency": "strong", "idempotencyRequired": true}
+    }
+  ],
+  "semanticAuthorities": [{"scopeId": "patient-demographics", "mode": "native", "authorityRef": {"kind": "source-schema", "id": "patient-demographics", "version": "1.0.0", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"}}],
+  "recordAuthorityPolicies": [{"contract": "record-authority-policy/v1", "artifactRef": {"kind": "record-authority-policy", "id": "patient-demographics-authority", "version": "1.0.0", "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"}, "scope": {"scopeId": "patient-demographics", "domain": "identity", "recordTypes": ["patient"], "paths": ["name", "address", "telecom"], "lifecycleStates": ["active"]}, "authoritativeWriterRef": "registration-system", "permittedWriterRefs": ["registration-system", "coordination-app"], "conflictPolicy": "reconcile", "versionPolicyRef": {"kind": "version-policy", "id": "demographics-optimistic-lock", "version": "1.0.0", "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}, "correctionBehavior": "Reconcile against registration and preserve both provenance trails.", "provenanceRequired": true}],
+  "dataPostures": [{"scopeId": "patient-demographics", "posture": "mongodb_system_of_record", "servingRepositoryRef": "patient-repository"}],
+  "constraints": {"tenancyMode": "single_tenant", "regions": [], "estimatedDocuments": 1000000, "peakReadsPerSecond": 100, "peakWritesPerSecond": 50, "retentionDays": 3650},
+  "targetCapabilityProfileRef": {"kind": "target-capability-profile", "id": "atlas-production", "version": "1.0.0", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+  "preferredFoundationRefs": [],
+  "assumptions": [],
+  "decisions": ["Registration remains authoritative while the coordination application may propose reconciled updates."]
+}

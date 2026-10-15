@@ -1,0 +1,314 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "DatasetCharacteristics": {
+      "additionalProperties": false,
+      "properties": {
+        "averageRecordBytes": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Averagerecordbytes"
+        },
+        "cardinalityNotes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Cardinalitynotes",
+          "type": "array"
+        },
+        "logicalBytes": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Logicalbytes"
+        },
+        "physicalBytes": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Physicalbytes"
+        },
+        "recordCount": {
+          "minimum": 0,
+          "title": "Recordcount",
+          "type": "integer"
+        },
+        "skewNotes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Skewnotes",
+          "type": "array"
+        },
+        "subjectCount": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subjectcount"
+        }
+      },
+      "required": [
+        "recordCount"
+      ],
+      "title": "DatasetCharacteristics",
+      "type": "object"
+    },
+    "WorkloadShape": {
+      "enum": [
+        "point_lookup",
+        "patient_bounded",
+        "index_range",
+        "cohort_selective",
+        "cohort_broad",
+        "full_scan",
+        "search",
+        "vector_search",
+        "aggregation",
+        "graph_traversal",
+        "event_timeline",
+        "semantic_resolution",
+        "natural_language",
+        "write",
+        "bulk_ingest"
+      ],
+      "title": "WorkloadShape",
+      "type": "string"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:workload-profile",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "concurrency": {
+      "default": 1,
+      "minimum": 1,
+      "title": "Concurrency",
+      "type": "integer"
+    },
+    "contract": {
+      "const": "workload-profile/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "dataset": {
+      "$ref": "#/$defs/DatasetCharacteristics"
+    },
+    "expectedResultCount": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expectedresultcount"
+    },
+    "freshnessTargetSeconds": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Freshnesstargetseconds"
+    },
+    "indexedPredicateCount": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Indexedpredicatecount"
+    },
+    "latencyTargetMs": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Latencytargetms"
+    },
+    "predicateCount": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Predicatecount"
+    },
+    "requestsPerSecond": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Requestspersecond"
+    },
+    "resultBytes": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Resultbytes"
+    },
+    "selectivityPartsPerMillion": {
+      "anyOf": [
+        {
+          "maximum": 1000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Selectivitypartspermillion"
+    },
+    "shape": {
+      "$ref": "#/$defs/WorkloadShape"
+    },
+    "shardFanout": {
+      "anyOf": [
+        {
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Shardfanout"
+    },
+    "workloadId": {
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Workloadid",
+      "type": "string"
+    },
+    "writesPerSecond": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Writespersecond"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "workloadId",
+    "shape",
+    "dataset"
+  ],
+  "title": "WorkloadProfile",
+  "type": "object"
+}

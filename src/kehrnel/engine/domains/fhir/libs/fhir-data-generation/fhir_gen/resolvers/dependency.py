@@ -7,7 +7,7 @@ from collections import defaultdict
 
 from ..schema.registry import registry
 
-# Resources with fhir-search-to-mql configs (84). Keep in sync with
+# Resources with fhir-search-to-mql configs (97). Keep in sync with
 # fhir-search-to-mql/src/fhir_search_to_mql/configs/*.yaml and
 # fhir-search-to-mql/src/fhir_search_to_mql/resolvers/dependency.py
 MQL_SHIPPED_RESOURCES: tuple[str, ...] = (
@@ -95,6 +95,20 @@ MQL_SHIPPED_RESOURCES: tuple[str, ...] = (
     "SupplyRequest",
     "Task",
     "VisionPrescription",
+    # ── Additional R4/R5 resources ──
+    "AppointmentResponse",
+    "CommunicationRequest",
+    "DeviceUseStatement",
+    "DocumentManifest",
+    "EncounterHistory",
+    "GuidanceResponse",
+    "ImagingSelection",
+    "ImmunizationEvaluation",
+    "List",
+    "Media",
+    "MolecularSequence",
+    "RequestGroup",
+    "SubscriptionStatus",
 )
 
 # Generate anchor resources before dependents that reference them.
@@ -265,6 +279,103 @@ _CORE_DEPENDENCIES_EXTENDED: dict[str, list[str]] = {
 }
 
 CORE_DEPENDENCIES.update(_CORE_DEPENDENCIES_EXTENDED)
+
+# Schema-only resources (no clinical enricher; generated from schema alone).
+# These cover all remaining R4 and R5 resources not in the MQL-shipped set.
+_CORE_DEPENDENCIES_SCHEMA_ONLY: dict[str, list[str]] = {
+    # ── Terminology / conformance (no patient deps) ──
+    "ActivityDefinition": [],
+    "ActorDefinition": [],
+    "AdministrableProductDefinition": [],
+    "ArtifactAssessment": [],
+    "Binary": [],
+    "Bundle": [],
+    "CapabilityStatement": [],
+    "CatalogEntry": [],
+    "Citation": [],
+    "ClinicalUseDefinition": ["Patient"],
+    "CodeSystem": [],
+    "CompartmentDefinition": [],
+    "ConceptMap": [],
+    "ConditionDefinition": [],
+    "DeviceAssociation": ["Patient", "Device"],
+    "DeviceDefinition": ["Organization"],
+    "DeviceMetric": ["Device"],
+    "DeviceUseStatement": ["Patient", "Device"],
+    "DocumentManifest": ["Patient", "Practitioner", "Organization"],
+    "EffectEvidenceSynthesis": [],
+    "EncounterHistory": ["Patient", "Encounter"],
+    "EventDefinition": [],
+    "Evidence": [],
+    "EvidenceReport": [],
+    "EvidenceVariable": [],
+    "ExampleScenario": [],
+    "FormularyItem": [],
+    "GraphDefinition": [],
+    "GuidanceResponse": ["Patient"],
+    "ImagingSelection": ["Patient", "Practitioner"],
+    "ImplementationGuide": [],
+    "Ingredient": [],
+    "InventoryItem": [],
+    "InventoryReport": ["Location"],
+    "Library": [],
+    "Linkage": ["Practitioner"],
+    "List": ["Patient", "Practitioner"],
+    "ManufacturedItemDefinition": [],
+    "Media": ["Patient", "Practitioner", "Encounter"],
+    "MedicinalProduct": [],
+    "MedicinalProductAuthorization": [],
+    "MedicinalProductContraindication": [],
+    "MedicinalProductDefinition": [],
+    "MedicinalProductIndication": [],
+    "MedicinalProductIngredient": [],
+    "MedicinalProductInteraction": [],
+    "MedicinalProductManufactured": [],
+    "MedicinalProductPackaged": [],
+    "MedicinalProductPharmaceutical": [],
+    "MedicinalProductUndesirableEffect": [],
+    "MessageDefinition": [],
+    "MessageHeader": [],
+    "MolecularSequence": ["Patient"],
+    "NamingSystem": [],
+    "NutritionProduct": [],
+    "ObservationDefinition": [],
+    "OperationDefinition": [],
+    "OperationOutcome": [],
+    "PackagedProductDefinition": [],
+    "Parameters": [],
+    "Permission": [],
+    "PlanDefinition": [],
+    "RegulatedAuthorization": [],
+    "RequestGroup": ["Patient", "Practitioner", "Encounter"],
+    "Requirements": [],
+    "ResearchDefinition": [],
+    "ResearchElementDefinition": [],
+    "RiskEvidenceSynthesis": [],
+    "SearchParameter": [],
+    "SpecimenDefinition": [],
+    "StructureDefinition": [],
+    "StructureMap": [],
+    "Subscription": [],
+    "SubscriptionTopic": [],
+    "SubstanceDefinition": [],
+    "SubstanceNucleicAcid": [],
+    "SubstancePolymer": [],
+    "SubstanceProtein": [],
+    "SubstanceReferenceInformation": [],
+    "SubstanceSourceMaterial": [],
+    "SubstanceSpecification": [],
+    "TerminologyCapabilities": [],
+    "TestPlan": [],
+    "TestReport": [],
+    "TestScript": [],
+    "ValueSet": [],
+    "VerificationResult": [],
+    # ── Workflow / admin ──
+    "CommunicationRequest": ["Patient", "Practitioner", "Encounter"],
+}
+
+CORE_DEPENDENCIES.update(_CORE_DEPENDENCIES_SCHEMA_ONLY)
 
 
 def _known_resources() -> set[str]:

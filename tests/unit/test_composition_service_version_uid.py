@@ -51,6 +51,96 @@ class _SummaryDb:
         return self._collections[name]
 
 
+class _SingleDocumentCollection:
+    def __init__(self, document):
+        self.document = document
+
+    async def find_one(self, query):
+        if self.document and query.get("_id") == self.document.get("_id"):
+            return deepcopy(self.document)
+        return None
+
+
+class _SingleDocumentDb:
+    def __init__(self, document):
+        self.collection = _SingleDocumentCollection(document)
+
+    def __getitem__(self, name):
+        return self.collection
+
+
+class _SingleDocumentCollection:
+    def __init__(self, document):
+        self.document = document
+
+    async def find_one(self, query):
+        if self.document and query.get("_id") == self.document.get("_id"):
+            return deepcopy(self.document)
+        return None
+
+
+class _SingleDocumentDb:
+    def __init__(self, document):
+        self.collection = _SingleDocumentCollection(document)
+
+    def __getitem__(self, name):
+        return self.collection
+
+
+class _SingleDocumentCollection:
+    def __init__(self, document):
+        self.document = document
+
+    async def find_one(self, query):
+        if self.document and query.get("_id") == self.document.get("_id"):
+            return deepcopy(self.document)
+        return None
+
+
+class _SingleDocumentDb:
+    def __init__(self, document):
+        self.collection = _SingleDocumentCollection(document)
+
+    def __getitem__(self, name):
+        return self.collection
+
+
+class _SingleDocumentCollection:
+    def __init__(self, document):
+        self.document = document
+
+    async def find_one(self, query):
+        if self.document and query.get("_id") == self.document.get("_id"):
+            return deepcopy(self.document)
+        return None
+
+
+class _SingleDocumentDb:
+    def __init__(self, document):
+        self.collection = _SingleDocumentCollection(document)
+
+    def __getitem__(self, name):
+        return self.collection
+
+
+class _SingleDocumentCollection:
+    def __init__(self, document):
+        self.document = document
+
+    async def find_one(self, query):
+        if self.document and query.get("_id") == self.document.get("_id"):
+            return deepcopy(self.document)
+        return None
+
+
+class _SingleDocumentDb:
+    def __init__(self, document):
+        self.collection = _SingleDocumentCollection(document)
+
+    def __getitem__(self, name):
+        return self.collection
+
+
 def _composition_payload(uid_value: str) -> dict:
     return {
         "_type": "COMPOSITION",
@@ -75,7 +165,7 @@ async def test_add_composition_rewrites_canonical_uid_before_flattening(monkeypa
     flattener = _CaptureFlattener()
     captured = {}
 
-    async def fake_find_ehr_by_id(ehr_id, db):
+    async def fake_find_ehr_by_id(ehr_id, db, config=None):
         return {"_id": {"value": ehr_id}}
 
     async def fake_insert(**kwargs):
@@ -97,6 +187,10 @@ async def test_add_composition_rewrites_canonical_uid_before_flattening(monkeypa
 
     assert created.uid == "comp-create::my-openehr-server::1"
     assert created.data["uid"]["value"] == created.uid
+    assert flattener.raw_docs[0]["_id"] == "comp-create"
+    assert flattener.raw_docs[0]["_id"] == "comp-create"
+    assert flattener.raw_docs[0]["_id"] == "comp-create"
+    assert flattener.raw_docs[0]["_id"] == "comp-create"
     assert flattener.raw_docs[0]["canonicalJSON"]["uid"]["value"] == created.uid
     assert flattener.raw_docs[0]["time_committed"] == created.time_created
     assert captured["composition_doc"]["data"]["uid"]["value"] == created.uid
@@ -104,11 +198,161 @@ async def test_add_composition_rewrites_canonical_uid_before_flattening(monkeypa
 
 
 @pytest.mark.asyncio
+async def test_add_composition_replays_identical_deterministic_version(monkeypatch):
+    object_id = "4ea0b434-e3c7-5d1d-94e7-84d8f7d7a102"
+    uid = f"{object_id}::my-openehr-server::1"
+    payload = _composition_payload("external-source::ehrbase.ehrbase.org::1")
+    expected = deepcopy(payload)
+    expected["uid"] = {"_type": "OBJECT_VERSION_ID", "value": uid}
+    stored = {
+        "_id": uid,
+        "time_created": "2026-10-04T00:00:00Z",
+        "data": expected,
+    }
+
+    async def fake_find_ehr_by_id(ehr_id, db, config=None):
+        return {"_id": {"value": ehr_id}}
+
+    monkeypatch.setattr(service, "find_ehr_by_id", fake_find_ehr_by_id)
+    result = await service.add_composition(
+        ehr_id="ehr-1",
+        composition_create=CompositionCreate.model_validate(payload),
+        db=_SingleDocumentDb(stored),
+        config=SimpleNamespace(compositions="compositions"),
+        flattener=_CaptureFlattener(),
+        composition_object_id=object_id,
+    )
+
+    assert result.uid == uid
+    assert result.data == expected
+
+
+@pytest.mark.asyncio
+async def test_add_composition_replays_identical_deterministic_version(monkeypatch):
+    object_id = "4ea0b434-e3c7-5d1d-94e7-84d8f7d7a102"
+    uid = f"{object_id}::my-openehr-server::1"
+    payload = _composition_payload("external-source::ehrbase.ehrbase.org::1")
+    expected = deepcopy(payload)
+    expected["uid"] = {"_type": "OBJECT_VERSION_ID", "value": uid}
+    stored = {
+        "_id": uid,
+        "time_created": "2026-10-04T00:00:00Z",
+        "data": expected,
+    }
+
+    async def fake_find_ehr_by_id(ehr_id, db, config=None):
+        return {"_id": {"value": ehr_id}}
+
+    monkeypatch.setattr(service, "find_ehr_by_id", fake_find_ehr_by_id)
+    result = await service.add_composition(
+        ehr_id="ehr-1",
+        composition_create=CompositionCreate.model_validate(payload),
+        db=_SingleDocumentDb(stored),
+        config=SimpleNamespace(compositions="compositions"),
+        flattener=_CaptureFlattener(),
+        composition_object_id=object_id,
+    )
+
+    assert result.uid == uid
+    assert result.data == expected
+
+
+@pytest.mark.asyncio
+async def test_add_composition_replays_identical_deterministic_version(monkeypatch):
+    object_id = "4ea0b434-e3c7-5d1d-94e7-84d8f7d7a102"
+    uid = f"{object_id}::my-openehr-server::1"
+    payload = _composition_payload("external-source::ehrbase.ehrbase.org::1")
+    expected = deepcopy(payload)
+    expected["uid"] = {"_type": "OBJECT_VERSION_ID", "value": uid}
+    stored = {
+        "_id": uid,
+        "time_created": "2026-10-04T00:00:00Z",
+        "data": expected,
+    }
+
+    async def fake_find_ehr_by_id(ehr_id, db, config=None):
+        return {"_id": {"value": ehr_id}}
+
+    monkeypatch.setattr(service, "find_ehr_by_id", fake_find_ehr_by_id)
+    result = await service.add_composition(
+        ehr_id="ehr-1",
+        composition_create=CompositionCreate.model_validate(payload),
+        db=_SingleDocumentDb(stored),
+        config=SimpleNamespace(compositions="compositions"),
+        flattener=_CaptureFlattener(),
+        composition_object_id=object_id,
+    )
+
+    assert result.uid == uid
+    assert result.data == expected
+
+
+@pytest.mark.asyncio
+async def test_add_composition_replays_identical_deterministic_version(monkeypatch):
+    object_id = "4ea0b434-e3c7-5d1d-94e7-84d8f7d7a102"
+    uid = f"{object_id}::my-openehr-server::1"
+    payload = _composition_payload("external-source::ehrbase.ehrbase.org::1")
+    expected = deepcopy(payload)
+    expected["uid"] = {"_type": "OBJECT_VERSION_ID", "value": uid}
+    stored = {
+        "_id": uid,
+        "time_created": "2026-10-04T00:00:00Z",
+        "data": expected,
+    }
+
+    async def fake_find_ehr_by_id(ehr_id, db, config=None):
+        return {"_id": {"value": ehr_id}}
+
+    monkeypatch.setattr(service, "find_ehr_by_id", fake_find_ehr_by_id)
+    result = await service.add_composition(
+        ehr_id="ehr-1",
+        composition_create=CompositionCreate.model_validate(payload),
+        db=_SingleDocumentDb(stored),
+        config=SimpleNamespace(compositions="compositions"),
+        flattener=_CaptureFlattener(),
+        composition_object_id=object_id,
+    )
+
+    assert result.uid == uid
+    assert result.data == expected
+
+
+@pytest.mark.asyncio
+async def test_add_composition_replays_identical_deterministic_version(monkeypatch):
+    object_id = "4ea0b434-e3c7-5d1d-94e7-84d8f7d7a102"
+    uid = f"{object_id}::my-openehr-server::1"
+    payload = _composition_payload("external-source::ehrbase.ehrbase.org::1")
+    expected = deepcopy(payload)
+    expected["uid"] = {"_type": "OBJECT_VERSION_ID", "value": uid}
+    stored = {
+        "_id": uid,
+        "time_created": "2026-10-04T00:00:00Z",
+        "data": expected,
+    }
+
+    async def fake_find_ehr_by_id(ehr_id, db, config=None):
+        return {"_id": {"value": ehr_id}}
+
+    monkeypatch.setattr(service, "find_ehr_by_id", fake_find_ehr_by_id)
+    result = await service.add_composition(
+        ehr_id="ehr-1",
+        composition_create=CompositionCreate.model_validate(payload),
+        db=_SingleDocumentDb(stored),
+        config=SimpleNamespace(compositions="compositions"),
+        flattener=_CaptureFlattener(),
+        composition_object_id=object_id,
+    )
+
+    assert result.uid == uid
+    assert result.data == expected
+
+
+@pytest.mark.asyncio
 async def test_bulk_add_compositions_batches_valid_items_and_reports_invalid_ones(monkeypatch):
     flattener = _CaptureFlattener()
     captured = {}
 
-    async def fake_find_ehr_by_id(ehr_id, db):
+    async def fake_find_ehr_by_id(ehr_id, db, config=None):
         return {"_id": {"value": ehr_id}}
 
     async def fake_insert_many(**kwargs):
@@ -178,6 +422,7 @@ async def test_update_composition_rewrites_uid_and_reflattens(monkeypatch):
 
     assert updated.uid == "comp-1::my-openehr-server::2"
     assert updated.data["uid"]["value"] == updated.uid
+    assert flattener.raw_docs[0]["_id"] == "comp-1"
     assert flattener.raw_docs[0]["canonicalJSON"]["uid"]["value"] == updated.uid
     assert flattener.raw_docs[0]["composition_version"] == "2"
     assert flattener.raw_docs[0]["time_committed"] == updated.time_created
@@ -197,13 +442,13 @@ async def test_delete_composition_passes_config_and_target_uid(monkeypatch):
         merge_search_docs=False,
     )
 
-    async def fake_retrieve_ehr_by_id(ehr_id, db):
+    async def fake_retrieve_ehr_by_id(ehr_id, db, config=None):
         return {"_id": {"value": ehr_id}}
 
     async def fake_retrieve_composition(**kwargs):
         return SimpleNamespace(uid=kwargs["uid_based_id"])
 
-    async def fake_find_deletion_contribution_for_version(preceding_version_uid, db):
+    async def fake_find_deletion_contribution_for_version(preceding_version_uid, db, config=None):
         return None
 
     async def fake_add_deletion_contribution_and_update_ehr(**kwargs):
@@ -238,7 +483,7 @@ async def test_bulk_delete_compositions_batches_only_valid_items(monkeypatch):
         merge_search_docs=False,
     )
 
-    async def fake_retrieve_ehr_by_id(ehr_id, db):
+    async def fake_retrieve_ehr_by_id(ehr_id, db, config=None):
         return SimpleNamespace(
             compositions=[
                 SimpleNamespace(id=SimpleNamespace(value="comp-1::my-openehr-server::1")),
@@ -250,7 +495,7 @@ async def test_bulk_delete_compositions_batches_only_valid_items(monkeypatch):
         assert cfg is config
         return [{"_id": "comp-1::my-openehr-server::1"}, {"_id": "comp-2::my-openehr-server::1"}]
 
-    async def fake_find_deletion_contributions_for_versions(uids, db):
+    async def fake_find_deletion_contributions_for_versions(uids, db, config=None):
         return [{"versions": [{"preceding_version_uid": "comp-2::my-openehr-server::1"}]}]
 
     async def fake_add_bulk_deletion_contributions_and_update_ehr(**kwargs):
@@ -304,7 +549,7 @@ async def test_list_composition_summaries_uses_ehr_refs_and_projects_only_needed
         ]
     )
 
-    async def fake_find_ehr_by_id(ehr_id, _db):
+    async def fake_find_ehr_by_id(ehr_id, _db, config=None):
         return {
             "_id": {"value": ehr_id},
             "compositions": [

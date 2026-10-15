@@ -1,0 +1,213 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "StrategyOperationalProbeCheck": {
+      "additionalProperties": false,
+      "properties": {
+        "checkId": {
+          "enum": [
+            "runtime_connectivity",
+            "required_collections",
+            "storage_schema",
+            "managed_indexes",
+            "derived_projection",
+            "data_freshness",
+            "reconciliation_integrity"
+          ],
+          "title": "Checkid",
+          "type": "string"
+        },
+        "detail": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Detail",
+          "type": "string"
+        },
+        "state": {
+          "enum": [
+            "passed",
+            "failed",
+            "unavailable"
+          ],
+          "title": "State",
+          "type": "string"
+        }
+      },
+      "required": [
+        "checkId",
+        "state",
+        "detail"
+      ],
+      "title": "StrategyOperationalProbeCheck",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:strategy-operational-probe-evidence",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "activationSpecificationRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "checks": {
+      "items": {
+        "$ref": "#/$defs/StrategyOperationalProbeCheck"
+      },
+      "maxItems": 7,
+      "minItems": 7,
+      "title": "Checks",
+      "type": "array"
+    },
+    "contract": {
+      "const": "strategy-operational-probe-evidence/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "domain": {
+      "minLength": 1,
+      "title": "Domain",
+      "type": "string"
+    },
+    "evidenceDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Evidencedigest",
+      "type": "string"
+    },
+    "freshnessTargetSeconds": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Freshnesstargetseconds"
+    },
+    "indexState": {
+      "enum": [
+        "in_sync",
+        "drifted",
+        "unavailable"
+      ],
+      "title": "Indexstate",
+      "type": "string"
+    },
+    "observedFreshnessSeconds": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Observedfreshnessseconds"
+    },
+    "probeOperation": {
+      "const": "operational_probe",
+      "default": "operational_probe",
+      "title": "Probeoperation",
+      "type": "string"
+    },
+    "reconciliationDivergenceCount": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reconciliationdivergencecount"
+    },
+    "runtimeActivationId": {
+      "minLength": 1,
+      "title": "Runtimeactivationid",
+      "type": "string"
+    },
+    "schemaState": {
+      "enum": [
+        "in_sync",
+        "drifted",
+        "unavailable"
+      ],
+      "title": "Schemastate",
+      "type": "string"
+    },
+    "state": {
+      "enum": [
+        "healthy",
+        "degraded",
+        "unavailable"
+      ],
+      "title": "State",
+      "type": "string"
+    },
+    "strategyInstanceId": {
+      "minLength": 1,
+      "title": "Strategyinstanceid",
+      "type": "string"
+    },
+    "strategyRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    }
+  },
+  "required": [
+    "contract",
+    "strategyInstanceId",
+    "strategyRef",
+    "activationSpecificationRef",
+    "runtimeActivationId",
+    "domain",
+    "state",
+    "schemaState",
+    "indexState",
+    "checks",
+    "evidenceDigest"
+  ],
+  "title": "StrategyOperationalProbeEvidence",
+  "type": "object"
+}

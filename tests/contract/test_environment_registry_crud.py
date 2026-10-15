@@ -32,9 +32,9 @@ def test_environment_registry_crud_and_activation_fallback(tmp_path):
     activate_res = client.post(
         "/v1/environments/env-meta/activate",
         json={
-            "strategy_id": "fhir.clinical_cdr",
-            "version": "0.1.0",
-            "config": {},
+            "strategy_id": "fhir.resource_store",
+            "version": "0.13.1",
+            "config": {"database": "kehrnel_contract_test"},
             "domain": "fhir",
             "bindings": {},
             "allow_plaintext_bindings": True,

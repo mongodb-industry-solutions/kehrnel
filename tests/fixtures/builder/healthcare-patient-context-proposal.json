@@ -1,0 +1,210 @@
+{
+  "request": {
+    "contract": "strategy-compilation-request/v1",
+    "blueprint": {
+      "contract": "legacy-source-blueprint/internal",
+      "blueprintId": "healthcare.patient-context",
+      "industry": "healthcare",
+      "revision": 1,
+      "sources": [
+        {
+          "instanceId": "clinical-record",
+          "profileRef": {
+            "kind": "source-profile",
+            "id": "exchange.openehr-json",
+            "version": "1.0.0",
+            "digest": "sha256:25879a28eaac9ebccf2935d51c39839405eeb1ad4bbe8a5a4763af2039e95186"
+          },
+          "ingestionMode": "api",
+          "integrationPosture": "selective_materialization"
+        }
+      ],
+      "context": [
+        {
+          "contextId": "patient-identity",
+          "kind": "identity_resolution",
+          "required": true,
+          "appliesToSourceIds": ["clinical-record"],
+          "conceptIds": []
+        }
+      ],
+      "consumptions": [
+        {
+          "consumptionId": "canonical-aql",
+          "kind": "openehr",
+          "protocol": "openEHR REST + AQL",
+          "operations": ["execute-aql"],
+          "latencyTargetMs": 500,
+          "workload": {
+            "scope": "subject",
+            "queryFeatures": ["filter"],
+            "consistency": "strong"
+          }
+        },
+        {
+          "consumptionId": "population-cohort",
+          "kind": "cohort",
+          "operations": ["find-population"],
+          "latencyTargetMs": 500,
+          "freshnessTargetSeconds": 60,
+          "workload": {
+            "scope": "population",
+            "queryFeatures": ["filter", "aggregation"],
+            "consistency": "bounded_staleness",
+            "expectedResultDocuments": 1000
+          }
+        }
+      ],
+      "constraints": {
+        "tenancyMode": "single_tenant",
+        "regions": []
+      },
+      "preferredStrategyIds": ["openehr.rps_dual"]
+    },
+    "discoveredProfiles": []
+  },
+  "response": {
+    "contract": "architecture-proposal/v1",
+    "proposalOrigin": "deterministic_core",
+    "blueprintId": "healthcare.patient-context",
+    "blueprintRevision": 1,
+    "proposalDigest": "sha256:21fadd4c0a47d92faad96632704e37811bf1027fcab03623fc5e888f54119dc1",
+    "requiresApproval": true,
+    "strategyCandidate": {
+      "contract": "strategy-candidate/v1",
+      "blueprintId": "healthcare.patient-context",
+      "blueprintRevision": 1,
+      "status": "ready",
+      "candidateDigest": "sha256:bc1094d58b1986a6ed372d997b5017909c77b9b49b640bc35b895f1137f8ade6",
+      "requiresApproval": false,
+      "sourcePlans": [
+        {
+          "sourceInstanceId": "clinical-record",
+          "sourceProfileRef": {
+            "kind": "source-profile",
+            "id": "exchange.openehr-json",
+            "version": "1.0.0",
+            "digest": "sha256:25879a28eaac9ebccf2935d51c39839405eeb1ad4bbe8a5a4763af2039e95186"
+          },
+          "ingestionMode": "api",
+          "integrationPosture": "selective_materialization",
+          "targetModel": "openehr",
+          "mappingMode": "direct",
+          "strategyId": "openehr.rps_dual"
+        }
+      ],
+      "strategySelections": [
+        {
+          "strategyId": "openehr.rps_dual",
+          "generated": false,
+          "reason": "Required by the openehr consumption contract.",
+          "sourceInstanceIds": ["clinical-record"],
+          "consumptionIds": ["canonical-aql", "population-cohort"]
+        }
+      ],
+      "interfacePlans": [
+        {
+          "consumptionId": "canonical-aql",
+          "kind": "openehr",
+          "protocol": "openEHR REST + AQL",
+          "operations": ["execute-aql"],
+          "strategyId": "openehr.rps_dual"
+        },
+        {
+          "consumptionId": "population-cohort",
+          "kind": "cohort",
+          "operations": ["find-population"],
+          "strategyId": "openehr.rps_dual"
+        }
+      ],
+      "issues": []
+    },
+    "accessPlan": {
+      "contract": "access-plan/v1",
+      "blueprintId": "healthcare.patient-context",
+      "blueprintRevision": 1,
+      "candidateDigest": "sha256:bc1094d58b1986a6ed372d997b5017909c77b9b49b640bc35b895f1137f8ade6",
+      "status": "requires_approval",
+      "requiresApproval": true,
+      "accessPlanDigest": "sha256:bebd3522492a480c5ff4278f27dbb9d9a203183325a891708699878821141d3f",
+      "structures": [
+        {
+          "accessStructureId": "access.openehr-rps-dual.direct-document",
+          "mechanism": "direct_document",
+          "strategyId": "openehr.rps_dual",
+          "servesConsumptionIds": ["canonical-aql", "population-cohort"],
+          "sourceInstanceIds": ["clinical-record"],
+          "rationale": "Preserve the authoritative industry record and serve access directly when its document boundary is sufficient.",
+          "consistency": "authoritative",
+          "requiresDerivedCopy": false,
+          "freshnessTargetSeconds": 60,
+          "capabilityMaturity": "compilable",
+          "observationKind": "estimated"
+        },
+        {
+          "accessStructureId": "access.openehr-rps-dual.materialized-projection",
+          "mechanism": "materialized_projection",
+          "strategyId": "openehr.rps_dual",
+          "servesConsumptionIds": ["population-cohort"],
+          "sourceInstanceIds": ["clinical-record"],
+          "rationale": "Meet a declared broad-scope aggregation or cohort workload that direct access and indexes alone cannot safely promise.",
+          "consistency": "asynchronous_derived",
+          "requiresDerivedCopy": true,
+          "rebuildSource": "authoritative:openehr.rps_dual",
+          "retirementCondition": "Retire when no approved consumption profile references this access structure.",
+          "freshnessTargetSeconds": 60,
+          "capabilityMaturity": "compilable",
+          "observationKind": "estimated"
+        },
+        {
+          "accessStructureId": "access.openehr-rps-dual.targeted-index",
+          "mechanism": "targeted_index",
+          "strategyId": "openehr.rps_dual",
+          "servesConsumptionIds": ["canonical-aql", "population-cohort"],
+          "sourceInstanceIds": ["clinical-record"],
+          "rationale": "Support declared filters, joins, graph keys, or bounded queries without creating another data copy.",
+          "consistency": "synchronous_derived",
+          "requiresDerivedCopy": false,
+          "rebuildSource": "authoritative:openehr.rps_dual",
+          "retirementCondition": "Retire when no approved consumption profile references this access structure.",
+          "freshnessTargetSeconds": 60,
+          "capabilityMaturity": "compilable",
+          "observationKind": "estimated"
+        }
+      ],
+      "rejectedAlternatives": [
+        {
+          "alternativeId": "alternative.canonical-aql.materialized-projection",
+          "mechanism": "materialized_projection",
+          "consumptionId": "canonical-aql",
+          "reasonCode": "DERIVED_COPY_NOT_JUSTIFIED",
+          "explanation": "The declared workload can use the authoritative document and lower-cost access structures; another data copy is not justified."
+        },
+        {
+          "alternativeId": "alternative.population-cohort.direct-document",
+          "mechanism": "direct_document",
+          "consumptionId": "population-cohort",
+          "reasonCode": "DIRECT_ONLY_INSUFFICIENT_FOR_WORKLOAD",
+          "explanation": "Direct access remains authoritative, but it is not sufficient by itself for the declared broad-scope workload and SLO."
+        }
+      ],
+      "projectionBudget": {
+        "observationKind": "estimated",
+        "accessStructureCount": 3,
+        "indexLikeStructureCount": 1,
+        "computedFieldCount": 0,
+        "derivedCopyCount": 1,
+        "externalExportCount": 0,
+        "servingConsumptionCount": 2
+      },
+      "issues": [
+        {
+          "code": "ACCESS_BENCHMARK_REQUIRED",
+          "severity": "review",
+          "message": "The materialized projection for 'population-cohort' is justified by static workload rules and requires benchmark evidence before release.",
+          "refs": ["population-cohort", "openehr.rps_dual"]
+        }
+      ]
+    }
+  }
+}

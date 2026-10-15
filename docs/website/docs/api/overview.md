@@ -12,7 +12,7 @@ Instead of navigating endpoint-by-endpoint in the sidebar, use the four API laye
 
 - **Core**: runtime contracts, strategy registry, environment activation
 - **Common**: authentication, conventions, and shared behaviors
-- **Domain**: canonical domain operations (openEHR, FHIR preview)
+- **Domain**: canonical domain operations (openEHR, FHIR, SNOMED CT and the provider-neutral terminology API)
 - **Strategy**: strategy-specific runtime operations
 
 Start at [API Layers](./layers), then go deeper into the layer page you need.
@@ -246,5 +246,5 @@ curl -X POST "${RUNTIME_URL}/environments" \
 
 - [Quick Start](../getting-started/quickstart) - Getting started with the API
 - [Configuration](../getting-started/configuration) - API server configuration
-- [AQL Query Guide](../concepts/aql-to-mql) - Understanding AQL to MQL translation
+- [AQL Query Guide](/docs/domains/openehr/aql-query-engine) - Understanding AQL to MQL translation
 - [API Layers](./layers) - Layer model and navigation

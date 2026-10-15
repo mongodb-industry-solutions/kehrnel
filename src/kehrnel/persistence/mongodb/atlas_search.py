@@ -53,3 +53,20 @@ class MongoAtlasSearchAdapter(TextSearchAdapter):
             return [doc async for doc in cursor]
         except Exception:
             return []
+
+    async def ensure_vector_index(self, collection: str, index_name: str, definition: Dict[str, Any]) -> Dict[str, Any]:
+        warnings = []
+        try:
+            existing = await self.list_search_indexes(collection)
+            existing_names = {str(doc.get("name")) for doc in existing if isinstance(doc, dict)}
+            if index_name in existing_names:
+                await self.db.command({"updateSearchIndex": collection, "name": index_name, "definition": definition})
+                return {"created": [], "updated": [index_name], "warnings": warnings}
+            await self.db.command({
+                "createSearchIndexes": collection,
+                "indexes": [{"name": index_name, "type": "vectorSearch", "definition": definition}],
+            })
+            return {"created": [index_name], "updated": [], "warnings": warnings}
+        except Exception as exc:
+            warnings.append(f"Vector index not ensured: {exc}")
+            return {"created": [], "updated": [], "warnings": warnings}

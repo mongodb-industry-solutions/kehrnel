@@ -1,4 +1,5 @@
 import asyncio
+from copy import deepcopy
 from pathlib import Path
 
 import pytest
@@ -18,18 +19,21 @@ def _pick_rps_manifest(runtime: StrategyRuntime):
 
 
 def _activate_with_fixture(runtime: StrategyRuntime, manifest, fixture_dir: Path, env_id: str = "env-contract"):
-    cfg = manifest.default_config or {}
+    cfg = deepcopy(manifest.default_config or {})
+    cfg.setdefault("database", "kehrnel_contract_test")
     bindings = StrategyBindings(extras={"db": {"provider": "none"}})
 
     async def _act():
         domain = getattr(manifest, "domain", "default")
         await runtime.activate(env_id, manifest.id, manifest.version, cfg, bindings, allow_plaintext_bindings=True, domain=domain)
 
-    asyncio.get_event_loop().run_until_complete(_act())
-    runtime._env_cache[env_id] = {
-        "adapters": {"storage": FixtureStorage(fixture_dir)},
-        "dict_cache": {},
+    asyncio.run(_act())
+    fixture_storage = FixtureStorage(fixture_dir)
+    runtime._build_adapters = lambda _env_id, _bindings: {
+        "storage": fixture_storage,
+        "index_admin": fixture_storage,
     }
+    runtime._env_cache.setdefault(env_id, {})["dict_cache"] = {}
     return env_id
 
 

@@ -25,6 +25,19 @@ This section centralizes openEHR runtime documentation.
 - [openEHR RPS Dual Query Translation](/docs/strategies/openehr/rps-dual/query-translation)
 - [openEHR RPS Dual Configuration](/docs/strategies/openehr/rps-dual/configuration)
 
+### Query and Ingest
+
+- [AQL Query Engine](/docs/domains/openehr/aql-query-engine)
+- [Composition Flattening Pipeline](/docs/domains/openehr/composition-flattening)
+
+### openEHR Concepts
+
+- [Dual-View Persistence](/docs/domains/openehr/concepts/dual-collection)
+- [Canonical To Operational Transformation](/docs/domains/openehr/concepts/flattening)
+- [Hierarchical Path Encoding](/docs/domains/openehr/concepts/reversed-paths)
+- [Query Translation](/docs/domains/openehr/concepts/aql-to-mql)
+- [Source Sampling for Synthetic Data](/docs/domains/openehr/concepts/data-sampling)
+
 ### Core CLI Entry Points
 
 - [CLI Overview](/docs/cli/overview)
@@ -37,3 +50,5 @@ This section centralizes openEHR runtime documentation.
 2. strategy introduction
 3. CLI workflows
 4. strategy data model and query translation
+5. AQL query engine and composition flattening pipeline
+

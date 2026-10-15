@@ -1,0 +1,148 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "CdcOperation": {
+      "enum": [
+        "insert",
+        "update",
+        "replace",
+        "delete"
+      ],
+      "title": "CdcOperation",
+      "type": "string"
+    },
+    "MappingCdcEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "after": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "After"
+        },
+        "documentKey": {
+          "additionalProperties": true,
+          "title": "Documentkey",
+          "type": "object"
+        },
+        "eventId": {
+          "minLength": 1,
+          "title": "Eventid",
+          "type": "string"
+        },
+        "operation": {
+          "$ref": "#/$defs/CdcOperation"
+        },
+        "sequence": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sequence"
+        }
+      },
+      "required": [
+        "eventId",
+        "operation"
+      ],
+      "title": "MappingCdcEvent",
+      "type": "object"
+    },
+    "MappingExecutionMode": {
+      "enum": [
+        "batch",
+        "cdc"
+      ],
+      "title": "MappingExecutionMode",
+      "type": "string"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:mapping-simulation-request",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "contract": {
+      "const": "mapping-simulation-request/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "events": {
+      "items": {
+        "$ref": "#/$defs/MappingCdcEvent"
+      },
+      "maxItems": 100,
+      "title": "Events",
+      "type": "array"
+    },
+    "mappingRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "mode": {
+      "$ref": "#/$defs/MappingExecutionMode"
+    },
+    "records": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "maxItems": 100,
+      "title": "Records",
+      "type": "array"
+    }
+  },
+  "required": [
+    "contract",
+    "mappingRef",
+    "mode"
+  ],
+  "title": "MappingSimulationRequest",
+  "type": "object"
+}

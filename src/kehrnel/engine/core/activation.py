@@ -30,6 +30,8 @@ class EnvironmentActivation:
     store_profiles: Dict[str, Any] = field(default_factory=dict)
     already_active: bool = False
     replaced_from: Optional[Dict[str, Any]] = None
+    condition_acceptances: list[Dict[str, Any]] = field(default_factory=list)
+    seed: Optional[Dict[str, Any]] = None
 
     def snapshot(self) -> Dict[str, Any]:
         return {
@@ -53,4 +55,6 @@ class EnvironmentActivation:
             "store_profiles": self.store_profiles,
             "already_active": self.already_active,
             "replaced_from": self.replaced_from,
+            "condition_acceptances": self.condition_acceptances,
+            "seed": self.seed,
         }

@@ -51,7 +51,7 @@ from kehrnel.api.domains.openehr.ehr.repository import find_ehr_by_id
 
 from kehrnel.api.domains.openehr.contribution.repository import (
     find_contribution_by_version_uid,
-    find_deletion_contribution_for_version, 
+    find_deletion_contribution_for_version,
     find_deletion_contributions_for_versions,
     find_latest_contribution_by_vo_uid,
     find_contributions_for_versioned_object
@@ -113,8 +113,14 @@ async def _prepare_new_composition_artifacts(
         data=composition_data,
     )
 
+    # RPS projections encode the stable composition object identity according
+    # to the activated strategy (string, ObjectId, or UUID binary). The
+    # canonical repository still keys the version document by the complete
+    # openEHR VERSION_UID; the repository restores that value as the physical
+    # projection `_id` after flattening.
+    composition_object_id = composition_uid.split("::", 1)[0]
     raw_doc_for_flattener = {
-        "_id": new_composition_for_db.uid,
+        "_id": composition_object_id,
         "ehr_id": ehr_id,
         "composition_version": composition_version,
         "time_committed": time_committed,
@@ -160,7 +166,8 @@ async def add_composition(
     config: CompositionCollectionNames,
     flattener: CompositionFlattener,
     merge_search_docs: bool = False,
-    committer_name: str = "System"
+    committer_name: str = "System",
+    composition_object_id: str | None = None,
 ) -> Composition:
     """
     Handles the business logic of adding a new, client-provided canonical
@@ -189,16 +196,33 @@ async def add_composition(
     """
 
     # Validate that the EHR Exists
-    ehr = await find_ehr_by_id(ehr_id, db)
+    ehr = await find_ehr_by_id(ehr_id, db, config)
     if not ehr:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
             detail = f"EHR with id '{ehr_id}' not found."
         )
-    
+
     time_created = datetime.now(timezone.utc)
-    composition_object_id = str(uuid.uuid4())
+    idempotent_identity = composition_object_id is not None
+    composition_object_id = composition_object_id or str(uuid.uuid4())
     composition_uid = f"{composition_object_id}::my-openehr-server::1"
+    if idempotent_identity:
+        existing_doc = await db[config.compositions].find_one({"_id": composition_uid})
+        if existing_doc is not None:
+            expected_payload = _materialize_versioned_composition_payload(
+                composition_create.content,
+                composition_uid,
+            )
+            if existing_doc.get("data") == expected_payload:
+                return Composition.model_validate(existing_doc)
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=(
+                    "The idempotent composition identity already exists with "
+                    "different content."
+                ),
+            )
     artifacts = await _prepare_new_composition_artifacts(
         ehr_id=ehr_id,
         composition_create=composition_create,
@@ -226,6 +250,12 @@ async def add_composition(
             merge_search_docs=merge_search_docs
         )
     except PyMongoError as e:
+        # A concurrent retry may have committed the same deterministic version
+        # identity. Return it only when the authoritative payload is identical.
+        if idempotent_identity:
+            existing_doc = await db[config.compositions].find_one({"_id": composition_uid})
+            if existing_doc is not None and existing_doc.get("data") == new_composition_for_db.data:
+                return Composition.model_validate(existing_doc)
         # The repository re-raises the error, we catch it here to give a user-friendly response
         raise HTTPException(
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -233,7 +263,7 @@ async def add_composition(
         )
 
     await _maybe_flush_generated_codes(flattener)
-    
+
     # Return the created composition object
     return new_composition_for_db
 
@@ -258,7 +288,7 @@ async def bulk_add_compositions(
             detail="At least one composition is required.",
         )
 
-    ehr = await find_ehr_by_id(ehr_id, db)
+    ehr = await find_ehr_by_id(ehr_id, db, config)
     if not ehr:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -370,13 +400,13 @@ async def retrieve_composition(
     """
 
     # Validate that the EHR exists
-    ehr_doc = await find_ehr_by_id(ehr_id, db)
+    ehr_doc = await find_ehr_by_id(ehr_id, db, config)
     if not ehr_doc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"EHR with id '{ehr_id}' not found"
         )
-    
+
     composition_doc = None
     # Case 1: A specific version is requested (contains '::')
     if "::" in uid_based_id:
@@ -390,7 +420,7 @@ async def retrieve_composition(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Composition with id '{uid_based_id}' not found in EHR '{ehr_id}'"
         )
-    
+
     # Extract the base object UID from the found document's full version UID (_id)
     try:
         versioned_object_uid_from_doc = composition_doc["_id"].split("::")[0]
@@ -413,7 +443,7 @@ async def retrieve_composition(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Composition with id '{uid_based_id}' not found in EHR '{ehr_id}'"
         )
-    
+
     return Composition.model_validate(composition_doc)
 
 
@@ -429,7 +459,7 @@ async def list_composition_summaries(
     We read the EHR's current composition references and project only the
     summary fields needed by the sandbox list.
     """
-    ehr_doc = await find_ehr_by_id(ehr_id, db)
+    ehr_doc = await find_ehr_by_id(ehr_id, db, config)
     if not ehr_doc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -504,9 +534,9 @@ async def retrieve_and_unflatten_composition(
     Raises:
         HTTPException: 404 if resources are not found, 500 for internal errors.
     """
-    
+
     # 1. Validate that the EHR Exists
-    ehr_doc = await find_ehr_by_id(ehr_id, db)
+    ehr_doc = await find_ehr_by_id(ehr_id, db, config)
     if not ehr_doc:
         raise HTTPException(status_code=404, detail=f"EHR with id '{ehr_id}' not found")
 
@@ -541,7 +571,7 @@ async def retrieve_and_unflatten_composition(
             status_code=404,
             detail=f"Composition '{uid_based_id}' not found in EHR '{ehr_id}'"
         )
-    
+
     # 4. Fetch the flattened document using the determined version UID
     flattened_doc = await find_flattened_composition_by_uid(composition_version_uid, db, config)
 
@@ -551,7 +581,7 @@ async def retrieve_and_unflatten_composition(
             status_code=500,
             detail=f"Inconsistent data: Canonical composition '{composition_version_uid}' exists but its flattened version is missing."
         )
-    
+
     # 5. Un-flatten the document to reconstruct the canonical JSON
     try:
         reconstructed_data = unflattener.unflatten(flattened_doc)
@@ -561,7 +591,7 @@ async def retrieve_and_unflatten_composition(
             status_code=500,
             detail=f"Failed to reconstruct composition '{composition_version_uid}'."
         )
-    
+
 
     # 7. Return the data in the same Pydantic model as the original function
     return Composition(
@@ -580,7 +610,8 @@ async def update_composition(
     config: CompositionCollectionNames,
     flattener: CompositionFlattener,
     merge_search_docs: bool = False,
-    committer_name: str = "System"
+    committer_name: str = "System",
+    idempotency_key: str | None = None,
 ) -> Composition:
     """
     Updates a composition by creating a new version.
@@ -604,7 +635,7 @@ async def update_composition(
             status_code = status.HTTP_400_BAD_REQUEST,
             detail = f"The If-Match header ('{expected_uid}') does not match the preceding_version_uid in the URL ('{preceding_version_uid}')."
         )
-    
+
     # Fetch the composition being updated to ensure it exists
     existing_composition = await retrieve_composition(
         ehr_id = ehr_id,
@@ -626,7 +657,7 @@ async def update_composition(
         new_uid = f"{object_id}::{system_id}::{new_version}"
     except (ValueError, IndexError):
         raise HTTPException(status_code=500, detail="Could not parse the existing version UID to create a new version.")
-    
+
     # Prepare the new versioned objects
     time_committed = datetime.now(timezone.utc)
 
@@ -636,6 +667,19 @@ async def update_composition(
         new_uid,
     )
 
+    if idempotency_key is not None:
+        existing_next_version = await db[config.compositions].find_one({"_id": new_uid})
+        if existing_next_version is not None:
+            if existing_next_version.get("data") == normalized_composition_data:
+                return Composition.model_validate(existing_next_version)
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=(
+                    "The next composition version already exists with different "
+                    "content. Refresh the preceding version before correcting it."
+                ),
+            )
+
     new_composition_for_db = Composition(
         uid = new_uid,
         time_created = time_committed,
@@ -643,7 +687,9 @@ async def update_composition(
     )
 
     raw_doc_for_flattener = {
-        "_id": new_composition_for_db.uid,
+        # The projection encodes the stable object identity; the repository
+        # restores the complete VERSION_UID before persisting this version.
+        "_id": object_id,
         "ehr_id": ehr_id,
         "composition_version": str(new_version),
         "time_committed": time_committed,
@@ -688,13 +734,20 @@ async def update_composition(
             merge_search_docs = merge_search_docs,
         )
     except PyMongoError as e:
+        if idempotency_key is not None:
+            existing_next_version = await db[config.compositions].find_one({"_id": new_uid})
+            if (
+                existing_next_version is not None
+                and existing_next_version.get("data") == normalized_composition_data
+            ):
+                return Composition.model_validate(existing_next_version)
         raise HTTPException(
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail = f"Could not update Composition due to a database error: {e}"
         )
 
     await _maybe_flush_generated_codes(flattener)
-    
+
     return new_composition_for_db
 
 
@@ -704,7 +757,7 @@ async def delete_composition_by_preceding_uid(
     if_match: str,
     db: AsyncIOMotorDatabase,
     config: CompositionCollectionNames,
-    committer_name: str = "System"
+    committer_name: str = "System",
 ) -> Dict[str, Any]:
     """
     Handles the logical deletion of a composition version.
@@ -728,9 +781,9 @@ async def delete_composition_by_preceding_uid(
             status_code = status.HTTP_412_PRECONDITION_FAILED,
             detail = f"The If-Match header ('{expected_uid}') doesn't match the preceding_version_uid in the URL ('{preceding_version_uid}')"
         )
-    
+
     # Fetch the EHR and composition to ensure they exist and are linked
-    ehr = await retrieve_ehr_by_id(ehr_id, db)
+    ehr = await retrieve_ehr_by_id(ehr_id, db, config)
 
     # This function already raises 404 if the composition is not found or not linked to the EHR.
     composition_to_delete = await retrieve_composition(
@@ -741,13 +794,13 @@ async def delete_composition_by_preceding_uid(
     )
 
     # Verify this version hans't already been deleted
-    existing_deletion = await find_deletion_contribution_for_version(preceding_version_uid, db)
+    existing_deletion = await find_deletion_contribution_for_version(preceding_version_uid, db, config)
     if existing_deletion:
         raise HTTPException(
             status_code = status.HTTP_409_CONFLICT,
             detail = f"Version '{preceding_version_uid}' has already been deleted."
         )
-    
+
     # Create the new version UID for the audit entry
     try:
         object_id, system_id, version_str = preceding_version_uid.split('::')
@@ -758,7 +811,7 @@ async def delete_composition_by_preceding_uid(
             status_code = 500,
             detail = "Could not parse the existing version UID to create a new version for the deletion audit."
         )
-    
+
     # Prepare the new "deleted" contribution
     time_committed = datetime.now(timezone.utc)
 
@@ -795,7 +848,7 @@ async def delete_composition_by_preceding_uid(
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail = f"Could not delete Composition due to a database error: {e}"
         )
-    
+
     # Return data needed for response headers
     return {
         "new_audit_uid": new_audit_uid,
@@ -809,7 +862,7 @@ async def bulk_delete_compositions(
     preceding_version_uids: List[str],
     db: AsyncIOMotorDatabase,
     config: CompositionCollectionNames,
-    committer_name: str = "System"
+    committer_name: str = "System",
 ) -> BulkCompositionDeleteResult:
     """
     Sandbox helper that batches logical composition deletions without changing
@@ -830,7 +883,7 @@ async def bulk_delete_compositions(
             detail="At least one composition uid is required."
         )
 
-    ehr = await retrieve_ehr_by_id(ehr_id, db)
+    ehr = await retrieve_ehr_by_id(ehr_id, db, config)
     linked_uids = {
         getattr(getattr(ref, "id", None), "value", None)
         for ref in (ehr.compositions or [])
@@ -851,7 +904,7 @@ async def bulk_delete_compositions(
     composition_docs = await find_compositions_by_uids(linked_requested_uids, db, config)
     found_uids = {str(doc.get("_id")) for doc in composition_docs if doc.get("_id")}
 
-    existing_deletions = await find_deletion_contributions_for_versions(linked_requested_uids, db)
+    existing_deletions = await find_deletion_contributions_for_versions(linked_requested_uids, db, config)
     deleted_uids = {
         version.get("preceding_version_uid")
         for doc in existing_deletions
@@ -964,20 +1017,20 @@ async def retrieve_revision_history(
     await retrieve_composition(ehr_id=ehr_id, uid_based_id=versioned_object_uid, db=db, config=config)
 
     # Fetch all the relevant contribution from the repository
-    contribution_docs = await find_contributions_for_versioned_object(versioned_object_uid, db)
+    contribution_docs = await find_contributions_for_versioned_object(versioned_object_uid, db, config)
 
     if not contribution_docs:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"No revision history found for composition '{versioned_object_uid}' in EHR '{ehr_id}'"
         )
-    
+
     # Map the contribution data to the RevisionHistoryItem model
     history_items = []
     for contrib_doc in contribution_docs:
         # Find the specific version entry within the contribution that matches the composition
         matching_version = next(
-            (v for v in contrib_doc.get("versions", []) 
+            (v for v in contrib_doc.get("versions", [])
              if v.get("uid", {}).get("value", "").startswith(versioned_object_uid)),
             None
         )
@@ -992,7 +1045,7 @@ async def retrieve_revision_history(
 
 
 async def retrieve_versioned_composition(
-    ehr_id: str, 
+    ehr_id: str,
     versioned_object_uid: str,
     db: AsyncIOMotorDatabase,
     config: CompositionCollectionNames
@@ -1000,7 +1053,7 @@ async def retrieve_versioned_composition(
     """
     Retrieves metadata about a VERSIONED_COMPOSITION
 
-    This function validates that the composition belongs to the EHR, 
+    This function validates that the composition belongs to the EHR,
     then finds the creation time of its version to construc the response
 
     Args:
@@ -1029,7 +1082,7 @@ async def retrieve_versioned_composition(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Composition with id '{versioned_object_uid}' not found in EHR '{ehr_id}'"
         )
-    
+
     # Construct the VersionedComposition response object
     versioned_composition_response = VersionedComposition(
         uid=HierObjectID(value=versioned_object_uid),
@@ -1085,7 +1138,8 @@ async def retrieve_composition_version(
     contribution_doc = await find_latest_contribution_by_vo_uid(
         versioned_object_uid=versioned_object_uid,
         db=db,
-        timestamp=at_time_datetime
+        timestamp=at_time_datetime,
+        config=config,
     )
 
     if not contribution_doc:
@@ -1093,28 +1147,28 @@ async def retrieve_composition_version(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"No version of composition '{versioned_object_uid}' found at the specified time."
         )
-    
-    
+
+
     # If the found contribution is a deletion marker, no version was extant.
     if contribution_doc["audit"]["change_type"] == "deleted":
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Composition '{versioned_object_uid}' was deleted at or before the specified time."
         )
-    
+
     # Extract composition version info from the contribution's 'versions' array.
     version_info = next(
         (v for v in contribution_doc.get("versions", [])
          if v.get("uid", {}).get("value", "").startswith(versioned_object_uid)),
         None
     )
-    
+
     if not version_info:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Inconsistent data: Contribution found but version link is missing."
         )
-    
+
     composition_version_uid = version_info["uid"]["value"]
     preceding_uid_val = version_info.get("preceding_version_uid")
 
@@ -1125,7 +1179,7 @@ async def retrieve_composition_version(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Inconsistent data: Version referenced in contribution not found."
         )
-    
+
     response = OriginalVersionResponse(
         uid=ObjectVersionID.model_validate(version_info["uid"]),
         preceding_version_uid=ObjectVersionID(value=preceding_uid_val) if preceding_uid_val else None,
@@ -1170,7 +1224,7 @@ async def retrieve_composition_version_by_uid(
             detail="Composition parameters are not matching.",
         )
 
-    contribution_doc = await find_contribution_by_version_uid(version_uid=version_uid, db=db)
+    contribution_doc = await find_contribution_by_version_uid(version_uid=version_uid, db=db, config=config)
 
     if not contribution_doc or contribution_doc.get("ehr_id") != ehr_id:
         raise HTTPException(

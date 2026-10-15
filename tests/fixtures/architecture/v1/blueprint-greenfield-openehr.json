@@ -1,0 +1,92 @@
+{
+  "contract": "solution-blueprint/v1",
+  "blueprintId": "greenfield-openehr-cdr",
+  "industry": "healthcare",
+  "revision": 1,
+  "objective": "Create a new openEHR clinical data repository without assuming a legacy source.",
+  "participants": [
+    {"participantId": "clinical-app", "label": "Clinical application", "kind": "application", "lifecycle": "planned"},
+    {"participantId": "openehr-cdr", "label": "openEHR CDR", "kind": "repository", "lifecycle": "planned"}
+  ],
+  "interactions": [
+  {
+    "contract": "interaction-contract/v1",
+    "artifactRef": {
+      "kind": "interaction-contract",
+      "id": "clinical-app.correct-composition",
+      "version": "1.0.0",
+      "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    "interactionId": "correct-composition",
+    "behavior": "update",
+    "pattern": "request_response",
+    "roles": {
+      "requesterRef": "clinical-app",
+      "providerRef": "openehr-cdr"
+    },
+    "interface": {
+      "kind": "openehr",
+      "protocolVersion": "1.0.3"
+    },
+    "semanticScopeId": "clinical-record",
+    "workloadRef": {
+      "kind": "workload-profile",
+      "id": "clinical-correction",
+      "version": "1.0.0",
+      "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+    },
+    "guarantees": {
+      "acknowledgement": "durable_authoritative",
+      "consistency": "strong",
+      "latencyTargetMs": 100,
+      "idempotencyRequired": true
+    }
+  },
+  {
+    "contract": "interaction-contract/v1",
+      "artifactRef": {"kind": "interaction-contract", "id": "clinical-app.create-composition", "version": "1.0.0", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+      "interactionId": "create-composition",
+      "behavior": "create",
+      "pattern": "request_response",
+      "roles": {"requesterRef": "clinical-app", "providerRef": "openehr-cdr"},
+      "interface": {"kind": "openehr", "protocolVersion": "1.0.3"},
+      "semanticScopeId": "clinical-record",
+      "workloadRef": {"kind": "workload-profile", "id": "clinical-write", "version": "1.0.0", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+      "guarantees": {"acknowledgement": "durable_authoritative", "consistency": "strong", "latencyTargetMs": 100, "idempotencyRequired": true}
+    },
+    {
+      "contract": "interaction-contract/v1",
+      "artifactRef": {"kind": "interaction-contract", "id": "clinical-app.query-cohort", "version": "1.0.0", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"},
+      "interactionId": "query-cohort",
+      "behavior": "query",
+      "pattern": "request_response",
+      "roles": {"requesterRef": "clinical-app", "providerRef": "openehr-cdr"},
+      "interface": {"kind": "aql", "protocolVersion": "1.0.3"},
+      "semanticScopeId": "clinical-record",
+      "workloadRef": {"kind": "workload-profile", "id": "cohort-selective", "version": "1.0.0", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"},
+      "guarantees": {"acknowledgement": "accepted", "consistency": "strong", "latencyTargetMs": 250, "idempotencyRequired": false}
+    }
+  ],
+  "semanticAuthorities": [
+    {"scopeId": "clinical-record", "mode": "native", "authorityRef": {"kind": "openehr-template", "id": "clinical-record", "version": "1.0.0", "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"}}
+  ],
+  "recordAuthorityPolicies": [
+    {
+      "contract": "record-authority-policy/v1",
+      "artifactRef": {"kind": "record-authority-policy", "id": "clinical-record-authority", "version": "1.0.0", "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"},
+      "scope": {"scopeId": "clinical-record", "domain": "clinical", "recordTypes": ["COMPOSITION"], "paths": [], "lifecycleStates": []},
+      "authoritativeWriterRef": "clinical-app",
+      "permittedWriterRefs": ["clinical-app"],
+      "conflictPolicy": "reject",
+      "versionPolicyRef": {"kind": "version-policy", "id": "openehr-contribution-versioning", "version": "1.0.0", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+      "correctionBehavior": "Create a versioned contribution; never overwrite history.",
+      "provenanceRequired": true
+    }
+  ],
+  "dataPostures": [{"scopeId": "clinical-record", "posture": "mongodb_system_of_record", "servingRepositoryRef": "openehr-cdr"}],
+  "constraints": {"tenancyMode": "single_tenant", "regions": ["eu-west-1"], "estimatedDocuments": 1000000, "peakReadsPerSecond": 100, "peakWritesPerSecond": 25, "retentionDays": 3650},
+  "targetCapabilityProfileRef": {"kind": "target-capability-profile", "id": "atlas-production", "version": "1.0.0", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+  "preferredFoundationRefs": [{"kind": "strategy", "id": "openehr.rps_dual", "version": "1.0.0", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"}],
+  "assumptions": ["The application creates the first clinical records."],
+  "decisions": ["Preserve native openEHR semantics and AQL as the query contract."]
+}

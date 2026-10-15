@@ -58,7 +58,7 @@ class _FakeDb:
 async def test_delete_ehr_service_collects_related_ids(monkeypatch):
     captured = {}
 
-    async def fake_retrieve_ehr_by_id(ehr_id, db):
+    async def fake_retrieve_ehr_by_id(ehr_id, db, config=None):
         return SimpleNamespace(
             compositions=[
                 SimpleNamespace(id=SimpleNamespace(value="comp-1")),

@@ -1,0 +1,124 @@
+resource: PractitionerRole
+fhir_version: R4
+
+search_parameters:
+  active:
+    type: token
+    description: "Whether this practitioner role record is in active use"
+    fields:
+      - field: "active"
+        tokenType: boolean
+
+  practitioner:
+    type: reference
+    description: "Practitioner that is able to provide the defined services for the organization"
+    fields:
+      - field: "_search.practitionerId"
+        referenceType: id
+      - field: "practitioner.reference"
+        referenceType: full
+
+  organization:
+    type: reference
+    description: "The identity of the organization the practitioner represents"
+    fields:
+      - field: "_search.organizationId"
+        referenceType: id
+      - field: "organization.reference"
+        referenceType: full
+
+  role:
+    type: token
+    description: "The practitioner can perform this role at for the organization"
+    fields:
+      - field: "_search.roleCode"
+        tokenType: code
+
+  specialty:
+    type: token
+    description: "The practitioner has this specialty at an organization"
+    fields:
+      - field: "_search.specialtyCode"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: "A practitioner's Identifier"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  _id:
+    type: token
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  practitioner:
+    source: practitioner
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: practitioner.reference
+        target_field: practitionerId
+        datatype: string
+        extractType: id
+
+  organization:
+    source: organization
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: organization.reference
+        target_field: organizationId
+        datatype: string
+        extractType: id
+
+  code:
+    source: code
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code[*].coding[*].code
+        target_field: roleCode
+        datatype: array[string]
+
+  specialty:
+    source: specialty
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: specialty[*].coding[*].code
+        target_field: specialtyCode
+        datatype: array[string]
+
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+indexes:
+  - fields:
+      - "_search.practitionerId": 1
+    options:
+      name: idx_r4_pr_practitioner
+  - fields:
+      - "_search.roleCode": 1
+    options:
+      name: idx_r4_pr_role

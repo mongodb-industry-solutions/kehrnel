@@ -1,0 +1,359 @@
+{
+  "contract": "source-profile-catalog/v1",
+  "profiles": [
+    {
+      "contract": "source-profile/v1",
+      "artifactRef": {
+        "kind": "source-profile",
+        "id": "exchange.fhir-r4-json",
+        "version": "1.0.0",
+        "digest": "sha256:ab1b61787c648554ea050d8be72da2bfced0a10fea94942dd440b2ae060f25e6"
+      },
+      "catalog": {
+        "role": "source_profile",
+        "provenance": "mongodb_curated",
+        "paths": [
+          {"industry": "healthcare", "segments": ["source-categories", "interoperability", "reference-implementations", "fhir-r4-exchange"]},
+          {"industry": "pharmaceutical", "segments": ["source-categories", "standards-exchange", "reference-implementations", "fhir-r4-exchange"]}
+        ],
+        "tags": ["fhir-r4", "json", "standards-native"]
+      },
+      "origin": "known",
+      "technology": "standard_exchange",
+      "productName": "FHIR R4 JSON exchange",
+      "categoryIds": ["healthcare.interoperability", "pharmaceutical.standards-exchange"],
+      "capabilityMaturity": "pilot_validated",
+      "ingestionModes": ["snapshot", "batch", "event_stream", "api"],
+      "structures": [
+        {
+          "name": "Resource",
+          "kind": "resource",
+          "primaryKeys": ["resourceType", "id"],
+          "fields": [
+            {"path": "resourceType", "dataType": "string", "nullable": false},
+            {"path": "id", "dataType": "string", "nullable": false},
+            {"path": "meta.lastUpdated", "dataType": "instant"}
+          ],
+          "polymorphic": true
+        }
+      ],
+      "interactions": [
+        {
+          "interactionId": "resource-change",
+          "label": "FHIR resource create or update",
+          "operation": "event",
+          "structureRefs": ["Resource"],
+          "eventName": "fhir.resource.changed"
+        }
+      ],
+      "semanticBindings": [
+        {"sourcePath": "Resource.resourceType", "conceptId": "fhir.resource.type", "state": "declared"},
+        {"sourcePath": "Resource.id", "conceptId": "healthcare.record.logical-id", "state": "declared"}
+      ],
+      "mappingRoutes": [
+        {
+          "targetModel": "fhir",
+          "mode": "direct",
+          "readiness": "available",
+          "strategyIds": ["fhir.resource_store"]
+        }
+      ]
+    },
+    {
+      "contract": "source-profile/v1",
+      "artifactRef": {
+        "kind": "source-profile",
+        "id": "exchange.openehr-json",
+        "version": "1.0.0",
+        "digest": "sha256:25879a28eaac9ebccf2935d51c39839405eeb1ad4bbe8a5a4763af2039e95186"
+      },
+      "catalog": {
+        "role": "source_profile",
+        "provenance": "mongodb_curated",
+        "paths": [
+          {"industry": "healthcare", "segments": ["source-categories", "interoperability", "reference-implementations", "openehr-exchange"]}
+        ],
+        "tags": ["openehr", "json", "opt", "standards-native"]
+      },
+      "origin": "known",
+      "technology": "standard_exchange",
+      "productName": "openEHR composition and OPT exchange",
+      "categoryIds": ["healthcare.interoperability"],
+      "capabilityMaturity": "production_validated",
+      "ingestionModes": ["snapshot", "batch", "event_stream", "api"],
+      "structures": [
+        {
+          "name": "COMPOSITION",
+          "kind": "resource",
+          "primaryKeys": ["uid.value"],
+          "fields": [
+            {"path": "uid.value", "dataType": "hier_object_id", "nullable": false},
+            {"path": "archetype_details.template_id.value", "dataType": "template_id", "nullable": false},
+            {"path": "composer", "dataType": "party_proxy"}
+          ],
+          "polymorphic": true
+        },
+        {
+          "name": "OPT",
+          "kind": "object",
+          "primaryKeys": ["template_id.value"],
+          "fields": [
+            {"path": "template_id.value", "dataType": "string", "nullable": false}
+          ]
+        }
+      ],
+      "interactions": [
+        {
+          "interactionId": "composition-commit",
+          "label": "Commit versioned composition",
+          "operation": "event",
+          "structureRefs": ["COMPOSITION", "OPT"],
+          "eventName": "openehr.composition.committed"
+        }
+      ],
+      "semanticBindings": [
+        {"sourcePath": "COMPOSITION.uid.value", "conceptId": "openehr.composition.uid", "state": "declared"},
+        {"sourcePath": "COMPOSITION.archetype_details.template_id.value", "conceptId": "openehr.template.id", "state": "declared"}
+      ],
+      "mappingRoutes": [
+        {
+          "targetModel": "openehr",
+          "mode": "direct",
+          "readiness": "available",
+          "strategyIds": ["openehr.rps_dual", "openehr.rps_dual_ibm"]
+        }
+      ]
+    },
+    {
+      "contract": "source-profile/v1",
+      "artifactRef": {
+        "kind": "source-profile",
+        "id": "app.openmrs.mysql",
+        "version": "1.0.0",
+        "digest": "sha256:86cc6614069751be0c6f67c1ee99ccd731fdb89266534ba0c4d980e17c938058"
+      },
+      "catalog": {
+        "role": "source_profile",
+        "provenance": "mongodb_curated",
+        "paths": [
+          {"industry": "healthcare", "segments": ["source-categories", "ehr", "reference-implementations", "openmrs"]}
+        ],
+        "tags": ["ehr", "openmrs", "mysql", "cdc"]
+      },
+      "origin": "known",
+      "technology": "mysql",
+      "productName": "OpenMRS",
+      "productVersion": "reference-profile",
+      "categoryIds": ["healthcare.ehr"],
+      "capabilityMaturity": "specified",
+      "ingestionModes": ["snapshot", "batch", "cdc", "polling"],
+      "structures": [
+        {"name": "person", "kind": "table", "primaryKeys": ["person_id"], "fields": [{"path": "person_id", "dataType": "integer", "nullable": false}]},
+        {"name": "patient", "kind": "table", "primaryKeys": ["patient_id"], "fields": [{"path": "patient_id", "dataType": "integer", "nullable": false}]},
+        {"name": "visit", "kind": "table", "primaryKeys": ["visit_id"], "fields": [{"path": "visit_id", "dataType": "integer", "nullable": false}]},
+        {"name": "encounter", "kind": "table", "primaryKeys": ["encounter_id"], "fields": [{"path": "encounter_id", "dataType": "integer", "nullable": false}, {"path": "uuid", "dataType": "uuid", "nullable": false}, {"path": "encounter_datetime", "dataType": "datetime", "nullable": false}, {"path": "creator", "dataType": "integer", "nullable": false}]},
+        {"name": "obs", "kind": "table", "primaryKeys": ["obs_id"], "fields": [{"path": "obs_id", "dataType": "integer", "nullable": false}, {"path": "uuid", "dataType": "uuid", "nullable": false}, {"path": "person_id", "dataType": "integer", "nullable": false}, {"path": "encounter_id", "dataType": "integer", "nullable": false}, {"path": "concept_id", "dataType": "integer", "nullable": false}, {"path": "value_numeric", "dataType": "decimal", "nullable": false}, {"path": "obs_datetime", "dataType": "datetime", "nullable": false}]},
+        {"name": "concept_name", "kind": "table", "primaryKeys": ["concept_id", "locale", "concept_name_type"], "fields": [{"path": "concept_id", "dataType": "integer", "nullable": false}, {"path": "name", "dataType": "string", "nullable": false}, {"path": "locale", "dataType": "string", "nullable": false}, {"path": "concept_name_type", "dataType": "string", "nullable": false}]},
+        {"name": "concept_numeric", "kind": "table", "primaryKeys": ["concept_id"], "fields": [{"path": "concept_id", "dataType": "integer", "nullable": false}, {"path": "units", "dataType": "string", "nullable": false}]},
+        {"name": "orders", "kind": "table", "primaryKeys": ["order_id"], "fields": [{"path": "order_id", "dataType": "integer", "nullable": false}]}
+      ],
+      "interactions": [
+        {"interactionId": "patient-registration", "label": "Register or update a patient", "operation": "event", "structureRefs": ["person", "patient"], "eventName": "openmrs.patient.changed"},
+        {"interactionId": "encounter-documentation", "label": "Document an encounter", "operation": "event", "structureRefs": ["visit", "encounter", "obs"], "eventName": "openmrs.encounter.changed"},
+        {"interactionId": "laboratory-result-observed", "label": "Record one numeric laboratory observation", "operation": "event", "structureRefs": ["patient", "encounter", "obs", "concept_name", "concept_numeric"], "eventName": "openmrs.lab.observation.changed"},
+        {"interactionId": "order-placement", "label": "Place or change an order", "operation": "event", "structureRefs": ["orders"], "eventName": "openmrs.order.changed"}
+      ],
+      "semanticBindings": [
+        {"sourcePath": "person.person_id", "conceptId": "healthcare.person.local-id", "state": "declared"},
+        {"sourcePath": "patient.patient_id", "conceptId": "healthcare.patient.local-id", "state": "declared"},
+        {"sourcePath": "encounter.encounter_id", "conceptId": "healthcare.encounter.local-id", "state": "declared"},
+        {"sourcePath": "obs.concept_id", "conceptId": "healthcare.observation.concept", "state": "declared"},
+        {"sourcePath": "obs.value_numeric", "conceptId": "healthcare.observation.numeric-value", "state": "declared"},
+        {"sourcePath": "concept_numeric.units", "conceptId": "healthcare.observation.unit", "state": "declared"}
+      ],
+      "mappingRoutes": [
+        {"targetModel": "openehr", "mode": "curated", "readiness": "proposed", "strategyIds": ["openehr.rps_dual", "openehr.rps_dual_ibm"], "mappingRef": "mapping.openmrs-to-openehr/v1"},
+        {"targetModel": "fhir", "mode": "curated", "readiness": "proposed", "strategyIds": ["fhir.resource_store"], "mappingRef": "mapping.openmrs-to-fhir-r4/v1"}
+      ]
+    },
+    {
+      "contract": "source-profile/v1",
+      "artifactRef": {
+        "kind": "source-profile",
+        "id": "app.bahmni.reference",
+        "version": "1.0.0",
+        "digest": "sha256:7e567bad1d749067d79db8cb81b47e4329c7b78e8d1ae970e62a12553a8e16c1"
+      },
+      "catalog": {
+        "role": "source_profile",
+        "provenance": "mongodb_curated",
+        "paths": [
+          {"industry": "healthcare", "segments": ["source-categories", "hospital-suite", "reference-implementations", "bahmni"]}
+        ],
+        "tags": ["ehr", "lims", "billing", "pacs", "composite-application"]
+      },
+      "origin": "known",
+      "technology": "composite_application",
+      "productName": "Bahmni reference distribution",
+      "productVersion": "reference-profile",
+      "categoryIds": [
+        "healthcare.ehr",
+        "healthcare.laboratory",
+        "healthcare.imaging",
+        "healthcare.revenue-cycle"
+      ],
+      "capabilityMaturity": "specified",
+      "ingestionModes": ["snapshot", "batch", "cdc", "polling", "api"],
+      "structures": [
+        {"name": "OpenMRS clinical", "kind": "object", "primaryKeys": ["patient_id"], "fields": [{"path": "patient_id", "dataType": "integer", "nullable": false}], "polymorphic": true},
+        {"name": "OpenELIS laboratory", "kind": "object", "primaryKeys": ["accession_number"], "fields": [{"path": "accession_number", "dataType": "string", "nullable": false}], "polymorphic": true},
+        {"name": "Odoo billing", "kind": "object", "primaryKeys": ["invoice_id"], "fields": [{"path": "invoice_id", "dataType": "string", "nullable": false}], "polymorphic": true},
+        {"name": "PACS imaging", "kind": "object", "primaryKeys": ["study_instance_uid"], "fields": [{"path": "study_instance_uid", "dataType": "string", "nullable": false}], "polymorphic": true}
+      ],
+      "interactions": [
+        {"interactionId": "care-delivery", "label": "Register and document clinical care", "operation": "event", "structureRefs": ["OpenMRS clinical"], "eventName": "bahmni.clinical.changed"},
+        {"interactionId": "laboratory-result", "label": "Order and result a laboratory test", "operation": "event", "structureRefs": ["OpenMRS clinical", "OpenELIS laboratory"], "eventName": "bahmni.lab.resulted"},
+        {"interactionId": "billing-cycle", "label": "Create and settle a patient invoice", "operation": "event", "structureRefs": ["OpenMRS clinical", "Odoo billing"], "eventName": "bahmni.invoice.changed"},
+        {"interactionId": "imaging-study", "label": "Order and publish an imaging study", "operation": "event", "structureRefs": ["OpenMRS clinical", "PACS imaging"], "eventName": "bahmni.imaging.changed"}
+      ],
+      "semanticBindings": [
+        {"sourcePath": "OpenMRS clinical.patient_id", "conceptId": "healthcare.person.local-id", "state": "declared"},
+        {"sourcePath": "OpenELIS laboratory.accession_number", "conceptId": "healthcare.laboratory.accession", "state": "declared"},
+        {"sourcePath": "Odoo billing.invoice_id", "conceptId": "healthcare.billing.invoice", "state": "declared"},
+        {"sourcePath": "PACS imaging.study_instance_uid", "conceptId": "healthcare.imaging.study-uid", "state": "declared"}
+      ],
+      "mappingRoutes": [
+        {"targetModel": "openehr", "mode": "curated", "readiness": "proposed", "strategyIds": ["openehr.rps_dual", "openehr.rps_dual_ibm"], "mappingRef": "mapping.bahmni-to-openehr/v1"},
+        {"targetModel": "fhir", "mode": "curated", "readiness": "proposed", "strategyIds": ["fhir.resource_store"], "mappingRef": "mapping.bahmni-to-fhir-r4/v1"}
+      ]
+    },
+    {
+      "contract": "source-profile/v1",
+      "artifactRef": {
+        "kind": "source-profile",
+        "id": "exchange.cdisc-dataset-json",
+        "version": "1.0.0",
+        "digest": "sha256:d383ab0994e63f6713dd8a43117a69e82a41059a0c17b1d9b1da933efc77e877"
+      },
+      "catalog": {
+        "role": "source_profile",
+        "provenance": "mongodb_curated",
+        "paths": [
+          {
+            "industry": "pharmaceutical",
+            "segments": [
+              "source-categories",
+              "standards-exchange",
+              "reference-implementations",
+              "cdisc-dataset-json"
+            ]
+          }
+        ],
+        "tags": [
+          "cdisc",
+          "dataset-json",
+          "study-data",
+          "standards-native"
+        ]
+      },
+      "origin": "known",
+      "technology": "standard_exchange",
+      "productName": "CDISC Dataset-JSON 1.1 exchange",
+      "categoryIds": [
+        "pharmaceutical.standards-exchange"
+      ],
+      "capabilityMaturity": "specified",
+      "ingestionModes": [
+        "snapshot",
+        "batch",
+        "api"
+      ],
+      "structures": [
+        {
+          "name": "Dataset-JSON",
+          "kind": "file",
+          "primaryKeys": [
+            "studyOID",
+            "name"
+          ],
+          "fields": [
+            {
+              "path": "datasetJSONVersion",
+              "dataType": "string",
+              "nullable": false
+            },
+            {
+              "path": "studyOID",
+              "dataType": "string",
+              "nullable": false
+            },
+            {
+              "path": "metaDataVersionOID",
+              "dataType": "string"
+            },
+            {
+              "path": "itemGroupOID",
+              "dataType": "string"
+            },
+            {
+              "path": "name",
+              "dataType": "string",
+              "nullable": false
+            },
+            {
+              "path": "columns",
+              "dataType": "array",
+              "nullable": false,
+              "repeated": true
+            },
+            {
+              "path": "rows",
+              "dataType": "array",
+              "nullable": false,
+              "repeated": true
+            }
+          ],
+          "polymorphic": true
+        }
+      ],
+      "interactions": [
+        {
+          "interactionId": "dataset-snapshot-intake",
+          "label": "Receive a Dataset-JSON study dataset",
+          "operation": "event",
+          "structureRefs": [
+            "Dataset-JSON"
+          ],
+          "eventName": "cdisc.dataset-json.received"
+        }
+      ],
+      "semanticBindings": [
+        {
+          "sourcePath": "Dataset-JSON.studyOID",
+          "conceptId": "pharmaceutical.study.id",
+          "state": "declared"
+        },
+        {
+          "sourcePath": "Dataset-JSON.itemGroupOID",
+          "conceptId": "cdisc.dataset.item-group",
+          "state": "declared"
+        },
+        {
+          "sourcePath": "Dataset-JSON.name",
+          "conceptId": "cdisc.dataset.name",
+          "state": "declared"
+        }
+      ],
+      "mappingRoutes": [
+        {
+          "targetModel": "cdisc",
+          "mode": "direct",
+          "readiness": "available",
+          "strategyIds": [
+            "cdisc.sdr"
+          ]
+        }
+      ]
+    }
+  ]
+}

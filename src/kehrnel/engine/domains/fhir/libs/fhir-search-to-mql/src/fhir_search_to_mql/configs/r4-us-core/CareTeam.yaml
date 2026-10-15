@@ -1,0 +1,139 @@
+resource: CareTeam
+fhir_version: R4
+profile: us-core
+
+search_parameters:
+  status:
+    type: token
+    description: "proposed | active | suspended | inactive | entered-in-error"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  patient:
+    type: reference
+    description: "Who care team is for"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  subject:
+    type: reference
+    description: "Who care team is for"
+    fields:
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  encounter:
+    type: reference
+    description: "Encounter created as part of"
+    fields:
+      - field: "_search.encounterId"
+        referenceType: id
+      - field: "encounter.reference"
+        referenceType: full
+
+  participant:
+    type: reference
+    description: "Who is involved"
+    fields:
+      - field: "_search.participantId"
+        referenceType: id
+
+  _id:
+    type: token
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+  _profile:
+    type: uri
+    description: "US Core profile URL this resource conforms to"
+    fields:
+      - field: "meta.profile"
+
+denormalization:
+  subject:
+    source: subject
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: subject.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+      - source_path: subject.reference
+        target_field: subjectId
+        datatype: string
+        extractType: id
+
+  encounter:
+    source: encounter
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: encounter.reference
+        target_field: encounterId
+        datatype: string
+        extractType: id
+
+  participant:
+    source: participant
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: participant[*].member.reference
+        target_field: participantId
+        datatype: array[string]
+        extractType: id
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - subject
+        reference_type: Patient
+        include_self: false
+        datatype: array[string]
+
+  meta_profile:
+    source: meta
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: profile
+        target_field: meta_profile
+        datatype: array[string]
+
+compartments:
+  precomputed:
+    - Patient
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_r4_ct_compartment_patient
+      sparse: true
+  - fields:
+      - "status": 1
+    options:
+      name: idx_r4_ct_status
+  - fields:
+      - "meta.profile": 1
+    options:
+      name: idx_r4_us_ct_meta_profile
+      sparse: true

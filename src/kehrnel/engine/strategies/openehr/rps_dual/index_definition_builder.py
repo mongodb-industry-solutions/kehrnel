@@ -9,6 +9,9 @@ from kehrnel.engine.strategies.openehr.rps_dual.config import (
     build_flattener_config,
 )
 from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
+from kehrnel.engine.strategies.openehr.rps_dual.id_encoding import (
+    atlas_search_type_for_id_encoding,
+)
 
 
 def _normalize_mapping_payload(payload: Any) -> Any:
@@ -86,15 +89,42 @@ def _assign_field(tree: Dict[str, Any], parts: List[str], leaf: Dict[str, Any]) 
     _assign_field(node["fields"], parts[1:], leaf)
 
 
+def flatten_search_index_field_types(definition: Any) -> Dict[str, List[str]]:
+    """Return every declared Atlas Search path and its mapped field types."""
+    if not isinstance(definition, dict):
+        return {}
+    mappings = definition.get("mappings")
+    fields = mappings.get("fields") if isinstance(mappings, dict) else None
+    if not isinstance(fields, dict):
+        return {}
+
+    flattened: Dict[str, Set[str]] = {}
+
+    def visit(node_fields: Dict[str, Any], prefix: str = "") -> None:
+        for field_name, raw_spec in node_fields.items():
+            path = f"{prefix}.{field_name}" if prefix else str(field_name)
+            specs = raw_spec if isinstance(raw_spec, list) else [raw_spec]
+            for spec in specs:
+                if not isinstance(spec, dict):
+                    continue
+                field_type = spec.get("type")
+                if isinstance(field_type, str) and field_type:
+                    flattened.setdefault(path, set()).add(field_type)
+                children = spec.get("fields")
+                if isinstance(children, dict):
+                    visit(children, path)
+
+    visit(fields)
+    return {path: sorted(types) for path, types in sorted(flattened.items())}
+
+
 def _metadata_id_def(strategy_cfg: RPSDualConfig, field_name: str) -> Dict[str, Any]:
     policy = "string"
     if field_name == strategy_cfg.fields.document.ehr_id:
         policy = str(strategy_cfg.ids.ehr_id or "string").strip().lower()
-    if policy in {"uuid", "uuidbin", "uuid_bin"}:
-        return {"type": "uuid"}
-    if policy == "objectid":
-        return {"type": "objectId"}
-    return {"type": "token"}
+    elif field_name == strategy_cfg.fields.document.comp_id:
+        policy = str(strategy_cfg.ids.composition_id or "string").strip().lower()
+    return {"type": atlas_search_type_for_id_encoding(policy)}
 
 
 def _archetype_id_def(strategy_cfg: RPSDualConfig) -> Dict[str, Any]:
@@ -131,6 +161,11 @@ def _leaf_defs_for_path(path: str, rm_type: Optional[str], strategy_cfg: RPSDual
         return [{"type": "date"}]
 
     if last == "value":
+        # A terminology identifier is an exact namespace discriminator, even
+        # when the enclosing ELEMENT is a DV_CODED_TEXT.  Treating it as
+        # analyzed display text would make code-system correlation unsafe.
+        if parent == "terminology_id":
+            return [{"type": "token"}]
         if rm_upper in {"DV_DATE", "DV_DATE_TIME", "DV_TIME"}:
             return [{"type": "date"}]
         if rm_upper in {"DV_QUANTITY", "DV_COUNT", "DV_ORDINAL", "DV_PROPORTION"}:
@@ -266,6 +301,7 @@ async def build_search_index_definition_from_mappings(
 
     root_fields: Dict[str, Any] = {
         strategy_cfg.fields.document.ehr_id: _metadata_id_def(strategy_cfg, strategy_cfg.fields.document.ehr_id),
+        strategy_cfg.fields.document.comp_id: _metadata_id_def(strategy_cfg, strategy_cfg.fields.document.comp_id),
         strategy_cfg.fields.document.tid: {"type": "token"},
         strategy_cfg.fields.document.sort_time: {"type": "date"},
         nodes_field: {
@@ -303,6 +339,12 @@ async def build_search_index_definition_from_mappings(
             "path_field": path_field,
             "data_field": data_field,
             "sort_field": strategy_cfg.fields.document.sort_time,
+            "sort_fields": sorted(
+                {
+                    strategy_cfg.fields.document.sort_time,
+                    strategy_cfg.fields.document.comp_id,
+                }
+            ),
             "sources": sorted(sources),
             "apply_shortcuts": bool(flattener.apply_shortcuts and flattener.shortcut_keys),
         },

@@ -3,6 +3,7 @@
 import json
 import logging
 import re
+from copy import deepcopy
 from pathlib import Path
 from datetime import timezone
 from typing import Any, Dict, List, Tuple, Optional, Union
@@ -12,8 +13,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from .exceptions_g import UnknownCodeError
 from .encoding import PathCodec
 import jsonschema
-from bson import Binary, ObjectId
-import uuid
+from kehrnel.engine.strategies.openehr.rps_dual.id_encoding import encode_id
 
 # Constants from original ingestionOptimized.py
 LOCATABLE = {
@@ -27,7 +27,7 @@ LOCATABLE = {
 NON_ARCHETYPED_RM = {"HISTORY", "ISM_TRANSITION", "EVENT_CONTEXT"}
 LOC_HINT = {"archetype_node_id", "archetype_details"}
 SKIP_ATTRS = {}
-_AT_ROOT = re.compile(r"^at0*([1-9][0-9]*)$", re.I)
+_AT_ROOT = re.compile(r"^at([0-9]+)$", re.I)
 _AT_DOTTED = re.compile(r"^at[0-9]+(?:\.[0-9]{1,4})+$", re.I)
 _START_DOTTED = -10_000
 
@@ -117,12 +117,13 @@ class CompositionFlattener:
         self.id_encoding = (config.get("ids") or {}) if isinstance(config.get("ids"), dict) else {}
         self.path_codec = PathCodec(separator=self.path_separator)
         self.template_fields: Dict[str, List[dict]] = {}
+        self.template_provenance: Dict[str, Dict[str, str]] = {}
         self.compiled_template_rules: Dict[str, List[dict]] = {}
         self.catalog_mappings_spec: Optional[Dict[str, Any]] = None
 
         # Load mappings synchronously from file or inline content
         self._load_mappings(mappings_path, mappings_content)
-    
+
     @classmethod
     async def create(
         cls,
@@ -170,22 +171,7 @@ class CompositionFlattener:
         # Important: if no analytics/mappings exist for this template, do not produce a search document.
         collections_cfg = (self.config.get("collections") or {}) if isinstance(self.config, dict) else {}
         search_enabled = bool((collections_cfg.get("search") or {}).get("enabled", True))
-        rules = self._compiled_rules_for_template(template_name)
-        sn: List[dict] = []
-        if search_enabled and rules:
-            for node in cn:
-                path_val = node.get(self.cf_path)
-                dblock = node.get(self.cf_data, {})
-                if not path_val:
-                    continue
-                parts = str(path_val).split(self.path_separator)
-                pc_set = {self.path_separator.join(parts[:i]) for i in range(1, len(parts) + 1)}
-
-                for rule in rules:
-                    if self._rule_matches(rule, pc_set, parts, dblock):
-                        slim = self._apply_rule(rule, node, dblock)
-                        if slim:
-                            sn.append(slim)
+        sn = self._project_search_nodes(template_name, cn) if search_enabled else []
 
         # STEP 3: Clean up ancestry markers (used only during processing)
         for node in cn:
@@ -238,6 +224,101 @@ class CompositionFlattener:
 
         return base_doc, search_doc
 
+    def _project_search_nodes(self, template_name: str, nodes: List[dict]) -> List[dict]:
+        """Project flattened composition nodes through the active mapping rules."""
+        rules = self._compiled_rules_for_template(template_name)
+        if not rules:
+            return []
+
+        search_nodes: List[dict] = []
+        for node in nodes:
+            if not isinstance(node, dict):
+                continue
+            path_val = node.get(self.cf_path)
+            dblock = node.get(self.cf_data, {})
+            if not path_val or not isinstance(dblock, dict):
+                continue
+            parts = str(path_val).split(self.path_separator)
+            pc_set = {
+                self.path_separator.join(parts[:i])
+                for i in range(1, len(parts) + 1)
+            }
+
+            for rule in rules:
+                if self._rule_matches(rule, pc_set, parts, dblock):
+                    slim = self._apply_rule(rule, node, dblock)
+                    if slim:
+                        search_nodes.append(slim)
+        return search_nodes
+
+    def project_search_document(self, base_doc: dict) -> Optional[dict]:
+        """Rebuild one slim-search document from an already flattened base document.
+
+        Persisted base documents have already passed through key/value shortcut
+        encoding.  The projection rules are expressed against canonical openEHR
+        field names, so this method reverses those shortcuts before running the
+        same rule engine used during normal ingest, then reapplies the configured
+        search encoding to produce byte-for-byte compatible sidecars.
+        """
+        if not isinstance(base_doc, dict):
+            raise ValueError("Flattened composition must be a document")
+
+        template_name = base_doc.get(self.cf_tmpl)
+        composition_id = base_doc.get(self.cf_cid, base_doc.get("_id"))
+        ehr_id = base_doc.get(self.cf_ehr)
+        stored_nodes = base_doc.get(self.cf_nodes)
+
+        if not isinstance(template_name, str) or not template_name.strip():
+            raise ValueError(f"Flattened composition {composition_id!r} has no template id")
+        if composition_id is None:
+            raise ValueError("Flattened composition has no composition id")
+        if ehr_id is None:
+            raise ValueError(f"Flattened composition {composition_id!r} has no EHR id")
+        if not isinstance(stored_nodes, list):
+            raise ValueError(f"Flattened composition {composition_id!r} has no node array")
+
+        nodes = []
+        for stored_node in stored_nodes:
+            node = (
+                self._expand_sc_deep(stored_node)
+                if self.apply_shortcuts
+                else deepcopy(stored_node)
+            )
+            if isinstance(node, dict) and "_anc" not in node:
+                path_value = node.get(self.cf_path)
+                if path_value is not None:
+                    parts = str(path_value).split(self.path_separator)
+                    ancestors: list[Any] = []
+                    for part in reversed(parts[1:]):
+                        try:
+                            ancestors.append(int(part))
+                        except (TypeError, ValueError):
+                            ancestors.append(part)
+                    node["_anc"] = tuple(ancestors)
+            nodes.append(node)
+        search_nodes = self._project_search_nodes(template_name, nodes)
+        if not search_nodes:
+            return None
+
+        search_doc = {
+            "_id": composition_id,
+            self.sf_ehr: ehr_id,
+            self.sf_cid: composition_id,
+            self.sf_tmpl: template_name,
+            self.sf_nodes: search_nodes,
+        }
+        committed = base_doc.get(self.cf_time_committed)
+        if committed is not None:
+            search_doc[self.sf_sort_time] = committed
+
+        if self.apply_shortcuts:
+            search_doc = self._apply_sc_deep(search_doc)
+        return self._apply_field_map_to_doc(
+            search_doc,
+            root_map=self.field_map.get("search", {}),
+            node_map=self.field_map.get("search_nodes", {}),
+        )
+
 
     async def _load_codes_from_db(self):
         if not self.use_codes_db:
@@ -259,11 +340,11 @@ class CompositionFlattener:
                     if isinstance(vers, dict):
                         for ver, code in vers.items():
                             ar_book[f"{rm}.{name}.{ver}"] = code
-        
+
         at_book = {}
         for k, v in (doc.get("at") or {}).items():
             at_book[k] = v
-        
+
         self.code_book["ar_code"] = ar_book
         self.code_book["at"] = at_book
         if isinstance(doc.get("_max"), int):
@@ -302,10 +383,10 @@ class CompositionFlattener:
             parts = sid.split(".")
             rm, name, ver = parts[0], parts[1] if len(parts) > 1 else "", ".".join(parts[2:])
             nested.setdefault(rm, {}).setdefault(name, {})[ver] = code
-        
+
         if isinstance(self.seq.get("ar_code"), int):
             nested["_max"] = max(max_code, self.seq.get("ar_code", 0))
-        
+
         await codes_col.replace_one(
             {"_id": self.codes_document_id},
             {"_id": self.codes_document_id, **nested},
@@ -368,6 +449,7 @@ class CompositionFlattener:
         self.raw_rules = {}
         self.simple_fields = {}
         self.template_fields = {}
+        self.template_provenance = {}
         self.compiled_template_rules = {}
         self.catalog_mappings_spec = None
 
@@ -400,6 +482,13 @@ class CompositionFlattener:
             return
         self.template_fields[tid] = fields
         self.simple_fields[tid] = fields
+        provenance = template_doc.get("provenance")
+        if isinstance(provenance, dict) and provenance:
+            self.template_provenance[tid] = {
+                str(key): str(value)
+                for key, value in provenance.items()
+                if value is not None
+            }
 
     def _coerce_template_mapping_doc(self, doc: Any) -> Optional[Dict[str, Any]]:
         if not isinstance(doc, dict):
@@ -426,10 +515,42 @@ class CompositionFlattener:
         if not template_id:
             return None
 
-        return {
+        metadata = doc.get("metadata") if isinstance(doc.get("metadata"), dict) else {}
+        provenance = (
+            candidate.get("provenance")
+            if isinstance(candidate.get("provenance"), dict)
+            else doc.get("provenance")
+            if isinstance(doc.get("provenance"), dict)
+            else metadata.get("provenance")
+            if isinstance(metadata.get("provenance"), dict)
+            else {}
+        )
+        source_digest = (
+            provenance.get("templateSourceDigest")
+            or provenance.get("sourceDigest")
+            or candidate.get("templateSourceDigest")
+            or candidate.get("sourceDigest")
+            or metadata.get("templateSourceDigest")
+            or metadata.get("sourceDigest")
+        )
+        catalog_digest = (
+            provenance.get("catalogDigest")
+            or candidate.get("catalogDigest")
+            or metadata.get("catalogDigest")
+        )
+        normalized_provenance = {}
+        if isinstance(source_digest, str) and source_digest.strip():
+            normalized_provenance["templateSourceDigest"] = source_digest.strip()
+        if isinstance(catalog_digest, str) and catalog_digest.strip():
+            normalized_provenance["catalogDigest"] = catalog_digest.strip()
+
+        result = {
             "templateId": str(template_id).strip(),
             "fields": fields,
         }
+        if normalized_provenance:
+            result["provenance"] = normalized_provenance
+        return result
 
     def _extract_catalog_mappings_spec(self, data: Any) -> Optional[Dict[str, Any]]:
         if not isinstance(data, dict):
@@ -628,14 +749,14 @@ class CompositionFlattener:
         sid_lower = sid.lower()
         if key == "ar_code" and sid_lower.startswith("at"):
             return self._at_code_to_int(sid)
-        
+
         book = self.code_book.setdefault(key, {})
         if sid in book:
             return book[sid]
 
         if self.role != "primary":
             raise UnknownCodeError(key, sid)
-        
+
         if key == "ar_code":
             if self.ar_strategy == "short_prefix":
                 code = self._encode_ar_short(sid)
@@ -798,7 +919,7 @@ class CompositionFlattener:
                         self._walk(itm, new_anc_codes, new_anc_pi, cn, kp_chain=base_kp + [k_long], list_index=idx)
 
     # --- Utility functions converted to private methods ---
-    
+
     @staticmethod
     def _archetype_id(obj: dict) -> str | None:
         ad = obj.get("archetype_details", {})
@@ -835,7 +956,7 @@ class CompositionFlattener:
         Everything else stays embedded in its parent.
         """
         return isinstance(obj, dict) and "archetype_node_id" in obj
-        
+
     def _sc_key(self, key: str) -> str:
         """Return shortcut key if available, otherwise return original key."""
         return self.shortcut_keys.get(key, key)
@@ -849,7 +970,7 @@ class CompositionFlattener:
     def _get_rules_for(self, template: int, original_num: str) -> list[dict]:
         if template in self.active_rules:
             return self.active_rules[template]
-        
+
         raw_block = self.raw_rules.get(original_num, {})
         if not raw_block:
             # Try version-flexible matching as fallback
@@ -858,14 +979,14 @@ class CompositionFlattener:
                 if rule_key.startswith(base_name + '.v'):
                     raw_block = self.raw_rules[rule_key]
                     break
-        
+
         compiled: list[dict] = []
         for r in raw_block.get("rules", []):
             w = r["when"]
             p_raw = w.get("pathChain", [])
             c_raw = w.get("contains", [])
             extra = [(k, v) for k, v in w.items() if k not in ("pathChain", "contains")]
-            
+
             try:
                 compiled_rule = {
                     "_path": tuple(self._seg_to_int(x) for x in p_raw),
@@ -968,7 +1089,7 @@ class CompositionFlattener:
                     {"selector": selector, "is_archetype": selector.upper().startswith("OPENEHR-EHR-")}
                 )
         return selectors
-        
+
     def _seg_to_int(self, seg: str | int) -> Any:
         if isinstance(seg, int): return seg
         if isinstance(seg, str):
@@ -985,6 +1106,22 @@ class CompositionFlattener:
             return self.shortcut_vals[o]
         return o
 
+    def _expand_sc_deep(self, value: Any) -> Any:
+        """Reverse configured shortcuts for reprojection of persisted base nodes."""
+        inverse_keys = {short: original for original, short in self.shortcut_keys.items()}
+        inverse_values = {short: original for original, short in self.shortcut_vals.items()}
+
+        def expand(item: Any) -> Any:
+            if isinstance(item, dict):
+                return {inverse_keys.get(key, key): expand(child) for key, child in item.items()}
+            if isinstance(item, list):
+                return [expand(child) for child in item]
+            if isinstance(item, str):
+                return inverse_values.get(item, item)
+            return item
+
+        return expand(value)
+
     @staticmethod
     def _dpath_get(obj: Any, path: str) -> Any | None:
         parts = path.split(".")
@@ -1000,7 +1137,7 @@ class CompositionFlattener:
                 return coll[0] if len(coll) == 1 else coll
             return None
         return walk(obj, 0)
-        
+
     def _rule_matches(self, rule, pc_set, parts, dblock) -> bool:
         if rule.get("_root_only") and len(parts) != 1:
             return False
@@ -1013,7 +1150,7 @@ class CompositionFlattener:
                     j += 1
                     if j == len(rule["_cont"]): break
             if j != len(rule["_cont"]): return False
-        
+
         # Wrap dblock to match "data.value" expectation in rules
         if any(self._dpath_get({"data": dblock}, path) != val_req for path, val_req in rule["_extra"]):
             return False
@@ -1097,9 +1234,9 @@ class CompositionFlattener:
         Writes to 'slim' using Search Keys (sf_*).
         """
         slim: dict = {}
-        
+
         # 1. Path
-        if self.sf_path and "p" in rule["copy"]: 
+        if self.sf_path and "p" in rule["copy"]:
              slim[self.sf_path] = self._encode_path_for_profile(node.get(self.cf_path), self.search_encoding_profile)
 
         # 2. Archetype Path
@@ -1121,9 +1258,9 @@ class CompositionFlattener:
             if expr.startswith("data."):
                 sub = expr[5:] # Remove "data."
                 val = self._dpath_get(dblock, sub)
-                
+
                 if val is None: continue
-                
+
                 cur = slim.setdefault(self.sf_data, {})
                 path_parts = sub.split(".")
                 for part in path_parts[:-1]:
@@ -1163,21 +1300,11 @@ class CompositionFlattener:
         return self.path_codec.encode_path_from_string(str(path), profile)
 
     def _encode_id(self, value: Any, field: str) -> Any:
-        policy = (self.id_encoding.get(field) or "string").lower()
-        if policy == "string":
-            return str(value)
-        if policy == "objectid":
-            try:
-                return ObjectId(str(value))
-            except Exception:
-                return value
-        if policy in ("uuid", "uuidbin", "uuid_bin"):
-            try:
-                u = uuid.UUID(str(value))
-                return Binary.from_uuid(u)
-            except Exception:
-                return value
-        return value
+        return encode_id(
+            value,
+            self.id_encoding.get(field),
+            field_name=field,
+        )
 
     def _refresh_codec(self):
         """Refresh path codec with current dictionaries and shortcuts."""
@@ -1197,7 +1324,7 @@ class CompositionFlattener:
             except Exception:
                 return value
         return value
-        
+
     def _to_bson_dates(self, obj):
         if isinstance(obj, dict):
             t0 = obj.get("_type")

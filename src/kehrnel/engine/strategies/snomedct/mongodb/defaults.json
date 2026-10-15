@@ -12,6 +12,10 @@
   "collections": {
     "concepts": "snomed_concepts",
     "terms": "snomed_terms",
+    "value_sets": "snomed_value_sets",
+    "grounding_reviews": "snomed_grounding_reviews",
+    "gold_notes": "snomed_gold_notes",
+    "usage_events": "snomed_usage_events",
     "sidecar_enabled": true
   },
   "languages": ["es", "en"],
@@ -33,6 +37,26 @@
     "max_limit": 100,
     "default_language": "es",
     "use_sidecar": true,
-    "lexical_strategy": "normalized_regex"
+    "lexical_strategy": "normalized_regex",
+    "scope_max_ids": 20000,
+    "scope_cache_ttl_seconds": 86400,
+    "scope_cache_max_entries": 5000
+  },
+  "retrieval": {
+    "vector_index": "",
+    "vector_path": "embedText",
+    "candidate_pool": 40,
+    "rrf_k": 60,
+    "rerank_pool": 40
+  },
+  "clinical": {
+    "max_phrases": 20,
+    "per_phrase_limit": 5,
+    "llm_extraction": true,
+    "accept_confidence": 0.68
+  },
+  "grounding": {
+    "store_source_text": false,
+    "max_codings_per_review": 50
   }
 }

@@ -17,6 +17,7 @@ from fhir_search_to_mql.core.exceptions import (
     MissingConfigurationError,
 )
 from fhir_search_to_mql.core.constants import DEFAULT_SEARCH_TARGET
+from fhir_search_to_mql.temporal import build_date_projections
 
 # Import extractors from extractors package
 from fhir_search_to_mql.denormalizer.extractors import (
@@ -99,6 +100,8 @@ class ResourceDenormalizer:
         self,
         config_path: Optional[str] = None,
         config_dir: Optional[Any] = None,
+        fhir_version: Optional[str] = None,
+        profile: Optional[str] = None,
     ):
         """
         Initialize the resource denormalizer.
@@ -120,6 +123,8 @@ class ResourceDenormalizer:
         self.config_loader = ConfigLoader(
             config_path=config_path, config_dir=config_dir
         )
+        self.fhir_version = fhir_version
+        self.profile = profile
         self._extractor_cache: Dict[str, Any] = {}
     
     def denormalize(
@@ -167,7 +172,7 @@ class ResourceDenormalizer:
             return result
 
         try:
-            config = self.config_loader.get_config(resource_type)
+            config = self.config_loader.get_config(resource_type, fhir_version=self.fhir_version, profile=self.profile)
         except MissingConfigurationError:
             # No configuration → return unchanged. This is a normal
             # outcome for resources we don't denormalize (e.g.
@@ -241,6 +246,13 @@ class ResourceDenormalizer:
         for bucket_name, bucket_value in buckets.items():
             if bucket_value:
                 result[bucket_name] = bucket_value
+
+        # Keep canonical FHIR temporal strings untouched and create internal
+        # BSON-date intervals after all configured Period/Timing projections
+        # have been materialized.
+        date_projections = build_date_projections(result, config)
+        if date_projections:
+            result.setdefault(DEFAULT_SEARCH_TARGET, {})["_dates"] = date_projections
 
         return result
 
@@ -604,15 +616,10 @@ class ResourceDenormalizer:
                             {'$set': {'_search': denormalized.get('_search', {})}}
                         )
                     else:
-                        # Collect results
                         results.append(denormalized)
                     
                     processed += 1
                     
-                    # Progress tracking
-                    if processed % batch_size == 0:
-                        print(f"Progress: {processed}/{total} documents processed")
-                
                 except Exception as e:
                     print(f"Warning: Failed to denormalize document {resource.get('_id')}: {str(e)}")
                     continue

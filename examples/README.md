@@ -16,7 +16,7 @@ CLI-oriented automation skeleton for pack validation and command-driven workflow
 - `examples/cli/full_workflow_console.sh`
 End-to-end workflow smoke test using unified CLI primitives (`context`, `resource`, `op`, `run`) plus local template flow.
 
-- **FHIR (`fhir.clinical_cdr`)** — pack docs and API sample JSON: [`src/kehrnel/engine/strategies/fhir/clinical_cdr/README.md`](../src/kehrnel/engine/strategies/fhir/clinical_cdr/README.md) (`specification/` for JSON files).
+- **FHIR (`fhir.resource_store`)** — pack docs and API sample JSON: [`src/kehrnel/engine/strategies/fhir/resource_store/README.md`](../src/kehrnel/engine/strategies/fhir/resource_store/README.md) (`specification/` for JSON files).
 
 ## Quick Usage
 

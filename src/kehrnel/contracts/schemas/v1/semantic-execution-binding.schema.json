@@ -1,0 +1,221 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "BindingConsumerKind": {
+      "enum": [
+        "preparation",
+        "materialization",
+        "query_planner",
+        "executor"
+      ],
+      "title": "BindingConsumerKind",
+      "type": "string"
+    },
+    "SemanticBindingConsumer": {
+      "additionalProperties": false,
+      "properties": {
+        "componentRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "consumerId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Consumerid",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/BindingConsumerKind"
+        }
+      },
+      "required": [
+        "consumerId",
+        "kind",
+        "componentRef"
+      ],
+      "title": "SemanticBindingConsumer",
+      "type": "object"
+    },
+    "SemanticPathBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "correlationKey": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Correlationkey"
+        },
+        "indexRefs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Indexrefs",
+          "type": "array"
+        },
+        "physicalPath": {
+          "minLength": 1,
+          "title": "Physicalpath",
+          "type": "string"
+        },
+        "reconstructionRule": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reconstructionrule"
+        },
+        "repeated": {
+          "default": false,
+          "title": "Repeated",
+          "type": "boolean"
+        },
+        "semanticPath": {
+          "minLength": 1,
+          "title": "Semanticpath",
+          "type": "string"
+        },
+        "temporalPolicy": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Temporalpolicy"
+        },
+        "unitPolicy": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unitpolicy"
+        },
+        "valueType": {
+          "minLength": 1,
+          "title": "Valuetype",
+          "type": "string"
+        }
+      },
+      "required": [
+        "semanticPath",
+        "physicalPath",
+        "valueType"
+      ],
+      "title": "SemanticPathBinding",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:semantic-execution-binding",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "consumers": {
+      "items": {
+        "$ref": "#/$defs/SemanticBindingConsumer"
+      },
+      "minItems": 1,
+      "title": "Consumers",
+      "type": "array"
+    },
+    "contract": {
+      "const": "semantic-execution-binding/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "pathBindings": {
+      "items": {
+        "$ref": "#/$defs/SemanticPathBinding"
+      },
+      "minItems": 1,
+      "title": "Pathbindings",
+      "type": "array"
+    },
+    "queryInteractionIds": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Queryinteractionids",
+      "type": "array"
+    },
+    "semanticAuthorityRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "strategyRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "writerInteractionIds": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Writerinteractionids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "semanticAuthorityRef",
+    "strategyRef",
+    "pathBindings",
+    "consumers"
+  ],
+  "title": "SemanticExecutionBindingV1",
+  "type": "object"
+}

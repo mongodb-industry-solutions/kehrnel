@@ -1,5 +1,6 @@
 # src/kehrnel/api/compatibility/v1/ingest/repository.py
 
+from datetime import datetime, timezone
 from typing import Any, Dict, Optional
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from pymongo.errors import PyMongoError
@@ -7,6 +8,56 @@ from bson import ObjectId
 import logging
 
 logger = logging.getLogger(__name__)
+
+_PROJECTION_STATE_COLLECTION = "_kehrnel_projection_state"
+_RPS_DUAL_STRATEGY_ID = "openehr.rps_dual"
+
+
+async def _invalidate_matching_projection_readiness(
+    db: AsyncIOMotorDatabase,
+    *,
+    source_collection: str,
+    target_collection: str,
+    session: Any,
+    reason: str,
+) -> None:
+    """Make every readiness receipt for this physical projection fail closed.
+
+    Legacy HTTP ingest does not carry an environment id, so the physical
+    source/target collection pair is the narrowest safe tenant-local identity.
+    The update participates in the caller's MongoDB transaction: either both
+    the data write and the fence commit, or neither does.
+    """
+
+    if not source_collection or not target_collection:
+        return
+    now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    await db[_PROJECTION_STATE_COLLECTION].update_many(
+        {
+            "strategyId": _RPS_DUAL_STRATEGY_ID,
+            "sourceCollection": source_collection,
+            "targetCollection": target_collection,
+        },
+        {
+            "$set": {
+                "projection.state": "stale",
+                "projection.complete": False,
+                "projection.completedAt": None,
+                "reconciliation.safe": False,
+                "reconciliation.complete": False,
+                "reconciliation.sourceToTargetCoverage": "unverified",
+                "reconciliation.targetToSourceCoverage": "unverified",
+                "invalidation": {
+                    "reason": reason,
+                    "invalidatedAt": now,
+                    "writer": "legacy-http",
+                },
+            },
+            "$inc": {"mutationSequence": 1},
+        },
+        session=session,
+    )
+
 
 class IngestionRepository:
     """
@@ -33,7 +84,7 @@ class IngestionRepository:
             target_db[config["target"]["search_collection"]] if self.options.get("search_enabled", True) else None
         )
 
-        # Source collection for canonical data 
+        # Source collection for canonical data
         source_collection_name = config["source"]["canonical_compositions_collection"]
         self.source_compositions_coll = source_db[source_collection_name]
 
@@ -76,7 +127,7 @@ class IngestionRepository:
         if self.store_canonical and self.canonical_coll and raw_canonical_doc:
             canonical_doc = dict(raw_canonical_doc)
             canonical_doc["_id"] = new_id
-        
+
         async with await self.client.start_session() as session:
             async with session.start_transaction():
                 try:
@@ -90,9 +141,16 @@ class IngestionRepository:
                     # 3. Optionally store canonical
                     if canonical_doc:
                         await self.canonical_coll.insert_one(canonical_doc, session=session)
+
+                    await _invalidate_matching_projection_readiness(
+                        self.target_db,
+                        source_collection=self.config["target"]["compositions_collection"],
+                        target_collection=self.config["target"].get("search_collection", ""),
+                        session=session,
+                        reason="legacy_http_flattened_insert",
+                    )
                 except PyMongoError as e:
                     logger.error(f"Flattened composition insertion transaction failed: {e}")
                     # Re-raise for the service layer to handle
                     raise
         return str(new_id)
-        

@@ -4,6 +4,7 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Any, Dict, List, Optional, Tuple
 
+from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.domains.openehr.aql.ir import AqlQueryIR
 from kehrnel.engine.strategies.openehr.rps_dual.config import RPSDualConfig, build_schema_config
 from kehrnel.engine.strategies.openehr.rps_dual.query.ast_adapter import adapt_ir_to_ast
@@ -28,6 +29,50 @@ from kehrnel.persistence import get_default_strategy, load_strategy_from_json
 
 
 _SHARED_RESOLVER_CACHE_LIMIT = 8
+
+
+def _order_by_columns(ast_doc: Dict[str, Any]) -> Any:
+    order_by = ast_doc.get("orderBy")
+    if not isinstance(order_by, dict):
+        return order_by
+    return order_by.get("columns", order_by)
+
+
+def _pipeline_has_deterministic_ordering(pipeline: List[Dict[str, Any]]) -> bool:
+    for stage in pipeline:
+        if not isinstance(stage, dict):
+            continue
+        sort_spec = stage.get("$sort")
+        if isinstance(sort_spec, dict) and sort_spec:
+            return True
+        search_spec = stage.get("$search")
+        if (
+            isinstance(search_spec, dict)
+            and isinstance(search_spec.get("sort"), dict)
+            and search_spec["sort"]
+        ):
+            return True
+    return False
+
+
+def _assert_order_by_was_compiled(
+    ast_doc: Dict[str, Any],
+    pipeline: List[Dict[str, Any]],
+) -> None:
+    columns = _order_by_columns(ast_doc)
+    if not columns:
+        return
+    if _pipeline_has_deterministic_ordering(pipeline):
+        return
+    raise KehrnelError(
+        code="AQL_ORDER_BY_UNSUPPORTED",
+        status=400,
+        message=(
+            "The AQL ORDER BY clause could not be represented by a deterministic "
+            "MongoDB sort stage."
+        ),
+        details={"orderBy": columns},
+    )
 
 
 def extract_ehr_id(ir: AqlQueryIR) -> str | None:
@@ -263,6 +308,8 @@ async def build_query_pipeline_from_ast(
     compatibility_match: bool = False,
     pagination_options: Optional[Dict[str, Any]] = None,
     code_items: Optional[Dict[str, Any]] = None,
+    require_exact_path_correlation: bool = False,
+    search_field_types: Optional[Dict[str, Any]] = None,
 ) -> Tuple[str, List[Dict[str, Any]], str, Dict[str, Any], Dict[str, Any], Dict[str, Any]]:
     cfg = cfg_model.model_dump()
     ast_doc, pagination_info = normalize_ast_pagination(
@@ -310,6 +357,8 @@ async def build_query_pipeline_from_ast(
         shortcut_map=shortcut_map or {},
         archetype_resolver=archetype_resolver,
         compatibility_match=compatibility_match,
+        require_exact_path_correlation=require_exact_path_correlation,
+        search_field_types=search_field_types,
     )
     if scope == "cross_patient" and cfg.get("collections", {}).get("search", {}).get("enabled") and not prefer_match:
         pipeline = await transformer.build_search_pipeline()
@@ -319,6 +368,7 @@ async def build_query_pipeline_from_ast(
         engine = "pipeline_builder"
     if not pipeline:
         raise ValueError("Query pipeline is empty")
+    _assert_order_by_was_compiled(ast_doc, pipeline)
     stage0 = list(pipeline[0].keys())[0]
     if scope == "patient" and stage0 != "$match":
         raise ValueError(f"Patient scope must start with $match, got {stage0}")
@@ -333,6 +383,7 @@ async def build_query_pipeline_from_ast(
         "has_ehr_id_pred": resolved_ehr_id is not None,
         "prefer_match": prefer_match,
         "search_enabled": cfg.get("collections", {}).get("search", {}).get("enabled"),
+        "exact_path_correlation_required": bool(require_exact_path_correlation),
         "cache": {
             "archetype_resolver": resolver_cache_status,
             **_transformer_cache_info(transformer),
@@ -353,6 +404,8 @@ async def build_query_pipeline(
     compile_cache: Optional[Dict[str, Any]] = None,
     pagination_options: Optional[Dict[str, Any]] = None,
     code_items: Optional[Dict[str, Any]] = None,
+    require_exact_path_correlation: bool = False,
+    search_field_types: Optional[Dict[str, Any]] = None,
 ) -> Tuple[str, List[Dict[str, Any]], str, Dict[str, Any], Dict[str, Any], Dict[str, Any]]:
     ast_doc = adapt_ir_to_ast(ir, ehr_alias="e", composition_alias="c")
     return await build_query_pipeline_from_ast(
@@ -366,6 +419,8 @@ async def build_query_pipeline(
         compile_cache=compile_cache,
         pagination_options=pagination_options,
         code_items=code_items,
+        require_exact_path_correlation=require_exact_path_correlation,
+        search_field_types=search_field_types,
         # The IR/structured query path is the compatibility/legacy transformer path,
         # which expects composition filters merged into a flat composition-array key.
         compatibility_match=True,
