@@ -4,7 +4,8 @@
   "payload": {
     "recipe": "clinical_dev",
     "seed": 42,
-    "schema_version": "R5",
+    "schema_version": "R4",
+    "profile_pack": "us_core",
     "store_canonical": true,
     "write_batch_size": 250,
     "dry_run": false,

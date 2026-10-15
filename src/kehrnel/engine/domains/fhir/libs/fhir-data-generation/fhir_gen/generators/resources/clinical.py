@@ -10,6 +10,7 @@ from faker import Faker
 
 from ...codes import codeable_from_section, pick_code, concept_from_section
 from ...codes.loader import get_system, random_code
+from ...config import settings
 from ...resolvers.reference import ReferenceStore
 from ..special_types import SpecialTypeGenerator
 
@@ -145,11 +146,8 @@ def enrich_Organization(
             code=org_type["code"],
             display=org_type["display"],
         )]
-    contact = t.gen_ExtendedContactDetail()
-    contact["address"] = t.gen_Address()
-    r["contact"] = [contact]
-    r.pop("telecom", None)
-    r.pop("address", None)
+    r["telecom"] = [t.gen_ContactPoint("phone"), t.gen_ContactPoint("email")]
+    r["address"] = [t.gen_Address()]
     r["identifier"] = [t.gen_Identifier(
         system="http://hl7.org/fhir/sid/us-npi",
         value=str(rng.randint(1000000000, 9999999999)),
@@ -176,13 +174,10 @@ def enrich_Location(
             display=loc_type["display"],
         )]
     r["address"] = t.gen_Address()
-    contact = t.gen_ExtendedContactDetail()
-    contact["address"] = t.gen_Address()
-    r["contact"] = [contact]
-    r.pop("telecom", None)
+    r["telecom"] = [t.gen_ContactPoint("phone")]
     if store.has("Organization"):
         r["managingOrganization"] = store.get_reference("Organization", rng)
-    r["form"] = t.gen_CodeableConcept(
+    r["physicalType"] = t.gen_CodeableConcept(
         system="http://terminology.hl7.org/CodeSystem/location-physical-type",
         code=rng.choice(["si", "bu", "wi", "wa", "lvl", "ro", "bd", "ve"]),
         display=rng.choice(["Site", "Building", "Wing", "Ward", "Level", "Room", "Bed", "Vehicle"]),
@@ -199,23 +194,32 @@ def enrich_Encounter(
     status = random_code("encounter_status", rng)
     r["status"] = status["code"] if status else "finished"
     enc_class = random_code("encounter_class", rng)
-    r["class"] = [t.gen_CodeableConcept(
-        system=get_system("encounter_class"),
-        code=enc_class["code"] if enc_class else "AMB",
-        display=enc_class["display"] if enc_class else "ambulatory",
-    )]
+    if settings.fhir_version == "R4":
+        r["class"] = t.gen_Coding(
+            system=get_system("encounter_class"),
+            code=enc_class["code"] if enc_class else "AMB",
+            display=enc_class["display"] if enc_class else "ambulatory",
+        )
+    else:
+        r["class"] = [t.gen_CodeableConcept(
+            system=get_system("encounter_class"),
+            code=enc_class["code"] if enc_class else "AMB",
+            display=enc_class["display"] if enc_class else "ambulatory",
+        )]
     if store.has("Patient"):
         r["subject"] = store.get_reference("Patient", rng)
     if store.has("Practitioner"):
+        actor_key = "individual" if settings.fhir_version == "R4" else "actor"
         r["participant"] = [{
             "type": [t.gen_CodeableConcept(
                 system="http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
                 code="ATND",
                 display="attender",
             )],
-            "actor": store.get_reference("Practitioner", rng),
+            actor_key: store.get_reference("Practitioner", rng),
         }]
-    r["actualPeriod"] = t.gen_Period()
+    period_field = "period" if settings.fhir_version == "R4" else "actualPeriod"
+    r[period_field] = t.gen_Period()
     if store.has("Organization"):
         r["serviceProvider"] = store.get_reference("Organization", rng)
     if store.has("Location"):
@@ -261,23 +265,7 @@ def enrich_Condition(
     if store.has("Encounter"):
         r["encounter"] = store.get_reference("Encounter", rng)
     if store.has("Practitioner"):
-        from ...schema.registry import SchemaRegistry
-
-        schema_registry = getattr(t, "schema_registry", None) or SchemaRegistry.get()
-        condition_fields = schema_registry.definition("Condition").fields
-        if "participant" in condition_fields:
-            r["participant"] = [{
-                "function": t.gen_CodeableConcept(
-                    system="http://terminology.hl7.org/CodeSystem/provenance-participant-type",
-                    code="author",
-                    display="Author",
-                ),
-                "actor": store.get_reference("Practitioner", rng),
-            }]
-            r.pop("recorder", None)
-        else:
-            r["recorder"] = store.get_reference("Practitioner", rng)
-            r.pop("participant", None)
+        r["recorder"] = store.get_reference("Practitioner", rng)
     r["onsetDateTime"] = t.p.gen_dateTime(min_year=2015, max_year=2023)
     r["recordedDate"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
     cat = random_code("condition_category", rng)
@@ -361,10 +349,13 @@ def enrich_AllergyIntolerance(
         system=get_system("allergy_verification_status"),
         code=vs["code"] if vs else "confirmed",
     )
-    r["type"] = t.gen_CodeableConcept(
-        system="http://hl7.org/fhir/allergy-intolerance-type",
-        code=rng.choice(["allergy", "intolerance"]),
-    )
+    if settings.fhir_version == "R4":
+        r["type"] = rng.choice(["allergy", "intolerance"])  # plain code in R4
+    else:
+        r["type"] = t.gen_CodeableConcept(
+            system="http://hl7.org/fhir/allergy-intolerance-type",
+            code=rng.choice(["allergy", "intolerance"]),
+        )
     r["category"] = [rng.choice(["food", "medication", "environment", "biologic"])]
     r["criticality"] = rng.choice(["low", "high", "unable-to-assess"])
     sub = random_code("allergy_substances", rng)
@@ -384,15 +375,11 @@ def enrich_AllergyIntolerance(
             code=sub["code"] if sub else "7980",
             display=sub["display"] if sub else "Penicillin",
         ),
-        "manifestation": [{
-            "concept": t.gen_CodeableConcept(
-                system="http://snomed.info/sct",
-                code=rng.choice(
-                    ["271807003", "39579001", "418290006", "49727002"]
-                ),
-                display=rng.choice(["Rash", "Anaphylaxis", "Itching", "Cough"]),
-            )
-        }],
+        "manifestation": [t.gen_CodeableConcept(
+            system="http://snomed.info/sct",
+            code=rng.choice(["271807003", "39579001", "418290006", "49727002"]),
+            display=rng.choice(["Rash", "Anaphylaxis", "Itching", "Cough"]),
+        )],
         "severity": sev["code"] if sev else "moderate",
         "onset": t.p.gen_dateTime(min_year=2020, max_year=2023),
     }]
@@ -418,10 +405,9 @@ def enrich_Procedure(
         r["encounter"] = store.get_reference("Encounter", rng)
     if store.has("Practitioner"):
         r["performer"] = [{"actor": store.get_reference("Practitioner", rng)}]
-    for key in list(r):
-        if key.startswith("occurrence") and not key.startswith("_occurrence"):
-            r.pop(key, None)
-    r["occurrenceDateTime"] = t.p.gen_dateTime(min_year=2022, max_year=2024)
+    # R4 uses performedDateTime; R5 uses occurredDateTime
+    performed_field = "performedDateTime" if settings.fhir_version == "R4" else "occurredDateTime"
+    r[performed_field] = t.p.gen_dateTime(min_year=2022, max_year=2024)
     r["category"] = [t.gen_CodeableConcept(
         system="http://snomed.info/sct",
         code=rng.choice(["387713003", "103693007", "46947000"]),

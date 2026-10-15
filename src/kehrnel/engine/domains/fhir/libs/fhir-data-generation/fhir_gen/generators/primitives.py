@@ -58,6 +58,14 @@ class PrimitiveGenerator:
         field_name: str | None = None,
         **_,
     ) -> str:
+        # DateTime suffix detection: fields typed as string but named like a date/time
+        if field_name:
+            if field_name.endswith("DateTime") or field_name.endswith("Instant"):
+                return self.gen_dateTime()
+            if field_name.endswith("Date") and not field_name.endswith("DateTime"):
+                return self.gen_date()
+            if field_name.endswith("Time") and not field_name.endswith("DateTime"):
+                return self.gen_time()
         return clinical_text(
             self.rng,
             resource_type=resource_type,
@@ -73,9 +81,8 @@ class PrimitiveGenerator:
         hi = min(max_val, 1000)
         return self.rng.randint(lo, hi)
 
-    def gen_integer64(self, **_) -> str:
-        """FHIR integer64 is serialized as a JSON string in R5/R6."""
-        return str(self.rng.randint(-10**9, 10**9))
+    def gen_integer64(self, **_) -> int:
+        return self.rng.randint(-10**9, 10**9)
 
     def gen_decimal(
         self,
@@ -143,7 +150,7 @@ class PrimitiveGenerator:
 
     def gen_oid(self, **_) -> str:
         """OID: urn:oid:x.x.x..."""
-        parts = [str(self.rng.randint(0, 2))] + [
+        parts = [str(self.rng.randint(1, 9))] + [
             str(self.rng.randint(0, 999)) for _ in range(self.rng.randint(3, 7))
         ]
         return "urn:oid:" + ".".join(parts)

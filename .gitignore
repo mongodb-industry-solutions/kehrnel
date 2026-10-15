@@ -240,3 +240,5 @@ src/kehrnel/engine/domains/fhir/libs/**/.DS_Store
 # Tracked by mistake and removed from the index; the local file is kept.
 # ---------------------------------------------------------------------------
 samples/in/semanticQuerying/20250924161205_respuestas_proms_v2_VIH_eVIHa.csv
+# LOCAL_TESTING
+LOCAL_TESTING/

@@ -7,6 +7,7 @@ from typing import Any
 
 from ...codes import codeable_from_section, concept_from_section, pick_code
 from ...codes.loader import get_system, random_code
+from ...config import settings
 from ...resolvers.reference import ReferenceStore
 from ..special_types import SpecialTypeGenerator
 
@@ -29,10 +30,13 @@ def enrich_Coverage(
         r["subscriber"] = store.get_reference("Patient", rng)
     if store.has("Organization"):
         r["insurer"] = store.get_reference("Organization", rng)
-    r["subscriberId"] = [t.gen_Identifier(
-        system="http://insurance.example.org/subscribers",
-        value=f"SUB{rng.randint(100000, 999999)}",
-    )]
+    if settings.fhir_version == "R4":
+        r["subscriberId"] = f"SUB{rng.randint(100000, 999999)}"  # plain string in R4
+    else:
+        r["subscriberId"] = [t.gen_Identifier(
+            system="http://insurance.example.org/subscribers",
+            value=f"SUB{rng.randint(100000, 999999)}",
+        )]
     r["relationship"] = t.gen_CodeableConcept(
         system="http://terminology.hl7.org/CodeSystem/subscriber-relationship",
         code=rng.choice(["self", "spouse", "child", "parent", "common"]),
@@ -222,10 +226,10 @@ def enrich_ChargeItem(
         r["performer"] = [{"actor": store.get_reference("Practitioner", rng)}]
     r["occurrenceDateTime"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
     r["quantity"] = t.gen_Quantity(value=1.0, unit="each")
-    r["unitPriceComponent"] = {
+    r["unitPriceComponent"] = [{
         "type": "base",
         "amount": t.gen_Money(),
-    }
+    }]
     return r
 
 
@@ -387,7 +391,7 @@ def enrich_PaymentReconciliation(
     rng: random.Random,
 ) -> dict[str, Any]:
     r["status"] = pick_code("payment_reconciliation_status", rng, "active")
-    r["outcome"] = pick_code("payment_reconciliation_outcome", rng, "complete")
+    r["outcome"] = concept_from_section("payment_reconciliation_outcome", rng, t)
     r["created"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
     r["disposition"] = "Payment processed"
     if store.has("Organization"):

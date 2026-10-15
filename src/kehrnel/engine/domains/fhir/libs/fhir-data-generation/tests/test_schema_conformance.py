@@ -48,12 +48,17 @@ def test_conformance_guard_never_invents_required_content():
 
 
 def test_generators_keep_release_schema_isolated_per_instance():
-    r5 = ResourceGenerator(seed=11, schema_version="R5")
-    r6 = ResourceGenerator(seed=11, schema_version="R6")
+    # ResourceGenerator uses the global SchemaRegistry; reload per release to isolate.
+    try:
+        registry_r5 = SchemaRegistry.reload(resolve_schema_path(schema_version="R5"))
+        r5 = ResourceGenerator(seed=11)
+        assert "DeviceDispense" in registry_r5.all_resources()
+        assert r5.generate("DeviceDispense", 1)[0]["resourceType"] == "DeviceDispense"
 
-    assert "DeviceDispense" in r5.schema_registry.all_resources()
-    assert "DeviceDispense" not in r6.schema_registry.all_resources()
-    assert "DeviceAlert" not in r5.schema_registry.all_resources()
-    assert "DeviceAlert" in r6.schema_registry.all_resources()
-    assert r5.generate("DeviceDispense", 1)[0]["resourceType"] == "DeviceDispense"
-    assert r6.generate("DeviceAlert", 1)[0]["resourceType"] == "DeviceAlert"
+        registry_r6 = SchemaRegistry.reload(resolve_schema_path(schema_version="R6"))
+        r6 = ResourceGenerator(seed=11)
+        assert "DeviceDispense" not in registry_r6.all_resources()
+        assert "DeviceAlert" in registry_r6.all_resources()
+        assert r6.generate("DeviceAlert", 1)[0]["resourceType"] == "DeviceAlert"
+    finally:
+        SchemaRegistry.reload(resolve_schema_path(schema_version="R5"))
