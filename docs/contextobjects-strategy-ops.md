@@ -9,6 +9,6 @@ The following shared ops are now available on context-capable strategies:
 
 They are currently wired into:
 
-- [X12 CO single](/Users/francesc.mateu/Documents/GitHub/kehrnel/src/kehrnel/engine/strategies/x12/co_single/strategy.py)
+- [X12 CO single](../src/kehrnel/engine/strategies/x12/co_single/strategy.py)
 
 This lets HDL talk to the kernel through stable runtime verbs while each strategy keeps its own storage/query specifics.

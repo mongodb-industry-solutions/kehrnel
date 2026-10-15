@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Optional
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI, Request, HTTPException, Security
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, FileResponse, HTMLResponse, RedirectResponse
 from fastapi.security import APIKeyHeader
 from fastapi.middleware.cors import CORSMiddleware
@@ -58,6 +59,19 @@ def _is_public_path(path: str) -> bool:
         or any(path.startswith(prefix) for prefix in PUBLIC_PATH_PREFIXES)
         or any(pattern.match(path) for pattern in PUBLIC_PATH_PATTERNS)
     )
+
+
+# The FHIR router is mounted both at the root and behind /v1.
+FHIR_ROUTE_PREFIXES = ("/api/domains/fhir", "/v1/api/domains/fhir")
+
+
+def _is_fhir_route(path: str) -> bool:
+    """True only for the FHIR router and its routes.
+
+    Matching on segment boundaries (rather than a substring) keeps unrelated
+    paths that merely contain the prefix on the default error shape.
+    """
+    return any(path == prefix or path.startswith(f"{prefix}/") for prefix in FHIR_ROUTE_PREFIXES)
 
 
 def _get_api_keys() -> set[str]:
@@ -335,6 +349,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     from kehrnel.api.internal.routes import router as internal_runtime_router
     from kehrnel.api.domains.openehr.routes import router as openehr_domain_router
     from kehrnel.api.domains.snomedct.routes import router as snomedct_domain_router
+    from kehrnel.api.terminology.routes import router as terminology_router
     from kehrnel.api.strategies.openehr.rps_dual.routes import router as openehr_rps_dual_router
 
     # Disable built-in docs handlers so we can control the HTML (favicon, titles, etc.)
@@ -440,6 +455,19 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     app.state.strategy_asset_dirs = asset_dirs
     # Store allowed strategy paths for validation
     app.state.allowed_strategy_paths = [p.resolve() for p in _strategy_paths()]
+
+    @app.on_event("startup")
+    async def _recover_persisted_strategy_jobs() -> None:
+        manager = getattr(app.state, "synthetic_job_manager", None)
+        if manager is None:
+            return
+        mode = (os.getenv("KEHRNEL_JOBS_RECOVERY") or "fail").strip().lower()
+        try:
+            recovered = await manager.recover_incomplete_jobs(retry=mode == "retry")
+            if recovered.get("found"):
+                logging.getLogger("kehrnel.jobs").info("Recovered persisted jobs: %s", recovered)
+        except Exception as exc:
+            logging.getLogger("kehrnel.jobs").warning("Persisted job recovery failed: %s", exc)
 
     @app.on_event("startup")
     async def _init_default_ingestion_runtime() -> None:
@@ -663,6 +691,26 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         # Defense-in-depth: avoid leaking credentials / filesystem internals in exception messages.
         message = redact_sensitive(message) or message
         return JSONResponse(status_code=status, content={"error": {"code": code, "message": message, "details": details}})
+    @app.exception_handler(RequestValidationError)
+    async def validation_exception_handler(request: Request, exc: RequestValidationError):
+        # FHIR endpoints must return OperationOutcome (application/fhir+json), even
+        # for request-body validation errors that fire before the route handler.
+        if _is_fhir_route(request.url.path):
+            from kehrnel.engine.strategies.fhir.resource_store.scripts.serialization import (
+                operation_outcome,
+            )
+            detail = "; ".join(
+                f"{'.'.join(str(p) for p in e.get('loc', []))}: {e.get('msg', 'invalid')}"
+                for e in exc.errors()
+            ) or "Invalid request body"
+            return JSONResponse(
+                status_code=422,
+                media_type="application/fhir+json",
+                content=operation_outcome(code="INVALID_INPUT", message=detail),
+            )
+        # Default behavior for non-FHIR routes.
+        return JSONResponse(status_code=422, content={"detail": exc.errors()})
+
     runtime_routers = [
         admin_router,
         ops_domain_router,
@@ -670,6 +718,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         fhir_domain_router,
         openehr_domain_router,
         snomedct_domain_router,
+        terminology_router,
         openehr_rps_dual_router,
     ]
 

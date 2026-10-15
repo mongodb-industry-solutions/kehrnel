@@ -1015,6 +1015,12 @@ def _serialize_manifest_op(manifest: StrategyManifest, op: Any, include_schemas:
     return row
 
 
+def _serialize_interaction_contract(contract: Any) -> Dict[str, Any]:
+    if hasattr(contract, "model_dump"):
+        return contract.model_dump(mode="json", exclude_none=True)
+    return dict(contract or {})
+
+
 @router.get("/ops", include_in_schema=False)
 async def list_ops(request: Request):
     try:
@@ -1062,6 +1068,7 @@ async def env_capabilities(env_id: str, request: Request, include_schemas: bool 
         activations = rt.registry.list_activations(env_id) or {}
         domains: List[Dict[str, Any]] = []
         strategy_ops: List[Dict[str, Any]] = []
+        interaction_contracts: List[Dict[str, Any]] = []
 
         for domain_key, activation in activations.items():
             manifest = rt.registry.get_manifest(activation.strategy_id)
@@ -1069,6 +1076,16 @@ async def env_capabilities(env_id: str, request: Request, include_schemas: bool 
                 continue
             op_rows = [_serialize_manifest_op(manifest, op, include_schemas=include_schemas) for op in (manifest.ops or [])]
             strategy_ops.extend(op_rows)
+            contract_rows = [
+                {
+                    **_serialize_interaction_contract(contract),
+                    "domain": domain_key,
+                    "strategy_id": manifest.id,
+                    "strategy_version": activation.version,
+                }
+                for contract in (manifest.interaction_contracts or [])
+            ]
+            interaction_contracts.extend(contract_rows)
             domains.append(
                 {
                     "domain": domain_key,
@@ -1076,12 +1093,14 @@ async def env_capabilities(env_id: str, request: Request, include_schemas: bool 
                     "strategy_version": activation.version,
                     "activation_id": activation.activation_id,
                     "ops": [row.get("name") for row in op_rows if row.get("name")],
+                    "interaction_contracts": contract_rows,
                 }
             )
 
         return {
             "env_id": env_id,
             "domains": domains,
+            "interaction_contracts": interaction_contracts,
             "operations": {
                 "standard": _standard_env_operations(),
                 "strategy": strategy_ops,

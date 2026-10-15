@@ -26,6 +26,11 @@ from kehrnel.engine.strategies.openehr.rps_dual.index_definition_builder import 
     build_search_index_definition_from_mappings,
 )
 from kehrnel.engine.strategies.openehr.rps_dual.query.executor import execute as execute_query_plan
+from kehrnel.engine.strategies.openehr.rps_dual.query.executor import (
+    _normalize_result_value,
+    _uses_uuid_binary_ids,
+)
+from kehrnel.engine.strategies.openehr.rps_dual.query.transformers.value_formatter import ValueFormatter
 from kehrnel.engine.strategies.openehr.rps_dual.services.codes_service import atcode_to_token
 from kehrnel.engine.strategies.openehr.rps_dual.services.codes_service import get_codes
 from kehrnel.engine.strategies.openehr.rps_dual.services.shortcuts_service import get_shortcuts
@@ -900,6 +905,124 @@ class RPSDualStrategy(StrategyPlugin):
         storage = adapters.get("storage")
         atlas = adapters.get("atlas_search") or adapters.get("text_search")
 
+        if op_lower in {"list_native_ehrs", "list_native_compositions", "fetch_native_composition"}:
+            if not storage:
+                raise KehrnelError(
+                    code="STORAGE_NOT_AVAILABLE",
+                    status=503,
+                    message="storage adapter not available for native composition browsing",
+                )
+
+            collection = strategy_cfg.collections.compositions.name
+            fields = strategy_cfg.fields.document
+            normalize_binary_uuid = _uses_uuid_binary_ids(ctx.config)
+
+            def _limit(default: int, maximum: int) -> int:
+                try:
+                    return max(1, min(int(payload.get("limit", default)), maximum))
+                except (TypeError, ValueError):
+                    return default
+
+            def _normalize(value: Any, key: str) -> Any:
+                normalized = _normalize_result_value(
+                    value,
+                    key,
+                    normalize_binary_uuid=normalize_binary_uuid,
+                )
+                if normalized is None or isinstance(normalized, (str, int, float, bool)):
+                    return normalized
+                return str(normalized)
+
+            if op_lower == "list_native_ehrs":
+                rows = await storage.aggregate(
+                    collection,
+                    [
+                        {"$match": {fields.ehr_id: {"$exists": True, "$ne": None}}},
+                        {
+                            "$group": {
+                                "_id": f"${fields.ehr_id}",
+                                "time_created": {"$min": f"${fields.time_committed}"},
+                            }
+                        },
+                        {"$sort": {"_id": 1}},
+                        {"$limit": _limit(1000, 5000)},
+                    ],
+                )
+                return {
+                    "ok": True,
+                    "records": [
+                        {
+                            "ehr_id": _normalize(row.get("_id"), "ehr_id"),
+                            "time_created": row.get("time_created"),
+                        }
+                        for row in rows
+                        if row.get("_id") is not None
+                    ],
+                }
+
+            ehr_id = str(payload.get("ehr_id") or "").strip()
+            if not ehr_id:
+                raise KehrnelError(
+                    code="INVALID_INPUT",
+                    status=400,
+                    message="ehr_id is required",
+                )
+            ehr_value = ValueFormatter.format_id_value(ehr_id, strategy_cfg.ids.ehr_id)
+
+            if op_lower == "list_native_compositions":
+                rows = await storage.aggregate(
+                    collection,
+                    [
+                        {"$match": {fields.ehr_id: ehr_value}},
+                        {"$sort": {fields.time_committed: -1, fields.comp_id: 1}},
+                        {"$limit": _limit(500, 2000)},
+                        {
+                            "$project": {
+                                "_id": 0,
+                                "uid": f"${fields.comp_id}",
+                                "template_id": f"${fields.tid}",
+                                "time_created": f"${fields.time_committed}",
+                            }
+                        },
+                    ],
+                )
+                return {
+                    "ok": True,
+                    "records": [
+                        {
+                            **row,
+                            "uid": _normalize(row.get("uid"), "composition_id"),
+                        }
+                        for row in rows
+                        if row.get("uid") is not None
+                    ],
+                }
+
+            uid = str(payload.get("uid") or "").strip()
+            if not uid:
+                raise KehrnelError(
+                    code="INVALID_INPUT",
+                    status=400,
+                    message="uid is required",
+                )
+            uid_value = ValueFormatter.format_id_value(uid, strategy_cfg.ids.composition_id)
+            base_doc = await storage.find_one(
+                collection,
+                {fields.ehr_id: ehr_value, fields.comp_id: uid_value},
+                {"_id": 0},
+            )
+            if not base_doc:
+                raise KehrnelError(
+                    code="COMPOSITION_NOT_FOUND",
+                    status=404,
+                    message=f"Composition '{uid}' was not found for EHR '{ehr_id}'",
+                )
+            normalized_doc = _normalize_result_value(
+                base_doc,
+                normalize_binary_uuid=normalize_binary_uuid,
+            )
+            return {"ok": True, "composition": normalized_doc}
+
         if op_lower == "ensure_dictionaries":
             created = []
             warnings = []
@@ -1069,8 +1192,13 @@ class RPSDualStrategy(StrategyPlugin):
                 bundle_id = seed_ref.definition
             bundle = await self._maybe_load_bundle(bundle_id, ctx)
             inserted = 0
+            skipped_empty = 0
             for doc in docs:
                 search_doc = self._apply_bundle_to_composition(bundle, doc, strategy_cfg)
+                search_nodes = search_doc.get(strategy_cfg.fields.document.sn)
+                if not isinstance(search_nodes, list) or not search_nodes:
+                    skipped_empty += 1
+                    continue
                 await storage.insert_one(search_coll_name, search_doc)
                 inserted += 1
             warnings = []
@@ -1079,7 +1207,13 @@ class RPSDualStrategy(StrategyPlugin):
                 definition = await self._resolve_search_index_definition(ctx, strategy_cfg)
                 res = await atlas.ensure_search_index(search_coll_name, atlas_idx.name, definition)
                 warnings.extend(res.get("warnings", []))
-            return {"ok": True, "processed": len(docs), "inserted": inserted, "warnings": warnings}
+            return {
+                "ok": True,
+                "processed": len(docs),
+                "inserted": inserted,
+                "skipped_empty": skipped_empty,
+                "warnings": warnings,
+            }
 
         if op_lower == "synthetic_generate_batch":
             if not storage:

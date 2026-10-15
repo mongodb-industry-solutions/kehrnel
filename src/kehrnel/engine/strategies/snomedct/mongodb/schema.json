@@ -32,9 +32,11 @@
       "properties": {
         "concepts": { "type": "string" },
         "terms": { "type": "string" },
+        "value_sets": { "type": "string" },
+        "grounding_reviews": { "type": "string" },
         "sidecar_enabled": { "type": "boolean" }
       },
-      "required": ["concepts", "terms", "sidecar_enabled"],
+      "required": ["concepts", "terms", "value_sets", "grounding_reviews", "sidecar_enabled"],
       "additionalProperties": false
     },
     "languages": {
@@ -72,6 +74,15 @@
         "default_language": { "type": "string" },
         "use_sidecar": { "type": "boolean" },
         "lexical_strategy": { "type": "string", "enum": ["normalized_regex"] }
+      },
+      "additionalProperties": false
+    },
+    "grounding": {
+      "type": "object",
+      "description": "Governance controls for reviewer-confirmed clinical grounding artifacts.",
+      "properties": {
+        "store_source_text": { "type": "boolean", "default": false },
+        "max_codings_per_review": { "type": "integer", "minimum": 1, "maximum": 250 }
       },
       "additionalProperties": false
     }

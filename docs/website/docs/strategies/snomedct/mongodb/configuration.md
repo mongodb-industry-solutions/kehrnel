@@ -35,6 +35,8 @@ The strategy is multi-tenant. Each tenant activates the same pack with its own M
   "collections": {
     "concepts": "snomed_concepts",
     "terms": "snomed_terms",
+    "value_sets": "snomed_value_sets",
+    "grounding_reviews": "snomed_grounding_reviews",
     "sidecar_enabled": true
   },
   "languages": ["es", "en"],
@@ -57,6 +59,10 @@ The strategy is multi-tenant. Each tenant activates the same pack with its own M
     "default_language": "es",
     "use_sidecar": true,
     "lexical_strategy": "normalized_regex"
+  },
+  "grounding": {
+    "store_source_text": false,
+    "max_codings_per_review": 50
   }
 }
 ```
@@ -68,13 +74,15 @@ The strategy is multi-tenant. Each tenant activates the same pack with its own M
 | `database` | Logical name shown in pack metadata; binding selects the actual MongoDB database |
 | `release.id`, `release.label` | Each tenant may ingest a different licensed publication |
 | `source.*` | Local folder and filename pattern where the customer places the licensed JSON release |
-| `collections.*` | Tenants may use naming conventions or multiple release sets |
+| `collections.*` | Tenants may name canonical concepts, term sidecar, ValueSet registry, and reviewed-grounding collections |
 | `languages` | Sidecar generation can target Spanish, English, or local language subsets |
 | `ingest.batch_size` | Tune for laptop, CI, or production clusters |
 | `ingest.include_descendants` | Default false to avoid redundant large descendant arrays |
 | `collections.sidecar_enabled` | Canonical-only deployments are valid but cannot search or ground mentions |
 | `indexes.*` | Enable only the index families required by the deployment |
 | `search.default_language`, limits | API defaults without hardcoding client behavior |
+| `grounding.store_source_text` | Defaults false; enables explicit tenant retention of clinical source text |
+| `grounding.max_codings_per_review` | Bounds reviewer submissions |
 
 ## What Should Not Be Configurable
 
@@ -93,13 +101,15 @@ MongoDB connectivity comes from activation bindings, not from the strategy confi
 ```json
 {
   "strategy_id": "snomedct.mongodb",
-  "version": "0.1.0",
+  "version": "0.5.0",
   "domain": "snomedct",
   "config": {
     "release": { "id": "20260601" },
     "collections": {
       "concepts": "snomed_concepts",
       "terms": "snomed_terms",
+      "value_sets": "snomed_value_sets",
+      "grounding_reviews": "snomed_grounding_reviews",
       "sidecar_enabled": true
     }
   },

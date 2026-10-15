@@ -6,10 +6,12 @@ from pydantic import BaseModel, Field, model_validator
 
 # Strategy status for UI display
 StrategyStatus = Literal["stable", "preview", "example", "community"]
+InteractionMode = Literal["native", "compiled", "hybrid"]
 
 
 class AdapterRequirements(BaseModel):
     storage: List[str] = Field(default_factory=list)
+    artifact: List[str] = Field(default_factory=list)
     search: List[str] = Field(default_factory=list)
     vector: List[str] = Field(default_factory=list)
     queue: List[str] = Field(default_factory=list)
@@ -61,6 +63,32 @@ class StrategyOp(BaseModel):
     output_schema: Dict[str, Any] = Field(default_factory=dict)
 
 
+class InteractionContract(BaseModel):
+    """Describe who defines an interaction and how Kehrnel executes it.
+
+    A strategy can expose a standard-native interaction (for example FHIR
+    Search), a Kehrnel-compiled interaction over standard semantics (for
+    example a cross-domain CDISC study query), or a hybrid capability that
+    combines both.  Keeping this on the manifest makes the distinction
+    discoverable instead of leaving it as UI copy or implementation lore.
+    """
+
+    id: str
+    name: str
+    mode: InteractionMode
+    kind: str = "query"
+    authority: str
+    standard: Optional[str] = None
+    contract: str
+    description: Optional[str] = None
+    engines: List[str] = Field(default_factory=list)
+    builders: List[str] = Field(default_factory=list)
+    operations: List[str] = Field(default_factory=list)
+    source_domains: List[str] = Field(default_factory=list)
+
+    model_config = {"extra": "allow"}
+
+
 class StrategyManifest(BaseModel):
     id: str
     name: str
@@ -79,5 +107,6 @@ class StrategyManifest(BaseModel):
     license: Optional[str] = None
     keywords: List[str] = Field(default_factory=list)
     ops: List[StrategyOp] = Field(default_factory=list)
+    interaction_contracts: List[InteractionContract] = Field(default_factory=list)
 
     model_config = {"extra": "allow"}
