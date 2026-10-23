@@ -232,6 +232,14 @@ Restrict API keys to specific environments:
 KEHRNEL_API_KEY_ENV_SCOPES='{"prod-key": ["production"], "staging-key": ["staging"], "admin-key": "*"}'
 ```
 
+Every environment-targeted route enforces this scope, including `POST /ops`, where the
+environment is named in the request body. Routes that change runtime-wide state shared by
+all environments, such as `POST /api/strategies/openehr/rps_dual/config`, require an admin
+key scoped to `"*"` once scopes are configured.
+
+The rate limiter (`KEHRNEL_RATE_LIMIT`) counts each valid API key separately. Requests with
+missing or unknown keys are counted per client IP, so guessing keys is throttled too.
+
 ## Scaling Guidelines
 
 ### Vertical Scaling
