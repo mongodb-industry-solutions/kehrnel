@@ -5,7 +5,6 @@ services:
       dockerfile: demo/wetty/shell/Dockerfile
     container_name: kehrnel-demo-shell
     environment:
-      DEMO_USER: ${DEMO_USER:-demo}
       DEMO_PASSWORD: ${DEMO_PASSWORD:-demo}
       KEHRNEL_PORT: ${KEHRNEL_PORT:-8080}
       MONGODB_URI: ${MONGODB_URI:-}
@@ -34,7 +33,7 @@ services:
       - --ssh-port
       - "22"
       - --ssh-user
-      - ${DEMO_USER:-demo}
+      - demo
       - --ssh-auth
       - password
       - --ssh-pass
