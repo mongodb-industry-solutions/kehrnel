@@ -120,7 +120,8 @@ class SpecialConverter(BaseConverter):
         # Create date converter with meta.lastUpdated field
         config = {
             'type': 'date',
-            'fields': [{'field': 'meta.lastUpdated', 'type': 'date'}]
+            'fields': [{'field': 'meta.lastUpdated', 'type': 'date'}],
+            '_parameter_name': '_lastUpdated',
         }
         
         converter = DateConverter(config)
@@ -324,7 +325,8 @@ class SpecialConverter(BaseConverter):
         
         # Create multi-step query
         multi_step = MultiStepQuery(
-            description=f"Reverse chain: Find {base_resource_type} referenced by {target_resource_type} where {search_param}={search_value}"
+            description=f"Reverse chain: Find {base_resource_type} referenced by {target_resource_type} where {search_param}={search_value}",
+            target_field="id",
         )
         
         # Step 1: Query target resource
@@ -336,9 +338,9 @@ class SpecialConverter(BaseConverter):
         )
         
         # Step 2: Build final query with extracted IDs
-        multi_step.set_final_query_builder(
-            lambda ids: {"_id": {"$in": ids}} if ids else {"_id": None}
-        )
+        # An empty id set must match nothing: {"$in": []} is unsatisfiable, whereas
+        # {"id": None} would match documents whose id is null or missing.
+        multi_step.set_final_query_builder(lambda ids: {"id": {"$in": ids}})
         
         return multi_step
     

@@ -1,0 +1,10 @@
+{
+  "label": "resource-store",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "title": "FHIR Resource Store",
+    "description": "Native FHIR R5 storage with fhir-gen synthetic data and fhir-mql search translation.",
+    "slug": "/strategies/fhir/resource-store"
+  }
+}

@@ -232,8 +232,8 @@ class TestSpecialConverter:
         """Test _lastUpdated parameter."""
         query = SpecialConverter.convert_last_updated("2024-01-01", prefix="ge")
         
-        assert "meta.lastUpdated" in str(query)
-        assert "$gte" in str(query)
+        assert "_search._dates._lastUpdated" in str(query)
+        assert "$gt" in str(query)
     
     def test_tag_system_code(self):
         """Test _tag with system|code."""

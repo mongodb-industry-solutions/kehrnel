@@ -5,12 +5,12 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "fhir-gen"
 version = "1.0.0"
-description = "FHIR R5 Synthetic Healthcare Data Generator"
+description = "FHIR R5/R6 Synthetic Healthcare Data Generator"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
 authors = [{ name = "FHIR Data Generation Contributors" }]
-keywords = ["fhir", "healthcare", "synthetic-data", "hl7", "r5"]
+keywords = ["fhir", "healthcare", "synthetic-data", "hl7", "r5", "r6"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -27,6 +27,7 @@ dependencies = [
   "pymongo>=4.6",
   "click>=8.1",
   "faker>=24.0",
+  "jsonschema>=4.22",
   "PyYAML>=6.0",
 ]
 
@@ -53,6 +54,7 @@ include = ["fhir_gen*"]
 [tool.setuptools.package-data]
 fhir_gen = [
   "schema/fhir.schema.v5.json",
+  "schema/fhir.schema.v6.json",
   "hl7_codes/healthcare_codes.yaml",
 ]
 

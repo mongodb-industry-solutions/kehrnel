@@ -94,20 +94,26 @@ def apply_patient_scenario(
         resource["active"] = False
 
     elif scenario_id == "multiple_birth_boolean":
+        _clear_deceased(resource)
         _clear_multiple_birth(resource)
         resource["multipleBirthBoolean"] = True
         resource.setdefault("active", True)
 
     elif scenario_id == "multiple_birth_integer":
+        _clear_deceased(resource)
         _clear_multiple_birth(resource)
         resource["multipleBirthInteger"] = rng.randint(2, 4)
         resource.setdefault("active", True)
 
     elif scenario_id == "with_photo":
+        _clear_deceased(resource)
+        _clear_multiple_birth(resource)
         resource.setdefault("active", True)
         resource["photo"] = [t.gen_Attachment()]
 
     elif scenario_id == "with_link":
+        _clear_deceased(resource)
+        _clear_multiple_birth(resource)
         resource.setdefault("active", True)
         if store.has("Patient"):
             from .field_fill import backbone_filler_for
@@ -119,6 +125,8 @@ def apply_patient_scenario(
                     resource["link"] = [link]
 
     elif scenario_id == "with_communication":
+        _clear_deceased(resource)
+        _clear_multiple_birth(resource)
         from ..codes.loader import get_system, random_code
 
         lang = random_code("languages", rng)
@@ -273,6 +281,7 @@ def scenario_catalog(
     resource_type: str,
     *,
     include_poly_variants: bool = True,
+    schema_registry=None,
 ) -> tuple[GenerationScenario, ...]:
     """
     Full scenario list for a resource type.
@@ -284,7 +293,8 @@ def scenario_catalog(
     if not include_poly_variants:
         return tuple(named)
 
-    from ..schema.registry import registry as schema_registry
+    if schema_registry is None:
+        from ..schema.registry import registry as schema_registry
     from .poly_catalog import poly_variant_scenarios
 
     try:
@@ -311,8 +321,10 @@ def scenario_catalog(
 def scenario_for_index(
     resource_type: str,
     index: int,
+    *,
+    schema_registry=None,
 ) -> GenerationScenario | None:
-    catalog = scenario_catalog(resource_type)
+    catalog = scenario_catalog(resource_type, schema_registry=schema_registry)
     if not catalog:
         return None
     return catalog[index % len(catalog)]
@@ -323,11 +335,13 @@ def scenario_by_id(
     scenario_id: str,
     *,
     include_poly_variants: bool = True,
+    schema_registry=None,
 ) -> GenerationScenario | None:
     """Look up a scenario by id (named or ``poly_*``)."""
     for entry in scenario_catalog(
         resource_type,
         include_poly_variants=include_poly_variants,
+        schema_registry=schema_registry,
     ):
         if entry.id == scenario_id:
             return entry

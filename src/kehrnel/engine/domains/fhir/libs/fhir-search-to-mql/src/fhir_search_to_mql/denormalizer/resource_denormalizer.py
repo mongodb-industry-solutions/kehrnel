@@ -17,6 +17,7 @@ from fhir_search_to_mql.core.exceptions import (
     MissingConfigurationError,
 )
 from fhir_search_to_mql.core.constants import DEFAULT_SEARCH_TARGET
+from fhir_search_to_mql.temporal import build_date_projections
 
 # Import extractors from extractors package
 from fhir_search_to_mql.denormalizer.extractors import (
@@ -175,8 +176,6 @@ class ResourceDenormalizer:
             return result
 
         denorm_rules = config.get('denormalization', {})
-        if not denorm_rules:
-            return result
 
         # Buckets for top-level denormalization containers. ``_search`` is
         # the canonical bucket; rules may opt into additional buckets (e.g.
@@ -241,6 +240,13 @@ class ResourceDenormalizer:
         for bucket_name, bucket_value in buckets.items():
             if bucket_value:
                 result[bucket_name] = bucket_value
+
+        # Keep canonical FHIR temporal strings untouched and create internal
+        # BSON-date intervals after all configured Period/Timing projections
+        # have been materialized.
+        date_projections = build_date_projections(result, config)
+        if date_projections:
+            result.setdefault(DEFAULT_SEARCH_TARGET, {})["_dates"] = date_projections
 
         return result
 

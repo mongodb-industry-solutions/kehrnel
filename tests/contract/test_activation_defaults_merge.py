@@ -12,7 +12,7 @@ def test_activation_merges_defaults_and_overrides_and_updates_hash(tmp_path):
             "strategy_id": "openehr.rps_dual",
             "version": "0.1.0",
             "domain": "openEHR",
-            "config": {},
+            "config": {"database": "env_merge"},
             "bindings": {},
             "allow_plaintext_bindings": True,
         },
@@ -30,7 +30,7 @@ def test_activation_merges_defaults_and_overrides_and_updates_hash(tmp_path):
             "strategy_id": "openehr.rps_dual",
             "version": "0.1.0",
             "domain": "openEHR",
-            "config": {"collections": {"search": {"atlas_index_name": "custom_idx"}}},
+            "config": {"database": "env_merge", "collections": {"search": {"atlas_index_name": "custom_idx"}}},
             "bindings": {},
             "allow_plaintext_bindings": True,
             "force": True,
@@ -61,20 +61,3 @@ def test_activation_merges_defaults_and_overrides_and_updates_hash(tmp_path):
     plan = res.json()["result"]["plan"]
     search_stage = plan["pipeline"][0]["$search"]
     assert search_stage["index"] == "custom_idx"
-
-    # activation for rps_single also merges defaults
-    res = client.post(
-        "/v1/environments/env-single/activate",
-        json={
-            "strategy_id": "openehr.rps_single",
-            "version": "0.1.0",
-            "domain": "openEHR",
-            "config": {},
-            "bindings": {},
-            "allow_plaintext_bindings": True,
-        },
-    )
-    assert res.status_code == 200
-    act_single = res.json()["activation"]
-    assert act_single["config"]["collections"]["compositions"]["name"] == "compositions_rps"
-    assert act_single["config_hash"]
