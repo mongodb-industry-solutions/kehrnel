@@ -32,10 +32,20 @@ def _is_precondition_failed(exc: Exception) -> bool:
     return code in {"PreconditionFailed", "412"} or exc.__class__.__name__ == "PreconditionFailed"
 
 
-def _assert_identical(existing: Dict[str, Any], content: bytes, digest: str) -> None:
+def _assert_identical(
+    client: Any, bucket: str, key: str, existing: Dict[str, Any], content: bytes, digest: str
+) -> None:
     """Fail unless the stored object already holds exactly these bytes."""
     existing_digest = (existing.get("Metadata") or {}).get("sha256")
     if existing.get("ContentLength") != len(content) or existing_digest != digest:
+        raise ValueError("immutable artifact key already contains different bytes")
+    # Metadata is written by whoever uploaded the object, so it is not evidence
+    # of the bytes; read the object back and hash it, exactly as replay does,
+    # before it is accepted as identical. The length check above bounds the read
+    # to the size of the content already in hand.
+    body = client.get_object(Bucket=bucket, Key=key)["Body"]
+    stored = body.read() if hasattr(body, "read") else bytes(body)
+    if hashlib.sha256(stored).hexdigest() != digest:
         raise ValueError("immutable artifact key already contains different bytes")
 
 
@@ -147,7 +157,7 @@ class S3ArtifactStore:
                 } and not isinstance(exc, FileNotFoundError):
                     raise
             else:
-                _assert_identical(existing, content, digest)
+                _assert_identical(self.client, self.bucket, object_key, existing, content, digest)
                 return
             options: Dict[str, Any] = {
                 "Bucket": self.bucket,
@@ -170,7 +180,8 @@ class S3ArtifactStore:
                 if not _is_precondition_failed(exc):
                     raise
                 # Another writer created the key first; accept it only if identical.
-                _assert_identical(self.client.head_object(Bucket=self.bucket, Key=object_key), content, digest)
+                existing = self.client.head_object(Bucket=self.bucket, Key=object_key)
+                _assert_identical(self.client, self.bucket, object_key, existing, content, digest)
 
         await asyncio.to_thread(store)
         return ArtifactLocation(
@@ -252,6 +263,12 @@ class AzureBlobArtifactStore:
                 existing_metadata = getattr(properties, "metadata", {}) or {}
                 existing_size = getattr(properties, "size", None)
                 if existing_size != len(content) or existing_metadata.get("sha256") != digest:
+                    raise ValueError("immutable artifact key already contains different bytes")
+                # Metadata is written by whoever uploaded the blob, so it is not
+                # evidence of the bytes; download them and hash them, exactly as
+                # the S3 adapter does, before the blob is accepted as identical.
+                stored = blob.download_blob().readall()
+                if hashlib.sha256(stored).hexdigest() != digest:
                     raise ValueError("immutable artifact key already contains different bytes")
                 return
             from azure.storage.blob import ContentSettings

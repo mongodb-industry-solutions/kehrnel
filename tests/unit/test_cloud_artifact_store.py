@@ -81,6 +81,32 @@ async def test_s3_put_losing_a_race_never_overwrites_the_winner():
 
 
 @pytest.mark.asyncio
+async def test_s3_put_hashes_the_stored_object_before_accepting_it_as_identical():
+    client = FakeS3()
+    store = S3ArtifactStore("trial-data", prefix="tenant-a", client=client)
+    key = "sha256/aa/forged"
+    await store.put(key, b"content", media_type="application/octet-stream")
+    # A presigned upload can swap the bytes while keeping the declared length and
+    # the sha256 metadata, so the store must hash the object before accepting it.
+    client.objects[("trial-data", "tenant-a/sha256/aa/forged")]["Body"] = b"altered"
+
+    with pytest.raises(ValueError):
+        await store.put(key, b"content", media_type="application/octet-stream")
+
+    # The same holds when another writer wins the race with forged metadata.
+    client.race_writer = {
+        "Bucket": "trial-data",
+        "Key": "tenant-a/sha256/aa/raced",
+        "Body": b"evil",
+        "Metadata": {"sha256": hashlib.sha256(b"ours").hexdigest()},
+    }
+    with pytest.raises(ValueError):
+        await store.put("sha256/aa/raced", b"ours", media_type="application/octet-stream")
+
+    assert client.objects[("trial-data", "tenant-a/sha256/aa/raced")]["Body"] == b"evil"
+
+
+@pytest.mark.asyncio
 async def test_s3_direct_transfer_targets_are_prefix_scoped_and_checksum_bound():
     client = FakeS3()
     store = S3ArtifactStore("trial-data", prefix="tenant-a", client=client)
