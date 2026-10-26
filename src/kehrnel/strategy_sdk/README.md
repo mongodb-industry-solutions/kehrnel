@@ -1,97 +1,94 @@
-# Adding Strategies to Kehrnel (Plugins, Activation, Portal)
+# Kehrnel Strategy SDK
 
-This guide explains how to add a new strategy plugin, register it, and interact with it from the Healthcare Data Lab portal. The examples use the OpenEHR and FHIR strategies included in the repo. It replaces the former `kernel-usage.md` to avoid duplication.
+The Strategy SDK is the Python authoring contract for executable Kehrnel
+strategy packs. It is not a consumer API and it is not a remote runtime SDK.
+Applications use the FHIR, openEHR, REST, event, MQL or MCP interfaces selected
+by their interaction contracts.
 
-## 1) Define the Strategy Manifest
-- Create a module under `src/strategies/<protocol>/` with a `MANIFEST` (StrategyManifest) and a `StrategyPlugin` subclass.
-- Declare:
-  - `id`, `name`, `version`, `protocols`
-  - `capabilities` (ingest/transform/search/enrich/embed/etc.)
-  - `entrypoint` (`module:Class`)
-  - `config_schema` (JSON Schema) + `default_config`
-  - `adapters` (storage/search/vector/queue) and UI metadata
-- Example (simulated FHIR skeleton): `strategies.fhir.simulated.MANIFEST`.
+The public SDK now imports the exact plug-in and execution types used by the
+Kehrnel runtime. A pack cannot validate against one Python ABI and execute
+against another.
 
-## 2) Implement the Plugin
-- Subclass `StrategyPlugin` and override the hooks you advertise:
-  - `initialize(config, bindings, context)` to validate/configure.
-  - `ingest(payload, bindings, context)` to transform/persist.
-  - `search(query, bindings, context)` if you expose search.
-- Use shared libs to avoid duplication:
-  - OpenEHR: `libs/openehr` (flattener/transformer, remap, codec helpers).
-- Storage/search adapters: bind via `StrategyBindings` (MongoStorageAdapter, etc.).
-- Example: `strategies.fhir.simulated` shows a no-op/echo ingest and a simulated search response.
+## 1) Define the manifest
 
-## 3) Register the Manifest
-- Register manifests via the new runtime (either placed under `src/kehrnel/engine/strategies/**` for discovery or registered programmatically through the API).
-- Built-in registration currently includes: openEHR RPS dual, FHIR resource-first, FHIR simulated skeleton.
+Each pack declares `id`, `name`, `version`, `domain`, `capabilities`, `ops`, an
+`entrypoint` (`module:Class`), configuration schema/defaults, adapter
+requirements, and optional presentation metadata. Bundled packs live under
+`src/kehrnel/engine/strategies/**`.
 
-## 4) Activate a Strategy
-- Use the admin API:
-- `GET /strategies` — list manifests and active strategies.
-- `POST /strategies/activate` with body:
-    ```json
-    {
-      "strategy_id": "fhir.simulated_skeleton",
-      "config": { "mode": "echo" }
-    }
-    ```
-  - Activations are persisted to file when `KEHRNEL_REGISTRY_PATH` is set; restored on startup.
-- Bindings are built from config:
-  - Storage: from `config.target.*` (Mongo) or defaults.
-- Search: from `config.search` (project default is Atlas Search in MongoDB).
-  - Extras: e.g., `{"flattener": CompositionFlattener}` for openEHR.
+Static pack validation checks layout, schemas and the entrypoint declaration
+without importing pack code. Executable conformance is a separate trusted-code
+step.
 
-## 5) Use a Strategy via Ingest API
-- Call strategy/domain routes exposed by the active runtime:
-  - strategy-scoped: `/api/strategies/{domain}/{strategy}/...`
-  - domain-scoped: `/api/domains/{domain}/...`
-  - environment-scoped core runtime: `/environments/{env_id}/...`
-- The runtime routes to the strategy’s capability implementation (`ingest`, `transform`, `query`, `compile_query`, `op`).
+## 2) Implement the runtime hooks
 
-## 6) Portal Integration (discovery + activation)
-- The portal can call `GET /strategies` to populate the catalog (manifests contain tags, protocol badges, “works_with” metadata, links).
-- Activation flow in portal:
-  1. User selects a strategy/version → portal loads its manifest (including `config_schema`).
-  2. Portal renders a config form from `config_schema` (JSON Schema UI).
-  3. Portal posts to `/strategies/activate` with the chosen `strategy_id` and config.
-  4. Portal polls `GET /strategies` to show active strategy per environment.
-- For local dev, activations are file-backed when `KEHRNEL_REGISTRY_PATH` is set.
+Subclass `StrategyPlugin` and implement only the hooks advertised by the
+manifest. Hooks receive one environment-scoped `StrategyContext`; resolved
+adapters and bindings are on that context.
 
-## 7) Skeleton Strategy Template (pseudo-code)
 ```python
-from kehrnel.strategy_sdk import StrategyPlugin, StrategyManifest, StrategyCapability, AdapterRequirements
+from kehrnel.strategy_sdk import (
+    ApplyPlan,
+    ApplyResult,
+    StrategyContext,
+    StrategyManifest,
+    StrategyPlugin,
+)
 
 MANIFEST = StrategyManifest(
-    id="myproto.my_strategy",
+    id="example.operational",
     name="My Strategy",
-    version="0.1.0",
-    protocols=["MyProto"],
-    capabilities=[StrategyCapability.INGEST],
-    entrypoint="strategies.myproto.my_strategy:MyStrategy",
-    adapters=AdapterRequirements(storage=["mongo"]),
-    config_schema={...},
-    default_config={...},
+    version="1",
+    domain="example",
+    capabilities=["plan", "apply", "ingest"],
+    entrypoint="example.strategy:MyStrategy",
 )
 
 class MyStrategy(StrategyPlugin):
     def __init__(self, manifest=MANIFEST):
-        super().__init__(manifest)
-        self.config = {}
-    def initialize(self, config, bindings, context):
-        self.config = config or self.manifest.default_config
-        return StrategyInitResult(config_applied=self.config)
-    def ingest(self, payload, bindings, context):
-        storage = getattr(bindings, "storage", None)
-        # transform/persist payload as needed
-        if storage:
-            storage.insert_one(payload)
-        return {"base": payload, "search": None}
+        self.manifest = manifest
+
+    async def validate_config(self, ctx: StrategyContext) -> None:
+        ...
+
+    async def plan(self, ctx: StrategyContext) -> ApplyPlan:
+        return ApplyPlan(artifacts={})
+
+    async def apply(self, ctx: StrategyContext, plan: ApplyPlan) -> ApplyResult:
+        return ApplyResult()
+
+    async def ingest(self, ctx: StrategyContext, payload: dict) -> dict:
+        ...
 ```
 
-## 8) Tips for Strategy Authors
-- Keep protocol-specific traversal/validation in shared libs to reuse across variants.
-- Declare adapter needs clearly in the manifest to guide portal and runtime bindings.
-- Provide UI metadata (tags, badges, works_with) to improve portal discoverability.
-- Add JSON Schema defaults and examples for a smoother activation UX.
-- If you need remote isolation, expose the strategy via a service URL and register it externally (future work).
+Query-capable packs implement both `compile_query` and `execute_query`.
+Manifest-specific operations implement `run_op`.
+
+## 3) Run executable conformance
+
+Only run executable conformance for built-in or reviewed code because it imports
+the pack entrypoint:
+
+```python
+from kehrnel.strategy_sdk import validate_strategy_entrypoint
+
+report = validate_strategy_entrypoint(manifest)
+if not report.is_conformant:
+    raise RuntimeError(report.as_dict())
+```
+
+Conformance verifies manifest identity, SDK inheritance, required capability
+hooks, hook signatures, and operation dispatch. The bundled conformance suite
+applies the same rules to every built-in pack.
+
+## 4) Activate and operate
+
+The Kehrnel Control API owns environment activation and operation. List packs
+with `GET /v1/strategies`, activate one through the environment-scoped control
+endpoint, then invoke its standard or manifest-specific operations through the
+environment runtime. The Healthcare Data Lab Builder is a client of this API;
+it is not part of the SDK.
+
+Remote strategy isolation, a separately distributed cross-language SDK, and a
+complete package/prove/promote lifecycle remain roadmap work and must not be
+described as available.

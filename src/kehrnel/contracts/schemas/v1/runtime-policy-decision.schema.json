@@ -1,0 +1,86 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:runtime-policy-decision",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "decision": {
+      "const": "allow",
+      "title": "Decision",
+      "type": "string"
+    },
+    "decisionDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Decisiondigest",
+      "type": "string"
+    },
+    "interactionId": {
+      "minLength": 1,
+      "title": "Interactionid",
+      "type": "string"
+    },
+    "packageRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "preparationExecutionRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "scope": {
+      "const": "execute_activated_package_interaction",
+      "title": "Scope",
+      "type": "string"
+    }
+  },
+  "required": [
+    "artifactRef",
+    "decision",
+    "scope",
+    "packageRef",
+    "preparationExecutionRef",
+    "interactionId",
+    "decisionDigest"
+  ],
+  "title": "RuntimePolicyDecision",
+  "type": "object"
+}

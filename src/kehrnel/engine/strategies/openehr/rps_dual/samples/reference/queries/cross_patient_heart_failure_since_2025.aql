@@ -1,0 +1,18 @@
+SELECT
+    e/ehr_id/value AS ehrId,
+    c/uid/value AS compositionUid,
+    c/context/start_time/value AS clinicalStartTime
+FROM
+    EHR e
+        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
+        CONTAINS EVALUATION d[openEHR-EHR-EVALUATION.problem_diagnosis.v1]
+WHERE
+    c/archetype_details/template_id/value = 'sample_laboratory_v0.4'
+    AND d/data[at0001]/items[at0002]/value/defining_code/terminology_id/value = 'SNOMED-CT'
+    AND d/data[at0001]/items[at0002]/value/defining_code/code_string
+        MATCHES {'195111005', '84114007'}
+    AND d/data[at0001]/items[at0003]/value/value >= '2025-01-01T00:00:00Z'
+ORDER BY
+    c/context/start_time/value DESC,
+    c/uid/value ASC
+LIMIT 50

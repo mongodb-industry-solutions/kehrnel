@@ -120,7 +120,8 @@ class SpecialConverter(BaseConverter):
         # Create date converter with meta.lastUpdated field
         config = {
             'type': 'date',
-            'fields': [{'field': 'meta.lastUpdated', 'type': 'date'}]
+            'fields': [{'field': 'meta.lastUpdated', 'type': 'date'}],
+            '_parameter_name': '_lastUpdated',
         }
         
         converter = DateConverter(config)

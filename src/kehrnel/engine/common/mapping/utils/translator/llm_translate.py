@@ -30,14 +30,26 @@ _CODE_LIKE = re.compile(r"^[A-Za-z]{2}\d{4}$")  # e.g., at0003
 def _get_client() -> OpenAI:
     # Try environment; if missing, attempt to load .env here too (extra safety)
     api_key = os.environ.get("OPENAI_API_KEY")
-    if not api_key:
+    dotenv_disabled = os.getenv("KEHRNEL_SKIP_DOTENV", "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+    if not api_key and not dotenv_disabled:
         try:
             from dotenv import load_dotenv, find_dotenv
             load_dotenv(find_dotenv(usecwd=True), override=False)
             api_key = os.environ.get("OPENAI_API_KEY")
         except Exception:
             pass
-    if not api_key:
+    dotenv_disabled = os.getenv("KEHRNEL_SKIP_DOTENV", "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+    if not api_key and not dotenv_disabled:
         raise RuntimeError("OPENAI_API_KEY not set")
     return OpenAI(api_key=api_key)
 

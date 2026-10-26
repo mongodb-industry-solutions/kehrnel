@@ -7,7 +7,7 @@ name = "kehrnel-core"
 version = "0.1.0"
 description = "kehrnel core, mapper and CLI"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 authors = [{ name = "Your Name", email = "you@example.com" }]
 
 # Hard runtime deps
@@ -39,6 +39,10 @@ translate = [
 # Optional persistence
 mongo = ["pymongo>=4"]
 
+# CDISC SAS XPORT ingestion
+cdisc = ["pyreadstat>=1.3,<2", "pandas>=2.1,<3"]
+cdisc-cloud = ["boto3>=1.34,<2", "azure-storage-blob>=12.20,<13"]
+
 # FHIR synthetic data + search (vendored under src/kehrnel/engine/domains/fhir/libs/)
 # No file: URLs here — they break uv wheel metadata. Paths are in [tool.uv.sources].
 # Pip: install libs first, then this extra (see FHIR_TESTING.md).
@@ -53,6 +57,7 @@ api = [
     "uvicorn[standard]>=0.24",
     "motor>=3.3",
     "certifi>=2024.0.0",
+    "python-dotenv>=1.0.0",
     "python-multipart>=0.0.6",
     "pydantic-settings>=2.0.0",
     "pydantic>=2.5"
@@ -85,6 +90,10 @@ all = [
     "pytest>=8.0",
     "pytest-asyncio>=0.23.0",
     "httpx>=0.27.0",
+    "pyreadstat>=1.3,<2",
+    "pandas>=2.1,<3",
+    "boto3>=1.34,<2",
+    "azure-storage-blob>=12.20,<13",
     "fhir-gen",
     "fhir-search-to-mql",
 ]
@@ -121,6 +130,7 @@ include = ["kehrnel*"]
     "**/*.jsonc",
     "**/*.opt",
     "**/*.ndjson",
+    "**/*.aql",
 ]
 "kehrnel.engine.common.mapping" = ["patterns.yaml"]
 
@@ -132,3 +142,4 @@ host = "0.0.0.0"
 port = 8000
 reload = true
 log-level = "info"
+

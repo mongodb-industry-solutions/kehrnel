@@ -3,9 +3,11 @@ print(f"HTTPretty version being used by pytest: {httpx.__version__}")
 print(f"HTTPretty file location: {httpx.__file__}")
 
 import os
-# Test harness defaults: do not require auth and avoid relying on external env vars.
-# create_app() loads .env.local with override=False, so explicitly set values here.
+# Test harness defaults: do not require auth and never discover developer-local
+# dotenv files during collection. Integration credentials must be supplied
+# explicitly by the caller's process environment.
 os.environ.setdefault("KEHRNEL_AUTH_ENABLED", "false")
+os.environ.setdefault("KEHRNEL_SKIP_DOTENV", "true")
 
 import pytest
 import pytest_asyncio
@@ -14,7 +16,6 @@ from httpx import AsyncClient
 import asyncio
 
 from typing import AsyncGenerator
-from dotenv import load_dotenv
 
 try:
     # Compatibility v1 app (optional, can be removed in strategy-only runtime)
@@ -30,11 +31,8 @@ except Exception:
 # This fixture will create a new, clean database for each test session
 # It will drop the database connection after all tests are done
 
-# Load the environment variables
-load_dotenv()
-
-MONGO_TEST_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
-TEST_DB_NAME = os.getenv("TEST_DB_NAME", "kehrnel_test")
+MONGO_TEST_URI = os.getenv("KEHRNEL_TEST_MONGODB_URI", "mongodb://localhost:27017")
+TEST_DB_NAME = os.getenv("KEHRNEL_TEST_DB_NAME", "kehrnel_test")
 
 @pytest_asyncio.fixture(scope="function")
 async def test_db_client() -> AsyncGenerator[AsyncIOMotorClient, None]:
@@ -61,8 +59,10 @@ async def client(test_db_client: AsyncIOMotorClient) -> AsyncGenerator[AsyncClie
 
     # Only run legacy-v1 DB-backed tests when a test Mongo URI is explicitly provided.
     # This avoids failing collection in environments (CI/local) without MongoDB.
-    if "MONGODB_URI" not in os.environ:
-        pytest.skip("MONGODB_URI not set; skipping legacy v1 MongoDB-backed tests.")
+    if "KEHRNEL_TEST_MONGODB_URI" not in os.environ:
+        pytest.skip(
+            "KEHRNEL_TEST_MONGODB_URI not set; skipping legacy v1 MongoDB-backed tests."
+        )
 
     db = test_db_client[TEST_DB_NAME]
 
@@ -73,7 +73,7 @@ async def client(test_db_client: AsyncIOMotorClient) -> AsyncGenerator[AsyncClie
     # Tells the FastAPI app to replace the get_mongodb_ehr_db with the test_db
     def override_get_db():
         return db
-    
+
     app.dependency_overrides[get_mongodb_ehr_db] = override_get_db
     async with AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as c:
         yield c

@@ -5,9 +5,13 @@ kehrnel is the execution kernel.
 
 The split is:
 
-- HDL authors ContextObject definitions, Blocks, Context Maps, Instances, and Con2L artifacts.
+- HDL selects source semantic authorities and consumption contracts. It authors
+  ContextObject definitions, Blocks, Context Maps, Instances, and Con2L
+  artifacts only when a derived or composed semantic mode requires them.
 - HDL previews and inspects runtime behavior.
-- kehrnel resolves ContextObject contracts, negotiates Con2L, compiles deterministic query plans, and executes strategy-specific runtime work.
+- kehrnel preserves native FHIR, openEHR, or CDISC semantics where sufficient;
+  resolves ContextObject contracts where required; and compiles deterministic,
+  strategy-specific runtime work.
 
 For the ContextObjects stack, the concrete seam is:
 
@@ -21,3 +25,4 @@ Current shared ops:
 - `compile_con2l`
 - `summarize_object_map`
 - `negotiate_con2l`
+

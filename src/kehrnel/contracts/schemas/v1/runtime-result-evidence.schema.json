@@ -1,0 +1,47 @@
+{
+  "$id": "urn:mongodb:data-lab:contracts:v1:runtime-result-evidence",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "containsResultPayload": {
+      "const": false,
+      "default": false,
+      "title": "Containsresultpayload",
+      "type": "boolean"
+    },
+    "itemCount": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Itemcount"
+    },
+    "resultDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Resultdigest",
+      "type": "string"
+    },
+    "resultType": {
+      "enum": [
+        "object",
+        "array",
+        "scalar",
+        "null"
+      ],
+      "title": "Resulttype",
+      "type": "string"
+    }
+  },
+  "required": [
+    "resultDigest",
+    "resultType"
+  ],
+  "title": "RuntimeResultEvidence",
+  "type": "object"
+}

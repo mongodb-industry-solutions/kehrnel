@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$repo_root"
+
+python_bin="${PYTHON_BIN:-.venv/bin/python}"
+export KEHRNEL_SKIP_DOTENV=true
+"$python_bin" -m pytest -q \
+  tests/unit/contracts \
+  tests/unit/test_environment_loading.py \
+  tests/unit/test_modeler_proposals.py \
+  tests/unit/test_validate_pack_cli.py \
+  tests/contract/test_contract_schema_registry.py \
+  tests/contract/test_solution_blueprint_instantiation_contracts.py \
+  tests/contract/test_solution_blueprint_canonicalization.py \
+  tests/contract/test_manifest_convergence.py \
+  tests/contract/test_mapping_ir.py \
+  tests/contract/test_modeler_assistant_contracts.py \
+  tests/contract/test_outcome_catalog.py \
+  tests/contract/test_industry_outcome_catalog_runtime.py \
+  tests/contract/test_reference_architecture_instantiation.py \
+  tests/contract/test_package_digest.py \
+  tests/contract/test_strategy_portfolio.py \
+  tests/contract/test_source_aware_strategy_compiler.py \
+  tests/contract/test_strategy_pack_loader.py \
+  tests/contract/test_strategy_pack_validation.py \
+  tests/contract/test_strategy_packs_portable.py

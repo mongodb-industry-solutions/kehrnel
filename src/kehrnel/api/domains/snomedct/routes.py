@@ -13,16 +13,36 @@ from kehrnel.api.bridge.app.core.database import (
     _get_activation,
     _is_env_access_allowed,
 )
-from kehrnel.api.core.admin.routes import _error_response, _json_safe
+from kehrnel.api.core.admin.routes import _error_response, _json_safe, _require_admin_access
 from kehrnel.api.domains.snomedct.models import (
     SnomedConceptExpansionRequest,
     SnomedEclRequest,
+    SnomedGoldNoteRequest,
     SnomedGroundRequest,
+    SnomedGroundedCorpusRequest,
+    SnomedGroundingReviewRequest,
     SnomedHybridSearchRequest,
+    SnomedEnsureIndexesRequest,
+    SnomedLlmGroundRequest,
+    SnomedNlpMapRequest,
+    SnomedReleaseDiffRequest,
+    SnomedReleaseIngestRequest,
+    SnomedReleaseSourceRequest,
+    SnomedReleaseUploadFinalizeRequest,
+    SnomedReleaseUploadInitiateRequest,
+    SnomedReleaseUploadRequest,
     SnomedRelationshipSearchRequest,
+    SnomedRetrievalBenchmarkRequest,
+    SnomedScopeRequest,
     SnomedSearchRequest,
     SnomedSemanticFacetsRequest,
+    SnomedSidecarRebuildRequest,
+    SnomedSubsumesRequest,
+    SnomedUsageEventRequest,
+    SnomedValidateCodeRequest,
     SnomedValueSetExpandRequest,
+    SnomedValueSetRegistrationRequest,
+    SnomedValueSetValidateRequest,
 )
 from kehrnel.engine.core.errors import KehrnelError
 
@@ -63,13 +83,293 @@ def _query_payload(mode: str, payload: dict[str, Any]) -> dict[str, Any]:
     return {"domain": SNOMEDCT_DOMAIN, "query": {"mode": mode, **payload}}
 
 
+def _operation_payload(op: str, payload: dict[str, Any]) -> dict[str, Any]:
+    """Keep direct domain routes safe in a multi-domain environment."""
+
+    return {"domain": SNOMEDCT_DOMAIN, "op": op, "payload": payload}
+
+
+def _model_payload(payload: Any | None) -> dict[str, Any]:
+    return payload.model_dump(exclude_none=True) if payload is not None else {}
+
+
+async def _dispatch_snomed_op(request: Request, op: str, payload: dict[str, Any]) -> dict[str, Any]:
+    env_id = resolve_active_env_id(request)
+    runtime, _ = _require_snomed_activation(request, env_id)
+    return await runtime.dispatch(
+        env_id,
+        "op",
+        {"domain": SNOMEDCT_DOMAIN, "op": op, "payload": payload},
+    )
+
+
+@router.get("/releases")
+async def list_snomed_releases(request: Request, file_pattern: str | None = None):
+    try:
+        return _json_safe(
+            await _dispatch_snomed_op(
+                request,
+                "snomed_list_releases",
+                {"file_pattern": file_pattern} if file_pattern else {},
+            )
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/releases/inspect")
+async def inspect_snomed_release(
+    request: Request,
+    payload: SnomedReleaseSourceRequest | None = Body(default=None),
+):
+    try:
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_inspect_release", _model_payload(payload))
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/releases/diff")
+async def diff_snomed_release(request: Request, payload: SnomedReleaseDiffRequest = Body(...)):
+    try:
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_diff_release", _model_payload(payload))
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/releases/ingest")
+async def ingest_snomed_release(request: Request, payload: SnomedReleaseIngestRequest = Body(...)):
+    try:
+        _require_admin_access(request)
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_ingest_release", _model_payload(payload))
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/releases/upload")
+async def upload_snomed_release(request: Request, payload: SnomedReleaseUploadRequest = Body(...)):
+    """Stage a licensed release JSON from the browser (inline, up to 5 MB)."""
+    try:
+        _require_admin_access(request)
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_upload_release", _model_payload(payload))
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/releases/upload/initiate")
+async def initiate_snomed_release_upload(
+    request: Request,
+    payload: SnomedReleaseUploadInitiateRequest = Body(...),
+):
+    """Create a signed upload target for a licensed release larger than 5 MB."""
+    try:
+        _require_admin_access(request)
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_initiate_release_upload", _model_payload(payload))
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/releases/upload/finalize")
+async def finalize_snomed_release_upload(
+    request: Request,
+    payload: SnomedReleaseUploadFinalizeRequest = Body(...),
+):
+    """Fetch a completed signed upload and stage it as a local release file."""
+    try:
+        _require_admin_access(request)
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_finalize_release_upload", _model_payload(payload))
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/sidecar/rebuild")
+async def rebuild_snomed_sidecar(request: Request, payload: SnomedSidecarRebuildRequest = Body(...)):
+    try:
+        _require_admin_access(request)
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_rebuild_sidecar", _model_payload(payload))
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/indexes/ensure")
+async def ensure_snomed_indexes(request: Request, payload: SnomedEnsureIndexesRequest = Body(...)):
+    try:
+        _require_admin_access(request)
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_ensure_indexes", _model_payload(payload))
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.get("/capabilities")
+async def snomed_capabilities(request: Request, release_id: str | None = None, include_readiness: bool = True):
+    try:
+        payload: dict[str, Any] = {"include_readiness": include_readiness}
+        if release_id:
+            payload["release_id"] = release_id
+        return _json_safe(await _dispatch_snomed_op(request, "snomed_capabilities", payload))
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/validate-code")
+async def validate_snomed_code(request: Request, payload: SnomedValidateCodeRequest = Body(...)):
+    try:
+        result = await _dispatch_snomed_op(request, "snomed_validate_code", payload.model_dump(exclude_none=True))
+        return _json_safe(result)
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/subsumes")
+async def subsumes_snomed_codes(request: Request, payload: SnomedSubsumesRequest = Body(...)):
+    try:
+        result = await _dispatch_snomed_op(request, "snomed_subsumes", payload.model_dump(exclude_none=True))
+        return _json_safe(result)
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+
+
+@router.get("/value-sets")
+async def list_snomed_value_sets(request: Request, status: str | None = None, limit: int = 100):
+    try:
+        return _json_safe(
+            await _dispatch_snomed_op(
+                request,
+                "snomed_list_value_sets",
+                {"status": status, "limit": max(1, min(limit, 500))},
+            )
+        )
+    except HTTPException:
+        raise
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/value-sets")
+async def register_snomed_value_set(
+    request: Request, payload: SnomedValueSetRegistrationRequest = Body(...)
+):
+    try:
+        _require_admin_access(request)
+        return _json_safe(
+            await _dispatch_snomed_op(
+                request, "snomed_put_value_set", payload.model_dump(exclude_none=True)
+            )
+        )
+    except HTTPException:
+        raise
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/value-sets/$validate-code")
+async def validate_snomed_value_set_code(
+    request: Request, payload: SnomedValueSetValidateRequest = Body(...)
+):
+    try:
+        return _json_safe(
+            await _dispatch_snomed_op(
+                request,
+                "snomed_validate_value_set",
+                payload.model_dump(exclude_none=True),
+            )
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
 @router.post("/search")
 async def search_snomed(request: Request, payload: SnomedSearchRequest = Body(...)):
+    """Search the term sidecar with tiered ranking and an optional semantic scope.
+
+    This dispatches to the ``snomed_search`` operation rather than the bare
+    ``search`` query mode, so the HTTP surface and the op surface return the same
+    tiered ordering. The unscoped query mode remains reachable through the
+    universal runtime.
+    """
     try:
-        env_id = resolve_active_env_id(request)
-        runtime, _ = _require_snomed_activation(request, env_id)
-        result = await runtime.dispatch(env_id, "query", _query_payload("search", payload.model_dump(exclude_none=True)))
-        return _json_safe({"ok": True, "matches": result.get("rows", []), "explain": result.get("explain")})
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_search", payload.model_dump(exclude_none=True))
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/suggest")
+async def suggest_snomed(request: Request, payload: SnomedSearchRequest = Body(...)):
+    try:
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_suggest", payload.model_dump(exclude_none=True))
+        )
     except HTTPException:
         raise
     except KehrnelError as exc:
@@ -83,7 +383,7 @@ async def hybrid_search_snomed(request: Request, payload: SnomedHybridSearchRequ
     try:
         env_id = resolve_active_env_id(request)
         runtime, _ = _require_snomed_activation(request, env_id)
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_hybrid_search", "payload": payload.model_dump(exclude_none=True)})
+        result = await runtime.dispatch(env_id, "op", _operation_payload("snomed_hybrid_search", payload.model_dump(exclude_none=True)))
         return _json_safe(result)
     except HTTPException:
         raise
@@ -113,6 +413,35 @@ async def lookup_snomed_concept(request: Request, concept_id: str, release_id: s
         return _error_response(exc)
 
 
+@router.get("/concepts/{concept_id}/history")
+async def history_snomed_concept(
+    request: Request,
+    concept_id: str,
+    language: str = "es",
+    offset: int = 0,
+    limit: int = 20,
+):
+    try:
+        return _json_safe(
+            await _dispatch_snomed_op(
+                request,
+                "snomed_concept_history",
+                {
+                    "concept_id": concept_id,
+                    "language": language,
+                    "offset": max(0, offset),
+                    "limit": max(1, min(limit, 100)),
+                },
+            )
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
 @router.post("/concepts/{concept_id}/children")
 async def children_snomed_concept(request: Request, concept_id: str, payload: SnomedConceptExpansionRequest | None = Body(default=None)):
     try:
@@ -120,7 +449,7 @@ async def children_snomed_concept(request: Request, concept_id: str, payload: Sn
         runtime, _ = _require_snomed_activation(request, env_id)
         body = payload.model_dump(exclude_none=True) if payload else {}
         body["concept_id"] = concept_id
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_concept_children", "payload": body})
+        result = await runtime.dispatch(env_id, "op", _operation_payload("snomed_concept_children", body))
         return _json_safe(result)
     except HTTPException:
         raise
@@ -137,7 +466,7 @@ async def descendants_snomed_concept(request: Request, concept_id: str, payload:
         runtime, _ = _require_snomed_activation(request, env_id)
         body = payload.model_dump(exclude_none=True) if payload else {}
         body["concept_id"] = concept_id
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_concept_descendants", "payload": body})
+        result = await runtime.dispatch(env_id, "op", _operation_payload("snomed_concept_descendants", body))
         return _json_safe(result)
     except HTTPException:
         raise
@@ -154,7 +483,7 @@ async def ancestors_snomed_concept(request: Request, concept_id: str, payload: S
         runtime, _ = _require_snomed_activation(request, env_id)
         body = payload.model_dump(exclude_none=True) if payload else {}
         body["concept_id"] = concept_id
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_concept_ancestors", "payload": body})
+        result = await runtime.dispatch(env_id, "op", _operation_payload("snomed_concept_ancestors", body))
         return _json_safe(result)
     except HTTPException:
         raise
@@ -170,7 +499,8 @@ async def run_snomed_ecl(request: Request, payload: SnomedEclRequest = Body(...)
         env_id = resolve_active_env_id(request)
         runtime, _ = _require_snomed_activation(request, env_id)
         result = await runtime.dispatch(env_id, "query", _query_payload("ecl", payload.model_dump(exclude_none=True)))
-        return _json_safe({"ok": True, "matches": result.get("rows", []), "explain": result.get("explain")})
+        explain = result.get("explain") or {}
+        return _json_safe({"ok": True, "matches": result.get("rows", []), "page": explain.get("page"), "explain": explain})
     except HTTPException:
         raise
     except KehrnelError as exc:
@@ -184,7 +514,7 @@ async def parse_snomed_ecl(request: Request, payload: SnomedEclRequest = Body(..
     try:
         env_id = resolve_active_env_id(request)
         runtime, _ = _require_snomed_activation(request, env_id)
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_parse_ecl", "payload": payload.model_dump(exclude_none=True)})
+        result = await runtime.dispatch(env_id, "op", _operation_payload("snomed_parse_ecl", payload.model_dump(exclude_none=True)))
         return _json_safe(result)
     except HTTPException:
         raise
@@ -199,7 +529,7 @@ async def compile_snomed_ecl(request: Request, payload: SnomedEclRequest = Body(
     try:
         env_id = resolve_active_env_id(request)
         runtime, _ = _require_snomed_activation(request, env_id)
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_compile_ecl", "payload": payload.model_dump(exclude_none=True)})
+        result = await runtime.dispatch(env_id, "op", _operation_payload("snomed_compile_ecl", payload.model_dump(exclude_none=True)))
         return _json_safe(result)
     except HTTPException:
         raise
@@ -214,7 +544,7 @@ async def expand_snomed_value_set(request: Request, payload: SnomedValueSetExpan
     try:
         env_id = resolve_active_env_id(request)
         runtime, _ = _require_snomed_activation(request, env_id)
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_expand_value_set", "payload": payload.model_dump(exclude_none=True)})
+        result = await runtime.dispatch(env_id, "op", _operation_payload("snomed_expand_value_set", payload.model_dump(exclude_none=True)))
         return _json_safe(result)
     except HTTPException:
         raise
@@ -229,7 +559,7 @@ async def relationship_search_snomed(request: Request, payload: SnomedRelationsh
     try:
         env_id = resolve_active_env_id(request)
         runtime, _ = _require_snomed_activation(request, env_id)
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_relationship_search", "payload": payload.model_dump(exclude_none=True)})
+        result = await runtime.dispatch(env_id, "op", _operation_payload("snomed_relationship_search", payload.model_dump(exclude_none=True)))
         return _json_safe(result)
     except HTTPException:
         raise
@@ -244,7 +574,7 @@ async def semantic_facets_snomed(request: Request, payload: SnomedSemanticFacets
     try:
         env_id = resolve_active_env_id(request)
         runtime, _ = _require_snomed_activation(request, env_id)
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_semantic_facets", "payload": payload.model_dump(exclude_none=True) if payload else {}})
+        result = await runtime.dispatch(env_id, "op", _operation_payload("snomed_semantic_facets", payload.model_dump(exclude_none=True) if payload else {}))
         return _json_safe(result)
     except HTTPException:
         raise
@@ -259,8 +589,171 @@ async def ground_snomed_mentions(request: Request, payload: SnomedGroundRequest 
     try:
         env_id = resolve_active_env_id(request)
         runtime, _ = _require_snomed_activation(request, env_id)
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_ground_note", "payload": payload.model_dump(exclude_none=True)})
+        result = await runtime.dispatch(env_id, "op", _operation_payload("snomed_ground_note", payload.model_dump(exclude_none=True)))
         return _json_safe(result)
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/ground/reviews")
+async def save_snomed_grounding_review(
+    request: Request, payload: SnomedGroundingReviewRequest = Body(...)
+):
+    try:
+        _require_admin_access(request)
+        return _json_safe(
+            await _dispatch_snomed_op(
+                request,
+                "snomed_save_grounding_review",
+                payload.model_dump(exclude_none=True),
+            )
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/ground/corpus/search")
+async def query_snomed_grounded_corpus(
+    request: Request, payload: SnomedGroundedCorpusRequest = Body(...)
+):
+    try:
+        return _json_safe(
+            await _dispatch_snomed_op(
+                request,
+                "snomed_query_grounded_corpus",
+                payload.model_dump(exclude_none=True),
+            )
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/benchmarks/retrieval")
+async def benchmark_snomed_retrieval(
+    request: Request, payload: SnomedRetrievalBenchmarkRequest = Body(...)
+):
+    try:
+        return _json_safe(
+            await _dispatch_snomed_op(
+                request,
+                "snomed_benchmark_retrieval",
+                payload.model_dump(exclude_none=True),
+            )
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/scope")
+async def resolve_snomed_scope(request: Request, payload: SnomedScopeRequest = Body(...)):
+    """Resolve an ECL expression and/or area concept into a cached concept-id scope."""
+    try:
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_resolve_scope", payload.model_dump(exclude_none=True))
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/nlp-map")
+async def map_snomed_clinical_note(request: Request, payload: SnomedNlpMapRequest = Body(...)):
+    """Map a clinical note to SNOMED CT candidates with an evidence graph."""
+    try:
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_nlp_map", payload.model_dump(exclude_none=True))
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/llm-ground")
+async def llm_ground_snomed_mentions(request: Request, payload: SnomedLlmGroundRequest = Body(...)):
+    """Let the configured LLM choose among already-retrieved candidates."""
+    try:
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_llm_ground", payload.model_dump(exclude_none=True))
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.get("/gold-notes")
+async def list_snomed_gold_notes(request: Request, limit: int = 100):
+    try:
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_list_gold_notes", {"limit": max(1, min(limit, 500))})
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/gold-notes")
+async def put_snomed_gold_note(request: Request, payload: SnomedGoldNoteRequest = Body(...)):
+    try:
+        _require_admin_access(request)
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_put_gold_note", payload.model_dump(exclude_none=True))
+        )
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.delete("/gold-notes/{note_id}")
+async def delete_snomed_gold_note(request: Request, note_id: str):
+    try:
+        _require_admin_access(request)
+        return _json_safe(await _dispatch_snomed_op(request, "snomed_delete_gold_note", {"id": note_id}))
+    except HTTPException:
+        raise
+    except KehrnelError as exc:
+        return _error_response(exc)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/usage-events")
+async def record_snomed_usage_event(request: Request, payload: SnomedUsageEventRequest = Body(...)):
+    """Record a product/usage event (search executed, result selected, feedback)."""
+    try:
+        return _json_safe(
+            await _dispatch_snomed_op(request, "snomed_record_usage_event", payload.model_dump(exclude_none=True))
+        )
     except HTTPException:
         raise
     except KehrnelError as exc:
@@ -275,7 +768,7 @@ async def snomed_readiness(request: Request, release_id: str | None = None):
         env_id = resolve_active_env_id(request)
         runtime, _ = _require_snomed_activation(request, env_id)
         payload = {"release_id": release_id} if release_id else {}
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_readiness", "payload": payload})
+        result = await runtime.dispatch(env_id, "op", _operation_payload("snomed_readiness", payload))
         return _json_safe(result)
     except HTTPException:
         raise

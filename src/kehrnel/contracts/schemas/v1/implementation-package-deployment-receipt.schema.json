@@ -1,0 +1,205 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:implementation-package-deployment-receipt",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "changeRef": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Changeref"
+    },
+    "contract": {
+      "const": "implementation-package-deployment-receipt/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "deploymentDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Deploymentdigest",
+      "type": "string"
+    },
+    "deploymentId": {
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Deploymentid",
+      "type": "string"
+    },
+    "deploymentNotes": {
+      "anyOf": [
+        {
+          "maxLength": 2000,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Deploymentnotes"
+    },
+    "deploymentOwnerRef": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Deploymentownerref",
+      "type": "string"
+    },
+    "deploymentRequestId": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Deploymentrequestid",
+      "type": "string"
+    },
+    "deploymentScope": {
+      "const": "tenant_environment_release",
+      "title": "Deploymentscope",
+      "type": "string"
+    },
+    "environmentId": {
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$",
+      "title": "Environmentid",
+      "type": "string"
+    },
+    "evidencePersistence": {
+      "const": "durable",
+      "default": "durable",
+      "title": "Evidencepersistence",
+      "type": "string"
+    },
+    "monitoringOwnerRef": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Monitoringownerref",
+      "type": "string"
+    },
+    "nextRequiredAction": {
+      "const": "monitor_release",
+      "title": "Nextrequiredaction",
+      "type": "string"
+    },
+    "operationState": {
+      "const": "succeeded",
+      "title": "Operationstate",
+      "type": "string"
+    },
+    "operationalOwnerRef": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Operationalownerref",
+      "type": "string"
+    },
+    "packageRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "preparationExecutionRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "previousDeploymentRef": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "promotionRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "readinessRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "recordedEffect": {
+      "const": "active_release_binding_created",
+      "title": "Recordedeffect",
+      "type": "string"
+    },
+    "rollbackOwnerRef": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Rollbackownerref",
+      "type": "string"
+    },
+    "trafficManagement": {
+      "const": "external",
+      "title": "Trafficmanagement",
+      "type": "string"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "deploymentId",
+    "deploymentRequestId",
+    "environmentId",
+    "readinessRef",
+    "promotionRef",
+    "packageRef",
+    "preparationExecutionRef",
+    "deploymentOwnerRef",
+    "operationalOwnerRef",
+    "monitoringOwnerRef",
+    "rollbackOwnerRef",
+    "operationState",
+    "deploymentScope",
+    "recordedEffect",
+    "trafficManagement",
+    "nextRequiredAction",
+    "deploymentDigest"
+  ],
+  "title": "ImplementationPackageDeploymentReceipt",
+  "type": "object"
+}

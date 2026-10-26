@@ -1,0 +1,46 @@
+{
+  "contract": "solution-blueprint/v1",
+  "blueprintId": "legacy-lab-modernization",
+  "industry": "healthcare",
+  "revision": 1,
+  "objective": "Modernize laboratory access while preserving the legacy laboratory authority.",
+  "participants": [
+    {"participantId": "legacy-lab", "label": "Legacy laboratory system", "kind": "system", "lifecycle": "existing", "sourceProfileRef": {"kind": "source-profile", "id": "hospital.legacy-lab", "version": "1.0.0", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}},
+    {"participantId": "openehr-cdr", "label": "openEHR operational replica", "kind": "repository", "lifecycle": "planned"},
+    {"participantId": "analytics-app", "label": "Clinical analytics", "kind": "application", "lifecycle": "planned"}
+  ],
+  "interactions": [
+    {
+      "contract": "interaction-contract/v1",
+      "artifactRef": {"kind": "interaction-contract", "id": "legacy-lab.publish-results", "version": "1.0.0", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+      "interactionId": "publish-lab-results",
+      "behavior": "publish",
+      "pattern": "stream",
+      "roles": {"publisherRef": "legacy-lab", "subscriberRef": "openehr-cdr"},
+      "interface": {"kind": "event", "protocolVersion": "1"},
+      "semanticScopeId": "laboratory-result",
+      "workloadRef": {"kind": "workload-profile", "id": "lab-result-stream", "version": "1.0.0", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"},
+      "guarantees": {"acknowledgement": "derived_visible", "consistency": "bounded_staleness", "freshnessTargetSeconds": 30, "idempotencyRequired": true}
+    },
+    {
+      "contract": "interaction-contract/v1",
+      "artifactRef": {"kind": "interaction-contract", "id": "analytics.query-lab-cohort", "version": "1.0.0", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"},
+      "interactionId": "query-lab-cohort",
+      "behavior": "query",
+      "pattern": "request_response",
+      "roles": {"requesterRef": "analytics-app", "providerRef": "openehr-cdr"},
+      "interface": {"kind": "aql", "protocolVersion": "1.0.3"},
+      "semanticScopeId": "laboratory-result",
+      "workloadRef": {"kind": "workload-profile", "id": "cohort-selective", "version": "1.0.0", "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"},
+      "guarantees": {"acknowledgement": "accepted", "consistency": "bounded_staleness", "latencyTargetMs": 300, "freshnessTargetSeconds": 30, "idempotencyRequired": false}
+    }
+  ],
+  "semanticAuthorities": [{"scopeId": "laboratory-result", "mode": "native", "authorityRef": {"kind": "openehr-template", "id": "laboratory-result", "version": "1.0.0", "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}}],
+  "recordAuthorityPolicies": [{"contract": "record-authority-policy/v1", "artifactRef": {"kind": "record-authority-policy", "id": "laboratory-result-authority", "version": "1.0.0", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"}, "scope": {"scopeId": "laboratory-result", "domain": "laboratory", "recordTypes": ["lab-result"], "paths": [], "lifecycleStates": []}, "authoritativeWriterRef": "legacy-lab", "permittedWriterRefs": ["legacy-lab"], "conflictPolicy": "reject", "versionPolicyRef": {"kind": "version-policy", "id": "legacy-source-sequence", "version": "1.0.0", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"}, "correctionBehavior": "Propagate a source correction as a new governed version.", "provenanceRequired": true}],
+  "dataPostures": [{"scopeId": "laboratory-result", "posture": "operational_replica", "servingRepositoryRef": "openehr-cdr"}],
+  "constraints": {"tenancyMode": "single_tenant", "regions": ["eu-west-1"], "estimatedDocuments": 10000000, "peakReadsPerSecond": 200, "peakWritesPerSecond": 100, "retentionDays": 3650},
+  "targetCapabilityProfileRef": {"kind": "target-capability-profile", "id": "atlas-production", "version": "1.0.0", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"},
+  "preferredFoundationRefs": [{"kind": "strategy", "id": "openehr.rps_dual", "version": "1.0.0", "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"}],
+  "assumptions": ["The legacy laboratory remains the record authority."],
+  "decisions": ["Use an operational replica for governed clinical queries."]
+}

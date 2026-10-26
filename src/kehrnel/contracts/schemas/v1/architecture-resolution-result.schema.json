@@ -1,0 +1,883 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "BlueprintRevisionRef": {
+      "additionalProperties": false,
+      "properties": {
+        "blueprintId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Blueprintid",
+          "type": "string"
+        },
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "blueprintId",
+        "revision",
+        "digest"
+      ],
+      "title": "BlueprintRevisionRef",
+      "type": "object"
+    },
+    "CandidateStatus": {
+      "enum": [
+        "ready",
+        "requires_approval",
+        "blocked"
+      ],
+      "title": "CandidateStatus",
+      "type": "string"
+    },
+    "CapabilityAvailability": {
+      "enum": [
+        "available",
+        "unavailable",
+        "unknown"
+      ],
+      "title": "CapabilityAvailability",
+      "type": "string"
+    },
+    "CompilationIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        },
+        "refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Refs",
+          "type": "array"
+        },
+        "severity": {
+          "$ref": "#/$defs/IssueSeverity"
+        }
+      },
+      "required": [
+        "code",
+        "severity",
+        "message"
+      ],
+      "title": "CompilationIssue",
+      "type": "object"
+    },
+    "InteractionBehavior": {
+      "enum": [
+        "create",
+        "update",
+        "delete",
+        "command",
+        "read",
+        "search",
+        "query",
+        "subscribe",
+        "publish",
+        "export"
+      ],
+      "title": "InteractionBehavior",
+      "type": "string"
+    },
+    "IssueSeverity": {
+      "enum": [
+        "info",
+        "review",
+        "blocking"
+      ],
+      "title": "IssueSeverity",
+      "type": "string"
+    },
+    "JsonValue": {},
+    "MaterializationKind": {
+      "enum": [
+        "projection",
+        "index",
+        "search_index",
+        "vector_index",
+        "cache",
+        "export"
+      ],
+      "title": "MaterializationKind",
+      "type": "string"
+    },
+    "MaterializationMaintenance": {
+      "additionalProperties": false,
+      "properties": {
+        "deletionBehavior": {
+          "minLength": 1,
+          "title": "Deletionbehavior",
+          "type": "string"
+        },
+        "freshnessTargetSeconds": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Freshnesstargetseconds"
+        },
+        "rebuildSource": {
+          "minLength": 1,
+          "title": "Rebuildsource",
+          "type": "string"
+        },
+        "recoveryBehavior": {
+          "minLength": 1,
+          "title": "Recoverybehavior",
+          "type": "string"
+        },
+        "retirementCondition": {
+          "minLength": 1,
+          "title": "Retirementcondition",
+          "type": "string"
+        },
+        "updateMode": {
+          "enum": [
+            "synchronous",
+            "asynchronous",
+            "snapshot"
+          ],
+          "title": "Updatemode",
+          "type": "string"
+        }
+      },
+      "required": [
+        "updateMode",
+        "rebuildSource",
+        "deletionBehavior",
+        "recoveryBehavior",
+        "retirementCondition"
+      ],
+      "title": "MaterializationMaintenance",
+      "type": "object"
+    },
+    "MaterializationPlanV1": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/MaterializationKind"
+        },
+        "maintenance": {
+          "$ref": "#/$defs/MaterializationMaintenance"
+        },
+        "materializationId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Materializationid",
+          "type": "string"
+        },
+        "ownerStrategyInstanceId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Ownerstrategyinstanceid",
+          "type": "string"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "servesInteractionIds": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Servesinteractionids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "materializationId",
+        "kind",
+        "ownerStrategyInstanceId",
+        "servesInteractionIds",
+        "rationale",
+        "maintenance"
+      ],
+      "title": "MaterializationPlanV1",
+      "type": "object"
+    },
+    "PreparationPlan": {
+      "additionalProperties": false,
+      "properties": {
+        "artifactRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "blueprintRef": {
+          "$ref": "#/$defs/BlueprintRevisionRef"
+        },
+        "contract": {
+          "const": "preparation-plan/v1",
+          "title": "Contract",
+          "type": "string"
+        },
+        "issues": {
+          "items": {
+            "$ref": "#/$defs/CompilationIssue"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "stages": {
+          "items": {
+            "$ref": "#/$defs/PreparationStage"
+          },
+          "title": "Stages",
+          "type": "array"
+        },
+        "targetCapabilityProfileRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        }
+      },
+      "required": [
+        "contract",
+        "artifactRef",
+        "blueprintRef",
+        "targetCapabilityProfileRef"
+      ],
+      "title": "PreparationPlan",
+      "type": "object"
+    },
+    "PreparationStage": {
+      "additionalProperties": false,
+      "properties": {
+        "bindingRefs": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "title": "Bindingrefs",
+          "type": "array"
+        },
+        "compositionId": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Compositionid"
+        },
+        "failureBehavior": {
+          "minLength": 1,
+          "title": "Failurebehavior",
+          "type": "string"
+        },
+        "freshnessTargetSeconds": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Freshnesstargetseconds"
+        },
+        "inputResources": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Inputresources",
+          "type": "array"
+        },
+        "interactionIds": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Interactionids",
+          "type": "array"
+        },
+        "kind": {
+          "$ref": "#/$defs/PreparationStageKind"
+        },
+        "outputResources": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Outputresources",
+          "type": "array"
+        },
+        "stageId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Stageid",
+          "type": "string"
+        },
+        "strategyInstanceId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Strategyinstanceid",
+          "type": "string"
+        },
+        "trigger": {
+          "$ref": "#/$defs/PreparationTrigger"
+        }
+      },
+      "required": [
+        "stageId",
+        "kind",
+        "trigger",
+        "strategyInstanceId",
+        "interactionIds",
+        "outputResources",
+        "failureBehavior"
+      ],
+      "title": "PreparationStage",
+      "type": "object"
+    },
+    "PreparationStageKind": {
+      "enum": [
+        "validate",
+        "map",
+        "enrich",
+        "compose",
+        "authoritative_write",
+        "materialize",
+        "index",
+        "rebuild"
+      ],
+      "title": "PreparationStageKind",
+      "type": "string"
+    },
+    "PreparationTrigger": {
+      "enum": [
+        "synchronous_write",
+        "asynchronous_event",
+        "batch"
+      ],
+      "title": "PreparationTrigger",
+      "type": "string"
+    },
+    "QueryPlanFamily": {
+      "additionalProperties": false,
+      "properties": {
+        "fallbackPlanFamilyIds": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Fallbackplanfamilyids",
+          "type": "array"
+        },
+        "interactionIds": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Interactionids",
+          "type": "array"
+        },
+        "mechanism": {
+          "minLength": 1,
+          "title": "Mechanism",
+          "type": "string"
+        },
+        "planFamilyId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Planfamilyid",
+          "type": "string"
+        },
+        "runtimeConstraints": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Runtimeconstraints",
+          "type": "object"
+        },
+        "semanticBindingRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "strategyInstanceId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Strategyinstanceid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "planFamilyId",
+        "interactionIds",
+        "strategyInstanceId",
+        "semanticBindingRef",
+        "mechanism"
+      ],
+      "title": "QueryPlanFamily",
+      "type": "object"
+    },
+    "ResolvedArchitecturePlan": {
+      "additionalProperties": false,
+      "properties": {
+        "artifactRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "blueprintRef": {
+          "$ref": "#/$defs/BlueprintRevisionRef"
+        },
+        "contract": {
+          "const": "resolved-architecture-plan/v1",
+          "title": "Contract",
+          "type": "string"
+        },
+        "issues": {
+          "items": {
+            "$ref": "#/$defs/CompilationIssue"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "materializations": {
+          "items": {
+            "$ref": "#/$defs/MaterializationPlanV1"
+          },
+          "title": "Materializations",
+          "type": "array"
+        },
+        "preparationPlanRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "queryPlanFamilies": {
+          "items": {
+            "$ref": "#/$defs/QueryPlanFamily"
+          },
+          "title": "Queryplanfamilies",
+          "type": "array"
+        },
+        "requiresApproval": {
+          "title": "Requiresapproval",
+          "type": "boolean"
+        },
+        "resourceOwnership": {
+          "items": {
+            "$ref": "#/$defs/ResourceOwnership"
+          },
+          "title": "Resourceownership",
+          "type": "array"
+        },
+        "runtimePlanRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "semanticBindingRefs": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "title": "Semanticbindingrefs",
+          "type": "array"
+        },
+        "status": {
+          "$ref": "#/$defs/CandidateStatus"
+        },
+        "strategyInstances": {
+          "items": {
+            "$ref": "#/$defs/ResolvedStrategyInstance"
+          },
+          "title": "Strategyinstances",
+          "type": "array"
+        },
+        "targetCapabilityProfileRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "targetCompatibility": {
+          "items": {
+            "$ref": "#/$defs/TargetCompatibilityAssessment"
+          },
+          "title": "Targetcompatibility",
+          "type": "array"
+        }
+      },
+      "required": [
+        "contract",
+        "artifactRef",
+        "blueprintRef",
+        "targetCapabilityProfileRef",
+        "status",
+        "requiresApproval"
+      ],
+      "title": "ResolvedArchitecturePlan",
+      "type": "object"
+    },
+    "ResolvedStrategyInstance": {
+      "additionalProperties": false,
+      "properties": {
+        "bindingRefs": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "title": "Bindingrefs",
+          "type": "array"
+        },
+        "capabilityRequirements": {
+          "items": {
+            "$ref": "#/$defs/TargetCapabilityRequirement"
+          },
+          "title": "Capabilityrequirements",
+          "type": "array"
+        },
+        "configurationDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Configurationdigest",
+          "type": "string"
+        },
+        "dependencyRefs": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "title": "Dependencyrefs",
+          "type": "array"
+        },
+        "interactionIds": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Interactionids",
+          "type": "array"
+        },
+        "strategyInstanceId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Strategyinstanceid",
+          "type": "string"
+        },
+        "strategyRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        }
+      },
+      "required": [
+        "strategyInstanceId",
+        "strategyRef",
+        "configurationDigest"
+      ],
+      "title": "ResolvedStrategyInstance",
+      "type": "object"
+    },
+    "ResourceOwnership": {
+      "additionalProperties": false,
+      "properties": {
+        "ownerStrategyInstanceId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Ownerstrategyinstanceid",
+          "type": "string"
+        },
+        "resourceId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Resourceid",
+          "type": "string"
+        },
+        "resourceKind": {
+          "minLength": 1,
+          "title": "Resourcekind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "resourceId",
+        "resourceKind",
+        "ownerStrategyInstanceId"
+      ],
+      "title": "ResourceOwnership",
+      "type": "object"
+    },
+    "RuntimeExecutionPlan": {
+      "additionalProperties": false,
+      "properties": {
+        "artifactRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "blueprintRef": {
+          "$ref": "#/$defs/BlueprintRevisionRef"
+        },
+        "contract": {
+          "const": "runtime-execution-plan/v1",
+          "title": "Contract",
+          "type": "string"
+        },
+        "issues": {
+          "items": {
+            "$ref": "#/$defs/CompilationIssue"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "routes": {
+          "items": {
+            "$ref": "#/$defs/RuntimeRoute"
+          },
+          "title": "Routes",
+          "type": "array"
+        },
+        "targetCapabilityProfileRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        }
+      },
+      "required": [
+        "contract",
+        "artifactRef",
+        "blueprintRef",
+        "targetCapabilityProfileRef"
+      ],
+      "title": "RuntimeExecutionPlan",
+      "type": "object"
+    },
+    "RuntimeRoute": {
+      "additionalProperties": false,
+      "properties": {
+        "behavior": {
+          "$ref": "#/$defs/InteractionBehavior"
+        },
+        "executorRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "fallbackBehavior": {
+          "minLength": 1,
+          "title": "Fallbackbehavior",
+          "type": "string"
+        },
+        "interactionId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Interactionid",
+          "type": "string"
+        },
+        "planFamilyId": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Planfamilyid"
+        },
+        "plannerRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "policyRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "routeId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Routeid",
+          "type": "string"
+        },
+        "semanticBindingRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "strategyInstanceId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Strategyinstanceid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "routeId",
+        "interactionId",
+        "behavior",
+        "strategyInstanceId",
+        "semanticBindingRef",
+        "plannerRef",
+        "executorRef",
+        "fallbackBehavior"
+      ],
+      "title": "RuntimeRoute",
+      "type": "object"
+    },
+    "TargetCapabilityRequirement": {
+      "additionalProperties": false,
+      "properties": {
+        "capabilityId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Capabilityid",
+          "type": "string"
+        },
+        "minimumVersion": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Minimumversion"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "required": {
+          "default": true,
+          "title": "Required",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "capabilityId",
+        "rationale"
+      ],
+      "title": "TargetCapabilityRequirement",
+      "type": "object"
+    },
+    "TargetCompatibilityAssessment": {
+      "additionalProperties": false,
+      "properties": {
+        "availability": {
+          "$ref": "#/$defs/CapabilityAvailability"
+        },
+        "capabilityId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Capabilityid",
+          "type": "string"
+        },
+        "compatible": {
+          "title": "Compatible",
+          "type": "boolean"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "capabilityId",
+        "required",
+        "availability",
+        "compatible",
+        "rationale"
+      ],
+      "title": "TargetCompatibilityAssessment",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:architecture-resolution-result",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "contract": {
+      "const": "architecture-resolution-result/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "preparationPlan": {
+      "$ref": "#/$defs/PreparationPlan"
+    },
+    "resolvedPlan": {
+      "$ref": "#/$defs/ResolvedArchitecturePlan"
+    },
+    "runtimePlan": {
+      "$ref": "#/$defs/RuntimeExecutionPlan"
+    }
+  },
+  "required": [
+    "contract",
+    "resolvedPlan",
+    "preparationPlan",
+    "runtimePlan"
+  ],
+  "title": "ArchitectureResolutionResult",
+  "type": "object"
+}

@@ -1,0 +1,140 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "JsonValue": {},
+    "PerformanceModelKind": {
+      "enum": [
+        "analytical",
+        "calibrated",
+        "analogous"
+      ],
+      "title": "PerformanceModelKind",
+      "type": "string"
+    },
+    "WorkloadShape": {
+      "enum": [
+        "point_lookup",
+        "patient_bounded",
+        "index_range",
+        "cohort_selective",
+        "cohort_broad",
+        "full_scan",
+        "search",
+        "vector_search",
+        "aggregation",
+        "graph_traversal",
+        "event_timeline",
+        "semantic_resolution",
+        "natural_language",
+        "write",
+        "bulk_ingest"
+      ],
+      "title": "WorkloadShape",
+      "type": "string"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:performance-model",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "applicableStrategyIds": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Applicablestrategyids",
+      "type": "array"
+    },
+    "applicableWorkloadShapes": {
+      "items": {
+        "$ref": "#/$defs/WorkloadShape"
+      },
+      "minItems": 1,
+      "title": "Applicableworkloadshapes",
+      "type": "array"
+    },
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "assumptions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Assumptions",
+      "type": "array"
+    },
+    "benchmarkEvidenceRefs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "title": "Benchmarkevidencerefs",
+      "type": "array"
+    },
+    "contract": {
+      "const": "performance-model/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "kind": {
+      "$ref": "#/$defs/PerformanceModelKind"
+    },
+    "modelVersion": {
+      "minLength": 1,
+      "title": "Modelversion",
+      "type": "string"
+    },
+    "validityBounds": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "title": "Validitybounds",
+      "type": "object"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "kind",
+    "modelVersion",
+    "applicableStrategyIds",
+    "applicableWorkloadShapes"
+  ],
+  "title": "PerformanceModel",
+  "type": "object"
+}

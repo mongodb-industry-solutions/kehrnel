@@ -6,8 +6,8 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import Optional
 
 from kehrnel.api.domains.openehr.directory.service import (
-    create_directory, 
-    update_directory, 
+    create_directory,
+    update_directory,
     retrieve_directory,
     retrieve_directory_by_version_id,
     delete_directory
@@ -15,13 +15,15 @@ from kehrnel.api.domains.openehr.directory.service import (
 
 from kehrnel.api.domains.openehr.directory.models import Folder, FolderCreate
 from kehrnel.api.domains.openehr.directory.api_responses import (
-    create_directory_responses, 
+    create_directory_responses,
     update_directory_responses,
     get_directory_responses,
     get_directory_by_version_id_responses,
     delete_directory_responses
 )
 from kehrnel.api.bridge.app.core.database import get_mongodb_ehr_db
+from kehrnel.api.bridge.app.core.config_models import CompositionCollectionNames
+from kehrnel.api.domains.openehr.composition.dependencies import get_composition_config
 
 router = APIRouter(
     tags = ["Directory"]
@@ -46,7 +48,8 @@ async def get_directory_endpoint(
         None,
         description="Path to a sub-folder. Example: episodes/a/b/c",
     ),
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Retrieves the version of the directory FOLDER associated with the EHR.
@@ -59,7 +62,8 @@ async def get_directory_endpoint(
         ehr_id=ehr_id,
         version_at_time=version_at_time,
         path=path,
-        db=db
+        db=db,
+        config=config,
     )
 
     response.headers["ETag"] = f'"{root_version_uid}"'
@@ -86,17 +90,19 @@ async def get_directory_by_version_id_endpoint(
         description="Path to a sub-folder. Example: episodes/a/b/c",
     ),
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Retrieves a particular version of the directory FOLDER, identified by `version_uid`.
 
-    - If `path` is supplied, retrieves only the sub-FOLDER at that path. 
+    - If `path` is supplied, retrieves only the sub-FOLDER at that path.
     """
     folder, time_committed = await retrieve_directory_by_version_id(
         ehr_id=ehr_id,
         version_uid=version_uid,
         path=path,
-        db=db
+        db=db,
+        config=config,
     )
 
     response.headers["ETag"] = f'"{version_uid}"'
@@ -119,7 +125,8 @@ async def create_directory_endpoint(
     response: Response,
     payload: FolderCreate,
     prefer: str = Header("return=minimal", alias="Prefer"),
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Creates a new directory FOLDER associated with the EHR identified by `ehr_id`.
@@ -134,11 +141,12 @@ async def create_directory_endpoint(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail = "Invalid 'Prefer' header value. Must be 'return=representation' or 'return=minimal'."
         )
-    
+
     created_directory, time_created = await create_directory(
         ehr_id=ehr_id,
         directory_payload=payload,
-        db=db
+        db=db,
+        config=config,
     )
 
     version_uid = created_directory.uid.value
@@ -153,7 +161,7 @@ async def create_directory_endpoint(
         # with no content and a 204/205/304 status, but for 201 it will.
         # So we return a Response with an empty body.
         return Response(status_code=status.HTTP_201_CREATED, headers=response.headers)
-    
+
 @router.put(
     "/ehr/{ehr_id}/directory",
     status_code=status.HTTP_200_OK,
@@ -167,7 +175,8 @@ async def update_directory_endpoint(
     payload: FolderCreate,
     if_match: str = Header(..., alias="If-Match", description="The last known version_uid of the directory."),
     prefer: str = Header("return=minimal", alias="Prefer"),
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Updates the directory FOLDER for the specified EHR.
@@ -184,7 +193,7 @@ async def update_directory_endpoint(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid 'Prefer' header value. Must be 'return=representation' or 'return=minimal'."
         )
-    
+
     # The version UID in If-Match is quoted
     preceding_version_uid = if_match.strip('"')
 
@@ -192,7 +201,8 @@ async def update_directory_endpoint(
         ehr_id=ehr_id,
         if_match_uid=preceding_version_uid,
         directory_payload=payload,
-        db=db
+        db=db,
+        config=config,
     )
 
     new_version_uid = updated_directory.uid.value
@@ -205,7 +215,7 @@ async def update_directory_endpoint(
     else:
         # For PUT with minimal return, 204 No Content is more appropriate than 200 OK.
         return Response(status_code=status.HTTP_204_NO_CONTENT, headers=response.headers)
-    
+
 
 @router.delete(
     "/ehr/{ehr_id}/directory",
@@ -217,6 +227,7 @@ async def delete_directory_endpoint(
     ehr_id: str,
     if_match: str = Header(..., alias="If-Match", description="The last known version_uid of the directory."),
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Deletes the directory FOLDER associated with the EHR.
@@ -230,7 +241,8 @@ async def delete_directory_endpoint(
     await delete_directory(
         ehr_id=ehr_id,
         preceding_version_uid=preceding_version_uid,
-        db=db
+        db=db,
+        config=config,
     )
 
     # A 204 response should not have a body, so we return a Response object.

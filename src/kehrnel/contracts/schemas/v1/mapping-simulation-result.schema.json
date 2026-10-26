@@ -1,0 +1,309 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "ExecutionState": {
+      "enum": [
+        "planned",
+        "running",
+        "executed",
+        "failed",
+        "cancelled"
+      ],
+      "title": "ExecutionState",
+      "type": "string"
+    },
+    "FieldLineage": {
+      "additionalProperties": false,
+      "properties": {
+        "documentIndex": {
+          "minimum": 0,
+          "title": "Documentindex",
+          "type": "integer"
+        },
+        "ruleId": {
+          "title": "Ruleid",
+          "type": "string"
+        },
+        "semanticConceptId": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Semanticconceptid"
+        },
+        "sourceKind": {
+          "enum": [
+            "field",
+            "constant"
+          ],
+          "title": "Sourcekind",
+          "type": "string"
+        },
+        "sourcePath": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sourcepath"
+        },
+        "targetPath": {
+          "title": "Targetpath",
+          "type": "string"
+        },
+        "terminologyRef": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Terminologyref"
+        },
+        "transformOperations": {
+          "items": {
+            "$ref": "#/$defs/MappingTransformOperation"
+          },
+          "title": "Transformoperations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "documentIndex",
+        "ruleId",
+        "targetPath",
+        "sourceKind"
+      ],
+      "title": "FieldLineage",
+      "type": "object"
+    },
+    "MappedDocumentRoute": {
+      "additionalProperties": false,
+      "properties": {
+        "documentId": {
+          "minLength": 1,
+          "title": "Documentid",
+          "type": "string"
+        },
+        "documentIndex": {
+          "minimum": 0,
+          "title": "Documentindex",
+          "type": "integer"
+        },
+        "subjectKey": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subjectkey"
+        }
+      },
+      "required": [
+        "documentIndex",
+        "documentId"
+      ],
+      "title": "MappedDocumentRoute",
+      "type": "object"
+    },
+    "MappingExecutionMode": {
+      "enum": [
+        "batch",
+        "cdc"
+      ],
+      "title": "MappingExecutionMode",
+      "type": "string"
+    },
+    "MappingRecordError": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "deadLetterContract": {
+          "minLength": 1,
+          "title": "Deadlettercontract",
+          "type": "string"
+        },
+        "message": {
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        },
+        "recordIndex": {
+          "minimum": 0,
+          "title": "Recordindex",
+          "type": "integer"
+        },
+        "ruleId": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ruleid"
+        },
+        "sourcePath": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sourcepath"
+        }
+      },
+      "required": [
+        "recordIndex",
+        "code",
+        "message",
+        "deadLetterContract"
+      ],
+      "title": "MappingRecordError",
+      "type": "object"
+    },
+    "MappingTransformOperation": {
+      "enum": [
+        "to_string",
+        "to_integer",
+        "to_decimal",
+        "iso_datetime",
+        "lowercase",
+        "uppercase"
+      ],
+      "title": "MappingTransformOperation",
+      "type": "string"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:mapping-simulation-result",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "contract": {
+      "const": "mapping-simulation-result/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "documentIdempotencyKeys": {
+      "items": {
+        "pattern": "^sha256:[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "title": "Documentidempotencykeys",
+      "type": "array"
+    },
+    "documentRoutes": {
+      "items": {
+        "$ref": "#/$defs/MappedDocumentRoute"
+      },
+      "title": "Documentroutes",
+      "type": "array"
+    },
+    "documents": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Documents",
+      "type": "array"
+    },
+    "errors": {
+      "items": {
+        "$ref": "#/$defs/MappingRecordError"
+      },
+      "title": "Errors",
+      "type": "array"
+    },
+    "lineage": {
+      "items": {
+        "$ref": "#/$defs/FieldLineage"
+      },
+      "title": "Lineage",
+      "type": "array"
+    },
+    "mappingRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "mode": {
+      "$ref": "#/$defs/MappingExecutionMode"
+    },
+    "outputDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Outputdigest",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/ExecutionState"
+    }
+  },
+  "required": [
+    "contract",
+    "mappingRef",
+    "state",
+    "mode",
+    "outputDigest"
+  ],
+  "title": "MappingSimulationResult",
+  "type": "object"
+}

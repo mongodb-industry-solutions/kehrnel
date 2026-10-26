@@ -1,0 +1,11 @@
+{
+  "contract": "performance-model/v1",
+  "artifactRef": {"kind": "performance-model", "id": "openehr-rps-dual-cohort", "version": "1.0.0", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+  "kind": "calibrated",
+  "modelVersion": "1.0.0",
+  "applicableStrategyIds": ["openehr.rps_dual"],
+  "applicableWorkloadShapes": ["cohort_selective", "cohort_broad"],
+  "benchmarkEvidenceRefs": [{"kind": "benchmark-evidence", "id": "openehr-cohort-selective-small", "version": "1.0.0", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}],
+  "assumptions": ["Index selectivity and shard fan-out remain within the stated validity bounds."],
+  "validityBounds": {"minimumRecords": 100000, "maximumRecords": 100000000, "maximumShardFanout": 4}
+}

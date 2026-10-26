@@ -101,6 +101,24 @@
   },
   "ops": [
     {
+      "name": "list_native_ehrs",
+      "kind": "read",
+      "summary": "List distinct EHR ids represented in the configured composition collection",
+      "input_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "list_native_compositions",
+      "kind": "read",
+      "summary": "List native composition summaries for an EHR",
+      "input_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "fetch_native_composition",
+      "kind": "read",
+      "summary": "Fetch one stored native composition document",
+      "input_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
       "name": "ensure_dictionaries",
       "kind": "maintenance",
       "summary": "Ensure and seed _codes/_shortcuts dictionaries",
@@ -132,16 +150,288 @@
       "input_schema": { "type": "object", "additionalProperties": true }
     },
     {
-      "name": "rebuild_search_collection",
+      "name": "ensure_atlas_search_index",
       "kind": "maintenance",
-      "summary": "Rebuild the slim search collection from composition documents",
-      "input_schema": { "type": "object", "additionalProperties": true }
+      "summary": "Ensure Atlas Search index for slim search collection",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "index_name": { "type": "string" },
+          "recreate": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "result": { "type": "object" },
+          "warnings": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    {
+      "name": "prepare_search_projection_dictionary",
+      "kind": "maintenance",
+      "summary": "Compile active projection mappings and persist any missing encoded path identifiers before a governed rebuild",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "dry_run": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "dryRun": { "type": "boolean" },
+          "templateCount": { "type": "integer" },
+          "fieldCount": { "type": "integer" },
+          "dictionary": { "type": "object" }
+        }
+      }
+    },
+    {
+      "name": "prepare_search_projection_dictionary",
+      "kind": "maintenance",
+      "summary": "Compile active projection mappings and persist any missing encoded path identifiers before a governed rebuild",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "dry_run": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "dryRun": { "type": "boolean" },
+          "templateCount": { "type": "integer" },
+          "fieldCount": { "type": "integer" },
+          "dictionary": { "type": "object" }
+        }
+      }
+    },
+    {
+      "name": "prepare_search_projection_dictionary",
+      "kind": "maintenance",
+      "summary": "Compile active projection mappings and persist any missing encoded path identifiers before a governed rebuild",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "dry_run": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "dryRun": { "type": "boolean" },
+          "templateCount": { "type": "integer" },
+          "fieldCount": { "type": "integer" },
+          "dictionary": { "type": "object" }
+        }
+      }
+    },
+    {
+      "name": "recover_search_projection_rebuild",
+      "kind": "maintenance",
+      "summary": "Release a verifiably stale interrupted rebuild lease while preserving its resumable checkpoint",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "minimum_age_seconds": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 86400,
+            "default": 300
+          },
+          "template_ids": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 128,
+            "uniqueItems": true,
+            "items": { "type": "string", "minLength": 1, "maxLength": 512 },
+            "description": "Optional Analytics-selected template scope for the shared RPS Dual projection."
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "recovered": { "type": "boolean" },
+          "reason": { "type": "string" },
+          "ageSeconds": { "type": "integer" },
+          "checkpoint": { "type": "object" }
+        }
+      }
+    },
+    {
+      "name": "semantic_projection_preflight",
+      "kind": "diagnostic",
+      "summary": "Verify mappings, rebuild revision, and live Atlas Search readiness for a governed semantic query",
+      "input_schema": {
+        "type": "object",
+        "required": [
+          "contract",
+          "templateId",
+          "templateSourceDigest",
+          "catalogDigest",
+          "planDigest",
+          "requiredPaths"
+        ],
+        "properties": {
+          "contract": {
+            "const": "openehr-semantic-projection-preflight/v1"
+          },
+          "templateId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "templateSourceDigest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "catalogDigest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "planDigest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "requiredPaths": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 256,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096,
+              "pattern": "^/"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "contract": { "type": "string" },
+          "ready": { "type": "boolean" },
+          "manifest": { "type": "object" },
+          "rebuildState": { "type": "string" },
+          "rebuildComplete": { "type": "boolean" },
+          "rebuildInProgress": { "type": "boolean" },
+          "rebuildWatermark": { "type": ["object", "null"] },
+          "atlasIndexState": { "type": "string" },
+          "atlasIndexLiveVerified": { "type": "boolean" },
+          "reasons": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    {
+      "name": "rebuild_slim_search_collection",
+      "kind": "maintenance",
+      "summary": "Rebuild slim search docs from canonical compositions",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "batch_size": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000,
+            "default": 100
+          },
+          "cursor": {
+            "type": ["string", "null"],
+            "description": "Opaque next_cursor returned by the preceding rebuild batch."
+          },
+          "template_ids": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 128,
+            "uniqueItems": true,
+            "items": { "type": "string", "minLength": 1, "maxLength": 512 },
+            "description": "Optional Analytics-selected template scope within the shared search projection."
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "processed": { "type": "integer" },
+          "inserted": { "type": "integer" },
+          "upserted": { "type": "integer" },
+          "skipped_empty": { "type": "integer" },
+          "complete": { "type": "boolean" },
+          "next_cursor": { "type": ["string", "null"] },
+          "counts": { "type": "object" },
+          "watermark": { "type": "object" },
+          "projection": { "type": "object" },
+          "index": { "type": "object" },
+          "reconciliation": { "type": "object" },
+          "state": { "type": "object" },
+          "warnings": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
     },
     {
       "name": "synthetic_generate_batch",
-      "kind": "extension",
+      "kind": "synthetic",
       "summary": "Generate synthetic openEHR documents",
       "input_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "operational_probe",
+      "kind": "diagnostic",
+      "summary": "Read-only runtime, collection, projection-revision, and managed-index drift evidence",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": true
+      }
     }
-  ]
+  ],
+  "adapters": {
+    "storage": [
+      "mongo"
+    ],
+    "search": [
+      "atlas_search"
+    ]
+  }
 }

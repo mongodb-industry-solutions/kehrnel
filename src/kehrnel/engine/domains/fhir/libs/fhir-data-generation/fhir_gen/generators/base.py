@@ -89,6 +89,11 @@ class ResourceGenerator:
     def store(self) -> ReferenceStore:
         return self._store
 
+    @property
+    def schema_registry(self) -> SchemaRegistry:
+        """Schema definitions used by this generator for the active release."""
+        return self._registry
+
     def generate(
         self,
         resource_type: str,
@@ -409,6 +414,17 @@ class ResourceGenerator:
         resource = normalize_canonical_resource(
             resource, self._types, self._store, self.rng
         )
+
+        # Apply profile pack (US Core etc.) — R4 only, opt-in via settings
+        from ..config import settings
+        if settings.profile_pack:
+            from ..profiles.applicator import apply_profile_pack
+            resource = apply_profile_pack(
+                resource,
+                settings.profile_pack,
+                settings.fhir_version,
+                self.rng,
+            )
 
         if overrides:
             resource.update(overrides)

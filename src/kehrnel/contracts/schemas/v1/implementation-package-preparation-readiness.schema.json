@@ -1,0 +1,222 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "StrategyPreparationRequirement": {
+      "additionalProperties": false,
+      "properties": {
+        "activationSpecDigest": {
+          "anyOf": [
+            {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Activationspecdigest"
+        },
+        "bindingsRef": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bindingsref"
+        },
+        "configurationKeys": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Configurationkeys",
+          "type": "array"
+        },
+        "missingInputs": {
+          "items": {
+            "enum": [
+              "activation_input",
+              "strategy_reference",
+              "domain",
+              "configuration",
+              "database",
+              "bindings_ref",
+              "approval"
+            ],
+            "type": "string"
+          },
+          "title": "Missinginputs",
+          "type": "array"
+        },
+        "state": {
+          "enum": [
+            "ready",
+            "blocked"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "strategyInstanceId": {
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$",
+          "title": "Strategyinstanceid",
+          "type": "string"
+        },
+        "strategyRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "validationErrors": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Validationerrors",
+          "type": "array"
+        }
+      },
+      "required": [
+        "strategyInstanceId",
+        "strategyRef",
+        "state"
+      ],
+      "title": "StrategyPreparationRequirement",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:implementation-package-preparation-readiness",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "contract": {
+      "const": "implementation-package-preparation-readiness/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "deferredStageIds": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Deferredstageids",
+      "type": "array"
+    },
+    "environmentId": {
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$",
+      "title": "Environmentid",
+      "type": "string"
+    },
+    "materializationReceiptRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "nextRequiredAction": {
+      "enum": [
+        "provide_activation_inputs",
+        "activate_strategies"
+      ],
+      "title": "Nextrequiredaction",
+      "type": "string"
+    },
+    "packageRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "preparationExecuted": {
+      "const": false,
+      "default": false,
+      "title": "Preparationexecuted",
+      "type": "boolean"
+    },
+    "preparationPlanRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "readinessDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Readinessdigest",
+      "type": "string"
+    },
+    "readinessId": {
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Readinessid",
+      "type": "string"
+    },
+    "runtimeExecuted": {
+      "const": false,
+      "default": false,
+      "title": "Runtimeexecuted",
+      "type": "boolean"
+    },
+    "state": {
+      "enum": [
+        "ready",
+        "blocked"
+      ],
+      "title": "State",
+      "type": "string"
+    },
+    "strategyRequirements": {
+      "items": {
+        "$ref": "#/$defs/StrategyPreparationRequirement"
+      },
+      "minItems": 1,
+      "title": "Strategyrequirements",
+      "type": "array"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "readinessId",
+    "environmentId",
+    "materializationReceiptRef",
+    "packageRef",
+    "preparationPlanRef",
+    "state",
+    "strategyRequirements",
+    "nextRequiredAction",
+    "readinessDigest"
+  ],
+  "title": "ImplementationPackagePreparationReadiness",
+  "type": "object"
+}

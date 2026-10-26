@@ -107,3 +107,42 @@ not `common ingest`.
 The AQL examples are maintained alongside the packaged sample dataset and are
 validated in tests by compiling them against the bundled dictionaries and the
 packaged envelopes after flattening.
+
+## Heart-failure semantic cohort
+
+The reference pack also includes a deterministic cohort for the complete
+openEHR query path:
+
+```text
+SNOMED CT expansion
+  -> OPT-derived diagnosis and recognition-date paths
+  -> RPS Dual search projection
+  -> correlated AQL-to-MongoDB plan
+```
+
+The two bundled heart-failure codes are an **illustrative fixture subset**, not
+an authoritative SNOMED CT expansion. The manifest marks them accordingly. A
+live execution must obtain a bounded, version-pinned expansion receipt from the
+configured terminology provider.
+
+Run `cross_patient_heart_failure_since_2025.aql` against the reference pack.
+The five runnable cases include two matches plus controls for the wrong
+concept, wrong terminology, and a diagnosis clinically recognised before the
+cutoff. They all validate against `sample_laboratory_v0_4.opt`.
+
+In this example, “since 2025” is bound specifically to the OPT field
+**Date/time clinically recognised**. It is not composition commit time and it
+is not automatically equivalent to FHIR `Condition.recordedDate`. A natural-
+language client must expose or confirm that distinction before execution.
+
+`reference/adversarial/split_evaluation_correlation.envelope.json` deliberately
+contains two diagnosis EVALUATION instances even though this OPT constrains
+that archetype to at most one. It is excluded from `all.ndjson` and exists only
+to prove that query predicates cannot be joined across repeated instances.
+
+Rebuild the deterministic cases, OPT-derived projection fields, and both Atlas
+Search definitions with:
+
+```bash
+python -m kehrnel.engine.strategies.openehr.rps_dual.samples.build_heart_failure_demo
+```

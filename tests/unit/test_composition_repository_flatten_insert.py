@@ -6,6 +6,7 @@ from types import SimpleNamespace
 import pytest
 
 from kehrnel.api.domains.openehr.composition.repository import (
+    add_deletion_contribution_and_update_ehr,
     add_bulk_deletion_contributions_and_update_ehr,
     insert_composition_contribution_and_update_ehr,
     insert_compositions_contributions_and_update_ehr,
@@ -27,6 +28,7 @@ class _FakeCollection:
         self.inserted = []
         self.inserted_many = []
         self.updated = []
+        self.updated_many = []
         self.deleted = []
 
     async def insert_one(self, document, session=None):
@@ -50,6 +52,20 @@ class _FakeCollection:
                 "upsert": upsert,
             }
         )
+        return _FakeUpdateResult()
+
+    async def update_many(self, filter_query, update_operation, session=None):
+        self.updated_many.append(
+            {
+                "filter": deepcopy(filter_query),
+                "update": deepcopy(update_operation),
+                "session": session,
+            }
+        )
+        return _FakeUpdateResult()
+
+    async def delete_one(self, filter_query, session=None):
+        self.deleted.append(deepcopy(filter_query))
         return _FakeUpdateResult()
 
     async def delete_many(self, filter_query, session=None):
@@ -95,6 +111,30 @@ def _config():
     )
 
 
+def _assert_projection_invalidation(db: _FakeDb, *, reason: str) -> None:
+    updates = db["_kehrnel_projection_state"].updated_many
+    assert len(updates) == 1
+    operation = updates[0]
+    assert operation["filter"] == {
+        "strategyId": "openehr.rps_dual",
+        "sourceCollection": "compositions_rps",
+        "targetCollection": "compositions_search",
+    }
+    assert operation["session"] is not None
+    assert operation["update"]["$inc"] == {"mutationSequence": 1}
+    invalidation = operation["update"]["$set"]
+    assert invalidation["projection.state"] == "stale"
+    assert invalidation["projection.complete"] is False
+    assert invalidation["projection.completedAt"] is None
+    assert invalidation["reconciliation.safe"] is False
+    assert invalidation["reconciliation.complete"] is False
+    assert invalidation["reconciliation.sourceToTargetCoverage"] == "unverified"
+    assert invalidation["reconciliation.targetToSourceCoverage"] == "unverified"
+    assert invalidation["invalidation"]["reason"] == reason
+    assert invalidation["invalidation"]["writer"] == "legacy-http"
+    assert invalidation["invalidation"]["invalidatedAt"].endswith("Z")
+
+
 @pytest.mark.asyncio
 async def test_inserts_flattened_base_even_without_search_nodes():
     db = _FakeDb()
@@ -114,6 +154,7 @@ async def test_inserts_flattened_base_even_without_search_nodes():
     assert len(db["compositions_rps"].inserted) == 1
     assert db["compositions_rps"].inserted[0]["_id"] == "comp-1::server::1"
     assert db["compositions_search"].inserted == []
+    _assert_projection_invalidation(db, reason="legacy_http_composition_insert")
 
 
 @pytest.mark.asyncio
@@ -135,6 +176,23 @@ async def test_inserts_search_document_when_search_nodes_are_present():
     assert len(db["compositions_rps"].inserted) == 1
     assert len(db["compositions_search"].inserted) == 1
     assert db["compositions_search"].inserted[0]["_id"] == "comp-2::server::1"
+    _assert_projection_invalidation(db, reason="legacy_http_composition_insert")
+
+
+@pytest.mark.asyncio
+async def test_canonical_only_insert_does_not_invalidate_projection_receipts():
+    db = _FakeDb()
+    config = _config()
+
+    await insert_composition_contribution_and_update_ehr(
+        ehr_id="ehr-1",
+        composition_doc={"_id": "comp-3::server::1"},
+        contribution_doc={"_id": "contrib-3"},
+        db=db,
+        config=config,
+    )
+
+    assert db["_kehrnel_projection_state"].updated_many == []
 
 
 @pytest.mark.asyncio
@@ -198,6 +256,7 @@ async def test_bulk_insert_updates_ehr_once_and_inserts_flattened_documents():
             "ordered": True,
         }
     ]
+    _assert_projection_invalidation(db, reason="legacy_http_composition_batch_insert")
     assert db["ehr"].updated == [
         {
             "filter": {"_id.value": "ehr-1"},
@@ -247,6 +306,7 @@ async def test_bulk_delete_updates_ehr_once_and_deletes_flattened_documents():
     assert db["compositions_search"].deleted == [
         {"_id": {"$in": ["comp-1::server::1", "comp-2::server::1"]}}
     ]
+    _assert_projection_invalidation(db, reason="legacy_http_composition_batch_delete")
     assert db["ehr"].updated == [
         {
             "filter": {"_id.value": "ehr-1"},
@@ -268,3 +328,21 @@ async def test_bulk_delete_updates_ehr_once_and_deletes_flattened_documents():
             "upsert": False,
         }
     ]
+
+
+@pytest.mark.asyncio
+async def test_single_delete_invalidates_matching_projection_receipts():
+    db = _FakeDb()
+    config = _config()
+
+    await add_deletion_contribution_and_update_ehr(
+        ehr_id="ehr-1",
+        preceding_version_uid="comp-1::server::1",
+        contribution_doc={"_id": "audit-1"},
+        db=db,
+        config=config,
+    )
+
+    assert db["compositions_rps"].deleted == [{"_id": "comp-1::server::1"}]
+    assert db["compositions_search"].deleted == [{"_id": "comp-1::server::1"}]
+    _assert_projection_invalidation(db, reason="legacy_http_composition_delete")

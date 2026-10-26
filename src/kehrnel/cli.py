@@ -2,15 +2,18 @@
 from __future__ import annotations
 
 import argparse
-import json
 import os
+import sys
 from pathlib import Path
 
-from kehrnel.engine.core.pack_loader import load_strategy
+from kehrnel.engine.core.pack_loader import (
+    iter_strategy_manifest_paths,
+    load_strategy,
+    load_strategy_manifest,
+)
 from kehrnel.engine.core.registry import FileActivationRegistry
 from kehrnel.engine.core.runtime import StrategyRuntime
 from kehrnel.engine.core.manifest import StrategyManifest
-from kehrnel.engine.core.pack_validator import StrategyPackValidator
 
 
 def _strategy_paths() -> list[Path]:
@@ -35,32 +38,12 @@ def _discover_manifests() -> list[StrategyManifest]:
     for base in _strategy_paths():
         if not base.exists():
             continue
-        for manifest_path in base.glob("**/manifest.json"):
-            data = json.loads(manifest_path.read_text(encoding="utf-8"))
-            base_dir = manifest_path.parent
-            defaults_path = base_dir / "defaults.json"
-            schema_path = base_dir / "schema.json"
-            spec_field = data.get("spec")
-            if isinstance(spec_field, dict):
-                spec_path = base_dir / (spec_field.get("path") or "spec.json")
-            elif isinstance(spec_field, str):
-                spec_path = base_dir / spec_field
-            else:
-                spec_path = base_dir / "spec.json"
-            if defaults_path.exists():
-                data["default_config"] = json.loads(defaults_path.read_text(encoding="utf-8"))
-            if schema_path.exists():
-                data["config_schema"] = json.loads(schema_path.read_text(encoding="utf-8"))
-            if data.get("pack_format") == "strategy-pack/v1" and spec_path.exists():
-                try:
-                    data["pack_spec"] = json.loads(spec_path.read_text(encoding="utf-8"))
-                except Exception:
-                    pass
-            # validate
-            errors = StrategyPackValidator(data, base_dir).validate()
-            if errors:
+        for manifest_path in iter_strategy_manifest_paths(base):
+            try:
+                manifests.append(load_strategy_manifest(manifest_path))
+            except Exception as exc:
+                print(f"Skipping invalid strategy manifest {manifest_path}: {exc}", file=sys.stderr)
                 continue
-            manifests.append(StrategyManifest(**data))
     return manifests
 
 

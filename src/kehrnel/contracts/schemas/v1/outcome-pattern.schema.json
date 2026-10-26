@@ -1,0 +1,525 @@
+{
+  "$defs": {
+    "ArtifactProvenance": {
+      "description": "Who owns the lifecycle of a reusable catalog artifact.",
+      "enum": [
+        "mongodb_curated",
+        "community",
+        "tenant_generated",
+        "tenant_extended"
+      ],
+      "title": "ArtifactProvenance",
+      "type": "string"
+    },
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "AutonomyMode": {
+      "description": "Who selects and executes the next operation.\n\nAutonomy is deliberately independent from write access.  A direct\napplication may write authoritative data, while an agent may remain\nread-only.",
+      "enum": [
+        "direct_application",
+        "agent_assisted",
+        "bounded_autonomous",
+        "continuous_agent"
+      ],
+      "title": "AutonomyMode",
+      "type": "string"
+    },
+    "CapabilityMaturity": {
+      "enum": [
+        "not_assessed",
+        "specified",
+        "simulated",
+        "compilable",
+        "pilot_validated",
+        "production_validated"
+      ],
+      "title": "CapabilityMaturity",
+      "type": "string"
+    },
+    "CatalogArtifactRole": {
+      "description": "The architectural role an artifact plays, independent of its industry.",
+      "enum": [
+        "source_category",
+        "source_profile",
+        "mapping",
+        "target_strategy",
+        "semantic_asset",
+        "data_architecture",
+        "application",
+        "outcome_pattern",
+        "reference_architecture",
+        "demo_experience",
+        "portfolio_domain",
+        "data_product",
+        "architecture_capability",
+        "visual_pattern",
+        "solution_blueprint_template"
+      ],
+      "title": "CatalogArtifactRole",
+      "type": "string"
+    },
+    "CatalogMetadata": {
+      "additionalProperties": false,
+      "description": "Faceted catalog metadata kept separate from executable behavior.",
+      "properties": {
+        "extendsRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "paths": {
+          "items": {
+            "$ref": "#/$defs/CatalogPath"
+          },
+          "minItems": 1,
+          "title": "Paths",
+          "type": "array"
+        },
+        "provenance": {
+          "$ref": "#/$defs/ArtifactProvenance"
+        },
+        "role": {
+          "$ref": "#/$defs/CatalogArtifactRole"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        }
+      },
+      "required": [
+        "role",
+        "provenance",
+        "paths"
+      ],
+      "title": "CatalogMetadata",
+      "type": "object"
+    },
+    "CatalogPath": {
+      "additionalProperties": false,
+      "description": "One navigational placement; artifacts may appear in several industries.",
+      "properties": {
+        "industry": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Industry",
+          "type": "string"
+        },
+        "segments": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Segments",
+          "type": "array"
+        }
+      },
+      "required": [
+        "industry",
+        "segments"
+      ],
+      "title": "CatalogPath",
+      "type": "object"
+    },
+    "InteractionEffect": {
+      "description": "The observable effect an application, workflow, or agent may cause.",
+      "enum": [
+        "retrieve",
+        "subscribe",
+        "enrich",
+        "command",
+        "coordinate",
+        "record_decision",
+        "remember",
+        "improve"
+      ],
+      "title": "InteractionEffect",
+      "type": "string"
+    },
+    "InteractionRequirement": {
+      "additionalProperties": false,
+      "description": "What a consumer can do, not merely which protocol it can call.",
+      "properties": {
+        "approvalRequired": {
+          "default": false,
+          "title": "Approvalrequired",
+          "type": "boolean"
+        },
+        "auditRequired": {
+          "default": true,
+          "title": "Auditrequired",
+          "type": "boolean"
+        },
+        "autonomyModes": {
+          "items": {
+            "$ref": "#/$defs/AutonomyMode"
+          },
+          "minItems": 1,
+          "title": "Autonomymodes",
+          "type": "array"
+        },
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "effect": {
+          "$ref": "#/$defs/InteractionEffect"
+        },
+        "interactionId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Interactionid",
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "readProductIds": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Readproductids",
+          "type": "array"
+        },
+        "writeTargets": {
+          "items": {
+            "$ref": "#/$defs/InteractionWriteTarget"
+          },
+          "title": "Writetargets",
+          "type": "array"
+        }
+      },
+      "required": [
+        "interactionId",
+        "name",
+        "description",
+        "effect",
+        "autonomyModes"
+      ],
+      "title": "InteractionRequirement",
+      "type": "object"
+    },
+    "InteractionWriteTarget": {
+      "additionalProperties": false,
+      "description": "A durable effect produced by one interaction requirement.",
+      "properties": {
+        "authorityRequired": {
+          "default": false,
+          "title": "Authorityrequired",
+          "type": "boolean"
+        },
+        "kind": {
+          "$ref": "#/$defs/WriteTargetKind"
+        },
+        "productId": {
+          "minLength": 1,
+          "pattern": "^\\S+$",
+          "title": "Productid",
+          "type": "string"
+        },
+        "sourceOfTruth": {
+          "default": false,
+          "title": "Sourceoftruth",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "kind",
+        "productId"
+      ],
+      "title": "InteractionWriteTarget",
+      "type": "object"
+    },
+    "OutcomeScenario": {
+      "additionalProperties": false,
+      "description": "A functional story that can be understood before viewing implementation.",
+      "properties": {
+        "actorRoles": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Actorroles",
+          "type": "array"
+        },
+        "agentExample": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Agentexample"
+        },
+        "authorityInvariant": {
+          "minLength": 1,
+          "title": "Authorityinvariant",
+          "type": "string"
+        },
+        "failureCase": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Failurecase"
+        },
+        "freshnessExpectation": {
+          "minLength": 1,
+          "title": "Freshnessexpectation",
+          "type": "string"
+        },
+        "goal": {
+          "minLength": 1,
+          "title": "Goal",
+          "type": "string"
+        },
+        "interactionIds": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Interactionids",
+          "type": "array"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "observableResult": {
+          "minLength": 1,
+          "title": "Observableresult",
+          "type": "string"
+        },
+        "scenarioId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Scenarioid",
+          "type": "string"
+        },
+        "successMeasures": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Successmeasures",
+          "type": "array"
+        },
+        "trigger": {
+          "minLength": 1,
+          "title": "Trigger",
+          "type": "string"
+        }
+      },
+      "required": [
+        "scenarioId",
+        "name",
+        "actorRoles",
+        "trigger",
+        "goal",
+        "observableResult",
+        "freshnessExpectation",
+        "authorityInvariant",
+        "successMeasures",
+        "interactionIds"
+      ],
+      "title": "OutcomeScenario",
+      "type": "object"
+    },
+    "PublicationStatus": {
+      "enum": [
+        "draft",
+        "in_review",
+        "published",
+        "withdrawn"
+      ],
+      "title": "PublicationStatus",
+      "type": "string"
+    },
+    "SupportStatus": {
+      "enum": [
+        "unsupported",
+        "evaluation_only",
+        "supported",
+        "deprecated"
+      ],
+      "title": "SupportStatus",
+      "type": "string"
+    },
+    "WriteTargetKind": {
+      "enum": [
+        "source_system",
+        "operational_product",
+        "workflow_state",
+        "derived_artifact",
+        "decision_trace",
+        "memory"
+      ],
+      "title": "WriteTargetKind",
+      "type": "string"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:outcome-pattern",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A reusable industry outcome, independent of one physical implementation.",
+  "properties": {
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "capabilityMaturity": {
+      "$ref": "#/$defs/CapabilityMaturity",
+      "default": "not_assessed"
+    },
+    "catalog": {
+      "$ref": "#/$defs/CatalogMetadata"
+    },
+    "contract": {
+      "const": "outcome-pattern/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "dataProductIds": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Dataproductids",
+      "type": "array"
+    },
+    "domainIds": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Domainids",
+      "type": "array"
+    },
+    "evidenceRefs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "title": "Evidencerefs",
+      "type": "array"
+    },
+    "industryExperienceIds": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Industryexperienceids",
+      "type": "array"
+    },
+    "interactions": {
+      "items": {
+        "$ref": "#/$defs/InteractionRequirement"
+      },
+      "minItems": 1,
+      "title": "Interactions",
+      "type": "array"
+    },
+    "name": {
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "publicationStatus": {
+      "$ref": "#/$defs/PublicationStatus",
+      "default": "draft"
+    },
+    "scenarios": {
+      "items": {
+        "$ref": "#/$defs/OutcomeScenario"
+      },
+      "minItems": 1,
+      "title": "Scenarios",
+      "type": "array"
+    },
+    "sourceCategoryIds": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Sourcecategoryids",
+      "type": "array"
+    },
+    "summary": {
+      "minLength": 1,
+      "title": "Summary",
+      "type": "string"
+    },
+    "supportStatus": {
+      "$ref": "#/$defs/SupportStatus",
+      "default": "evaluation_only"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "catalog",
+    "name",
+    "summary",
+    "industryExperienceIds",
+    "domainIds",
+    "scenarios",
+    "sourceCategoryIds",
+    "dataProductIds",
+    "interactions"
+  ],
+  "title": "OutcomePattern",
+  "type": "object"
+}

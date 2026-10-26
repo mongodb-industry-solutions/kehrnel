@@ -1,0 +1,231 @@
+{
+  "$defs": {
+    "ArtifactProvenance": {
+      "description": "Who owns the lifecycle of a reusable catalog artifact.",
+      "enum": [
+        "mongodb_curated",
+        "community",
+        "tenant_generated",
+        "tenant_extended"
+      ],
+      "title": "ArtifactProvenance",
+      "type": "string"
+    },
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "CatalogArtifactRole": {
+      "description": "The architectural role an artifact plays, independent of its industry.",
+      "enum": [
+        "source_category",
+        "source_profile",
+        "mapping",
+        "target_strategy",
+        "semantic_asset",
+        "data_architecture",
+        "application",
+        "outcome_pattern",
+        "reference_architecture",
+        "demo_experience",
+        "portfolio_domain",
+        "data_product",
+        "architecture_capability",
+        "visual_pattern",
+        "solution_blueprint_template"
+      ],
+      "title": "CatalogArtifactRole",
+      "type": "string"
+    },
+    "CatalogMetadata": {
+      "additionalProperties": false,
+      "description": "Faceted catalog metadata kept separate from executable behavior.",
+      "properties": {
+        "extendsRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "paths": {
+          "items": {
+            "$ref": "#/$defs/CatalogPath"
+          },
+          "minItems": 1,
+          "title": "Paths",
+          "type": "array"
+        },
+        "provenance": {
+          "$ref": "#/$defs/ArtifactProvenance"
+        },
+        "role": {
+          "$ref": "#/$defs/CatalogArtifactRole"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        }
+      },
+      "required": [
+        "role",
+        "provenance",
+        "paths"
+      ],
+      "title": "CatalogMetadata",
+      "type": "object"
+    },
+    "CatalogPath": {
+      "additionalProperties": false,
+      "description": "One navigational placement; artifacts may appear in several industries.",
+      "properties": {
+        "industry": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Industry",
+          "type": "string"
+        },
+        "segments": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Segments",
+          "type": "array"
+        }
+      },
+      "required": [
+        "industry",
+        "segments"
+      ],
+      "title": "CatalogPath",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:architecture-capability",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Reusable architecture capability and the artifacts it is expected to emit.",
+  "properties": {
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "catalog": {
+      "$ref": "#/$defs/CatalogMetadata"
+    },
+    "contract": {
+      "const": "architecture-capability/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "coreOutcomeRefs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "title": "Coreoutcomerefs",
+      "type": "array"
+    },
+    "description": {
+      "minLength": 1,
+      "title": "Description",
+      "type": "string"
+    },
+    "generatedArtifacts": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Generatedartifacts",
+      "type": "array"
+    },
+    "name": {
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "optionalOutcomeRefs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "title": "Optionaloutcomerefs",
+      "type": "array"
+    },
+    "reference": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reference"
+    },
+    "reuseExamples": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Reuseexamples",
+      "type": "array"
+    },
+    "scope": {
+      "minLength": 1,
+      "title": "Scope",
+      "type": "string"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "catalog",
+    "name",
+    "description",
+    "generatedArtifacts",
+    "reuseExamples",
+    "scope"
+  ],
+  "title": "ArchitectureCapabilityDefinition",
+  "type": "object"
+}

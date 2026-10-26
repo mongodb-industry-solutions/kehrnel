@@ -8,7 +8,7 @@ This guide covers installing \{kehrnel\} on your local machine for development a
 
 ## Prerequisites
 
-- **Python 3.10+**
+- **Python 3.11+**
 - **MongoDB Atlas** cluster (M10+ recommended for production) or local MongoDB 6.0+
 - **Git**
 
@@ -46,11 +46,9 @@ pip install -e .
 kehrnel-api --help
 ```
 
-### Using pip (For Users)
+### Package Name
 
-```bash
-pip install kehrnel
-```
+The Python distribution is named `kehrnel-core` (it provides the `kehrnel` and `kehrnel-api` commands). It is not published to a package index yet, so install it from source as shown above.
 
 ## Environment Setup
 
@@ -66,9 +64,13 @@ KEHRNEL_API_HOST=0.0.0.0
 KEHRNEL_API_PORT=8000
 KEHRNEL_API_RELOAD=true
 
-# Security (optional for development)
+# Security: local development only
 KEHRNEL_AUTH_ENABLED=false
 ```
+
+:::warning
+`KEHRNEL_AUTH_ENABLED=false` turns off API key checks: anyone who can reach the port can read and write your data. Use it only on your own machine, never on a shared or internet-facing host.
+:::
 
 ## MongoDB Atlas Setup
 
@@ -77,7 +79,7 @@ For production use, we recommend MongoDB Atlas:
 1. Create an Atlas cluster
 2. Enable Atlas Search on the cluster
 3. Create a database user with readWrite permissions
-4. Whitelist your IP address or use VPC peering
+4. Add your IP address to the Atlas IP access list, or use VPC peering
 5. Copy the connection string to your `.env.local`
 
 ### Required Atlas Search Definition
@@ -113,10 +115,11 @@ Direct API startup:
 kehrnel-api
 ```
 
-Check the health endpoint:
+Check the health endpoint on the port you started:
 
 ```bash
-curl http://localhost:8000/health
+curl http://localhost:8080/health   # ./startKehrnel
+curl http://localhost:8000/health   # kehrnel-api (default port)
 ```
 
 Expected response:

@@ -73,7 +73,7 @@
     "ideal_for": "Any domain with explicit semantic models where node IDs are stable and you need fast path-based queries across large populations. Particularly well suited for clinical trial data, IoT telemetry with structured schemas, financial instrument lifecycle events, and supply chain object tracking.",
     "consider_alternatives": [
       "If your data is clinical EHR archetypes (openEHR), use openehr.rps_dual instead — it includes dictionary compression and Atlas Search support.",
-      "If your data is HL7 FHIR R5 resources, use fhir.clinical_cdr instead.",
+      "If your data is HL7 FHIR R5 resources, use fhir.resource_store instead.",
       "If you only need record-level lookups and never query across instances, a single-collection layout is simpler."
     ],
     "scorecard": {

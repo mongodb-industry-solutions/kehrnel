@@ -1,0 +1,16 @@
+{
+  "contract": "semantic-execution-binding/v1",
+  "artifactRef": {"kind": "semantic-execution-binding", "id": "openehr.clinical-record.rps-dual", "version": "1.0.0", "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"},
+  "semanticAuthorityRef": {"kind": "openehr-template", "id": "clinical-record", "version": "1.0.0", "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"},
+  "strategyRef": {"kind": "strategy", "id": "openehr.rps_dual", "version": "1.0.0", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"},
+  "pathBindings": [
+    {"semanticPath": "/content[openEHR-EHR-OBSERVATION.lab_test.v1]/data/events/data/items/value", "physicalPath": "content.data.events.data.items.value.magnitude", "valueType": "quantity", "repeated": true, "correlationKey": "nodeId", "unitPolicy": "UCUM", "temporalPolicy": "event-time", "indexRefs": ["idx-lab-magnitude"], "reconstructionRule": "Use canonical composition plus node metadata."}
+  ],
+  "consumers": [
+    {"consumerId": "openehr-ingest", "kind": "preparation", "componentRef": {"kind": "component", "id": "openehr.rps_dual.ingest", "version": "1.0.0", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555"}},
+    {"consumerId": "aql-query-planner", "kind": "query_planner", "componentRef": {"kind": "component", "id": "openehr.rps_dual.aql-planner", "version": "1.0.0", "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666"}},
+    {"consumerId": "aql-executor", "kind": "executor", "componentRef": {"kind": "component", "id": "openehr.rps_dual.aql-executor", "version": "1.0.0", "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777"}}
+  ],
+  "writerInteractionIds": ["create-composition", "correct-composition"],
+  "queryInteractionIds": ["query-cohort"]
+}

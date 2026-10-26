@@ -1,0 +1,1173 @@
+{
+  "$defs": {
+    "AcknowledgementLevel": {
+      "enum": [
+        "accepted",
+        "durable_authoritative",
+        "derived_visible"
+      ],
+      "title": "AcknowledgementLevel",
+      "type": "string"
+    },
+    "ArchitectureConstraints": {
+      "additionalProperties": false,
+      "properties": {
+        "estimatedDocuments": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Estimateddocuments"
+        },
+        "peakReadsPerSecond": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Peakreadspersecond"
+        },
+        "peakWritesPerSecond": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Peakwritespersecond"
+        },
+        "regions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Regions",
+          "type": "array"
+        },
+        "retentionDays": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Retentiondays"
+        },
+        "tenancyMode": {
+          "default": "single_tenant",
+          "enum": [
+            "single_tenant",
+            "multi_tenant"
+          ],
+          "title": "Tenancymode",
+          "type": "string"
+        }
+      },
+      "title": "ArchitectureConstraints",
+      "type": "object"
+    },
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "AuthorityScope": {
+      "additionalProperties": false,
+      "properties": {
+        "domain": {
+          "minLength": 1,
+          "title": "Domain",
+          "type": "string"
+        },
+        "lifecycleStates": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Lifecyclestates",
+          "type": "array"
+        },
+        "paths": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Paths",
+          "type": "array"
+        },
+        "recordTypes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Recordtypes",
+          "type": "array"
+        },
+        "scopeId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Scopeid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "scopeId",
+        "domain"
+      ],
+      "title": "AuthorityScope",
+      "type": "object"
+    },
+    "BindingConsumerKind": {
+      "enum": [
+        "preparation",
+        "materialization",
+        "query_planner",
+        "executor"
+      ],
+      "title": "BindingConsumerKind",
+      "type": "string"
+    },
+    "CapabilityAvailability": {
+      "enum": [
+        "available",
+        "unavailable",
+        "unknown"
+      ],
+      "title": "CapabilityAvailability",
+      "type": "string"
+    },
+    "ConsistencyRequirement": {
+      "enum": [
+        "strong",
+        "bounded_staleness",
+        "eventual",
+        "snapshot"
+      ],
+      "title": "ConsistencyRequirement",
+      "type": "string"
+    },
+    "DataPostureSelection": {
+      "additionalProperties": false,
+      "properties": {
+        "posture": {
+          "$ref": "#/$defs/IntegrationPosture"
+        },
+        "scopeId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Scopeid",
+          "type": "string"
+        },
+        "servingRepositoryRef": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Servingrepositoryref"
+        }
+      },
+      "required": [
+        "scopeId",
+        "posture"
+      ],
+      "title": "DataPostureSelection",
+      "type": "object"
+    },
+    "DataProductComposition": {
+      "additionalProperties": false,
+      "description": "Explicit lineage between semantic data-product scopes.\n\nThis is separate from SemanticMode.COMPOSED: that mode governs meaning;\nthis contract names the products supplying another product's data.",
+      "properties": {
+        "compositionId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Compositionid",
+          "type": "string"
+        },
+        "inputScopeIds": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Inputscopeids",
+          "type": "array"
+        },
+        "targetScopeId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Targetscopeid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "compositionId",
+        "targetScopeId",
+        "inputScopeIds"
+      ],
+      "title": "DataProductComposition",
+      "type": "object"
+    },
+    "IntegrationPosture": {
+      "description": "How much responsibility MongoDB assumes for one source domain.",
+      "enum": [
+        "federated_access",
+        "selective_materialization",
+        "operational_replica",
+        "mongodb_system_of_record"
+      ],
+      "title": "IntegrationPosture",
+      "type": "string"
+    },
+    "InteractionBehavior": {
+      "enum": [
+        "create",
+        "update",
+        "delete",
+        "command",
+        "read",
+        "search",
+        "query",
+        "subscribe",
+        "publish",
+        "export"
+      ],
+      "title": "InteractionBehavior",
+      "type": "string"
+    },
+    "InteractionGuarantees": {
+      "additionalProperties": false,
+      "properties": {
+        "acknowledgement": {
+          "$ref": "#/$defs/AcknowledgementLevel",
+          "default": "accepted"
+        },
+        "consistency": {
+          "$ref": "#/$defs/ConsistencyRequirement",
+          "default": "strong"
+        },
+        "freshnessTargetSeconds": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Freshnesstargetseconds"
+        },
+        "idempotencyRequired": {
+          "default": false,
+          "title": "Idempotencyrequired",
+          "type": "boolean"
+        },
+        "latencyTargetMs": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latencytargetms"
+        }
+      },
+      "title": "InteractionGuarantees",
+      "type": "object"
+    },
+    "InteractionInterface": {
+      "additionalProperties": false,
+      "properties": {
+        "capabilityRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "kind": {
+          "$ref": "#/$defs/InterfaceKind"
+        },
+        "protocolVersion": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Protocolversion"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "InteractionInterface",
+      "type": "object"
+    },
+    "InteractionPattern": {
+      "enum": [
+        "request_response",
+        "publish_subscribe",
+        "stream",
+        "batch"
+      ],
+      "title": "InteractionPattern",
+      "type": "string"
+    },
+    "InteractionRoleBindings": {
+      "additionalProperties": false,
+      "properties": {
+        "providerRef": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Providerref"
+        },
+        "publisherRef": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Publisherref"
+        },
+        "requesterRef": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Requesterref"
+        },
+        "subscriberRef": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subscriberref"
+        }
+      },
+      "title": "InteractionRoleBindings",
+      "type": "object"
+    },
+    "InterfaceKind": {
+      "enum": [
+        "rest",
+        "fhir",
+        "openehr",
+        "aql",
+        "mql",
+        "sql",
+        "event",
+        "agent_tool",
+        "natural_language"
+      ],
+      "title": "InterfaceKind",
+      "type": "string"
+    },
+    "JsonValue": {},
+    "ParticipantKind": {
+      "enum": [
+        "application",
+        "system",
+        "service",
+        "agent",
+        "repository",
+        "device",
+        "external_authority"
+      ],
+      "title": "ParticipantKind",
+      "type": "string"
+    },
+    "ParticipantLifecycle": {
+      "enum": [
+        "existing",
+        "planned"
+      ],
+      "title": "ParticipantLifecycle",
+      "type": "string"
+    },
+    "ParticipantSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/ParticipantKind"
+        },
+        "label": {
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "lifecycle": {
+          "$ref": "#/$defs/ParticipantLifecycle"
+        },
+        "participantId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Participantid",
+          "type": "string"
+        },
+        "sourceProfileRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "participantId",
+        "label",
+        "kind",
+        "lifecycle"
+      ],
+      "title": "ParticipantSpec",
+      "type": "object"
+    },
+    "ProjectInteractionContract": {
+      "additionalProperties": false,
+      "properties": {
+        "artifactRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "authorizationPolicyRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "behavior": {
+          "$ref": "#/$defs/InteractionBehavior"
+        },
+        "contract": {
+          "const": "interaction-contract/v1",
+          "title": "Contract",
+          "type": "string"
+        },
+        "errorContractRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "guarantees": {
+          "$ref": "#/$defs/InteractionGuarantees"
+        },
+        "inputContractRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "interactionId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Interactionid",
+          "type": "string"
+        },
+        "interface": {
+          "$ref": "#/$defs/InteractionInterface"
+        },
+        "pattern": {
+          "$ref": "#/$defs/InteractionPattern"
+        },
+        "resultContractRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "roles": {
+          "$ref": "#/$defs/InteractionRoleBindings"
+        },
+        "semanticScopeId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Semanticscopeid",
+          "type": "string"
+        },
+        "workloadRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        }
+      },
+      "required": [
+        "contract",
+        "artifactRef",
+        "interactionId",
+        "behavior",
+        "pattern",
+        "roles",
+        "interface",
+        "semanticScopeId",
+        "workloadRef"
+      ],
+      "title": "ProjectInteractionContract",
+      "type": "object"
+    },
+    "RecordAuthorityPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "artifactRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "authoritativeWriterRef": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Authoritativewriterref",
+          "type": "string"
+        },
+        "conflictPolicy": {
+          "$ref": "#/$defs/RecordConflictPolicy"
+        },
+        "contract": {
+          "const": "record-authority-policy/v1",
+          "title": "Contract",
+          "type": "string"
+        },
+        "correctionBehavior": {
+          "minLength": 1,
+          "title": "Correctionbehavior",
+          "type": "string"
+        },
+        "permittedWriterRefs": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Permittedwriterrefs",
+          "type": "array"
+        },
+        "provenanceRequired": {
+          "default": true,
+          "title": "Provenancerequired",
+          "type": "boolean"
+        },
+        "scope": {
+          "$ref": "#/$defs/AuthorityScope"
+        },
+        "versionPolicyRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        }
+      },
+      "required": [
+        "contract",
+        "artifactRef",
+        "scope",
+        "authoritativeWriterRef",
+        "permittedWriterRefs",
+        "conflictPolicy",
+        "versionPolicyRef",
+        "correctionBehavior"
+      ],
+      "title": "RecordAuthorityPolicy",
+      "type": "object"
+    },
+    "RecordConflictPolicy": {
+      "enum": [
+        "reject",
+        "reconcile",
+        "append_distinct",
+        "reviewed_merge"
+      ],
+      "title": "RecordConflictPolicy",
+      "type": "string"
+    },
+    "SemanticAuthoritySelection": {
+      "additionalProperties": false,
+      "properties": {
+        "authorityRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "mode": {
+          "$ref": "#/$defs/SemanticMode"
+        },
+        "scopeId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Scopeid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "scopeId",
+        "mode",
+        "authorityRef"
+      ],
+      "title": "SemanticAuthoritySelection",
+      "type": "object"
+    },
+    "SemanticBindingConsumer": {
+      "additionalProperties": false,
+      "properties": {
+        "componentRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "consumerId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Consumerid",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/BindingConsumerKind"
+        }
+      },
+      "required": [
+        "consumerId",
+        "kind",
+        "componentRef"
+      ],
+      "title": "SemanticBindingConsumer",
+      "type": "object"
+    },
+    "SemanticExecutionBindingV1": {
+      "additionalProperties": false,
+      "properties": {
+        "artifactRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "consumers": {
+          "items": {
+            "$ref": "#/$defs/SemanticBindingConsumer"
+          },
+          "minItems": 1,
+          "title": "Consumers",
+          "type": "array"
+        },
+        "contract": {
+          "const": "semantic-execution-binding/v1",
+          "title": "Contract",
+          "type": "string"
+        },
+        "pathBindings": {
+          "items": {
+            "$ref": "#/$defs/SemanticPathBinding"
+          },
+          "minItems": 1,
+          "title": "Pathbindings",
+          "type": "array"
+        },
+        "queryInteractionIds": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Queryinteractionids",
+          "type": "array"
+        },
+        "semanticAuthorityRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "strategyRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "writerInteractionIds": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Writerinteractionids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "contract",
+        "artifactRef",
+        "semanticAuthorityRef",
+        "strategyRef",
+        "pathBindings",
+        "consumers"
+      ],
+      "title": "SemanticExecutionBindingV1",
+      "type": "object"
+    },
+    "SemanticMode": {
+      "description": "How a consumption contract obtains its semantic model.",
+      "enum": [
+        "native",
+        "derived",
+        "composed"
+      ],
+      "title": "SemanticMode",
+      "type": "string"
+    },
+    "SemanticPathBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "correlationKey": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Correlationkey"
+        },
+        "indexRefs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Indexrefs",
+          "type": "array"
+        },
+        "physicalPath": {
+          "minLength": 1,
+          "title": "Physicalpath",
+          "type": "string"
+        },
+        "reconstructionRule": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reconstructionrule"
+        },
+        "repeated": {
+          "default": false,
+          "title": "Repeated",
+          "type": "boolean"
+        },
+        "semanticPath": {
+          "minLength": 1,
+          "title": "Semanticpath",
+          "type": "string"
+        },
+        "temporalPolicy": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Temporalpolicy"
+        },
+        "unitPolicy": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unitpolicy"
+        },
+        "valueType": {
+          "minLength": 1,
+          "title": "Valuetype",
+          "type": "string"
+        }
+      },
+      "required": [
+        "semanticPath",
+        "physicalPath",
+        "valueType"
+      ],
+      "title": "SemanticPathBinding",
+      "type": "object"
+    },
+    "SolutionBlueprint": {
+      "additionalProperties": false,
+      "properties": {
+        "assumptions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Assumptions",
+          "type": "array"
+        },
+        "blueprintId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Blueprintid",
+          "type": "string"
+        },
+        "constraints": {
+          "$ref": "#/$defs/ArchitectureConstraints"
+        },
+        "contract": {
+          "const": "solution-blueprint/v1",
+          "title": "Contract",
+          "type": "string"
+        },
+        "dataPostures": {
+          "items": {
+            "$ref": "#/$defs/DataPostureSelection"
+          },
+          "minItems": 1,
+          "title": "Datapostures",
+          "type": "array"
+        },
+        "dataProductCompositions": {
+          "items": {
+            "$ref": "#/$defs/DataProductComposition"
+          },
+          "title": "Dataproductcompositions",
+          "type": "array"
+        },
+        "decisions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Decisions",
+          "type": "array"
+        },
+        "industry": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Industry",
+          "type": "string"
+        },
+        "interactions": {
+          "items": {
+            "$ref": "#/$defs/ProjectInteractionContract"
+          },
+          "minItems": 1,
+          "title": "Interactions",
+          "type": "array"
+        },
+        "objective": {
+          "minLength": 1,
+          "title": "Objective",
+          "type": "string"
+        },
+        "participants": {
+          "items": {
+            "$ref": "#/$defs/ParticipantSpec"
+          },
+          "minItems": 1,
+          "title": "Participants",
+          "type": "array"
+        },
+        "preferredFoundationRefs": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "title": "Preferredfoundationrefs",
+          "type": "array"
+        },
+        "recordAuthorityPolicies": {
+          "items": {
+            "$ref": "#/$defs/RecordAuthorityPolicy"
+          },
+          "title": "Recordauthoritypolicies",
+          "type": "array"
+        },
+        "revision": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "semanticAuthorities": {
+          "items": {
+            "$ref": "#/$defs/SemanticAuthoritySelection"
+          },
+          "minItems": 1,
+          "title": "Semanticauthorities",
+          "type": "array"
+        },
+        "targetCapabilityProfileRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        }
+      },
+      "required": [
+        "contract",
+        "blueprintId",
+        "industry",
+        "objective",
+        "participants",
+        "interactions",
+        "semanticAuthorities",
+        "dataPostures",
+        "targetCapabilityProfileRef"
+      ],
+      "title": "SolutionBlueprint",
+      "type": "object"
+    },
+    "TargetCapability": {
+      "additionalProperties": false,
+      "properties": {
+        "availability": {
+          "$ref": "#/$defs/CapabilityAvailability"
+        },
+        "capabilityId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Capabilityid",
+          "type": "string"
+        },
+        "constraints": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Constraints",
+          "type": "object"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        }
+      },
+      "required": [
+        "capabilityId",
+        "availability"
+      ],
+      "title": "TargetCapability",
+      "type": "object"
+    },
+    "TargetCapabilityProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "artifactRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "capabilities": {
+          "items": {
+            "$ref": "#/$defs/TargetCapability"
+          },
+          "minItems": 1,
+          "title": "Capabilities",
+          "type": "array"
+        },
+        "contract": {
+          "const": "target-capability-profile/v1",
+          "title": "Contract",
+          "type": "string"
+        },
+        "deploymentId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Deploymentid",
+          "type": "string"
+        },
+        "mongodbVersion": {
+          "minLength": 1,
+          "title": "Mongodbversion",
+          "type": "string"
+        },
+        "topology": {
+          "$ref": "#/$defs/TargetTopology"
+        }
+      },
+      "required": [
+        "contract",
+        "artifactRef",
+        "deploymentId",
+        "mongodbVersion",
+        "topology",
+        "capabilities"
+      ],
+      "title": "TargetCapabilityProfile",
+      "type": "object"
+    },
+    "TargetTopology": {
+      "additionalProperties": false,
+      "properties": {
+        "deploymentModel": {
+          "minLength": 1,
+          "title": "Deploymentmodel",
+          "type": "string"
+        },
+        "regions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Regions",
+          "type": "array"
+        },
+        "searchNodeCount": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Searchnodecount"
+        },
+        "shardCount": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Shardcount"
+        }
+      },
+      "required": [
+        "deploymentModel"
+      ],
+      "title": "TargetTopology",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:architecture-resolution-request",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "blueprint": {
+      "$ref": "#/$defs/SolutionBlueprint"
+    },
+    "contract": {
+      "const": "architecture-resolution-request/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "semanticExecutionBindings": {
+      "items": {
+        "$ref": "#/$defs/SemanticExecutionBindingV1"
+      },
+      "title": "Semanticexecutionbindings",
+      "type": "array"
+    },
+    "targetCapabilityProfile": {
+      "$ref": "#/$defs/TargetCapabilityProfile"
+    }
+  },
+  "required": [
+    "contract",
+    "blueprint",
+    "targetCapabilityProfile"
+  ],
+  "title": "ArchitectureResolutionRequest",
+  "type": "object"
+}

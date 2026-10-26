@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$repo_root"
+
+python_bin="${PYTHON_BIN:-.venv/bin/python}"
+export KEHRNEL_SKIP_DOTENV=true
+unset FHIR_TEST_MONGODB_URI FHIR_TEST_DB
+unset CDISC_TEST_MONGODB_URI CDISC_TEST_DB
+unset KEHRNEL_TEST_MONGODB_URI KEHRNEL_TEST_DB_NAME
+
+"$python_bin" -m pytest -q \
+  tests/contract/test_strategy_portfolio.py \
+  tests/contract/test_source_aware_strategy_compiler.py \
+  tests/contract/test_strategy_defaults_schema.py \
+  tests/contract/test_activation_defaults_merge.py \
+  tests/contract/test_activation_fails_if_bundle_missing.py \
+  tests/contract/test_activation_idempotent_switch.py \
+  tests/contract/test_activation_strategy_compat.py \
+  tests/contract/test_api_contract.py \
+  tests/contract/test_api_endpoints_registry.py \
+  tests/contract/test_api_full_contract.py \
+  tests/contract/test_domain_contracts.py \
+  tests/contract/test_environment_registry_crud.py \
+  tests/contract/test_ops_endpoints.py \
+  tests/contract/test_runtime_cache_invalidation_on_ops.py \
+  tests/contract/rps_dual \
+  tests/contract/resource_store \
+  tests/contract/cdisc \
+  tests/unit/test_aql_bridge_rps_dual_dictionaries.py \
+  tests/unit/test_rps_dual_*.py \
+  tests/unit/test_fhir_*.py \
+  tests/unit/test_cdisc_*.py

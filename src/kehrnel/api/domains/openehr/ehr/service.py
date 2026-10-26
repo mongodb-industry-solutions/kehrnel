@@ -7,9 +7,9 @@ from typing import Optional, List
 from fastapi import HTTPException, status
 from pymongo.errors import PyMongoError
 from kehrnel.api.domains.openehr.ehr.repository import (
-    insert_ehr_and_contribution_in_transaction, 
-    find_ehr_by_subject, 
-    find_ehr_by_id, 
+    insert_ehr_and_contribution_in_transaction,
+    find_ehr_by_subject,
+    find_ehr_by_id,
     find_newest_ehrs,
     delete_ehr_and_related_documents,
 )
@@ -28,8 +28,14 @@ from kehrnel.api.common.models import(
 
 from kehrnel.api.domains.openehr.ehr.models import EHRCreationResponse, EHR
 from kehrnel.api.bridge.app.core.models import Contribution, AuditDetails
+from kehrnel.api.bridge.app.core.config_models import CompositionCollectionNames
 
-async def retrieve_ehr_by_subject(subject_id: str, subject_namespace: str, db: AsyncIOMotorDatabase) -> EHR:
+async def retrieve_ehr_by_subject(
+    subject_id: str,
+    subject_namespace: str,
+    db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames | None = None,
+) -> EHR:
     """
     Retrieves a single EHR by its subject's ID and namespace.
 
@@ -44,7 +50,7 @@ async def retrieve_ehr_by_subject(subject_id: str, subject_namespace: str, db: A
     Raises:
         HTTPException: If no EHR with the given subject is found (status 404).
     """
-    ehr_document = await find_ehr_by_subject(subject_id, subject_namespace, db)
+    ehr_document = await find_ehr_by_subject(subject_id, subject_namespace, db, config)
     if not ehr_document:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
@@ -53,7 +59,11 @@ async def retrieve_ehr_by_subject(subject_id: str, subject_namespace: str, db: A
     return EHR.model_validate(ehr_document)
 
 
-async def retrieve_ehr_by_id(ehr_id: str, db: AsyncIOMotorDatabase) ->EHR:
+async def retrieve_ehr_by_id(
+    ehr_id: str,
+    db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames | None = None,
+) -> EHR:
     """
     Retrieves an EHR by its ID.
 
@@ -67,20 +77,24 @@ async def retrieve_ehr_by_id(ehr_id: str, db: AsyncIOMotorDatabase) ->EHR:
     Raises:
         HTTPException: If the EHR with the given ID is not found (status 404).
     """
-    ehr_document = await find_ehr_by_id(ehr_id, db)
+    ehr_document = await find_ehr_by_id(ehr_id, db, config)
     if not ehr_document:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"EHR with id '{ehr_id} not found"
         )
-    
+
     # The document from MongoDB is a dict. We parse it with the EHR model
     # to ensure it's valid and to get a proper Pydantic object back.
     # The aliasing of ehr_id <-> _id is handled automatically by Pydantic.
     return EHR.model_validate(ehr_document)
 
 
-async def retrieve_ehr_list(db: AsyncIOMotorDatabase, limit: int = 50) -> List[EHR]:
+async def retrieve_ehr_list(
+    db: AsyncIOMotorDatabase,
+    limit: int = 50,
+    config: CompositionCollectionNames | None = None,
+) -> List[EHR]:
     """
     Retrieves a list of the newest EHRs.
 
@@ -90,13 +104,13 @@ async def retrieve_ehr_list(db: AsyncIOMotorDatabase, limit: int = 50) -> List[E
 
     Returns:
         A list of EHR Pydantic model instances.
-    
+
     Raises:
         HTTPException: If no EHRs are found (status 404).
     """
-    
-    ehr_list_documents = await find_newest_ehrs(db, limit)
-    
+
+    ehr_list_documents = await find_newest_ehrs(db, limit, config)
+
     # Convert the list of dictionaries from the DB into a list of Pydantic models.
     # An empty list is a valid result if the database is empty.
     return [EHR.model_validate(document) for document in ehr_list_documents]
@@ -106,36 +120,39 @@ async def create_ehr_with_id(
     ehr_id: str,
     db: AsyncIOMotorDatabase,
     initial_status: Optional[EHRStatusCreate] = None,
-    committer_name: str = "System"
+    committer_name: str = "System",
+    config: CompositionCollectionNames | None = None,
 ) -> EHRCreationResponse:
     """
     Creates an EHR with a client-specified ID
     """
-    if await find_ehr_by_id(ehr_id, db):
+    if await find_ehr_by_id(ehr_id, db, config):
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=f"EHR with id '{ehr_id}' already exists"
         )
-    return await _create_ehr_logic(db, ehr_id, initial_status, committer_name)
+    return await _create_ehr_logic(db, ehr_id, initial_status, committer_name, config)
 
 
 async def create_ehr(
     db: AsyncIOMotorDatabase,
     initial_status: Optional[EHRStatusCreate] = None,
-    committer_name: str = "System"
+    committer_name: str = "System",
+    config: CompositionCollectionNames | None = None,
 ) -> EHRCreationResponse:
     """
     Creates an EHR with a server-generated ID.
     """
     ehr_id = str(uuid.uuid4())
-    return await _create_ehr_logic(db, ehr_id, initial_status, committer_name)
+    return await _create_ehr_logic(db, ehr_id, initial_status, committer_name, config)
 
 
 async def _create_ehr_logic(
     db: AsyncIOMotorDatabase,
     ehr_id: str,
     initial_status: Optional[EHRStatusCreate] = None,
-    committer_name: str = "System"
+    committer_name: str = "System",
+    config: CompositionCollectionNames | None = None,
 ) -> EHRCreationResponse:
     """
     Shared business logic for creating an EHR.
@@ -148,7 +165,7 @@ async def _create_ehr_logic(
         subject_id = initial_status.subject.external_ref["id"]["value"]
         subject_namespace = initial_status.subject.external_ref["namespace"]
 
-        if await find_ehr_by_subject(subject_id, subject_namespace, db):
+        if await find_ehr_by_subject(subject_id, subject_namespace, db, config):
             raise HTTPException(
                 status_code = status.HTTP_409_CONFLICT,
                 detail = f"An EHR with subjectId '{subject_id}' already exists"
@@ -209,7 +226,8 @@ async def _create_ehr_logic(
         await insert_ehr_and_contribution_in_transaction(
             ehr_doc.model_dump(by_alias=True),
             contribution.model_dump(by_alias=True),
-            db
+            db,
+            config,
         )
     except PyMongoError as e:
         raise HTTPException(
@@ -229,6 +247,7 @@ async def _create_ehr_logic(
 async def delete_ehr(
     ehr_id: str,
     db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames | None = None,
 ) -> None:
     """
     Hard-delete an EHR and its related sandbox records.
@@ -236,7 +255,7 @@ async def delete_ehr(
     This is intended for local/testing workflows where removing the complete
     EHR aggregate is preferable to keeping revision history.
     """
-    ehr = await retrieve_ehr_by_id(ehr_id=ehr_id, db=db)
+    ehr = await retrieve_ehr_by_id(ehr_id=ehr_id, db=db, config=config)
 
     composition_ids = [
         ref.id.value
@@ -255,6 +274,7 @@ async def delete_ehr(
             composition_ids=composition_ids,
             contribution_ids=contribution_ids,
             db=db,
+            config=config,
         )
     except PyMongoError as e:
         raise HTTPException(
