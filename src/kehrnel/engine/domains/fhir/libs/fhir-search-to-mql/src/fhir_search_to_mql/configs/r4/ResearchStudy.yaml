@@ -1,0 +1,89 @@
+resource: ResearchStudy
+fhir_version: R4
+
+search_parameters:
+  status:
+    type: token
+    description: "ResearchStudy status"
+    fields:
+      - field: "status"
+        tokenType: code
+  category:
+    type: token
+    description: "Category of ResearchStudy"
+    fields:
+      - field: "_search.categoryCode"
+        tokenType: code
+  date:
+    type: date
+    description: "Date for ResearchStudy"
+    fields:
+      - field: "_search.date"
+        type: date
+  identifier:
+    type: token
+    description: "Identifier for ResearchStudy"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  category:
+    source: category
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: category[*].coding[*].code
+        target_field: categoryCode
+        datatype: array[string]
+  period:
+    source: period
+    target: _search
+    extractor: PeriodExtractor
+    field_mappings:
+      - source_path: period.start
+        target_field: date
+        datatype: date
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+indexes:
+  - fields:
+      - "status": 1
+    options:
+      name: idx_r4_rsrchs_status
+  - fields:
+      - "_search.date": -1
+    options:
+      name: idx_r4_rsrchs_date
+  - fields:
+      - "_search.categoryCode": 1
+    options:
+      name: idx_r4_rsrchs_category
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_r4_rsrchs_updated

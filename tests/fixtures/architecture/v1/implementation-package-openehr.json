@@ -1,0 +1,20 @@
+{
+  "contract": "implementation-package/v1",
+  "artifactRef": {"kind": "implementation-package", "id": "greenfield-openehr-cdr", "version": "1.0.0", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"},
+  "blueprintRef": {"blueprintId": "greenfield-openehr-cdr", "revision": 1, "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999"},
+  "resolvedPlanRef": {"kind": "resolved-architecture-plan", "id": "greenfield-openehr-cdr", "version": "1.0.0", "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888"},
+  "targetCapabilityProfileRef": {"kind": "target-capability-profile", "id": "atlas-production", "version": "1.0.0", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+  "requiredArtifactRefs": [
+    {"kind": "strategy", "id": "openehr.rps_dual", "version": "1.0.0", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"},
+    {"kind": "semantic-execution-binding", "id": "openehr.clinical-record.rps-dual", "version": "1.0.0", "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"}
+  ],
+  "compilerRef": {"kind": "compiler", "id": "kehrnel-core", "version": "phase0", "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"},
+  "runtimeDependencies": [
+    {"dependencyId": "clinical-terminology", "kind": "terminology", "artifactRef": {"kind": "service-contract", "id": "clinical-terminology", "version": "1.0.0", "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}, "requiredAtRuntime": false, "purpose": "Resolve terminology during governed authoring; runtime uses pinned bindings."},
+    {"dependencyId": "tenant-policy", "kind": "policy", "artifactRef": {"kind": "policy-bundle", "id": "tenant-clinical-access", "version": "1.0.0", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"}, "requiredAtRuntime": true, "purpose": "Authorize each query and write."}
+  ],
+  "deliveryLevel": "customer_evaluation",
+  "lifecycleOwner": "tenant-clinical-platform-team",
+  "portalIndependent": true,
+  "packageDigest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+}

@@ -6,24 +6,26 @@ import logging
 from datetime import datetime
 from typing import Optional, Dict, Any, Tuple
 from kehrnel.api.bridge.app.core.config import settings
+from kehrnel.api.bridge.app.core.config_models import CompositionCollectionNames
 
 logger = logging.getLogger(__name__)
 
-def _ehr_coll() -> str:
-    return settings.EHR_COLL_NAME
+def _ehr_coll(config: CompositionCollectionNames | None = None) -> str:
+    return config.ehr if config is not None else settings.EHR_COLL_NAME
 
 
-def _contrib_coll() -> str:
-    return settings.EHR_CONTRIBUTIONS_COLL
+def _contrib_coll(config: CompositionCollectionNames | None = None) -> str:
+    return config.contributions if config is not None else settings.EHR_CONTRIBUTIONS_COLL
 
 async def update_ehr_and_insert_contribution_for_directory(
     ehr_id: str,
     directory_ref: dict,
     contribution_doc: dict,
     contribution_ref: dict,
-    db: AsyncIOMotorDatabase
+    db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames | None = None,
 ):
-    
+
     """Updates the EHR with the directory and contribution references, and inserts
     the contribution document in a single atomic transaction
 
@@ -39,12 +41,12 @@ async def update_ehr_and_insert_contribution_for_directory(
         async with session.start_transaction():
             try:
                 # 1. Insert the new contribution document
-                await db[_contrib_coll()].insert_one(
+                await db[_contrib_coll(config)].insert_one(
                     contribution_doc, session=session
                 )
 
                 # 2. Update the EHR document
-                result = await db[_ehr_coll()].update_one(
+                result = await db[_ehr_coll(config)].update_one(
                     {
                         "_id.value": ehr_id
                     },
@@ -62,7 +64,7 @@ async def update_ehr_and_insert_contribution_for_directory(
                 if result.matched_count == 0:
                     await session.abort_transaction()
                     raise PyMongoError(f"Failed to find EHR with id {ehr_id} during transaction.")
-            
+
             except PyMongoError as e:
                 logger.error(f"Directory creation transaction failed: {e}")
                 # The transaction is automatically aborted on exception
@@ -70,7 +72,10 @@ async def update_ehr_and_insert_contribution_for_directory(
 
 
 async def find_folder_in_contribution_by_uid(
-    ehr_id: str, version_uid: str, db: AsyncIOMotorDatabase
+    ehr_id: str,
+    version_uid: str,
+    db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames | None = None,
 ) -> Optional[Tuple[Dict[str, Any], Optional[datetime]]]:
     """
     Finds the contribution containing a specific FOLDER version for a given EHR
@@ -84,8 +89,8 @@ async def find_folder_in_contribution_by_uid(
     Returns:
         The dictionary of the FOLDER object if found, otherwise None.
     """
-    
-    contribution = await db[_contrib_coll()].find_one(
+
+    contribution = await db[_contrib_coll(config)].find_one(
         {"ehr_id": ehr_id, "versions.uid.value": version_uid}
     )
 
@@ -93,17 +98,20 @@ async def find_folder_in_contribution_by_uid(
         return None
 
     time_committed = contribution.get("audit", {}).get("time_committed")
-    
+
     # Iterate through the versions in the contribution to find the matching FOLDER
     for version in contribution.get("versions", []):
         if version.get("_type") == "FOLDER" and version.get("uid", {}).get("value") == version_uid:
             return version, time_committed
-            
+
     return None
 
 
 async def find_folder_in_contribution_at_time(
-    ehr_id: str, timestamp: datetime, db: AsyncIOMotorDatabase
+    ehr_id: str,
+    timestamp: datetime,
+    db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames | None = None,
 ) -> Optional[Tuple[Dict[str, Any], Optional[datetime]]]:
     """
     Finds the latest FOLDER version for an EHR at or before a specific time
@@ -159,7 +167,7 @@ async def find_folder_in_contribution_at_time(
         }
     ]
 
-    cursor = db[_contrib_coll()].aggregate(pipeline)
+    cursor = db[_contrib_coll(config)].aggregate(pipeline)
     result = await cursor.to_list(length=1)
 
     if not result:
@@ -172,7 +180,8 @@ async def delete_directory_and_insert_contribution(
     ehr_id: str,
     contribution_doc: dict,
     contribution_ref: dict,
-    db: AsyncIOMotorDatabase
+    db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames | None = None,
 ):
     """
     Sets the EHR directory to null and inserts a deletion contribution in a transaction.
@@ -187,12 +196,12 @@ async def delete_directory_and_insert_contribution(
         async with session.start_transaction():
             try:
                 # 1. Insert the new "deletion" contribution document
-                await db[_contrib_coll()].insert_one(
+                await db[_contrib_coll(config)].insert_one(
                     contribution_doc, session=session
                 )
 
                 # 2. Update the EHR document to remove the directory
-                result = await db[_ehr_coll()].update_one(
+                result = await db[_ehr_coll(config)].update_one(
                     {"_id.value": ehr_id},
                     {
                         "$set": {"directory": None},

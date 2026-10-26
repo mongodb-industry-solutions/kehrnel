@@ -1,0 +1,111 @@
+{
+  "$id": "urn:mongodb:data-lab:contracts:v1:strategy-pack-spec",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "meta"
+        ]
+      },
+      "then": {
+        "properties": {
+          "meta": {
+            "required": [
+              "strategyId",
+              "specVersion"
+            ],
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "_strategy"
+        ]
+      },
+      "then": {
+        "required": [
+          "_schemaVersion"
+        ]
+      }
+    }
+  ],
+  "anyOf": [
+    {
+      "required": [
+        "meta"
+      ]
+    },
+    {
+      "required": [
+        "_strategy"
+      ]
+    }
+  ],
+  "minProperties": 1,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "_description": {
+      "type": "string"
+    },
+    "_schemaVersion": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "_strategy": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "glossary": {},
+    "instanceShape": {
+      "type": "object"
+    },
+    "logicalModel": {
+      "type": "object"
+    },
+    "meta": {
+      "additionalProperties": true,
+      "properties": {
+        "specVersion": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "strategyId": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "strategyId",
+        "specVersion"
+      ],
+      "type": "object"
+    },
+    "queryModel": {
+      "type": "object"
+    },
+    "storage": {
+      "type": "object"
+    },
+    "storageModel": {
+      "type": "object"
+    },
+    "transformModel": {
+      "type": "object"
+    },
+    "visualization": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "queryModel"
+  ],
+  "title": "Strategy Pack Specification",
+  "type": "object"
+}

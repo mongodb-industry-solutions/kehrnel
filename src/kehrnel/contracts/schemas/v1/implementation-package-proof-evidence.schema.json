@@ -1,0 +1,154 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "ImplementationPackageProofCheck": {
+      "additionalProperties": false,
+      "properties": {
+        "checkId": {
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9._-]*$",
+          "title": "Checkid",
+          "type": "string"
+        },
+        "evidenceDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Evidencedigest",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "passed",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "summary": {
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "checkId",
+        "status",
+        "summary",
+        "evidenceDigest"
+      ],
+      "title": "ImplementationPackageProofCheck",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:implementation-package-proof-evidence",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "checks": {
+      "items": {
+        "$ref": "#/$defs/ImplementationPackageProofCheck"
+      },
+      "minItems": 1,
+      "title": "Checks",
+      "type": "array"
+    },
+    "compilerRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "containsRuntimeMeasurements": {
+      "const": false,
+      "default": false,
+      "title": "Containsruntimemeasurements",
+      "type": "boolean"
+    },
+    "contract": {
+      "const": "implementation-package-proof-evidence/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "evidenceDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Evidencedigest",
+      "type": "string"
+    },
+    "evidencePersistence": {
+      "enum": [
+        "ephemeral",
+        "durable"
+      ],
+      "title": "Evidencepersistence",
+      "type": "string"
+    },
+    "packageRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "proofKind": {
+      "const": "static_package_qualification",
+      "title": "Proofkind",
+      "type": "string"
+    },
+    "resolvedPlanRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "status": {
+      "enum": [
+        "passed",
+        "failed"
+      ],
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "packageRef",
+    "resolvedPlanRef",
+    "compilerRef",
+    "proofKind",
+    "status",
+    "checks",
+    "evidencePersistence",
+    "evidenceDigest"
+  ],
+  "title": "ImplementationPackageProofEvidence",
+  "type": "object"
+}

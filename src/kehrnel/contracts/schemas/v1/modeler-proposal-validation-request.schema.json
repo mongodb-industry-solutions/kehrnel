@@ -1,0 +1,1696 @@
+{
+  "$defs": {
+    "AcknowledgementLevel": {
+      "enum": [
+        "accepted",
+        "durable_authoritative",
+        "derived_visible"
+      ],
+      "title": "AcknowledgementLevel",
+      "type": "string"
+    },
+    "ArchitectureConstraints": {
+      "additionalProperties": false,
+      "properties": {
+        "estimatedDocuments": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Estimateddocuments"
+        },
+        "peakReadsPerSecond": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Peakreadspersecond"
+        },
+        "peakWritesPerSecond": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Peakwritespersecond"
+        },
+        "regions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Regions",
+          "type": "array"
+        },
+        "retentionDays": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Retentiondays"
+        },
+        "tenancyMode": {
+          "default": "single_tenant",
+          "enum": [
+            "single_tenant",
+            "multi_tenant"
+          ],
+          "title": "Tenancymode",
+          "type": "string"
+        }
+      },
+      "title": "ArchitectureConstraints",
+      "type": "object"
+    },
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "AuthorityScope": {
+      "additionalProperties": false,
+      "properties": {
+        "domain": {
+          "minLength": 1,
+          "title": "Domain",
+          "type": "string"
+        },
+        "lifecycleStates": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Lifecyclestates",
+          "type": "array"
+        },
+        "paths": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Paths",
+          "type": "array"
+        },
+        "recordTypes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Recordtypes",
+          "type": "array"
+        },
+        "scopeId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Scopeid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "scopeId",
+        "domain"
+      ],
+      "title": "AuthorityScope",
+      "type": "object"
+    },
+    "BlueprintOverrideOperation": {
+      "description": "Restricted JSON Patch operations accepted at the Builder boundary.",
+      "enum": [
+        "add",
+        "remove",
+        "replace"
+      ],
+      "title": "BlueprintOverrideOperation",
+      "type": "string"
+    },
+    "BlueprintRevisionIdentity": {
+      "additionalProperties": false,
+      "description": "One exact immutable Blueprint revision used as proposal input.",
+      "properties": {
+        "blueprintId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Blueprintid",
+          "type": "string"
+        },
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "blueprintId",
+        "revision",
+        "digest"
+      ],
+      "title": "BlueprintRevisionIdentity",
+      "type": "object"
+    },
+    "ConsistencyRequirement": {
+      "enum": [
+        "strong",
+        "bounded_staleness",
+        "eventual",
+        "snapshot"
+      ],
+      "title": "ConsistencyRequirement",
+      "type": "string"
+    },
+    "DataPostureSelection": {
+      "additionalProperties": false,
+      "properties": {
+        "posture": {
+          "$ref": "#/$defs/IntegrationPosture"
+        },
+        "scopeId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Scopeid",
+          "type": "string"
+        },
+        "servingRepositoryRef": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Servingrepositoryref"
+        }
+      },
+      "required": [
+        "scopeId",
+        "posture"
+      ],
+      "title": "DataPostureSelection",
+      "type": "object"
+    },
+    "DataProductComposition": {
+      "additionalProperties": false,
+      "description": "Explicit lineage between semantic data-product scopes.\n\nThis is separate from SemanticMode.COMPOSED: that mode governs meaning;\nthis contract names the products supplying another product's data.",
+      "properties": {
+        "compositionId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Compositionid",
+          "type": "string"
+        },
+        "inputScopeIds": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Inputscopeids",
+          "type": "array"
+        },
+        "targetScopeId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Targetscopeid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "compositionId",
+        "targetScopeId",
+        "inputScopeIds"
+      ],
+      "title": "DataProductComposition",
+      "type": "object"
+    },
+    "IntegrationPosture": {
+      "description": "How much responsibility MongoDB assumes for one source domain.",
+      "enum": [
+        "federated_access",
+        "selective_materialization",
+        "operational_replica",
+        "mongodb_system_of_record"
+      ],
+      "title": "IntegrationPosture",
+      "type": "string"
+    },
+    "InteractionBehavior": {
+      "enum": [
+        "create",
+        "update",
+        "delete",
+        "command",
+        "read",
+        "search",
+        "query",
+        "subscribe",
+        "publish",
+        "export"
+      ],
+      "title": "InteractionBehavior",
+      "type": "string"
+    },
+    "InteractionGuarantees": {
+      "additionalProperties": false,
+      "properties": {
+        "acknowledgement": {
+          "$ref": "#/$defs/AcknowledgementLevel",
+          "default": "accepted"
+        },
+        "consistency": {
+          "$ref": "#/$defs/ConsistencyRequirement",
+          "default": "strong"
+        },
+        "freshnessTargetSeconds": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Freshnesstargetseconds"
+        },
+        "idempotencyRequired": {
+          "default": false,
+          "title": "Idempotencyrequired",
+          "type": "boolean"
+        },
+        "latencyTargetMs": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latencytargetms"
+        }
+      },
+      "title": "InteractionGuarantees",
+      "type": "object"
+    },
+    "InteractionInterface": {
+      "additionalProperties": false,
+      "properties": {
+        "capabilityRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "kind": {
+          "$ref": "#/$defs/InterfaceKind"
+        },
+        "protocolVersion": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Protocolversion"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "InteractionInterface",
+      "type": "object"
+    },
+    "InteractionPattern": {
+      "enum": [
+        "request_response",
+        "publish_subscribe",
+        "stream",
+        "batch"
+      ],
+      "title": "InteractionPattern",
+      "type": "string"
+    },
+    "InteractionRoleBindings": {
+      "additionalProperties": false,
+      "properties": {
+        "providerRef": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Providerref"
+        },
+        "publisherRef": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Publisherref"
+        },
+        "requesterRef": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Requesterref"
+        },
+        "subscriberRef": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subscriberref"
+        }
+      },
+      "title": "InteractionRoleBindings",
+      "type": "object"
+    },
+    "InterfaceKind": {
+      "enum": [
+        "rest",
+        "fhir",
+        "openehr",
+        "aql",
+        "mql",
+        "sql",
+        "event",
+        "agent_tool",
+        "natural_language"
+      ],
+      "title": "InterfaceKind",
+      "type": "string"
+    },
+    "JsonValue": {},
+    "ModelerAgenticDestination": {
+      "additionalProperties": false,
+      "description": "Exact Agentic Engine workspace selected by the hosting server.",
+      "properties": {
+        "deploymentId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Deploymentid",
+          "type": "string"
+        },
+        "engine": {
+          "const": "mongodb_agentic_engine",
+          "title": "Engine",
+          "type": "string"
+        },
+        "workspaceRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        }
+      },
+      "required": [
+        "engine",
+        "workspaceRef",
+        "deploymentId"
+      ],
+      "title": "ModelerAgenticDestination",
+      "type": "object"
+    },
+    "ModelerAgenticExecutionReceipt": {
+      "additionalProperties": false,
+      "description": "Server-captured Agentic Engine execution identity and tool evidence.\n\nThis is a structural receipt, not a cryptographic attestation from MongoDB.\nThe host must obtain it from the configured Agentic Engine integration and\nverify every ``toolRef`` is a member of the pinned registry.",
+      "properties": {
+        "completedAt": {
+          "format": "date-time",
+          "title": "Completedat",
+          "type": "string"
+        },
+        "contract": {
+          "const": "modeler-agentic-execution-receipt/v1",
+          "title": "Contract",
+          "type": "string"
+        },
+        "engine": {
+          "const": "mongodb_agentic_engine",
+          "title": "Engine",
+          "type": "string"
+        },
+        "executionDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Executiondigest",
+          "type": "string"
+        },
+        "executionId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Executionid",
+          "type": "string"
+        },
+        "invocationDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Invocationdigest",
+          "type": "string"
+        },
+        "invocationId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Invocationid",
+          "type": "string"
+        },
+        "modelId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Modelid",
+          "type": "string"
+        },
+        "providerId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Providerid",
+          "type": "string"
+        },
+        "sessionId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Sessionid",
+          "type": "string"
+        },
+        "startedAt": {
+          "format": "date-time",
+          "title": "Startedat",
+          "type": "string"
+        },
+        "toolReceipts": {
+          "items": {
+            "$ref": "#/$defs/ModelerToolReceipt"
+          },
+          "maxItems": 256,
+          "minItems": 1,
+          "title": "Toolreceipts",
+          "type": "array"
+        },
+        "toolRegistryRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "workspaceRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        }
+      },
+      "required": [
+        "contract",
+        "engine",
+        "executionDigest",
+        "invocationId",
+        "invocationDigest",
+        "toolRegistryRef",
+        "workspaceRef",
+        "providerId",
+        "modelId",
+        "executionId",
+        "sessionId",
+        "startedAt",
+        "completedAt",
+        "toolReceipts"
+      ],
+      "title": "ModelerAgenticExecutionReceipt",
+      "type": "object"
+    },
+    "ModelerAgenticInvocation": {
+      "additionalProperties": false,
+      "description": "Server-created, content-addressed authorization to call Agentic Engine.\n\nThe contract records an allowlist and policy decision but cannot prove who\ncreated them.  The host must authenticate this record and enforce tool\nmembership and data exposure before dispatch.",
+      "properties": {
+        "authorizedEvidenceRefs": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "maxItems": 512,
+          "title": "Authorizedevidencerefs",
+          "type": "array"
+        },
+        "baseBlueprint": {
+          "$ref": "#/$defs/BlueprintRevisionIdentity"
+        },
+        "catalogRefs": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "maxItems": 256,
+          "minItems": 1,
+          "title": "Catalogrefs",
+          "type": "array"
+        },
+        "contract": {
+          "const": "modeler-agentic-invocation/v1",
+          "title": "Contract",
+          "type": "string"
+        },
+        "createdAt": {
+          "format": "date-time",
+          "title": "Createdat",
+          "type": "string"
+        },
+        "destination": {
+          "$ref": "#/$defs/ModelerAgenticDestination"
+        },
+        "exposureManifest": {
+          "items": {
+            "$ref": "#/$defs/ModelerExposureItem"
+          },
+          "maxItems": 512,
+          "minItems": 1,
+          "title": "Exposuremanifest",
+          "type": "array"
+        },
+        "exposureManifestDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Exposuremanifestdigest",
+          "type": "string"
+        },
+        "invocationDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Invocationdigest",
+          "type": "string"
+        },
+        "invocationId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Invocationid",
+          "type": "string"
+        },
+        "issuedBy": {
+          "const": "data_lab_server",
+          "title": "Issuedby",
+          "type": "string"
+        },
+        "payloadDigest": {
+          "description": "Digest of the exact redacted payload dispatched to Agentic Engine.",
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Payloaddigest",
+          "type": "string"
+        },
+        "payloadSizeBytes": {
+          "maximum": 4194304,
+          "minimum": 1,
+          "title": "Payloadsizebytes",
+          "type": "integer"
+        },
+        "policyDecision": {
+          "$ref": "#/$defs/ModelerPolicyDecision"
+        },
+        "scope": {
+          "$ref": "#/$defs/ModelerAssistantScope"
+        },
+        "toolRegistryRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        }
+      },
+      "required": [
+        "contract",
+        "issuedBy",
+        "invocationId",
+        "invocationDigest",
+        "createdAt",
+        "scope",
+        "baseBlueprint",
+        "catalogRefs",
+        "destination",
+        "exposureManifest",
+        "exposureManifestDigest",
+        "policyDecision",
+        "payloadDigest",
+        "payloadSizeBytes",
+        "toolRegistryRef"
+      ],
+      "title": "ModelerAgenticInvocation",
+      "type": "object"
+    },
+    "ModelerAssistantScope": {
+      "additionalProperties": false,
+      "description": "Identity and authorization context injected by the hosting server.\n\nClients and the language model must not choose these values.  The\n``authorizationDigest`` lets an integration fail closed if permissions\nchange between proposal, validation, and approval.",
+      "properties": {
+        "actorId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Actorid",
+          "type": "string"
+        },
+        "authorizationDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Authorizationdigest",
+          "type": "string"
+        },
+        "binding": {
+          "const": "server_bound",
+          "title": "Binding",
+          "type": "string"
+        },
+        "projectId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Projectid",
+          "type": "string"
+        },
+        "purpose": {
+          "maxLength": 512,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Purpose",
+          "type": "string"
+        },
+        "role": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Role",
+          "type": "string"
+        },
+        "sessionId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Sessionid",
+          "type": "string"
+        },
+        "tenantId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Tenantid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "binding",
+        "tenantId",
+        "projectId",
+        "actorId",
+        "sessionId",
+        "role",
+        "purpose",
+        "authorizationDigest"
+      ],
+      "title": "ModelerAssistantScope",
+      "type": "object"
+    },
+    "ModelerAssumptionOrigin": {
+      "enum": [
+        "declared",
+        "inferred"
+      ],
+      "title": "ModelerAssumptionOrigin",
+      "type": "string"
+    },
+    "ModelerBlueprintChange": {
+      "additionalProperties": false,
+      "description": "One explainable, non-executing Blueprint patch suggestion.\n\nValidation is delegated to :class:`BlueprintOverride`, preserving the same\nrestricted ``add``/``remove``/``replace`` operations, editable roots, JSON\nPointer rules, and canonical JSON value subset used by the Builder.",
+      "properties": {
+        "assumptionIds": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 128,
+          "title": "Assumptionids",
+          "type": "array"
+        },
+        "changeId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Changeid",
+          "type": "string"
+        },
+        "confidenceBasisPoints": {
+          "maximum": 10000,
+          "minimum": 0,
+          "title": "Confidencebasispoints",
+          "type": "integer"
+        },
+        "dependsOnChangeIds": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 128,
+          "title": "Dependsonchangeids",
+          "type": "array"
+        },
+        "evidenceIds": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 128,
+          "title": "Evidenceids",
+          "type": "array"
+        },
+        "operation": {
+          "$ref": "#/$defs/BlueprintOverrideOperation"
+        },
+        "path": {
+          "minLength": 1,
+          "pattern": "^/(?:objective|participants|interactions|semanticAuthorities|recordAuthorityPolicies|dataPostures|constraints|targetCapabilityProfileRef|preferredFoundationRefs|assumptions|decisions)(?:/(?:[^~/]|~[01])*)*$",
+          "title": "Path",
+          "type": "string"
+        },
+        "rationale": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/JsonValue"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "changeId",
+        "operation",
+        "path",
+        "rationale",
+        "confidenceBasisPoints"
+      ],
+      "title": "ModelerBlueprintChange",
+      "type": "object"
+    },
+    "ModelerBlueprintProposal": {
+      "additionalProperties": false,
+      "description": "Immutable Agentic Engine suggestion awaiting deterministic validation.",
+      "properties": {
+        "assumptions": {
+          "items": {
+            "$ref": "#/$defs/ModelerProposalAssumption"
+          },
+          "maxItems": 256,
+          "title": "Assumptions",
+          "type": "array"
+        },
+        "baseBlueprint": {
+          "$ref": "#/$defs/BlueprintRevisionIdentity"
+        },
+        "changes": {
+          "items": {
+            "$ref": "#/$defs/ModelerBlueprintChange"
+          },
+          "maxItems": 256,
+          "minItems": 1,
+          "title": "Changes",
+          "type": "array"
+        },
+        "contract": {
+          "const": "modeler-blueprint-proposal/v1",
+          "title": "Contract",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/ModelerProposalEvidence"
+          },
+          "maxItems": 512,
+          "title": "Evidence",
+          "type": "array"
+        },
+        "executionReceipt": {
+          "$ref": "#/$defs/ModelerAgenticExecutionReceipt"
+        },
+        "invocation": {
+          "$ref": "#/$defs/ModelerAgenticInvocation"
+        },
+        "proposalDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Proposaldigest",
+          "type": "string"
+        },
+        "proposalId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Proposalid",
+          "type": "string"
+        },
+        "proposalOrigin": {
+          "const": "mongodb_agentic_engine",
+          "title": "Proposalorigin",
+          "type": "string"
+        },
+        "rationale": {
+          "maxLength": 8000,
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "scope": {
+          "$ref": "#/$defs/ModelerAssistantScope"
+        },
+        "status": {
+          "const": "proposed",
+          "title": "Status",
+          "type": "string"
+        },
+        "summary": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "contract",
+        "proposalOrigin",
+        "status",
+        "proposalId",
+        "proposalDigest",
+        "scope",
+        "baseBlueprint",
+        "invocation",
+        "executionReceipt",
+        "summary",
+        "rationale",
+        "changes"
+      ],
+      "title": "ModelerBlueprintProposal",
+      "type": "object"
+    },
+    "ModelerConsentStatus": {
+      "enum": [
+        "not_required",
+        "granted",
+        "denied"
+      ],
+      "title": "ModelerConsentStatus",
+      "type": "string"
+    },
+    "ModelerDataClassification": {
+      "enum": [
+        "public",
+        "internal",
+        "confidential",
+        "restricted"
+      ],
+      "title": "ModelerDataClassification",
+      "type": "string"
+    },
+    "ModelerEvidenceKind": {
+      "description": "The bounded provenance classes an assistant may cite.",
+      "enum": [
+        "catalog_artifact",
+        "source_observation",
+        "user_requirement",
+        "compiler_evidence",
+        "prior_decision"
+      ],
+      "title": "ModelerEvidenceKind",
+      "type": "string"
+    },
+    "ModelerExposureItem": {
+      "additionalProperties": false,
+      "description": "One content-addressed item authorized to cross the agent boundary.",
+      "properties": {
+        "artifactRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "classification": {
+          "$ref": "#/$defs/ModelerDataClassification"
+        },
+        "contentDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Contentdigest",
+          "type": "string"
+        },
+        "exposureId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Exposureid",
+          "type": "string"
+        },
+        "includedPaths": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 256,
+          "title": "Includedpaths",
+          "type": "array"
+        },
+        "kind": {
+          "$ref": "#/$defs/ModelerExposureKind"
+        },
+        "purpose": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Purpose",
+          "type": "string"
+        }
+      },
+      "required": [
+        "exposureId",
+        "kind",
+        "classification",
+        "purpose",
+        "contentDigest"
+      ],
+      "title": "ModelerExposureItem",
+      "type": "object"
+    },
+    "ModelerExposureKind": {
+      "enum": [
+        "blueprint",
+        "catalog_artifact",
+        "source_evidence",
+        "runtime_evidence",
+        "user_requirement",
+        "conversation_context"
+      ],
+      "title": "ModelerExposureKind",
+      "type": "string"
+    },
+    "ModelerPolicyDecision": {
+      "additionalProperties": false,
+      "description": "Explicit policy and consent decision made before an invocation.",
+      "properties": {
+        "consentRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "consentStatus": {
+          "$ref": "#/$defs/ModelerConsentStatus"
+        },
+        "decisionRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "outcome": {
+          "$ref": "#/$defs/ModelerPolicyOutcome"
+        },
+        "policyRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "restrictions": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 128,
+          "title": "Restrictions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "outcome",
+        "policyRef",
+        "decisionRef",
+        "consentStatus"
+      ],
+      "title": "ModelerPolicyDecision",
+      "type": "object"
+    },
+    "ModelerPolicyOutcome": {
+      "enum": [
+        "allow",
+        "deny"
+      ],
+      "title": "ModelerPolicyOutcome",
+      "type": "string"
+    },
+    "ModelerProposalAssumption": {
+      "additionalProperties": false,
+      "description": "A visible premise used by the assistant rather than an asserted fact.",
+      "properties": {
+        "assumptionId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Assumptionid",
+          "type": "string"
+        },
+        "confidenceBasisPoints": {
+          "maximum": 10000,
+          "minimum": 0,
+          "title": "Confidencebasispoints",
+          "type": "integer"
+        },
+        "evidenceIds": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 128,
+          "title": "Evidenceids",
+          "type": "array"
+        },
+        "origin": {
+          "$ref": "#/$defs/ModelerAssumptionOrigin"
+        },
+        "statement": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Statement",
+          "type": "string"
+        }
+      },
+      "required": [
+        "assumptionId",
+        "statement",
+        "origin",
+        "confidenceBasisPoints"
+      ],
+      "title": "ModelerProposalAssumption",
+      "type": "object"
+    },
+    "ModelerProposalEvidence": {
+      "additionalProperties": false,
+      "description": "Content-addressed evidence; raw source data is intentionally excluded.",
+      "properties": {
+        "artifactRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "contentDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Contentdigest",
+          "type": "string"
+        },
+        "evidenceId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Evidenceid",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/ModelerEvidenceKind"
+        },
+        "summary": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidenceId",
+        "kind",
+        "summary",
+        "contentDigest"
+      ],
+      "title": "ModelerProposalEvidence",
+      "type": "object"
+    },
+    "ModelerToolReceipt": {
+      "additionalProperties": false,
+      "description": "Content-addressed receipt for one bounded Agentic Engine tool call.",
+      "properties": {
+        "callId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Callid",
+          "type": "string"
+        },
+        "inputDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Inputdigest",
+          "type": "string"
+        },
+        "receiptContract": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Receiptcontract",
+          "type": "string"
+        },
+        "receiptDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Receiptdigest",
+          "type": "string"
+        },
+        "receiptId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Receiptid",
+          "type": "string"
+        },
+        "resultArtifactRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "resultDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Resultdigest",
+          "type": "string"
+        },
+        "toolRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        }
+      },
+      "required": [
+        "receiptId",
+        "receiptDigest",
+        "callId",
+        "toolRef",
+        "receiptContract",
+        "inputDigest",
+        "resultDigest"
+      ],
+      "title": "ModelerToolReceipt",
+      "type": "object"
+    },
+    "ParticipantKind": {
+      "enum": [
+        "application",
+        "system",
+        "service",
+        "agent",
+        "repository",
+        "device",
+        "external_authority"
+      ],
+      "title": "ParticipantKind",
+      "type": "string"
+    },
+    "ParticipantLifecycle": {
+      "enum": [
+        "existing",
+        "planned"
+      ],
+      "title": "ParticipantLifecycle",
+      "type": "string"
+    },
+    "ParticipantSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/ParticipantKind"
+        },
+        "label": {
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "lifecycle": {
+          "$ref": "#/$defs/ParticipantLifecycle"
+        },
+        "participantId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Participantid",
+          "type": "string"
+        },
+        "sourceProfileRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "participantId",
+        "label",
+        "kind",
+        "lifecycle"
+      ],
+      "title": "ParticipantSpec",
+      "type": "object"
+    },
+    "ProjectInteractionContract": {
+      "additionalProperties": false,
+      "properties": {
+        "artifactRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "authorizationPolicyRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "behavior": {
+          "$ref": "#/$defs/InteractionBehavior"
+        },
+        "contract": {
+          "const": "interaction-contract/v1",
+          "title": "Contract",
+          "type": "string"
+        },
+        "errorContractRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "guarantees": {
+          "$ref": "#/$defs/InteractionGuarantees"
+        },
+        "inputContractRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "interactionId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Interactionid",
+          "type": "string"
+        },
+        "interface": {
+          "$ref": "#/$defs/InteractionInterface"
+        },
+        "pattern": {
+          "$ref": "#/$defs/InteractionPattern"
+        },
+        "resultContractRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "roles": {
+          "$ref": "#/$defs/InteractionRoleBindings"
+        },
+        "semanticScopeId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Semanticscopeid",
+          "type": "string"
+        },
+        "workloadRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        }
+      },
+      "required": [
+        "contract",
+        "artifactRef",
+        "interactionId",
+        "behavior",
+        "pattern",
+        "roles",
+        "interface",
+        "semanticScopeId",
+        "workloadRef"
+      ],
+      "title": "ProjectInteractionContract",
+      "type": "object"
+    },
+    "RecordAuthorityPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "artifactRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "authoritativeWriterRef": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Authoritativewriterref",
+          "type": "string"
+        },
+        "conflictPolicy": {
+          "$ref": "#/$defs/RecordConflictPolicy"
+        },
+        "contract": {
+          "const": "record-authority-policy/v1",
+          "title": "Contract",
+          "type": "string"
+        },
+        "correctionBehavior": {
+          "minLength": 1,
+          "title": "Correctionbehavior",
+          "type": "string"
+        },
+        "permittedWriterRefs": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Permittedwriterrefs",
+          "type": "array"
+        },
+        "provenanceRequired": {
+          "default": true,
+          "title": "Provenancerequired",
+          "type": "boolean"
+        },
+        "scope": {
+          "$ref": "#/$defs/AuthorityScope"
+        },
+        "versionPolicyRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        }
+      },
+      "required": [
+        "contract",
+        "artifactRef",
+        "scope",
+        "authoritativeWriterRef",
+        "permittedWriterRefs",
+        "conflictPolicy",
+        "versionPolicyRef",
+        "correctionBehavior"
+      ],
+      "title": "RecordAuthorityPolicy",
+      "type": "object"
+    },
+    "RecordConflictPolicy": {
+      "enum": [
+        "reject",
+        "reconcile",
+        "append_distinct",
+        "reviewed_merge"
+      ],
+      "title": "RecordConflictPolicy",
+      "type": "string"
+    },
+    "SemanticAuthoritySelection": {
+      "additionalProperties": false,
+      "properties": {
+        "authorityRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "mode": {
+          "$ref": "#/$defs/SemanticMode"
+        },
+        "scopeId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Scopeid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "scopeId",
+        "mode",
+        "authorityRef"
+      ],
+      "title": "SemanticAuthoritySelection",
+      "type": "object"
+    },
+    "SemanticMode": {
+      "description": "How a consumption contract obtains its semantic model.",
+      "enum": [
+        "native",
+        "derived",
+        "composed"
+      ],
+      "title": "SemanticMode",
+      "type": "string"
+    },
+    "SolutionBlueprint": {
+      "additionalProperties": false,
+      "properties": {
+        "assumptions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Assumptions",
+          "type": "array"
+        },
+        "blueprintId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Blueprintid",
+          "type": "string"
+        },
+        "constraints": {
+          "$ref": "#/$defs/ArchitectureConstraints"
+        },
+        "contract": {
+          "const": "solution-blueprint/v1",
+          "title": "Contract",
+          "type": "string"
+        },
+        "dataPostures": {
+          "items": {
+            "$ref": "#/$defs/DataPostureSelection"
+          },
+          "minItems": 1,
+          "title": "Datapostures",
+          "type": "array"
+        },
+        "dataProductCompositions": {
+          "items": {
+            "$ref": "#/$defs/DataProductComposition"
+          },
+          "title": "Dataproductcompositions",
+          "type": "array"
+        },
+        "decisions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Decisions",
+          "type": "array"
+        },
+        "industry": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Industry",
+          "type": "string"
+        },
+        "interactions": {
+          "items": {
+            "$ref": "#/$defs/ProjectInteractionContract"
+          },
+          "minItems": 1,
+          "title": "Interactions",
+          "type": "array"
+        },
+        "objective": {
+          "minLength": 1,
+          "title": "Objective",
+          "type": "string"
+        },
+        "participants": {
+          "items": {
+            "$ref": "#/$defs/ParticipantSpec"
+          },
+          "minItems": 1,
+          "title": "Participants",
+          "type": "array"
+        },
+        "preferredFoundationRefs": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "title": "Preferredfoundationrefs",
+          "type": "array"
+        },
+        "recordAuthorityPolicies": {
+          "items": {
+            "$ref": "#/$defs/RecordAuthorityPolicy"
+          },
+          "title": "Recordauthoritypolicies",
+          "type": "array"
+        },
+        "revision": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "semanticAuthorities": {
+          "items": {
+            "$ref": "#/$defs/SemanticAuthoritySelection"
+          },
+          "minItems": 1,
+          "title": "Semanticauthorities",
+          "type": "array"
+        },
+        "targetCapabilityProfileRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        }
+      },
+      "required": [
+        "contract",
+        "blueprintId",
+        "industry",
+        "objective",
+        "participants",
+        "interactions",
+        "semanticAuthorities",
+        "dataPostures",
+        "targetCapabilityProfileRef"
+      ],
+      "title": "SolutionBlueprint",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:modeler-proposal-validation-request",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Input to deterministic Core validation; it performs no mutation.\n\n``selectedChangeIds`` may contain the complete proposal or a non-empty,\ndependency-closed subset selected in the Builder review experience.",
+  "properties": {
+    "baseBlueprint": {
+      "$ref": "#/$defs/SolutionBlueprint"
+    },
+    "contract": {
+      "const": "modeler-proposal-validation-request/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "proposal": {
+      "$ref": "#/$defs/ModelerBlueprintProposal"
+    },
+    "selectedChangeIds": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 256,
+      "minItems": 1,
+      "title": "Selectedchangeids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "contract",
+    "proposal",
+    "baseBlueprint",
+    "selectedChangeIds"
+  ],
+  "title": "ModelerProposalValidationRequest",
+  "type": "object"
+}

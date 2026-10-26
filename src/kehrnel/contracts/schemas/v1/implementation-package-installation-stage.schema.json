@@ -1,0 +1,138 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:implementation-package-installation-stage",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "artifactsMaterialized": {
+      "const": false,
+      "default": false,
+      "title": "Artifactsmaterialized",
+      "type": "boolean"
+    },
+    "contract": {
+      "const": "implementation-package-installation-stage/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "environmentId": {
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$",
+      "title": "Environmentid",
+      "type": "string"
+    },
+    "installationId": {
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Installationid",
+      "type": "string"
+    },
+    "installationMode": {
+      "const": "tenant_sandbox",
+      "title": "Installationmode",
+      "type": "string"
+    },
+    "nextRequiredAction": {
+      "const": "materialize_package_artifacts",
+      "default": "materialize_package_artifacts",
+      "title": "Nextrequiredaction",
+      "type": "string"
+    },
+    "packageMetadataPersisted": {
+      "const": true,
+      "default": true,
+      "title": "Packagemetadatapersisted",
+      "type": "boolean"
+    },
+    "packageRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "preparationExecuted": {
+      "const": false,
+      "default": false,
+      "title": "Preparationexecuted",
+      "type": "boolean"
+    },
+    "qualificationEvidenceRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "resolvedPlanRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "runtimeExecuted": {
+      "const": false,
+      "default": false,
+      "title": "Runtimeexecuted",
+      "type": "boolean"
+    },
+    "stageDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Stagedigest",
+      "type": "string"
+    },
+    "state": {
+      "const": "staged",
+      "default": "staged",
+      "title": "State",
+      "type": "string"
+    },
+    "targetCapabilityProfileRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "installationId",
+    "environmentId",
+    "installationMode",
+    "packageRef",
+    "resolvedPlanRef",
+    "qualificationEvidenceRef",
+    "targetCapabilityProfileRef",
+    "stageDigest"
+  ],
+  "title": "ImplementationPackageInstallationStage",
+  "type": "object"
+}

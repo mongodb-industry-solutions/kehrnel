@@ -34,7 +34,7 @@ sidebar_position: 3
 | `KEHRNEL_API_KEYS` | Comma-separated list of valid API keys | - |
 | `KEHRNEL_ADMIN_API_KEYS` | Comma-separated list of admin API keys | - |
 | `KEHRNEL_API_KEY_ENV_SCOPES` | JSON mapping of API keys to environment scopes | - |
-| `KEHRNEL_CORS_ORIGINS` | Comma-separated list of allowed CORS origins | `*` |
+| `KEHRNEL_CORS_ORIGINS` | Comma-separated list of allowed CORS origins (`*` allows any origin; use it only in development) | none (same-origin only) |
 | `ENV_SECRETS_KEY` | Encryption key for environment secrets | - |
 
 ### Rate Limiting

@@ -6,6 +6,8 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import List, Dict, Any
 
 from kehrnel.api.bridge.app.core.database import get_mongodb_ehr_db
+from kehrnel.api.bridge.app.core.config_models import CompositionCollectionNames
+from kehrnel.api.domains.openehr.composition.dependencies import get_composition_config
 from kehrnel.api.domains.openehr.aql.service import (
     create_or_update_stored_query,
     retrieve_stored_query,
@@ -44,32 +46,21 @@ async def execute_query(
 ):
     """
     Accepts an AQL query as plain text, executes it, and returns the result set.
-    
+
     Query Strategy:
     - With ehr_id: Uses $match on flatten_compositions (targeted, efficient)
     - Without ehr_id: Uses $search on search collection (cross-EHR, indexed)
     - force_search=true: Forces $search strategy regardless of ehr_id
     """
-    from kehrnel.api.bridge.app.core.config import settings
-    
-    # Temporarily override force_search_strategy if requested
-    original_force_search = settings.search_config.force_search_strategy
-    if force_search:
-        settings.search_config.force_search_strategy = True
-    
-    try:
-        response = await process_aql_query(
-            aql_query=aql,
-            request_url=request.url,
-            db=db,
-            ehr_id=ehr_id,
-            request=request,
-            feature_mode=aql_feature_mode,
-        )
-        return response
-    finally:
-        # Restore original setting
-        settings.search_config.force_search_strategy = original_force_search
+    return await process_aql_query(
+        aql_query=aql,
+        request_url=request.url,
+        db=db,
+        ehr_id=ehr_id,
+        request=request,
+        feature_mode=aql_feature_mode,
+        force_search=force_search,
+    )
 
 
 @router.post(
@@ -109,17 +100,17 @@ async def parse_aql_to_ast_endpoint(
     """
     try:
         from kehrnel.engine.domains.openehr.aql.parser import AQLParser
-        
+
         parser = AQLParser(aql)
         ast = parser.parse()
-        
+
         return {
             "success": True,
             "message": "AQL parsed successfully",
             "original_query": aql,
             "ast": ast
         }
-        
+
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -148,7 +139,7 @@ async def execute_ast_query(
     This endpoint is primarily for testing
     """
     try:
-        
+
         response = await process_aql_ast_query(
             ast_query=ast_data,
             request_url=request.url,
@@ -158,7 +149,7 @@ async def execute_ast_query(
             feature_mode=aql_feature_mode,
         )
         return response
-        
+
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -218,14 +209,14 @@ async def debug_aql_to_mql_query(
     try:
         from kehrnel.engine.domains.openehr.aql.parser import AQLParser
         from .service import build_aql_pipeline
-        
+
         parser = AQLParser(aql)
         ast_data = parser.parse()
 
         # aql = Original query
         # ast_data = Parsed query
         # mql_pipeline = MongoDB Aggregation Pipeline
-        
+
         mql_pipeline = await build_aql_pipeline(
             ast_data,
             db,
@@ -233,14 +224,14 @@ async def debug_aql_to_mql_query(
             request=request,
             feature_mode=aql_feature_mode,
         )
-    
+
         return AQLtoMQLDebugResponse(
             success=True,
             aql_query=aql,
             ast=ast_data,
             mql_pipeline=mql_pipeline
         )
-        
+
     except Exception as e:
         error_response_body = AQLtoMQLDebugErrorResponse(
             message=f"Failed to process AQL: {str(e)}",
@@ -275,7 +266,7 @@ async def debug_ast_query(
     try:
         # Import here to avoid circular imports
         from .service import build_aql_pipeline
-        
+
         pipeline = await build_aql_pipeline(
             ast_data,
             db,
@@ -283,13 +274,13 @@ async def debug_ast_query(
             request=request,
             feature_mode=aql_feature_mode,
         )
-        
+
         return {
             "query": ast_data,
             "pipeline": pipeline,
             "pipeline_count": len(pipeline)
         }
-        
+
     except Exception as e:
         return {
             "query": ast_data,
@@ -377,53 +368,63 @@ async def delete_stored_query(
     description="Returns information about the dual-query strategy configuration and decision logic."
 )
 async def get_strategy_info(
+    request: Request,
     ehr_id: str = Query(None, description="Test EHR ID to see which strategy would be used"),
     force_search: bool = Query(False, description="Test force search parameter"),
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Returns detailed information about the dual-query strategy and configuration.
     """
-    from kehrnel.api.bridge.app.core.config import settings
-    from kehrnel.api.domains.openehr.aql.transformers.aql_transformer import AQLtoMQLTransformer
-    
+    from kehrnel.engine.strategies.openehr.rps_dual.query.transformers import AQLtoMQLTransformer
+    from kehrnel.engine.strategies.openehr.rps_dual.config import build_schema_config, normalize_config
+    from kehrnel.api.bridge.app.core.database import resolve_active_openehr_context
+
+    context = await resolve_active_openehr_context(request, ensure_ingestion=False)
+    strategy_cfg = normalize_config(getattr(context.get("activation"), "config", {}) or {})
+    schemas = build_schema_config(strategy_cfg)
+
     # Create a minimal AST for testing strategy decision
     test_ast = {
         "select": {"columns": {}},
         "contains": {"rmType": "COMPOSITION", "alias": "c"}
     }
-    
+
     transformer = AQLtoMQLTransformer(
-        test_ast, 
+        test_ast,
         ehr_id=ehr_id,
-        search_index_name=settings.search_config.search_index_name
+        schema_config=schemas["composition"],
+        search_schema_config=schemas["search"],
+        db=db,
+        search_index_name=config.atlas_index_name or "search_compositions_index",
     )
-    
+
     would_use_search = transformer.should_use_search_strategy(ehr_id, force_search)
-    
+
     # Get collection counts for diagnostics
     try:
-        flatten_count = await db[settings.search_config.flatten_collection].estimated_document_count()
-        search_count = await db[settings.search_config.search_collection].estimated_document_count()
+        flatten_count = await db[config.flatten_compositions].estimated_document_count()
+        search_count = await db[config.search_compositions].estimated_document_count()
     except Exception as e:
         flatten_count = f"Error: {e}"
         search_count = f"Error: {e}"
-    
+
     return {
         "strategy_config": {
-            "dual_strategy_enabled": settings.search_config.enable_dual_strategy,
-            "search_collection": settings.search_config.search_collection,
-            "flatten_collection": settings.search_config.flatten_collection,
-            "search_index_name": settings.search_config.search_index_name,
-            "search_compositions_merge": settings.search_config.search_compositions_merge,
-            "force_search_strategy": settings.search_config.force_search_strategy
+            "dual_strategy_enabled": strategy_cfg.collections.search.enabled,
+            "search_collection": config.search_compositions,
+            "flatten_collection": config.flatten_compositions,
+            "search_index_name": config.atlas_index_name,
+            "search_compositions_merge": config.merge_search_docs,
+            "force_search_strategy": force_search,
         },
         "decision_logic": {
             "test_ehr_id": ehr_id,
             "test_force_search": force_search,
             "would_use_search_strategy": would_use_search,
             "strategy_reasoning": (
-                "Search strategy (Atlas Search on search collection)" if would_use_search 
+                "Search strategy (Atlas Search on search collection)" if would_use_search
                 else "Match strategy (Standard aggregation on flatten collection)"
             )
         },

@@ -1,0 +1,358 @@
+{
+  "$defs": {
+    "ArtifactProvenance": {
+      "description": "Who owns the lifecycle of a reusable catalog artifact.",
+      "enum": [
+        "mongodb_curated",
+        "community",
+        "tenant_generated",
+        "tenant_extended"
+      ],
+      "title": "ArtifactProvenance",
+      "type": "string"
+    },
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "CapabilityMaturity": {
+      "enum": [
+        "not_assessed",
+        "specified",
+        "simulated",
+        "compilable",
+        "pilot_validated",
+        "production_validated"
+      ],
+      "title": "CapabilityMaturity",
+      "type": "string"
+    },
+    "CatalogArtifactRole": {
+      "description": "The architectural role an artifact plays, independent of its industry.",
+      "enum": [
+        "source_category",
+        "source_profile",
+        "mapping",
+        "target_strategy",
+        "semantic_asset",
+        "data_architecture",
+        "application",
+        "outcome_pattern",
+        "reference_architecture",
+        "demo_experience",
+        "portfolio_domain",
+        "data_product",
+        "architecture_capability",
+        "visual_pattern",
+        "solution_blueprint_template"
+      ],
+      "title": "CatalogArtifactRole",
+      "type": "string"
+    },
+    "CatalogMetadata": {
+      "additionalProperties": false,
+      "description": "Faceted catalog metadata kept separate from executable behavior.",
+      "properties": {
+        "extendsRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "paths": {
+          "items": {
+            "$ref": "#/$defs/CatalogPath"
+          },
+          "minItems": 1,
+          "title": "Paths",
+          "type": "array"
+        },
+        "provenance": {
+          "$ref": "#/$defs/ArtifactProvenance"
+        },
+        "role": {
+          "$ref": "#/$defs/CatalogArtifactRole"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        }
+      },
+      "required": [
+        "role",
+        "provenance",
+        "paths"
+      ],
+      "title": "CatalogMetadata",
+      "type": "object"
+    },
+    "CatalogPath": {
+      "additionalProperties": false,
+      "description": "One navigational placement; artifacts may appear in several industries.",
+      "properties": {
+        "industry": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Industry",
+          "type": "string"
+        },
+        "segments": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Segments",
+          "type": "array"
+        }
+      },
+      "required": [
+        "industry",
+        "segments"
+      ],
+      "title": "CatalogPath",
+      "type": "object"
+    },
+    "ConsumptionKind": {
+      "enum": [
+        "fhir",
+        "openehr",
+        "cdisc",
+        "mql",
+        "application_api",
+        "cohort",
+        "search",
+        "vector_search",
+        "graph",
+        "agent_tools",
+        "analytics_export",
+        "event_stream"
+      ],
+      "title": "ConsumptionKind",
+      "type": "string"
+    },
+    "PublicationStatus": {
+      "enum": [
+        "draft",
+        "in_review",
+        "published",
+        "withdrawn"
+      ],
+      "title": "PublicationStatus",
+      "type": "string"
+    },
+    "ReferenceArchitectureKind": {
+      "enum": [
+        "canonical_repository",
+        "operational_data_layer",
+        "event_driven",
+        "agentic_context",
+        "hybrid"
+      ],
+      "title": "ReferenceArchitectureKind",
+      "type": "string"
+    },
+    "SupportStatus": {
+      "enum": [
+        "unsupported",
+        "evaluation_only",
+        "supported",
+        "deprecated"
+      ],
+      "title": "SupportStatus",
+      "type": "string"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:reference-architecture",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A proven or proposed arrangement of reusable Kehrnel assets.",
+  "properties": {
+    "architectureKind": {
+      "$ref": "#/$defs/ReferenceArchitectureKind"
+    },
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "blueprintTemplateRef": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "capabilityIds": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Capabilityids",
+      "type": "array"
+    },
+    "capabilityMaturity": {
+      "$ref": "#/$defs/CapabilityMaturity",
+      "default": "not_assessed"
+    },
+    "catalog": {
+      "$ref": "#/$defs/CatalogMetadata"
+    },
+    "consumptionKinds": {
+      "items": {
+        "$ref": "#/$defs/ConsumptionKind"
+      },
+      "minItems": 1,
+      "title": "Consumptionkinds",
+      "type": "array"
+    },
+    "contract": {
+      "const": "reference-architecture/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "dataProductIds": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Dataproductids",
+      "type": "array"
+    },
+    "evidenceRefs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "title": "Evidencerefs",
+      "type": "array"
+    },
+    "interactionIds": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Interactionids",
+      "type": "array"
+    },
+    "mappingRefs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "title": "Mappingrefs",
+      "type": "array"
+    },
+    "name": {
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "outcomePatternRefs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "minItems": 1,
+      "title": "Outcomepatternrefs",
+      "type": "array"
+    },
+    "publicationStatus": {
+      "$ref": "#/$defs/PublicationStatus",
+      "default": "draft"
+    },
+    "semanticAssetRefs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "title": "Semanticassetrefs",
+      "type": "array"
+    },
+    "sourceCategoryRefs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "minItems": 1,
+      "title": "Sourcecategoryrefs",
+      "type": "array"
+    },
+    "sourceProfileRefs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "title": "Sourceprofilerefs",
+      "type": "array"
+    },
+    "strategyRefs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "title": "Strategyrefs",
+      "type": "array"
+    },
+    "summary": {
+      "minLength": 1,
+      "title": "Summary",
+      "type": "string"
+    },
+    "supportStatus": {
+      "$ref": "#/$defs/SupportStatus",
+      "default": "evaluation_only"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "catalog",
+    "name",
+    "summary",
+    "architectureKind",
+    "outcomePatternRefs",
+    "sourceCategoryRefs",
+    "dataProductIds",
+    "capabilityIds",
+    "consumptionKinds",
+    "interactionIds"
+  ],
+  "title": "ReferenceArchitecture",
+  "type": "object"
+}

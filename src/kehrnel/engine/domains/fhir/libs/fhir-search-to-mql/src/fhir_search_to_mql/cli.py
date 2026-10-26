@@ -136,7 +136,7 @@ def _open_database(args: argparse.Namespace):
     Open a pymongo database handle using args + env-var precedence.
 
     pymongo is an optional runtime dependency for callers who only
-    need ``convert`` (pure FHIR → MQL translation), so we import it
+    need ``convert`` (pure FHIR -> MQL translation), so we import it
     lazily and surface a clean error when it's missing.
     """
     try:
@@ -171,21 +171,82 @@ def _resolve_collection_name(args: argparse.Namespace, resource_type: str) -> st
 
 
 def _build_loader(args: argparse.Namespace) -> ConfigLoader:
+    fhir_version = getattr(args, 'fhir_version', None)
+    profile = getattr(args, 'profile', None)
+    if profile == 'us-core' and fhir_version != 'R4':
+        raise SystemExit(
+            "--profile us-core requires --fhir-version R4. "
+            "US Core v9.0.0 targets FHIR R4 (4.0.1) only."
+        )
     config_dirs = list(args.config_dir or [])
+    # Auto-select bundled version-specific dirs when no explicit config_dir given
+    if not config_dirs and fhir_version:
+        from fhir_search_to_mql.core.config_loader import (
+            _bundled_r4_configs_dir, _bundled_r4_us_core_configs_dir,
+            _bundled_r5_configs_dir,
+        )
+        if fhir_version == 'R4':
+            config_dirs = [_bundled_r4_configs_dir()]
+            if profile == 'us-core':
+                config_dirs.append(_bundled_r4_us_core_configs_dir())
+        elif fhir_version == 'R5':
+            config_dirs = [_bundled_r5_configs_dir()]
     return ConfigLoader(config_dir=config_dirs or None)
 
 
 def _build_denormalizer(args: argparse.Namespace) -> ResourceDenormalizer:
+    fhir_version = getattr(args, 'fhir_version', None)
+    profile = getattr(args, 'profile', None)
+    if profile == 'us-core' and fhir_version != 'R4':
+        raise SystemExit(
+            "--profile us-core requires --fhir-version R4. "
+            "US Core v9.0.0 targets FHIR R4 (4.0.1) only."
+        )
     config_dirs = list(args.config_dir or [])
-    return ResourceDenormalizer(config_dir=config_dirs or None)
+    if not config_dirs and fhir_version:
+        from fhir_search_to_mql.core.config_loader import (
+            _bundled_r4_configs_dir, _bundled_r4_us_core_configs_dir,
+            _bundled_r5_configs_dir,
+        )
+        if fhir_version == 'R4':
+            config_dirs = [_bundled_r4_configs_dir()]
+            if profile == 'us-core':
+                config_dirs.append(_bundled_r4_us_core_configs_dir())
+        elif fhir_version == 'R5':
+            config_dirs = [_bundled_r5_configs_dir()]
+    return ResourceDenormalizer(
+        config_dir=config_dirs or None,
+        fhir_version=fhir_version,
+        profile=profile,
+    )
 
 
 def _build_converter(args: argparse.Namespace) -> FHIRSearchConverter:
+    fhir_version = getattr(args, 'fhir_version', None)
+    profile = getattr(args, 'profile', None)
+    if profile == 'us-core' and fhir_version != 'R4':
+        raise SystemExit(
+            "--profile us-core requires --fhir-version R4. "
+            "US Core v9.0.0 targets FHIR R4 (4.0.1) only."
+        )
     config_dirs = list(args.config_dir or [])
     compartment_dir = getattr(args, "compartment_definitions_dir", None)
+    if not config_dirs and fhir_version:
+        from fhir_search_to_mql.core.config_loader import (
+            _bundled_r4_configs_dir, _bundled_r4_us_core_configs_dir,
+            _bundled_r5_configs_dir,
+        )
+        if fhir_version == 'R4':
+            config_dirs = [_bundled_r4_configs_dir()]
+            if profile == 'us-core':
+                config_dirs.append(_bundled_r4_us_core_configs_dir())
+        elif fhir_version == 'R5':
+            config_dirs = [_bundled_r5_configs_dir()]
     return FHIRSearchConverter(
         config_dir=config_dirs or None,
         compartment_definitions_dir=compartment_dir,
+        fhir_version=fhir_version,
+        profile=profile,
     )
 
 
@@ -356,7 +417,7 @@ def _execute_search(
             if id_values:
                 and_clauses.append({target_field: {"$in": id_values}})
             else:
-                # No matches in the auxiliary step → enforce empty result.
+                # No matches in the auxiliary step -> enforce empty result.
                 and_clauses.append({"_id": {"$in": []}})
         if and_clauses:
             composed = (
@@ -695,6 +756,29 @@ def _add_common_args(parser: argparse.ArgumentParser) -> None:
         ),
     )
     parser.add_argument(
+        "--fhir-version",
+        choices=("R4", "R5", "R6"),
+        default=None,
+        metavar="VERSION",
+        help=(
+            "FHIR version for config selection: R4 (plain FHIR R4), "
+            "R5 (default, bundled configs), R6. "
+            "Use with --profile us-core for R4 + US Core profile support."
+        ),
+    )
+    parser.add_argument(
+        "--profile",
+        choices=("us-core",),
+        default=None,
+        metavar="PROFILE",
+        help=(
+            "Profile pack for config selection. "
+            "'us-core' requires --fhir-version R4. "
+            "Loads configs/r4-us-core/ overlays which add _profile search "
+            "and meta.profile denormalization for US Core conformant resources."
+        ),
+    )
+    parser.add_argument(
         "--format",
         choices=("json", "table"),
         default="table",
@@ -728,7 +812,7 @@ def _add_db_args(parser: argparse.ArgumentParser) -> None:
         default="",
         help=(
             "Prefix prepended to the resource type to derive the "
-            "collection name (default: empty, i.e. 'Patient' → "
+            "collection name (default: empty, i.e. 'Patient' -> "
             "collection 'Patient')."
         ),
     )

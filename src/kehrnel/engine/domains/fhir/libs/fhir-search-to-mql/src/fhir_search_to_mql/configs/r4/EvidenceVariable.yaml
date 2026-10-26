@@ -1,0 +1,94 @@
+resource: EvidenceVariable
+fhir_version: R4
+
+search_parameters:
+  status:
+    type: token
+    description: "EvidenceVariable status"
+    fields:
+      - field: "status"
+        tokenType: code
+  type:
+    type: token
+    description: "Type of EvidenceVariable"
+    fields:
+      - field: "_search.typeCode"
+        tokenType: code
+      - field: "_search.typeSystemCode"
+        tokenType: systemCode
+  date:
+    type: date
+    description: "Date for EvidenceVariable"
+    fields:
+      - field: "_search.date"
+        type: date
+  identifier:
+    type: token
+    description: "Identifier for EvidenceVariable"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  type:
+    source: type
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: type.coding[*].code
+        target_field: typeCode
+        datatype: array[string]
+      - source_path: type
+        target_field: typeSystemCode
+        datatype: array[string]
+  date:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: date
+        target_field: date
+        datatype: date
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+indexes:
+  - fields:
+      - "status": 1
+    options:
+      name: idx_r4_evdncv_status
+  - fields:
+      - "_search.date": -1
+    options:
+      name: idx_r4_evdncv_date
+  - fields:
+      - "_search.typeCode": 1
+    options:
+      name: idx_r4_evdncv_type
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_r4_evdncv_updated

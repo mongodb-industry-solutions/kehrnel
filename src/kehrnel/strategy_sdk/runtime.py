@@ -24,10 +24,13 @@ class StrategyHandle:
 
     async def activate(self, config: Dict[str, Any], bindings: StrategyBindings, context: StrategyContext):
         """
-        Activate plugin, honoring async validate/initialize implementations.
+        Activate a plugin against the same context used for runtime execution.
+
+        Passing the canonical context to ``validate_config`` keeps SDK
+        validation and tenant execution on one ABI.
         """
         if hasattr(self.plugin, "validate_config"):
-            res = self.plugin.validate_config(config)
+            res = self.plugin.validate_config(context)
             if inspect.isawaitable(res):
                 await res
         if hasattr(self.plugin, "initialize"):

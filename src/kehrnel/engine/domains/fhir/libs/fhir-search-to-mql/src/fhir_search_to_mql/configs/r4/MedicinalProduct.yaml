@@ -1,0 +1,66 @@
+resource: MedicinalProduct
+fhir_version: R4
+
+search_parameters:
+  type:
+    type: token
+    description: "Type of MedicinalProduct"
+    fields:
+      - field: "_search.typeCode"
+        tokenType: code
+      - field: "_search.typeSystemCode"
+        tokenType: systemCode
+  identifier:
+    type: token
+    description: "Identifier for MedicinalProduct"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  type:
+    source: type
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: type.coding[*].code
+        target_field: typeCode
+        datatype: array[string]
+      - source_path: type
+        target_field: typeSystemCode
+        datatype: array[string]
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+indexes:
+  - fields:
+      - "_search.typeCode": 1
+    options:
+      name: idx_r4_mdcnlp_type
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_r4_mdcnlp_updated

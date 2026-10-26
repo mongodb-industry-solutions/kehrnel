@@ -1,0 +1,57 @@
+{
+  "contract": "solution-blueprint/v1",
+  "blueprintId": "greenfield-fhir-store",
+  "industry": "healthcare",
+  "revision": 1,
+  "objective": "Create a new FHIR resource store whose first writer is a new application.",
+  "participants": [
+    {"participantId": "care-app", "label": "Care application", "kind": "application", "lifecycle": "planned"},
+    {"participantId": "fhir-store", "label": "FHIR resource store", "kind": "repository", "lifecycle": "planned"}
+  ],
+  "interactions": [
+    {
+      "contract": "interaction-contract/v1",
+      "artifactRef": {"kind": "interaction-contract", "id": "care-app.create-observation", "version": "1.0.0", "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"},
+      "interactionId": "create-observation",
+      "behavior": "create",
+      "pattern": "request_response",
+      "roles": {"requesterRef": "care-app", "providerRef": "fhir-store"},
+      "interface": {"kind": "fhir", "protocolVersion": "R4", "capabilityRef": {"kind": "fhir-capability-statement", "id": "fhir-r4-write", "version": "1.0.0", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555"}},
+      "semanticScopeId": "observation",
+      "workloadRef": {"kind": "workload-profile", "id": "fhir-write", "version": "1.0.0", "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666"},
+      "guarantees": {"acknowledgement": "durable_authoritative", "consistency": "strong", "latencyTargetMs": 120, "idempotencyRequired": true}
+    },
+    {
+      "contract": "interaction-contract/v1",
+      "artifactRef": {"kind": "interaction-contract", "id": "care-app.update-observation", "version": "1.0.0", "digest": "sha256:1212121212121212121212121212121212121212121212121212121212121212"},
+      "interactionId": "update-observation",
+      "behavior": "update",
+      "pattern": "request_response",
+      "roles": {"requesterRef": "care-app", "providerRef": "fhir-store"},
+      "interface": {"kind": "fhir", "protocolVersion": "R4", "capabilityRef": {"kind": "fhir-capability-statement", "id": "fhir-r4-write", "version": "1.0.0", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555"}},
+      "semanticScopeId": "observation",
+      "workloadRef": {"kind": "workload-profile", "id": "fhir-write", "version": "1.0.0", "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666"},
+      "guarantees": {"acknowledgement": "durable_authoritative", "consistency": "strong", "latencyTargetMs": 120, "idempotencyRequired": true}
+    },
+    {
+      "contract": "interaction-contract/v1",
+      "artifactRef": {"kind": "interaction-contract", "id": "care-app.search-observation", "version": "1.0.0", "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777"},
+      "interactionId": "search-observation",
+      "behavior": "search",
+      "pattern": "request_response",
+      "roles": {"requesterRef": "care-app", "providerRef": "fhir-store"},
+      "interface": {"kind": "fhir", "protocolVersion": "R4", "capabilityRef": {"kind": "fhir-capability-statement", "id": "fhir-r4-search", "version": "1.0.0", "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888"}},
+      "semanticScopeId": "observation",
+      "workloadRef": {"kind": "workload-profile", "id": "fhir-search", "version": "1.0.0", "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999"},
+      "guarantees": {"acknowledgement": "accepted", "consistency": "strong", "latencyTargetMs": 150, "idempotencyRequired": false}
+    }
+  ],
+  "semanticAuthorities": [{"scopeId": "observation", "mode": "native", "authorityRef": {"kind": "fhir-structure-definition", "id": "Observation", "version": "4.0.1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}],
+  "recordAuthorityPolicies": [{"contract": "record-authority-policy/v1", "artifactRef": {"kind": "record-authority-policy", "id": "observation-authority", "version": "1.0.0", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}, "scope": {"scopeId": "observation", "domain": "clinical", "recordTypes": ["Observation"], "paths": [], "lifecycleStates": []}, "authoritativeWriterRef": "care-app", "permittedWriterRefs": ["care-app"], "conflictPolicy": "reject", "versionPolicyRef": {"kind": "version-policy", "id": "fhir-resource-versioning", "version": "1.0.0", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}, "correctionBehavior": "Create a new resource version.", "provenanceRequired": true}],
+  "dataPostures": [{"scopeId": "observation", "posture": "mongodb_system_of_record", "servingRepositoryRef": "fhir-store"}],
+  "constraints": {"tenancyMode": "single_tenant", "regions": ["eu-west-1"], "estimatedDocuments": 500000, "peakReadsPerSecond": 80, "peakWritesPerSecond": 20, "retentionDays": 3650},
+  "targetCapabilityProfileRef": {"kind": "target-capability-profile", "id": "atlas-production", "version": "1.0.0", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+  "preferredFoundationRefs": [{"kind": "strategy", "id": "fhir.resource_store", "version": "1.0.0", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"}],
+  "assumptions": ["No legacy source exists."],
+  "decisions": ["Keep the FHIR REST contract native and require version preconditions for corrections."]
+}

@@ -62,7 +62,7 @@ cat > .kehrnel/quickstart/bindings.mongo.yaml <<EOF
 db:
   provider: mongodb
   uri: ${MONGODB_URI}
-  database: openEHR_demo
+  database: openehr_cdr
 EOF
 
 kehrnel core env activate \
@@ -112,7 +112,7 @@ kehrnel run synthetic_generate_batch \
   --domain openehr \
   --set patient_count=50 \
   --set generation_mode=from_source \
-  --set source_database=hc_openEHRCDR \
+  --set source_database=openehr_source \
   --set source_collection=samples \
   --dry-run
 ```
@@ -156,4 +156,5 @@ Use the complete smoke workflow script:
 examples/cli/full_workflow_console.sh
 ```
 
-See [Full Workflow Test](/docs/getting-started/full-workflow-test) for required environment variables and expected outputs.
+See [Full Workflow Test](/docs/operate/full-workflow-test) for required environment variables and expected outputs.
+

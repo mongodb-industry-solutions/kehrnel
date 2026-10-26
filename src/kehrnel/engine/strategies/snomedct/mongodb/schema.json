@@ -32,9 +32,13 @@
       "properties": {
         "concepts": { "type": "string" },
         "terms": { "type": "string" },
+        "value_sets": { "type": "string" },
+        "grounding_reviews": { "type": "string" },
+        "gold_notes": { "type": "string" },
+        "usage_events": { "type": "string" },
         "sidecar_enabled": { "type": "boolean" }
       },
-      "required": ["concepts", "terms", "sidecar_enabled"],
+      "required": ["concepts", "terms", "value_sets", "grounding_reviews", "sidecar_enabled"],
       "additionalProperties": false
     },
     "languages": {
@@ -71,7 +75,42 @@
         "max_limit": { "type": "integer", "minimum": 1 },
         "default_language": { "type": "string" },
         "use_sidecar": { "type": "boolean" },
-        "lexical_strategy": { "type": "string", "enum": ["normalized_regex"] }
+        "lexical_strategy": { "type": "string", "enum": ["normalized_regex"] },
+        "scope_max_ids": { "type": "integer", "minimum": 100, "maximum": 250000 },
+        "scope_cache_ttl_seconds": { "type": "integer", "minimum": 10 },
+        "scope_cache_max_entries": { "type": "integer", "minimum": 100 }
+      },
+      "additionalProperties": false
+    },
+    "retrieval": {
+      "type": "object",
+      "description": "Optional vector branch and rank-fusion tuning. Lexical retrieval never depends on these.",
+      "properties": {
+        "vector_index": { "type": "string" },
+        "vector_path": { "type": "string" },
+        "candidate_pool": { "type": "integer", "minimum": 5, "maximum": 200 },
+        "rrf_k": { "type": "integer", "minimum": 1, "maximum": 1000 },
+        "rerank_pool": { "type": "integer", "minimum": 5, "maximum": 200 }
+      },
+      "additionalProperties": false
+    },
+    "clinical": {
+      "type": "object",
+      "description": "Bounds for clinical note mapping.",
+      "properties": {
+        "max_phrases": { "type": "integer", "minimum": 1, "maximum": 40 },
+        "per_phrase_limit": { "type": "integer", "minimum": 1, "maximum": 25 },
+        "llm_extraction": { "type": "boolean" },
+        "accept_confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "grounding": {
+      "type": "object",
+      "description": "Governance controls for reviewer-confirmed clinical grounding artifacts.",
+      "properties": {
+        "store_source_text": { "type": "boolean", "default": false },
+        "max_codings_per_review": { "type": "integer", "minimum": 1, "maximum": 250 }
       },
       "additionalProperties": false
     }

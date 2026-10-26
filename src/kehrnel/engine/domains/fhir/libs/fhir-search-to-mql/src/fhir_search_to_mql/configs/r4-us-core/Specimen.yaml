@@ -1,0 +1,144 @@
+resource: Specimen
+fhir_version: R4
+profile: us-core
+
+search_parameters:
+  status:
+    type: token
+    description: "available | unavailable | unsatisfactory | entered-in-error"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  type:
+    type: token
+    description: "The specimen type"
+    fields:
+      - field: "_search.typeCode"
+        tokenType: code
+
+  patient:
+    type: reference
+    description: "The patient the specimen comes from"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  subject:
+    type: reference
+    description: "The subject of the specimen"
+    fields:
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  identifier:
+    type: token
+    description: "The unique identifier associated with the specimen"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  _id:
+    type: token
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+  _profile:
+    type: uri
+    description: "US Core profile URL this resource conforms to"
+    fields:
+      - field: "meta.profile"
+
+denormalization:
+  type:
+    source: type
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: type.coding[*].code
+        target_field: typeCode
+        datatype: array[string]
+
+  subject:
+    source: subject
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: subject.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+      - source_path: subject.reference
+        target_field: subjectId
+        datatype: string
+        extractType: id
+
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - subject
+        reference_type: Patient
+        include_self: false
+        datatype: array[string]
+
+  meta_profile:
+    source: meta
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: profile
+        target_field: meta_profile
+        datatype: array[string]
+
+compartments:
+  precomputed:
+    - Patient
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_r4_spec_compartment_patient
+      sparse: true
+  - fields:
+      - "status": 1
+    options:
+      name: idx_r4_spec_status
+  - fields:
+      - "_search.typeCode": 1
+    options:
+      name: idx_r4_spec_type
+  - fields:
+      - "meta.profile": 1
+    options:
+      name: idx_r4_us_spec_meta_profile
+      sparse: true

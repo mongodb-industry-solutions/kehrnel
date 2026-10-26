@@ -10,6 +10,7 @@ from kehrnel.api.domains.openehr.composition.routes import router as composition
 from kehrnel.api.domains.openehr.contribution.routes import router as contribution_router
 from kehrnel.api.domains.openehr.directory.routes import router as directory_router
 from kehrnel.api.domains.openehr.template.routes import router as template_router
+from kehrnel.api.domains.openehr.semantics.routes import router as semantics_router
 
 
 router = APIRouter(prefix="/api/domains/openehr")
@@ -21,3 +22,4 @@ router.include_router(contribution_router)
 router.include_router(directory_router)
 router.include_router(template_router)
 router.include_router(aql_router)
+router.include_router(semantics_router)

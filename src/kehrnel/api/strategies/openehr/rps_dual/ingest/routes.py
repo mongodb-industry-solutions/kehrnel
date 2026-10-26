@@ -15,8 +15,7 @@ from kehrnel.api.strategies.openehr.rps_dual.ingest.service import IngestionServ
 from kehrnel.api.strategies.openehr.rps_dual.ingest.repository import IngestionRepository
 from kehrnel.api.bridge.app.core.database import ensure_active_openehr_dictionaries, resolve_active_openehr_context
 from kehrnel.api.bridge.app.utils.config_runtime import DEFAULT_MAPPINGS_PATH
-from kehrnel.strategy_sdk import StrategyBindings
-from kehrnel.strategy_sdk.runtime import StrategyRuntimeError
+from kehrnel.engine.core.errors import KehrnelError
 
 from kehrnel.api.strategies.openehr.rps_dual.ingest.models import (
     FilePathRequest,
@@ -34,6 +33,193 @@ from kehrnel.engine.strategies.openehr.rps_dual.ingest.remap import remap_fields
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
+
+
+def _optional_request_selector(
+    request: Request | None,
+    *,
+    query_name: str,
+    header_name: str,
+) -> str | None:
+    """Read one routing selector without silently accepting two values."""
+
+    if request is None:
+        return None
+    query_value = str(request.query_params.get(query_name) or "").strip()
+    header_value = str(request.headers.get(header_name) or "").strip()
+    if query_value and header_value and query_value != header_value:
+        raise KehrnelError(
+            code="INGEST_ROUTING_SELECTOR_CONFLICT",
+            status=400,
+            message=(
+                f"Conflicting {query_name} values were supplied in the query "
+                f"parameter and {header_name} header."
+            ),
+            details={"selector": query_name},
+        )
+    return query_value or header_value or None
+
+
+def _activation_precondition(context: dict) -> dict[str, str]:
+    """Pin runtime dispatch to the activation resolved for this HTTP request."""
+
+    activation = context.get("activation")
+    values = {
+        "activationId": getattr(activation, "activation_id", None),
+        "strategyId": getattr(activation, "strategy_id", None),
+        "configHash": getattr(activation, "config_hash", None),
+        "manifestDigest": getattr(activation, "manifest_digest", None),
+        "bindingsHash": getattr(activation, "bindings_hash", None),
+        "dataTargetDigest": context.get("data_target_digest"),
+    }
+    return {
+        key: str(value).strip()
+        for key, value in values.items()
+        if value is not None and str(value).strip()
+    }
+
+
+def _normalize_strategy_protocol(strategy_protocol: str | None) -> str | None:
+    if strategy_protocol is None:
+        return None
+    normalized = strategy_protocol.strip().lower().replace("-", "_")
+    if normalized not in {"openehr", "open_ehr"}:
+        raise KehrnelError(
+            code="OPENEHR_INGEST_PROTOCOL_UNSUPPORTED",
+            status=400,
+            message="strategy_protocol must identify the openEHR protocol.",
+            details={"strategyProtocol": strategy_protocol},
+        )
+    return "openehr"
+
+
+async def _ingest_with_active_strategy(
+    request: Request,
+    *,
+    raw_doc: dict,
+    strategy_id: str,
+    strategy_protocol: str | None,
+) -> str:
+    """Ingest through the exact openEHR activation bound to this request.
+
+    The activated strategy owns transformation, persistence, projection
+    invalidation, and dictionary flush. The compatibility route only adapts its
+    successful result to the historical response shape.
+    """
+
+    context = getattr(request.state, "_openehr_context", None)
+    if not isinstance(context, dict):
+        raise KehrnelError(
+            code="OPENEHR_INGEST_CONTEXT_UNAVAILABLE",
+            status=503,
+            message="The request-scoped openEHR activation context is unavailable.",
+        )
+
+    runtime = context.get("runtime")
+    environment_id = str(context.get("env_id") or "").strip()
+    activation = context.get("activation")
+    data_target_digest = str(context.get("data_target_digest") or "").strip()
+    if runtime is None or not environment_id or activation is None or not data_target_digest:
+        raise KehrnelError(
+            code="OPENEHR_INGEST_CONTEXT_INCOMPLETE",
+            status=503,
+            message=(
+                "The request-scoped openEHR activation and persistence target "
+                "must be resolved before strategy-routed ingest."
+            ),
+        )
+
+    registry = getattr(runtime, "registry", None)
+    manifest = registry.get_manifest(strategy_id) if registry is not None else None
+    if manifest is None:
+        raise KehrnelError(
+            code="STRATEGY_NOT_FOUND",
+            status=404,
+            message=f"Strategy {strategy_id} is not registered.",
+            details={"strategyId": strategy_id},
+        )
+
+    manifest_domain = str(getattr(manifest, "domain", "") or "").strip().lower()
+    if manifest_domain not in {"openehr", "open_ehr"}:
+        raise KehrnelError(
+            code="OPENEHR_INGEST_STRATEGY_DOMAIN_MISMATCH",
+            status=409,
+            message="The requested strategy does not belong to the openEHR domain.",
+            details={
+                "strategyId": strategy_id,
+                "strategyDomain": manifest_domain or None,
+            },
+        )
+
+    active_strategy_id = str(getattr(activation, "strategy_id", "") or "").strip()
+    active_domain = str(getattr(activation, "domain", "") or "").strip().lower()
+    if active_domain not in {"openehr", "open_ehr"} or active_strategy_id != strategy_id:
+        raise KehrnelError(
+            code="OPENEHR_INGEST_ACTIVATION_MISMATCH",
+            status=409,
+            message=(
+                "The requested strategy is not the active openEHR strategy for "
+                "this environment."
+            ),
+            details={
+                "environmentId": environment_id,
+                "requestedStrategyId": strategy_id,
+                "activeStrategyId": active_strategy_id or None,
+                "activeDomain": active_domain or None,
+            },
+        )
+
+    capabilities = {
+        str(value).strip().lower()
+        for value in (getattr(manifest, "capabilities", None) or [])
+    }
+    if "ingest" not in capabilities:
+        raise KehrnelError(
+            code="OPENEHR_INGEST_CAPABILITY_UNSUPPORTED",
+            status=409,
+            message="The active strategy does not publish the ingest capability.",
+            details={"strategyId": strategy_id},
+        )
+
+    dispatch_payload = dict(raw_doc)
+    # Routing metadata is server-owned. Do not let composition properties select
+    # a different domain, strategy, environment, or activation.
+    dispatch_payload.update(
+        {
+            "domain": "openehr",
+            "strategy_id": strategy_id,
+            "__activation_precondition": _activation_precondition(context),
+        }
+    )
+    normalized_protocol = _normalize_strategy_protocol(strategy_protocol)
+    if normalized_protocol:
+        dispatch_payload["strategy_protocol"] = normalized_protocol
+
+    result = await runtime.dispatch(environment_id, "ingest", dispatch_payload)
+    if not isinstance(result, dict) or not isinstance(result.get("base"), dict):
+        raise KehrnelError(
+            code="OPENEHR_INGEST_RESULT_INVALID",
+            status=502,
+            message="The active strategy returned an invalid ingest result.",
+            details={"strategyId": strategy_id},
+        )
+    inserted = result.get("inserted")
+    if not isinstance(inserted, dict) or not str(inserted.get("base") or "").strip():
+        raise KehrnelError(
+            code="OPENEHR_INGEST_RESULT_INVALID",
+            status=502,
+            message="The active strategy did not attest a base collection write.",
+            details={"strategyId": strategy_id},
+        )
+    composition_id = result["base"].get("_id")
+    if composition_id is None or not str(composition_id).strip():
+        raise KehrnelError(
+            code="OPENEHR_INGEST_RESULT_INVALID",
+            status=502,
+            message="The active strategy did not return the inserted composition id.",
+            details={"strategyId": strategy_id},
+        )
+    return str(composition_id)
 
 
 async def _maybe_flush_generated_codes(flattener: CompositionFlattener | None) -> None:
@@ -85,31 +271,18 @@ async def get_ingestion_service(request: Request) -> IngestionService | None:
 
     Returns None if config is not available (preview mode can still work).
     """
-    # Use explicit None checks - MongoDB objects don't support bool()
-    target_db = getattr(request.app.state, "target_db", None)
+    context = await resolve_active_openehr_context(request, ensure_ingestion=False)
+    await ensure_active_openehr_dictionaries(request, context=context)
+    context = await resolve_active_openehr_context(request, ensure_ingestion=True)
+    target_db = context.get("target_db")
     if target_db is None:
-        target_db = getattr(request.app.state, "db", None)
-    source_db = getattr(request.app.state, "source_db", None)
+        target_db = context.get("db")
+    source_db = context.get("source_db")
     if source_db is None:
         source_db = target_db
-    config = getattr(request.app.state, "config", None)
-    options = getattr(request.app.state, "ingest_options", None) or {}
-    flattener = getattr(request.app.state, "flattener", None)
-
-    if request is not None:
-        try:
-            context = await resolve_active_openehr_context(request, ensure_ingestion=False)
-            await ensure_active_openehr_dictionaries(request, context=context)
-            context = await resolve_active_openehr_context(request, ensure_ingestion=True)
-            target_db = getattr(request.app.state, "target_db", target_db)
-            source_db = getattr(request.app.state, "source_db", source_db) or target_db
-            config = getattr(request.app.state, "config", config)
-            options = getattr(request.app.state, "ingest_options", options) or {}
-            flattener = getattr(request.app.state, "flattener", None)
-        except HTTPException:
-            raise
-        except Exception:
-            logger.debug("No request-scoped openEHR activation available for ingestion bootstrap", exc_info=True)
+    config = context.get("ingest_config")
+    options = context.get("ingest_options") or {}
+    flattener = context.get("flattener")
 
     # If config is None, we can't create a full repository - return None
     # Preview mode will handle this gracefully
@@ -211,12 +384,45 @@ async def ingest_from_payload(
         ) or []
 
         # Optional: dispatch through strategy runtime when requested
-        strategy_id = request.query_params.get("strategy_id") if request else None
-        if not strategy_id:
-            strategy_id = request.headers.get("x-strategy-id") if request else None
-        strategy_protocol = request.query_params.get("strategy_protocol") if request else None
-        if not strategy_protocol:
-            strategy_protocol = request.headers.get("x-strategy-protocol") if request else None
+        strategy_id = _optional_request_selector(
+            request,
+            query_name="strategy_id",
+            header_name="x-strategy-id",
+        )
+        strategy_protocol = _optional_request_selector(
+            request,
+            query_name="strategy_protocol",
+            header_name="x-strategy-protocol",
+        )
+        if strategy_protocol and not strategy_id:
+            raise KehrnelError(
+                code="OPENEHR_INGEST_STRATEGY_REQUIRED",
+                status=400,
+                message="strategy_protocol requires an explicit strategy_id.",
+                details={"strategyProtocol": strategy_protocol},
+            )
+        if strategy_id and runtime_config is not None:
+            raise KehrnelError(
+                code="OPENEHR_INGEST_CONFIG_CONFLICT",
+                status=400,
+                message=(
+                    "Per-request config cannot be combined with strategy_id; "
+                    "the active strategy configuration is authoritative."
+                ),
+                details={"strategyId": strategy_id},
+            )
+
+        if strategy_id:
+            new_comp_id = await _ingest_with_active_strategy(
+                request,
+                raw_doc=raw_doc,
+                strategy_id=strategy_id,
+                strategy_protocol=strategy_protocol,
+            )
+            return IngestionSuccessResponse(
+                message="Composition from payload ingested and stored.",
+                flattened_composition_id=new_comp_id,
+            )
 
         # Fast path: reuse the warmed ingestion service and shared flattener when the caller
         # is doing a standard ingest with no per-request runtime overrides.
@@ -230,44 +436,18 @@ async def ingest_from_payload(
         flattener = getattr(service, "flattener", None) if not runtime_config else None
         if flattener is None:
             flattener = await get_runtime_flattener(request, runtime_config)
-
-        if strategy_id and getattr(request.app.state, "strategy_runtime", None):
-            sr = request.app.state.strategy_runtime
-            bindings = StrategyBindings(extras={"flattener": flattener})
-            router = sr.router()
-            ctx = sr.context()
-            try:
-                # Prefer ingest capability if implemented; fallback to transform
-                ingest_result = router.dispatch(
-                    "ingest",
-                    payload=raw_doc,
-                    strategy_id=strategy_id,
-                    protocol=strategy_protocol,
-                    bindings=bindings,
-                    context=ctx,
-                )
-                base_doc = ingest_result.get("base")
-                search_doc = ingest_result.get("search")
-            except StrategyRuntimeError as exc:
-                if "not implemented" not in str(exc).lower():
-                    raise
-                base_doc, search_doc = router.dispatch(
-                    "transform",
-                    payload=raw_doc,
-                    strategy_id=strategy_id,
-                    protocol=strategy_protocol,
-                    bindings=bindings,
-                    context=ctx,
-                )
-        else:
-            base_doc, search_doc = flattener.transform_composition(raw_doc)
+        base_doc, search_doc = flattener.transform_composition(raw_doc)
         base_doc, search_doc, path_field = remap_fields_for_config(
             base_doc, search_doc, runtime_config
         )
-        if analytics_paths:
-            search_doc = filter_search_nodes(search_doc, analytics_paths, path_field)
-        else:
-            search_doc = None
+        # An explicit request override owns its analytics allow-list. With no
+        # override, preserve the search projection produced by the activated
+        # strategy, just as the normal warmed-service path does.
+        if runtime_config is not None:
+            if analytics_paths:
+                search_doc = filter_search_nodes(search_doc, analytics_paths, path_field)
+            else:
+                search_doc = None
         meta_doc = build_meta(raw_doc, base_doc)
 
         # Persist using repository (same as before)
@@ -282,6 +462,10 @@ async def ingest_from_payload(
             message="Composition from payload ingested and stored.",
             flattened_composition_id=new_comp_id,
         )
+    except HTTPException:
+        raise
+    except KehrnelError:
+        raise
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except FlattenerError as e:
@@ -354,8 +538,11 @@ DEFAULT_FLATTENER_CONFIG = {
 
 # Helper: create per-request flattener with runtime overrides
 async def get_runtime_flattener(request: Request, runtime_config: dict | None):
-    # Get base config from existing flattener, or use default if not initialized
-    base_flattener = getattr(request.app.state, "flattener", None)
+    # Runtime overrides are derived from the active request only.  Falling back
+    # to app.state here would allow another tenant's warmed flattener/database
+    # to leak into this preview or ingest operation.
+    context = getattr(request.state, "_openehr_context", None) or {}
+    base_flattener = context.get("flattener")
     if base_flattener is not None and hasattr(base_flattener, "config"):
         base_cfg = base_flattener.config
     else:
@@ -386,16 +573,17 @@ async def get_runtime_flattener(request: Request, runtime_config: dict | None):
     merged.setdefault("target", DEFAULT_FLATTENER_CONFIG["target"])
 
     # Get database - use explicit None check (MongoDB objects don't support bool())
-    db = getattr(request.app.state, "target_db", None)
+    db = context.get("target_db")
     if db is None:
-        db = getattr(request.app.state, "db", None)
+        db = context.get("db")
 
     logger.debug("Preview mode: creating flattener with config keys: %s", list(merged.keys()))
 
     return await CompositionFlattener.create(
         db=db,
         config=merged,
-        mappings_path=DEFAULT_MAPPINGS_PATH,
+        mappings_path=context.get("mappings_path") or str(DEFAULT_MAPPINGS_PATH),
+        mappings_content=context.get("mappings_content"),
         # Preview/runtime flattener must work without DB dictionaries.
         coding_opts={"arcodes": {"strategy": "literal"}, "atcodes": {"strategy": "literal"}},
     )
@@ -450,7 +638,7 @@ async def ingest_from_file(
     except Exception:
         logger.exception("Unexpected error while ingesting from local file")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error.")
-    
+
 
 @router.post(
     "/database",

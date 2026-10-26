@@ -1,0 +1,123 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "StrategyActivationInput": {
+      "additionalProperties": false,
+      "description": "Tenant-supplied, non-secret activation input for one resolved strategy.",
+      "properties": {
+        "approved": {
+          "default": false,
+          "title": "Approved",
+          "type": "boolean"
+        },
+        "bindingsRef": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bindingsref"
+        },
+        "configuration": {
+          "additionalProperties": true,
+          "title": "Configuration",
+          "type": "object"
+        },
+        "domain": {
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$",
+          "title": "Domain",
+          "type": "string"
+        },
+        "strategyInstanceId": {
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$",
+          "title": "Strategyinstanceid",
+          "type": "string"
+        },
+        "strategyRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        }
+      },
+      "required": [
+        "strategyInstanceId",
+        "strategyRef",
+        "domain",
+        "configuration"
+      ],
+      "title": "StrategyActivationInput",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:implementation-package-preparation-readiness-request",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "activationInputs": {
+      "items": {
+        "$ref": "#/$defs/StrategyActivationInput"
+      },
+      "title": "Activationinputs",
+      "type": "array"
+    },
+    "contract": {
+      "const": "implementation-package-preparation-readiness-request/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "expectedPackageRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "materializationReceiptRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    }
+  },
+  "required": [
+    "contract",
+    "materializationReceiptRef",
+    "expectedPackageRef"
+  ],
+  "title": "ImplementationPackagePreparationReadinessRequest",
+  "type": "object"
+}

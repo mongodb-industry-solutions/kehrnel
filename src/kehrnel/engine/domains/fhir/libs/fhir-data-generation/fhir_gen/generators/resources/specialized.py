@@ -9,9 +9,11 @@ from ...codes import (
     codeable_from_section,
     codeable_reference_from_section,
     concept_from_section,
+    coding_from_section,
     pick_code,
 )
 from ...codes.loader import get_system, random_code
+from ...config import settings
 from ...resolvers.reference import ReferenceStore
 from ..special_types import SpecialTypeGenerator
 
@@ -109,13 +111,24 @@ def enrich_Device(
     rng: random.Random,
 ) -> dict[str, Any]:
     r["status"] = rng.choice(["active", "inactive", "entered-in-error"])
-    r["name"] = [{
-        "value": rng.choice([
-            "Pulse Oximeter", "Blood Pressure Monitor", "Insulin Pump", "Cardiac Monitor",
-            "Ventilator", "Defibrillator", "Infusion Pump", "ECG Machine",
-        ]),
-        "type": "user-friendly-name",
-    }]
+    # R4 uses deviceName[] with type as plain code; R5 uses name[] with type as string
+    if settings.fhir_version == "R4":
+        r["deviceName"] = [{
+            "name": rng.choice([
+                "Pulse Oximeter", "Blood Pressure Monitor", "Insulin Pump", "Cardiac Monitor",
+                "Ventilator", "Defibrillator", "Infusion Pump", "ECG Machine",
+            ]),
+            "type": rng.choice(["udi-label-name", "user-friendly-name", "patient-reported-name",
+                                "manufacturer-name", "model-name", "other"]),
+        }]
+    else:
+        r["name"] = [{
+            "value": rng.choice([
+                "Pulse Oximeter", "Blood Pressure Monitor", "Insulin Pump", "Cardiac Monitor",
+                "Ventilator", "Defibrillator", "Infusion Pump", "ECG Machine",
+            ]),
+            "type": "user-friendly-name",
+        }]
     r["type"] = [t.gen_CodeableConcept(
         system="http://snomed.info/sct",
         code=rng.choice(["706767009", "19257004", "360008003"]),
@@ -523,7 +536,8 @@ def enrich_DeviceDispense(
     r["status"] = pick_code("device_dispense_status", rng, "completed")
     if store.has("Patient"):
         r["subject"] = store.get_reference("Patient", rng)
-    r["code"] = codeable_reference_from_section("snomed_devices", rng, t)
+    # R5 requires "device" (CodeableReference); standalone synced "code" which is R4 field name
+    r["device"] = codeable_reference_from_section("snomed_devices", rng, t)
     return r
 
 
@@ -533,8 +547,13 @@ def enrich_BiologicallyDerivedProduct(
     store: ReferenceStore,
     rng: random.Random,
 ) -> dict[str, Any]:
-    r["productCategory"] = pick_code("biologically_derived_product_category", rng, "fluid")
-    r["productStatus"] = pick_code("biologically_derived_product_status", rng, "available")
+    if settings.fhir_version == "R4":
+        r["productCategory"] = pick_code("biologically_derived_product_category", rng, "fluid")
+    elif settings.fhir_version == "R6":
+        r["productCategory"] = [concept_from_section("biologically_derived_product_category", rng, t)]
+    else:
+        r["productCategory"] = coding_from_section("biologically_derived_product_category", rng)
+    r["productStatus"] = coding_from_section("biologically_derived_product_status", rng)
     r["code"] = concept_from_section("biologically_derived_product_codes", rng, t)
     r["identifier"] = [t.gen_Identifier(value=f"BDP-{rng.randint(1000, 9999)}")]
     if store.has("Practitioner"):
@@ -567,7 +586,8 @@ def enrich_Endpoint(
     rng: random.Random,
 ) -> dict[str, Any]:
     r["status"] = "active"
-    r["connectionType"] = concept_from_section("endpoint_connection_type", rng, t)
+    # R5 Endpoint.connectionType is an array
+    r["connectionType"] = [concept_from_section("endpoint_connection_type", rng, t)]
     r["payloadType"] = [concept_from_section("mime_types", rng, t)]
     r["address"] = "https://fhir.example.org/r5"
     if store.has("Organization"):
@@ -583,7 +603,8 @@ def enrich_GenomicStudy(
 ) -> dict[str, Any]:
     r["status"] = pick_code("genomic_study_status", rng, "registered")
     if store.has("Patient"):
-        r["subject"] = [store.get_reference("Patient", rng)]
+        # R5 GenomicStudy.subject is a single Reference, not an array
+        r["subject"] = store.get_reference("Patient", rng)
     r["identifier"] = [t.gen_Identifier(value=f"GS-{rng.randint(1000, 9999)}")]
     return r
 
@@ -621,7 +642,9 @@ def enrich_MeasureReport(
     r["status"] = pick_code("measure_report_status", rng, "complete")
     r["type"] = pick_code("measure_report_type", rng, "individual")
     if store.has("Measure"):
-        r["measure"] = store.get_reference("Measure", rng)
+        measure = store.get_resource("Measure", rng)
+        if measure:
+            r["measure"] = measure.get("url") or f"http://example.org/Measure/{measure['id']}"
     if store.has("Patient"):
         r["subject"] = store.get_reference("Patient", rng)
     r["period"] = t.gen_Period()

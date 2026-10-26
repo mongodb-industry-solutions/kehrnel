@@ -100,7 +100,7 @@ def _build_count_map(
     default="R5",
     show_default=True,
     envvar="FHIR_GEN_SCHEMA_VERSION",
-    help="FHIR release for JSON Schema (R5 default, R6 optional)",
+    help="FHIR release for JSON Schema: R4, R5 (default), R6",
 )
 @click.option(
     "--schema-path",
@@ -121,6 +121,13 @@ def _build_count_map(
     envvar="FHIR_GEN_MONGODB_DB",
     help="MongoDB database name (default: fhir_synthetic)",
 )
+@click.option(
+    "--profile-pack",
+    default=None,
+    envvar="FHIR_GEN_PROFILE_PACK",
+    type=click.Choice(["us-core"], case_sensitive=False),
+    help="Apply a US Core profile pack (us-core). Only valid with --schema-version R4. Adds meta.profile stamps and US Core extensions (race, ethnicity, birthsex). Without this flag, --schema-version R4 generates plain FHIR R4 with no US Core profile fields.",
+)
 @click.pass_context
 def cli(
     ctx: click.Context,
@@ -129,8 +136,13 @@ def cli(
     schema_path: Path | None,
     mongo_uri: str | None,
     db: str | None,
+    profile_pack: str | None,
 ) -> None:
-    """FHIR synthetic data generator (default schema: FHIR R5)."""
+    """FHIR synthetic data generator.
+
+    Schema versions: R4 (plain FHIR R4), R5 (default), R6.
+    US Core profiles: add --profile-pack us-core with --schema-version R4.
+    """
     ctx.ensure_object(dict)
     ctx.obj["seed"] = seed
     ctx.obj["mongo_uri"] = mongo_uri or settings.mongodb_uri
@@ -149,6 +161,18 @@ def cli(
     from ..schema.registry import SchemaRegistry
 
     SchemaRegistry.reload(resolved)
+    if profile_pack:
+        # Normalize hyphen to underscore for internal use
+        settings.profile_pack = profile_pack.replace("-", "_")
+    else:
+        settings.profile_pack = None
+    # Validate: profile_pack requires R4
+    if settings.profile_pack and settings.fhir_version != "R4":
+        raise click.ClickException(
+            f"--profile-pack '{profile_pack}' requires --schema-version R4 "
+            f"(got {settings.fhir_version}). US Core v9.0.0 targets FHIR R4 only."
+        )
+    ctx.obj["profile_pack"] = settings.profile_pack
     ctx.obj["schema_version"] = settings.fhir_version
     ctx.obj["schema_path"] = str(resolved)
 
@@ -219,7 +243,8 @@ def generate(
       fhir-gen generate Observation --count 5 --no-save --output obs.json
       fhir-gen generate MedicationRequest -n 20
     """
-    valid_resources = registry.all_resources()
+    from ..schema.registry import SchemaRegistry as _SR
+    valid_resources = _SR.get().all_resources()
     if resource_type not in valid_resources:
         prefix = resource_type.lower()[:3]
         similar = [r for r in valid_resources if r.lower().startswith(prefix)]
@@ -354,7 +379,8 @@ def generate_many_cmd(
 @click.pass_context
 def list_resources(_ctx: click.Context) -> None:
     """List all available FHIR resource types."""
-    resources = sorted(registry.all_resources())
+    from ..schema.registry import SchemaRegistry
+    resources = sorted(SchemaRegistry.get().all_resources())
     click.echo(f"Available resources ({len(resources)} total):")
     for i, rname in enumerate(resources, 1):
         click.echo(f"  {i:3d}. {rname}")
@@ -417,7 +443,9 @@ def list_scenarios(
         for entry in catalog:
             kind = "named" if not entry.id.startswith("poly_") else "poly "
             poly = f" forced={entry.forced_poly}" if entry.forced_poly else ""
-            click.echo(f"  [{kind}] {entry.id:28s} {entry.description}{poly}")
+            # Encode safely for Windows cp1252 terminals
+            line = f"  [{kind}] {entry.id:28s} {entry.description}{poly}"
+            click.echo(line.encode('ascii', errors='replace').decode('ascii'))
         return
 
     click.echo("Resources with named lifecycle scenario catalogs:")

@@ -1,0 +1,283 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "PreparationStageExecutionReceipt": {
+      "additionalProperties": false,
+      "description": "Evidence that setup for one trigger-driven preparation stage is installed.",
+      "properties": {
+        "applyResultDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Applyresultdigest",
+          "type": "string"
+        },
+        "dataExecutionState": {
+          "const": "awaiting_trigger",
+          "title": "Dataexecutionstate",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/PreparationStageKind"
+        },
+        "planDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Plandigest",
+          "type": "string"
+        },
+        "setupState": {
+          "const": "applied",
+          "title": "Setupstate",
+          "type": "string"
+        },
+        "stageId": {
+          "minLength": 1,
+          "title": "Stageid",
+          "type": "string"
+        },
+        "strategyInstanceId": {
+          "minLength": 1,
+          "title": "Strategyinstanceid",
+          "type": "string"
+        },
+        "trigger": {
+          "$ref": "#/$defs/PreparationTrigger"
+        }
+      },
+      "required": [
+        "stageId",
+        "kind",
+        "trigger",
+        "strategyInstanceId",
+        "setupState",
+        "dataExecutionState",
+        "planDigest",
+        "applyResultDigest"
+      ],
+      "title": "PreparationStageExecutionReceipt",
+      "type": "object"
+    },
+    "PreparationStageKind": {
+      "enum": [
+        "validate",
+        "map",
+        "enrich",
+        "compose",
+        "authoritative_write",
+        "materialize",
+        "index",
+        "rebuild"
+      ],
+      "title": "PreparationStageKind",
+      "type": "string"
+    },
+    "PreparationTrigger": {
+      "enum": [
+        "synchronous_write",
+        "asynchronous_event",
+        "batch"
+      ],
+      "title": "PreparationTrigger",
+      "type": "string"
+    },
+    "StrategyPreparationExecutionReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "activationSpecificationRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "applyResultDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Applyresultdigest",
+          "type": "string"
+        },
+        "createdArtifacts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Createdartifacts",
+          "type": "array"
+        },
+        "planDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Plandigest",
+          "type": "string"
+        },
+        "runtimeActivationId": {
+          "minLength": 1,
+          "title": "Runtimeactivationid",
+          "type": "string"
+        },
+        "stageReceipts": {
+          "items": {
+            "$ref": "#/$defs/PreparationStageExecutionReceipt"
+          },
+          "title": "Stagereceipts",
+          "type": "array"
+        },
+        "state": {
+          "const": "applied",
+          "title": "State",
+          "type": "string"
+        },
+        "strategyInstanceId": {
+          "minLength": 1,
+          "title": "Strategyinstanceid",
+          "type": "string"
+        },
+        "strategyRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "updatedArtifacts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Updatedartifacts",
+          "type": "array"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "strategyInstanceId",
+        "strategyRef",
+        "activationSpecificationRef",
+        "runtimeActivationId",
+        "state",
+        "planDigest",
+        "applyResultDigest"
+      ],
+      "title": "StrategyPreparationExecutionReceipt",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:implementation-package-preparation-execution-receipt",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "activationReceiptRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "contract": {
+      "const": "implementation-package-preparation-execution-receipt/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "environmentId": {
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$",
+      "title": "Environmentid",
+      "type": "string"
+    },
+    "executionDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Executiondigest",
+      "type": "string"
+    },
+    "executionId": {
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Executionid",
+      "type": "string"
+    },
+    "nextRequiredAction": {
+      "const": "execute_runtime_contract",
+      "title": "Nextrequiredaction",
+      "type": "string"
+    },
+    "packageRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "preparationDataExecution": {
+      "const": "awaiting_trigger",
+      "default": "awaiting_trigger",
+      "title": "Preparationdataexecution",
+      "type": "string"
+    },
+    "preparationPlanRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "preparationSetupExecuted": {
+      "const": true,
+      "default": true,
+      "title": "Preparationsetupexecuted",
+      "type": "boolean"
+    },
+    "runtimeExecuted": {
+      "const": false,
+      "default": false,
+      "title": "Runtimeexecuted",
+      "type": "boolean"
+    },
+    "state": {
+      "const": "prepared",
+      "title": "State",
+      "type": "string"
+    },
+    "strategyExecutions": {
+      "items": {
+        "$ref": "#/$defs/StrategyPreparationExecutionReceipt"
+      },
+      "minItems": 1,
+      "title": "Strategyexecutions",
+      "type": "array"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "executionId",
+    "environmentId",
+    "packageRef",
+    "activationReceiptRef",
+    "preparationPlanRef",
+    "state",
+    "strategyExecutions",
+    "nextRequiredAction",
+    "executionDigest"
+  ],
+  "title": "ImplementationPackagePreparationExecutionReceipt",
+  "type": "object"
+}

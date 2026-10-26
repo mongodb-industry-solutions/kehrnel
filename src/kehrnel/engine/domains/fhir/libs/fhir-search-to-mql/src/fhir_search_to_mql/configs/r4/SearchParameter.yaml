@@ -1,0 +1,75 @@
+resource: SearchParameter
+fhir_version: R4
+
+search_parameters:
+  status:
+    type: token
+    description: "SearchParameter status"
+    fields:
+      - field: "status"
+        tokenType: code
+  code:
+    type: token
+    description: "Code for SearchParameter"
+    fields:
+      - field: "_search.codeCode"
+        tokenType: code
+      - field: "_search.codeSystemCode"
+        tokenType: systemCode
+  date:
+    type: date
+    description: "Date for SearchParameter"
+    fields:
+      - field: "_search.date"
+        type: date
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  code:
+    source: code
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code.coding[*].code
+        target_field: codeCode
+        datatype: array[string]
+      - source_path: code
+        target_field: codeSystemCode
+        datatype: array[string]
+  date:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: date
+        target_field: date
+        datatype: date
+
+indexes:
+  - fields:
+      - "status": 1
+    options:
+      name: idx_r4_srchpr_status
+  - fields:
+      - "_search.date": -1
+    options:
+      name: idx_r4_srchpr_date
+  - fields:
+      - "_search.codeCode": 1
+    options:
+      name: idx_r4_srchpr_code
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_r4_srchpr_updated

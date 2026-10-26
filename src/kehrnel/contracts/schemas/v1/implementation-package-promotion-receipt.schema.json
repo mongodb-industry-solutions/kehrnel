@@ -1,0 +1,209 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "InteractionBehavior": {
+      "enum": [
+        "create",
+        "update",
+        "delete",
+        "command",
+        "read",
+        "search",
+        "query",
+        "subscribe",
+        "publish",
+        "export"
+      ],
+      "title": "InteractionBehavior",
+      "type": "string"
+    },
+    "InteractionPromotionEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "behavior": {
+          "$ref": "#/$defs/InteractionBehavior"
+        },
+        "evidenceKind": {
+          "enum": [
+            "query_plan_trace",
+            "write_acknowledgement"
+          ],
+          "title": "Evidencekind",
+          "type": "string"
+        },
+        "interactionId": {
+          "minLength": 1,
+          "title": "Interactionid",
+          "type": "string"
+        },
+        "resultDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Resultdigest",
+          "type": "string"
+        },
+        "runtimeExecutionRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        }
+      },
+      "required": [
+        "interactionId",
+        "behavior",
+        "runtimeExecutionRef",
+        "evidenceKind",
+        "resultDigest"
+      ],
+      "title": "InteractionPromotionEvidence",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:implementation-package-promotion-receipt",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "approval": {
+      "const": "approved",
+      "title": "Approval",
+      "type": "string"
+    },
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "contract": {
+      "const": "implementation-package-promotion-receipt/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "deploymentState": {
+      "const": "not_deployed",
+      "title": "Deploymentstate",
+      "type": "string"
+    },
+    "environmentId": {
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$",
+      "title": "Environmentid",
+      "type": "string"
+    },
+    "evidencePersistence": {
+      "const": "durable",
+      "default": "durable",
+      "title": "Evidencepersistence",
+      "type": "string"
+    },
+    "interactionEvidence": {
+      "items": {
+        "$ref": "#/$defs/InteractionPromotionEvidence"
+      },
+      "minItems": 1,
+      "title": "Interactionevidence",
+      "type": "array"
+    },
+    "nextRequiredAction": {
+      "const": "review_operational_readiness",
+      "title": "Nextrequiredaction",
+      "type": "string"
+    },
+    "packageRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "preparationExecutionRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "promotionDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Promotiondigest",
+      "type": "string"
+    },
+    "promotionId": {
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Promotionid",
+      "type": "string"
+    },
+    "promotionScope": {
+      "const": "tenant_release_candidate",
+      "title": "Promotionscope",
+      "type": "string"
+    },
+    "releaseNotes": {
+      "anyOf": [
+        {
+          "maxLength": 2000,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Releasenotes"
+    },
+    "runtimeEvidenceRefs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "minItems": 1,
+      "title": "Runtimeevidencerefs",
+      "type": "array"
+    },
+    "state": {
+      "const": "promoted",
+      "title": "State",
+      "type": "string"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "promotionId",
+    "environmentId",
+    "packageRef",
+    "preparationExecutionRef",
+    "runtimeEvidenceRefs",
+    "interactionEvidence",
+    "approval",
+    "state",
+    "promotionScope",
+    "deploymentState",
+    "nextRequiredAction",
+    "promotionDigest"
+  ],
+  "title": "ImplementationPackagePromotionReceipt",
+  "type": "object"
+}

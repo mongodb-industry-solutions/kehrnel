@@ -52,8 +52,8 @@ kehrnel context set \
 Manage reusable profiles:
 
 ```bash
-kehrnel resource add src --type mongo --uri "$MONGODB_URI" --db hc_openEHRCDR --collection samples
-kehrnel resource add dst --type mongo --uri "$MONGODB_URI" --db hdl_user_test --collection compositions_rps
+kehrnel resource add src --type mongo --uri "$MONGODB_URI" --db openehr_source --collection samples
+kehrnel resource add dst --type mongo --uri "$MONGODB_URI" --db openehr_cdr --collection compositions_rps
 kehrnel resource use --source src --sink dst
 ```
 

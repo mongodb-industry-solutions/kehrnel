@@ -9,10 +9,12 @@ from typing import Any
 from ...codes import (
     codeable_from_section,
     codeable_reference_from_section,
+    coding_from_section,
     concept_from_section,
     pick_code,
 )
 from ...codes.loader import get_system, random_code
+from ...config import settings
 from ...resolvers.reference import ReferenceStore
 from ..special_types import SpecialTypeGenerator
 
@@ -36,13 +38,20 @@ def enrich_Appointment(
     r["end"] = (start_dt + timedelta(minutes=duration)).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
     r["minutesDuration"] = duration
     st = random_code("service_type", rng)
-    r["serviceType"] = [
-        t.gen_CodeableReference(
+    if settings.fhir_version == "R4":
+        r["serviceType"] = [t.gen_CodeableConcept(
             system=get_system("service_type"),
             code=st["code"] if st else "124",
             display=st["display"] if st else "General Practice",
-        )
-    ]
+        )]
+    else:
+        r["serviceType"] = [
+            t.gen_CodeableReference(
+                system=get_system("service_type"),
+                code=st["code"] if st else "124",
+                display=st["display"] if st else "General Practice",
+            )
+        ]
     participants: list[dict[str, Any]] = []
     if store.has("Patient"):
         participants.append({
@@ -460,7 +469,7 @@ def enrich_Contract(
         r["authority"] = [store.get_reference("Organization", rng)]
     if store.has("Practitioner"):
         r["signer"] = [{
-            "type": concept_from_section("contract_signing_types", rng, t),
+            "type": coding_from_section("contract_signing_types", rng),
             "party": store.get_reference("Practitioner", rng),
         }]
     return r
@@ -545,7 +554,7 @@ def enrich_Questionnaire(
         display="Semantic Versioning (semver.org)",
     )
     r.pop("versionAlgorithmString", None)
-    r["code"] = [codeable_from_section("loinc_questionnaire_panels", rng)]
+    r["code"] = [coding_from_section("loinc_questionnaire_panels", rng)]
     r["jurisdiction"] = [codeable_from_section("countries", rng)]
     r["item"] = [{"linkId": "1", "text": "Sample question", "type": "string"}]
     return r
@@ -578,6 +587,8 @@ def enrich_SupplyRequest(
 ) -> dict[str, Any]:
     r["status"] = pick_code("supply_request_status", rng, "active")
     r["category"] = concept_from_section("supply_categories", rng, t)
+    # R5 requires "item" (CodeableReference)
+    r["item"] = codeable_reference_from_section("supply_categories", rng, t)
     if store.has("Patient"):
         r["subject"] = store.get_reference("Patient", rng)
     if store.has("Practitioner"):

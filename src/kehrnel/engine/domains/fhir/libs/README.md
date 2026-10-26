@@ -41,7 +41,7 @@ cd src/kehrnel/engine/domains/fhir/libs/fhir-search-to-mql && pytest
 
 ## Kehrnel strategy integration
 
-`fhir.clinical_cdr` imports these packages only through `src/kehrnel/engine/strategies/fhir/clinical_cdr/scripts/` (bridge, generation, denormalize, query). Do not import `fhir_gen` from unrelated kehrnel modules.
+`fhir.resource_store` imports these packages only through `src/kehrnel/engine/strategies/fhir/resource_store/scripts/` (bridge, generation, denormalize, query). Do not import `fhir_gen` from unrelated kehrnel modules.
 
 ## Refresh from upstream (optional)
 

@@ -1,0 +1,133 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "ContextObjectDefinitionStatus": {
+      "enum": [
+        "available",
+        "guided",
+        "planned"
+      ],
+      "title": "ContextObjectDefinitionStatus",
+      "type": "string"
+    },
+    "ContextObjectRuntimeBinding": {
+      "enum": [
+        "executable",
+        "design_only"
+      ],
+      "title": "ContextObjectRuntimeBinding",
+      "type": "string"
+    },
+    "SemanticAuthorityKind": {
+      "enum": [
+        "openehr",
+        "fhir",
+        "cdisc",
+        "context_object",
+        "source_schema"
+      ],
+      "title": "SemanticAuthorityKind",
+      "type": "string"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:context-object-definition",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Pinned semantic-composition definition offered to architecture authors.",
+  "properties": {
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "name": {
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "outputFamilies": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Outputfamilies",
+      "type": "array"
+    },
+    "resultShape": {
+      "minLength": 1,
+      "title": "Resultshape",
+      "type": "string"
+    },
+    "runtimeBinding": {
+      "$ref": "#/$defs/ContextObjectRuntimeBinding"
+    },
+    "status": {
+      "$ref": "#/$defs/ContextObjectDefinitionStatus"
+    },
+    "subject": {
+      "minLength": 1,
+      "title": "Subject",
+      "type": "string"
+    },
+    "summary": {
+      "minLength": 1,
+      "title": "Summary",
+      "type": "string"
+    },
+    "supportedAuthorityKinds": {
+      "items": {
+        "$ref": "#/$defs/SemanticAuthorityKind"
+      },
+      "minItems": 1,
+      "title": "Supportedauthoritykinds",
+      "type": "array"
+    }
+  },
+  "required": [
+    "artifactRef",
+    "name",
+    "summary",
+    "subject",
+    "resultShape",
+    "supportedAuthorityKinds",
+    "outputFamilies",
+    "status",
+    "runtimeBinding"
+  ],
+  "title": "ContextObjectDefinitionSummary",
+  "type": "object"
+}

@@ -5,11 +5,19 @@ from pathlib import Path
 from kehrnel.api.app import create_app, validate_strategy_pack
 
 
-def test_strategy_packs_are_portable_and_self_contained():
-    app = create_app()
+def test_strategy_packs_are_portable_and_self_contained(tmp_path):
+    app = create_app(str(tmp_path / "registry.json"))
     diagnostics = app.state.strategy_diagnostics
-    valid_diags = [d for d in diagnostics if d.get("is_valid")]
-    assert valid_diags, "expected at least one valid strategy pack"
+    builtin_root = (Path(__file__).resolve().parents[2] / "src" / "kehrnel" / "engine" / "strategies").resolve()
+    builtin_diags = [
+        item
+        for item in diagnostics
+        if Path(item["paths"]["manifest_path"]).resolve().is_relative_to(builtin_root)
+    ]
+    invalid_diags = [item for item in builtin_diags if not item.get("is_valid")]
+    assert invalid_diags == []
+    valid_diags = [item for item in builtin_diags if item.get("is_valid")]
+    assert len(valid_diags) == 8
     for diag in valid_diags:
         manifest_path = Path(diag["paths"]["manifest_path"])
         base_dir = manifest_path.parent

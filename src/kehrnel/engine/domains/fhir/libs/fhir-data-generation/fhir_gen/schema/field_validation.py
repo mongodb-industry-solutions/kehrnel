@@ -70,7 +70,13 @@ def validate_primitive(value: Any, primitive_type: str) -> str | None:
         if not isinstance(value, bool):
             return f"expected boolean, got {type(value).__name__}"
         return None
-    if primitive_type in ("integer", "integer64", "unsignedInt", "positiveInt"):
+    if primitive_type == "integer64":
+        if not isinstance(value, str) or not re.fullmatch(r"-?\d+", value):
+            return f"expected integer64 decimal string, got {type(value).__name__}"
+        if not -(2**63) <= int(value) < 2**63:
+            return "integer64 is outside the signed 64-bit range"
+        return None
+    if primitive_type in ("integer", "unsignedInt", "positiveInt"):
         if not isinstance(value, int) or isinstance(value, bool):
             return f"expected integer, got {type(value).__name__}"
         return None

@@ -1,0 +1,956 @@
+{
+  "$defs": {
+    "_StrictActivationCondition": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Code"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "attestation",
+            "notice",
+            "reference"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "message": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message"
+        },
+        "references": {
+          "items": {
+            "$ref": "#/$defs/_StrictActivationConditionReference"
+          },
+          "title": "References",
+          "type": "array"
+        },
+        "required": {
+          "default": false,
+          "title": "Required",
+          "type": "boolean"
+        },
+        "statement": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Statement"
+        },
+        "statement_translations": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Statement Translations",
+          "type": "object"
+        },
+        "statement_version": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Statement Version"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "^\\S(?:.*\\S)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        }
+      },
+      "required": [
+        "id",
+        "kind"
+      ],
+      "title": "_StrictActivationCondition",
+      "type": "object"
+    },
+    "_StrictActivationConditionReference": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Label",
+          "type": "string"
+        },
+        "url": {
+          "minLength": 1,
+          "pattern": "^\\S+$",
+          "title": "Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "url"
+      ],
+      "title": "_StrictActivationConditionReference",
+      "type": "object"
+    },
+    "_StrictActivationDatabaseHint": {
+      "additionalProperties": false,
+      "properties": {
+        "example": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Example"
+        },
+        "naming_hint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Naming Hint"
+        }
+      },
+      "title": "_StrictActivationDatabaseHint",
+      "type": "object"
+    },
+    "_StrictActivationSeed": {
+      "additionalProperties": false,
+      "properties": {
+        "collections": {
+          "items": {
+            "$ref": "#/$defs/_StrictActivationSeedCollection"
+          },
+          "title": "Collections",
+          "type": "array"
+        },
+        "digest": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Digest"
+        },
+        "kind": {
+          "const": "collection_copy",
+          "default": "collection_copy",
+          "title": "Kind",
+          "type": "string"
+        },
+        "license_class": {
+          "minLength": 1,
+          "pattern": "^\\S+$",
+          "title": "License Class",
+          "type": "string"
+        },
+        "scope": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scope"
+        },
+        "source_database": {
+          "minLength": 1,
+          "pattern": "^\\S+$",
+          "title": "Source Database",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_database",
+        "license_class"
+      ],
+      "title": "_StrictActivationSeed",
+      "type": "object"
+    },
+    "_StrictActivationSeedCollection": {
+      "additionalProperties": false,
+      "properties": {
+        "expected_documents": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Documents"
+        },
+        "from": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "^\\S+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "From"
+        },
+        "mode": {
+          "default": "copy",
+          "enum": [
+            "copy",
+            "empty"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "pattern": "^\\S+$",
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "_StrictActivationSeedCollection",
+      "type": "object"
+    },
+    "_StrictAdapterRequirements": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Artifact",
+          "type": "array"
+        },
+        "queue": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Queue",
+          "type": "array"
+        },
+        "search": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Search",
+          "type": "array"
+        },
+        "storage": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Storage",
+          "type": "array"
+        },
+        "vector": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Vector",
+          "type": "array"
+        }
+      },
+      "title": "_StrictAdapterRequirements",
+      "type": "object"
+    },
+    "_StrictInteractionContract": {
+      "additionalProperties": false,
+      "properties": {
+        "authority": {
+          "title": "Authority",
+          "type": "string"
+        },
+        "builders": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Builders",
+          "type": "array"
+        },
+        "contract": {
+          "title": "Contract",
+          "type": "string"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "engines": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Engines",
+          "type": "array"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "default": "query",
+          "title": "Kind",
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "native",
+            "compiled",
+            "hybrid"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "operations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Operations",
+          "type": "array"
+        },
+        "source_domains": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Domains",
+          "type": "array"
+        },
+        "standard": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Standard"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "mode",
+        "authority",
+        "contract"
+      ],
+      "title": "_StrictInteractionContract",
+      "type": "object"
+    },
+    "_StrictStrategyActivation": {
+      "additionalProperties": false,
+      "properties": {
+        "conditions": {
+          "items": {
+            "$ref": "#/$defs/_StrictActivationCondition"
+          },
+          "title": "Conditions",
+          "type": "array"
+        },
+        "database": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/_StrictActivationDatabaseHint"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "readiness_op": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "^\\S+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Readiness Op"
+        },
+        "requires_database": {
+          "default": false,
+          "title": "Requires Database",
+          "type": "boolean"
+        },
+        "seed": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/_StrictActivationSeed"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "_StrictStrategyActivation",
+      "type": "object"
+    },
+    "_StrictStrategyCompatibility": {
+      "additionalProperties": false,
+      "properties": {
+        "domains": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Domains",
+          "type": "array"
+        },
+        "optional": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Optional",
+          "type": "array"
+        },
+        "packFormat": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Packformat"
+        },
+        "platforms": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Platforms",
+          "type": "array"
+        },
+        "requires": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Requires",
+          "type": "array"
+        },
+        "search": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Search",
+          "type": "array"
+        },
+        "storage": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Storage",
+          "type": "array"
+        },
+        "vector": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Vector",
+          "type": "array"
+        }
+      },
+      "title": "_StrictStrategyCompatibility",
+      "type": "object"
+    },
+    "_StrictStrategyOp": {
+      "additionalProperties": false,
+      "properties": {
+        "input_schema": {
+          "additionalProperties": true,
+          "title": "Input Schema",
+          "type": "object"
+        },
+        "kind": {
+          "default": "extension",
+          "title": "Kind",
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "pattern": "^\\S+$",
+          "title": "Name",
+          "type": "string"
+        },
+        "output_schema": {
+          "additionalProperties": true,
+          "title": "Output Schema",
+          "type": "object"
+        },
+        "summary": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Summary"
+        }
+      },
+      "required": [
+        "name",
+        "input_schema"
+      ],
+      "title": "_StrictStrategyOp",
+      "type": "object"
+    },
+    "_StrictStrategyUI": {
+      "additionalProperties": false,
+      "properties": {
+        "accent_color": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Accent Color"
+        },
+        "activatable": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Activatable"
+        },
+        "avoid_when": {
+          "items": {},
+          "title": "Avoid When",
+          "type": "array"
+        },
+        "benefits": {
+          "items": {},
+          "title": "Benefits",
+          "type": "array"
+        },
+        "consider_alternatives": {
+          "default": null,
+          "title": "Consider Alternatives"
+        },
+        "constraints": {
+          "items": {},
+          "title": "Constraints",
+          "type": "array"
+        },
+        "docs": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Docs"
+        },
+        "domain_badge": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Domain Badge"
+        },
+        "example_data": {
+          "default": null,
+          "title": "Example Data"
+        },
+        "how_it_works": {
+          "default": null,
+          "title": "How It Works"
+        },
+        "icon": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Icon"
+        },
+        "ideal_for": {
+          "default": null,
+          "title": "Ideal For"
+        },
+        "index_contract": {
+          "default": null,
+          "title": "Index Contract"
+        },
+        "links": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Links",
+          "type": "object"
+        },
+        "pick_when": {
+          "items": {},
+          "title": "Pick When",
+          "type": "array"
+        },
+        "references": {
+          "default": null,
+          "title": "References"
+        },
+        "scorecard": {
+          "additionalProperties": true,
+          "title": "Scorecard",
+          "type": "object"
+        },
+        "status": {
+          "anyOf": [
+            {
+              "enum": [
+                "stable",
+                "preview",
+                "example",
+                "community"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "stable",
+          "title": "Status"
+        },
+        "status_message": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Status Message"
+        },
+        "story": {
+          "default": null,
+          "title": "Story"
+        },
+        "tabs": {
+          "additionalProperties": true,
+          "title": "Tabs",
+          "type": "object"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        },
+        "works_with": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Works With",
+          "type": "array"
+        }
+      },
+      "title": "_StrictStrategyUI",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:strategy-manifest",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Strict source-file contract before runtime-computed identity is added.",
+  "properties": {
+    "activation": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/_StrictStrategyActivation"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "adapters": {
+      "$ref": "#/$defs/_StrictAdapterRequirements"
+    },
+    "capabilities": {
+      "items": {
+        "minLength": 1,
+        "pattern": "^\\S+$",
+        "type": "string"
+      },
+      "title": "Capabilities",
+      "type": "array"
+    },
+    "compatibility": {
+      "$ref": "#/$defs/_StrictStrategyCompatibility"
+    },
+    "config": {
+      "additionalProperties": true,
+      "title": "Config",
+      "type": "object"
+    },
+    "config_schema": {
+      "additionalProperties": true,
+      "title": "Config Schema",
+      "type": "object"
+    },
+    "default_config": {
+      "additionalProperties": true,
+      "title": "Default Config",
+      "type": "object"
+    },
+    "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Description"
+    },
+    "domain": {
+      "minLength": 1,
+      "pattern": "^\\S+$",
+      "title": "Domain",
+      "type": "string"
+    },
+    "entrypoint": {
+      "pattern": "^[A-Za-z_]\\w*(?:\\.[A-Za-z_]\\w*)*:[A-Za-z_]\\w*$",
+      "title": "Entrypoint",
+      "type": "string"
+    },
+    "id": {
+      "minLength": 1,
+      "pattern": "^\\S+$",
+      "title": "Id",
+      "type": "string"
+    },
+    "interaction_contracts": {
+      "items": {
+        "$ref": "#/$defs/_StrictInteractionContract"
+      },
+      "title": "Interaction Contracts",
+      "type": "array"
+    },
+    "keywords": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Keywords",
+      "type": "array"
+    },
+    "license": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "License"
+    },
+    "manifestContract": {
+      "const": "strategy-manifest/v1",
+      "title": "Manifestcontract",
+      "type": "string"
+    },
+    "maturity": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Maturity"
+    },
+    "name": {
+      "minLength": 1,
+      "pattern": "^\\S(?:.*\\S)?$",
+      "title": "Name",
+      "type": "string"
+    },
+    "ops": {
+      "items": {
+        "$ref": "#/$defs/_StrictStrategyOp"
+      },
+      "title": "Ops",
+      "type": "array"
+    },
+    "pack_format": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Pack Format"
+    },
+    "spec": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Spec"
+    },
+    "summary": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Summary"
+    },
+    "ui": {
+      "$ref": "#/$defs/_StrictStrategyUI"
+    },
+    "variants": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Variants",
+      "type": "array"
+    },
+    "version": {
+      "minLength": 1,
+      "pattern": "^\\S+$",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "version",
+    "domain",
+    "entrypoint",
+    "ops",
+    "manifestContract"
+  ],
+  "title": "StrategyManifestSource",
+  "type": "object"
+}

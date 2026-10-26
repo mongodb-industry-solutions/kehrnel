@@ -1,0 +1,107 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "CapabilityMaturity": {
+      "enum": [
+        "not_assessed",
+        "specified",
+        "simulated",
+        "compilable",
+        "pilot_validated",
+        "production_validated"
+      ],
+      "title": "CapabilityMaturity",
+      "type": "string"
+    },
+    "RuntimeAvailability": {
+      "enum": [
+        "available",
+        "degraded",
+        "unavailable",
+        "unknown"
+      ],
+      "title": "RuntimeAvailability",
+      "type": "string"
+    },
+    "SupportStatus": {
+      "enum": [
+        "unsupported",
+        "evaluation_only",
+        "supported",
+        "deprecated"
+      ],
+      "title": "SupportStatus",
+      "type": "string"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:capability-claim",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capabilityId": {
+      "minLength": 1,
+      "title": "Capabilityid",
+      "type": "string"
+    },
+    "capabilityMaturity": {
+      "$ref": "#/$defs/CapabilityMaturity"
+    },
+    "evidenceRefs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "title": "Evidencerefs",
+      "type": "array"
+    },
+    "runtimeAvailability": {
+      "$ref": "#/$defs/RuntimeAvailability"
+    },
+    "supportStatus": {
+      "$ref": "#/$defs/SupportStatus"
+    }
+  },
+  "required": [
+    "capabilityId",
+    "capabilityMaturity",
+    "supportStatus",
+    "runtimeAvailability"
+  ],
+  "title": "CapabilityClaim",
+  "type": "object"
+}
