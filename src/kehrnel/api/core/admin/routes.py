@@ -189,6 +189,37 @@ def _require_env_access(request: Request, env_id: str) -> None:
         )
 
 
+def _global_scope_allowed(request: Request) -> bool:
+    """True when the key may act on process-wide state shared by every environment.
+
+    With KEHRNEL_API_KEY_ENV_SCOPES configured only keys scoped to "*" qualify, so a
+    tenant key limited to its own env_id can never reconfigure other tenants.
+    Only when the variable is unset is the runtime single-tenant and admin access
+    sufficient; a set-but-empty or invalid policy fails closed.
+    """
+    auth_enabled = os.getenv("KEHRNEL_AUTH_ENABLED", "true").lower() in ("1", "true", "yes")
+    if not auth_enabled:
+        return True
+    if not (os.getenv("KEHRNEL_API_KEY_ENV_SCOPES") or "").strip():
+        return True
+    scopes = _parse_api_key_env_scopes()
+    api_key = (request.headers.get("x-api-key") or "").strip()
+    if not api_key:
+        return False
+    return any(secrets.compare_digest(api_key, str(key)) and scope == "*" for key, scope in scopes.items())
+
+
+def _require_global_admin_access(request: Request) -> None:
+    """Admin key with unrestricted environment scope (for process-wide runtime config)."""
+    _require_admin_access(request)
+    if not _global_scope_allowed(request):
+        raise KehrnelError(
+            code="FORBIDDEN",
+            status=403,
+            message="This operation changes runtime-wide configuration and requires an unscoped admin API key.",
+        )
+
+
 def _truthy_env(name: str, default: str = "false") -> bool:
     return (os.getenv(name, default) or "").strip().lower() in ("1", "true", "yes")
 
@@ -1041,6 +1072,8 @@ async def run_op(request: Request, body: Dict[str, Any] = Body(default_factory=d
         payload = body.get("payload") or {}
         if not env_id or not domain or not op:
             raise KehrnelError(code="INVALID_INPUT", status=400, message="environment, domain, and op are required")
+        env_id = str(env_id).strip()
+        _require_env_access(request, env_id)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
