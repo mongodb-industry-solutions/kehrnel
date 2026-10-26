@@ -92,23 +92,15 @@ The companion SNOMED-specific statement is:
 
 ### 1.1 Reference implementation located
 
-The local repository corresponding to the published MongoDB Solution Library
-implementation is:
-
-```text
-/Users/francesc.mateu/Documents/GitHub/snomed-ct-on-mongodb
-```
-
-Its configured Git remote is:
+The published MongoDB Solution Library implementation lives at:
 
 ```text
 https://github.com/mongodb-industry-solutions/snomed-ct-on-mongodb.git
 ```
 
-The current local branch is `docs/solution-overview`. Treat that repository as
-the behavior and experience reference. Kehrnel must own the reusable runtime
-implementation, while HDL incorporates the journey rather than embedding or
-calling the standalone Next.js application.
+Treat that repository as the behavior and experience reference. Kehrnel must own
+the reusable runtime implementation, while HDL incorporates the journey rather
+than embedding or calling the standalone Next.js application.
 
 ### 1.2 Existing published SNOMED database
 

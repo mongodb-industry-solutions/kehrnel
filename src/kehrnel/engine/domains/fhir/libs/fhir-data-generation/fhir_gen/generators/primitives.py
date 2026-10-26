@@ -142,9 +142,16 @@ class PrimitiveGenerator:
         return self.faker.lexify("????").lower()
 
     def gen_oid(self, **_) -> str:
-        """OID: urn:oid:x.x.x..."""
-        parts = [str(self.rng.randint(0, 2))] + [
-            str(self.rng.randint(0, 999)) for _ in range(self.rng.randint(3, 7))
+        """OID: urn:oid:x.x.x...
+
+        The FHIR OID grammar is ``urn:oid:[0-2](.(0|[1-9][0-9]*))+``; when the
+        first arc is 0 or 1 the second arc is constrained to 0-39, so it is
+        sampled conditionally rather than from the unrestricted range.
+        """
+        first = self.rng.randint(0, 2)
+        second = self.rng.randint(0, 39 if first in (0, 1) else 999)
+        parts = [str(first), str(second)] + [
+            str(self.rng.randint(0, 999)) for _ in range(self.rng.randint(2, 6))
         ]
         return "urn:oid:" + ".".join(parts)
 

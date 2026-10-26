@@ -61,6 +61,19 @@ def _is_public_path(path: str) -> bool:
     )
 
 
+# The FHIR router is mounted both at the root and behind /v1.
+FHIR_ROUTE_PREFIXES = ("/api/domains/fhir", "/v1/api/domains/fhir")
+
+
+def _is_fhir_route(path: str) -> bool:
+    """True only for the FHIR router and its routes.
+
+    Matching on segment boundaries (rather than a substring) keeps unrelated
+    paths that merely contain the prefix on the default error shape.
+    """
+    return any(path == prefix or path.startswith(f"{prefix}/") for prefix in FHIR_ROUTE_PREFIXES)
+
+
 def _get_api_keys() -> set[str]:
     """Get valid API keys from environment."""
     keys_str = os.getenv("KEHRNEL_API_KEYS", "")
@@ -682,7 +695,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     async def validation_exception_handler(request: Request, exc: RequestValidationError):
         # FHIR endpoints must return OperationOutcome (application/fhir+json), even
         # for request-body validation errors that fire before the route handler.
-        if "/api/domains/fhir" in request.url.path:
+        if _is_fhir_route(request.url.path):
             from kehrnel.engine.strategies.fhir.resource_store.scripts.serialization import (
                 operation_outcome,
             )

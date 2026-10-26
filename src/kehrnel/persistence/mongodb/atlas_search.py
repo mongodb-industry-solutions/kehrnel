@@ -5,6 +5,7 @@ from typing import Any, Dict, List
 
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
+from kehrnel.engine.core.redaction import redact_sensitive
 from kehrnel.persistence.mongodb.base import TextSearchAdapter
 
 
@@ -44,7 +45,7 @@ class MongoAtlasSearchAdapter(TextSearchAdapter):
             )
             return {"created": [index_name], "updated": [], "warnings": warnings}
         except Exception as exc:
-            warnings.append(f"Search index not ensured: {exc}")
+            warnings.append(f"Search index not ensured: {redact_sensitive(str(exc)) or 'unknown error'}")
             return {"created": [], "updated": [], "warnings": warnings}
 
     async def list_search_indexes(self, collection: str) -> List[Dict[str, Any]]:
@@ -68,5 +69,5 @@ class MongoAtlasSearchAdapter(TextSearchAdapter):
             })
             return {"created": [index_name], "updated": [], "warnings": warnings}
         except Exception as exc:
-            warnings.append(f"Vector index not ensured: {exc}")
+            warnings.append(f"Vector index not ensured: {redact_sensitive(str(exc)) or 'unknown error'}")
             return {"created": [], "updated": [], "warnings": warnings}

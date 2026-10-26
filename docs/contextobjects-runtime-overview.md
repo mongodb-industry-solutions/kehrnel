@@ -2,12 +2,12 @@
 
 The kernel-side ContextObjects runtime is implemented in:
 
-- [models.py](/Users/francesc.mateu/Documents/GitHub/kehrnel/src/kehrnel/contextobjects/models.py)
-- [catalog.py](/Users/francesc.mateu/Documents/GitHub/kehrnel/src/kehrnel/contextobjects/catalog.py)
-- [resolver.py](/Users/francesc.mateu/Documents/GitHub/kehrnel/src/kehrnel/contextobjects/resolver.py)
-- [con2l.py](/Users/francesc.mateu/Documents/GitHub/kehrnel/src/kehrnel/contextobjects/con2l.py)
-- [object_maps.py](/Users/francesc.mateu/Documents/GitHub/kehrnel/src/kehrnel/contextobjects/object_maps.py)
-- [strategy_support.py](/Users/francesc.mateu/Documents/GitHub/kehrnel/src/kehrnel/contextobjects/strategy_support.py)
+- [models.py](../src/kehrnel/contextobjects/models.py)
+- [catalog.py](../src/kehrnel/contextobjects/catalog.py)
+- [resolver.py](../src/kehrnel/contextobjects/resolver.py)
+- [con2l.py](../src/kehrnel/contextobjects/con2l.py)
+- [object_maps.py](../src/kehrnel/contextobjects/object_maps.py)
+- [strategy_support.py](../src/kehrnel/contextobjects/strategy_support.py)
 
 The runtime responsibilities are:
 
