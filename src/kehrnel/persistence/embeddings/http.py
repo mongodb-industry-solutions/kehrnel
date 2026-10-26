@@ -4,8 +4,29 @@ from __future__ import annotations
 
 import asyncio
 import json
+import urllib.parse
 import urllib.request
 from typing import Any, Dict, List
+
+
+class _RedirectGuard(urllib.request.HTTPRedirectHandler):
+    """urlopen follows redirects with the Authorization header attached, so a
+    302 could forward the bearer credential to another destination. Once a
+    credential is configured, only same-origin HTTPS redirects are accepted."""
+
+    def __init__(self, credential: bool, origin: str):
+        super().__init__()
+        self._credential = credential
+        self._origin = origin
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        if self._credential:
+            parts = urllib.parse.urlsplit(newurl)
+            if parts.scheme != "https" or f"{parts.scheme}://{parts.netloc}" != self._origin:
+                raise ValueError(
+                    f"embedding endpoint redirect would send the bearer credential to {newurl}"
+                )
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
 
 
 class HttpEmbeddingAdapter:
@@ -30,6 +51,10 @@ class HttpEmbeddingAdapter:
         credential = bool(self.api_key) or any(name.lower() == "authorization" for name in self.headers)
         if credential and not self.endpoint.startswith("https://"):
             raise ValueError("embedding endpoint must use HTTPS when a bearer credential is sent")
+        parts = urllib.parse.urlsplit(self.endpoint)
+        self._opener = urllib.request.build_opener(
+            _RedirectGuard(credential, f"{parts.scheme}://{parts.netloc}")
+        )
 
     async def embed(self, texts: List[str]) -> List[List[float]]:
         if not texts:
@@ -48,7 +73,7 @@ class HttpEmbeddingAdapter:
                 headers=headers,
                 method="POST",
             )
-            with urllib.request.urlopen(request, timeout=self.timeout_seconds) as response:
+            with self._opener.open(request, timeout=self.timeout_seconds) as response:
                 content = response.read(20_000_001)
             if len(content) > 20_000_000:
                 raise RuntimeError("embedding response exceeds 20 MB")
