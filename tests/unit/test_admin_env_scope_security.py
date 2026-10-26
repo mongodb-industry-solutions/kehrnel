@@ -159,3 +159,40 @@ def test_rate_limit_throttles_invalid_keys_by_ip(tmp_path, monkeypatch):
 
     assert statuses[:2] == [401, 401]
     assert statuses[2] == 429
+
+
+def test_rps_dual_config_fails_closed_on_empty_scope_policy(tmp_path, monkeypatch):
+    _scoped_auth(monkeypatch)
+    monkeypatch.setenv("KEHRNEL_API_KEY_ENV_SCOPES", "{}")
+    client = TestClient(create_app(str(tmp_path / "registry.json")))
+
+    res = client.post(
+        "/api/strategies/openehr/rps_dual/config",
+        headers={"X-API-Key": GLOBAL_KEY},
+        json={},
+    )
+
+    assert res.status_code == 403
+
+
+def test_rate_limit_eviction_never_drops_current_bucket():
+    import asyncio
+    from types import SimpleNamespace
+
+    from kehrnel.api.app import RateLimitMiddleware
+
+    async def call_next(request):
+        return "ok"
+
+    mw = RateLimitMiddleware(app=None, requests_per_minute=10, max_clients=2)
+    mw._request_counts = {"key:a": [], "key:b": []}
+    request = SimpleNamespace(
+        url=SimpleNamespace(path="/v1/ops"),
+        state=SimpleNamespace(rate_limit_key="key:c"),
+        headers={},
+        client=None,
+    )
+
+    assert asyncio.run(mw.dispatch(request, call_next)) == "ok"
+    assert "key:c" in mw._request_counts
+    assert len(mw._request_counts) == 2

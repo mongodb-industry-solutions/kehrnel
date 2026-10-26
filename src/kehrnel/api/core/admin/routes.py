@@ -194,14 +194,15 @@ def _global_scope_allowed(request: Request) -> bool:
 
     With KEHRNEL_API_KEY_ENV_SCOPES configured only keys scoped to "*" qualify, so a
     tenant key limited to its own env_id can never reconfigure other tenants.
-    Without scopes the runtime is single-tenant and admin access is sufficient.
+    Only when the variable is unset is the runtime single-tenant and admin access
+    sufficient; a set-but-empty or invalid policy fails closed.
     """
     auth_enabled = os.getenv("KEHRNEL_AUTH_ENABLED", "true").lower() in ("1", "true", "yes")
     if not auth_enabled:
         return True
-    scopes = _parse_api_key_env_scopes()
-    if not scopes:
+    if not (os.getenv("KEHRNEL_API_KEY_ENV_SCOPES") or "").strip():
         return True
+    scopes = _parse_api_key_env_scopes()
     api_key = (request.headers.get("x-api-key") or "").strip()
     if not api_key:
         return False

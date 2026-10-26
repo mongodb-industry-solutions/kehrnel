@@ -162,15 +162,9 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         current_time = time.time()
         window_start = current_time - 60  # 1 minute window
 
-        # Clean old requests and get current count
-        if client_id not in self._request_counts:
-            self._request_counts[client_id] = []
-
-        self._request_counts[client_id] = [
-            t for t in self._request_counts[client_id] if t > window_start
-        ]
         # Bound memory growth from spoofed identities / high cardinality traffic.
-        if len(self._request_counts) > self.max_clients:
+        # Evict before creating the new bucket so the current caller is never the victim.
+        if client_id not in self._request_counts and len(self._request_counts) >= self.max_clients:
             oldest_key = None
             oldest_ts = float("inf")
             for key, ts_list in self._request_counts.items():
@@ -180,6 +174,11 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
                     oldest_key = key
             if oldest_key:
                 self._request_counts.pop(oldest_key, None)
+
+        # Clean old requests and get current count
+        self._request_counts[client_id] = [
+            t for t in self._request_counts.get(client_id, []) if t > window_start
+        ]
 
         if len(self._request_counts[client_id]) >= self.requests_per_minute:
             return JSONResponse(
