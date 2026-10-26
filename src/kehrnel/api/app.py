@@ -82,6 +82,19 @@ def _get_api_keys() -> set[str]:
     return {k.strip() for k in keys_str.split(",") if k.strip()}
 
 
+def _api_key_fingerprint(api_key: str) -> str:
+    return hashlib.sha256(api_key.encode("utf-8")).hexdigest()[:20]
+
+
+def _valid_api_key_fingerprint(api_key: str | None) -> str | None:
+    """Fingerprint of a configured API key, or None for missing/unknown keys."""
+    if not api_key:
+        return None
+    if not any(secrets.compare_digest(api_key, k) for k in _get_api_keys()):
+        return None
+    return _api_key_fingerprint(api_key)
+
+
 def _is_auth_enabled() -> bool:
     """Check if API key authentication is enabled."""
     return os.getenv("KEHRNEL_AUTH_ENABLED", "true").lower() in ("true", "1", "yes")
@@ -127,7 +140,7 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
                 content={"error": {"code": "UNAUTHORIZED", "message": "Invalid or missing API key"}},
             )
         # Avoid using attacker-controlled headers directly for other controls.
-        key_fingerprint = hashlib.sha256(api_key.encode("utf-8")).hexdigest()[:20]
+        key_fingerprint = _api_key_fingerprint(api_key)
         request.state.authenticated_api_key = key_fingerprint
         request.state.rate_limit_key = f"key:{key_fingerprint}"
 
@@ -148,8 +161,14 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         if _is_public_path(request.url.path or ""):
             return await call_next(request)
 
-        # Prefer authenticated identity from auth middleware; fallback to IP.
+        # This middleware runs before APIKeyAuthMiddleware, so identify the caller here:
+        # a valid configured key gets its own bucket; missing or unknown keys share the
+        # client IP bucket, which keeps key-guessing attempts throttled.
         client_id = getattr(request.state, "rate_limit_key", None)
+        if not client_id and _is_auth_enabled():
+            fingerprint = _valid_api_key_fingerprint(request.headers.get("X-API-Key"))
+            if fingerprint:
+                client_id = f"key:{fingerprint}"
         if not client_id:
             ip = request.client.host if request.client else "unknown"
             client_id = f"ip:{ip}"
@@ -157,15 +176,9 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         current_time = time.time()
         window_start = current_time - 60  # 1 minute window
 
-        # Clean old requests and get current count
-        if client_id not in self._request_counts:
-            self._request_counts[client_id] = []
-
-        self._request_counts[client_id] = [
-            t for t in self._request_counts[client_id] if t > window_start
-        ]
         # Bound memory growth from spoofed identities / high cardinality traffic.
-        if len(self._request_counts) > self.max_clients:
+        # Evict before creating the new bucket so the current caller is never the victim.
+        if client_id not in self._request_counts and len(self._request_counts) >= self.max_clients:
             oldest_key = None
             oldest_ts = float("inf")
             for key, ts_list in self._request_counts.items():
@@ -175,6 +188,11 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
                     oldest_key = key
             if oldest_key:
                 self._request_counts.pop(oldest_key, None)
+
+        # Clean old requests and get current count
+        self._request_counts[client_id] = [
+            t for t in self._request_counts.get(client_id, []) if t > window_start
+        ]
 
         if len(self._request_counts[client_id]) >= self.requests_per_minute:
             return JSONResponse(
@@ -366,7 +384,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     # Security Middleware (order matters - first added = last executed)
     # ========================================================================
 
-    # 1. Rate Limiting (applied first to incoming requests)
+    # Execution order for a request: CORS -> RateLimit -> APIKeyAuth -> routes.
     # 1. API Key Authentication
     if _is_auth_enabled():
         app.add_middleware(APIKeyAuthMiddleware)
