@@ -13,8 +13,8 @@ from __future__ import annotations
 import asyncio
 from pathlib import Path
 
-from kehrnel.core.runtime import StrategyRuntime
-from kehrnel.core.registry import FileActivationRegistry
+from kehrnel.engine.core.runtime import StrategyRuntime
+from kehrnel.engine.core.registry import FileActivationRegistry
 from kehrnel.strategy_sdk import StrategyBindings
 
 

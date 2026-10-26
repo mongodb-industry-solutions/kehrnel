@@ -1,0 +1,451 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FHIR Resource Store Strategy Configuration",
+  "description": "MongoDB layout, conformance overlays, import, semantic projection, generation, and fhir-mql search settings for FHIR R4, R5, and R6.",
+  "type": "object",
+  "x-ui": {
+    "guidance": [
+      {
+        "title": "FHIR Core works immediately",
+        "body": "Choose a release and database to start. An implementation guide or profile is optional."
+      },
+      {
+        "title": "Upload packages, then select profiles",
+        "body": "Stage a FHIR NPM package in this form. Review its inventory, add it to the activation draft, and select zero or more profile canonical URLs."
+      },
+      {
+        "title": "CapabilityStatement is generated",
+        "body": "The CapabilityStatement is runtime evidence derived from the active release, implemented interactions, and resource support. It is not an upload input."
+      }
+    ]
+  },
+  "properties": {
+    "database": {
+      "title": "Strategy database",
+      "type": "string",
+      "minLength": 1,
+      "description": "Required strategy-owned MongoDB database for FHIR resources. Review this value during activation."
+    },
+    "schema_version": {
+      "title": "FHIR release",
+      "type": "string",
+      "enum": ["R4", "R5", "R6"],
+      "default": "R5",
+      "description": "FHIR release. R4 is currently a minimal Patient/Observation interoperability baseline; R5 and R6 are package-backed."
+    },
+    "collection_prefix": {
+      "title": "Collection prefix",
+      "type": "string",
+      "description": "Optional prefix for per-resource-type collection names",
+      "x-ui": { "hidden": true }
+    },
+    "import": {
+      "title": "Import limits",
+      "type": "object",
+      "description": "Safety limits for direct Resource, Bundle, and NDJSON imports. Migration clients can submit larger sources as bounded chunks.",
+      "x-ui": { "hidden": true },
+      "properties": {
+        "max_resources_per_request": {
+          "title": "Maximum resources per request",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100000,
+          "default": 10000,
+          "description": "Safety bound for one Bundle/NDJSON request; larger migrations are chunked by clients"
+        }
+      },
+      "additionalProperties": false
+    },
+    "search": {
+      "title": "FHIR Search projections",
+      "type": "object",
+      "description": "Mandatory projection and indexing contract used to compile supported FHIR Search parameters into ordinary MongoDB queries.",
+      "x-ui": { "hidden": true },
+      "properties": {
+        "enabled": {
+          "title": "Enable FHIR Search",
+          "type": "boolean",
+          "const": true,
+          "default": true,
+          "description": "Required. FHIR Search is compiled to ordinary MongoDB filters; Atlas Search is not required."
+        },
+        "denormalize_on_generate": {
+          "title": "Project generated resources",
+          "type": "boolean",
+          "const": true,
+          "default": true,
+          "description": "Mandatory invariant: project search and compartment fields before synthetic resources become visible"
+        },
+        "config_dir": {
+          "title": "Search configuration directory",
+          "type": ["string", "null"],
+          "description": "Override fhir-mql resource YAML directory; null uses bundled configs"
+        },
+        "compartment_definitions_dir": {
+          "title": "Compartment definitions directory",
+          "type": ["string", "null"],
+          "description": "Override compartment definitions; null uses bundled paths"
+        },
+        "auto_index": {
+          "title": "Ensure search indexes",
+          "type": "boolean",
+          "const": true,
+          "default": true,
+          "description": "Mandatory invariant: ensure resource search indexes before writes"
+        }
+      },
+      "required": ["enabled", "denormalize_on_generate", "auto_index"],
+      "additionalProperties": false
+    },
+    "implementation_guides": {
+      "title": "Implementation guides and profiles",
+      "type": "object",
+      "description": "Optional customer or jurisdictional FHIR NPM packages layered over the selected FHIR Core release. Omit packages to use base conformance mode.",
+      "properties": {
+        "compiled_root": {
+          "title": "Compiled artifact directory",
+          "type": "string",
+          "minLength": 1,
+          "description": "Local destination for immutable, checksum-addressed activation artifacts. Required when packages are configured.",
+          "x-ui": { "hidden": true }
+        },
+        "packages": {
+          "title": "FHIR NPM packages",
+          "type": "array",
+          "default": [],
+          "description": "Optional FHIR NPM package archives staged and inspected for this environment. Uploading adds a package to the draft; activation is still explicit.",
+          "x-ui": {
+            "control": "fhir-package-upload",
+            "accept": ".tgz,.tar.gz,.tar,application/gzip",
+            "releasePath": "schema_version",
+            "profileOptionsPath": "implementation_guides.active_profiles"
+          },
+          "items": {
+            "type": "object",
+            "required": ["source"],
+            "properties": {
+              "enabled": {
+                "title": "Include package",
+                "type": "boolean",
+                "default": true,
+                "description": "Include this package in the activation overlay."
+              },
+              "source": {
+                "title": "Staged package source",
+                "type": "string",
+                "minLength": 1,
+                "description": "Local FHIR NPM package directory or .tgz archive. Packages are never downloaded on a request path."
+              },
+              "sha256": {
+                "title": "SHA-256 checksum",
+                "type": "string",
+                "pattern": "^[0-9a-fA-F]{64}$",
+                "description": "Optional pinned package checksum verified during activation."
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "active_profiles": {
+          "title": "Active profile URLs",
+          "type": "array",
+          "default": [],
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Optional canonical profile URLs selected from enabled IG packages. Empty keeps the store unconstrained. Selection is reported separately from profile validation.",
+          "x-ui": {
+            "control": "tag-list",
+            "placeholder": "https://example.org/fhir/StructureDefinition/profile"
+          }
+        },
+        "profile_validation": {
+          "type": "object",
+          "description": "Optional fail-closed profile enforcement through a configured validation adapter.",
+          "properties": {
+            "mode": {
+              "title": "Profile enforcement",
+              "type": "string",
+              "enum": ["disabled", "required"],
+              "default": "disabled",
+              "description": "Disabled records selected profiles without enforcing them. Required rejects resources when the configured validator cannot confirm conformance."
+            },
+            "binding": {
+              "title": "Validation provider binding",
+              "type": "string",
+              "minLength": 1,
+              "default": "validation_engine",
+              "description": "Environment adapter name used for profile and invariant validation."
+            },
+            "fail_on_warning": {
+              "title": "Treat warnings as errors",
+              "type": "boolean",
+              "default": false,
+              "description": "When enabled, validator warnings prevent the write as well as errors."
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "terminology_validation": {
+      "title": "Terminology validation",
+      "type": "object",
+      "description": "Optional validation of Coding values through the tenant terminology gateway. Only explicitly listed canonical systems are inspected.",
+      "properties": {
+        "mode": {
+          "title": "Validation mode",
+          "type": "string",
+          "enum": ["disabled", "advisory", "required"],
+          "default": "disabled",
+          "description": "Disabled skips terminology checks, advisory records findings, and required rejects invalid or unverifiable governed codes."
+        },
+        "binding": {
+          "title": "Terminology provider binding",
+          "type": "string",
+          "minLength": 1,
+          "default": "terminology",
+          "description": "Environment terminology route used for lookup and validation, such as the native SNOMED CT service or an external FHIR terminology server."
+        },
+        "systems": {
+          "title": "Governed code systems",
+          "type": "array",
+          "default": [],
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Canonical code-system URLs to validate. Empty means no systems are checked unless selected profiles introduce binding requirements.",
+          "x-ui": { "control": "tag-list", "placeholder": "http://snomed.info/sct" }
+        },
+        "max_codings_per_resource": {
+          "title": "Maximum codings per resource",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 100,
+          "description": "Safety limit for terminology checks performed on one resource."
+        }
+      },
+      "additionalProperties": false
+    },
+    "index_policy": {
+      "title": "Index policy",
+      "type": "object",
+      "description": "Generated index governance. Indexes are always ensured before writes; activation-time materialization is optional.",
+      "x-ui": { "hidden": true },
+      "properties": {
+        "max_managed_indexes_per_collection": {
+          "title": "Managed index budget",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 63,
+          "default": 63,
+          "description": "Maximum accelerator-managed indexes per collection, excluding MongoDB's built-in _id index."
+        },
+        "materialize_on_activation": {
+          "title": "Create all indexes during activation",
+          "type": "boolean",
+          "default": false,
+          "description": "Create every configured resource index during activation. False uses lazy per-resource materialization before writes."
+        }
+      },
+      "additionalProperties": false
+    },
+    "semantic": {
+      "title": "Semantic projections",
+      "type": "object",
+      "description": "Optional, rebuildable semantic projections. Canonical FHIR resources are never modified and no embedding request runs during activation.",
+      "properties": {
+        "enabled": {
+          "title": "Enable semantic pipelines",
+          "type": "boolean",
+          "default": false,
+          "description": "Enables declared extraction pipelines. Activation does not generate embeddings; preview and materialization remain explicit operations."
+        },
+        "pipelines": {
+          "type": "array",
+          "default": [],
+          "description": "Optional semantic extraction pipelines. Start from the clinical-note example, then review every resource type and path before activation.",
+          "maxItems": 32,
+          "examples": [
+            [
+              {
+                "id": "clinical-notes-v1",
+                "enabled": true,
+                "resource_types": ["DiagnosticReport", "Composition"],
+                "profiles": [],
+                "fields": [
+                  { "path": "DiagnosticReport.conclusion", "label": "Conclusion" },
+                  { "path": "Composition.section.text.div", "label": "Narrative" }
+                ],
+                "chunking": { "max_chars": 3000, "overlap_chars": 300 },
+                "embedding": { "binding": "embedding", "model": "configure-provider-model", "dimensions": 768 },
+                "trigger": "manual",
+                "storage": { "mode": "sidecar", "collection": "fhir_semantic_chunks" }
+              }
+            ]
+          ],
+          "items": {
+            "type": "object",
+            "required": ["id", "resource_types", "fields"],
+            "properties": {
+              "id": {
+                "description": "Stable identifier for this semantic extraction pipeline.",
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9._-]{0,63}$"
+              },
+              "enabled": { "type": "boolean", "default": true, "description": "Whether this pipeline is available for preview and explicit materialization." },
+              "resource_types": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9]{0,63}$" },
+                "description": "Resource types from which this pipeline may extract text."
+              },
+              "profiles": {
+                "type": "array",
+                "default": [],
+                "uniqueItems": true,
+                "items": { "type": "string", "minLength": 1 },
+                "description": "Optional canonical profile URLs that restrict when this pipeline applies."
+              },
+              "fields": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 32,
+                "description": "FHIR paths whose textual values are combined into semantic source text.",
+                "items": {
+                  "type": "object",
+                  "required": ["path"],
+                  "properties": {
+                    "path": { "type": "string", "minLength": 1, "description": "FHIRPath-like dot path rooted at a supported resource type." },
+                    "label": { "type": "string", "description": "Optional human-readable label stored with the extracted chunk." }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "separator": { "type": "string", "default": "\n", "description": "Text inserted between values extracted from configured fields." },
+              "max_source_chars": {
+                "type": "integer",
+                "minimum": 128,
+                "maximum": 1000000,
+                "default": 50000,
+                "description": "Maximum extracted source-text length before chunking."
+              },
+              "chunking": {
+                "type": "object",
+                "description": "Deterministic character-based chunking controls.",
+                "properties": {
+                  "max_chars": { "type": "integer", "minimum": 128, "maximum": 50000, "default": 3000, "description": "Maximum characters in one semantic chunk." },
+                  "overlap_chars": { "type": "integer", "minimum": 0, "maximum": 10000, "default": 300, "description": "Characters repeated between adjacent chunks to preserve context." }
+                },
+                "additionalProperties": false
+              },
+              "embedding": {
+                "type": "object",
+                "description": "Embedding provider and vector-shape contract used only during explicit materialization or semantic search.",
+                "properties": {
+                  "binding": { "type": "string", "default": "embedding", "description": "Environment adapter name for the embedding provider." },
+                  "model": { "type": "string", "minLength": 1, "description": "Provider model identifier recorded with generated vectors." },
+                  "dimensions": { "type": "integer", "minimum": 1, "maximum": 8192, "description": "Expected vector dimensions used to reject incompatible provider output." }
+                },
+                "additionalProperties": false
+              },
+              "trigger": {
+                "type": "string",
+                "const": "manual",
+                "default": "manual",
+                "description": "Semantic materialization is explicit; imports never invoke an embedding provider automatically."
+              },
+              "storage": {
+                "type": "object",
+                "description": "Rebuildable sidecar storage and optional Atlas Vector Search index binding.",
+                "properties": {
+                  "mode": { "type": "string", "const": "sidecar", "default": "sidecar", "description": "Keeps generated vectors outside canonical FHIR resources." },
+                  "collection": { "type": "string", "minLength": 1, "default": "fhir_semantic_chunks", "description": "MongoDB collection that stores rebuildable semantic chunks and embeddings." },
+                  "vector_index": { "type": "string", "minLength": 1, "description": "Atlas Vector Search index used only by explicit semantic retrieval." }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "generation": {
+      "title": "Synthetic data generation",
+      "type": "object",
+      "description": "Defaults and named recipes used only when a user explicitly starts synthetic generation after activation.",
+      "x-ui": { "hidden": true },
+      "properties": {
+        "seed": { "type": "integer", "description": "Default random seed for reproducible synthetic generation." },
+        "use_enrichers": {
+          "type": "boolean",
+          "default": true,
+          "description": "Apply fhir-gen enrichers when generating resources"
+        },
+        "recipes": {
+          "title": "Generation recipes",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "description": { "type": "string", "description": "Human-readable purpose and intended use of the recipe." },
+              "resources": {
+                "type": "object",
+                "description": "Resource-type counts generated by this flat recipe.",
+                "additionalProperties": { "type": "integer", "minimum": 0 }
+              },
+              "scenarios": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Named generator scenarios applied by this recipe."
+              },
+              "seed": { "type": "integer", "description": "Recipe-specific random seed overriding the generation default." }
+            },
+            "additionalProperties": false
+          },
+          "description": "Named generation recipes; merged from specification/recipes.json at load time"
+        },
+        "watermark": {
+          "title": "Synthetic-data watermark",
+          "type": "object",
+          "description": "Marks generated resources so synthetic data can be identified after persistence.",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true,
+              "description": "Add a synthetic provenance meta.tag and extension before MongoDB save."
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "query": {
+      "title": "Query limits",
+      "type": "object",
+      "description": "Query execution limits.",
+      "x-ui": { "hidden": true },
+      "properties": {
+        "max_count": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1000,
+          "description": "Server maximum result count enforced across all input forms (URL _count, structured, internal ops)."
+        },
+        "default_count": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1000,
+          "description": "Default page size applied when a request specifies no _count."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": ["database", "schema_version"],
+  "additionalProperties": false
+}

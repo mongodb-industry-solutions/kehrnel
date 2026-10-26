@@ -1,0 +1,587 @@
+resource: Task
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec Task)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/
+#   patient.json, practitioner.json, device.json, encounter.json,
+#   relatedperson.json
+#
+# Total parameters: 24 (22 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `Task.for` is the subject Reference (not `subject`); `patient`
+#     is the Patient/* shortcut; `subject` searches all `for` targets.
+#   * `Task.requestedPerformer[]` is CodeableReference — `performer`
+#     (token) searches `.concept`, `requestedperformer-reference`
+#     searches `.reference`.
+#   * `Task.performer[]` is backbone; `actor` searches `performer.actor`.
+#   * `period` searches `executionPeriod` (interval overlap).
+#   * `output` searches `output[].valueReference` (Reference arm).
+#   * Top-level scalars `status`, `intent`, `priority` query root fields.
+#   * `groupIdentifier` is a single Identifier (token search).
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters
+  # ─────────────────────────────────────────────────────────────
+  actor:
+    type: reference
+    description: "Search by specific performer (performer.actor)"
+    fields:
+      - field: "_search.actorIds"
+        referenceType: id
+      - field: "_search.actorTypes"
+        referenceType: type
+      - field: "performer.actor.reference"
+        referenceType: full
+
+  based-on:
+    type: reference
+    description: "Search by requests this task is based on"
+    fields:
+      - field: "_search.basedOnIds"
+        referenceType: id
+      - field: "_search.basedOnTypes"
+        referenceType: type
+      - field: "basedOn.reference"
+        referenceType: full
+
+  encounter:
+    type: reference
+    description: "Search by encounter"
+    fields:
+      - field: "_search.encounterId"
+        referenceType: id
+      - field: "encounter.reference"
+        referenceType: full
+
+  focus:
+    type: reference
+    description: "Search by task focus"
+    fields:
+      - field: "_search.focusId"
+        referenceType: id
+      - field: "_search.focusType"
+        referenceType: type
+      - field: "focus.reference"
+        referenceType: full
+
+  output:
+    type: reference
+    description: "Search by task output references"
+    fields:
+      - field: "_search.outputReferenceIds"
+        referenceType: id
+      - field: "_search.outputReferenceTypes"
+        referenceType: type
+
+  owner:
+    type: reference
+    description: "Search by task owner"
+    fields:
+      - field: "_search.ownerId"
+        referenceType: id
+      - field: "_search.ownerType"
+        referenceType: type
+      - field: "owner.reference"
+        referenceType: full
+
+  part-of:
+    type: reference
+    description: "Search by parent task"
+    fields:
+      - field: "_search.partOfIds"
+        referenceType: id
+      - field: "_search.partOfTypes"
+        referenceType: type
+      - field: "partOf.reference"
+        referenceType: full
+
+  patient:
+    type: reference
+    description: "Search by patient (for when Patient)"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "for.reference"
+        referenceType: full
+
+  requestedperformer-reference:
+    type: reference
+    description: "Search by specific requested performer reference"
+    fields:
+      - field: "_search.requestedPerformerReferenceIds"
+        referenceType: id
+      - field: "_search.requestedPerformerReferenceTypes"
+        referenceType: type
+
+  requester:
+    type: reference
+    description: "Search by task requester"
+    fields:
+      - field: "_search.requesterId"
+        referenceType: id
+      - field: "_search.requesterType"
+        referenceType: type
+      - field: "requester.reference"
+        referenceType: full
+
+  subject:
+    type: reference
+    description: "Search by subject (for)"
+    fields:
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "_search.subjectType"
+        referenceType: type
+      - field: "for.reference"
+        referenceType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters
+  # ─────────────────────────────────────────────────────────────
+  business-status:
+    type: token
+    description: "Search by business status"
+    fields:
+      - field: "_search.businessStatus_systemCode"
+        tokenType: systemCode
+      - field: "_search.businessStatus_codes"
+        tokenType: code
+
+  code:
+    type: token
+    description: "Search by task code"
+    fields:
+      - field: "_search.code_systemCode"
+        tokenType: systemCode
+      - field: "_search.code_codes"
+        tokenType: code
+
+  group-identifier:
+    type: token
+    description: "Search by group identifier"
+    fields:
+      - field: "_search.groupIdentifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.groupIdentifier_values"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: "Search for task by identifier"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  intent:
+    type: token
+    description: "Search for task by intent"
+    fields:
+      - field: "intent"
+        tokenType: code
+
+  performer:
+    type: token
+    description: "Search by recommended performer type (requestedPerformer.concept)"
+    fields:
+      - field: "_search.requestedPerformerConcept_systemCode"
+        tokenType: systemCode
+      - field: "_search.requestedPerformerConcept_codes"
+        tokenType: code
+
+  priority:
+    type: token
+    description: "Search by task priority"
+    fields:
+      - field: "priority"
+        tokenType: code
+
+  status:
+    type: token
+    description: "Search by task status"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters
+  # ─────────────────────────────────────────────────────────────
+  authored-on:
+    type: date
+    description: "Search by creation date"
+    fields:
+      - field: "authoredOn"
+        type: date
+
+  modified:
+    type: date
+    description: "Search by last modification date"
+    fields:
+      - field: "lastModified"
+        type: date
+
+  period:
+    type: date
+    description: "Search by execution period"
+    fields:
+      - field: "_search.executionPeriod"
+        type: period
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  group_identifier:
+    source: groupIdentifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: groupIdentifier.value
+        target_field: groupIdentifier_values
+        datatype: array[string]
+      - source_path: groupIdentifier
+        target_field: groupIdentifier_systemCode
+        datatype: array[string]
+
+  code:
+    source: code
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code.coding[*].code
+        target_field: code_codes
+        datatype: array[string]
+      - source_path: code.coding[*]
+        target_field: code_systemCode
+        datatype: array[string]
+
+  business_status:
+    source: businessStatus
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: businessStatus.coding[*].code
+        target_field: businessStatus_codes
+        datatype: array[string]
+      - source_path: businessStatus.coding[*]
+        target_field: businessStatus_systemCode
+        datatype: array[string]
+
+  task_for:
+    source: for
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: for.reference
+        target_field: subjectId
+        datatype: string
+        extractType: id
+      - source_path: for.reference
+        target_field: subjectType
+        datatype: string
+        extractType: type
+      - source_path: for.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+        filterType: Patient
+        comment: "Patient/* for only — powers `patient` search parameter"
+
+  encounter:
+    source: encounter
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: encounter.reference
+        target_field: encounterId
+        datatype: string
+        extractType: id
+
+  focus:
+    source: focus
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: focus.reference
+        target_field: focusId
+        datatype: string
+        extractType: id
+      - source_path: focus.reference
+        target_field: focusType
+        datatype: string
+        extractType: type
+
+  owner:
+    source: owner
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: owner.reference
+        target_field: ownerId
+        datatype: string
+        extractType: id
+      - source_path: owner.reference
+        target_field: ownerType
+        datatype: string
+        extractType: type
+
+  requester:
+    source: requester
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: requester.reference
+        target_field: requesterId
+        datatype: string
+        extractType: id
+      - source_path: requester.reference
+        target_field: requesterType
+        datatype: string
+        extractType: type
+
+  based_on:
+    source: basedOn
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: basedOn[*].reference
+        target_field: basedOnIds
+        datatype: array[string]
+        extractType: id
+      - source_path: basedOn[*].reference
+        target_field: basedOnTypes
+        datatype: array[string]
+        extractType: type
+
+  part_of:
+    source: partOf
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: partOf[*].reference
+        target_field: partOfIds
+        datatype: array[string]
+        extractType: id
+      - source_path: partOf[*].reference
+        target_field: partOfTypes
+        datatype: array[string]
+        extractType: type
+
+  task_performer_actor:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: performer[*].actor.reference
+        target_field: actorIds
+        datatype: array[string]
+        extractType: id
+      - source_path: performer[*].actor.reference
+        target_field: actorTypes
+        datatype: array[string]
+        extractType: type
+
+  requested_performer_concept:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: requestedPerformer[*].concept.coding[*].code
+        target_field: requestedPerformerConcept_codes
+        datatype: array[string]
+      - source_path: requestedPerformer[*].concept.coding[*]
+        target_field: requestedPerformerConcept_systemCode
+        datatype: array[string]
+
+  requested_performer_reference:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: requestedPerformer[*].reference.reference
+        target_field: requestedPerformerReferenceIds
+        datatype: array[string]
+        extractType: id
+      - source_path: requestedPerformer[*].reference.reference
+        target_field: requestedPerformerReferenceTypes
+        datatype: array[string]
+        extractType: type
+
+  output_reference:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: output[*].valueReference.reference
+        target_field: outputReferenceIds
+        datatype: array[string]
+        extractType: id
+      - source_path: output[*].valueReference.reference
+        target_field: outputReferenceTypes
+        datatype: array[string]
+        extractType: type
+
+  execution_period:
+    source: executionPeriod
+    target: _search
+    extractor: PeriodExtractor
+    field_mappings:
+      - source_path: start
+        target_field: executionPeriod.start
+        datatype: date
+        optional: true
+      - source_path: end
+        target_field: executionPeriod.end
+        datatype: date
+        optional: true
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - for
+          - focus
+          - patient
+        reference_type: Patient
+        datatype: array[string]
+        comment: |
+          Patient compartment (patient.json linking params patient,
+          focus). `patient` token satisfies audit; membership is
+          extracted from `for` (Patient/*) and `focus`.
+      - target_field: Practitioner
+        source_paths:
+          - owner
+          - requester
+        reference_type: Practitioner
+        datatype: array[string]
+        comment: "Practitioner compartment (owner, requester)"
+      - target_field: Device
+        source_paths:
+          - owner
+          - requester
+        reference_type: Device
+        datatype: array[string]
+        comment: "Device compartment (owner, requester)"
+      - target_field: Encounter
+        source_paths:
+          - encounter
+        reference_type: Encounter
+        datatype: array[string]
+        comment: "Encounter compartment (encounter linking param)"
+
+compartments:
+  precomputed:
+    - Patient
+    - Practitioner
+    - Encounter
+    - Device
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+  - fields:
+      - "_compartments.Practitioner": 1
+    options:
+      name: idx_compartment_practitioner
+      sparse: true
+  - fields:
+      - "_compartments.Encounter": 1
+    options:
+      name: idx_compartment_encounter
+      sparse: true
+  - fields:
+      - "_compartments.Device": 1
+    options:
+      name: idx_compartment_device
+      sparse: true
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+  - fields:
+      - "intent": 1
+    options:
+      name: idx_intent
+      sparse: true
+  - fields:
+      - "_search.patientId": 1
+    options:
+      name: idx_patient_id
+      sparse: true
+  - fields:
+      - "_search.encounterId": 1
+    options:
+      name: idx_encounter_id
+      sparse: true
+  - fields:
+      - "_search.ownerId": 1
+    options:
+      name: idx_owner_id
+      sparse: true
+  - fields:
+      - "_search.requesterId": 1
+    options:
+      name: idx_requester_id
+      sparse: true
+  - fields:
+      - "_search.code_codes": 1
+    options:
+      name: idx_code_codes
+      sparse: true
+  - fields:
+      - "_search.executionPeriod.start": 1
+      - "_search.executionPeriod.end": 1
+    options:
+      name: idx_execution_period
+      sparse: true
+  - fields:
+      - "authoredOn": 1
+    options:
+      name: idx_authored_on
+      sparse: true
+  - fields:
+      - "lastModified": 1
+    options:
+      name: idx_last_modified
+      sparse: true
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_meta_last_updated

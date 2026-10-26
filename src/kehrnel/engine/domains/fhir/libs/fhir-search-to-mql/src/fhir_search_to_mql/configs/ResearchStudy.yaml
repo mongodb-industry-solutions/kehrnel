@@ -1,0 +1,632 @@
+resource: ResearchStudy
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec ResearchStudy)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: practitioner.json lists `principalinvestigator` — R5 has
+#   `associatedParty.party` instead; Practitioner compartment uses dynamic
+#   resolver only (see PaymentNotice / Substance pattern).
+#
+# Total parameters: 27 (22 resource-specific per R5 index + 3 composite +
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `focus[]` is CodeableReference — `focus-code` / `focus-reference`.
+#   * `progressStatus[]` backbone powers three composite search params.
+#   * `date` searches `period` (interval overlap).
+#   * `recruitment` backbone: `eligibility`, `actualNumber`, `targetNumber`.
+#   * Top-level scalar `status` queries the FHIR root.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # String Parameters
+  # ─────────────────────────────────────────────────────────────
+  description:
+    type: string
+    description: "Detailed narrative of the study"
+    fields:
+      default:
+        - field: "_search.description_lower"
+          query_type: range
+      exact:
+        - field: "_search.description"
+
+  name:
+    type: string
+    description: "Name for this study"
+    fields:
+      default:
+        - field: "_search.name_lower"
+          query_type: range
+      exact:
+        - field: "_search.name"
+
+  objective-description:
+    type: string
+    description: "Free text description of the objective of the study"
+    fields:
+      default:
+        - field: "_search.objectiveDescription_lower"
+          query_type: range
+      exact:
+        - field: "_search.objectiveDescription"
+
+  title:
+    type: string
+    description: "The human readable name of the research study"
+    fields:
+      default:
+        - field: "_search.title_lower"
+          query_type: range
+      exact:
+        - field: "_search.title"
+
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters
+  # ─────────────────────────────────────────────────────────────
+  eligibility:
+    type: reference
+    description: "Inclusion and exclusion criteria"
+    fields:
+      - field: "_search.eligibilityId"
+        referenceType: id
+      - field: "_search.eligibilityType"
+        referenceType: type
+      - field: "recruitment.eligibility.reference"
+        referenceType: full
+
+  focus-reference:
+    type: reference
+    description: "Drugs, devices, etc. under study, as a reference"
+    fields:
+      - field: "_search.focusReferenceIds"
+        referenceType: id
+      - field: "_search.focusReferenceTypes"
+        referenceType: type
+
+  part-of:
+    type: reference
+    description: "Part of larger study"
+    fields:
+      - field: "_search.partOfIds"
+        referenceType: id
+      - field: "_search.partOfTypes"
+        referenceType: type
+      - field: "partOf.reference"
+        referenceType: full
+
+  protocol:
+    type: reference
+    description: "Steps followed in executing study"
+    fields:
+      - field: "_search.protocolIds"
+        referenceType: id
+      - field: "_search.protocolTypes"
+        referenceType: type
+      - field: "protocol.reference"
+        referenceType: full
+
+  site:
+    type: reference
+    description: "Facility where study activities are conducted"
+    fields:
+      - field: "_search.siteIds"
+        referenceType: id
+      - field: "_search.siteTypes"
+        referenceType: type
+      - field: "site.reference"
+        referenceType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters
+  # ─────────────────────────────────────────────────────────────
+  classifier:
+    type: token
+    description: "Classification for the study"
+    fields:
+      - field: "_search.classifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.classifier_codes"
+        tokenType: code
+
+  condition:
+    type: token
+    description: "Condition being studied"
+    fields:
+      - field: "_search.condition_systemCode"
+        tokenType: systemCode
+      - field: "_search.condition_codes"
+        tokenType: code
+
+  focus-code:
+    type: token
+    description: "Drugs, devices, etc. under study, as a code"
+    fields:
+      - field: "_search.focusConcept_systemCode"
+        tokenType: systemCode
+      - field: "_search.focusConcept_codes"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: "Business Identifier for study"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  keyword:
+    type: token
+    description: "Used to search for the study"
+    fields:
+      - field: "_search.keyword_systemCode"
+        tokenType: systemCode
+      - field: "_search.keyword_codes"
+        tokenType: code
+
+  objective-type:
+    type: token
+    description: "The kind of study objective"
+    fields:
+      - field: "_search.objectiveType_systemCode"
+        tokenType: systemCode
+      - field: "_search.objectiveType_codes"
+        tokenType: code
+
+  phase:
+    type: token
+    description: "The stage in the progression of a study"
+    fields:
+      - field: "_search.phase_systemCode"
+        tokenType: systemCode
+      - field: "_search.phase_codes"
+        tokenType: code
+
+  region:
+    type: token
+    description: "Geographic area for the study"
+    fields:
+      - field: "_search.region_systemCode"
+        tokenType: systemCode
+      - field: "_search.region_codes"
+        tokenType: code
+
+  status:
+    type: token
+    description: "active | administratively-completed | approved | ..."
+    fields:
+      - field: "status"
+        tokenType: code
+
+  study-design:
+    type: token
+    description: "Classifications of the study design characteristics"
+    fields:
+      - field: "_search.studyDesign_systemCode"
+        tokenType: systemCode
+      - field: "_search.studyDesign_codes"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Number Parameters
+  # ─────────────────────────────────────────────────────────────
+  recruitment-actual:
+    type: number
+    description: "Actual number of participants enrolled across all groups"
+    fields:
+      - field: "_search.recruitmentActualNumber_values"
+
+  recruitment-target:
+    type: number
+    description: "Target number of participants enrolled across all groups"
+    fields:
+      - field: "_search.recruitmentTargetNumber_values"
+
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters
+  # ─────────────────────────────────────────────────────────────
+  date:
+    type: date
+    description: "When the study began and ended"
+    fields:
+      - field: "_search.period"
+        type: period
+
+  # ─────────────────────────────────────────────────────────────
+  # Composite Parameters
+  # ─────────────────────────────────────────────────────────────
+  progress-status-state-actual:
+    type: composite
+    description: "Status of study by state and actual"
+    components:
+      - name: state
+        type: token
+        converter: TokenConverter
+        fields:
+          - field: "_search.progressStatusState_systemCode"
+            tokenType: systemCode
+          - field: "_search.progressStatusState_codes"
+            tokenType: code
+      - name: actual
+        type: token
+        converter: TokenConverter
+        fields:
+          - field: "_search.progressStatusActual_values"
+            tokenType: boolean
+
+  progress-status-state-period:
+    type: composite
+    description: "Status of study by state and period"
+    components:
+      - name: state
+        type: token
+        converter: TokenConverter
+        fields:
+          - field: "_search.progressStatusState_systemCode"
+            tokenType: systemCode
+          - field: "_search.progressStatusState_codes"
+            tokenType: code
+      - name: period
+        type: date
+        converter: DateConverter
+        fields:
+          - field: "_search.progressStatusPeriod"
+            type: period
+
+  progress-status-state-period-actual:
+    type: composite
+    description: "Status of study by state, period and actual"
+    components:
+      - name: state
+        type: token
+        converter: TokenConverter
+        fields:
+          - field: "_search.progressStatusState_systemCode"
+            tokenType: systemCode
+          - field: "_search.progressStatusState_codes"
+            tokenType: code
+      - name: period
+        type: date
+        converter: DateConverter
+        fields:
+          - field: "_search.progressStatusPeriod"
+            type: period
+      - name: actual
+        type: token
+        converter: TokenConverter
+        fields:
+          - field: "_search.progressStatusActual_values"
+            tokenType: boolean
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  description:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: description
+        target_field: description
+        datatype: string
+      - source_path: description
+        target_field: description_lower
+        datatype: string
+        normalize: lowercase
+
+  name:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: name
+        target_field: name
+        datatype: string
+      - source_path: name
+        target_field: name_lower
+        datatype: string
+        normalize: lowercase
+
+  title:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: title
+        target_field: title
+        datatype: string
+      - source_path: title
+        target_field: title_lower
+        datatype: string
+        normalize: lowercase
+
+  objective_description:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: objective[*].description
+        target_field: objectiveDescription
+        datatype: array[string]
+      - source_path: objective[*].description
+        target_field: objectiveDescription_lower
+        datatype: array[string]
+        normalize: lowercase
+
+  classifier:
+    source: classifier
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: classifier[*].coding[*].code
+        target_field: classifier_codes
+        datatype: array[string]
+      - source_path: classifier[*].coding[*]
+        target_field: classifier_systemCode
+        datatype: array[string]
+
+  condition:
+    source: condition
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: condition[*].coding[*].code
+        target_field: condition_codes
+        datatype: array[string]
+      - source_path: condition[*].coding[*]
+        target_field: condition_systemCode
+        datatype: array[string]
+
+  keyword:
+    source: keyword
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: keyword[*].coding[*].code
+        target_field: keyword_codes
+        datatype: array[string]
+      - source_path: keyword[*].coding[*]
+        target_field: keyword_systemCode
+        datatype: array[string]
+
+  region:
+    source: region
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: region[*].coding[*].code
+        target_field: region_codes
+        datatype: array[string]
+      - source_path: region[*].coding[*]
+        target_field: region_systemCode
+        datatype: array[string]
+
+  study_design:
+    source: studyDesign
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: studyDesign[*].coding[*].code
+        target_field: studyDesign_codes
+        datatype: array[string]
+      - source_path: studyDesign[*].coding[*]
+        target_field: studyDesign_systemCode
+        datatype: array[string]
+
+  phase:
+    source: phase
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: phase.coding[*].code
+        target_field: phase_codes
+        datatype: array[string]
+      - source_path: phase.coding[*]
+        target_field: phase_systemCode
+        datatype: array[string]
+
+  focus_concept:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: focus[*].concept.coding[*].code
+        target_field: focusConcept_codes
+        datatype: array[string]
+      - source_path: focus[*].concept.coding[*]
+        target_field: focusConcept_systemCode
+        datatype: array[string]
+
+  focus_reference:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: focus[*].reference.reference
+        target_field: focusReferenceIds
+        datatype: array[string]
+        extractType: id
+      - source_path: focus[*].reference.reference
+        target_field: focusReferenceTypes
+        datatype: array[string]
+        extractType: type
+
+  objective_type:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: objective[*].type.coding[*].code
+        target_field: objectiveType_codes
+        datatype: array[string]
+      - source_path: objective[*].type.coding[*]
+        target_field: objectiveType_systemCode
+        datatype: array[string]
+
+  progress_status_state:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: progressStatus[*].state.coding[*].code
+        target_field: progressStatusState_codes
+        datatype: array[string]
+      - source_path: progressStatus[*].state.coding[*]
+        target_field: progressStatusState_systemCode
+        datatype: array[string]
+
+  progress_status_actual:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: progressStatus[*].actual
+        target_field: progressStatusActual_values
+        datatype: array[boolean]
+
+  progress_status_period:
+    source: $resource
+    target: _search
+    extractor: PeriodExtractor
+    field_mappings:
+      - source_path: progressStatus[*].period
+        target_field: progressStatusPeriod
+        datatype: array[object]
+        comment: "Powers progress-status composite `period` component overlap"
+
+  study_period:
+    source: period
+    target: _search
+    extractor: PeriodExtractor
+    field_mappings:
+      - source_path: start
+        target_field: period
+        datatype: object
+        comment: "Powers `date` search on ResearchStudy.period"
+
+  eligibility:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: recruitment.eligibility.reference
+        target_field: eligibilityId
+        datatype: string
+        extractType: id
+      - source_path: recruitment.eligibility.reference
+        target_field: eligibilityType
+        datatype: string
+        extractType: type
+
+  recruitment_numbers:
+    source: recruitment
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: actualNumber
+        target_field: recruitmentActualNumber_values
+        datatype: integer
+      - source_path: targetNumber
+        target_field: recruitmentTargetNumber_values
+        datatype: integer
+
+  part_of:
+    source: partOf
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: partOf[*].reference
+        target_field: partOfIds
+        datatype: array[string]
+        extractType: id
+      - source_path: partOf[*].reference
+        target_field: partOfTypes
+        datatype: array[string]
+        extractType: type
+
+  protocol:
+    source: protocol
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: protocol[*].reference
+        target_field: protocolIds
+        datatype: array[string]
+        extractType: id
+      - source_path: protocol[*].reference
+        target_field: protocolTypes
+        datatype: array[string]
+        extractType: type
+
+  site:
+    source: site
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: site[*].reference
+        target_field: siteIds
+        datatype: array[string]
+        extractType: id
+      - source_path: site[*].reference
+        target_field: siteTypes
+        datatype: array[string]
+        extractType: type
+
+indexes:
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+  - fields:
+      - "_search.identifier_values": 1
+    options:
+      name: idx_identifier_values
+      sparse: true
+  - fields:
+      - "_search.condition_codes": 1
+    options:
+      name: idx_condition_codes
+      sparse: true
+  - fields:
+      - "_search.focusConcept_codes": 1
+    options:
+      name: idx_focus_concept_codes
+      sparse: true
+  - fields:
+      - "_search.siteIds": 1
+    options:
+      name: idx_site_ids
+      sparse: true
+  - fields:
+      - "_search.period": 1
+    options:
+      name: idx_period
+      sparse: true

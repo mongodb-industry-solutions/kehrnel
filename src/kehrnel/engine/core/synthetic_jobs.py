@@ -2,8 +2,9 @@
 from __future__ import annotations
 
 import asyncio
-import uuid
 import hashlib
+import threading
+import uuid
 from datetime import datetime, timezone
 from typing import Any, Dict
 
@@ -19,6 +20,8 @@ class SyntheticJobManager:
     """Async in-process job manager.
 
     The manager is generic and delegates generation logic to strategy ops.
+    Job work runs off the API event loop so ``POST /synthetic/jobs`` can
+    return HTTP 202 immediately with a ``job_id`` for polling.
     """
 
     def __init__(self, runtime: StrategyRuntime, store: Any | None = None):
@@ -26,8 +29,65 @@ class SyntheticJobManager:
         self.store = store
         self._jobs: Dict[str, Dict[str, Any]] = {}
         self._tasks: Dict[str, asyncio.Task] = {}
-        self._cancel_events: Dict[str, asyncio.Event] = {}
+        self._cancel_events: Dict[str, threading.Event] = {}
         self._lock = asyncio.Lock()
+        self._main_loop: asyncio.AbstractEventLoop | None = None
+
+    async def recover_incomplete_jobs(self, *, retry: bool = False) -> Dict[str, int]:
+        """Recover persisted work after process restart.
+
+        The safe default records interrupted jobs as failed. Deployments whose
+        strategy operations are idempotent can request retry, preserving the
+        original job id and payload for audit continuity.
+        """
+
+        if not self.store:
+            return {"found": 0, "retried": 0, "failed": 0}
+        persisted = await asyncio.to_thread(self.store.list, env_id=None, domain=None)
+        incomplete = [
+            dict(item)
+            for item in persisted
+            if item.get("status") in {"queued", "running", "canceling"}
+        ]
+        counts = {"found": len(incomplete), "retried": 0, "failed": 0}
+        loop = asyncio.get_running_loop()
+        self._main_loop = loop
+        for record in incomplete:
+            job_id = str(record.get("job_id") or "")
+            if not job_id:
+                continue
+            if not retry or not isinstance(record.get("payload"), dict):
+                now = _now_iso()
+                record.update(
+                    status="failed",
+                    phase="interrupted",
+                    completed_at=record.get("completed_at") or now,
+                    updated_at=now,
+                    error={
+                        "code": "JOB_INTERRUPTED",
+                        "message": "Worker restarted before the job completed.",
+                    },
+                )
+                await asyncio.to_thread(self.store.upsert, record)
+                counts["failed"] += 1
+                continue
+            record.update(status="queued", phase="recovered", progress=0, updated_at=_now_iso())
+            async with self._lock:
+                self._jobs[job_id] = record
+                self._cancel_events[job_id] = threading.Event()
+            await self._persist_upsert(record)
+            async with self._lock:
+                self._tasks[job_id] = loop.create_task(
+                    self._run_job_wrapper(
+                        job_id=job_id,
+                        env_id=str(record.get("env_id") or ""),
+                        domain=str(record.get("domain") or ""),
+                        op=str(record.get("op") or ""),
+                        payload=record["payload"],
+                    )
+                )
+            counts["retried"] += 1
+        return counts
 
     async def create_job(
         self,
@@ -73,21 +133,51 @@ class SyntheticJobManager:
             "started_at": None,
             "completed_at": None,
         }
+        loop = asyncio.get_running_loop()
+        self._main_loop = loop
         async with self._lock:
             self._jobs[job_id] = rec
-            cancel_event = asyncio.Event()
+            cancel_event = threading.Event()
             self._cancel_events[job_id] = cancel_event
-            self._tasks[job_id] = asyncio.create_task(
-                self._run_job(job_id=job_id, env_id=env_id, domain=domain, op=op, payload=payload)
-            )
+        # Persist the queued state before the worker can publish a newer state.
+        # This avoids a queued-after-running race with slow external stores.
         await self._persist_upsert(rec)
+        async with self._lock:
+            self._tasks[job_id] = loop.create_task(
+                self._run_job_wrapper(
+                    job_id=job_id,
+                    env_id=env_id,
+                    domain=domain,
+                    op=op,
+                    payload=payload,
+                )
+            )
         return self._public(rec)
 
-    async def _run_job(self, *, job_id: str, env_id: str, domain: str, op: str, payload: Dict[str, Any]) -> None:
-        await self._patch(job_id, status="running", phase="starting", progress=1, started_at=_now_iso())
-        cancel_event = self._cancel_events.get(job_id) or asyncio.Event()
+    async def _run_job_wrapper(
+        self,
+        *,
+        job_id: str,
+        env_id: str,
+        domain: str,
+        op: str,
+        payload: Dict[str, Any],
+    ) -> None:
+        # Yield so create_job can finish and the HTTP 202 response is sent first.
+        await asyncio.sleep(0)
+        await self._run_job(job_id=job_id, env_id=env_id, domain=domain, op=op, payload=payload)
 
-        async def progress_cb(*, progress: int | None = None, phase: str | None = None, stats: Dict[str, Any] | None = None):
+    async def _run_job(self, *, job_id: str, env_id: str, domain: str, op: str, payload: Dict[str, Any]) -> None:
+        main_loop = self._main_loop or asyncio.get_running_loop()
+        await self._patch(job_id, status="running", phase="starting", progress=1, started_at=_now_iso())
+        cancel_event = self._cancel_events.get(job_id) or threading.Event()
+
+        async def progress_cb(
+            *,
+            progress: int | None = None,
+            phase: str | None = None,
+            stats: Dict[str, Any] | None = None,
+        ):
             patch: Dict[str, Any] = {"updated_at": _now_iso()}
             if progress is not None:
                 patch["progress"] = max(0, min(100, int(progress)))
@@ -96,23 +186,37 @@ class SyntheticJobManager:
             if stats:
                 current = (self._jobs.get(job_id) or {}).get("stats") or {}
                 patch["stats"] = {**current, **stats}
-            await self._patch(job_id, **patch)
+            if asyncio.get_running_loop() is main_loop:
+                await self._patch(job_id, **patch)
+                return
+            fut = asyncio.run_coroutine_threadsafe(self._patch(job_id, **patch), main_loop)
+            await asyncio.wrap_future(fut)
 
         def should_cancel() -> bool:
             return cancel_event.is_set()
 
+        def _dispatch_in_worker() -> Any:
+            worker_loop = asyncio.new_event_loop()
+            try:
+                return worker_loop.run_until_complete(
+                    self.runtime.dispatch(
+                        env_id,
+                        "op",
+                        {
+                            "domain": domain,
+                            "op": op,
+                            "payload": payload,
+                            "__job_id": job_id,
+                            "__progress_cb": progress_cb,
+                            "__should_cancel": should_cancel,
+                        },
+                    )
+                )
+            finally:
+                worker_loop.close()
+
         try:
-            result = await self.runtime.dispatch(
-                env_id,
-                "op",
-                {
-                    "domain": domain,
-                    "op": op,
-                    "payload": payload,
-                    "__progress_cb": progress_cb,
-                    "__should_cancel": should_cancel,
-                },
-            )
+            result = await asyncio.to_thread(_dispatch_in_worker)
             if cancel_event.is_set():
                 await self._patch(
                     job_id,
@@ -229,7 +333,7 @@ class SyntheticJobManager:
             task = self._tasks.get(job_id)
             ev = self._cancel_events.get(job_id)
             if ev is None:
-                ev = asyncio.Event()
+                ev = threading.Event()
                 self._cancel_events[job_id] = ev
             ev.set()
 
@@ -282,6 +386,7 @@ class SyntheticJobManager:
         data["requester_id"] = rec.get("requester_id")
         data["team_id"] = rec.get("team_id")
         payload = (rec.get("payload") or {}) if isinstance(rec.get("payload"), dict) else {}
+        recipe_summary = payload.get("recipe") if isinstance(payload.get("recipe"), dict) else {}
         # Do not echo full payload back for large jobs unless needed by caller.
         data["payload"] = {"keys": sorted(list(payload.keys()))}
         # Expose minimal request summary for UI traceability.
@@ -292,6 +397,11 @@ class SyntheticJobManager:
             "dry_run": payload.get("dry_run"),
             "source_collection": payload.get("source_collection"),
             "model_source": payload.get("model_source") if isinstance(payload.get("model_source"), dict) else None,
+            "study_id": payload.get("studyId") or recipe_summary.get("studyId"),
+            "profile": payload.get("profile") or recipe_summary.get("profile"),
+            "subjects": payload.get("subjects") or recipe_summary.get("subjects"),
+            "persist": payload.get("persist"),
+            "publish": payload.get("publish"),
         }
         has_models = isinstance(payload.get("models"), list) and len(payload.get("models")) > 0
         has_templates = isinstance(payload.get("templates"), list) and len(payload.get("templates")) > 0

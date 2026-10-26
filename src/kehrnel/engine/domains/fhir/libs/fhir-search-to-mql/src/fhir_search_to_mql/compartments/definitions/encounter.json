@@ -1,0 +1,172 @@
+{
+  "resourceType": "CompartmentDefinition",
+  "id": "encounter",
+  "url": "http://hl7.org/fhir/CompartmentDefinition/encounter",
+  "version": "5.0.0",
+  "name": "Encounter",
+  "status": "active",
+  "experimental": false,
+  "date": "2024-03-26T10:00:00Z",
+  "publisher": "FHIR Project Team",
+  "description": "The set of resources associated with a particular encounter",
+  "code": "Encounter",
+  "search": true,
+  "resource": [
+    {
+      "code": "Account",
+      "param": ["subject"]
+    },
+    {
+      "code": "AdverseEvent",
+      "param": ["encounter"]
+    },
+    {
+      "code": "AllergyIntolerance",
+      "param": ["encounter"]
+    },
+    {
+      "code": "Appointment",
+      "param": ["supporting-info"]
+    },
+    {
+      "code": "AppointmentResponse",
+      "param": ["part-status"]
+    },
+    {
+      "code": "Basic",
+      "param": ["encounter"]
+    },
+    {
+      "code": "CarePlan",
+      "param": ["encounter"]
+    },
+    {
+      "code": "ChargeItem",
+      "param": ["encounter"]
+    },
+    {
+      "code": "Claim",
+      "param": ["encounter"]
+    },
+    {
+      "code": "ClaimResponse",
+      "param": ["request"]
+    },
+    {
+      "code": "ClinicalImpression",
+      "param": ["encounter"]
+    },
+    {
+      "code": "Communication",
+      "param": ["encounter"]
+    },
+    {
+      "code": "CommunicationRequest",
+      "param": ["encounter"]
+    },
+    {
+      "code": "Composition",
+      "param": ["encounter"]
+    },
+    {
+      "code": "Condition",
+      "param": ["encounter"]
+    },
+    {
+      "code": "DeviceRequest",
+      "param": ["encounter"]
+    },
+    {
+      "code": "DiagnosticReport",
+      "param": ["encounter"]
+    },
+    {
+      "code": "DocumentReference",
+      "param": ["encounter", "context"]
+    },
+    {
+      "code": "Encounter",
+      "param": ["part-of"]
+    },
+    {
+      "code": "ExplanationOfBenefit",
+      "param": ["encounter"]
+    },
+    {
+      "code": "Flag",
+      "param": ["encounter"]
+    },
+    {
+      "code": "ImagingStudy",
+      "param": ["encounter"]
+    },
+    {
+      "code": "Immunization",
+      "param": ["encounter"]
+    },
+    {
+      "code": "List",
+      "param": ["encounter"]
+    },
+    {
+      "code": "MedicationAdministration",
+      "param": ["encounter"]
+    },
+    {
+      "code": "MedicationDispense",
+      "param": ["encounter"]
+    },
+    {
+      "code": "MedicationRequest",
+      "param": ["encounter"]
+    },
+    {
+      "code": "MedicationStatement",
+      "param": ["encounter"]
+    },
+    {
+      "code": "NutritionIntake",
+      "param": ["encounter"]
+    },
+    {
+      "code": "NutritionOrder",
+      "param": ["encounter"]
+    },
+    {
+      "code": "Observation",
+      "param": ["encounter"]
+    },
+    {
+      "code": "Procedure",
+      "param": ["encounter"]
+    },
+    {
+      "code": "Provenance",
+      "param": ["encounter"]
+    },
+    {
+      "code": "QuestionnaireResponse",
+      "param": ["encounter"]
+    },
+    {
+      "code": "RequestOrchestration",
+      "param": ["encounter"]
+    },
+    {
+      "code": "RiskAssessment",
+      "param": ["encounter"]
+    },
+    {
+      "code": "ServiceRequest",
+      "param": ["encounter"]
+    },
+    {
+      "code": "Task",
+      "param": ["encounter"]
+    },
+    {
+      "code": "VisionPrescription",
+      "param": ["encounter"]
+    }
+  ]
+}

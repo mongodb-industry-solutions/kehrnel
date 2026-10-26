@@ -4,8 +4,10 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
+SCRIPT_VERSION="2026-07-01.2"
 HOST="${KEHRNEL_HOST:-127.0.0.1}"
 PORT="${KEHRNEL_PORT:-8080}"
+RUNTIME_URL="http://${HOST}:${PORT}"
 RELOAD=1
 BUILD_DOCS_MODE="auto"
 SYNC_MODE="${KEHRNEL_SYNC_MODE:-auto}"
@@ -52,6 +54,20 @@ find_user_uv() {
   return 1
 }
 
+find_virtualenv_uv() {
+  local candidate
+  if [[ -z "${VIRTUAL_ENV:-}" ]]; then
+    return 1
+  fi
+  for candidate in "$VIRTUAL_ENV/bin/uv" "$VIRTUAL_ENV/Scripts/uv.exe" "$VIRTUAL_ENV/Scripts/uv"; do
+    if [[ -x "$candidate" ]]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+  return 1
+}
+
 # Returns the name of a usable Python interpreter (python3 preferred, python as fallback).
 find_python_cmd() {
   local candidate
@@ -66,6 +82,14 @@ find_python_cmd() {
 
 find_bootstrap_python() {
   local candidate
+  if [[ -n "${VIRTUAL_ENV:-}" ]]; then
+    for candidate in "$VIRTUAL_ENV/bin/python" "$VIRTUAL_ENV/Scripts/python.exe"; do
+      if [[ -x "$candidate" ]] && "$candidate" -m pip --version >/dev/null 2>&1; then
+        printf '%s\n' "$candidate"
+        return 0
+      fi
+    done
+  fi
   for candidate in python3 python /usr/bin/python3 /opt/homebrew/bin/python3 /usr/local/bin/python3; do
     if have_cmd "$candidate" && "$candidate" -m pip --version >/dev/null 2>&1; then
       printf '%s\n' "$candidate"
@@ -75,9 +99,18 @@ find_bootstrap_python() {
   return 1
 }
 
+python_in_virtualenv() {
+  "$1" - <<'PY' >/dev/null 2>&1
+import sys
+raise SystemExit(0 if sys.prefix != getattr(sys, "base_prefix", sys.prefix) or hasattr(sys, "real_prefix") else 1)
+PY
+}
+
 run_uv() {
   if have_cmd uv; then
     uv "$@"
+  elif uv_path="$(find_virtualenv_uv 2>/dev/null)"; then
+    "$uv_path" "$@"
   elif [[ -x "$HOME/.local/bin/uv" ]]; then
     "$HOME/.local/bin/uv" "$@"
   elif uv_path="$(find_user_uv 2>/dev/null)"; then
@@ -95,6 +128,7 @@ run_uv() {
 
 ensure_uv() {
   local bootstrap_python py
+  local uv_requirement="${KEHRNEL_UV_REQUIREMENT:-uv>=0.5}"
 
   if have_cmd uv; then
     return
@@ -113,8 +147,19 @@ ensure_uv() {
     exit 1
   fi
 
-  log "Installing uv via $bootstrap_python -m pip"
-  "$bootstrap_python" -m pip install --user uv
+  if python_in_virtualenv "$bootstrap_python"; then
+    log "Installing uv into the active virtual environment via $bootstrap_python -m pip"
+    "$bootstrap_python" -m pip install --disable-pip-version-check "$uv_requirement"
+  else
+    log "Installing uv for the current user via $bootstrap_python -m pip"
+    "$bootstrap_python" -m pip install --disable-pip-version-check --user "$uv_requirement"
+  fi
+
+  if ! run_uv --version >/dev/null 2>&1; then
+    log "ERROR: uv was installed but is still not runnable."
+    log "Try: python -m pip install -r requirements.txt"
+    exit 1
+  fi
 }
 
 ensure_python() {
@@ -211,13 +256,45 @@ sync_python_deps() {
 
   if ! should_sync_python_deps; then
     log "Python dependencies already up to date"
+    verify_fhir_libs_in_venv
     return
   fi
 
   log "Syncing Python dependencies"
+  # Vendored FHIR libs: explicit editable installs (uv cannot use file: in wheel metadata).
+  if [[ -d src/kehrnel/engine/domains/fhir/libs/fhir-data-generation && -d src/kehrnel/engine/domains/fhir/libs/fhir-search-to-mql ]]; then
+    run_uv pip install --python "$(venv_python)" \
+      -e './src/kehrnel/engine/domains/fhir/libs/fhir-data-generation' \
+      -e './src/kehrnel/engine/domains/fhir/libs/fhir-search-to-mql'
+  else
+    log "Warning: engine/domains/fhir/libs/fhir-* missing; FHIR strategy will not be available"
+  fi
   run_uv pip install --python "$(venv_python)" -e '.[all]'
   current_fingerprint="$(dependency_fingerprint)"
   printf '%s\n' "$current_fingerprint" > "$stamp_file"
+  verify_fhir_libs_in_venv
+}
+
+verify_fhir_libs_in_venv() {
+  # pyproject stamp can be current while vendored FHIR libs were never installed (e.g. after path moves).
+  if "$(venv_python)" -c "import fhir_gen, fhir_search_to_mql" 2>/dev/null; then
+    return 0
+  fi
+  if [[ ! -d src/kehrnel/engine/domains/fhir/libs/fhir-data-generation ]]; then
+    log "Warning: fhir_gen not installed and vendored libs missing under engine/domains/fhir/libs/"
+    return 0
+  fi
+  log "Installing vendored FHIR libraries into .venv (fhir_gen / fhir_search_to_mql)"
+  run_uv pip install --python "$(venv_python)" \
+    -e './src/kehrnel/engine/domains/fhir/libs/fhir-data-generation' \
+    -e './src/kehrnel/engine/domains/fhir/libs/fhir-search-to-mql'
+  run_uv pip install --python "$(venv_python)" -e '.[fhir]'
+  if ! "$(venv_python)" -c "import fhir_gen, fhir_search_to_mql" 2>/dev/null; then
+    log "ERROR: fhir_gen still not importable after install. Run manually:"
+    log "  pip install -e src/kehrnel/engine/domains/fhir/libs/fhir-data-generation -e src/kehrnel/engine/domains/fhir/libs/fhir-search-to-mql"
+    exit 1
+  fi
+  log "FHIR libraries OK"
 }
 
 build_docs_if_needed() {
@@ -318,6 +395,17 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+if have_cmd git && git rev-parse --show-toplevel >/dev/null 2>&1; then
+  current_branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
+  current_commit="$(git rev-parse --short HEAD 2>/dev/null || true)"
+  log "Using startKehrnel $SCRIPT_VERSION from ${current_branch:-unknown}@${current_commit:-unknown}"
+else
+  log "Using startKehrnel $SCRIPT_VERSION"
+fi
+if [[ -n "${VIRTUAL_ENV:-}" ]]; then
+  log "Active virtual environment: $VIRTUAL_ENV"
+fi
 
 if ! find_python_cmd >/dev/null 2>&1; then
   log "Python 3.8+ is required but was not found (tried: python3, python)"

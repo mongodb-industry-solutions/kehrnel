@@ -145,54 +145,29 @@ def test_transform_composition_uses_configured_search_comp_id_field_name(monkeyp
     assert search_doc["composition_uid"] == ObjectId("64b64c2e5f6270b5c2c2c2c2")
 
 
-def test_transform_composition_copies_configured_envelope_fields_after_shortcuts(monkeypatch):
-    flattener = _build_flattener(
+def test_flattener_preserves_sidecar_lineage_for_search_nodes():
+    flattener = _build_flattener()
+
+    slim = flattener._apply_rule(
+        {"copy": ["p", "data.v.df.cs"]},
         {
-            "transform": {
-                "envelope": {
-                    "base": {
-                        "version": "version",
-                        "metrics.config_name": "ops.config_name",
-                    },
-                    "search": {
-                        "template": "source_template",
-                    },
+            "p": "-2:-1:33:24",
+            "pi": [0, 0, 1, -1],
+            "kp": ["data", "items", "value"],
+        },
+        {
+            "v": {
+                "df": {
+                    "cs": "372726002",
                 }
             }
-        }
+        },
     )
 
-    monkeypatch.setattr(
-        flattener,
-        "_compiled_rules_for_template",
-        lambda template_name: [{"_path": (), "_cont": (), "_extra": [], "copy": ["p"]}],
-    )
-    monkeypatch.setattr(flattener, "_rule_matches", lambda *args, **kwargs: True)
-    monkeypatch.setattr(
-        flattener,
-        "_apply_rule",
-        lambda *args, **kwargs: {"p": "1", "data": {"name": {"value": "Example composition"}}},
-    )
-
-    base_doc, search_doc = flattener.transform_composition(
-        {
-            "_id": "comp-1::my-openehr-server::1",
-            "ehr_id": "ehr-1",
-            "composition_version": "1",
-            "time_committed": datetime(2026, 4, 11, 13, 42, 6, tzinfo=timezone.utc),
-            "canonicalJSON": _minimal_composition(),
-            "_source_envelope": {
-                "version": "comp-1::my-openehr-server::1",
-                "template": "test-template-human",
-                "metrics": {"config_name": "CONFIG_1"},
-            },
-        }
-    )
-
-    assert base_doc["version"] == "comp-1::my-openehr-server::1"
-    assert base_doc["ops"]["config_name"] == "CONFIG_1"
-    assert search_doc is not None
-    assert search_doc["source_template"] == "test-template-human"
+    assert slim["p"] == "-2:-1:33:24"
+    assert slim["pi"] == [0, 0, 1, -1]
+    assert slim["kp"] == ["data", "items", "value"]
+    assert slim["data"]["v"]["df"]["cs"] == "372726002"
 
 
 @pytest.mark.asyncio
@@ -232,9 +207,10 @@ async def test_build_query_pipeline_maps_version_commit_time_to_top_level_match_
     )
     assert match_stage["tid"] == "test-template"
     assert match_stage["cn"]["$elemMatch"] == {"p": {"$regex": r"^[^:]+$"}}
-    assert pipeline[1]["$project"]["DataRegistre"] == "$time_c"
-    assert pipeline[1]["$project"]["TemplateId"] == "$tid"
-    assert pipeline[2]["$sort"] == {"DataRegistre": 1}
+    assert pipeline[1]["$sort"] == {"time_c": 1}
+    assert pipeline[2] == {"$limit": 100}
+    assert pipeline[3]["$project"]["DataRegistre"] == "$time_c"
+    assert pipeline[3]["$project"]["TemplateId"] == "$tid"
 
 
 @pytest.mark.asyncio
@@ -302,13 +278,14 @@ async def test_build_query_pipeline_prefers_match_for_cross_patient_template_and
         2026, 4, 11, 0, 0, tzinfo=timezone.utc
     )
     assert match_stage["cn"]["$elemMatch"] == {"p": {"$regex": r"^[^:]+$"}}
-    assert pipeline[1]["$project"]["DataRegistre"] == "$time_c"
-    assert pipeline[2]["$sort"] == {"DataRegistre": -1}
+    assert pipeline[1]["$sort"] == {"time_c": -1}
+    assert pipeline[2] == {"$limit": 100}
+    assert pipeline[3]["$project"]["DataRegistre"] == "$time_c"
 
 
 @pytest.mark.asyncio
-async def test_build_query_pipeline_uses_configured_separator_for_root_path_regex():
-    cfg = normalize_config({"paths": {"separator": ":"}})
+async def test_build_query_pipeline_treats_commit_time_as_implicit_value_path():
+    cfg = normalize_config({})
     ast = {
         "select": {
             "distinct": False,
@@ -316,7 +293,7 @@ async def test_build_query_pipeline_uses_configured_separator_for_root_path_rege
                 "0": {
                     "value": {
                         "type": "dataMatchPath",
-                        "path": "v/commit_audit/time_committed/value",
+                        "path": "v/commit_audit/time_committed",
                     },
                     "alias": "DataRegistre",
                 }
@@ -344,16 +321,36 @@ async def test_build_query_pipeline_uses_configured_separator_for_root_path_rege
                     "path": "c/archetype_details/template_id/value",
                     "operator": "=",
                     "value": "test-template",
-                }
+                },
+                "1": {
+                    "path": "v/commit_audit/time_committed",
+                    "operator": ">=",
+                    "value": "2026-04-11",
+                },
             },
         },
-        "orderBy": {},
+        "orderBy": {
+            "columns": {
+                "0": {
+                    "path": "v/commit_audit/time_committed",
+                    "direction": "DESC",
+                }
+            }
+        },
     }
 
     engine, pipeline, *_ = await build_query_pipeline_from_ast(ast, cfg)
 
     assert engine == "pipeline_builder"
-    assert pipeline[0]["$match"]["cn"]["$elemMatch"] == {"p": {"$regex": r"^[^:]+$"}}
+    match_stage = pipeline[0]["$match"]
+    assert match_stage["tid"] == "test-template"
+    assert match_stage["time_c"]["$gte"] == datetime(
+        2026, 4, 11, 0, 0, tzinfo=timezone.utc
+    )
+    assert "data.commit_audit.time_committed" not in str(match_stage)
+    assert pipeline[1]["$sort"] == {"time_c": -1}
+    assert pipeline[2] == {"$limit": 100}
+    assert pipeline[3]["$project"]["DataRegistre"] == "$time_c"
 
 
 @pytest.mark.asyncio

@@ -1,1 +1,0 @@
-"""FHIR search scaffold."""

@@ -1,0 +1,207 @@
+resource: VisionPrescription
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec VisionPrescription)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/
+#   patient.json, practitioner.json, encounter.json
+#
+# Total parameters: 8 (6 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `patient` and `prescriber` are required Reference fields.
+#   * Top-level scalar `status` queries the FHIR root.
+#   * `datewritten` searches root `dateWritten`.
+
+search_parameters:
+  datewritten:
+    type: date
+    description: "Return prescriptions written on this date"
+    fields:
+      - field: "dateWritten"
+        type: date
+
+  encounter:
+    type: reference
+    description: "Return prescriptions with this encounter identifier"
+    fields:
+      - field: "_search.encounterId"
+        referenceType: id
+      - field: "encounter.reference"
+        referenceType: full
+
+  identifier:
+    type: token
+    description: "Return prescriptions with this external identifier"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  patient:
+    type: reference
+    description: "The identity of a patient to list dispenses for"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "patient.reference"
+        referenceType: full
+
+  prescriber:
+    type: reference
+    description: "Who authorized the vision prescription"
+    fields:
+      - field: "_search.prescriberId"
+        referenceType: id
+      - field: "_search.prescriberType"
+        referenceType: type
+      - field: "prescriber.reference"
+        referenceType: full
+
+  status:
+    type: token
+    description: "The status of the vision prescription"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  patient:
+    source: patient
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: patient.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+
+  prescriber:
+    source: prescriber
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: prescriber.reference
+        target_field: prescriberId
+        datatype: string
+        extractType: id
+      - source_path: prescriber.reference
+        target_field: prescriberType
+        datatype: string
+        extractType: type
+
+  encounter:
+    source: encounter
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: encounter.reference
+        target_field: encounterId
+        datatype: string
+        extractType: id
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - patient
+        reference_type: Patient
+        datatype: array[string]
+      - target_field: Practitioner
+        source_paths:
+          - prescriber
+        reference_type: Practitioner
+        datatype: array[string]
+      - target_field: Encounter
+        source_paths:
+          - encounter
+        reference_type: Encounter
+        datatype: array[string]
+
+compartments:
+  precomputed:
+    - Patient
+    - Practitioner
+    - Encounter
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+  - fields:
+      - "_compartments.Practitioner": 1
+    options:
+      name: idx_compartment_practitioner
+      sparse: true
+  - fields:
+      - "_compartments.Encounter": 1
+    options:
+      name: idx_compartment_encounter
+      sparse: true
+
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+
+  - fields:
+      - "_search.patientId": 1
+    options:
+      name: idx_patient_id
+      sparse: true
+
+  - fields:
+      - "_search.prescriberId": 1
+    options:
+      name: idx_prescriber_id
+      sparse: true
+
+  - fields:
+      - "_search.encounterId": 1
+    options:
+      name: idx_encounter_id
+      sparse: true
+
+  - fields:
+      - "dateWritten": 1
+    options:
+      name: idx_date_written
+      sparse: true
+
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_meta_last_updated

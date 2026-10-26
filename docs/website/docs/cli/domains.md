@@ -19,3 +19,9 @@ Current openEHR actions:
 - `ingest`
 - `map`
 - `identify`
+
+SNOMED CT currently uses the universal runtime and domain API surfaces rather than a dedicated `kehrnel domain snomedct` CLI group:
+
+- strategy ops via `/environments/{env}/run`
+- domain routes under `/api/domains/snomedct/*`
+- strategy pack metadata under `snomedct.mongodb`

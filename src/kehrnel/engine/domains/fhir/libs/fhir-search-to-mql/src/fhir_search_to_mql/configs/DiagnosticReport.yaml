@@ -1,0 +1,514 @@
+resource: DiagnosticReport
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec DiagnosticReport)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/
+#   patient.json, practitioner.json, device.json, encounter.json
+#
+# Total parameters: 19 (17 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `DiagnosticReport.code` is required CodeableConcept (0..1).
+#   * `DiagnosticReport.subject` is Reference (Patient | Group | Device |
+#     Organization | Practitioner | …); `patient` is the Patient/*
+#     shortcut on subject.
+#   * `DiagnosticReport.performer[]` and `resultsInterpreter[]` are
+#     plain Reference[] (not BackboneElement.actor). Only `performer`
+#     links Practitioner/Device compartments per compartment JSON.
+#   * `DiagnosticReport.effective[x]` is polymorphic (dateTime | Period).
+#     `date` uses `effectiveDateTime` and `_search.effectivePeriod` for
+#     interval overlap.
+#   * `conclusion` search targets `conclusionCode[]` (not `conclusion`
+#     markdown).
+#   * `media` search targets `media[].link` (DocumentReference).
+#   * Top-level scalar `status` and `issued` (instant) query root fields.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters
+  # ─────────────────────────────────────────────────────────────
+  based-on:
+    type: reference
+    description: "Reference to the service request"
+    fields:
+      - field: "_search.basedOnIds"
+        referenceType: id
+      - field: "_search.basedOnTypes"
+        referenceType: type
+      - field: "basedOn.reference"
+        referenceType: full
+
+  encounter:
+    type: reference
+    description: "The Encounter when the order was made"
+    fields:
+      - field: "_search.encounterId"
+        referenceType: id
+      - field: "encounter.reference"
+        referenceType: full
+
+  media:
+    type: reference
+    description: "A reference to the image source"
+    fields:
+      - field: "_search.mediaIds"
+        referenceType: id
+      - field: "_search.mediaTypes"
+        referenceType: type
+
+  patient:
+    type: reference
+    description: "The subject of the report if a patient"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  performer:
+    type: reference
+    description: "Who is responsible for the report"
+    fields:
+      - field: "_search.performerIds"
+        referenceType: id
+      - field: "_search.performerTypes"
+        referenceType: type
+      - field: "performer.reference"
+        referenceType: full
+
+  result:
+    type: reference
+    description: "Link to an atomic result (observation resource)"
+    fields:
+      - field: "_search.resultIds"
+        referenceType: id
+      - field: "_search.resultTypes"
+        referenceType: type
+      - field: "result.reference"
+        referenceType: full
+
+  results-interpreter:
+    type: reference
+    description: "Who was the source of the report"
+    fields:
+      - field: "_search.resultsInterpreterIds"
+        referenceType: id
+      - field: "_search.resultsInterpreterTypes"
+        referenceType: type
+      - field: "resultsInterpreter.reference"
+        referenceType: full
+
+  specimen:
+    type: reference
+    description: "The specimen details"
+    fields:
+      - field: "_search.specimenIds"
+        referenceType: id
+      - field: "_search.specimenTypes"
+        referenceType: type
+      - field: "specimen.reference"
+        referenceType: full
+
+  study:
+    type: reference
+    description: "Studies associated with the diagnostic report"
+    fields:
+      - field: "_search.studyIds"
+        referenceType: id
+      - field: "_search.studyTypes"
+        referenceType: type
+
+  subject:
+    type: reference
+    description: "The subject of the report"
+    fields:
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "_search.subjectType"
+        referenceType: type
+      - field: "subject.reference"
+        referenceType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters
+  # ─────────────────────────────────────────────────────────────
+  category:
+    type: token
+    description: "Which diagnostic discipline/department created the report"
+    fields:
+      - field: "_search.category_systemCode"
+        tokenType: systemCode
+      - field: "_search.category_codes"
+        tokenType: code
+
+  code:
+    type: token
+    description: "The code for the report (as opposed to atomic result codes)"
+    fields:
+      - field: "_search.code_systemCode"
+        tokenType: systemCode
+      - field: "_search.code_codes"
+        tokenType: code
+
+  conclusion:
+    type: token
+    description: "A coded conclusion (interpretation/impression) on the report"
+    fields:
+      - field: "_search.conclusionCode_systemCode"
+        tokenType: systemCode
+      - field: "_search.conclusionCode_codes"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: "An identifier for the report"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  status:
+    type: token
+    description: "registered | partial | preliminary | final | amended | corrected | appended | cancelled | entered-in-error | unknown"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters
+  # ─────────────────────────────────────────────────────────────
+  date:
+    type: date
+    description: "The clinically relevant time of the report"
+    fields:
+      - field: "effectiveDateTime"
+        type: date
+      - field: "_search.effectivePeriod"
+        type: period
+
+  issued:
+    type: date
+    description: "When the report was issued"
+    fields:
+      - field: "issued"
+        type: date
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+# Denormalization Configuration
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  category:
+    source: category
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: category[*].coding[*].code
+        target_field: category_codes
+        datatype: array[string]
+      - source_path: category[*].coding[*]
+        target_field: category_systemCode
+        datatype: array[string]
+
+  code:
+    source: code
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code.coding[*].code
+        target_field: code_codes
+        datatype: array[string]
+      - source_path: code.coding[*]
+        target_field: code_systemCode
+        datatype: array[string]
+
+  conclusion_code:
+    source: conclusionCode
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: conclusionCode[*].coding[*].code
+        target_field: conclusionCode_codes
+        datatype: array[string]
+      - source_path: conclusionCode[*].coding[*]
+        target_field: conclusionCode_systemCode
+        datatype: array[string]
+
+  subject:
+    source: subject
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: subject.reference
+        target_field: subjectId
+        datatype: string
+        extractType: id
+      - source_path: subject.reference
+        target_field: subjectType
+        datatype: string
+        extractType: type
+      - source_path: subject.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+        filterType: Patient
+        comment: "Patient/* subject only — powers `patient` search parameter"
+
+  encounter:
+    source: encounter
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: encounter.reference
+        target_field: encounterId
+        datatype: string
+        extractType: id
+
+  based_on:
+    source: basedOn
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: basedOn[*].reference
+        target_field: basedOnIds
+        datatype: array[string]
+        extractType: id
+      - source_path: basedOn[*].reference
+        target_field: basedOnTypes
+        datatype: array[string]
+        extractType: type
+
+  performer:
+    source: performer
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: performer[*].reference
+        target_field: performerIds
+        datatype: array[string]
+        extractType: id
+      - source_path: performer[*].reference
+        target_field: performerTypes
+        datatype: array[string]
+        extractType: type
+
+  results_interpreter:
+    source: resultsInterpreter
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: resultsInterpreter[*].reference
+        target_field: resultsInterpreterIds
+        datatype: array[string]
+        extractType: id
+      - source_path: resultsInterpreter[*].reference
+        target_field: resultsInterpreterTypes
+        datatype: array[string]
+        extractType: type
+
+  result:
+    source: result
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: result[*].reference
+        target_field: resultIds
+        datatype: array[string]
+        extractType: id
+      - source_path: result[*].reference
+        target_field: resultTypes
+        datatype: array[string]
+        extractType: type
+
+  specimen:
+    source: specimen
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: specimen[*].reference
+        target_field: specimenIds
+        datatype: array[string]
+        extractType: id
+      - source_path: specimen[*].reference
+        target_field: specimenTypes
+        datatype: array[string]
+        extractType: type
+
+  study:
+    source: study
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: study[*].reference
+        target_field: studyIds
+        datatype: array[string]
+        extractType: id
+      - source_path: study[*].reference
+        target_field: studyTypes
+        datatype: array[string]
+        extractType: type
+
+  media:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: media[*].link.reference
+        target_field: mediaIds
+        datatype: array[string]
+        extractType: id
+      - source_path: media[*].link.reference
+        target_field: mediaTypes
+        datatype: array[string]
+        extractType: type
+
+  effective_period:
+    source: effectivePeriod
+    target: _search
+    extractor: PeriodExtractor
+    field_mappings:
+      - source_path: start
+        target_field: effectivePeriod
+        datatype: object
+        comment: "Nested Period for `date` overlap queries"
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - subject
+          - patient
+        reference_type: Patient
+        datatype: array[string]
+        comment: "Patient compartment (patient.json linking params subject, patient)"
+      - target_field: Practitioner
+        source_paths:
+          - performer
+        reference_type: Practitioner
+        datatype: array[string]
+        comment: |
+          Practitioner compartment — `performer` only (not
+          results-interpreter per practitioner.json).
+      - target_field: Device
+        source_paths:
+          - performer
+        reference_type: Device
+        datatype: array[string]
+        comment: "Device compartment (performer where Device/*)"
+      - target_field: Encounter
+        source_paths:
+          - encounter
+        reference_type: Encounter
+        datatype: array[string]
+        comment: "Encounter compartment (encounter linking param)"
+
+compartments:
+  precomputed:
+    - Patient
+    - Practitioner
+    - Device
+    - Encounter
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+  - fields:
+      - "_compartments.Practitioner": 1
+    options:
+      name: idx_compartment_practitioner
+      sparse: true
+  - fields:
+      - "_compartments.Device": 1
+    options:
+      name: idx_compartment_device
+      sparse: true
+  - fields:
+      - "_compartments.Encounter": 1
+    options:
+      name: idx_compartment_encounter
+      sparse: true
+
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+
+  - fields:
+      - "_search.subjectId": 1
+    options:
+      name: idx_subject_id
+      sparse: true
+
+  - fields:
+      - "_search.encounterId": 1
+    options:
+      name: idx_encounter_id
+      sparse: true
+
+  - fields:
+      - "effectiveDateTime": 1
+    options:
+      name: idx_effective_datetime
+      sparse: true
+
+  - fields:
+      - "_search.effectivePeriod.start": 1
+      - "_search.effectivePeriod.end": 1
+    options:
+      name: idx_effective_period
+      sparse: true
+
+  - fields:
+      - "issued": 1
+    options:
+      name: idx_issued
+      sparse: true
+
+  - fields:
+      - "_search.identifier_values": 1
+    options:
+      name: idx_identifier_values
+      sparse: true
+
+  - fields:
+      - "meta.lastUpdated": 1
+    options:
+      name: idx_meta_last_updated
+      sparse: true

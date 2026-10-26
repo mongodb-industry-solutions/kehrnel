@@ -29,6 +29,14 @@ class ActivationRegistry:
     def activate(self, activation: EnvironmentActivation, reason: str = "activate") -> EnvironmentActivation:
         raise NotImplementedError
 
+    def update_activation_fields(
+        self,
+        env_id: str,
+        domain: str,
+        **fields: Any,
+    ) -> Optional[EnvironmentActivation]:
+        raise NotImplementedError
+
     def get_activation(self, env_id: str, domain: str | None = None) -> Optional[EnvironmentActivation]:
         raise NotImplementedError
 
@@ -184,6 +192,22 @@ class FileActivationRegistry(ActivationRegistry):
         env_record.updated_at = getattr(activation, "updated_at", None) or getattr(activation, "activated_at", None) or datetime.utcnow().isoformat()
         self._save()
         return activation
+
+    def update_activation_fields(
+        self,
+        env_id: str,
+        domain: str,
+        **fields: Any,
+    ) -> Optional[EnvironmentActivation]:
+        env_map = self.activations.get(env_id) or {}
+        domain_key = str(domain).lower()
+        existing = env_map.get(domain_key)
+        if not existing:
+            return None
+        for key, value in fields.items():
+            setattr(existing, key, value)
+        self._save()
+        return existing
 
     def get_activation(self, env_id: str, domain: str | None = None) -> Optional[EnvironmentActivation]:
         env_map = self.activations.get(env_id) or {}

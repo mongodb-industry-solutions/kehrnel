@@ -1,5 +1,5 @@
-from kehrnel.core.runtime import StrategyRuntime
-from kehrnel.core.registry import FileActivationRegistry
+from kehrnel.engine.core.runtime import StrategyRuntime
+from kehrnel.engine.core.registry import FileActivationRegistry
 from pathlib import Path
 
 

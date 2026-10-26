@@ -1,0 +1,545 @@
+resource: Group
+fhir_version: R5
+
+# Definition: https://www.hl7.org/fhir/group-definitions.html
+# Search Parameters: https://www.hl7.org/fhir/group-search.html
+# Compartments containing Group:
+#   * Patient — via `member` linking parameter
+#     (https://www.hl7.org/fhir/compartmentdefinition-patient.html)
+#   * Practitioner — via `managing-entity` linking parameter
+#     (https://www.hl7.org/fhir/compartmentdefinition-practitioner.html)
+#   * Device — via `member` AND `managing-entity` linking parameters
+#     (https://www.hl7.org/fhir/compartmentdefinition-device.html).
+#     Note that the FHIR R5 `Group.managingEntity` only targets
+#     Organization / RelatedPerson / Practitioner / PractitionerRole
+#     so the Device compartment's `managing-entity` link will rarely
+#     yield matches; we still wire the source path so the
+#     extractor's `reference_type` filter handles it cleanly.
+# FHIR R5 Group search parameter table validated 2026-05.
+#
+# Total parameters: 13 (11 resource-specific per R5 §8.3.14 + 2 common).
+#
+# Resource-specific search parameters (per R5 §8.3.14):
+#   characteristic (token), characteristic-reference (reference),
+#   characteristic-value (composite, deferred — see §Composites note),
+#   code (token), exclude (token), identifier (token),
+#   managing-entity (reference), member (reference),
+#   membership (token), name (string), type (token),
+#   value (token, deferred — see §Composites note).
+#
+# Composites note: `characteristic-value` is a FHIR composite parameter
+# that pairs `characteristic` (code) with `value` (CodeableConcept | bool).
+# The standalone `value` parameter searches only the CodeableConcept and
+# boolean variants of `characteristic.value[x]`, NOT Quantity / Range /
+# Reference. Our converter supports composite dispatch (see Observation's
+# combo-code family), but Group's composite pairs against a polymorphic
+# `value[x]` choice that doesn't decompose into separate denormalized
+# columns the way Observation's quantity-pair composites do. They're
+# omitted from this config until a downstream consumer actually needs
+# them — when the time comes, mirror Observation.yaml's composite stanza
+# and add a `_search.groupComposite_*` projection. The standalone
+# `value` parameter is also deferred (it's only meaningful when paired
+# with `characteristic` via the composite anyway — searching all values
+# across all characteristics rarely matches a real use case).
+#
+# R5 structural notes worth calling out:
+#   * `Group.code` is `CodeableConcept` — the kind of *resources* the
+#     group contains (e.g. SNOMED code for "diabetic patients"). Do
+#     NOT confuse with `Group.type` (the resource type code).
+#   * `Group.type` is a top-level scalar code with R5 fixed bindings:
+#     `person | animal | practitioner | device | careteam |
+#      healthcareservice | location | organization | relatedperson |
+#      specimen` (R5 broadened R4's narrower set).
+#   * `Group.membership` is a top-level scalar code:
+#     `definitional | enumerated`.
+#   * `Group.characteristic` is `BackboneElement[]` of
+#     `{code, value[x], exclude, period}` where `value[x]` is one of
+#     `CodeableConcept | boolean | Quantity | Range | Reference`.
+#   * `Group.member` is `BackboneElement[]` of
+#     `{entity, period, inactive}` where `entity` is a `Reference` to
+#     ANY of: HealthcareService, CareTeam, Device, Organization,
+#     RelatedPerson, PractitionerRole, Group, Practitioner, Specimen,
+#     Location, Patient (eleven target types — the broadest reference
+#     in any of our shipped configs).
+#   * `Group.managingEntity` is a single `Reference` to one of:
+#     Organization, RelatedPerson, Practitioner, PractitionerRole.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # String Parameters (1 — name)
+  #
+  # Per FHIR R5 §3.1.1.5.3: default = case-insensitive starts-with
+  # against the `_lower` companion; `:exact` = case-sensitive
+  # equality against the case-preserved field. Same contract every
+  # other shipped config uses for string parameters.
+  # ─────────────────────────────────────────────────────────────
+  name:
+    type: string
+    description: "A portion of the Group's name (Group.name)"
+    fields:
+      default:
+        - field: "_search.name_lower"
+          query_type: range
+      exact:
+        - field: "_search.name"
+
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters (3 — characteristic-reference,
+  # managing-entity, member)
+  # ─────────────────────────────────────────────────────────────
+  characteristic-reference:
+    type: reference
+    description: |
+      An entity referenced in a characteristic
+      (Group.characteristic.value.ofType(Reference)). Targets the
+      Reference variant of the polymorphic `value[x]` — the
+      CodeableConcept / boolean variants are searched via the
+      standalone `value` parameter (deferred).
+    fields:
+      - field: "_search.characteristicRefId"
+        referenceType: id
+      - field: "_search.characteristicRefType"
+        referenceType: type
+
+  managing-entity:
+    type: reference
+    description: |
+      Entity that is the custodian of the Group's definition
+      (Group.managingEntity). Targets Organization, RelatedPerson,
+      PractitionerRole, or Practitioner per R5.
+    fields:
+      - field: "_search.managingEntityId"
+        referenceType: id
+      - field: "_search.managingEntityType"
+        referenceType: type
+      - field: "managingEntity.reference"
+        referenceType: full
+
+  member:
+    type: reference
+    description: |
+      Reference to the group member (Group.member.entity). Targets
+      ANY of HealthcareService, CareTeam, Device, Organization,
+      RelatedPerson, PractitionerRole, Group, Practitioner, Specimen,
+      Location, Patient — the broadest reference in any shipped config.
+    fields:
+      - field: "_search.memberIds"
+        referenceType: id
+      - field: "_search.memberTypes"
+        referenceType: type
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters (6 + `_id` listed under common at bottom)
+  # ─────────────────────────────────────────────────────────────
+  characteristic:
+    type: token
+    description: |
+      Kind of characteristic (Group.characteristic.code — a
+      CodeableConcept identifying the trait). Often paired with the
+      composite `characteristic-value` parameter, which is deferred
+      in this config.
+    fields:
+      - field: "_search.characteristic_systemCode"
+        tokenType: systemCode
+      - field: "_search.characteristic_codes"
+        tokenType: code
+
+  code:
+    type: token
+    description: |
+      The kind of resources contained (Group.code — a CodeableConcept
+      describing what the group is *of*, e.g. a SNOMED code for
+      "diabetic patients"). Distinct from `type` which is the FHIR
+      resource type code.
+    fields:
+      - field: "_search.code_systemCode"
+        tokenType: systemCode
+      - field: "_search.code_codes"
+        tokenType: code
+
+  exclude:
+    type: token
+    description: |
+      Group includes or excludes (Group.characteristic.exclude — a
+      boolean per characteristic entry). Searched as a token over the
+      native boolean; only the bare-value form is meaningful (no
+      system). `tokenType: boolean` triggers the converter's
+      "true"/"false" → ``True``/``False`` coercion so the query
+      operand matches the BSON-typed booleans the denormalizer writes
+      under ``_search.exclude_values`` (same pattern Patient.yaml
+      uses for ``active``).
+    fields:
+      - field: "_search.exclude_values"
+        tokenType: boolean
+
+  identifier:
+    type: token
+    description: "Unique id (Group.identifier)"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  membership:
+    type: token
+    description: |
+      Definitional or enumerated group (Group.membership). Top-level
+      scalar code with R5 fixed bindings:
+      `definitional | enumerated`.
+    fields:
+      - field: "membership"
+        tokenType: code
+
+  type:
+    type: token
+    description: |
+      The type of resources the group contains (Group.type). Top-level
+      scalar code with R5 fixed bindings: `person | animal |
+      practitioner | device | careteam | healthcareservice | location
+      | organization | relatedperson | specimen`.
+    fields:
+      - field: "type"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters (2 — applied to every FHIR resource)
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+
+# Denormalization Configuration
+# Only fields explicitly listed here are denormalized (100% config-driven).
+# The denormalizer writes everything to `_search.*` (and `_compartments.*`
+# for the compartment_membership rule); the original FHIR resource fields
+# are left intact so resource purity is preserved. Top-level scalars
+# (`type`, `membership`) are queried directly — no denormalization needed.
+denormalization:
+  # FHIR R5: `Group.identifier` (Identifier[]). Standard token
+  # denormalization — both bare values and `system|value` pairs so
+  # the search supports the `system|code` modifier.
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+        comment: "Bare identifier values (powers `identifier=<value>`)"
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+        comment: "system|value pairs (powers `identifier=<system>|<value>`)"
+
+  # FHIR R5: `Group.code` is a `CodeableConcept` — the kind of resources
+  # the group contains (e.g. a SNOMED code for "diabetic patients").
+  # Pre-resolved mode feeds the dict directly to CodeableConceptExtractor.
+  code:
+    source: code
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code.coding[*].code
+        target_field: code_codes
+        datatype: array[string]
+        comment: "Codes from Group.code.coding (powers `code=<code>`)"
+      - source_path: code.coding[*]
+        target_field: code_systemCode
+        datatype: array[string]
+        comment: "system|code pairs for the code parameter"
+
+  # FHIR R5: `Group.characteristic[*].code` is a `CodeableConcept` per
+  # characteristic entry. `$resource` mode + path resolution unions
+  # codings across every characteristic entry — same pattern
+  # PractitionerRole uses for the nested `code`/`specialty` arrays.
+  characteristic:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: characteristic[*].code.coding[*].code
+        target_field: characteristic_codes
+        datatype: array[string]
+        comment: "Characteristic codes (powers `characteristic=<code>`)"
+      - source_path: characteristic[*].code.coding[*]
+        target_field: characteristic_systemCode
+        datatype: array[string]
+        comment: "system|code pairs for the characteristic parameter"
+
+  # FHIR R5: `Group.characteristic[*].exclude` is a boolean per
+  # characteristic entry. The `exclude` token search compares against
+  # the stringified boolean — DirectFieldExtractor in `$resource`
+  # mode walks `characteristic[*].exclude` and writes an
+  # `array[boolean]` to `_search.exclude_values`. The token converter
+  # accepts string literals "true" / "false" so we keep the values as
+  # native bools (BSON-typed) rather than stringifying — MongoDB will
+  # match `_search.exclude_values: true` against the exact element.
+  exclude:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: characteristic[*].exclude
+        target_field: exclude_values
+        datatype: array[boolean]
+        comment: "Per-characteristic boolean exclude flags (powers `exclude=true|false`)"
+
+  # FHIR R5: `Group.name` is a top-level string. Same case-preserved
+  # + lowercased pair every other shipped string parameter uses.
+  name:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: name
+        target_field: name
+        datatype: string
+        comment: "Group name (case-preserved for `:exact`)"
+      - source_path: name
+        target_field: name_lower
+        datatype: string
+        normalize: lowercase
+        comment: "Group name lowercased for default starts-with search"
+
+  # ─────────────────────────────────────────────────────────────
+  # Reference denormalization
+  # ─────────────────────────────────────────────────────────────
+
+  # FHIR R5: `Group.member[*].entity` is a Reference targeting any of
+  # 11 resource types. ReferenceExtractor in pre-resolved mode walks
+  # the array and projects bare ids and types — the `member` search
+  # parameter then queries `_search.memberIds`.
+  member:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: member[*].entity.reference
+        target_field: memberIds
+        datatype: array[string]
+        extractType: id
+        comment: "Bare IDs from member[*].entity references (11 possible target types)"
+      - source_path: member[*].entity.reference
+        target_field: memberTypes
+        datatype: array[string]
+        extractType: type
+        comment: "Resource types from member[*].entity references"
+
+  # FHIR R5: `Group.managingEntity` is a single Reference targeting
+  # Organization, RelatedPerson, Practitioner, or PractitionerRole.
+  managingEntity:
+    source: managingEntity
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: managingEntity.reference
+        target_field: managingEntityId
+        datatype: string
+        extractType: id
+        comment: "Bare ID from managingEntity reference"
+      - source_path: managingEntity.reference
+        target_field: managingEntityType
+        datatype: string
+        extractType: type
+        comment: "Resource type from managingEntity reference"
+
+  # FHIR R5: `Group.characteristic[*].value.ofType(Reference)` — the
+  # Reference variant of the polymorphic `value[x]`. ReferenceExtractor
+  # in `$resource` mode resolves the path; entries where `value[x]` is
+  # NOT a Reference (it's a CodeableConcept / boolean / Quantity /
+  # Range) produce no `.reference` resolution and are silently
+  # skipped, which is the correct behavior — non-Reference variants
+  # are searched via the deferred `value` parameter.
+  characteristicReference:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: characteristic[*].valueReference.reference
+        target_field: characteristicRefId
+        datatype: array[string]
+        extractType: id
+        comment: "Bare IDs from characteristic[*].valueReference"
+      - source_path: characteristic[*].valueReference.reference
+        target_field: characteristicRefType
+        datatype: array[string]
+        extractType: type
+        comment: "Resource types from characteristic[*].valueReference"
+
+  # ---------------------------------------------------------------------
+  # Compartment membership precompute (Hybrid Approach 3 from
+  # analysis_documents/FHIR_TO_MQL_COMPARTMENT.md). Group is a member
+  # of THREE compartments per R5:
+  #   * Patient — via `member` (Group.member.entity filtered to Patient/*)
+  #   * Practitioner — via `managing-entity`
+  #     (Group.managingEntity filtered to Practitioner/*)
+  #   * Device — via `member` and `managing-entity`
+  #     (R5's Group.managingEntity targets don't include Device, so
+  #     the second source path won't yield matches in practice; we
+  #     still wire it so the extractor's reference_type filter is
+  #     authoritative if the spec ever broadens.)
+  # The CompartmentMembershipExtractor's `reference_type` filter
+  # ensures only references to the requested compartment type land
+  # in the bucket — non-Patient member.entity refs (Device, CareTeam,
+  # Specimen, …) are silently dropped from `_compartments.Patient`.
+  # ---------------------------------------------------------------------
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - member[*].entity
+        reference_type: Patient
+        datatype: array[string]
+        comment: "Patient compartment IDs (Group.member.entity refs filtered to Patient/*)"
+      - target_field: Practitioner
+        source_paths:
+          - managingEntity
+        reference_type: Practitioner
+        datatype: array[string]
+        comment: "Practitioner compartment IDs (Group.managingEntity refs filtered to Practitioner/*)"
+      - target_field: Device
+        source_paths:
+          - member[*].entity
+          - managingEntity
+        reference_type: Device
+        datatype: array[string]
+        comment: "Device compartment IDs (Group.member.entity AND Group.managingEntity refs filtered to Device/*)"
+
+# Compartment fast-path opt-in. The CompartmentResolver consults this
+# list and emits the precomputed `_compartments.<Type>` query for any
+# Patient / Practitioner / Device compartment scope (instead of the
+# dynamic `$or` over linking parameters). All three are precomputed
+# here because all three rely on populated `_compartments.*` buckets.
+compartments:
+  precomputed:
+    - Patient
+    - Practitioner
+    - Device
+
+# Recommended MongoDB Indexes
+indexes:
+  # Compartment fast-path indexes (Hybrid Approach 3). Single-field
+  # indexed lookups powering Group/<id>/Patient (etc.) compartment
+  # queries through the resolver's precomputed branch.
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+  - fields:
+      - "_compartments.Practitioner": 1
+    options:
+      name: idx_compartment_practitioner
+      sparse: true
+  - fields:
+      - "_compartments.Device": 1
+    options:
+      name: idx_compartment_device
+      sparse: true
+
+  # Top-level scalars (queried directly, not via `_search.*`)
+  - fields:
+      - "type": 1
+    options:
+      name: idx_type
+  - fields:
+      - "membership": 1
+    options:
+      name: idx_membership
+
+  - fields:
+      - "_search.identifier_systemCode": 1
+    options:
+      name: idx_identifier_system_code
+  - fields:
+      - "_search.identifier_values": 1
+    options:
+      name: idx_identifier_values
+
+  - fields:
+      - "_search.code_systemCode": 1
+    options:
+      name: idx_code_system_code
+      sparse: true
+  - fields:
+      - "_search.code_codes": 1
+    options:
+      name: idx_code_codes
+      sparse: true
+
+  - fields:
+      - "_search.characteristic_systemCode": 1
+    options:
+      name: idx_characteristic_system_code
+      sparse: true
+  - fields:
+      - "_search.characteristic_codes": 1
+    options:
+      name: idx_characteristic_codes
+      sparse: true
+
+  - fields:
+      - "_search.exclude_values": 1
+    options:
+      name: idx_exclude_values
+      sparse: true
+
+  - fields:
+      - "_search.name_lower": 1
+    options:
+      name: idx_name_lower
+      sparse: true
+
+  - fields:
+      - "_search.memberIds": 1
+    options:
+      name: idx_member_ids
+      sparse: true
+  - fields:
+      - "_search.memberTypes": 1
+    options:
+      name: idx_member_types
+      sparse: true
+
+  - fields:
+      - "_search.managingEntityId": 1
+    options:
+      name: idx_managing_entity_id
+      sparse: true
+  - fields:
+      - "_search.managingEntityType": 1
+    options:
+      name: idx_managing_entity_type
+      sparse: true
+
+  - fields:
+      - "_search.characteristicRefId": 1
+    options:
+      name: idx_characteristic_ref_id
+      sparse: true
+  - fields:
+      - "_search.characteristicRefType": 1
+    options:
+      name: idx_characteristic_ref_type
+      sparse: true
+
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_last_updated

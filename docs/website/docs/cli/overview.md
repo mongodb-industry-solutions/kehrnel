@@ -51,7 +51,21 @@ kehrnel resource use --source src --sink dst
 kehrnel op capabilities --env dev
 kehrnel run ensure_dictionaries --env dev --domain openehr
 kehrnel strategy build-search-index --env dev --domain openehr --strategy openehr.rps_dual --out .kehrnel/search-index.json
+
+# Compile and execute AQL from a file
+kehrnel core env compile-query --env dev --domain openehr --aql query.aql --debug
+kehrnel core env query --env dev --domain openehr --aql query.aql
+
+# Or execute a short AQL statement directly
+kehrnel core env query \
+  --env dev \
+  --domain openehr \
+  --aql-text "SELECT e/ehr_id/value AS ehr_id FROM EHR e LIMIT 5"
 ```
+
+`kehrnel op capabilities --env dev` lists both the standard runtime
+capabilities and strategy-specific operations. Each row includes a copy-ready
+CLI command, so the capability inventory is also an execution guide.
 
 ## Getting Help
 
@@ -82,3 +96,5 @@ See [Configuration](/docs/getting-started/configuration) for the complete list.
 ## Canonical Inventory
 
 For exhaustive command and endpoint inventory generated from `pyproject.toml` and OpenAPI, see:
+
+- [Canonical CLI + API Inventory (generated)](https://github.com/mongodb-industry-solutions/kehrnel/blob/main/docs/cli-api-reference.md)

@@ -1,0 +1,138 @@
+resource: EnrollmentRequest
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec EnrollmentRequest)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/patient.json,
+#   practitioner.json, relatedperson.json (linking param subject)
+#
+# Total parameters: 6 (4 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `patient` and `subject` both search `candidate` (Patient reference).
+#   * Top-level scalar `status` queries the FHIR root.
+
+search_parameters:
+  identifier:
+    type: token
+    description: "The business identifier of the EnrollmentRequest"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  patient:
+    type: reference
+    description: "The subject being enrolled (Patient candidate)"
+    fields:
+      - field: "_search.candidateId"
+        referenceType: id
+      - field: "candidate.reference"
+        referenceType: full
+
+  subject:
+    type: reference
+    description: "The subject being enrolled"
+    fields:
+      - field: "_search.candidateId"
+        referenceType: id
+      - field: "_search.candidateType"
+        referenceType: type
+      - field: "candidate.reference"
+        referenceType: full
+
+  status:
+    type: token
+    description: "The status of the enrollment request"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  candidate:
+    source: candidate
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: candidate.reference
+        target_field: candidateId
+        datatype: string
+        extractType: id
+      - source_path: candidate.reference
+        target_field: candidateType
+        datatype: string
+        extractType: type
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - candidate
+          - subject
+        reference_type: Patient
+        datatype: array[string]
+        comment: "Patient compartment (patient.json linking param subject)"
+
+compartments:
+  precomputed:
+    - Patient
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+
+  - fields:
+      - "_search.candidateId": 1
+    options:
+      name: idx_candidate_id
+      sparse: true
+
+  - fields:
+      - "_search.identifier_systemCode": 1
+    options:
+      name: idx_identifier_system_code
+      sparse: true
+
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_meta_last_updated

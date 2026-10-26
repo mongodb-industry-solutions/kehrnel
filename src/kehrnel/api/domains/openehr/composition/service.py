@@ -50,6 +50,7 @@ from kehrnel.api.domains.openehr.ehr.service import retrieve_ehr_by_id
 from kehrnel.api.domains.openehr.ehr.repository import find_ehr_by_id
 
 from kehrnel.api.domains.openehr.contribution.repository import (
+    find_contribution_by_version_uid,
     find_deletion_contribution_for_version, 
     find_deletion_contributions_for_versions,
     find_latest_contribution_by_vo_uid,
@@ -1137,3 +1138,72 @@ async def retrieve_composition_version(
     )
 
     return response
+
+
+async def retrieve_composition_version_by_uid(
+    ehr_id: str,
+    versioned_object_uid: str,
+    version_uid: str,
+    db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames,
+) -> OriginalVersionResponse:
+    """
+    Retrieves a specific version of a composition by its full version UID.
+
+    Args:
+        ehr_id: The ID of the parent EHR.
+        versioned_object_uid: The base ID of the composition.
+        version_uid: The full, unique version identifier.
+        db: The database session.
+        config: Active composition collection names.
+
+    Returns:
+        An OriginalVersionResponse object containing the version data and audit.
+
+    Raises:
+        HTTPException: If the requested version is missing or does not belong to
+            the specified EHR/versioned composition.
+    """
+    if not version_uid.startswith(f"{versioned_object_uid}::"):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Composition parameters are not matching.",
+        )
+
+    contribution_doc = await find_contribution_by_version_uid(version_uid=version_uid, db=db)
+
+    if not contribution_doc or contribution_doc.get("ehr_id") != ehr_id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Version '{version_uid}' not found in EHR '{ehr_id}'.",
+        )
+
+    version_info = next(
+        (v for v in contribution_doc.get("versions", []) if v.get("uid", {}).get("value") == version_uid),
+        None,
+    )
+    if not version_info:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Inconsistent data: Contribution found for version '{version_uid}', but the version data is missing.",
+        )
+
+    preceding_uid_val = version_info.get("preceding_version_uid")
+
+    composition_doc = await find_composition_by_uid(version_uid, db, config)
+    if not composition_doc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Inconsistent data: Version referenced in contribution not found.",
+        )
+
+    return OriginalVersionResponse(
+        uid=ObjectVersionID.model_validate(version_info["uid"]),
+        preceding_version_uid=ObjectVersionID(value=preceding_uid_val) if preceding_uid_val else None,
+        data=composition_doc["data"],
+        commit_audit=AuditDetails.model_validate(contribution_doc["audit"]),
+        contribution=ObjectRef(
+            id=HierObjectID(value=contribution_doc["_id"]),
+            type="CONTRIBUTION",
+        ),
+    )

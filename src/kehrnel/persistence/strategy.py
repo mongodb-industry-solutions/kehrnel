@@ -38,6 +38,7 @@ class FieldMapping(BaseModel):
     nodes: Optional[str] = None
     data: Optional[str] = None
     path: Optional[str] = None
+    path_instance: Optional[str] = None
     archetype_path: Optional[str] = None
     ancestors: Optional[str] = None
     key_path: Optional[str] = None

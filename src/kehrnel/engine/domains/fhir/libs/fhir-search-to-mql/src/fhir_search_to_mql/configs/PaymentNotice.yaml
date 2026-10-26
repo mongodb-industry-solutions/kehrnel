@@ -1,0 +1,210 @@
+resource: PaymentNotice
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec PaymentNotice)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/
+#   practitioner.json (lists `provider` — R5 field/search param is `reporter`;
+#   Practitioner compartment queries use the dynamic resolver)
+#
+# Total parameters: 9 (7 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `amount` and `recipient` are required; not searchable in R5 index.
+#   * `request` and `response` are single Reference (0..1).
+#   * Top-level scalar `status` and `created` query the FHIR root.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters
+  # ─────────────────────────────────────────────────────────────
+  reporter:
+    type: reference
+    description: "The reference to the reporter"
+    fields:
+      - field: "_search.reporterId"
+        referenceType: id
+      - field: "_search.reporterType"
+        referenceType: type
+      - field: "reporter.reference"
+        referenceType: full
+
+  request:
+    type: reference
+    description: "The Claim"
+    fields:
+      - field: "_search.requestId"
+        referenceType: id
+      - field: "_search.requestType"
+        referenceType: type
+      - field: "request.reference"
+        referenceType: full
+
+  response:
+    type: reference
+    description: "The ClaimResponse"
+    fields:
+      - field: "_search.responseId"
+        referenceType: id
+      - field: "_search.responseType"
+        referenceType: type
+      - field: "response.reference"
+        referenceType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters
+  # ─────────────────────────────────────────────────────────────
+  identifier:
+    type: token
+    description: "The business identifier of the notice"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  payment-status:
+    type: token
+    description: "The type of payment notice"
+    fields:
+      - field: "_search.paymentStatus_systemCode"
+        tokenType: systemCode
+      - field: "_search.paymentStatus_codes"
+        tokenType: code
+
+  status:
+    type: token
+    description: "active | cancelled | draft | entered-in-error"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters
+  # ─────────────────────────────────────────────────────────────
+  created:
+    type: date
+    description: "Creation date for the notice"
+    fields:
+      - field: "created"
+        type: date
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  payment_status:
+    source: paymentStatus
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: paymentStatus.coding[*].code
+        target_field: paymentStatus_codes
+        datatype: array[string]
+      - source_path: paymentStatus.coding[*]
+        target_field: paymentStatus_systemCode
+        datatype: array[string]
+
+  reporter:
+    source: reporter
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: reporter.reference
+        target_field: reporterId
+        datatype: string
+        extractType: id
+      - source_path: reporter.reference
+        target_field: reporterType
+        datatype: string
+        extractType: type
+
+  request:
+    source: request
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: request.reference
+        target_field: requestId
+        datatype: string
+        extractType: id
+      - source_path: request.reference
+        target_field: requestType
+        datatype: string
+        extractType: type
+
+  response:
+    source: response
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: response.reference
+        target_field: responseId
+        datatype: string
+        extractType: id
+      - source_path: response.reference
+        target_field: responseType
+        datatype: string
+        extractType: type
+
+indexes:
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+  - fields:
+      - "_search.reporterId": 1
+    options:
+      name: idx_reporter_id
+      sparse: true
+  - fields:
+      - "_search.requestId": 1
+    options:
+      name: idx_request_id
+      sparse: true
+  - fields:
+      - "_search.responseId": 1
+    options:
+      name: idx_response_id
+      sparse: true
+  - fields:
+      - "_search.paymentStatus_codes": 1
+    options:
+      name: idx_payment_status_codes
+      sparse: true
+  - fields:
+      - "created": 1
+    options:
+      name: idx_created
+      sparse: true
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_meta_last_updated

@@ -1,0 +1,22 @@
+{
+  "name" : "hl7.fhir.r6.search",
+  "version" : "6.0.0-ballot4",
+  "tools-version" : 3,
+  "type" : "Examples",
+  "date" : "20260527191021",
+  "license" : "CC0-1.0",
+  "canonical" : "http://hl7.org/fhir",
+  "notForPublication" : true,
+  "url" : "http://build.fhir.org/",
+  "title" : "FHIR 6.0.0-ballot4 package : ungrouped search parameters",
+  "description" : "FHIR 6.0.0-ballot4 package : Search Parameters (break out combined parameters for server execution convenience) (built Wed, May 27, 2026 19:10+0000+00:00)",
+  "fhirVersions" : ["6.0.0-ballot4"],
+  "dependencies" : {
+  },
+  "directories" : {
+    "lib" : "package",
+    "example" : "example"
+  },
+  "peerDependencies" : {
+  }
+}

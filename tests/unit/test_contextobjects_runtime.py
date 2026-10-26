@@ -2,12 +2,6 @@ import pytest
 
 from kehrnel.contextobjects.resolver import resolve_context_contract
 from kehrnel.engine.core.types import StrategyContext
-from kehrnel.engine.strategies.fhir.fhir_contextobjects_vitals_window.strategy import (
-    DEFAULTS_PATH as FHIR_DEFAULTS_PATH,
-    FhirVitalsWindowStrategy,
-    MANIFEST as FHIR_MANIFEST,
-    load_json as load_fhir_json,
-)
 from kehrnel.engine.strategies.x12.co_single.strategy import (
     DEFAULTS_PATH as X12_DEFAULTS_PATH,
     MANIFEST as X12_MANIFEST,
@@ -68,36 +62,6 @@ def test_resolve_context_contract_matches_requested_points():
     assert resolution["ready"] is True
     assert resolution["contextContract"] == "oncology_episode_context"
     assert set(resolution["matchedRequestedPoints"]) == {"follow-up delay", "evidence"}
-
-
-@pytest.mark.asyncio
-async def test_fhir_strategy_negotiate_con2l_from_catalog():
-    strat = FhirVitalsWindowStrategy(FHIR_MANIFEST)
-    cfg = load_fhir_json(FHIR_DEFAULTS_PATH)
-    ctx = StrategyContext(
-        environment_id="env",
-        config=cfg,
-        adapters={"storage": DummyStorage([_catalog_definition()])},
-    )
-    result = await strat.run_op(
-        ctx,
-        "negotiate_con2l",
-        {
-            "draft": {
-                "utterance": "Show follow-up delay evidence for this patient",
-                "request_ir": {
-                    "scope": "patient",
-                    "requested_points": ["follow-up delay", "evidence"],
-                    "assertion_type": "observed",
-                },
-            },
-            "catalog": {"collection": "kehrnel_context_catalog"},
-        },
-    )
-    payload = result["result"]
-    assert payload["ready"] is True
-    assert payload["resolved"]["contextContract"] == "oncology_episode_context"
-    assert payload["compiled"]["collection"] == cfg["collections"]["contextobjects"]["name"]
 
 
 @pytest.mark.asyncio

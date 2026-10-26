@@ -1,0 +1,145 @@
+resource: GenomicStudy
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec GenomicStudy)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: none — not listed in compartments/definitions/*.json
+#
+# Total parameters: 7 (5 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `subject` is required Reference.
+#   * `focus` searches `analysis[].focus[]` references.
+#   * Top-level scalar `status` queries the FHIR root.
+
+search_parameters:
+  focus:
+    type: reference
+    description: "What the genomic study analysis is about, when it is not about the subject of record"
+    fields:
+      - field: "_search.focusIds"
+        referenceType: id
+      - field: "_search.focusTypes"
+        referenceType: type
+
+  identifier:
+    type: token
+    description: "Identifiers for the Study"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  patient:
+    type: reference
+    description: "Who the study is about (Patient subject)"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  status:
+    type: token
+    description: "The status of the study"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  subject:
+    type: reference
+    description: "Who the study is about"
+    fields:
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "_search.subjectType"
+        referenceType: type
+      - field: "subject.reference"
+        referenceType: full
+
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  subject:
+    source: subject
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: subject.reference
+        target_field: subjectId
+        datatype: string
+        extractType: id
+      - source_path: subject.reference
+        target_field: subjectType
+        datatype: string
+        extractType: type
+      - source_path: subject.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+        filterType: Patient
+
+  analysis_focus:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: analysis[*].focus[*].reference
+        target_field: focusIds
+        datatype: array[string]
+        extractType: id
+      - source_path: analysis[*].focus[*].reference
+        target_field: focusTypes
+        datatype: array[string]
+        extractType: type
+
+indexes:
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+
+  - fields:
+      - "_search.subjectId": 1
+    options:
+      name: idx_subject_id
+      sparse: true
+
+  - fields:
+      - "_search.focusIds": 1
+    options:
+      name: idx_focus_ids
+      sparse: true
+
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_meta_last_updated

@@ -7,6 +7,7 @@ import os
 import random
 import tempfile
 import uuid
+from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict
 
@@ -25,6 +26,11 @@ from kehrnel.engine.strategies.openehr.rps_dual.index_definition_builder import 
     build_search_index_definition_from_mappings,
 )
 from kehrnel.engine.strategies.openehr.rps_dual.query.executor import execute as execute_query_plan
+from kehrnel.engine.strategies.openehr.rps_dual.query.executor import (
+    _normalize_result_value,
+    _uses_uuid_binary_ids,
+)
+from kehrnel.engine.strategies.openehr.rps_dual.query.transformers.value_formatter import ValueFormatter
 from kehrnel.engine.strategies.openehr.rps_dual.services.codes_service import atcode_to_token
 from kehrnel.engine.strategies.openehr.rps_dual.services.codes_service import get_codes
 from kehrnel.engine.strategies.openehr.rps_dual.services.shortcuts_service import get_shortcuts
@@ -42,6 +48,7 @@ from kehrnel.engine.strategies.openehr.rps_dual.query.compiler import (
     build_query_pipeline_from_ast,
     build_runtime_strategy,
 )
+from kehrnel.engine.strategies.openehr.rps_dual.query.pagination import render_effective_aql
 
 
 def load_json(path: Path) -> Dict[str, Any]:
@@ -62,7 +69,10 @@ _SUPPORTED_QUERY_SAFE_ENCODING_PROFILES = {
     "profile.search_shortcuts",
 }
 
-_RAW_AQL_AST_CACHE_LIMIT = 128
+# Path separators the query compiler can safely escape and round-trip. ":" is the
+# default; "." is retained for backward compatibility. "/" is used by IBM
+# exact-model HDL environments.
+_SUPPORTED_QUERY_SAFE_SEPARATORS = {".", "/", ":"}
 
 _INGEST_CONTROL_KEYS = {
     "data_mode",
@@ -113,62 +123,17 @@ def _bind_query_params(node: Any, params: Dict[str, Any], missing: set[str]) -> 
     return node
 
 
-def _query_compile_cache(ctx: StrategyContext) -> Dict[str, Any] | None:
-    meta = ctx.meta if isinstance(ctx.meta, dict) else None
-    if not isinstance(meta, dict):
-        return None
-    cache = meta.get("query_compile_cache")
-    if isinstance(cache, dict):
-        return cache
-    cache = {}
-    meta["query_compile_cache"] = cache
-    return cache
-
-
-def _compile_cache_bucket(
-    compile_cache: Dict[str, Any] | None,
-    name: str,
-) -> Dict[str, Any] | None:
-    if not isinstance(compile_cache, dict):
-        return None
-    bucket = compile_cache.get(name)
-    if isinstance(bucket, dict):
-        return bucket
-    bucket = {}
-    compile_cache[name] = bucket
-    return bucket
-
-
-def _remember_cached_value(
-    cache: Dict[str, Any] | None,
-    key: str,
-    value: Any,
-    *,
-    limit: int,
-) -> None:
-    if not isinstance(cache, dict):
-        return
-    if key in cache:
-        cache.pop(key, None)
-    elif len(cache) >= limit:
-        oldest_key = next(iter(cache), None)
-        if oldest_key is not None:
-            cache.pop(oldest_key, None)
-    cache[key] = value
-
-
-def _get_or_parse_raw_aql_ast(raw_aql: str, ctx: StrategyContext) -> tuple[Dict[str, Any], str]:
-    compile_cache = _query_compile_cache(ctx)
-    bucket = _compile_cache_bucket(compile_cache, "raw_aql_ast")
-    cache_key = str(raw_aql or "").strip()
-    cached = bucket.get(cache_key) if isinstance(bucket, dict) else None
-    if isinstance(cached, dict):
-        _remember_cached_value(bucket, cache_key, cached, limit=_RAW_AQL_AST_CACHE_LIMIT)
-        return cached, "hit"
-
-    parsed = AQLToASTParser(cache_key).parse()
-    _remember_cached_value(bucket, cache_key, parsed, limit=_RAW_AQL_AST_CACHE_LIMIT)
-    return parsed, "miss"
+def _extract_query_pagination_options(query: Dict[str, Any] | None) -> Dict[str, Any]:
+    if not isinstance(query, dict):
+        return {}
+    pagination = query.get("pagination") if isinstance(query.get("pagination"), dict) else {}
+    options: Dict[str, Any] = {}
+    if pagination:
+        options["pagination"] = pagination
+    for key in ("pageToken", "searchAfter", "searchBefore"):
+        if query.get(key) is not None:
+            options[key] = query.get(key)
+    return options
 
 
 def _allow_local_file_ingest() -> bool:
@@ -250,7 +215,6 @@ def _load_ingest_documents_from_path(file_path: str) -> list[Dict[str, Any]]:
 class RPSDualStrategy(StrategyPlugin):
     def __init__(self, manifest: StrategyManifest = MANIFEST):
         self.manifest = manifest
-        self.strategy_base_dir = Path(__file__).parent
         self.schema = load_json(SCHEMA_PATH)
         self.defaults = load_json(DEFAULTS_PATH)
         # Load bulk config schemas
@@ -261,19 +225,32 @@ class RPSDualStrategy(StrategyPlugin):
         self.manifest.default_config = self.defaults
         self.normalized_config: RPSDualConfig | None = None
         self.normalized_bulk_config: BulkConfig | None = None
+        self._query_compile_caches: Dict[str, Dict[str, Any]] = {}
 
-    def _strategy_root_dir(self) -> Path:
-        base_dir = getattr(self, "strategy_base_dir", None)
-        if isinstance(base_dir, Path):
-            return base_dir
-        if isinstance(base_dir, str) and base_dir.strip():
-            return Path(base_dir)
-        return Path(__file__).parent
+    def _compile_cache_for_context(self, ctx: StrategyContext) -> Dict[str, Any]:
+        env_id = getattr(ctx, "environment_id", None) or "default"
+        cache = self._query_compile_caches.get(env_id)
+        if isinstance(cache, dict):
+            return cache
+        if len(self._query_compile_caches) >= 16:
+            oldest_key = next(iter(self._query_compile_caches), None)
+            if oldest_key is not None:
+                self._query_compile_caches.pop(oldest_key, None)
+        cache = {}
+        self._query_compile_caches[env_id] = cache
+        return cache
 
     async def validate_config(self, ctx: StrategyContext | Dict[str, Any]) -> None:
         raw_config = ctx.config if isinstance(ctx, StrategyContext) else ctx
         strategy_cfg = normalize_config(raw_config or {})
         errors: list[str] = []
+
+        if strategy_cfg.paths.separator not in _SUPPORTED_QUERY_SAFE_SEPARATORS:
+            errors.append(
+                "paths.separator must be one of "
+                f"{sorted(_SUPPORTED_QUERY_SAFE_SEPARATORS)} because query compilation must be able to "
+                "round-trip stored paths."
+            )
 
         comp_profile = (strategy_cfg.collections.compositions.encodingProfile or "").strip().lower()
         if comp_profile not in _SUPPORTED_QUERY_SAFE_ENCODING_PROFILES:
@@ -305,7 +282,7 @@ class RPSDualStrategy(StrategyPlugin):
         mappings_ref = strategy_cfg.transform.mappings
         if mappings_content is None and mappings_ref is not None:
             db = getattr((ctx.adapters or {}).get("storage"), "db", None)
-            mappings_content = await resolve_uri_async(mappings_ref, db, self._strategy_root_dir())
+            mappings_content = await resolve_uri_async(mappings_ref, db, Path(__file__).parent)
         if mappings_content is None:
             return {"templates": []}
         return mappings_content
@@ -363,7 +340,7 @@ class RPSDualStrategy(StrategyPlugin):
         definition = None
         if search_cfg.atlasIndex and search_cfg.atlasIndex.definition:
             try:
-                definition = await resolve_uri_async(search_cfg.atlasIndex.definition, db, self._strategy_root_dir())
+                definition = await resolve_uri_async(search_cfg.atlasIndex.definition, db, Path(__file__).parent)
             except Exception:
                 definition = None
         if isinstance(definition, dict) and definition.get("mappings"):
@@ -440,6 +417,39 @@ class RPSDualStrategy(StrategyPlugin):
         stores = (spec.get("storage") or {}).get("stores") or (spec.get("storageModel") or {}).get("stores") or []
         store_profiles = (ctx.meta or {}).get("store_profiles") or {}
         collections_cfg = ctx.config.get("collections", {}) if isinstance(ctx.config, dict) else {}
+        try:
+            strategy_cfg = normalize_config(ctx.config or {})
+        except Exception:
+            strategy_cfg = None
+        document_fields = getattr(getattr(strategy_cfg, "fields", None), "document", None)
+        node_fields = getattr(getattr(strategy_cfg, "fields", None), "node", None)
+
+        document_aliases = {
+            "ehr_id": getattr(document_fields, "ehr_id", "ehr_id"),
+            "comp_id": getattr(document_fields, "comp_id", "comp_id"),
+            "tid": getattr(document_fields, "tid", "tid"),
+            "v": getattr(document_fields, "v", "v"),
+            "time_c": getattr(document_fields, "time_committed", "time_c"),
+            "time_committed": getattr(document_fields, "time_committed", "time_c"),
+            "sort_time": getattr(document_fields, "sort_time", "sort_time"),
+            "cn": getattr(document_fields, "cn", "cn"),
+            "sn": getattr(document_fields, "sn", "sn"),
+        }
+        node_aliases = {
+            "p": getattr(node_fields, "p", "p"),
+            "pi": getattr(node_fields, "pi", "pi"),
+            "data": getattr(node_fields, "data", "data"),
+        }
+        node_array_fields = {document_aliases["cn"], document_aliases["sn"]}
+
+        def resolve_index_field(field: str) -> str:
+            if not isinstance(field, str) or not field:
+                return field
+            parts = field.split(".")
+            parts[0] = document_aliases.get(parts[0], parts[0])
+            if len(parts) > 1 and parts[0] in node_array_fields:
+                parts[1] = node_aliases.get(parts[1], parts[1])
+            return ".".join(parts)
 
         def resolve_collection(store: Dict[str, Any]) -> str | None:
             role = store.get("role") or store.get("id")
@@ -452,23 +462,69 @@ class RPSDualStrategy(StrategyPlugin):
                 return (collections_cfg.get("search") or {}).get("name")
             return store.get("destinationType")
 
+        def plan_metadata(idx: Dict[str, Any], logical_fields: list[str] | None = None) -> Dict[str, Any]:
+            metadata: Dict[str, Any] = {
+                "id": idx.get("id"),
+                "type": idx.get("type"),
+                "requirement": idx.get("requirement"),
+                "purpose": idx.get("purpose"),
+                "workloads": idx.get("workloads"),
+                "configResolved": idx.get("configResolved"),
+                "fieldsFromConfig": idx.get("fieldsFromConfig"),
+            }
+            if logical_fields:
+                metadata["logicalFields"] = logical_fields
+            return {key: value for key, value in metadata.items() if value not in (None, [], {})}
+
+        def search_plan_metadata(search: Dict[str, Any]) -> Dict[str, Any]:
+            metadata: Dict[str, Any] = {
+                "kind": search.get("kind"),
+                "requirement": search.get("requirement"),
+                "condition": search.get("condition"),
+                "purpose": search.get("purpose"),
+                "workloads": search.get("workloads"),
+                "configResolved": search.get("configResolved"),
+            }
+            return {key: value for key, value in metadata.items() if value not in (None, [], {})}
+
         for store in stores:
             if not isinstance(store, dict):
                 continue
             coll = resolve_collection(store)
+            search_contract = store.get("search")
+            if coll and isinstance(search_contract, dict):
+                for search_index in artifacts.get("search_indexes", []):
+                    if search_index.get("collection") == coll:
+                        search_index.update(search_plan_metadata(search_contract))
             for idx in store.get("indexes") or []:
                 if not isinstance(idx, dict):
+                    continue
+                if idx.get("autoCreate") is False:
                     continue
                 idx_type = idx.get("type")
                 if idx_type == "btree":
                     fields = idx.get("fields") or []
-                    keys = [(f, 1) for f in fields]
+                    keys = [(resolve_index_field(f), 1) for f in fields]
                     if coll and keys:
-                        artifacts["indexes"].append({"collection": coll, "keys": keys, "options": idx.get("options", {})})
+                        artifacts["indexes"].append(
+                            {
+                                "collection": coll,
+                                "keys": keys,
+                                "options": idx.get("options", {}),
+                                **plan_metadata(idx, fields),
+                            }
+                        )
                 elif idx_type == "wildcard":
-                    field = idx.get("field") or "data"
+                    field = resolve_index_field(idx.get("field") or "data")
                     if coll:
-                        artifacts["indexes"].append({"collection": coll, "keys": [(f"{field}.$**", 1)], "options": idx.get("options", {})})
+                        artifacts["indexes"].append(
+                            {
+                                "collection": coll,
+                                "keys": [(f"{field}.$**", 1)],
+                                "options": idx.get("options", {}),
+                                **plan_metadata(idx, [idx.get("field") or "data"]),
+                            }
+                        )
                 elif idx_type == "search":
                     if coll:
                         artifacts["search_indexes"].append(
@@ -477,6 +533,7 @@ class RPSDualStrategy(StrategyPlugin):
                                 "name": idx.get("name") or store.get("role") or "search_index",
                                 "definition": idx.get("definition", {}),
                                 "storedSource": idx.get("storedSource"),
+                                **plan_metadata(idx),
                             }
                         )
         return artifacts
@@ -495,7 +552,7 @@ class RPSDualStrategy(StrategyPlugin):
         coding_cfg = build_coding_opts(strategy_cfg)
         mappings_content = await self._resolve_mappings_content(ctx, strategy_cfg)
 
-        mappings_path = str(self._strategy_root_dir() / "ingest" / "config" / "flattener_mappings_f.jsonc")
+        mappings_path = str(Path(__file__).parent / "ingest" / "config" / "flattener_mappings_f.jsonc")
 
         # Try to reuse raw motor database from the storage adapter if available
         db = getattr(storage, "db", None)
@@ -529,7 +586,6 @@ class RPSDualStrategy(StrategyPlugin):
     def _build_raw_ingest_document(cls, payload: Dict[str, Any] | Any) -> Dict[str, Any]:
         comp_obj = cls._payload_to_composition_object(payload)
         if isinstance(payload, dict):
-            source_envelope = {k: v for k, v in payload.items() if k not in _INGEST_CONTROL_KEYS}
             return {
                 "_id": payload.get("_id") or "comp-1",
                 "ehr_id": payload.get("ehr_id") or "ehr-1",
@@ -537,7 +593,6 @@ class RPSDualStrategy(StrategyPlugin):
                 "time_committed": payload.get("time_committed"),
                 "time_created": payload.get("time_created"),
                 "canonicalJSON": comp_obj,
-                "_source_envelope": source_envelope,
             }
         return {
             "_id": "comp-1",
@@ -546,7 +601,6 @@ class RPSDualStrategy(StrategyPlugin):
             "time_committed": None,
             "time_created": None,
             "canonicalJSON": comp_obj,
-            "_source_envelope": None,
         }
 
     @classmethod
@@ -685,7 +739,7 @@ class RPSDualStrategy(StrategyPlugin):
         runtime_strategy = build_runtime_strategy(cfg_model)
         storage = (ctx.adapters or {}).get("storage") if ctx else None
         motor_db = getattr(storage, "db", None) if storage else None
-        compile_cache = _query_compile_cache(ctx)
+        compile_cache = self._compile_cache_for_context(ctx)
 
         def _execution_contract(stage_name: str, schema_cfgs: Dict[str, Any]) -> tuple[str, str | None]:
             if stage_name == "$search":
@@ -694,11 +748,12 @@ class RPSDualStrategy(StrategyPlugin):
 
         if isinstance(query, dict):
             debug = bool(query.get("debug"))
+            pagination_options = _extract_query_pagination_options(query)
             raw_aql = query.get("raw_aql")
             if isinstance(raw_aql, str) and raw_aql.strip():
                 params = query.get("params") or query.get("parameters") or {}
                 try:
-                    raw_ast, raw_aql_cache_status = _get_or_parse_raw_aql_ast(raw_aql, ctx)
+                    raw_ast = AQLToASTParser(raw_aql).parse()
                 except Exception as exc:
                     raise KehrnelError(
                         code="INVALID_AQL",
@@ -708,7 +763,7 @@ class RPSDualStrategy(StrategyPlugin):
                     ) from exc
 
                 missing_params: set[str] = set()
-                ast_doc = _bind_query_params(raw_ast, params, missing_params)
+                ast_doc = _bind_query_params(deepcopy(raw_ast), params, missing_params)
                 if missing_params:
                     raise KehrnelError(
                         code="MISSING_QUERY_PARAMETERS",
@@ -726,11 +781,12 @@ class RPSDualStrategy(StrategyPlugin):
                     db=motor_db,
                     shortcut_map=shortcuts_res.get("items") or {},
                     strategy=runtime_strategy,
-                    raw_cfg=ctx.config if isinstance(ctx.config, dict) else None,
                     compile_cache=compile_cache,
+                    pagination_options=pagination_options,
+                    code_items=codes_res.get("items") or {},
                 )
-                builder_cache = builder_info.setdefault("cache", {})
-                builder_cache["raw_aql_ast"] = raw_aql_cache_status
+                pagination_info = builder_info.get("pagination") or {}
+                warnings.extend(pagination_info.get("warnings") or [])
                 scope = builder_info.get("scope") or "patient"
                 if scope == "cross_patient":
                     post_match = [stage for stage in pipeline[1:] if "$match" in stage]
@@ -742,6 +798,9 @@ class RPSDualStrategy(StrategyPlugin):
                     "pipeline": pipeline,
                     "scope": scope,
                     "collection": collection,
+                }
+                plan_dict["pagination"] = {
+                    key: value for key, value in pagination_info.items() if key != "warnings"
                 }
                 plan_dict["dicts"] = {
                     "codes": {"source": codes_res.get("source"), "missing": codes_res.get("missing", False)},
@@ -758,7 +817,9 @@ class RPSDualStrategy(StrategyPlugin):
                     "ast": ast_doc if debug else None,
                     "builder": {**builder_info, "compiler_engine": engine, "execution_engine": execution_engine},
                     "rawAql": raw_aql if debug else None,
+                    "effectiveAql": render_effective_aql(raw_aql, pagination_info) if debug else None,
                     "parameters": params if debug else None,
+                    "pagination": plan_dict["pagination"],
                     "mode": "raw_aql_strategy",
                 }
                 explain = enrich_explain(
@@ -771,7 +832,13 @@ class RPSDualStrategy(StrategyPlugin):
                 plan_dict["explain"] = explain
                 return QueryPlan(engine=plan_dict["engine"], plan=plan_dict, explain=explain)
             # The IR dataclass does not accept extra keys like "debug".
-            query_payload = {k: v for k, v in query.items() if k != "debug"}
+            query_payload = {
+                k: v
+                for k, v in query.items()
+                if k not in {"debug", "pageToken", "searchAfter", "searchBefore", "pagination"}
+            }
+        else:
+            pagination_options = {}
 
         ir = AqlQueryIR(**query_payload) if not isinstance(query, AqlQueryIR) else query
         # Build query pipeline using the query compiler
@@ -781,9 +848,12 @@ class RPSDualStrategy(StrategyPlugin):
             db=motor_db,
             shortcut_map=shortcuts_res.get("items") or {},
             strategy=runtime_strategy,
-            raw_cfg=ctx.config if isinstance(ctx.config, dict) else None,
             compile_cache=compile_cache,
+            pagination_options=pagination_options,
+            code_items=codes_res.get("items") or {},
         )
+        pagination_info = builder_info.get("pagination") or {}
+        warnings.extend(pagination_info.get("warnings") or [])
         if ir.scope == "cross_patient":
             post_match = [stage for stage in pipeline[1:] if "$match" in stage]
             if post_match:
@@ -793,6 +863,9 @@ class RPSDualStrategy(StrategyPlugin):
             "engine": execution_engine,
             "pipeline": pipeline,
             "collection": collection,
+        }
+        plan_dict["pagination"] = {
+            key: value for key, value in pagination_info.items() if key != "warnings"
         }
         plan_dict["dicts"] = {
             "codes": {"source": codes_res.get("source"), "missing": codes_res.get("missing", False)},
@@ -808,6 +881,7 @@ class RPSDualStrategy(StrategyPlugin):
             "schema": schema_cfgs,
             "ast": ast_doc if debug else None,
             "builder": {**builder_info, "compiler_engine": engine, "execution_engine": execution_engine},
+            "pagination": plan_dict["pagination"],
         }
         explain = enrich_explain(
             explain,
@@ -830,6 +904,124 @@ class RPSDualStrategy(StrategyPlugin):
         index_admin = adapters.get("index_admin")
         storage = adapters.get("storage")
         atlas = adapters.get("atlas_search") or adapters.get("text_search")
+
+        if op_lower in {"list_native_ehrs", "list_native_compositions", "fetch_native_composition"}:
+            if not storage:
+                raise KehrnelError(
+                    code="STORAGE_NOT_AVAILABLE",
+                    status=503,
+                    message="storage adapter not available for native composition browsing",
+                )
+
+            collection = strategy_cfg.collections.compositions.name
+            fields = strategy_cfg.fields.document
+            normalize_binary_uuid = _uses_uuid_binary_ids(ctx.config)
+
+            def _limit(default: int, maximum: int) -> int:
+                try:
+                    return max(1, min(int(payload.get("limit", default)), maximum))
+                except (TypeError, ValueError):
+                    return default
+
+            def _normalize(value: Any, key: str) -> Any:
+                normalized = _normalize_result_value(
+                    value,
+                    key,
+                    normalize_binary_uuid=normalize_binary_uuid,
+                )
+                if normalized is None or isinstance(normalized, (str, int, float, bool)):
+                    return normalized
+                return str(normalized)
+
+            if op_lower == "list_native_ehrs":
+                rows = await storage.aggregate(
+                    collection,
+                    [
+                        {"$match": {fields.ehr_id: {"$exists": True, "$ne": None}}},
+                        {
+                            "$group": {
+                                "_id": f"${fields.ehr_id}",
+                                "time_created": {"$min": f"${fields.time_committed}"},
+                            }
+                        },
+                        {"$sort": {"_id": 1}},
+                        {"$limit": _limit(1000, 5000)},
+                    ],
+                )
+                return {
+                    "ok": True,
+                    "records": [
+                        {
+                            "ehr_id": _normalize(row.get("_id"), "ehr_id"),
+                            "time_created": row.get("time_created"),
+                        }
+                        for row in rows
+                        if row.get("_id") is not None
+                    ],
+                }
+
+            ehr_id = str(payload.get("ehr_id") or "").strip()
+            if not ehr_id:
+                raise KehrnelError(
+                    code="INVALID_INPUT",
+                    status=400,
+                    message="ehr_id is required",
+                )
+            ehr_value = ValueFormatter.format_id_value(ehr_id, strategy_cfg.ids.ehr_id)
+
+            if op_lower == "list_native_compositions":
+                rows = await storage.aggregate(
+                    collection,
+                    [
+                        {"$match": {fields.ehr_id: ehr_value}},
+                        {"$sort": {fields.time_committed: -1, fields.comp_id: 1}},
+                        {"$limit": _limit(500, 2000)},
+                        {
+                            "$project": {
+                                "_id": 0,
+                                "uid": f"${fields.comp_id}",
+                                "template_id": f"${fields.tid}",
+                                "time_created": f"${fields.time_committed}",
+                            }
+                        },
+                    ],
+                )
+                return {
+                    "ok": True,
+                    "records": [
+                        {
+                            **row,
+                            "uid": _normalize(row.get("uid"), "composition_id"),
+                        }
+                        for row in rows
+                        if row.get("uid") is not None
+                    ],
+                }
+
+            uid = str(payload.get("uid") or "").strip()
+            if not uid:
+                raise KehrnelError(
+                    code="INVALID_INPUT",
+                    status=400,
+                    message="uid is required",
+                )
+            uid_value = ValueFormatter.format_id_value(uid, strategy_cfg.ids.composition_id)
+            base_doc = await storage.find_one(
+                collection,
+                {fields.ehr_id: ehr_value, fields.comp_id: uid_value},
+                {"_id": 0},
+            )
+            if not base_doc:
+                raise KehrnelError(
+                    code="COMPOSITION_NOT_FOUND",
+                    status=404,
+                    message=f"Composition '{uid}' was not found for EHR '{ehr_id}'",
+                )
+            normalized_doc = _normalize_result_value(
+                base_doc,
+                normalize_binary_uuid=normalize_binary_uuid,
+            )
+            return {"ok": True, "composition": normalized_doc}
 
         if op_lower == "ensure_dictionaries":
             created = []
@@ -874,7 +1066,7 @@ class RPSDualStrategy(StrategyPlugin):
                 if not coll or not seed_uri:
                     return 0
                 try:
-                    payload = await resolve_uri_async(seed_uri, motor_db, self._strategy_root_dir())
+                    payload = await resolve_uri_async(seed_uri, motor_db, Path(__file__).parent)
                 except Exception as exc:
                     warnings.append(f"failed to resolve seed {seed_uri}: {exc}")
                     return 0
@@ -913,7 +1105,7 @@ class RPSDualStrategy(StrategyPlugin):
             motor_db = getattr(storage, "db", None)
             warnings = []
             try:
-                seed_payload = await resolve_uri_async(dict_seed, motor_db, self._strategy_root_dir()) if dict_seed else None
+                seed_payload = await resolve_uri_async(dict_seed, motor_db, Path(__file__).parent) if dict_seed else None
             except Exception as exc:
                 return {"ok": False, "warnings": [f"failed to resolve codes seed: {exc}"]}
             if motor_db is None:
@@ -945,7 +1137,7 @@ class RPSDualStrategy(StrategyPlugin):
                 return {"ok": False, "warnings": ["raw motor db not available; cannot rebuild shortcuts idempotently"]}
             warnings = []
             try:
-                seed_payload = await resolve_uri_async(shortcuts_seed, motor_db, self._strategy_root_dir()) if shortcuts_seed else None
+                seed_payload = await resolve_uri_async(shortcuts_seed, motor_db, Path(__file__).parent) if shortcuts_seed else None
             except Exception as exc:
                 return {"ok": False, "warnings": [f"failed to resolve shortcuts seed: {exc}"]}
             if isinstance(seed_payload, dict) and seed_payload.get("_id"):
@@ -992,260 +1184,35 @@ class RPSDualStrategy(StrategyPlugin):
             if not comp_coll or not search_coll_name:
                 return {"ok": False, "warnings": ["collections not configured"]}
             batch_size = int(payload.get("batch_size", 100)) if payload else 100
-            clear_existing = bool(payload.get("clear_existing", False)) if payload else False
-            progress_cb = (ctx.meta or {}).get("progress_cb")
-            should_cancel = (ctx.meta or {}).get("should_cancel")
-            if progress_cb:
-                await progress_cb(progress=2, phase="preparing", stats={"collection": search_coll_name})
-            if _is_canceled(should_cancel):
-                raise KehrnelError(code="JOB_CANCELED", status=499, message="Search rebuild canceled")
-            if clear_existing:
-                if progress_cb:
-                    await progress_cb(progress=5, phase="clearing", stats={"collection": search_coll_name})
-                if hasattr(storage, "delete_many"):
-                    await storage.delete_many(search_coll_name, {})
-                elif getattr(storage, "db", None) is not None:
-                    await storage.db[search_coll_name].delete_many({})
-                else:
-                    warnings = ["storage adapter cannot clear existing search documents"]
-                    return {"ok": False, "warnings": warnings}
-            if progress_cb:
-                await progress_cb(progress=10, phase="loading", stats={"batch_size": batch_size})
             docs = await storage.aggregate(comp_coll, [{"$limit": batch_size}])
-            warnings = []
-            flattener = None
-            try:
-                flattener = await self._build_flattener_for_context(ctx)
-            except Exception as exc:
-                warnings.append(f"analytics rebuild unavailable, falling back to bundle projection: {exc}")
-            # Get bundle reference from search collection seed if available.
-            # This remains as a legacy fallback for older bundle-only setups.
+            # Get bundle reference from search collection seed if available
             bundle_id = None
             seed_ref = strategy_cfg.collections.search.atlasIndex
             if seed_ref and isinstance(seed_ref.definition, str):
                 bundle_id = seed_ref.definition
             bundle = await self._maybe_load_bundle(bundle_id, ctx)
             inserted = 0
-            total_docs = len(docs)
-            for idx, doc in enumerate(docs, start=1):
-                if _is_canceled(should_cancel):
-                    raise KehrnelError(code="JOB_CANCELED", status=499, message="Search rebuild canceled")
-                search_doc = flattener.project_search_from_flattened(doc) if flattener else None
-                if search_doc is None and bundle:
-                    search_doc = self._apply_bundle_to_composition(bundle, doc, strategy_cfg)
-                if not isinstance(search_doc, dict):
-                    if progress_cb and (idx == total_docs or idx % 250 == 0):
-                        progress = 10 + int((idx / max(total_docs, 1)) * 80)
-                        await progress_cb(
-                            progress=progress,
-                            phase="projecting",
-                            stats={"processed": idx, "inserted": inserted, "total": total_docs},
-                        )
+            skipped_empty = 0
+            for doc in docs:
+                search_doc = self._apply_bundle_to_composition(bundle, doc, strategy_cfg)
+                search_nodes = search_doc.get(strategy_cfg.fields.document.sn)
+                if not isinstance(search_nodes, list) or not search_nodes:
+                    skipped_empty += 1
                     continue
-                nodes = search_doc.get(strategy_cfg.fields.document.sn)
-                if not isinstance(nodes, list) or not nodes:
-                    if progress_cb and (idx == total_docs or idx % 250 == 0):
-                        progress = 10 + int((idx / max(total_docs, 1)) * 80)
-                        await progress_cb(
-                            progress=progress,
-                            phase="projecting",
-                            stats={"processed": idx, "inserted": inserted, "total": total_docs},
-                        )
-                    continue
-                if "_id" not in search_doc and isinstance(doc, dict) and doc.get("_id") is not None:
-                    search_doc["_id"] = doc["_id"]
                 await storage.insert_one(search_coll_name, search_doc)
                 inserted += 1
-                if progress_cb and (idx == total_docs or idx % 250 == 0):
-                    progress = 10 + int((idx / max(total_docs, 1)) * 80)
-                    await progress_cb(
-                        progress=progress,
-                        phase="projecting",
-                        stats={"processed": idx, "inserted": inserted, "total": total_docs},
-                    )
+            warnings = []
             atlas_idx = strategy_cfg.collections.search.atlasIndex
             if atlas and atlas_idx and atlas_idx.name:
-                if progress_cb:
-                    await progress_cb(progress=94, phase="indexing", stats={"processed": total_docs, "inserted": inserted})
                 definition = await self._resolve_search_index_definition(ctx, strategy_cfg)
                 res = await atlas.ensure_search_index(search_coll_name, atlas_idx.name, definition)
                 warnings.extend(res.get("warnings", []))
-            if progress_cb:
-                await progress_cb(progress=99, phase="finalizing", stats={"processed": total_docs, "inserted": inserted})
-            return {"ok": True, "processed": len(docs), "inserted": inserted, "cleared": clear_existing, "warnings": warnings}
-
-        if op_lower == "fetch_native_composition":
-            if not storage:
-                raise KehrnelError(
-                    code="STORAGE_NOT_AVAILABLE",
-                    status=503,
-                    message="storage adapter not available for native composition lookup",
-                )
-
-            comp_coll = strategy_cfg.collections.compositions.name
-            if not comp_coll:
-                raise KehrnelError(
-                    code="COLLECTION_NOT_CONFIGURED",
-                    status=400,
-                    message="compositions collection is not configured",
-                )
-
-            uid = str(payload.get("uid") or payload.get("composition_uid") or "").strip()
-            if not uid:
-                raise KehrnelError(
-                    code="INVALID_INPUT",
-                    status=400,
-                    message="uid is required",
-                )
-
-            uid_candidates = [uid]
-            base_uid = uid.split("::", 1)[0].strip()
-            if base_uid and base_uid not in uid_candidates:
-                uid_candidates.append(base_uid)
-
-            uid_match = []
-            for candidate in uid_candidates:
-                uid_match.extend([
-                    {"version": candidate},
-                    {"uid": candidate},
-                    {"_id": candidate},
-                    {"cn.data.uid.v": candidate},
-                    {"cn.data.uid.value": candidate},
-                ])
-                try:
-                    uid_match.append({"_id": uuid.UUID(candidate)})
-                except Exception:
-                    pass
-
-            query: Dict[str, Any] = {"$or": uid_match}
-
-            ehr_id = payload.get("ehr_id")
-            if ehr_id is not None and str(ehr_id).strip():
-                ehr_candidates = [ehr_id]
-                try:
-                    ehr_candidates.append(uuid.UUID(str(ehr_id)))
-                except Exception:
-                    pass
-                query = {
-                    "$and": [
-                        {"$or": uid_match},
-                        {"$or": [{"ehr_id": candidate} for candidate in ehr_candidates]},
-                    ]
-                }
-
-            doc = await storage.find_one(comp_coll, query)
-            if not isinstance(doc, dict):
-                raise KehrnelError(
-                    code="COMPOSITION_NOT_FOUND",
-                    status=404,
-                    message=f"native composition not found for uid '{uid}'",
-                )
-
             return {
                 "ok": True,
-                "composition": json.loads(json.dumps(doc, default=str)),
-            }
-
-        if op_lower == "list_native_ehrs":
-            if not storage:
-                raise KehrnelError(
-                    code="STORAGE_NOT_AVAILABLE",
-                    status=503,
-                    message="storage adapter not available for native EHR lookup",
-                )
-
-            comp_coll = strategy_cfg.collections.compositions.name
-            if not comp_coll:
-                raise KehrnelError(
-                    code="COLLECTION_NOT_CONFIGURED",
-                    status=400,
-                    message="compositions collection is not configured",
-                )
-
-            limit = max(1, min(int(payload.get("limit", 1000) or 1000), 5000))
-            records = await storage.aggregate(
-                comp_coll,
-                [
-                    {"$match": {"ehr_id": {"$exists": True, "$ne": None}}},
-                    {
-                        "$group": {
-                            "_id": "$ehr_id",
-                            "time_created": {"$max": "$creation_date"},
-                        }
-                    },
-                    {"$sort": {"time_created": -1, "_id": 1}},
-                    {"$limit": limit},
-                    {"$project": {"_id": 0, "ehr_id": "$_id", "time_created": 1}},
-                ],
-            )
-
-            return {
-                "ok": True,
-                "records": json.loads(json.dumps(records, default=str)),
-            }
-
-        if op_lower == "list_native_compositions":
-            if not storage:
-                raise KehrnelError(
-                    code="STORAGE_NOT_AVAILABLE",
-                    status=503,
-                    message="storage adapter not available for native composition lookup",
-                )
-
-            comp_coll = strategy_cfg.collections.compositions.name
-            if not comp_coll:
-                raise KehrnelError(
-                    code="COLLECTION_NOT_CONFIGURED",
-                    status=400,
-                    message="compositions collection is not configured",
-                )
-
-            ehr_id = payload.get("ehr_id")
-            if ehr_id is None or not str(ehr_id).strip():
-                raise KehrnelError(
-                    code="INVALID_INPUT",
-                    status=400,
-                    message="ehr_id is required",
-                )
-
-            limit = max(1, min(int(payload.get("limit", 500) or 500), 2000))
-            ehr_candidates = [ehr_id]
-            try:
-                ehr_candidates.append(uuid.UUID(str(ehr_id)))
-            except Exception:
-                pass
-
-            records = await storage.aggregate(
-                comp_coll,
-                [
-                    {"$match": {"$or": [{"ehr_id": candidate} for candidate in ehr_candidates]}},
-                    {
-                        "$project": {
-                            "_id": 0,
-                            "uid": {"$ifNull": ["$version", {"$toString": "$_id"}]},
-                            "templateId": {"$ifNull": ["$template", "$template_id"]},
-                            "creation_date": "$creation_date",
-                            "name": {
-                                "$let": {
-                                    "vars": {"root": {"$first": "$cn"}},
-                                    "in": {
-                                        "$ifNull": [
-                                            "$$root.data.n.v",
-                                            {"$ifNull": ["$$root.data.n.value", "$template"]},
-                                        ]
-                                    },
-                                }
-                            },
-                        }
-                    },
-                    {"$sort": {"creation_date": -1, "uid": 1}},
-                    {"$limit": limit},
-                ],
-            )
-
-            return {
-                "ok": True,
-                "records": json.loads(json.dumps(records, default=str)),
+                "processed": len(docs),
+                "inserted": inserted,
+                "skipped_empty": skipped_empty,
+                "warnings": warnings,
             }
 
         if op_lower == "synthetic_generate_batch":
@@ -1278,9 +1245,13 @@ class RPSDualStrategy(StrategyPlugin):
             progress_cb = (ctx.meta or {}).get("progress_cb")
             should_cancel = (ctx.meta or {}).get("should_cancel")
 
+            # Prefer model_source from metadata (has defaults) over payload
+            model_source_from_meta = (ctx.meta or {}).get("model_source") if ctx and ctx.meta else None
+            model_source_from_payload = payload.get("model_source") if isinstance(payload.get("model_source"), dict) else {}
+            model_source = model_source_from_meta if model_source_from_meta else model_source_from_payload
+
             models = payload.get("models")
             templates = payload.get("templates")
-            model_source = payload.get("model_source") or {}
             source_templates = payload.get("source_templates")
             source_sample_size = int(payload.get("source_sample_size", 200) or 200)
             source_min_per_patient = int(payload.get("source_min_per_patient", 1) or 1)
@@ -1298,32 +1269,30 @@ class RPSDualStrategy(StrategyPlugin):
                     strategy_id=getattr(ctx.manifest, "id", None),
                 )
             elif isinstance(templates, list) and templates:
+                # Convert templates to models format and resolve with catalog
+                template_models = []
                 for entry in templates:
                     if not isinstance(entry, dict):
                         raise KehrnelError(code="INVALID_INPUT", status=400, message="each template entry must be an object")
                     template_id = str(entry.get("template_id") or entry.get("templateId") or "").strip()
                     if not template_id:
                         raise KehrnelError(code="INVALID_INPUT", status=400, message="template_id is required in each template entry")
-                    min_per = int(entry.get("min_per_patient", entry.get("min", 1)))
-                    max_per = int(entry.get("max_per_patient", entry.get("max", min_per)))
-                    if min_per < 0 or max_per < min_per:
-                        raise KehrnelError(
-                            code="INVALID_INPUT",
-                            status=400,
-                            message=f"invalid range for template {template_id}: min={min_per}, max={max_per}",
-                        )
-                    sample_size = int(entry.get("sample_pool_size", 25) or 25)
-                    model_specs.append(
-                        {
-                            "model_id": template_id,
-                            "template_id": template_id,
-                            "min": min_per,
-                            "max": max_per,
-                            "weight": float(entry.get("weight", 1.0)),
-                            "sample_size": max(1, sample_size),
-                            "catalog": {},
-                        }
-                    )
+                    template_models.append({
+                        "model_id": template_id,
+                        "template_id": template_id,
+                        "min_per_patient": int(entry.get("min_per_patient", entry.get("min", 1))),
+                        "max_per_patient": int(entry.get("max_per_patient", entry.get("max", entry.get("min_per_patient", entry.get("min", 1))))),
+                        "weight": float(entry.get("weight", 1.0)),
+                        "sample_pool_size": int(entry.get("sample_pool_size", 25) or 25),
+                    })
+                # Resolve models to fetch catalog documents
+                model_specs = await resolve_model_specs(
+                    storage,
+                    model_source=model_source if isinstance(model_source, dict) else {},
+                    requested_models=template_models,
+                    domain=(getattr(ctx.manifest, "domain", "") or "openEHR"),
+                    strategy_id=getattr(ctx.manifest, "id", None),
+                )
             elif str(generation_mode or "").lower() in ("from_source", "source", "auto"):
                 # Source-instance mode: derive templates from existing source collection.
                 discovered_template_ids: list[str] = []
@@ -1487,9 +1456,6 @@ class RPSDualStrategy(StrategyPlugin):
 
                 if prefer_models:
                     model_doc = spec.get("catalog") or {}
-                    stored_opt = await storage.find_one("templates", {"_id": template_id})
-                    if stored_opt and stored_opt.get("content"):
-                        model_doc = {"opt": stored_opt["content"]}
                     gen = _build_canonical_generator_from_model(model_doc)
                     if gen is not None:
                         template_generators[template_id] = gen
@@ -1783,7 +1749,7 @@ class RPSDualStrategy(StrategyPlugin):
         store = (ctx.meta or {}).get("bundle_store") if ctx else None
         if store:
             return store.get_bundle(bundle_id)
-        path = self._strategy_root_dir() / "bundles" / f"{bundle_id}.json"
+        path = Path(__file__).parent / "bundles" / f"{bundle_id}.json"
         if path.exists():
             import json as _json
             return _json.loads(path.read_text(encoding="utf-8"))
@@ -1836,6 +1802,7 @@ def _build_canonical_generator_from_model(model_doc: Dict[str, Any]):
         (((model_doc.get("domainData") or {}).get("source") or {}).get("xml") if isinstance(model_doc.get("domainData"), dict) else None)
         or model_doc.get("opt")
         or model_doc.get("template")
+        or model_doc.get("content")
     )
     if not isinstance(xml_payload, str) or "<" not in xml_payload:
         return None

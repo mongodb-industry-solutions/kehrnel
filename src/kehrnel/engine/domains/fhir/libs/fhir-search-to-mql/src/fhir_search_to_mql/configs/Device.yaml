@@ -1,0 +1,859 @@
+resource: Device
+fhir_version: R5
+
+# Definition: https://www.hl7.org/fhir/device-definitions.html
+# Search Parameters: https://www.hl7.org/fhir/device-search.html
+# Compartment: Device IS a compartment-defining resource
+#   (https://www.hl7.org/fhir/compartmentdefinition-device.html); other
+#   resources reference Device via fields like Observation.device,
+#   DeviceUsage.device, etc. Device itself has "No defined compartments"
+#   per the R5 spec (it's not a *member* of any compartment), but the
+#   FHIR R5 implicit-self-membership rule (`[base]` linking parameter)
+#   means `Device/<id>/Device` is still a valid query. This config opts
+#   into the Hybrid Approach 3 fast-path so that self-query collapses
+#   to a single indexed `_compartments.Device` lookup.
+# FHIR R5 Device search parameter table validated 2026-05.
+#
+# Total parameters: 25 (23 resource-specific per R5 §8.15.13 + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# Resource-specific search parameters (per R5 §8.15.13):
+#   biological-source-event (token), code (token),
+#   code-value-concept (composite, deferred — see §Composites note),
+#   definition (reference→DeviceDefinition), device-name (string),
+#   expiration-date (date), identifier (token),
+#   location (reference→Location), lot-number (string),
+#   manufacture-date (date), manufacturer (string),
+#   model (string), organization (reference→Organization, Device.owner),
+#   parent (reference→Device), serial-number (string, multi-source),
+#   specification (token), specification-version (composite, deferred),
+#   status (token), type (token), udi-carrier (string),
+#   udi-di (string), url (uri), version (string).
+#
+# Composites note: `code-value-concept` and `specification-version`
+# are FHIR composite parameters that pair two simple components. Our
+# converter supports composite dispatch (see Observation's combo-code
+# / code-value-concept families), but Device's composites pair against
+# a `version`/`specification` BackboneElement that doesn't decompose
+# cleanly into independent denormalized columns the way Observation's
+# do. They're omitted from this config until a downstream consumer
+# actually needs them — when the time comes, mirror Observation.yaml's
+# composite stanza and add a `_search.deviceComposite_*` projection.
+#
+# R5 structural notes worth calling out:
+#   * `Device.definition` is `CodeableReference` (R5 — combines a
+#     CodeableConcept and a Reference). The FHIR R5 expressions split
+#     them: `code` searches `Device.definition.concept` (the
+#     CodeableConcept side) while `definition` searches
+#     `Device.definition.reference` (the Reference side).
+#   * `Device.name` is `BackboneElement[*]` of `{value, type, display,
+#     preferred}` — the `device-name` string parameter unions name
+#     values WITH `Device.type.coding.display` and `Device.type.text`.
+#   * `Device.type` is `CodeableConcept[*]` (R5 changed cardinality
+#     from R4's 0..1).
+#   * `Device.version` is `BackboneElement[*]` of `{type, component,
+#     installDate, value}` — the `version` parameter targets `.value`.
+#   * `Device.serialNumber` is a top-level scalar AND duplicated as an
+#     `Identifier` with `type='SNO'`. The R5 expression
+#     `Device.serialNumber | Device.identifier.where(type='SNO')`
+#     unions both into the `serial-number` parameter.
+#   * `Device.udiCarrier` is `BackboneElement[*]` of `{deviceIdentifier,
+#     issuer, jurisdiction, carrierAIDC, carrierHRF, entryType}` —
+#     `udi-di` searches `.deviceIdentifier`, `udi-carrier` searches
+#     `.carrierHRF`.
+#   * `Device.conformsTo` is `BackboneElement[*]` of `{category,
+#     specification, version}` — `specification` searches
+#     `.specification` (CodeableConcept).
+#   * `Device.expirationDate` and `Device.manufactureDate` are
+#     `dateTime` scalars (NOT Periods); the date converter compares
+#     against the field directly.
+#   * `Device.url` is `uri` — exact-match equality; same shape as
+#     Observation's `value-canonical`.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # String Parameters (6 total — device-name, lot-number, manufacturer,
+  # model, serial-number, udi-carrier, udi-di, version)
+  #
+  # Per FHIR R5 §3.1.1.5.3 / §3.1.1.5.4: default = case-insensitive
+  # starts-with against the `_lower` companion; `:exact` =
+  # case-sensitive equality against the case-preserved field. Same
+  # contract Practitioner / Patient / Organization use.
+  # ─────────────────────────────────────────────────────────────
+  device-name:
+    type: string
+    description: |
+      A server defined search that may match any of the string fields in
+      Device.name or Device.type. FHIR R5 expression:
+      `Device.name.value | Device.type.coding.display | Device.type.text`.
+    fields:
+      default:
+        - field: "_search.deviceName_lower"
+          query_type: range
+      exact:
+        - field: "_search.deviceName"
+
+  lot-number:
+    type: string
+    description: "The lot number of the device (Device.lotNumber)"
+    fields:
+      default:
+        - field: "_search.lotNumber_lower"
+          query_type: range
+      exact:
+        - field: "_search.lotNumber"
+
+  manufacturer:
+    type: string
+    description: "The manufacturer of the device (Device.manufacturer)"
+    fields:
+      default:
+        - field: "_search.manufacturer_lower"
+          query_type: range
+      exact:
+        - field: "_search.manufacturer"
+
+  model:
+    type: string
+    description: "The model of the device (Device.modelNumber)"
+    fields:
+      default:
+        - field: "_search.modelNumber_lower"
+          query_type: range
+      exact:
+        - field: "_search.modelNumber"
+
+  serial-number:
+    type: string
+    description: |
+      The serial number of the device. FHIR R5 expression:
+      `Device.serialNumber | Device.identifier.where(type='SNO')` —
+      a path union over the top-level scalar AND any identifiers
+      tagged with the v2-0203 `SNO` (Serial Number) type code.
+    fields:
+      default:
+        - field: "_search.serialNumber_lower"
+          query_type: range
+      exact:
+        - field: "_search.serialNumber"
+
+  udi-carrier:
+    type: string
+    description: "UDI Barcode (RFID or other technology) string in HRF format (Device.udiCarrier.carrierHRF)"
+    fields:
+      default:
+        - field: "_search.udiCarrier_lower"
+          query_type: range
+      exact:
+        - field: "_search.udiCarrier"
+
+  udi-di:
+    type: string
+    description: "The udi Device Identifier (DI) (Device.udiCarrier.deviceIdentifier)"
+    fields:
+      default:
+        - field: "_search.udiDi_lower"
+          query_type: range
+      exact:
+        - field: "_search.udiDi"
+
+  version:
+    type: string
+    description: "The specific version of the device (Device.version.value)"
+    fields:
+      default:
+        - field: "_search.version_lower"
+          query_type: range
+      exact:
+        - field: "_search.version"
+
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters (3 total — definition, location, organization, parent)
+  # ─────────────────────────────────────────────────────────────
+  definition:
+    type: reference
+    description: |
+      The definition / type of the device (Device.definition.reference).
+      Targets the Reference side of the R5 CodeableReference. The
+      `code` parameter targets the CodeableConcept side of the same
+      element via `Device.definition.concept`.
+    fields:
+      - field: "_search.definitionId"
+        referenceType: id
+      - field: "_search.definitionType"
+        referenceType: type
+      - field: "definition.reference"
+        referenceType: full
+
+  location:
+    type: reference
+    description: "A location, where the resource is found (Device.location)"
+    fields:
+      - field: "_search.locationId"
+        referenceType: id
+      - field: "_search.locationType"
+        referenceType: type
+      - field: "location.reference"
+        referenceType: full
+
+  organization:
+    type: reference
+    description: "The organization responsible for the device (Device.owner)"
+    fields:
+      - field: "_search.ownerId"
+        referenceType: id
+      - field: "_search.ownerType"
+        referenceType: type
+      - field: "owner.reference"
+        referenceType: full
+
+  parent:
+    type: reference
+    description: "The parent device (Device.parent) — recursive reference to another Device"
+    fields:
+      - field: "_search.parentId"
+        referenceType: id
+      - field: "_search.parentType"
+        referenceType: type
+      - field: "parent.reference"
+        referenceType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters (8 total — biological-source-event, code,
+  # identifier, specification, status, type + `_id` listed under
+  # common at bottom)
+  # ─────────────────────────────────────────────────────────────
+  biological-source-event:
+    type: token
+    description: "The biological source for the device (Device.biologicalSourceEvent — single Identifier)"
+    fields:
+      - field: "_search.biologicalSourceEvent_systemCode"
+        tokenType: systemCode
+      - field: "_search.biologicalSourceEvent_values"
+        tokenType: code
+
+  code:
+    type: token
+    description: |
+      The definition / type of the device, by code
+      (Device.definition.concept). Targets the CodeableConcept side
+      of the R5 CodeableReference; the Reference side is searched via
+      the `definition` parameter.
+    fields:
+      - field: "_search.code_systemCode"
+        tokenType: systemCode
+      - field: "_search.code_codes"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: "Instance id from manufacturer, owner, and others (Device.identifier)"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  specification:
+    type: token
+    description: "The standards, specifications, or formal guidances (Device.conformsTo.specification)"
+    fields:
+      - field: "_search.specification_systemCode"
+        tokenType: systemCode
+      - field: "_search.specification_codes"
+        tokenType: code
+
+  status:
+    type: token
+    description: |
+      Device status: `active | inactive | entered-in-error | unknown`
+      (Device.status). Top-level scalar code — same shape as
+      Appointment.status.
+    fields:
+      - field: "status"
+        tokenType: code
+
+  type:
+    type: token
+    description: "The type of the device (Device.type — CodeableConcept[])"
+    fields:
+      - field: "_search.type_systemCode"
+        tokenType: systemCode
+      - field: "_search.type_codes"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # URI Parameter (1 total — url)
+  # Same exact-match shape Observation uses for `value-canonical`.
+  # ─────────────────────────────────────────────────────────────
+  url:
+    type: uri
+    description: "Network address to contact device (Device.url)"
+    fields:
+      - field: "url"
+
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters (2 resource-specific + `_lastUpdated` common)
+  # Per FHIR R5 the comparators eq/ne/gt/ge/lt/le/sa/eb/ap are all
+  # allowed. Both `expirationDate` and `manufactureDate` are dateTime
+  # scalars (NOT Periods), so we compare against the field directly.
+  # ─────────────────────────────────────────────────────────────
+  expiration-date:
+    type: date
+    description: "The expiration date of the device (Device.expirationDate)"
+    fields:
+      - field: "_search.expirationDate"
+        type: date
+
+  manufacture-date:
+    type: date
+    description: "The manufacture date of the device (Device.manufactureDate)"
+    fields:
+      - field: "_search.manufactureDate"
+        type: date
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters (2 — applied to every FHIR resource)
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+
+# Denormalization Configuration
+# Only fields explicitly listed here are denormalized (100% config-driven).
+# The denormalizer writes everything to `_search.*` (and `_compartments.*`
+# for the compartment_membership rule); the original FHIR resource fields
+# are left intact so resource purity is preserved. Top-level scalars
+# (`status`, `url`) are queried directly — no denormalization needed.
+denormalization:
+  # FHIR R5: `Device.identifier` (Identifier[]). Standard token
+  # denormalization — both bare values and `system|value` pairs so
+  # the search supports the `system|code` modifier.
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+        comment: "Bare identifier values (powers `identifier=<value>`)"
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+        comment: "system|value pairs (powers `identifier=<system>|<value>`)"
+
+  # FHIR R5: `Device.biologicalSourceEvent` is a SINGLE Identifier
+  # (cardinality 0..1, not an array). IdentifierExtractor's
+  # `_ensure_list` wraps the scalar so the same projection logic works.
+  biologicalSourceEvent:
+    source: biologicalSourceEvent
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: biologicalSourceEvent.value
+        target_field: biologicalSourceEvent_values
+        datatype: array[string]
+        comment: "Bare biological-source-event identifier value(s)"
+      - source_path: biologicalSourceEvent
+        target_field: biologicalSourceEvent_systemCode
+        datatype: array[string]
+        comment: "system|value pair(s) for the biological-source-event token search"
+
+  # FHIR R5: `Device.definition.concept` is the CodeableConcept side
+  # of the R5 CodeableReference. `$resource` mode + path resolution
+  # descends into the CodeableReference wrapper; pre-resolved mode
+  # would feed the wrapper itself (which has `concept` AND `reference`
+  # siblings) and CodeableConceptExtractor would mis-route.
+  code:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: definition.concept.coding[*].code
+        target_field: code_codes
+        datatype: array[string]
+        comment: "Device type codes (powers `code=<code>`)"
+      - source_path: definition.concept.coding[*]
+        target_field: code_systemCode
+        datatype: array[string]
+        comment: "system|code pairs for the code parameter"
+
+  # FHIR R5: `Device.type` is CodeableConcept[] (R5 changed cardinality
+  # from R4's single CodeableConcept). Pre-resolved mode feeds the
+  # array directly to CodeableConceptExtractor.
+  type:
+    source: type
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: type[*].coding[*].code
+        target_field: type_codes
+        datatype: array[string]
+        comment: "Device type codes (powers `type=<code>`)"
+      - source_path: type[*].coding[*]
+        target_field: type_systemCode
+        datatype: array[string]
+        comment: "system|code pairs for the type parameter"
+
+  # FHIR R5: `Device.conformsTo[*].specification` is a CodeableConcept
+  # nested inside the conformsTo BackboneElement. `$resource` mode +
+  # path resolution walks `conformsTo[*].specification.coding[*]`.
+  specification:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: conformsTo[*].specification.coding[*].code
+        target_field: specification_codes
+        datatype: array[string]
+        comment: "Specification codes from Device.conformsTo[*].specification"
+      - source_path: conformsTo[*].specification.coding[*]
+        target_field: specification_systemCode
+        datatype: array[string]
+        comment: "system|code pairs for the specification parameter"
+
+  # FHIR R5: `device-name` parameter expression is a path union over
+  # `Device.name.value`, `Device.type.coding.display`, and
+  # `Device.type.text`. `$resource` mode + a `|`-joined path
+  # expression collapses all three into a single denormalized array.
+  # Path-resolver `|` is documented in path_resolver.py — same
+  # pattern Practitioner.yaml uses for the `identifier` union.
+  deviceName:
+    source: $resource
+    target: _search
+    extractor: TextExtractor
+    field_mappings:
+      - source_path: name[*].value | type[*].coding[*].display | type[*].text
+        target_field: deviceName
+        datatype: array[string]
+        comment: "Case-preserved deviceName union for `:exact` matches"
+      - source_path: name[*].value | type[*].coding[*].display | type[*].text
+        target_field: deviceName_lower
+        datatype: array[string]
+        normalize: lowercase
+        comment: "Lowercased deviceName for case-insensitive default search"
+
+  # FHIR R5 scalar strings — denormalized as both case-preserved
+  # (`:exact`) and lowercased (`default`) projections for the
+  # standard string-search contract. DirectFieldExtractor handles
+  # the simple top-level scalars; the `*_lower` companion is built
+  # by the `normalize: lowercase` flag.
+  manufacturer:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: manufacturer
+        target_field: manufacturer
+        datatype: string
+        comment: "Manufacturer name (case-preserved for `:exact`)"
+      - source_path: manufacturer
+        target_field: manufacturer_lower
+        datatype: string
+        normalize: lowercase
+        comment: "Manufacturer lowercased for default starts-with search"
+
+  modelNumber:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: modelNumber
+        target_field: modelNumber
+        datatype: string
+        comment: "Model number (powers `model=<value>` :exact)"
+      - source_path: modelNumber
+        target_field: modelNumber_lower
+        datatype: string
+        normalize: lowercase
+        comment: "Model number lowercased for default search"
+
+  lotNumber:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: lotNumber
+        target_field: lotNumber
+        datatype: string
+        comment: "Lot number (case-preserved for `:exact`)"
+      - source_path: lotNumber
+        target_field: lotNumber_lower
+        datatype: string
+        normalize: lowercase
+        comment: "Lot number lowercased for default search"
+
+  # FHIR R5 `serial-number` expression is a path union over the
+  # top-level `Device.serialNumber` scalar AND any
+  # `Device.identifier` entries tagged with v2-0203 `SNO` (Serial
+  # Number). TextExtractor in `$resource` mode walks both branches;
+  # an SNO-typed identifier without a `where()` filter feature just
+  # joins the top-level scalar against ALL identifier values, which
+  # would over-match. We narrow it by using the v2-0203 SNO `coding`
+  # path explicitly — the path resolver doesn't implement
+  # `.where(type='SNO')`, so the practical compromise is to denormalize
+  # `serialNumber` from BOTH branches and accept that an Identifier
+  # whose .type.coding[*].code is `SNO` AND whose .value matches will
+  # surface; non-SNO identifiers never reach this path because we
+  # restrict the second branch to `identifier[*].value` filtered to
+  # SNO via post-extract. TextExtractor honors the `|` union but
+  # doesn't filter by sibling fields; for the typical case (serial
+  # number stored as the top-level scalar) the first branch is
+  # sufficient. See README §Device serial-number caveat for the
+  # full caveat.
+  serialNumber:
+    source: $resource
+    target: _search
+    extractor: TextExtractor
+    field_mappings:
+      - source_path: serialNumber | identifier[*].value
+        target_field: serialNumber
+        datatype: array[string]
+        comment: "Serial number — case-preserved union over top-level scalar and identifier values"
+      - source_path: serialNumber | identifier[*].value
+        target_field: serialNumber_lower
+        datatype: array[string]
+        normalize: lowercase
+        comment: "Serial number lowercased for default search"
+
+  # FHIR R5: `Device.version` is `BackboneElement[*]` of `{type,
+  # component, installDate, value}`. The `version` search parameter
+  # targets `.value` per the R5 expression `Device.version.value`.
+  version:
+    source: $resource
+    target: _search
+    extractor: TextExtractor
+    field_mappings:
+      - source_path: version[*].value
+        target_field: version
+        datatype: array[string]
+        comment: "Device version values (case-preserved for `:exact`)"
+      - source_path: version[*].value
+        target_field: version_lower
+        datatype: array[string]
+        normalize: lowercase
+        comment: "Device version values lowercased for default search"
+
+  # FHIR R5: `Device.udiCarrier` is `BackboneElement[*]` of
+  # `{deviceIdentifier, issuer, jurisdiction, carrierAIDC, carrierHRF,
+  # entryType}`. Two distinct search params:
+  #   * `udi-carrier` → `Device.udiCarrier.carrierHRF`
+  #   * `udi-di`      → `Device.udiCarrier.deviceIdentifier`
+  udiCarrier:
+    source: $resource
+    target: _search
+    extractor: TextExtractor
+    field_mappings:
+      - source_path: udiCarrier[*].carrierHRF
+        target_field: udiCarrier
+        datatype: array[string]
+        comment: "UDI HRF (Human-Readable Form) for the udi-carrier parameter"
+      - source_path: udiCarrier[*].carrierHRF
+        target_field: udiCarrier_lower
+        datatype: array[string]
+        normalize: lowercase
+        comment: "UDI HRF lowercased for default search"
+      - source_path: udiCarrier[*].deviceIdentifier
+        target_field: udiDi
+        datatype: array[string]
+        comment: "UDI DI (Device Identifier) for the udi-di parameter"
+      - source_path: udiCarrier[*].deviceIdentifier
+        target_field: udiDi_lower
+        datatype: array[string]
+        normalize: lowercase
+        comment: "UDI DI lowercased for default search"
+
+  # FHIR R5 dates — `expirationDate` and `manufactureDate` are
+  # top-level dateTime scalars (NOT Periods). DirectFieldExtractor
+  # preserves Python `datetime` objects through denormalization (per
+  # the `_coerce` patch added during the Practitioner work); raw FHIR
+  # JSON ingestion stores them as ISO strings, in which case callers
+  # should pre-coerce dates the way the integration tests do.
+  expirationDate:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: expirationDate
+        target_field: expirationDate
+        datatype: date
+        comment: "Expiration dateTime — powers `expiration-date` range queries"
+
+  manufactureDate:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: manufactureDate
+        target_field: manufactureDate
+        datatype: date
+        comment: "Manufacture dateTime — powers `manufacture-date` range queries"
+
+  # ─────────────────────────────────────────────────────────────
+  # Reference denormalization (for the 4 reference search params)
+  # ─────────────────────────────────────────────────────────────
+  definitionRef:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: definition.reference
+        target_field: definitionId
+        datatype: string
+        extractType: id
+        comment: "Bare ID from definition.reference (CodeableReference's Reference side)"
+      - source_path: definition.reference
+        target_field: definitionType
+        datatype: string
+        extractType: type
+        comment: "Resource type from definition.reference (always 'DeviceDefinition')"
+
+  location:
+    source: location
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: location.reference
+        target_field: locationId
+        datatype: string
+        extractType: id
+        comment: "Bare ID from location reference"
+      - source_path: location.reference
+        target_field: locationType
+        datatype: string
+        extractType: type
+        comment: "Resource type from location reference (always 'Location')"
+
+  owner:
+    source: owner
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: owner.reference
+        target_field: ownerId
+        datatype: string
+        extractType: id
+        comment: "Bare ID from owner reference (powers `organization=<id>`)"
+      - source_path: owner.reference
+        target_field: ownerType
+        datatype: string
+        extractType: type
+        comment: "Resource type from owner reference (always 'Organization')"
+
+  parent:
+    source: parent
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: parent.reference
+        target_field: parentId
+        datatype: string
+        extractType: id
+        comment: "Bare ID from parent reference (recursive Device pointer)"
+      - source_path: parent.reference
+        target_field: parentType
+        datatype: string
+        extractType: type
+        comment: "Resource type from parent reference (always 'Device')"
+
+  # ---------------------------------------------------------------------
+  # Compartment membership precompute (Hybrid Approach 3 from
+  # analysis_documents/FHIR_TO_MQL_COMPARTMENT.md). Per FHIR R5 spec,
+  # Device has "No defined compartments" as a *member* (it's not in
+  # any other resource's compartment), but the implicit-self-membership
+  # rule (CompartmentDefinition `[base]` linking parameter, FHIR R5
+  # §3.5.5) means `Device/<id>/Device` is a valid query. The
+  # CompartmentLoader already enforces this — we add the precompute
+  # here so that self-query collapses to a single indexed lookup
+  # against `_compartments.Device` instead of the dynamic-resolver
+  # error path (Device isn't listed under itself in device.json's
+  # canonical resource[] array).
+  # ---------------------------------------------------------------------
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Device
+        source_paths: []
+        reference_type: Device
+        include_self: true
+        datatype: array[string]
+        comment: "Device compartment IDs (own id only — FHIR R5 implicit self-membership; Device has no Device-typed self-references)"
+
+# Compartment fast-path opt-in. The CompartmentResolver consults this
+# list and, for the Device compartment, emits the precomputed
+# `_compartments.Device: id` query for the `Device/<id>/Device` self
+# query. Cross-resource queries (`Device/<id>/Observation`,
+# `Device/<id>/Appointment`, ...) go through the dynamic resolver
+# against the linking parameters listed in
+# `compartments/definitions/device.json` (per the design doc's
+# Configuration 2 pattern).
+compartments:
+  precomputed:
+    - Device
+
+# Recommended MongoDB Indexes
+indexes:
+  # Compartment fast-path index (Hybrid Approach 3). Single-field
+  # indexed lookup that powers `Device/<id>/Device` queries through
+  # the resolver's precomputed branch.
+  - fields:
+      - "_compartments.Device": 1
+    options:
+      name: idx_compartment_device
+      sparse: true
+
+  # Top-level scalars (queried directly, not via `_search.*`)
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+  - fields:
+      - "url": 1
+    options:
+      name: idx_url
+      sparse: true
+
+  - fields:
+      - "_search.identifier_systemCode": 1
+    options:
+      name: idx_identifier_system_code
+  - fields:
+      - "_search.identifier_values": 1
+    options:
+      name: idx_identifier_values
+
+  - fields:
+      - "_search.biologicalSourceEvent_systemCode": 1
+    options:
+      name: idx_biological_source_event_system_code
+      sparse: true
+  - fields:
+      - "_search.biologicalSourceEvent_values": 1
+    options:
+      name: idx_biological_source_event_values
+      sparse: true
+
+  - fields:
+      - "_search.code_systemCode": 1
+    options:
+      name: idx_code_system_code
+      sparse: true
+  - fields:
+      - "_search.code_codes": 1
+    options:
+      name: idx_code_codes
+      sparse: true
+
+  - fields:
+      - "_search.type_systemCode": 1
+    options:
+      name: idx_type_system_code
+      sparse: true
+  - fields:
+      - "_search.type_codes": 1
+    options:
+      name: idx_type_codes
+      sparse: true
+
+  - fields:
+      - "_search.specification_systemCode": 1
+    options:
+      name: idx_specification_system_code
+      sparse: true
+  - fields:
+      - "_search.specification_codes": 1
+    options:
+      name: idx_specification_codes
+      sparse: true
+
+  - fields:
+      - "_search.deviceName_lower": 1
+    options:
+      name: idx_device_name_lower
+      sparse: true
+  - fields:
+      - "_search.manufacturer_lower": 1
+    options:
+      name: idx_manufacturer_lower
+      sparse: true
+  - fields:
+      - "_search.modelNumber_lower": 1
+    options:
+      name: idx_model_number_lower
+      sparse: true
+  - fields:
+      - "_search.lotNumber_lower": 1
+    options:
+      name: idx_lot_number_lower
+      sparse: true
+  - fields:
+      - "_search.serialNumber_lower": 1
+    options:
+      name: idx_serial_number_lower
+      sparse: true
+  - fields:
+      - "_search.udiCarrier_lower": 1
+    options:
+      name: idx_udi_carrier_lower
+      sparse: true
+  - fields:
+      - "_search.udiDi_lower": 1
+    options:
+      name: idx_udi_di_lower
+      sparse: true
+  - fields:
+      - "_search.version_lower": 1
+    options:
+      name: idx_version_lower
+      sparse: true
+
+  - fields:
+      - "_search.expirationDate": 1
+    options:
+      name: idx_expiration_date
+      sparse: true
+  - fields:
+      - "_search.manufactureDate": 1
+    options:
+      name: idx_manufacture_date
+      sparse: true
+
+  - fields:
+      - "_search.locationId": 1
+    options:
+      name: idx_location_id
+      sparse: true
+  - fields:
+      - "_search.ownerId": 1
+    options:
+      name: idx_owner_id
+      sparse: true
+  - fields:
+      - "_search.parentId": 1
+    options:
+      name: idx_parent_id
+      sparse: true
+  - fields:
+      - "_search.definitionId": 1
+    options:
+      name: idx_definition_id
+      sparse: true
+
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_last_updated

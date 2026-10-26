@@ -1,0 +1,230 @@
+resource: ResearchSubject
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec ResearchSubject)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/patient.json
+#
+# Total parameters: 9 (7 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `study` and `subject` are required Reference fields.
+#   * `patient` search is the Patient/* shortcut on `subject`.
+#   * `date` searches `period` (interval overlap).
+#   * `subject_state` searches `progress[].subjectState` (token).
+#   * Top-level scalar `status` queries the FHIR root.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters
+  # ─────────────────────────────────────────────────────────────
+  patient:
+    type: reference
+    description: "Who or what is part of study (Patient subject)"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  study:
+    type: reference
+    description: "Study subject is part of"
+    fields:
+      - field: "_search.studyId"
+        referenceType: id
+      - field: "_search.studyType"
+        referenceType: type
+      - field: "study.reference"
+        referenceType: full
+
+  subject:
+    type: reference
+    description: "Who or what is part of study"
+    fields:
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "_search.subjectType"
+        referenceType: type
+      - field: "subject.reference"
+        referenceType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters
+  # ─────────────────────────────────────────────────────────────
+  identifier:
+    type: token
+    description: "Business Identifier for research subject in a study"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  status:
+    type: token
+    description: "draft | active | retired | unknown"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  subject_state:
+    type: token
+    description: "candidate | on-study | screening | withdrawn | ..."
+    fields:
+      - field: "_search.progressSubjectState_systemCode"
+        tokenType: systemCode
+      - field: "_search.progressSubjectState_codes"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters
+  # ─────────────────────────────────────────────────────────────
+  date:
+    type: date
+    description: "Start and end of participation"
+    fields:
+      - field: "_search.period"
+        type: period
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  subject:
+    source: subject
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: subject.reference
+        target_field: subjectId
+        datatype: string
+        extractType: id
+      - source_path: subject.reference
+        target_field: subjectType
+        datatype: string
+        extractType: type
+      - source_path: subject.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+        filterType: Patient
+        comment: "Patient/* subject only — powers `patient` search parameter"
+
+  study:
+    source: study
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: study.reference
+        target_field: studyId
+        datatype: string
+        extractType: id
+      - source_path: study.reference
+        target_field: studyType
+        datatype: string
+        extractType: type
+
+  participation_period:
+    source: period
+    target: _search
+    extractor: PeriodExtractor
+    field_mappings:
+      - source_path: start
+        target_field: period
+        datatype: object
+        comment: "Powers `date` search on ResearchSubject.period"
+
+  progress_subject_state:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: progress[*].subjectState.coding[*].code
+        target_field: progressSubjectState_codes
+        datatype: array[string]
+      - source_path: progress[*].subjectState.coding[*]
+        target_field: progressSubjectState_systemCode
+        datatype: array[string]
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - subject
+          - patient
+        reference_type: Patient
+        datatype: array[string]
+        comment: |
+          Patient compartment (subject linking param). Patient/*
+          refs only; `patient` token satisfies compartment audit.
+
+compartments:
+  precomputed:
+    - Patient
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+  - fields:
+      - "_search.patientId": 1
+    options:
+      name: idx_patient_id
+      sparse: true
+  - fields:
+      - "_search.studyId": 1
+    options:
+      name: idx_study_id
+      sparse: true
+  - fields:
+      - "_search.subjectId": 1
+    options:
+      name: idx_subject_id
+      sparse: true
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+  - fields:
+      - "_search.identifier_values": 1
+    options:
+      name: idx_identifier_values
+      sparse: true
+  - fields:
+      - "_search.progressSubjectState_codes": 1
+    options:
+      name: idx_progress_subject_state_codes
+      sparse: true

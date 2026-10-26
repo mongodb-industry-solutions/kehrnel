@@ -1,0 +1,505 @@
+resource: Schedule
+fhir_version: R5
+
+# Definition: https://www.hl7.org/fhir/schedule-definitions.html
+# Search Parameters: https://www.hl7.org/fhir/schedule-search.html
+# Compartments containing Schedule:
+#   * Patient     — via `actor` linking parameter
+#     (https://www.hl7.org/fhir/compartmentdefinition-patient.html)
+#   * Practitioner — via `actor` linking parameter
+#     (https://www.hl7.org/fhir/compartmentdefinition-practitioner.html)
+#   * Device      — via `actor` linking parameter
+#     (https://www.hl7.org/fhir/compartmentdefinition-device.html)
+#   * RelatedPerson — via `actor` linking parameter (DYNAMIC — not precomputed,
+#     RelatedPerson compartment follows the Encounter/dynamic strategy)
+# FHIR R5 Schedule search parameter table validated 2026-05.
+#
+# Total parameters: 11 (9 resource-specific per R5 §12.16.13 + 2 common).
+#
+# Resource-specific search parameters (per R5 §12.16.13):
+#   active (token), actor (reference), date (date),
+#   identifier (token), name (string), service-category (token),
+#   service-type (token), service-type-reference (reference),
+#   specialty (token).
+#
+# R5 structural notes worth calling out:
+#   * `Schedule.active` is a top-level scalar boolean (0..1). It is a
+#     modifier element — absent is treated as active per the spec.
+#     Queried directly (no `_search.*` projection needed). Uses
+#     `tokenType: boolean` so the converter emits Python True/False
+#     matching BSON-typed denormalized values (same pattern as
+#     Patient.active and PractitionerRole.active).
+#   * `Schedule.serviceType` is `CodeableReference(HealthcareService)[]`
+#     (R5 change from R4 CodeableConcept). This means each entry has
+#     EITHER `.concept` (CodeableConcept) OR `.reference` (Reference).
+#     Two separate search params cover the two arms:
+#       - `service-type`            → Schedule.serviceType.concept
+#       - `service-type-reference`  → Schedule.serviceType.reference
+#     Same pattern Appointment.yaml uses for its serviceType field.
+#   * `Schedule.actor` is `Reference(...)[]` with 8 possible target types:
+#     Patient, Practitioner, PractitionerRole, CareTeam, RelatedPerson,
+#     Device, HealthcareService, Location. All 4 precomputed compartment
+#     types (Patient, Practitioner, Device) and the dynamic RelatedPerson
+#     compartment are routed through this single source path.
+#   * `Schedule.planningHorizon` is a `Period` (0..1). The `date` search
+#     parameter performs an interval overlap test, so PeriodExtractor
+#     is used to normalize start/end into `_search.planningHorizon`.
+#   * `Schedule.comment` is a markdown free-text field with no search
+#     parameter — omitted from denormalization.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # String Parameters (1 — name)
+  # ─────────────────────────────────────────────────────────────
+  name:
+    type: string
+    description: "A portion of the Schedule name (Schedule.name)"
+    fields:
+      default:
+        - field: "_search.name_lower"
+          query_type: range
+      exact:
+        - field: "_search.name"
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters (5 — active, identifier, service-category,
+  #                        service-type, specialty)
+  # ─────────────────────────────────────────────────────────────
+
+  # active — boolean top-level scalar; queried directly
+  # (no _search.* projection). `tokenType: boolean` so the converter
+  # coerces "true"/"false" to Python True/False matching BSON booleans.
+  active:
+    type: token
+    description: "Whether this schedule is in active use (Schedule.active)"
+    fields:
+      - field: "active"
+        tokenType: boolean
+
+  identifier:
+    type: token
+    description: "A Schedule Identifier (Schedule.identifier)"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  service-category:
+    type: token
+    description: "High-level category of service (Schedule.serviceCategory)"
+    fields:
+      - field: "_search.serviceCategory_systemCode"
+        tokenType: systemCode
+      - field: "_search.serviceCategory_codes"
+        tokenType: code
+
+  # service-type queries the CodeableConcept arm of the R5 CodeableReference.
+  service-type:
+    type: token
+    description: >
+      The type (by coding) of appointments that can be booked into associated
+      slot(s) — Schedule.serviceType.concept (CodeableReference's concept arm).
+    fields:
+      - field: "_search.serviceType_systemCode"
+        tokenType: systemCode
+      - field: "_search.serviceType_codes"
+        tokenType: code
+
+  specialty:
+    type: token
+    description: "Type of specialty needed (Schedule.specialty)"
+    fields:
+      - field: "_search.specialty_systemCode"
+        tokenType: systemCode
+      - field: "_search.specialty_codes"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters (2 — actor, service-type-reference)
+  # ─────────────────────────────────────────────────────────────
+
+  # actor targets 8 resource types: Patient, Practitioner,
+  # PractitionerRole, CareTeam, RelatedPerson, Device,
+  # HealthcareService, Location.
+  actor:
+    type: reference
+    description: >
+      The individual(HealthcareService, Practitioner, Location, …) to
+      find a Schedule for (Schedule.actor). 8 possible target types.
+    fields:
+      - field: "_search.actorIds"
+        referenceType: id
+      - field: "_search.actorTypes"
+        referenceType: type
+
+  # service-type-reference queries the Reference arm of the CodeableReference.
+  service-type-reference:
+    type: reference
+    description: >
+      The type (by HealthcareService) of appointments that can be booked —
+      Schedule.serviceType.reference (CodeableReference's reference arm).
+    fields:
+      - field: "_search.serviceTypeReferenceId"
+        referenceType: id
+      - field: "_search.serviceTypeReferenceType"
+        referenceType: type
+
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters (1 — date against planningHorizon Period)
+  # ─────────────────────────────────────────────────────────────
+
+  # date searches for Schedules whose planningHorizon Period overlaps
+  # the given date. The PeriodExtractor normalises the Period into a
+  # `_search.planningHorizon` sub-document {start, end}, and the
+  # `type: period` hint instructs the date converter to apply the
+  # standard FHIR interval-overlap semantics
+  # (queryDate ≥ period.start AND queryDate ≤ period.end).
+  date:
+    type: date
+    description: >
+      Search for Schedule resources that have a planningHorizon Period
+      that contains this date (Schedule.planningHorizon).
+    fields:
+      - field: "_search.planningHorizon"
+        type: period
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters (_id, _lastUpdated)
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Denormalization
+# ─────────────────────────────────────────────────────────────────────────────
+denormalization:
+
+  # ── identifier ────────────────────────────────────────────────────────────
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+        comment: "Bare identifier values from Schedule.identifier[*].value"
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+        comment: "system|value pairs from Schedule.identifier for token lookup"
+
+  # ── serviceCategory ───────────────────────────────────────────────────────
+  # Schedule.serviceCategory is a plain CodeableConcept[] — no CodeableReference
+  # split required.
+  serviceCategory:
+    source: serviceCategory
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: serviceCategory[*].coding[*].code
+        target_field: serviceCategory_codes
+        datatype: array[string]
+        comment: "Codes from Schedule.serviceCategory[*].coding[*].code"
+      - source_path: serviceCategory[*].coding[*]
+        target_field: serviceCategory_systemCode
+        datatype: array[string]
+        comment: "system|code pairs from Schedule.serviceCategory"
+
+  # ── serviceType.concept ───────────────────────────────────────────────────
+  # R5: serviceType is CodeableReference(HealthcareService)[]. The concept arm
+  # carries the CodeableConcept used for the `service-type` token parameter.
+  serviceType_concept:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: serviceType[*].concept.coding[*].code
+        target_field: serviceType_codes
+        datatype: array[string]
+        comment: "Codes from Schedule.serviceType (R5 concept; R4 legacy auto-unioned)"
+      - source_path: serviceType[*].concept.coding[*]
+        target_field: serviceType_systemCode
+        datatype: array[string]
+        comment: "system|code pairs from Schedule.serviceType[*].concept"
+
+  # ── serviceType.reference ─────────────────────────────────────────────────
+  # The reference arm of the CodeableReference points to a HealthcareService.
+  # Used by the `service-type-reference` reference search parameter.
+  serviceTypeReference:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: serviceType[*].reference
+        target_field: serviceTypeReferenceId
+        datatype: array[string]
+        extractType: id
+        comment: "IDs extracted from Schedule.serviceType[*].reference (HealthcareService)"
+      - source_path: serviceType[*].reference
+        target_field: serviceTypeReferenceType
+        datatype: array[string]
+        extractType: type
+        comment: "Resource types from Schedule.serviceType[*].reference (always 'HealthcareService')"
+
+  # ── specialty ─────────────────────────────────────────────────────────────
+  specialty:
+    source: specialty
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: specialty[*].coding[*].code
+        target_field: specialty_codes
+        datatype: array[string]
+        comment: "Codes from Schedule.specialty[*].coding[*].code"
+      - source_path: specialty[*].coding[*]
+        target_field: specialty_systemCode
+        datatype: array[string]
+        comment: "system|code pairs from Schedule.specialty"
+
+  # ── name ──────────────────────────────────────────────────────────────────
+  # Schedule.name is a scalar string (0..1). DirectFieldExtractor emits both
+  # the case-preserved value (for :exact) and the lowercased companion
+  # (for case-insensitive starts-with default).
+  name:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: name
+        target_field: name
+        datatype: string
+        comment: "Case-preserved Schedule.name for :exact string match"
+      - source_path: name
+        target_field: name_lower
+        datatype: string
+        normalize: lowercase
+        comment: "Lowercased Schedule.name for case-insensitive starts-with match"
+
+  # ── actor ─────────────────────────────────────────────────────────────────
+  # Schedule.actor (1..*) is an array of References to 8 possible target
+  # types: Patient, Practitioner, PractitionerRole, CareTeam, RelatedPerson,
+  # Device, HealthcareService, Location.
+  # actorIds / actorTypes power the `actor` reference search parameter.
+  # The compartment_membership rule below slices this same array per type.
+  actor:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: actor[*].reference
+        target_field: actorIds
+        datatype: array[string]
+        extractType: id
+        comment: "Bare IDs from Schedule.actor[*] (8 possible target types)"
+      - source_path: actor[*].reference
+        target_field: actorTypes
+        datatype: array[string]
+        extractType: type
+        comment: "Resource types from Schedule.actor[*] (Patient / Practitioner / Device / …)"
+
+  # ── planningHorizon ───────────────────────────────────────────────────────
+  # Schedule.planningHorizon (0..1) is a native Period. PeriodExtractor
+  # normalises it into `_search.planningHorizon` {start, end} so the
+  # `date` parameter's `type: period` converter can apply FHIR
+  # interval-overlap semantics (queryDate ≥ period.start AND ≤ period.end).
+  planningHorizon:
+    source: planningHorizon
+    target: _search
+    extractor: PeriodExtractor
+    field_mappings:
+      - source_path: planningHorizon.start
+        target_field: planningHorizon.start
+        datatype: date
+        optional: true
+        comment: >
+          planningHorizon.start for date range overlap queries. Using
+          `datatype: date` (not string) so the validator accepts Python
+          datetime objects when seeded programmatically, enabling BSON
+          ISODate storage and type-aware range comparisons in MongoDB.
+      - source_path: planningHorizon.end
+        target_field: planningHorizon.end
+        datatype: date
+        optional: true
+        comment: "planningHorizon.end for date range overlap queries"
+
+  # ── compartment_membership ────────────────────────────────────────────────
+  # All four FHIR R5 compartments link to Schedule via the `actor`
+  # linking parameter. Patient, Practitioner, and Device are precomputed
+  # for fast indexed lookups. RelatedPerson uses the DYNAMIC strategy
+  # (resolves to a live `actor` reference query at query time) because
+  # RelatedPerson compartment access is far less frequent than Patient /
+  # Practitioner / Device and follows the same dynamic pattern as the
+  # Encounter compartment.
+  #
+  # CompartmentMembershipExtractor's `reference_type` filter ensures
+  # each actor reference is routed to the correct bucket — the same
+  # actor[] array is scanned once but partitioned by reference type.
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - actor
+        reference_type: Patient
+        datatype: array[string]
+        comment: |
+          Patient compartment IDs (Schedule.actor refs filtered to Patient/*).
+          Per FHIR R5 compartmentdefinition-patient.html, Schedule participates
+          in the Patient compartment via the `actor` linking parameter.
+      - target_field: Practitioner
+        source_paths:
+          - actor
+        reference_type: Practitioner
+        datatype: array[string]
+        comment: |
+          Practitioner compartment IDs (Schedule.actor refs filtered to Practitioner/*).
+          Per FHIR R5 compartmentdefinition-practitioner.html, Schedule participates
+          in the Practitioner compartment via the `actor` linking parameter.
+      - target_field: Device
+        source_paths:
+          - actor
+        reference_type: Device
+        datatype: array[string]
+        comment: |
+          Device compartment IDs (Schedule.actor refs filtered to Device/*).
+          Per FHIR R5 compartmentdefinition-device.html, Schedule participates
+          in the Device compartment via the `actor` linking parameter.
+          A device can be a bookable actor (e.g. an MRI scanner, a robot-arm).
+
+compartments:
+  precomputed:
+    - Patient
+    - Practitioner
+    - Device
+  # RelatedPerson is intentionally NOT in `precomputed`. The
+  # compartment_resolver will dynamically generate:
+  #   { "actor.reference": { "$in": ["RelatedPerson/<id>"] } }
+  # at query time — consistent with how the Encounter compartment is
+  # handled throughout the codebase.
+
+indexes:
+  # ── Compartment fast-path indexes (mandatory — pinned by
+  #    test_precomputed_compartments_have_backing_index audit)
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+  - fields:
+      - "_compartments.Practitioner": 1
+    options:
+      name: idx_compartment_practitioner
+      sparse: true
+  - fields:
+      - "_compartments.Device": 1
+    options:
+      name: idx_compartment_device
+      sparse: true
+
+  # ── Top-level scalars (queried directly, no _search.* prefix)
+  - fields:
+      - "active": 1
+    options:
+      name: idx_active
+
+  # ── Identifier
+  - fields:
+      - "_search.identifier_systemCode": 1
+    options:
+      name: idx_identifier_system_code
+      sparse: true
+  - fields:
+      - "_search.identifier_values": 1
+    options:
+      name: idx_identifier_values
+      sparse: true
+
+  # ── Service category / type / specialty
+  - fields:
+      - "_search.serviceCategory_codes": 1
+    options:
+      name: idx_service_category_codes
+      sparse: true
+  - fields:
+      - "_search.serviceCategory_systemCode": 1
+    options:
+      name: idx_service_category_system_code
+      sparse: true
+  - fields:
+      - "_search.serviceType_codes": 1
+    options:
+      name: idx_service_type_codes
+      sparse: true
+  - fields:
+      - "_search.serviceType_systemCode": 1
+    options:
+      name: idx_service_type_system_code
+      sparse: true
+  - fields:
+      - "_search.serviceTypeReferenceId": 1
+    options:
+      name: idx_service_type_reference_id
+      sparse: true
+  - fields:
+      - "_search.specialty_codes": 1
+    options:
+      name: idx_specialty_codes
+      sparse: true
+  - fields:
+      - "_search.specialty_systemCode": 1
+    options:
+      name: idx_specialty_system_code
+      sparse: true
+
+  # ── Name
+  - fields:
+      - "_search.name_lower": 1
+    options:
+      name: idx_name_lower
+      sparse: true
+
+  # ── Actor reference lookups
+  - fields:
+      - "_search.actorIds": 1
+    options:
+      name: idx_actor_ids
+      sparse: true
+  - fields:
+      - "_search.actorTypes": 1
+    options:
+      name: idx_actor_types
+      sparse: true
+
+  # ── Planning horizon period
+  - fields:
+      - "_search.planningHorizon.start": 1
+      - "_search.planningHorizon.end": 1
+    options:
+      name: idx_planning_horizon_period
+      sparse: true
+
+  # ── Common metadata
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_last_updated
+  - fields:
+      - "id": 1
+    options:
+      name: idx_id
+      unique: true

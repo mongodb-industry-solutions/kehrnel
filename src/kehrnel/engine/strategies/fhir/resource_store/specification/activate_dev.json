@@ -1,0 +1,27 @@
+{
+  "strategy_id": "fhir.resource_store",
+  "version": "0.13.1",
+  "domain": "fhir",
+  "config": {
+    "database": "fhir_synthetic_resource_store",
+    "schema_version": "R5",
+    "collection_prefix": "",
+    "generation": {
+      "seed": 42,
+      "use_enrichers": true
+    },
+    "search": {
+      "enabled": true,
+      "denormalize_on_generate": true,
+      "auto_index": true
+    }
+  },
+  "bindings": {
+    "db": {
+      "provider": "mongodb",
+      "uri": "mongodb://localhost:27017",
+      "database": "fhir_synthetic_resource_store"
+    }
+  },
+  "allow_plaintext_bindings": true
+}

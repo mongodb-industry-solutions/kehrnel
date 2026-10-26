@@ -1,0 +1,416 @@
+resource: AdverseEvent
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec AdverseEvent)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/
+#   patient.json, practitioner.json, relatedperson.json, device.json,
+#   encounter.json
+#
+# Total parameters: 16 (14 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `subject` is required Reference.
+#   * `occurrence[x]` is polymorphic — `date` uses `occurrenceDateTime`
+#     and `_search.occurrencePeriod`.
+#   * `suspectEntity[].instanceReference` powers `substance` search.
+#   * `resultingeffect` searches `resultingEffect[]` (FHIR param spelling).
+#   * Encounter compartment uses dynamic resolver (`encounter` linking param).
+
+search_parameters:
+  encounter:
+    type: reference
+    description: "Encounter during which event occurred"
+    fields:
+      - field: "_search.encounterId"
+        referenceType: id
+      - field: "encounter.reference"
+        referenceType: full
+
+  location:
+    type: reference
+    description: "Location where adverse event occurred"
+    fields:
+      - field: "_search.locationId"
+        referenceType: id
+      - field: "_search.locationType"
+        referenceType: type
+      - field: "location.reference"
+        referenceType: full
+
+  patient:
+    type: reference
+    description: "Subject impacted by event (Patient)"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  recorder:
+    type: reference
+    description: "Who recorded the adverse event"
+    fields:
+      - field: "_search.recorderId"
+        referenceType: id
+      - field: "_search.recorderType"
+        referenceType: type
+      - field: "recorder.reference"
+        referenceType: full
+
+  resultingeffect:
+    type: reference
+    description: "Effect on the subject due to this event"
+    fields:
+      - field: "_search.resultingEffectIds"
+        referenceType: id
+      - field: "_search.resultingEffectTypes"
+        referenceType: type
+
+  study:
+    type: reference
+    description: "Research study that the subject is enrolled in"
+    fields:
+      - field: "_search.studyIds"
+        referenceType: id
+      - field: "_search.studyTypes"
+        referenceType: type
+
+  subject:
+    type: reference
+    description: "Subject impacted by event"
+    fields:
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "_search.subjectType"
+        referenceType: type
+      - field: "subject.reference"
+        referenceType: full
+
+  substance:
+    type: reference
+    description: "Refers to the specific entity that caused the adverse event"
+    fields:
+      - field: "_search.substanceIds"
+        referenceType: id
+      - field: "_search.substanceTypes"
+        referenceType: type
+
+  actuality:
+    type: token
+    description: "actual | potential"
+    fields:
+      - field: "actuality"
+        tokenType: code
+
+  category:
+    type: token
+    description: "wrong-patient | procedure-mishap | medication-mishap | ..."
+    fields:
+      - field: "_search.category_systemCode"
+        tokenType: systemCode
+      - field: "_search.category_codes"
+        tokenType: code
+
+  code:
+    type: token
+    description: "Event or incident that occurred or was averted"
+    fields:
+      - field: "_search.code_systemCode"
+        tokenType: systemCode
+      - field: "_search.code_codes"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: "Business identifier for the event"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  seriousness:
+    type: token
+    description: "Seriousness or gravity of the event"
+    fields:
+      - field: "_search.seriousness_systemCode"
+        tokenType: systemCode
+      - field: "_search.seriousness_codes"
+        tokenType: code
+
+  status:
+    type: token
+    description: "in-progress | completed | entered-in-error | unknown"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  date:
+    type: date
+    description: "When the event occurred"
+    fields:
+      - field: "occurrenceDateTime"
+        type: date
+      - field: "_search.occurrencePeriod"
+        type: period
+
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  category:
+    source: category
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: category[*].coding[*].code
+        target_field: category_codes
+        datatype: array[string]
+      - source_path: category[*].coding[*]
+        target_field: category_systemCode
+        datatype: array[string]
+
+  code:
+    source: code
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code.coding[*].code
+        target_field: code_codes
+        datatype: array[string]
+      - source_path: code.coding[*]
+        target_field: code_systemCode
+        datatype: array[string]
+
+  seriousness:
+    source: seriousness
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: seriousness.coding[*].code
+        target_field: seriousness_codes
+        datatype: array[string]
+      - source_path: seriousness.coding[*]
+        target_field: seriousness_systemCode
+        datatype: array[string]
+
+  subject:
+    source: subject
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: subject.reference
+        target_field: subjectId
+        datatype: string
+        extractType: id
+      - source_path: subject.reference
+        target_field: subjectType
+        datatype: string
+        extractType: type
+      - source_path: subject.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+        filterType: Patient
+
+  recorder:
+    source: recorder
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: recorder.reference
+        target_field: recorderId
+        datatype: string
+        extractType: id
+      - source_path: recorder.reference
+        target_field: recorderType
+        datatype: string
+        extractType: type
+
+  encounter:
+    source: encounter
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: encounter.reference
+        target_field: encounterId
+        datatype: string
+        extractType: id
+
+  location:
+    source: location
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: location.reference
+        target_field: locationId
+        datatype: string
+        extractType: id
+      - source_path: location.reference
+        target_field: locationType
+        datatype: string
+        extractType: type
+
+  resulting_effect:
+    source: resultingEffect
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: resultingEffect[*].reference
+        target_field: resultingEffectIds
+        datatype: array[string]
+        extractType: id
+      - source_path: resultingEffect[*].reference
+        target_field: resultingEffectTypes
+        datatype: array[string]
+        extractType: type
+
+  study:
+    source: study
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: study[*].reference
+        target_field: studyIds
+        datatype: array[string]
+        extractType: id
+      - source_path: study[*].reference
+        target_field: studyTypes
+        datatype: array[string]
+        extractType: type
+
+  suspect_substance:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: suspectEntity[*].instanceReference.reference
+        target_field: substanceIds
+        datatype: array[string]
+        extractType: id
+      - source_path: suspectEntity[*].instanceReference.reference
+        target_field: substanceTypes
+        datatype: array[string]
+        extractType: type
+
+  occurrence_period:
+    source: occurrencePeriod
+    target: _search
+    extractor: PeriodExtractor
+    field_mappings:
+      - source_path: start
+        target_field: occurrencePeriod
+        datatype: object
+        comment: "Nested Period for `date` overlap queries"
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - subject
+          - patient
+        reference_type: Patient
+        datatype: array[string]
+      - target_field: Practitioner
+        source_paths:
+          - recorder
+        reference_type: Practitioner
+        datatype: array[string]
+      - target_field: RelatedPerson
+        source_paths:
+          - recorder
+        reference_type: RelatedPerson
+        datatype: array[string]
+      - target_field: Device
+        source_paths:
+          - recorder
+        reference_type: Device
+        datatype: array[string]
+
+compartments:
+  precomputed:
+    - Patient
+    - Practitioner
+    - RelatedPerson
+    - Device
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+  - fields:
+      - "_compartments.Practitioner": 1
+    options:
+      name: idx_compartment_practitioner
+      sparse: true
+  - fields:
+      - "_compartments.RelatedPerson": 1
+    options:
+      name: idx_compartment_relatedperson
+      sparse: true
+  - fields:
+      - "_compartments.Device": 1
+    options:
+      name: idx_compartment_device
+      sparse: true
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+  - fields:
+      - "_search.subjectId": 1
+    options:
+      name: idx_subject_id
+      sparse: true
+  - fields:
+      - "_search.encounterId": 1
+    options:
+      name: idx_encounter_id
+      sparse: true
+  - fields:
+      - "occurrenceDateTime": 1
+    options:
+      name: idx_occurrence_datetime
+      sparse: true
+  - fields:
+      - "_search.code_codes": 1
+    options:
+      name: idx_code_codes
+      sparse: true
+  - fields:
+      - "meta.lastUpdated": 1
+    options:
+      name: idx_meta_last_updated
+      sparse: true

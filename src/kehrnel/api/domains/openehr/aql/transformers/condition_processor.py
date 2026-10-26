@@ -1,4 +1,5 @@
 # src/kehrnel/api/compatibility/v1/aql/transformers/condition_processor.py
+import re
 from typing import Dict, Any, List, Tuple
 from .value_formatter import ValueFormatter
 
@@ -93,6 +94,55 @@ class ConditionProcessor:
         
         return ehr_conditions, comp_structure
 
+    def _build_aql_like_pattern(self, value: Any) -> str:
+        parts = ["^"]
+        for char in str(value):
+            if char == "*":
+                parts.append(".*")
+            elif char == "?":
+                parts.append(".")
+            else:
+                parts.append(re.escape(char))
+        parts.append("$")
+        return "".join(parts)
+
+    def _build_matches_pattern(self, value: Any) -> str:
+        if isinstance(value, dict):
+            values = [value.get(str(idx)) for idx in range(len(value))]
+            escaped = [re.escape(str(item)) for item in values if item is not None]
+            if escaped:
+                return rf"^(?:{'|'.join(escaped)})$"
+        if isinstance(value, list):
+            escaped = [re.escape(str(item)) for item in value if item is not None]
+            if escaped:
+                return rf"^(?:{'|'.join(escaped)})$"
+        return str(value)
+
+    def _build_data_condition(self, operator: str, value: Any, *, preformatted: bool = False) -> Any:
+        normalized_operator = str(operator or "").upper()
+        formatted_value = value if preformatted else self.value_formatter.format_value(value)
+
+        if normalized_operator == "=":
+            return formatted_value
+        if normalized_operator in {"!=", "<>"}:
+            return {"$ne": formatted_value}
+        if normalized_operator in OPERATOR_MAP:
+            return {OPERATOR_MAP[normalized_operator]: formatted_value}
+        if normalized_operator == "EXISTS":
+            return {"$exists": True}
+        if normalized_operator == "LIKE":
+            return {"$regex": self._build_aql_like_pattern(formatted_value)}
+        if normalized_operator == "MATCHES":
+            return {"$regex": self._build_matches_pattern(formatted_value)}
+        raise NotImplementedError(f"AQL operator '{operator}' not supported.")
+
+    def _can_merge_field_conditions(self, existing: Any, incoming: Any) -> bool:
+        if not isinstance(existing, dict) or not isinstance(incoming, dict):
+            return False
+        if "$regex" in existing or "$regex" in incoming:
+            return False
+        return not (set(existing) & set(incoming))
+
     def _extract_conditions_by_level(self, node: Dict, ehr_conditions: Dict, comp_conditions: List):
         """
         Recursively extracts conditions and separates them by EHR vs composition level.
@@ -118,16 +168,12 @@ class ConditionProcessor:
                     path_parts = path.split('/')[1:]  # Remove EHR alias
                     if len(path_parts) >= 2 and path_parts[0] == 'ehr_id':
                         ehr_field = 'ehr_id'
-                        mql_operator = OPERATOR_MAP.get(node["operator"], "$eq")
                         value = self.value_formatter.format_value(node["value"])
                         
                         # For shortened format collections, keep EHR ID as string to match document format
                         # Don't convert to Binary for now as documents store EHR IDs as strings
                         
-                        if mql_operator == "$eq":
-                            ehr_conditions[ehr_field] = value
-                        else:
-                            ehr_conditions[ehr_field] = {mql_operator: value}
+                        ehr_conditions[ehr_field] = self._build_data_condition(node["operator"], value, preformatted=True)
                 else:
                     # Composition-level condition
                     comp_conditions.append(node)
@@ -178,7 +224,7 @@ class ConditionProcessor:
             # Single condition
             variable = comp_structure["path"].split('/')[0]
             elem_match = await self._create_elem_match_for_single_condition(variable, comp_structure)
-            return {"$elemMatch": elem_match}
+            return self._wrap_elem_match(elem_match)
         
         elif comp_structure.get("operator") == "AND":
             # AND conditions - use $all with multiple $elemMatch
@@ -201,7 +247,7 @@ class ConditionProcessor:
                             "children": conditions
                         }
                     elem_match = await self._create_elem_match_for_variable_group(variable, condition_structure)
-                    elem_matches.append({"$elemMatch": elem_match})
+                    elem_matches.append(self._wrap_elem_match(elem_match))
             
             return {"$all": elem_matches} if len(elem_matches) > 1 else elem_matches[0] if elem_matches else {}
         
@@ -219,6 +265,11 @@ class ConditionProcessor:
             return {"$elemMatch": {"$or": or_conditions}} if or_conditions else {}
         
         return {}
+
+    def _wrap_elem_match(self, elem_match: Dict) -> Dict:
+        if "$notElemMatch" in elem_match:
+            return {"$not": {"$elemMatch": elem_match["$notElemMatch"]}}
+        return {"$elemMatch": elem_match}
 
     def _group_conditions_by_variable(self, node: Dict, variable_conditions: Dict):
         """
@@ -269,26 +320,20 @@ class ConditionProcessor:
                     if self.format == 'shortened' and p_regex_part and not p_pattern_for_shortened:
                         p_pattern_for_shortened = p_regex_part
                     
-                    mql_operator = OPERATOR_MAP.get(condition["operator"])
-                    if not mql_operator:
-                        raise NotImplementedError(f"AQL operator '{condition['operator']}' not supported.")
-                    
-                    value = self.value_formatter.format_value(condition["value"])
+                    value = self._build_data_condition(condition["operator"], condition["value"])
                     
                     # For multiple conditions on same field, combine them
                     if data_path in data_conditions:
-                        if isinstance(data_conditions[data_path], dict) and not any(op in data_conditions[data_path] for op in ["$eq", "$ne"]):
-                            # Existing condition is a range condition, add to it
-                            data_conditions[data_path][mql_operator] = value
+                        existing = data_conditions[data_path]
+                        if self._can_merge_field_conditions(existing, value):
+                            data_conditions[data_path] = {**existing, **value}
                         else:
-                            # Convert to $and array if we have conflicting operators
-                            existing = data_conditions[data_path]
-                            data_conditions[data_path] = {"$and": [existing, {mql_operator: value}]}
+                            raise NotImplementedError(
+                                f"Multiple conditions on the same AQL path are not supported for operator combination "
+                                f"'{condition['operator']}'."
+                            )
                     else:
-                        if mql_operator == "$eq":
-                            data_conditions[data_path] = value
-                        else:
-                            data_conditions[data_path] = {mql_operator: value}
+                        data_conditions[data_path] = value
             
             # Build path condition based on format
             path_field = self.schema_config['path_field']
@@ -348,16 +393,11 @@ class ConditionProcessor:
             if var_name in self.let_variables:
                 # Use the resolved variable value directly
                 value = self._resolve_let_variable(var_name, "where")
-                mql_operator = OPERATOR_MAP.get(condition["operator"], "$eq")
+                data_condition = self._build_data_condition(condition["operator"], value)
                 
                 # For variable references, we use a generic path match and then check the variable value
                 # This is a simplified approach - in production you'd want more sophisticated handling
                 path_field = self.schema_config['path_field']
-                
-                if mql_operator == "$eq":
-                    data_condition = value
-                else:
-                    data_condition = {mql_operator: value}
                 
                 return {
                     path_field: {"$regex": base_path_regex},
@@ -375,11 +415,12 @@ class ConditionProcessor:
                 
             p_regex_part, data_path = await self.format_resolver.translate_aql_path(aql_path)
             
-            mql_operator = OPERATOR_MAP.get(condition["operator"])
-            if not mql_operator:
-                raise NotImplementedError(f"AQL operator '{condition['operator']}' not supported.")
-            
-            value = self.value_formatter.format_value(condition["value"])
+            operator = str(condition.get("operator") or "").upper()
+            data_condition = (
+                None
+                if operator == "NOT EXISTS"
+                else self._build_data_condition(condition["operator"], condition["value"])
+            )
             path_field = self.schema_config['path_field']
             
             # For shortened format, we need to handle path patterns differently
@@ -399,12 +440,9 @@ class ConditionProcessor:
                     # Fallback if no regex pattern available
                     path_condition = {"$exists": True}
             
-            # Build data condition
-            if mql_operator == "$eq":
-                data_condition = value
-            else:
-                data_condition = {mql_operator: value}
-            
+            if operator == "NOT EXISTS":
+                return {"$notElemMatch": {path_field: path_condition}}
+
             return {
                 path_field: path_condition,
                 data_path: data_condition

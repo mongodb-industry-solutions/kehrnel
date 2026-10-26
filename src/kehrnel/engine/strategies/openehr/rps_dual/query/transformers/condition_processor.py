@@ -1,5 +1,8 @@
 # src/kehrnel/api/compatibility/v1/aql/transformers/condition_processor.py
-from typing import Dict, Any, List, Tuple
+import re
+from typing import Dict, Any, List, Tuple, Set
+
+from ..metadata_paths import is_version_commit_time_path
 from .value_formatter import ValueFormatter
 
 
@@ -94,6 +97,149 @@ class ConditionProcessor:
         
         return ehr_conditions, comp_structure
 
+    def requires_mixed_level_match(self, processed_where: Dict) -> bool:
+        """
+        Returns True when the logical tree includes an OR that spans both
+        document-level predicates and composition-node predicates.
+        """
+        if not processed_where:
+            return False
+
+        if processed_where.get("type") == "condition":
+            return False
+
+        if processed_where.get("operator") == "OR" and len(self._collect_node_levels(processed_where)) > 1:
+            return True
+
+        return any(self.requires_mixed_level_match(child) for child in processed_where.get("children", []))
+
+    async def build_mixed_level_match(self, node: Dict, comp_array_field: str) -> Dict[str, Any]:
+        """
+        Builds a full MongoDB match tree for logical expressions that mix EHR-level
+        and composition-level predicates under the same OR branch.
+        """
+        if not node:
+            return {}
+
+        levels = self._collect_node_levels(node)
+        if not levels:
+            return {}
+
+        if levels == {"ehr"}:
+            return self._build_ehr_condition_tree(node)
+
+        if levels == {"comp"}:
+            return {comp_array_field: await self.build_composition_match(node)}
+
+        operator = node.get("operator")
+        if operator not in {"AND", "OR"}:
+            return {}
+
+        child_conditions: List[Dict[str, Any]] = []
+        for child in node.get("children", []):
+            child_condition = await self.build_mixed_level_match(child, comp_array_field)
+            if child_condition:
+                child_conditions.append(child_condition)
+
+        if not child_conditions:
+            return {}
+
+        if operator == "OR":
+            return {"$or": child_conditions}
+
+        merged: Dict[str, Any] = {}
+        for child_condition in child_conditions:
+            self._merge_mongo_match(merged, child_condition)
+        return merged
+
+    def _collect_node_levels(self, node: Dict) -> Set[str]:
+        if not node:
+            return set()
+
+        if node.get("type") == "condition":
+            if node.get("variable"):
+                return {"comp"}
+
+            path = node.get("path")
+            if not path:
+                return set()
+
+            top_level = self._build_top_level_condition(path, node["operator"], node["value"])
+            return {"ehr"} if top_level else {"comp"}
+
+        levels: Set[str] = set()
+        for child in node.get("children", []):
+            levels.update(self._collect_node_levels(child))
+        return levels
+
+    def _can_flat_merge_field(self, existing: Any, incoming: Any) -> bool:
+        if not isinstance(existing, dict) or not isinstance(incoming, dict):
+            return False
+        if "$regex" in existing or "$regex" in incoming:
+            return False
+        if "$not" in existing or "$not" in incoming:
+            return False
+        return not (set(existing) & set(incoming))
+
+    def _merge_mongo_match(self, target: Dict[str, Any], condition: Dict[str, Any]) -> None:
+        if not condition:
+            return
+
+        if not target:
+            target.update(condition)
+            return
+
+        if "$and" in target or "$or" in target or "$and" in condition or "$or" in condition:
+            if "$and" in target and len(target) == 1:
+                target["$and"].append(condition)
+                return
+            existing = dict(target)
+            target.clear()
+            target["$and"] = [existing, condition]
+            return
+
+        for field_name, value in condition.items():
+            if field_name not in target:
+                target[field_name] = value
+            elif self._can_flat_merge_field(target[field_name], value):
+                target[field_name] = {**target[field_name], **value}
+            else:
+                existing = dict(target)
+                target.clear()
+                target["$and"] = [existing, condition]
+                return
+
+    def _build_ehr_condition_tree(self, node: Dict) -> Dict[str, Any]:
+        if not node:
+            return {}
+
+        if node.get("type") == "condition":
+            path = node.get("path")
+            if not path:
+                return {}
+            return self._build_top_level_condition(path, node["operator"], node["value"])
+
+        operator = node.get("operator")
+        if operator not in ["AND", "OR"]:
+            return {}
+
+        child_conditions = []
+        for child in node.get("children", []):
+            child_condition = self._build_ehr_condition_tree(child)
+            if child_condition:
+                child_conditions.append(child_condition)
+
+        if not child_conditions:
+            return {}
+
+        if operator == "OR":
+            return {"$or": child_conditions}
+
+        merged: Dict[str, Any] = {}
+        for child_condition in child_conditions:
+            self._merge_mongo_match(merged, child_condition)
+        return merged
+
     def _extract_conditions_by_level(self, node: Dict, ehr_conditions: Dict, comp_conditions: List):
         """
         Recursively extracts conditions and separates them by EHR vs composition level.
@@ -147,15 +293,11 @@ class ConditionProcessor:
             
             # Add structured conditions
             if ehr_children:
-                # For EHR conditions, we need to handle OR/AND at the MongoDB level
-                if node["operator"] == "OR":
-                    # This is complex - OR conditions at EHR level need $or
-                    # For now, raise an error as this needs special handling
-                    raise NotImplementedError("OR conditions at EHR level not yet supported")
-                else:
-                    # AND conditions - process each child
-                    for child in ehr_children:
-                        self._extract_conditions_by_level(child, ehr_conditions, [])
+                ehr_tree = self._build_ehr_condition_tree({
+                    "operator": node["operator"],
+                    "children": ehr_children,
+                })
+                self._merge_mongo_match(ehr_conditions, ehr_tree)
             
             if comp_children:
                 comp_conditions.append({
@@ -174,7 +316,7 @@ class ConditionProcessor:
             id_encoding = self.schema_config.get("composition_id_encoding", "string")
         elif path == f"{self.composition_alias}/archetype_details/template_id/value":
             field_name = self.schema_config.get("template_id", "tid")
-        elif self.version_alias and path == f"{self.version_alias}/commit_audit/time_committed/value":
+        elif is_version_commit_time_path(path, self.version_alias):
             field_name = (
                 self.schema_config.get("time_committed")
                 or self.schema_config.get("sort_time")
@@ -184,13 +326,59 @@ class ConditionProcessor:
         if not field_name:
             return {}
 
-        mql_operator = OPERATOR_MAP.get(operator, "$eq")
         formatted_value = self.value_formatter.format_value(value)
         if id_encoding is not None:
             formatted_value = self.value_formatter.format_id_value(formatted_value, id_encoding)
-        if mql_operator == "$eq":
-            return {field_name: formatted_value}
-        return {field_name: {mql_operator: formatted_value}}
+        return {field_name: self._build_data_condition(operator, formatted_value, preformatted=True)}
+
+    def _build_aql_like_pattern(self, value: Any) -> str:
+        parts = ["^"]
+        for char in str(value):
+            if char == "*":
+                parts.append(".*")
+            elif char == "?":
+                parts.append(".")
+            else:
+                parts.append(re.escape(char))
+        parts.append("$")
+        return "".join(parts)
+
+    def _build_matches_pattern(self, value: Any) -> str:
+        if isinstance(value, dict):
+            values = [value.get(str(idx)) for idx in range(len(value))]
+            escaped = [re.escape(str(item)) for item in values if item is not None]
+            if escaped:
+                return rf"^(?:{'|'.join(escaped)})$"
+        if isinstance(value, list):
+            escaped = [re.escape(str(item)) for item in value if item is not None]
+            if escaped:
+                return rf"^(?:{'|'.join(escaped)})$"
+        return str(value)
+
+    def _build_data_condition(self, operator: str, value: Any, *, preformatted: bool = False) -> Any:
+        normalized_operator = str(operator or "").upper()
+        formatted_value = value if preformatted else self.value_formatter.format_value(value)
+
+        if normalized_operator == "=":
+            return formatted_value
+        if normalized_operator in {"!=", "<>"}:
+            return {"$ne": formatted_value}
+        if normalized_operator in OPERATOR_MAP:
+            return {OPERATOR_MAP[normalized_operator]: formatted_value}
+        if normalized_operator == "EXISTS":
+            return {"$exists": True}
+        if normalized_operator == "LIKE":
+            return {"$regex": self._build_aql_like_pattern(formatted_value)}
+        if normalized_operator == "MATCHES":
+            return {"$regex": self._build_matches_pattern(formatted_value)}
+        raise NotImplementedError(f"AQL operator '{operator}' not supported.")
+
+    def _can_merge_field_conditions(self, existing: Any, incoming: Any) -> bool:
+        if not isinstance(existing, dict) or not isinstance(incoming, dict):
+            return False
+        if "$regex" in existing or "$regex" in incoming:
+            return False
+        return not (set(existing) & set(incoming))
 
     async def build_composition_match(self, comp_structure: Dict) -> Dict:
         """
@@ -200,7 +388,7 @@ class ConditionProcessor:
             # Single condition
             variable = comp_structure["path"].split('/')[0]
             elem_match = await self._create_elem_match_for_single_condition(variable, comp_structure)
-            return {"$elemMatch": elem_match}
+            return self._wrap_elem_match(elem_match)
         
         elif comp_structure.get("operator") == "AND":
             # AND conditions - use $all with multiple $elemMatch
@@ -223,7 +411,7 @@ class ConditionProcessor:
                             "children": conditions
                         }
                     elem_match = await self._create_elem_match_for_variable_group(variable, condition_structure)
-                    elem_matches.append({"$elemMatch": elem_match})
+                    elem_matches.append(self._wrap_elem_match(elem_match))
             
             return {"$all": elem_matches} if len(elem_matches) > 1 else elem_matches[0] if elem_matches else {}
         
@@ -232,7 +420,7 @@ class ConditionProcessor:
             or_conditions = []
             
             for child in comp_structure.get("children", []):
-                child_match = self.build_composition_match(child)
+                child_match = await self.build_composition_match(child)
                 if "$elemMatch" in child_match:
                     or_conditions.append(child_match["$elemMatch"])
                 elif child_match:
@@ -241,6 +429,11 @@ class ConditionProcessor:
             return {"$elemMatch": {"$or": or_conditions}} if or_conditions else {}
         
         return {}
+
+    def _wrap_elem_match(self, elem_match: Dict) -> Dict:
+        if "$notElemMatch" in elem_match:
+            return {"$not": {"$elemMatch": elem_match["$notElemMatch"]}}
+        return {"$elemMatch": elem_match}
 
     def _group_conditions_by_variable(self, node: Dict, variable_conditions: Dict):
         """
@@ -291,26 +484,20 @@ class ConditionProcessor:
                     if self.format == 'shortened' and p_regex_part and not p_pattern_for_shortened:
                         p_pattern_for_shortened = p_regex_part
                     
-                    mql_operator = OPERATOR_MAP.get(condition["operator"])
-                    if not mql_operator:
-                        raise NotImplementedError(f"AQL operator '{condition['operator']}' not supported.")
-                    
-                    value = self.value_formatter.format_value(condition["value"])
+                    value = self._build_data_condition(condition["operator"], condition["value"])
                     
                     # For multiple conditions on same field, combine them
                     if data_path in data_conditions:
-                        if isinstance(data_conditions[data_path], dict) and not any(op in data_conditions[data_path] for op in ["$eq", "$ne"]):
-                            # Existing condition is a range condition, add to it
-                            data_conditions[data_path][mql_operator] = value
+                        existing = data_conditions[data_path]
+                        if self._can_merge_field_conditions(existing, value):
+                            data_conditions[data_path] = {**existing, **value}
                         else:
-                            # Convert to $and array if we have conflicting operators
-                            existing = data_conditions[data_path]
-                            data_conditions[data_path] = {"$and": [existing, {mql_operator: value}]}
+                            raise NotImplementedError(
+                                f"Multiple conditions on the same AQL path are not supported for operator combination "
+                                f"'{condition['operator']}'."
+                            )
                     else:
-                        if mql_operator == "$eq":
-                            data_conditions[data_path] = value
-                        else:
-                            data_conditions[data_path] = {mql_operator: value}
+                        data_conditions[data_path] = value
             
             # Build path condition based on format
             path_field = self.schema_config['path_field']
@@ -370,17 +557,12 @@ class ConditionProcessor:
             if var_name in self.let_variables:
                 # Use the resolved variable value directly
                 value = self._resolve_let_variable(var_name, "where")
-                mql_operator = OPERATOR_MAP.get(condition["operator"], "$eq")
+                data_condition = self._build_data_condition(condition["operator"], value)
                 
                 # For variable references, we use a generic path match and then check the variable value
                 # This is a simplified approach - in production you'd want more sophisticated handling
                 path_field = self.schema_config['path_field']
-                
-                if mql_operator == "$eq":
-                    data_condition = value
-                else:
-                    data_condition = {mql_operator: value}
-                
+
                 return {
                     path_field: {"$regex": base_path_regex},
                     # Use a placeholder data path - this would need more sophisticated handling in production
@@ -397,11 +579,12 @@ class ConditionProcessor:
                 
             p_regex_part, data_path = await self.format_resolver.translate_aql_path(aql_path)
             
-            mql_operator = OPERATOR_MAP.get(condition["operator"])
-            if not mql_operator:
-                raise NotImplementedError(f"AQL operator '{condition['operator']}' not supported.")
-            
-            value = self.value_formatter.format_value(condition["value"])
+            operator = str(condition.get("operator") or "").upper()
+            data_condition = (
+                None
+                if operator == "NOT EXISTS"
+                else self._build_data_condition(condition["operator"], condition["value"])
+            )
             path_field = self.schema_config['path_field']
             
             # For shortened format, we need to handle path patterns differently
@@ -421,12 +604,9 @@ class ConditionProcessor:
                     # Fallback if no regex pattern available
                     path_condition = {"$exists": True}
             
-            # Build data condition
-            if mql_operator == "$eq":
-                data_condition = value
-            else:
-                data_condition = {mql_operator: value}
-            
+            if operator == "NOT EXISTS":
+                return {"$notElemMatch": {path_field: path_condition}}
+
             return {
                 path_field: path_condition,
                 data_path: data_condition

@@ -1,3 +1,5 @@
+from email.utils import formatdate
+
 from fastapi import APIRouter, Depends, status, Response
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
@@ -39,5 +41,9 @@ async def get_contribution_endpoint(
 
     response.headers["Location"] = f"/v1/ehr/{ehr_id}/contribution/{contribution_uid}"
     response.headers["ETag"] = f'"{contribution_uid}"'
+    response.headers["Last-Modified"] = formatdate(
+        contribution.audit.time_committed.timestamp(),
+        usegmt=True,
+    )
 
     return contribution

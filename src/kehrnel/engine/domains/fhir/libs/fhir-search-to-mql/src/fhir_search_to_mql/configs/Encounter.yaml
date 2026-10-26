@@ -1,0 +1,711 @@
+resource: Encounter
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec Encounter)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/
+#   patient.json, practitioner.json, device.json, encounter.json
+#
+# Total parameters: 29 (27 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`). HL7 index lists 30 including composite
+# `location-period`, which is deferred here (same policy as Group
+# `characteristic-value` — composite pairs location with period on
+# Encounter.location backbone rows; not implemented until needed).
+#
+# R5 structural notes:
+#   * `Encounter.actualPeriod` is a native Period (0..1). The `date`
+#     search parameter performs interval overlap against
+#     `_search.actualPeriod`; `date-start` / `end-date` query
+#     `actualPeriod.start` / `actualPeriod.end` directly.
+#   * `Encounter.diagnosis[].condition` and `Encounter.reason[].value`
+#     are CodeableReference — token params search `.concept`, reference
+#     params search `.reference` (resource-rooted denorm rules).
+#   * `Encounter.participant[]` is BackboneElement with `actor`
+#     (Reference) and `type` (CodeableConcept[]). `participant` and
+#     `practitioner` search params filter actor refs by type.
+#   * `Encounter.subject` is Reference(Patient | Group); `patient` is
+#     the clinical-patient shortcut for Patient/* subjects.
+#   * `Encounter.class`, `type`, `specialArrangement` are
+#     CodeableConcept[]; `subjectStatus` is a single CodeableConcept.
+#   * `Encounter.length` is Duration (0..1) — quantity search hits the
+#     FHIR root field with `quantityType: full`.
+#   * Encounter compartment (self): `[base]` via `include_self: true`
+#     plus child encounters linked through `partOf` (audit linking
+#     param `part-of` per encounter.json).
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters
+  # ─────────────────────────────────────────────────────────────
+  account:
+    type: reference
+    description: "The set of accounts that may be used for billing for this Encounter"
+    fields:
+      - field: "_search.accountIds"
+        referenceType: id
+      - field: "_search.accountTypes"
+        referenceType: type
+      - field: "account.reference"
+        referenceType: full
+
+  appointment:
+    type: reference
+    description: "The appointment that scheduled this encounter"
+    fields:
+      - field: "_search.appointmentIds"
+        referenceType: id
+      - field: "_search.appointmentTypes"
+        referenceType: type
+      - field: "appointment.reference"
+        referenceType: full
+
+  based-on:
+    type: reference
+    description: "The ServiceRequest that initiated this encounter"
+    fields:
+      - field: "_search.basedOnIds"
+        referenceType: id
+      - field: "_search.basedOnTypes"
+        referenceType: type
+      - field: "basedOn.reference"
+        referenceType: full
+
+  careteam:
+    type: reference
+    description: "Careteam allocated to participate in the encounter"
+    fields:
+      - field: "_search.careTeamIds"
+        referenceType: id
+      - field: "_search.careTeamTypes"
+        referenceType: type
+      - field: "careTeam.reference"
+        referenceType: full
+
+  diagnosis-reference:
+    type: reference
+    description: "The diagnosis or procedure relevant to the encounter (resource reference)"
+    fields:
+      - field: "_search.diagnosisReferenceIds"
+        referenceType: id
+      - field: "_search.diagnosisReferenceTypes"
+        referenceType: type
+
+  episode-of-care:
+    type: reference
+    description: "Episode(s) of care that this encounter should be recorded against"
+    fields:
+      - field: "_search.episodeOfCareIds"
+        referenceType: id
+      - field: "_search.episodeOfCareTypes"
+        referenceType: type
+      - field: "episodeOfCare.reference"
+        referenceType: full
+
+  location:
+    type: reference
+    description: "Location the encounter takes place"
+    fields:
+      - field: "_search.locationIds"
+        referenceType: id
+      - field: "location.location.reference"
+        referenceType: full
+
+  part-of:
+    type: reference
+    description: "Another Encounter this encounter is part of"
+    fields:
+      - field: "_search.partOfId"
+        referenceType: id
+      - field: "_search.partOfType"
+        referenceType: type
+      - field: "partOf.reference"
+        referenceType: full
+
+  participant:
+    type: reference
+    description: "Persons involved in the encounter other than the patient"
+    fields:
+      - field: "_search.participantIds"
+        referenceType: id
+      - field: "_search.participantTypes"
+        referenceType: type
+      - field: "participant.actor.reference"
+        referenceType: full
+
+  patient:
+    type: reference
+    description: "The patient present at the encounter"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  practitioner:
+    type: reference
+    description: "Practitioner participant in the encounter"
+    fields:
+      - field: "_search.practitionerId"
+        referenceType: id
+      - field: "participant.actor.reference"
+        referenceType: full
+
+  reason-reference:
+    type: reference
+    description: "Reference to a resource (by instance)"
+    fields:
+      - field: "_search.reasonReferenceIds"
+        referenceType: id
+      - field: "_search.reasonReferenceTypes"
+        referenceType: type
+
+  service-provider:
+    type: reference
+    description: "The organization (facility) responsible for this encounter"
+    fields:
+      - field: "_search.serviceProviderId"
+        referenceType: id
+      - field: "_search.serviceProviderType"
+        referenceType: type
+      - field: "serviceProvider.reference"
+        referenceType: full
+
+  subject:
+    type: reference
+    description: "The patient or group present at the encounter"
+    fields:
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "_search.subjectType"
+        referenceType: type
+      - field: "subject.reference"
+        referenceType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters
+  # ─────────────────────────────────────────────────────────────
+  class:
+    type: token
+    description: "Classification of patient encounter"
+    fields:
+      - field: "_search.class_systemCode"
+        tokenType: systemCode
+      - field: "_search.class_codes"
+        tokenType: code
+
+  diagnosis-code:
+    type: token
+    description: "The diagnosis or procedure relevant to the encounter (coded)"
+    fields:
+      - field: "_search.diagnosisCode_systemCode"
+        tokenType: systemCode
+      - field: "_search.diagnosisCode_codes"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: "Identifier(s) by which this encounter is known"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  participant-type:
+    type: token
+    description: "Role of participant in encounter"
+    fields:
+      - field: "_search.participantType_systemCode"
+        tokenType: systemCode
+      - field: "_search.participantType_codes"
+        tokenType: code
+
+  reason-code:
+    type: token
+    description: "Reference to a concept (by class)"
+    fields:
+      - field: "_search.reasonCode_systemCode"
+        tokenType: systemCode
+      - field: "_search.reasonCode_codes"
+        tokenType: code
+
+  special-arrangement:
+    type: token
+    description: "Wheelchair, translator, stretcher, etc."
+    fields:
+      - field: "_search.specialArrangement_systemCode"
+        tokenType: systemCode
+      - field: "_search.specialArrangement_codes"
+        tokenType: code
+
+  status:
+    type: token
+    description: "planned | in-progress | on-hold | completed | cancelled | entered-in-error | unknown"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  subject-status:
+    type: token
+    description: "The current status of the subject in relation to the Encounter"
+    fields:
+      - field: "_search.subjectStatus_systemCode"
+        tokenType: systemCode
+      - field: "_search.subjectStatus_codes"
+        tokenType: code
+
+  type:
+    type: token
+    description: "Specific type of encounter"
+    fields:
+      - field: "_search.type_systemCode"
+        tokenType: systemCode
+      - field: "_search.type_codes"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters
+  # ─────────────────────────────────────────────────────────────
+  date:
+    type: date
+    description: "A date within the actualPeriod the Encounter lasted"
+    fields:
+      - field: "_search.actualPeriod"
+        type: period
+
+  date-start:
+    type: date
+    description: "The actual start date of the Encounter"
+    fields:
+      - field: "actualPeriod.start"
+        type: date
+
+  end-date:
+    type: date
+    description: "The actual end date of the Encounter"
+    fields:
+      - field: "actualPeriod.end"
+        type: date
+
+  # ─────────────────────────────────────────────────────────────
+  # Quantity Parameters
+  # ─────────────────────────────────────────────────────────────
+  length:
+    type: quantity
+    description: "Length of encounter in days"
+    fields:
+      - field: "length"
+        quantityType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+# Denormalization Configuration
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  class:
+    source: class
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: class[*].coding[*].code
+        target_field: class_codes
+        datatype: array[string]
+      - source_path: class[*].coding[*]
+        target_field: class_systemCode
+        datatype: array[string]
+
+  type:
+    source: type
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: type[*].coding[*].code
+        target_field: type_codes
+        datatype: array[string]
+      - source_path: type[*].coding[*]
+        target_field: type_systemCode
+        datatype: array[string]
+
+  specialArrangement:
+    source: specialArrangement
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: specialArrangement[*].coding[*].code
+        target_field: specialArrangement_codes
+        datatype: array[string]
+      - source_path: specialArrangement[*].coding[*]
+        target_field: specialArrangement_systemCode
+        datatype: array[string]
+
+  subjectStatus:
+    source: subjectStatus
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: subjectStatus.coding[*].code
+        target_field: subjectStatus_codes
+        datatype: array[string]
+      - source_path: subjectStatus.coding[*]
+        target_field: subjectStatus_systemCode
+        datatype: array[string]
+
+  subject:
+    source: subject
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: subject.reference
+        target_field: subjectId
+        datatype: string
+        extractType: id
+      - source_path: subject.reference
+        target_field: subjectType
+        datatype: string
+        extractType: type
+      - source_path: subject.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+        filterType: Patient
+        comment: "Patient/* subject only — powers `patient` search parameter"
+
+  participant:
+    source: participant
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: participant[*].actor.reference
+        target_field: participantIds
+        datatype: array[string]
+        extractType: id
+        comment: "All participant actors — powers `participant`"
+      - source_path: participant[*].actor.reference
+        target_field: participantTypes
+        datatype: array[string]
+        extractType: type
+      - source_path: participant[*].actor.reference
+        target_field: practitionerId
+        datatype: array[string]
+        extractType: id
+        filterType: Practitioner
+        comment: "Practitioner/* participants only — powers `practitioner`"
+
+  participantType:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: participant[*].type[*].coding[*].code
+        target_field: participantType_codes
+        datatype: array[string]
+      - source_path: participant[*].type[*].coding[*]
+        target_field: participantType_systemCode
+        datatype: array[string]
+
+  diagnosis_concept:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: diagnosis[*].condition.concept.coding[*].code
+        target_field: diagnosisCode_codes
+        datatype: array[string]
+      - source_path: diagnosis[*].condition.concept.coding[*]
+        target_field: diagnosisCode_systemCode
+        datatype: array[string]
+
+  diagnosis_reference:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: diagnosis[*].condition.reference
+        target_field: diagnosisReferenceIds
+        datatype: array[string]
+        extractType: id
+      - source_path: diagnosis[*].condition.reference
+        target_field: diagnosisReferenceTypes
+        datatype: array[string]
+        extractType: type
+
+  reason_concept:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: reason[*].value.concept.coding[*].code
+        target_field: reasonCode_codes
+        datatype: array[string]
+      - source_path: reason[*].value.concept.coding[*]
+        target_field: reasonCode_systemCode
+        datatype: array[string]
+
+  reason_reference:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: reason[*].value.reference
+        target_field: reasonReferenceIds
+        datatype: array[string]
+        extractType: id
+      - source_path: reason[*].value.reference
+        target_field: reasonReferenceTypes
+        datatype: array[string]
+        extractType: type
+
+  location:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: location[*].location.reference
+        target_field: locationIds
+        datatype: array[string]
+        extractType: id
+
+  basedOn:
+    source: basedOn
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: basedOn[*].reference
+        target_field: basedOnIds
+        datatype: array[string]
+        extractType: id
+      - source_path: basedOn[*].reference
+        target_field: basedOnTypes
+        datatype: array[string]
+        extractType: type
+
+  appointment:
+    source: appointment
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: appointment[*].reference
+        target_field: appointmentIds
+        datatype: array[string]
+        extractType: id
+      - source_path: appointment[*].reference
+        target_field: appointmentTypes
+        datatype: array[string]
+        extractType: type
+
+  account:
+    source: account
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: account[*].reference
+        target_field: accountIds
+        datatype: array[string]
+        extractType: id
+      - source_path: account[*].reference
+        target_field: accountTypes
+        datatype: array[string]
+        extractType: type
+
+  careTeam:
+    source: careTeam
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: careTeam[*].reference
+        target_field: careTeamIds
+        datatype: array[string]
+        extractType: id
+      - source_path: careTeam[*].reference
+        target_field: careTeamTypes
+        datatype: array[string]
+        extractType: type
+
+  episodeOfCare:
+    source: episodeOfCare
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: episodeOfCare[*].reference
+        target_field: episodeOfCareIds
+        datatype: array[string]
+        extractType: id
+      - source_path: episodeOfCare[*].reference
+        target_field: episodeOfCareTypes
+        datatype: array[string]
+        extractType: type
+
+  partOf:
+    source: partOf
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: partOf.reference
+        target_field: partOfId
+        datatype: string
+        extractType: id
+      - source_path: partOf.reference
+        target_field: partOfType
+        datatype: string
+        extractType: type
+
+  serviceProvider:
+    source: serviceProvider
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: serviceProvider.reference
+        target_field: serviceProviderId
+        datatype: string
+        extractType: id
+      - source_path: serviceProvider.reference
+        target_field: serviceProviderType
+        datatype: string
+        extractType: type
+
+  actual_period:
+    source: actualPeriod
+    target: _search
+    extractor: PeriodExtractor
+    field_mappings:
+      - source_path: start
+        target_field: actualPeriod
+        datatype: object
+        comment: "Nested Period for `date` overlap queries"
+
+  # ---------------------------------------------------------------------
+  # Compartment membership precompute (Hybrid Approach 3).
+  # Patient compartment: linking parameters `patient` and `subject`
+  # (patient.json) — both resolve through `subject` when Patient/*.
+  # Practitioner compartment: `participant` and `practitioner`
+  # (practitioner.json) — Practitioner IDs from participant.actor.
+  # Device compartment: `participant` (device.json).
+  # Encounter compartment (self): `[base]` + `part-of` via partOf refs.
+  # ---------------------------------------------------------------------
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - subject
+          - patient
+        reference_type: Patient
+        datatype: array[string]
+        comment: |
+          Patient compartment IDs. FHIR R5 lists linking parameters
+          `patient` and `subject`; both resolve through Encounter.subject
+          when the reference is Patient/* (`patient` is the clinical shortcut).
+      - target_field: Practitioner
+        source_paths:
+          - participant[*].actor
+          - practitioner
+        reference_type: Practitioner
+        datatype: array[string]
+        comment: |
+          Practitioner compartment IDs (participant.actor where Practitioner/*).
+          `practitioner` path token satisfies CompartmentDefinition audit
+          for the `practitioner` linking parameter (no separate FHIR element).
+      - target_field: Device
+        source_paths:
+          - participant[*].actor
+        reference_type: Device
+        datatype: array[string]
+        comment: "Device compartment IDs (participant.actor where Device/*)"
+      - target_field: Encounter
+        source_paths:
+          - partOf
+        reference_type: Encounter
+        include_self: true
+        datatype: array[string]
+        comment: |
+          Encounter compartment IDs (own id via [base] + parent Encounter
+          from partOf). Powers Encounter/<id>/Encounter child lookups.
+
+compartments:
+  precomputed:
+    - Patient
+    - Practitioner
+    - Device
+    - Encounter
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+  - fields:
+      - "_compartments.Practitioner": 1
+    options:
+      name: idx_compartment_practitioner
+      sparse: true
+  - fields:
+      - "_compartments.Device": 1
+    options:
+      name: idx_compartment_device
+      sparse: true
+  - fields:
+      - "_compartments.Encounter": 1
+    options:
+      name: idx_compartment_encounter
+      sparse: true
+
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+
+  - fields:
+      - "_search.identifier_values": 1
+    options:
+      name: idx_identifier_values
+      sparse: true
+
+  - fields:
+      - "_search.subjectId": 1
+    options:
+      name: idx_subject_id
+      sparse: true
+
+  - fields:
+      - "_search.actualPeriod.start": 1
+      - "_search.actualPeriod.end": 1
+    options:
+      name: idx_actual_period
+      sparse: true
+
+  - fields:
+      - "meta.lastUpdated": 1
+    options:
+      name: idx_meta_last_updated
+      sparse: true

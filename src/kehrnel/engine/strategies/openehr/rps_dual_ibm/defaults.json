@@ -1,15 +1,16 @@
 {
   "collections": {
     "compositions": {
-      "name": "compositions_rps_ibm",
+      "name": "compositions_rps",
       "encodingProfile": "profile.codedpath"
     },
     "search": {
-      "name": "compositions_search_ibm",
+      "name": "compositions_search",
       "encodingProfile": "profile.search_shortcuts",
       "enabled": true,
       "atlasIndex": {
-        "name": "search_nodes_index"
+        "name": "search_nodes_index",
+        "definition": "file://bundles/searchIndex/searchIndex.json"
       }
     },
     "codes": {
@@ -22,20 +23,20 @@
     }
   },
   "ids": {
-    "ehr_id": "uuidbin",
-    "composition_id": "uuidbin"
+    "ehr_id": "string",
+    "composition_id": "objectid"
   },
   "paths": {
-    "separator": "/"
+    "separator": ":"
   },
   "fields": {
     "document": {
       "ehr_id": "ehr_id",
-      "comp_id": "version",
-      "tid": "template",
-      "v": "version",
-      "time_committed": "creation_date",
-      "sort_time": "creation_date",
+      "comp_id": "_id",
+      "tid": "tid",
+      "v": "v",
+      "time_committed": "time_c",
+      "sort_time": "sort_time",
       "cn": "cn",
       "sn": "sn"
     },
@@ -48,27 +49,15 @@
   "transform": {
     "apply_shortcuts": true,
     "envelope": {
-      "base": {
-        "_id": "_id",
-        "version": "version",
-        "template": "template",
-        "template_id": "template_id",
-        "creation_date": "creation_date",
-        "metrics": "metrics"
-      },
-      "search": {
-        "version": "version",
-        "template": "template",
-        "template_id": "template_id",
-        "creation_date": "creation_date"
-      }
+      "base": {},
+      "search": {}
     },
     "coding": {
       "arcodes": {
         "strategy": "sequential"
       },
       "atcodes": {
-        "strategy": "compact_prefix",
+        "strategy": "negative_int",
         "store_original": false
       }
     }
@@ -76,7 +65,7 @@
   "bootstrap": {
     "dictionariesOnActivate": {
       "codes": "ensure",
-      "shortcuts": "ensure"
+      "shortcuts": "seed"
     }
   }
 }

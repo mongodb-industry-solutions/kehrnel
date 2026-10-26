@@ -1,9 +1,11 @@
 # src/kehrnel/api/compatibility/v1/aql/transformers/format_resolver.py
 import re
 from typing import Tuple, Dict, Optional
+
 from .archetype_resolver import ArchetypeResolver
 from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.strategies.openehr.rps_dual.services.shortcuts_service import canonical_to_slim
+from ..metadata_paths import version_commit_time_paths
 
 
 class FormatResolver:
@@ -30,6 +32,9 @@ class FormatResolver:
         self.path_separator = schema_config.get("separator", ":") or ":"
         self.archetype_resolver = archetype_resolver
         self.shortcut_map = shortcut_map or {}
+        self._translate_cache: Dict[str, Tuple[str, str]] = {}
+        self._selector_codes_cache: Dict[str, list[str]] = {}
+        self._context_selector_codes_cache: Dict[str, list[str]] = {}
 
     def _data_path(self, parts: list[str]) -> str:
         if not parts:
@@ -84,19 +89,25 @@ class FormatResolver:
     async def get_selector_codes(self, aql_path: str) -> list[str]:
         if not isinstance(aql_path, str) or "/" not in aql_path:
             return []
+        if aql_path in self._selector_codes_cache:
+            return list(self._selector_codes_cache[aql_path])
 
         parts = aql_path.split("/")[1:]
         selector_codes: list[str] = []
         for selector in self._selector_tokens(parts):
             code = await self._selector_to_code(selector)
             if code is None:
+                self._selector_codes_cache[aql_path] = []
                 return []
             selector_codes.append(code)
+        self._selector_codes_cache[aql_path] = list(selector_codes)
         return selector_codes
 
     async def _context_selector_codes(self, variable_alias: str) -> list[str]:
         if not self.archetype_resolver:
             return []
+        if variable_alias in self._context_selector_codes_cache:
+            return list(self._context_selector_codes_cache[variable_alias])
 
         codes: list[str] = []
         visited: set[str] = set()
@@ -116,6 +127,7 @@ class FormatResolver:
             current_alias = parent_alias
 
         codes.reverse()
+        self._context_selector_codes_cache[variable_alias] = list(codes)
         return codes
 
     async def _selector_chain_pattern(self, variable_alias: str, parts: list[str]) -> Optional[str]:
@@ -153,11 +165,13 @@ class FormatResolver:
             f"{self.composition_alias}/archetype_details/template_id/value": self.schema_config.get("template_id", "tid"),
         }
         if self.version_alias:
-            document_paths[f"{self.version_alias}/commit_audit/time_committed/value"] = (
+            time_field = (
                 self.schema_config.get("time_committed")
                 or self.schema_config.get("sort_time")
                 or "time_c"
             )
+            for path in version_commit_time_paths(self.version_alias):
+                document_paths[path] = time_field
         return document_paths.get(aql_path)
 
     async def translate_aql_path(self, aql_path: str) -> Tuple[str, str]:
@@ -167,13 +181,19 @@ class FormatResolver:
         For full format: Returns (p_regex, data_path) for cn array filtering
         For shortened format: Returns (None, direct_path) for direct field access
         """
+        cached = self._translate_cache.get(aql_path)
+        if cached is not None:
+            return cached
+
         document_field = self.resolve_document_field(aql_path)
         if document_field:
-            return None, document_field
-        if self.format == 'shortened':
-            return await self._translate_shortened_path(aql_path)
+            resolved = (None, document_field)
+        elif self.format == 'shortened':
+            resolved = await self._translate_shortened_path(aql_path)
         else:
-            return self._translate_full_path(aql_path)
+            resolved = self._translate_full_path(aql_path)
+        self._translate_cache[aql_path] = resolved
+        return resolved
 
     async def _translate_shortened_path(self, aql_path: str) -> Tuple[str, str]:
         """
@@ -255,9 +275,9 @@ class FormatResolver:
             # Generic path handling for all other variables
             if len(parts) > 0:
                 if parts[0] == "time":
-                    data_path = "data.time.value"
+                    data_path = self._data_path(["time", "value"])
                 elif parts[0] == "other_participations":
-                    data_path = f"data.{'.'.join(parts)}"
+                    data_path = self._data_path(parts)
                 elif parts[0] == "description":
                     # Handle description paths
                     desc_parts = parts[1:]  # Skip 'description'

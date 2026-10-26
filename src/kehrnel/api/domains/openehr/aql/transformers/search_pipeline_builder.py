@@ -246,8 +246,16 @@ class SearchPipelineBuilder:
                 }
         
         if operator == "LIKE":
-            # Convert SQL LIKE to regex
-            regex_pattern = str(value).replace('%', '.*').replace('_', '.')
+            parts = ["^"]
+            for char in str(value):
+                if char == "*":
+                    parts.append(".*")
+                elif char == "?":
+                    parts.append(".")
+                else:
+                    parts.append(re.escape(char))
+            parts.append("$")
+            regex_pattern = "".join(parts)
             return {
                 "regex": {
                     "path": search_path,
@@ -952,8 +960,13 @@ class SearchPipelineBuilder:
         
         for col_data in columns.values():
             alias = col_data.get("alias")
+            path = col_data.get("path")
             direction = col_data.get("direction", "ASC")
             
+            if alias and (not isinstance(path, str) or "/" not in path):
+                raise ValueError(
+                    f"ORDER BY projection alias '{alias}' is not supported; use the full AQL path instead."
+                )
             if alias:
                 sort_spec[alias] = 1 if direction.upper() == "ASC" else -1
             

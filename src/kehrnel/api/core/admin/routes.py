@@ -8,7 +8,6 @@ import secrets
 import logging
 import ipaddress
 import base64
-import uuid
 from pathlib import Path
 from fastapi import APIRouter, Request, Body
 from fastapi.encoders import jsonable_encoder
@@ -17,7 +16,6 @@ from typing import Any, Dict, List
 import yaml
 from lxml import etree
 from bson import ObjectId
-from bson.binary import Binary, UuidRepresentation
 
 from kehrnel.engine.core.manifest import StrategyManifest
 from kehrnel.engine.core.errors import KehrnelError
@@ -35,6 +33,12 @@ from kehrnel.engine.core.redaction import redact_sensitive
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
+
+RPS_DUAL_STRATEGY_IDS = {"openehr.rps_dual", "openehr.rps_dual_ibm"}
+
+
+def _is_rps_dual_strategy_id(strategy_id: Any) -> bool:
+    return str(strategy_id or "").strip().lower() in RPS_DUAL_STRATEGY_IDS
 
 
 ALLOWED_DOC_EXTENSIONS = {".xml", ".csv", ".cda", ".json", ".txt", ".hl7"}
@@ -95,29 +99,16 @@ def _error_response(exc: Exception) -> JSONResponse:
     return JSONResponse(status_code=status, content={"error": {"code": code, "message": message, "details": details}})
 
 
+def _json_safe_binary(value: bytes) -> Dict[str, str]:
+    return {
+        "$binary": base64.b64encode(bytes(value)).decode("ascii"),
+        "encoding": "base64",
+    }
+
+
 def _json_safe(payload: Any) -> Any:
     """Encode runtime payloads so BSON/ObjectId values do not break API responses."""
-    def _encode_bytes(value: bytes) -> str:
-        try:
-            return value.decode("utf-8")
-        except Exception:
-            return base64.b64encode(value).decode("ascii")
-
-    def _encode_binary(value: Binary) -> str:
-        try:
-            return str(value.as_uuid(UuidRepresentation.STANDARD))
-        except Exception:
-            return _encode_bytes(bytes(value))
-
-    return jsonable_encoder(
-        payload,
-        custom_encoder={
-            ObjectId: str,
-            uuid.UUID: str,
-            Binary: _encode_binary,
-            bytes: _encode_bytes,
-        },
-    )
+    return jsonable_encoder(payload, custom_encoder={ObjectId: str, bytes: _json_safe_binary})
 
 
 def _require_admin_access(request: Request) -> None:
@@ -195,6 +186,37 @@ def _require_env_access(request: Request, env_id: str) -> None:
             code="FORBIDDEN",
             status=403,
             message=f"Access to env_id={env_id} is not permitted for this API key.",
+        )
+
+
+def _global_scope_allowed(request: Request) -> bool:
+    """True when the key may act on process-wide state shared by every environment.
+
+    With KEHRNEL_API_KEY_ENV_SCOPES configured only keys scoped to "*" qualify, so a
+    tenant key limited to its own env_id can never reconfigure other tenants.
+    Only when the variable is unset is the runtime single-tenant and admin access
+    sufficient; a set-but-empty or invalid policy fails closed.
+    """
+    auth_enabled = os.getenv("KEHRNEL_AUTH_ENABLED", "true").lower() in ("1", "true", "yes")
+    if not auth_enabled:
+        return True
+    if not (os.getenv("KEHRNEL_API_KEY_ENV_SCOPES") or "").strip():
+        return True
+    scopes = _parse_api_key_env_scopes()
+    api_key = (request.headers.get("x-api-key") or "").strip()
+    if not api_key:
+        return False
+    return any(secrets.compare_digest(api_key, str(key)) and scope == "*" for key, scope in scopes.items())
+
+
+def _require_global_admin_access(request: Request) -> None:
+    """Admin key with unrestricted environment scope (for process-wide runtime config)."""
+    _require_admin_access(request)
+    if not _global_scope_allowed(request):
+        raise KehrnelError(
+            code="FORBIDDEN",
+            status=403,
+            message="This operation changes runtime-wide configuration and requires an unscoped admin API key.",
         )
 
 
@@ -431,16 +453,27 @@ async def _initialize_activation_artifacts(rt, env_id: str, activation) -> Dict[
             ((activation.config or {}).get("transform") or {}).get("apply_shortcuts", True)
         )
         bootstrap_cfg = (((activation.config or {}).get("bootstrap") or {}).get("dictionariesOnActivate") or {})
-        is_rps_dual = (getattr(activation, "strategy_id", "") or "").strip().lower() == "openehr.rps_dual"
+        is_rps_dual = _is_rps_dual_strategy_id(getattr(activation, "strategy_id", ""))
         bootstrap_payload = {}
         if is_rps_dual:
             bootstrap_payload = {
                 "codes": bootstrap_cfg.get("codes") or "ensure",
                 "shortcuts": bootstrap_cfg.get("shortcuts") or ("seed" if apply_shortcuts else "none"),
             }
+        # For non-rps-dual strategies, only bootstrap if the strategy manifest declares
+        # an ensure_dictionaries op — avoids spurious failures on FHIR and other domains.
+        has_ensure_dicts = False
+        if not is_rps_dual:
+            try:
+                _manifest = rt.registry.get_manifest(getattr(activation, "strategy_id", ""))
+                has_ensure_dicts = any(
+                    op.name == "ensure_dictionaries" for op in (_manifest.ops if _manifest else [])
+                )
+            except Exception:
+                pass
         should_bootstrap = (
             is_rps_dual and any(bootstrap_payload.get(key) != "none" for key in ("codes", "shortcuts"))
-        ) or (not is_rps_dual and apply_shortcuts)
+        ) or (not is_rps_dual and apply_shortcuts and has_ensure_dicts)
         if should_bootstrap:
             dict_result = await rt.dispatch(
                 env_id,
@@ -908,7 +941,7 @@ async def endpoints_registry(request: Request):
 async def strategy_endpoints(strategy_id: str, request: Request):
     _require_admin_access(request)
     base = ""
-    if strategy_id == "openehr.rps_dual":
+    if _is_rps_dual_strategy_id(strategy_id):
         return {
             "strategy_id": strategy_id,
             "endpoints": {
@@ -1013,6 +1046,12 @@ def _serialize_manifest_op(manifest: StrategyManifest, op: Any, include_schemas:
     return row
 
 
+def _serialize_interaction_contract(contract: Any) -> Dict[str, Any]:
+    if hasattr(contract, "model_dump"):
+        return contract.model_dump(mode="json", exclude_none=True)
+    return dict(contract or {})
+
+
 @router.get("/ops", include_in_schema=False)
 async def list_ops(request: Request):
     try:
@@ -1039,11 +1078,13 @@ async def run_op(request: Request, body: Dict[str, Any] = Body(default_factory=d
         payload = body.get("payload") or {}
         if not env_id or not domain or not op:
             raise KehrnelError(code="INVALID_INPUT", status=400, message="environment, domain, and op are required")
+        env_id = str(env_id).strip()
+        _require_env_access(request, env_id)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
         result = await rt.dispatch(env_id, "op", {"op": op, "payload": payload, "domain": domain})
-        return {"ok": True, "result": result}
+        return _json_safe({"ok": True, "result": result})
     except Exception as exc:
         return _error_response(exc)
 
@@ -1060,6 +1101,7 @@ async def env_capabilities(env_id: str, request: Request, include_schemas: bool 
         activations = rt.registry.list_activations(env_id) or {}
         domains: List[Dict[str, Any]] = []
         strategy_ops: List[Dict[str, Any]] = []
+        interaction_contracts: List[Dict[str, Any]] = []
 
         for domain_key, activation in activations.items():
             manifest = rt.registry.get_manifest(activation.strategy_id)
@@ -1067,6 +1109,16 @@ async def env_capabilities(env_id: str, request: Request, include_schemas: bool 
                 continue
             op_rows = [_serialize_manifest_op(manifest, op, include_schemas=include_schemas) for op in (manifest.ops or [])]
             strategy_ops.extend(op_rows)
+            contract_rows = [
+                {
+                    **_serialize_interaction_contract(contract),
+                    "domain": domain_key,
+                    "strategy_id": manifest.id,
+                    "strategy_version": activation.version,
+                }
+                for contract in (manifest.interaction_contracts or [])
+            ]
+            interaction_contracts.extend(contract_rows)
             domains.append(
                 {
                     "domain": domain_key,
@@ -1074,12 +1126,14 @@ async def env_capabilities(env_id: str, request: Request, include_schemas: bool 
                     "strategy_version": activation.version,
                     "activation_id": activation.activation_id,
                     "ops": [row.get("name") for row in op_rows if row.get("name")],
+                    "interaction_contracts": contract_rows,
                 }
             )
 
         return {
             "env_id": env_id,
             "domains": domains,
+            "interaction_contracts": interaction_contracts,
             "operations": {
                 "standard": _standard_env_operations(),
                 "strategy": strategy_ops,
@@ -1149,17 +1203,19 @@ async def run_env_op(env_id: str, request: Request, body: Dict[str, Any] = Body(
             route_scope = "strategy"
 
         result = await rt.dispatch(env_id, dispatch_op, dispatch_payload)
-        return {
-            "ok": True,
-            "env_id": env_id,
-            "operation": operation,
-            "dispatch": {
-                "scope": route_scope,
-                "op": dispatch_op,
-                "domain": requested_domain or None,
-            },
-            "result": result,
-        }
+        return _json_safe(
+            {
+                "ok": True,
+                "env_id": env_id,
+                "operation": operation,
+                "dispatch": {
+                    "scope": route_scope,
+                    "op": dispatch_op,
+                    "domain": requested_domain or None,
+                },
+                "result": result,
+            }
+        )
     except Exception as exc:
         return _error_response(exc)
 
@@ -1321,7 +1377,7 @@ async def run_extension(env_id: str, strategy_id: str, op: str, request: Request
         if activation.strategy_id != strategy_id:
             raise ValueError(f"Environment {env_id} active with {activation.strategy_id}, not {strategy_id}")
         result = await rt.dispatch(env_id, "op", {"op": op, "payload": payload or {}, "strategy_id": strategy_id})
-        return {"ok": True, "result": result}
+        return _json_safe({"ok": True, "result": result})
     except Exception as exc:
         return _error_response(exc)
 
@@ -1956,11 +2012,18 @@ async def create_synthetic_job(env_id: str, request: Request, body: Dict[str, An
         }
         target_database = None
         if activation_now and getattr(activation_now, "bindings", None):
-            db_bindings = (activation_now.bindings or {}).get("db") or {}
-            target_database = db_bindings.get("database") if isinstance(db_bindings, dict) else None
-        if not target_database and activation_now:
-            db_bindings_meta = (getattr(activation_now, "bindings_meta", None) or {}).get("db") or {}
-            target_database = db_bindings_meta.get("database") if isinstance(db_bindings_meta, dict) else None
+            bindings = getattr(activation_now, "bindings", None)
+            # Handle bindings as dict or object
+            if isinstance(bindings, dict):
+                db_bindings = bindings.get("db")
+            else:
+                db_bindings = getattr(bindings, "db", None)
+            
+            if db_bindings:
+                if isinstance(db_bindings, dict):
+                    target_database = db_bindings.get("database") or db_bindings.get("name")
+                elif not isinstance(db_bindings, str):
+                    target_database = getattr(db_bindings, "database", None) or getattr(db_bindings, "name", None)
         if not target_database and activation_now and activation_now.bindings_ref:
             try:
                 from kehrnel.engine.core.bindings_resolver import resolve_bindings as _resolve_bindings_ref
@@ -1977,6 +2040,10 @@ async def create_synthetic_job(env_id: str, request: Request, body: Dict[str, An
             except Exception:
                 target_database = None
         model_source = payload.get("model_source") if isinstance(payload.get("model_source"), dict) else {}
+        # Default catalog_collection to "templates" for openEHR domain
+        catalog_coll = model_source.get("catalog_collection")
+        if not catalog_coll and domain and str(domain).lower() == "openehr":
+            catalog_coll = "templates"
         job = await manager.create_job(
             env_id=env_id,
             domain=domain,
@@ -1987,7 +2054,7 @@ async def create_synthetic_job(env_id: str, request: Request, body: Dict[str, An
                 "target_collections": target_collections,
                 "model_source": {
                     "database_name": model_source.get("database_name") or target_database,
-                    "catalog_collection": model_source.get("catalog_collection"),
+                    "catalog_collection": catalog_coll,
                     "links_collection": model_source.get("links_collection"),
                 },
             },

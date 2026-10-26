@@ -1,0 +1,222 @@
+resource: BiologicallyDerivedProduct
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec BiologicallyDerivedProduct)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: none — BiologicallyDerivedProduct is not listed in any R5
+#   compartment definition (see compartments/definitions/*.json).
+#
+# Total parameters: 10 (8 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `biologicalSourceEvent` is a single Identifier (token search).
+#   * `productCategory` and `productStatus` are bare Coding scalars.
+#   * `serial-number` and `identifier` both search `identifier[]`.
+
+search_parameters:
+  biological-source-event:
+    type: token
+    description: "The biological source for the biologically derived product"
+    fields:
+      - field: "_search.biologicalSourceEvent_systemCode"
+        tokenType: systemCode
+      - field: "_search.biologicalSourceEvent_values"
+        tokenType: code
+
+  code:
+    type: token
+    description: "A code that identifies the kind of this biologically derived product"
+    fields:
+      - field: "_search.productCode_systemCode"
+        tokenType: systemCode
+      - field: "_search.productCode_codes"
+        tokenType: code
+
+  collector:
+    type: reference
+    description: "Who collected the product"
+    fields:
+      - field: "_search.collectorId"
+        referenceType: id
+      - field: "_search.collectorType"
+        referenceType: type
+      - field: "collection.collector.reference"
+        referenceType: full
+
+  identifier:
+    type: token
+    description: "Identifier"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  product-category:
+    type: token
+    description: "Broad category of this product"
+    fields:
+      - field: "_search.productCategory_systemCode"
+        tokenType: systemCode
+      - field: "_search.productCategory_codes"
+        tokenType: code
+
+  product-status:
+    type: token
+    description: "Whether the product is currently available"
+    fields:
+      - field: "_search.productStatus_systemCode"
+        tokenType: systemCode
+      - field: "_search.productStatus_codes"
+        tokenType: code
+
+  request:
+    type: reference
+    description: "Procedure request to obtain this biologically derived product"
+    fields:
+      - field: "_search.requestIds"
+        referenceType: id
+      - field: "_search.requestTypes"
+        referenceType: type
+      - field: "request.reference"
+        referenceType: full
+
+  serial-number:
+    type: token
+    description: "Identifier (serial number search alias)"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  biologicalSourceEvent:
+    source: biologicalSourceEvent
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: biologicalSourceEvent.value
+        target_field: biologicalSourceEvent_values
+        datatype: array[string]
+      - source_path: biologicalSourceEvent
+        target_field: biologicalSourceEvent_systemCode
+        datatype: array[string]
+
+  productCode:
+    source: productCode
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: productCode.coding[*].code
+        target_field: productCode_codes
+        datatype: array[string]
+      - source_path: productCode.coding[*]
+        target_field: productCode_systemCode
+        datatype: array[string]
+
+  productCategory:
+    source: productCategory
+    target: _search
+    extractor: CodingExtractor
+    field_mappings:
+      - source_path: productCategory.code
+        target_field: productCategory_codes
+        datatype: array[string]
+      - source_path: productCategory
+        target_field: productCategory_systemCode
+        datatype: array[string]
+
+  productStatus:
+    source: productStatus
+    target: _search
+    extractor: CodingExtractor
+    field_mappings:
+      - source_path: productStatus.code
+        target_field: productStatus_codes
+        datatype: array[string]
+      - source_path: productStatus
+        target_field: productStatus_systemCode
+        datatype: array[string]
+
+  collector:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: collection.collector.reference
+        target_field: collectorId
+        datatype: string
+        extractType: id
+      - source_path: collection.collector.reference
+        target_field: collectorType
+        datatype: string
+        extractType: type
+
+  request:
+    source: request
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: request[*].reference
+        target_field: requestIds
+        datatype: array[string]
+        extractType: id
+      - source_path: request[*].reference
+        target_field: requestTypes
+        datatype: array[string]
+        extractType: type
+
+indexes:
+  - fields:
+      - "_search.identifier_values": 1
+    options:
+      name: idx_identifier_values
+      sparse: true
+  - fields:
+      - "_search.productCode_codes": 1
+    options:
+      name: idx_product_code_codes
+      sparse: true
+  - fields:
+      - "_search.collectorId": 1
+    options:
+      name: idx_collector_id
+      sparse: true
+  - fields:
+      - "_search.requestIds": 1
+    options:
+      name: idx_request_ids
+      sparse: true
+  - fields:
+      - "meta.lastUpdated": 1
+    options:
+      name: idx_meta_last_updated
+      sparse: true

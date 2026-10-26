@@ -1,0 +1,783 @@
+resource: DocumentReference
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec DocumentReference)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/
+#   patient.json, practitioner.json, encounter.json, device.json,
+#   relatedperson.json
+#
+# Total parameters: 36 (34 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`). Composite `relationship` is deferred (pairs
+# `relation` + `relatesto`; use those parameters directly).
+#
+# R5 structural notes:
+#   * `DocumentReference.content[]` is required (Attachment + profile).
+#   * `bodySite[]` and `event[]` are CodeableReference — concept vs
+#     reference searches use split denorm rules.
+#   * `attester[]` powers `attester` search via `party` (compartment JSON
+#     still lists legacy token `authenticator`).
+#   * `patient` is a Patient/* filter on `subject`.
+#   * Encounter compartment links `context` (and audit token `encounter`).
+#   * RelatedPerson compartment uses dynamic resolver.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters
+  # ─────────────────────────────────────────────────────────────
+  date:
+    type: date
+    description: "When this document reference was created"
+    fields:
+      - field: "date"
+        type: date
+
+  creation:
+    type: date
+    description: "When the document was created"
+    fields:
+      - field: "_search.attachmentCreation"
+        type: date
+
+  period:
+    type: date
+    description: "Time of service that is being documented"
+    fields:
+      - field: "_search.period"
+        type: period
+
+  # ─────────────────────────────────────────────────────────────
+  # String Parameters
+  # ─────────────────────────────────────────────────────────────
+  description:
+    type: string
+    description: "Human-readable description"
+    fields:
+      default:
+        - field: "_search.description_lower"
+          query_type: range
+      exact:
+        - field: "_search.description"
+
+  version:
+    type: string
+    description: "The business version identifier"
+    fields:
+      default:
+        - field: "_search.version_lower"
+          query_type: range
+      exact:
+        - field: "_search.version"
+
+  # ─────────────────────────────────────────────────────────────
+  # URI Parameters
+  # ─────────────────────────────────────────────────────────────
+  location:
+    type: uri
+    description: "Uri where the data can be found"
+    fields:
+      - field: "_search.attachmentUrl_values"
+      - field: "content.attachment.url"
+
+  format-uri:
+    type: uri
+    description: "Profile URI content rules for the document"
+    fields:
+      - field: "_search.formatUri_values"
+      - field: "content.profile.valueUri"
+
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters
+  # ─────────────────────────────────────────────────────────────
+  attester:
+    type: reference
+    description: "Who attested the document"
+    fields:
+      - field: "_search.attesterPartyIds"
+        referenceType: id
+      - field: "_search.attesterPartyTypes"
+        referenceType: type
+
+  author:
+    type: reference
+    description: "Who and/or what authored the document"
+    fields:
+      - field: "_search.authorIds"
+        referenceType: id
+      - field: "_search.authorTypes"
+        referenceType: type
+      - field: "author.reference"
+        referenceType: full
+
+  based-on:
+    type: reference
+    description: "Procedure that caused this document"
+    fields:
+      - field: "_search.basedOnIds"
+        referenceType: id
+      - field: "_search.basedOnTypes"
+        referenceType: type
+
+  bodysite-reference:
+    type: reference
+    description: "Target body site reference"
+    fields:
+      - field: "_search.bodySiteReferenceIds"
+        referenceType: id
+      - field: "_search.bodySiteReferenceTypes"
+        referenceType: type
+
+  context:
+    type: reference
+    description: "Context of the document content"
+    fields:
+      - field: "_search.contextIds"
+        referenceType: id
+      - field: "_search.contextTypes"
+        referenceType: type
+
+  custodian:
+    type: reference
+    description: "Organization which maintains the document"
+    fields:
+      - field: "_search.custodianId"
+        referenceType: id
+      - field: "_search.custodianType"
+        referenceType: type
+      - field: "custodian.reference"
+        referenceType: full
+
+  event-reference:
+    type: reference
+    description: "Related event resource"
+    fields:
+      - field: "_search.eventReferenceIds"
+        referenceType: id
+      - field: "_search.eventReferenceTypes"
+        referenceType: type
+
+  format-canonical:
+    type: reference
+    description: "Profile canonical content rules for the document"
+    fields:
+      - field: "_search.formatCanonical_values"
+        referenceType: full
+
+  patient:
+    type: reference
+    description: "Who/what is the subject of the document (Patient/*)"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  relatesto:
+    type: reference
+    description: "Target of the relationship"
+    fields:
+      - field: "_search.relatesToTargetIds"
+        referenceType: id
+      - field: "_search.relatesToTargetTypes"
+        referenceType: type
+
+  subject:
+    type: reference
+    description: "Who/what is the subject of the document"
+    fields:
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "_search.subjectType"
+        referenceType: type
+      - field: "subject.reference"
+        referenceType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters
+  # ─────────────────────────────────────────────────────────────
+  bodysite:
+    type: token
+    description: "Target body site concept"
+    fields:
+      - field: "_search.bodySite_systemCode"
+        tokenType: systemCode
+      - field: "_search.bodySite_codes"
+        tokenType: code
+
+  category:
+    type: token
+    description: "Categorization of document"
+    fields:
+      - field: "_search.category_systemCode"
+        tokenType: systemCode
+      - field: "_search.category_codes"
+        tokenType: code
+
+  contenttype:
+    type: token
+    description: "Mime type of the attachment"
+    fields:
+      - field: "_search.contentType_values"
+        tokenType: code
+
+  doc-status:
+    type: token
+    description: "preliminary | final | amended | entered-in-error"
+    fields:
+      - field: "docStatus"
+        tokenType: code
+
+  event-code:
+    type: token
+    description: "Related event concept"
+    fields:
+      - field: "_search.eventCode_systemCode"
+        tokenType: systemCode
+      - field: "_search.eventCode_codes"
+        tokenType: code
+
+  facility:
+    type: token
+    description: "Kind of facility where patient was seen"
+    fields:
+      - field: "_search.facilityType_systemCode"
+        tokenType: systemCode
+      - field: "_search.facilityType_codes"
+        tokenType: code
+
+  format-code:
+    type: token
+    description: "Format code content rules for the document"
+    fields:
+      - field: "_search.formatCode_systemCode"
+        tokenType: systemCode
+      - field: "_search.formatCode_codes"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: "Identifier of the attachment binary"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  language:
+    type: token
+    description: "Human language of the content (BCP-47)"
+    fields:
+      - field: "_search.attachmentLanguage_values"
+        tokenType: code
+
+  modality:
+    type: token
+    description: "The modality used"
+    fields:
+      - field: "_search.modality_systemCode"
+        tokenType: systemCode
+      - field: "_search.modality_codes"
+        tokenType: code
+
+  relation:
+    type: token
+    description: "replaces | transforms | signs | appends"
+    fields:
+      - field: "_search.relation_systemCode"
+        tokenType: systemCode
+      - field: "_search.relation_codes"
+        tokenType: code
+
+  security-label:
+    type: token
+    description: "Document security-tags"
+    fields:
+      - field: "_search.securityLabel_systemCode"
+        tokenType: systemCode
+      - field: "_search.securityLabel_codes"
+        tokenType: code
+
+  setting:
+    type: token
+    description: "Additional details about where content was created"
+    fields:
+      - field: "_search.practiceSetting_systemCode"
+        tokenType: systemCode
+      - field: "_search.practiceSetting_codes"
+        tokenType: code
+
+  status:
+    type: token
+    description: "current | superseded | entered-in-error"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  type:
+    type: token
+    description: "Kind of document (LOINC if possible)"
+    fields:
+      - field: "_search.type_systemCode"
+        tokenType: systemCode
+      - field: "_search.type_codes"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+# Denormalization Configuration
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  type:
+    source: type
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: type.coding[*].code
+        target_field: type_codes
+        datatype: array[string]
+      - source_path: type.coding[*]
+        target_field: type_systemCode
+        datatype: array[string]
+
+  category:
+    source: category
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: category[*].coding[*].code
+        target_field: category_codes
+        datatype: array[string]
+      - source_path: category[*].coding[*]
+        target_field: category_systemCode
+        datatype: array[string]
+
+  modality:
+    source: modality
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: modality[*].coding[*].code
+        target_field: modality_codes
+        datatype: array[string]
+      - source_path: modality[*].coding[*]
+        target_field: modality_systemCode
+        datatype: array[string]
+
+  facility_type:
+    source: facilityType
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: facilityType.coding[*].code
+        target_field: facilityType_codes
+        datatype: array[string]
+      - source_path: facilityType.coding[*]
+        target_field: facilityType_systemCode
+        datatype: array[string]
+
+  practice_setting:
+    source: practiceSetting
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: practiceSetting.coding[*].code
+        target_field: practiceSetting_codes
+        datatype: array[string]
+      - source_path: practiceSetting.coding[*]
+        target_field: practiceSetting_systemCode
+        datatype: array[string]
+
+  security_label:
+    source: securityLabel
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: securityLabel[*].coding[*].code
+        target_field: securityLabel_codes
+        datatype: array[string]
+      - source_path: securityLabel[*].coding[*]
+        target_field: securityLabel_systemCode
+        datatype: array[string]
+
+  subject:
+    source: subject
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: subject.reference
+        target_field: subjectId
+        datatype: string
+        extractType: id
+      - source_path: subject.reference
+        target_field: subjectType
+        datatype: string
+        extractType: type
+      - source_path: subject.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+        filterType: Patient
+        comment: "Patient/* subject — powers `patient` search parameter"
+
+  author:
+    source: author
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: author[*].reference
+        target_field: authorIds
+        datatype: array[string]
+        extractType: id
+      - source_path: author[*].reference
+        target_field: authorTypes
+        datatype: array[string]
+        extractType: type
+
+  attester_party:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: attester[*].party.reference
+        target_field: attesterPartyIds
+        datatype: array[string]
+        extractType: id
+      - source_path: attester[*].party.reference
+        target_field: attesterPartyTypes
+        datatype: array[string]
+        extractType: type
+
+  based_on:
+    source: basedOn
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: basedOn[*].reference
+        target_field: basedOnIds
+        datatype: array[string]
+        extractType: id
+      - source_path: basedOn[*].reference
+        target_field: basedOnTypes
+        datatype: array[string]
+        extractType: type
+
+  context:
+    source: context
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: context[*].reference
+        target_field: contextIds
+        datatype: array[string]
+        extractType: id
+      - source_path: context[*].reference
+        target_field: contextTypes
+        datatype: array[string]
+        extractType: type
+
+  custodian:
+    source: custodian
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: custodian.reference
+        target_field: custodianId
+        datatype: string
+        extractType: id
+      - source_path: custodian.reference
+        target_field: custodianType
+        datatype: string
+        extractType: type
+
+  body_site_concept:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: bodySite[*].concept.coding[*].code
+        target_field: bodySite_codes
+        datatype: array[string]
+      - source_path: bodySite[*].concept.coding[*]
+        target_field: bodySite_systemCode
+        datatype: array[string]
+
+  body_site_reference:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: bodySite[*].reference.reference
+        target_field: bodySiteReferenceIds
+        datatype: array[string]
+        extractType: id
+      - source_path: bodySite[*].reference.reference
+        target_field: bodySiteReferenceTypes
+        datatype: array[string]
+        extractType: type
+
+  event_code:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: event[*].concept.coding[*].code
+        target_field: eventCode_codes
+        datatype: array[string]
+      - source_path: event[*].concept.coding[*]
+        target_field: eventCode_systemCode
+        datatype: array[string]
+
+  event_reference:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: event[*].reference.reference
+        target_field: eventReferenceIds
+        datatype: array[string]
+        extractType: id
+      - source_path: event[*].reference.reference
+        target_field: eventReferenceTypes
+        datatype: array[string]
+        extractType: type
+
+  relates_to:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: relatesTo[*].target.reference
+        target_field: relatesToTargetIds
+        datatype: array[string]
+        extractType: id
+      - source_path: relatesTo[*].target.reference
+        target_field: relatesToTargetTypes
+        datatype: array[string]
+        extractType: type
+
+  relation_code:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: relatesTo[*].code.coding[*].code
+        target_field: relation_codes
+        datatype: array[string]
+      - source_path: relatesTo[*].code.coding[*]
+        target_field: relation_systemCode
+        datatype: array[string]
+
+  content_attachment:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: content[*].attachment.contentType
+        target_field: contentType_values
+        datatype: array[string]
+      - source_path: content[*].attachment.language
+        target_field: attachmentLanguage_values
+        datatype: array[string]
+      - source_path: content[*].attachment.url
+        target_field: attachmentUrl_values
+        datatype: array[string]
+      - source_path: content[*].attachment.creation
+        target_field: attachmentCreation
+        datatype: array[date]
+
+  format_profile:
+    source: $resource
+    target: _search
+    extractor: CodingExtractor
+    field_mappings:
+      - source_path: content[*].profile[*].valueCoding.code
+        target_field: formatCode_codes
+        datatype: array[string]
+      - source_path: content[*].profile[*].valueCoding
+        target_field: formatCode_systemCode
+        datatype: array[string]
+
+  format_uri:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: content[*].profile[*].valueUri
+        target_field: formatUri_values
+        datatype: array[string]
+
+  format_canonical:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: content[*].profile[*].valueCanonical
+        target_field: formatCanonical_values
+        datatype: array[string]
+
+  description:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: description
+        target_field: description
+        datatype: string
+      - source_path: description
+        target_field: description_lower
+        datatype: string
+        normalize: lowercase
+
+  version:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: version
+        target_field: version
+        datatype: string
+      - source_path: version
+        target_field: version_lower
+        datatype: string
+        normalize: lowercase
+
+  period:
+    source: period
+    target: _search
+    extractor: PeriodExtractor
+    field_mappings:
+      - source_path: start
+        target_field: period
+        datatype: object
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - subject
+          - patient
+          - author
+        reference_type: Patient
+        datatype: array[string]
+        comment: |
+          Patient compartment (subject, author). `patient` is the
+          clinical-patient search alias on subject.
+      - target_field: Practitioner
+        source_paths:
+          - subject
+          - author
+          - attester[*].party
+          - authenticator
+        reference_type: Practitioner
+        datatype: array[string]
+        comment: |
+          Practitioner compartment (subject, author, authenticator).
+          `attester[*].party` is the FHIR path; `authenticator` satisfies
+          compartment-definition audit token.
+      - target_field: Encounter
+        source_paths:
+          - context
+          - encounter
+        reference_type: Encounter
+        datatype: array[string]
+        comment: |
+          Encounter compartment (`context`; audit token `encounter`).
+      - target_field: Device
+        source_paths:
+          - subject
+          - author
+        reference_type: Device
+        datatype: array[string]
+        comment: "Device compartment (subject, author filtered to Device/*)"
+
+compartments:
+  precomputed:
+    - Patient
+    - Practitioner
+    - Encounter
+    - Device
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+
+  - fields:
+      - "_compartments.Practitioner": 1
+    options:
+      name: idx_compartment_practitioner
+      sparse: true
+
+  - fields:
+      - "_compartments.Encounter": 1
+    options:
+      name: idx_compartment_encounter
+      sparse: true
+
+  - fields:
+      - "_compartments.Device": 1
+    options:
+      name: idx_compartment_device
+      sparse: true
+
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+
+  - fields:
+      - "_search.patientId": 1
+    options:
+      name: idx_patient_id
+      sparse: true
+
+  - fields:
+      - "_search.type_codes": 1
+    options:
+      name: idx_type_codes
+      sparse: true
+
+  - fields:
+      - "date": 1
+    options:
+      name: idx_date
+      sparse: true
+
+  - fields:
+      - "meta.lastUpdated": 1
+    options:
+      name: idx_meta_last_updated
+      sparse: true

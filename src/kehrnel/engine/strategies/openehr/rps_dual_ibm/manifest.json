@@ -1,24 +1,24 @@
 {
   "id": "openehr.rps_dual_ibm",
   "name": "Reversed Path Search - IBM Exact Model",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "maturity": "published",
   "pack_format": "strategy-pack/v1",
   "spec": { "path": "spec.json", "version": "1.1" },
-  "variants": ["composition.ibm_exact", "search.ibm_exact"],
+  "variants": ["composition.codedpath", "search.codedpath", "search.shortcuts", "ibm-exact-model"],
   "domain": "openEHR",
-  "summary": "Compatibility pack for the IBM openEHR reversed-path persistence model, preserving IBM field names, compact tokens, and envelope layout.",
-  "description": "This strategy reuses the shared openEHR RPS compiler and maintenance plumbing, but emits and reads the IBM document model exactly as stored: slash-separated reversed paths, compact atcodes, li sibling indexes, prefixed value tokens, and IBM envelope metadata.",
+  "summary": "Compatibility alias for the IBM exact-model RPS Dual runtime used by HDL environments.",
+  "description": "This strategy id preserves compatibility with environments activated as openehr.rps_dual_ibm while delegating execution to the RPS Dual implementation.",
   "config": {
     "strategy": {
       "schema": "schema.json",
       "defaults": "defaults.json",
-      "description": "IBM exact-model storage configuration"
+      "description": "Data model and storage configuration (portal-visible)"
     },
     "bulk": {
       "schema": "../rps_dual/ingest/bulk_schema.json",
       "defaults": "../rps_dual/ingest/bulk_defaults.json",
-      "description": "Bulk operation settings"
+      "description": "Bulk operation settings (CLI/API only, not visible in portal)"
     }
   },
   "capabilities": [
@@ -32,13 +32,20 @@
   ],
   "entrypoint": "kehrnel.engine.strategies.openehr.rps_dual_ibm.strategy:RPSDualIBMStrategy",
   "ui": {
-    "docs": "/guide/docs/strategies/openehr/rps-dual-ibm",
-    "tags": ["openEHR", "reversed-paths", "ibm", "compatibility"],
+    "tags": ["openEHR", "reversed-paths", "atlas-search", "dual-collection", "slim-search", "IBM"],
     "domain_badge": "openEHR",
     "works_with": ["atlas_search_dual"],
+    "docs": "/guide/docs/strategies/openehr/rps-dual",
     "links": {
-      "strategy_synthetic_generate": "/api/strategies/openehr/rps_dual_ibm/synthetic/generate",
-      "strategy_synthetic_stats": "/api/strategies/openehr/rps_dual_ibm/synthetic/stats",
+      "strategy_base": "/api/strategies/openehr/rps_dual",
+      "strategy_config": "/api/strategies/openehr/rps_dual/config",
+      "strategy_ingest_body": "/api/strategies/openehr/rps_dual/ingest/body",
+      "strategy_ingest_file": "/api/strategies/openehr/rps_dual/ingest/file",
+      "strategy_ingest_database": "/api/strategies/openehr/rps_dual/ingest/database",
+      "strategy_synthetic_generate": "/api/strategies/openehr/rps_dual/synthetic/generate",
+      "strategy_synthetic_stats": "/api/strategies/openehr/rps_dual/synthetic/stats",
+      "domain_base": "/api/domains/openehr",
+      "domain_aql": "/api/domains/openehr/query/aql",
       "runtime_activate": "/environments/{env_id}/activate",
       "runtime_capabilities": "/environments/{env_id}/capabilities",
       "runtime_run": "/environments/{env_id}/run",
@@ -55,444 +62,104 @@
       "strategy_manifest": "/strategies/openehr.rps_dual_ibm",
       "strategy_spec": "/strategies/openehr.rps_dual_ibm/spec",
       "strategy_endpoints": "/strategies/openehr.rps_dual_ibm/endpoints",
+      "strategy_asset_paper": "/strategies/openehr.rps_dual/assets/rps-paper.pdf",
       "catalog_ops": "/ops"
     },
-    "story": "If an organization already stores openEHR data using IBM's reversed-path model, the right move is usually not to migrate that data just to adopt Kehrnel. This strategy lets Kehrnel work against the persisted IBM shape directly, so teams can keep IBM collection names, compact `$>` value tokens, `li` sibling indexes, and slash-separated reversed paths while still using Kehrnel's query and ingest tooling.\n\nIt is intentionally a compatibility pack, not the new recommended default. The goal is operational continuity first: connect Kehrnel to an existing IBM deployment safely, then decide later whether any migration to the default Kehrnel profile is worthwhile.",
-    "how_it_works": "The runtime reuses the same RPS compiler, planning, and maintenance infrastructure as the default dual-collection strategy, but swaps in IBM-specific flatten/unflatten logic and field bindings. Canonical documents remain IBM-shaped, search documents keep IBM shortcuts and path conventions, and query resolution maps openEHR concepts onto IBM envelope fields such as `version`, `template`, and `creation_date`.\n\nFor existing IBM deployments, collection names and dictionary collection names should be reviewed before first activation. The recommended flow is configuration first in the GUI, then activation in Kehrnel once the right collection bindings and policies are confirmed.",
+    "index_contract": {
+      "specPath": "storageModel.stores[].indexes",
+      "searchSpecPath": "storageModel.stores[].search",
+      "configResolved": true,
+      "summary": "Required and recommended MongoDB indexes are declared in the IBM strategy spec with logical field aliases. Runtime plan/apply resolves the IBM collection names, UUID settings, and field aliases from the active environment config.",
+      "requiredForOptimizedAql": ["idx_patient_path", "idx_template_commit_version"],
+      "recommendedForOptimizedAql": ["idx_template_node_commit", "idx_patient_sort"],
+      "optionalForOptimizedAql": ["idx_template_commit"],
+      "conditionalSearchIndex": "collections.search.atlasIndex"
+    },
+    "story": "Compatibility alias for CatSalut and other HDL environments that were activated under the IBM exact-model strategy id. Query, transform, ingest, and maintenance operations execute through the same RPS Dual implementation.",
     "benefits": [
-      "Works directly with the IBM exact persisted model, reducing migration risk for existing deployments.",
-      "Preserves IBM field names, `$>` shortcut values, compact atcode tokens, and envelope metadata exactly as stored.",
-      "Lets teams point Kehrnel at pre-existing canonical, search, code, and shortcut collections rather than forcing a rewrite.",
-      "Reuses the shared RPS planning, query, and maintenance machinery so operational behavior stays familiar."
+      "Lets local runtimes load production HDL environments whose activation references openehr.rps_dual_ibm.",
+      "Keeps the existing RPS Dual query and Atlas Search behavior without duplicating implementation code."
     ],
-    "constraints": [
-      "This pack preserves IBM conventions exactly, even where a greenfield Kehrnel deployment would choose cleaner defaults.",
-      "Slash-separated reversed paths and IBM envelope fields are kept for compatibility, not because they are the preferred fresh design.",
-      "Dictionary bootstrap policy should be reviewed before first use when attaching to pre-existing IBM collections."
-    ],
-    "pick_when": [
-      "You already have IBM-shaped openEHR collections or exports and need Kehrnel to interoperate without rewriting them.",
-      "You want Kehrnel query and ingest support now, while keeping migration to the default Kehrnel model optional."
-    ],
-    "avoid_when": [
-      "You are starting greenfield and can use the default `openehr.rps_dual` strategy instead.",
-      "You want the cleanest Kehrnel-native path separator and field layout rather than IBM exact compatibility."
-    ],
-    "ideal_for": "This strategy is best for teams onboarding an existing IBM openEHR reversed-path deployment into Kehrnel. It is especially useful when collection names, dictionary contents, and document layout are already in production and must remain stable while new query, transform, or maintenance workflows are introduced.",
-    "consider_alternatives": "If you are building a new repository from scratch, prefer the default `openehr.rps_dual` strategy; it has cleaner defaults, richer portal guidance, and avoids compatibility constraints that exist only to match IBM. Choose this IBM pack when preserving an installed IBM layout matters more than simplification.",
+    "ideal_for": "HDL environments whose persisted activation strategy id is openehr.rps_dual_ibm.",
     "scorecard": {
       "read_patient": 4,
       "read_population": 5,
       "writes": 2,
       "storage": 3,
       "index_cost": 3,
-      "migration_ease": 5
+      "migration_ease": 2
     },
     "tabs": {
       "overview": {
         "cards": [
-          { "title": "Compatibility", "body": "Targets IBM exact persistence: slash paths, compact atcodes, `$>` values, `li`, and IBM envelope fields." },
-          { "title": "Querying", "body": "Reuses the shared RPS query compiler while rebinding document paths to IBM fields such as `version`, `template`, and `creation_date`." },
-          { "title": "Compare To Default", "body": "Use this pack to preserve an installed IBM model. For greenfield deployments, the default `openehr.rps_dual` profile remains the better starting point." }
-        ]
-      },
-      "activation": {
-        "cards": [
-          { "title": "Configure First", "body": "Before first activation, review `collections.compositions.name`, `collections.search.name`, `collections.codes.name`, and `collections.shortcuts.name` so Kehrnel points at the correct IBM collections." },
-          { "title": "Safer Bootstrap", "body": "Compatibility defaults are ensure-only for dictionaries, so existing IBM dictionary documents are not replaced unless you explicitly choose seed/rebuild operations." }
+          { "title": "Querying", "body": "Compatibility alias for RPS Dual query compilation and execution." },
+          { "title": "Storage", "body": "Uses the environment activation config, including IBM collection names and UUID settings." },
+          { "title": "Indexes", "body": "Spec-declared B-tree and Atlas Search indexes are resolved from the active IBM collection and field configuration." }
         ]
       }
     }
   },
   "ops": [
     {
+      "name": "list_native_ehrs",
+      "kind": "read",
+      "summary": "List distinct EHR ids represented in the configured composition collection",
+      "input_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "list_native_compositions",
+      "kind": "read",
+      "summary": "List native composition summaries for an EHR",
+      "input_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
+      "name": "fetch_native_composition",
+      "kind": "read",
+      "summary": "Fetch one stored native composition document",
+      "input_schema": { "type": "object", "additionalProperties": true }
+    },
+    {
       "name": "ensure_dictionaries",
       "kind": "maintenance",
-      "summary": "Ensure dictionary collections and optionally seed them from the configured IBM-compatible payloads",
+      "summary": "Ensure and seed _codes/_shortcuts dictionaries",
       "input_schema": {
         "type": "object",
         "properties": {
-          "codes": {
-            "type": "string",
-            "enum": ["none", "ensure", "seed"],
-            "description": "Bootstrap mode for the codes dictionary"
-          },
-          "shortcuts": {
-            "type": "string",
-            "enum": ["none", "ensure", "seed"],
-            "description": "Bootstrap mode for the shortcuts dictionary"
-          }
+          "codes": { "type": "string", "enum": ["none", "ensure", "seed"] },
+          "shortcuts": { "type": "string", "enum": ["none", "ensure", "seed"] }
         },
-        "additionalProperties": false
-      },
-      "output_schema": {
-        "type": "object",
-        "properties": {
-          "ok": { "type": "boolean" },
-          "created": {
-            "type": "array",
-            "items": { "type": "string" }
-          },
-          "seeded": {
-            "type": "object",
-            "properties": {
-              "codes": { "type": "integer" },
-              "shortcuts": { "type": "integer" }
-            }
-          },
-          "warnings": {
-            "type": "array",
-            "items": { "type": "string" }
-          }
-        }
+        "additionalProperties": true
       }
     },
     {
       "name": "rebuild_codes",
       "kind": "maintenance",
-      "summary": "Rebuild code dictionary documents from the configured IBM-compatible seed payload",
-      "input_schema": {
-        "type": "object",
-        "properties": {
-          "dry_run": {
-            "type": "boolean",
-            "default": false
-          }
-        },
-        "additionalProperties": false
-      },
-      "output_schema": {
-        "type": "object",
-        "properties": {
-          "ok": { "type": "boolean" },
-          "updated": { "type": "integer" },
-          "warnings": {
-            "type": "array",
-            "items": { "type": "string" }
-          }
-        }
-      }
+      "summary": "Rebuild codes dictionary from configured seed",
+      "input_schema": { "type": "object", "additionalProperties": true }
     },
     {
       "name": "rebuild_shortcuts",
       "kind": "maintenance",
-      "summary": "Rebuild shortcuts dictionary document from the configured IBM-compatible seed payload",
-      "input_schema": {
-        "type": "object",
-        "properties": {
-          "dry_run": {
-            "type": "boolean",
-            "default": false
-          }
-        },
-        "additionalProperties": false
-      },
-      "output_schema": {
-        "type": "object",
-        "properties": {
-          "ok": { "type": "boolean" },
-          "updated": { "type": "integer" },
-          "warnings": {
-            "type": "array",
-            "items": { "type": "string" }
-          }
-        }
-      }
+      "summary": "Rebuild shortcuts dictionary from configured seed",
+      "input_schema": { "type": "object", "additionalProperties": true }
     },
     {
       "name": "build_search_index_definition",
       "kind": "maintenance",
-      "summary": "Generate Atlas Search index definition from active mappings configuration",
-      "input_schema": {
-        "type": "object",
-        "properties": {
-          "include_stored_source": {
-            "type": "boolean",
-            "default": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "output_schema": {
-        "type": "object",
-        "properties": {
-          "ok": { "type": "boolean" },
-          "definition": { "type": "object" },
-          "metadata": { "type": "object" },
-          "warnings": {
-            "type": "array",
-            "items": { "type": "string" }
-          }
-        }
-      }
+      "summary": "Build Atlas Search index definition for the configured search collection",
+      "input_schema": { "type": "object", "additionalProperties": true }
     },
     {
-      "name": "ensure_atlas_search_index",
+      "name": "rebuild_search_collection",
       "kind": "maintenance",
-      "summary": "Ensure Atlas Search index for slim search collection",
-      "input_schema": {
-        "type": "object",
-        "properties": {
-          "index_name": { "type": "string" },
-          "recreate": {
-            "type": "boolean",
-            "default": false
-          }
-        },
-        "additionalProperties": false
-      },
-      "output_schema": {
-        "type": "object",
-        "properties": {
-          "ok": { "type": "boolean" },
-          "result": { "type": "object" },
-          "warnings": {
-            "type": "array",
-            "items": { "type": "string" }
-          }
-        }
-      }
-    },
-    {
-      "name": "rebuild_slim_search_collection",
-      "kind": "maintenance",
-      "summary": "Rebuild slim search docs from canonical IBM-compatible compositions",
-      "input_schema": {
-        "type": "object",
-        "properties": {
-          "batch_size": {
-            "type": "integer",
-            "default": 100
-          },
-          "clear_existing": {
-            "type": "boolean",
-            "default": false
-          }
-        },
-        "additionalProperties": false
-      },
-      "output_schema": {
-        "type": "object",
-        "properties": {
-          "ok": { "type": "boolean" },
-          "processed": { "type": "integer" },
-          "inserted": { "type": "integer" },
-          "cleared": { "type": "boolean" },
-          "warnings": {
-            "type": "array",
-            "items": { "type": "string" }
-          }
-        }
-      }
+      "summary": "Rebuild the slim search collection from composition documents",
+      "input_schema": { "type": "object", "additionalProperties": true }
     },
     {
       "name": "synthetic_generate_batch",
-      "kind": "synthetic",
-      "summary": "Generate synthetic datasets in batch from source instances and/or model catalog",
-      "input_schema": {
-        "type": "object",
-        "properties": {
-          "patient_count": {
-            "type": "integer",
-            "minimum": 1
-          },
-          "patients": {
-            "type": "integer",
-            "minimum": 1
-          },
-          "source_collection": {
-            "type": "string"
-          },
-          "source_database": {
-            "type": "string"
-          },
-          "source_db": {
-            "type": "string"
-          },
-          "source_templates": {
-            "type": "array",
-            "items": { "type": "string" }
-          },
-          "source_sample_size": {
-            "type": "integer",
-            "minimum": 1,
-            "default": 200
-          },
-          "source_min_per_patient": {
-            "type": "integer",
-            "minimum": 0,
-            "default": 1
-          },
-          "source_max_per_patient": {
-            "type": "integer",
-            "minimum": 0,
-            "default": 1
-          },
-          "source_filter": {
-            "type": "object",
-            "additionalProperties": true
-          },
-          "generation_mode": {
-            "type": "string",
-            "enum": ["auto", "from_source", "from_models", "source", "models"]
-          },
-          "dry_run": {
-            "type": "boolean",
-            "default": false
-          },
-          "plan_only": {
-            "type": "boolean",
-            "default": false
-          },
-          "store_canonical": {
-            "type": "boolean",
-            "default": false
-          },
-          "canonical_collection": {
-            "type": "string",
-            "default": "compositions_canonical_synthetic"
-          },
-          "write_batch_size": {
-            "type": "integer",
-            "minimum": 10,
-            "default": 250
-          },
-          "model_source": {
-            "type": "object",
-            "properties": {
-              "database_name": { "type": "string" },
-              "catalog_collection": { "type": "string" },
-              "links_collection": { "type": "string" }
-            },
-            "additionalProperties": true
-          },
-          "models": {
-            "type": "array",
-            "minItems": 1,
-            "items": {
-              "type": "object",
-              "properties": {
-                "model_id": { "type": "string" },
-                "template_id": { "type": "string" },
-                "min_per_patient": { "type": "integer", "minimum": 0 },
-                "max_per_patient": { "type": "integer", "minimum": 0 },
-                "weight": { "type": "number", "minimum": 0 },
-                "sample_pool_size": { "type": "integer", "minimum": 0, "default": 25 }
-              },
-              "required": ["model_id"],
-              "additionalProperties": false
-            }
-          },
-          "templates": {
-            "type": "array",
-            "minItems": 1,
-            "items": {
-              "type": "object",
-              "properties": {
-                "template_id": { "type": "string" },
-                "templateId": { "type": "string" },
-                "min_per_patient": {
-                  "type": "integer",
-                  "minimum": 0
-                },
-                "min": {
-                  "type": "integer",
-                  "minimum": 0
-                },
-                "max_per_patient": {
-                  "type": "integer",
-                  "minimum": 0
-                },
-                "max": {
-                  "type": "integer",
-                  "minimum": 0
-                },
-                "weight": {
-                  "type": "number",
-                  "minimum": 0
-                },
-                "sample_pool_size": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "default": 25
-                }
-              },
-              "additionalProperties": false
-            }
-          },
-          "links": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "from": { "type": "string" },
-                "from_model_id": { "type": "string" },
-                "to": { "type": "string" },
-                "to_model_id": { "type": "string" },
-                "probability": { "type": "number", "minimum": 0, "maximum": 1 },
-                "min_to_per_patient": { "type": "integer", "minimum": 0 },
-                "type": { "type": "string" }
-              },
-              "additionalProperties": true
-            }
-          }
-        },
-        "anyOf": [
-          { "required": ["patient_count"] },
-          { "required": ["patients"] }
-        ],
-        "additionalProperties": false
-      },
-      "output_schema": {
-        "type": "object",
-        "properties": {
-          "ok": { "type": "boolean" },
-          "dry_run": { "type": "boolean" },
-          "plan_only": { "type": "boolean" },
-          "source_collection": { "type": "string" },
-          "source_database": { "type": ["string", "null"] },
-          "target": {
-            "type": "object",
-            "properties": {
-              "canonical": { "type": ["string", "null"] },
-              "compositions": { "type": ["string", "null"] },
-              "search": { "type": ["string", "null"] }
-            }
-          },
-          "patients": { "type": "integer" },
-          "estimated_docs": { "type": "integer" },
-          "generated_docs": { "type": "integer" },
-          "inserted_canonical": { "type": "integer" },
-          "inserted_base": { "type": "integer" },
-          "inserted_search": { "type": "integer" },
-          "estimated_canonical_bytes": { "type": "integer" },
-          "estimated_base_bytes": { "type": "integer" },
-          "estimated_search_bytes": { "type": "integer" },
-          "estimated_total_bytes": { "type": "integer" },
-          "links_applied": { "type": "integer" },
-          "models": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "model_id": { "type": "string" },
-                "template_id": { "type": "string" },
-                "min": { "type": "integer" },
-                "max": { "type": "integer" }
-              }
-            }
-          },
-          "links": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "additionalProperties": true
-            }
-          },
-          "by_template": { "type": "object" },
-          "by_model": { "type": "object" }
-        }
-      }
+      "kind": "extension",
+      "summary": "Generate synthetic openEHR documents",
+      "input_schema": { "type": "object", "additionalProperties": true }
     }
   ]
 }

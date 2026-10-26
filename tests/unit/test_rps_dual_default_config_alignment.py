@@ -6,9 +6,9 @@ from pathlib import Path
 import jsonschema
 import pytest
 
-from kehrnel.core.pack_loader import load_strategy
-from kehrnel.core.registry import FileActivationRegistry
-from kehrnel.core.runtime import StrategyRuntime
+from kehrnel.engine.core.pack_loader import load_strategy
+from kehrnel.engine.core.registry import FileActivationRegistry
+from kehrnel.engine.core.runtime import StrategyRuntime
 from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.core.types import StrategyContext
 from kehrnel.engine.strategies.openehr.rps_dual.config import (
@@ -24,6 +24,13 @@ from kehrnel.engine.strategies.openehr.rps_dual.strategy import (
     SCHEMA_PATH,
     RPSDualStrategy,
     load_json,
+)
+from kehrnel.engine.strategies.openehr.rps_dual_ibm.strategy import (
+    RPSDualIBMStrategy,
+)
+from kehrnel.engine.strategies.openehr.rps_dual.query.compiler import build_runtime_strategy
+from kehrnel.engine.strategies.openehr.rps_dual.query.transformers.search_pipeline_builder import (
+    SearchPipelineBuilder,
 )
 from kehrnel.strategy_sdk import StrategyBindings
 
@@ -54,6 +61,105 @@ def test_defaults_json_matches_schema_and_python_config_builders():
     assert schema_cfg["search"]["ehr_id_encoding"] == defaults["ids"]["ehr_id"]
     assert schema_cfg["search"]["sort_time"] == defaults["fields"]["document"]["sort_time"]
     assert flattener_cfg["search_fields"]["comp_id"] == defaults["fields"]["document"]["comp_id"]
+
+
+def test_ibm_defaults_use_legacy_li_instance_field():
+    ibm_dir = (
+        Path(__file__).resolve().parents[2]
+        / "src"
+        / "kehrnel"
+        / "engine"
+        / "strategies"
+        / "openehr"
+        / "rps_dual_ibm"
+    )
+    defaults = load_json(ibm_dir / "defaults.json")
+    schema = load_json(ibm_dir / "schema.json")
+
+    jsonschema.validate(defaults, schema)
+
+    cfg = normalize_config(defaults)
+    flattener_cfg = build_flattener_config(cfg)
+    schema_cfg = build_schema_config(cfg)
+
+    assert defaults["fields"]["node"]["pi"] == "li"
+    assert defaults["fields"]["document"]["comp_id"] == "_id"
+    assert flattener_cfg["composition_fields"]["path_instance"] == "li"
+    assert flattener_cfg["search_fields"]["path_instance"] == "li"
+    assert schema_cfg["composition"]["path_instance_field"] == "li"
+    assert schema_cfg["search"]["path_instance_field"] == "li"
+    assert schema_cfg["search"]["path_instance_mode"] == "scalar"
+    assert schema_cfg["composition"]["comp_id"] == "_id"
+    assert schema_cfg["search"]["comp_id"] == "_id"
+
+    strategy = RPSDualIBMStrategy()
+    assert strategy.defaults["fields"]["node"]["pi"] == "li"
+    assert strategy.defaults["fields"]["document"]["comp_id"] == "_id"
+    assert strategy.manifest.default_config["fields"]["node"]["pi"] == "li"
+    assert strategy.manifest.default_config["fields"]["document"]["comp_id"] == "_id"
+
+    legacy_activation_cfg = deepcopy(strategy.defaults)
+    legacy_activation_cfg["fields"]["node"]["pi"] = "pi"
+    legacy_activation_cfg["fields"]["document"]["v"] = "version"
+    legacy_activation_cfg["fields"]["document"]["comp_id"] = "version"
+    coerced_cfg = strategy._coerce_ibm_config(legacy_activation_cfg)
+    assert coerced_cfg["fields"]["node"]["pi"] == "li"
+    assert coerced_cfg["fields"]["document"]["comp_id"] == "_id"
+
+
+def test_ibm_legacy_version_comp_id_lookup_uses_uuid_id_field():
+    strategy = RPSDualIBMStrategy()
+    legacy_cfg = deepcopy(strategy.defaults)
+    legacy_cfg["collections"]["compositions"]["name"] = "ibm-semiflattened-compositions"
+    legacy_cfg["collections"]["search"]["name"] = "compositions_search_ibm"
+    legacy_cfg["ids"]["ehr_id"] = "uuidbin"
+    legacy_cfg["ids"]["composition_id"] = "uuidbin"
+    legacy_cfg["fields"]["document"].update(
+        {
+            "comp_id": "version",
+            "tid": "template",
+            "v": "version",
+            "time_committed": "creation_date",
+            "sort_time": "creation_date",
+        }
+    )
+
+    cfg_model = normalize_config(strategy._coerce_ibm_config(legacy_cfg))
+    schema_cfg = build_schema_config(cfg_model)
+    builder = SearchPipelineBuilder(
+        "e",
+        "c",
+        schema_cfg["composition"],
+        None,
+        {},
+        strategy=build_runtime_strategy(cfg_model),
+        search_index_name=schema_cfg["search"]["index_name"],
+    )
+
+    lookup_stage = builder.build_lookup_stage(
+        {
+            "select": {
+                "columns": {
+                    "0": {
+                        "value": {
+                            "type": "dataMatchPath",
+                            "path": "c/name/value",
+                        },
+                        "alias": "composition_name",
+                    }
+                }
+            }
+        }
+    )
+
+    assert lookup_stage == {
+        "$lookup": {
+            "from": "ibm-semiflattened-compositions",
+            "localField": "_id",
+            "foreignField": "_id",
+            "as": "full_composition",
+        }
+    }
 
 
 def test_manifest_schema_and_spec_advertise_current_supported_surface():
@@ -146,7 +252,10 @@ async def test_default_plan_materializes_expected_default_artifacts(tmp_path):
 
     index_keys = {(idx["collection"], tuple(idx["keys"])) for idx in artifacts["indexes"]}
     assert ("compositions_rps", (("ehr_id", 1), ("cn.p", 1), ("time_c", 1))) in index_keys
+    assert ("compositions_rps", (("tid", 1), ("time_c", 1), ("v", 1))) in index_keys
+    assert ("compositions_rps", (("tid", 1), ("cn.data.ani", 1), ("cn.p", 1), ("time_c", 1))) in index_keys
     assert ("compositions_search", (("ehr_id", 1), ("sort_time", 1))) in index_keys
+    assert ("compositions_rps", (("tid", 1), ("time_c", 1))) not in index_keys
 
     assert len(artifacts["search_indexes"]) == 1
     search_index = artifacts["search_indexes"][0]
@@ -201,7 +310,7 @@ async def test_active_mappings_prefer_generated_search_index_definition_over_see
 async def test_validate_config_accepts_supported_separator_override():
     strategy = RPSDualStrategy(MANIFEST.model_copy(deep=True))
     cfg = deepcopy(strategy.defaults)
-    cfg["paths"]["separator"] = ":"
+    cfg["paths"]["separator"] = "/"
 
     ctx = StrategyContext(
         environment_id="env-valid-separator",
@@ -213,7 +322,7 @@ async def test_validate_config_accepts_supported_separator_override():
 
     await strategy.validate_config(ctx)
     assert strategy.normalized_config is not None
-    assert strategy.normalized_config.paths.separator == ":"
+    assert strategy.normalized_config.paths.separator == "/"
 
 
 @pytest.mark.asyncio

@@ -1,0 +1,595 @@
+resource: Location
+fhir_version: R5
+
+# Definition: https://www.hl7.org/fhir/location-definitions.html
+# Search Parameters Configuration
+# Reference: https://www.hl7.org/fhir/location-search.html
+# Validated against the canonical R5 search parameter table at
+# https://www.hl7.org/fhir/location-search.html (2026-05).
+#
+# FHIR R5 defines 17 resource-specific search parameters for Location
+# (sections 8.7.17 through 8.7.33). Of these:
+#   • 15 are implemented below (all `Normal` processing-mode params).
+#   •  2 are intentionally NOT implemented because they are typed as
+#      `special` by the spec and require a geospatial query engine and
+#      GeoJSON projections that this conversion layer does not yet
+#      provide. They are documented in detail under "Geospatial
+#      parameters (NOT IMPLEMENTED)" below.
+# Plus 2 common parameters that apply to every FHIR resource:
+#   _id, _lastUpdated.
+# So this YAML implements 15 (resource-specific) + 2 (common) = 17
+# searchable parameters out of the 17 + 2 = 19 R5 parameters relevant
+# to Location.
+#
+# R5 spec parameter coverage — implemented (alphabetical):
+#   address (string), address-city (string), address-country (string),
+#   address-postalcode (string), address-state (string),
+#   address-use (token), characteristic (token), endpoint (reference),
+#   identifier (token), name (string), operational-status (token),
+#   organization (reference), partof (reference), status (token),
+#   type (token)
+#
+# ─────────────────────────────────────────────────────────────────────
+# Geospatial parameters (NOT IMPLEMENTED — spec-conformant degradation)
+# ─────────────────────────────────────────────────────────────────────
+# Both parameters below are typed as `special` in FHIR R5 and require
+# infrastructure (MongoDB 2dsphere index + GeoJSON projection)
+# that this conversion layer does not currently provide. Per FHIR R5
+# section 8.7.28, a server that doesn't support `near` "MIGHT report
+# the unused parameter in a bundled OperationOutcome and still perform
+# the search ignoring the near parameter." The converter implements
+# exactly this contract: it logs a warning and silently drops the
+# parameter while the remainder of the query proceeds. The same
+# graceful-degradation policy is applied to `contains`. (To convert
+# this to a hard "400 Bad Request"-style failure, consume the
+# `UnsupportedParameterError` raised by the lower-level
+# `_get_parameter_config` path.)
+#
+# `near` (R5 §8.7.28)
+#   Type:       special
+#   Expression: Location.position
+#   Value:      [latitude]|[longitude]|[distance]|[units]
+#                 - units: SHALL support 'km' (kilometers);
+#                          SHOULD support '[mi_us]' (US miles);
+#                          if omitted, defaults to km.
+#                 - distance: optional. If omitted, server picks a
+#                             reasonable default radius.
+#   Implementation note: `Location.position` is preserved as-is on the
+#   denormalized document so a future GeoPointExtractor can lift
+#   {latitude, longitude} into a GeoJSON Point projection (e.g.
+#   `_search.position_geojson = {type: "Point", coordinates: [lng, lat]}`)
+#   without a schema migration. The companion `2dsphere` index is
+#   already drafted (commented out) in the `indexes:` block below.
+#
+# `contains` (R5 §8.7.24)
+#   Type:       special
+#   Expression: Location.extension('http://hl7.org/fhir/StructureDefinition/location-boundary-geojson').value
+#   Value:      a coordinate (point) — the search returns Locations
+#               whose boundary polygon (carried in the
+#               `location-boundary-geojson` extension) contains it.
+#   Implementation note: the extension is publisher-supplied and not
+#   universally present, so this is left unimplemented until a
+#   concrete deployment needs it.
+#
+# Compartments: NONE per the FHIR R5 spec — Location is neither a
+# compartment root nor a member of any defined compartment
+# (https://www.hl7.org/fhir/compartmentdefinition.html). Therefore this
+# YAML does NOT define a `compartments:` block.
+#
+# Cross-resource linking inventory (where other resources reference
+# Location, FYI for query authors):
+#   Appointment.participant.actor (when actor is Location/X) → already
+#       captured by Appointment/_search.locationId AND
+#       Appointment/_search.actorIds + actorTypes='Location'.
+#   Observation.subject (when subject is Location/X) → captured by
+#       Observation/_search.subjectId + subjectType='Location'.
+#   Encounter.location.location (R5) → would resolve via the same
+#       referenceType-aware ReferenceExtractor pattern when an
+#       Encounter config is added.
+# All of these continue to work unchanged because the referencing
+# configs use the generic ReferenceExtractor which captures Id, Type,
+# and full reference uniformly.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # Token parameters
+  # ─────────────────────────────────────────────────────────────
+  status:
+    type: token
+    description: "Searches for locations with a specific kind of status (Location.status)"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  operational-status:
+    type: token
+    description: |
+      Searches for locations (typically bed/room) that have an
+      operational status (e.g. contaminated, housekeeping). The R5
+      element is a single Coding (NOT a CodeableConcept).
+    fields:
+      - field: "_search.operationalStatus_systemCode"
+        tokenType: systemCode
+      - field: "_search.operationalStatus_codes"
+        tokenType: code
+
+  type:
+    type: token
+    description: "A code for the type of location (Location.type[*].coding)"
+    fields:
+      - field: "_search.type_systemCode"
+        tokenType: systemCode
+      - field: "_search.type_codes"
+        tokenType: code
+
+  characteristic:
+    type: token
+    description: "One of the Location's characteristics (Location.characteristic[*].coding)"
+    fields:
+      - field: "_search.characteristic_systemCode"
+        tokenType: systemCode
+      - field: "_search.characteristic_codes"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: "An identifier for the location (Location.identifier)"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  address-use:
+    type: token
+    description: "A use code specified in an address (Location.address.use)"
+    fields:
+      - field: "_search.addressUse"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # String parameters
+  # ─────────────────────────────────────────────────────────────
+  # Per-modifier `fields` routing wires FHIR's case-sensitive `:exact`
+  # modifier to the case-preserved `_search.*` fields (`name`,
+  # `aliases`, `addressCity`, etc.). The `_lower` companions remain
+  # the default-modifier targets for case-insensitive prefix match.
+  name:
+    type: string
+    description: |
+      A portion of the location's name or alias. Per FHIR R5 the spec
+      expression is `Location.name | Location.alias`, so this parameter
+      ranges over BOTH the canonical name and every alias.
+    fields:
+      default:
+        - field: "_search.name_lower"
+          query_type: range
+        - field: "_search.aliases_lower"
+          query_type: range
+        - field: "_search.nameAlias_lower"
+          query_type: range
+      exact:
+        - field: "_search.name"
+        - field: "_search.aliases"
+
+  address:
+    type: string
+    description: "A (part of the) address of the location (Location.address)"
+    fields:
+      default:
+        - field: "_search.addressFull_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressFull"
+        - field: "_search.addressText"
+
+  address-city:
+    type: string
+    description: "A city specified in an address (Location.address.city)"
+    fields:
+      default:
+        - field: "_search.addressCity_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressCity"
+
+  address-country:
+    type: string
+    description: "A country specified in an address (Location.address.country)"
+    fields:
+      default:
+        - field: "_search.addressCountry_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressCountry"
+
+  address-postalcode:
+    type: string
+    description: "A postal code specified in an address (Location.address.postalCode)"
+    fields:
+      - field: "_search.addressPostalCode"
+        query_type: exact
+
+  address-state:
+    type: string
+    description: "A state specified in an address (Location.address.state)"
+    fields:
+      default:
+        - field: "_search.addressState_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressState"
+
+  # ─────────────────────────────────────────────────────────────
+  # Reference parameters
+  # ─────────────────────────────────────────────────────────────
+  organization:
+    type: reference
+    description: "Searches for locations that are managed by the provided organization (Location.managingOrganization -> Organization)"
+    targetResources:
+      - Organization
+    fields:
+      - field: "_search.managingOrganizationId"
+        referenceType: id
+      - field: "_search.managingOrganizationType"
+        referenceType: type
+      - field: "managingOrganization.reference"
+        referenceType: full
+
+  partof:
+    type: reference
+    description: "A location of which this location is a part (Location.partOf -> Location)"
+    targetResources:
+      - Location
+    fields:
+      - field: "_search.partOfId"
+        referenceType: id
+      - field: "_search.partOfType"
+        referenceType: type
+      - field: "partOf.reference"
+        referenceType: full
+
+  endpoint:
+    type: reference
+    description: "Technical endpoints providing access to services operated for the location (Location.endpoint -> Endpoint)"
+    targetResources:
+      - Endpoint
+    fields:
+      - field: "_search.endpointId"
+        referenceType: id
+      - field: "endpoint.reference"
+        referenceType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Common parameters
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+# =====================================================================
+# Denormalization rules
+#
+# Built entirely from the GENERIC, data-type-specific extractors —
+# no Location-specific extractor. Cross-cutting computations
+# (name+alias union) use `source: $resource` + path expressions
+# resolved by the project's FHIRPath-lite resolver.
+# =====================================================================
+denormalization:
+  # ---------------------------------------------------------------
+  # Name and alias (FHIR types: string, list of strings)
+  #
+  # Same shape as Organization: name (string) + alias (array[string]).
+  # Powers the FHIR `name` parameter via the spec expression
+  # `Location.name | Location.alias`.
+  # ---------------------------------------------------------------
+  name:
+    source: $resource
+    target: _search
+    extractor: TextExtractor
+    field_mappings:
+      - source_path: name
+        target_field: name
+        datatype: string
+        normalize: none
+      - source_path: name
+        target_field: name_lower
+        datatype: string
+        normalize: lowercase
+      - source_path: alias[*]
+        target_field: aliases
+        datatype: array[string]
+      - source_path: alias[*]
+        target_field: aliases_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: name | alias[*]
+        target_field: nameAlias_lower
+        datatype: string
+        normalize: lowercase
+        separator: " "
+
+  # ---------------------------------------------------------------
+  # Identifier (Location.identifier — top-level only; unlike
+  # Organization, there is no `qualification.identifier` to union).
+  # ---------------------------------------------------------------
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  # ---------------------------------------------------------------
+  # Type (CodeableConcept, 0..*) — same explicit-coding-path style
+  # used by Appointment / Observation / Organization for codebase
+  # consistency.
+  # ---------------------------------------------------------------
+  type:
+    source: type
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: type[*].coding[*].code
+        target_field: type_codes
+        datatype: array[string]
+      - source_path: type[*].coding[*]
+        target_field: type_systemCode
+        datatype: array[string]
+
+  # ---------------------------------------------------------------
+  # Characteristic (CodeableConcept, 0..*)
+  # ---------------------------------------------------------------
+  characteristic:
+    source: characteristic
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: characteristic[*].coding[*].code
+        target_field: characteristic_codes
+        datatype: array[string]
+      - source_path: characteristic[*].coding[*]
+        target_field: characteristic_systemCode
+        datatype: array[string]
+
+  # ---------------------------------------------------------------
+  # Operational status (single Coding, 0..1) — uses CodingExtractor
+  # rather than CodeableConceptExtractor because the FHIR datatype
+  # is a *bare* Coding, not a CodeableConcept wrapper.
+  # ---------------------------------------------------------------
+  operationalStatus:
+    source: operationalStatus
+    target: _search
+    extractor: CodingExtractor
+    field_mappings:
+      - source_path: operationalStatus.code
+        target_field: operationalStatus_codes
+        datatype: array[string]
+      - source_path: operationalStatus
+        target_field: operationalStatus_systemCode
+        datatype: array[string]
+
+  # ---------------------------------------------------------------
+  # Address — Location.address is a SINGLETON (0..1 Address), not a
+  # nested ExtendedContactDetail like Organization. So the rule
+  # mirrors Patient's address pattern (`source: address`,
+  # `source_path: address.<component>`).
+  # ---------------------------------------------------------------
+  address:
+    source: address
+    target: _search
+    extractor: AddressExtractor
+    field_mappings:
+      - source_path: address
+        target_field: addressFull
+        datatype: array[string]
+      - source_path: address
+        target_field: addressFull_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: address.city
+        target_field: addressCity
+        datatype: array[string]
+      - source_path: address.city
+        target_field: addressCity_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: address.state
+        target_field: addressState
+        datatype: array[string]
+      - source_path: address.state
+        target_field: addressState_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: address.postalCode
+        target_field: addressPostalCode
+        datatype: array[string]
+      - source_path: address.country
+        target_field: addressCountry
+        datatype: array[string]
+      - source_path: address.country
+        target_field: addressCountry_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: address.use
+        target_field: addressUse
+        datatype: array[string]
+      # Free-text representation (`Address.text`). Not directly
+      # targeted by an R5 search parameter, but mirroring the
+      # Patient.address denormalization keeps cross-resource shape
+      # consistent and gives consumers a fast read-side projection
+      # for display. Note: AddressExtractor already prefers
+      # `address.text` when constructing `addressFull`, so the FHIR
+      # `address` parameter continues to match against the textual
+      # form even without this field.
+      - source_path: address.text
+        target_field: addressText
+        datatype: array[string]
+
+  # ---------------------------------------------------------------
+  # managingOrganization (Reference -> Organization, 0..1)
+  # ---------------------------------------------------------------
+  managingOrganization:
+    source: managingOrganization
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: managingOrganization.reference
+        target_field: managingOrganizationId
+        datatype: string
+        extractType: id
+      - source_path: managingOrganization.reference
+        target_field: managingOrganizationType
+        datatype: string
+        extractType: type
+
+  # ---------------------------------------------------------------
+  # partOf (Reference -> Location, 0..1)
+  # ---------------------------------------------------------------
+  partOf:
+    source: partOf
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: partOf.reference
+        target_field: partOfId
+        datatype: string
+        extractType: id
+      - source_path: partOf.reference
+        target_field: partOfType
+        datatype: string
+        extractType: type
+
+  # ---------------------------------------------------------------
+  # endpoint (Reference -> Endpoint, 0..*)
+  # ---------------------------------------------------------------
+  endpoint:
+    source: endpoint
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: endpoint[*].reference
+        target_field: endpointId
+        datatype: array[string]
+        extractType: id
+
+# =====================================================================
+# Recommended MongoDB Indexes
+# =====================================================================
+indexes:
+  # Name lookup (directory-style queries)
+  - fields:
+      - "_search.name_lower": 1
+    options:
+      name: idx_loc_name_lower
+      sparse: true
+  - fields:
+      - "_search.nameAlias_lower": 1
+    options:
+      name: idx_loc_name_alias_lower
+      sparse: true
+
+  # Identifier
+  - fields:
+      - "_search.identifier_systemCode": 1
+    options:
+      name: idx_loc_identifier_system_code
+      sparse: true
+  - fields:
+      - "_search.identifier_values": 1
+    options:
+      name: idx_loc_identifier_values
+      sparse: true
+
+  # Type / status / characteristic — common filters
+  - fields:
+      - "_search.type_systemCode": 1
+    options:
+      name: idx_loc_type_system_code
+      sparse: true
+  - fields:
+      - "status": 1
+    options:
+      name: idx_loc_status
+  - fields:
+      - "_search.operationalStatus_codes": 1
+    options:
+      name: idx_loc_operational_status_codes
+      sparse: true
+  - fields:
+      - "_search.characteristic_codes": 1
+    options:
+      name: idx_loc_characteristic_codes
+      sparse: true
+
+  # Hierarchy — partOf chained queries / ancestor lookup
+  - fields:
+      - "_search.partOfId": 1
+    options:
+      name: idx_loc_part_of_id
+      sparse: true
+
+  # Cross-resource linking
+  - fields:
+      - "_search.managingOrganizationId": 1
+    options:
+      name: idx_loc_managing_organization_id
+      sparse: true
+  - fields:
+      - "_search.endpointId": 1
+    options:
+      name: idx_loc_endpoint_id
+      sparse: true
+
+  # Address — geographic filters
+  - fields:
+      - "_search.addressCity_lower": 1
+    options:
+      name: idx_loc_address_city_lower
+      sparse: true
+  - fields:
+      - "_search.addressState_lower": 1
+    options:
+      name: idx_loc_address_state_lower
+      sparse: true
+  - fields:
+      - "_search.addressCountry_lower": 1
+    options:
+      name: idx_loc_address_country_lower
+      sparse: true
+  - fields:
+      - "_search.addressPostalCode": 1
+    options:
+      name: idx_loc_address_postal_code
+      sparse: true
+
+  # Common metadata
+  - fields:
+      - "meta.lastUpdated": 1
+    options:
+      name: idx_loc_last_updated
+      sparse: true
+
+  # Future: Location.position 2dsphere index for `near` parameter
+  # support. Left commented as a deliberate placeholder so the index
+  # is added at the same time GeoPointExtractor lands.
+  # - fields:
+  #     - "_search.position_geojson": "2dsphere"
+  #   options:
+  #     name: idx_loc_position_geojson
+  #     sparse: true

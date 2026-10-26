@@ -1,39 +1,18 @@
 # kehrnel
 
-`kehrnel` is a strategy runtime that turns healthcare data models into operational capabilities.
-
-It exists because defining a healthcare data model is not enough. Teams also need a repeatable way to validate data, transform it into an operational representation, ingest it, query it, maintain it, and evolve it as requirements change. Without that execution layer, models often remain documentation, storage schemas, or isolated specifications.
-
-It starts with openEHR on MongoDB because openEHR is a strong test case for semantic depth: archetypes, templates, terminology, paths, temporal context, and query semantics all need to survive the move from model to storage. The broader purpose is not to build an openEHR engine only. `kehrnel` defines a repeatable document-first way to operationalize data models through strategy packs, activate those strategies per environment, expose model-aware APIs, and provide safer execution surfaces for applications, education, and agentic AI workflows.
-
-The useful boundary is the contract between a model, the strategy that operationalizes it, and the tools that call it. Healthcare Data Lab can act as the portal and control plane; `kehrnel` acts as the execution plane.
-
-## What kehrnel Provides
-
-- Strategy-pack API (`FastAPI`) for discovering, validating, and loading strategy definitions
-- Runtime and activation engine for binding a strategy to an environment, domain, config, and secure data binding
-- CLI tooling for mapping, validation, ingest, transform, query, and pack validation
-- Runtime endpoints for query compilation, execution, strategy operations, synthetic jobs, and OpenAPI/guide access
-- Exposed workflows that each persistence strategy can customize for activation, validation, ingestion, transformation, querying, synthetic data, and maintenance
-- A foundation for semantic and agentic workflows where tools operate through explicit contracts instead of guessing against raw collections
-
-## Why It Exists
-
-Healthcare data models are often rich on paper and difficult to use operationally. `kehrnel` is the layer that asks:
-
-- How does this model become a working API?
-- How does a query language compile to a database-native plan?
-- How do mappings, dictionaries, indexes, and operational jobs stay versioned and inspectable?
-- How can AI agents use model semantics without improvising execution?
-
-The current implementation answers those questions first for openEHR. The same architecture is intended to invite new strategy families for FHIR, ContextObjects, synthetic data generation, semantic catalogs, natural language retrieval, semantic products, and other healthcare-specific tooling.
+`kehrnel` is a Python runtime for strategy packs, with:
+- Strategy-pack API (`FastAPI`)
+- Runtime/activation engine
+- CLI tooling for mapping, validation, ingest, transform, and pack validation
 
 ## Active Scope
 
 This repository is intentionally focused on:
 - `src/kehrnel/api` (API surface)
   - includes `src/kehrnel/api/compatibility` compatibility modules still used by current domain routes
-- `src/kehrnel/engine` (core/common/domains/strategies)
+  - domain HTTP: `src/kehrnel/api/domains/{fhir,openehr}/`
+- `src/kehrnel/engine` (runtime, strategy packs under `engine/strategies/`)
+- `src/kehrnel/engine/domains` (domain logic and assets; FHIR **fhir-gen** / **fhir-mql** under `engine/domains/fhir/libs/`)
 - `src/kehrnel/cli` (CLI commands)
 - `samples/` and `tests/`
 
@@ -44,20 +23,63 @@ Removed from active scope:
 
 ## Quick Start
 
+Recommended one-command startup from a fresh clone:
+
 ```bash
 git clone <repo>
 cd kehrnel
 ./startKehrnel
 ```
 
+`./startKehrnel` bootstraps `uv` if needed, installs Python 3.12 locally, creates `.venv`, syncs `.[all]`, builds the docs site if `docs/website/build` is missing, and starts the API with dev-friendly defaults:
+- `KEHRNEL_AUTH_ENABLED=false`
+- `KEHRNEL_INIT_INGESTION_RUNTIME=false`
+
+Manual setup, useful when you want to control the virtual environment yourself:
+
+```bash
+git clone <repo>
+cd kehrnel
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+./startKehrnel --skip-sync
+```
+
+On Windows PowerShell, activate the environment with:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Avoid `pip install --user ...` while a virtual environment is active. Python hides user site-packages inside many virtualenvs, which produces:
+
+```text
+ERROR: Can not perform a '--user' install. User site-packages are not visible in this virtualenv.
+```
+
+Troubleshooting stale checkouts:
+
+```bash
+git fetch origin
+git checkout fix/normalize-bson-uuid-results
+git pull --ff-only origin fix/normalize-bson-uuid-results
+./startKehrnel
+```
+
+On startup the script prints its branch and commit, for example:
+
+```text
+[startKehrnel] Using startKehrnel 2026-07-01.2 from fix/normalize-bson-uuid-results@<commit>
+```
+
+If the log says `Installing uv via python3 -m pip`, you are running an old copy of `startKehrnel`; pull the branch again.
+
 API docs:
 - `http://localhost:8080/docs`
 - `http://localhost:8080/redoc`
 - `http://localhost:8080/guide`
-
-`./startKehrnel` bootstraps `uv` if needed, installs Python 3.12 locally, creates `.venv`, syncs `.[all]`, builds the docs site if `docs/website/build` is missing, and starts the API with dev-friendly defaults:
-- `KEHRNEL_AUTH_ENABLED=false`
-- `KEHRNEL_INIT_INGESTION_RUNTIME=false`
 
 Local port note:
 - `./startKehrnel` serves the runtime on `http://localhost:8080`
@@ -92,6 +114,32 @@ In Docusaurus dev mode, API links are proxied to `KEHRNEL_API_ORIGIN` (default `
 
 Full integration guide:
 - `examples/README.md`
+- `docs/cli-api-reference.md`
+
+### FHIR domain (optional)
+
+FHIR is optional: core Kehrnel and openEHR work without it. When enabled, use strategy **`fhir.resource_store`**.
+
+| Layer | Location |
+|-------|----------|
+| HTTP search API | `src/kehrnel/api/domains/fhir/` |
+| Strategy pack | `src/kehrnel/engine/strategies/fhir/resource_store/` |
+| **fhir-gen** + **fhir-mql** (vendored) | `src/kehrnel/engine/domains/fhir/libs/` |
+
+Install (from repo root):
+
+```bash
+pip install -e src/kehrnel/engine/domains/fhir/libs/fhir-data-generation -e src/kehrnel/engine/domains/fhir/libs/fhir-search-to-mql
+pip install -e ".[api,mongo,fhir]"
+# ./startKehrnel installs vendored libraries + .[all] via uv automatically
+```
+
+- Library details: [src/kehrnel/engine/domains/fhir/libs/README.md](src/kehrnel/engine/domains/fhir/libs/README.md)
+- **Full test playbook:** [FHIR_TESTING.md](FHIR_TESTING.md)
+- Strategy pack: [resource_store/README.md](src/kehrnel/engine/strategies/fhir/resource_store/README.md)
+- Smoke: `python src/kehrnel/engine/strategies/fhir/resource_store/scripts/spike_generate_and_search.py --db fhir_kehrnel_spike`
+
+Docker: `docker compose --profile fhir up kehrnel-fhir-api` or `Dockerfile.backend` (all-in-one with FHIR).
 
 ## Runtime Endpoints Used by HDL
 
@@ -136,6 +184,9 @@ kehrnel common validate-pack /path/to/strategy-pack
 Primary CLI entrypoint:
 - `kehrnel` (`auth`, `context`, `resource`, `op`, `run`, `core`, `common`, `domain`, `strategy`)
 - `kehrnel-api` (API server launcher)
+
+Complete CLI + endpoint inventory:
+- `docs/cli-api-reference.md`
 
 ## Standalone Usage
 
@@ -201,8 +252,9 @@ Activation binds:
 4. Strategy-specific APIs (example):
 - `/api/strategies/openehr/rps_dual/*`
 
-Clinical domain APIs:
+Domain APIs:
 - `/api/domains/openehr/*`
+- `/api/domains/fhir/*` (requires `[fhir]` install and `fhir.resource_store` activation)
 
 ## Security Baseline
 
@@ -231,7 +283,7 @@ pytest tests/contract
 
 Notes:
 - Contract/golden tests target the active strategy runtime.
-- The public API exposes both the canonical `openehr.rps_dual` strategy and the production `openehr.rps_dual_ibm` variant where installed deployments depend on IBM-compatible behavior.
+- Some tests still exercise compatibility routes while API/domain migration is completed.
 
 ## License
 

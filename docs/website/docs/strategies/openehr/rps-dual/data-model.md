@@ -4,12 +4,14 @@ sidebar_position: 2
 
 # Data Model
 
-RPS Dual materializes two related MongoDB document shapes from one canonical openEHR composition:
+RPS Dual can materialize two related MongoDB document shapes from one canonical openEHR composition:
 
 - a primary composition document in `compositions_rps`
 - an optional slim search document in `compositions_search`
 
-The exact field names are configurable in the strategy, but the examples below use the current defaults from `defaults.json`.
+The exact field names and identifier types are configurable. The field labels
+below use the current defaults from `defaults.json`; identifier values are shown
+as readable strings even where the default physical type is `ObjectId`.
 
 ## Primary Store (`compositions_rps`)
 
@@ -38,7 +40,7 @@ Representative document:
       }
     },
     {
-      "p": "-4.8.-3.-2.-1.2.1",
+      "p": "-4:8:-3:-2:-1:2:1",
       "kp": ["i"],
       "pi": [1, 0, -1, 0, -1, 0, -1],
       "data": {
@@ -70,7 +72,7 @@ Representative document:
   "tid": "PO_Obstetric_process_v0.8_FORMULARIS",
   "sn": [
     {
-      "p": "-4.8.-3.-2.-1.2.1",
+      "p": "-4:8:-3:-2:-1:2:1",
       "data": {
         "ani": -4,
         "v": { "v": "2025-01-15T10:30:00Z" }
@@ -89,9 +91,9 @@ depending on the active strategy config.
 
 | Field | Store(s) | Type | Description |
 |-------|----------|------|-------------|
-| `_id` | both | string | Version UID (`uuid::system::version`) |
-| `ehr_id` | both | string | EHR identifier |
-| `comp_id` | both | string | Composition identifier stored explicitly for filters and joins |
+| `_id` | both | configured identifier type | Physical document identifier; representation depends on the active profile |
+| `ehr_id` | both | configured identifier type | EHR identifier |
+| `comp_id` | both | configured identifier type | Composition identifier stored explicitly for filters and joins |
 | `v` | `compositions_rps` | string | Version number extracted from the version UID |
 | `time_c` | `compositions_rps` | date | Commit time for the persisted version |
 | `tid` | both | string | Template identifier by default |
@@ -128,7 +130,10 @@ The `sn` array keeps only the fields required by the active analytics/search map
 
 ## Path Encoding
 
-`p` stores the reversed path. Depending on strategy config, path segments may be compacted with:
+`p` stores the reversed path. The default separator is `:`; query-safe
+activation overrides are `.`, `/`, and `:`. IBM exact-model deployments
+commonly use `/`. Depending on strategy config, path segments may be compacted
+with:
 
 | Component | Current default |
 |-----------|-----------------|
