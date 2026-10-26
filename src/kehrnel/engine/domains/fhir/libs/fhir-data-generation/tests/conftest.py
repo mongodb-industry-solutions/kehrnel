@@ -7,8 +7,18 @@ from fhir_gen.generators.complex_types import ComplexTypeGenerator
 from fhir_gen.generators.primitives import PrimitiveGenerator
 from fhir_gen.generators.special_types import SpecialTypeGenerator
 from fhir_gen.resolvers.reference import ReferenceStore
+from fhir_gen.config import SCHEMA_PATH
+from fhir_gen.schema.registry import SchemaRegistry
 
 SEED = 42
+
+
+@pytest.fixture(autouse=True)
+def isolate_schema_registry():
+    """Prevent release-specific tests from leaking their schema into later tests."""
+    SchemaRegistry.reload(SCHEMA_PATH)
+    yield
+    SchemaRegistry.reload(SCHEMA_PATH)
 
 
 @pytest.fixture(scope="session")

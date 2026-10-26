@@ -145,8 +145,11 @@ def enrich_Organization(
             code=org_type["code"],
             display=org_type["display"],
         )]
-    r["telecom"] = [t.gen_ContactPoint("phone"), t.gen_ContactPoint("email")]
-    r["address"] = [t.gen_Address()]
+    contact = t.gen_ExtendedContactDetail()
+    contact["address"] = t.gen_Address()
+    r["contact"] = [contact]
+    r.pop("telecom", None)
+    r.pop("address", None)
     r["identifier"] = [t.gen_Identifier(
         system="http://hl7.org/fhir/sid/us-npi",
         value=str(rng.randint(1000000000, 9999999999)),
@@ -173,10 +176,13 @@ def enrich_Location(
             display=loc_type["display"],
         )]
     r["address"] = t.gen_Address()
-    r["telecom"] = [t.gen_ContactPoint("phone")]
+    contact = t.gen_ExtendedContactDetail()
+    contact["address"] = t.gen_Address()
+    r["contact"] = [contact]
+    r.pop("telecom", None)
     if store.has("Organization"):
         r["managingOrganization"] = store.get_reference("Organization", rng)
-    r["physicalType"] = t.gen_CodeableConcept(
+    r["form"] = t.gen_CodeableConcept(
         system="http://terminology.hl7.org/CodeSystem/location-physical-type",
         code=rng.choice(["si", "bu", "wi", "wa", "lvl", "ro", "bd", "ve"]),
         display=rng.choice(["Site", "Building", "Wing", "Ward", "Level", "Room", "Bed", "Vehicle"]),
@@ -255,7 +261,23 @@ def enrich_Condition(
     if store.has("Encounter"):
         r["encounter"] = store.get_reference("Encounter", rng)
     if store.has("Practitioner"):
-        r["recorder"] = store.get_reference("Practitioner", rng)
+        from ...schema.registry import SchemaRegistry
+
+        schema_registry = getattr(t, "schema_registry", None) or SchemaRegistry.get()
+        condition_fields = schema_registry.definition("Condition").fields
+        if "participant" in condition_fields:
+            r["participant"] = [{
+                "function": t.gen_CodeableConcept(
+                    system="http://terminology.hl7.org/CodeSystem/provenance-participant-type",
+                    code="author",
+                    display="Author",
+                ),
+                "actor": store.get_reference("Practitioner", rng),
+            }]
+            r.pop("recorder", None)
+        else:
+            r["recorder"] = store.get_reference("Practitioner", rng)
+            r.pop("participant", None)
     r["onsetDateTime"] = t.p.gen_dateTime(min_year=2015, max_year=2023)
     r["recordedDate"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
     cat = random_code("condition_category", rng)
@@ -362,11 +384,15 @@ def enrich_AllergyIntolerance(
             code=sub["code"] if sub else "7980",
             display=sub["display"] if sub else "Penicillin",
         ),
-        "manifestation": [t.gen_CodeableConcept(
-            system="http://snomed.info/sct",
-            code=rng.choice(["271807003", "39579001", "418290006", "49727002"]),
-            display=rng.choice(["Rash", "Anaphylaxis", "Itching", "Cough"]),
-        )],
+        "manifestation": [{
+            "concept": t.gen_CodeableConcept(
+                system="http://snomed.info/sct",
+                code=rng.choice(
+                    ["271807003", "39579001", "418290006", "49727002"]
+                ),
+                display=rng.choice(["Rash", "Anaphylaxis", "Itching", "Cough"]),
+            )
+        }],
         "severity": sev["code"] if sev else "moderate",
         "onset": t.p.gen_dateTime(min_year=2020, max_year=2023),
     }]
@@ -392,7 +418,10 @@ def enrich_Procedure(
         r["encounter"] = store.get_reference("Encounter", rng)
     if store.has("Practitioner"):
         r["performer"] = [{"actor": store.get_reference("Practitioner", rng)}]
-    r["occurredDateTime"] = t.p.gen_dateTime(min_year=2022, max_year=2024)
+    for key in list(r):
+        if key.startswith("occurrence") and not key.startswith("_occurrence"):
+            r.pop(key, None)
+    r["occurrenceDateTime"] = t.p.gen_dateTime(min_year=2022, max_year=2024)
     r["category"] = [t.gen_CodeableConcept(
         system="http://snomed.info/sct",
         code=rng.choice(["387713003", "103693007", "46947000"]),

@@ -61,6 +61,11 @@ class FHIRSchemaParser:
             self._raw = json.load(f)
         self._defs: dict = self._raw["definitions"]
 
+    @property
+    def raw_schema(self) -> dict:
+        """Loaded JSON Schema used by generation and conformance checks."""
+        return self._raw
+
     def parse_all(self) -> dict[str, ResourceDef]:
         return {name: self.parse_definition(name) for name in self._defs}
 
@@ -75,7 +80,7 @@ class FHIRSchemaParser:
 
         fields: dict[str, FieldDef] = {}
         for fname, prop in properties.items():
-            ref = self._extract_ref(prop)
+            ref = self._extract_ref(prop, field_name=fname)
             is_array = prop.get("type") == "array" or "items" in prop
             const_value = prop.get("const")
             if const_value is not None:
@@ -108,19 +113,92 @@ class FHIRSchemaParser:
             return ref.rsplit("/", 1)[-1]
         return None
 
-    def _extract_ref(self, prop: dict) -> str | None:
+    def _infer_inline_primitive(
+        self, prop: dict, field_name: str | None
+    ) -> str | None:
+        """Recover FHIR primitive semantics from inlined JSON Schema fields.
+
+        The HL7 schemas inline many primitive constraints instead of retaining a
+        ``$ref`` (for example ``effectiveInstant`` becomes ``type: string`` plus
+        the instant regex). Treating those values as ordinary strings generated
+        clinical prose that could never validate against the same schema.
+        """
+        inline_type = prop.get("type")
+        if inline_type == "integer":
+            minimum = prop.get("minimum")
+            if minimum == 1:
+                return "positiveInt"
+            if minimum == 0:
+                return "unsignedInt"
+            return "integer"
+        if inline_type == "number":
+            return "decimal"
+        if inline_type != "string":
+            return inline_type if inline_type in self.PRIMITIVES else None
+
+        name = field_name or ""
+        exact_names = {
+            "id": "id",
+            "birthDate": "date",
+            "lastUpdated": "instant",
+        }
+        if name in exact_names:
+            return exact_names[name]
+        suffixes = (
+            ("Base64Binary", "base64Binary"),
+            ("DateTime", "dateTime"),
+            ("Canonical", "canonical"),
+            ("PositiveInt", "positiveInt"),
+            ("UnsignedInt", "unsignedInt"),
+            ("Integer64", "integer64"),
+            ("Instant", "instant"),
+            ("Markdown", "markdown"),
+            ("Boolean", "boolean"),
+            ("Decimal", "decimal"),
+            ("Integer", "integer"),
+            ("Date", "date"),
+            ("Time", "time"),
+            ("Canonical", "canonical"),
+            ("Uri", "uri"),
+            ("Url", "url"),
+            ("Uuid", "uuid"),
+            ("Oid", "oid"),
+            ("Code", "code"),
+            ("Id", "id"),
+        )
+        for suffix, primitive in suffixes:
+            if name.endswith(suffix):
+                return primitive
+
+        pattern = prop.get("pattern")
+        if pattern:
+            for primitive in ("instant", "dateTime", "date", "time", "id", "oid", "uuid"):
+                if pattern == (self._defs.get(primitive) or {}).get("pattern"):
+                    return primitive
+            # FHIR code/uri/canonical fields commonly share the no-whitespace
+            # regex. ``code`` is the safest conforming scalar when the field name
+            # does not preserve the original primitive type.
+            if pattern == r"^\S*$":
+                return "code"
+        return "string"
+
+    def _extract_ref(
+        self, prop: dict, field_name: str | None = None
+    ) -> str | None:
         if not isinstance(prop, dict):
             return None
         if "$ref" in prop:
             return self._ref_name(prop["$ref"])
         inline_type = prop.get("type")
-        if isinstance(inline_type, str) and inline_type in self.PRIMITIVES:
-            return inline_type
+        if isinstance(inline_type, str):
+            inferred = self._infer_inline_primitive(prop, field_name)
+            if inferred:
+                return inferred
         if inline_type == "array" and isinstance(prop.get("items"), dict):
-            return self._extract_ref(prop["items"])
+            return self._extract_ref(prop["items"], field_name=field_name)
         if "allOf" in prop:
             for item in prop["allOf"]:
-                ref = self._extract_ref(item)
+                ref = self._extract_ref(item, field_name=field_name)
                 if ref:
                     return ref
         return None

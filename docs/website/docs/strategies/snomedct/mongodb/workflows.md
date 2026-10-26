@@ -25,9 +25,10 @@ curl -sS -X POST "${RUNTIME_URL}/environments/dev/activate" \
   -H "Content-Type: application/json" \
   -d '{
     "strategy_id": "snomedct.mongodb",
-    "version": "0.1.0",
+    "version": "0.5.0",
     "domain": "snomedct",
     "config": {
+      "database": "snomedct",
       "release": { "id": "20260601" },
       "source": {
         "local_dir": ".kehrnel/snomedct/releases",
@@ -57,33 +58,25 @@ mkdir -p .kehrnel/snomedct/releases
 List staged release files:
 
 ```bash
-curl -sS -X POST "${RUNTIME_URL}/environments/dev/run" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "domain": "snomedct",
-    "operation": "op",
-    "payload": {
-      "op": "snomed_list_releases",
-      "payload": {}
-    }
-  }'
+curl -sS "${RUNTIME_URL}/api/domains/snomedct/releases" \
+  -H "x-active-env: dev"
+
+kehrnel terminology snomed-releases --env dev
 ```
+
+Only files inside the activated `source.local_dir` are visible to these
+operations. Runtime requests cannot override or escape that staging root.
 
 ## Inspect
 
 ```bash
-curl -sS -X POST "${RUNTIME_URL}/environments/dev/run" \
+curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/releases/inspect" \
   -H "Content-Type: application/json" \
-  -d '{
-    "domain": "snomedct",
-    "operation": "op",
-    "payload": {
-      "op": "snomed_inspect_release",
-      "payload": {
-        "limit": 1000
-      }
-    }
-  }'
+  -H "x-active-env: dev" \
+  -d '{"file_name":"edicion_20260601.json","limit":1000}'
+
+kehrnel terminology inspect-snomed-release \
+  --env dev --file-name edicion_20260601.json --limit 1000
 ```
 
 Remove `limit` for the full file.
@@ -91,19 +84,13 @@ Remove `limit` for the full file.
 ## Diff
 
 ```bash
-curl -sS -X POST "${RUNTIME_URL}/environments/dev/run" \
+curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/releases/diff" \
   -H "Content-Type: application/json" \
-  -d '{
-    "domain": "snomedct",
-    "operation": "op",
-    "payload": {
-      "op": "snomed_diff_release",
-      "payload": {
-        "release_id": "20260601",
-        "sample_limit": 20
-      }
-    }
-  }'
+  -H "x-active-env: dev" \
+  -d '{"file_name":"edicion_20260601.json","release_id":"20260601","sample_limit":20}'
+
+kehrnel terminology diff-snomed-release \
+  --env dev --release-id 20260601 --file-name edicion_20260601.json
 ```
 
 This streams the official file and compares canonical hashes against MongoDB.
@@ -111,19 +98,19 @@ This streams the official file and compares canonical hashes against MongoDB.
 ## Ingest and Rebuild Sidecar
 
 ```bash
-curl -sS -X POST "${RUNTIME_URL}/environments/dev/run" \
+curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/releases/ingest" \
   -H "Content-Type: application/json" \
-  -d '{
-    "domain": "snomedct",
-    "operation": "op",
-    "payload": {
-      "op": "snomed_ingest_release",
-      "payload": {
-        "release_id": "20260601",
-        "rebuild_sidecar": true
-      }
-    }
-  }'
+  -H "x-active-env: dev" \
+  -d '{"file_name":"edicion_20260601.json","release_id":"20260601","rebuild_sidecar":true,"dry_run":false,"license_acknowledged":true}'
+
+# Safe default is a dry run. Add --execute to persist.
+kehrnel terminology ingest-snomed-release \
+  --env dev --release-id 20260601 --file-name edicion_20260601.json
+
+# Persistence additionally requires both flags.
+kehrnel terminology ingest-snomed-release \
+  --env dev --release-id 20260601 --file-name edicion_20260601.json \
+  --execute --license-acknowledged
 ```
 
 For a first local smoke test, add `"limit": 1000`.
@@ -131,16 +118,13 @@ For a first local smoke test, add `"limit": 1000`.
 ## Ensure Indexes
 
 ```bash
-curl -sS -X POST "${RUNTIME_URL}/environments/dev/run" \
+curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/indexes/ensure" \
   -H "Content-Type: application/json" \
-  -d '{
-    "domain": "snomedct",
-    "operation": "op",
-    "payload": {
-      "op": "snomed_ensure_indexes",
-      "payload": {}
-    }
-  }'
+  -H "x-active-env: dev" \
+  -d '{"dry_run":false}'
+
+# Safe default previews the plan. Add --execute to create indexes.
+kehrnel terminology ensure-snomed-indexes --env dev
 ```
 
 ## Domain API
@@ -157,6 +141,7 @@ curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/search" \
     "q": "diabetes mellitus",
     "language": "en",
     "release_id": "20260601",
+    "offset": 0,
     "limit": 20
   }'
 ```
@@ -166,6 +151,42 @@ Lookup:
 ```bash
 curl -sS "${RUNTIME_URL}/api/domains/snomedct/concepts/73211009?release_id=20260601" \
   -H "x-active-env: dev"
+```
+
+Typeahead and cross-release history:
+
+```bash
+curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/suggest" \
+  -H "Content-Type: application/json" -H "x-active-env: dev" \
+  -d '{"q":"myocard","language":"en","limit":8}'
+
+curl -sS "${RUNTIME_URL}/api/domains/snomedct/concepts/73211009/history?language=en&offset=0&limit=20" \
+  -H "x-active-env: dev"
+```
+
+Validate a code and display:
+
+```bash
+curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/validate-code" \
+  -H "Content-Type: application/json" \
+  -H "x-active-env: dev" \
+  -d '{
+    "code": "73211009",
+    "display": "Diabetes mellitus",
+    "language": "en"
+  }'
+```
+
+Check subsumption using the materialized inferred hierarchy:
+
+```bash
+curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/subsumes" \
+  -H "Content-Type: application/json" \
+  -H "x-active-env: dev" \
+  -d '{
+    "code_a": "404684003",
+    "code_b": "73211009"
+  }'
 ```
 
 Basic ECL:
@@ -203,6 +224,32 @@ curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/expand" \
   -d '{
     "expression": "<< 73211009",
     "release_id": "20260601",
+    "limit": 50
+  }'
+```
+
+Register a reusable, immutable ValueSet version and then expand it by canonical
+URL. The definition is tenant-owned metadata; the licensed concepts remain in
+the canonical release collection.
+
+```bash
+curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/value-sets" \
+  -H "Content-Type: application/json" \
+  -H "x-active-env: dev" \
+  -d '{
+    "url": "https://example.org/ValueSet/diabetes",
+    "version": "1.0.0",
+    "name": "Diabetes disorders",
+    "release_id": "20260601",
+    "expression": "<< 73211009"
+  }'
+
+curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/expand" \
+  -H "Content-Type: application/json" \
+  -H "x-active-env: dev" \
+  -d '{
+    "url": "https://example.org/ValueSet/diabetes",
+    "value_set_version": "1.0.0",
     "limit": 50
   }'
 ```
@@ -258,6 +305,36 @@ curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/ground" \
     "language": "en",
     "release_id": "20260601",
     "limit_per_mention": 5
+  }'
+```
+
+Persist reviewer decisions and query the reviewed corpus. The source text is
+hashed and discarded unless the activation explicitly enables retention.
+
+```bash
+curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/ground/reviews" \
+  -H "Content-Type: application/json" -H "x-active-env: dev" \
+  -d '{
+    "source_ref":"note-001",
+    "text":"Patient has diabetes mellitus",
+    "language":"en",
+    "codings":[{"concept_id":"73211009","status":"accepted","evidence":"diabetes mellitus"}]
+  }'
+
+curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/ground/corpus/search" \
+  -H "Content-Type: application/json" -H "x-active-env: dev" \
+  -d '{"concept_id":"404684003","offset":0,"limit":20}'
+```
+
+Run a bounded retrieval benchmark:
+
+```bash
+curl -sS -X POST "${RUNTIME_URL}/api/domains/snomedct/benchmarks/retrieval" \
+  -H "Content-Type: application/json" -H "x-active-env: dev" \
+  -d '{
+    "language":"en",
+    "top_k":10,
+    "cases":[{"id":"diabetes","query":"diabetes mellitus","expected_concept_ids":["73211009"]}]
   }'
 ```
 

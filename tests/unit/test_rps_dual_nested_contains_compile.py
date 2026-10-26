@@ -524,13 +524,20 @@ async def test_compile_query_raw_aql_adds_row_fanout_for_deepest_selected_alias(
     )
 
     pipeline = plan.plan["pipeline"]
-    assert pipeline[1] == {"$limit": 100}
-    assert pipeline[2]["$addFields"]["__fanout_nodes"]["$filter"]["cond"]["$regexMatch"]["regex"] == "^31(?::[^:]+)*:33(?::[^:]+)*:30(?::[^:]+)*:24$"
-    assert pipeline[2]["$addFields"]["__fanout_nodes"]["$filter"]["cond"]["$regexMatch"]["input"] == {
+    fanout_index = next(
+        index
+        for index, stage in enumerate(pipeline)
+        if "__fanout_nodes" in stage.get("$addFields", {})
+    )
+    unwind_index = next(index for index, stage in enumerate(pipeline) if "$unwind" in stage)
+    limit_index = next(index for index, stage in enumerate(pipeline) if "$limit" in stage)
+    assert fanout_index < unwind_index < limit_index
+    assert pipeline[fanout_index]["$addFields"]["__fanout_nodes"]["$filter"]["cond"]["$regexMatch"]["regex"] == "^31(?::[^:]+)*:33(?::[^:]+)*:30(?::[^:]+)*:24$"
+    assert pipeline[fanout_index]["$addFields"]["__fanout_nodes"]["$filter"]["cond"]["$regexMatch"]["input"] == {
         "$cond": [{"$eq": [{"$type": "$$node.p"}, "string"]}, "$$node.p", ""]
     }
-    assert pipeline[3] == {"$unwind": "$__fanout_nodes"}
-    assert pipeline[4]["$addFields"]["__fanout_paths"]["ev"] == "$__fanout_nodes.p"
+    assert pipeline[unwind_index] == {"$unwind": "$__fanout_nodes"}
+    assert pipeline[unwind_index + 1]["$addFields"]["__fanout_paths"]["ev"] == "$__fanout_nodes.p"
 
     project_stage = _first_stage(pipeline, "$project")
     assert project_stage["compositionId"] == "$comp_id"
@@ -645,6 +652,12 @@ async def test_compile_query_raw_aql_projection_cache_reuses_repeated_sources():
         for stage in low_reuse_plan.plan["pipeline"]
         if "__nodes_by_path" in stage.get("$addFields", {})
     )
+    low_fanout_stage = next(
+        stage["$addFields"]
+        for stage in low_reuse_plan.plan["pipeline"]
+        if "__fanout_nodes" in stage.get("$addFields", {})
+    )
+    assert low_path_lookup_stage is low_fanout_stage
     assert low_path_lookup_stage["__nodes_by_path"]["$arrayToObject"]["$map"]["input"] == {
         "$reverseArray": {
             "$filter": {

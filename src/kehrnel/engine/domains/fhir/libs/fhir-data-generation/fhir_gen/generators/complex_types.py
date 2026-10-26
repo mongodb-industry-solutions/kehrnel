@@ -117,6 +117,8 @@ class ComplexTypeGenerator:
     ) -> dict:
         """FHIR R5/R6 CodeableReference — concept and/or reference arm."""
         out: dict = {}
+        if concept is None and reference is None and system is None and code is None:
+            concept = self.gen_CodeableConcept()
         if concept is not None:
             out["concept"] = concept
         elif system is not None or code is not None:
@@ -135,7 +137,8 @@ class ComplexTypeGenerator:
         version: str | None = None,
     ) -> dict:
         if system is None and code is None:
-            return {}
+            system = "http://example.org/fhir/CodeSystem/synthetic"
+            code = self.p.gen_code()
         result: dict = {
             "system": system or "http://snomed.info/sct",
             "code": code or self.p.gen_code(),

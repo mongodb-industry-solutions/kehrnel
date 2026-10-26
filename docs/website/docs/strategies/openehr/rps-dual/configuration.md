@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 # RPS Dual Configuration
@@ -68,7 +68,7 @@ The current default activation baseline is:
     "composition_id": "objectid"
   },
   "paths": {
-    "separator": "."
+    "separator": ":"
   },
   "fields": {
     "document": {
@@ -89,6 +89,10 @@ The current default activation baseline is:
   },
   "transform": {
     "apply_shortcuts": true,
+    "envelope": {
+      "base": {},
+      "search": {}
+    },
     "coding": {
       "arcodes": {
         "strategy": "sequential"
@@ -133,6 +137,8 @@ The main supported override areas are:
   stored MongoDB documents.
 - `transform.apply_shortcuts` if you want the slim search payload to preserve
   full RM key names instead of shortcut labels.
+- `transform.envelope.base` and `transform.envelope.search` for optional
+  passthrough mappings from source envelope paths to output document fields.
 - `transform.coding.arcodes.*` and `transform.coding.atcodes.*` if you want
   different archetype or at-code strategies.
 - `transform.mappings` if you want the search-side projection to be built from a
@@ -142,7 +148,11 @@ The main supported override areas are:
 
 Current consistency boundary:
 
-- `paths.separator` is fixed to `.` in the current strategy surface.
+- The query-safe `paths.separator` values accepted by strategy activation are
+  `.`, `/`, and `:`. The default is `:`; `.` remains supported for older data,
+  and IBM exact-model environments commonly use `/`. The JSON schema currently
+  also lists `|` and `~`, but runtime validation rejects them because the query
+  compiler does not guarantee safe round-tripping for those values.
 - `collections.compositions.encodingProfile` and
   `collections.search.encodingProfile` are restricted to
   `profile.codedpath` or `profile.search_shortcuts`.

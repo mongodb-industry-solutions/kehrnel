@@ -237,6 +237,17 @@ class AQLtoMQLTransformer:
         projection_path_lookup_stage = self.pipeline_builder.build_projection_path_lookup_stage(projection_cache_plan)
         projection_cache_stage = self.pipeline_builder.build_projection_cache_stage(projection_cache_plan)
 
+        # The path lookup depends only on the composition node array. When the
+        # query also fans rows out, compute that lookup in the same pre-unwind
+        # stage as the fanout candidates. Besides removing a stage, this avoids
+        # rebuilding the full path map once for every unwound row.
+        if fanout_stages and projection_path_lookup_stage:
+            fanout_fields = fanout_stages[0].get("$addFields")
+            lookup_fields = projection_path_lookup_stage.get("$addFields")
+            if isinstance(fanout_fields, dict) and isinstance(lookup_fields, dict):
+                fanout_stages[0] = {"$addFields": {**fanout_fields, **lookup_fields}}
+                projection_path_lookup_stage = None
+
         # 6. Build the $project stage from the SELECT clause
         project_stage = await self.pipeline_builder.build_project_stage(
             self.ast,
@@ -259,7 +270,14 @@ class AQLtoMQLTransformer:
             and not distinct_stages
             and (pre_projection_sort is not None or sort_stage is None)
         )
-        page_before_fanout = can_apply_pagination_before_projection and row_exact_match is None
+        # Pagination applies to AQL result rows. A fanout can emit more than one
+        # row per composition, so it must complete before OFFSET/LIMIT even when
+        # no row-sensitive WHERE predicate is present.
+        page_before_fanout = (
+            can_apply_pagination_before_projection
+            and row_exact_match is None
+            and not fanout_stages
+        )
         page_after_fanout = can_apply_pagination_before_projection and not page_before_fanout
 
         if page_before_fanout and pre_projection_sort:

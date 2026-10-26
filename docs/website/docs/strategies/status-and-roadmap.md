@@ -8,7 +8,7 @@ sidebar_position: 2
 
 `openehr.rps_dual` is the current production-grade reference strategy.
 
-`fhir.clinical_cdr` is an implemented reference strategy for native FHIR R5 persistence, synthetic generation, denormalization, and FHIR Search.
+`fhir.resource_store` is an implemented reference strategy for native FHIR R5 persistence, synthetic generation, denormalization, and FHIR Search.
 
 `snomedct.mongodb` is an implemented preview strategy for SNOMED CT terminology persistence. It includes pack discovery, manifest/spec/schema/defaults, canonical transform, local release discovery, inspect/diff/ingest ops, sidecar rebuild, index creation, lookup, basic ECL, lexical search, grounding, domain API routes, and contract tests.
 
