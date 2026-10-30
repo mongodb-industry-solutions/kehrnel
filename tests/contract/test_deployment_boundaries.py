@@ -97,7 +97,7 @@ async def test_strict_analytics_rejects_duplicate_types_and_unresolved_terminals
     assert error.value.code == 'DEPLOYMENT_ANALYTICS_INVALID'
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize('config', [{'serviceKey':'secret'}, {'transform':{'token':'secret'}}, {'transform':{'envelope':{'base':{'source':'https://user:password@example.test/config'}}}}, {'transform':{'privateKey':'secret'}}])
+@pytest.mark.parametrize('config', [{'serviceKey':'secret'}, {'transform':{'token':'secret'}}, {'transform':{'envelope':{'base':{'source':'https://user:password@example.test/config'}}}}, {'transform':{'privateKey':'secret'}}, {'transform': {'envelope': {'base': {'auth_token': 'secret'}}}}, {'transform': {'envelope': {'base': {'db_uri': 'secret'}}}}, {'transform': {'envelope': {'base': {'x-api-key': 'secret'}}}}, {'transform': {'envelope': {'base': {'authTokenValue': 'secret'}}}}])
 async def test_credentials_cannot_enter_compiler_inputs_or_echo(config):
     with pytest.raises(KehrnelError) as error:
         await compile_deployment_configuration(load_strategy('openehr.rps_dual',ROOT/'rps_dual'), DeploymentCompilationRequest(config={'database':'isolated',**config},templates=[TEMPLATE]))

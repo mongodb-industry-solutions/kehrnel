@@ -23,6 +23,16 @@ RPS_ROOT = Path(__file__).resolve().parents[1] / "strategies/openehr/rps_dual"
 SECRET_KEY = re.compile(r"^(?:uri|connectionstring|password|passwd|credentials?|secrets?|apikey|servicekey|privatekey|token|accesstoken|refreshtoken|clientsecret|authorization|bindings|bindingsref|__proto__|prototype|constructor)$", re.I)
 
 
+CREDENTIAL_COMPONENT = re.compile(r"(?:^|[^a-z0-9])(?:uris?|tokens?|passwords?|passwd|credentials?|secrets?|authorization|connection[\s_-]*string|(?:api|private|service)[\s_-]*keys?)(?:$|[^a-z0-9])", re.I)
+CREDENTIAL_SUFFIX = re.compile(r"(?:uri|token|password|passwd|credentials?|secrets?|apikeys?|servicekeys?|privatekeys?|connectionstring)$", re.I)
+
+def credential_key(key):
+    normalized = re.sub(r"[_-]", "", str(key))
+    words = re.sub(r"([A-Z]+)([A-Z][a-z])", r"\1 \2", str(key))
+    words = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", words)
+    return SECRET_KEY.fullmatch(normalized) or CREDENTIAL_COMPONENT.search(words) or CREDENTIAL_SUFFIX.search(normalized) or key == "__proto__"
+
+
 def invalid(code, message, details=None):
     raise KehrnelError(code=code, status=422, message=message, details=details or {})
 
@@ -30,7 +40,7 @@ def invalid(code, message, details=None):
 def reject_secrets(value, path="input"):
     if isinstance(value, dict):
         for key, child in value.items():
-            if SECRET_KEY.fullmatch(re.sub(r"[_-]", "", str(key))) or str(key) == "__proto__":
+            if credential_key(key):
                 invalid("DEPLOYMENT_SECRET_FORBIDDEN", f"Connection credentials and bindings are not allowed at {path}.{key}")
             reject_secrets(child, f"{path}.{key}")
     elif isinstance(value, list):
