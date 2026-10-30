@@ -31,8 +31,16 @@ class DeploymentTemplate(BaseModel):
 
 class DeploymentCompilationRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    version: str | None = None
-    packageDigest: str | None = None
+    version: str | None = Field(default=None, min_length=1, max_length=128)
+    packageDigest: str | None = Field(default=None, pattern=r"^sha256:[a-f0-9]{64}$")
     config: dict[str, Any] = Field(default_factory=dict)
     templates: list[DeploymentTemplate] = Field(default_factory=list, max_length=2000)
     dictionaries: dict[str, Any] = Field(default_factory=dict)
+
+
+    @field_validator("version")
+    @classmethod
+    def nonblank_version(cls, value):
+        if value is not None and not value.strip():
+            raise ValueError("version must be nonblank when supplied")
+        return value

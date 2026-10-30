@@ -38,6 +38,8 @@
     "version": {
       "anyOf": [
         {
+          "maxLength": 128,
+          "minLength": 1,
           "type": "string"
         },
         {
@@ -50,6 +52,7 @@
     "packageDigest": {
       "anyOf": [
         {
+          "pattern": "^sha256:[a-f0-9]{64}$",
           "type": "string"
         },
         {

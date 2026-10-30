@@ -17,10 +17,10 @@ from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import Composit
 
 
 CONTRACT = "kehrnel.deployment-configuration/v1"
-COMPILER_VERSION = "1"
+COMPILER_VERSION = "2"
 SUPPORTED_STRATEGIES = {"openehr.rps_dual", "openehr.rps_dual_ibm"}
 RPS_ROOT = Path(__file__).resolve().parents[1] / "strategies/openehr/rps_dual"
-SECRET_KEY = re.compile(r"^(?:uri|connection_string|connectionString|password|credentials?|secrets?|apiKey|api_key|accessToken|bindings|bindings_ref)$", re.I)
+SECRET_KEY = re.compile(r"^(?:uri|connectionstring|password|passwd|credentials?|secrets?|apikey|servicekey|privatekey|token|accesstoken|refreshtoken|clientsecret|authorization|bindings|bindingsref|__proto__|prototype|constructor)$", re.I)
 
 
 def invalid(code, message, details=None):
@@ -30,13 +30,15 @@ def invalid(code, message, details=None):
 def reject_secrets(value, path="input"):
     if isinstance(value, dict):
         for key, child in value.items():
-            if SECRET_KEY.fullmatch(str(key)):
+            if SECRET_KEY.fullmatch(re.sub(r"[_-]", "", str(key))) or str(key) == "__proto__":
                 invalid("DEPLOYMENT_SECRET_FORBIDDEN", f"Connection credentials and bindings are not allowed at {path}.{key}")
             reject_secrets(child, f"{path}.{key}")
     elif isinstance(value, list):
         for child in value:
             reject_secrets(child, path)
-    elif isinstance(value, str) and re.search(r"mongodb(?:\+srv)?://", value, re.I):
+    elif isinstance(value, int) and not isinstance(value, bool) and abs(value) > 9007199254740991:
+        invalid("DEPLOYMENT_JSON_INVALID", "Deployment numbers must be safe integers")
+    elif isinstance(value, str) and (re.search(r"mongodb(?:\+srv)?://|[a-z][a-z0-9+.-]*://[^/\s]*@|-----BEGIN (?:[A-Z ]+ )?PRIVATE KEY-----", value, re.I)):
         invalid("DEPLOYMENT_SECRET_FORBIDDEN", "MongoDB connection strings cannot be exported")
 
 
@@ -112,16 +114,18 @@ async def compile_deployment_configuration(manifest, body: DeploymentCompilation
     if manifest.id not in SUPPORTED_STRATEGIES:
         invalid("DEPLOYMENT_EXPORT_UNSUPPORTED", "This strategy does not support portable deployment compilation")
     installed_identity = package_identity(manifest)
-    package_root = strategy_package_root(manifest.id)
-    if body.version and body.version != manifest.version:
+    package_root = strategy_package_root(manifest)
+    if body.version is not None and body.version != manifest.version:
         raise KehrnelError(code="DEPLOYMENT_VERSION_MISMATCH", status=409, message="The requested exact strategy version is not installed")
-    if body.packageDigest and body.packageDigest != installed_identity["packageDigest"]:
+    if body.packageDigest is not None and body.packageDigest != installed_identity["packageDigest"]:
         raise KehrnelError(code="DEPLOYMENT_PACKAGE_MISMATCH", status=409, message="The installed strategy package changed; refresh its manifest before publishing")
     reject_secrets(body.model_dump())
     try:
         content_digest(body.model_dump(mode="json"))
     except TypeError as exc:
         invalid("DEPLOYMENT_JSON_INVALID", str(exc))
+    if set(body.config) - {"database", "collections", "ids", "paths", "fields", "transform", "bootstrap"}:
+        invalid("DEPLOYMENT_INPUT_INVALID", "Only portable strategy configuration is allowed")
     if set(body.dictionaries) - {"codes", "shortcuts"}:
         invalid("DEPLOYMENT_DICTIONARY_INVALID", "Only codes and shortcuts snapshots are supported")
     template_ids = [template.templateId for template in body.templates]
@@ -204,6 +208,7 @@ async def compile_deployment_configuration(manifest, body: DeploymentCompilation
                                 "fieldCount": len(template["fields"]), "compiledRuleCount": len(rules),
                                 "message": "Prepare an immutable dictionary snapshot covering these template paths before running the projector"})
     result = {"contract": CONTRACT, "compilerVersion": COMPILER_VERSION, "executionMode": "external",
+              "input": body.model_dump(mode="json"), "inputDigest": content_digest(body.model_dump(mode="json")),
               "strategy": {"id": manifest.id, "version": manifest.version, "manifestDigest": installed_identity["manifestDigest"],
                            "packageDigest": installed_identity["packageDigest"],
                            "implementationDigest": content_digest({"rpsDualPackage": compute_package_digest(RPS_ROOT),

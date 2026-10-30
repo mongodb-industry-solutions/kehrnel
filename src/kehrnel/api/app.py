@@ -309,7 +309,9 @@ def _load_manifests() -> tuple[list[StrategyManifest], list[dict[str, object]], 
             errors.append(f"Duplicate strategy id detected during discovery: {mid}")
         if not errors:
             seen.add(mid)
-            unique.append(StrategyManifest(**data))
+            manifest = StrategyManifest(**data)
+            manifest.pack_root = str(manifest_path.parent.resolve())
+            unique.append(manifest)
             if mid:
                 asset_dirs[mid] = str(manifest_path.parent)
         diagnostics.append(

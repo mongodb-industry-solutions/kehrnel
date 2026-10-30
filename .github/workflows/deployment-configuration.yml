@@ -15,6 +15,6 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install -e '.[all]'
-      - run: python -m pytest -q tests/contract/test_deployment_configuration.py tests/unit/test_search_index_definition_builder.py tests/unit/test_rps_dual_ibm_strategy.py
+      - run: python -m pytest -q tests/contract/test_deployment_configuration.py tests/contract/test_deployment_boundaries.py tests/unit/test_search_index_definition_builder.py tests/unit/test_rps_dual_ibm_strategy.py
         env:
           KEHRNEL_SKIP_DOTENV: 'true'

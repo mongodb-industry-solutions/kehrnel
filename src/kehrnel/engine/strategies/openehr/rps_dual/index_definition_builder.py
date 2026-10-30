@@ -208,6 +208,7 @@ async def build_search_index_definition_from_mappings(
     sources: Set[str] = set()
 
     data_fields: Dict[str, Any] = {}
+    strict_definitions: Dict[str, Any] = {}
     nodes_field = strategy_cfg.fields.document.sn
     path_field = strategy_cfg.fields.node.p
     data_field = strategy_cfg.fields.node.data
@@ -222,6 +223,16 @@ async def build_search_index_definition_from_mappings(
         if not leaf_defs:
             warnings.append(f"Could not infer Atlas Search type for {clean_path}")
             return
+        if strict:
+            terminal = clean_path.split(".")[-1]
+            known_terminal = terminal in {"archetype_node_id", "code_string", "id", "units", "system_id", "magnitude", "start_time", "end_time", "origin", "time", "name"}
+            scalar_rm = str(rm_type or "").upper() in {"DV_BOOLEAN", "DV_DATE", "DV_DATE_TIME", "DV_TIME", "DV_QUANTITY", "DV_COUNT", "DV_ORDINAL", "DV_PROPORTION", "DV_TEXT", "DV_PARAGRAPH", "DV_CODED_TEXT", "DV_IDENTIFIER"}
+            if len(leaf_defs) != 1 or not (known_terminal or scalar_rm):
+                raise ValueError(f"Unresolved Atlas Search scalar type for analytics path: {clean_path}")
+            previous = strict_definitions.get(slim_path)
+            if previous is not None and previous != leaf_defs:
+                raise ValueError(f"Incompatible Atlas Search analytics types for path: {slim_path}")
+            strict_definitions[slim_path] = leaf_defs
         indexed_data_paths.add(slim_path)
         if template_id:
             template_ids.add(str(template_id))

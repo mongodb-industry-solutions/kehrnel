@@ -45,6 +45,7 @@ logger = logging.getLogger(__name__)
 async def compile_strategy_deployment(strategy_id: str, request: Request, body: DeploymentCompilationRequest):
     """Compile supplied configuration only; never activate or connect to a target database."""
     try:
+        _require_admin_access(request)
         rt = getattr(request.app.state, "strategy_runtime", None)
         manifest = rt.registry.get_manifest(strategy_id) if rt else None
         if manifest is None:
