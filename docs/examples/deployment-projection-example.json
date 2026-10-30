@@ -1,0 +1,193 @@
+{
+  "contract": "openehr.rps-dual.projection-example/v1",
+  "synthetic": true,
+  "strategyId": "openehr.rps_dual",
+  "input": {
+    "version": null,
+    "packageDigest": null,
+    "config": {
+      "database": "synthetic_local"
+    },
+    "templates": [
+      {
+        "templateId": "Synthetic.Example",
+        "fields": [
+          {
+            "path": "/context/start_time/value",
+            "rmType": "DV_DATE_TIME"
+          },
+          {
+            "path": "/content[at0004]/value/magnitude",
+            "rmType": "DV_QUANTITY"
+          }
+        ],
+        "provenance": {}
+      }
+    ],
+    "dictionaries": {
+      "codes": {
+        "openEHR-EHR-COMPOSITION": {
+          "example": {
+            "v1": 1
+          }
+        },
+        "at": {
+          "at0004": -4
+        }
+      },
+      "shortcuts": {
+        "keys": {
+          "value": "v",
+          "archetype_node_id": "ani",
+          "_type": "t"
+        },
+        "values": {}
+      }
+    }
+  },
+  "source": {
+    "_id": "64b64c2e5f6270b5c2c2c2c2",
+    "ehr_id": "01010101-0202-4303-8404-050505050505",
+    "composition_version": "1",
+    "time_committed": "2026-01-01T12:00:00Z",
+    "version": "1",
+    "template": "Synthetic.Example",
+    "template_id": "cd20ccae-106c-473d-a31e-cf3f0b815d96",
+    "creation_date": "2026-01-01T12:00:00Z",
+    "canonicalJSON": {
+      "_type": "COMPOSITION",
+      "archetype_node_id": "openEHR-EHR-COMPOSITION.example.v1",
+      "archetype_details": {
+        "template_id": {
+          "value": "Synthetic.Example"
+        }
+      },
+      "name": {
+        "_type": "DV_TEXT",
+        "value": "Synthetic example"
+      },
+      "context": {
+        "_type": "EVENT_CONTEXT",
+        "start_time": {
+          "_type": "DV_DATE_TIME",
+          "value": "2026-01-01T10:00:00Z"
+        }
+      },
+      "content": [
+        {
+          "_type": "ELEMENT",
+          "archetype_node_id": "at0004",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Synthetic amount"
+          },
+          "value": {
+            "_type": "DV_QUANTITY",
+            "magnitude": 10.1,
+            "units": "mg"
+          }
+        }
+      ]
+    }
+  },
+  "expectedComposition": {
+    "ehr_id": "01010101-0202-4303-8404-050505050505",
+    "comp_id": {
+      "$oid": "64b64c2e5f6270b5c2c2c2c2"
+    },
+    "v": "1",
+    "time_c": {
+      "$date": "2026-01-01T12:00:00Z"
+    },
+    "tid": "Synthetic.Example",
+    "cn": [
+      {
+        "p": "1",
+        "data": {
+          "t": "COMPOSITION",
+          "ani": 1,
+          "archetype_details": {
+            "template_id": {
+              "v": "Synthetic.Example"
+            }
+          },
+          "name": {
+            "t": "DV_TEXT",
+            "v": "Synthetic example"
+          },
+          "context": {
+            "t": "EVENT_CONTEXT",
+            "start_time": {
+              "t": "DV_DATE_TIME",
+              "v": {
+                "$date": "2026-01-01T10:00:00Z"
+              }
+            }
+          }
+        }
+      },
+      {
+        "p": "-4:1",
+        "kp": [
+          "content"
+        ],
+        "pi": [
+          0,
+          -1
+        ],
+        "data": {
+          "t": "ELEMENT",
+          "ani": -4,
+          "name": {
+            "t": "DV_TEXT",
+            "v": "Synthetic amount"
+          },
+          "v": {
+            "t": "DV_QUANTITY",
+            "magnitude": 10.1,
+            "units": "mg"
+          }
+        }
+      }
+    ]
+  },
+  "expectedSearch": {
+    "_id": {
+      "$oid": "64b64c2e5f6270b5c2c2c2c2"
+    },
+    "ehr_id": "01010101-0202-4303-8404-050505050505",
+    "comp_id": {
+      "$oid": "64b64c2e5f6270b5c2c2c2c2"
+    },
+    "tid": "Synthetic.Example",
+    "sort_time": {
+      "$date": "2026-01-01T12:00:00Z"
+    },
+    "sn": [
+      {
+        "p": "1",
+        "anc": [],
+        "data": {
+          "context": {
+            "start_time": {
+              "v": {
+                "$date": "2026-01-01T10:00:00Z"
+              }
+            }
+          }
+        }
+      },
+      {
+        "p": "-4:1",
+        "anc": [
+          1
+        ],
+        "data": {
+          "v": {
+            "magnitude": 10.1
+          }
+        }
+      }
+    ]
+  }
+}
