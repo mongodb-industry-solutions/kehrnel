@@ -27,6 +27,9 @@ CREDENTIAL_COMPONENT = re.compile(r"(?:^|[^a-z0-9])(?:uris?|tokens?|passwords?|p
 CREDENTIAL_SUFFIX = re.compile(r"(?:uri|token|password|passwd|credentials?|secrets?|apikeys?|servicekeys?|privatekeys?|connectionstring)$", re.I)
 
 def credential_key(key):
+    # These exact openEHR RM type labels identify dictionary values, not credentials.
+    if key in {"DV_URI", "DV_EHR_URI"}:
+        return False
     normalized = re.sub(r"[_-]", "", str(key))
     words = re.sub(r"([A-Z]+)([A-Z][a-z])", r"\1 \2", str(key))
     words = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", words)

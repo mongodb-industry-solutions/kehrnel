@@ -102,3 +102,12 @@ async def test_credentials_cannot_enter_compiler_inputs_or_echo(config):
     with pytest.raises(KehrnelError) as error:
         await compile_deployment_configuration(load_strategy('openehr.rps_dual',ROOT/'rps_dual'), DeploymentCompilationRequest(config={'database':'isolated',**config},templates=[TEMPLATE]))
     assert error.value.code == 'DEPLOYMENT_SECRET_FORBIDDEN'
+
+@pytest.mark.asyncio
+async def test_standard_uri_type_labels_in_supplied_shortcuts_remain_exportable():
+    manifest=load_strategy('openehr.rps_dual',ROOT/'rps_dual')
+    native=await compile_deployment_configuration(manifest,request())
+    shortcuts=native['dictionaries']['shortcuts']['snapshot']
+    assert 'DV_URI' in shortcuts['values'] and 'DV_EHR_URI' in shortcuts['values']
+    result=await compile_deployment_configuration(load_strategy('openehr.rps_dual',ROOT/'rps_dual'),request(dictionaries={'shortcuts':shortcuts}))
+    assert result['input']['dictionaries']['shortcuts']==shortcuts
