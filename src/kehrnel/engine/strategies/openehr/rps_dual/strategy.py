@@ -345,6 +345,23 @@ class RPSDualStrategy(StrategyPlugin):
         search_cfg = strategy_cfg.collections.search
         db = getattr((ctx.adapters or {}).get("storage"), "db", None)
 
+        if (ctx.meta or {}).get("strict_index_planning"):
+            mappings_content = await self._resolve_mappings_content(ctx, strategy_cfg)
+            try:
+                built = await build_search_index_definition_from_mappings(
+                    strategy_cfg, mappings_content, db=None, strict=True,
+                    shortcuts={"keys": (ctx.meta or {}).get("index_shortcut_keys") or {}},
+                    archetype_type=(ctx.meta or {}).get("archetype_search_type"),
+                )
+            except ValueError as exc:
+                raise KehrnelError(code="DEPLOYMENT_ANALYTICS_INVALID", status=422, message=str(exc)) from exc
+            if built.get("warnings") or not (built.get("metadata") or {}).get("data_field_count"):
+                raise KehrnelError(code="DEPLOYMENT_ANALYTICS_INVALID", status=422,
+                                   message="Enabled search requires fully resolved analytics leaf fields",
+                                   details={"warnings": built.get("warnings", [])})
+            return built["definition"]
+
+
         try:
             mappings_content = await self._resolve_mappings_content(ctx, strategy_cfg)
             build_result = await build_search_index_definition_from_mappings(
@@ -434,8 +451,145 @@ class RPSDualStrategy(StrategyPlugin):
                 skipped.append({"collection": si.get("collection"), "reason": "atlas_search adapter not available"})
         return ApplyResult(created=created, warnings=warnings, skipped=[s for s in skipped if s])
 
+    def _deployment_indexes_from_spec(self, ctx: StrategyContext, artifacts: Dict[str, Any]) -> Dict[str, Any]:
+        """Merge indexes defined in pack_spec storage indexes into the plan."""
+        spec = getattr(self.manifest, "pack_spec", None) or {}
+        stores = (spec.get("storage") or {}).get("stores") or (spec.get("storageModel") or {}).get("stores") or []
+        store_profiles = (ctx.meta or {}).get("store_profiles") or {}
+        collections_cfg = ctx.config.get("collections", {}) if isinstance(ctx.config, dict) else {}
+        try:
+            strategy_cfg = normalize_config(ctx.config or {})
+        except Exception:
+            strategy_cfg = None
+        document_fields = getattr(getattr(strategy_cfg, "fields", None), "document", None)
+        node_fields = getattr(getattr(strategy_cfg, "fields", None), "node", None)
+
+        document_aliases = {
+            "ehr_id": getattr(document_fields, "ehr_id", "ehr_id"),
+            "comp_id": getattr(document_fields, "comp_id", "comp_id"),
+            "tid": getattr(document_fields, "tid", "tid"),
+            "v": getattr(document_fields, "v", "v"),
+            "time_c": getattr(document_fields, "time_committed", "time_c"),
+            "time_committed": getattr(document_fields, "time_committed", "time_c"),
+            "sort_time": getattr(document_fields, "sort_time", "sort_time"),
+            "cn": getattr(document_fields, "cn", "cn"),
+            "sn": getattr(document_fields, "sn", "sn"),
+        }
+        node_aliases = {
+            "p": getattr(node_fields, "p", "p"),
+            "pi": getattr(node_fields, "pi", "pi"),
+            "data": getattr(node_fields, "data", "data"),
+        }
+        node_array_fields = {document_aliases["cn"], document_aliases["sn"]}
+
+        def resolve_index_field(field: str) -> str:
+            if not isinstance(field, str) or not field:
+                return field
+            parts = field.split(".")
+            parts[0] = document_aliases.get(parts[0], parts[0])
+            if len(parts) > 1 and parts[0] in node_array_fields:
+                parts[1] = node_aliases.get(parts[1], parts[1])
+                if len(parts) > 2 and parts[1] == node_aliases["data"] and parts[2] == "ani":
+                    if strategy_cfg and not strategy_cfg.transform.apply_shortcuts:
+                        parts[2] = "archetype_node_id"
+                    elif (ctx.meta or {}).get("index_shortcut_keys"):
+                        parts[2] = ctx.meta["index_shortcut_keys"].get("archetype_node_id", "archetype_node_id")
+            return ".".join(parts)
+
+        def resolve_collection(store: Dict[str, Any]) -> str | None:
+            role = store.get("role") or store.get("id")
+            if role == "store:search" and strategy_cfg and not strategy_cfg.collections.search.enabled:
+                return None
+            if role and role in store_profiles:
+                return store_profiles[role].get("collection")
+            # fallback to config
+            if role == "store:compositions":
+                return (collections_cfg.get("compositions") or {}).get("name")
+            if role == "store:search":
+                return (collections_cfg.get("search") or {}).get("name")
+            return store.get("destinationType")
+
+        def plan_metadata(idx: Dict[str, Any], logical_fields: list[str] | None = None) -> Dict[str, Any]:
+            metadata: Dict[str, Any] = {
+                "id": idx.get("id"),
+                "type": idx.get("type"),
+                "requirement": idx.get("requirement"),
+                "purpose": idx.get("purpose"),
+                "workloads": idx.get("workloads"),
+                "configResolved": idx.get("configResolved"),
+                "fieldsFromConfig": idx.get("fieldsFromConfig"),
+                "autoCreate": idx.get("autoCreate"),
+            }
+            if logical_fields:
+                metadata["logicalFields"] = logical_fields
+            return {key: value for key, value in metadata.items() if value not in (None, [], {})}
+
+        def search_plan_metadata(search: Dict[str, Any]) -> Dict[str, Any]:
+            metadata: Dict[str, Any] = {
+                "kind": search.get("kind"),
+                "requirement": search.get("requirement"),
+                "condition": search.get("condition"),
+                "purpose": search.get("purpose"),
+                "workloads": search.get("workloads"),
+                "configResolved": search.get("configResolved"),
+            }
+            return {key: value for key, value in metadata.items() if value not in (None, [], {})}
+
+        for store in stores:
+            if not isinstance(store, dict):
+                continue
+            coll = resolve_collection(store)
+            search_contract = store.get("search")
+            if coll and isinstance(search_contract, dict):
+                for search_index in artifacts.get("search_indexes", []):
+                    if search_index.get("collection") == coll:
+                        search_index.update(search_plan_metadata(search_contract))
+            for idx in store.get("indexes") or []:
+                if not isinstance(idx, dict):
+                    continue
+                if idx.get("autoCreate") is False and not (ctx.meta or {}).get("include_optional_indexes"):
+                    continue
+                idx_type = idx.get("type")
+                if idx_type == "btree":
+                    fields = idx.get("fields") or []
+                    keys = [(resolve_index_field(f), 1) for f in fields]
+                    if coll and keys:
+                        artifacts["indexes"].append(
+                            {
+                                "collection": coll,
+                                "keys": keys,
+                                "options": idx.get("options", {}),
+                                **plan_metadata(idx, fields),
+                            }
+                        )
+                elif idx_type == "wildcard":
+                    field = resolve_index_field(idx.get("field") or "data")
+                    if coll:
+                        artifacts["indexes"].append(
+                            {
+                                "collection": coll,
+                                "keys": [(f"{field}.$**", 1)],
+                                "options": idx.get("options", {}),
+                                **plan_metadata(idx, [idx.get("field") or "data"]),
+                            }
+                        )
+                elif idx_type == "search":
+                    if coll:
+                        artifacts["search_indexes"].append(
+                            {
+                                "collection": coll,
+                                "name": idx.get("name") or store.get("role") or "search_index",
+                                "definition": idx.get("definition", {}),
+                                "storedSource": idx.get("storedSource"),
+                                **plan_metadata(idx),
+                            }
+                        )
+        return artifacts
+
     def _augment_indexes_from_spec(self, ctx: StrategyContext, artifacts: Dict[str, Any]) -> Dict[str, Any]:
         """Merge indexes defined in pack_spec storage indexes into the plan."""
+        if (ctx.meta or {}).get("strict_index_planning"):
+            return self._deployment_indexes_from_spec(ctx, artifacts)
         spec = getattr(self.manifest, "pack_spec", None) or {}
         stores = (spec.get("storage") or {}).get("stores") or (spec.get("storageModel") or {}).get("stores") or []
         store_profiles = (ctx.meta or {}).get("store_profiles") or {}

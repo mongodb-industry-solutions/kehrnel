@@ -316,7 +316,9 @@ class CompositionFlattener:
             self.sf_nodes: sn,
         }
 
-        doc_id = base_doc.get("_id")
+        # An explicit identity envelope (IBM) owns _id. Otherwise ingest uses
+        # the composition ID for the sidecar even when MongoDB assigns a base _id.
+        doc_id = base_doc.get("_id") if "_id" in self.base_envelope_fields else base_doc.get(self.cf_cid, base_doc.get("_id"))
         if doc_id is not None:
             search_doc["_id"] = doc_id
 
@@ -1333,8 +1335,17 @@ class CompositionFlattener:
         if self.sf_ap and self.cf_ap and self.cf_ap in node:
             slim[self.sf_ap] = node[self.cf_ap]
 
-        if self.sf_anc and "_anc" in node:
-            slim[self.sf_anc] = node["_anc"]
+        if self.sf_anc:
+            if "_anc" in node:
+                slim[self.sf_anc] = node["_anc"]
+            else:
+                # Ingest removes its temporary lineage after building the sidecar.
+                # Persisted reversed paths retain the root-to-parent code sequence.
+                ancestors = list(reversed(str(node.get(self.cf_path) or "").split(self.path_separator)[1:]))
+                archetype_value = dblock.get(self._shortcut_path("archetype_node_id"), dblock.get("archetype_node_id"))
+                if isinstance(archetype_value, int):
+                    ancestors = [int(code) if code.lstrip("-").isdigit() else code for code in ancestors]
+                slim[self.sf_anc] = ancestors
 
         for expr in rule["copy"]:
             if not expr.startswith("data."):

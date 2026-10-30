@@ -79,6 +79,7 @@ class FileActivationRegistry(ActivationRegistry):
             data = json.loads(self.path.read_text(encoding="utf-8"))
             for mid, m in (data.get("manifests") or {}).items():
                 self.manifests[mid] = StrategyManifest(**m)
+                self.manifests[mid].pack_root = (data.get("manifest_roots") or {}).get(mid)
             for env_id, env_data in (data.get("environments") or {}).items():
                 if isinstance(env_data, dict):
                     self.environments[env_id] = EnvironmentRecord(**env_data)
@@ -97,6 +98,7 @@ class FileActivationRegistry(ActivationRegistry):
     def _save(self):
         data = {
             "manifests": {mid: m.model_dump() for mid, m in self.manifests.items()},
+            "manifest_roots": {mid: m.pack_root for mid, m in self.manifests.items() if m.pack_root},
             "environments": {env_id: env.snapshot() for env_id, env in self.environments.items()},
             "activations": {env_id: {domain: act.__dict__ for domain, act in acts.items()} for env_id, acts in self.activations.items()},
             "history": self.history,

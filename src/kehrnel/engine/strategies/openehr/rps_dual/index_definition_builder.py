@@ -131,6 +131,8 @@ def _leaf_defs_for_path(path: str, rm_type: Optional[str], strategy_cfg: RPSDual
         return [{"type": "date"}]
 
     if last == "value":
+        if rm_upper == "DV_BOOLEAN":
+            return [{"type": "boolean"}]
         if rm_upper in {"DV_DATE", "DV_DATE_TIME", "DV_TIME"}:
             return [{"type": "date"}]
         if rm_upper in {"DV_QUANTITY", "DV_COUNT", "DV_ORDINAL", "DV_PROPORTION"}:
@@ -178,6 +180,8 @@ async def build_search_index_definition_from_mappings(
     db: Any = None,
     shortcuts: Optional[Dict[str, Any]] = None,
     include_stored_source: bool = True,
+    strict: bool = False,
+    archetype_type: Optional[str] = None,
 ) -> Dict[str, Any]:
     payload = _normalize_mapping_payload(mappings_content)
     flattener = CompositionFlattener(
@@ -204,6 +208,7 @@ async def build_search_index_definition_from_mappings(
     sources: Set[str] = set()
 
     data_fields: Dict[str, Any] = {}
+    strict_definitions: Dict[str, Any] = {}
     nodes_field = strategy_cfg.fields.document.sn
     path_field = strategy_cfg.fields.node.p
     data_field = strategy_cfg.fields.node.data
@@ -218,10 +223,26 @@ async def build_search_index_definition_from_mappings(
         if not leaf_defs:
             warnings.append(f"Could not infer Atlas Search type for {clean_path}")
             return
+        if strict:
+            terminal = clean_path.split(".")[-1]
+            known_terminal = terminal in {"archetype_node_id", "code_string", "id", "units", "system_id", "magnitude", "start_time", "end_time", "origin", "time", "name"}
+            scalar_rm = str(rm_type or "").upper() in {"DV_BOOLEAN", "DV_DATE", "DV_DATE_TIME", "DV_TIME", "DV_QUANTITY", "DV_COUNT", "DV_ORDINAL", "DV_PROPORTION", "DV_TEXT", "DV_PARAGRAPH", "DV_CODED_TEXT", "DV_IDENTIFIER"}
+            if len(leaf_defs) != 1 or not (known_terminal or scalar_rm):
+                raise ValueError(f"Unresolved Atlas Search scalar type for analytics path: {clean_path}")
+            previous = strict_definitions.get(slim_path)
+            if previous is not None and previous != leaf_defs:
+                raise ValueError(f"Incompatible Atlas Search analytics types for path: {slim_path}")
+            strict_definitions[slim_path] = leaf_defs
         indexed_data_paths.add(slim_path)
         if template_id:
             template_ids.add(str(template_id))
         sources.add(source)
+        if clean_path == "archetype_node_id" and archetype_type:
+            leaf_defs = [{"type": archetype_type}]
+        if strict:
+            for existing in indexed_data_paths - {slim_path}:
+                if existing.startswith(slim_path + ".") or slim_path.startswith(existing + "."):
+                    raise ValueError(f"Atlas Search analytics paths conflict as scalar and document: {existing}, {slim_path}")
         for leaf in leaf_defs:
             _assign_field(data_fields, slim_path.split("."), leaf)
 
