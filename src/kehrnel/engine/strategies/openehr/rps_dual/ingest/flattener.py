@@ -13,7 +13,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from .exceptions_g import UnknownCodeError
 from .encoding import PathCodec
 import jsonschema
-from bson import ObjectId
+from bson import Binary, ObjectId
 import uuid
 
 # Constants from original ingestionOptimized.py
@@ -93,6 +93,8 @@ class CompositionFlattener:
         self.sf_nodes = s_fields.get("nodes", "sn")
         self.sf_data  = s_fields.get("data", "data")
         self.sf_path  = s_fields.get("path", "p")
+        self.sf_pi = s_fields.get("path_instance", self.cf_pi)
+        self.sf_kp = s_fields.get("keyPath") or s_fields.get("key_path") or "kp"
         self.sf_ap    = s_fields.get("archetype_path")
         self.sf_anc   = s_fields.get("ancestors", "anc")
         self.sf_ehr   = s_fields.get("ehr_id", "ehr_id")
@@ -1295,6 +1297,12 @@ class CompositionFlattener:
         if self.sf_anc and "_anc" in node:
              slim[self.sf_anc] = node["_anc"]
 
+        # Retain exact post-search correlation metadata from live ingestion.
+        if self.sf_kp and "kp" in node:
+            slim[self.sf_kp] = node["kp"]
+        if self.cf_pi in node:
+            slim[self.sf_pi] = node[self.cf_pi]
+
         # 4. Data
         for expr in rule["copy"]:
             if expr.startswith("data."):
@@ -1346,6 +1354,11 @@ class CompositionFlattener:
                 if isinstance(archetype_value, int):
                     ancestors = [int(code) if code.lstrip("-").isdigit() else code for code in ancestors]
                 slim[self.sf_anc] = ancestors
+
+        if self.sf_kp and "kp" in node:
+            slim[self.sf_kp] = node["kp"]
+        if self.cf_pi in node:
+            slim[self.sf_pi] = node[self.cf_pi]
 
         for expr in rule["copy"]:
             if not expr.startswith("data."):
@@ -1405,7 +1418,7 @@ class CompositionFlattener:
         if policy in ("uuid", "uuidbin", "uuid_bin"):
             try:
                 u = uuid.UUID(str(value))
-                return u.bytes
+                return Binary.from_uuid(u)
             except Exception:
                 return value
         return value

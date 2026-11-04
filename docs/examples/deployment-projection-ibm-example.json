@@ -204,7 +204,11 @@
           "v": {
             "magnitude": 10.1
           }
-        }
+        },
+        "kp": [
+          "content"
+        ],
+        "li": 0
       }
     ],
     "template_id": {
