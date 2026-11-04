@@ -65,6 +65,8 @@ class StrategyManifest(BaseModel):
     id: str
     name: str
     version: str
+    # Server-local provenance; never expose filesystem roots through manifest APIs.
+    pack_root: Optional[str] = Field(default=None, exclude=True)
     summary: Optional[str] = None
     description: Optional[str] = None
     domain: str

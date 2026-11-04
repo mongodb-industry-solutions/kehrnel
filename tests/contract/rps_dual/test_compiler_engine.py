@@ -29,7 +29,8 @@ async def test_patient_query_uses_compatibility_transformer_pipeline():
     ]
     plan = await strat.compile_query(ctx, "openehr", ir.to_dict())
     pipeline = plan.plan.get("pipeline", [])
-    assert plan.engine == "pipeline_builder"
+    # QueryPlan names the executable engine; explain.builder names its compiler.
+    assert plan.engine == "mongo_pipeline"
     assert plan.explain["engine"] == "query_engine"
     assert pipeline and "$match" in pipeline[0]
     project = next((stage for stage in pipeline if "$project" in stage), None)
@@ -60,7 +61,7 @@ async def test_cross_patient_query_uses_compatibility_search_transformer():
     ]
     plan = await strat.compile_query(ctx, "openehr", ir.to_dict())
     pipeline = plan.plan.get("pipeline", [])
-    assert plan.engine == "search_pipeline_builder"
+    assert plan.engine == "text_search_dual"
     assert plan.explain["engine"] == "query_engine"
     assert pipeline and "$search" in pipeline[0]
     search_stage = pipeline[0]["$search"]

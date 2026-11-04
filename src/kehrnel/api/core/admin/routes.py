@@ -30,6 +30,9 @@ from kehrnel.engine.domains.openehr.templates.generator import kehrnelGenerator
 from kehrnel.engine.domains.openehr.templates.validator import kehrnelValidator
 from kehrnel.api.bridge.app.core.config import settings as bridge_settings
 from kehrnel.engine.core.redaction import redact_sensitive
+from kehrnel.contracts.deployment_configuration import DeploymentCompilationRequest
+from kehrnel.engine.core.deployment_configuration import compile_deployment_configuration
+from kehrnel.engine.core.deployment_identity import SUPPORTED_STRATEGIES, package_identity
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -39,6 +42,20 @@ RPS_DUAL_STRATEGY_IDS = {"openehr.rps_dual", "openehr.rps_dual_ibm"}
 
 def _is_rps_dual_strategy_id(strategy_id: Any) -> bool:
     return str(strategy_id or "").strip().lower() in RPS_DUAL_STRATEGY_IDS
+
+
+@router.post("/strategies/{strategy_id}/deployment-config/compile")
+async def compile_strategy_deployment(strategy_id: str, request: Request, body: DeploymentCompilationRequest):
+    """Compile supplied configuration only; never activate or connect to a target database."""
+    try:
+        _require_admin_access(request)
+        rt = getattr(request.app.state, "strategy_runtime", None)
+        manifest = rt.registry.get_manifest(strategy_id) if rt else None
+        if manifest is None:
+            raise KehrnelError(code="STRATEGY_NOT_FOUND", status=404, message="Strategy is not installed")
+        return await compile_deployment_configuration(manifest, body)
+    except Exception as exc:
+        return _error_response(exc)
 
 
 ALLOWED_DOC_EXTENSIONS = {".xml", ".csv", ".cda", ".json", ".txt", ".hl7"}
@@ -1261,6 +1278,8 @@ async def get_strategy(strategy_id: str, request: Request):
         if not manifest:
             raise KeyError("Strategy not found")
         data = manifest.model_dump()
+        if manifest.id in SUPPORTED_STRATEGIES:
+            data.update(package_identity(manifest))
         if hasattr(manifest, "pack_spec") and manifest.pack_spec:
             data["pack_spec"] = manifest.pack_spec
         return data
