@@ -1,5 +1,12 @@
 # Portable deployment configuration
 
+The public EC2 backend releases from `main`, matching the public HDL frontend
+and the corporate production pipelines. Deploy this backend before HDL. HDL
+uses its authorized admin service key for compilation; customers use a separate
+deployment-enabled HDL integration key to download published releases. Search
+projections retain path/key lineage during ingest and reconstruction, and UUID
+fields use BSON Binary subtype 4 as declared by the exported encoding contract.
+
 Healthcare Data Lab owns tenant authoring, publication, integration keys and downloads. Kehrnel owns compilation of the strategy's storage and projection contract. An external projection writer consumes an immutable release; it does not use HDL as a query or ingest gateway.
 
 ## Compiler API

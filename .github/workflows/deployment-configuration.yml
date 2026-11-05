@@ -6,6 +6,7 @@ on:
       - 'tests/**'
       - 'docs/examples/deployment-projection*.json'
       - '.github/workflows/deployment-configuration.yml'
+      - '.github/workflows/deploy.yml'
 jobs:
   contracts:
     runs-on: ubuntu-latest
@@ -14,7 +15,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python -m pip install -e '.[all]'
-      - run: python -m pytest -q tests/contract/test_deployment_configuration.py tests/contract/test_deployment_boundaries.py tests/unit/test_search_index_definition_builder.py tests/unit/test_rps_dual_ibm_strategy.py
+      # These openEHR/API contracts do not require the separately vendored FHIR packages.
+      - run: python -m pip install -e '.[api,test,translate]'
+      - run: python -m pytest -q tests/contract/test_deployment_configuration.py tests/contract/test_deployment_boundaries.py tests/unit/test_search_index_definition_builder.py tests/unit/test_rps_dual_ibm_strategy.py tests/contract/test_rps_dual_compiler_engine.py tests/contract/test_rps_dual_compile_raw_aql.py tests/contract/test_rps_dual_schema_allows_bundle_ref.py tests/contract/test_rps_dual_plan_version_indexes.py tests/unit/test_rps_dual_versioning.py tests/unit/test_rps_dual_strategy_ingest_batch.py tests/unit/test_rps_dual_nested_contains_compile.py tests/unit/test_rps_dual_raw_aql_strategy_compile.py tests/unit/test_production_deployment.py
         env:
           KEHRNEL_SKIP_DOTENV: 'true'
