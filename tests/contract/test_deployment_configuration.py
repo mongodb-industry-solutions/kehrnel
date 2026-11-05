@@ -113,7 +113,7 @@ async def test_boolean_typing_and_conflicting_analytics_are_explicit():
     fields = result["indexes"]["atlasSearch"][0]["definition"]["mappings"]["fields"]["sn"]["fields"]["data"]["fields"]
     assert fields["v"]["fields"]["v"]["type"] == "boolean"
     conflict = deepcopy(boolean)
-    conflict["fields"].append({"path": "/context/value/units", "extract": "value", "rmType": "DV_TEXT"})
+    conflict["fields"].append({"path": "/context/value", "extract": "value.value", "rmType": "DV_TEXT"})
     with pytest.raises(KehrnelError) as exc:
         await compile_deployment_configuration(manifest(), DeploymentCompilationRequest(config={"database": "local"}, templates=[conflict]))
     assert exc.value.code == "DEPLOYMENT_ANALYTICS_INVALID"
