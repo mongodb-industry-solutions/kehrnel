@@ -228,7 +228,7 @@ async def compile_deployment_configuration(manifest, body: DeploymentCompilation
                                                                   "compilerSource": Path(__file__).read_text(),
                                                                   "identitySource": Path(__file__).with_name("deployment_identity.py").read_text()})},
               "config": normalized, "templates": templates, "collections": plan.artifacts.get("collections", []),
-              "projection": {"contract": "openehr.rps-dual.search-projection/v1", "algorithmVersion": "1", "flattenerClass": f"{flattener_class.__module__}:{flattener_class.__name__}",
+              "projection": {"contract": "openehr.rps-dual.search-projection/v1", "algorithmVersion": "2", "flattenerClass": f"{flattener_class.__module__}:{flattener_class.__name__}",
                              "envelope": normalized["transform"]["envelope"], "shortcutValuePrefix": "$>" if manifest.id.endswith("_ibm") else "",
                              "archetypeCodeValueType": "string" if manifest.id.endswith("_ibm") else "integer",
                              "mappings": mappings, "fields": normalized["fields"], "ids": normalized["ids"],

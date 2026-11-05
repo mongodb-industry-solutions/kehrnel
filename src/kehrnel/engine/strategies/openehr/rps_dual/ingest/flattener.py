@@ -182,16 +182,18 @@ class CompositionFlattener:
         rules = self._compiled_rules_for_template(template_name)
         sn: List[dict] = []
         if search_enabled and rules:
+            ancestors = {}
             for node in cn:
                 path_val = node.get(self.cf_path)
                 dblock = node.get(self.cf_data, {})
                 if not path_val:
                     continue
                 parts = str(path_val).split(self.path_separator)
+                ancestors[str(path_val)] = node
                 pc_set = {self.path_separator.join(parts[:i]) for i in range(1, len(parts) + 1)}
 
                 for rule in rules:
-                    if self._rule_matches(rule, pc_set, parts, dblock):
+                    if self._rule_matches(rule, pc_set, parts, dblock, ancestors=ancestors):
                         slim = self._apply_rule(rule, node, dblock)
                         if slim:
                             sn.append(slim)
@@ -291,6 +293,7 @@ class CompositionFlattener:
             return None
 
         sn: List[dict] = []
+        ancestors = {}
         for node in nodes:
             if not isinstance(node, dict):
                 continue
@@ -303,10 +306,11 @@ class CompositionFlattener:
                 dblock = {}
 
             parts = str(path_val).split(self.path_separator)
+            ancestors[str(path_val)] = node
             pc_set = {self.path_separator.join(parts[:i]) for i in range(1, len(parts) + 1)}
 
             for rule in rules:
-                if self._rule_matches(rule, pc_set, parts, dblock):
+                if self._rule_matches(rule, pc_set, parts, dblock, ancestors=ancestors):
                     slim = self._apply_rule_to_flattened_node(rule, node, dblock)
                     if slim:
                         sn.append(slim)
@@ -746,6 +750,15 @@ class CompositionFlattener:
         if s in self.code_book["at"]:
             return self.code_book["at"][s]
         if self.role != "primary":
+            # These encodings are deterministic and do not allocate dictionary
+            # entries. Sequential/dotted numeric codes still require a snapshot.
+            if self.at_strategy == "literal":
+                return s
+            if self.at_strategy == "compact_prefix":
+                return self._encode_at_compact(s)
+            root = _AT_ROOT.match(s)
+            if self.at_strategy == "negative_int" and root:
+                return -int(root.group(1))
             raise UnknownCodeError("at", s)
 
         strategy = self.at_strategy
@@ -1083,7 +1096,7 @@ class CompositionFlattener:
         selectors = self._parse_path_selectors(path)
 
         if infer_extract and not extract:
-            extract = self._infer_extract_from_path(path)
+            extract = self._infer_extract_from_path(path, field.get("rmType"))
         if not extract:
             return None
 
@@ -1101,15 +1114,52 @@ class CompositionFlattener:
                 "copy": copy_fields,
                 "_root_only": not selectors,
             }
+            labels = []
+            for index, selector in enumerate(selectors):
+                if selector.get("name") is not None:
+                    labels.append({"path": [self._seg_to_int(item["selector"]) for item in reversed(selectors[:index + 1])], "name": selector["name"]})
+            if labels:
+                compiled_rule["_labels"] = labels
             return compiled_rule
         except (ValueError, UnknownCodeError):
             return None
 
-    def _infer_extract_from_path(self, path: str) -> str:
+    @staticmethod
+    def _path_segments(path: str) -> List[str]:
+        # AQL predicates can contain both name/value and quoted labels with '/'.
+        segments = []
+        start = depth = 0
+        quote = None
+        escaped = False
+        for index, char in enumerate(path):
+            if quote:
+                if escaped:
+                    escaped = False
+                elif char == "\\":
+                    escaped = True
+                elif char == quote:
+                    quote = None
+            elif char in "'\"" and depth:
+                quote = char
+            elif char == "[":
+                depth += 1
+            elif char == "]":
+                depth -= 1
+            elif char == "/" and depth == 0:
+                if index > start:
+                    segments.append(path[start:index])
+                start = index + 1
+        if quote or depth:
+            raise ValueError("Unclosed analytics path predicate")
+        if start < len(path):
+            segments.append(path[start:])
+        return segments
+
+    def _infer_extract_from_path(self, path: str, rm_type: Optional[str] = None) -> str:
         """
         Derive the relative data path (post-leaf archetype) from an openEHR path.
         """
-        segments = [seg for seg in path.split("/") if seg]
+        segments = self._path_segments(path)
         last_bracket_idx = -1
         for idx, seg in enumerate(segments):
             if "[" in seg and "]" in seg:
@@ -1125,20 +1175,31 @@ class CompositionFlattener:
             base, _ = self._split_segment(seg)
             if base:
                 pieces.append(base)
-        return ".".join(pieces)
+        extract = ".".join(pieces)
+        # Older HDL selections identify the DV object at /value, rather than
+        # its scalar leaf. Resolve that object using its declared RM type.
+        if extract == "value":
+            suffix = {"DV_QUANTITY": "magnitude", "DV_COUNT": "magnitude", "DV_CODED_TEXT": "defining_code.code_string", "DV_IDENTIFIER": "id"}.get(str(rm_type or "").upper())
+            if not suffix and str(rm_type or "").upper() in {"DV_DATE", "DV_DATE_TIME", "DV_TIME", "DV_DURATION", "DV_TEXT", "DV_PARAGRAPH", "DV_BOOLEAN", "DV_ORDINAL", "DV_URI", "DV_EHR_URI"}:
+                suffix = "value"
+            if suffix:
+                extract += "." + suffix
+        return extract
 
     def _parse_path_selectors(self, path: str) -> List[dict]:
         """
         Parse a canonical openEHR path into selector tokens with archetype hints.
         """
         selectors: List[dict] = []
-        segments = [seg for seg in path.split("/") if seg]
+        segments = self._path_segments(path)
         for seg in segments:
             _, selector = self._split_segment(seg)
             if selector:
-                selectors.append(
-                    {"selector": selector, "is_archetype": selector.upper().startswith("OPENEHR-EHR-")}
-                )
+                item = {"selector": selector, "is_archetype": selector.upper().startswith("OPENEHR-EHR-")}
+                named = re.search(r'''(?:,\s*|\band\s+name/value\s*=\s*)(?:'((?:\\.|[^'])*)'|"((?:\\.|[^"])*)")''', seg)
+                if named:
+                    item["name"] = re.sub(r"\\(['\"\\])", r"\1", named.group(1) if named.group(1) is not None else named.group(2))
+                selectors.append(item)
         return selectors
         
     def _seg_to_int(self, seg: str | int) -> Any:
@@ -1188,7 +1249,7 @@ class CompositionFlattener:
             cur = cur.setdefault(part, {})
         cur[parts[-1]] = value
         
-    def _rule_matches(self, rule, pc_set, parts, dblock) -> bool:
+    def _rule_matches(self, rule, pc_set, parts, dblock, *, ancestors=None) -> bool:
         if rule.get("_root_only") and len(parts) != 1:
             return False
         if rule["_path"] and self.path_separator.join(str(x) for x in rule["_path"]) not in pc_set:
@@ -1200,6 +1261,23 @@ class CompositionFlattener:
                     j += 1
                     if j == len(rule["_cont"]): break
             if j != len(rule["_cont"]): return False
+
+        for label in rule.get("_labels", []):
+            pattern = [str(code) for code in label["path"]]
+            matches = False
+            for index in range(len(parts) - len(pattern) + 1):
+                if parts[index:index + len(pattern)] != pattern:
+                    continue
+                ancestor = (ancestors or {}).get(self.path_separator.join(parts[index:]))
+                data = dblock if index == 0 else (ancestor or {}).get(self.cf_data, {})
+                name = self._dpath_get(data, "name.value")
+                if name is None:
+                    name = self._dpath_get(data, self._shortcut_path("name.value"))
+                if name == label["name"]:
+                    matches = True
+                    break
+            if not matches:
+                return False
         
         # Wrap dblock to match "data.value" expectation in rules
         if any(self._dpath_get({"data": dblock}, path) != val_req for path, val_req in rule["_extra"]):
@@ -1274,6 +1352,8 @@ class CompositionFlattener:
         sel = rest.split("]", 1)[0]
         if "," in sel:
             sel = sel.split(",", 1)[0]
+        if " and " in sel:
+            sel = sel.split(" and ", 1)[0]
         sel = sel.strip().strip("'\"")
         return base, sel
 
